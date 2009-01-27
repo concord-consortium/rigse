@@ -1,0 +1,18 @@
+<h1>Listing assessment_targets</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% for assessment_target in @assessment_targets %>
+  <tr>
+    <td><%= link_to 'Show', assessment_target %></td>
+    <td><%= link_to 'Edit', edit_assessment_target_path(assessment_target) %></td>
+    <td><%= link_to 'Destroy', assessment_target, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New assessment_target', new_assessment_target_path %>

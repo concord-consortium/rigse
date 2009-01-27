@@ -13,10 +13,10 @@ Scenario: an empty field
 
 
 StoryBuilder story = stories.createStory().called("a story")
-	.asA("person")
-	.iWant("to do something")
-	.soThat("I can rule the world");
+  .asA("person")
+  .iWant("to do something")
+  .soThat("I can rule the world");
 story.addScenario().called("happy path").as()
-	.given("some context")
-	.when("some event happens")
-	.then("expect some outcome");
+  .given("some context")
+  .when("some event happens")
+  .then("expect some outcome");

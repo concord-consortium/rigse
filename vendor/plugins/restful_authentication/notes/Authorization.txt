@@ -85,10 +85,10 @@ h2. Outcomes / Obligations
 
 h2. Notes from "Core Security Patterns":http://www.coresecuritypatterns.com/patterns.htm website
 
-# Authentication Enforcer 	who the hell are you
-# Intercepting Validator	Is your request well-formed
-# Authorization Enforcer  	Are you allowed to do that
-# Secure Logger 		Know what's happening/happened
+# Authentication Enforcer   who the hell are you
+# Intercepting Validator  Is your request well-formed
+# Authorization Enforcer    Are you allowed to do that
+# Secure Logger     Know what's happening/happened
 #
 
 h2. notes from "XACML":http://www.nsitonline.in/hemant/stuff/xacml/XACML%20Tutorial%20with%20a%20Use%20Case%20Scenario%20for%20Academic%20Institutions.htm
@@ -100,11 +100,11 @@ Policy [Rule Combining Algorithm] (defines access to particular resources.)
 ## Resource Attributes
 ## Action Attributes
 ## Environment Attributes
-# Rule [Effect]		Identify various conditions or cases under which a policy may become applicable
-## Subject Attributes	user who has made an access request
-## Resource Attributes	object to which access is requested
-## Action Attributes	action the subject wants to take on the resource
-## Environment Attributes	request environment (time of day, ip, etc)
+# Rule [Effect]    Identify various conditions or cases under which a policy may become applicable
+## Subject Attributes  user who has made an access request
+## Resource Attributes  object to which access is requested
+## Action Attributes  action the subject wants to take on the resource
+## Environment Attributes  request environment (time of day, ip, etc)
 ## Conditions
 # Obligations
 
@@ -148,7 +148,7 @@ Reference Monitor (SecPatt p256)
 * Access control  -- define policy
 ** Roles
 ** Acc. matrix
-* Authorization	-- enforce policy (reference monitor ; filter chain)
+* Authorization  -- enforce policy (reference monitor ; filter chain)
 * Obligations
-**  Audit 	-- (observer)
+**  Audit   -- (observer)
 

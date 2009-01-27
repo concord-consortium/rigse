@@ -33,7 +33,7 @@ class RspecScaffoldGenerator < Rails::Generator::NamedBase
     if Rails::VERSION::STRING < "2.0.0"
       @resource_generator = "scaffold_resource"
       @default_file_extension = "rhtml"
-		else
+    else
       @resource_generator = "scaffold"
       @default_file_extension = "html.erb"
     end

@@ -1,0 +1,18 @@
+<h1>Listing grade_span_expectations</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% for grade_span_expectation in @grade_span_expectations %>
+  <tr>
+    <td><%= link_to 'Show', grade_span_expectation %></td>
+    <td><%= link_to 'Edit', edit_grade_span_expectation_path(grade_span_expectation) %></td>
+    <td><%= link_to 'Destroy', grade_span_expectation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New grade_span_expectation', new_grade_span_expectation_path %>

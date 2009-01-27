@@ -9,7 +9,47 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080929171348) do
+ActiveRecord::Schema.define(:version => 20090127214650) do
+
+  create_table "assessment_targets", :force => true do |t|
+    t.integer "knowledge_statement_id"
+    t.integer "unifying_theme_id"
+    t.integer "number"
+    t.string  "target"
+    t.string  "grade_span"
+  end
+
+  create_table "big_ideas", :force => true do |t|
+    t.integer "unifying_theme_id"
+    t.string  "idea"
+  end
+
+  create_table "domains", :force => true do |t|
+    t.string "name"
+    t.string "key"
+  end
+
+  create_table "expectation_stems", :force => true do |t|
+    t.integer "grade_span_expectation_id"
+    t.string  "stem"
+  end
+
+  create_table "expectations", :force => true do |t|
+    t.integer "expectation_stem_id"
+    t.string  "ordinal"
+    t.string  "expectation"
+  end
+
+  create_table "grade_span_expectations", :force => true do |t|
+    t.integer "assessment_target_id"
+    t.string  "grade_span"
+  end
+
+  create_table "knowledge_statements", :force => true do |t|
+    t.integer "domain_id"
+    t.integer "number"
+    t.string  "statement"
+  end
 
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
@@ -50,8 +90,13 @@ ActiveRecord::Schema.define(:version => 20080929171348) do
     t.datetime "updated_at"
   end
 
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "unifying_themes", :force => true do |t|
+    t.string "name"
+    t.string "key"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40

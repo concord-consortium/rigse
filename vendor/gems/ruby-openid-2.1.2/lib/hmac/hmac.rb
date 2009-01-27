@@ -26,8 +26,8 @@ module HMAC
     private
     def check_status
       unless @status == STATUS_INITIALIZED
-	raise RuntimeError,
-	  "The underlying hash algorithm has not yet been initialized."
+  raise RuntimeError,
+    "The underlying hash algorithm has not yet been initialized."
       end
     end
 
@@ -39,8 +39,8 @@ module HMAC
       key_xor_ipad = "\x36" * @block_size
       key_xor_opad = "\x5C" * @block_size
       for i in 0 .. key.size - 1
-	key_xor_ipad[i] ^= key[i]
-	key_xor_opad[i] ^= key[i]
+  key_xor_ipad[i] ^= key[i]
+  key_xor_opad[i] ^= key[i]
       end
       @key_xor_ipad = key_xor_ipad
       @key_xor_opad = key_xor_opad
@@ -87,21 +87,21 @@ module HMAC
     # held a key even if it's no longer in use.
     def Base.digest(key, text)
       begin
-	hmac = self.new(key)
-	hmac.update(text)
-	hmac.digest
+  hmac = self.new(key)
+  hmac.update(text)
+  hmac.digest
       ensure
-	hmac.reset_key
+  hmac.reset_key
       end
     end
 
     def Base.hexdigest(key, text)
       begin
-	hmac = self.new(key)
-	hmac.update(text)
-	hmac.hexdigest
+  hmac = self.new(key)
+  hmac.update(text)
+  hmac.hexdigest
       ensure
-	hmac.reset_key
+  hmac.reset_key
       end
     end
 

@@ -1,0 +1,48 @@
+<p>
+  <b>Title:</b>
+  <%=h @activity.title %>
+</p>
+
+<p>
+  <b>Context:</b>
+  <%=h @activity.context %>
+</p>
+
+<p>
+  <b>Opportunities:</b>
+  <%=h @activity.opportunities %>
+</p>
+
+<p>
+  <b>Objectives:</b>
+  <%=h @activity.objectives %>
+</p>
+
+<p>
+  <b>Procedures opening:</b>
+  <%=h @activity.procedures_opening %>
+</p>
+
+<p>
+  <b>Procedures engagement:</b>
+  <%=h @activity.procedures_engagement %>
+</p>
+
+<p>
+  <b>Procedures closure:</b>
+  <%=h @activity.procedures_closure %>
+</p>
+
+<p>
+  <b>Assessment:</b>
+  <%=h @activity.assessment %>
+</p>
+
+<p>
+  <b>Reflection:</b>
+  <%=h @activity.reflection %>
+</p>
+
+
+<%= link_to 'Edit', edit_activity_path(@activity) %> |
+<%= link_to 'Back', activities_path %>

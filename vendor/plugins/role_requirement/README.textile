@@ -16,7 +16,7 @@ h2. "Limiting" Methods
 role_requirement accepts several methods as an options hash of key/value pairs. These methods work like clauses that limit the require_role line.
 
 * <b>:for</b> -                Evaluate this role requirement before executing ONLY the following actions in this controller...
-*	<b>:for_all_except</b> - 		Evaluate this role requirement before executing ALL actions in this controller EXCEPT the following...
+*  <b>:for_all_except</b> -     Evaluate this role requirement before executing ALL actions in this controller EXCEPT the following...
 
 (note:  :only and :except also work, similarly to before_filter)
 
@@ -103,11 +103,11 @@ This method, by default, always returns true for the role named "admin." This ma
 If you don't want this behavior, comment out the line that causes admin to always return true:
 
 <pre><code>
-	def has_role?(role_in_question)
-		@_list ||= self.roles.collect(&:name)
-		# return true if @_list.include?("admin") #This is the culprit.
-		(@_list.include?(role_in_question.to_s) )
-	end
+  def has_role?(role_in_question)
+    @_list ||= self.roles.collect(&:name)
+    # return true if @_list.include?("admin") #This is the culprit.
+    (@_list.include?(role_in_question.to_s) )
+  end
 </code></pre>
 
 You can also change the name of the "all access" role here. You can use any name that makes sense to you.

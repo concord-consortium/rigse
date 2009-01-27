@@ -1,0 +1,48 @@
+<h1>Editing activity</h1>
+
+<% form_for(@activity) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :context %><br />
+    <%= f.text_area :context %>
+  </p>
+  <p>
+    <%= f.label :opportunities %><br />
+    <%= f.text_area :opportunities %>
+  </p>
+  <p>
+    <%= f.label :objectives %><br />
+    <%= f.text_area :objectives %>
+  </p>
+  <p>
+    <%= f.label :procedures_opening %><br />
+    <%= f.text_area :procedures_opening %>
+  </p>
+  <p>
+    <%= f.label :procedures_engagement %><br />
+    <%= f.text_area :procedures_engagement %>
+  </p>
+  <p>
+    <%= f.label :procedures_closure %><br />
+    <%= f.text_area :procedures_closure %>
+  </p>
+  <p>
+    <%= f.label :assessment %><br />
+    <%= f.text_area :assessment %>
+  </p>
+  <p>
+    <%= f.label :reflection %><br />
+    <%= f.text_area :reflection %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @activity %> |
+<%= link_to 'Back', activities_path %>

@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  title: MyString
+  context: MyText
+  opportunities: MyText
+  objectives: MyText
+  procedures_opening: MyText
+  procedures_engagement: MyText
+  procedures_closure: MyText
+  assessment: MyText
+  reflection: MyText
+
+two:
+  title: MyString
+  context: MyText
+  opportunities: MyText
+  objectives: MyText
+  procedures_opening: MyText
+  procedures_engagement: MyText
+  procedures_closure: MyText
+  assessment: MyText
+  reflection: MyText

@@ -1,4 +1,22 @@
-ActionController::Routing::Routes.draw do |map| 
+ActionController::Routing::Routes.draw do |map|
+  map.resources :activities
+
+  map.resources :big_ideas
+
+  map.resources :unifying_themes
+
+  map.resources :expectations
+
+  map.resources :expectation_stems
+
+  map.resources :grade_span_expectations
+
+  map.resources :assessment_targets
+
+  map.resources :knowledge_statements
+
+  map.resources :domains
+ 
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'

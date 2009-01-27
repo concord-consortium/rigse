@@ -1,0 +1,2 @@
+module AssessmentTargetsHelper
+end

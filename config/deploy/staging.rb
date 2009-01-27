@@ -1,12 +1,12 @@
 #############################################################
-#	Application
+#  Application
 #############################################################
 
 set :application, "bort"
 set :deploy_to, "/path/to/deploy"
 
 #############################################################
-#	Settings
+#  Settings
 #############################################################
 
 default_run_options[:pty] = true
@@ -16,7 +16,7 @@ set :scm_verbose, true
 set :rails_env, "staging" 
 
 #############################################################
-#	Servers
+#  Servers
 #############################################################
 
 set :user, "bort"
@@ -25,7 +25,7 @@ server domain, :app, :web
 role :db, domain, :primary => true
 
 #############################################################
-#	Git
+#  Git
 #############################################################
 
 set :scm, :git
@@ -36,7 +36,7 @@ set :repository, "git@github.com:FudgeStudios/bort.git"
 set :deploy_via, :remote_cache
 
 #############################################################
-#	Passenger
+#  Passenger
 #############################################################
 
 namespace :deploy do

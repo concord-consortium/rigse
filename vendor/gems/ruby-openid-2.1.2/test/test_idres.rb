@@ -114,7 +114,7 @@ module OpenID
                   'openid.return_to' => 'http://binkley.lan:8001/process?janrain_nonce=2008-01-28T21%3A07%3A02Z0tMIKx', 
                   'openid.sig' => 'YJlWH4U6SroB1HoPkmEKx9AyGGg=', 
                   'openid.signed' => 'assoc_handle,identity,response_nonce,return_to,claimed_id,op_endpoint,pape.auth_time,ns.pape,pape.nist_auth_level,pape.auth_policies' 
-	         } 
+           } 
           assert_equal(args['openid.ns'], OPENID2_NS)
           incoming = Message.from_post_args(args)
           assert(incoming.is_openid2)

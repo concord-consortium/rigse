@@ -305,7 +305,7 @@ Autocompleter.Base.prototype = {
 Ajax.Autocompleter = Class.create();
 Object.extend(Object.extend(Ajax.Autocompleter.prototype, Autocompleter.Base.prototype), {
   initialize: function(element, update, url, options) {
-	  this.baseInitialize(element, update, options);
+    this.baseInitialize(element, update, options);
     this.options.asynchronous  = true;
     this.options.onComplete    = this.onComplete.bind(this);
     this.options.defaultParams = this.options.parameters || null;
@@ -470,7 +470,7 @@ Ajax.InPlaceEditor.prototype = {
       formClassName: 'inplaceeditor-form',
       highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
       highlightendcolor: "#FFFFFF",
-      externalControl:	null,
+      externalControl:  null,
       ajaxOptions: {}
     }, options || {});
 
