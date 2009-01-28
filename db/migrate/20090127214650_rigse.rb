@@ -33,8 +33,12 @@ class Rigse < ActiveRecord::Migration
       t.timestamps
     end
 
+    create_table :expectation_stems_grade_span_expectations do |t|
+      t.integer  :grade_span_expectation_id
+      t.integer  :expectation_stem_id
+    end
+    
     create_table :expectation_stems do |t|
-      t.integer :grade_span_expectation_id
       t.string  :stem
       t.column :uuid, :string, :limit => 36
       t.timestamps

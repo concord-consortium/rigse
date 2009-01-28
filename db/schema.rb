@@ -55,11 +55,15 @@ ActiveRecord::Schema.define(:version => 20090127220427) do
   end
 
   create_table "expectation_stems", :force => true do |t|
-    t.integer  "grade_span_expectation_id"
     t.string   "stem"
-    t.string   "uuid",                      :limit => 36
+    t.string   "uuid",       :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "expectation_stems_grade_span_expectations", :force => true do |t|
+    t.integer "grade_span_expectation_id"
+    t.integer "expectation_stem_id"
   end
 
   create_table "expectations", :force => true do |t|

@@ -33,6 +33,7 @@ Rails::Initializer.run do |config|
 # config.gem "haml", :version => '2.0.7'  
   config.gem "RedCloth", :version => '4.1.1'
   config.gem "uuidtools"
+  config.gem "hpricot"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
