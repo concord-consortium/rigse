@@ -1,3 +1,4 @@
+*~
 log/*.log
 tmp/**/*
 .DS_Store
@@ -6,3 +7,4 @@ doc/app
 coverage
 db/*.sqlite3
 config/database.yml
+config/initializewrs/site_keys.rb
