@@ -1,0 +1,19 @@
+ActsAsReplicatable
+==================
+
+Specify this act if you want to be able to replicate models from one instance of this web application to another.
+But ... so far all this plugin does is create and save a uuid for model instances.
+
+Example
+=======
+
+You need to add a uuid attribute (string, limit=36) to the models you use this plugin with.
+
+  t.column :uuid, :string, :limit => 36
+
+Then in the model definition add:
+
+  acts_as_replicatable
+
+Copyright (c) 2008 Concord Consortium, released under the MIT license
+Written by Stephen Bannasch

@@ -22,7 +22,18 @@ class User < ActiveRecord::Base
   
   # Relationships
   has_and_belongs_to_many :roles
+  has_many :activities
+  has_many :assessment_targets
+  has_many :big_ideas
+  has_many :domains
+  has_many :expectations
+  has_many :expectation_stems
+  has_many :grade_span_expectations
+  has_many :knowledge_statements
+  has_many :unifying_themes
 
+  acts_as_replicatable
+  
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
@@ -32,6 +43,10 @@ class User < ActiveRecord::Base
   def self.authenticate(login, password)
     u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
     u && u.authenticated?(password) ? u : nil
+  end
+  
+  def name
+    "#{first_name} #{last_name}"
   end
   
   # Check if a user has a role.

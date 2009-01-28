@@ -1,20 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :activities
-
   map.resources :big_ideas
-
   map.resources :unifying_themes
-
   map.resources :expectations
-
   map.resources :expectation_stems
-
   map.resources :grade_span_expectations
-
   map.resources :assessment_targets
-
   map.resources :knowledge_statements
-
   map.resources :domains
  
   # Restful Authentication Rewrites
@@ -34,7 +26,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
   
   # Home Page
-  map.root :controller => 'sessions', :action => 'new'
+  map.home '/home', :controller => 'home', :action => 'index'
+  map.root :controller => 'home', :action => 'index'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

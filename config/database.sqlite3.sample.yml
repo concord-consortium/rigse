@@ -8,7 +8,7 @@ development:
   # Mysql Settings
   # adapter: mysql
   # encoding: utf8
-  # database: bort_development
+  # database: risge_development
   # username: root
   # password:
   # pool: 5
@@ -23,7 +23,7 @@ test:
   # Mysql Settings
   # adapter: mysql
   # encoding: utf8
-  # database: bort_test
+  # database: risge_test
   # username: root
   # password:
   # pool: 5
@@ -38,7 +38,7 @@ staging:
   # Mysql Settings
   # adapter: mysql
   # encoding: utf8
-  # database: bort_staging
+  # database: risge_staging
   # username: root
   # password:
   # pool: 5
@@ -53,7 +53,7 @@ production:
   # Mysql Settings
   # adapter: mysql
   # encoding: utf8
-  # database: bort_production
+  # database: risge_production
   # username: root
   # password:
   # pool: 5
