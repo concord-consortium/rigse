@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20090127220427) do
   create_table "roles", :force => true do |t|
     t.string  "title"
     t.integer "position"
+    t.string  "uuid",     :limit => 36
   end
 
   create_table "roles_users", :id => false, :force => true do |t|
@@ -153,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20090127220427) do
     t.datetime "remember_token_expires_at"
     t.datetime "activated_at"
     t.datetime "deleted_at"
+    t.string   "uuid",                      :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
   end
