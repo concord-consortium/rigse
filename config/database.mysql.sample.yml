@@ -1,0 +1,35 @@
+development:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
+  encoding: utf8
+  database: risge_development
+  username: root
+  password:
+  pool: 5
+  
+test:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
+  encoding: utf8
+  database: risge_test
+  username: root
+  password:
+  pool: 5
+  
+staging:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
+  encoding: utf8
+  database: risge_staging
+  username: root
+  password:
+  pool: 5
+  
+production:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
+  encoding: utf8
+  database: risge_production
+  username: root
+  password:
+  pool: 5
