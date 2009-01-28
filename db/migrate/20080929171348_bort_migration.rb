@@ -38,6 +38,7 @@ class BortMigration < ActiveRecord::Migration
       t.datetime :remember_token_expires_at
       t.datetime :activated_at
       t.datetime :deleted_at
+      t.column :uuid, :string, :limit => 36
       t.timestamps
     end
     
@@ -55,6 +56,7 @@ class BortMigration < ActiveRecord::Migration
     create_table :roles do |t|
       t.string :title
       t.integer :position
+      t.column :uuid, :string, :limit => 36
     end
     
     create_table :roles_users, :id => false do |t|
