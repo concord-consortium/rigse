@@ -47,11 +47,15 @@
         #side-bar
           .lighter_background
             %p.sideBarTitle
-              %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
-                More about RITES project
+              = link_to '&#187; Home', home_path
+            %p.sideBarTitle
+              = link_to '&#187; Activities', activities_path
             %p
               %span.sideBarText
-                The Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide. The core partners are the University of Rhode Island, Rhode Island College, Johnston (RI) Public Schools, and the Rhode Island Department of Education. Supporting Partners include Brown University, the Community College of Rhode Island, the Rhode Island Economic Development Corporation, and the Concord Consortium. The Education Alliance at Brown University will evaluate the project. 
+                Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
+            %p.sideBarTitle
+              %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
+                More about RITES project
           %div
             %p.sideBarTitle
               Validation
@@ -86,7 +90,7 @@
           = mail_to("stephen@concord.org", "Send us an email", :subject => "diy question", :encode => "javascript")
         .right
           footer text on the right
-  = javascript_include_tag "tinymce/tiny_mce"
+  = javascript_include_tag "tiny_mce/tiny_mce"
   %script{ :type => "text/javascript" }
     tinyMCE.init({
     mode : "textareas",
