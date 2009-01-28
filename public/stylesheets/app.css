@@ -173,8 +173,8 @@ body {
     color: #51a656;
     background-color: parent;
     text-decoration: none;
-    margin: 0;
-    padding: 0.75em 1ex 0.75em 5mm;
+    margin: 0em 0.5em 0em 0em;
+    padding: 0.2em;
     display: block; }
   #side-bar .sideBarText {
     line-height: 1.5em;
@@ -221,7 +221,7 @@ body {
   margin-bottom: 0em;
   margin-left: 15em;
   padding: 0em 1em 0em 2em;
-  border-left: 1px solid;
+  border-left: 0px solid;
   border-color: #999999; }
   #main_content .top_of_page {
     color: white;
