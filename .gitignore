@@ -7,4 +7,5 @@ doc/app
 coverage
 db/*.sqlite3
 config/database.yml
-config/initializewrs/site_keys.rb
+config/initializers/site_keys.rb
+config/mailer.yml
