@@ -3,27 +3,11 @@
 <table>
   <tr>
     <th>Title</th>
-    <th>Context</th>
-    <th>Opportunities</th>
-    <th>Objectives</th>
-    <th>Procedures opening</th>
-    <th>Procedures engagement</th>
-    <th>Procedures closure</th>
-    <th>Assessment</th>
-    <th>Reflection</th>
   </tr>
 
 <% for activity in @activities %>
   <tr>
     <td><%=h activity.title %></td>
-    <td><%=h activity.context %></td>
-    <td><%=h activity.opportunities %></td>
-    <td><%=h activity.objectives %></td>
-    <td><%=h activity.procedures_opening %></td>
-    <td><%=h activity.procedures_engagement %></td>
-    <td><%=h activity.procedures_closure %></td>
-    <td><%=h activity.assessment %></td>
-    <td><%=h activity.reflection %></td>
     <td><%= link_to 'Show', activity %></td>
     <td><%= link_to 'Edit', edit_activity_path(activity) %></td>
     <td><%= link_to 'Destroy', activity, :confirm => 'Are you sure?', :method => :delete %></td>
