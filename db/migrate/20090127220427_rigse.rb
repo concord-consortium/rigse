@@ -10,7 +10,7 @@ class Rigse < ActiveRecord::Migration
     create_table :knowledge_statements do |t|
       t.integer :domain_id
       t.integer :number
-      t.string  :statement
+      t.string  :description
       t.column :uuid, :string, :limit => 36
       t.timestamps
     end
@@ -20,7 +20,7 @@ class Rigse < ActiveRecord::Migration
       t.integer :knowledge_statement_id
       t.integer :unifying_theme_id
       t.integer :number
-      t.string  :target
+      t.string  :description
       t.string  :grade_span
       t.column :uuid, :string, :limit => 36
       t.timestamps
@@ -47,7 +47,7 @@ class Rigse < ActiveRecord::Migration
     create_table :expectations do |t|
       t.integer :expectation_stem_id
       t.string  :ordinal
-      t.string  :expectation
+      t.string  :description
       t.column :uuid, :string, :limit => 36
       t.timestamps
     end
@@ -61,7 +61,7 @@ class Rigse < ActiveRecord::Migration
 
     create_table :big_ideas do |t|
       t.integer :unifying_theme_id
-      t.string  :idea
+      t.string  :description
       t.column :uuid, :string, :limit => 36
       t.timestamps
     end

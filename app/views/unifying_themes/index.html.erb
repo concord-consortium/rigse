@@ -6,9 +6,11 @@
 
 <% for unifying_theme in @unifying_themes %>
   <tr>
+    <td><%=h unifying_theme.key %></td>
+    <td><%=h unifying_theme.name %></td>
     <td><%= link_to 'Show', unifying_theme %></td>
     <td><%= link_to 'Edit', edit_unifying_theme_path(unifying_theme) %></td>
-    <td><%= link_to 'Destroy', unifying_theme, :confirm => 'Are you sure?', :method => :delete %></td>
+    <!-- <td><%= link_to 'Destroy', unifying_theme, :confirm => 'Are you sure?', :method => :delete %></td> -->
   </tr>
 <% end %>
 </table>
