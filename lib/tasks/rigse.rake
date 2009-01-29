@@ -152,7 +152,7 @@ HEREDOC
           u.activate!
           role_title = user_config[1]['role']
           if role_title
-            Role.find_by_title(role_title)
+            role = Role.find_by_title(role_title)
             u.roles << role
           end
         end
