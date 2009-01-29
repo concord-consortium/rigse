@@ -93,7 +93,6 @@ class Parser
   end
   
   def import_enduring_knowledge (table)
-    puts "======== importing enduring knowledge "
     domain_keys = Domain.find(:all).map { |domain| domain.key }
     regex = /^#{domain_keys.join("|")}/
     eks = (table/:tr).collect { | row |  (row/:td).inner_text.strip }
@@ -132,7 +131,6 @@ class Parser
   #
   #
   def import_unifying_themes(table)
-    puts "======== importing unifying themes "
     relevent_columns = ((table/:tr)[2]/:td).collect { |td| td.inner_text.strip }
     relevent_columns.each { | column | 
       entries = column.split(/\n+/)
@@ -141,7 +139,6 @@ class Parser
       theme = UnifyingTheme.find_by_name(entries[0])
       if (theme)
         (1..(entries.size-1)).each do |i|        
-          puts "========>#{entries[i]}|"
           big_idea = BigIdea.new
           big_idea.description = entries[i]
           big_idea.unifying_theme = theme 
