@@ -1,54 +1,16 @@
 require 'rake'
 require 'hpricot'
-namespace :importer do
-  load 'config/environment.rb'
+
+namespace :setup do
+ 
   #
   #
   #
-  desc 'sample thing for noa'
+  desc 'import grade span expectations from file config/rigse_data.xhtml'
   task :import_from_file do
+    load 'config/environment.rb'
     parser = Parser.new
     parser.parse("config/rigse_data.xhtml")
-  end
-  
-  namespace :install do
-    # nothing
-  end
-  
-  #
-  #
-  #
-  desc 'create the learning domains for risge'
-  task :make_domains do
-    domains = [
-      ["Life Science", "LS"],
-      ["Earth and Space Science","ESS"],
-      ["Physical Science", "PS"]]
-
-    domains.collect { |d|
-      d = Domain.new(:key => d[1], :name => d[0])
-      d.save
-    }
-  end
-
-  #
-  #
-  #
-  desc 'make the unifying themes for risge'
-  task :make_themes do
-    unifying_themes = [
-      ["INQ", "Scientific Inquiry"],
-      ["NOS", "Nature of Science"],
-      ["SAE", "Systems & Energy"],
-      ["MOS", "Models & Scale"],
-      ["POC", "Patterns of Change"],
-      ["FOF", "Form & Function"]
-    ]
-
-    unifying_themes.collect { |t|
-      theme = UnifyingTheme.new(:key => t[0], :name => t[1])
-      theme.save
-    }
   end
 
 end
