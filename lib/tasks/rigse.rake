@@ -61,6 +61,7 @@ HEREDOC
         Rake::Task['db:migrate'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
+        Rake::Task['rigse:setup:import_from_file'].invoke
   
         puts <<HEREDOC
 
@@ -111,25 +112,17 @@ HEREDOC
     # Here's an example of how to create and additional_users.yml file:
     #
     # additional_users = { "stephen" =>
-    #   { "salt"=>"6a0172c1678bf48badba84cdc0ba6be3071583ae", 
-    #     "crypted_password"=>"7e11934911cee011e26eaece4b4ca5de58141728", 
-    #     "role"=>"admin", 
+    #   { "role"=>"admin", 
     #     "first_name"=>"Stephen", 
     #     "last_name"=>"Bannasch", 
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
-    # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(contacts, f)}
+    # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
     # 
-    # One way to create salt and crypted_password values for a user is to
-    # perform the following operations in script/console with any valid user object:
+    # The additional users will be created but each one will need to go to the
+    # forgot password link to actually get a working password:
     #
-    #   salt = User.make_token
-    #   crypted_password = user.encrypt('passwd')
-    #
-    # The salt is based on the REST_AUTH_SITE_KEY which is normally different
-    # for development and production deployment environments. The values for salt
-    # and crypted_password should be calculated using the REST_AUTH_SITE_KEY in
-    # the desired deployment environment.
+    #   http://rigse-dev.concord.org/rigse/forgot_password
     #
     desc "Create additional users from additional_users.yml file."
     task :create_additional_users => :environment do
@@ -137,17 +130,16 @@ HEREDOC
         path = File.join(RAILS_ROOT, %w{config additional_users.yml})
         additional_users = YAML::load(IO.read(path))
         puts "\nCreating additional users ...\n\n"
+        pw = User.make_token
         additional_users.each do |user_config|
           puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['email']}"
           u = User.create(:login => user_config[0], 
             :first_name => user_config[1]['first_name'], 
             :last_name => user_config[1]['last_name'], 
             :email => user_config[1]['email'], 
-            :password => "password", 
-            :password_confirmation => "password")
+            :password => pw, 
+            :password_confirmation => pw)
           u = User.find_by_login(user_config[0])
-          u.update_attribute('crypted_password', user_config[1]['crypted_password'])
-          u.update_attribute('salt', user_config[1]['salt'])
           u.register!
           u.activate!
           role_title = user_config[1]['role']
@@ -156,7 +148,7 @@ HEREDOC
             u.roles << role
           end
         end
-        puts "\n\n"
+        puts "\n"
       rescue SystemCallError => e
         # puts e.class
         # puts "#{path} not found"

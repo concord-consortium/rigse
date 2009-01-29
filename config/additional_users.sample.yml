@@ -1,7 +1,5 @@
 ---
 stephen: 
-  salt: 6a0172c1678bf48badba84cdc0ba6be3071583ae
-  crypted_password: 7e11934911cee011e26eaece4b4ca5de58141728
   first_name: Stephen
   last_name: Bannasch
   email: stephen.bannasch@gmail.com
