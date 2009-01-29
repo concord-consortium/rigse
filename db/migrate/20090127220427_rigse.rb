@@ -71,11 +71,11 @@ class Rigse < ActiveRecord::Migration
     drop_table :domains
     drop_table :knowledge_statements
     drop_table :assessment_targets
-    drop_table :grade_span_expectations 
+    drop_table :grade_span_expectations
+    drop_table :expectation_stems_grade_span_expectations
     drop_table :expectation_stems 
     drop_table :expectations
     drop_table :unifying_themes 
     drop_table :big_ideas
-    t.column :uuid, :string, :limit => 36
   end
 end
