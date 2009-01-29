@@ -55,13 +55,19 @@ namespace :rigse do
       
       puts <<HEREDOC
 
-You can now start the RI-GSE by running this command:
+You can now start RI-GSE in develelopment mode by running this command:
 
   script/server
 
-You can re-edit the configuration parameters by running:
+You can re-edit the initial configuration parameters by running the
+setup script again:
 
   ruby config/setup.rb
+
+You can re-create the database from scratch and setup default users 
+again by running this rake task again:
+
+  rake rigse:setup:new_rigse_from_scratch
   
 HEREDOC
 
