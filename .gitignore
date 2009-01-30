@@ -11,3 +11,4 @@ config/initializers/site_keys.rb
 config/mailer.yml
 db/schema.rb
 config/additional_users.yml
+public/images/0*
