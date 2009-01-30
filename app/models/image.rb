@@ -1,18 +1,16 @@
 class Image < ActiveRecord::Base
   belongs_to :user
-#  has_attachment :content_type => :image, 
-#                :storage => :file_system, 
-#                :size => 0.kilobytes..1000.kilobytes,
-#                :resize_to => '320x200>',
-#                :thumbnails => { :thumb => '100x100>' }
-#  validates_as_attachment
+  has_attachment :content_type => :image, 
+                :storage => :file_system, 
+                :size => 0.kilobytes..1000.kilobytes,
+                :resize_to => '320x200>',
+                :thumbnails => { :thumb => '100x100>' }
+  validates_as_attachment
 
-  include Changeable
-  
   def self.find_all_unprocessed
     self.find(:all, :conditions => "parent_id is NULL")
   end
-  
+
   # see: http://significantbits.wordpress.com/2007/04/06/using-attachment_fu-by-techno-weenie-to-add-image-attachment-support-to-your-rails-application/
   def source_url=(url)
     return nil if not url
