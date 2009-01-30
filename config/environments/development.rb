@@ -16,10 +16,6 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-# Restful Authentication
-REST_AUTH_SITE_KEY = '115d54d0-ec9b-11dd-bad2-001ff3caa767'
-REST_AUTH_DIGEST_STRETCHES = 10
-
 # textmate-footnotes
 # Rails errors displayed in browser are generated with links to textmate
 # see: http://wiki.github.com/josevalim/rails-footnotes

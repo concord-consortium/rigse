@@ -22,7 +22,3 @@ config.action_controller.perform_caching             = true
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
-
-# Restful Authentication
-REST_AUTH_SITE_KEY = '1f278770-ec9b-11dd-bad2-001ff3caa767'
-REST_AUTH_DIGEST_STRETCHES = 10
