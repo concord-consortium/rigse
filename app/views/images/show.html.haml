@@ -1,0 +1,29 @@
+= if @image.image?
+  = link_to image_tag(@image.public_filename(:thumb)), @image.public_filename
+%br
+(
+= link_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+
+%p
+  %bContent type:
+  =h @image.content_type
+
+%p
+  %b Filename:
+  =h @image.filename
+
+%p
+  %b Size:
+  =h number_to_human_size @image.size
+
+%p
+  %b Width:
+  =h @image.width
+
+%p
+  %b Height:
+  =h @image.height
+
+
+= link_to 'Edit', edit_image_path(@image) |
+= link_to 'Back', images_path

@@ -1,0 +1,10 @@
+.menu
+  %ul
+    %li Listing Images:
+    %li
+      = link_to 'Upload new image', new_image_path
+
+.item_collection
+  %ul.item_array
+    = for image in @images
+      = render(:partial => "shared/image_item", :object => image)
