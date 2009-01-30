@@ -1,6 +1,18 @@
 class ActivitiesController < ApplicationController
   # GET /activities
   # GET /activities.xml
+  
+  prawnto :prawn=>{
+    :page_layout=>:landscape,
+    :tags => {
+      :h1 => { :font_size => "3em", :font_weight => :bold },
+      :h2 => { :font_size => "2.5em", :font_style => :italic },
+      :h3 => { :font_size => "2em", :font_style => :italic },
+      :h4 => { :font_size => "1.5em", :font_style => :italic },
+      :p => { :font_size => "1.0em" }
+    }  
+  }
+  
   def index
     @activities = Activity.find(:all)
 
@@ -18,6 +30,7 @@ class ActivitiesController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @activity }
+      format.pdf {render :layout => false }
     end
   end
 

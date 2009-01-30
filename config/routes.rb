@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :images
+
   map.resources :activities
   map.resources :big_ideas
   map.resources :unifying_themes

@@ -34,6 +34,8 @@ Rails::Initializer.run do |config|
   config.gem "RedCloth", :version => '4.1.1'
   config.gem "uuidtools"
   config.gem "hpricot"
+  config.gem "prawn", :version => '0.4.1'
+  # config.gem "prawn-format"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -79,3 +81,6 @@ Rails::Initializer.run do |config|
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   config.active_record.observers = :user_observer
 end
+
+require 'prawn'
+require 'prawn/format'

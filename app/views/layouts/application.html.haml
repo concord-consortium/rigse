@@ -34,6 +34,7 @@
               = link_to 'Signup', signup_path
         #mid_header
           .logo
+            = link_to image_tag('rites.gif', :size => "70x70"), "http://rites.concord.org"
           %h1
             RITES Activity Template
         #sub_header.horiz_band
@@ -56,12 +57,14 @@
               = link_to '&#187; Unifying Themes', unifying_themes_path
             %p.sideBarTitle
               = link_to '&#187; Grade Span Expectations', grade_span_expectations_path
+            %p.sideBarTitle
+              = link_to '&#187; Images', images_path
             %p
               %span.sideBarText
                 Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
             %p.sideBarTitle
               %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
-                More about RITES project
+                RITES Project Wiki
           %div
             %p.sideBarTitle
               Validation
@@ -76,13 +79,9 @@
         #content_header_container
           #content_header.horiz_band
             .left
-              %ul
-                %li
-                  Left Side
+              = yield :left_content_header
             .right
-              %ul
-                %li
-                  Right Side
+              = yield :right_content_header
         #main_content
           %p{ :style => "color: green" }
             = flash_messages
