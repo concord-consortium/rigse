@@ -49,12 +49,43 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
   
+  
   # Check if a user has a role.
-  def has_role?(role)
-    list ||= self.roles.map(&:name)
-    list.include?(role.to_s) || list.include?('admin')
+  #
+  # Returns True if User has one of the roles.
+  # False otherwize.
+  #
+  # You can pass in a sequence of strings:
+  #
+  #  user.has_role?("admin", "manager")
+  #
+  # or an array of strings:
+  #
+  #  user.has_role?(%w{admin manager})
+  #
+  def has_role?(*role_list)
+    (roles.map{ |r| r.title.downcase } & role_list.flatten).length > 0
+  end
+
+  def does_not_have_role?(*role_list)
+    !has_role?(role_list)
+  end
+
+  def make_user_a_member
+    roles << Role.find_by_title('member')
+  end
+
+  # is this user the anonymous user?
+  def anonymous?
+    self == ANONYMOUS_USER
   end
   
+  # class method for returning the anonymous user
+  def self.anonymous
+    ANONYMOUS_USER
+  end
+  
+
   # Not using open id
   def not_using_openid?
     identity_url.blank?

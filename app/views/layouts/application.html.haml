@@ -25,8 +25,9 @@
           .right
             %span.do_not_display
               Login and Registration:
-            - if logged_in?
-              Welcome: 
+            Welcome 
+            = "#{current_user.name}:"
+            - unless current_user.anonymous?
               = link_to 'Logout', logout_path
             - else
               = link_to 'Login', login_path
