@@ -18,7 +18,7 @@ end
 pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
   pdf.font "Helvetica" do
     pdf.stroke_horizontal_rule
-    pdf.text "And here's a sexy footer", :size => 16
+    pdf.text "And here's a footer", :size => 16
   end
 end
 
