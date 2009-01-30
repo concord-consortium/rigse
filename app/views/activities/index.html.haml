@@ -1,55 +1,32 @@
 = content_for(:left_content_header) do
   = link_to 'New activity', new_activity_path
-%h1
-  Listing activities
+
+= content_for(:right_content_header) do
+  - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+    %input{ :type => "submit", :value => "Search"}
+    = content_tag :label do
+      = text_field_tag :search, params[:search], :size => 35
+
+%h1 Activity List
+
+.paginator
+  = will_paginate @paginated_objects
+  - if @paginated_objects
+    = page_entries_info @paginated_objects
+
 .item_collection
   %ul.item_list
-    = for activity in @activities
+    - for activity in @activities
       .item
         .menu
           %ul
-            %li id:
-              = activity.id_to_s
+            %li
+              = activity.id.to_s
+            %li
+              = activity.title
             %li
               = link_to 'Show', activity
             %li
               = link_to 'Edit', edit_activity_path(activity)
-            
-%table
-  %tr
-    %th
-      Title
-  - for activity in @activities
-    %tr
-      %td
-        = h activity.title
-      %td
-        = link_to 'Show', activity
-      %td
-        = link_to 'Edit', edit_activity_path(activity)
-    /
-      <td><haml:loud> link_to 'Destroy', activity, :confirm =&amp;gt; 'Are you sure?', :method =&amp;gt; :delete </haml:loud></td>
-
-a
-<div class='item_collection'>
-  <ul class='item_list'>
-    <% for page_html in @page_htmls %>
-      <div class='item'>
-        <div class="menu">
-          <ul>
-            <li>id: <%= page_html.id.to_s %></li>
-            <li><%= link_to 'Show', page_html %></li>
-            <li><%= link_to 'Edit', edit_page_html_path(page_html) %></li>
-            <li><%= link_to 'Delete', page_html, :confirm => 'Are you sure?', :method => :delete %></li>
-            <% if current_user.localization.locale != 'en-US' && page_html.body_not_translated? %> 
-              <li><%= link_to "Translate to #{current_user.localization.english_name} using Babelfish",  translate_page_html_path(page_html) %></li>
-            <% end %>
-          </ul>
-        </div>
-        <div class='content'>
-          <%= render(:partial => "shared/html_content", :object => page_html) %>
-        </div>
-      </div>
-    <% end %>
-  </ul>
-<div>
+        .content
+          = truncate(activity.context, 120)
