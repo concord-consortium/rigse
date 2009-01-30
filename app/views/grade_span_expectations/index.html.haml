@@ -1,0 +1,21 @@
+%h1 Grade Span Expectation List
+.item_collection
+  %ul.item_list
+    -  for grade_span_expectation in @grade_span_expectations
+      - assessment_target = grade_span_expectation.assessment_target
+      .item
+        .menu
+          %ul
+            %li
+              Grade Span: 
+              = grade_span_expectation.grade_span
+              ,
+            %li
+              Assessment Target: 
+              number:
+              = assessment_target.number
+              ,
+              grade span:
+              = assessment_target.grade_span
+        .content
+          = assessment_target.description
