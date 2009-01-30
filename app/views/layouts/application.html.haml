@@ -26,7 +26,7 @@
             %span.do_not_display
               Login and Registration:
             Welcome 
-            = "#{current_user.name}:"
+            = "#{current_user.name},"
             - unless current_user.anonymous?
               = link_to 'Logout', logout_path
             - else
