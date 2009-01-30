@@ -37,14 +37,55 @@ namespace :rigse do
 
   namespace :setup do
     
+    require 'uuidtools'
+    require 'highline/import'
+    require 'fileutils'
+    
+    def rails_file_path(*args)
+      File.join([RAILS_ROOT] + args)
+    end
+    
+    
     desc "Raise an error unless the RAILS_ENV is development"
     task :development_environment_only do
       raise "Hey, development only you monkey!" unless RAILS_ENV == 'development'
     end
+    
+    desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
+    task :regenerate_rest_auth_site_key => :environment do
+      
+      puts <<HEREDOC
+
+This task will re-generate a REST_AUTH_SITE_KEY and update
+the file config/initializers/site_keys.rb.
+
+Completing this will invalidate existing passwords. Users will
+need to complete the "forgot password" process to revalidate
+their passwords even though their actual password hasn't changed.
+
+If the application is running it will need to be restarted for
+this change to take effect.
+
+HEREDOC
+      
+      if agree("Do you want to do this?  (y/n)", true)
+        site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
+        site_key = UUID.timestamp_create().to_s
+
+        site_keys_rb = <<HEREDOC
+REST_AUTH_SITE_KEY = '#{site_key}'
+REST_AUTH_DIGEST_STRETCHES = 10
+HEREDOC
+
+        File.open(site_keys_path, 'w') {|f| f.write site_keys_rb }
+        FileUtils.chmod 0660, site_keys_path
+      end
+    end
+    
 
     desc "setup a new rigse instance"
     task :new_rigse_from_scratch => :environment do
-      require 'highline/import'
+      
       puts <<HEREDOC
 
 This task will drop your extsing rigse database, rebuild it from scratch, 
@@ -160,15 +201,19 @@ HEREDOC
 
       puts <<HEREDOC
 
-This task creates four roles (if they don't already exist):
+This task creates seven roles (if they don't already exist):
 
   admin
+  manager
   researcher
+  teacher
   member
+  student
   guest
 
-In addition it create three new default users with these logins:
+In addition it create four new default users with these login names:
 
+  anonymous
   admin
   researcher
   member
@@ -178,10 +223,14 @@ You can edit the default settings for these users.
 HEREDOC
 
       admin_role = Role.find_or_create_by_title('admin')
+      manager_role = Role.find_or_create_by_title('manager')
       researcher_role = Role.find_or_create_by_title('researcher')
+      teacher_role = Role.find_or_create_by_title('teacher')
       member_role = Role.find_or_create_by_title('member')
+      student_role = Role.find_or_create_by_title('student')
       guest_role = Role.find_or_create_by_title('guest')
 
+      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
       admin_user = User.create(:login => "admin", :email => "admin@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Admin", :last_name => "User")
       researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
       member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
