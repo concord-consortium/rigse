@@ -1,6 +1,17 @@
 class Activity < ActiveRecord::Base
   belongs_to :user
   acts_as_replicatable
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{title context opportunities objectives procedures_opening procedures_engagement procedures_closure assessment reflection}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+  
 
   default_value_for :procedures_opening, <<HEREDOC
   <h3>Procedures</h3>  

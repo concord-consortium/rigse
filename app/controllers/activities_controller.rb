@@ -6,6 +6,26 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   
+  before_filter :setup_object, :except => [:index]
+  
+  protected
+  
+  def setup_object
+    if params[:id]
+      if params[:id].length == 36
+        @activity = Activity.find(:first, :conditions => ['uuid=?',params[:id]])
+      else
+        @activity = Activity.find(params[:id])
+      end
+    elsif params[:activity]
+      @activity = Activity.new(params[:activity])
+    else
+      @activity = Activity.new
+    end
+  end
+  
+  public
+  
   def index
     # @activities = Activity.find(:all)
     @activities = Activity.search(params[:search], params[:page], self.current_user)

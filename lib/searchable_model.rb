@@ -37,8 +37,10 @@ module SearchableModel
     if user.has_role?("admin", "manager") || self == User
       sql_conditions = ""
     else
-      sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
-      sql_parameters << user.id
+      # re-enable this or something like this after dealing with asset visibility attributes
+      # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
+      sql_conditions = ""
+      # sql_parameters << user.id
     end
     # debugger
     sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
