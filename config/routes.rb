@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :unifying_themes
   map.resources :expectations
   map.resources :expectation_stems
-  map.resources :grade_span_expectations
+  map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
   map.resources :assessment_targets
   map.resources :knowledge_statements
   map.resources :domains

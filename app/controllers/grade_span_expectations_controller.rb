@@ -1,8 +1,22 @@
 class GradeSpanExpectationsController < ApplicationController
+
+  # PUT /grade_span_expectations/reparse_gses
+  def reparse_gses
+    parser = Parser.new
+    respond_to do |format|
+      flash[:notice] = 'Grade Span Expectations reparsed from rigse_data.xhtml'
+      format.html { redirect_to :action => 'index' }
+      format.xml  { head :ok }
+    end    
+  end
+  
   # GET /grade_span_expectations
   # GET /grade_span_expectations.xml
   def index
-    @grade_span_expectations = GradeSpanExpectation.find(:all)
+    # @grade_span_expectations = GradeSpanExpectation.find(:all, :include => :assessment_target)
+
+    @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user)
+    @paginated_objects = @grade_span_expectations
 
     respond_to do |format|
       format.html # index.html.erb

@@ -10,7 +10,7 @@ namespace :rigse do
     task :import_from_file do
       load 'config/environment.rb'
       parser = Parser.new
-      parser.parse("config/rigse_data.xhtml")
+      parser.parse(File.join [RAILS_ROOT] + %w{config rigse_data.xhtml})
     end
   end
 end
