@@ -17,4 +17,13 @@ module ApplicationHelper
     messages
   end
   
+  # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
+  def check_box_tag_new(name, value = "1", options = {})
+    html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
+    unless html_options["check"].nil?
+      html_options["checked"] = "checked" if html_options["check"].to_i == 1
+    end
+    tag :input, html_options
+  end
+
 end

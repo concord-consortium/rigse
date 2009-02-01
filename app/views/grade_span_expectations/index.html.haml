@@ -1,9 +1,10 @@
 %h1 Grade Span Expectations
 - content_for(:left_content_header) do
   %ul
-    %li
-      - form_tag reparse_gses_grade_span_expectations_path, :method => :put do
-        %input{ :type => "submit", :value => "Re-parse orginal GSE document"}
+    - if RAILS_ENV == "development"
+      %li
+        - form_tag reparse_gses_grade_span_expectations_path, :method => :put do
+          %input{ :type => "submit", :value => "Re-parse orginal GSE document"}
 
 - content_for(:right_content_header) do
   %ul
