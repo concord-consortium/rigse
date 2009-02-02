@@ -5,6 +5,12 @@ require 'yaml'
 ####################################################################
 class Parser
   
+  
+  def initialize
+    @domains = {}
+    @themes = {}
+  end
+    
   #
   #
   #
@@ -31,7 +37,7 @@ class Parser
       Expectation,
       UnifyingTheme, 
       BigIdea]
-    classes_to_clean.each { | c| c.delete_all }
+    classes_to_clean.each { | c| c.destroy_all }
   end
   
   #
@@ -42,6 +48,7 @@ class Parser
     data.keys.each do |key| 
       d = Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
+      @domains[key] = d
     end
   end
 
@@ -53,6 +60,7 @@ class Parser
     data.keys.each do |key|
       theme = UnifyingTheme.find_or_create_by_key(:key => key, :name => data[key])
       theme.save
+      @themes[key] = theme
       end
     end
   
@@ -94,7 +102,7 @@ class Parser
   #
   def parse_knowledge_statement(text)
     knowledge_statement = nil
-    regex = /(\w+?)\s*([0-9])(.*)/mi
+    regex = /([A-Z]+)\s?([0-9])(.*)/mi
     matches = text.match(regex)
     if (matches)
       (domain_key,number,statement) = matches.captures
@@ -104,9 +112,11 @@ class Parser
           :first, 
           :conditions => { :domain_id => domain.id, :number => number }
         )
-        unless(knowledge_statement)
-          knowledge_statement = KnowledgeStatement.new(:domain => domain, :number => number)
+        unless (knowledge_statement)
+          knowledge_statement=KnowledgeStatement.new
         end
+        knowledge_statement.domain = domain
+        knowledge_statement.number = number
         knowledge_statement.description = statement
         knowledge_statement.save
       end
@@ -174,25 +184,32 @@ class Parser
   #
   def parse_assesment_target(text)
     assessment_target = nil
-    # unifying_theme_regex = 
-    regex = /([A-Z]+)\s*([0-9])\s*\?*\s*\(([K|0-9].{1,5}[K|0-9])\s*\).{1,5}([A-Z| |\+]+).{1,5}?([0-9|Ext|ext|EXT])(.*)/mi
+    ut_regex = @themes.keys.join("|")
+    domain_regex = @domains.keys.join("|")
+    space_or_dashes = "[\s|-|–|-]+"
+    regex = /(#{domain_regex})\s*([0-9]+)\s*\(\s*([K|0-9][ |-|–|-][K|0-9]+)\s*\)[ |-|–|-]+((#{ut_regex})[\s|\+])*[ |-|–|-]+(.*)/mix
+    
     matches = text.match(regex)
     if (matches)
       (domain_key,ek_key,grade_span,unifying_theme_key,number,target) = matches.captures
+    
+      
+      themes = unifying_theme_key.split(' +');
+      themes.map { |theme| theme.gsub!("+","") }
+      unifying_theme_key = themes[0]
 
-      domain = Domain.find_by_key(domain_key)
+      domain = @domains[domain_key.strip]
+
       if (domain)
         knowledge_statement = KnowledgeStatement.find(
           :first, 
-          :conditions => { :domain_id => domain.id, :number => number })
+          :conditions => { :domain_id => domain.id, :number => ek_key })
       else
         puts "could not find domain for #{domain_key}"
       end
 
       assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
-      unifying_theme = UnifyingTheme.find(
-        :first,
-        :conditions => {:key => unifying_theme_key})
+      unifying_theme = @themes[unifying_theme_key.strip]
       if (unifying_theme)
         assessment_target.unifying_theme = unifying_theme
       else
