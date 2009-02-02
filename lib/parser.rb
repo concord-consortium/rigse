@@ -104,8 +104,10 @@ class Parser
     knowledge_statement = nil
     regex = /([A-Z]+)\s?([0-9])(.*)/mi
     matches = text.match(regex)
+    
     if (matches)
       (domain_key,number,statement) = matches.captures
+      puts "domain: #{domain_key} number: #{number} statement: #{statement}"
       domain = Domain.find_by_key(domain_key)
       if (domain)
         knowledge_statement = KnowledgeStatement.find(
