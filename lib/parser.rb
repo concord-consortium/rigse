@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'yaml'
 ####################################################################
 # Parser --
 ####################################################################
@@ -36,51 +37,30 @@ class Parser
   #
   #
   #
-  def make_domains
-    domains = [
-      ["Life Science", "LS"],
-      ["Earth and Space Science","ESS"],
-      ["Physical Science", "PS"]]
-
-    domains.collect { |d|
-      # d = Domain.find_or_create(:key => d[1], :name => d[0])
-      d = Domain.find_or_create_by_key(:key => d[1], :name => d[0])
+  def make_domains(domain_yaml)
+    data = YAML::load(File.open(domain_yaml))
+    data.keys.each do |key| 
+      d = Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
-    }
+    end
   end
 
   #
   #
   #
-  def make_themes
-    unifying_themes = [
-      ["INQ", "Scientific Inquiry"],
-      ["NOS", "Nature of Science"],
-      ["SAE", "Systems & Energy"],
-      ["MOS", "Models & Scale"],
-      ["POC", "Patterns of Change"],
-      ["FOF", "Form & Function"]
-    ]
-    unifying_themes.collect { |t|
-      # theme = UnifyingTheme.find_or_create(:key => t[0], :name => t[1])
-      theme = UnifyingTheme.find_or_create_by_key(:key => t[0], :name => t[1])
+  def make_themes(theme_yaml)
+    data = YAML::load(File.open(theme_yaml))
+    data.keys.each do |key|
+      theme = UnifyingTheme.find_or_create_by_key(:key => key, :name => data[key])
       theme.save
-    }
-  end
+      end
+    end
   
   
   # Parse a xhtml file looking for 
   # table_heading_regex to seperate 
   #
   def parse(path)
-    #
-    # first import the domains if they do not exist
-    #
-    remove_old_data
-    make_domains
-    make_themes
-    
-    match_expression = /Table(\d+)_([A-Z][0-9])/i
     doc = Hpricot(open(path))
     table_number = 0
     
@@ -96,6 +76,7 @@ class Parser
       end
     end
   end
+  
   
   #
   #
@@ -193,23 +174,30 @@ class Parser
   #
   def parse_assesment_target(text)
     assessment_target = nil
+    # unifying_theme_regex = 
     regex = /([A-Z]+)\s*([0-9])\s*\?*\s*\(([K|0-9].{1,5}[K|0-9])\s*\).{1,5}([A-Z| |\+]+).{1,5}?([0-9|Ext|ext|EXT])(.*)/mi
     matches = text.match(regex)
     if (matches)
       (domain_key,ek_key,grade_span,unifying_theme_key,number,target) = matches.captures
 
       domain = Domain.find_by_key(domain_key)
-      
-      knowledge_statement = KnowledgeStatement.find(
-        :first, 
-        :conditions => { :domain_id => domain.id, :number => number })
-     
+      if (domain)
+        knowledge_statement = KnowledgeStatement.find(
+          :first, 
+          :conditions => { :domain_id => domain.id, :number => number })
+      else
+        puts "could not find domain for #{domain_key}"
+      end
+
+      assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
       unifying_theme = UnifyingTheme.find(
         :first,
         :conditions => {:key => unifying_theme_key})
-
-      assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
-      assessment_target.unifying_theme = unifying_theme
+      if (unifying_theme)
+        assessment_target.unifying_theme = unifying_theme
+      else
+        puts "could not find unifying theme that matches: #{unifying_theme_key}"
+      end
       assessment_target.description = target
       assessment_target.grade_span = grade_span
       assessment_target.save
