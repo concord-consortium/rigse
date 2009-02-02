@@ -1,10 +1,10 @@
 require 'open-uri'
 require 'yaml'
+require 'spreadsheet'
 ####################################################################
 # Parser --
 ####################################################################
 class Parser
-  
   
   def initialize
     @domains = {}
@@ -65,6 +65,35 @@ class Parser
     end
   
   
+  #
+  # use spreadsheet to pull in additional (incomplete) expectations
+  #
+  def parse_ri_goals_xls(path_to_xls)
+     spreadsheet = Spreadsheet.open path_to_xls
+     sheet = spreadsheet.worksheet 'Science'
+     domain_regex = @domains.keys.join("|")
+     regex = /(#{domain_regex})(\d+)\(([K|0-9]\s*[-|–]\s*[K|0-9]+)\)\s*[-|–]\s*([0-9]+)([a-b])(.*)/
+     sheet.each do |row| 
+       if (row[1])
+         begin
+           matches = (row[1]).match(regex) # we are only after column #2
+           if (matches) # PS3(9-11)-10b Comparing and contrasting electromagnetic waves to mechanical waves.
+              (domain_key,someNumber,grade_span,target_number,expectaton_ordinal,description) = matches.captures
+              if (domain_key)
+                if (domain_key !="PS") # we already have all of these
+                  expectation  = Expectation.new(:description => description, :ordinal => expectaton_ordinal)
+                  expectation.save
+                end
+              end
+            end
+          rescue
+            puts "WARN: problem reading #{row} / #{sheet}"
+          end
+        end
+     end
+  end
+  
+  
   # Parse a xhtml file looking for 
   # table_heading_regex to seperate 
   #
@@ -110,7 +139,6 @@ class Parser
     
     if (matches)
       (domain_key,number,statement) = matches.captures
-      puts "domain: #{domain_key} number: #{number} statement: #{statement}"
       domain = Domain.find_by_key(domain_key)
       if (domain)
         knowledge_statement = KnowledgeStatement.find(
@@ -126,7 +154,7 @@ class Parser
         knowledge_statement.save
       end
       else
-        puts "***** unable to parse knowledge statement"
+        puts "WARN: ***** unable to parse knowledge statement"
     end
     return knowledge_statement
   end # end for method dec    
@@ -149,7 +177,7 @@ class Parser
           big_idea.save
         end
       else
-        puts "could not find theme for : #{entires[0]}"
+        puts "WARN: could not find theme for : #{entires[0]}"
       end
     }
   end
@@ -197,8 +225,7 @@ class Parser
     matches = text.match(regex)
     if (matches)
       (domain_key,ek_key,grade_span,unifying_theme_key,number,target) = matches.captures
-    
-      
+  
       themes = unifying_theme_key.split(' +');
       themes.map { |theme| theme.gsub!("+","") }
       unifying_theme_key = themes[0]
@@ -210,7 +237,7 @@ class Parser
           :first, 
           :conditions => { :domain_id => domain.id, :number => ek_key })
       else
-        puts "could not find domain for #{domain_key}"
+        puts "WARN: could not find domain for #{domain_key}"
       end
 
       assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
@@ -218,14 +245,13 @@ class Parser
       if (unifying_theme)
         assessment_target.unifying_theme = unifying_theme
       else
-        puts "could not find unifying theme that matches: #{unifying_theme_key}"
+        puts "WARN: could not find unifying theme that matches: #{unifying_theme_key}"
       end
       assessment_target.description = target
       assessment_target.grade_span = grade_span
       assessment_target.save
     else
-      puts "Error: cant parse assessment target"
-      puts "text is #{text}"
+      puts "WARN: cant parse assessment target text is #{text}"
     end
     return assessment_target
   end # end for method dec
@@ -265,7 +291,7 @@ class Parser
           expectation
         }
       else
-        puts "Error: cant parse assessment gse"
+        puts "WARN: cant parse assessment gse text = #{text}"
       end
       return gse
     end # end for method dec

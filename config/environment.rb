@@ -34,6 +34,7 @@ Rails::Initializer.run do |config|
   config.gem "RedCloth", :version => '4.1.1'
   config.gem "uuidtools"
   config.gem "hpricot"
+  config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '0.4.1'
   # config.gem "prawn-format"
   
