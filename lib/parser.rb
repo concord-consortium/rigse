@@ -4,12 +4,9 @@ require 'open-uri'
 ####################################################################
 class Parser
   
-  def initialize
-    @last_k_statmenent = nil
-    @assessment_targets = {}
-  end
-  
-  
+  #
+  #
+  #
   def clean_text(text) 
     if(text)
       text.gsub!("\n"," ")
@@ -20,6 +17,9 @@ class Parser
     end
   end
   
+  #
+  #
+  #
   def remove_old_data
     classes_to_clean = [
       Domain,
@@ -33,7 +33,9 @@ class Parser
     classes_to_clean.each { | c| c.delete_all }
   end
   
-  
+  #
+  #
+  #
   def make_domains
     domains = [
       ["Life Science", "LS"],
@@ -47,6 +49,9 @@ class Parser
     }
   end
 
+  #
+  #
+  #
   def make_themes
     unifying_themes = [
       ["INQ", "Scientific Inquiry"],
@@ -92,6 +97,9 @@ class Parser
     end
   end
   
+  #
+  #
+  #
   def import_enduring_knowledge (table)
     domain_keys = Domain.find(:all).map { |domain| domain.key }
     regex = /^#{domain_keys.join("|")}/
@@ -211,6 +219,7 @@ class Parser
     end
     return assessment_target
   end # end for method dec
+  
   
   #
   #

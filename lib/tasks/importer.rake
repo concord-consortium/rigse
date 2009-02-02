@@ -6,11 +6,10 @@ namespace :rigse do
     #
     #
     #
-    desc 'import grade span expectations from file config/rigse_data.xhtml'
-    task :import_from_file do
-      load 'config/environment.rb'
+    desc 'import grade span expectations from file config/rigse_data/rigse_k12_sci_doc_convert.xhtml'
+    task :import_from_file => :environment do
       parser = Parser.new
-      parser.parse(File.join [RAILS_ROOT] + %w{config rigse_data.xhtml})
+      parser.parse(File.join [RAILS_ROOT] + %w{config rigse_data rigse_k12_sci_doc_convert.xhtml})
     end
   end
 end
