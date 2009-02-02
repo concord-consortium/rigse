@@ -92,9 +92,12 @@ class Parser
   def import_enduring_knowledge (table)
     domain_keys = Domain.find(:all).map { |domain| domain.key }
     regex = /^#{domain_keys.join("|")}/
-    eks = (table/:tr).collect { | row |  (row/:td).inner_text.strip }
-    eks = eks.select { | ek | ek =~ regex }
-    eks.each { |ek| parse_knowledge_statement ek }
+    (table/:tr/:td).each do | td |  
+      data = td.inner_text.strip
+      if (data =~ regex)
+        parse_knowledge_statement data
+      end
+    end
   end
   
   #
