@@ -10,7 +10,18 @@ class Parser
     @domains = {}
     @themes = {}
   end
+  
+  #
+  #
+  #
+  def process_rigse_data
+    # should delete old stuff
+    remove_old_data
     
+    make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
+    make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data rigse_k12_sci_doc_convert.xhtml}))
+  end
   #
   #
   #

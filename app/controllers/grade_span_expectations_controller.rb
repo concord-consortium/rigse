@@ -3,8 +3,9 @@ class GradeSpanExpectationsController < ApplicationController
   # PUT /grade_span_expectations/reparse_gses
   def reparse_gses
     parser = Parser.new
+    parser.process_rigse_data
     respond_to do |format|
-      flash[:notice] = 'Grade Span Expectations reparsed from rigse_data.xhtml'
+      flash[:notice] = 'Grade Span Expectations data reparsed from original RI-GSE documents'
       format.html { redirect_to :action => 'index' }
       format.xml  { head :ok }
     end    
