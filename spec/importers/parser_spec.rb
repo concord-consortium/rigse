@@ -5,6 +5,7 @@ describe Parser do
     @parser = Parser.new
     @parser.process_rigse_data
     @domains = Domain.find(:all)
+    @big_ideas = BigIdea.find(:all)
     @knowledge_statements = KnowledgeStatement.find(:all)
     @grade_span_expectations = GradeSpanExpectation.find(:all)
     @expectation_stems = ExpectationStem.find(:all)
@@ -27,7 +28,7 @@ describe Parser do
 
   it "should create big ideas that that relate to a unifying theme " do
     @big_ideas.each do |big|
-      big.key.should_not be_empty
+      big.unifying_theme.should be_a_kind_of(UnifyingTheme)
     end
   end
 
@@ -63,7 +64,8 @@ describe Parser do
 
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
-      ex.EXPECTATION_STEM.should_be_a_kind_of(AssessmentTarget)
+      es = ex.expectation_stem
+      es.should_be_a_kind_of(ExpectationStem)
     end
   end
 
@@ -81,7 +83,7 @@ describe Parser do
 
   it "should create expectation_stems that have stems" do
     @expectation_stems.each do |ex_stem|
-      ex_stem.expectation_stem.should_not be_empty
+      ex_stem.stem.should_not be_empty
     end
   end
 
