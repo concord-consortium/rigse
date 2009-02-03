@@ -65,7 +65,7 @@ describe Parser do
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
       es = ex.expectation_stem
-      es.should_be_a_kind_of(ExpectationStem)
+      es.should be_a_kind_of(ExpectationStem)
     end
   end
 
