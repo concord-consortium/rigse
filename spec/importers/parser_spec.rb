@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+
 describe Parser do
   before(:all) do
     @parser = Parser.new
@@ -12,6 +13,22 @@ describe Parser do
     @expectations = Expectation.find(:all)
     @unifying_themes = UnifyingTheme.find(:all)
     @assessment_targets = AssessmentTarget.find(:all)
+  end
+
+  it "should parse assesment targets" do
+    sample_text = 'PS1 (5-8) INQ-1 Investigate the relationships among mass, volume and density.'
+    @parser.parse_assesment_target(sample_text).should_not be_nil
+  end
+
+  it "should parse grade span expectation texts" do
+    sample_text = 'Example Extension(s) PS2 (Ext)– 5 Students demonstrate an understanding of energy by… 5aa Identifying, measuring, calculating an'
+    @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
+  end
+
+
+  it "should not parse some bad entities" do
+    sample_text = 'No further targets for EK PS1 at the K-4 Grade Span'
+    @parser.parse_assesment_target(sample_text).should be_nil
   end
 
   it "should create domains that have names" do
@@ -40,6 +57,7 @@ describe Parser do
 
   it "should create knowledge statements that have numbers" do
     @knowledge_statements.each do |ks|
+      ks.number.should_not be_nil
       ks.number.should be_a_kind_of(Fixnum)
     end
   end
@@ -59,12 +77,14 @@ describe Parser do
   it "should create grade span expectations that have an assessment target" do
     @grade_span_expectations.each do |gse|
       gse.assessment_target.should be_a_kind_of(AssessmentTarget)
+      gse.assessment_target.should_not be_nil
     end
   end
 
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
       es = ex.expectation_stem
+      es.should_not be_nil
       es.should be_a_kind_of(ExpectationStem)
     end
   end

@@ -5,10 +5,11 @@ require 'spreadsheet'
 # Parser --
 ####################################################################
 class Parser
-  
+  attr_accessor :logger
   def initialize
     @domains = {}
     @themes = {}
+    @logger = Logger.new(STDOUT)
   end
   
   #
@@ -98,7 +99,7 @@ class Parser
               end
             end
           rescue
-            puts "WARN: problem reading #{row} / #{sheet}"
+            logger.warn "problem reading #{row} / #{sheet}"
           end
         end
      end
@@ -165,7 +166,7 @@ class Parser
         knowledge_statement.save
       end
       else
-        puts "WARN: ***** unable to parse knowledge statement"
+        logger.warn "unable to parse knowledge statement in text: #{text}"
     end
     return knowledge_statement
   end # end for method dec    
@@ -188,7 +189,7 @@ class Parser
           big_idea.save
         end
       else
-        puts "WARN: could not find theme for : #{entires[0]}"
+        logger.warn "could not find theme for : #{entires[0]}"
       end
     }
   end
@@ -228,17 +229,16 @@ class Parser
   #
   def parse_assesment_target(text)
     assessment_target = nil
-    ut_regex = @themes.keys.join("|")
     domain_regex = @domains.keys.join("|")
     space_or_dashes = "[\s|-|–|-]+"
-    regex = /(#{domain_regex})\s*([0-9]+)\s*\(\s*([K|0-9][ |-|–|-][K|0-9]+)\s*\)[ |-|–|-]+((#{ut_regex})[\s|\+])*[ |-|–|-]+(.*)/mix
+    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s]+)\)[\s|\-|\–|\-]+([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]+(\d+)(.*)/mx
     
     matches = text.match(regex)
     if (matches)
       (domain_key,ek_key,grade_span,unifying_theme_key,number,target) = matches.captures
   
-      themes = unifying_theme_key.split(' +');
-      themes.map { |theme| theme.gsub!("+","") }
+      themes = unifying_theme_key.split('+');
+      themes.map { |theme| theme.strip }
       unifying_theme_key = themes[0]
 
       domain = @domains[domain_key.strip]
@@ -248,7 +248,7 @@ class Parser
           :first, 
           :conditions => { :domain_id => domain.id, :number => ek_key })
       else
-        puts "WARN: could not find domain for #{domain_key}"
+        logger.warn "could not find domain for #{domain_key}"
       end
 
       assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
@@ -256,13 +256,13 @@ class Parser
       if (unifying_theme)
         assessment_target.unifying_theme = unifying_theme
       else
-        puts "WARN: could not find unifying theme that matches: #{unifying_theme_key}"
+        logger.warn "could not find unifying theme that matches: #{unifying_theme_key}"
       end
       assessment_target.description = target
       assessment_target.grade_span = grade_span
       assessment_target.save
     else
-      puts "WARN: cant parse assessment target text is #{text}"
+      logger.warn "can't parse assessment target text is #{text}"
     end
     return assessment_target
   end # end for method dec
@@ -273,7 +273,7 @@ class Parser
   #
   def parse_grade_span_expectation(text, assessment_target)
       gse = nil
-      regex = /.*?\(\s?([K|0-9].{1,5}[K|0-9])\s?\).{1,5}[0-9](.*)/mi
+      regex = /.*?\(\s?(Ext|[K|0-9].{1,5}[K|0-9])\s?\).{1,5}[0-9](.*)/mi
       matches = text.match(regex)
       if (matches)
         (grade_span,body) = matches.captures
@@ -284,7 +284,6 @@ class Parser
         statement_strings.each { |s| clean_text(s) }
         statement_strings.reject! { |s| s == "" || s == nil || s == " " }
 
-        # statements.each { | s | puts "--- #{s}" }
         gse = GradeSpanExpectation.new(:grade_span => grade_span)
         gse.assessment_target = assessment_target
         gse.save
@@ -302,7 +301,7 @@ class Parser
           expectation
         }
       else
-        puts "WARN: cant parse assessment gse text = #{text}"
+        logger.warn "can't parse grade span expectation text = #{text}"
       end
       return gse
     end # end for method dec
