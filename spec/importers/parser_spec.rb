@@ -23,6 +23,8 @@ describe Parser do
   it "should parse grade span expectation texts" do
     sample_text = 'Example Extension(s) PS2 (Ext)– 5 Students demonstrate an understanding of energy by… 5aa Identifying, measuring, calculating an'
     @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
+    sample_text = 'PS1 (K-2) POC –2 Students demonstrate an understanding of states of matter by … 2a describing properties of solids and liquids. 2b identifying and comparing solids and liquids. 2c making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water freezing).'
+    @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
   end
 
 
@@ -57,7 +59,6 @@ describe Parser do
 
   it "should create knowledge statements that have numbers" do
     @knowledge_statements.each do |ks|
-      ks.number.should_not be_nil
       ks.number.should be_a_kind_of(Fixnum)
     end
   end
@@ -77,14 +78,12 @@ describe Parser do
   it "should create grade span expectations that have an assessment target" do
     @grade_span_expectations.each do |gse|
       gse.assessment_target.should be_a_kind_of(AssessmentTarget)
-      gse.assessment_target.should_not be_nil
     end
   end
 
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
       es = ex.expectation_stem
-      es.should_not be_nil
       es.should be_a_kind_of(ExpectationStem)
     end
   end
