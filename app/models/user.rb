@@ -33,7 +33,10 @@ class User < ActiveRecord::Base
   has_many :unifying_themes
 
   acts_as_replicatable
-  
+
+  # we will lazy load the anonymous user later
+  @@anonymous_user = nil 
+ 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
@@ -76,13 +79,16 @@ class User < ActiveRecord::Base
   end
 
   # is this user the anonymous user?
-  def anonymous?
-    self == ANONYMOUS_USER
+  def  anonymous?
+    self == User.anonymous
   end
   
   # class method for returning the anonymous user
   def self.anonymous
-    ANONYMOUS_USER
+    unless(@@anonymous_user)
+      @@anonymous_user = User.find_by_login('anonymous')
+    end
+    @@anonymous_user
   end
   
 

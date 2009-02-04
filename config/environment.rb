@@ -83,7 +83,7 @@ Rails::Initializer.run do |config|
   config.active_record.observers = :user_observer
 end
 
-ANONYMOUS_USER = User.find_by_login('anonymous')
+# ANONYMOUS_USER = User.find_by_login('anonymous')
 
 require 'prawn'
 require 'prawn/format'
