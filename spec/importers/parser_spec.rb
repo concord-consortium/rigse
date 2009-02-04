@@ -18,6 +18,8 @@ describe Parser do
   it "should parse assesment targets" do
     sample_text = 'PS1 (5-8) INQ-1 Investigate the relationships among mass, volume and density.'
     @parser.parse_assesment_target(sample_text).should_not be_nil
+    sample_text = 'LS2 (9-11) SAE+FAF -10 Explain how the immune system, endocrine system, or nervous system works and draw conclusions about how systems interact to maintain homeostasis in the human body.'
+    @parser.parse_assesment_target(sample_text).should_not be_nil
   end
 
   it "should parse grade span expectation texts" do

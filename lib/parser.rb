@@ -1,6 +1,7 @@
 require 'open-uri'
 require 'yaml'
 require 'spreadsheet'
+require 'hpricot'
 ####################################################################
 # Parser --
 ####################################################################
@@ -21,13 +22,17 @@ class Parser
     
     make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
     make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data rigse_k12_sci_doc_convert.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.html}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.html}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.html}))
   end
   #
   #
   #
   def clean_text(text) 
     if(text)
+      # remove all non-ascii ecept elipses, which I like
+      text.gsub!(/[^\x20-\x7E|…]/,"")
       text.gsub!("\n"," ")
       text.gsub!("\t"," ")
       text.gsub!("\?","")
@@ -84,7 +89,7 @@ class Parser
      spreadsheet = Spreadsheet.open path_to_xls
      sheet = spreadsheet.worksheet 'Science'
      domain_regex = @domains.keys.join("|")
-     regex = /(#{domain_regex})(\d+)\(([K|0-9]\s*[-|–]\s*[K|0-9]+)\)\s*[-|–]\s*([0-9]+)([a-b])(.*)/
+     regex = /(#{domain_regex})(\d+)\(([K|0-9]\s*[-|–]\s*[K|0-9]+)\)\s*[-|–]\s*([0-9]+)([a-b])(.+)/
      sheet.each do |row| 
        if (row[1])
          begin
@@ -146,7 +151,7 @@ class Parser
   #
   def parse_knowledge_statement(text)
     knowledge_statement = nil
-    regex = /([A-Z]+)\s?([0-9])(.*)/mi
+    regex = /([A-Z]+)\s?([0-9])(.+)/mi
     matches = text.match(regex)
     
     if (matches)
@@ -189,7 +194,7 @@ class Parser
           big_idea.save
         end
       else
-        logger.warn "could not find theme for : #{entires[0]}"
+        logger.warn "could not find theme for : #{entries[0]}"
       end
     }
   end
@@ -231,7 +236,7 @@ class Parser
     assessment_target = nil
     domain_regex = @domains.keys.join("|")
     space_or_dashes = "[\s|-|–|-]+"
-    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s]+)\)[\s|\-|\–|\-]+([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]+(\d+)(.*)/mx
+    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s]+)\)[\s|\-|\–|\-]+([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]+(\d+)(.+)/mx
     
     matches = text.match(regex)
     if (matches)
@@ -273,33 +278,34 @@ class Parser
   #
   def parse_grade_span_expectation(text, assessment_target)
       gse = nil
-      regex = /.*?\(\s?(Ext|[K|0-9].{1,5}[K|0-9])\s?\).{1,5}[0-9](.*)/mi
+      regex = /.*?\(\s?(Ext|[K|0-9].{1,5}[K|0-9])\s?\).{0,5}[0-9](.+)/mi
       matches = text.match(regex)
       if (matches)
         (grade_span,body) = matches.captures
         clean_text(body)
         (stem_string,body) = body.split("…")
+        if body
+          statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
+          statement_strings.each { |s| clean_text(s) }
+          statement_strings.reject! { |s| s == "" || s == nil || s == " " }
 
-        statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
-        statement_strings.each { |s| clean_text(s) }
-        statement_strings.reject! { |s| s == "" || s == nil || s == " " }
-
-        gse = GradeSpanExpectation.new(:grade_span => grade_span)
-        gse.assessment_target = assessment_target
-        gse.save
-        stem = ExpectationStem.find_or_create_by_stem(:stem => stem_string)
-        stem.save
-        stem.grade_span_expectations << gse
-        stem.save
-        
-        ordinal = 'a'
-        expectations = statement_strings.map { | ss | 
-          expectation  = Expectation.new(:description => ss, :ordinal => ordinal)
-          expectation.expectation_stem = stem
-          expectation.save
-          ordinal = ordinal.next
-          expectation
-        }
+          gse = GradeSpanExpectation.new(:grade_span => grade_span)
+          gse.assessment_target = assessment_target
+          gse.save
+          stem = ExpectationStem.find_or_create_by_stem(:stem => stem_string)
+          stem.save
+          stem.grade_span_expectations << gse
+          stem.save
+          
+          ordinal = 'a'
+          expectations = statement_strings.map { | ss | 
+            expectation  = Expectation.new(:description => ss, :ordinal => ordinal)
+            expectation.expectation_stem = stem
+            expectation.save
+            ordinal = ordinal.next
+            expectation
+          }
+      end
       else
         logger.warn "can't parse grade span expectation text = #{text}"
       end
