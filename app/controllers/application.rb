@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def check_user
     # self.current_user = ANONYMOUS_USER unless login_from_basic_http || logged_in?
-    self.current_user = ANONYMOUS_USER unless login_from_basic_auth || logged_in?
+    self.current_user = User.anonymous unless login_from_basic_auth || logged_in?
   end
 
 end
