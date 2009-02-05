@@ -25,5 +25,14 @@ module ApplicationHelper
     end
     tag :input, html_options
   end
+    
+    def pdf_footer(message)
+      pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
+        pdf.stroke_horizontal_rule
+        pdf.pad(10) do
+          pdf.text message, :size => 16
+        end
+      end      
+  end
 
 end

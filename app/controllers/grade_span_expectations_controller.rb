@@ -17,11 +17,18 @@ class GradeSpanExpectationsController < ApplicationController
     # @grade_span_expectations = GradeSpanExpectation.find(:all, :include => :assessment_target)
 
     @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user)
+    @search_string = params[:search]
     @paginated_objects = @grade_span_expectations
 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @grade_span_expectations }
+      format.pdf do
+        @rendered_partial = render_to_string :partial => 'expectation_list.html.haml', 
+          :locals => { :grade_span_expectations => @grade_span_expectations }
+        @rendered_partial.gsub!(/&/, '&amp;')
+        render :layout => false 
+      end
     end
   end
 
