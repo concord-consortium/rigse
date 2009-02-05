@@ -85,10 +85,7 @@ class User < ActiveRecord::Base
   
   # class method for returning the anonymous user
   def self.anonymous
-    unless(@@anonymous_user)
-      @@anonymous_user = User.find_by_login('anonymous')
-    end
-    @@anonymous_user
+    @@anonymous_user ||=  User.find_by_login('anonymous')
   end
   
 
