@@ -22,9 +22,9 @@ class Parser
     
     make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
     make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
+    #parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
+    #parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
   end
   #
   #
@@ -35,10 +35,11 @@ class Parser
       text.gsub!(/[^\x20-\x7E|…]/,"")
       text.gsub!("\n"," ")
       text.gsub!("\t"," ")
-      text.gsub!("\?","")
+      text.gsub!(/\?+/,"")
       text.squeeze!(" ")
       text.strip!
     end
+    text
   end
   
   #
@@ -216,7 +217,7 @@ class Parser
         when 4,7
           assessment_target_index = (column / 2.0).ceil
           if (assessment_targets[assessment_target_index])
-            grade_span_expectation = parse_grade_span_expectation(columntext,assessment_targets[assessment_target_index])
+            grade_span_expectation = parse_grade_span_expectation(data,assessment_targets[assessment_target_index])
           end
         end # end case
         
@@ -273,38 +274,45 @@ class Parser
   #
   #
   #
-  def parse_grade_span_expectation(text, assessment_target)
+  def parse_grade_span_expectation(td, assessment_target)
       gse = nil
-      regex = /.*?\(\s?(Ext|[K|0-9].{1,5}[K|0-9])\s?\).{0,5}[0-9](.+)/mi
-      matches = text.match(regex)
-      if (matches)
-        (grade_span,body) = matches.captures
-        clean_text(body)
-        (stem_string,body) = body.split("…")
-        if body
-          statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
-          statement_strings.each { |s| clean_text(s) }
-          statement_strings.reject! { |s| s == "" || s == nil || s == " " }
-
-          gse = GradeSpanExpectation.new(:grade_span => grade_span)
-          gse.assessment_target = assessment_target
-          gse.save
-          stem = ExpectationStem.find_or_create_by_stem(:stem => stem_string)
+      counter = 1
+      ordinal = 'a'
+      gse = nil
+      stem = nil
+      (td/:p).each do | p | 
+        text = p.inner_text
+        text = clean_text(text)
+        next if text.nil? || text==""
+        case counter
+        when 1
+          puts "#{counter} ====================== #{text}"
+          match = text.match(/\(((Ext|[K|0-9|\-|–|\s])+)\)/mx)
+          if match
+            puts match
+            puts "=========================================== #{match.inspect}"
+            grade_span=match.captures[0]
+            gse = GradeSpanExpectation.new(:grade_span => grade_span)
+            logger.warn("===================> found gradespan #{grade_span}")
+            gse.assessment_target = assessment_target
+            gse.save
+          else
+            logger.warn("===================> could not find grade span where it should be: #{text}")
+          end
+        when 2
+          stem = ExpectationStem.find_or_create_by_stem(:stem => text)
           stem.save
-          stem.grade_span_expectations << gse
-          stem.save
-          
-          ordinal = 'a'
-          expectations = statement_strings.map { | ss | 
-            expectation  = Expectation.new(:description => ss, :ordinal => ordinal)
-            expectation.expectation_stem = stem
-            expectation.save
-            ordinal = ordinal.next
-            expectation
-          }
-      end
-      else
-        logger.warn "can't parse grade span expectation text = #{text}"
+          if gse
+            stem.grade_span_expectations << gse
+            stem.save
+          end
+        else
+         expectation  = Expectation.new(:description => text, :ordinal => ordinal)
+         expectation.expectation_stem = stem
+         expectation.save
+         ordinal = ordinal.next
+        end
+        counter = counter + 1
       end
       return gse
     end # end for method dec
