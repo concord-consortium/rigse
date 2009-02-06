@@ -22,9 +22,9 @@ class Parser
     
     make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
     make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.html}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.html}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.html}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
   end
   #
   #
@@ -176,27 +176,24 @@ class Parser
     return knowledge_statement
   end # end for method dec    
   
-  #
+  
   #
   #
   def import_unifying_themes(table)
-    relevent_columns = ((table/:tr)[2]/:td).collect { |td| td.inner_text.strip }
-    relevent_columns.each { | column | 
-      entries = column.split(/\n+/)
-      entries.map! { |e| e.strip }
-      entries.reject! { |d| d == "" || d =~ /^[\s+\?]+$/|| d.nil?}
-      theme = UnifyingTheme.find_by_name(entries[0])
+    relevent_columns = ((table/:tr)[2]/:td).each do |td| 
+      themeName = ((td/:p)[0]).inner_text.strip 
+      theme = UnifyingTheme.find_by_name(themeName)
       if (theme)
-        (1..(entries.size-1)).each do |i|        
+        (td/:li).each do  |li|
           big_idea = BigIdea.new
-          big_idea.description = entries[i]
+          big_idea.description = (clean_text(li.inner_text)).gsub(/^\./,"")
           big_idea.unifying_theme = theme 
           big_idea.save
         end
       else
-        logger.warn "could not find theme for : #{entries[0]}"
+        logger.warn "could not find theme for : #{themeName}"
       end
-    }
+    end   
   end
   
   #
