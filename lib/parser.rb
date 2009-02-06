@@ -64,8 +64,10 @@ class Parser
   def make_domains(domain_yaml)
     data = YAML::load(File.open(domain_yaml))
     data.keys.each do |key| 
+      puts key
       d = Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
+      puts d.inspect
       @domains[key] = d
     end
   end
@@ -291,16 +293,16 @@ class Parser
           gse = GradeSpanExpectation.new(:grade_span => grade_span)
           gse.assessment_target = assessment_target
           gse.save
-          stem = ExpectationStem.find_or_create_by_stem(:stem => stem_string)
-          stem.save
-          stem.grade_span_expectations << gse
-          stem.save
-          
+          stem = ExpectationStem.find_or_create_by_description(stem_string)
+          stem.save # force an id
+          expectation = Expectation.find(:first, :conditions =>   { :expectation_stem_id => stem, :grade_span_expectation_id => gse })
+          expectation ||= Expectation.new(:expectation_stem => stem, :grade_span_expectation => gse)
+          expectation.save
           ordinal = 'a'
           expectations = statement_strings.map { | ss | 
-            expectation  = Expectation.new(:description => ss, :ordinal => ordinal)
-            expectation.expectation_stem = stem
-            expectation.save
+            expectation_indicator  = ExpectationIndicator.new(:description => ss, :ordinal => ordinal)
+            expectation_indicator.expectation = expectation
+            expectation_indicator.save
             ordinal = ordinal.next
             expectation
           }
