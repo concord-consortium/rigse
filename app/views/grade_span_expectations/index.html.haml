@@ -1,4 +1,4 @@
-%h1= "Grade Span Expectations: #{GradeSpanExpectation.count}" 
+%h1= "Grade Span Expectations: #{@grade_span_expectations.total_entries}" 
 - content_for(:left_content_header) do
   %ul
     - if RAILS_ENV == "development"
