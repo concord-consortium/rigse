@@ -35,10 +35,11 @@ class Parser
       text.gsub!(/[^\x20-\x7E|…]/,"")
       text.gsub!("\n"," ")
       text.gsub!("\t"," ")
-      text.gsub!("\?","")
+      text.gsub!(/\?+/,"")
       text.squeeze!(" ")
       text.strip!
     end
+    text
   end
   
   #
@@ -216,7 +217,7 @@ class Parser
         when 4,7
           assessment_target_index = (column / 2.0).ceil
           if (assessment_targets[assessment_target_index])
-            grade_span_expectation = parse_grade_span_expectation(columntext,assessment_targets[assessment_target_index])
+            grade_span_expectation = parse_grade_span_expectation(data.inner_text,assessment_targets[assessment_target_index])
           end
         end # end case
         
@@ -233,7 +234,8 @@ class Parser
     assessment_target = nil
     domain_regex = @domains.keys.join("|")
     space_or_dashes = "[\s|-|–|-]+"
-    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s]+)\)[\s|\-|\–|\-]+([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]+(\d+)(.+)/mx
+    # (ESS)\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s])+\)[\s|\-|\–|\-][\s|\-|\–|\-]*([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]*(\d+)(.+)
+    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\s])+\)[\s|\-|\–]*([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]*(\d+)(.+)/mx
     
     matches = text.match(regex)
     if (matches)

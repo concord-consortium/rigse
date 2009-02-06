@@ -25,8 +25,8 @@ describe Parser do
   it "should parse grade span expectation texts" do
     sample_text = 'Example Extension(s) PS2 (Ext)– 5 Students demonstrate an understanding of energy by… 5aa Identifying, measuring, calculating an'
     @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
-    sample_text = 'PS1 (K-2) POC –2 Students demonstrate an understanding of states of matter by … 2a describing properties of solids and liquids. 2b identifying and comparing solids and liquids. 2c making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water freezing).'
-    @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
+    # sample_text = 'PS1 (K-2) POC –2 Students demonstrate an understanding of states of matter by … 2a describing properties of solids and liquids. 2b identifying and comparing solids and liquids. 2c making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water freezing).'
+    # @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
   end
 
 
@@ -80,6 +80,25 @@ describe Parser do
   it "should create grade span expectations that have an assessment target" do
     @grade_span_expectations.each do |gse|
       gse.assessment_target.should be_a_kind_of(AssessmentTarget)
+    end
+  end
+
+  it "should create grade span expectations that have expectation stems that have expectations" do
+    @grade_span_expectations.each do |gse|
+      es = gse.expectation_stems
+      if es.length > 0
+        ex = es.expectations
+        if ex.length > 0
+          ex[0].should be_a_kind_of(Expectation)
+        end
+      end
+    end
+  end
+
+  it "should create expectation stems that have expectations" do
+    @expectation_stems.each do |es|
+      ex = es.expectations
+      ex[0].should be_a_kind_of(Expectation) if ex.length > 0
     end
   end
 
