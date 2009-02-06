@@ -276,44 +276,42 @@ class Parser
   #
   def parse_grade_span_expectation(td, assessment_target)
       gse = nil
-      counter = 1
+      counter = 0
       ordinal = 'a'
       gse = nil
       stem = nil
-      (td/:p).each do | p | 
-        text = p.inner_text
-        text = clean_text(text)
+      td.each_child do | p | 
+        text = clean_text p.inner_text
         next if text.nil? || text==""
-        case counter
-        when 1
-          puts "#{counter} ====================== #{text}"
-          match = text.match(/\(((Ext|[K|0-9|\-|–|\s])+)\)/mx)
-          if match
-            puts match
-            puts "=========================================== #{match.inspect}"
-            grade_span=match.captures[0]
-            gse = GradeSpanExpectation.new(:grade_span => grade_span)
-            logger.warn("===================> found gradespan #{grade_span}")
-            gse.assessment_target = assessment_target
-            gse.save
-          else
-            logger.warn("===================> could not find grade span where it should be: #{text}")
-          end
-        when 2
-          stem = ExpectationStem.find_or_create_by_stem(:stem => text)
-          stem.save
-          if gse
-            stem.grade_span_expectations << gse
-            stem.save
-          end
+        puts "#{counter} ====================== #{text}"
+        match = text.match(/\(((Ext|[K|0-9|\-|–|\s])+)\)/mx)
+        if match
+          puts match
+          grade_span=match.captures[0]
+          gse = GradeSpanExpectation.new(:grade_span => grade_span)
+          logger.warn("===================> found gradespan #{grade_span}")
+          gse.assessment_target = assessment_target
+          gse.save
+          counter = 1
         else
-         expectation  = Expectation.new(:description => text, :ordinal => ordinal)
-         expectation.expectation_stem = stem
-         expectation.save
-         ordinal = ordinal.next
-        end
-        counter = counter + 1
-      end
+          case counter
+          when 1
+            stem = ExpectationStem.find_or_create_by_stem(:stem => text)
+            stem.save
+            if gse
+              stem.grade_span_expectations << gse
+              stem.save
+            end
+            counter = counter + 1
+          else
+            expectation  = Expectation.new(:description => text, :ordinal => ordinal)
+            expectation.expectation_stem = stem
+            expectation.save
+            ordinal = ordinal.next
+            counter = counter + 1
+          end # case
+        end # if
+      end # each 
       return gse
     end # end for method dec
   
