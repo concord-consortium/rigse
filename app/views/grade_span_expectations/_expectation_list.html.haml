@@ -35,3 +35,10 @@
             %dt Description
             %dd
               = assessment_target.description
+            %dt Expectations:
+            %dd
+              - for expectation_stem in grade_span_expectation.expectation_stems do
+                = expectation_stem.stem
+                %ul
+                  - for expectation in expectation_stem.expectations do
+                    %li= expectation.description 
