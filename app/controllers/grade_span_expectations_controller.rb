@@ -14,9 +14,9 @@ class GradeSpanExpectationsController < ApplicationController
   # GET /grade_span_expectations
   # GET /grade_span_expectations.xml
   def index
-    # @grade_span_expectations = GradeSpanExpectation.find(:all, :include => :assessment_target)
-
-    @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user)
+    
+    @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
+    # :include => [:expectations => [:expectation_indicators, :stem]]
     @search_string = params[:search]
     @paginated_objects = @grade_span_expectations
 
