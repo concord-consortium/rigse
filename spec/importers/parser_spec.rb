@@ -83,6 +83,25 @@ describe Parser do
     end
   end
 
+  it "should create grade span expectations that have expectation stems that have expectations" do
+    @grade_span_expectations.each do |gse|
+      es = gse.expectation_stems
+      if es.length > 0
+        ex = es.expectations
+        if ex.length > 0
+          ex[0].should be_a_kind_of(Expectation)
+        end
+      end
+    end
+  end
+
+  it "should create expectation stems that have expectations" do
+    @expectation_stems.each do |es|
+      ex = es.expectations
+      ex[0].should be_a_kind_of(Expectation) if ex.length > 0
+    end
+  end
+
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
       es = ex.expectation_stem
