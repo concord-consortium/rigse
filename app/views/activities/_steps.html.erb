@@ -1,0 +1,7 @@
+
+Steps:
+<ul>
+<% for step in @activity.steps %>
+	<li><%= form_for_step(step) %> </li> 
+<% end %>
+</ul>
