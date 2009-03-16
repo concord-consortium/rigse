@@ -102,7 +102,7 @@ HEREDOC
         Rake::Task['db:migrate'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
-        Rake::Task['rigse:setup:import_from_file'].invoke
+        Rake::Task['rigse:setup:import_gses_from_file'].invoke
   
         puts <<HEREDOC
 
