@@ -1,0 +1,4 @@
+<% @activity.steps.each do |step| %> 
+	<% domid = "step_#{step.id}" %> 
+		<li class="sortable_step" id='<%= domid %>'><%= html_for_step(step) %></li> 
+<% end %> 

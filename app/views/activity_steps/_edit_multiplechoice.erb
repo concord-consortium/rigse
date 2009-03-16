@@ -1,0 +1,19 @@
+
+<%= @step.prompt %> <br/>
+<% form_for(@step) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :prompt %><br />
+    <%= f.text_field :prompt, :cols => 60 %>
+  </p>
+  
+
+  <p>
+    <%= f.label :options %><br />
+    <%= f.text_field :options, :cols => 60 %>
+  </p>
+<% end %>
+<p>
+	<%= link_to_delete(@step) %>
+</p>

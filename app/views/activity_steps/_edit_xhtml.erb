@@ -1,0 +1,19 @@
+
+<%= @step.name %> <br/>
+<% form_for(@step) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name, :cols => 60 %>
+  </p>
+  
+
+  <p>
+    <%= f.label :contents %><br />
+    <%= f.text_area :contents, :cols => 60 %>
+  </p>
+<% end %>
+<p>
+<%= link_to_delete(@step) %>
+</p>	
