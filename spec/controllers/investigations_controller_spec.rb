@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe ActivitiesController do
+describe InvestigationsController do
 
   def mock_investigation(stubs={})
     @mock_investigation ||= mock_model(Investigation, stubs)
@@ -18,7 +18,7 @@ describe ActivitiesController do
   
       it "should render all investigations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Investigation.should_receive(:find).with(:all).and_return(investigations = mock("Array of Activities"))
+        Investigation.should_receive(:find).with(:all).and_return(investigations = mock("Array of Investigations"))
         investigations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
