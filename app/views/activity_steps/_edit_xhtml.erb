@@ -6,6 +6,7 @@
   <p>
     <%= f.label :name %><br />
     <%= f.text_field :name, :cols => 60 %>
+ 	<%= in_place_editor_field :xhtml, 'name' %>
   </p>
   
 
@@ -15,5 +16,6 @@
   </p>
 <% end %>
 <p>
+<%= link_to_save (@step) %>
 <%= link_to_delete(@step) %>
 </p>	

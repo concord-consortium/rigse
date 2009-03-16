@@ -1,4 +1,5 @@
 class ActivityStepsController < ApplicationController
+
   # GET /activity_steps
   # GET /activity_steps.xml
   def index
@@ -108,9 +109,9 @@ class ActivityStepsController < ApplicationController
       step.save
     end
    
-    new_contents = render_to_string :partial => "steps", :layout => false
+    # new_contents = render_to_string :partial => "steps", :layout => false
     render :update do |page|
-        page.replace_html "steps", new_contents
+        page.replace_html "steps", :partial => "steps"
         page.visual_effect :highlight, 'steps'
       end
   end
