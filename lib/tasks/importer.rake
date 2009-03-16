@@ -7,7 +7,7 @@ namespace :rigse do
     #
     #
     desc 'import grade span expectations from file config/rigse_data/*'
-    task :import_from_file => :environment do
+    task :import_gses_from_file => :environment do
       parser = Parser.new
       parser.process_rigse_data
     end
