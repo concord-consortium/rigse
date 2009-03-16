@@ -1,4 +1,4 @@
-class Activity < ActiveRecord::Base
+class Investigation < ActiveRecord::Base
   belongs_to :user
   acts_as_replicatable
   
@@ -15,7 +15,7 @@ class Activity < ActiveRecord::Base
 
   default_value_for :procedures_opening, <<HEREDOC
   <h3>Procedures</h3>  
-  <p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
+  <p><em>What investigations will you and your students do and how are they connected to the objectives?</em></p>
   <p></p>
   <h4>What will you be doing?</h4>
   <p><em>How do you activate and assess students’ prior knowledge and connect it to this new learning?</em></li>

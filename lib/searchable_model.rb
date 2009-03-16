@@ -20,15 +20,15 @@
 # Create @searchable_attributes instance variable in controller for model
 # for later use in view.
 #
-#   @searchable_attributes = Activity.searchable_attributes
+#   @searchable_attributes = Investigation.searchable_attributes
 #
 # Create controller paginated model instance variable like this:
 # 
-#    @activities = Activity.search(params[:search], params[:page], current_user)
+#    @investigations = Investigation.search(params[:search], params[:page], current_user)
 #
 # Optionally add an include parameter to eagerly load asociations:
 #
-#   @activities = Activity.search(params[:search], params[:page], current_user, [{:learners => :learner_sessions}])
+#   @investigations = Investigation.search(params[:search], params[:page], current_user, [{:learners => :learner_sessions}])
 #
 module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search

@@ -27,13 +27,13 @@ pdf.font "#{Prawn::BASEDIR}/data/fonts/Chalkboard.ttf"
 # pdf.font "Helvetica"
 pdf.bounding_box([pdf.bounds.left, pdf.bounds.top - 50], 
     :width  => pdf.bounds.width, :height => pdf.bounds.height - 100) do                 
-  pdf.text "Activity name: #{@activity.title}"
-  pdf.text @activity.context
-  pdf.text @activity.opportunities
-  pdf.text @activity.objectives
-  pdf.text @activity.procedures_opening
-  pdf.text @activity.procedures_engagement
-  pdf.text @activity.procedures_closure
-  pdf.text @activity.assessment
-  pdf.text @activity.reflection
+  pdf.text "Investigation name: #{@investigation.title}"
+  pdf.text @investigation.context
+  pdf.text @investigation.opportunities
+  pdf.text @investigation.objectives
+  pdf.text @investigation.procedures_opening
+  pdf.text @investigation.procedures_engagement
+  pdf.text @investigation.procedures_closure
+  pdf.text @investigation.assessment
+  pdf.text @investigation.reflection
 end

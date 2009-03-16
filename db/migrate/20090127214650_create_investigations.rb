@@ -1,6 +1,6 @@
-class CreateActivities < ActiveRecord::Migration
+class CreateInvestigations < ActiveRecord::Migration
   def self.up
-    create_table :activities do |t|
+    create_table :investigations do |t|
       t.integer :user_id
       t.string :title
       t.text :context
@@ -17,6 +17,6 @@ class CreateActivities < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :activities
+    drop_table :investigations
   end
 end

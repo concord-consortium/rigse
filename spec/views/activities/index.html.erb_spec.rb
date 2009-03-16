@@ -1,11 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe "/activities/index.html.erb" do
-  include ActivitiesHelper
+describe "/investigations/index.html.erb" do
+  include InvestigationsHelper
   
   before(:each) do
-    assigns[:activities] = [
-      stub_model(Activity,
+    assigns[:investigations] = [
+      stub_model(Investigation,
         :title => "value for title",
         :context => "value for context",
         :opportunities => "value for opportunities",
@@ -16,7 +16,7 @@ describe "/activities/index.html.erb" do
         :assessment => "value for assessment",
         :reflection => "value for reflection"
       ),
-      stub_model(Activity,
+      stub_model(Investigation,
         :title => "value for title",
         :context => "value for context",
         :opportunities => "value for opportunities",
@@ -30,8 +30,8 @@ describe "/activities/index.html.erb" do
     ]
   end
 
-  it "should render list of activities" do
-    render "/activities/index.html.erb"
+  it "should render list of investigations" do
+    render "/investigations/index.html.erb"
     response.should have_tag("tr>td", "value for title", 2)
     response.should have_tag("tr>td", "value for context", 2)
     response.should have_tag("tr>td", "value for opportunities", 2)

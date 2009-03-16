@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe "/activities/edit.html.erb" do
-  include ActivitiesHelper
+describe "/investigations/edit.html.erb" do
+  include InvestigationsHelper
   
   before(:each) do
-    assigns[:activity] = @activity = stub_model(Activity,
+    assigns[:investigation] = @investigation = stub_model(Investigation,
       :new_record? => false,
       :title => "value for title",
       :context => "value for context",
@@ -19,18 +19,18 @@ describe "/activities/edit.html.erb" do
   end
 
   it "should render edit form" do
-    render "/activities/edit.html.erb"
+    render "/investigations/edit.html.erb"
     
-    response.should have_tag("form[action=#{activity_path(@activity)}][method=post]") do
-      with_tag('input#activity_title[name=?]', "activity[title]")
-      with_tag('textarea#activity_context[name=?]', "activity[context]")
-      with_tag('textarea#activity_opportunities[name=?]', "activity[opportunities]")
-      with_tag('textarea#activity_objectives[name=?]', "activity[objectives]")
-      with_tag('textarea#activity_procedures_opening[name=?]', "activity[procedures_opening]")
-      with_tag('textarea#activity_procedures_engagement[name=?]', "activity[procedures_engagement]")
-      with_tag('textarea#activity_procedures_closure[name=?]', "activity[procedures_closure]")
-      with_tag('textarea#activity_assessment[name=?]', "activity[assessment]")
-      with_tag('textarea#activity_reflection[name=?]', "activity[reflection]")
+    response.should have_tag("form[action=#{investigation_path(@investigation)}][method=post]") do
+      with_tag('input#investigation_title[name=?]', "investigation[title]")
+      with_tag('textarea#investigation_context[name=?]', "investigation[context]")
+      with_tag('textarea#investigation_opportunities[name=?]', "investigation[opportunities]")
+      with_tag('textarea#investigation_objectives[name=?]', "investigation[objectives]")
+      with_tag('textarea#investigation_procedures_opening[name=?]', "investigation[procedures_opening]")
+      with_tag('textarea#investigation_procedures_engagement[name=?]', "investigation[procedures_engagement]")
+      with_tag('textarea#investigation_procedures_closure[name=?]', "investigation[procedures_closure]")
+      with_tag('textarea#investigation_assessment[name=?]', "investigation[assessment]")
+      with_tag('textarea#investigation_reflection[name=?]', "investigation[reflection]")
     end
   end
 end

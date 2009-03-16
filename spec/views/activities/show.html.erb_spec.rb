@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe "/activities/show.html.erb" do
-  include ActivitiesHelper
+describe "/investigations/show.html.erb" do
+  include InvestigationsHelper
   
   before(:each) do
-    assigns[:activity] = @activity = stub_model(Activity,
+    assigns[:investigation] = @investigation = stub_model(Investigation,
       :title => "value for title",
       :context => "value for context",
       :opportunities => "value for opportunities",
@@ -18,7 +18,7 @@ describe "/activities/show.html.erb" do
   end
 
   it "should render attributes in <p>" do
-    render "/activities/show.html.erb"
+    render "/investigations/show.html.erb"
     response.should have_text(/value\ for\ title/)
     response.should have_text(/value\ for\ context/)
     response.should have_text(/value\ for\ opportunities/)

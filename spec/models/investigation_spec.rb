@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Activity do
+describe Investigation do
   before(:each) do
     @valid_attributes = {
       :title => "value for title",
@@ -16,6 +16,6 @@ describe Activity do
   end
 
   it "should create a new instance given valid attributes" do
-    Activity.create!(@valid_attributes)
+    Investigation.create!(@valid_attributes)
   end
 end

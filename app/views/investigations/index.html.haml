@@ -1,7 +1,7 @@
 - content_for(:left_content_header) do
   %ul
     %li
-      = link_to 'New activity', new_activity_path
+      = link_to 'New investigation', new_investigation_path
 
 - content_for(:right_content_header) do
   %ul
@@ -15,7 +15,7 @@
           = text_field_tag :search, params[:search], :size => 30
         %input{ :type => "submit", :value => "Search"}
 
-%h1 Activity List
+%h1 Investigation List
 
 .paginator
   = will_paginate @paginated_objects
@@ -24,17 +24,17 @@
 
 .item_collection
   %ul.item_list
-    - for activity in @activities
+    - for investigation in @investigations
       .item
         .menu
           %ul
             %li
-              = activity.id.to_s
+              = investigation.id.to_s
             %li
-              = activity.title
+              = investigation.title
             %li
-              = link_to 'Show', activity
+              = link_to 'Show', investigation
             %li
-              = link_to 'Edit', edit_activity_path(activity)
+              = link_to 'Edit', edit_investigation_path(investigation)
         .content
-          = truncate(activity.context, 120)
+          = truncate(investigation.context, 120)
