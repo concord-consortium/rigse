@@ -1,18 +1,18 @@
-<h1>Listing activity_steps</h1>
+<h1>Listing investigation_steps</h1>
 
 <table>
   <tr>
   </tr>
 
-<% for activity_steps in @activity_steps %>
+<% for investigation_steps in @investigation_steps %>
   <tr>
-    <td><%= link_to 'Show', activity_steps %></td>
-    <td><%= link_to 'Edit', edit_activity_steps_path(activity_steps) %></td>
-    <td><%= link_to 'Destroy', activity_steps, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Show', investigation_steps %></td>
+    <td><%= link_to 'Edit', edit_investigation_steps_path(investigation_steps) %></td>
+    <td><%= link_to 'Destroy', investigation_steps, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New activity_steps', new_activity_steps_path %>
+<%= link_to 'New investigation_steps', new_investigation_steps_path %>

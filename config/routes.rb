@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :activity_steps
+  map.resources :investigation_steps
 
   map.resources :interactive_models
 

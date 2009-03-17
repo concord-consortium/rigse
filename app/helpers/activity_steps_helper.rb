@@ -1,4 +1,4 @@
-module ActivityStepsHelper
+module InvestigationStepsHelper
   
   # def form_for_step(act_step)
   #   type = act_step.step_type
@@ -17,7 +17,7 @@ module ActivityStepsHelper
     @act_step = act_step
     @step = act_step.step
     type = act_step.step_type
-    partial = "activity_steps/#{mode}_#{type.downcase}"
+    partial = "investigation_steps/#{mode}_#{type.downcase}"
     html = "could not render partial (#{partial})"
     begin
       html = render(:partial => partial, :object => @act_step)
@@ -29,12 +29,12 @@ module ActivityStepsHelper
 
   def link_to_delete (act_step) 
     @delete_step = act_step
-    render(:partial => 'activity_steps/delete', :object => @act_step)
+    render(:partial => 'investigation_steps/delete', :object => @act_step)
   end
   
   def link_to_save (act_step) 
     @delete_step = act_step
-    render(:partial => 'activity_steps/save', :object => @act_step)
+    render(:partial => 'investigation_steps/save', :object => @act_step)
   end
   
 end

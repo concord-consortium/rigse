@@ -1,6 +1,6 @@
 class Investigation < ActiveRecord::Base
   belongs_to :user
-  has_many :steps, :class_name => "ActivityStep"
+  has_many :steps, :class_name => "InvestigationStep"
   
   acts_as_replicatable
   

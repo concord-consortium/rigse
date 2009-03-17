@@ -1,5 +1,4 @@
-class ActivityStep < ActiveRecord::Base
-belongs_to :activity
-belongs_to :step,   :polymorphic => true
+class InvestigationStep < ActiveRecord::Base
+belongs_to :investigationbelongs_to :step,   :polymorphic => true
 
 end
