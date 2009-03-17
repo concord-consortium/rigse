@@ -1,5 +1,13 @@
 h1. rigse
 
+After checking out the code for the first time swithc to the rites_rails23 branch:
+
+  git checkout -b rites_rails2_3
+
+and run this rake task:
+
+  rake rigse:setup:new_rigse_from_scratch
+
 !http://clients.fudgestudios.com/chester.jpg!
 
 h1. Bort
