@@ -1,0 +1,12 @@
+<h1>Editing data_collector</h1>
+
+<% form_for(@data_collector) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @data_collector %> |
+<%= link_to 'Back', data_collectors_path %>

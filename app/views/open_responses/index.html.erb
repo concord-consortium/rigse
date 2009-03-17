@@ -1,0 +1,18 @@
+<h1>Listing open_responses</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% for open_response in @open_responses %>
+  <tr>
+    <td><%= link_to 'Show', open_response %></td>
+    <td><%= link_to 'Edit', edit_open_response_path(open_response) %></td>
+    <td><%= link_to 'Destroy', open_response, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New open_response', new_open_response_path %>

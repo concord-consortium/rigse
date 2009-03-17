@@ -1,0 +1,2 @@
+module XhtmlsHelper
+end

@@ -1,5 +1,8 @@
 class Investigation < ActiveRecord::Base
   belongs_to :user
+  has_many :activity_steps
+  has_many :steps, :class_name => "ActivityStep"
+  
   acts_as_replicatable
   
   self.extend SearchableModel

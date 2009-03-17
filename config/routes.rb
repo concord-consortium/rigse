@@ -1,4 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :activity_steps
+
+  map.resources :interactive_models
+
+  map.resources :data_collectors
+
+  map.resources :multiple_choices
+
+  map.resources :open_responses
+
+  map.resources :xhtmls
+
   map.resources :images
 
   map.resources :investigations
