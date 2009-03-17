@@ -20,3 +20,15 @@ config.action_mailer.raise_delivery_errors = false
 # Rails errors displayed in browser are generated with links to textmate
 # see: http://wiki.github.com/josevalim/rails-footnotes
 config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
+
+unless RUBY_PLATFORM =~ /java/
+  # See: http://www.datanoise.com/ruby-debug/
+  require 'ruby-debug'
+  # Debugger.wait_connection = true
+  # Debugger.stop_on_connect = true
+  # Debugger.start_remote
+  Debugger.start
+  Debugger.settings[:autolist] = 1
+  Debugger.settings[:autoeval] = 1
+  Debugger.settings[:reload_source_on_change] = 1
+end
