@@ -2,9 +2,9 @@
 
 
 <div class="step_editor">
-	<%= link_to 'preview', @activity %> |
+	<%= link_to 'preview', @investigation %> |
 	<%= link_to 'edit', :action => 'edit' %>
-	<h1>Adding items to activity &ldquo;<%= @activity.title %>&rdquo;</h1>
+	<h1>Adding items to investigation &ldquo;<%= @investigation.title %>&rdquo;</h1>
 	<div class="step_tree">
 		<ul>
 			<li class="section selected">
@@ -29,40 +29,40 @@
 			<span id="Xhtml" class='option'>
 				<%= link_to_remote 'Add XHTML', 
 					:url => {
-							:controller => 'activity_steps',
+							:controller => 'activities_steps',
 							:action => 'add_step', 
-							:activity_id => @activity.id,
+							:investigation_id => @investigation.id,
 							:kind => 'Xhtml'} %>
 			</span>
 
 			<span id="MultipleChoice" class='option'>
 				<%= link_to_remote 'Add MultipleChoice', 
 					:url => {
-							:controller => 'activity_steps',
+							:controller => 'activities_steps',
 							:action => 'add_step', 
-							:activity_id => @activity.id,
+							:investigation_id => @investigation.id,
 							:kind => 'MultipleChoice'} %>
 			</span>
 			
 			<span id="OpenResponse" class='option'>
 				<%= link_to_remote 'Add Open Response', 
 					:url => {
-							:controller => 'activity_steps',
+							:controller => 'activities_steps',
 							:action => 'add_step',
-							:activity_id => @activity.id,
+							:investigation_id => @investigation.id,
 							:kind => 'OpenResponse'} %>
 			</span>
 		</span>
 
 		<div id="steps_container" class="steps_container">
 			<ol id="steps">
-				<%= render(:partial => "activity_steps/steps", :object => @activity) %> 
+				<%= render(:partial => "activities_steps/steps", :object => @investigation) %> 
 			</ol>
 		</div>
 	
 
-	<%= link_to 'Show', @activity %> |
-	<%= link_to 'Back', activities_path %>
+	<%= link_to 'Show', @investigation %> |
+	<%= link_to 'Back', investigations_path %>
 	</div>
 	
 </div>
