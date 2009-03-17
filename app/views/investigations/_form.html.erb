@@ -42,32 +42,7 @@
     <%= f.text_area :reflection, :cols => 80, :rows => 20%>
   </p>
 	<hr/>
-	
-	<div id="Xhtml" class='draggable_step'>
-		Add XHTML
-	</div>
-	
-	<div id="MultipleChoice" class='draggable_step'>
-		Add Multiple Choice
-	</div>
-	<div id="OpenResponse" class='draggable_step'>
-		Add Open Response
-	</div>
-	
-	<%= draggable_element :Xhtml, :revert => true %>
-	<%= draggable_element :MultipleChoice, :revert => true %>
-	<%= draggable_element :OpenResponse, :revert => true %>
-	
-	<div id='contents' class='contents'>
-		This is where you can drag things to.
-	</div>
-	<%= drop_receiving_element :contents, 
-		:url => { :controller => "activities", :action => "add_step",
-			:params => {:activity_id => @activity.id }} %>
-	<%= sortable_element :contents, :options => {
-		:dropOnEmpty => true,
-		:constraint => :vertical
-	}   %>	
+
 
   <p>
     <%= f.submit "Create" %>

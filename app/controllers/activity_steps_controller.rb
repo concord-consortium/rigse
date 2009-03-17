@@ -82,4 +82,85 @@ class ActivityStepsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+
+
+  ##
+  ##
+  ##
+  def add_step
+    @activity = Activity.find(params['activity_id'])
+    class_name = params['kind']
+    step = nil
+    
+    case class_name
+    when 'Xhtml'
+      step = Xhtml.create(:name => "new XHTML")
+      step.activities << @activity
+      step.save
+    when 'OpenResponse'
+        step = MultipleChoice.create(:prompt => "new OpenResponse")
+        step.activities << @activity
+        step.save
+    when 'MultipleChoice'
+      step = MultipleChoice.create(:prompt => "new MultipleChoice")
+      step.activities << @activity
+      step.save
+    end
+   
+    new_contents = render_to_string :partial => "steps", :layout => false
+    render :update do |page|
+        page.replace_html "steps", new_contents
+        page.visual_effect :highlight, 'steps'
+      end
+  end
+  
+  
+  ##
+  ##
+  ##  
+  def sort_steps
+    puts params.inspect
+    render :text => "ok"
+  end
+  
+  
+  ##
+  ##
+  ##  
+  def show_step()
+    @step = params['id']
+    mode = params['mode'] || 'edit'
+    type = act_step.step_type
+    partial = "#{mode}_#{type.downcase}"
+    html = "could not render partial (#{partial})"
+    begin
+      html = render_to_string :partial => partial  
+    rescue => e
+      html = "#{html} : #{e}"
+    end
+    render html
+  end
+  
+  
+  ##
+  ##
+  ##
+  def delete_step
+    @activity = Activity.find(params['activity_id'])
+    @steps = ActivityStep.find(:all, :conditions => {
+      :step_id => params['step_id'],
+      :activity_id => params['activity_id']
+    });
+    @steps.each do |step|
+      #TODO: we need to remove lots of depenedant items potentially, see :dependent, after_destroy, &etc.
+      step.destroy
+    end
+   
+   new_contents = render_to_string :partial => "steps", :layout => false
+   render :update do |page|
+       page.replace_html "steps", new_contents
+       page.visual_effect :highlight, 'steps'
+     end
+  end
 end
