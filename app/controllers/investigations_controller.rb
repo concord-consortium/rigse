@@ -6,7 +6,7 @@ class InvestigationsController < ApplicationController
     :page_layout=>:landscape,
   }
   
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index, :add_step]
   
   protected
   
@@ -111,4 +111,37 @@ class InvestigationsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def add_step
+    puts params.inspect
+    # render :js => "alert('hello')"
+    investigation_id = params['investigation_id']
+    @investigation = Investigation.find(investigation_id)
+    # weird!
+    class_name = params['id']
+    step = nil
+
+    case class_name
+    when 'Xhtml'
+      step = Xhtml.create(:name => "new XHTML")
+      step.activities << @investigation
+      step.save
+    when 'OpenResponse'
+      step = MultipleChoice.create(:prompt => "new OpenResponse")
+      step.activities << @investigation
+      step.save
+    when 'MultipleChoice'
+      step = MultipleChoice.create(:prompt => "new MultipleChoice")
+      step.activities << @investigation
+      step.save
+    end
+
+    new_contents = render_to_string :partial => "steps", :layout => false
+    render :update do |page|
+      page.replace_html "contents", new_contents
+      page.visual_effect :highlight, 'contents'
+
+    end
+  end
+
 end
