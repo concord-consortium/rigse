@@ -1,5 +1,8 @@
 class ActivityStepsController < ApplicationController
 
+
+
+  
   # GET /activity_steps
   # GET /activity_steps.xml
   def index
@@ -143,7 +146,23 @@ class ActivityStepsController < ApplicationController
     render html
   end
   
-  
+
+  ##
+  ##
+  ##
+  def save_step
+    @step = ActivityStep.find(params['step_id'])
+    @actual_step = @step.step
+    attribute_updates = params.reject{ |k,v| !(@actual_step.attributes.has_key? k)}
+    @actual_step.update_attributes(attribute_updates)
+    @actual_step.save
+    render :update do |page|
+       page.visual_effect :highlight, params['id']
+     end
+  end
+
+
+
   ##
   ##
   ##

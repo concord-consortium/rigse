@@ -28,15 +28,13 @@ module ActivityStepsHelper
   end
 
   def link_to_delete (act_step) 
-    @word = 'word'
     @delete_step = act_step
     render(:partial => 'activity_steps/delete', :object => @act_step)
   end
   
-  def link_to_saves (act_step) 
-    @word = 'word'
+  def link_to_save (act_step) 
     @delete_step = act_step
-    render(:partial => 'activity_steps/delete', :object => @act_step)
+    render(:partial => 'activity_steps/save', :object => @act_step)
   end
   
 end
