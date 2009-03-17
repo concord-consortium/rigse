@@ -7,19 +7,20 @@ class User < ActiveRecord::Base
   include Authorization::AasmRoles
 
   # Validations
-  validates_presence_of :login, :if => :not_using_openid?
-  validates_length_of :login, :within => 3..40, :if => :not_using_openid?
-  validates_uniqueness_of :login, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :login, :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD, :if => :not_using_openid?
-  validates_format_of :name, :with => RE_NAME_OK, :message => MSG_NAME_BAD, :allow_nil => true
-  validates_length_of :name, :maximum => 100
-  validates_presence_of :email, :if => :not_using_openid?
-  validates_length_of :email, :within => 6..100, :if => :not_using_openid?
-  validates_uniqueness_of :email, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD, :if => :not_using_openid?
-  validates_uniqueness_of :identity_url, :unless => :not_using_openid?
-  validate :normalize_identity_url
   
+  validates_presence_of     :login
+  validates_length_of       :login,    :within => 3..40
+  validates_uniqueness_of   :login
+  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
+
+  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_length_of       :name,     :maximum => 100
+
+  validates_presence_of     :email
+  validates_length_of       :email,    :within => 6..100 #r@a.wk
+  validates_uniqueness_of   :email
+  validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
+
   # Relationships
   has_and_belongs_to_many :roles
   has_many :investigations
@@ -44,8 +45,8 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
-    u && u.authenticated?(password) ? u : nil
+    u1 = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
+    u1 && u1.authenticated?(password) ? u1 : nil
   end
   
   def name

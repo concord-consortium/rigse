@@ -42,6 +42,7 @@ class SessionsController < ApplicationController
       note_failed_signin
       @login = params[:login]
       @remember_me = params[:remember_me]
+      self.current_user = User.anonymous
       render :action => :new
     end
   end
