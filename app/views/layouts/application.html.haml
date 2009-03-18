@@ -47,7 +47,7 @@
           .right
             %ul
       #middle_section
-        #side-bar
+        #sidebar
           .lighter_background
             %p.sideBarTitle
               = link_to '&#187; Home', home_path
@@ -60,7 +60,9 @@
             / %p.sideBarTitle
             /   = link_to '&#187; Domains', domains_path
             / %p.sideBarTitle
-            /   = link_to '&#187; Unifying Themes', unifying_themes_path          
+            /   = link_to '&#187; Unifying Themes', unifying_themes_path
+            = yield :sidebar
+            
             %p
               %span.sideBarText
                 Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.

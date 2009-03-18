@@ -1,69 +1,65 @@
-
-
-
 <div class="step_editor">
-	<%= link_to 'preview', @investigation %> |
-	<%= link_to 'edit', :action => 'edit' %>
-	<h1>Adding items to investigation &ldquo;<%= @investigation.title %>&rdquo;</h1>
-	<div class="step_tree">
-		<ul>
-			<li class="section selected">
-				<span class="title">Discovery</span>
-			</li>
-			<li class="section">
-				<span class="title">Materials</span>
-			</li>
-			<li class="section">
-				<span class="title">Safety</span>
-			</li>
-			<li class="section">
-				<span class="title">Predict</span>
-			</li>
-			<li class="section">
-				<span class="title">Investigate</span>
-			</li>	
-		</ul>
-	</div>
+  <%= link_to 'preview', @investigation %> |
+  <%= link_to 'edit', :action => 'edit' %>
+  <h1>Adding items to investigation &ldquo;<%= @investigation.title %>&rdquo;</h1>
+  <% content_for(:sidebar) do %> 
+    <div class="step_tree">
+      <ul>
+        <li class="section selected">
+          <span class="title">Discovery</span>
+        </li>
+        <li class="section">
+          <span class="title">Materials</span>
+        </li>
+        <li class="section">
+          <span class="title">Safety</span>
+        </li>
+        <li class="section">
+          <span class="title">Predict</span>
+        </li>
+        <li class="section">
+          <span class="title">Investigate</span>
+        </li> 
+      </ul>
+    </div>
+  <% end %>
 
-		<span id="options" class="options">
-			<span id="Xhtml" class='option'>
-				<%= link_to_remote 'Add XHTML', 
-					:url => {
-							:controller => 'activities_steps',
-							:action => 'add_step', 
-							:investigation_id => @investigation.id,
-							:kind => 'Xhtml'} %>
-			</span>
+  <span id="options" class="options menu">
+    <span id="Xhtml" class='option'>
+      <%= link_to_remote 'XHTML', { :class => "embeddable_button" },
+        :url => {
+            :controller => 'investigation_steps',
+            :action => 'add_step', 
+            :investigation_id => @investigation.id,
+            :kind => 'Xhtml'} %>
+    </span>
 
-			<span id="MultipleChoice" class='option'>
-				<%= link_to_remote 'Add MultipleChoice', 
-					:url => {
-							:controller => 'activities_steps',
-							:action => 'add_step', 
-							:investigation_id => @investigation.id,
-							:kind => 'MultipleChoice'} %>
-			</span>
-			
-			<span id="OpenResponse" class='option'>
-				<%= link_to_remote 'Add Open Response', 
-					:url => {
-							:controller => 'activities_steps',
-							:action => 'add_step',
-							:investigation_id => @investigation.id,
-							:kind => 'OpenResponse'} %>
-			</span>
-		</span>
+    <span id="MultipleChoice" class='option'>
+      <%= link_to_remote 'MultipleChoice', { :class => "embeddable_button" },
+        :url => {
+            :controller => 'investigation_steps',
+            :action => 'add_step', 
+            :investigation_id => @investigation.id,
+            :kind => 'MultipleChoice'} %>
+    </span>
+    
+    <span id="OpenResponse" class='option'>
+      <%= link_to_remote 'Open Response', { :class => "embeddable_button" },
+        :url => {
+            :controller => 'investigation_steps',
+            :action => 'add_step',
+            :investigation_id => @investigation.id,
+            :kind => 'OpenResponse'} %>
+    </span>
+  </span>
 
-		<div id="steps_container" class="steps_container">
-			<ol id="steps">
-				<%= render(:partial => "activities_steps/steps", :object => @investigation) %> 
-			</ol>
-		</div>
-	
+  <div id="steps_container" class="steps_container">
+    <ol id="steps">
+      <%= render(:partial => "investigation_steps/steps", :object => @investigation) %> 
+    </ol>
+  </div>
+  
 
-	<%= link_to 'Show', @investigation %> |
-	<%= link_to 'Back', investigations_path %>
-	</div>
-	
+  <%= link_to 'Show', @investigation %> |
+  <%= link_to 'Back', investigations_path %>
 </div>
-

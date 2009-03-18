@@ -19,7 +19,7 @@
 !footer_background = !medium_green
 !mid_header_font_color = !brownish_red
 !sub_header_background = !dark_green
-!side_bar_font_color = !redish_brown
+!sidebar_font_color = !redish_brown
 
 !common_link_color_dark_background = !light_green
 !common_link_color_light_background = !medium_green
@@ -34,7 +34,7 @@
 !content_header_font_color = !redish_brown
 
 !mid_header_height = 7em
-!side_bar_width = 15em
+!sidebar_width = 15em
 
 body
   :color black
@@ -73,7 +73,7 @@ body
   :top -4.5em
   .logo
     :position absolute
-    :left 1.5em
+    :left 0.5em
     :top = 0.5em
     :margin 0em
     :width 6.2em
@@ -81,10 +81,10 @@ body
       :width 100%
   h1
     :top 0.2em
-    :margin 0em 5em 0em 3em
+    :margin 0em 5em 0em 5em
     :padding 0.5em 0em
     :font
-      :size 337%
+      :size 200%
       :weight 700
 
 .horiz_band
@@ -124,6 +124,8 @@ body
   :font-size 1.2em
   :color = !super_header_font_color
   :background-color transparent
+  :height = 3em
+  :margin 2em 0em -3em 0em
   .right
     :margin-right 0.5em
   a
@@ -174,7 +176,7 @@ body
     :top 0em
     :right 0em 
     :bottom 0em
-    :left = !side_bar_width
+    :left = !sidebar_width
   :border
     :left 1px solid
     :right 1px solid
@@ -206,11 +208,11 @@ body
     :bottom 1px solid
     :color = !common_border
 
-#side-bar
-  :width = !side_bar_width - 0.1em
+#sidebar
+  :width = !sidebar_width - 0.1em
   :float left
   :clear left
-  :color = !side_bar_font_color
+  :color = !sidebar_font_color
   :border
     :right 0.1em solid
     :left 0.1em solid
@@ -231,6 +233,19 @@ body
     :font-weight bold
     :margin 0em 0em 0em 2.5mm
     :padding 1em 0 0 0
+  .step_tree
+    :font-weight bold
+    :margin 1em 1em 1em 2.5mm
+    :padding 0.2em 0.2em 0.2em 1.5em
+    :border
+      :style dotted
+      :width 1px
+      :color = !common_border
+    ul
+      :margin 0.2em 0.2em 0.2em 0.2em
+      li
+        :margin 0.1em 0.1em 0.1em 0.1em
+
   a:hover
     :color white
     :background-color = !common_highlight_background
@@ -271,7 +286,7 @@ body
     :top 0em
     :right 0em 
     :bottom 0em
-    :left = !side_bar_width
+    :left = !sidebar_width
   :padding 0em 1em 0em 2em
   :border
     :left 0px solid
@@ -329,6 +344,44 @@ body
       :style dotted
       :width 1px
       :color = !common_border
+  
+  .step_editor
+    .menu
+      :background-color = !body_background
+      :color = !redish_brown
+      ul
+        :background-color = !body_background
+        :color = !redish_brown
+        li
+          a
+            :color = !medium_green
+            &:hover
+              :color = !dark_green
+    
+    .embeddable_button
+    .steps_container
+      :margin 0em
+      :padding 0em 0em 0em 0em
+      ol
+        :background-color = !body_background
+        :color = !redish_brown
+        :position relative
+        :background-image none
+        :margin-left 0.5em
+        :padding-left 0.5em
+        
+        li
+          :margin 1em
+          :padding 1em 1em 1em 1em
+          :border
+            :style dotted
+            :width 1px
+            :color = !common_border
+          :background-color white
+          :position relative
+          :z-index 0
+          :top 0px
+          :left 0 px
 
   .paginator
     :margin 0em

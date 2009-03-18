@@ -100,13 +100,16 @@ class InvestigationStepsController < ApplicationController
     case class_name
     when 'Xhtml'
       step = Xhtml.create(:name => "new XHTML")
-      step.activities << @investigation      step.save
+      step.investigations << @investigation
+      step.save
     when 'OpenResponse'
         step = MultipleChoice.create(:prompt => "new OpenResponse")
-        step.activities << @investigation        step.save
+        step.investigations << @investigation
+        step.save
     when 'MultipleChoice'
       step = MultipleChoice.create(:prompt => "new MultipleChoice")
-      step.activities << @investigation      step.save
+      step.investigations << @investigation
+      step.save
     end
    
     # new_contents = render_to_string :partial => "steps", :layout => false

@@ -1,4 +1,4 @@
 class InvestigationStep < ActiveRecord::Base
-belongs_to :investigationbelongs_to :step,   :polymorphic => true
-
+  belongs_to :investigation
+  belongs_to :step,   :polymorphic => true
 end
