@@ -24,9 +24,14 @@
     </div>
   <% end %>
 
+<!-- noah removed this from each link_to_remote below:
+{ :class => "embeddable_button" },
+not sure how it got there, or what it was supposed to do.
+I will glg it. -->
+
   <span id="options" class="options menu">
     <span id="Xhtml" class='option'>
-      <%= link_to_remote 'XHTML', { :class => "embeddable_button" },
+      <%= link_to_remote 'XHTML', 
         :url => {
             :controller => 'investigation_steps',
             :action => 'add_step', 
@@ -35,7 +40,7 @@
     </span>
 
     <span id="MultipleChoice" class='option'>
-      <%= link_to_remote 'MultipleChoice', { :class => "embeddable_button" },
+      <%= link_to_remote 'MultipleChoice', 
         :url => {
             :controller => 'investigation_steps',
             :action => 'add_step', 
@@ -44,7 +49,7 @@
     </span>
     
     <span id="OpenResponse" class='option'>
-      <%= link_to_remote 'Open Response', { :class => "embeddable_button" },
+      <%= link_to_remote 'Open Response', 
         :url => {
             :controller => 'investigation_steps',
             :action => 'add_step',
