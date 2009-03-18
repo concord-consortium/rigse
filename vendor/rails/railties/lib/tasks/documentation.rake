@@ -17,7 +17,7 @@ namespace :doc do
     rdoc.template = "#{ENV['template']}.rb" if ENV['template']
     rdoc.title    = "Rails Framework Documentation"
     rdoc.options << '--line-numbers' << '--inline-source'
-    rdoc.rdoc_files.include('README')
+    # rdoc.rdoc_files.include('README')
     rdoc.rdoc_files.include('vendor/rails/railties/CHANGELOG')
     rdoc.rdoc_files.include('vendor/rails/railties/MIT-LICENSE')
     rdoc.rdoc_files.include('vendor/rails/railties/README')

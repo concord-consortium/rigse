@@ -1,8 +1,6 @@
 class InvestigationsController < ApplicationController
   # GET /investigations
   # GET /investigations.xml
-
-  in_place_edit_for :xhtml, :name
   
   prawnto :prawn=>{
     :page_layout=>:landscape,
