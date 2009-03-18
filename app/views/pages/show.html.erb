@@ -33,7 +33,7 @@ I will glg it. -->
     <span id="Xhtml" class='option'>
       <%= link_to_remote 'XHTML', 
         :url => {
-            :controller => 'investigation_steps',
+            :controller => 'page_elements',
             :action => 'add_step', 
             :investigation_id => @investigation.id,
             :kind => 'Xhtml'} %>
@@ -42,7 +42,7 @@ I will glg it. -->
     <span id="MultipleChoice" class='option'>
       <%= link_to_remote 'MultipleChoice', 
         :url => {
-            :controller => 'investigation_steps',
+            :controller => 'page_elements',
             :action => 'add_step', 
             :investigation_id => @investigation.id,
             :kind => 'MultipleChoice'} %>
@@ -51,7 +51,7 @@ I will glg it. -->
     <span id="OpenResponse" class='option'>
       <%= link_to_remote 'Open Response', 
         :url => {
-            :controller => 'investigation_steps',
+            :controller => 'page_elements',
             :action => 'add_step',
             :investigation_id => @investigation.id,
             :kind => 'OpenResponse'} %>
@@ -60,11 +60,11 @@ I will glg it. -->
 
   <div id="steps_container" class="steps_container">
     <ol id="steps">
-      <%= render(:partial => "investigation_steps/steps", :object => @investigation) %> 
+      <%= render(:partial => "page_elements/steps", :object => @investigation) %> 
     </ol>
   </div>
   
 
   <%= link_to 'Show', @investigation %> |
-  <%= link_to 'Back', investigations_path %>
+  <%= link_to 'Back', pages_path %>
 </div>

@@ -1,7 +1,6 @@
 class Investigation < ActiveRecord::Base
   belongs_to :user
-  has_many :steps, :class_name => "InvestigationStep"
-  
+  has_many :sections, :order => :position, :dependent => :destroy
   acts_as_replicatable
   
   self.extend SearchableModel

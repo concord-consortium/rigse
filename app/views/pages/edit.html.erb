@@ -1,0 +1,12 @@
+<h1>Editing page_elements</h1>
+
+<% form_for(@page_elements) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @page_elements %> |
+<%= link_to 'Back', page_elements_path %>

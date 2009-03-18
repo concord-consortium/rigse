@@ -1,9 +1,12 @@
 class CreateInteractiveModels < ActiveRecord::Migration
   def self.up
     create_table :interactive_models do |t|
-      t.string      :prompt
-      t.string      :response
       t.timestamps
+      t.string      :name
+      t.string      :description
+      t.integer     :user_id
+      t.string      :uuid,         :limit => 36
+      t.string      :content
     end
   end
 

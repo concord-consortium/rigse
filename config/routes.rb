@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :investigation_steps
-
+  map.resources :page_elements
+  map.resources :pages
   map.resources :interactive_models
 
   map.resources :data_collectors
@@ -13,7 +13,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :images
 
-  map.resources :investigations
+  map.resources :investigations, :has_many => :sections, :shallow => true
   map.resources :big_ideas
   map.resources :unifying_themes
   map.resources :expectations

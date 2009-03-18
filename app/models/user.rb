@@ -24,6 +24,9 @@ class User < ActiveRecord::Base
   # Relationships
   has_and_belongs_to_many :roles
   has_many :investigations
+  has_many :sections
+  has_many :pages
+
   has_many :assessment_targets
   has_many :big_ideas
   has_many :domains

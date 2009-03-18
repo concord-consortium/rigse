@@ -1,6 +1,6 @@
 class InvestigationsController < ApplicationController
-  # GET /investigations
-  # GET /investigations.xml
+  # GET /pages
+  # GET /pages.xml
   
   prawnto :prawn=>{
     :page_layout=>:landscape,
@@ -27,19 +27,19 @@ class InvestigationsController < ApplicationController
   public
   
   def index
-    # @investigations = Investigation.find(:all)
-    @investigations = Investigation.search(params[:search], params[:page], self.current_user)
-    @paginated_objects = @investigations
+    # @pages = Investigation.find(:all)
+    @pages = Investigation.search(params[:search], params[:page], self.current_user)
+    @paginated_objects = @pages
     
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @investigations }
+      format.xml  { render :xml => @pages }
     end
   end
 
-  # GET /investigations/1
-  # GET /investigations/1.xml
+  # GET /pages/1
+  # GET /pages/1.xml
   def show
     @investigation = Investigation.find(params[:id])
 
@@ -50,8 +50,8 @@ class InvestigationsController < ApplicationController
     end
   end
 
-  # GET /investigations/new
-  # GET /investigations/new.xml
+  # GET /pages/new
+  # GET /pages/new.xml
   def new
     @investigation = Investigation.new
 
@@ -61,13 +61,13 @@ class InvestigationsController < ApplicationController
     end
   end
 
-  # GET /investigations/1/edit
+  # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
   end
 
-  # POST /investigations
-  # POST /investigations.xml
+  # POST /pages
+  # POST /pages.xml
   def create
     @investigation = Investigation.new(params[:investigation])
 
@@ -83,8 +83,8 @@ class InvestigationsController < ApplicationController
     end
   end
 
-  # PUT /investigations/1
-  # PUT /investigations/1.xml
+  # PUT /pages/1
+  # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
 
@@ -101,14 +101,14 @@ class InvestigationsController < ApplicationController
   end
   
 
-  # DELETE /investigations/1
-  # DELETE /investigations/1.xml
+  # DELETE /pages/1
+  # DELETE /pages/1.xml
   def destroy
     @investigation = Investigation.find(params[:id])
     @investigation.destroy
 
     respond_to do |format|
-      format.html { redirect_to(investigations_url) }
+      format.html { redirect_to(pages_url) }
       format.xml  { head :ok }
     end
   end

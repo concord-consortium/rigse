@@ -1,0 +1,18 @@
+<h1>Listing pages for <%= @investigation.title %> </h1>
+<%= @investigation.title %> 
+<table>
+  <tr>
+  </tr>
+
+<% for page in @pages %>
+  <tr>
+    <td><%= link_to 'Show', page %></td>
+    <td><%= link_to 'Edit', edit_page_path(page) %></td>
+    <td><%= link_to 'Destroy', page, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New page for #{@investigation.title}', new_page_path %>

@@ -1,4 +1,4 @@
 class MultipleChoice < ActiveRecord::Base
-  has_many :investigation_steps, :as => :step
-  has_many :investigations, :through =>:investigation_steps
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
 end

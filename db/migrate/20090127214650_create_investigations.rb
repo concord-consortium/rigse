@@ -17,6 +17,6 @@ class CreateInvestigations < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :investigations
+    drop_table :pages
   end
 end
