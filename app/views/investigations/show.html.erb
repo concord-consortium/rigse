@@ -5,13 +5,6 @@
 <%= link_to 'Edit', edit_investigation_path(@investigation) %> |
 <%= link_to 'Back', investigations_path %> 
 
-<% if @investigation.sections.size > 0%>
-	<em>Sections:</em>
-	<% @investigation.sections.each do | section | %>
-		<%= link_to section.name, section_url(section)%>
-	<% end %>
-<% end %>
-
 <p>
   <b>Name:</b>
   <%= @investigation.name %>
@@ -21,6 +14,13 @@
   <b>Description:</b>
   <%= @investigation.description %>
 </p>
+
+<% if @investigation.sections.size > 0%>
+	<em>Sections:</em>
+	<% @investigation.sections.each do | section | %>
+		<%= link_to section.name, section_url(section)%>
+	<% end %>
+<% end %>
 
 
 <%= link_to 'Edit', edit_investigation_path(@investigation) %> |
