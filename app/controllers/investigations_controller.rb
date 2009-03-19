@@ -108,7 +108,7 @@ class InvestigationsController < ApplicationController
     @investigation.destroy
 
     respond_to do |format|
-      format.html { redirect_to(pages_url) }
+      format.html { redirect_to(investigations_url) }
       format.xml  { head :ok }
     end
   end

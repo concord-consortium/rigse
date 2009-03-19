@@ -1,70 +1,38 @@
 <div class="step_editor">
-  <%= link_to 'preview', @investigation %> |
-  <%= link_to 'edit', :action => 'edit' %>
-  <h1>Adding items to investigation &ldquo;<%= @investigation.title %>&rdquo;</h1>
-  <% content_for(:sidebar) do %> 
-    <div class="step_tree">
-      <ul>
-        <li class="section selected">
-          <span class="title">Discovery</span>
-        </li>
-        <li class="section">
-          <span class="title">Materials</span>
-        </li>
-        <li class="section">
-          <span class="title">Safety</span>
-        </li>
-        <li class="section">
-          <span class="title">Predict</span>
-        </li>
-        <li class="section">
-          <span class="title">Investigate</span>
-        </li> 
-      </ul>
-    </div>
-  <% end %>
+	
+  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
+  <%= link_to 'edit', :action => 'edit' %> |
+  <%= link_to_remote 'add xhtml element to this page', :action => 'add_xhtml' %> | 
+  <%= link_to_remote 'add question element to this page', :action => 'add_xhtml' %>
 
-<!-- noah removed this from each link_to_remote below:
-{ :class => "embeddable_button" },
-not sure how it got there, or what it was supposed to do.
-I will glg it. -->
-
-  <span id="options" class="options menu">
-    <span id="Xhtml" class='option'>
-      <%= link_to_remote 'XHTML', 
-        :url => {
-            :controller => 'page_elements',
-            :action => 'add_step', 
-            :investigation_id => @investigation.id,
-            :kind => 'Xhtml'} %>
-    </span>
-
-    <span id="MultipleChoice" class='option'>
-      <%= link_to_remote 'MultipleChoice', 
-        :url => {
-            :controller => 'page_elements',
-            :action => 'add_step', 
-            :investigation_id => @investigation.id,
-            :kind => 'MultipleChoice'} %>
-    </span>
-    
-    <span id="OpenResponse" class='option'>
-      <%= link_to_remote 'Open Response', 
+  <h1>Showing page for <%= @page.name %> of &ldquo;<%= @page.section.name %>&rdquo; section</h1>
+	<%= render 	:partial => 'shared/investigation_side_menu',
+				:locals => { :investigation => @page.section.investigation } %>
+    <!-- 
+	use link to remote here to add a new page...
+	
         :url => {
             :controller => 'page_elements',
             :action => 'add_step',
             :investigation_id => @investigation.id,
             :kind => 'OpenResponse'} %>
-    </span>
-  </span>
+    -->
 
-  <div id="steps_container" class="steps_container">
-    <ol id="steps">
-      <%= render(:partial => "page_elements/steps", :object => @investigation) %> 
-    </ol>
-  </div>
-  
+  <!-- Allow for page reordering here? -->
+  <div id="elements_container" class="elements_container">
+	<% if @page.page_elements.size > 0 %>
+	<ol id="element_{element.id}">
+		<% @page.page_elements.each do | element | %>
+			<li>
+				<%= element.embeddable.name %>
+				<%= element.embeddable.class %>
+				<%= element.embeddable.description %>
+			</li>
+		<% end %>
+	</ol>
+	<% end %>
+ </div>
 
-  <%= link_to 'Show', @investigation %> |
-  <%= link_to 'Back', pages_path %>
+
+  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
 </div>

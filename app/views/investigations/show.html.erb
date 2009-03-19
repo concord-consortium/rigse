@@ -1,6 +1,16 @@
 
+<%= render 	:partial => 'shared/investigation_side_menu',
+			:locals => { :investigation => @investigation } %>
+
 <%= link_to 'Edit', edit_investigation_path(@investigation) %> |
-<%= link_to 'Back', pages_path %>
+<%= link_to 'Back', investigations_path %> 
+
+<% if @investigation.sections.size > 0%>
+	<em>Sections:</em>
+	<% @investigation.sections.each do | section | %>
+		<%= link_to section.name, section_url(section)%>
+	<% end %>
+<% end %>
 
 <p>
   <b>Title:</b>

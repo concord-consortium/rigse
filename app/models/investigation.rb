@@ -67,9 +67,7 @@ HEREDOC
 
   default_value_for :sections do 
     results = []
-    i = 0
-    %w[Discovery Matrials Safety Prediction Inestigation Analysis Conclusion].each do | section |
-      i = i.next
+    %w[Discovery Matrials Safety Prediction Inestigation Analysis Conclusion].each_with_index do | section,i |
       results << Section.new(
         :position => i,
         :name => section,

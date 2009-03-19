@@ -36,5 +36,7 @@
               = link_to 'Show', investigation
             %li
               = link_to 'Edit', edit_investigation_path(investigation)
+            %li
+              = link_to 'Delete', :action => 'destroy', :id =>investigation.id
         .content
           = truncate(investigation.context, 120)
