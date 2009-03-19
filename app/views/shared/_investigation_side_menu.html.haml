@@ -1,0 +1,5 @@
+- content_for :sidebar do
+  .step_tree
+    %ul Sections:
+    - investigation.sections.each do |section|
+      = link_to section.name, section_url(section)
