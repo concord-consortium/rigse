@@ -13,6 +13,7 @@ class Investigation < ActiveRecord::Base
     end
   end
   
+  
 
   default_value_for :procedures_opening, <<HEREDOC
   <h3>Procedures</h3>  

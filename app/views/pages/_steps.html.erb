@@ -1,6 +1,7 @@
-<% @investigation.steps.each do |step| %> 
-	<% domid = "step_#{step.id}" %> 
-		<li class="sortable_step" id='<%= domid %>'><%= html_for_step(step) %></li> 
+<% @investigation.steps.each do |step| %>
+  <% content_tag_for :li, step, :class => "sortable_step" do %>
+    <%= html_for_step(step) %></li> 
+  <% end %> 
 <% end %> 
-<%= sortable_element :steps, :dropOnEmpty => true, :url=> {:action => 'sort_steps',
-		:params => {:investigation_id => @investigation.id }}  %>	
+<%= sortable_element :steps, :dropOnEmpty => true, 
+  :url=> {:action => 'sort_steps', :params => {:investigation_id => @investigation.id }}  %> 

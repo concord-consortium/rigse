@@ -3,8 +3,9 @@ class PagesController < ApplicationController
   # GET /page
   # GET /page.xml
   def index
-    @investigation = Investigation.find(params['section_id'])
-    @pages = @investigation.pages
+    # @investigation = Investigation.find(params['section_id'])
+    # @pages = @investigation.pages
+    @pages = Page.find(:all)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @page }
@@ -34,7 +35,7 @@ class PagesController < ApplicationController
 
   # GET /page/1/edit
   def edit
-    @page = Page.find(params[:id])
+    @page = Page.find(params[:id], :include => :page_elements)
   end
 
   # POST /page

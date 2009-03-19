@@ -1,27 +1,23 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :page_elements
-  map.resources :pages
-  map.resources :interactive_models
 
-  map.resources :data_collectors
+  map.resources :interactive_models, :data_collectors, :multiple_choices
+  map.resources :open_responses, :xhtmls
 
-  map.resources :multiple_choices
+  map.resources :sections, :pages, :page_elements
 
-  map.resources :open_responses
+  map.resources :investigations do |investigation|
+    investigation.resources :sections do |section|
+      section.resources :pages do |page|
+        page.resources :page_elements
+      end
+    end
+  end
 
-  map.resources :xhtmls
+  map.resources :assessment_targets, :knowledge_statements, :domains
+  map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
+  map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
 
   map.resources :images
-
-  map.resources :investigations, :has_many => :sections, :shallow => true
-  map.resources :big_ideas
-  map.resources :unifying_themes
-  map.resources :expectations
-  map.resources :expectation_stems
-  map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
-  map.resources :assessment_targets
-  map.resources :knowledge_statements
-  map.resources :domains
  
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
@@ -44,6 +40,6 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'home', :action => 'index'
 
   # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  # map.connect ':controller/:action/:id'
+  # map.connect ':controller/:action/:id.:format'
 end
