@@ -27,7 +27,6 @@ class InvestigationsController < ApplicationController
   public
   
   def index
-    # @pages = Investigation.find(:all)
     @pages = Investigation.search(params[:search], params[:page], self.current_user)
     @paginated_objects = @pages
     
