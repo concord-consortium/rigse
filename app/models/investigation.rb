@@ -63,4 +63,40 @@ HEREDOC
   <p></p>
 HEREDOC
 
+
+
+  default_value_for :sections do 
+    results = []
+    i = 0
+    %w[Discovery Matrials Safety Prediction Inestigation Analysis Conclusion].each do | section |
+      i = i.next
+      results << Section.new(
+        :position => i,
+        :name => section,
+        :description => "#{section} section"
+      )
+    end
+    results
+  end
+
 end
+
+
+# 
+# Recent Schema definition:
+#
+# create_table "investigations", :force => true do |t|
+#   t.integer  "user_id"
+#   t.string   "title"
+#   t.text     "context"
+#   t.text     "opportunities"
+#   t.text     "objectives"
+#   t.text     "procedures_opening"
+#   t.text     "procedures_engagement"
+#   t.text     "procedures_closure"
+#   t.text     "assessment"
+#   t.text     "reflection"
+#   t.string   "uuid",                  :limit => 36
+#   t.datetime "created_at"
+#   t.datetime "updated_at"
+# end
