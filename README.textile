@@ -8,6 +8,16 @@ and run this rake task:
 
   rake rigse:setup:new_rigse_from_scratch
 
+
+
+h1. haml
+we use haml for some templates
+see: http://haml.hamptoncatlin.com/
+
+to install this plugin we followed this procedure:
+1. gem install --no-ri haml
+2. haml --rails path/to/rigse_app
+
 !http://clients.fudgestudios.com/chester.jpg!
 
 h1. Bort
