@@ -2,7 +2,7 @@ class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section, :class_name => "Section", :foreign_key => "section_id"
   has_many :page_elements, :order => :position
-
+  acts_as_replicatable
   acts_as_list
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   

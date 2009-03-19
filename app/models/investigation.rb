@@ -66,17 +66,31 @@ HEREDOC
 
 
   default_value_for :sections do 
+    results = Investigation.make_teacher_notes()
+    %w[Discovery Matrials Safety Prediction Investigation Analysis Conclusion].each_with_index do | section,i |
+      results << Section.new(
+        :position => i+1,
+        :name => section,
+        :description => "#{section} section"
+    )
+    end
+    results
+  end
+
+  protected 
+  def Investigation.make_teacher_notes
     results = []
     teacherNotes = Section.create(
       :position => 1,
       :name => 'Teacher Notes',
       :description => 'This section contains notes and materials for the teacher only.'
     )
-      
+
     opening = Page.create(
       :name => "Opening Proceedure",
       :description => "What investigations will you and your students do and how are they connected to the objectives?"
     )
+    
     opening_xhtml = Xhtml.create(
       :name => "Opening Proceedure",
       :description => "What investigations will you and your students do and how are they connected to the objectives?",
@@ -84,7 +98,7 @@ HEREDOC
     )
     opening_xhtml.pages << opening
     opening_xhtml.save
-    
+
     engagement = Page.create(
       :name => "Engagement Proceedure",
       :description => "What questions can you pose to encourage students to take risks and to deepen students’ understanding?"
@@ -96,7 +110,7 @@ HEREDOC
     )
     engagement_xhtml.pages << engagement
     engagement_xhtml.save
-    
+
     closure = Page.create(
       :name => "Closing Proceedure",
       :description => "What kinds of questions do you ask to get meaningful student feedback?"
@@ -108,24 +122,17 @@ HEREDOC
     )
     closure_xhtml.pages << closure
     closure_xhtml.save
-    
+
     teacherNotes.pages << opening 
     teacherNotes.pages << engagement
     teacherNotes.pages << closure
     results << teacherNotes
-      
-    %w[Discovery Matrials Safety Prediction Investigation Analysis Conclusion].each_with_index do | section,i |
-      results << Section.new(
-        :position => i+1,
-        :name => section,
-        :description => "#{section} section"
-      )
-    end
-
-    results
+    
   end
-
 end
+
+
+
 
 
 # 

@@ -2,6 +2,7 @@ class OpenResponse < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:
+  acts_as_replicatable
   
   default_value_for :name, "Further Investigation: cleaving a crystal"
   default_value_for :descrition, "This is an example take from Itroduction to Crystals"

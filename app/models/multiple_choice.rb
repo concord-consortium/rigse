@@ -2,6 +2,7 @@ class MultipleChoice < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   
+  acts_as_replicatable
   
   default_value_for :name, "Further Investigation: cleaving a crystal"
   default_value_for :descrition, "This is an example take from Itroduction to Crystals"
