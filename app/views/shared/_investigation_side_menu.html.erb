@@ -1,0 +1,10 @@
+  <% content_for(:sidebar) do %> 
+    <div class="step_tree">
+		<em>
+		<% investigation.title %> Sections:
+		</em>
+		<% investigation.sections.each do | section | %>
+			<%= link_to section.name, section_url(section)%>
+		<% end %>
+    </div>
+  <% end %>
