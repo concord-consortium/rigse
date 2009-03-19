@@ -128,7 +128,7 @@ class SectionsController < ApplicationController
   ##
   ##
   ##  
-  def sort_elements
+  def sort_pages
     puts params.inspect
     render :text => "ok"
   end

@@ -1,4 +1,4 @@
-<div class="step_editor">
+<div class="page_editor">
   <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %> |
   <%= link_to 'edit', :action => 'edit' %> |
   <%= link_to_remote 'add page to section', :action => 'add_page' %>
@@ -20,23 +20,27 @@
   <!-- Allow for page reordering here? -->
   
 	<% if @section.pages.size > 0%>
-		<div id="pages_container" class="pages_container">
- 		<ol id="page_{page.position}">
-		<% @section.pages.each do | page |%>
-			
-			<li><%= link_to page.name, page_url(page) %></li>
-				<% if page.page_elements.size > 0 %>
-					<ul>
-					<% page.page_elements.each do | element | %>
-						<%= element.embeddable.name %>
-						<%= element.embeddable.class %>
-						<%= element.embeddable.description %>
+ 		<ol id="pages_container">
+	
+			<% @section.pages.each do | page |%>
+
+			<% domid = "step_#{page.id}" %> 
+				
+				<li class="sortable_page" id="<%= domid %>">
+				<%= link_to page.name, page_url(page) %>
+					<% if page.page_elements.size > 0 %>
+						<ul>
+						<% page.page_elements.each do | element | %>
+							<%= element.embeddable.name %>
+							<%= element.embeddable.class %>
+							<%= element.embeddable.description %>
+						<% end %>
+						</ul>
 					<% end %>
-					</ul>
-				<% end %>
-		<% end %>
+				</li>
+			<% end %>
+			<%= sortable_element :pages_container, :dropOnEmpty => true %>	
 		</ol>
-		</div>
  	<% end %>
 
   <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %>
