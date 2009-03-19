@@ -33,6 +33,9 @@
 	<% end %>
  </div>
 
+ <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
+ <%= link_to 'edit', :action => 'edit' %> |
+ <%= link_to_remote 'add xhtml element to this page', :action => 'add_xhtml' %> | 
+ <%= link_to_remote 'add question element to this page', :action => 'add_xhtml' %>
 
-  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
 </div>

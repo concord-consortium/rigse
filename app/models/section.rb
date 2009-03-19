@@ -7,8 +7,6 @@ class Section < ActiveRecord::Base
 
   default_value_for :pages do
     page = Page.create()
-    xhtml = Xhtml.create
-    xhtml.pages << page
     [] << page
   end
   

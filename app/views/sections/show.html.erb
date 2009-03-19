@@ -18,10 +18,11 @@
 
 
   <!-- Allow for page reordering here? -->
-  <div id="pages_container" class="pages_container">
+  
 	<% if @section.pages.size > 0%>
+		<div id="pages_container" class="pages_container">
+ 		<ol id="page_{page.position}">
 		<% @section.pages.each do | page |%>
-	    <ol id="page_{page.position}">
 			
 			<li><%= link_to page.name, page_url(page) %></li>
 				<% if page.page_elements.size > 0 %>
@@ -33,9 +34,9 @@
 					<% end %>
 					</ul>
 				<% end %>
-	    </ol>
 		<% end %>
-	  </div>
+		</ol>
+		</div>
  	<% end %>
 
   <%= link_to "back to #{@section.investigation.title}", investigation_url(@section.investigation) %>

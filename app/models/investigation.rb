@@ -15,7 +15,7 @@ class Investigation < ActiveRecord::Base
   
   
 
-  default_value_for :procedures_opening, <<HEREDOC
+@@opening_xhtml= <<HEREDOC
   <h3>Procedures</h3>  
   <p><em>What investigations will you and your students do and how are they connected to the objectives?</em></p>
   <p></p>
@@ -35,7 +35,7 @@ class Investigation < ActiveRecord::Base
   <p></p>
 HEREDOC
 
-  default_value_for :procedures_engagement, <<HEREDOC
+@@engagement_xhtml= <<HEREDOC
   <h3>Engagement</h3>  
   <h4>What will you be doing?</h4>
   <p><em>What questions can you pose to encourage students to take risks and to deepen students’ understanding?</em></p>
@@ -52,7 +52,7 @@ HEREDOC
   <p></p>
 HEREDOC
 
-  default_value_for :procedures_closure, <<HEREDOC
+@@closure_xhtml= <<HEREDOC
   <h3>Closure</h3>  
   <h4>What will you be doing?</h4>
   <p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
@@ -67,13 +67,61 @@ HEREDOC
 
   default_value_for :sections do 
     results = []
-    %w[Discovery Matrials Safety Prediction Inestigation Analysis Conclusion].each_with_index do | section,i |
+    teacherNotes = Section.create(
+      :position => 1,
+      :name => 'Teacher Notes',
+      :description => 'This section contains notes and materials for the teacher only.'
+    )
+      
+    opening = Page.create(
+      :name => "Opening Proceedure",
+      :description => "What investigations will you and your students do and how are they connected to the objectives?"
+    )
+    opening_xhtml = Xhtml.create(
+      :name => "Opening Proceedure",
+      :description => "What investigations will you and your students do and how are they connected to the objectives?",
+      :content => @@opening_xhtml
+    )
+    opening_xhtml.pages << opening
+    opening_xhtml.save
+    
+    engagement = Page.create(
+      :name => "Engagement Proceedure",
+      :description => "What questions can you pose to encourage students to take risks and to deepen students’ understanding?"
+    )
+    engagement_xhtml = Xhtml.create(
+      :name => "Engagement Proceedure",
+      :description => "What questions can you pose to encourage students to take risks and to deepen students’ understanding?",
+      :content => @@engagement_xhtml
+    )
+    engagement_xhtml.pages << engagement
+    engagement_xhtml.save
+    
+    closure = Page.create(
+      :name => "Closing Proceedure",
+      :description => "What kinds of questions do you ask to get meaningful student feedback?"
+    )
+    closure_xhtml = Xhtml.create(
+      :name => "Closing Proceedure",
+      :description => "What kinds of questions do you ask to get meaningful student feedback?",
+      :content => @@closure_xhtml
+    )
+    closure_xhtml.pages << closure
+    closure_xhtml.save
+    
+    teacherNotes.pages << opening 
+    teacherNotes.pages << engagement
+    teacherNotes.pages << closure
+    results << teacherNotes
+      
+    %w[Discovery Matrials Safety Prediction Investigation Analysis Conclusion].each_with_index do | section,i |
       results << Section.new(
-        :position => i,
+        :position => i+1,
         :name => section,
         :description => "#{section} section"
       )
     end
+
     results
   end
 
