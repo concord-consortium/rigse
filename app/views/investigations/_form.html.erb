@@ -2,49 +2,14 @@
 <% form_for(@investigation) do |f| %>
   <%= f.error_messages %>
   <p>
-    <%= f.submit "Create" %>
+    <%= f.label :name %><br />
+    <%= f.text_field :name, :cols => 60 %>
   </p>
   <p>
-    <%= f.label :title %><br />
-    <%= f.text_field :title, :cols => 60 %>
+    <%= f.label :description %><br />
+    <%= f.text_area :description, :cols => 80, :rows => 10 %>
   </p>
   <p>
-    <%= f.label :context %><br />
-    <%= f.text_area :context, :cols => 80, :rows => 10 %>
-  </p>
-  <p>
-    <%= f.label :opportunities %><br />
-    <%= f.text_area :opportunities, :cols => 80, :rows => 10%>
-  </p>
-  <p>
-    <%= f.label :objectives %><br />
-    <%= f.text_area :objectives, :cols => 80, :rows => 10%>
-  </p>
-  <h3>Procedures</h3>
-  <p>
-    <%= f.label :procedures_opening %><br />
-    <%= f.text_area :procedures_opening, :cols => 80, :rows => 36%>
-  </p>
-  <p>
-    <%= f.label :procedures_engagement %><br />
-    <%= f.text_area :procedures_engagement, :cols => 80, :rows => 30%>
-  </p>
-  <p>
-    <%= f.label :procedures_closure %><br />
-    <%= f.text_area :procedures_closure, :cols => 80, :rows => 20%>
-  </p>
-  <p>
-    <%= f.label :assessment %><br />
-    <%= f.text_area :assessment, :cols => 80, :rows => 20%>
-  </p>
-  <p>
-    <%= f.label :reflection %><br />
-    <%= f.text_area :reflection, :cols => 80, :rows => 20%>
-  </p>
-	<hr/>
-
-
-  <p>
-    <%= f.submit "Create" %>
+    <%= f.submit "Save" %>
   </p>
 <% end %>

@@ -31,7 +31,7 @@
             %li
               = investigation.id.to_s
             %li
-              = investigation.title
+              = investigation.name
             %li
               = link_to 'Show', investigation
             %li
@@ -39,4 +39,4 @@
             %li
               = link_to 'Delete', investigation, :confirm => "Are you sure you want to delete ivestigation #{investigation.id}", :method => :delete 
         .content
-          = truncate(investigation.context, 120)
+          = truncate(investigation.description, 120)

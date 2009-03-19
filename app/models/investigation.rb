@@ -5,7 +5,7 @@ class Investigation < ActiveRecord::Base
   
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{title context opportunities objectives procedures_opening procedures_engagement procedures_closure assessment reflection}
+  @@searchable_attributes = %w{name description}
   
   class <<self
     def searchable_attributes
