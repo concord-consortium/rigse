@@ -1,0 +1,7 @@
+<%= link_to_remote('Save', 
+		:class => 'save',
+		:url => {
+		:controller => 'page_elements',
+		:action => 'save_step', 
+		:step_id => @act_step.id,
+		:investigation_id => @act_step.investigation.id}) %>

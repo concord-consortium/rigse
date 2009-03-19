@@ -1,0 +1,42 @@
+<div class="step_editor">
+  <%= link_to "back to #{@section.investigation.title}", investigation_url(@section.investigation) %> |
+  <%= link_to 'edit', :action => 'edit' %> |
+  <%= link_to_remote 'add page to section', :action => 'add_page' %>
+  <h1>Showing pages for <%= @section.name %> section of &ldquo;<%= @section.investigation.title %>&rdquo;</h1>
+	<%= render 	:partial => 'shared/investigation_side_menu',
+				:locals => { :investigation => @section.investigation } %>
+
+    <!-- 
+	use link to remote here to add a new page...
+	
+        :url => {
+            :controller => 'page_elements',
+            :action => 'add_step',
+            :investigation_id => @investigation.id,
+            :kind => 'OpenResponse'} %>
+    -->
+
+
+  <!-- Allow for page reordering here? -->
+  <div id="pages_container" class="pages_container">
+	<% if @section.pages.size > 0%>
+		<% @section.pages.each do | page |%>
+	    <ol id="page_{page.position}">
+			
+			<li><%= link_to page.name, page_url(page) %></li>
+				<% if page.page_elements.size > 0 %>
+					<ul>
+					<% page.page_elements.each do | element | %>
+						<%= element.embeddable.name %>
+						<%= element.embeddable.class %>
+						<%= element.embeddable.description %>
+					<% end %>
+					</ul>
+				<% end %>
+	    </ol>
+		<% end %>
+	  </div>
+ 	<% end %>
+
+  <%= link_to "back to #{@section.investigation.title}", investigation_url(@section.investigation) %>
+</div>
