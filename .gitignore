@@ -13,3 +13,5 @@ db/schema.rb
 config/additional_users.yml
 public/images/0*
 public/stylesheets/app.css
+nbproject
+
