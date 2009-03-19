@@ -8,18 +8,18 @@ describe InvestigationsController do
   
   describe "responding to GET index" do
 
-    it "should expose all investigations as @investigations" do
+    it "should expose all pages as @pages" do
       Investigation.should_receive(:find).with(:all).and_return([mock_investigation])
       get :index
-      assigns[:investigations].should == [mock_investigation]
+      assigns[:pages].should == [mock_investigation]
     end
 
     describe "with mime type of xml" do
   
-      it "should render all investigations as xml" do
+      it "should render all pages as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Investigation.should_receive(:find).with(:all).and_return(investigations = mock("Array of Investigations"))
-        investigations.should_receive(:to_xml).and_return("generated XML")
+        Investigation.should_receive(:find).with(:all).and_return(pages = mock("Array of Investigations"))
+        pages.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
       end
@@ -162,10 +162,10 @@ describe InvestigationsController do
       delete :destroy, :id => "37"
     end
   
-    it "should redirect to the investigations list" do
+    it "should redirect to the pages list" do
       Investigation.stub!(:find).and_return(mock_investigation(:destroy => true))
       delete :destroy, :id => "1"
-      response.should redirect_to(investigations_url)
+      response.should redirect_to(pages_url)
     end
 
   end

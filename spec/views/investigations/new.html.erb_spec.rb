@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe "/investigations/new.html.erb" do
+describe "/pages/new.html.erb" do
   include InvestigationsHelper
   
   before(:each) do
@@ -19,9 +19,9 @@ describe "/investigations/new.html.erb" do
   end
 
   it "should render new form" do
-    render "/investigations/new.html.erb"
+    render "/pages/new.html.erb"
     
-    response.should have_tag("form[action=?][method=post]", investigations_path) do
+    response.should have_tag("form[action=?][method=post]", pages_path) do
       with_tag("input#investigation_title[name=?]", "investigation[title]")
       with_tag("textarea#investigation_context[name=?]", "investigation[context]")
       with_tag("textarea#investigation_opportunities[name=?]", "investigation[opportunities]")

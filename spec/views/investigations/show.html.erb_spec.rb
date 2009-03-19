@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe "/investigations/show.html.erb" do
+describe "/pages/show.html.erb" do
   include InvestigationsHelper
   
   before(:each) do
@@ -18,7 +18,7 @@ describe "/investigations/show.html.erb" do
   end
 
   it "should render attributes in <p>" do
-    render "/investigations/show.html.erb"
+    render "/pages/show.html.erb"
     response.should have_text(/value\ for\ title/)
     response.should have_text(/value\ for\ context/)
     response.should have_text(/value\ for\ opportunities/)
