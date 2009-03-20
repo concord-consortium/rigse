@@ -92,37 +92,15 @@ class SectionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
 
 
   ##
   ##
   ##
-  def add_element
-    @investigation= Investigation.find(params['investigation_id'])
-    class_name = params['kind']
-    step = nil
-    
-    case class_name
-    when 'Xhtml'
-      step = Xhtml.create(:name => "new XHTML")
-      step.pages << @investigation
-      step.save
-    when 'OpenResponse'
-        step = MultipleChoice.create(:prompt => "new OpenResponse")
-        step.pages << @investigation
-        step.save
-    when 'MultipleChoice'
-      step = MultipleChoice.create(:prompt => "new MultipleChoice")
-      step.pages << @investigation
-      step.save
-    end
-   
-    # new_contents = render_to_string :partial => "steps", :layout => false
-    render :update do |page|
-        page.replace_html "steps", :partial => "steps"
-        page.visual_effect :highlight, 'steps'
-      end
+  def add_page
+    @page= Page.new
+    @page.section = Section.find(params['section_id'])
+    @page.save
   end
   
   ##
@@ -136,58 +114,12 @@ class SectionsController < ApplicationController
     end 
     render :nothing => true
   end
-  
-  ##
-  ##
-  ##  
-  def show_element()
-    @step = params['id']
-    mode = params['mode'] || 'edit'
-    type = act_element.step_type
-    partial = "#{mode}_#{type.downcase}"
-    html = "could not render partial (#{partial})"
-    begin
-      html = render_to_string :partial => partial  
-    rescue => e
-      html = "#{html} : #{e}"
-    end
-    render html
-  end
-  
 
   ##
   ##
   ##
-  def save_element
-    @step = PageEmbedable.find(params['step_id'])
-    @actual_element = @step.step
-    attribute_updates = params.reject{ |k,v| !(@actual_element.attributes.has_key? k)}
-    @actual_element.update_attributes(attribute_updates)
-    @actual_element.save
-    render :update do |page|
-       page.visual_effect :highlight, params['id']
-     end
-  end
-
-
-  ##
-  ##
-  ##
-  def delete_element
-    @investigation= Investigation.find(params['investigation_id'])
-    @steps = PageEmbedable.find(:all, :conditions => {
-      :step_id => params['step_id'],
-      :investigation_id => params['investigation_id']
-    });
-    @steps.each do |step|
-      #TODO: we need to remove lots of depenedant items potentially, see :dependent, after_destroy, &etc.
-      step.destroy
-    end
-   
-   new_contents = render_to_string :partial => "steps", :layout => false
-   render :update do |page|
-       page.replace_html "steps", new_contents
-       page.visual_effect :highlight, 'steps'
-     end
+  def delete_page
+    @page= Page.find(params['page_id'])
+    @page.destroy
   end
 end

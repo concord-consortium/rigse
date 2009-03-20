@@ -27,7 +27,7 @@
 			<li>
 				<%= element.embeddable.name %>
 				<%= element.embeddable.class %>
-				<%= element.embeddable.description %>
+				<%= mce_edit_in_place_tag(element.embeddable, 'description', 'foo') %>
 			</li>
 		<% end %>
 	</ol>

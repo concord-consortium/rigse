@@ -1,48 +1,21 @@
 <div class="page_editor">
-  <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %> |
-  <%= link_to 'edit', :action => 'edit' %> |
-  <%= link_to_remote 'add page to section', :action => 'add_page' %>
-  <h1>Showing pages for <%= @section.name %> section of &ldquo;<%= @section.investigation.name %>&rdquo;</h1>
-	<%= render 	:partial => 'shared/investigation_side_menu',
-				:locals => { :investigation => @section.investigation } %>
+  <%= render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @section.investigation } %>
+  <% content_for :left_content_header do %>
+    <h3>Showing pages for <%= @section.name %> section of &ldquo;<%= @section.investigation.name %>&rdquo;</h3>
+    <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %> |
+    <%= link_to 'edit', :action => 'edit' %> |
+    <%= link_to_remote 'add page to section', :url => {:action => 'add_page', :params => {:section_id => @section.id, :id => @section.id}} %>
+  <% end %>
 
-    <!-- 
-	use link to remote here to add a new page...
-	
-        :url => {
-            :controller => 'page_elements',
-            :action => 'add_step',
-            :investigation_id => @investigation.id,
-            :kind => 'OpenResponse'} %>
-    -->
-
-
-  <!-- Allow for page reordering here? -->
-  
-	<% if @section.pages.size > 0%>
- 		<ol id="section_pages_list">
-	
+ 		<ol id="section_pages_list" class="sortable">
 			<% @section.pages.each do | page |%>
 
-			<% domid = "step_#{page.id}" %> 
-				
-				<li class="sortable_page" id="<%= domid %>">
-				<%= link_to page.name, page_url(page) %>
-					<% if page.page_elements.size > 0 %>
-						<ul>
-						<% page.page_elements.each do | element | %>
-							<%= element.embeddable.name %>
-							<%= element.embeddable.class %>
-							<%= element.embeddable.description %>
-						<% end %>
-						</ul>
-					<% end %>
-				</li>
+      <%= render :partial => 'page_list_item', :locals => {:page => page} %>
+
 			<% end %>
-			<%= sortable_element :section_pages_list, :dropOnEmpty => true, 
+			<%= sortable_element :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
         :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %>	
 		</ol>
- 	<% end %>
 
   <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %>
 </div>

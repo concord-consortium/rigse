@@ -16,6 +16,7 @@ class PagesController < ApplicationController
   # GET /page/1.xml
   def show
     @page = Page.find(params[:id], :include => :page_elements)
+    @section = @page.section
     @page_elements = @page.page_elements
     respond_to do |format|
       format.html # show.html.erb

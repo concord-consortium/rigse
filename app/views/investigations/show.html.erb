@@ -1,27 +1,21 @@
+<div class="page_editor">
+  <%= render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @investigation } %>
+  <% content_for :left_content_header do %>
+    <h3>Sections of <%= @investigation.name %></h3>
+    <%= link_to "list investigations", investigations_url %>|
+    <%= link_to 'edit', :action => 'edit' %> |
+    <%= link_to_remote 'add section', :url => {:action => 'add_section', :params => {:investigation_id => @investigation.id}} %>
+  <% end %>
 
-<%= render 	:partial => 'shared/investigation_side_menu',
-			:locals => { :investigation => @investigation } %>
+ 		<ol id="investigation_sections_list" class="sortable">
+			<% @investigation.sections.each do | section |%>
 
-<%= link_to 'Edit', edit_investigation_path(@investigation) %> |
-<%= link_to 'Back', investigations_path %> 
+      <%= render :partial => 'section_list_item', :locals => {:section => section} %>
 
-<p>
-  <b>Name:</b>
-  <%= @investigation.name %>
-</p>
+			<% end %>
+			<%= sortable_element :investigation_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
+        :url=> {:action => 'sort_sections', :params => {:investigation_id => @investigation.id }} %>	
+		</ol>
 
-<p>
-  <b>Description:</b>
-  <%= @investigation.description %>
-</p>
-
-<% if @investigation.sections.size > 0%>
-	<em>Sections:</em>
-	<% @investigation.sections.each do | section | %>
-		<%= link_to section.name, section_url(section)%>
-	<% end %>
-<% end %>
-
-
-<%= link_to 'Edit', edit_investigation_path(@investigation) %> |
-<%= link_to 'Back', pages_path %>
+  <%= link_to "list investigations", investigations_url %>
+</div>

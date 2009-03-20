@@ -112,6 +112,34 @@ class InvestigationsController < ApplicationController
     end
   end
   
+  ##
+  ##
+  ##
+  def add_section
+    @section= Section.new
+    @section.investigation = Investigation.find(params['investigation_id'])
+    @section.save
+  end
+  
+  
+  ##
+  ##
+  ##  
+  def sort_sections
+    @investigation = Investigation.find(params[:id], :include => :sections)
+    @investigation.sections.each do |section|
+      section.position = params['investigation_sections_list'].index(section.id.to_s) + 1
+      section.save
+    end 
+    render :nothing => true
+  end
 
+  ##
+  ##
+  ##
+  def delete_section
+    @section= Section.find(params['section_id'])
+    @section.destroy
+  end  
   
 end
