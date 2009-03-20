@@ -1,0 +1,2 @@
+page.visual_effect :highlight, 'investigation_sections_list'
+page.remove "section_#{@section.id}"

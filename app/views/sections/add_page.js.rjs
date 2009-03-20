@@ -1,0 +1,4 @@
+page.visual_effect :highlight, 'section_pages_list'
+page.insert_html :bottom, 'section_pages_list', :partial => 'page_list_item', :locals => {:page => @page} 
+
+# page.add "page_#{@page.id}"

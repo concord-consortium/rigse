@@ -1,0 +1,19 @@
+<% domid = "page_#{page.id}" %> 
+<li class="sortable_page" id="<%= domid %>">
+  <%= link_to page.name, page_url(page) %> 
+  <%= link_to_remote 'delete', :url => {
+    :action => 'delete_page', 
+    :params => {:page_id => page.id}
+    },
+    :html => {:class=>"delete"} %>
+
+  <% if page.page_elements.size > 0 %>
+  <ul>
+    <% page.page_elements.each do | element | %>
+      <%= element.embeddable.name %>
+      <%= element.embeddable.class %>
+      <%= element.embeddable.description %>
+    <% end %>   
+  </ul>
+<% end %>
+</li>

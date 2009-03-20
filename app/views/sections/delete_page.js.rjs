@@ -1,0 +1,2 @@
+page.visual_effect :highlight, 'section_pages_list'
+page.remove "page_#{@page.id}"
