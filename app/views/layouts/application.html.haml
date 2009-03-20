@@ -58,25 +58,15 @@
             Navigation:
           .left
             %ul
+              %li= link_to 'Home', home_path
+              %li= link_to 'Investigations', investigations_path
+              %li= link_to 'Grade Span Expectations', grade_span_expectations_path
           .right
             %ul
       #middle_section
         #sidebar
           .lighter_background
-            %p.sideBarTitle
-              = link_to '&#187; Home', home_path
-            %p.sideBarTitle
-              = link_to '&#187; Investigations', investigations_path
-            %p.sideBarTitle
-              = link_to '&#187; Grade Span Expectations', grade_span_expectations_path
-            %p.sideBarTitle
-              = link_to '&#187; Images', images_path
-            / %p.sideBarTitle
-            /   = link_to '&#187; Domains', domains_path
-            / %p.sideBarTitle
-            /   = link_to '&#187; Unifying Themes', unifying_themes_path
             = yield :sidebar
-            
             %p
               %span.sideBarText
                 Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
@@ -96,10 +86,8 @@
               of this page.
         #content_header_container
           #content_header.horiz_band
-            .left
-              = yield :left_content_header
-            .right
-              = yield :right_content_header
+            .left= yield :left_content_header
+            .right= yield :right_content_header
         #main_content
           %p{ :style => "color: green" }
             = flash_messages
@@ -110,7 +98,7 @@
       #footer.horiz_band
         .left
           Questions/Feedback:
-          = mail_to("stephen@concord.org", "Send us an email", :subject => "diy question", :encode => "javascript")
+          = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
         .right
           footer text on the right
   = javascript_include_tag "tiny_mce/tiny_mce"

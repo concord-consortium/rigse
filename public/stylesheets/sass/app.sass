@@ -69,16 +69,26 @@ body
   :color = !mid_header_font_color
   :background-color = transparent
   :position relative
+  :padding
+    :left 0
   :height = 3em
   :top -4.5em
+  :margin
+    :left 0em
   .logo
     :position absolute
-    :left 0.5em
+    :left 0em
     :top = 0.5em
     :margin 0em
+    :padding 0em
     :width 6.2em
     img
       :width 100%
+      :border-style none
+      :margin 0em
+      :padding 0em
+    a
+      :border-style none
   h1
     :top 0.2em
     :margin 0em 5em 0em 5em
@@ -150,8 +160,7 @@ body
   :color = !content_header_font_color
   :background-color = !content_header_background
   :border
-    :bottom 1px solid
-    :color = !common_border
+    :style none
   a
     :padding 0em 0.1em
     :color = !medium_green
@@ -177,10 +186,7 @@ body
     :right 0em 
     :bottom 0em
     :left = !sidebar_width
-  :border
-    :left 1px solid
-    :right 1px solid
-    :color = !common_border
+  :border-style none
 
 .menu
   :color = !redish_brown
@@ -235,17 +241,49 @@ body
     :padding 1em 0 0 0
   .step_tree
     :font-weight bold
-    :margin 1em 1em 1em 2.5mm
-    :padding 0.2em 0.2em 0.2em 1.5em
-    :border
+    :margin 0.5em
+    :padding 0.5em
+    :border-top
+      :style dotted
+      :width 1px
+      :color = !common_border
+    :border-bottom
       :style dotted
       :width 1px
       :color = !common_border
     ul
-      :margin 0.2em 0.2em 0.2em 0.2em
-      li
-        :margin 0.1em 0.1em 0.1em 0.1em
-
+      :margin 0.1em 
+      :text-align left
+      :font-weight bold
+    li
+      :list-style-type none
+      :margin 0.1em
+    h3
+      :font-size 15px
+      :margin 0em
+      :padding 0em
+      :text-align left
+      a
+        :color = !light_green
+      a:hover
+        :color white
+      :background-color = !common_link_color_light_background
+    .tiny 
+      :padding 0em
+      :margin 
+        :left 1em
+        :top 0em
+        :bottom 0em
+      :font
+        :weight normal
+        :size 9px
+    
+    a.selected:hover
+      :color white
+      :background-color brown
+    a.selected
+      :color brown
+      :background-color white
   a:hover
     :color white
     :background-color = !common_highlight_background
@@ -462,12 +500,27 @@ body
 .do_not_display
   :display none
 
-#pages_container
+.sortable
+  :margin 
+    :top 0em
+    :left 0em
+    :right 0em
+    :bottom 1em
+  :padding 0em
   li
+    :list-style-position inside
+    :padding 0.5em
     :background-color white
-    :margin 1.2em
-    :cursor hand
-
+    :margin 
+      :top 1em
+      :left 0em
+    :cursor move
+a.delete
+  :color red
+  :background-color red
+  :font-size 6px
+  :text-decoration none
+  :font-weight bold
 dd
   :margin 0em 0em 2em 2em
   :padding 0em
@@ -475,7 +528,9 @@ dd
 dl
   :margin 1em 1ex 2em 1ex
   :padding 0em
+  
 
+  
 dt
   :font-weight bold
   :margin 0em

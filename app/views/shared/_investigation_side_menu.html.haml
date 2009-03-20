@@ -1,5 +1,15 @@
 - content_for :sidebar do
   .step_tree
-    %ul Sections:
+    %h3=link_to investigation.name, investigation_url(investigation)
+    %ul
     - investigation.sections.each do |section|
-      = link_to section.name, section_url(section)
+      - if @section && @section.id == section.id
+        %li.selected=link_to section.name, section_url(section), :class => "selected"
+        %ol.tiny
+        - section.pages.each do |page|
+          - if @page && @page.id == page.id
+            %li.tiny.selected=link_to page.name, page_url(page), :class => "tiny selected"
+          - else
+            %li.tiny=link_to page.name, page_url(page), :class => "tiny"
+      - else
+        %li=link_to section.name, section_url(section)
