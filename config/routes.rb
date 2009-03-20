@@ -3,7 +3,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :interactive_models, :data_collectors, :multiple_choices
   map.resources :open_responses, :xhtmls
 
-  map.resources :sections, :member => { :sort_pages => :post }
+  map.resources :sections, :member => { 
+    :add_page => :post,
+    :sort_pages => :post, 
+    :delete_page => :post
+  }
+    
   map.resources :pages, :member => { :sort_elements => :post }
   map.resources :page_elements
 
@@ -14,7 +19,13 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
-
+  
+  map.resources :investigations, :member => {
+    :add_section => :post,
+    :sort_sections => :post,
+    :delete_section => :post,
+  }
+  
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
   map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
