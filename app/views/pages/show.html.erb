@@ -18,10 +18,11 @@
             :kind => 'OpenResponse'} %>
     -->
 
+
+
   <!-- Allow for page reordering here? -->
-  <div id="elements_container" class="elements_container">
 	<% if @page.page_elements.size > 0 %>
-	<ol id="element_{element.id}">
+	<ol id="elements_container">
 		<% @page.page_elements.each do | element | %>
 			<li>
 				<%= element.embeddable.name %>
@@ -31,7 +32,8 @@
 		<% end %>
 	</ol>
 	<% end %>
- </div>
+	<%= sortable_element :elements_container, :dropOnEmpty => true %>	
+
 
  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
  <%= link_to 'edit', :action => 'edit' %> |

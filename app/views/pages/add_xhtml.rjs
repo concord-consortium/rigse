@@ -1,0 +1,2 @@
+
+page.insert_html :bottom, 'elements_container', '<li>Last item</li>'
