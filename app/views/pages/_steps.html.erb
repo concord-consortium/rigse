@@ -1,5 +1,5 @@
 <% @investigation.steps.each do |step| %>
-  <% content_tag_for :li, step, :class => "sortable_step" do %>
+  <% content_tag_for :li, step, :class => "sortable_element" do %>
     <%= html_for_step(step) %></li> 
   <% end %> 
 <% end %> 

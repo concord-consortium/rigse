@@ -15,8 +15,8 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
-    @page = Page.find(params[:id])
-
+    @page = Page.find(params[:id], :include => :page_elements)
+    @page_elements = @page.page_elements
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
@@ -26,7 +26,7 @@ class PagesController < ApplicationController
   # GET /page/new
   # GET /page/new.xml
   def new
-    
+    @page = Page.new
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @page }
@@ -36,6 +36,7 @@ class PagesController < ApplicationController
   # GET /page/1/edit
   def edit
     @page = Page.find(params[:id], :include => :page_elements)
+    @page_elements = @page.page_elements
   end
 
   # POST /page
@@ -56,8 +57,8 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
-    @page = Page.find(params[:id])
-
+    @page = Page.find(params[:id], :include => :page_elements)
+    @page_elements = @page.page_elements
     respond_to do |format|
       if @page.update_attributes(params[:page])
         flash[:notice] = 'PageEmbedables was successfully updated.'
@@ -73,7 +74,8 @@ class PagesController < ApplicationController
   # DELETE /page/1
   # DELETE /page/1.xml
   def destroy
-    @page = Page.find(params[:id])
+    @page = Page.find(params[:id], :include => :page_elements)
+    @page_elements = @page.page_elements
     @page.destroy
     respond_to do |format|
       format.html { redirect_to(page_url) }
@@ -118,8 +120,12 @@ class PagesController < ApplicationController
   ##
   ##  
   def sort_elements
-    puts params.inspect
-    render :text => "ok"
+    @page = Page.find(params[:id], :include => :page_elements)
+    @page.page_elements.each do |element|
+      element.position = params['page-element-list'].index(element.id.to_s) + 1
+      element.save
+    end 
+    render :nothing => true
   end
   
   

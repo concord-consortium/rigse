@@ -3,7 +3,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :interactive_models, :data_collectors, :multiple_choices
   map.resources :open_responses, :xhtmls
 
-  map.resources :sections, :pages, :page_elements
+  map.resources :sections
+  map.resources :pages, :member => { :sort_elements => :put }
+  map.resources :page_elements
 
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
