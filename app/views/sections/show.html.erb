@@ -20,7 +20,7 @@
   <!-- Allow for page reordering here? -->
   
 	<% if @section.pages.size > 0%>
- 		<ol id="pages_container">
+ 		<ol id="section_pages_list">
 	
 			<% @section.pages.each do | page |%>
 
@@ -39,7 +39,8 @@
 					<% end %>
 				</li>
 			<% end %>
-			<%= sortable_element :pages_container, :dropOnEmpty => true %>	
+			<%= sortable_element :section_pages_list, :dropOnEmpty => true, 
+        :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %>	
 		</ol>
  	<% end %>
 

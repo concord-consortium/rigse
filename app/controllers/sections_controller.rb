@@ -8,7 +8,8 @@ class SectionsController < ApplicationController
     @section = Section.find(params[:id])
   end
   
-
+  public
+  
   ##
   ##
   ##
@@ -124,15 +125,17 @@ class SectionsController < ApplicationController
       end
   end
   
-  
   ##
   ##
   ##  
   def sort_pages
-    puts params.inspect
-    render :text => "ok"
+    @section = Section.find(params[:id], :include => :pages)
+    @section.pages.each do |page|
+      page.position = params['section_pages_list'].index(page.id.to_s) + 1
+      page.save
+    end 
+    render :nothing => true
   end
-  
   
   ##
   ##
