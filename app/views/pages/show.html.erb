@@ -1,16 +1,17 @@
 <div class="step_editor">
-	
+  
   <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
   <%= link_to 'edit', :action => 'edit' %> |
   <%= link_to_remote 'add xhtml element to this page', :action => 'add_xhtml' %> | 
   <%= link_to_remote 'add question element to this page', :action => 'add_xhtml' %>
 
   <h1>Showing page for <%= @page.name %> of &ldquo;<%= @page.section.name %>&rdquo; section</h1>
-	<%= render 	:partial => 'shared/investigation_side_menu',
-				:locals => { :investigation => @page.section.investigation } %>
+  <%= render  :partial => 'shared/investigation_side_menu',
+        :locals => { :investigation => @page.section.investigation } %>
+  <%= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } %>
     <!-- 
-	use link to remote here to add a new page...
-	
+  use link to remote here to add a new page...
+  
         :url => {
             :controller => 'page_elements',
             :action => 'add_step',
@@ -21,18 +22,23 @@
 
 
   <!-- Allow for page reordering here? -->
-	<% if @page.page_elements.size > 0 %>
-	<ol id="elements_container">
-		<% @page.page_elements.each do | element | %>
-			<li>
-				<%= element.embeddable.name %>
-				<%= element.embeddable.class %>
-				<%= mce_edit_in_place_tag(element.embeddable, 'description', 'foo') %>
-			</li>
-		<% end %>
-	</ol>
-	<% end %>
-	<%= sortable_element :elements_container, :dropOnEmpty => true %>	
+  <% if @page.page_elements.size > 0 %>
+    <ol id="elements_container">
+      <% @page.page_elements.each do | element | %>
+        <li>
+          <div class="item">
+            <div class="menu">
+              <%= element.embeddable.name %>
+            </div>
+            <div class="content">
+              <%= element.embeddable.content %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+  <%= sortable_element :elements_container, :dropOnEmpty => true %> 
 
 
  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |

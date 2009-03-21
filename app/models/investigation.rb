@@ -67,7 +67,7 @@ HEREDOC
 
   default_value_for :sections do 
     results = Investigation.make_teacher_notes()
-    %w[Discovery Matrials Safety Prediction Investigation Analysis Conclusion].each_with_index do | section,i |
+    %w[Discovery Materials Safety Prediction Investigation Analysis Conclusion].each_with_index do | section,i |
       results << Section.new(
         :position => i+1,
         :name => section,

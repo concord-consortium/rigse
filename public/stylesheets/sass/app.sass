@@ -33,7 +33,7 @@
 !content_header_background = !body_background
 !content_header_font_color = !redish_brown
 
-!mid_header_height = 7em
+!ouside_margin = 0.5em
 !sidebar_width = 15em
 
 body
@@ -55,47 +55,18 @@ body
 
 #body2
   :margin 1em 0em
-  :padding 1em 0em
-  
+  :padding 0em 0em
+
+.login
+  :font-size 1.2em
+
 .lighter_background
   :color inherit
   :background-color white
 
 #header
-  :margin 0
-  :padding 0
-  
-#mid_header
-  :color = !mid_header_font_color
-  :background-color = transparent
-  :position relative
-  :padding
-    :left 0
-  :height = 3em
-  :top -4.5em
-  :margin
-    :left 0em
-  .logo
-    :position absolute
-    :left 0em
-    :top = 0.5em
-    :margin 0em
-    :padding 0em
-    :width 6.2em
-    img
-      :width 100%
-      :border-style none
-      :margin 0em
-      :padding 0em
-    a
-      :border-style none
-  h1
-    :top 0.2em
-    :margin 0em 5em 0em 5em
-    :padding 0.5em 0em
-    :font
-      :size 200%
-      :weight 700
+  :margin 0em 0.1em 0em 0.2em
+  :padding 0em 0.1em 0em 0.2em
 
 .horiz_band
   :color = !common_menu_font_color
@@ -131,13 +102,10 @@ body
     :padding 0px
 
 .horiz_band#super_header
-  :font-size 1.2em
+  :font-size 1em
   :color = !super_header_font_color
   :background-color transparent
-  :height = 3em
-  :margin 2em 0em -3em 0em
-  .right
-    :margin-right 0.5em
+  :margin 0.1em 0em 0em 0em
   a
     :color = !common_link_color_light_background
     &:hover
@@ -145,6 +113,12 @@ body
   li
     &.selected
       :color !dark_green
+  h1
+    :margin 0em 0em 0.5em 0.5em
+    :padding 0.1em 0em 0.1em 0.5em
+    :font
+      :size 2em
+      :weight 700
 
 .horiz_band#footer
   :color white
@@ -155,12 +129,20 @@ body
   :color white
   :background-color = !sub_header_background
   :font-size 1.2em
+  .center_left
+    :position absolute
+    :left = !sidebar_width
+    :margin-top 0.5em
+    :margin-right 1em
+    :margin-bottom 0.5em
+    :margin-left 0.5em
 
 .horiz_band#content_header
   :color = !content_header_font_color
   :background-color = !content_header_background
   :border
-    :style none
+    :bottom 1px solid
+    :color = !common_border
   a
     :padding 0em 0.1em
     :color = !medium_green
@@ -194,11 +176,11 @@ body
     :background-color = !body_background
     :color = !redish_brown
     :margin 0em
-    :padding 0em
+    :padding 0em 0em
     li
       :display inline
       :list-style-type none
-      :padding 0em 0.1em
+      :padding 0em 2em
       a
         :color = !medium_green
 .item
@@ -218,6 +200,7 @@ body
   :width = !sidebar_width - 0.1em
   :float left
   :clear left
+  :margin-left = !ouside_margin
   :color = !sidebar_font_color
   :border
     :right 0.1em solid
@@ -367,7 +350,7 @@ body
     ul
       :background-color = !common_menu_background
       :color = !light_redish_brown
-      :margin 0em 0em 0em 0em
+      :margin 0em 0em 0em 1em
       :padding 0.2em 0em 0.4em 1em
       li
         a

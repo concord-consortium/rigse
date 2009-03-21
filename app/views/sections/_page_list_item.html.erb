@@ -8,12 +8,16 @@
     :html => {:class=>"delete"} %>
 
   <% if page.page_elements.size > 0 %>
-  <ul>
-    <% page.page_elements.each do | element | %>
-      <%= element.embeddable.name %>
-      <%= element.embeddable.class %>
-      <%= element.embeddable.description %>
-    <% end %>   
-  </ul>
-<% end %>
+  <div class="item">
+    <ul>
+      <% page.page_elements.each do | element | %>
+        <div class="menu">
+          <%= element.embeddable.name %>
+        </div>
+        <div class="content">
+          <%= element.embeddable.description %>
+        </div>
+      <% end %>   
+    </ul>
+  </div>
 </li>

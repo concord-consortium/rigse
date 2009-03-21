@@ -1,5 +1,6 @@
 <div class="page_editor">
   <%= render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @investigation } %>
+  <%= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @investigation } %>
   <% content_for :left_content_header do %>
     <h3>Sections of <%= @investigation.name %></h3>
     <%= link_to "list investigations", investigations_url %>|
