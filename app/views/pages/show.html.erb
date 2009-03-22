@@ -2,19 +2,40 @@
   
   <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
   <%= link_to 'edit', :action => 'edit' %> |
-  <%= link_to_remote 'add xhtml element to this page', 
+  <%= link_to_remote 'add xhtml element', 
     :url => new_page_xhtml_path(@page), 
     :method => :get,
     :update => 'elements_container',
     :position => :bottom,
     :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
      | 
-   <%= link_to_remote 'add open response question to this page', 
-     :url => new_page_open_response_path(@page), 
-     :method => :get,
-     :update => 'elements_container',
-     :position => :bottom,
-     :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
+    <%= link_to_remote 'add open response question', 
+      :url => new_page_open_response_path(@page), 
+      :method => :get,
+      :update => 'elements_container',
+      :position => :bottom,
+      :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
+      |
+    <%= link_to_remote 'add data collector', 
+      :url => new_page_data_collector_path(@page), 
+      :method => :get,
+      :update => 'elements_container',
+      :position => :bottom,
+      :complete => "var f = Flotr.draw(
+          $('data_collector'), [
+          { // => first series
+              data: [ [0, 0], [1, 2], [2, 4], [3, 6], [4, 8] ],
+              label: 'y = 2x',
+              lines: {show: true, fill: true},
+              points: {show: true}
+          },
+          { // => second series
+              data: [ [0, 2.5], [1, 5.5], [2, 8.5], [3, 11.5], [4, 14.5] ],
+              label: 'y = 2.5 + 3x'
+          }]
+        );
+        Sortable.create('elements_container', { dropOnEmpty: true });" %>
+    
 
   <h1>Showing page for <%= @page.name %> of &ldquo;<%= @page.section.name %>&rdquo; section</h1>
   <%= render  :partial => 'shared/investigation_side_menu',
