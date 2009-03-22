@@ -27,7 +27,7 @@ class OpenResponsesController < ApplicationController
     @open_response = OpenResponse.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render :partial=>'open_response', :layout=>false }
       format.xml  { render :xml => @open_response }
     end
   end

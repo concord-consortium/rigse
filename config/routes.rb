@@ -1,8 +1,13 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :interactive_models, :data_collectors, :multiple_choices
-  map.resources :open_responses, :xhtmls
+  
+  map.resources :xhtmls
+  map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
+  map.resources :open_responses
+  map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+  
   map.resources :sections, :member => { 
     :add_page => :post,
     :sort_pages => :post, 
@@ -10,6 +15,10 @@ ActionController::Routing::Routes.draw do |map|
   }
     
   map.resources :pages, :member => { :sort_elements => :post }
+  
+  # /pages/:id/add_element/:embeddable_type
+  # /pages/:id/:embeddable_type_controller
+  map.resources :pages
   map.resources :page_elements
 
   map.resources :investigations do |investigation|

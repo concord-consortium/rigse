@@ -25,9 +25,8 @@ class XhtmlsController < ApplicationController
   # GET /xhtmls/new.xml
   def new
     @xhtml = Xhtml.new
-
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render :partial=>'xhtml', :layout=>false }
       format.xml  { render :xml => @xhtml }
     end
   end
@@ -41,7 +40,10 @@ class XhtmlsController < ApplicationController
   # POST /xhtmls.xml
   def create
     @xhtml = Xhtml.new(params[:xhtml])
-
+    if params[:page_id]
+      @page = Page.find(params[:page_id])
+      @xhtml.pages <<  @page
+    end
     respond_to do |format|
       if @xhtml.save
         flash[:notice] = 'Xhtml was successfully created.'

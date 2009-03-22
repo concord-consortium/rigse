@@ -2,8 +2,19 @@
   
   <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
   <%= link_to 'edit', :action => 'edit' %> |
-  <%= link_to_remote 'add xhtml element to this page', :action => 'add_xhtml' %> | 
-  <%= link_to_remote 'add question element to this page', :action => 'add_xhtml' %>
+  <%= link_to_remote 'add xhtml element to this page', 
+    :url => new_page_xhtml_path(@page), 
+    :method => :get,
+    :update => 'elements_container',
+    :position => :bottom,
+    :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
+     | 
+   <%= link_to_remote 'add open response question to this page', 
+     :url => new_page_open_response_path(@page), 
+     :method => :get,
+     :update => 'elements_container',
+     :position => :bottom,
+     :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
 
   <h1>Showing page for <%= @page.name %> of &ldquo;<%= @page.section.name %>&rdquo; section</h1>
   <%= render  :partial => 'shared/investigation_side_menu',
@@ -23,20 +34,20 @@
 
   <!-- Allow for page reordering here? -->
   <% if @page.page_elements.size > 0 %>
-    <ol id="elements_container">
-      <% @page.page_elements.each do | element | %>
-        <li>
-          <div class="item">
-            <div class="menu">
-              <%= element.embeddable.name %>
-            </div>
-            <div class="content">
-              <%= element.embeddable.content %>
-            </div>
-          </div>
-        </li>
-      <% end %>
-    </ol>
+  <ol id="elements_container">
+    <% @page.page_elements.each do | element | %>
+    <li>
+      <div class="item">
+        <div class="menu">
+          <%= element.embeddable.name %>
+        </div>
+        <div class="content">
+          <%= element.embeddable.content %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ol>
   <% end %>
   <%= sortable_element :elements_container, :dropOnEmpty => true %> 
 
