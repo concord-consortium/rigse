@@ -1,8 +1,8 @@
 class GradeSpanExpectation < ActiveRecord::Base
   belongs_to              :user
   has_many                :expectations
-  has_many                :big_ideas
   belongs_to              :assessment_target
+  has_many                :unifying_themes, :through => :assessment_target
   acts_as_replicatable
   
   self.extend SearchableModel
