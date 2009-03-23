@@ -34,5 +34,11 @@ module ApplicationHelper
         end
       end      
   end
+  
+  def partial_for(element)
+      # dynimically find the partial for the 
+      class_name = element.class.name.underscore
+      return "#{class_name.pluralize}/sortable_#{class_name}"
+  end
 
 end

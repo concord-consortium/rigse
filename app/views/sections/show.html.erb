@@ -14,7 +14,7 @@
       <%= render :partial => 'page_list_item', :locals => {:page => page} %>
 
 			<% end %>
-			<%= sortable_element :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
+			<%= sortable_element :section_pages_list, :dropOnEmpty => true, 
         :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %>	
 		</ol>
 

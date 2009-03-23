@@ -18,14 +18,13 @@ class Page < ActiveRecord::Base
     xhtml.save
   end
   
-  # create_table "pages", :force => true do |t|
-  #   t.datetime "created_at"
-  #   t.datetime "updated_at"
-  #   t.string   "name"
-  #   t.string   "description"
-  #   t.integer  "user_id"
-  #   t.integer  "position"
-  #   t.integer  "section_id"
-  #   t.string   "uuid",        :limit => 36
-  # end  
+  
+  #
+  # return element.id for the component passed in
+  # so for example, pass in an xhtml item in, and get back a page_elements object.
+  # assumes that this page contains component
+  def element_for(component)
+    return page_elements.detect { |e| (e.embeddable_type == component.class.name && e.embeddable_id == component.id) }
+  end
+
 end
