@@ -2,7 +2,10 @@ class AssessmentTargetsController < ApplicationController
   # GET /assessment_targets
   # GET /assessment_targets.xml
   def index
-    @assessment_targets = AssessmentTarget.find(:all)
+    @assessment_targets = AssessmentTarget.search(params[:search], params[:page], self.current_user)
+    # :include => [:expectations => [:expectation_indicators, :stem]]
+    @search_string = params[:search]
+    @paginated_objects = @assessment_targets
 
     respond_to do |format|
       format.html # index.html.erb
