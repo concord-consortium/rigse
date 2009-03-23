@@ -1,6 +1,6 @@
 <div class="page_editor">
-  <%= render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @section.investigation } %>
-  <%= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @section.investigation } %>
+  <%= render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @section.investigation } %>
+  <%= render  :partial => 'shared/investigation_content_menu', :locals => { :investigation => @section.investigation } %>
   <% content_for :left_content_header do %>
     <h3>Showing pages for <%= @section.name %> section of &ldquo;<%= @section.investigation.name %>&rdquo;</h3>
     <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %> |
@@ -8,15 +8,15 @@
     <%= link_to_remote 'add page to section', :url => {:action => 'add_page', :params => {:section_id => @section.id, :id => @section.id}} %>
   <% end %>
 
- 		<ol id="section_pages_list" class="sortable">
-			<% @section.pages.each do | page |%>
+    <ol id="section_pages_list" class="sortable">
+      <% @section.pages.each do | page |%>
 
       <%= render :partial => 'page_list_item', :locals => {:page => page} %>
 
-			<% end %>
-			<%= sortable_element :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
-        :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %>	
-		</ol>
+      <% end %>
+      <%= sortable_element :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
+        :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %> 
+    </ol>
 
   <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %>
 </div>
