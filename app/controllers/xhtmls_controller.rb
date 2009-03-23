@@ -26,7 +26,7 @@ class XhtmlsController < ApplicationController
   def new
     @xhtml = Xhtml.new
     respond_to do |format|
-      format.html { render :partial=>'xhtml', :layout=>false }
+      format.html { render :partial=>'xhtml', :locals => { :embeddable => @xhtml }, :layout=>false }
       format.xml  { render :xml => @xhtml }
     end
   end
