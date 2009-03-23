@@ -1,6 +1,10 @@
 - content_for :content_header do
-  .menu
+  .trail
     %ul
+      %li=@section.investigation.name
+      %li=@section.name
+      %li=@page.name
+  .menu
     - investigation.sections.each do |section|
       - if @section && @section.id == section.id
         %li.selected=link_to section.name, section_url(section), :class => "selected"

@@ -54,8 +54,8 @@ body
       :font-weight 800
 
 #body2
-  :margin 1em 0em
-  :padding 0em 0em
+  :margin 0em
+  :padding 0em
 
 .login
   :font-size 1.2em
@@ -105,7 +105,6 @@ body
   :font-size 1em
   :color = !super_header_font_color
   :background-color transparent
-  :margin 0.1em 0em 0em 0em
   a
     :color = !common_link_color_light_background
     &:hover
@@ -114,8 +113,8 @@ body
     &.selected
       :color !dark_green
   h1
-    :margin 0em 0em 0.5em 0.5em
-    :padding 0.1em 0em 0.1em 0.5em
+    :margin 0em 0em 0.5em 0em
+    :padding 0em
     :font
       :size 2em
       :weight 700
@@ -184,6 +183,9 @@ body
       a
         :padding 0em 2em
         :color = !medium_green
+.item
+  :margin 2em 0em 2em 0em
+  :padding 0em 1em 0em 1em
 
 .this_page
   :color black
@@ -291,10 +293,6 @@ body
     :margin 0em
     :padding 0em 0em 1.1em 0em
 
-#middle_section
-//  :border
-//    :right 1px solid
-//    :color = !common_border
   
 #main_content
   :color black
@@ -303,25 +301,13 @@ body
   :line-height 1.5em
   :margin 
     :top 0em
-    :right 0em 
     :bottom 0em
     :left = !sidebar_width
   :padding 0em 1em 0em 2em
   :border
     :left 0px solid
     :color = !common_border
-  .top_of_page
-    :color white
-    :background-color transparent
-    :font
-      :size 91%
-      :weight bold
-    :text-decoration none
-    :margin 2.5ex 1ex 0em 0em
-    :padding 0
-    :float right
-  >.top_of_page
-    :margin 0.5ex 1ex 0em 0em
+
   a
     :color = !common_link_color_light_background
     :background-color transparent
@@ -339,110 +325,39 @@ body
   p
     :margin 1em 1ex 2em 1ex
     :padding 0em
-  ol
-    li
-      :margin 0.2em 0.2em 0.2em 0.2em
-      :padding 0em 1em 0em 1em
-  .menu
-    :padding 0.5em 1em
-    :border
-      :style dotted
-      :width 1px
-      :color = !common_border
-      :padding 1em
-      :bottom none
-    ul
-      :background-color = !common_menu_background
-      :color = !light_redish_brown
-      :margin 0em 0em 0em 1em
-      :padding 0.2em 0em 0.4em 1em
-      li
-        a
-          :color = !common_link_color_dark_background
-          &:hover
-            :color white
-  .content
-    :background-color = !body_background
-    :margin 0em 0em 0em 0em
-    :padding 1em
-    :border
-      :style dotted
-      :width 1px
-      :color = !common_border
-    ol
-      li
-        :background-color = !body_background
-  .item
-    :background-color = !body_background
-    :margin 0em 0em 1em 2em
-    :padding 0em 1em 0em 1em
-    :width 90%
-    .menu
-      :background-color = !body_background
-      :padding 0.5em 1em
-      :border
-        :style dotted
-        :width 1px
-        :color = !common_border
-        :padding 1em
-        :bottom none
-      ul
-        :background-color = !common_menu_background
-        :color = !light_redish_brown
-        :margin 0em 0em 0em 1em
-        :padding 0.2em 0em 0.4em 1em
-        li
-          a
-            :color = !common_link_color_dark_background
-            &:hover
-              :color white
-    .content
-      :background-color = white
-      :margin 0em 0em 0em 0em
-      :padding 1em
-      :border
-        :style dotted
-        :width 1px
-        :color = !common_border
-      .prompt
-        :margin 0em 0em 0em 0em
-        :padding 0.3em 1em 0.3em 0.5em
-        :border
-          :style dotted
-          :width 1px
-          :color = !common_border
-      .response
-        :margin 0em 0em 0em 0em
-        :padding 0.3em 1em 0.3em 0.5em
-        :border
-          :style dotted
-          :width 1px
-          :color = !common_border
-      .data_collector
-        :margin 0em 0em 0em 0em
-        :padding 0.3em 1em 0.3em 0.5em
-        :width 600px
-        :height 300px
-        :border
-          :style dotted
-          :width 1px
-          :color = !common_border
-  
 
-  .step_editor
-    .menu
-      :background-color = !body_background
-      :color = !redish_brown
-      ul
-        :background-color = !body_background
-        :color = !redish_brown
-        li
-          a
-            :color = !medium_green
-            &:hover
-              :color = !dark_green
+  .content
+    :background-color = white
+    :margin 0em 0em 0em 0em
+    :padding 0.3em 1em 0.4em 0.1em
+    :border
+      :style dotted
+      :width 1px
+      :color = !common_border
+    .prompt
+      :margin 0em 0em 0em 0em
+      :padding 0.3em 1em 0.4em 0.1em
+      :border
+        :style dotted
+        :width 1px
+        :color = !common_border
+    .response
+      :margin 0em 0em 0em 0em
+      :padding 0.3em 1em 0.4em 0.1em
+      :border
+        :style dotted
+        :width 1px
+        :color = !common_border
+    .data_collector
+      :margin 0em 0em 0em 0em
+      :padding 0.3em 1em 0.4em 0.1em
+      :width 600px
+      :height 300px
+      :border
+        :style dotted
+        :width 1px
+        :color = !common_border
     
-    .embeddable_button
     .steps_container
       :margin 0em
       :padding 0em 0em 0em 0em
@@ -561,12 +476,14 @@ body
       :top 1em
       :left 0em
     :cursor move
+    
 a.delete
   :color red
   :background-color red
-  :font-size 8px
+  :font-size 6px
   :text-decoration none
   :font-weight bold
+
 dd
   :margin 0em 0em 2em 2em
   :padding 0em
@@ -574,9 +491,7 @@ dd
 dl
   :margin 1em 1ex 2em 1ex
   :padding 0em
-  
 
-  
 dt
   :font-weight bold
   :margin 0em

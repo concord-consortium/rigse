@@ -119,7 +119,6 @@ class PagesController < ApplicationController
     render :nothing => true
   end
 
-
   ##
   ##
   ##
