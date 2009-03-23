@@ -1,8 +1,20 @@
-%li
-  .item
-    .menu
-      =data_collector.name
-    .content
-      .prompt
-        =data_collector.description
-      %div{:id => "data_collector", :class => "data_collector"}
+.item
+  .menu
+    =data_collector.name
+  .content
+    .prompt
+      =data_collector.description
+    %div{:id => "data_collector", :class => "data_collector"}
+    :javascript
+      Flotr.draw(
+        $('data_collector'),[
+        {data: [ ],
+          label: 'Distance (m)',
+          lines: {show: true, fill: false},
+          points: {show: true}
+          }],{
+          legend: {show: true, max: 60},
+          xaxis: {min: 0, max: 60},
+          yaxis: {min: 0, max: 5}
+        }
+        );

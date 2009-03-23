@@ -27,7 +27,7 @@ class DataCollectorsController < ApplicationController
     @data_collector = DataCollector.new
 
     respond_to do |format|
-      format.html { render :partial=>'data_collector', :layout=>false }
+      format.html { render :partial=>'data_collector', :locals => { :embeddable => @data_collector }, :layout=>false }
       format.xml  { render :xml => @data_collector }
     end
   end

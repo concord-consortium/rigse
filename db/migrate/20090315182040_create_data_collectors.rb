@@ -6,7 +6,10 @@ class CreateDataCollectors < ActiveRecord::Migration
       t.string      :description
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
-      t.string      :content
+      t.integer     :y_axis_min, :default => 0
+      t.integer     :y_axis_max, :default => 5
+      t.integer     :x_axis_min, :default => 0
+      t.integer     :x_axis_max, :default => 60
     end
   end
 
