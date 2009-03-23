@@ -22,17 +22,15 @@
       :update => 'elements_container',
       :position => :bottom,
       :complete => "var f = Flotr.draw(
-          $('data_collector'), [
-          { // => first series
-              data: [ [0, 0], [1, 2], [2, 4], [3, 6], [4, 8] ],
-              label: 'y = 2x',
-              lines: {show: true, fill: true},
-              points: {show: true}
-          },
-          { // => second series
-              data: [ [0, 2.5], [1, 5.5], [2, 8.5], [3, 11.5], [4, 14.5] ],
-              label: 'y = 2.5 + 3x'
-          }]
+        $('data_collector'),[
+        {data: [ ],
+          label: 'Distance (m)',
+          lines: {show: true, fill: false},
+          points: {show: true}
+          }],{
+          xaxis: {min: 0, max: 60},
+          yaxis: {min: 0, max: 5}
+        }
         );
         Sortable.create('elements_container', { dropOnEmpty: true });" %>
     
@@ -57,21 +55,15 @@
   <% if @page.page_elements.size > 0 %>
   <ol id="elements_container">
     <% @page.page_elements.each do | element | %>
-    <li>
-      <div class="item">
-        <div class="menu">
-          <%= element.embeddable.name %>
-        </div>
-        <div class="content">
-          <%= element.embeddable.content %>
-        </div>
-      </div>
-    </li>
+      <li>
+        <% etype = element.embeddable_type.underscore %>
+        <%= render :partial => "#{etype}s/#{etype}", :locals => { :embeddable => element.embeddable } %>
+      </li>
     <% end %>
   </ol>
   <% end %>
-  <%= sortable_element :elements_container, :dropOnEmpty => true %> 
-
+  <%= sortable_element :elements_container, :dropOnEmpty => true, 
+    :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }} %> 
 
  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
  <%= link_to 'edit', :action => 'edit' %> |
