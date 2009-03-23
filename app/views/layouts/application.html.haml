@@ -71,6 +71,7 @@
             %ul
               %li= link_to 'Investigations', investigations_path
               %li= link_to 'Grade Span Expectations', grade_span_expectations_path
+              %li= link_to 'Assessment Targets', assessment_targets_path
           .right
             %ul
       #middle_section
@@ -97,11 +98,10 @@
         #content_header_container
           #content_header.horiz_band
             .left
-              = yield :content_header
+              = yield :content_header_left
             .right
               %ul
-                %li
-                  Right Side
+                = yield :content_header_right
             
         #main_content
           %p{ :style => "color: green" }
