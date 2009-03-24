@@ -1,4 +1,5 @@
 *~
+*.css
 log/*.log
 tmp/**/*
 .DS_Store

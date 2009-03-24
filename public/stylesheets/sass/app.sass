@@ -3,171 +3,106 @@
 // Sass (Syntactically Awesome StyleSheets)
 // Here's the rdoc: http://haml.hamptoncatlin.com/docs/rdoc/classes/Sass.html
 
-!common_border = #999999
-!body_background = #FFFEE9
+@import app_colors
+@import app_metrics
+@import app_links
 
-!light_green = #E1FCD3
-!medium_green = #51A656
-!dark_green = #17711E
-!redish_brown = #982F10
-!light_redish_brown = #F5BFA4
-!brownish_red = #915400
-
-!mid_header_background = !body_background
-!super_header_background = !body_background
-!super_header_font_color = !redish_brown
-!footer_background = !medium_green
-!mid_header_font_color = !brownish_red
-!sub_header_background = !dark_green
-!sidebar_font_color = !redish_brown
-
-!common_link_color_dark_background = !light_green
-!common_link_color_light_background = !medium_green
-!common_text_color_dark_background = !light_green
-!common_text_color_light_background = !medium_green
-
-!common_highlight_background = !medium_green
-!common_menu_background = !dark_green
-!common_menu_font_color = !redish_brown
-
-!content_header_background = !body_background
-!content_header_font_color = !redish_brown
-
-!ouside_margin = 0.5em
-!sidebar_width = 15em
++rollover_link
 
 body
   :color black
   :background-color = !body_background
+  :margin 2em
+    :top 0px
+  :padding 0px
   :font
-    :family verdana, helvetica, arial, sans-serif
+    :family helvetica, verdana, arial, sans-serif
     :size 71%
-  a
-    :color = !common_link_color_light_background
-    :background-color transparent
-    :text-decoration none
-    :font-weight 600
-    :margin 0em
-    :padding 0.2em 0.5em
-    &:hover
-      :color !dark_green
-      :font-weight 800
-
-#body2
-  :margin 0em
-  :padding 0em
-
-.login
-  :font-size 1.2em
-
-.lighter_background
-  :color inherit
-  :background-color white
-
-#header
-  :margin 0em 0.1em 0em 0.2em
-  :padding 0em 0.1em 0em 0.2em
-
+    
 .horiz_band
   :color = !common_menu_font_color
   :background-color = !common_menu_background
   :width 100%
   :display table
-  :margin 0em
-  :padding 0em
+  :margin 0.5em
+    :left 0em
+    :bottom 0em
+  :padding 0.5em
+
   .left
     :float left
-    :margin 0.5em 1em
+  .center_left
+    :float left
   .right
     :text-align right
     :float right
-    :margin 0.5em 1em
-  a
-    :color = !common_link_color_dark_background
-    :font-weight 600
-    &:hover
-      :color white
-      :font-weight 800
-      &:hover
-        :font-size 100%
-  li
-    :display inline
-    :list-style-type none
-    &.selected
-      a
-        :color white
-        :font-weight 800
+    
   ul
     :margin 0px
     :padding 0px
+  li
+    :display inline
+    :list-style-type none
+    :padding-right 1.2em
+    +inverse_color_link
 
-.horiz_band#super_header
+#header
+  :margin 0px
+  :padding 0px
+#super_header
   :font-size 1em
   :color = !super_header_font_color
   :background-color transparent
-  a
-    :color = !common_link_color_light_background
-    &:hover
-      :color = !dark_green
   li
     &.selected
       :color !dark_green
-  h1
-    :margin 0em 0em 0.5em 0em
-    :padding 0em
-    :font
-      :size 2em
-      :weight 700
 
-.horiz_band#footer
-  :color white
-  :background-color = !footer_background
-  :font-size 91%
 
-.horiz_band#sub_header
+#sub_header
   :color white
   :background-color = !sub_header_background
   :font-size 1.1em
   .center_left
     :position absolute
-    :left = !sidebar_width
-    :margin-top 0.5em
-    :margin-right 1em
-    :margin-bottom 0.5em
-    :margin-left 0.5em
+    :left = !sidebar_width + 2.5em
 
-.horiz_band#content_header
-  :color = !content_header_font_color
-  :background-color = !content_header_background
-  :border
-    :bottom 1px solid
-    :color = !common_border
-  a
-    :padding 0em 0.1em
-    :color = !medium_green
-
-.horiz_band#content_menu
-  :color = !redish_brown
-  ul
-    :background-color = !body_background
-    :color = !redish_brown
-    :margin 0em
-    :padding 0em
-    li
-      :display inline
-      :list-style-type none
-      :padding 0em 0.1em
-      a
-        :color = !medium_green
 
 #content_header_container
   :background-color = !body_background
   :margin 
     :top 0em
-    :right 0em 
     :bottom 0em
-    :left = !sidebar_width
+    :left = !sidebar_width + 2em
   :border-style none
+
+
+#content_header
+  :color = !content_header_font_color
+  :background-color = !content_header_background
+  :border-bottom 1px dashed
+  :border-color = !common_border
+  +rollover_link
+
+
+
+#footer
+  :color white
+  :background-color = !footer_background
+  :font-size 0.9em
+  +inverse_color_link
+
+
+
+#content_menu
+  :color = !redish_brown
+  ul
+    :background-color = !body_background
+    :color = !redish_brown
+    li
+      :display inline
+      :list-style-type none
+      :padding-right 10px
+      
 
 .menu
   :color = !redish_brown
@@ -180,9 +115,7 @@ body
       :display inline
       :list-style-type none
       :padding 0em 2em
-      a
-        :padding 0em 2em
-        :color = !medium_green
+
 .item
   :margin 2em 0em 2em 0em
   :padding 0em 1em 0em 1em
@@ -197,60 +130,29 @@ body
     :color = !common_border
 
 #sidebar
-  :width = !sidebar_width - 0.1em
+  :width = !sidebar_width
   :float left
   :clear left
-  :margin-left = !ouside_margin
   :color = !sidebar_font_color
-  :border
-    :right 0.1em solid
-    :left 0.1em solid
-    :color = !common_border
-  a
-    :color = !common_link_color_light_background
-    :background-color parent
-    :text-decoration none
-    :margin 0em 0.5em 0em 0em
-    :padding 0.2em
-    :display block
-  .sideBarText
-    :line-height 1.5em
-    :margin 0 0 1em 0
-    :padding 0 1.5ex 0 2.5mm
-    :display block
-  .sideBarTitle
-    :font-weight bold
-    :margin 0em 0em 0em 2.5mm
-    :padding 1em 0 0 0
+  :padding 0 1.5ex 0 2.5mm
+  :line-height 1.5em
+  :display block
+  :margin 
+    :left 0px
+    :right 0px
+    :top 0px
+  :padding 0.5em
+  :background-color white
   .step_tree
     :font-weight bold
-    :margin 0.5em
-    :padding 0.5em
-    :border-top
-      :style dotted
-      :width 1px
-      :color = !common_border
     :border-bottom
-      :style dotted
+      :style dashed
       :width 1px
       :color = !common_border
-    ul
-      :margin 0.1em 
-      :text-align left
-      :font-weight bold
     li
       :list-style-type none
       :margin 0.1em
-    h3
-      :font-size 15px
-      :margin 0em
-      :padding 0em
-      :text-align left
-      a
-        :color = !light_green
-      a:hover
-        :color white
-      :background-color = !common_link_color_light_background
+
     .tiny 
       :padding 0em
       :margin 
@@ -260,30 +162,6 @@ body
       :font
         :weight normal
         :size 9px
-    
-    a.selected:hover
-      :color white
-      :background-color brown
-    a.selected
-      :color brown
-      :background-color white
-  a:hover
-    :color white
-    :background-color = !common_highlight_background
-    :text-decoration none
-  .sideBarText a
-    :text-decoration underline
-    :margin 0
-    :padding 0
-    :display inline
-    &:hover
-      :color = !common_link_color_light_background
-      :background-color transparent
-      :text-decoration none
-  div
-    :border
-      :bottom 1px solid
-      :color = !common_border
   li
     :margin 0
     :padding 0.1em 0em
@@ -300,20 +178,11 @@ body
   :text-align justify
   :line-height 1.5em
   :margin 
-    :top 0em
-    :bottom 0em
-    :left = !sidebar_width
-  :padding 0em 1em 0em 2em
+    :left = !sidebar_width + 2em
   :border
     :left 0px solid
     :color = !common_border
-
-  a
-    :color = !common_link_color_light_background
-    :background-color transparent
-    :text-decoration underline
-    &:hover
-      :text-decoration none
+    
   h1
     :color white
     :background-color = !common_highlight_background
@@ -335,154 +204,30 @@ body
       :width 1px
       :color = !common_border
     .prompt
-      :margin 0em 0em 0em 0em
-      :padding 0.3em 1em 0.4em 0.1em
-      :border
-        :style dotted
-        :width 1px
-        :color = !common_border
     .response
-      :margin 0em 0em 0em 0em
-      :padding 0.3em 1em 0.4em 0.1em
-      :border
-        :style dotted
-        :width 1px
-        :color = !common_border
     .data_collector
-      :margin 0em 0em 0em 0em
-      :padding 0.3em 1em 0.4em 0.1em
-      :width 600px
-      :height 300px
-      :border
-        :style dotted
-        :width 1px
-        :color = !common_border
-    
-    .steps_container
-      :margin 0em
-      :padding 0em 0em 0em 0em
-      ol
-        :background-color = !body_background
-        :color = !redish_brown
-        :position relative
-        :background-image none
-        :margin-left 0.5em
-        :padding-left 0.5em
-        
-        li
-          :margin 1em
-          :padding 1em 1em 1em 1em
-          :border
-            :style dotted
-            :width 1px
-            :color = !common_border
-          :background-color white
-          :position relative
-          :z-index 0
-          :top 0px
-          :left 0 px
-
-  .paginator
-    :margin 0em
-    :padding 0em 0em 0em 0em
-
-  .item_collection
-    :margin 0em
-    :padding 0em 0em 0em 0em
-    .menu
-      :background-color = !body_background
-      :color = !redish_brown
-      ul
-        :background-color = !body_background
-        :color = !redish_brown
-        li
-          a
-            :color = !medium_green
-            &:hover
-              :color = !dark_green
-    .not_translated
-      :background-image url("/images/preview.gif")
-    .html_content
-      :border
-        :style solid
-        :width 1px
-        :color = !common_border
-      :margin 0em
-      :padding 1em
-      :font-size 1.2em
-      :color black
-      :background-color white
-      :text-align justify
-      :line-height 1.5em
-      a
-        :color = !common_link_color_light_background
-        :background-color transparent
-        :text-decoration underline
-        &:hover
-          :text-decoration none
-      h1
-        :color white
-        :background-color = !common_highlight_background
-        :font
-          :size 100%
-          :weight bold
-        :margin 3em 0em 0em 0em
-        :padding 0.5ex 0em 0.5ex 1ex
-      p
-        :margin 0em
-        :padding 0em
-    .image_content
-      :border
-        :style solid
-        :width 1px
-        :color = !common_border
-      :margin 0em
-      :padding 1em
-      :font-size 1.2em
-      :background-color white
-
-  .item_collection>.item_list
-
-  .item_array
-    :margin 0em
-    :padding 0em
-    .item
-      :width 14em
-      :height 13em
-      :float left
-
-  .item_list
-    :margin 0em 1em 0em 1em
-    :padding 0em 0em 0em 0em
-
-.button_to div input[type="submit"]
+  
+.paginator
   :margin 0em
+  :padding 0em 0em 0em 0em
 
 .do_not_display
   :display none
 
 .sortable
-  :margin 
-    :top 0em
-    :left 0em
-    :right 0em
-    :bottom 1em
   :padding 0em
+  :margin 0px
+    :bottom 1em
   li
     :list-style-position inside
-    :padding 0.5em
+    :padding 0.25em
+      :left 0em
     :background-color white
     :margin 
       :top 1em
       :left 0em
     :cursor move
     
-a.delete
-  :color red
-  :background-color red
-  :font-size 6px
-  :text-decoration none
-  :font-weight bold
 
 dd
   :margin 0em 0em 2em 2em
@@ -511,4 +256,4 @@ acronym, .titleTip
   :display block
   :visibility hidden
   :margin 1em
-  
+
