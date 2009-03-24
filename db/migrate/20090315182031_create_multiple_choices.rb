@@ -7,7 +7,8 @@ class CreateMultipleChoices < ActiveRecord::Migration
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
       t.string      :prompt
-      t.string      :default_response
+      t.string      :options
+      t.timestamps
     end
   end
 

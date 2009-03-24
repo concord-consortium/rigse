@@ -1,7 +1,6 @@
 class CreateDataCollectors < ActiveRecord::Migration
   def self.up
     create_table :data_collectors do |t|
-      t.timestamps
       t.string      :name
       t.string      :description
       t.integer     :user_id

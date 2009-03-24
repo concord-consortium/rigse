@@ -20,24 +20,27 @@ to install this plugin we followed this procedure:
 
 !http://clients.fudgestudios.com/chester.jpg!
 
-h1. Bort
+h1. rigse
 
-Bort is a base Rails 2.2 application that makes creating new projects easier and faster. Bort is developed and maintained by "Fudge Studios":http://www.fudgestudios.com, "Jim Neath":http://jimneath.org and "Matt Hall":http://matthall.wordpress.com
-
-If you have any suggestions for improvements then feel free to leave a request on "User Voice":http://bort.uservoice.com
 
 h2. Install
 
-* Download and unzip Bort
-* Edit the database.yml and the settings.yml files
-* Changed the default password in the bort migration
-* Edit the REST_AUTH_SITE_KEY in each of the environment files
-* Rake db:migrate
-* Have a brew and celebrate
 
-h2. Plugins Installed
+h2. notes for collaborating developers
 
-Bort comes with a few commonly used plugins installed and already setup.
+# I could not figure out how to get rspec to work, and I did not feel like installing shoulda, so for now I am using basic unit tests
+# This project was derived from BORT, which is basically like an archetype. Other notes in this document are taken from the Bort docs.
+# 
+
+h2. TODO Items:
+
+# make models for
+## activities (done)
+## xhtml text areas [Xhtml]
+## Open Responses [OpenResponse]
+## Multiple Choice Questions [MultipleChoiceQuestion]
+## Datacollectors: sensors and prediction [DataCollector]
+## Models [InteractiveModel]
 
 h3. RESTful Authentication
 
@@ -57,7 +60,7 @@ Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
 
 h3. Will Paginate
 
-We use will_paginate in pretty much every project we use, so Bort comes with it pre-installed.
+We use will_paginate in pretty much every project we use.
 
 h3. Rspec & Rspec-rails
 
@@ -76,7 +79,6 @@ load times and saves you bandwidth.
 
 h2. Routes
 
-The routes for RESful Auth and the forgot password stuff are already sorted for you.
 
 h2. Settings YAML
 
