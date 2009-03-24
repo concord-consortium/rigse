@@ -74,18 +74,17 @@
           %ul
     #middle_section
       #sidebar
-        .lighter_background
-          = yield :sidebar
-          %p
-            %span.sideBarText
-              Rhode Island Technology Enhanced Science (RITES) program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
-          %p.sideBarTitle
-            %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
-              RITES Project Wiki
-        %div
-          %p.sideBarTitle
-            Validation
+        = yield :sidebar
+        %p
           %span.sideBarText
+            Rhode Island Technology Enhanced Science 
+            %em (RITES) 
+            program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
+        %p.sideBarTitle
+          %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
+            RITES Project Wiki
+        %div
+          %p.small
             Validate the
             %a{ :href => "http://validator.w3.org/check/referer" }
               XHTML
