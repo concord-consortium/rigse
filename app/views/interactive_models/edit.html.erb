@@ -1,0 +1,12 @@
+<h1>Editing interactive_model</h1>
+
+<% form_for(@interactive_model) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @interactive_model %> |
+<%= link_to 'Back', interactive_models_path %>

@@ -1,7 +1,6 @@
 class CreateXhtmls < ActiveRecord::Migration
   def self.up
     create_table :xhtmls do |t|
-      t.timestamps
       t.string      :name
       t.string      :description
       t.integer     :user_id
