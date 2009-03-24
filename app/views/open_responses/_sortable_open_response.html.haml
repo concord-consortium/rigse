@@ -1,6 +1,8 @@
 %li[@page.element_for(@component)]
   .item
-    .menu= component.name
+    .menu
+    = component.name 
+    =link_to_ajax_delete(page,component)
     .content
       .prompt= component.prompt
       .response= component.default_response
