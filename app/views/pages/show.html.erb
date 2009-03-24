@@ -1,73 +1,53 @@
 <div class="step_editor">
   
   <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
-  <%= link_to 'edit', :action => 'edit' %> |
-  <%= link_to_remote 'add xhtml element', 
-    :url => new_page_xhtml_path(@page), 
-    :method => :get,
-    :update => 'elements_container',
-    :position => :bottom,
-    :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
-     | 
-    <%= link_to_remote 'add open response question', 
-      :url => new_page_open_response_path(@page), 
-      :method => :get,
-      :update => 'elements_container',
-      :position => :bottom,
-      :complete => "Sortable.create('elements_container', { dropOnEmpty: true });" %>
-      |
-    <%= link_to_remote 'add data collector', 
-      :url => new_page_data_collector_path(@page), 
-      :method => :get,
-      :update => 'elements_container',
-      :position => :bottom,
-      :complete => "var f = Flotr.draw(
-        $('data_collector'),[
-        {data: [ ],
-          label: 'Distance (m)',
-          lines: {show: true, fill: false},
-          points: {show: true}
-          }],{
-          xaxis: {min: 0, max: 60},
-          yaxis: {min: 0, max: 5}
-        }
-        );
-        Sortable.create('elements_container', { dropOnEmpty: true });" %>
-    
+  <%= link_to 'edit', :action => 'edit' %>
+  |
 
+  <%= link_to_remote 'add xhtml element', 
+    :url => {
+      :action => 'add_element', 
+      :page_id => @page.id, 
+      :container => 'elements_container',
+      :class_name => 'Xhtml' } %> 
+  
+  | 
+  <%= link_to_remote 'add open response question', 
+    :url => {
+      :action => 'add_element', 
+      :page_id => @page.id, 
+      :container => 'elements_container',
+      :class_name => 'OpenResponse' } %> 
+  |
+  
+  <%= link_to_remote 'add data collector', 
+    :url => {
+      :action => 'add_element', 
+      :page_id => @page.id, 
+      :container => 'elements_container',
+      :class_name => 'DataCollector' } %> 
+  
+  
   <h1>Showing page for <%= @page.name %> of &ldquo;<%= @page.section.name %>&rdquo; section</h1>
+
   <%= render  :partial => 'shared/investigation_side_menu',
         :locals => { :investigation => @page.section.investigation } %>
   <%= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } %>
-    <!-- 
-  use link to remote here to add a new page...
-  
-        :url => {
-            :controller => 'page_elements',
-            :action => 'add_step',
-            :investigation_id => @investigation.id,
-            :kind => 'OpenResponse'} %>
-    -->
 
 
-
-  <!-- Allow for page reordering here? -->
+  <!-- Allow for page reordering here: -->
   <% if @page.page_elements.size > 0 %>
-  <ol id="elements_container">
-    <% @page.page_elements.each do | element | %>
-      <li>
-        <% etype = element.embeddable_type.underscore %>
-        <%= render :partial => "#{etype}s/#{etype}", :locals => { :embeddable => element.embeddable } %>
-      </li>
+  <ol id="elements_container" class="sortable">
+    <% @page.page_elements.each do |element| %>
+      <%= render :partial => partial_for(element.embeddable), 
+        :locals => {:component => element.embeddable, :page => @page} %>
     <% end %>
   </ol>
   <% end %>
-  <%= sortable_element :elements_container, :dropOnEmpty => true, 
-    :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }} %> 
-
- <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
- <%= link_to 'edit', :action => 'edit' %> |
- <%= link_to_remote 'add xhtml element to this page', :action => 'add_xhtml' %> | 
- <%= link_to_remote 'add question element to this page', :action => 'add_xhtml' %>
-
+  <%= sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } } %>
+  
+  
+  <%= link_to "back to #{@page.section.name}", section_url(@page.section) %> |
+  <%= link_to 'edit', :action => 'edit' %> 
+  <%= sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } } %>
 </div>

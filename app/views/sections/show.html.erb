@@ -13,10 +13,10 @@
 
       <%= render :partial => 'page_list_item', :locals => {:page => page} %>
 
-      <% end %>
-      <%= sortable_element :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, 
-        :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %> 
-    </ol>
+			<% end %>
+			<%= sortable_element :section_pages_list, :dropOnEmpty => true, 
+        :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }} %>	
+		</ol>
 
   <%= link_to "back to #{@section.investigation.name}", investigation_url(@section.investigation) %>
 </div>

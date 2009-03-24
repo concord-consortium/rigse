@@ -1,0 +1,6 @@
+%li[page.element_for(component)]
+  .item
+    .menu
+      =component.name
+      =link_to_remote 'delete',  :confirm => "Delete this item?", :url => { :action => 'delete_element', :dom_id =>page.element_for(component).dom_id, :element_id => page.element_for(component).id }
+    .content=component.content

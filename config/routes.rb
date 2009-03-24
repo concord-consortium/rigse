@@ -17,7 +17,10 @@ ActionController::Routing::Routes.draw do |map|
     :delete_page => :post
   }
     
-  map.resources :pages, :member => { :sort_elements => :post }
+  map.resources :pages, :member => { 
+    :add_element => :post,
+    :sort_elements => :post,
+    :delete_element => :post}
   
   # /pages/:id/add_element/:embeddable_type
   # /pages/:id/:embeddable_type_controller
