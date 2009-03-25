@@ -30,6 +30,8 @@ role :db, domain, :primary => true
 
 set :scm, :git
 set :branch, "master"
+# wondering if we can do something special for this? create
+# a special deploy user on github?
 set :scm_user, 'knowuh'
 set :scm_passphrase, "PASSWORD"
 set :repository, "git://github.com/stepheneb/rigse.git"
