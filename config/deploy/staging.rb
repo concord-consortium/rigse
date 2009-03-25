@@ -29,7 +29,7 @@ role :db, domain, :primary => true
 #############################################################
 
 set :scm, :git
-set :branch, "np2"
+set :branch, "master"
 set :scm_user, 'knowuh'
 set :scm_passphrase, "PASSWORD"
 set :repository, "git://github.com/stepheneb/rigse.git"
