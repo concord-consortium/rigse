@@ -1,0 +1,12 @@
+.menu
+  %ul
+    - if RAILS_ENV == "development"
+      %li
+        id:
+        =component.id
+    %li
+      = component.name
+    %li
+      = link_to_ajax_update(page, component)
+    %li
+      = link_to_ajax_cancel(page, component)

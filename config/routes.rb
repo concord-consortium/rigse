@@ -3,28 +3,34 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :interactive_models, :multiple_choices
   
   map.resources :xhtmls
-  map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+  # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
   map.resources :open_responses
-  map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+  # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
   map.resources :data_collectors
-  map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+  # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
   
-  map.resources :sections, :member => { 
+  map.resources :sections, :member => {
     :add_page => :post,
     :sort_pages => :post, 
     :delete_page => :post
   }
     
-  map.resources :pages, :member => { 
+  map.resources :pages, :member => {
     :add_element => :post,
     :sort_elements => :post,
-    :delete_element => :post}
+    :delete_element => :post
+  }
   
   # /pages/:id/add_element/:embeddable_type
   # /pages/:id/:embeddable_type_controller
-  map.resources :pages
+  map.resources :pages do |page|
+    page.resources :xhtmls
+    page.resources :open_responses
+    page.resources :data_collectors
+  end
+  
   map.resources :page_elements
 
   map.resources :investigations do |investigation|

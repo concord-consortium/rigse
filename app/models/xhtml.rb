@@ -2,8 +2,7 @@ class Xhtml < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  # belongs_to :page, :through =>:page_elements
-  
+
   acts_as_replicatable
 
   default_value_for :name, "Collect Data"

@@ -35,10 +35,16 @@ module ApplicationHelper
       end      
   end
   
-  def partial_for(element)
-      # dynimically find the partial for the 
-      class_name = element.class.name.underscore
-      return "#{class_name.pluralize}/sortable_#{class_name}"
+  def partial_for(component)
+      # dynamically find the partial for the 
+      class_name = component.class.name.underscore
+      # return "#{class_name.pluralize}/sortable_#{class_name}"
+      "#{class_name.pluralize}/#{class_name}"
+  end
+  
+  def render_partial_for(component)
+    class_name = component.class.name.underscore
+    render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
 end

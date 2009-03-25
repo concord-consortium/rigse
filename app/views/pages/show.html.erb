@@ -4,31 +4,37 @@
 <%= render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation } %>
 <%= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } %>
 
-  <%= link_to 'edit', :action => 'edit' %>
-  |
-
-  <%= link_to_remote 'add xhtml element', 
-    :url => {
-      :action => 'add_element', 
-      :page_id => @page.id, 
-      :container => 'elements_container',
-      :class_name => 'Xhtml' } %> 
-  
-  | 
-  <%= link_to_remote 'add open response question', 
-    :url => {
-      :action => 'add_element', 
-      :page_id => @page.id, 
-      :container => 'elements_container',
-      :class_name => 'OpenResponse' } %> 
-  |
-  
-  <%= link_to_remote 'add data collector', 
-    :url => {
-      :action => 'add_element', 
-      :page_id => @page.id, 
-      :container => 'elements_container',
-      :class_name => 'DataCollector' } %> 
+<div class="menu">
+  <ul>
+    <li>
+      <b>Insert:</b>
+    </li>
+    <li>
+      <%= link_to_remote 'xhtml', 
+        :url => {
+          :action => 'add_element', 
+          :page_id => @page.id, 
+          :container => 'elements_container',
+          :class_name => 'Xhtml' } %> 
+    </li>
+    <li>
+      <%= link_to_remote 'open response question', 
+        :url => {
+          :action => 'add_element', 
+          :page_id => @page.id, 
+          :container => 'elements_container',
+          :class_name => 'OpenResponse' } %> 
+    </li>
+    <li>
+      <%= link_to_remote 'data collector', 
+        :url => {
+          :action => 'add_element', 
+          :page_id => @page.id, 
+          :container => 'elements_container',
+          :class_name => 'DataCollector' } %> 
+    </li>
+  </ul>
+</div>
 
 
 
@@ -36,8 +42,9 @@
   <% if @page.page_elements.size > 0 %>
   <ol id="elements_container" class="sortable">
     <% @page.page_elements.each do |element| %>
-      <%= render :partial => partial_for(element.embeddable), 
-        :locals => {:component => element.embeddable, :page => @page} %>
+      <div id="item_<%= element.embeddable.name.underscore %>_<%= element.embeddable.id %>", class='item'>    
+        <%= render_partial_for(element.embeddable) %>
+      </div>
     <% end %>
   </ol>
   <% end %>

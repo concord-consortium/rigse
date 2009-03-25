@@ -98,6 +98,32 @@ class PagesController < ApplicationController
     @component = Kernel.const_get(params['class_name']).create
     @component.pages << @page
     @component.save
+    # 
+    # # dynimically insert appropriate partial based on type.
+    # @partial = partial_for(@component)
+
+    # we will render page/add_element.js.rjs by default....
+    # this rjs will include the appropriate html fragment
+  end
+  
+  
+  ##
+  ## This is a remote_function (ajax) to be called with link_to_remote or similar. 
+  ## We expect parameters "page_id" and "closs_name"
+  ## optional parameter "container" tells us what DOM ID to add our results too...
+  ##
+  def edit_element
+    @dom_id = params['dom_id']
+    @element = PageElement.find(params['element_id'])
+    @element.destroy
+
+    @page= Page.find(params['page_id'])
+    @container = params['container'] || 'elements_container'
+
+    # dynamically instatiate the component based on its type.
+    @component = Kernel.const_get(params['class_name']).find
+    @component.pages << @page
+    @component.save
     
     # dynimically insert appropriate partial based on type.
     @partial = partial_for(@component)
@@ -105,8 +131,7 @@ class PagesController < ApplicationController
     # we will render page/add_element.js.rjs by default....
     # this rjs will include the appropriate html fragment
   end
-  
-  
+
   ##
   ##
   ##  

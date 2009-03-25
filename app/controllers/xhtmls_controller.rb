@@ -3,6 +3,7 @@ class XhtmlsController < ApplicationController
   # GET /xhtmls.xml
   def index
     @xhtmls = Xhtml.find(:all)
+    @paginated_objects = @xhtmls
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,10 +15,13 @@ class XhtmlsController < ApplicationController
   # GET /xhtmls/1.xml
   def show
     @xhtml = Xhtml.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @xhtml }
+    if request.xhr?
+      render :partial => 'xhtml', :locals => { :xhtml => @xhtml }
+    else
+      respond_to do |format|
+        format.html # show.html.erb
+        format.xml  { render :xml => @xhtml }
+      end
     end
   end
 
@@ -25,50 +29,73 @@ class XhtmlsController < ApplicationController
   # GET /xhtmls/new.xml
   def new
     @xhtml = Xhtml.new
-    respond_to do |format|
-      format.html { render :partial=>'xhtml', :locals => { :embeddable => @xhtml }, :layout=>false }
-      format.xml  { render :xml => @xhtml }
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
+    else
+      respond_to do |format|
+        format.html { render :partial=>'xhtml', :locals => { :xhtml => @xhtml }, :layout=>false }
+        format.xml  { render :xml => @xhtml }
+      end
     end
   end
 
   # GET /xhtmls/1/edit
   def edit
     @xhtml = Xhtml.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
+    end
+    
   end
 
   # POST /xhtmls
   # POST /xhtmls.xml
   def create
     @xhtml = Xhtml.new(params[:xhtml])
-    if params[:page_id]
-      @page = Page.find(params[:page_id])
-      @xhtml.pages <<  @page
-    end
-    respond_to do |format|
-      if @xhtml.save
-        flash[:notice] = 'Xhtml was successfully created.'
-        format.html { redirect_to(@xhtml) }
-        format.xml  { render :xml => @xhtml, :status => :created, :location => @xhtml }
+    cancel = params[:commit] == "Cancel"
+    if request.xhr?
+      if cancel 
+        redirect_to :index
+      elsif @xhtml.save
+        render :partial => 'new', :locals => { :xhtml => @xhtml }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+        render :xml => @xhtml.errors, :status => :unprocessable_entity
       end
-    end
+    else
+      respond_to do |format|
+        if @xhtml.save
+          flash[:notice] = 'Xhtml was successfully created.'
+          format.html { redirect_to(@xhtml) }
+          format.xml  { render :xml => @xhtml, :status => :created, :location => @xhtml }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+        end
+      end
+    end'remote_form
   end
 
   # PUT /xhtmls/1
   # PUT /xhtmls/1.xml
   def update
+    cancel = params[:commit] == "Cancel"
     @xhtml = Xhtml.find(params[:id])
-
-    respond_to do |format|
-      if @xhtml.update_attributes(params[:xhtml])
-        flash[:notice] = 'Xhtml was successfully updated.'
-        format.html { redirect_to(@xhtml) }
-        format.xml  { head :ok }
+    if request.xhr?
+      if cancel || @xhtml.update_attributes(params[:xhtml])
+        render :partial => 'xhtml', :locals => { :xhtml => @xhtml }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+        render :xml => @xhtml.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @xhtml.update_attributes(params[:xhtml])
+          flash[:notice] = 'Xhtml was successfully updated.'
+          format.html { redirect_to(@xhtml) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

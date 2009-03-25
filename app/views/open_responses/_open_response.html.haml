@@ -1,5 +1,9 @@
-.item
-  .menu= embeddable.name
-  .content
-    .prompt= embeddable.prompt
-    .response= embeddable.default_response
+.menu
+  %ul
+    %li
+      = open_response.name
+    %li
+      = button_to_remote 'edit', :url => edit_open_response_path(open_response), :update => "item_open_response_#{open_response.id}", :method => :get
+.content
+  .prompt= open_response.prompt
+  .response= open_response.default_response

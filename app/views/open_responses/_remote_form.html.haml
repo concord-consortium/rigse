@@ -1,0 +1,17 @@
+- remote_form_for(open_response, :update => "item_open_response_#{open_response.id}") do |f|
+  .menu
+    %ul
+      %li
+        = open_response.name
+      %li
+        =  f.submit "Save"
+      %li
+        =  f.submit "Cancel"
+  .content
+    %p
+      - field_set_tag 'Prompt' do
+        %p
+          = f.text_area :prompt
+      - field_set_tag 'Response' do
+        %p
+          = f.text_area :default_response

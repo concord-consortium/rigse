@@ -1,0 +1,10 @@
+%h1= "Data Collectors: #{@data_collectors.length}" 
+- content_for(:content_header_left) do
+  %ul
+    - if RAILS_ENV == "development"
+      %li
+-content_for(:content_header_right) do
+  %ul
+    %li
+
+= render :partial => 'data_collector', :collection => @data_collectors

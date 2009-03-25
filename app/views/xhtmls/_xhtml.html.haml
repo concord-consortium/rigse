@@ -1,8 +1,8 @@
-.item
-  .menu
-    %ul
-      %li
-        =embeddable.name
-        edit
-  .content
-    =embeddable.content
+.menu
+  %ul
+    %li
+      = xhtml.name
+    %li
+      = button_to_remote 'edit', :url => edit_xhtml_path(xhtml), :update => "item_xhtml_#{xhtml.id}", :method => :get, :complete => "new tinymce.Editor('item_xhtml_textarea_#{xhtml.id}');"
+.content
+  = xhtml.content

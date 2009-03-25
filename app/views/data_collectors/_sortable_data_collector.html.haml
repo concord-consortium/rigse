@@ -1,12 +1,12 @@
 %li[@page.element_for(component)]
   .item
-    .menu= component.name
+    = render :partial => 'shared/element_menu', :locals => { :page => page, :component => component }
     .content
       = component.description
-      #data_collector.data_collector
+      %div[component]
         :javascript
           Flotr.draw(
-            $('data_collector'),[
+            $('data_collector_#{component.id}'),[
             {data: [ ],
               label: 'Distance (m)',
               lines: {show: true, fill: false},

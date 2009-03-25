@@ -30,7 +30,8 @@ class Page < ActiveRecord::Base
   # so for example, pass in an xhtml item in, and get back a page_elements object.
   # assumes that this page contains component
   def element_for(component)
-    return page_elements.detect { |e| (e.embeddable_type == component.class.name && e.embeddable_id == component.id) }
+    component.page_elements.detect {|pe| pe.page == self }
+    # return page_elements.detect { |e| (e.embeddable_type == component.class.name && e.embeddable_id == component.id) }
   end
 
 end

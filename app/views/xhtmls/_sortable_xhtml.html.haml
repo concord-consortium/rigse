@@ -1,6 +1,4 @@
 %li[page.element_for(component)]
   .item
-    .menu
-      =component.name
-      =link_to_ajax_delete(page,component)
+    = render :partial => 'shared/element_menu', :locals => { :page => page, :component => component }
     .content= component.content

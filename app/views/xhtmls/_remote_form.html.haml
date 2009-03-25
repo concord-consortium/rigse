@@ -1,0 +1,12 @@
+- remote_form_for(xhtml, :update => "item_xhtml_#{xhtml.id}") do |f|
+  .menu
+    %ul
+      %li
+        = xhtml.name
+      %li
+        =  f.submit "Save"
+      %li
+        =  f.submit "Cancel"
+  .content
+    %p
+      = f.text_area :content, :id => "item_xhtml_textarea_#{xhtml.id}"
