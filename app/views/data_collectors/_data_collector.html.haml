@@ -3,12 +3,13 @@
     %li
       = data_collector.name
     %li
-      = button_to_remote 'edit', :url => edit_data_collector_path(data_collector), :update => "item_data_collector_#{data_collector.id}", :method => :get
+      = button_to_remote 'edit', :url => edit_data_collector_path(data_collector), :update => dom_id_for(data_collector, :item), :method => :get
+
 .content
   %div[data_collector]
     :javascript
       Flotr.draw(
-        $('data_collector_#{data_collector.id}'),[
+        $('#{dom_id_for(data_collector)}'),[
         {data: [ ],
           label: 'Distance (m)',
           lines: {show: true, fill: false},

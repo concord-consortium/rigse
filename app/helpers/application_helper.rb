@@ -47,4 +47,17 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
+  def dom_id_for(component, optional_prefix=nil)
+    prefix_text = optional_prefix.nil? ? '' : "#{optional_prefix.to_s}_"
+    class_name = component.class.name.underscore
+    id_string = component.id.to_s
+    "#{prefix_text}#{class_name}_#{id_string}"
+  end
+  
+  def dom_class_for(component)
+    component.class.name.underscore
+  end
+  
+  
+  
 end

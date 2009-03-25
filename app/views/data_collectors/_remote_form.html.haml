@@ -1,4 +1,4 @@
-- remote_form_for(data_collector, :update => "item_data_collector_#{data_collector.id}") do |f|
+- remote_form_for(data_collector, :update => dom_id_for(data_collector, :item)) do |f|
   .menu
     %ul
       %li
@@ -10,11 +10,13 @@
   .content
     %p
       - field_set_tag 'Y axis' do
-        %p
-          = f.text_field :y_axis_max
-          %br
-          = f.text_field :y_axis_min
+        Y Max
+        = f.text_field :y_axis_max
+        %br
+        Y Min
+        = f.text_field :y_axis_min
       - field_set_tag 'X axis' do
-        %p
-          = f.text_field :x_axis_min
-          = f.text_field :x_axis_max
+        X Min
+        = f.text_field :x_axis_min
+        X Max
+        = f.text_field :x_axis_max
