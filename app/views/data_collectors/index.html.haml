@@ -7,4 +7,6 @@
   %ul
     %li
 
-= render :partial => 'data_collector', :collection => @data_collectors
+- @data_collectors.each do |data_collector|
+  %div{ :id => "item_#{data_collector.name.underscore}_#{data_collector.id}", :class => 'item' }
+    = render :partial => 'data_collector', :locals => { :data_collector => data_collector }

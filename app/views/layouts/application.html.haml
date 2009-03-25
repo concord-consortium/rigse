@@ -14,11 +14,11 @@
     = javascript_include_tag :defaults
     /[if IE]
       = javascript_include_tag "flotr/excanvas.js"
+    = javascript_include_tag "flotr/flotr.js"
     / = javascript_include_tag "patch_inplaceeditor_1-8-1.js"
     / = javascript_include_tag "patch_inplaceeditor_editonblank_1-8-1.js"
     / = javascript_include_tag "inplacericheditor.js"
     = javascript_include_tag "tiny_mce/tiny_mce"
-    = javascript_include_tag "flotr/flotr.js"
     
     :javascript
       tinyMCE.init({
@@ -71,6 +71,9 @@
             %li= link_to 'Grade Span Expectations', grade_span_expectations_path
         .right
           %ul
+            %li= link_to 'Data Collectors', data_collectors_path
+            %li= link_to 'Open Responses', open_responses_path
+            %li= link_to 'Xhtmls', xhtmls_path
     #middle_section
       #sidebar
         = yield :sidebar

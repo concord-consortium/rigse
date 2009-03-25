@@ -36,18 +36,9 @@
   </ul>
 </div>
 
-
-
-  <!-- Allow for page reordering here: -->
-  <% if @page.page_elements.size > 0 %>
   <ol id="elements_container" class="sortable">
-    <% @page.page_elements.each do |element| %>
-      <div id="item_<%= element.embeddable.name.underscore %>_<%= element.embeddable.id %>", class='item'>    
-        <%= render_partial_for(element.embeddable) %>
-      </div>
-    <% end %>
+    <%= render :partial => 'element_container', :collection => @page.page_elements, :locals => { :page => @page } %>
   </ol>
-  <% end %>
   <%= sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } } %>
   
   

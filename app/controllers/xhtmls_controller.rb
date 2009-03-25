@@ -72,7 +72,7 @@ class XhtmlsController < ApplicationController
           format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
         end
       end
-    end'remote_form
+    end
   end
 
   # PUT /xhtmls/1

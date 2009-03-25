@@ -1,0 +1,10 @@
+%h1= "Open Response Questions: #{@open_responses.length}" 
+- content_for(:content_header_left) do
+  %ul
+    - if RAILS_ENV == "development"
+      %li
+-content_for(:content_header_right) do
+  %ul
+    %li
+
+= render :partial => 'open_response', :collection => @open_responses

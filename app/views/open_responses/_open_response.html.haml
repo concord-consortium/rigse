@@ -5,5 +5,7 @@
     %li
       = button_to_remote 'edit', :url => edit_open_response_path(open_response), :update => "item_open_response_#{open_response.id}", :method => :get
 .content
-  .prompt= open_response.prompt
-  .response= open_response.default_response
+  - field_set_tag 'prompt' do
+    = open_response.prompt
+  - field_set_tag 'default response' do
+    = open_response.default_response

@@ -1,0 +1,10 @@
+%h1= "XHTML elements: #{@xhtmls.length}" 
+- content_for(:content_header_left) do
+  %ul
+    - if RAILS_ENV == "development"
+      %li
+-content_for(:content_header_right) do
+  %ul
+    %li
+
+= render :partial => 'xhtml', :collection => @xhtmls
