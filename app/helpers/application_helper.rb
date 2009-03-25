@@ -47,17 +47,83 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
-  def dom_id_for(component, optional_prefix=nil)
-    prefix_text = optional_prefix.nil? ? '' : "#{optional_prefix.to_s}_"
+  #
+  # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
+  #
+  # This helper is normally used with ActiveRecord objects.
+  #
+  #   @model = Model.find(3)
+  #   dom_id_for(@model)                        # => "model_3"
+  #   dom_id_for(@model, :item)                 # => "item_model_3"
+  #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
+  #
+  def dom_id_for(component, *optional_prefixes)
+    prefix = ''
+    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
     id_string = component.id.to_s
-    "#{prefix_text}#{class_name}_#{id_string}"
+    "#{prefix}#{class_name}_#{id_string}"
   end
   
   def dom_class_for(component)
     component.class.name.underscore
   end
   
+  def edit_button_for_component(component, options={})
+    url      = options[:url]      || edit_url_for_component(component)
+    update   = options[:update]   || dom_id_for(component, :item)
+    method   = options[:method]   || :get
+    complete = options[:complete] || nil
+    button_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete)
+  end
   
+  def delete_button_for_page_component(page, component)
+    button_to_remote('delete',  
+      :confirm => "Delete #{component.class.human_name} named #{component.name}?", 
+      :html => {:class => 'delete'}, 
+      :url => { 
+        :action => 'delete_element', 
+        :dom_id => page.element_for(component).dom_id, 
+        :element_id => page.element_for(component).id }
+      )
+  end
   
+  def edit_url_for_component(component)
+    { :controller => component.class.name.pluralize.underscore, 
+      :action => :edit, 
+      :id  => component.id }
+  end
+
+  def name_for_component(component)
+    if RAILS_ENV == "development"
+      "#{component.id}: #{component.name}" 
+    else
+      "#{component.name}"
+    end
+  end
+  
+  def edit_menu_for_component(component, form)
+    content_tag('div', :class => 'menu') do
+      content_tag('ul') do
+        list = ''
+        list << content_tag('li') { name_for_component(component) }
+        list << content_tag('li') { form.submit "Save" }
+        list << content_tag('li') { form.submit "Cancel" }
+        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
+      end
+    end
+  end
+
+  def show_menu_for_component(component, options={})
+    content_tag('div', :class => 'menu') do
+      content_tag('ul') do
+        list = ''
+        list << content_tag('li') { name_for_component(component) }
+        list << content_tag('li') { edit_button_for_component(component, options) }
+        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
+      end
+    end
+  end
+        
+
 end

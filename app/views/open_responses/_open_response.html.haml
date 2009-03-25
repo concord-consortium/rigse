@@ -1,9 +1,4 @@
-.menu
-  %ul
-    %li
-      = open_response.name
-    %li
-      = button_to_remote 'edit', :url => edit_open_response_path(open_response), :update => "item_open_response_#{open_response.id}", :method => :get
+= show_menu_for_component(open_response, :complete => 'tinyMCE.init({mode : "textareas"});')
 .content
   - field_set_tag 'prompt' do
     = open_response.prompt

@@ -19,6 +19,14 @@ body
     :family helvetica, verdana, arial, sans-serif
     :size 71%
     
+.left
+  :float left
+.center_left
+  :float left
+.right
+  :text-align right
+  :float right
+
 .horiz_band
   :color = !common_menu_font_color
   :background-color = !common_menu_background
@@ -29,14 +37,7 @@ body
     :bottom 0em
   :padding 0.5em
 
-  .left
-    :float left
-  .center_left
-    :float left
-  .right
-    :text-align right
-    :float right
-    
+
   ul
     :margin 0px
     :padding 0px
@@ -235,7 +236,14 @@ body
       :top 1em
       :left 0em
     :cursor move
-    
+
+.tinymce_textarea
+  :width 600px
+  :word-break break-all
+
+  .tinymce_textarea_short
+    :width 600px
+    :height 80px
 
 dd
   :margin 0em 0em 2em 2em

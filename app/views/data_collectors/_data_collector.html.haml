@@ -1,10 +1,4 @@
-.menu
-  %ul
-    %li
-      = data_collector.name
-    %li
-      = button_to_remote 'edit', :url => edit_data_collector_path(data_collector), :update => dom_id_for(data_collector, :item), :method => :get
-
+= show_menu_for_component(data_collector)
 .content
   %div[data_collector]
     :javascript

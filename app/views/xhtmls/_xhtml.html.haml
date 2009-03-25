@@ -1,8 +1,4 @@
-.menu
-  %ul
-    %li
-      = xhtml.name
-    %li
-      = button_to_remote 'edit', :url => edit_xhtml_path(xhtml), :update => "item_xhtml_#{xhtml.id}", :method => :get, :complete => "new tinymce.Editor('item_xhtml_textarea_#{xhtml.id}');"
+= show_menu_for_component(xhtml, :complete => 'tinyMCE.init({mode : "textareas"});')
 .content
   = xhtml.content
+= yield dom_id_for(xhtml, :delete, :item)
