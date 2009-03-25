@@ -29,7 +29,7 @@ role :db, domain, :primary => true
 #############################################################
 
 set :scm, :git
-set :branch, "master"
+set :branch, "np2"
 set :scm_user, 'knowuh'
 set :scm_passphrase, "PASSWORD"
 set :repository, "git://github.com/stepheneb/rigse.git"
@@ -40,38 +40,6 @@ set :deploy_via, :remote_cache
 #############################################################
 
 namespace :deploy do
-  desc "Create the database yaml file"
-  task :after_update_code do
-    db_config = <<-EOF
-    production:    
-      adapter: mysql
-      encoding: utf8
-      username: rails
-      password: FIXME (see config/deploy.rb specifically deploy:shared_symlinks)
-      database: ritesdev_production
-      host: localhost
-    development:
-      adapter: mysql
-      encoding: utf8
-      username: rails
-      password: FIXME (see config/deploy.rb specifically deploy:shared_symlinks)
-      database: ritesdev_production
-      host: localhost
-    EOF
-    
-    put db_config, "#{release_path}/config/database.yml"
-    
-    #########################################################
-    # Uncomment the following to symlink an uploads directory.
-    # Just change the paths to whatever you need.
-    #########################################################
-    
-    # desc "Symlink the upload directories"
-    # task :before_symlink do
-    #   run "mkdir -p #{shared_path}/uploads"
-    #   run "ln -s #{shared_path}/uploads #{release_path}/public/uploads"
-    # end
-  end
     
   # Restart passenger on deploy
   desc "Restarting mod_rails with restart.txt"
