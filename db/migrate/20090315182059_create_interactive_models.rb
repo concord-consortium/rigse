@@ -3,7 +3,7 @@ class CreateInteractiveModels < ActiveRecord::Migration
     create_table :interactive_models do |t|
       t.timestamps
       t.string      :name
-      t.string      :description
+      t.text         :description
       t.integer     :user_id
       t.string      :uuid,         :limit => 36
       t.string      :content

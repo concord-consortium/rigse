@@ -3,10 +3,10 @@ class CreateOpenResponses < ActiveRecord::Migration
     create_table :open_responses do |t|
       t.timestamps
       t.string      :name
-      t.string      :description
+      t.text         :description
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
-      t.string      :prompt
+      t.text        :prompt
       t.string      :default_response  
     end
   end

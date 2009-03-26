@@ -3,10 +3,10 @@ class CreateMultipleChoices < ActiveRecord::Migration
     create_table :multiple_choices do |t|
       t.timestamps
       t.string      :name
-      t.string      :description
+      t.text         :description
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
-      t.string      :prompt
+      t.text        :prompt
       t.string      :options
       t.timestamps
     end

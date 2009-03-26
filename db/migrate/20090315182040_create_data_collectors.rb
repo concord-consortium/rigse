@@ -2,7 +2,7 @@ class CreateDataCollectors < ActiveRecord::Migration
   def self.up
     create_table :data_collectors do |t|
       t.string      :name
-      t.string      :description
+      t.text         :description
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
       t.integer     :y_axis_min, :default => 0

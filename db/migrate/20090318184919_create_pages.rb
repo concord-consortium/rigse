@@ -3,7 +3,7 @@ class CreatePages < ActiveRecord::Migration
     create_table :pages do |t|
       t.timestamps
       t.string      :name
-      t.string      :description
+      t.text         :description
       t.integer     :user_id
       t.integer     :position
       t.integer     :section_id
