@@ -1,0 +1,18 @@
+digraph controllers_diagram {
+	graph[overlap=false, splines=true]
+	"ActivitiesController" [shape=Mrecord, label="{ActivitiesController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|setup_object\l|\l}"]
+	"AssessmentTargetsController" [shape=Mrecord, label="{AssessmentTargetsController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"BigIdeasController" [shape=Mrecord, label="{BigIdeasController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"DomainsController" [shape=Mrecord, label="{DomainsController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"ExpectationStemsController" [shape=Mrecord, label="{ExpectationStemsController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"ExpectationsController" [shape=Mrecord, label="{ExpectationsController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"GradeSpanExpectationsController" [shape=Mrecord, label="{GradeSpanExpectationsController|create\ldestroy\ledit\lindex\lnew\lreparse_gses\lshow\lupdate\l|\l|\l}"]
+	"HomeController" [shape=Mrecord, label="{HomeController|\l|\l|\l}"]
+	"ImagesController" [shape=Mrecord, label="{ImagesController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"KnowledgeStatementsController" [shape=Mrecord, label="{KnowledgeStatementsController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"PasswordsController" [shape=Mrecord, label="{PasswordsController|create\lnew\lreset\lupdate\lupdate_after_forgetting\l|\l|\l}"]
+	"SessionsController" [shape=Mrecord, label="{SessionsController|create\ldestroy\lnew\lopen_id_authentication\l|note_failed_signin\lpassword_authentication\lsuccessful_login\l|\l}"]
+	"UnifyingThemesController" [shape=Mrecord, label="{UnifyingThemesController|create\ldestroy\ledit\lindex\lnew\lshow\lupdate\l|\l|\l}"]
+	"UsersController" [shape=Mrecord, label="{UsersController|activate\lcreate\lnew\l|create_new_user\lfailed_creation\lsuccessful_creation\l|\l}"]
+	"ApplicationController" [shape=Mrecord, label="{ApplicationController|role_requirements\lrole_requirements=\l|filter_parameters\lrecord_not_found\l|check_user\l}"]
+}
