@@ -3,8 +3,17 @@
 <% form_for @user do |f| %>
   <%= f.error_messages %>
   <fieldset>
-    <legend>Your Details</legend>
+    <legend>Your Details go here:</legend>
     <ol>
+      <li>
+        <%= f.label :first_name, 'First Name' %>
+        <%= f.text_field :first_name %>
+      </li>
+      <li>
+        <%= f.label :last_name, 'Last Name'%>
+        <%= f.text_field :last_name %>
+      </li>
+
       <li>
         <%= f.label :login, 'Username' %>
         <%= f.text_field :login %>

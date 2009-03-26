@@ -53,7 +53,8 @@ class User < ActiveRecord::Base
   end
   
   def name
-    "#{first_name} #{last_name}"
+    _fullname = "#{first_name} #{last_name}"
+    _fullname.strip != "" ? _fullname : login
   end
   
   
