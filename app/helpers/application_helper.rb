@@ -1,5 +1,18 @@
 module ApplicationHelper
   
+  
+  def display_repo_info
+    if repo = Grit::Repo.new(".")
+      last_commit = repo.commits.first
+      content_tag('ul') do
+        list = ''
+        list << content_tag('li') { "commit: #{last_commit.id}" }
+        list << content_tag('li') { "author: #{last_commit.author.name}" }
+        list << content_tag('li') { "date: #{last_commit.authored_date}" }
+      end
+    end
+  end
+  
   # Sets the page title and outputs title if container is passed in.
   # eg. <%= title('Hello World', :h2) %> will return the following:
   # <h2>Hello World</h2> as well as setting the page title.
