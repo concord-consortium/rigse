@@ -5,12 +5,10 @@ class OpenResponse < ActiveRecord::Base
   
   acts_as_replicatable
   
-  default_value_for :name, "Further Investigation: cleaving a crystal"
-  default_value_for :description, "This is an example take from Itroduction to Crystals"
+  default_value_for :name, "Open Response Question"
+  default_value_for :description, "What is the purpose of this question ...?"
   default_value_for :prompt, <<-HEREDOC
-  You want to cleave a crystal.
-  But scientists do not really all agree about how a crystal cut propagates or travels along a crystal. 
-  Where might a break begin and how would it travel? Please provide a reasonable atomic-level hypothesis.
+  <p>You can use HTML content to <b>write</b> the prompt of the question ...</p>
   HEREDOC
   default_value_for :default_response, "Place answer here!"
   
