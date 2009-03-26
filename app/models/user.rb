@@ -91,28 +91,11 @@ class User < ActiveRecord::Base
   def self.anonymous
     @@anonymous_user ||=  User.find_by_login('anonymous')
   end
-  
-
-  # Not using open id
-  def not_using_openid?
-    identity_url.blank?
-  end
-  
-  # Overwrite password_required for open id
-  def password_required?
-    new_record? ? not_using_openid? && (crypted_password.blank? || !password.blank?) : !password.blank?
-  end
 
   protected
     
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
-  end
-  
-  def normalize_identity_url
-    self.identity_url = OpenIdAuthentication.normalize_url(identity_url) unless not_using_openid?
-  rescue URI::InvalidURIError
-    errors.add_to_base("Invalid OpenID URL")
   end
 end
