@@ -1,0 +1,28 @@
+%p
+  Database:
+  - db_info = ActiveRecord::Base.configurations
+  %br
+  %small
+    type:
+    = db_info[RAILS_ENV]['adapter']
+  %br
+  %small
+    name:
+    = db_info[RAILS_ENV]['database']
+  - if host = db_info[RAILS_ENV]['host']
+    %br
+    %small
+      host:
+      = host
+%p
+  Subdomains:
+  %br
+  %small
+    = request.subdomains.join(', ')
+%p
+  RAILS_ROOT:
+  %br
+  %small
+    = RAILS_ROOT
+%p
+  = display_repo_info
