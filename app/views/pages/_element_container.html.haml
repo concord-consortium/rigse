@@ -1,5 +1,5 @@
-%li[page.element_for(element_container.embeddable)]
-  %div{ :id => dom_id_for(element_container.embeddable, :item), :class => 'item' }
-    = render_partial_for(element_container.embeddable)
+%li[page.element_for(component)]
+  %div{ :id => dom_id_for(component, :item), :class => 'item' }
+    = render_partial_for(component)
     .menu.right
-      = delete_button_for_page_component(page, element_container.embeddable)
+      = delete_button_for_page_component(page, component)
