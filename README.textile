@@ -1,6 +1,6 @@
 h1. rigse
 
-After checking out the code for the first time swithc to the rites_rails23 branch:
+After checking out the code for the first time switch to the rites_rails23 branch:
 
   git checkout -b rites_rails2_3
 
@@ -9,8 +9,35 @@ and run this rake task:
   rake rigse:setup:new_rigse_from_scratch
 
 
+h2. Capistrano Recipies (and problems)
+
+cap deploy should work to deploy to rites.dev.concord.org (otto).
+See config/deploy.rb.  Right now the only properly configured server is the 'staging' server (in config/deploy/staging.rb )
+
++warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
+<code> sudo chmod -R g+w ./cached-copy/ </code>
+
+There are three custom cap tasks defined in config/deploy.rb  One works, One sometimes works, and the last ones  *doesn't!*
+* cap deploy:from_scratch does not work. 
+** It would need to be able to let users answer questions.
+** Instead of dropping the database, we would have to simply drop tables. (rails user does not have perms to drop dbs)
+* cap deploy:install_gems does seem to work, unless there are dependancies on the gem being installed.
+* cap deploy:shared_symlinks does work, and it links in the shared resources that we use. (like config/database.yml)
+
+Workarounds for cap deploy:from_scratch:  I usually just end up loggin in to otto, dropping all the tables, 
+and then running the various rake tasks by hand:
+
+<code><pre>
+rake db:migrate
+rake rigse:setup:default_users_roles
+rake rigse:setup:create_additional_users
+rake rigse:setup:import_gses_from_file
+</pre></code>
+
+We should solve this one sooner rather than later.
 
 h1. haml
+
 we use haml for some templates
 see: http://haml.hamptoncatlin.com/
 
