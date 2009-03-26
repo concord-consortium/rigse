@@ -96,7 +96,7 @@ module ApplicationHelper
       :html => {:class => 'delete'}, 
       :url => { 
         :action => 'delete_element', 
-        :dom_id => page.element_for(component).dom_id, 
+        :dom_id => dom_id_for(page.element_for(component)), 
         :element_id => page.element_for(component).id }
       )
   end

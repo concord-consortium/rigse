@@ -33,7 +33,8 @@ class Page < ActiveRecord::Base
     if component.instance_of? PageElement
       return component
     end
-    component.page_elements.detect {|pe| pe.type == self }
+    puts self.page_elements.inspect
+    return component.page_elements.detect {|pe| pe.embeddable.id == component.id }
   end
 
 

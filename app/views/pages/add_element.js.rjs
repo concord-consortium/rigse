@@ -1,2 +1,2 @@
 page.visual_effect :highlight, @container
-page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:element_container => @component, :page => @page })
+page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:component => @component, :page => @page })
