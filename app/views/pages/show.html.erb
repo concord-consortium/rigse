@@ -10,7 +10,7 @@
       <b>Insert:</b>
     </li>
     <li>
-      <%= link_to_remote 'xhtml', 
+      <%= link_to_remote 'Text Area', 
         :url => {
           :action => 'add_element', 
           :page_id => @page.id, 
@@ -18,7 +18,7 @@
           :class_name => 'Xhtml' } %> 
     </li>
     <li>
-      <%= link_to_remote 'open response question', 
+      <%= link_to_remote 'Open Response', 
         :url => {
           :action => 'add_element', 
           :page_id => @page.id, 
@@ -26,7 +26,7 @@
           :class_name => 'OpenResponse' } %> 
     </li>
     <li>
-      <%= link_to_remote 'data collector', 
+      <%= link_to_remote 'Data Collector', 
         :url => {
           :action => 'add_element', 
           :page_id => @page.id, 
