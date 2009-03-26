@@ -7,13 +7,9 @@ class DataCollector < ActiveRecord::Base
 
   default_value_for :name, "Data Collector"
   default_value_for :description, <<-HEREDOC
-  A simple Data Collector Graph.
+  A simple Data Collector graph.
   HEREDOC
 
-  # NOTE: noah march 25:
-  # it does not seem as though the model has these items yet.
-  # so I am temporarliy commenting them out:
-  #
   default_value_for :y_axis_min, 0
   default_value_for :y_axis_max, 5
   default_value_for :x_axis_min, 0
