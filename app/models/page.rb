@@ -13,8 +13,8 @@ class Page < ActiveRecord::Base
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   
   default_value_for :position, 1;
-  default_value_for :description, "Each new day is a blank page in the diary of your life. The secret of success is in turning that diary into the best story you possibly can."
-  default_value_for :name, "empty page"
+  default_value_for :name, "new page"
+  default_value_for :description, "describe the purpose of this page ..."
   
   after_create :add_xhtml
   
