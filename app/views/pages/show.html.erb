@@ -37,7 +37,9 @@
 </div>
 
   <ol id="elements_container" class="sortable">
-    <%= render :partial => 'element_container', :collection => @page.page_elements, :locals => { :page => @page } %>
+    <% @page.page_elements.each do |element| %>
+      <%= render :partial => 'element_container', :locals => {:component => element.embeddable || element, :page => @page } %>
+    <% end %>
   </ol>
   <%= sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } } %>
   

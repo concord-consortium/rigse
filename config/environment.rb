@@ -36,7 +36,7 @@ Rails::Initializer.run do |config|
   config.gem "hpricot"
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
-  config.gem 'grit', :source => 'http://gems.github.com', :version => '>=1.0.1'
+  config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   
   # config.gem "prawn-format"
   

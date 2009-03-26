@@ -24,14 +24,17 @@ class Page < ActiveRecord::Base
     xhtml.save
   end
   
-  
   #
   # return element.id for the component passed in
   # so for example, pass in an xhtml item in, and get back a page_elements object.
-  # assumes that this page contains component
+  # assumes that this page contains component.  Because this can cause confusion,
+  # if we pass in a page_element we directly return that.
   def element_for(component)
-    component.page_elements.detect {|pe| pe.page == self }
-    # return page_elements.detect { |e| (e.embeddable_type == component.class.name && e.embeddable_id == component.id) }
+    if component.instance_of? PageElement
+      return component
+    end
+    component.page_elements.detect {|pe| pe.type == self }
   end
+
 
 end

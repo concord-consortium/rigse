@@ -91,12 +91,12 @@ class PagesController < ApplicationController
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
   def add_element
-    @page1 = Page.find(params['page_id'])
+    @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
 
     # dynamically instatiate the component based on its type.
     @component = Kernel.const_get(params['class_name']).create
-    @component.pages << @page1
+    @component.pages << @page
     @component.save
     # 
     # # dynimically insert appropriate partial based on type.

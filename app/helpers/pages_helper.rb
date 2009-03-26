@@ -28,5 +28,5 @@ module PagesHelper
         :id  => component.id },
       :update => page.element_for(component).dom_id
   end
-  
+
 end
