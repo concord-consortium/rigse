@@ -19,7 +19,6 @@ set :rails_env, "production"
 #  Servers
 #############################################################
 
-# set :user, "npaessel"
 set :domain, "rites.dev.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
