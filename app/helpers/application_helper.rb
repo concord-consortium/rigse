@@ -118,8 +118,7 @@ module ApplicationHelper
   def edit_menu_for_component(component, form)
     content_tag('div', :class => 'menu') do
       content_tag('ul') do
-        list = ''
-        list << content_tag('li') { name_for_component(component) }
+        list = content_tag('li') { name_for_component(component) }
         list << content_tag('li') { form.submit "Save" }
         list << content_tag('li') { form.submit "Cancel" }
         # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
@@ -130,8 +129,7 @@ module ApplicationHelper
   def show_menu_for_component(component, options={})
     content_tag('div', :class => 'menu') do
       content_tag('ul') do
-        list = ''
-        list << content_tag('li') { name_for_component(component) }
+        list = content_tag('li') { name_for_component(component) }
         list << content_tag('li') { edit_button_for_component(component, options) }
         # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
       end
