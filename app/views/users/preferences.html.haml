@@ -1,5 +1,5 @@
 %h1
-  User
+  User Preferences
 - form_for @user do |form|
   .item
     .menu
@@ -11,6 +11,3 @@
     .content
       = form.error_messages
       = render :partial => 'user', :locals => { :f => form }
-      .menu
-        - if @user.has_role?("admin", "manager")
-          = render :partial => 'roles', :locals => { :f => form, :roles => @roles }

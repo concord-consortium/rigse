@@ -54,7 +54,7 @@
             Welcome
             = "#{current_user.name},"
             - unless current_user.anonymous?
-              = link_to 'preferences', edit_user_path(current_user)
+              = link_to 'preferences', preferences_user_path(current_user)
               = link_to 'Logout', logout_path
             - else
               = link_to 'Login', login_path

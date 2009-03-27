@@ -4,7 +4,9 @@ class OpenResponse < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   
   acts_as_replicatable
-  
+
+  include Changeable
+
   default_value_for :name, "Open Response Question"
   default_value_for :description, "What is the purpose of this question ...?"
   default_value_for :prompt, <<-HEREDOC

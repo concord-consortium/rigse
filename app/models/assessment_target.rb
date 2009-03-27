@@ -5,6 +5,8 @@ class AssessmentTarget < ActiveRecord::Base
   belongs_to  :unifying_theme
   acts_as_replicatable
   
+  include Changeable
+  
   self.extend SearchableModel
   
   @@searchable_attributes = %w{description}

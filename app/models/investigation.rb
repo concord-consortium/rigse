@@ -1,7 +1,10 @@
 class Investigation < ActiveRecord::Base
   belongs_to :user
   has_many :sections, :order => :position, :dependent => :destroy
+
   acts_as_replicatable
+  
+  include Changeable
   
   self.extend SearchableModel
   

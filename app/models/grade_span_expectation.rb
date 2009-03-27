@@ -5,6 +5,8 @@ class GradeSpanExpectation < ActiveRecord::Base
   has_many                :unifying_themes, :through => :assessment_target
   acts_as_replicatable
   
+  include Changeable
+  
   self.extend SearchableModel
   
   @@searchable_attributes = %w{grade_span}

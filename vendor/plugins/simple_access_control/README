@@ -1,0 +1,162 @@
+SimpleAccessControl
+===================
+
+Acknowledgements: I give all credit to Ezra and Technoweenie for their two plugins which
+inspired the interface design and a lot of the code for this one.
+
+SimpleAccessControl is a streamlined, intuitive authorisation system. It derives heavily from
+acl_system2 and has made clear some problems which plagued me when first using it. Some
+fixes to acl_system2's design:
+
+      * a normal Rails syntax:
+            access_rule 'admin', :only => :index
+            access_rule '(moderator || admin)', :only => :new
+      * error handling for helper methods (permit? bombed when current_user == nil)
+      * one-line parser, easy to replace or alter
+      * proper before_filter usage, meaning access rules are parsed only when needed
+      * no overrideable default (which I found counter-intuitive in the end)
+
+Also, it has two methods, access_control and permit?, for those moving from acl_system2.
+
+But, let me stress, everyone likes a slightly different system, so this one may not be
+your style. I find it synchronises very well with the interface of Acts as Authenticated (even
+though I have modified it so much that it's now called Authenticated Cookie).
+
+INSTALLATION
+============
+
+Create the following migration:
+
+  create_table "roles", :force => true do |t|
+    t.column "title", :string
+  end
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.column "role_id", :integer
+    t.column "user_id", :integer
+  end
+
+In your User model, you must have:
+
+  has_and_belongs_to_many :roles
+  
+In your Roles model, you must have:
+
+  has_and_belongs_to_many :users
+
+Your controllers must have the following two methods or variants of them:
+
+  # Returns a User object
+  def current_user
+    @current_user
+  end
+
+  # Returns true or false if a User object exists for this session
+  def logged_in?
+    @current_user.is_a? User
+  end
+
+
+SPECIAL NEEDS
+=============
+
+If you want to permit anonymous users without demanding that they are logged in, first you
+must ensure that logged_in? returns true in all cases, otherwise permission will be denied.
+The following approach should work:
+
+1. Create the 'guest' and 'user' roles, e.g.:
+
+  guest = Role.create(:title => 'guest')
+  user = Role.create(:title => 'user')
+
+2. In your registration/user creation area, ensure all real users have the 'user' role, e.g.:
+
+  @user = User.create(params[:user])
+  unless @user.roles.any? { |r| r.title == 'user' }
+    @user.roles << Role.find_by_title('user')
+  end
+  @user.save  
+
+[At this point you have two options: a real or virtual anonymous account]
+
+First Approach: Real Anonymous User
+
+  3a. Create an anonymous user, e.g.:
+
+    @anonymous = User.create(:login => 'anonymous', :password => '*', :activated => true)
+
+  4a. Add the role to the Anonymous user (in a migration or in script/console), e.g.:
+
+    anonymous.roles << Role.find_by_title('guest')
+    anonymous.save
+
+  5a. In your ApplicationController, set unauthenticated users as 'anonymous', e.g.:
+
+    before_filter :default_to_guest
+
+    def default_to_guest
+      self.current_user = User.find_by_login('anonymous', :include => :roles) unless logged_in?
+    end
+
+
+Second Approach: Virtual Anonymous User
+
+  3a. In your ApplicationController, create a virtual anonymous account if unauthenticated:
+
+    before_filter :default_to_virtual_guest
+    def default_to_virtual_guest
+      self.current_user = self.anonymous_user unless logged_in?
+    end
+
+    def anonymous_user
+      anonymous = User.new(:login => 'anonymous', :name => 'Guest')
+      anonymous.roles << Role.new(:title => 'guest')
+      anonymous.readonly!
+      anonymous
+    end
+
+
+USAGE
+=====
+
+The plugin is automatically hooked into ActionController::Base.
+
+In your controllers, add access rules like so:
+
+  access_rule 'admin', :only => :destroy
+  access_rule 'user || admin', :only => [:new, :create, :edit, :update]
+
+Note the use of Ruby-style operators. These strings are real conditionals and should be treated as
+such. Every grouping of non-operator characters will be considered a role title.
+
+In your views, you can use the following:
+
+  <% restrict_to 'admin || moderator' do %>
+    <%= link_to "Admin Area", admin_area_url %>
+  <% end %>
+  
+AND
+
+  <%= link_to("Admin Area", admin_area_url) if has_permission?('admin || moderator') %>
+
+There are also transitional methods which help you move from acl_system2 to this plugin -- I do this
+not to denegrate acl_system2 but because I did this for myself and decided to include it. The two
+systems are rather similar.
+
+Also, there are two callbacks, permission_granted and permission_denied, which may define in your
+controllers to customise their response. For example:
+
+  def permission_granted
+    logger.info("[authentication] Permission granted to %s at %s for %s" %
+      [(logged_in? ? current_user.login : 'guest'), Time.now, request.request_uri])
+  end
+  
+  def permission_denied
+    logger.info("[authentication] Permission denied to %s at %s for %s" %
+      [(logged_in? ? current_user.login : 'guest'), Time.now, request.request_uri])
+  end
+
+
+That's it!
+
+
+VARIATION BY MABS29

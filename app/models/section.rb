@@ -2,9 +2,14 @@ class Section < ActiveRecord::Base
   belongs_to :investigation
   belongs_to :user
   has_many :pages, :order => :position, :dependent => :destroy
+  
   acts_as_list :scope => :investigation_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
+
   acts_as_replicatable
+
+  include Changeable
+
   default_value_for :pages do
     page = Page.create()
     [] << page

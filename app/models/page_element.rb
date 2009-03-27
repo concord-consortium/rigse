@@ -4,6 +4,8 @@ class PageElement < ActiveRecord::Base
     acts_as_list :scope => :page_id
     belongs_to :embeddable, :polymorphic => true
 
+    include Changeable
+
     def dom_id
       "page_element_#{self.id}"
     end

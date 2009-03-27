@@ -10,6 +10,9 @@ class Page < ActiveRecord::Base
   
   acts_as_replicatable
   acts_as_list
+  
+  include Changeable
+  
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   
   default_value_for :position, 1;

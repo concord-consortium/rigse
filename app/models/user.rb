@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
 
   acts_as_replicatable
 
+  include Changeable
+
   # we will lazy load the anonymous user later
   @@anonymous_user = nil 
  
