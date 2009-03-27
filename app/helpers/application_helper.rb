@@ -4,11 +4,11 @@ module ApplicationHelper
   def display_repo_info
     if repo = Grit::Repo.new(".")
       last_commit = repo.commits.first
-      content_tag('ul') do
+      content_tag('ul', :class => 'tiny') do
         list = ''
-        list << content_tag('li') { "commit: #{last_commit.id}" }
+        list << content_tag('li') { "commit: #{truncate(last_commit.id, 16, " ...")}" }
         list << content_tag('li') { "author: #{last_commit.author.name}" }
-        list << content_tag('li') { "date: #{last_commit.authored_date}" }
+        list << content_tag('li') { "date: #{last_commit.authored_date.strftime('%a %b %d %H:%M:%S')}" }
       end
     end
   end
