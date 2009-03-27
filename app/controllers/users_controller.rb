@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   # skip_before_filter :verify_authenticity_token, :only => :create
   
+  access_rule 'admin', :only => [:index, :new, :edit, :update, :destroy]
+  access_rule 'admin || manager', :only => :index
+  
   def new
     @user = User.new
   end
@@ -15,11 +18,26 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @roles = Role.find(:all)
+    unless @user.changeable?(current_user)
+      flash[:warning]  = "You need to be logged in first."
+      redirect_to login_url 
+    end
+  end
+
+  # GET /users/1/edit
+  def preferences
+    @user = User.find(params[:id])
+    @roles = Role.find(:all)
+    unless @user.changeable?(current_user)
+      flash[:warning]  = "You need to be logged in first."
+      redirect_to login_url 
+    end
   end
   
   # PUT /users/1
   # PUT /users/1.xml
   def update
+    
     unless params[:commit] == "Cancel"
       @user = User.find(params[:id])
       respond_to do |format|
