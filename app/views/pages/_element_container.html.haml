@@ -1,11 +1,3 @@
 %li[page.element_for(component)]
-  - if (component.nil?)
-    %h3 yuck! null component
-  - if (page.nil?)
-    %h3 yuck null page
   %div{ :id => dom_id_for(component, :item), :class => 'item' }
     = render_partial_for(component)
-    - if (component.nil?)
-      %h3 yuck! null component
-    .menu.right
-      = delete_button_for_page_component(page, component)
