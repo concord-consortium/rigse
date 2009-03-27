@@ -4,6 +4,8 @@ class DataCollector < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   
   acts_as_replicatable
+  
+  include Changeable
 
   default_value_for :name, "Data Collector"
   default_value_for :description, <<-HEREDOC

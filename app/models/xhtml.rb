@@ -5,6 +5,8 @@ class Xhtml < ActiveRecord::Base
 
   acts_as_replicatable
 
+  include Changeable
+
   default_value_for :name, "xhtml content"
   default_value_for :description, "description ..."
   default_value_for :content, <<-HEREDOC
