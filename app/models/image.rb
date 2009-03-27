@@ -6,6 +6,8 @@ class Image < ActiveRecord::Base
 #                :resize_to => '320x200>',
 #                :thumbnails => { :thumb => '100x100>' }
 #  validates_as_attachment
+
+  include Changeable
   
   def self.find_all_unprocessed
     self.find(:all, :conditions => "parent_id is NULL")
