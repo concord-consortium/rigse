@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_filter :verify_authenticity_token, :only => :create
+  # skip_before_filter :verify_authenticity_token, :only => :create
   
   def new
     @user = User.new
@@ -8,7 +8,33 @@ class UsersController < ApplicationController
   def create
     logout_keeping_session!
     create_new_user(params[:user])
+    redirect_to(root_path)
   end
+
+  # GET /users/1/edit
+  def edit
+    @user = User.find(params[:id])
+    @roles = Role.find(:all)
+  end
+  
+  # PUT /users/1
+  # PUT /users/1.xml
+  def update
+    unless params[:commit] == "Cancel"
+      @user = User.find(params[:id])
+      respond_to do |format|
+        if @user.update_attributes(params[:user])
+          flash[:notice] = "User: #{@user.name} was successfully updated."
+          format.html { redirect_to(root_path) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
+      end
+    end
+  end
+  
   
   def activate
     logout_keeping_session!

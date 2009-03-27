@@ -1,0 +1,15 @@
+%h1
+  User Preferences
+- form_for @user do |form|
+  .item
+    .menu
+      %ul
+        %li
+          = submit_tag 'Save'
+        %li
+          = submit_tag 'Cancel'
+    .content
+      = form.error_messages
+      = render :partial => 'user', :locals => { :f => form }
+      .menu
+        = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
