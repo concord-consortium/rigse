@@ -20,38 +20,40 @@ body
     :family = !main_font_family
     :size = !main_font_size
     
-.left
-  :float left
-.center_left
-  :float left
-.right
-  :text-align right
-  :float right
 
 ul
   :margin 0.5em 1em
   :padding 0.5em 1em
   :list-style-type none
 
-.horiz_band
-  :color = !common_menu_font_color
-  :background-color = !common_menu_background
-  :width 100%
-  :display table
-  :margin 0.5em
-    :left 0em
-    :bottom 0em
-  :padding 0.5em
+form
+  fieldset
+    :background-color white
 
-  ul
-    :margin 0px
-    :padding 0px
-    :list-style-type none
-  li
-    :display inline
-    :list-style-type none
-    :padding-right 0.5em
-    +inverse_color_link
+    ul
+      :style horizontal
+
+
+dd
+  :margin 0em 0em 2em 2em
+  :padding 0em
+
+dl
+  :margin 1em 1ex 2em 1ex
+  :padding 0em
+
+dt
+  :font-weight bold
+  :margin 0em
+  :padding 0em
+
+acronym, .titleTip
+  :border-bottom 1px dotted
+  :border-color = !common_border
+  :cursor help
+  :margin 0em
+  :padding 0em 0em 0.4px 0em
+
 
 #header
   :margin 0px
@@ -124,14 +126,36 @@ ul
   .menu
     :background-color = !body_background
 
-form
-  fieldset
-    :background-color white
-  
-    ul
-      :style horizontal
+.horiz_band
+  :color = !common_menu_font_color
+  :background-color = !common_menu_background
+  :width 100%
+  :display table
+  :margin 0.5em
+    :left 0em
+    :bottom 0em
+  :padding 0.5em
+  ul
+    :margin 0px
+    :padding 0px
+    :list-style-type none
+  li
+    :display inline
+    :list-style-type none
+    :padding-right 0.5em
+    +inverse_color_link
 
-.page_element
+.left
+  :float left
+.center_left
+  :float left
+.right
+  :text-align right
+  :float right
+
+
+
+.page_elemen
   :background-color = !body_background
   
 .sortable
@@ -179,15 +203,7 @@ form
       :list-style-type none
       :margin 0.1em
 
-    .tiny 
-      :padding 0em
-      :margin 
-        :left 1em
-        :top 0em
-        :bottom 0em
-      :font
-        :weight normal
-        :size = (!main_font_size + 0.1em)
+
   li
     :margin 0
     :padding 0.1em 0em
@@ -197,7 +213,17 @@ form
     :margin 0em
     :padding 0em 0em 1.1em 0em
 
-  
+.tiny 
+  :padding 0em
+  :margin 
+    :left 1em
+    :top 0em
+    :bottom 0em
+  :font
+    :weight normal
+    // em is realtive size anyway, no need for addition here.
+    :size = 0.8em
+        
 #main_content
   :color black
   :background-color = !body_background
@@ -273,26 +299,6 @@ form
   .tinymce_textarea_short
     :width 600px
     :height 80px
-
-dd
-  :margin 0em 0em 2em 2em
-  :padding 0em
-
-dl
-  :margin 1em 1ex 2em 1ex
-  :padding 0em
-
-dt
-  :font-weight bold
-  :margin 0em
-  :padding 0em
-
-acronym, .titleTip
-  :border-bottom 1px dotted
-  :border-color = !common_border
-  :cursor help
-  :margin 0em
-  :padding 0em 0em 0.4px 0em
 
 .clear_both
   :clear both
