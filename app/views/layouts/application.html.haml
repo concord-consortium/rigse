@@ -9,8 +9,8 @@
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
-    = stylesheet_link_tag 'base'
-    = stylesheet_link_tag 'app'
+    = stylesheet_link_tag 'screen'
+    / = stylesheet_link_tag 'app'
     = javascript_include_tag :defaults
     /[if IE]
       = javascript_include_tag "flotr/excanvas.js"
@@ -39,46 +39,46 @@
       /
         For non-visual user agents:
       #top
-        %a.do_not_display.doNotPrint{ :href => "#main_content" }
+        %a.hidden.doNotPrint{ :href => "#main_content" }
           Skip to main content.
-      /
-        \##### Header #####
-    #header
-      #super_header.horiz_band
-        .left 
-          %h1 RITES Investigation Template
-        .right
-          %span.do_not_display
-            Login and Registration:
-          .login
+
+    #wrapper
+      #header
+        #title
+          %p
+            %h1 RITES Investigation Template
+        #login
+          %br
             Welcome
-            = "#{current_user.name},"
+            = "#{current_user.name}."
             - unless current_user.anonymous?
-              = link_to 'preferences', preferences_user_path(current_user)
+              = link_to 'Preferences', preferences_user_path(current_user)
+              \/
               = link_to 'Logout', logout_path
             - else
               = link_to 'Login', login_path
-              or
+              \/
               = link_to 'Signup', signup_path
-              
-      #sub_header.horiz_band
-        %span.do_not_display
-          Navigation:
-        .left
-          %ul
+      #nav_top
+        #nav_top_left
+          %span.hidden.doNotPrint
+            Navigation:
+          %ul.menu_h
             %li= link_to 'Home', home_path
-        .center_left
-          %ul
+        #nav_top_center
+          %ul.menu_h
             %li= link_to 'Investigations', investigations_path
             %li= link_to 'Grade Span Expectations', grade_span_expectations_path
-        .right
-          %ul
+        #nav_top_right
+          %ul.menu_h
             %li= link_to 'Data Collectors', data_collectors_path
             %li= link_to 'Open Responses', open_responses_path
             %li= link_to 'Xhtmls', xhtmls_path
-    #middle_section
-      #sidebar
-        = yield :sidebar
+
+
+      #left_nav
+        %p
+          = yield :sidebar
         %p
           %span.sideBarText
             Rhode Island Technology Enhanced Science 
@@ -100,23 +100,22 @@
           %hr
           = render :partial => 'shared/site_info'
           
-      #content_header_container
-        #content_header.horiz_band
-          .left
-            = yield :content_header
-          .right
-            = yield :left_content_header
-        
+
       #main_content
-        %p{ :style => "color: green" }
-          = flash_messages
+        #content_header
+          #content_header_left
+            = yield :content_header_left
+          #content_header_right
+            = yield :content_header_right
+          %p{ :style => "color: green" }
+            = flash_messages
         = yield :layout
-    /
-      \##### Footer #####
-    .clear_both
-    #footer.horiz_band
-      .left
-        Questions/Feedback:
-        = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
-      .right
-        footer text on the right
+
+      #footer
+        #footer_left
+          Questions/Feedback:
+          = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
+        #footer_center
+          / footer text in the center
+        #footer_right
+          / footer text on the right

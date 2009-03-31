@@ -1,0 +1,116 @@
+@import blueprint.sass
+@import compass/reset.sass
+@import new_app_colors.sass
+
++blueprint
+
+    
+body
+  :font
+    :family Helvetica
+  +light_blue_background
+h1 
+  :font 
+    :size 2.5em
+h2
+  :font
+    :size 1.5em
+    :weight bold
+    
+#wrapper
+  +container
+  :font
+    :size 1.25em
+  +light_blue_background
+
+  
+#header
+  +column(24,true)
+  :vertical-align baseline
+  :line-height 2em
+  #title
+    +column(14)
+  #login
+    :text-align right
+    +column(10,true)
+
+#nav_top
+  +column(24,true)
+  +navy_background
+  #nav_top_left
+    +column(6)
+    :padding
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+  #nav_top_center
+    +column(9)
+    :padding
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+
+  #nav_top_right
+    :text-align right
+    +column(9,true)
+    :padding
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+  
+#left_nav
+  +column(6)
+  +light_blue_background
+  :font
+    :size 9pt
+  :line-height 1.4em
+
+#main_content
+  +light_orange_background
+  +column(18,true)
+  :line-height 1.5em
+  #content_header
+    +column(18,true)
+    #content_header_left
+      +column(9)
+    #content_header_right
+      +column(9,true)
+      :text-align right
+
+#footer
+  +column(24,true)
+  +navy_background
+  #footer_left
+    +column(8)
+  #footer_center
+    +column(8)
+  #footer_right
+    :text-align right
+    +column(8,true)
+
+
+ul.menu_h
+  :display inline
+  :list-style-type none
+  :white-space nowrap
+  :padding 0em
+  :margin 0em
+  li
+    :margin 0em
+    :padding 0em
+      :left 0.5em
+      :right 0.5em
+    :display inline
+    :list-style-type none
+    :white-space nowrap
+
+.item
+  :padding 0.5em
+  :margin 0.5em
+  :border
+    :width 1px
+    :style solid
+    
+.hidden
+  :display none
+  

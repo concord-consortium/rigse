@@ -116,7 +116,7 @@ module ApplicationHelper
   end
   
   def edit_menu_for_component(component, form)
-    content_tag('div', :class => 'menu') do
+    content_tag('div', :class => 'menu_h') do
       content_tag('ul') do
         list = content_tag('li') { name_for_component(component) }
         list << content_tag('li') { form.submit "Save" }
@@ -127,7 +127,7 @@ module ApplicationHelper
   end
 
   def show_menu_for_component(component, options={})
-    content_tag('div', :class => 'menu') do
+    content_tag('div', :class => 'menu_h') do
       content_tag('ul') do
         list = content_tag('li') { name_for_component(component) }
         list << content_tag('li') { edit_button_for_component(component, options) }
