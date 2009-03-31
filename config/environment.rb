@@ -37,7 +37,7 @@ Rails::Initializer.run do |config|
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
-  config-gem 'open4', :version => '>= 0.9.6'
+  config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   
   # These cause problems with irb. Left in for reference
