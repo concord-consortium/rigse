@@ -1,4 +1,6 @@
 - remote_form_for(xhtml, :update => dom_id_for(xhtml, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = edit_menu_for_component(xhtml, f)
   .content
+    name:
+    = f.text_field :name, :id => dom_id_for(xhtml, :item, :name_field)
     = f.text_area :content, :id => dom_id_for(xhtml, :item, :textarea), :class => 'tinymce_textarea'

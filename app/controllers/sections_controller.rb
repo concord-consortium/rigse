@@ -44,13 +44,6 @@ class SectionsController < ApplicationController
   ##
   ##
   ##
-  def edit
-
-  end
-
-  ##
-  ##
-  ##
   def create
     respond_to do |format|
       if @section.save

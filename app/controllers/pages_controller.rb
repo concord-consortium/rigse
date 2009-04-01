@@ -63,7 +63,7 @@ class PagesController < ApplicationController
     @page_elements = @page.page_elements
     respond_to do |format|
       if @page.update_attributes(params[:page])
-        flash[:notice] = 'PageEmbedables was successfully updated.'
+        flash[:notice] = 'Page was successfully updated.'
         format.html { redirect_to(@page) }
         format.xml  { head :ok }
       else
