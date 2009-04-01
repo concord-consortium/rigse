@@ -1,0 +1,91 @@
+--- 
+- name: Fourier Ecolog
+  communication_protocol: usb
+  device_id: 30
+  uuid: d3db28e2-1820-11de-860a-001ec94098a1
+  id: 1
+  description: The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via USB.
+  short_name: fourier_ecolog
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/EcoLogXL_sm.png
+- name: Data Harvest Easysense Q
+  communication_protocol: usb
+  device_id: 40
+  uuid: d3dbb032-1820-11de-860a-001ec94098a1
+  id: 2
+  description: The Data Harvest EasySense Q works with all the Data Harvest sensors and communicates via USB.
+  short_name: dataharvest_easysense_q
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/EasysenseQ_sm.png
+- name: Pasco Science Workshop 500
+  communication_protocol: serial
+  device_id: 60
+  uuid: d3dc1c98-1820-11de-860a-001ec94098a1
+  id: 3
+  description: The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port.
+  short_name: pasco_sw500
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/Pasco500_sm.png
+- name: Pasco Airlink SI
+  communication_protocol: bluetooth
+  device_id: 61
+  uuid: d3dcb176-1820-11de-860a-001ec94098a1
+  id: 4
+  description: The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking.
+  short_name: pasco_airlink
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/pasportairlinksi_sm.png
+- name: Texas Instruments CBL2
+  communication_protocol: usb
+  device_id: 20
+  uuid: d3dd19f4-1820-11de-860a-001ec94098a1
+  id: 5
+  description: The Texas Instruments CBL2 works with TI sensors and communicates via USB.
+  short_name: ti_cbl2
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/CBL2_sm.png
+- name: Vernier Go! Link
+  communication_protocol: usb
+  device_id: 10
+  uuid: d3de82c6-1820-11de-860a-001ec94098a1
+  id: 6
+  description: Vernier's USB Go!Link interface works with many Vernier sensors. The Go!Temp and Go!Motion sensors have Go!Link interfaces integrated into the sensor.
+  short_name: vernier_goio
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/VernierGoLink_sm.png
+- name: Simulated Data
+  communication_protocol: simulated
+  device_id: 0
+  uuid: d3deecfc-1820-11de-860a-001ec94098a1
+  id: 7
+  description: Use the Simulated Data interface when you have no probeware to attach to your computer but you stillwant to test your activity.
+  short_name: pseudo_interface
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/psuedo_interface.jpg
+- name: Vernier LabPro
+  communication_protocol: usb
+  device_id: 11
+  uuid: d3df5af2-1820-11de-860a-001ec94098a1
+  id: 8
+  description: Vernier's LabPro interface works with many Vernier sensors.
+  short_name: vernier_labpro
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/labpro_sm.jpg
+- name: Vernier LabQuest
+  communication_protocol: usb
+  device_id: 12
+  uuid: d3df88f6-1820-11de-860a-001ec94098a1
+  id: 9
+  description: Vernier's LabQuest interface works with many Vernier sensors.
+  short_name: vernier_labquest
+  previous_user_id: 
+  user_id: 2
+  image: SensorImages/labquest_sm.jpg

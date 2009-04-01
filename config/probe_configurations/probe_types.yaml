@@ -1,0 +1,300 @@
+--- 
+- name: Temperature
+  period: 0.1
+  unit: degC
+  max: 40.0
+  uuid: 
+  port: 0
+  id: 1
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 0
+- name: Light
+  period: 0.1
+  unit: lux
+  max: 4000.0
+  uuid: 
+  port: 0
+  id: 2
+  display_precision: 0
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 2
+- name: Pressure
+  period: 0.1
+  unit: kPa
+  max: 104.0
+  uuid: 
+  port: 0
+  id: 3
+  display_precision: -1
+  previous_user_id: 
+  min: 96.0
+  user_id: 
+  step_size: 0.1
+  ptype: 3
+- name: Voltage
+  period: 0.1
+  unit: V
+  max: 10.0
+  uuid: 
+  port: 0
+  id: 4
+  display_precision: -2
+  previous_user_id: 
+  min: -10.0
+  user_id: 
+  step_size: 0.1
+  ptype: 4
+- name: Force (5N)
+  period: 0.01
+  unit: N
+  max: 4.0
+  uuid: 
+  port: 0
+  id: 5
+  display_precision: -2
+  previous_user_id: 
+  min: -4.0
+  user_id: 
+  step_size: 0.01
+  ptype: 5
+- name: Force (50N)
+  period: 0.01
+  unit: N
+  max: 40.0
+  uuid: 
+  port: 0
+  id: 6
+  display_precision: -1
+  previous_user_id: 
+  min: -40.0
+  user_id: 
+  step_size: 0.1
+  ptype: 5
+- name: Distance
+  period: 0.1
+  unit: m
+  max: 4.0
+  uuid: 
+  port: 0
+  id: 7
+  display_precision: -2
+  previous_user_id: 
+  min: -4.0
+  user_id: 
+  step_size: 0.1
+  ptype: 13
+- name: Relative Humidity
+  period: 0.1
+  unit: percentage
+  max: 90.0
+  uuid: 
+  port: 0
+  id: 8
+  display_precision: -1
+  previous_user_id: 
+  min: 10.0
+  user_id: 
+  step_size: 0.1
+  ptype: 7
+- name: CO2
+  period: 1.0
+  unit: ppm
+  max: 500.0
+  uuid: 
+  port: 0
+  id: 9
+  display_precision: 2
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 20.0
+  ptype: 18
+- name: Oxygen Gas
+  period: 0.1
+  unit: ppt
+  max: 300.0
+  uuid: 
+  port: 0
+  id: 10
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 19
+- name: pH
+  period: 0.1
+  unit: pH
+  max: 14.0
+  uuid: 
+  port: 0
+  id: 11
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 20
+- name: Salinity
+  period: 0.1
+  unit: ppt
+  max: 50.0
+  uuid: 
+  port: 0
+  id: 12
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 21
+- name: Raw Data
+  period: 0.1
+  unit: raw
+  max: 10000.0
+  uuid: 
+  port: 0
+  id: 13
+  display_precision: 0
+  previous_user_id: 
+  min: -10000.0
+  user_id: 
+  step_size: 1.0
+  ptype: 22
+- name: Raw Voltage
+  period: 0.1
+  unit: V
+  max: 10.0
+  uuid: 
+  port: 0
+  id: 14
+  display_precision: -2
+  previous_user_id: 
+  min: -1.0
+  user_id: 
+  step_size: 0.01
+  ptype: 23
+- name: Sound Level
+  period: 0.1
+  unit: dB
+  max: 120.0
+  uuid: 
+  port: 0
+  id: 15
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 1.0
+  ptype: 14
+- name: Magnetic Field
+  period: 0.1
+  unit: G
+  max: 10.0
+  uuid: 
+  port: 0
+  id: 16
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 26
+- name: Spirometer
+  period: 0.1
+  unit: L/s
+  max: 15.0
+  uuid: 
+  port: 0
+  id: 17
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 27
+- name: Heart Rate Signal
+  period: 0.1
+  unit: v
+  max: 4.0
+  uuid: 
+  port: 0
+  id: 18
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 28
+- name: EKG
+  period: 0.01
+  unit: v
+  max: 10.0
+  uuid: 
+  port: 0
+  id: 19
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 29
+- name: Blood Pressure
+  period: 0.1
+  unit: mm Hg
+  max: 200.0
+  uuid: 
+  port: 0
+  id: 20
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 1.0
+  ptype: 30
+- name: Conductivity
+  period: 0.1
+  unit: MICS
+  max: 100.0
+  uuid: 
+  port: 0
+  id: 21
+  display_precision: -1
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 1.0
+  ptype: 31
+- name: Dissolved Oxygen
+  period: 0.1
+  unit: mg/L
+  max: 10.0
+  uuid: 
+  port: 0
+  id: 22
+  display_precision: -2
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 32
+- name: Acceleration
+  period: 0.1
+  unit: m/s^2
+  max: 20.0
+  uuid: 
+  port: 0
+  id: 23
+  display_precision: -2
+  previous_user_id: 
+  min: 0.0
+  user_id: 
+  step_size: 0.1
+  ptype: 8

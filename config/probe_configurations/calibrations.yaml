@@ -1,0 +1,141 @@
+--- 
+- name: "Probekit: TMP36-Temperature (Celsius)"
+  y_axis_max: 25
+  physical_unit_id: 1
+  y_axis_min: 10
+  uuid: 
+  k0: -50.0
+  id: 1
+  default_calibration: false
+  x_axis_max: 100
+  probe_type_id: 14
+  k1: 100.0
+  description: "The Analog Devices TMP36 IC temperature sensor supplied in the ITSi Probekit has a nominal sensitivity of 10mV/\xC2\xB0C and an offset of 500 mV at 0 \xC2\xB0C. So the calibration function for a raw voltage input is: T = -50 + 100V, where T is temperature in Celsius and V is the voltage the sensor produces.\r\n"
+  data_filter_id: 1
+  previous_user_id: 
+  k2: 
+  user_id: 2
+  k3: 
+  x_axis_min: 0
+- name: "Probekit: Electric Motor-Distance (Meters)"
+  y_axis_max: 10
+  physical_unit_id: 2
+  y_axis_min: 0
+  uuid: 
+  k0: 
+  id: 2
+  default_calibration: false
+  x_axis_max: 60
+  probe_type_id: 14
+  k1: 
+  description: The electric motor supplied in the ITSi Probekit outputs a voltage that is approximately proportional to velocity. Integrating these data transforms them into something proportional to distance.
+  data_filter_id: 2
+  previous_user_id: 
+  k2: 
+  user_id: 13
+  k3: 
+  x_axis_min: 0
+- name: "Probekit: motor-rotational speed (rps)"
+  y_axis_max: 5
+  physical_unit_id: 4
+  y_axis_min: 0
+  uuid: 
+  k0: -15.66
+  id: 3
+  default_calibration: false
+  x_axis_max: 30
+  probe_type_id: 14
+  k1: 5.88
+  description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
+    \r\n\
+    The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
+  data_filter_id: 1
+  previous_user_id: 
+  k2: 
+  user_id: 13
+  k3: 
+  x_axis_min: 0
+- name: "Probekit: Thermocouple temperature difference"
+  y_axis_max: 40
+  physical_unit_id: 1
+  y_axis_min: 10
+  uuid: 
+  k0: -47.3
+  id: 4
+  default_calibration: false
+  x_axis_max: 30
+  probe_type_id: 14
+  k1: 17.8
+  description: |
+    The thermocouple wires supplied in the ITSI Probekit are iron and constantin. Two junctions are made so that a voltage will be produced that is proportional to the *difference* in temperature between the two junctions. The circuit uses the I-Amp with an amplification of 1000, giving 52 mV per degree of temperature difference.
+
+  data_filter_id: 1
+  previous_user_id: 
+  k2: 
+  user_id: 13
+  k3: 
+  x_axis_min: 0
+- name: "Probekit: motor-linear velocity-3 cm radius wheel"
+  y_axis_max: 5
+  physical_unit_id: 3
+  y_axis_min: -5
+  uuid: 
+  k0: -2.94
+  id: 5
+  default_calibration: false
+  x_axis_max: 30
+  probe_type_id: 14
+  k1: 1.109
+  description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
+    \r\n\
+    \r\n\
+    This calibration is for a wheel attached to the motor shaft with a radius of 3 cm. The circumference is 18.85 cm, so that linear velocity calibration is V = -(2.66/.17)*.1885 + (1/.17)*.1885 V, where V (m/s) is the velocity of the wheel rolling along a surface.\r\n\
+    \r\n\
+    The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
+  data_filter_id: 1
+  previous_user_id: 
+  k2: 
+  user_id: 13
+  k3: 
+  x_axis_min: 0
+- name: "Probekit: motor-linear velocity-6 cm radius wheel"
+  y_axis_max: 4
+  physical_unit_id: 3
+  y_axis_min: 0
+  uuid: 
+  k0: -5.9
+  id: 6
+  default_calibration: false
+  x_axis_max: 30
+  probe_type_id: 14
+  k1: 2.22
+  description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
+    \r\n\
+    \r\n\
+    This calibration is for a wheel attached to the motor shaft with a radius of 6 cm. The circumference is 37.7 cm, so that linear velocity calibration is V = -(2.66/.17)*.377 + (1/.17)*.377 V, where V (m/s) is the velocity of the wheel rolling along a surface.\r\n\
+    \r\n\
+    The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
+  data_filter_id: 1
+  previous_user_id: 
+  k2: 
+  user_id: 13
+  k3: 
+  x_axis_min: 0
+- name: "Velocity "
+  y_axis_max: 10
+  physical_unit_id: 3
+  y_axis_min: -10
+  uuid: 
+  k0: 
+  id: 7
+  default_calibration: 
+  x_axis_max: 100
+  probe_type_id: 7
+  k1: 
+  description: Most motion probes report position, this uses the differentiating filter to report velocity.
+  data_filter_id: 3
+  previous_user_id: 
+  k2: 
+  user_id: 23
+  k3: 
+  x_axis_min: 0
