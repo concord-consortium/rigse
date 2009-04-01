@@ -144,7 +144,8 @@ ul.menu
     :width 1px
     :style solid
   :cursor move
-  
+
+
 .hidden
   :display none
   
@@ -159,5 +160,42 @@ ul.quiet_list
     :list-style-type none
     :white-space nowrap
 
+
+ul.menu_v
+  :display block
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+ol.menu_v
+  :display block
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+li.menu_v
+  :list-style-type none
+  :margin 0em
+    :left 10px
+li.menu_v.selected
+  :list-style-type none
+  :margin 0em
+    :left 10px
+  +nav_tree_selected
+    
+.tiny
+  :font-size 0.85em
+  
 .item_list
   :cursor move
+  
+.data_collector
+  :display block
+  :width 600px
+  :height 250px
+    
+.tinymce_textarea
+  :width 600px
+  :word-break break-all
+
+.tinymce_textarea_short
+  :width 600px
+  :height 80px  
