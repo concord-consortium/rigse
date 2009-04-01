@@ -19,7 +19,7 @@
     / = javascript_include_tag "patch_inplaceeditor_editonblank_1-8-1.js"
     / = javascript_include_tag "inplacericheditor.js"
     = javascript_include_tag "tiny_mce/tiny_mce"
-    
+
     :javascript
       tinyMCE.init({
         mode : "textareas",
@@ -33,7 +33,7 @@
         theme_advanced_statusbar_location : "bottom",
         theme_advanced_resizing : true
       });
-    
+
   %body
     #body2
       /
@@ -94,8 +94,7 @@
               XHTML
             and
             %a{ :href => "http://jigsaw.w3.org/css-validator/check/referer" }
-              CSS
-            of this page.
+              CSS of this page.
         %div
           %hr
           = render :partial => 'shared/site_info'

@@ -2,7 +2,7 @@
   .menu
     %ul
       %li
-        = truncate(image_item.filename, 20)
+        = truncate(image_item.filename, :length => 20)
   .content
     .image_content
       = if image_item.image?
