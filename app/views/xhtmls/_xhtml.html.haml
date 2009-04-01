@@ -1,4 +1,4 @@
 = show_menu_for_component(xhtml, :complete => 'tinyMCE.init({mode : "textareas"});')
-.content
+%div{:id => dom_id_for(xhtml, :details), :class => 'content',:style =>'display:none;'}
   = xhtml.content
 = yield dom_id_for(xhtml, :delete, :item)

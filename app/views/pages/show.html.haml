@@ -1,18 +1,14 @@
-
-
-
 = render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation }
 = render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } 
-
+= render :partial => 'form'
 .menu
-  %ul
-    %li
-      %b Insert:
-    %li=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
-    %li=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
-    %li=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
+  %ul.menu
+    %b Insert:
+    %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
+    %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
+    %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
 
-  %ol#elements_container.sortable
+  %ol#elements_container.sortable.menu
     - @page.page_elements.each do |element|
       = render :partial => 'element_container', :locals => {:component => element.embeddable || element, :page => @page }
 

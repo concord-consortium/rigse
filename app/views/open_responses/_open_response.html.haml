@@ -1,5 +1,5 @@
 = show_menu_for_component(open_response, :complete => 'tinyMCE.init({mode : "textareas"});')
-.content
+%div{:id => dom_id_for(open_response, :details), :class => 'content',:style =>'display:none;'}
   - field_set_tag 'prompt' do
     = open_response.prompt
   - field_set_tag 'default response' do
