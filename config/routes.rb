@@ -1,4 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :vendor_interfaces
+
+  map.resources :probe_types
+
+  map.resources :physical_units
+
+  map.resources :device_configs
+
+  map.resources :data_filters
+
+  map.resources :calibrations
+
 
   map.resources :interactive_models, :multiple_choices
   
