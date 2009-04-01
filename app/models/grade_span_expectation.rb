@@ -5,6 +5,8 @@ class GradeSpanExpectation < ActiveRecord::Base
   has_many                :unifying_themes, :through => :assessment_target
   acts_as_replicatable
   
+  default_scope :conditions => "grade_span LIKE '%9-11%'"
+  
   include Changeable
   
   self.extend SearchableModel
