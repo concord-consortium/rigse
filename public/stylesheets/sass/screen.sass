@@ -145,29 +145,39 @@ fieldset
 ul.menu_h
   :display inline
   :list-style-type none
+  :list-style-position inside
   :margin 0em
   :padding 0em
-  li
-    :margin 0em
-    :padding 0em
-      :left 0.5em
-      :right 0.5em
-    :display inline
-    :list-style-type none
-    :white-space nowrap
+li.menu_h
+  :margin 0em
+  :padding 0em
+    :left 0.5em
+    :right 0.5em
+  :display inline
+  :list-style-type none
+  :white-space nowrap
+  
 ul.menu
   :display inline
   :list-style-type none
+  :list-style-position inside
   :margin 0em
   :padding 0em
-  li.menu
-    :display inline
-    :padding 0em
-      :right 0.5em
-      :left 0.5em
-    a
-      :font-size 0.8em
-      :font-weight 100
+ol.menu
+  :display inline
+  :list-style-position inside
+  :list-style-type decimal
+  :margin 0em
+  :padding 0em
+  
+li.menu
+  :display inline
+  :padding 0em
+    :right 0.5em
+    :left 0.5em
+  a
+    :font-size 0.8em
+    :font-weight 100
 
 
 .item

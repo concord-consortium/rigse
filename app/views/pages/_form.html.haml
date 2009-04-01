@@ -1,7 +1,7 @@
 - form_for(@page) do |f|
   = f.error_messages
   %ul.menu
-    %li.menu= "#{@page.name} details:"
+    %li.menu= "Page details:"
     %li.menu= f.submit "Save"
   - field_set_tag 'Page Name' do
     = f.text_field :name

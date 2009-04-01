@@ -1,9 +1,9 @@
 = render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation }
 = render  :partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } 
-= render  :partial => 'form'
 
-%hr
-%p sortable list of page elements
+/ = render  :partial => 'form'
+/ %hr
+/ %p sortable list of page elements
 %p
   %ul.menu
     %b Insert:
@@ -12,8 +12,11 @@
     %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
 
   %ol#elements_container.sortable.menu
-    - @page.page_elements.each do |element|
-      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
+    - @page.page_elements.each_with_index do |element,i|
+      -if i < 2
+        = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
+      - else
+        = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
 
   =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
   = link_to "back to #{@page.section.name}", section_url(@page.section)
