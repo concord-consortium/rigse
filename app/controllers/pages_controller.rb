@@ -98,6 +98,7 @@ class PagesController < ApplicationController
     @component = Kernel.const_get(params['class_name']).create
     @component.pages << @page
     @component.save
+    @element = @page.element_for(@component)
     # 
     # # dynimically insert appropriate partial based on type.
     # @partial = partial_for(@component)

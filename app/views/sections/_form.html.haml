@@ -1,0 +1,13 @@
+- form_for(@section) do |f| 
+  = f.error_messages
+  %p
+    = f.label :name
+    %br
+    = f.text_field :name, :cols => 60
+  %p
+    = f.label :description
+    %br
+    = f.text_area :description, :cols => 80, :rows => 5, :class => 'tinymce_textarea'
+  
+  %p
+    = f.submit "Save"

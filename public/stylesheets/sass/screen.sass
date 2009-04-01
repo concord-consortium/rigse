@@ -1,0 +1,242 @@
+@import blueprint.sass
+@import new_app_colors.sass
+
+!left_nav_columns = 4
+!main_content_columns = 20
+
+
+p
+  :padding-left 10px
+ul
+  :padding-left 10px
+  :list-style-type circle
+  :list-style-position inside
+ol
+  :padding-left 10px
+  :list-style-type decimal
+  :list-style-position inside
+body
+  :font
+    :family Helvetica
+  :background-color = !extra_lt_blue
+  :margin 2em 0em
+#body2
+  +light_blue_background
+h1 
+  :padding-left 10px
+  :font 
+    :size 1.7em
+h2
+  :padding-left 10px
+  :font
+    :size 1.5em
+    :weight bold
+h3
+  :padding-left 10px
+  :font
+    :size 1.3em
+    :weight normal
+
+#wrapper
+  +container
+  :padding 0.5em 2.5em 2.5em 2.5em
+  :font
+    :size 0.9em
+  +light_blue_background
+
+  
+#header
+  +column(24,true)
+  +container
+  :vertical-align baseline
+  :line-height 2em
+  #title
+    +column(14)
+  #login
+    :text-align right
+    +column(10,true)
+
+#nav_top
+  +container
+  +column(24,true)
+  +navy_background
+  #nav_top_left
+    +column(!left_nav_columns)
+    :padding 1em 0.5em 1em 0.5em
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+  #nav_top_center
+    +column(9)
+    :padding
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+
+  #nav_top_right
+    :text-align right
+    +column(9,true)
+    :padding
+      :bottom 0.5em
+      :top 0.5em
+    +navy_background
+  
+#left_nav
+  +column(!left_nav_columns)
+  +light_blue_background
+  :padding 1em 0em
+  :font
+    :size 9pt
+  :line-height 1.4em
+
+.step_tree
+  :font-weight bold
+  :background-color = !extra_lt_blue
+  :border-bottom
+    :style dashed
+    :width 1px
+  :padding 1em 0em
+  li
+    :background-color = !extra_lt_blue
+    :list-style-type none
+    :margin 0.1em
+
+#main_content
+  +container
+  +light_orange_background
+  +column(!main_content_columns,true)
+  :margin 0em
+  :line-height 1.5em
+#content_header
+  +container
+  +light_orange_background
+  +column(!main_content_columns,true)
+  :margin 0em
+  :line-height 1.5em
+  :padding 1em 0.5em 1em 0.5em
+  #content_header_left
+    +column(9)
+  #content_header_right
+    +column(9,true)
+    :text-align right
+
+#main_content2
+  :margin 1em 0.5em 1em 0.5em
+
+#footer
+  +column(24,true)
+  +container
+  +navy_background
+  #footer_left
+    +column(8)
+  #footer_center
+    +column(8)
+  #footer_right
+    :text-align right
+    +column(8,true)
+
+fieldset
+  :background-color white
+  :border 1px solid
+  :margin 0.5em 0.5em 1em 0.5em
+  :padding 0.5em 1em 1em 1em
+  ul
+    :style horizontal
+
+ul.menu_h
+  :display inline
+  :list-style-type none
+  :margin 0em
+  :padding 0em
+  li
+    :margin 0em
+    :padding 0em
+      :left 0.5em
+      :right 0.5em
+    :display inline
+    :list-style-type none
+    :white-space nowrap
+ul.menu
+  :display inline
+  :list-style-type none
+  :margin 0em
+  :padding 0em
+  li.menu
+    :display inline
+    :padding 0em
+      :right 0.5em
+      :left 0.5em
+    a
+      :font-size 0.8em
+      :font-weight 100
+
+
+.item
+  :padding 0.5em
+  :margin 0.5em
+  :border
+    :width 1px
+    :style solid
+  :cursor move
+  .content
+    :margin 0.5em
+    :padding 0.5em
+    :border
+      :width 1px
+      :style dotted
+    :background-color white
+
+
+.hidden
+  :display none
+  
+ul.quiet_list
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+  :padding 0em
+  li
+    :margin 0em
+    :padding 0.5em
+    :list-style-type none
+    :white-space nowrap
+
+
+ul.menu_v
+  :display block
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+ol.menu_v
+  :display block
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+li.menu_v
+  :list-style-type none
+  :margin 0em
+    :left 10px
+li.menu_v.selected
+  :list-style-type none
+  :margin 0em
+    :left 10px
+  +nav_tree_selected
+    
+.tiny
+  :font-size 0.85em
+  
+.item_list
+  :cursor move
+  
+.data_collector
+  :display block
+  :width 600px
+  :height 250px
+    
+.tinymce_textarea
+  :width 600px
+  :word-break break-all
+
+.tinymce_textarea_short
+  :width 600px
+  :height 80px  

@@ -1,0 +1,15 @@
+= render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @section.investigation }
+= render  :partial => 'shared/investigation_content_menu', :locals => { :investigation => @section.investigation }
+= render :partial => 'form'
+  
+.menu
+  %ul.menu_h
+    %li.menu_h
+      %b Insert:
+    %li.menu_h
+      = link_to_remote 'New Page', :url => {:action => 'add_page', :params => {:id => @section.id}} 
+
+  %ol#section_pages_list.sortable.menu
+    - @section.pages.each do |page|
+      = render :partial => 'page_list_item', :locals => {:page => page} 
+      = sortable_element :section_pages_list, :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:id => @section.id }}

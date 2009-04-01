@@ -1,0 +1,118 @@
+
+
+// oranges
+!bright_org = #FFCB64
+!med_org = #FFDA90
+!white_org = #FFE5B2
+
+// browns
+!light_brown = #9C8862
+!dark_brown = #74510A
+
+// dull
+!blue_grey = #4F5B77
+
+// blues
+!navy = #092159 
+!blue = #5979C3
+!lt_blue = #8BA6E5
+!white_blue = #A7BAE5
+!extra_lt_blue = #BCD6EA
+
+=delete_links
+  a.delete:link 
+    :font-size 9px
+    :color red
+  a.delete:active 
+    :color red
+  a.delete:visited 
+    :font-size 9px
+    :color red
+  a.delete:hover 
+    :font-size 9px
+    :color white
+    :background-color red
+    
+=light_blue_background
+  :color = !dark_brown
+  :background-color = !white_blue
+  a
+    :text-decoration none
+    :font-weight bold
+  a:link
+    :color = !navy
+    :background-color = !white_blue 
+  a:visited
+    :color = !navy
+    :background-color = !white_blue
+  a:active
+    :color = !navy
+    :background-color = !white_blue
+  a:hover
+    :color = !bright_org
+    :background-color = !navy
+  +delete_links
+  
+=light_orange_background
+  :color = !navy
+  :background-color = !white_org
+  a
+    :text-decoration none
+    :font-weight bold
+  a:link
+    :color = !navy
+    :font-weight bold
+    :background-color = !white_org 
+  a:visited
+    :color = !navy
+    :font-weight bold
+    :background-color = !white_org
+  a:active
+    :color = !navy
+    :font-weight bold
+    :background-color = !white_org
+  a:hover
+    :color = !bright_org
+    :font-weight bold
+    :background-color = !navy
+  +delete_links
+  
+=navy_background
+  :color = !white_org
+  :background-color = !navy 
+  a
+    :text-decoration none
+    :font-weight bold
+  a:link
+    :color = !bright_org
+    :background-color = !navy 
+  a:visited
+    :color = !bright_org
+    :background-color = !navy
+  a:active
+    :color = !white_org
+    :background-color = !navy
+  a:hover
+    :color = !navy
+    :background-color = !bright_org
+  +delete_links
+
+=nav_tree_selected
+  :color = !dark_brown
+  :background-color = !white_blue
+  a
+    :text-decoration none
+    :font-weight bold
+  a:link
+    :color = !dark_brown
+    :background-color = !white_blue 
+  a:visited
+    :color = !dark_brown
+    :background-color = !white_blue
+  a:active
+    :color = !dark_brown
+    :background-color = !white_blue
+  a:hover
+    :color = !bright_org
+    :background-color = !dark_brown
+  +delete_links

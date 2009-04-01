@@ -99,7 +99,7 @@ class SectionsController < ApplicationController
   ##
   def add_page
     @page= Page.new
-    @page.section = Section.find(params['section_id'])
+    @page.section = Section.find(params[:id])
     @page.save
   end
   

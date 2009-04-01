@@ -1,3 +1,3 @@
 page.visual_effect :highlight, @container
-page.insert_html :top, @container, render(:partial => 'element_container', :locals => {:component => @component, :page => @page })
+page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:element => @element, :component => @component, :page => @page })
 page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
