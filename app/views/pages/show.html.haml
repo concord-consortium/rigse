@@ -1,7 +1,10 @@
 = render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation }
-= render 	:partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } 
-= render :partial => 'form'
-.menu
+= render  :partial => 'shared/investigation_content_menu', :locals => { :investigation => @page.section.investigation } 
+= render  :partial => 'form'
+
+%hr
+%p sortable list of page elements
+%p
   %ul.menu
     %b Insert:
     %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   

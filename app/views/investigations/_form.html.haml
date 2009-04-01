@@ -1,13 +1,10 @@
-- form_for(@investigation) do |f| 
+- form_for(@investigation) do |f|
   = f.error_messages
-  %p
-    = f.label :name
-    %br
-    = f.text_field :name, :cols => 60
-  %p
-    = f.label :description
-    %br
-    = f.text_area :description, :cols => 80, :rows => 5
-  
-  %p
-    = f.submit "Save"
+  %ul.menu
+    %li.menu= "#{@investigation.name} details:"
+    %li.menu= f.submit "Save"
+  - field_set_tag 'Investigation Name' do
+    = f.text_field :name
+
+  - field_set_tag 'Investigation Description' do
+    = f.text_area :description, :cols => 80, :rows => 5, :class => 'tinymce_textarea'
