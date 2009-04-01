@@ -2,4 +2,5 @@
   %div{ :id => dom_id_for(component, :item), :class => 'item' }
     - if (defined? editable && editable)
       =render_remote_form_for(component)
-    = render_partial_for(component)
+    - else 
+      = render_partial_for(component)
