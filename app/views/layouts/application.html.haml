@@ -87,7 +87,7 @@
         %p.sideBarTitle
           %a{ :href => "http://confluence.concord.org/display/RITES/Home" }
             RITES Project Wiki
-        %div
+        %hr
           %p.small
             Validate the
             %a{ :href => "http://validator.w3.org/check/referer" }
@@ -96,8 +96,7 @@
             %a{ :href => "http://jigsaw.w3.org/css-validator/check/referer" }
               CSS
             of this page.
-        %div
-          %hr
+        %hr
           = render :partial => 'shared/site_info'
           
 
@@ -113,8 +112,9 @@
 
       #footer
         #footer_left
-          Questions/Feedback:
-          = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
+          %p
+            Questions/Feedback:
+            = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
         #footer_center
           / footer text in the center
         #footer_right

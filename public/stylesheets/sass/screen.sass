@@ -4,19 +4,35 @@
 
 +blueprint
 
-    
+p
+  :padding-left 10px
+ul
+  :padding-left 10px
+  :list-style-type circle
+  :list-style-position inside
+ol
+  :padding-left 10px
+  :list-style-type decimal
+  :list-style-position inside
 body
   :font
     :family Helvetica
   +light_blue_background
 h1 
+  :padding-left 10px
   :font 
     :size 2.5em
 h2
+  :padding-left 10px
   :font
     :size 1.5em
     :weight bold
-    
+h3
+  :padding-left 10px
+  :font
+    :size 1.5em
+    :weight normal
+
 #wrapper
   +container
   :font
@@ -26,6 +42,7 @@ h2
   
 #header
   +column(24,true)
+  +container
   :vertical-align baseline
   :line-height 2em
   #title
@@ -35,6 +52,7 @@ h2
     +column(10,true)
 
 #nav_top
+  +container
   +column(24,true)
   +navy_background
   #nav_top_left
@@ -64,13 +82,14 @@ h2
   :font
     :size 9pt
   :line-height 1.4em
-
 #main_content
+  +container
   +light_orange_background
   +column(18,true)
   :line-height 1.5em
   #content_header
     +column(18,true)
+    +container
     #content_header_left
       +column(9)
     #content_header_right
@@ -79,6 +98,7 @@ h2
 
 #footer
   +column(24,true)
+  +container
   +navy_background
   #footer_left
     +column(8)
@@ -92,9 +112,8 @@ h2
 ul.menu_h
   :display inline
   :list-style-type none
-  :white-space nowrap
-  :padding 0em
   :margin 0em
+  :padding 0em
   li
     :margin 0em
     :padding 0em
@@ -103,6 +122,20 @@ ul.menu_h
     :display inline
     :list-style-type none
     :white-space nowrap
+ul.menu
+  :display inline
+  :list-style-type none
+  :margin 0em
+  :padding 0em
+  li.menu
+    :display inline
+    :padding 0em
+      :right 0.5em
+      :left 0.5em
+    a
+      :font-size 0.8em
+      :font-weight 100
+
 
 .item
   :padding 0.5em
@@ -110,7 +143,21 @@ ul.menu_h
   :border
     :width 1px
     :style solid
-    
+  :cursor move
+  
 .hidden
   :display none
   
+ul.quiet_list
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+  :padding 0em
+  li
+    :margin 0em
+    :padding 0.5em
+    :list-style-type none
+    :white-space nowrap
+
+.item_list
+  :cursor move

@@ -135,7 +135,18 @@ module ApplicationHelper
       end
     end
   end
-     
+    
+  def toggle_more(component,details_id = nil,label="details")
+    toggle_id = dom_id_for(component,:show_hide)
+    details_id ||= dom_id_for(component, :details)
+   
+    link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
+      page.visual_effect(:toggle_blind, details_id)
+
+      # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
+    end
+    
+  end
 
 
 end

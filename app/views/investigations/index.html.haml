@@ -7,35 +7,25 @@
 - content_for(:content_header_right) do
   %p
     - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
-      / - %w{LS ESS PS}.each do |domain|
-      /   %label{:for => domain}
-      /   = domain
-      /   = check_box_tag domain, domain, true
       - content_tag :label do
         = text_field_tag :search, params[:search], :size => 30
       %input{ :type => "submit", :value => "Search"}
 
-%h2 Investigation List
 
+%p
+  %h3 Investigation List
 .paginator
   = will_paginate @paginated_objects
   - if @paginated_objects
     = page_entries_info @paginated_objects
 
 .item_collection
-  %ul.item_list
+  %ol.quiet_list
     - for investigation in @pages
-      %li.item
-        %ul.menu_h
-          %li
-            = investigation.id.to_s
-          %li
-            = investigation.name
-          %li
-            = link_to 'Show', investigation
-          %li
-            = link_to 'Edit', edit_investigation_path(investigation)
-          %li
-            = link_to 'Delete', investigation, :confirm => "Are you sure you want to delete ivestigation #{investigation.id}", :method => :delete 
-          .content
-            = truncate(investigation.description, 120)
+      %li.quiet_list.item
+        %ul.menu
+          %li.menu=link_to investigation.name, investigation            
+          %li.menu=toggle_more investigation
+          %li.menu=link_to 'Delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete ivestigation #{investigation.id}", :method => :delete 
+          %div{:id => dom_id_for(investigation, :details), :class => 'content', :style =>'display:none;'}
+            =investigation.description
