@@ -15,4 +15,5 @@ config/additional_users.yml
 public/images/0*
 public/stylesheets/app.css
 nbproject
+config/db_backup/
 
