@@ -60,6 +60,12 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
+  def render_remote_form_for(component)
+    class_name = component.class.name.underscore
+    render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
+  end
+  
+
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #
