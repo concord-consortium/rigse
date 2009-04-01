@@ -10,7 +10,7 @@
 
   %ol#elements_container.sortable.menu
     - @page.page_elements.each do |element|
-      = render :partial => 'element_container', :locals => {:component => element.embeddable || element, :page => @page }
+      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
 
   =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
   = link_to "back to #{@page.section.name}", section_url(@page.section)
