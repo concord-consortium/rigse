@@ -1,118 +1,74 @@
+// RIPES colors
+!blue_gray = #9DB3C1
+!rieps_body_background = !blue_gray
+!very_dark_blue = #00233A
+!rieps_brown = #A86922
+!rieps_logo_background = !rieps_brown
 
+!dark_blue_gray = #4F758D
+!rieps_content_header_text_color = !dark_blue_gray
 
-// oranges
-!bright_org = #FFCB64
-!med_org = #FFDA90
-!white_org = #FFE5B2
+!almost_white = #F2F8FC
+!light_blue = #BCD6EA
+!rieps_content_text_color = !light_blue
 
-// browns
-!light_brown = #9C8862
-!dark_brown = #74510A
-
-// dull
-!blue_grey = #4F5B77
-
-// blues
-!navy = #092159 
-!blue = #5979C3
-!lt_blue = #8BA6E5
-!white_blue = #A7BAE5
-!extra_lt_blue = #BCD6EA
+!very_dark = #202E37
+!dark_red = #9B3243
+!rieps_footer_link = !dark_red
 
 =delete_links
   a.delete:link 
     :font-size 9px
-    :color red
+    :color = !dark_red
   a.delete:active 
-    :color red
+    :color = !dark_red
   a.delete:visited 
     :font-size 9px
-    :color red
+    :color = !dark_red
   a.delete:hover 
     :font-size 9px
     :color white
-    :background-color red
+    :background-color = !dark_red
     
-=light_blue_background
-  :color = !dark_brown
-  :background-color = !white_blue
+=color_mixer(!fg,!bg)
+  :color = !fg
+  :background-color = !bg
   a
     :text-decoration none
     :font-weight bold
   a:link
-    :color = !navy
-    :background-color = !white_blue 
+    :color = !fg
+    :background-color= !bg
   a:visited
-    :color = !navy
-    :background-color = !white_blue
+    :color = !fg
+    :background-color = !bg
   a:active
-    :color = !navy
-    :background-color = !white_blue
+    :color = !fg
+    :background-color= !bg
   a:hover
-    :color = !bright_org
-    :background-color = !navy
+    :color= !bg
+    :background-color = !fg
+        
+=page_white
+  +color_mixer(!rieps_brown,white)
   +delete_links
-  
-=light_orange_background
-  :color = !navy
-  :background-color = !white_org
-  a
-    :text-decoration none
-    :font-weight bold
-  a:link
-    :color = !navy
-    :font-weight bold
-    :background-color = !white_org 
-  a:visited
-    :color = !navy
-    :font-weight bold
-    :background-color = !white_org
-  a:active
-    :color = !navy
-    :font-weight bold
-    :background-color = !white_org
-  a:hover
-    :color = !bright_org
-    :font-weight bold
-    :background-color = !navy
+
+=left_nav_colors
+  +color_mixer(!rieps_brown,!rieps_content_text_color)
   +delete_links
-  
-=navy_background
-  :color = !white_org
-  :background-color = !navy 
-  a
-    :text-decoration none
-    :font-weight bold
-  a:link
-    :color = !bright_org
-    :background-color = !navy 
-  a:visited
-    :color = !bright_org
-    :background-color = !navy
-  a:active
-    :color = !white_org
-    :background-color = !navy
-  a:hover
-    :color = !navy
-    :background-color = !bright_org
+
+=content_area_colors
+  +color_mixer(!very_dark_blue,!almost_white)
+  +delete_links
+    
+=top_and_bottom_nav_colors
+  +color_mixer(!rieps_content_text_color,!very_dark_blue)
   +delete_links
 
 =nav_tree_selected
-  :color = !dark_brown
-  :background-color = !white_blue
-  a
-    :text-decoration none
-    :font-weight bold
-  a:link
-    :color = !dark_brown
-    :background-color = !white_blue 
-  a:visited
-    :color = !dark_brown
-    :background-color = !white_blue
-  a:active
-    :color = !dark_brown
-    :background-color = !white_blue
-  a:hover
-    :color = !bright_org
-    :background-color = !dark_brown
+  a:before
+    :content "-"
+  a:after
+    :content "-"
+  +color_mixer(!very_dark_blue,!light_blue)
   +delete_links

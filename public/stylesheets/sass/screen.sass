@@ -4,7 +4,6 @@
 !left_nav_columns = 4
 !main_content_columns = 20
 
-
 p
   :padding-left 10px
 ul
@@ -15,13 +14,15 @@ ol
   :padding-left 10px
   :list-style-type decimal
   :list-style-position inside
+
 body
+  :padding-left 10px
   :font
     :family Helvetica
-  :background-color = !extra_lt_blue
-  :margin 2em 0em
-#body2
-  +light_blue_background
+  :background-color = !light_blue
+  :margin 10px 
+  // that's the blueprint default...
+  
 h1 
   :padding-left 10px
   :font 
@@ -37,17 +38,26 @@ h3
     :size 1.3em
     :weight normal
 
+fieldset
+  :background-color white
+  :border 1px solid
+  :margin 0.5em 0.5em 1em 0.5em
+  :padding 0.5em 1em 1em 1em
+  ul
+    :style horizontal
+
+
+#body2
+  +page_white
+
 #wrapper
   +container
-  :padding 0.5em 2.5em 2.5em 2.5em
-  :font
-    :size 0.9em
-  +light_blue_background
+  :padding 10px 
+  // that's the blueprint default...
+  +page_white
 
-  
 #header
   +column(24,true)
-  +container
   :vertical-align baseline
   :line-height 2em
   #title
@@ -57,62 +67,39 @@ h3
     +column(10,true)
 
 #nav_top
-  +container
   +column(24,true)
-  +navy_background
+  +top_and_bottom_nav_colors
+  :padding 0.5em
   #nav_top_left
-    +column(!left_nav_columns)
-    :padding 1em 0.5em 1em 0.5em
-      :bottom 0.5em
-      :top 0.5em
-    +navy_background
-  #nav_top_center
-    +column(9)
-    :padding
-      :bottom 0.5em
-      :top 0.5em
-    +navy_background
-
+    +column(6)
   #nav_top_right
     :text-align right
-    +column(9,true)
-    :padding
-      :bottom 0.5em
-      :top 0.5em
-    +navy_background
+    +column(18,true)
   
 #left_nav
   +column(!left_nav_columns)
-  +light_blue_background
-
-  :padding 0.5em 0em
+  +left_nav_colors
   :font
     :size 9pt
   :line-height 1.4em
-
-.step_tree
-  :font-weight bold
-  :background-color = !extra_lt_blue
-  :border dotted 1px
-  :padding 0.5em 0em 1em 0em
-  li
-    :background-color = !extra_lt_blue
-    :list-style-type none
-    :margin 0.1em
-
+  .step_tree
+    :padding 
+      :left 0.5em 
+      :right 0.5em
+      
+    .selected
+      +nav_tree_selected
+      
 #main_content
-  +container
-  +light_orange_background
+  +content_area_colors
   +column(!main_content_columns,true)
-  :margin 1em 0em
   :line-height 1.5em
 #content_header
-  +container
-  +light_orange_background
+  +content_area_colors
   +column(!main_content_columns,true)
   :margin 0em
   :line-height 1.5em
-  :padding 1em 0.5em 1em 0.5em
+  :padding 0.5em
   #content_header_left
     +column(9)
   #content_header_right
@@ -124,23 +111,14 @@ h3
 
 #footer
   +column(24,true)
-  +container
-  +navy_background
+  +top_and_bottom_nav_colors
+  :padding 0.5em
+  :margin 0em
   #footer_left
-    +column(8)
-  #footer_center
-    +column(8)
+    +column(12)
   #footer_right
     :text-align right
-    +column(8,true)
-
-fieldset
-  :background-color white
-  :border 1px solid
-  :margin 0.5em 0.5em 1em 0.5em
-  :padding 0.5em 1em 1em 1em
-  ul
-    :style horizontal
+    +column(12,true)
 
 ul.menu_h
   :display inline
@@ -156,6 +134,7 @@ ul.menu_h
     :display inline
     :list-style-type none
     :white-space nowrap
+    
 ul.menu
   :display inline
   :list-style-type none
@@ -170,7 +149,6 @@ ul.menu
     a
       :font-size 0.8em
       :font-weight 100
-
 
 .item
   :padding 0.5em
@@ -187,7 +165,6 @@ ul.menu
       :style dotted
     :background-color white
 
-
 .hidden
   :display none
   
@@ -202,26 +179,22 @@ ul.quiet_list
     :list-style-type none
     :white-space nowrap
 
-
 ul.menu_v
   :display block
   :list-style-type none
   :white-space nowrap
   :margin 0em
-ol.menu_v
-  :display block
-  :list-style-type none
-  :white-space nowrap
-  :margin 0em
+    :left 0.5em
 li.menu_v
-  :list-style-type none
   :margin 0em
-    :left 10px
-li.menu_v.selected
+    :left 0.5em
+  :display block
+  :white-space nowrap
   :list-style-type none
+  
+li.tiny
   :margin 0em
-    :left 10px
-  +nav_tree_selected
+    :left 1em
     
 .tiny
   :font-size 0.85em

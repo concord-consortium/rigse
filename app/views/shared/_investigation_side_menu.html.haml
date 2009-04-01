@@ -4,12 +4,13 @@
     %ul.menu_v
     - investigation.sections.each do |section|
       - if @section && @section.id == section.id
-        %li.menu_v.selected=link_to section.name, section_url(section)
-        %ol.menu_v.tiny
-        - section.pages.each do |page|
-          - if @page && @page.id == page.id
-            %li.menu_v.tiny.selected=link_to page.name, page_url(page)
-          - else
-            %li.menu_v.tiny=link_to page.name, page_url(page), :class => "tiny"
+        %li.menu_v.selected
+          =link_to section.name, section_url(section), :class => "selected"
+          %ul.menu_v.tiny
+          - section.pages.each do |page|
+            - if @page && @page.id == page.id
+              %li.menu_v.tiny.selected=link_to page.name, page_url(page), :class => "tiny selected"
+            - else
+              %li.menu_v.tiny=link_to page.name, page_url(page), :class => "tiny"
       - else
         %li.menu_v=link_to section.name, section_url(section)
