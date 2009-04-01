@@ -79,6 +79,11 @@
           = yield :sidebar
         %hr
         %p
+          %h3
+            Selected Probeware Interface
+        = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
+        %hr
+        %p
           %span.sideBarText
             Rhode Island Technology Enhanced Science 
             %em (RITES) 

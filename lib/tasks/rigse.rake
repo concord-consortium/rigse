@@ -194,7 +194,18 @@ HEREDOC
         # puts "#{path} not found"
       end
     end
-    
+
+    desc "Assign Vernier go!Link as default vendor_interface for users without a vendor_interface."
+    task :assign_vernier_golink_to_users => :environment do
+      interface = VendorInterface.find_by_short_name('vernier_goio')
+      User.find(:all).each do |u|
+        unless u.vendor_interface
+          u.vendor_interface = interface
+          u.save
+        end
+      end
+    end
+   
     desc "Create default users and roles"
     task :default_users_roles => :environment do
 

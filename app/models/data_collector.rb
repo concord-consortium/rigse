@@ -3,6 +3,8 @@ class DataCollector < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   
+  has_one :probe_type
+  
   acts_as_replicatable
   
   include Changeable
