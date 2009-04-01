@@ -1,22 +1,16 @@
 %h1= "Grade Span Expectations: #{@grade_span_expectations.total_entries}" 
-- content_for(:content_header_left) do
-  %ul
-    - if RAILS_ENV == "development"
-      %li
-        - form_tag reparse_gses_grade_span_expectations_path, :method => :put do
-          %input{ :type => "submit", :value => "Re-parse orginal RI-GSE documents"}
-  -content_for(:content_header_right) do
-    %ul
-      %li
-        - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
-          Grade Span: 
-          / - %w{LS ESS PS}.each do |domain|
-          /   %label{:for => domain}
-          /   = domain
-          /   = check_box_tag domain, domain, true
-          - content_tag :label do
-            = text_field_tag :search, params[:search], :size => 16
-          %input{ :type => "submit", :value => "Search"}
+- content_for(:content_header_right) do
+  %ul.menu_h
+    %li
+      - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+        Grade Span: 
+        / - %w{LS ESS PS}.each do |domain|
+        /   %label{:for => domain}
+        /   = domain
+        /   = check_box_tag domain, domain, true
+        - content_tag :label do
+          = text_field_tag :search, params[:search], :size => 16
+        %input{ :type => "submit", :value => "Search"}
 
 = will_paginate @grade_span_expectations
 = render :partial => 'expectation_list', :locals => { :grade_span_expectations => @grade_span_expectations }
