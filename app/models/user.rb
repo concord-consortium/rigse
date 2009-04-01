@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
   has_many :investigations
   has_many :sections
   has_many :pages
+  
+  belongs_to :vendor_interface
 
   has_many :assessment_targets
   has_many :big_ideas

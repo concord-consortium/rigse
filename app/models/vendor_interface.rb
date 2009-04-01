@@ -3,9 +3,9 @@ class VendorInterface < ActiveRecord::Base
   
   acts_as_replicatable
 
-  belongs_to :user
+  has_many :users
   has_many :device_configs
-  belongs_to :author, :class_name => 'User'
+  # belongs_to :author, :class_name => 'User'
   has_many :probes
   has_many :probe_types, :through => :probes
   
