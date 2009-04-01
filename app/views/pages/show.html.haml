@@ -1,21 +1,20 @@
 = render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation }
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
 
-/ = render  :partial => 'form'
-/ %hr
-/ %p sortable list of page elements
-%p
-  %ul.menu
-    %b Insert:
-    %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
-    %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
-    %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
 
-  %ul#elements_container.sortable.menu
+%ul.menu 
+  Insert:
+  %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
+  %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
+  %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
+
+%ul#elements_container.sortable.menu
+
+  - if @page.page_elements.size == 1
+    - element = @page.page_elements[0]
+    = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
+  -else 
     - @page.page_elements.each_with_index do |element,i|
-      -if i < 1
-        = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
-      - else
-        = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
+      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
 
-  =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
+=sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
