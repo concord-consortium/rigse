@@ -87,11 +87,11 @@ module ApplicationHelper
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
-    button_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete)
+    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete)
   end
   
   def delete_button_for_page_component(page, component)
-    button_to_remote('delete',  
+    link_to_remote('delete',  
       :confirm => "Delete #{component.class.human_name} named #{component.name}?", 
       :html => {:class => 'delete'}, 
       :url => { 
@@ -116,21 +116,22 @@ module ApplicationHelper
   end
   
   def edit_menu_for_component(component, form)
-    content_tag('div', :class => 'menu_h') do
-      content_tag('ul') do
-        list = content_tag('li') { name_for_component(component) }
-        list << content_tag('li') { form.submit "Save" }
-        list << content_tag('li') { form.submit "Cancel" }
+    content_tag('div') do
+      content_tag('ul', :class => 'menu') do
+        list = content_tag('li', :class => 'menu') { name_for_component(component) }
+        list << content_tag('li', :class => 'menu') { form.submit "Save" }
+        list << content_tag('li', :class => 'menu') { form.submit "Cancel" }
         # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
       end
     end
   end
 
   def show_menu_for_component(component, options={})
-    content_tag('div', :class => 'menu_h') do
-      content_tag('ul') do
-        list = content_tag('li') { name_for_component(component) }
-        list << content_tag('li') { edit_button_for_component(component, options) }
+    content_tag('div') do
+      content_tag('ul', :class => 'menu') do
+        list = content_tag('li',:class => 'menu') { name_for_component(component) }
+        list << content_tag('li',:class => 'menu') { toggle_more(component) }
+        list << content_tag('li',:class => 'menu') { edit_button_for_component(component, options) }
         # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
       end
     end
@@ -141,8 +142,7 @@ module ApplicationHelper
     details_id ||= dom_id_for(component, :details)
    
     link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
-      page.visual_effect(:toggle_blind, details_id)
-
+      page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
     
