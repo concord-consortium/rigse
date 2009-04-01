@@ -9,20 +9,7 @@ class BortMigration < ActiveRecord::Migration
 
     add_index :sessions, :session_id
     add_index :sessions, :updated_at
-    
-    # Create OpenID Tables
-    create_table :open_id_authentication_associations, :force => true do |t|
-      t.integer :issued, :lifetime
-      t.string :handle, :assoc_type
-      t.binary :server_url, :secret
-    end
 
-    create_table :open_id_authentication_nonces, :force => true do |t|
-      t.integer :timestamp, :null => false
-      t.string :server_url, :null => true
-      t.string :salt, :null => false
-    end
-    
     # Create Users Table
     create_table :users do |t|
       t.string :login, :limit => 40
@@ -89,7 +76,5 @@ class BortMigration < ActiveRecord::Migration
     drop_table :passwords
     drop_table :roles
     drop_table :roles_users
-    drop_table :open_id_authentication_associations
-    drop_table :open_id_authentication_nonces
   end
 end

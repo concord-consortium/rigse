@@ -7,7 +7,6 @@ namespace :rigse do
     :fudge_form => 'git://github.com/JimNeath/fudge_form.git',
     :haml => 'git://github.com/nex3/haml.git',
     :jrails => 'git://github.com/aaronchi/jrails.git',
-    :open_id_authentication => 'git://github.com/rails/open_id_authentication.git',
     :paperclip => 'git://github.com/thoughtbot/paperclip.git',
     :salty_slugs => 'git://github.com/norbauer/salty_slugs.git',
     :shoulda => 'git://github.com/thoughtbot/shoulda.git',
