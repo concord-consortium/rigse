@@ -11,7 +11,7 @@
     %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
     %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
 
-  %ol#elements_container.sortable.menu
+  %ul#elements_container.sortable.menu
     - @page.page_elements.each_with_index do |element,i|
       -if i < 1
         = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
