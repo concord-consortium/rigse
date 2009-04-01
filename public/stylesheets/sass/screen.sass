@@ -1,8 +1,9 @@
 @import blueprint.sass
-@import compass/reset.sass
 @import new_app_colors.sass
 
-+blueprint
+!left_nav_columns = 4
+!main_content_columns = 20
+
 
 p
   :padding-left 10px
@@ -17,11 +18,14 @@ ol
 body
   :font
     :family Helvetica
+  :background-color = !extra_lt_blue
+  :margin 2em 0em
+#body2
   +light_blue_background
 h1 
   :padding-left 10px
   :font 
-    :size 2.5em
+    :size 1.7em
 h2
   :padding-left 10px
   :font
@@ -30,13 +34,14 @@ h2
 h3
   :padding-left 10px
   :font
-    :size 1.5em
+    :size 1.3em
     :weight normal
 
 #wrapper
   +container
+  :padding 0.5em 2.5em 2.5em 2.5em
   :font
-    :size 1.25em
+    :size 0.9em
   +light_blue_background
 
   
@@ -56,8 +61,8 @@ h3
   +column(24,true)
   +navy_background
   #nav_top_left
-    +column(6)
-    :padding
+    +column(!left_nav_columns)
+    :padding 1em 0.5em 1em 0.5em
       :bottom 0.5em
       :top 0.5em
     +navy_background
@@ -77,24 +82,46 @@ h3
     +navy_background
   
 #left_nav
-  +column(6)
+  +column(!left_nav_columns)
   +light_blue_background
+  :padding 1em 0em
   :font
     :size 9pt
   :line-height 1.4em
+
+.step_tree
+  :font-weight bold
+  :background-color = !extra_lt_blue
+  :border-bottom
+    :style dashed
+    :width 1px
+  :padding 1em 0em
+  li
+    :background-color = !extra_lt_blue
+    :list-style-type none
+    :margin 0.1em
+
 #main_content
   +container
   +light_orange_background
-  +column(18,true)
+  +column(!main_content_columns,true)
+  :margin 0em
   :line-height 1.5em
-  #content_header
-    +column(18,true)
-    +container
-    #content_header_left
-      +column(9)
-    #content_header_right
-      +column(9,true)
-      :text-align right
+#content_header
+  +container
+  +light_orange_background
+  +column(!main_content_columns,true)
+  :margin 0em
+  :line-height 1.5em
+  :padding 1em 0.5em 1em 0.5em
+  #content_header_left
+    +column(9)
+  #content_header_right
+    +column(9,true)
+    :text-align right
+
+#main_content2
+  :margin 1em 0.5em 1em 0.5em
 
 #footer
   +column(24,true)
@@ -108,6 +135,13 @@ h3
     :text-align right
     +column(8,true)
 
+fieldset
+  :background-color white
+  :border 1px solid
+  :margin 0.5em 0.5em 1em 0.5em
+  :padding 0.5em 1em 1em 1em
+  ul
+    :style horizontal
 
 ul.menu_h
   :display inline
@@ -144,6 +178,13 @@ ul.menu
     :width 1px
     :style solid
   :cursor move
+  .content
+    :margin 0.5em
+    :padding 0.5em
+    :border
+      :width 1px
+      :style dotted
+    :background-color white
 
 
 .hidden
