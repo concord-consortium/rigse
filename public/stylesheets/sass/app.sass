@@ -1,311 +1,218 @@
-// This is a Sass template which is processed to produces app.css.
-// See: http://haml.hamptoncatlin.com/docs/sass for an introduction to
-// Sass (Syntactically Awesome StyleSheets)
-// Here's the rdoc: http://haml.hamptoncatlin.com/docs/rdoc/classes/Sass.html
-// 
-//
-// NOTE NOTE NOTE NOTE:  We are using screen.sass at the moment.
-// NOTE NOTE NOTE NOTE:  App.sass is for historical reference only while transitioning to compass.
-//
+@import blueprint.sass
+@import app_colors.sass
+@import app_fonts.sass
+@import app_metrics.sass
 
-@import app_colors
-@import app_metrics
-@import app_links
-@import app_fonts
-
-+rollover_link
+p
+  :padding-left 10px
+ul
+  :padding-left 10px
+  :list-style-type circle
+  :list-style-position inside
+ol
+  :padding-left 10px
+  :list-style-type decimal
+  :list-style-position inside
 
 body
-  :color black
-  :background-color = !body_background
-  :margin 2em
-    :top 0px
-  :padding 0px
+  :padding-left 10px
+  +main_font
+  :background-color = !light_blue
+  :margin 10px 
+  // that's the blueprint default...
+  
+h1 
+  :padding-left 10px
+  :font 
+    :size 1.7em
+h2
+  :padding-left 10px
   :font
-    :family = !main_font_family
-    :size = !main_font_size
-    
+    :size 1.5em
+    :weight bold
+h3
+  :padding-left 10px
+  :font
+    :size 1.3em
+    :weight normal
+h4
+  :padding-left 10px
+  :font
+    :size 1.3em
+    :weight normal
 
-ul
-  :margin 0.5em 1em
-  :padding 0.5em 1em
-  :list-style-type none
-
-form
-  fieldset
-    :background-color white
-
-    ul
-      :style horizontal
+fieldset
+  :background-color white
+  :border 1px solid
+  :margin 0.5em 0.5em 1em 0.5em
+  :padding 0.5em 1em 1em 1em
+  ul
+    :style horizontal
 
 
-dd
-  :margin 0em 0em 2em 2em
-  :padding 0em
+#body2
+  +page_white
 
-dl
-  :margin 1em 1ex 2em 1ex
-  :padding 0em
-
-dt
-  :font-weight bold
-  :margin 0em
-  :padding 0em
-
-acronym, .titleTip
-  :border-bottom 1px dotted
-  :border-color = !common_border
-  :cursor help
-  :margin 0em
-  :padding 0em 0em 0.4px 0em
-
+#wrapper
+  +container
+  :padding 10px 
+  // that's the blueprint default...
+  +page_white
 
 #header
-  :margin 0px
-  :padding 0px
-#super_header
-  :font-size = (!main_font_size + 0.2em)
-  :color = !super_header_font_color
-  :background-color transparent
-  li
-    &.selected
-      :color !dark_green
+  +column(24,true)
+  :vertical-align baseline
+  :line-height 2em
+  #title
+    +column(14)
+  #login
+    :text-align right
+    +column(10,true)
 
-#sub_header
-  :color white
-  :background-color = !sub_header_background
-  :font-size = (!main_font_size + 0.3em)
-  .center_left
-    :position absolute
-    :left = !sidebar_width + 2.5em
-
-
-#content_header_container
-  :background-color = !body_background
-  :margin 
-    :top 0em
-    :bottom 0em
-    :left = !sidebar_width + 2em
-  :border-style none
-
-
+#nav_top
+  +column(24,true)
+  +top_and_bottom_nav_colors
+  :padding 0.5em
+  #nav_top_left
+    +column(6)
+  #nav_top_right
+    :text-align right
+    +column(18,true)
+  
+#left_nav
+  +column(!left_nav_columns)
+  +left_nav_colors
+  :font
+    :size 9pt
+  :line-height 1.4em
+  .step_tree
+    :padding 
+      :left 0.5em 
+      :right 0.5em
+      
+    .selected
+      +nav_tree_selected
+      
+#main_content
+  +content_area_colors
+  +column(!main_content_columns,true)
+  :line-height 1.5em
 #content_header
-  :color = !content_header_font_color
-  :background-color = !content_header_background
-  :border-bottom 1px dashed
-  :border-color = !common_border
-  +rollover_link
+  +content_area_colors
+  +column(!main_content_columns,true)
+  :padding 0.1em 0em 0.7em
+  #content_header_left
+    +column(10)
+  #content_header_right
+    +column(10,true)
+    :float right
+    :text-align right
+
+#main_content2
+  :margin 1em 0.5em 1em 0.5em
 
 #footer
-  :color white
-  :background-color = !footer_background
-  +inverse_color_link
-
-#content_menu
-  :color = !redish_brown
-  ul
-    :background-color = !body_background
-    :color = !redish_brown
-    li
-      :display inline
-      :list-style-type none
-      :padding-right 10px
-
-.menu
-  :color = !redish_brown
-  ul
-    :color = !redish_brown
-    :margin 0.2em 0.5em
-    :padding 0em 0em
-    li
-      :display inline
-      :list-style-type none
-      :white-space nowrap
-      :padding 0em 0.5em
-
-.item
-  :margin 2em 0em 2em 0em
-  :padding 0em 1em 0em 1em
-  :width 95%
-  .menu
-    :background-color = !body_background
-
-.horiz_band
-  :color = !common_menu_font_color
-  :background-color = !common_menu_background
-  :width 100%
-  :display table
-  :margin 0.5em
-    :left 0em
-    :bottom 0em
+  +column(24,true)
+  +top_and_bottom_nav_colors
   :padding 0.5em
-  ul
-    :margin 0px
-    :padding 0px
-    :list-style-type none
+  :margin 0em
+  #footer_left
+    +column(12)
+  #footer_right
+    :text-align right
+    +column(12,true)
+
+ul.menu_h
+  :display inline
+  :list-style-type none
+  :list-style-position inside
+  :margin 0em
+  :padding 0em
   li
+    :margin 0em
+    :padding 0em
+      :left 0.5em
+      :right 0.5em
     :display inline
     :list-style-type none
-    :padding-right 0.5em
-    +inverse_color_link
-
-.left
-  :float left
-.center_left
-  :float left
-.right
-  :text-align right
-  :float right
-
-.page_element
-  :background-color = !body_background
-  
-.sortable
-  ol
-    :list-style-position inside
-
-.this_page
-  :color black
-  :background-color white
-  :padding-left 4mm
-  :border
-    :top 1px solid
-    :bottom 1px solid
-    :color = !common_border
-
-#sidebar
-  :width = !sidebar_width
-  :float left
-  :clear left
-  :color = !sidebar_font_color
-  :padding 0 1.5ex 0 2.5mm
-  :line-height 1.5em
-  :display block
-  :border-right
-    :style dashed
-    :width 1px
-    :color = !common_border
-  :border-left
-    :style dashed
-    :width 1px
-    :color = !common_border
-  :margin 
-    :left 0px
-    :right 0px
-    :top 0px
-  :padding 0.5em
-  :background-color = !body_background
-  .step_tree
-    :font-weight bold
-    :border-bottom
-      :style dashed
-      :width 1px
-      :color = !common_border
-    li
-      :list-style-type none
-      :margin 0.1em
-
-
-  li
-    :margin 0
-    :padding 0.1em 0em
-  ul
-    :list-style-type none
-    :list-style-position outside
-    :margin 0em
-    :padding 0em 0em 1.1em 0em
-
-.tiny 
-  :padding 0em
-  :margin 
-    :left 1em
-    :top 0em
-    :bottom 0em
-  :font
-    :weight normal
-    :size 0.8em
-        
-#main_content
-  :color black
-  :background-color = !body_background
-  :text-align justify
-  :line-height 1.5em
-  .menu
-    :background-color = !body_background
-  
-  :margin 
-    :left = !sidebar_width + 2em
-  :border
-    :left 0px solid
-    :color = !common_border
+    :white-space nowrap
     
-  h1
-    :color white
-    :background-color = !common_highlight_background
-    :font
-      :size = (!main_font_size + 0.2em)
-      :weight bold
-    :margin 1em 0em 1em 0em
-    :padding 0.5ex 0em 0.5ex 1ex
-  p
-    :margin 1em 1ex 2em 1ex
-    :padding 0em
-
-  .content
-    :background-color = white
-    :margin 0em 0em 0em 0em
-    :padding 0.5em 1em 0.5em 1em
-    :border
-      :style dotted
-      :width 1px
-      :color = !common_border
-    .prompt
-    .response
-      :margin 0em 0em 0em 0em
-      :padding 0.5em 1em 0.5em 1em
-      :border-top
-        :style dotted
-        :width 1px
-        :color = !common_border
-    .data_collector
-      :width 600px
-      :height 300px
-  
-.paginator
+ul.menu
+  :display inline
+  :list-style-type none
+  :list-style-position inside
   :margin 0em
-  :padding 0em 0em 0em 0em
-  :font-size = (!main_font_size + 0.2em)
-
-.do_not_display
-  :display none
-
-.sortable
   :padding 0em
-  :margin 0.5em 1em 0.5em 2em
-  ol
-    :list-style-position inside
-    li
-      :padding 0.25em
-        :left 0em
-      :background-color = !body_background
-      :margin 
-        :top 1em
-        :left 0em
-      :cursor move
+  li.menu
+    :display inline
+    :padding 0em
+      :right 0.5em
+      :left 0.5em
+    a
+      :font-size 0.8em
+      :font-weight 100
 
+.item
+  :padding 0.5em
+  :margin 0.5em
+  :border
+    :width 1px
+    :style solid
+  :cursor move
+  .content
+    :margin 0.5em
+    :padding 0.5em
+    :border
+      :width 1px
+      :style dotted
+    :background-color white
+
+.hidden
+  :display none
+  
+ul.quiet_list
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+  :padding 0em
+  li
+    :margin 0em
+    :padding 0.5em
+    :list-style-type none
+    :white-space nowrap
+
+ul.menu_v
+  :display block
+  :list-style-type none
+  :white-space nowrap
+  :margin 0em
+    :left 0.5em
+li.menu_v
+  :margin 0em
+    :left 0.5em
+  :display block
+  :white-space nowrap
+  :list-style-type none
+  
+li.tiny
+  :margin 0em
+    :left 1em
+    
+.tiny
+  :font-size 0.85em
+  
+.item_list
+  :cursor move
+  
+.data_collector
+  :display block
+  :width 600px
+  :height 250px
+    
 .tinymce_textarea
   :width 600px
   :word-break break-all
 
 .tinymce_textarea_short
   :width 600px
-  :height 80px
-
-.clear_both
-  :clear both
-  :line-height 0 
-  :height 1px
-  :display block
-  :visibility hidden
-  :margin 1em
-
+  :height 80px  
