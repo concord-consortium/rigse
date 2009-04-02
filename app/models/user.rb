@@ -45,6 +45,12 @@ class User < ActiveRecord::Base
   # we will lazy load the anonymous user later
   @@anonymous_user = nil 
  
+  # we need a default VendorInterface
+  default_value_for :vendor_interface do 
+        vendor_interface = VendorInterface.find_by_short_name('vernier_goio')
+  end
+   
+ 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
