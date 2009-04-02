@@ -10,7 +10,6 @@ db/*.sqlite3
 config/database.yml
 config/initializers/site_keys.rb
 config/mailer.yml
-db/schema.rb
 config/additional_users.yml
 public/images/0*
 public/stylesheets/app.css
