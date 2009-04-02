@@ -14,6 +14,12 @@ namespace :rigse do
     :workling => 'git://github.com/purzelrakete/workling.git'
   }
   
+  
+  #######################################################################
+  #
+  # List all plugins available to quick install
+  #
+  #######################################################################  
   desc 'List all plugins available to quick install'
   task :install do
     puts "\nAvailable Plugins\n=================\n\n"
@@ -43,13 +49,24 @@ namespace :rigse do
     def rails_file_path(*args)
       File.join([RAILS_ROOT] + args)
     end
-    
-    
+
+
+    #######################################################################
+    #
+    # Raise an error unless the RAILS_ENV is development
+    #
+    #######################################################################
     desc "Raise an error unless the RAILS_ENV is development"
     task :development_environment_only do
       raise "Hey, development only you monkey!" unless RAILS_ENV == 'development'
     end
     
+    
+    #######################################################################
+    #
+    # Regenerate the REST_AUTH_SITE_KEY 
+    #
+    #######################################################################
     desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
     task :regenerate_rest_auth_site_key => :environment do
       
@@ -81,7 +98,12 @@ HEREDOC
       end
     end
     
-
+    
+    #######################################################################
+    #
+    # New from scratch
+    #
+    #######################################################################
     desc "setup a new rigse instance"
     task :new_rigse_from_scratch => :environment do
       
@@ -97,11 +119,15 @@ HEREDOC
         rescue Exception
         end
         Rake::Task['rigse:setup:development_environment_only'].invoke
+        Rake::Task['db:backup:save'].invoke
         Rake::Task['db:create'].invoke
         Rake::Task['db:migrate'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['db:backup:load_probe_configurations'].invoke
+        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
   
         puts <<HEREDOC
 
@@ -142,6 +168,12 @@ HEREDOC
       user
     end
 
+
+    #######################################################################
+    #
+    # Create additional users
+    #
+    #######################################################################
     #
     # additional_users.yml is a YAML file that includes a list of users
     # to create when setting up a new instance. The salt and crypted_password
@@ -195,6 +227,13 @@ HEREDOC
       end
     end
 
+
+    #######################################################################
+    #
+    # Assign Vernier go!Link as default vendor_interface for users
+    # without a vendor_interface.
+    #
+    #######################################################################
     desc "Assign Vernier go!Link as default vendor_interface for users without a vendor_interface."
     task :assign_vernier_golink_to_users => :environment do
       interface = VendorInterface.find_by_short_name('vernier_goio')
@@ -206,12 +245,18 @@ HEREDOC
       end
     end
    
+   
+    #######################################################################
+    #
+    # Create default users and roles
+    #
+    #######################################################################   
     desc "Create default users and roles"
     task :default_users_roles => :environment do
 
       puts <<HEREDOC
 
-This task creates seven roles (if they don't already exist):
+This task creates seven roles (if they dont already exist):
 
   admin
   manager
@@ -255,6 +300,59 @@ HEREDOC
       admin_user.roles << admin_role 
       researcher_user.roles << researcher_role
       
+    end
+
+
+    #######################################################################
+    #
+    # Force Create default users and roles
+    # (similar to Create Default users, but without prompting)
+    #######################################################################   
+    desc "Force Create default users and roles"
+    task :force_default_users_roles => :environment do
+      admin_role = Role.find_or_create_by_title('admin')
+      manager_role = Role.find_or_create_by_title('manager')
+      researcher_role = Role.find_or_create_by_title('researcher')
+      teacher_role = Role.find_or_create_by_title('teacher')
+      member_role = Role.find_or_create_by_title('member')
+      student_role = Role.find_or_create_by_title('student')
+      guest_role = Role.find_or_create_by_title('guest')
+
+      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
+      admin_user = User.create(:login => "admin", :email => "admin@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Admin", :last_name => "User")
+      researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
+      member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
+
+      [admin_user, researcher_user, member_user].each do |user|
+        user.save
+        user.register!
+        user.activate!
+      end
+      admin_user.roles << admin_role 
+      researcher_user.roles << researcher_role
+    end
+    
+    #######################################################################
+    #
+    # Force New from scratch
+    #
+    #######################################################################
+    desc "force setup a new rigse instance, with no prompting! Danger!"
+    task :force_new_rigse_from_scratch => :environment do
+
+      puts <<-HEREDOC
+      This task will drop your extsing rigse database, rebuild it from scratch, 
+      and install default users.
+      HEREDOC
+        # save the old data?
+        Rake::Task['rigse:setup:development_environment_only'].invoke
+        Rake::Task['db:backup:save'].invoke
+        Rake::Task['db:reset'].invoke
+        Rake::Task['rigse:setup:force_default_users_roles'].invoke
+        Rake::Task['rigse:setup:create_additional_users'].invoke
+        Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        Rake::Task['db:backup:load_probe_configurations'].invoke
+        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
     end
   end
 end
