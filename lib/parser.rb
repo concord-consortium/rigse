@@ -289,8 +289,8 @@ class Parser
           statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
           statement_strings.each { |s| clean_text(s) }
           statement_strings.reject! { |s| s == "" || s == nil || s == " " }
-
-          gse = GradeSpanExpectation.new(:grade_span => grade_span)
+          gse = GradeSpanExpectation.new
+          gse.grade_span = grade_span
           gse.assessment_target = assessment_target
           gse.save
           stem = ExpectationStem.find_or_create_by_description(stem_string)
