@@ -42,7 +42,7 @@ end
 namespace :deploy do
   desc "setup a new version of rigse from-scratch using rake task of similar name"
   task :from_scratch do
-    run "cd #{deploy_to}/current; rake rigse:setup:new_rigse_from_scratch"
+    run "cd #{deploy_to}/current; rake rigse:setup:force_new_rigse_from_scratch"
   end
   
   desc "link in some shared resources, such as database.yml"
