@@ -119,7 +119,6 @@ HEREDOC
         rescue Exception
         end
         Rake::Task['rigse:setup:development_environment_only'].invoke
-        Rake::Task['db:backup:save'].invoke
         Rake::Task['db:create'].invoke
         Rake::Task['db:migrate'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
@@ -346,7 +345,6 @@ HEREDOC
       HEREDOC
         # save the old data?
         Rake::Task['rigse:setup:development_environment_only'].invoke
-        Rake::Task['db:backup:save'].invoke
         Rake::Task['db:reset'].invoke
         Rake::Task['rigse:setup:force_default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
