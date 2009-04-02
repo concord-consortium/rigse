@@ -22,9 +22,11 @@ class Page < ActiveRecord::Base
   after_create :add_xhtml
   
   def add_xhtml
-    xhtml = Xhtml.create
-    xhtml.pages << self
-    xhtml.save
+    if(self.page_elements.size < 1)
+      xhtml = Xhtml.create
+      xhtml.pages << self
+      xhtml.save
+    end
   end
   
   #
