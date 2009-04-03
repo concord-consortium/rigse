@@ -143,7 +143,7 @@ module ApplicationHelper
     end
   end
     
-  def toggle_more(component,details_id = nil,label="details")
+  def toggle_more(component,details_id = nil,label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
    

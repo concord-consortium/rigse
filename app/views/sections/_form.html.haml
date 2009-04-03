@@ -1,6 +1,6 @@
 - form_for(@section) do |f|
   %ul.menu
-    %li.menu= "#{@section.name} details:"
+    %li.menu= "#{@section.name} show/hide:"
     %li.menu= f.submit "Save"
   - field_set_tag 'Section Name' do
     = f.text_field :name

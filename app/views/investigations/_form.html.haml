@@ -1,7 +1,7 @@
 - form_for(@investigation) do |f|
   = f.error_messages
   %ul.menu
-    %li.menu= "#{@investigation.name} details:"
+    %li.menu= "#{@investigation.name} show/hide:"
     %li.menu= f.submit "Save"
   - field_set_tag 'Investigation Name' do
     = f.text_field :name
