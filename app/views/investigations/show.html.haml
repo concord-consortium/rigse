@@ -1,5 +1,6 @@
 = render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @investigation }
-= render 	:partial => 'shared/investigation_trail', :locals => { :investigation => @investigation } 
+= render 	:partial => 'shared/investigation_tab_menu', :locals => { :investigation => @investigation }
+/ = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @investigation } 
 - content_for :left_content_header do
   %ul.menu_h
     %li=link_to "list investigations", investigations_url 

@@ -11,6 +11,9 @@
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     = stylesheet_link_tag 'app'
     = javascript_include_tag :defaults
+    = javascript_include_tag "resizable.js"
+    = javascript_include_tag "livepipe/livepipe.js"
+    = javascript_include_tag "livepipe/tabs.js"
     /[if IE]
       = javascript_include_tag "flotr/excanvas.js"
     = javascript_include_tag "flotr/flotr.js"
@@ -104,11 +107,18 @@
           #content_header_left
             = yield :content_header_left
           = yield :content_header
+          #content_header_right
+            = yield :content_header_right
+        #content_header2
+          #content_header2_left
+            = yield :content_header2_left
+          = yield :content_header2
           %br
           %p{ :style => "color: green" }
             = flash_messages
-          #content_header_right
-            = yield :content_header_right
+          #content_header2_right
+            = yield :content_header2_right
+        
         #main_content2
           = yield :layout
 

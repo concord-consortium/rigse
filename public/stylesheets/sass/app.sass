@@ -5,14 +5,12 @@
 
 p
   :padding-left 10px
-ul
-  :padding-left 10px
-  :list-style-type circle
-  :list-style-position inside
+
 ol
   :padding-left 10px
   :list-style-type decimal
   :list-style-position inside
+
 
 body
   :padding-left 10px
@@ -97,13 +95,58 @@ fieldset
   +content_area_colors
   +column(!main_content_columns,true)
   :line-height 1.5em
+  ul
+    :padding-left 10px
+    :list-style-type circle
+    :list-style-position inside
+    &.subsection_tabs
+      :border-bottom 1px solid #CCCCCC
+      :clear both
+      :height 20px
+      :list-style-image none
+      :list-style-position outside
+      :list-style-type none
+      :margin 0 0 5px
+      :padding 0
+
+      li
+        &.tab
+          :float left
+          :margin-right 7px
+          :text-align center
+
+          a
+            :background-color #FFFFFF
+            :color #666666
+            :display block
+            :height 20px
+            :padding 0 6px
+            :width 80px
+
+            &:hover
+              :color #666666
+
+            &.active
+              :background-color #DDDDDD
+  
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.1em 0em 0.7em
+  :padding 0.5em 0em 0.7em
   #content_header_left
     +column(10)
   #content_header_right
+    +column(10,true)
+    :float right
+    :text-align right
+
+#content_header2
+  +content_area_colors
+  +column(!main_content_columns,true)
+  :padding 0.5em 0em 0.7em
+  #content_header2_left
+    +column(10)
+  #content_header2_right
     +column(10,true)
     :float right
     :text-align right
