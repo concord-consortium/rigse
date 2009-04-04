@@ -107,6 +107,13 @@ module ApplicationHelper
       )
   end
   
+  def delete_button_for_page(page)
+    link_to('delete',  
+      :confirm => "Delete page named #{page.name}?", 
+      :html => {:class => 'delete'}, 
+      :url => { :action => '' })
+  end
+  
   def edit_url_for_component(component)
     { :controller => component.class.name.pluralize.underscore, 
       :action => :edit, 
@@ -132,17 +139,6 @@ module ApplicationHelper
     end
   end
 
-  def show_menu_for_component(component, options={})
-    content_tag('div') do
-      content_tag('ul', :class => 'menu') do
-        list = content_tag('li',:class => 'menu') { name_for_component(component) }
-        list << content_tag('li',:class => 'menu') { toggle_more(component) }
-        list << content_tag('li',:class => 'menu') { edit_button_for_component(component, options) }
-        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
-      end
-    end
-  end
-    
   def toggle_more(component,details_id = nil,label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
@@ -154,5 +150,17 @@ module ApplicationHelper
     
   end
 
+
+  def render_view_bar_for(element)
+    render ('shared/item_menu', :element => element, :page =>element.page, :component => element.embeddable )
+    # "this is render view bar for #{element}"
+  end
+  
+  def render_edit_bar_for(element)
+    render_to_sting 'shared/item_menu', locals => {:element => element, :page =>element.page }
+    "this is render view bar for #{element}"
+  end
+  
+  
 
 end

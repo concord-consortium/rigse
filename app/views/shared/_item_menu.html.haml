@@ -1,12 +1,16 @@
-.menu
-  %ul
-    - if RAILS_ENV == "development"
+.action_menu
+  .action_menu_left
+    %ul#sections.sortable
       %li
-        id:
-        = component.id
-    %li
-      = component.name
-    %li
-      = edit_button_for_component(component)
-    %li
-      = link_to_ajax_delete(page, component)
+        = component.name
+        - if RAILS_ENV == "development"
+          =" :[#{component.id}]"
+  .action_menu_right
+    %ul
+      %li
+        = toggle_more(component)
+      %li
+        = edit_button_for_component(component)
+      %li
+        = delete_button_for_page_component(page,component)
+

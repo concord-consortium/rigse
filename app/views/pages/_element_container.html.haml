@@ -1,6 +1,8 @@
 %li{:id => dom_id_for(element), :class => 'menu' }
   %div{ :id => dom_id_for(component, :item), :class => 'item' }
     - if (defined? editable && editable)
+      =render_edit_bar_for(element)
       =render_remote_form_for(component)
     - else 
-      = render_partial_for(component)
+      =render_view_bar_for(element)
+      =render_partial_for(component)

@@ -2,6 +2,7 @@
 @import app_colors.sass
 @import app_fonts.sass
 @import app_metrics.sass
+@import action_menu_tab.sass
 
 p
   :padding-left 10px
@@ -70,6 +71,7 @@ fieldset
 #nav_top
   +column(24,true)
   +top_and_bottom_nav_colors
+  :overflow hidden
   :padding 0.5em
   #nav_top_left
     +column(6)
@@ -80,9 +82,9 @@ fieldset
 #left_nav
   +column(!left_nav_columns)
   +left_nav_colors
-  :font
-    :size 9pt
+  :overflow hidden
   :line-height 1.4em
+  :font-size 10px
   .step_tree
     :padding 
       :left 0.5em 
@@ -203,11 +205,10 @@ ul.menu
     :style solid
   :cursor move
   .content
-    :margin 0.5em
-    :padding 0.5em
     :border
       :width 1px
-      :style dotted
+      :style solid
+      :color #DDD
     :background-color white
 
 .hidden

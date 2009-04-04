@@ -2,11 +2,20 @@
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
 
 
-%ul.menu 
-  Insert:
-  %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
-  %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
-  %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
+.action_menu
+  .action_menu_left
+    %ul#sections.sortable
+      %li
+        = @page.name
+        - if RAILS_ENV == "development"
+          = ":[#{@page.id}]"
+  .action_menu_right
+    %ul
+      %li
+      %li=link_to_function 'Add Content'
+      %li=link_to_function 'edit'
+      %li=delete_button_for_page(@page)
+      
 
 %ul#elements_container.sortable.menu
 
