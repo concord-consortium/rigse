@@ -93,7 +93,8 @@ module ApplicationHelper
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
-    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete)
+    success  = options[:success] || nil
+    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
   
   def delete_button_for_page_component(page, component)
