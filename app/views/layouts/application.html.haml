@@ -17,6 +17,7 @@
     = javascript_include_tag "effects.js"
     = javascript_include_tag "prototype-ui/prototype-ui.js"
     = javascript_include_tag "application.js"
+    = javascript_include_tag "dragdrop.js"
     = javascript_include_tag "misc/resizable.js"
     = javascript_include_tag "livepipe/livepipe.js"
     = javascript_include_tag "livepipe/tabs.js"
@@ -118,21 +119,6 @@
 
       #main_content
         #content_header
-          #content_header_left
-            = yield :content_header_left
-          = yield :content_header
-          #content_header_right
-            = yield :content_header_right
-        #content_header2
-          #content_header2_left
-            = yield :content_header2_left
-          = yield :content_header2
-          %br
-          %p{ :style => "color: green" }
-            = flash_messages
-          #content_header2_right
-            = yield :content_header2_right
-        
         #main_content2
           = yield :layout
 
