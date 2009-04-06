@@ -1,13 +1,15 @@
 = render 	:partial => 'shared/investigation_side_menu', :locals => { :investigation => @investigation }
-= render 	:partial => 'shared/investigation_tab_menu', :locals => { :investigation => @investigation }
-/ = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @investigation } 
+= render  :partial => 'shared/investigation_trail', :locals => { :investigation => @investigation } 
+
+
 - content_for :left_content_header do
   %ul.menu_h
     %li=link_to "list investigations", investigations_url 
     %li=link_to 'edit', :action => 'edit'
     %li=link_to_remote 'add section', :url => {:action => 'add_section', :params => {:investigation_id => @investigation.id}}
 
-= render :partial => 'form'
+/ = render :partial => 'form'name
+= render 	:partial => 'shared/investigation_tab_menu', :locals => { :investigation => @investigation }
 
 %hr
 %ul.menu_h
