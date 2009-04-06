@@ -1,0 +1,16 @@
+.action_menu
+  .action_menu_left
+    %ul#sections.sortable.big
+      = link_to investigation.name, investigation
+      - if RAILS_ENV == "development"
+        =" :[#{investigation.id}]"
+  .action_menu_right
+    %ul
+      %li
+        = toggle_more(investigation)
+      %li
+        edit
+      %li{:class => 'delete'}
+        delete
+
+
