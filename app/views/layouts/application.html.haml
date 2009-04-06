@@ -20,7 +20,7 @@
     = javascript_include_tag "misc/resizable.js"
     = javascript_include_tag "livepipe/livepipe.js"
     = javascript_include_tag "livepipe/tabs.js"
-    / = javascript_include_tag "livepipe/window.js"
+    = javascript_include_tag "livepipe/window.js"
     /[if IE]
       = javascript_include_tag "flotr/excanvas.js"
     = javascript_include_tag "flotr/flotr.js"
@@ -30,6 +30,14 @@
     = javascript_include_tag "tiny_mce/tiny_mce"
     
     :javascript
+      //Modal Window
+      document.observe('dom:loaded',function(){
+        var modal = new Control.Modal($('modal'),{
+          overlayOpacity: 0.75,
+          className: 'modal',
+          fade: true
+        });
+      });
       tinyMCE.init({
         mode : "textareas",
         theme : "advanced",
@@ -42,7 +50,6 @@
         theme_advanced_statusbar_location : "bottom",
         theme_advanced_resizing : true
       });
-
   %body
     #body2
       /
