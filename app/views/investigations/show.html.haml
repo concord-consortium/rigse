@@ -9,8 +9,11 @@
 = render :partial => 'form'
 
 %hr
-
+%ul.menu_h
+  %li.menu_h
+    = link_to_remote 'Add Section', :url => {:action => 'add_section', :params => {:investigation_id => @investigation.id}}
 %ol#investigation_sections_list.item_list 
+
   sections:
   - @investigation.sections.each do |section|
     =render :partial => 'section_list_item', :locals => {:section => section}
