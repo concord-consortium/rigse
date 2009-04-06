@@ -118,6 +118,7 @@ class InvestigationsController < ApplicationController
   def add_section
     @section= Section.new
     @section.investigation = Investigation.find(params['investigation_id'])
+    @section.name = "New Section"
     @section.save
   end
   
