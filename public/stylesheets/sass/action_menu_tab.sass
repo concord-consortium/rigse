@@ -1,25 +1,34 @@
 
 
-=action_menu_tab(!_color = #111, !_bg_color = #EEE, !_color_hover = white,!_bg_color_hover = black)
+=action_menu_tab(!_color = #111, !_bg_color = #AAA, !_color_hover = white,!_bg_color_hover = black)
   ul
     :margin 0
       :bottom 0.25em
     :padding 0em
+    :background-color = !_bg_color
     li
       :display inline
-      :list-style-type none
-      :margin 0 
-      :padding 0
+      :list-style-type none 
+      :background-color = !_bg_color
+      :padding 0px
         :right 10px
+        
       a, a:visited, a:active
         :cursor pointer
         :color = !_color
         :font-weight bold
         :text-decoration none
+        :padding 2px
+        :background-color = !_bg_color
       a:hover
         :color = !_color_hover
         :background-color = !_bg_color_hover
-
+      .action
+        :color = !rieps_brown
+        :border
+          :style dotted
+          :width 1px
+          
     li.selected 
       a, a:visited, a:active
         :background-color blue
@@ -32,9 +41,12 @@
   :font-size 10px
   :margin 0px
     :bottom 2px
-  :background-color #EEE
+  :background-color #AAA
   :padding 1px
-  :height 20px
+  :height 2em
+  +clearfix
+  .big
+    :font-size 1.6em
   .action_menu_left
     :float left
     +action_menu_tab
