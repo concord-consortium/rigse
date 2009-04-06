@@ -70,34 +70,7 @@ class UsersController < ApplicationController
       redirect_back_or_default(root_path)
     end
   end
-  
-  protected
-  
-  def create_new_user(attributes)
-    @user = User.new(attributes)
-    if @user && @user.valid?
-      @user.register!
-    end
-    if @user.errors.empty?
-      # will redirect:
-      successful_creation(@user)
-    else
-      # will redirect:
-      failed_creation
-    end
-  end
-  
-  def successful_creation(user)
-    flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation code."
-    redirect_back_or_default(root_path)
-  end
-  
-  def failed_creation(message = 'Sorry, there was an error creating your account')
-    flash[:error] = message
-    render :action => :new
-  end
-  
+
   def interface
     # Select the probeware vendor and interface to use when generating jnlps and otml
     # files. This redult is saved in a session variable and if the user is logged-in
@@ -106,7 +79,6 @@ class UsersController < ApplicationController
     # downloaded to the users computer but the vendor_interface id (vid) which is 
     # also included in the contruction of the url
     @user = User.find(params[:id])
-    debugger
     if request.xhr?
       render :partial => 'interface', :locals => { :vendor_interface => @user.vendor_interface }
     else
@@ -147,6 +119,33 @@ class UsersController < ApplicationController
     else
       render(:nothing => true) 
     end
+  end
+  
+  protected
+  
+  def create_new_user(attributes)
+    @user = User.new(attributes)
+    if @user && @user.valid?
+      @user.register!
+    end
+    if @user.errors.empty?
+      # will redirect:
+      successful_creation(@user)
+    else
+      # will redirect:
+      failed_creation
+    end
+  end
+  
+  def successful_creation(user)
+    flash[:notice] = "Thanks for signing up!"
+    flash[:notice] << " We're sending you an email with your activation code."
+    redirect_back_or_default(root_path)
+  end
+  
+  def failed_creation(message = 'Sorry, there was an error creating your account')
+    flash[:error] = message
+    render :action => :new
   end
   
 end
