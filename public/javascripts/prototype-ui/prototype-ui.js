@@ -4523,7 +4523,7 @@ UI.Dialog = Class.create(UI.Window, {
     this.buttonsHeight = this.buttonContainer.getHeight() || this.buttonsHeight;
     var style = this.dialogContent.style, size  = this.getSize(true);
     // size.width -= 50;
-    size.height -= 8;
+    size.height -= 20;
     style.width = size.width + "px", style.height = size.height - this.buttonsHeight + "px";
   },
 
