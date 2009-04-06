@@ -1,8 +1,13 @@
-- content_for :content_header do
-  %ul.subsection_tabs
-    - investigation.sections.each do |section|
-      %li.tab
-        - if @section && @section.id == section.id
-          = link_to section.name, section_url(section), :class => "active"
-        -else
-          = link_to section.name, section_url(section)
+.action_menu
+  .action_menu_left
+    %ul.subsection_tabs
+      - investigation.sections.each do |section|
+        %li.tab
+          - if @section && @section.id == section.id
+            = link_to section.name, section_url(section), :class => "active"
+          -else
+            = link_to section.name, section_url(section)
+  .action_menu_right
+    %ul
+      %li
+        %a{:class=>'action'} add section
