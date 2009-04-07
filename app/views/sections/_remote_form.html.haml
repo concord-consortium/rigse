@@ -1,0 +1,8 @@
+- remote_form_for(section) do |f|
+  = f.hidden_field :investigation_id, :value => investigation.id
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(section, :modal, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(section, :modal, :textarea), :class => 'tinymce_textarea'
+  =submit_tag "save"
+

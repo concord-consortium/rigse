@@ -1,0 +1,7 @@
+page << "document.dialog.close()"
+page.insert_html :bottom, 'investigation_sections_list', render(:partial => 'investigations/section_list_item', :locals => {
+  :section => @section})
+
+page.insert_html :bottom, 'section_tabs', "<li id=#{dom_id_for(@section, :tab)} class='tab'>#{link_to @section.name, section_url(@section)}</li>"
+page.visual_effect :highlight, 'investigation_sections_list'
+page.visual_effect :highlight, 'section_tabs'
