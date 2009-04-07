@@ -9,4 +9,4 @@
             = link_to section.name, section_url(section)
   .action_menu_right
     %ul
-      %li= link_to_remote 'add section', :url => {:controller=> 'investigations', :action=> 'add_new_section', :params => {:investigation_id => investigation.id}},:html => {:class=>'action'}
+      %li= link_to_remote 'add section', :url => {:controller=> 'investigations', :action=> 'add_new_section', :params => {:id => investigation.id}},:html => {:class=>'action'}
