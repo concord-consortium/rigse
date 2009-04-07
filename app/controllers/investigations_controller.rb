@@ -115,13 +115,25 @@ class InvestigationsController < ApplicationController
   ##
   ##
   ##
-  def add_section
-    @section= Section.new
-    @section.investigation = Investigation.find(params['investigation_id'])
-    @section.name = "New Section"
-    @section.save
+  def add_new_section
+    @section = Section.new
+    if (params['investigation_id']) 
+      @investigation = Investigation.find(params['investigation_id'])
+      @section.investigation = @investigation
+    end
   end
   
+  
+  ##
+  ##
+  ##
+  def add_section
+    @section = Section.create(params['section']) # maybe that will work
+    if (params['investigation_id']) 
+      @section.investigation = Investigation.find(params['investigation_id'])
+    end
+  end
+
   
   ##
   ##

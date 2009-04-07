@@ -1,2 +1,4 @@
 page.visual_effect :highlight, 'investigation_sections_list'
-page.remove "item_section_#{@section.id}"
+page.remove dom_id_for(@section, :item)
+page.remove dom_id_for(@section, :tab)
+

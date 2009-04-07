@@ -1,6 +1,6 @@
 class SectionsController < ApplicationController
   
-  before_filter :find_entities
+  before_filter :find_entities, :except => 'create'
   protected 
   
   def find_entities
@@ -45,15 +45,13 @@ class SectionsController < ApplicationController
   ##
   ##
   def create
+    @section = Section.create!(params[:section])
     respond_to do |format|
-      if @section.save
+      format.js
+      format.html { 
         flash[:notice] = 'Section was successfully created.'
-        format.html { redirect_to(@section) }
-        format.xml  { render :xml => @section, :status => :created, :location => @section }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
-      end
+        redirect_to(@section) }
+      format.xml  { render :xml => @section, :status => :created, :location => @section }
     end
   end
 

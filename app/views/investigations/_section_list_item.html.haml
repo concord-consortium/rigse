@@ -4,7 +4,7 @@
   %ul.menu
     =link_to section.name, section_url(section)
     %li.menu=toggle_more section
-    %li.menu=link_to_remote 'delete', :url => { :action => 'delete_section', :params => {:section_id => section.id}}, :html => {:class=>"delete"}
+    %li.menu=link_to_remote 'delete', :url => { :controller => 'investigations',:action => 'delete_section', :params => {:id => section.investigation.id, :section_id => section.id}}, :html => {:class=>"delete"}
     %dl{:id => dom_id_for(section, :details), :class => 'content', :style =>'display:none;'}
       - section.pages.each do |page|
         %dt

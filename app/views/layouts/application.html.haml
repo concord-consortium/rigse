@@ -11,7 +11,7 @@
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     = stylesheet_link_tag 'app'
     = stylesheet_link_tag 'window'
-    = stylesheet_link_tag 'mac_os_x'
+    = stylesheet_link_tag 'rites-dialog'
     / = javascript_include_tag :defaults
     = javascript_include_tag "prototype.js"
     = javascript_include_tag "effects.js"
@@ -31,14 +31,6 @@
     = javascript_include_tag "tiny_mce/tiny_mce"
     
     :javascript
-      //Modal Window
-      document.observe('dom:loaded',function(){
-        var modal = new Control.Modal($('modal'),{
-          overlayOpacity: 0.75,
-          className: 'modal',
-          fade: true
-        });
-      });
       tinyMCE.init({
         mode : "textareas",
         theme : "advanced",
