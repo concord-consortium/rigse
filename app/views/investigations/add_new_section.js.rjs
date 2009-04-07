@@ -1,0 +1,20 @@
+page << <<JAVA_SCRIPT
+document.dialog = new UI.Window({
+    theme: 'rites',
+    shadow: true, 
+    width: 700,
+    modal: true,
+    resizable: false,
+    draggable: false,
+    id: 'modal_dialog',
+    height: 400
+  });
+document.dialog.center().setHeader('New Section');
+document.dialog.setContent("<div id='new_sect'>nothing-here</form>");
+document.dialog.show(true);
+
+JAVA_SCRIPT
+@section = Section.new
+page['new_sect'].update(render :layout => false, :partial => 'sections/remote_form', :locals => {
+    :section => @section, 
+    :investigation=> @investigation})
