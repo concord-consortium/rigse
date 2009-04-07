@@ -1,3 +1,0 @@
-page.visual_effect :highlight, 'investigation_sections_list'
-page.insert_html :bottom, 'investigation_sections_list', :partial => 'section_list_item', :locals => {:section => @section} 
-
