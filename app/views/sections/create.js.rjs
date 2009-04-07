@@ -5,3 +5,4 @@ page.insert_html :bottom, 'investigation_sections_list', render(:partial => 'inv
 page.insert_html :bottom, 'section_tabs', "<li id=#{dom_id_for(@section, :tab)} class='tab'>#{link_to @section.name, section_url(@section)}</li>"
 page.visual_effect :highlight, 'investigation_sections_list'
 page.visual_effect :highlight, 'section_tabs'
+page.sortable :investigation_sections_list, :url=> {:controller => 'investigations', :action => 'sort_sections', :params => {:id => @section.investigation_id}}
