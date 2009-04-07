@@ -45,6 +45,11 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :page_elements
 
+  map.resources :investigations, :member => {
+    :add_new_section => :post,
+    :sort_sections => :post,
+    :delete_section => :post,
+  }
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
       section.resources :pages do |page|
@@ -53,11 +58,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
-  map.resources :investigations, :member => {
-    :add_section => :post,
-    :sort_sections => :post,
-    :delete_section => :post,
-  }
+
   
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
