@@ -1,0 +1,16 @@
+.action_menu
+  .action_menu_header_left
+    %ul
+      %li
+        = section.name
+        - if RAILS_ENV == "development"
+          =" :[#{section.id}]"
+  .action_menu_header_right
+    %ul
+      %li
+        = toggle_more(section)
+      %li
+        = edit_button_for(section)      
+      %li
+        = delete_button_for(section)
+
