@@ -1,5 +1,5 @@
 - remote_form_for(data_collector, :update => dom_id_for(data_collector, :item)) do |f|
-  = edit_menu_for_component(data_collector, f)
+  = edit_menu_for(data_collector, f)
   .content
     %p
       - field_set_tag 'Y axis' do

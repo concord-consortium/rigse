@@ -1,6 +1,5 @@
 module ApplicationHelper
-  
-  
+
   def display_repo_info
     if repo = Grit::Repo.new(".")
       last_commit = repo.commits.first
@@ -20,7 +19,7 @@ module ApplicationHelper
     @page_title = str
     content_tag(container, str) if container
   end
-  
+
   # Outputs the corresponding flash message if any are set
   def flash_messages
     messages = []
@@ -29,7 +28,7 @@ module ApplicationHelper
     end
     messages
   end
-  
+
   # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
   def check_box_tag_new(name, value = "1", options = {})
     html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
@@ -38,23 +37,23 @@ module ApplicationHelper
     end
     tag :input, html_options
   end
-    
-    def pdf_footer(message)
-      pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
-        pdf.stroke_horizontal_rule
-        pdf.pad(10) do
-          pdf.text message, :size => 16
-        end
-      end      
+
+  def pdf_footer(message)
+    pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
+      pdf.stroke_horizontal_rule
+      pdf.pad(10) do
+        pdf.text message, :size => 16
+      end
+    end
   end
-  
+
   def partial_for(component)
       # dynamically find the partial for the 
       class_name = component.class.name.underscore
       # return "#{class_name.pluralize}/sortable_#{class_name}"
       "#{class_name.pluralize}/#{class_name}"
   end
-  
+
   def render_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
@@ -64,7 +63,6 @@ module ApplicationHelper
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
-  
 
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
@@ -83,39 +81,40 @@ module ApplicationHelper
     id_string = component.id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
-  
+
   def dom_class_for(component)
     component.class.name.underscore
   end
-  
-  def edit_button_for_component(component, options={})
-    url      = options[:url]      || edit_url_for_component(component)
+
+  def edit_button_for(component, options={})
+    url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success] || nil
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
-  
+
   def delete_button_for_page_component(page, component)
+    page_element = page.element_for(component)
     link_to_remote('delete',  
       :confirm => "Delete #{component.class.human_name} named #{component.name}?", 
       :html => {:class => 'delete'}, 
       :url => { 
         :action => 'delete_element', 
-        :dom_id => dom_id_for(page.element_for(component)), 
-        :element_id => page.element_for(component).id }
+        :dom_id => dom_id_for(page_element), 
+        :element_id => page_element.id }
       )
   end
-  
-  def delete_button_for_page(page)
+
+  def delete_button_for(model)
     link_to('delete',  
-      :confirm => "Delete page named #{page.name}?", 
+      :confirm => "Delete  #{model.class.human_name} named #{model.name}?", 
       :html => {:class => 'delete'}, 
       :url => { :action => '' })
   end
-  
-  def edit_url_for_component(component)
+
+  def edit_url_for(component)
     { :controller => component.class.name.pluralize.underscore, 
       :action => :edit, 
       :id  => component.id }
@@ -128,8 +127,30 @@ module ApplicationHelper
       "#{component.name}"
     end
   end
-  
-  def edit_menu_for_component(component, form)
+
+  def edit_menu_for(component, form)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_tag :ul do
+            haml_tag :li, {:class => 'menu'} do
+              haml_concat name_for_component(component)
+            end
+          end
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag :ul do
+            haml_tag :li, {:class => 'menu'} do
+              haml_concat form.submit("Save")
+              haml_concat form.submit("Cancel")
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def show_menu_for(component)
     content_tag('div') do
       content_tag('ul', :class => 'menu') do
         list = content_tag('li', :class => 'menu') { name_for_component(component) }
@@ -140,7 +161,7 @@ module ApplicationHelper
     end
   end
 
-  def toggle_more(component,details_id = nil,label="show/hide")
+  def toggle_more(component, details_id=nil, label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
    
@@ -151,17 +172,20 @@ module ApplicationHelper
     
   end
 
-
   def render_view_bar_for(element)
-    render ('shared/item_menu', :element => element, :page =>element.page, :component => element.embeddable )
     # "this is render view bar for #{element}"
+    # content_for :delete_button do
+    #   delete_button_for_page_component(page, component)
+    # end
+    render :partial => 'shared/item_menu', :locals => { :element => element, :page => element.page, :component => element.embeddable }
   end
-  
+
   def render_edit_bar_for(element)
-    render_to_sting 'shared/item_menu', locals => {:element => element, :page =>element.page }
-    "this is render view bar for #{element}"
+    # "this is render edit bar for #{element}"
+    # content_for :delete_button do
+    #   delete_button_for_page_component(page, component)
+    # end
+    render :partial => 'shared/item_menu', :locals => { :element => element, :page => element.page, :component => element.embeddable }
   end
-  
-  
 
 end
