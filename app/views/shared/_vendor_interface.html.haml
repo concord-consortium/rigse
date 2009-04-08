@@ -1,19 +1,6 @@
-%ul
-  %li
-    = link_to_function "popup: simple", "new UI.Window({theme: 'mac_os_x', shadow: true, width: 200, height: 150}).center().setContent('Hello World!').show();"
-  %li
-    = link_to_function "popup: content", "new UI.Window({theme: 'mac_os_x', shadow: true, width: 600, height: 400}).center().setContent($('vendor_interface')).show();"
-  %li
-    = link_to_function "popup: dialog", "new UI.Dialog({theme: 'mac_os_x', shadow: true, width: 600, height: 400, buttons: UI.Dialog.okCancelButton}).center().setHeader('Vendor Interface').setContent($('vendor_interface')).show(true);"
-  %li
-    = edit_button_for_component(current_user, :url => interface_user_path(current_user), :update => 'vi_popup', :success => "new UI.Dialog({theme: 'mac_os_x', shadow: true, width: 600, height: 400, buttons: UI.Dialog.okCancelButton}).center().setHeader('Vendor Interface').setContent($('vi_popup')).show(true);")
-    #vi_popup
-  %li
-    =link_to "edit two", interface_user_path(current_user),  {:id=>"modal"}
-
 #vendor_interface
   %h4
-    = vendor_interface.name
+    = link_to vendor_interface.name, interface_user_path(current_user), { :id=>"modal" }
   %p
     = image_tag(vendor_interface.image, :class => "vi_image", :width => 120 )
   %p
