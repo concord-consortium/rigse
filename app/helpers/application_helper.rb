@@ -150,13 +150,22 @@ module ApplicationHelper
     end
   end
 
-  def show_menu_for(component)
-    content_tag('div') do
-      content_tag('ul', :class => 'menu') do
-        list = content_tag('li', :class => 'menu') { name_for_component(component) }
-        list << content_tag('li', :class => 'menu') { form.submit "Save" }
-        list << content_tag('li', :class => 'menu') { form.submit "Cancel" }
-        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
+  def show_menu_for(component, options={})
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_tag :ul do
+            haml_tag :li, {:class => 'menu'} do
+              haml_concat name_for_component(component)
+            end
+          end
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag :ul do
+            haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+          end
+        end
       end
     end
   end
