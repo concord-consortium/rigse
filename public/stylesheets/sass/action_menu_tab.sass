@@ -1,8 +1,7 @@
 @import app_colors.sass
-=action_menu_tab(!_color = #111, !_bg_color = #AAA, !_color_hover = white,!_bg_color_hover = black)
+=action_menu_tab(!_color = #111, !_bg_color = !rieps_content_text_color, !_color_hover = white,!_bg_color_hover = black)
   ul
     :margin 0
-      :bottom 0.25em
     :padding 0em
     :background-color = !_bg_color
     li
@@ -37,20 +36,31 @@
 
 
 .action_menu
-  :font-size 10px
-  :margin 0px
-    :bottom 2px
-  :background-color #AAA
-  :padding 1px
-  :height 2em
+  :font-size 12px
+  :margin 4px 0px 4px 0px
+  :padding 4px 0px 4px 0px
+  :background-color = !rieps_content_text_color
   +clearfix
   .big
     :font-size 1.6em
+  .action_menu_header_left
+    :float left
+    :text-align left
+    +action_menu_tab
+    li
+      :font-size 14px
+      :font-weight bold
+  .action_menu_header_right
+    :float right
+    :text-align right
+    +action_menu_tab
   .action_menu_left
     :float left
+    :display table-cell
     +action_menu_tab
     :text-align left
   .action_menu_right
     :float right
+    :display table-cell
     :text-align right
     +action_menu_tab

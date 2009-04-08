@@ -95,6 +95,7 @@ fieldset
     :padding-left 10px
     :list-style-type circle
     :list-style-position inside
+    :margin 0 0 5px
     &.subsection_tabs
       :border-bottom 1px solid #CCCCCC
       :clear both
@@ -102,28 +103,42 @@ fieldset
       :list-style-image none
       :list-style-position outside
       :list-style-type none
-      :margin 0 0 5px
-      :padding 0
 
       li
         &.tab
           :float left
-          :margin-right 7px
+          :background url("tabs/left.gif") no-repeat left top      
+          :margin 2px 7px 2px 0px
+          :text-align center
+          a
+            :color #666666
+            :float left
+            :display block
+            :background url("tabs/right.gif")
+            :padding 0 6px
+
+            &:hover
+              :color #666666
+
+        &.tab.active
+          :float left
+          :background url("tabs/left_on.gif") no-repeat left top      
+          :margin 2px 7px 2px 0px
           :text-align center
 
           a
-            :background-color #FFFFFF
-            :color #666666
+            :color black
+            :float left
             :display block
-            :height 20px
+            :background url("tabs/right.gif")
             :padding 0 6px
-            :width 80px
 
             &:hover
               :color #666666
 
             &.active
-              :background-color #DDDDDD
+              :background-image url("tabs/right_on.gif")
+              
   
 #content_header
   +content_area_colors
