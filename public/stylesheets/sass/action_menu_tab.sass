@@ -36,7 +36,7 @@
 
 
 .action_menu
-  :font-size 12px
+  :font-size 11px
   :margin 4px 0px 4px 0px
   :padding 4px 0px 4px 0px
   :background-color = !rieps_content_text_color
@@ -64,3 +64,29 @@
     :display table-cell
     :text-align right
     +action_menu_tab
+    
+  ul.subsection_tabs
+    :list-style-image none
+    :list-style-position outside
+    :list-style-type none
+    :margin 0 10px 2px 0px
+    :padding 0px 10px
+    :border
+    li.tab
+      :float left
+      :background url("tabs/left.gif") no-repeat left top
+      :padding 0px 4px 0px 9px
+      :text-align center
+    li.active
+      :background url("tabs/left_on.gif") no-repeat left top !important
+    a
+      :float none
+      :display block
+      :background url("tabs/right.gif") no-repeat right top
+      :padding 0px
+    a.active
+      :background url("tabs/right_on.gif") no-repeat right top !important
+
+    a:hover
+      :text-decoration underline !important
+      :color = !rieps_brown !important
