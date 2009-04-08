@@ -1,9 +1,8 @@
 class XhtmlsController < ApplicationController
   # GET /xhtmls
   # GET /xhtmls.xml
-  def index
-    @xhtmls = Xhtml.find(:all)
-    @paginated_objects = @xhtmls
+  def index    
+    @xhtmls = Xhtml.search(params[:search], params[:page], self.current_user)
 
     respond_to do |format|
       format.html # index.html.erb
