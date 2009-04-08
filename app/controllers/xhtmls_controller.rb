@@ -82,7 +82,7 @@ class XhtmlsController < ApplicationController
     @xhtml = Xhtml.find(params[:id])
     if request.xhr?
       if cancel || @xhtml.update_attributes(params[:xhtml])
-        render :partial => 'xhtml', :locals => { :xhtml => @xhtml }
+        render :partial => 'show', :locals => { :xhtml => @xhtml }
       else
         render :xml => @xhtml.errors, :status => :unprocessable_entity
       end
