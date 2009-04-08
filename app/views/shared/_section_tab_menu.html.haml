@@ -1,15 +1,20 @@
 .action_menu
+  .action_menu_header_left
+    %ul
+      %li
+        Pages:
+  .action_menu_header_right
+    %ul
+      %li= link_to_remote 'add page', :url => add_page_section_path(section), :html => {:class=>'action'}
+
   .action_menu_left
     %ul.subsection_tabs
       - section.pages.each do |page|
-        %li.tab
-          - if @page && @page.id == page.id
+        - if @page && @page.id == page.id
+          %li.tab.active
             = link_to page.name, page_url(page), :class => "active"
-          -else
+        -else
+          %li.tab
             = link_to page.name, page_url(page)
   .action_menu_right
-    %ul
-      %li
-        = link_to_remote 'add page', :url => {:action => 'add_page', :params => {:id => @section.id}}, :html => {:class=>'action'}
-  
   

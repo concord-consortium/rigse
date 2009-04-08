@@ -1,8 +1,9 @@
 - content_for :pages_tabs do
   %ul.subsection_tabs
     - section.pages.each do |page|
-      %li.tab
-        - if @page && @page.id == page.id
+      - if @page && @page.id == page.id
+        %li.tab.active
           = link_to page.name, page_url(page), :class => "active"
-        -else
+      -else
+        %li.tab
           = link_to page.name, page_url(page)

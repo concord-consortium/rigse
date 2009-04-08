@@ -1,7 +1,7 @@
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @section.investigation }
 = render  :partial => 'shared/investigation_menu', :locals => { :investigation => @section.investigation }
 = render  :partial => 'shared/investigation_tab_menu', :locals => { :investigation => @section.investigation }
-= render  :partial => 'form'
+= render  :partial => 'shared/section_header', :locals => { :section => @section }
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @section }
 
 #investigation_sections_list.hidden

@@ -1,4 +1,7 @@
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
+= render  :partial => 'shared/investigation_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/investigation_tab_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
 .action_menu
   .action_menu_left
@@ -12,7 +15,7 @@
       %li
       %li=link_to_function 'Add Content'
       %li=link_to_function 'edit'
-      %li=delete_button_for_page(@page)
+      %li=delete_button_for(@page)
       
 
 %ul#elements_container.sortable.menu

@@ -1,12 +1,18 @@
 .action_menu
+  .action_menu_header_left
+    %ul
+      %li
+        Sections:
+  .action_menu_header_right
+    %ul
+      %li= link_to_remote 'add section', :url => add_section_investigation_path(investigation),:html => {:class=>'action'}
   .action_menu_left
     %ul#section_tabs.subsection_tabs
       - investigation.sections.each do |section|
-        %li{:id => dom_id_for(section, :tab), :class=>"tab"}
-          - if @section && @section.id == section.id
+        - if @section && @section.id == section.id
+          %li{:id => dom_id_for(section, :tab), :class=>"tab active"}
             = link_to section.name, section_url(section), :class => "active"
-          -else
+        -else
+          %li{:id => dom_id_for(section, :tab), :class=>"tab"}
             = link_to section.name, section_url(section)
   .action_menu_right
-    %ul
-      %li= link_to_remote 'add section', :url => {:controller=> 'investigations', :action=> 'add_new_section', :params => {:id => investigation.id}},:html => {:class=>'action'}
