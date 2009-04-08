@@ -111,6 +111,10 @@
 
       #main_content
         #content_header
+          #content_header_left
+            = yield :content_header_left
+          #content_header_right
+            = yield :content_header_right
         #main_content2
           = yield :layout
 
