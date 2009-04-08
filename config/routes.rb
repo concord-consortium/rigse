@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :page_elements
 
   map.resources :investigations, :member => {
-    :add_new_section => :post,
+    :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
   }
