@@ -2,4 +2,3 @@
   = open_response.prompt
   - field_set_tag 'Your Answer' do
     %input{:type => 'text', :value =>open_response.default_response, :size => 80, :id => dom_id_for(open_response, :item, :default_response_field)}
-= yield dom_id_for(open_response, :delete, :item)

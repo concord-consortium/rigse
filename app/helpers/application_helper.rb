@@ -47,19 +47,12 @@ module ApplicationHelper
     end
   end
 
-  def partial_for(component)
-      # dynamically find the partial for the 
-      class_name = component.class.name.underscore
-      # return "#{class_name.pluralize}/sortable_#{class_name}"
-      "#{class_name.pluralize}/#{class_name}"
-  end
-
-  def render_partial_for(component)
+  def render_show_partial_for(component)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
+    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
   end
 
-  def render_remote_form_for(component)
+  def render_edit_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
@@ -132,7 +125,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_tag :ul do
+          haml_tag :ul, :class => 'sections sortable' do
             haml_tag :li, {:class => 'menu'} do
               haml_concat name_for_component(component)
             end
@@ -140,10 +133,8 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul do
-            haml_tag :li, {:class => 'menu'} do
-              haml_concat form.submit("Save")
-              haml_concat form.submit("Cancel")
-            end
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
           end
         end
       end
@@ -154,7 +145,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_tag :ul do
+          haml_tag :ul, :class => 'sections sortable' do
             haml_tag :li, {:class => 'menu'} do
               haml_concat name_for_component(component)
             end
@@ -179,22 +170,6 @@ module ApplicationHelper
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
     
-  end
-
-  def render_view_bar_for(element)
-    # "this is render view bar for #{element}"
-    # content_for :delete_button do
-    #   delete_button_for_page_component(page, component)
-    # end
-    render :partial => 'shared/item_menu', :locals => { :element => element, :page => element.page, :component => element.embeddable }
-  end
-
-  def render_edit_bar_for(element)
-    # "this is render edit bar for #{element}"
-    # content_for :delete_button do
-    #   delete_button_for_page_component(page, component)
-    # end
-    render :partial => 'shared/item_menu', :locals => { :element => element, :page => element.page, :component => element.embeddable }
   end
 
 end

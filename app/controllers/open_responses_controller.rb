@@ -82,7 +82,7 @@ class OpenResponsesController < ApplicationController
     @open_response = OpenResponse.find(params[:id])
     if request.xhr?
       if cancel || @open_response.update_attributes(params[:open_response])
-        render :partial => 'open_response', :locals => { :open_response => @open_response }
+        render :partial => 'show', :locals => { :open_response => @open_response }
       else
         render :xml => @open_response.errors, :status => :unprocessable_entity
       end
