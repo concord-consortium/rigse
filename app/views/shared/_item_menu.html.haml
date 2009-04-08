@@ -1,12 +1,11 @@
 .action_menu
-  .action_menu_left
+  .action_menu_header_left
     %ul#sections.sortable
       %li
         = component.name
         - if RAILS_ENV == "development"
           =" :[#{component.id}]"
-  .action_menu_right
-    - x = { :a => 123 }
+  .action_menu_header_right
     %ul
       %li
         = toggle_more(component)
