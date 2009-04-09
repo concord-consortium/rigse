@@ -1,5 +1,5 @@
 - content_for :pages_tabs do
-  %ul.subsection_tabs
+  %ul#pages_actions.subsection_tabs
     - section.pages.each do |page|
       - if @page && @page.id == page.id
         %li.tab.active
