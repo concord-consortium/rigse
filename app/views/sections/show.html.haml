@@ -7,7 +7,9 @@
 #investigation_sections_list.hidden
   nothing here.
   
-%ol#section_pages_list.sortable.menu
+  
+%ul#section_pages_list.sortable.menu
   - @section.pages.each do |page|
     = render :partial => 'page_list_item', :locals => {:page => page} 
-    = sortable_element :section_pages_list, :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:id => @section.id }}
+
+= sortable_element :section_pages_list,:url=> {:action => 'sort_pages', :params => {:id => @section.id }}
