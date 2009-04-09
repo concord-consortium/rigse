@@ -63,6 +63,9 @@ class InvestigationsController < ApplicationController
   # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :investigation => @investigation }
+    end
   end
 
   # POST /pages
@@ -85,16 +88,24 @@ class InvestigationsController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
+    cancel = params[:commit] == "Cancel"
     @investigation = Investigation.find(params[:id])
-
-    respond_to do |format|
-      if @investigation.update_attributes(params[:investigation])
-        flash[:notice] = 'Investigation was successfully updated.'
-        format.html { redirect_to(@investigation) }
-        format.xml  { head :ok }
+    if request.xhr?
+      if cancel || @investigation.update_attributes(params[:investigation])
+        render :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @investigation.errors, :status => :unprocessable_entity }
+        render :xml => @investigation.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @investigation.update_attributes(params[:investigation])
+          flash[:notice] = 'Investigation was successfully updated.'
+          format.html { redirect_to(@investigation) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @investigation.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

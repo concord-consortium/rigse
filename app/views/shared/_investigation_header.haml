@@ -1,4 +1,4 @@
-.action_menu
+%div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu_header_left
     %ul
       %li= name_for_component(investigation)
@@ -7,7 +7,7 @@
       %li
         = toggle_more(investigation,"sections_actions", "show/hide sections")
       %li
-        = toggle_more(investigation, dom_id_for(investigation, :meta), 'edit')
+        = edit_button_for(investigation, :complete => mce_init_string())
       %li{:class => 'delete'}
         delete
 %div{:id => dom_id_for(investigation, :meta), :style=>"display: none;"}
