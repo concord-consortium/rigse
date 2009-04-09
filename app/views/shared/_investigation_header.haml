@@ -1,0 +1,16 @@
+.action_menu
+  .action_menu_left
+    %ul#sections.sortable.big
+      = link_to investigation.name, investigation
+      - if RAILS_ENV == "development"
+        =" :[#{investigation.id}]"
+  .action_menu_right
+    %ul
+      %li
+        = toggle_more(investigation,"sections_actions", "show/hide sections")
+      %li
+        = toggle_more(investigation, dom_id_for(investigation, :meta), 'edit')
+      %li{:class => 'delete'}
+        delete
+%div{:id => dom_id_for(investigation, :meta), :style=>"display: none;"}
+  = render :partial => "investigations/remote_form", :locals => {:investigation => investigation}
