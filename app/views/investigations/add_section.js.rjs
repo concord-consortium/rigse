@@ -2,16 +2,17 @@ page << <<JAVA_SCRIPT
 document.dialog = new UI.Window({
     theme: 'rites',
     shadow: true, 
-    width: 700,
+    width: 800,
     modal: true,
-    resizable: false,
-    draggable: false,
+    resizable: true,
+    draggable: true,
     id: 'modal_dialog',
     height: 400
   });
 document.dialog.center().setHeader('New Section');
 document.dialog.setContent("<div id='new_sect'>nothing-here</form>");
 document.dialog.show(true);
+document.dialog.focus(true);
 
 JAVA_SCRIPT
 @section = Section.new

@@ -1,7 +1,9 @@
 - remote_form_for(page) do |f|
   = f.hidden_field :section_id, :value => page.section.id
   - field_set_tag 'name' do
-    = f.text_field :name, :id => dom_id_for(page, :modal, :name_field)
+    = f.text_field :name, :id => :name_field)
   - field_set_tag 'description' do
-    = f.text_area :description, :id => dom_id_for(page, :modal, :textarea), :class => 'tinymce_textarea'
+    = f.text_area :description, :id => :description), :class => 'tinymce_textarea'
   =submit_tag "save"
+  
+= javascript_tag("$('name_field').activate();");
