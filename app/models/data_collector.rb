@@ -19,6 +19,14 @@ class DataCollector < ActiveRecord::Base
     end
   end
 
+  def y_axis_title
+    "#{self.y_axis_label} (#{self.y_axis_units})"
+  end
+
+  def x_axis_title
+    "#{self.x_axis_label} (#{self.x_axis_units})"
+  end
+
   default_value_for :name, "Data Collector"
   default_value_for :description, <<-HEREDOC
   A simple Data Collector graph.

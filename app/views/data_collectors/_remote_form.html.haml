@@ -1,15 +1,2 @@
 - remote_form_for(data_collector, :update => dom_id_for(data_collector, :item)) do |f|
-  = edit_menu_for(data_collector, f)
-  .content
-    %p
-      - field_set_tag 'Y axis' do
-        Y Max
-        = f.text_field :y_axis_max
-        %br
-        Y Min
-        = f.text_field :y_axis_min
-      - field_set_tag 'X axis' do
-        X Min
-        = f.text_field :x_axis_min
-        X Max
-        = f.text_field :x_axis_max
+  = render :partial => "data_collectors/form", :locals => { :data_collector => data_collector, :f => f  }
