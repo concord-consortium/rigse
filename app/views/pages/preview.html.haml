@@ -1,15 +1,14 @@
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
-= render  :partial => 'shared/investigation_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/investigation_header', :locals => { :investigation => @page.section.investigation }
 = render  :partial => 'shared/investigation_tab_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/section_header', :locals => { :section => @section }
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
 .action_menu
   .action_menu_left
     %ul#sections.sortable
       %li
-        = @page.name
-        - if RAILS_ENV == "development"
-          = ":[#{@page.id}]"
+        = name_for_component(@page)
   .action_menu_right
     %ul
       %li= link_to  toggle_link_title('edit', 'preview'), page_path(@page)

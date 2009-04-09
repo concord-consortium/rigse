@@ -2,9 +2,7 @@
   .action_menu_header_left
     %ul
       %li
-        = section.name
-        - if RAILS_ENV == "development"
-          =" :[#{section.id}]"
+        = name_for_component(section)
   .action_menu_header_right
     %ul
       %li

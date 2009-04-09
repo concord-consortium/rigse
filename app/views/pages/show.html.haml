@@ -5,12 +5,10 @@
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
 .action_menu
-  .action_menu_left
+  .action_menu_header_left
     %ul#sections.sortable
       %li
-        = @page.name
-        - if RAILS_ENV == "development"
-          = ":[#{@page.id}]"
+        = name_for_component(@page)
   .action_menu_right
     %ul
       %li
