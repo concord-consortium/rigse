@@ -170,6 +170,10 @@ module ApplicationHelper
     "<span class='toggle'><span class='current_state'>#{current_state}</span> &raquo; <span class='future_state'>#{future_state}</span></span>"
   end
 
+  def toggle_all(label, id_suffix='details_')
+    link_to_function(label, "$$('div[id^=#{id_suffix}]').each(function(d) { Effect.toggle(d,'blind', {duration:0.25}) });")
+  end
+
   def toggle_more(component, details_id=nil, label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
