@@ -403,7 +403,7 @@ Flotr.Graph = Class.create({
 				toolbarDownload: 'Download CSV', // @todo: add language support
 				toolbarSelectAll: 'Select all'
 			}
-		}
+		};
 		
 		options.x2axis = Object.extend(Object.clone(options.xaxis), options.x2axis);
 		options.y2axis = Object.extend(Object.clone(options.yaxis), options.y2axis);
@@ -594,7 +594,7 @@ Flotr.Graph = Class.create({
 				else {
 					var newRow = [];
 					newRow[0] = x;
-					newRow[i+1] = y
+					newRow[i+1] = y;
 					dg.push(newRow);
 				}
 			});
@@ -639,7 +639,7 @@ Flotr.Graph = Class.create({
 		this.tabs = {
 			graph: new Element('div', {className:'flotr-tab selected', style:'float:left;'}).update(this.options.spreadsheet.tabGraphLabel),
 			data: new Element('div', {className:'flotr-tab', style:'float:left;'}).update(this.options.spreadsheet.tabDataLabel)
-		}
+		};
 		
 		tabsContainer.insert(this.tabs.graph).insert(this.tabs.data);
 		
@@ -2229,6 +2229,8 @@ Flotr.Graph = Class.create({
 		
 		if(sw > 0){
 			slices.each(function (slice) {
+				if (slice.startAngle == slice.endAngle) return;
+				
 				var bisection = (slice.startAngle + slice.endAngle) / 2,
 				    xOffset = center.x + Math.cos(bisection) * slice.options.explode + sw,
 				    yOffset = center.y + Math.sin(bisection) * slice.options.explode + sw;
@@ -2246,6 +2248,8 @@ Flotr.Graph = Class.create({
 			html = ['<div style="color:' + this.options.grid.color + '" class="flotr-labels">'];
 		
 		slices.each(function (slice, index) {
+			if (slice.startAngle == slice.endAngle) return;
+			
 			var bisection = (slice.startAngle + slice.endAngle) / 2,
 			    color = slice.series.color,
 			    fillColor = slice.options.fillColor || color,
@@ -2489,7 +2493,7 @@ Flotr.Graph = Class.create({
 		var offset = this.overlay.cumulativeOffset(),
 			rx = (event.pageX - offset.left - this.plotOffset.left),
 			ry = (event.pageY - offset.top - this.plotOffset.top),
-			ax = 0, ay = 0
+			ax = 0, ay = 0;
 			
 		if(event.pageX == null && event.clientX != null){
 			var de = document.documentElement, b = document.body;
@@ -2901,21 +2905,21 @@ Flotr.Graph = Class.create({
 		if(n.mouse && n.mouse.track && !prevHit || (prevHit/* && (n.x != prevHit.x || n.y != prevHit.y)*/)){
 			var mt = this.mouseTrack || this.el.select(".flotr-mouse-value")[0],
 			    pos = '', 
-			    p = options.mouse.position, 
-			    m = options.mouse.margin,
+			    p = n.mouse.position, 
+			    m = n.mouse.margin,
 			    elStyle = 'opacity:0.7;background-color:#000;color:#fff;display:none;position:absolute;padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;';
 
-			if (!options.mouse.relative) { // absolute to the canvas
+			if (!n.mouse.relative) { // absolute to the canvas
 				     if(p.charAt(0) == 'n') pos += 'top:' + (m + plotOffset.top) + 'px;';
 				else if(p.charAt(0) == 's') pos += 'bottom:' + (m + plotOffset.bottom) + 'px;';					
 				     if(p.charAt(1) == 'e') pos += 'right:' + (m + plotOffset.right) + 'px;';
 				else if(p.charAt(1) == 'w') pos += 'left:' + (m + plotOffset.left) + 'px;';
 			}
 			else { // relative to the mouse
-			         if(p.charAt(0) == 'n') pos += 'bottom:' + (m - plotOffset.top - this.tVert(n.y) + this.canvasHeight) + 'px;';
-				else if(p.charAt(0) == 's') pos += 'top:' + (m + plotOffset.top + this.tVert(n.y)) + 'px;';
-				     if(p.charAt(1) == 'e') pos += 'left:' + (m + plotOffset.left + this.tHoz(n.x)) + 'px;';
-				else if(p.charAt(1) == 'w') pos += 'right:' + (m - plotOffset.left - this.tHoz(n.x) + this.canvasWidth) + 'px;';
+			         if(p.charAt(0) == 'n') pos += 'bottom:' + (m - plotOffset.top - this.tVert(n.y, n.ya) + this.canvasHeight) + 'px;';
+				else if(p.charAt(0) == 's') pos += 'top:' + (m + plotOffset.top + this.tVert(n.y, n.ya)) + 'px;';
+				     if(p.charAt(1) == 'e') pos += 'left:' + (m + plotOffset.left + this.tHoz(n.x, n.xa)) + 'px;';
+				else if(p.charAt(1) == 'w') pos += 'right:' + (m - plotOffset.left - this.tHoz(n.x, n.xa) + this.canvasWidth) + 'px;';
 			}
 			
 			elStyle += pos;

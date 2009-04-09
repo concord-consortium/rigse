@@ -678,7 +678,7 @@ if (!document.createElement('canvas').getContext) {
         ' weight="', lineWidth, 'px"',
         ' color="', color, '" />'
       );
-    } else if (typeof this.fillStyle == 'object') {
+    } else if (this.fillStyle instanceof CanvasGradient_) {
       var fillStyle = this.fillStyle;
       var angle = 0;
       var focus = {x: 0, y: 0};
@@ -755,6 +755,21 @@ if (!document.createElement('canvas').getContext) {
                    ' g_o_:opacity2="', opacity1, '"',
                    ' angle="', angle, '"',
                    ' focusposition="', focus.x, ',', focus.y, '" />');
+    } else if (this.fillStyle instanceof CanvasPattern_) {
+      var ws = max.x - min.x;
+      var hs = max.y - min.y;
+      if (ws && hs) {
+        var deltaLeft = -min.x;
+        var deltaTop = -min.y;
+        lineStr.push('<g_vml_:fill',
+                     ' position="',
+                     deltaLeft / ws * this.arcScaleX_ * this.arcScaleX_, ',',
+                     deltaTop / hs * this.arcScaleY_ * this.arcScaleY_, '"',
+                     ' type="tile"',
+                     // TODO: Figure out the correct size to fit the scale.
+                     //' size="', w, 'px ', h, 'px"',
+                     ' src="', this.fillStyle.src_, '" />');
+       }
     } else {
       lineStr.push('<g_vml_:fill color="', color, '" opacity="', opacity,
                    '" />');
@@ -797,6 +812,33 @@ if (!document.createElement('canvas').getContext) {
     this.m_ = this.mStack_.pop();
   };
 
+  function matrixIsFinite(m) {
+    for (var j = 0; j < 3; j++) {
+      for (var k = 0; k < 2; k++) {
+        if (!isFinite(m[j][k]) || isNaN(m[j][k])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function setM(ctx, m, updateLineScale) {
+    if (!matrixIsFinite(m)) {
+      return;
+    }
+    ctx.m_ = m;
+
+    if (updateLineScale) {
+      // Get the line scale.
+      // Determinant of this.m_ means how much the area is enlarged by the
+      // transformation. So its square root can be used as a scale factor
+      // for width.
+      var det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+      ctx.lineScale_ = sqrt(abs(det));
+    }
+  }
+
   contextPrototype.translate = function(aX, aY) {
     var m1 = [
       [1,  0,  0],
@@ -804,7 +846,7 @@ if (!document.createElement('canvas').getContext) {
       [aX, aY, 1]
     ];
 
-    this.m_ = matrixMultiply(m1, this.m_);
+    setM(this, matrixMultiply(m1, this.m_), false);
   };
 
   contextPrototype.rotate = function(aRot) {
@@ -817,7 +859,7 @@ if (!document.createElement('canvas').getContext) {
       [0,  0, 1]
     ];
 
-    this.m_ = matrixMultiply(m1, this.m_);
+    setM(this, matrixMultiply(m1, this.m_), false);
   };
 
   contextPrototype.scale = function(aX, aY) {
@@ -829,14 +871,27 @@ if (!document.createElement('canvas').getContext) {
       [0,  0,  1]
     ];
 
-    var m = this.m_ = matrixMultiply(m1, this.m_);
+    setM(this, matrixMultiply(m1, this.m_), true);
+  };
 
-    // Get the line scale.
-    // Determinant of this.m_ means how much the area is enlarged by the
-    // transformation. So its square root can be used as a scale factor
-    // for width.
-    var det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
-    this.lineScale_ = sqrt(abs(det));
+  contextPrototype.transform = function(m11, m12, m21, m22, dx, dy) {
+    var m1 = [
+      [m11, m12, 0],
+      [m21, m22, 0],
+      [dx,  dy,  1]
+    ];
+
+    setM(this, matrixMultiply(m1, this.m_), true);
+  };
+
+  contextPrototype.setTransform = function(m11, m12, m21, m22, dx, dy) {
+    var m = [
+      [m11, m12, 0],
+      [m21, m22, 0],
+      [dx,  dy,  1]
+    ];
+
+    setM(this, m, true);
   };
 
   /******** STUBS ********/
@@ -848,8 +903,8 @@ if (!document.createElement('canvas').getContext) {
     // TODO: Implement
   };
 
-  contextPrototype.createPattern = function() {
-    return new CanvasPattern_;
+  contextPrototype.createPattern = function(image, repetition) {
+    return new CanvasPattern_(image, repetition);
   };
 
   // Gradient / Pattern Stubs
@@ -871,13 +926,70 @@ if (!document.createElement('canvas').getContext) {
                        alpha: aColor.alpha});
   };
 
-  function CanvasPattern_() {}
+  function CanvasPattern_(image, repetition) {
+    assertImageIsValid(image);
+    switch (repetition) {
+      case 'repeat':
+      case null:
+      case '':
+        this.repetition_ = 'repeat';
+        break
+      case 'repeat-x':
+      case 'repeat-y':
+      case 'no-repeat':
+        this.repetition_ = repetition;
+        break;
+      default:
+        throwException('SYNTAX_ERR');
+    }
+
+    this.src_ = image.src;
+    this.width_ = image.width;
+    this.height_ = image.height;
+  }
+
+  function throwException(s) {
+    throw new DOMException_(s);
+  }
+
+  function assertImageIsValid(img) {
+    if (!img || img.nodeType != 1 || img.tagName != 'IMG') {
+      throwException('TYPE_MISMATCH_ERR');
+    }
+    if (img.readyState != 'complete') {
+      throwException('INVALID_STATE_ERR');
+    }
+  }
+
+  function DOMException_(s) {
+    this.code = this[s];
+    this.message = s +': DOM Exception ' + this.code;
+  };
+  var p = DOMException_.prototype = new Error;
+  p.INDEX_SIZE_ERR = 1;
+  p.DOMSTRING_SIZE_ERR = 2;
+  p.HIERARCHY_REQUEST_ERR = 3;
+  p.WRONG_DOCUMENT_ERR = 4;
+  p.INVALID_CHARACTER_ERR = 5;
+  p.NO_DATA_ALLOWED_ERR = 6;
+  p.NO_MODIFICATION_ALLOWED_ERR = 7;
+  p.NOT_FOUND_ERR = 8;
+  p.NOT_SUPPORTED_ERR = 9;
+  p.INUSE_ATTRIBUTE_ERR = 10;
+  p.INVALID_STATE_ERR = 11;
+  p.SYNTAX_ERR = 12;
+  p.INVALID_MODIFICATION_ERR = 13;
+  p.NAMESPACE_ERR = 14;
+  p.INVALID_ACCESS_ERR = 15;
+  p.VALIDATION_ERR = 16;
+  p.TYPE_MISMATCH_ERR = 17;
 
   // set up externs
   G_vmlCanvasManager = G_vmlCanvasManager_;
   CanvasRenderingContext2D = CanvasRenderingContext2D_;
   CanvasGradient = CanvasGradient_;
   CanvasPattern = CanvasPattern_;
+  DOMException = DOMException_;
 
 })();
 
