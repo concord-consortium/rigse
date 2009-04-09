@@ -5,10 +5,8 @@
     - content_tag :label do
       = text_field_tag :search, params[:search], :size => 30
     %input{ :type => "submit", :value => "Search"}
-    
 
-%p.paginator
-  = will_paginate @xhtmls
+%p= will_paginate @xhtmls
 
 - @xhtmls.each do |xhtml|
   %div{ :id => dom_id_for(xhtml, :item), :class => 'item' }
