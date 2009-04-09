@@ -52,6 +52,11 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
   end
 
+  def render_content_partial_for(component)
+    class_name = component.class.name.underscore
+    render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
+  end
+
   def render_edit_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
