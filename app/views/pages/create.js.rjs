@@ -1,0 +1,8 @@
+page << "document.dialog.close()"
+page.insert_html :bottom, 'section_pages_list', render(:partial => 'sections/page_list_item', :locals => {
+  :page => @page})
+page.visual_effect :highlight, 'section_pages_list'
+page.sortable :section_pages_list, :url=> {:controller => 'sections', :action => 'sort_pages', :params => {:id => @page.section_id}}
+
+page.insert_html :bottom, 'page_tabs', "<li id=#{dom_id_for(@page, :tab)} class='tab'>#{link_to @page.name, page_url(@page)}</li>"
+page.visual_effect :highlight, 'page_tabs'
