@@ -16,7 +16,7 @@
         :color = !_color
         :font-weight bold
         :text-decoration none
-        :padding 2px
+        :padding 2px 8px 0px 2px
         :background-color = !_bg_color
       a:hover
         :color = !_color_hover
@@ -38,7 +38,7 @@
 .action_menu
   :font-size 11px
   :margin 4px 0px 4px 0px
-  :padding 4px 0px 4px 0px
+  :padding 4px 0px 0px 0px
   :background-color = !rieps_content_text_color
   +clearfix
   .big
@@ -51,10 +51,16 @@
     li
       :font-size 14px
       :font-weight bold
+      :padding-top 6px
   .action_menu_header_right
     :float right
     :text-align right
     +action_menu_tab
+    ul
+      li
+        a, a:visited, a:active
+          :padding 2px 4px 0px 4px
+    
   .action_menu_left
     :float left
     :display table-cell
@@ -72,10 +78,12 @@
     :list-style-type none
     :margin 0 10px 2px 0px
     :padding 0px 10px
+    li
+      :margin-top 3px
     li.tab
       :float left
       :background url("tabs/left.gif") no-repeat left top
-      :padding 0px 4px 0px 9px
+      :padding 0px 8px 0px 8px
       :text-align center
     li.active
       :background url("tabs/left_on.gif") no-repeat left top !important
@@ -83,7 +91,7 @@
       :float none
       :display block
       :background url("tabs/right.gif") no-repeat right top
-      :padding 0px
+      :padding 0px 8px 0px 2px
     a.active
       :background url("tabs/right_on.gif") no-repeat right top !important
 

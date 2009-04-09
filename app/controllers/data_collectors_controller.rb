@@ -2,8 +2,7 @@ class DataCollectorsController < ApplicationController
   # GET /data_collectors
   # GET /data_collectors.xml
   def index
-    @data_collectors = DataCollector.find(:all)
-    @paginated_objects = @data_collectors
+    @data_collectors = DataCollector.search(params[:search], params[:page], self.current_user)
 
     respond_to do |format|
       format.html
@@ -89,7 +88,7 @@ class DataCollectorsController < ApplicationController
     @data_collector = DataCollector.find(params[:id])
     if request.xhr?
       if cancel || @data_collector.update_attributes(params[:data_collector])
-        render :partial => 'data_collector', :locals => { :data_collector => @data_collector }
+        render :partial => 'show', :locals => { :data_collector => @data_collector }
       else
         render :xml => @data_collector.errors, :status => :unprocessable_entity
       end
