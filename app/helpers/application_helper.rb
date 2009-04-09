@@ -166,6 +166,10 @@ module ApplicationHelper
     end
   end
 
+  def toggle_link_title(future_state, current_state)
+    "<span class='toggle'><span class='current_state'>#{current_state}</span> &raquo; <span class='future_state'>#{future_state}</span></span>"
+  end
+
   def toggle_more(component, details_id=nil, label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
@@ -174,7 +178,6 @@ module ApplicationHelper
       page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
-    
   end
 
 end

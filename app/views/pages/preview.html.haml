@@ -12,7 +12,7 @@
           = ":[#{@page.id}]"
   .action_menu_right
     %ul
-      %li= link_to 'show', page_path(@page)
+      %li= link_to  toggle_link_title('edit', 'preview'), page_path(@page)
 
       
 .item
