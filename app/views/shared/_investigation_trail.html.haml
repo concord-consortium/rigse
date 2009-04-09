@@ -1,17 +1,18 @@
 - investigation = @investigation ? @investigation : (@section ? @section.investigation : (@page ? @page.section.investigation : nil))
 - section = @section ? @section : (@page ? page.section : nil)
 - page = @page
-/ - content_for :content_header do
-%ul.menu_h.tiny
-  - if investigation
-    %li.trail.selected
-      &#x2192;
-      =link_to investigation.name, investigation_url(investigation), :class => "selected"
-  - if section
-    %li.trail.selected
-      &#x2192;
-      =link_to section.name, section_url(section), :class => "selected"
-  - if page
-    %li.trail.selected
-      &#x2192;
-      =link_to page.name, page_url(page), :class => "selected"
+
+- content_for :content_header_left do
+  %ul.menu_h.tiny
+    - if investigation
+      %li.trail.selected
+        &#x2192;
+        =link_to investigation.name, investigation_url(investigation), :class => "selected"
+    - if section
+      %li.trail.selected
+        &#x2192;
+        =link_to section.name, section_url(section), :class => "selected"
+    - if page
+      %li.trail.selected
+        &#x2192;
+        =link_to page.name, page_url(page), :class => "selected"
