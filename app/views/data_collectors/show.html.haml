@@ -1,2 +1,2 @@
-%div{ :id => "item_data_collector_#{@data_collector.id}", :class => 'item' }
-  = render :partial => 'data_collector'
+%div{ :id => dom_id_for(@data_collector, :item), :class => 'item' }
+  = render :partial => 'show', :locals => { :data_collector => @data_collector }

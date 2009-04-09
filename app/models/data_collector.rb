@@ -8,6 +8,16 @@ class DataCollector < ActiveRecord::Base
   acts_as_replicatable
   
   include Changeable
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{name description}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
 
   default_value_for :name, "Data Collector"
   default_value_for :description, <<-HEREDOC
