@@ -55,19 +55,36 @@ class SectionsController < ApplicationController
     end
   end
 
+  # GET /pages/1/edit
+  def edit
+    @section = Section.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :section => @section, :investigation => @section.investigation }
+    end
+  end
+  
   ##
   ##
   ##
   def update
     @section = Section.find(params[:id])
-    respond_to do |format|
-      if @section.update_attributes(params[:page])
-        flash[:notice] = 'Section was successfully updated.'
-        format.html { redirect_to(@section) }
-        format.xml  { head :ok }
+    cancel = params[:commit] == "Cancel"
+    if request.xhr?
+      if cancel || @section.update_attributes(params[:section])
+        render :partial => 'shared/section_header', :locals => { :section => @section }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
+        render :xml => @section.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @section.update_attributes(params[:page])
+          flash[:notice] = 'Section was successfully updated.'
+          format.html { redirect_to(@section) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

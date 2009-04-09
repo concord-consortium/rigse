@@ -128,10 +128,8 @@ class InvestigationsController < ApplicationController
   ##
   def add_section
     @section = Section.new
-    if (params['investigation_id']) 
-      @investigation = Investigation.find(params['investigation_id'])
-      @section.investigation = @investigation
-    end
+    @investigation = Investigation.find(params['id'])
+    @section.investigation = @investigation
   end
   
   ##

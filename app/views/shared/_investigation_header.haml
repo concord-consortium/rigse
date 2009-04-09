@@ -10,5 +10,3 @@
         = edit_button_for(investigation, :complete => mce_init_string())
       %li{:class => 'delete'}
         delete
-%div{:id => dom_id_for(investigation, :meta), :style=>"display: none;"}
-  = render :partial => "investigations/remote_form", :locals => {:investigation => investigation}
