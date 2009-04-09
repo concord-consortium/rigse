@@ -5,16 +5,16 @@
         Pages:
   .action_menu_header_right
     %ul
-      %li= link_to_remote 'add page', :url => add_page_section_path(section), :html => {:class=>'action'}
+      %li= link_to_remote 'add page', :complete => mce_init_string(), :url => add_page_section_path(section), :html => {:class=>'action'}
 
   .action_menu_left
-    %ul.subsection_tabs
+    %ul#page_tabs.subsection_tabs
       - section.pages.each do |page|
         - if @page && @page.id == page.id
-          %li.tab.active
+          %li{:id => dom_id_for(page, :tab), :class =>"tab active"}
             = link_to page.name, page_url(page), :class => "active"
         -else
-          %li.tab
+          %li{:id => dom_id_for(page, :tab), :class =>"tab"}
             = link_to page.name, page_url(page)
   .action_menu_right
   

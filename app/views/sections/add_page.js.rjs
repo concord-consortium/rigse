@@ -1,4 +1,18 @@
-page.visual_effect :highlight, 'section_pages_list'
-page.insert_html :bottom, 'section_pages_list', :partial => 'page_list_item', :locals => {:page => @page} 
+page << <<JAVA_SCRIPT
+document.dialog = new UI.Window({
+    theme: 'rites',
+    shadow: true, 
+    width: 700,
+    modal: true,
+    resizable: false,
+    draggable: false,
+    id: 'modal_dialog',
+    height: 400
+  });
+document.dialog.center().setHeader('New Page');
+document.dialog.setContent("<div id='new_page'>nothing-here</form>");
+document.dialog.show(true);
 
-# page.add "page_#{@page.id}"
+JAVA_SCRIPT
+@section = Section.new
+page['new_page'].update(render :layout => false, :partial => 'pages/remote_form', :locals => { :page => @page })
