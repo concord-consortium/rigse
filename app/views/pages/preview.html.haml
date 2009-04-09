@@ -1,0 +1,20 @@
+= render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
+= render  :partial => 'shared/investigation_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/investigation_tab_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
+
+.action_menu
+  .action_menu_left
+    %ul#sections.sortable
+      %li
+        = @page.name
+        - if RAILS_ENV == "development"
+          = ":[#{@page.id}]"
+  .action_menu_right
+    %ul
+      %li= link_to  toggle_link_title('edit', 'preview'), page_path(@page)
+
+      
+.item
+  - @page.page_elements.each do |element|
+    = render_content_partial_for(element.embeddable)

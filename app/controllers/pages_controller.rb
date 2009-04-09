@@ -25,6 +25,18 @@ class PagesController < ApplicationController
     end
   end
 
+  # GET /page/1
+  # GET /page/1.xml
+  def preview
+    @page = Page.find(params[:id], :include => :page_elements)
+    @section = @page.section
+    @page_elements = @page.page_elements
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @page }
+    end
+  end
+
   # GET /page/new
   # GET /page/new.xml
   def new
