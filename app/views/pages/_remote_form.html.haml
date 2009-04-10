@@ -2,7 +2,7 @@
   = edit_menu_for(page, f)
   = f.hidden_field :section_id, :value => page.section.id
   - field_set_tag 'name' do
-    = f.text_field :name, :id => 'name_field'
+    = f.text_field :name
   - field_set_tag 'description' do
     = f.text_area :description, :id => 'description_field', :class => 'tinymce_textarea'
   
