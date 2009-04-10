@@ -9,6 +9,7 @@ class Section < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  validates_presence_of :name, :on => :create, :message => "can't be blank"
   
   default_value_for :name, "name of section"
   default_value_for :description, "describe the purpose of this section here..."
