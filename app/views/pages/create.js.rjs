@@ -6,3 +6,7 @@ page.sortable :section_pages_list, :url=> {:controller => 'sections', :action =>
 
 page.insert_html :bottom, 'page_tabs', "<li id=#{dom_id_for(@page, :tab)} class='tab'>#{link_to @page.name, page_url(@page)}</li>"
 page.visual_effect :highlight, 'page_tabs'
+
+# this is new, try redirecting the user to the page they just created?
+page.redirect_to(url_for @page)
+
