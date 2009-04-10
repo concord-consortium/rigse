@@ -13,7 +13,5 @@
     %ul
       %li= link_to  toggle_link_title('edit', 'preview'), page_path(@page)
 
-      
 .item
-  - @page.page_elements.each do |element|
-    = render_content_partial_for(element.embeddable)
+  = render  :partial => 'preview', :locals => { :page => @page }
