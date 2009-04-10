@@ -4,6 +4,9 @@
 = render  :partial => 'shared/section_header', :locals => { :section => @section }
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
+/hack!  sometimes we need to update a div which lists all pages.
+#section_pages_list{:style=>"display: none;"}
+  =" "
 .action_menu
   .action_menu_header_left
     %ul#sections.sortable
