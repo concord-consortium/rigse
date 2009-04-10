@@ -4,9 +4,12 @@
 = render  :partial => 'shared/section_header', :locals => { :section => @section }
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
-/hack!  sometimes we need to update a div which lists all pages.
+/ hacks! Looking for a long term solution for this...
+#investigation_sections_list.hidden
+  nothing here.
 #section_pages_list{:style=>"display: none;"}
-  =" "
+  nothing here.
+  
 .action_menu
   .action_menu_header_left
     %ul
