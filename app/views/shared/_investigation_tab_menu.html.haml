@@ -10,11 +10,9 @@
     %ul#section_tabs.subsection_tabs
       - investigation.sections.each do |section|
         - if @section && @section.id == section.id
-          %li{:id => dom_id_for(section, :tab), :class=>"tab active"}
-            = link_to section.name, section_url(section), :class => "active"
+          = tab_for(section, :active => true)
         -else
-          %li{:id => dom_id_for(section, :tab), :class=>"tab"}
-            = link_to section.name, section_url(section)
+          = tab_for(section)
     = sortable_element :section_tabs, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> sort_sections_investigation_path(investigation)
     
   .action_menu_right

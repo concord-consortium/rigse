@@ -11,10 +11,8 @@
     %ul#page_tabs.subsection_tabs
       - section.pages.each do |page|
         - if @page && @page.id == page.id
-          %li{:id => dom_id_for(page, :tab), :class =>"tab active"}
-            = link_to page.name, page_url(page), :class => "active"
-        -else
-          %li{:id => dom_id_for(page, :tab), :class =>"tab"}
-            = link_to page.name, page_url(page)
+          = tab_for(page, :active => true)
+        - else
+          = tab_for(page)
   .action_menu_right
   
