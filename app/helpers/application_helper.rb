@@ -89,27 +89,17 @@ module ApplicationHelper
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
-    success  = options[:success] || nil
+    success  = options[:success]  || nil
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
 
-  def delete_button_for_page_component(page, component)
-    page_element = page.element_for(component)
-    link_to_remote('delete',  
-      :confirm => "Delete #{component.class.human_name} named #{component.name}?", 
-      :html => {:class => 'delete'}, 
-      :url => { 
-        :action => 'delete_element', 
-        :dom_id => dom_id_for(page_element), 
-        :element_id => page_element.id }
-      )
-  end
 
   def delete_button_for(model)
-    link_to('delete',  
+    controller = "#{model.class.name.pluralize.underscore}"
+    link_to_remote('delete',  
       :confirm => "Delete  #{model.class.human_name} named #{model.name}?", 
       :html => {:class => 'delete'}, 
-      :url => { :action => '' })
+      :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
   end
 
   def edit_url_for(component)
@@ -118,6 +108,7 @@ module ApplicationHelper
       :id  => component.id }
   end
 
+  
   def name_for_component(component)
     if component.id.nil?
       return "new #{component.class.name.humanize}"
@@ -163,6 +154,7 @@ module ApplicationHelper
           haml_tag :ul do
             haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
           end
         end
       end
@@ -214,6 +206,7 @@ module ApplicationHelper
       :draggable  => true,
       :shadow     => true,
       :id         => 'modal_dialog',
+      :partial    => "#{component.class.name.pluralize.underscore}/remote_form",
       component.class.name.underscore.to_sym => component
     }
     options = defaults.merge(options)
@@ -225,10 +218,21 @@ module ApplicationHelper
       document.dialog.show(true);
       document.dialog.focus(true);
       JAVASCRIPT
-    remote_form = "#{component.class.name.pluralize.underscore}/remote_form"
-    page['_dynamic_content_'].update(render :layout => false, :partial => remote_form, :locals => options);
+    page['_dynamic_content_'].update(render :layout => false, :partial => options[:partial], :locals => options);
   end
   
+  def tab_for(component, options={})
+    if(options[:active])
+      "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
+    else
+      "<li id=#{dom_id_for(component, :tab)} class='tab'>#{link_to component.name, component}</li>"
+    end
+  end
   
+  def safe_js(page,dom_id)
+    page << "if ($('#{dom_id}')) {"
+    yield
+    page << "}" 
+  end
   
 end
