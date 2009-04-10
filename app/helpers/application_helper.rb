@@ -119,6 +119,9 @@ module ApplicationHelper
   end
 
   def name_for_component(component)
+    if component.id.nil?
+      return "new #{component.class.name.humanize}"
+    end
     if RAILS_ENV == "development"
       "#{component.id}: #{component.name}" 
     else
