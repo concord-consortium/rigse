@@ -1,11 +1,11 @@
 %li{:id => dom_id_for(page, :container), :class => 'menu' }
   %div{ :id => dom_id_for(page, :item), :class => 'item' }
     %div.action_menu
-      %div.action_menu_left   
+      %div.action_menu_header_left   
         %ul.menu
           %li
             =link_to name_for_component(page), page
-      %div.action_menu_right   
+      %div.action_menu_header_right   
         %ul.menu
           %li.menu=toggle_more page
           %li.menu=link_to_remote 'delete', :url => { :controller => 'sections', :action => 'delete_page', :params => {:id=>page.section.id, :page_id => page.id}}, :html => {:class=>"delete"}
