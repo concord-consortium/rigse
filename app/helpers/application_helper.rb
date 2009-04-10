@@ -190,4 +190,45 @@ module ApplicationHelper
   def mce_init_string
     'tinyMCE.init({mode:"textareas",theme:"advanced",theme_advanced_toolbar_location:"top",theme_advanced_buttons1:"justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,|,fontselect,fontsizeselect|,bullist,numlist,hr|,undo,redo,link,unlink,image",theme_advanced_toolbar_align:"left",theme_advanced_buttons2:"",theme_advanced_buttons:"",theme_advanced_statusbar_location:"bottom",theme_advanced_resizing:true});' 
   end
+  
+
+  def js_string_value(object)
+    case object
+      when Fixnum; return object
+      when TrueClass; return object
+      when FalseClass; return object
+    end
+    return "'#{object}'" # use single quotes
+  end
+  
+  
+  # Pass in investigation_id, or anything else you wanted in options
+  def modal_dialog_for(page, component, options={})
+    defaults = {
+      :name       => "new #{component.class.name.humanize}",
+      :theme      => 'rites',
+      :width      => 800,
+      :height     => 400,
+      :modal      => true,
+      :resizable  => true,
+      :draggable  => true,
+      :shadow     => true,
+      :id         => 'modal_dialog',
+      component.class.name.underscore.to_sym => component
+    }
+    options = defaults.merge(options)
+    options_string = (options.map { |k,v| "#{k.to_s}: #{js_string_value(v)}" }).join(", ")
+    page << "document.dialog = new UI.Window({#{options_string}});"
+    page << <<-JAVASCRIPT
+      document.dialog.center().setHeader('New Section');
+      document.dialog.setContent("<div id='_dynamic_content_'>empty</div>");
+      document.dialog.show(true);
+      document.dialog.focus(true);
+      JAVASCRIPT
+    remote_form = "#{component.class.name.pluralize.underscore}/remote_form"
+    page['_dynamic_content_'].update(render :layout => false, :partial => remote_form, :locals => options);
+  end
+  
+  
+  
 end

@@ -1,18 +1,1 @@
-page << <<JAVA_SCRIPT
-document.dialog = new UI.Window({
-    theme: 'rites',
-    shadow: true, 
-    width: 800,
-    modal: true,
-    resizable: true,
-    draggable: true,
-    id: 'modal_dialog',
-    height: 400
-  });
-document.dialog.center().setHeader('New Page');
-document.dialog.setContent("<div id='new_page'>nothing-here</form>");
-document.dialog.show(true);
-
-JAVA_SCRIPT
-@section = Section.new
-page['new_page'].update(render :layout => false, :partial => 'pages/remote_form', :locals => { :page => @page })
+modal_dialog_for(page, @page)
