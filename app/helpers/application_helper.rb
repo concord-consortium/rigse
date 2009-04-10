@@ -123,7 +123,7 @@ module ApplicationHelper
       return "new #{component.class.name.humanize}"
     end
     if RAILS_ENV == "development"
-      "#{component.id}: #{component.name}" 
+      "#{component.name} <span class='dev_note'>#{component.id}</span>" 
     else
       "#{component.name}"
     end
