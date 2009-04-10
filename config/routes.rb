@@ -14,22 +14,31 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :interactive_models, :multiple_choices
   
-  map.resources :xhtmls
+  map.resources :xhtmls, :member => {
+    :destroy => :post
+  }
+  
   # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
-  map.resources :open_responses
+  map.resources :open_responses => {
+    :destroy => :post
+  }
   # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
-  map.resources :data_collectors
+  map.resources :data_collectors => {
+    :destroy => :post
+  }
   # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
   
   map.resources :sections, :member => {
+    :destroy => :post,
     :add_page => :post,
     :sort_pages => :post, 
     :delete_page => :post
   }
     
   map.resources :pages, :member => {
+    :destroy => :post,
     :add_element => :post,
     :sort_elements => :post,
     :delete_element => :post,
