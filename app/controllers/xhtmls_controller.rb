@@ -103,11 +103,16 @@ class XhtmlsController < ApplicationController
   # DELETE /xhtmls/1.xml
   def destroy
     @xhtml = Xhtml.find(params[:id])
-    @xhtml.destroy
-
     respond_to do |format|
       format.html { redirect_to(xhtmls_url) }
       format.xml  { head :ok }
+      format.js
     end
+    
+    # TODO:  We should move this logic into the model!
+    @xhtml.page_elements.each do |pe|
+      pe.destroy
+    end
+    @xhtml.destroy    
   end
 end
