@@ -120,7 +120,7 @@ module ApplicationHelper
 
   def name_for_component(component)
     if RAILS_ENV == "development"
-      "#{component.id}: #{component.name}" 
+      "#{component.name} <span class='dev_note'>#{component.id}</span>" 
     else
       "#{component.name}"
     end
