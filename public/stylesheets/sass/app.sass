@@ -22,18 +22,23 @@ body
   
 h1 
   :padding-left 10px
+  :letter-spacing .2em
   :font 
     :size 1.7em
 h2
   :padding-left 10px
+  :letter-spacing .2em
   :font
     :size 1.5em
     :weight bold
+
 h3
   :padding-left 10px
+  :letter-spacing .2em
   :font
     :size 1.3em
     :weight normal
+
 h4
   :padding-left 10px
   :font
@@ -98,9 +103,9 @@ fieldset
   +column(!main_content_columns,true)
   :padding 0.5em 0em 0.7em
   #content_header_left
-    +column(10)
+    +column(12)
   #content_header_right
-    +column(10,true)
+    +column(8,true)
     :float right
     :text-align right
 
@@ -172,13 +177,18 @@ ul.menu
   :color = !dev_note_color
   
 .legend
-  :font-size 0.7em
-  :font-style italic
+  :font-size 0.8em
+  :letter-spacing 0.1em
   :color = !legend_color
+
+.component_title
+  :font-size 1em
+  :font-weight bold
 
 .item
   :padding 0.5em
   :margin 0em
+    :top 0.5em
     :bottom 0.5em
   :clear both
   :border
