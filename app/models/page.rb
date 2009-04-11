@@ -19,16 +19,17 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :name, "name of page"
   default_value_for :description, "describe the purpose of this page here..."
-  
-  after_create :add_xhtml
-  
-  def add_xhtml
-    if(self.page_elements.size < 1)
-      xhtml = Xhtml.create
-      xhtml.pages << self
-      xhtml.save
-    end
-  end
+
+  # 
+  # after_create :add_xhtml
+  # 
+  # def add_xhtml
+  #   if(self.page_elements.size < 1)
+  #     xhtml = Xhtml.create
+  #     xhtml.pages << self
+  #     xhtml.save
+  #   end
+  # end
   
   #
   # return element.id for the component passed in
