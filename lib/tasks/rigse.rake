@@ -289,7 +289,7 @@ HEREDOC
       researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
       member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
 
-      [admin_user, researcher_user, member_user].each do |user|
+      [admin_user, researcher_user, member_user, anonymous_user].each do |user|
         user = edit_user(user)
         user.save
         user.register!
@@ -298,6 +298,7 @@ HEREDOC
 
       admin_user.roles << admin_role 
       researcher_user.roles << researcher_role
+      member_user.roles << member_role
       
     end
 
