@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
+  validates_presence_of     :vendor_interface_id
+
   # Relationships
   has_and_belongs_to_many :roles
   has_many :investigations
@@ -45,12 +47,9 @@ class User < ActiveRecord::Base
   # we will lazy load the anonymous user later
   @@anonymous_user = nil 
  
-  # we need a default VendorInterface
-  default_value_for :vendor_interface do 
-        vendor_interface = VendorInterface.find_by_short_name('vernier_goio')
-  end
-   
- 
+  # we need a default VendorInterface, 6 = Vernier Go! IO
+  default_value_for :vendor_interface_id, 6
+
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
