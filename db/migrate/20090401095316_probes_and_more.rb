@@ -12,6 +12,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.float   :k2
       t.float   :k3
       t.string  :uuid
+      
+      t.timestamps
     end
 
     create_table :data_filters do |t|
@@ -24,6 +26,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.boolean :k2_active
       t.boolean :k3_active
       t.string  :uuid
+
+      t.timestamps
     end
 
     create_table :device_configs do |t|
@@ -31,8 +35,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.integer  :vendor_interface_id
       t.string   :config_string
       t.string   :uuid
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
      
     create_table :physical_units do |t|
@@ -45,6 +49,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.boolean :si
       t.boolean :base_unit
       t.string  :uuid
+
+      t.timestamps
     end
 
     create_table :probe_types do |t|
@@ -59,6 +65,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.float   :max
       t.float   :period
       t.string  :uuid
+
+      t.timestamps
     end
 
     create_table :vendor_interfaces do |t|
@@ -70,6 +78,8 @@ class ProbesAndMore < ActiveRecord::Migration
       t.string  :image
       t.string  :uuid
       t.integer :device_id
+
+      t.timestamps
     end
   end
 

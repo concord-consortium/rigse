@@ -2,16 +2,11 @@ class CreateInvestigations < ActiveRecord::Migration
   def self.up
     create_table :investigations do |t|
       t.integer :user_id
-      t.string :title
-      t.text :context
-      t.text :opportunities
-      t.text :objectives
-      t.text :procedures_opening
-      t.text :procedures_engagement
-      t.text :procedures_closure
-      t.text :assessment
-      t.text :reflection
       t.column :uuid, :string, :limit => 36
+
+      t.string :name
+      t.text   :description
+
       t.timestamps
     end    
   end

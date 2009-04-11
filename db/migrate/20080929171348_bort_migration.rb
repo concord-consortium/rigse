@@ -13,7 +13,6 @@ class BortMigration < ActiveRecord::Migration
     # Create Users Table
     create_table :users do |t|
       t.string :login, :limit => 40
-      t.string :identity_url      
       t.string :first_name, :limit => 100, :default => '', :null => true
       t.string :last_name, :limit => 100, :default => '', :null => true
       t.string :email, :limit => 100
