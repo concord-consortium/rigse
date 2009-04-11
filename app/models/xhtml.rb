@@ -17,9 +17,8 @@ class Xhtml < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "xhtml content"
+  default_value_for :name, "html content"
   default_value_for :description, "description ..."
-  default_value_for :content, <<-HEREDOC
-  <p>Xhtml content goes here ...</p>
-  HEREDOC
+  default_value_for :content, "<p>content goes here ...</p>"
+
 end
