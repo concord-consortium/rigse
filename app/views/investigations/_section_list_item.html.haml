@@ -2,9 +2,7 @@
   %div{ :id => dom_id_for(section, :item), :class => 'item movable' }
     %div.action_menu
       %div.action_menu_header_left   
-        %ul.menu
-          %li
-            =link_to name_for_component(section), section
+        =link_to name_for_component(section), section
       %div.action_menu_header_right   
         %ul.menu
           %li.menu=toggle_more section

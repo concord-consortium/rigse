@@ -1,0 +1,114 @@
+ActionController::Routing::Routes.draw do |map|
+  map.resources :vendor_interfaces
+
+  map.resources :probe_types
+
+  map.resources :physical_units
+
+  map.resources :device_configs
+
+  map.resources :data_filters
+
+  map.resources :calibrations
+
+
+  map.resources :interactive_models, :multiple_choices
+
+  map.resources :xhtmls, :member  
+  map.resources :xhtmls, :member => {
+    :destroy => :post
+  }
+  
+  # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+
+<<<<<<< HEAD:config/routes.rb
+  map.resources :open_responses, :member  => {
+=======
+  map.resources :open_responses
+  map.resources :open_responses => {
+>>>>>>> fixed routing ???:config/routes.rb
+    :destroy => :post
+  }
+  # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+
+<<<<<<< HEAD:config/routes.rb
+  map.resources :data_collectors, :member => {
+=======
+  map.resources :data_collectors
+  map.resources :data_collectors => {
+>>>>>>> fixed routing ???:config/routes.rb
+    :destroy => :post
+  }
+  # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
+  
+  map.resources :sections, :member => {
+    :destroy => :post,
+    :add_page => :post,
+    :sort_pages => :post, 
+    :delete_page => :post
+  }
+    
+  map.resources :pages, :member => {
+    :destroy => :post,
+    :add_element => :post,
+    :sort_elements => :post,
+    :delete_element => :post,
+    :preview => :get
+  }
+
+  # /pages/:id/add_element/:embeddable_type
+  # /pages/:id/:embeddable_type_controller
+  map.resources :pages do |page|
+    page.resources :xhtmls
+    page.resources :open_responses
+    page.resources :data_collectors
+  end
+  
+  map.resources :page_elements
+
+  map.resources :investigations, :member => {
+    :add_section => :post,
+    :sort_sections => :post,
+    :delete_section => :post,
+    :duplicate => :get
+  }
+  map.resources :investigations do |investigation|
+    investigation.resources :sections do |section|
+      section.resources :pages do |page|
+        page.resources :page_elements
+      end
+    end
+  end
+  
+
+  
+  map.resources :assessment_targets, :knowledge_statements, :domains
+  map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
+  map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
+
+  map.resources :images
+ 
+  # Restful Authentication Rewrites
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.register '/register', :controller => 'users', :action => 'create'
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
+  map.forgot_password '/forgot_password', :controller => 'passwords', :action => 'new'
+  map.change_password '/change_password/:reset_code', :controller => 'passwords', :action => 'reset'
+  map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
+  map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
+  
+  # Restful Authentication Resources
+  map.resources :users, :member => { :preferences => [:get, :put], :interface => :get }
+  map.resources :passwords
+  map.resource :session
+  
+  # Home Page
+  map.home '/home', :controller => 'home', :action => 'index'
+  map.root :controller => 'home', :action => 'index'
+
+  # Install the default routes as the lowest priority.
+  # map.connect ':controller/:action/:id'
+  # map.connect ':controller/:action/:id.:format'
+end
