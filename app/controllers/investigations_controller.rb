@@ -152,4 +152,14 @@ class InvestigationsController < ApplicationController
     @section.destroy
   end  
   
+  ##
+  ##
+  ##
+  def duplicate
+    @original = Investigation.find(params['id'])
+    @investigation = @original.clone
+    @investigation.save
+    redirect_to edit_investigation_url(@investigation)
+  end
+  
 end
