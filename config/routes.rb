@@ -59,6 +59,7 @@ ActionController::Routing::Routes.draw do |map|
     :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
+    :duplicate => :get
   }
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
