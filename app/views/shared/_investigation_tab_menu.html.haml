@@ -1,10 +1,8 @@
 #sections_actions.action_menu
   .action_menu_header_left
-    %ul
-      %li
-        Sections:
+    Sections:
   .action_menu_header_right
-    %ul
+    %ul.menu
       %li= link_to_remote 'add section', :complete => mce_init_string(), :url => add_section_investigation_path(investigation),:html => {:class=>'action'}
   .action_menu_left
     %ul#section_tabs.subsection_tabs
