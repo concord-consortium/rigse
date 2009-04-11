@@ -86,7 +86,7 @@
   id: 7
   display_precision: -2
   previous_user_id: 
-  min: -4.0
+  min: 0.0
   user_id: 
   step_size: 0.1
   ptype: 13
