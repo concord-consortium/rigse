@@ -7,12 +7,12 @@
     - if investigation
       %li.trail.selected
         &#x2192;
-        =link_to investigation.name, investigation_url(investigation), :class => "selected"
+        =link_to truncate(investigation.name,:length => 25), investigation_url(investigation), :class => "selected"
     - if section
       %li.trail.selected
         &#x2192;
-        =link_to section.name, section_url(section), :class => "selected"
+        =link_to truncate(section.name,:length => 20), section_url(section), :class => "selected"
     - if page
       %li.trail.selected
         &#x2192;
-        =link_to page.name, page_url(page), :class => "selected"
+        =link_to truncate(page.name, :length => 15), page_url(page), :class => "selected"

@@ -32,7 +32,7 @@
 
 .action_menu
   :font-size 11px
-  :margin 4px 0px 4px 0px
+  :margin 2px 0px 2px 0px
   :padding 4px 0px 0px 0px
   :background-color = !rieps_content_text_color
   :clear both
@@ -42,15 +42,13 @@
   .action_menu_header_left
     :float left
     :text-align left
+    :margin 0px
     :padding-left 10px
-    +action_menu_tab
-    li
-      :font-size 14px
-      :font-weight bold
-      :padding-top 6px
+    :font-size 14px
   .action_menu_header_right
     :float right
     :text-align right
+    :margin 0px
     :padding-right 10px
     +action_menu_tab
     ul
@@ -68,6 +66,11 @@
     :display table-cell
     :text-align right
     +action_menu_tab
+  
+  ul.menu
+    :list-style-image none
+    :list-style-position outside
+    :list-style-type none
     
   ul.subsection_tabs
     :list-style-image none
