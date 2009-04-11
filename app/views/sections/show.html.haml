@@ -4,10 +4,6 @@
 = render  :partial => 'shared/section_header', :locals => { :section => @section }
 = render  :partial => 'shared/section_tab_menu', :locals => { :section => @section }
 
-#investigation_sections_list.hidden
-  nothing here.
-  
-  
 %ul#section_pages_list.sortable.menu
   - @section.pages.each do |page|
     = render :partial => 'page_list_item', :locals => {:page => page} 
