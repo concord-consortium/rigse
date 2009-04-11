@@ -1,8 +1,6 @@
 #page_actions.action_menu
   .action_menu_header_left
-    %ul
-      %li
-        Pages:
+    %span.legend Pages:
   .action_menu_header_right
     %ul.menu
       %li= link_to_remote 'add page', :complete => mce_init_string(), :url => add_page_section_path(section), :html => {:class=>'action'}

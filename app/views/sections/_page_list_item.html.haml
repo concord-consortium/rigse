@@ -2,9 +2,7 @@
   %div{ :id => dom_id_for(page, :item), :class => 'item' }
     %div.action_menu
       %div.action_menu_header_left
-        %ul
-          %li
-            =link_to name_for_component(page), page
+        =link_to name_for_component(page), page
       %div.action_menu_header_right   
         %ul.menu
           %li.menu=toggle_more page

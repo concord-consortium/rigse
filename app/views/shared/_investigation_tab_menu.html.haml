@@ -1,6 +1,6 @@
 #sections_actions.action_menu
   .action_menu_header_left
-    Sections:
+    %span.legend Sections:
   .action_menu_header_right
     %ul.menu
       %li= link_to_remote 'add section', :complete => mce_init_string(), :url => add_section_investigation_path(investigation),:html => {:class=>'action'}
