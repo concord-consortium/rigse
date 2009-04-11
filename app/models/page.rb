@@ -12,22 +12,24 @@ class Page < ActiveRecord::Base
   acts_as_list
   
   include Changeable
-  
+  validates_presence_of :name, :on => :create, :message => "can't be blank"
+
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   
   default_value_for :position, 1;
-  default_value_for :name, "new page"
-  default_value_for :description, "describe the purpose of this page ..."
-  
-  after_create :add_xhtml
-  
-  def add_xhtml
-    if(self.page_elements.size < 1)
-      xhtml = Xhtml.create
-      xhtml.pages << self
-      xhtml.save
-    end
-  end
+  default_value_for :name, "name of page"
+  default_value_for :description, "describe the purpose of this page here..."
+
+  # 
+  # after_create :add_xhtml
+  # 
+  # def add_xhtml
+  #   if(self.page_elements.size < 1)
+  #     xhtml = Xhtml.create
+  #     xhtml.pages << self
+  #     xhtml.save
+  #   end
+  # end
   
   #
   # return element.id for the component passed in

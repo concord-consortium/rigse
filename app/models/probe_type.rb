@@ -3,7 +3,8 @@ class ProbeType < ActiveRecord::Base
   
   acts_as_replicatable
 
-  has_many :activities
+  has_many :activities, :class_name => "Itsi::Activity"
+
   belongs_to :user
   has_many :probes
   has_many :vendor_interfaces, :through => :probes
@@ -11,5 +12,6 @@ class ProbeType < ActiveRecord::Base
   has_many :calibrations
 
   before_create :generate_uuid
+
 
 end

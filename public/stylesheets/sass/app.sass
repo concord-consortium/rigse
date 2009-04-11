@@ -2,17 +2,16 @@
 @import app_colors.sass
 @import app_fonts.sass
 @import app_metrics.sass
+@import action_menu_tab.sass
 
 p
   :padding-left 10px
-ul
-  :padding-left 10px
-  :list-style-type circle
-  :list-style-position inside
+
 ol
   :padding-left 10px
   :list-style-type decimal
   :list-style-position inside
+
 
 body
   :padding-left 10px
@@ -72,6 +71,7 @@ fieldset
 #nav_top
   +column(24,true)
   +top_and_bottom_nav_colors
+  :overflow hidden
   :padding 0.5em
   #nav_top_left
     +column(6)
@@ -82,25 +82,21 @@ fieldset
 #left_nav
   +column(!left_nav_columns)
   +left_nav_colors
-  :font
-    :size 9pt
+  :overflow hidden
   :line-height 1.4em
-  .step_tree
-    :padding 
-      :left 0.5em 
-      :right 0.5em
-      
-    .selected
-      +nav_tree_selected
+  :font-size 10px
+
       
 #main_content
   +content_area_colors
   +column(!main_content_columns,true)
   :line-height 1.5em
+ 
+  
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.1em 0em 0.7em
+  :padding 0.5em 0em 0.7em
   #content_header_left
     +column(10)
   #content_header_right
@@ -108,8 +104,19 @@ fieldset
     :float right
     :text-align right
 
+#content_header2
+  +content_area_colors
+  +column(!main_content_columns,true)
+  :padding 0.5em 0em 0.7em
+  #content_header2_left
+    +column(10)
+  #content_header2_right
+    +column(10,true)
+    :float right
+    :text-align right
+
 #main_content2
-  :margin 1em 0.5em 1em 0.5em
+  :margin 2em 0.5em 1em 0.5em
 
 #footer
   +column(24,true)
@@ -128,6 +135,12 @@ ul.menu_h
   :list-style-position inside
   :margin 0em
   :padding 0em
+  .right
+    :float right
+    :text-align right
+  .left
+    :float left
+    :text-align left
   li
     :margin 0em
     :padding 0em
@@ -143,30 +156,45 @@ ul.menu
   :list-style-position inside
   :margin 0em
   :padding 0em
-  li.menu
-    :display inline
-    :padding 0em
-      :right 0.5em
-      :left 0.5em
-    a
-      :font-size 0.8em
-      :font-weight 100
+  :font-size 0.85em
+  :font-weight 100
+
+
+.toggle
+  .future_state
+    :font-size 1em
+  .current_state
+    :font-size 1.2em
+
+.dev_note
+  :font-size 0.7em
+  :font-style italic
+  :color = !dev_note_color
+  
+.legend
+  :font-size 0.7em
+  :font-style italic
+  :color = !legend_color
 
 .item
   :padding 0.5em
-  :margin 0.5em
+  :margin 0em
+    :bottom 0.5em
+  :clear both
   :border
     :width 1px
-    :style solid
-  :cursor move
+    :style dotted
   .content
-    :margin 0.5em
     :padding 0.5em
     :border
-      :width 1px
-      :style dotted
+      :width 0px
+      :style solid
+      :color #DDD
     :background-color white
 
+.draggable, .sortable, .movable
+  :cursor move
+  
 .hidden
   :display none
   
@@ -187,12 +215,11 @@ ul.menu_v
   :white-space nowrap
   :margin 0em
     :left 0.5em
-li.menu_v
-  :margin 0em
-    :left 0.5em
-  :display block
-  :white-space nowrap
-  :list-style-type none
+  li
+    :margin 0.5em 0em
+    :display block
+    :white-space nowrap
+    :list-style-type none
   
 li.tiny
   :margin 0em
@@ -207,12 +234,22 @@ li.tiny
 .data_collector
   :display block
   :width 600px
-  :height 250px
+  :height 400px
     
 .tinymce_textarea
-  :width 600px
+  :width 700px
+  :height 200px  
   :word-break break-all
 
 .tinymce_textarea_short
-  :width 600px
+  :width 680px
   :height 80px  
+  
+ul
+  :padding-left 10px
+  :list-style-type circle
+  :list-style-position inside
+  :margin 0 0 5px
+
+
+

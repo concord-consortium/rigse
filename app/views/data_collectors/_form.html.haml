@@ -1,0 +1,52 @@
+= edit_menu_for(data_collector, f)
+.content
+  %p
+    - field_set_tag 'Title' do
+      = f.text_field :title, :size => 60
+  %p
+    - field_set_tag 'Y axis' do
+      %ul.menu_h
+        %li
+          Label:
+          = f.text_field :y_axis_label, :size => 30
+        %li
+          Units:
+          = f.text_field :y_axis_units, :size => 10
+      %ul.menu_v
+        %li
+          Max
+          = f.text_field :y_axis_max, :size => 10
+        %li
+          Min
+          = f.text_field :y_axis_min, :size => 10
+    - field_set_tag 'X axis' do
+      %ul.menu_h
+        %li
+          Label:
+          = f.text_field :x_axis_label, :size => 30
+        %li
+          Units:
+          = f.text_field :x_axis_units, :size => 10
+        %p
+          %ul.menu_h
+            %li
+              X Min
+              = f.text_field :x_axis_min, :size => 10
+            %li
+              X Max
+              = f.text_field :x_axis_max, :size => 10
+  - field_set_tag 'Options' do
+    %ul.menu_h
+      %li
+        = f.label 'Draw markers'
+        = f.check_box :draw_marks
+      %li
+        = f.label 'Connect points'
+        = f.check_box :connect_points
+      %li
+        = f.label 'Autoscale enabled'
+        = f.check_box :autoscale_enabled
+      %li
+        = f.label 'Ruler Enabled'
+        = f.check_box :ruler_enabled
+      

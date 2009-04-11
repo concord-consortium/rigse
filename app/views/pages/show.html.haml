@@ -1,20 +1,31 @@
-= render  :partial => 'shared/investigation_side_menu', :locals => { :investigation => @page.section.investigation }
 = render  :partial => 'shared/investigation_trail', :locals => { :investigation => @page.section.investigation } 
+= render  :partial => 'shared/investigation_header', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/investigation_tab_menu', :locals => { :investigation => @page.section.investigation }
+= render  :partial => 'shared/section_header', :locals => { :section => @section }
+= render  :partial => 'shared/section_tab_menu', :locals => { :section => @page.section }
 
-
-%ul.menu 
-  Insert:
-  %li.menu=link_to_remote 'Text Area', :url => { :action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'Xhtml' }   
-  %li.menu=link_to_remote 'Open Response', :url => {:action => 'add_element',  :page_id => @page.id, :container => 'elements_container', :class_name => 'OpenResponse' }
-  %li.menu=link_to_remote 'Data Collector', :url => {:action => 'add_element', :page_id => @page.id, :container => 'elements_container', :class_name => 'DataCollector' }
+.action_menu
+  .action_menu_header_left
+    %ul
+      %li
+        = name_for_component(@page)
+  .action_menu_header_right
+    %ul.menu
+      %li= link_to_remote 'Add xhtml', :url => url_for(:action => 'add_element', :class_name => 'Xhtml', :page_id => @page.id),:html => {:class=>'action'}, :complete => 'tinyMCE.init({mode:"textareas",theme:"advanced",theme_advanced_toolbar_location:"top",theme_advanced_buttons1:"justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,|,fontselect,fontsizeselect|,bullist,numlist,hr|,undo,redo,link,unlink,image",theme_advanced_toolbar_align:"left",theme_advanced_buttons2:"",theme_advanced_buttons:"",theme_advanced_statusbar_location:"bottom",theme_advanced_resizing:true});' 
+      %li= link_to_remote 'Add Open Response', :url => url_for(:action => 'add_element', :class_name => 'OpenResponse', :page_id => @page.id),:html => {:class=>'action'}, :complete => 'tinyMCE.init({mode:"textareas",theme:"advanced",theme_advanced_toolbar_location:"top",theme_advanced_buttons1:"justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,|,fontselect,fontsizeselect|,bullist,numlist,hr|,undo,redo,link,unlink,image",theme_advanced_toolbar_align:"left",theme_advanced_buttons2:"",theme_advanced_buttons:"",theme_advanced_statusbar_location:"bottom",theme_advanced_resizing:true});' 
+      %li= link_to_function 'edit'
+      %li= delete_button_for(@page)
+      %li= toggle_all('show/hide all')
+      %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(@page)
+      
 
 %ul#elements_container.sortable.menu
 
-  - if @page.page_elements.size == 1
-    - element = @page.page_elements[0]
-    = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
-  -else 
-    - @page.page_elements.each_with_index do |element,i|
-      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
+  / - if @page.page_elements.size == 1
+  /   - element = @page.page_elements[0]
+  /   = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
+  / -else 
+  - @page.page_elements.each_with_index do |element,i|
+    = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
 
 =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }

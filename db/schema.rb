@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090401181253) do
+ActiveRecord::Schema.define(:version => 20090411011201) do
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(:version => 20090401181253) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
+    t.boolean  "is_template"
   end
 
   create_table "knowledge_statements", :force => true do |t|

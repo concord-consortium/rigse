@@ -1,6 +1,5 @@
 module ApplicationHelper
-  
-  
+
   def display_repo_info
     if repo = Grit::Repo.new(".")
       last_commit = repo.commits.first
@@ -20,7 +19,7 @@ module ApplicationHelper
     @page_title = str
     content_tag(container, str) if container
   end
-  
+
   # Outputs the corresponding flash message if any are set
   def flash_messages
     messages = []
@@ -29,7 +28,7 @@ module ApplicationHelper
     end
     messages
   end
-  
+
   # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
   def check_box_tag_new(name, value = "1", options = {})
     html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
@@ -38,33 +37,30 @@ module ApplicationHelper
     end
     tag :input, html_options
   end
-    
-    def pdf_footer(message)
-      pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
-        pdf.stroke_horizontal_rule
-        pdf.pad(10) do
-          pdf.text message, :size => 16
-        end
-      end      
+
+  def pdf_footer(message)
+    pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
+      pdf.stroke_horizontal_rule
+      pdf.pad(10) do
+        pdf.text message, :size => 16
+      end
+    end
   end
-  
-  def partial_for(component)
-      # dynamically find the partial for the 
-      class_name = component.class.name.underscore
-      # return "#{class_name.pluralize}/sortable_#{class_name}"
-      "#{class_name.pluralize}/#{class_name}"
+
+  def render_show_partial_for(component)
+    class_name = component.class.name.underscore
+    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
   end
-  
-  def render_partial_for(component)
+
+  def render_content_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
-  def render_remote_form_for(component)
+  def render_edit_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
-  
 
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
@@ -83,67 +79,97 @@ module ApplicationHelper
     id_string = component.id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
-  
+
   def dom_class_for(component)
     component.class.name.underscore
   end
-  
-  def edit_button_for_component(component, options={})
-    url      = options[:url]      || edit_url_for_component(component)
+
+  def edit_button_for(component, options={})
+    url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
-    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete)
+    success  = options[:success]  || nil
+    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
-  
-  def delete_button_for_page_component(page, component)
+
+
+  def delete_button_for(model)
+    controller = "#{model.class.name.pluralize.underscore}"
     link_to_remote('delete',  
-      :confirm => "Delete #{component.class.human_name} named #{component.name}?", 
+      :confirm => "Delete  #{model.class.human_name} named #{model.name}?", 
       :html => {:class => 'delete'}, 
-      :url => { 
-        :action => 'delete_element', 
-        :dom_id => dom_id_for(page.element_for(component)), 
-        :element_id => page.element_for(component).id }
-      )
+      :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
   end
-  
-  def edit_url_for_component(component)
+
+  def edit_url_for(component)
     { :controller => component.class.name.pluralize.underscore, 
       :action => :edit, 
       :id  => component.id }
   end
 
+  
   def name_for_component(component)
+    if component.id.nil?
+      return "new #{component.class.name.humanize}"
+    end
     if RAILS_ENV == "development"
-      "#{component.id}: #{component.name}" 
+      "#{component.name} <span class='dev_note'>#{component.id}</span>" 
     else
       "#{component.name}"
     end
   end
-  
-  def edit_menu_for_component(component, form)
-    content_tag('div') do
-      content_tag('ul', :class => 'menu') do
-        list = content_tag('li', :class => 'menu') { name_for_component(component) }
-        list << content_tag('li', :class => 'menu') { form.submit "Save" }
-        list << content_tag('li', :class => 'menu') { form.submit "Cancel" }
-        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
+
+  def edit_menu_for(component, form)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_tag :ul, :class => 'sections sortable' do
+            haml_tag :li, {:class => 'menu'} do
+              haml_concat name_for_component(component)
+            end
+          end
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag :ul do
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
+          end
+        end
       end
     end
   end
 
-  def show_menu_for_component(component, options={})
-    content_tag('div') do
-      content_tag('ul', :class => 'menu') do
-        list = content_tag('li',:class => 'menu') { name_for_component(component) }
-        list << content_tag('li',:class => 'menu') { toggle_more(component) }
-        list << content_tag('li',:class => 'menu') { edit_button_for_component(component, options) }
-        # list << content_tag('li') { yield dom_id_for(component, :delete, :item) }
+  def show_menu_for(component, options={})
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_tag :ul, :class => 'sections sortable' do
+            haml_tag :li, {:class => 'menu'} do
+              haml_concat name_for_component(component)
+            end
+          end
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag :ul do
+            haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
+          end
+        end
       end
     end
   end
-    
-  def toggle_more(component,details_id = nil,label="show/hide")
+
+  def toggle_link_title(future_state, current_state)
+    "<span class='toggle'><span class='current_state'>#{current_state}</span> &raquo; <span class='future_state'>#{future_state}</span></span>"
+  end
+
+  def toggle_all(label, id_suffix='details_')
+    link_to_function(label, "$$('div[id^=#{id_suffix}]').each(function(d) { Effect.toggle(d,'blind', {duration:0.25}) });")
+  end
+
+  def toggle_more(component, details_id=nil, label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
    
@@ -151,8 +177,62 @@ module ApplicationHelper
       page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
-    
   end
 
+  def mce_init_string
+    'tinyMCE.init({mode:"textareas",theme:"advanced",theme_advanced_toolbar_location:"top",theme_advanced_buttons1:"justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,|,fontselect,fontsizeselect|,bullist,numlist,hr|,undo,redo,link,unlink,image",theme_advanced_toolbar_align:"left",theme_advanced_buttons2:"",theme_advanced_buttons:"",theme_advanced_statusbar_location:"bottom",theme_advanced_resizing:true});' 
+  end
+  
 
+  def js_string_value(object)
+    case object
+      when Fixnum; return object
+      when TrueClass; return object
+      when FalseClass; return object
+    end
+    return "'#{object}'" # use single quotes
+  end
+  
+  
+  # Pass in investigation_id, or anything else you wanted in options
+  def modal_dialog_for(page, component, options={})
+    defaults = {
+      :name       => "new #{component.class.name.humanize}",
+      :theme      => 'rites',
+      :width      => 800,
+      :height     => 400,
+      :modal      => true,
+      :resizable  => true,
+      :draggable  => true,
+      :shadow     => true,
+      :id         => 'modal_dialog',
+      :partial    => "#{component.class.name.pluralize.underscore}/remote_form",
+      component.class.name.underscore.to_sym => component
+    }
+    options = defaults.merge(options)
+    options_string = (options.map { |k,v| "#{k.to_s}: #{js_string_value(v)}" }).join(", ")
+    page << "document.dialog = new UI.Window({#{options_string}});"
+    page << <<-JAVASCRIPT
+      document.dialog.center().setHeader('New Section');
+      document.dialog.setContent("<div id='_dynamic_content_'>empty</div>");
+      document.dialog.show(true);
+      document.dialog.focus(true);
+      JAVASCRIPT
+    page['_dynamic_content_'].update(render :layout => false, :partial => options[:partial], :locals => options);
+  end
+  
+  def tab_for(component, options={})
+    if(options[:active])
+      "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
+    else
+      "<li id=#{dom_id_for(component, :tab)} class='tab'>#{link_to component.name, component}</li>"
+    end
+  end
+  
+  def safe_js(page,dom_id)
+    page << "if ($('#{dom_id}')) {"
+    yield
+    page << "}" 
+  end
+  
 end

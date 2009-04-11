@@ -1,2 +1,3 @@
 page.visual_effect :highlight, 'section_pages_list'
 page.remove "item_page_#{@page.id}"
+page.remove dom_id_for(@page, :tab)

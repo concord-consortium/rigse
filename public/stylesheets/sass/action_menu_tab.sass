@@ -1,0 +1,97 @@
+@import app_colors.sass
+=action_menu_tab(!_color = #111, !_bg_color = !rieps_content_text_color, !_color_hover = white,!_bg_color_hover = black)
+  ul
+    :margin 0
+    :padding 0em
+    :background-color = !_bg_color
+    li
+      :display inline
+      :list-style-type none 
+      :background-color = !_bg_color
+      :padding 0px
+        :right 10px
+        
+      a, a:visited, a:active
+        :cursor pointer
+        :color = !_color
+        :font-weight bold
+        :text-decoration none
+        :padding 2px 8px 0px 2px
+        :background-color = !_bg_color
+      a:hover
+        :color = !_color_hover
+        :background-color = !_bg_color_hover
+
+    li.selected 
+      a, a:visited, a:active
+        :background-color blue
+        :color = white
+    li.label 
+      :font-weight bold
+
+
+.action_menu
+  :font-size 11px
+  :margin 4px 0px 4px 0px
+  :padding 4px 0px 0px 0px
+  :background-color = !rieps_content_text_color
+  :clear both
+  +clearfix
+  .big
+    :font-size 1.6em
+  .action_menu_header_left
+    :float left
+    :text-align left
+    :padding-left 10px
+    +action_menu_tab
+    li
+      :font-size 14px
+      :font-weight bold
+      :padding-top 6px
+  .action_menu_header_right
+    :float right
+    :text-align right
+    :padding-right 10px
+    +action_menu_tab
+    ul
+      li
+        a, a:visited, a:active
+          :padding 2px 4px 0px 4px
+    
+  .action_menu_left
+    :float left
+    :display table-cell
+    +action_menu_tab
+    :text-align left
+  .action_menu_right
+    :float right
+    :display table-cell
+    :text-align right
+    +action_menu_tab
+    
+  ul.subsection_tabs
+    :list-style-image none
+    :list-style-position outside
+    :list-style-type none
+    :margin 0 10px 2px 0px
+    :padding 0px 10px
+    li
+      :margin-top 3px
+    li.tab
+      :float left
+      :background url("tabs/left.gif") no-repeat left top
+      :padding 0px 8px 0px 8px
+      :text-align center
+    li.active
+      :background url("tabs/left_on.gif") no-repeat left top !important
+    a
+      :float none
+      :display block
+      :background url("tabs/right.gif") no-repeat right top
+      :padding 0px 8px 0px 2px
+    a.active
+      :background url("tabs/right_on.gif") no-repeat right top !important
+
+    a:hover
+      :text-decoration underline !important
+      :color = !rieps_brown !important

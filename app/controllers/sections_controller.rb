@@ -1,6 +1,6 @@
 class SectionsController < ApplicationController
   
-  before_filter :find_entities
+  before_filter :find_entities, :except => 'create'
   protected 
   
   def find_entities
@@ -45,31 +45,46 @@ class SectionsController < ApplicationController
   ##
   ##
   def create
+    @section = Section.create!(params[:section])
     respond_to do |format|
-      if @section.save
+      format.js
+      format.html { 
         flash[:notice] = 'Section was successfully created.'
-        format.html { redirect_to(@section) }
-        format.xml  { render :xml => @section, :status => :created, :location => @section }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
-      end
+        redirect_to(@section) }
+      format.xml  { render :xml => @section, :status => :created, :location => @section }
     end
   end
 
+  # GET /pages/1/edit
+  def edit
+    @section = Section.find(params[:id])
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :section => @section, :investigation => @section.investigation }
+    end
+  end
+  
   ##
   ##
   ##
   def update
     @section = Section.find(params[:id])
-    respond_to do |format|
-      if @section.update_attributes(params[:page])
-        flash[:notice] = 'Section was successfully updated.'
-        format.html { redirect_to(@section) }
-        format.xml  { head :ok }
+    cancel = params[:commit] == "Cancel"
+    if request.xhr?
+      if cancel || @section.update_attributes(params[:section])
+        render :partial => 'shared/section_header', :locals => { :section => @section }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
+        render :xml => @section.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @section.update_attributes(params[:page])
+          flash[:notice] = 'Section was successfully updated.'
+          format.html { redirect_to(@section) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
@@ -92,8 +107,10 @@ class SectionsController < ApplicationController
   ##
   def add_page
     @page= Page.new
-    @page.section = Section.find(params[:id])
-    @page.save
+    if (params['id']) 
+      @section = Section.find(params['id'])
+      @page.section = @section
+    end
   end
   
   ##

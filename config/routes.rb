@@ -14,27 +14,37 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :interactive_models, :multiple_choices
   
-  map.resources :xhtmls
+  map.resources :xhtmls, :member => {
+    :destroy => :post
+  }
+  
   # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
-  map.resources :open_responses
+  map.resources :open_responses, :member  => {
+    :destroy => :post
+  }
   # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
-  map.resources :data_collectors
+  map.resources :data_collectors, :member => {
+    :destroy => :post
+  }
   # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
   
   map.resources :sections, :member => {
+    :destroy => :post,
     :add_page => :post,
     :sort_pages => :post, 
     :delete_page => :post
   }
     
   map.resources :pages, :member => {
+    :destroy => :post,
     :add_element => :post,
     :sort_elements => :post,
-    :delete_element => :post
+    :delete_element => :post,
+    :preview => :get
   }
-  
+
   # /pages/:id/add_element/:embeddable_type
   # /pages/:id/:embeddable_type_controller
   map.resources :pages do |page|
@@ -45,6 +55,12 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :page_elements
 
+  map.resources :investigations, :member => {
+    :add_section => :post,
+    :sort_sections => :post,
+    :delete_section => :post,
+    :duplicate => :get
+  }
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
       section.resources :pages do |page|
@@ -53,11 +69,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
-  map.resources :investigations, :member => {
-    :add_section => :post,
-    :sort_sections => :post,
-    :delete_section => :post,
-  }
+
   
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
@@ -77,7 +89,7 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
   
   # Restful Authentication Resources
-  map.resources :users, :member => { :preferences => [:get, :put] }
+  map.resources :users, :member => { :preferences => [:get, :put], :interface => :get }
   map.resources :passwords
   map.resource :session
   

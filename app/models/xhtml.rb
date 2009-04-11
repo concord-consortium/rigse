@@ -7,9 +7,18 @@ class Xhtml < ActiveRecord::Base
 
   include Changeable
 
-  default_value_for :name, "xhtml content"
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{name description content}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+
+  default_value_for :name, "html content"
   default_value_for :description, "description ..."
-  default_value_for :content, <<-HEREDOC
-  <p>Xhtml content goes here ...</p>
-  HEREDOC
+  default_value_for :content, "<p>content goes here ...</p>"
+
 end

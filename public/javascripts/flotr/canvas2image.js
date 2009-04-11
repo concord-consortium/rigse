@@ -7,8 +7,9 @@
 var Canvas2Image = (function() {
 	// check if we have canvas support
 	var oCanvas = document.createElement("canvas"),
-		sc = String.fromCharCode
-	
+	    sc = String.fromCharCode,
+      strDownloadMime = "image/octet-stream",
+      bReplaceDownloadMime = false;
 	
 	// no canvas, bail out.
 	if (!oCanvas.getContext) {
@@ -21,8 +22,7 @@ var Canvas2Image = (function() {
 
 	var bHasImageData = !!(oCanvas.getContext("2d").getImageData),
 	    bHasDataURL = !!(oCanvas.toDataURL),
-		bHasBase64 = !!(window.btoa),
-		strDownloadMime = "image/octet-stream";
+	    bHasBase64 = !!(window.btoa);
 
 	// ok, we're good
 	var readCanvasData = function(oCanvas) {
@@ -50,7 +50,7 @@ var Canvas2Image = (function() {
 	var createBMP = function(oData) {
 		var strHeader = '',
 		    iWidth = oData.width,
-			iHeight = oData.height;
+		    iHeight = oData.height;
 
 		strHeader += 'BM';
 	
@@ -87,10 +87,10 @@ var Canvas2Image = (function() {
 		strHeader += sc(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // these bytes are not used
 	
 		var aImgData = oData.data,
-			strPixelData = "",
-			c, x, y = iHeight,
-			iOffsetX, iOffsetY, strPixelRow;
-			
+		    strPixelData = "",
+		    c, x, y = iHeight,
+		    iOffsetX, iOffsetY, strPixelRow;
+		
 		do {
 			iOffsetY = iWidth*(y-1)*4;
 			strPixelRow = "";
@@ -150,12 +150,13 @@ var Canvas2Image = (function() {
 			if (!bHasDataURL) return false;
 			
 			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight),
-			    strData = oScaledCanvas.toDataURL("image/png");
+          strMime = "image/png",
+			    strData = oScaledCanvas.toDataURL(strMime);
 				
 			if (bReturnImg) {
 				return makeImageObject(strData);
 			} else {
-				saveFile(strData.replace("image/png", strDownloadMime));
+				saveFile(bReplaceDownloadMime ? strData.replace(strMime, strDownloadMime) : strData);
 			}
 			return true;
 		},
@@ -165,7 +166,7 @@ var Canvas2Image = (function() {
 
 			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight),
 			    strMime = "image/jpeg",
-				strData = oScaledCanvas.toDataURL(strMime);
+			    strData = oScaledCanvas.toDataURL(strMime);
 	
 			// check if browser actually supports jpeg by looking for the mime type in the data uri. if not, return false
 			if (strData.indexOf(strMime) != 5) return false;
@@ -173,22 +174,23 @@ var Canvas2Image = (function() {
 			if (bReturnImg) {
 				return makeImageObject(strData);
 			} else {
-				saveFile(strData.replace(strMime, strDownloadMime));
+        saveFile(bReplaceDownloadMime ? strData.replace(strMime, strDownloadMime) : strData);
 			}
 			return true;
 		},
 
 		saveAsBMP : function(oCanvas, bReturnImg, iWidth, iHeight) {
-			if (!(bHasImageData && bHasBase64)) return false;
+			if (!(bHasDataURL && bHasImageData && bHasBase64)) return false;
 
 			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight),
+          strMime = "image/bmp",
 			    oData = readCanvasData(oScaledCanvas),
-				strImgData = createBMP(oData);
+			    strImgData = createBMP(oData);
 				
 			if (bReturnImg) {
-				return makeImageObject(makeDataURI(strImgData, "image/bmp"));
+				return makeImageObject(makeDataURI(strImgData, strMime));
 			} else {
-				saveFile(makeDataURI(strImgData, strDownloadMime));
+        saveFile(makeDataURI(strImgData, strMime));
 			}
 			return true;
 		}

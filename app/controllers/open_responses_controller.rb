@@ -82,7 +82,7 @@ class OpenResponsesController < ApplicationController
     @open_response = OpenResponse.find(params[:id])
     if request.xhr?
       if cancel || @open_response.update_attributes(params[:open_response])
-        render :partial => 'open_response', :locals => { :open_response => @open_response }
+        render :partial => 'show', :locals => { :open_response => @open_response }
       else
         render :xml => @open_response.errors, :status => :unprocessable_entity
       end
@@ -103,12 +103,17 @@ class OpenResponsesController < ApplicationController
   # DELETE /open_responses/1
   # DELETE /open_responses/1.xml
   def destroy
+    
     @open_response = OpenResponse.find(params[:id])
     @open_response.destroy
-
+    # TODO:  We should move this logic into the model!
+    @open_response.page_elements.each do |pe|
+      pe.destroy
+    end
     respond_to do |format|
       format.html { redirect_to(open_responses_url) }
       format.xml  { head :ok }
+      format.js
     end
   end
 end

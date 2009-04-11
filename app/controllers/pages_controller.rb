@@ -25,6 +25,18 @@ class PagesController < ApplicationController
     end
   end
 
+  # GET /page/1
+  # GET /page/1.xml
+  def preview
+    @page = Page.find(params[:id], :include => :page_elements)
+    @section = @page.section
+    @page_elements = @page.page_elements
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @page }
+    end
+  end
+
   # GET /page/new
   # GET /page/new.xml
   def new
@@ -41,11 +53,14 @@ class PagesController < ApplicationController
     @page_elements = @page.page_elements
   end
 
+  
   # POST /page
   # POST /page.xml
   def create
+    @page = Page.create(params[:page])
     respond_to do |format|
       if @page.save
+        format.js
         flash[:notice] = 'PageEmbedables was successfully created.'
         format.html { redirect_to(@page) }
         format.xml  { render :xml => @page, :status => :created, :location => @page }
@@ -106,32 +121,6 @@ class PagesController < ApplicationController
     # we will render page/add_element.js.rjs by default....
     # this rjs will include the appropriate html fragment
   end
-  
-  
-  ##
-  ## This is a remote_function (ajax) to be called with link_to_remote or similar. 
-  ## We expect parameters "page_id" and "closs_name"
-  ## optional parameter "container" tells us what DOM ID to add our results too...
-  ##
-  def edit_element
-    @dom_id = params['dom_id']
-    @element = PageElement.find(params['element_id'])
-    @element.destroy
-
-    @page= Page.find(params['page_id'])
-    @container = params['container'] || 'elements_container'
-
-    # dynamically instatiate the component based on its type.
-    @component = Kernel.const_get(params['class_name']).find
-    @component.pages << @page
-    @component.save
-    
-    # dynimically insert appropriate partial based on type.
-    @partial = partial_for(@component)
-
-    # we will render page/add_element.js.rjs by default....
-    # this rjs will include the appropriate html fragment
-  end
 
   ##
   ##
@@ -153,13 +142,5 @@ class PagesController < ApplicationController
     @element = PageElement.find(params['element_id'])
     @element.destroy
   end
-  
-  protected
-  def partial_for(element)
-      # dynimically find the partial for the 
-      class_name = element.class.name.underscore
-      return "#{class_name.pluralize}/sortable_#{class_name}"
-  end
-  
 
 end

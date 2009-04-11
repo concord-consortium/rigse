@@ -1,1 +1,3 @@
-page.remove @dom_id
+safe_js(page,@dom_id) do
+  page.remove @dom_id
+end

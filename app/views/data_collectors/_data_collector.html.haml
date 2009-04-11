@@ -1,16 +1,22 @@
-= show_menu_for_component(data_collector)
 %div{:id => dom_id_for(data_collector, :details), :class => 'content'}
   %div{:id => dom_id_for(data_collector, :graph), :class => 'data_collector'}
     :javascript
       Flotr.draw(
-        $('#{dom_id_for(data_collector,:graph)}'),[
-        {data: [ ],
-          label: 'Distance (m)',
-          lines: {show: true, fill: false},
-          points: {show: true}
-          }],{
+        $('#{dom_id_for(data_collector, :graph)}'),
+        [ { 
+            data: [ ],
+            label: '#{data_collector.y_axis_title}',
+            lines: {show: true, fill: false},
+            points: {show: true} 
+        } ],
+        { 
           legend: {show: true, max: #{data_collector.y_axis_max}},
-          xaxis: {min: #{data_collector.x_axis_min}, max: #{data_collector.x_axis_max}},
-          yaxis: {min: #{data_collector.y_axis_min}, max: #{data_collector.y_axis_max}}
+          title: '#{data_collector.title}',
+          xaxis: { min: '#{data_collector.x_axis_min}', 
+            max: '#{data_collector.x_axis_max}', 
+            title: '#{data_collector.x_axis_title }' },
+          yaxis: { min: '#{data_collector.y_axis_min}', 
+            max: '#{data_collector.y_axis_max}', 
+            title: '#{data_collector.x_axis_title }' }
         }
-        );
+      );

@@ -1,5 +1,4 @@
 *~
-*.css
 log/*.log
 tmp/**/*
 .DS_Store
@@ -16,3 +15,10 @@ public/stylesheets/app.css
 nbproject
 config/db_backup/
 
+public/stylesheets/app_colors.css
+public/stylesheets/app_fonts.css
+public/stylesheets/app_links.css
+public/stylesheets/app_metrics.css
+public/stylesheets/ie.css
+public/stylesheets/print.css
+public/stylesheets/action_menu_tab.css
