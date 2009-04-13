@@ -1,0 +1,13 @@
+- content_for(:content_header_left) do
+  = will_paginate @<%= plural_name %>
+- content_for(:content_header_right) do
+  - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+    - content_tag :label do
+      = text_field_tag :search, params[:search], :size => 30
+    %input{ :type => "submit", :value => "Search"}
+
+%p
+  = page_entries_info @<%= plural_name %>
+- @<%= plural_name %>.each do |<%= singular_name %>|
+  %div{ :id => dom_id_for(<%= singular_name %>, :item), :class => 'item' }
+    = render :partial => "show", :locals => { :<%= singular_name %> => <%= singular_name %> }

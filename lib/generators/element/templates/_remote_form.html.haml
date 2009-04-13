@@ -1,0 +1,7 @@
+- remote_form_for(<%= singular_name %>, :update => dom_id_for(<%= singular_name %>, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = edit_menu_for(<%= singular_name %>, f)
+  .content
+    - field_set_tag 'name' do
+      = f.text_field :name, :id => dom_id_for(<%= singular_name %>, :item, :name_field)
+    - field_set_tag 'content' do
+      = f.text_area :content, :id => dom_id_for(<%= singular_name %>, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
