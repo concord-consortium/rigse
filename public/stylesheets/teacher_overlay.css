@@ -1,0 +1,90 @@
+/*
+Sass::SyntaxError: Undefined mixin 'main_font'.
+on line 2 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/teacher_overlay.sass
+
+1: #teacher_bottom
+2:   +main_font
+3:   +top_and_bottom_nav_colors
+4:   :z-index 10
+5:   :display block
+6:   :width 100%
+7:   :text-align center
+8:   :position fixed
+
+
+Backtrace:
+/Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/teacher_overlay.sass:2
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/mixin_node.rb:14:in `_perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `map'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:60:in `perform!'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/rule_node.rb:138:in `perform!'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `map'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:60:in `perform!'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/engine.rb:104:in `render'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:75:in `update_stylesheet'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:60:in `update_stylesheets'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:55:in `each'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:55:in `update_stylesheets'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:53:in `each'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin.rb:53:in `update_stylesheets'
+/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/rails/../lib/sass/plugin/rails.rb:16:in `process'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/base.rb:391:in `process'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/base.rb:386:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/routing/route_set.rb:433:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:88:in `dispatch'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:111:in `_call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:82:in `initialize'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/head.rb:9:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/head.rb:9:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/methodoverride.rb:24:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/params_parser.rb:15:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/rewindable_input.rb:25:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/session/abstract_store.rb:122:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:29:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/connection_adapters/abstract/query_cache.rb:34:in `cache'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:9:in `cache'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:28:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/reloader.rb:9:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/failsafe.rb:11:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `synchronize'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:106:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/rails/rack/static.rb:31:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:46:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:40:in `each'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:40:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/rails/rack/log_tailer.rb:17:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/content_length.rb:13:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/chunked.rb:15:in `call'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/handler/mongrel.rb:61:in `process'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:159:in `process_client'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:158:in `each'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:158:in `process_client'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `run'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `initialize'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `new'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `run'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `initialize'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `new'
+/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `run'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/handler/mongrel.rb:34:in `run'
+/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/commands/server.rb:111
+/opt/local/lib/ruby/vendor_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/opt/local/lib/ruby/vendor_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+./script/server:3
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Sass::SyntaxError: Undefined mixin 'main_font'.\A on line 2 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/teacher_overlay.sass\A \A 1: #teacher_bottom\A 2:   +main_font\A 3:   +top_and_bottom_nav_colors\A 4:   :z-index 10\A 5:   :display block\A 6:   :width 100%\A 7:   :text-align center\A 8:   :position fixed\A "; }
