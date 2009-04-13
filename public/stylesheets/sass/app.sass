@@ -1,8 +1,10 @@
+@import compass/reset.sass
 @import blueprint.sass
 @import app_colors.sass
 @import app_fonts.sass
 @import app_metrics.sass
 @import action_menu_tab.sass
+@import teacher_overlay.sass
 
 p
   :padding-left 10px
@@ -14,10 +16,12 @@ ol
 
 
 body
-  :padding-left 10px
+  +reset
+  :padding 0px
   +main_font
   :background-color = !light_blue
   :margin 10px 
+    :bottom 0px
   // that's the blueprint default...
   
 h1 
