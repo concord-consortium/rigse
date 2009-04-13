@@ -1,4 +1,4 @@
-class Itsi::ModelType < Itsi::ItsiObject
+class Itsi::ModelType < Itsi::Itsi
   set_table_name "itsidiy_model_types"
   
   # self.extend SearchableModel
