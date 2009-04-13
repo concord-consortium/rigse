@@ -17,7 +17,7 @@ class Xhtml < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "html content"
+  default_value_for :name, "text content"
   default_value_for :description, "description ..."
   default_value_for :content, "<p>content goes here ...</p>"
 
