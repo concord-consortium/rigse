@@ -4,6 +4,7 @@
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(investigation,"sections_actions", "show/hide sections")
+      %li= link_to_remote 'add section', :complete => mce_init_string(), :url => add_section_investigation_path(investigation),:html => {:class=>'action'}
       %li= edit_button_for(investigation, :complete => mce_init_string())
       %li= link_to 'duplicate', duplicate_investigation_url(investigation)
       %li{:class => 'menu delete'}= delete_button_for(investigation)
