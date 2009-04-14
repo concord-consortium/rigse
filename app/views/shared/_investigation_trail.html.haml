@@ -2,17 +2,40 @@
 - section = @section ? @section : (@page ? page.section : nil)
 - page = @page
 
-- content_for :content_header_left do
-  %ul.menu_h.tiny
-    - if investigation
-      %li.trail.selected
-        &#x2192;
-        =link_to truncate(investigation.name,:length => 25), investigation_url(investigation), :class => "selected"
-    - if section
-      %li.trail.selected
-        &#x2192;
-        =link_to truncate(section.name,:length => 20), section_url(section), :class => "selected"
-    - if page
-      %li.trail.selected
-        &#x2192;
-        =link_to truncate(page.name, :length => 15), page_url(page), :class => "selected"
+- if investigation
+  #section_nav_menu.dropdown
+    %ul
+      - investigation.sections.each do |s|
+        = link_to s.name,url_for(s)
+
+- if section
+  #page_nav_menu.dropdown
+    %ul
+      - section.pages.each do |p|
+        = link_to p.name, url_for(p)
+
+
+%ul.menu_h
+  %li= link_to 'Home', home_path
+
+  - if investigation
+    %li.trail
+      &rsaquo;
+      =link_to truncate(investigation.name,:length => 25), investigation_url(investigation)
+    
+  - if section
+    %li.trail
+      &rsaquo;
+      - if (investigation.sections.size <2)
+        =link_to truncate(section.name,:length => 30), section_url(section)
+      - else
+        =dropdown_link_for(:text => truncate(section.name,:length => 20), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
+      
+  - if page
+    %li.trail
+      &rsaquo;
+      - if (section.pages.size <2)
+        =link_to truncate(page.name, :length => 25), page_url(page)
+      - else
+        =dropdown_link_for(:text => truncate(page.name, :length => 25), :id=> 'page_nav_dropdown', :content_id => 'page_nav_menu')
+
