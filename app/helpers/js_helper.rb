@@ -16,8 +16,15 @@ module JsHelper
     page << "}" 
   end
   
-  def dropdown_link_for(link_text="add content",menu_id='add_content',dropdown_id='dropdown')
-    return link_to link_text, "#", :onmouseover => "dropdown_for('#{menu_id}','#{dropdown_id}')", :id=>"#{menu_id}"
+  def dropdown_link_for(options ={})
+    defaults = {
+      :url        => "#",
+      :text       => 'add content',
+      :content_id => 'dropdown',
+      :id         => 'add_content'
+    }
+    options = defaults.merge(options)
+    return link_to options[:text], options[:url], :onmouseover => "dropdown_for('#{options[:id]}','#{options[:content_id]}')", :id=>options[:id]
   end
   
   
