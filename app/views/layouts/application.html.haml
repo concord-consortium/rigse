@@ -74,8 +74,7 @@
         #nav_top_left
           %span.hidden.doNotPrint
             Navigation:
-          %ul.menu_h
-            %li= link_to 'Home', home_path
+          = render :partial => 'shared/investigation_trail'
         #nav_top_right
           %ul.menu_h
             %li= link_to 'Investigations', investigations_path
@@ -131,23 +130,5 @@
     = link_to_function 'teacher-notes', visual_effect(:toggle_blind, 'some_data',:duration => 0.25)
     #some_data{:style=>"display: none;"}
       %pre
-      
-        this is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blahthis is some fake text
-        blah blah blah blah blah 
-        blah
+        %code
+          =ipsum(500)
