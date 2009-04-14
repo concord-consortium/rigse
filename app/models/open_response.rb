@@ -2,7 +2,8 @@ class OpenResponse < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  
+  has_many :teacher_notes, :as => :authored_entity
+
   acts_as_replicatable
 
   include Changeable

@@ -8,6 +8,8 @@ class Page < ActiveRecord::Base
   has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
   has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
   
+  has_many :teacher_notes, :as => :authored_entity
+  
   acts_as_replicatable
   acts_as_list
   

@@ -2,7 +2,8 @@ class Section < ActiveRecord::Base
   belongs_to :investigation
   belongs_to :user
   has_many :pages, :order => :position, :dependent => :destroy
-  
+  has_many :teacher_notes, :as => :authored_entity
+    
   acts_as_list :scope => :investigation_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
 
