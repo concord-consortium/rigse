@@ -1,0 +1,6 @@
+.content
+  = edit_menu_for(teacher_note, f)
+  - field_set_tag 'body' do
+    = f.text_field :body, :id => dom_id_for(teacher_note, :item, :body_field)
+  - field_set_tag 'domain' do
+    = domain_select(teacher_note)

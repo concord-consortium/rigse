@@ -1,0 +1,7 @@
+.content
+  - field_set_tag 'body' do
+    = @teacher_note.body
+  - field_set_tag 'domains' do
+    %ul
+      - @teacher_note.domains.each do |domain|
+        %li= domain.name

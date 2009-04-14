@@ -1,0 +1,8 @@
+%h1= "Editing Teacher Note #{teacher_note.id}"
+
+- form_for(@teacher_note) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => {:f => f, :teacher_note => @teacher_note}
+
+= link_to 'Back', teacher_notes_path
+= link_to 'Show', @teacher_note 

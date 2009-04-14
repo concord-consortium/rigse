@@ -1,0 +1,9 @@
+%h1 Listing teacher_notes
+%table
+- @teacher_notes.each do |teacher_note|
+  %tr
+    %td= link_to 'Show', teacher_note
+    %td= link_to 'edit', edit_teacher_note_path(teacher_note) 
+    %td= link_to 'Destroy', teacher_note, :confirm => 'Are you sure?', :method => :delete
+
+= link_to 'New teacher_note', new_teacher_note_path
