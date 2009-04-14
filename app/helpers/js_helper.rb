@@ -1,6 +1,5 @@
 module JsHelper
 
-
   def js_string_value(object)
     case object
       when Fixnum; return object
@@ -16,5 +15,10 @@ module JsHelper
     yield
     page << "}" 
   end
+  
+  def dropdown_link_for(link_text="add content",menu_id='add_content',dropdown_id='dropdown')
+    return link_to link_text, "#", :onmouseover => "dropdown_for('#{menu_id}','#{dropdown_id}')", :id=>"#{menu_id}"
+  end
+  
   
 end
