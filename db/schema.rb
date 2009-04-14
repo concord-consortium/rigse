@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090411011201) do
+ActiveRecord::Schema.define(:version => 20090414201002) do
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
@@ -297,6 +297,31 @@ ActiveRecord::Schema.define(:version => 20090411011201) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "teacher_notes", :force => true do |t|
+    t.text     "body"
+    t.text     "author"
+    t.string   "uuid",                 :limit => 36
+    t.integer  "authored_entity_id"
+    t.string   "authored_entity_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "teacher_notes_assessment_targets", :force => true do |t|
+    t.integer "teacher_note_id"
+    t.integer "assessment_target_id"
+  end
+
+  create_table "teacher_notes_domains", :force => true do |t|
+    t.integer "teacher_note_id"
+    t.integer "domain_id"
+  end
+
+  create_table "teacher_notes_unifying_themes", :force => true do |t|
+    t.integer "teacher_note_id"
+    t.integer "unifying_theme_id"
+  end
 
   create_table "unifying_themes", :force => true do |t|
     t.string   "name"
