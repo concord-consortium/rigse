@@ -19,6 +19,10 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id], :include => :page_elements)
     @section = @page.section
     @page_elements = @page.page_elements
+    if (@page.teacher_notes.size < 1)
+      @page.teacher_notes << TeacherNote.new
+      @page.save
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
