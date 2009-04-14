@@ -3,7 +3,5 @@
     = name_for_component(section)
   .action_menu_header_right
     %ul.menu
-      %li
-        = toggle_more(section,"page_actions", "show/hide pages")
-      %li
-        = edit_button_for(section, :complete => mce_init_string())
+      / %li= toggle_more(section,"page_actions", "show/hide pages")
+      %li= edit_button_for(section, :complete => mce_init_string())
