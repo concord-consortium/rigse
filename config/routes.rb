@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :teacher_notes
+
   map.resources :vendor_interfaces
 
   map.resources :probe_types
