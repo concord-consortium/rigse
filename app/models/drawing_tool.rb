@@ -22,4 +22,7 @@ class DrawingTool < ActiveRecord::Base
   default_value_for :name, "Drawingtool element"
   default_value_for :description, "description ..."
 
+  def self.display_name
+    "Draw Tool"
+  end
 end

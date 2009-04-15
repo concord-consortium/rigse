@@ -15,4 +15,9 @@ class OpenResponse < ActiveRecord::Base
   HEREDOC
   default_value_for :default_response, "Place answer here!"
   
+  
+  def self.display_name
+    "Question"
+  end
+
 end

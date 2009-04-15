@@ -65,4 +65,9 @@ class DataCollector < ActiveRecord::Base
       end
     end
   end
+  
+  
+  def self.display_name
+    "Graph"
+  end
 end
