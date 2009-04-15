@@ -41,20 +41,27 @@ class ElementGenerator < Rails::Generator::NamedBase
       m.class_collisions("#{controller_class_name}Controller")
       m.class_collisions(class_name)
 
-      # Controller, helper, views, test and stylesheets directories.
+      # Model,  Controller, views directories
       m.directory(File.join('app/models', class_path))
       m.directory(File.join('app/controllers', controller_class_path))
       m.directory(File.join('app/views', controller_class_path, controller_file_name))
 
       # Model class
       m.template 'model.rb',      File.join('app/models', class_path, "#{file_name}.rb")
+      # Migration
+      m.migration_template 'migration.rb', 'db/migrate', :assigns => {
+        :migration_name => "Create#{class_name.pluralize.gsub(/::/, '')}"
+      }, :migration_file_name => "create_#{file_path.gsub(/\//, '_').pluralize}"
       
+      # Controller:
       m.template(
         'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
       )
+      
+      # Routes:
       m.route_resources controller_file_name
       
-      # views:
+      # Views:
       for action in scaffold_views
         m.template(
           "view_#{action}.html.haml",
@@ -62,7 +69,7 @@ class ElementGenerator < Rails::Generator::NamedBase
         )
       end
       
-      # partials:
+      # Partials:
       for partial in partials
         m.template(
           "_#{partial}.html.haml",
@@ -70,7 +77,7 @@ class ElementGenerator < Rails::Generator::NamedBase
         )
       end
       
-      #special case:
+      # Special Partial
         m.template(
           "_element.html.haml",
           File.join('app/views', controller_class_path, controller_file_name, "_#{singular_name}.html.haml")

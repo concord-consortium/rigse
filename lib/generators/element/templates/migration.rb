@@ -6,7 +6,6 @@ class <%= migration_name %> < ActiveRecord::Migration
       t.string    "uuid",        :limit => 36
       t.string    "name"
       t.text      "description"
-      t.integer   "teacher_note_id"
       
 <% for attribute in attributes -%>
       t.<%= attribute.type %> :<%= attribute.name %>
