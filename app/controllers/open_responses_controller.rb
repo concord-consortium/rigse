@@ -103,17 +103,19 @@ class OpenResponsesController < ApplicationController
   # DELETE /open_responses/1
   # DELETE /open_responses/1.xml
   def destroy
-    
     @open_response = OpenResponse.find(params[:id])
-    @open_response.destroy
-    # TODO:  We should move this logic into the model!
-    @open_response.page_elements.each do |pe|
-      pe.destroy
-    end
     respond_to do |format|
       format.html { redirect_to(open_responses_url) }
       format.xml  { head :ok }
       format.js
     end
+    @open_response.destroy
+    # TODO:  We should move this logic into the model!
+    @open_response.page_elements.each do |pe|
+      pe.destroy
+    end
+
   end
+  
+  
 end

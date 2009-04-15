@@ -110,15 +110,15 @@ class DataCollectorsController < ApplicationController
   # DELETE /data_collectors/1.xml
   def destroy
     @data_collector = DataCollector.find(params[:id])
-    @data_collector.destroy
-    # TODO:  We should move this logic into the model!
-    @data_collector.page_elements.each do |pe|
-      pe.destroy
-    end
     respond_to do |format|
       format.html { redirect_to(data_collectors_url) }
       format.xml  { head :ok }
       format.js
+    end
+    @data_collector.destroy
+    # TODO:  We should move this logic into the model!
+    @data_collector.page_elements.each do |pe|
+      pe.destroy
     end
   end  
 end
