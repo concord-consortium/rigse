@@ -3,7 +3,7 @@ class <%= class_name %> < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  has_one :teacher_note, :class_name => "TeacherNote", :foreign_key => "teacher_note_id"
+  has_many :teacher_notes, :as => :authored_entity
   
   acts_as_replicatable
 
