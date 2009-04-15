@@ -1,4 +1,4 @@
-class XhtmlsController < ApplicationController
+class DrawingToolsController < ApplicationController
   # GET /drawing_tools
   # GET /drawing_tools.xml
   def index    
@@ -13,7 +13,7 @@ class XhtmlsController < ApplicationController
   # GET /drawing_tools/1
   # GET /drawing_tools/1.xml
   def show
-    @drawing_tool = %= class_name %>.find(params[:id])
+    @drawing_tool = DrawingTool.find(params[:id])
     if request.xhr?
       render :partial => 'drawing_tool', :locals => { :drawing_tool => @drawing_tool }
     else

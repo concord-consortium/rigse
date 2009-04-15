@@ -1,6 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :drawing_tools
-
+  
+  map.resources :drawing_tools, :member => {
+    :destroy => :post
+  }
+  
   map.resources :teacher_notes
 
   map.resources :vendor_interfaces
