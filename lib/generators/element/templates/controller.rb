@@ -1,4 +1,4 @@
-class XhtmlsController < ApplicationController
+class <%= controller_class_name %>Controller < ApplicationController
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml
   def index    
@@ -13,7 +13,7 @@ class XhtmlsController < ApplicationController
   # GET /<%= table_name %>/1
   # GET /<%= table_name %>/1.xml
   def show
-    @<%= singular_name %> = %= class_name %>.find(params[:id])
+    @<%= singular_name %> = <%= class_name %>.find(params[:id])
     if request.xhr?
       render :partial => '<%= singular_name %>', :locals => { :<%= singular_name %> => @<%= singular_name %> }
     else
