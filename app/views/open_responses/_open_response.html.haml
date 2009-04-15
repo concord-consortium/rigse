@@ -1,4 +1,4 @@
 %div{:id => dom_id_for(open_response, :details), :class => 'content'}
   = open_response.prompt
-  - field_set_tag 'Your Answer' do
+  - field_set_tag  do
     %input{:type => 'text', :value =>open_response.default_response, :size => 80, :id => dom_id_for(open_response, :item, :default_response_field)}
