@@ -1,0 +1,13 @@
+- content_for(:content_header_left) do
+  = will_paginate @drawing_tools
+- content_for(:content_header_right) do
+  - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+    - content_tag :label do
+      = text_field_tag :search, params[:search], :size => 30
+    %input{ :type => "submit", :value => "Search"}
+
+%p
+  = page_entries_info @drawing_tools
+- @drawing_tools.each do |drawing_tool|
+  %div{ :id => dom_id_for(drawing_tool, :item), :class => 'item' }
+    = render :partial => "show", :locals => { :drawing_tool => drawing_tool }
