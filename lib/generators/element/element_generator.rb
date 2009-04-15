@@ -59,29 +59,20 @@ class ElementGenerator < Rails::Generator::NamedBase
       )
       
       # Routes:
-      m.route_resources controller_file_name
+      m.route_resources controller_file_name 
       
       # Views:
-      for action in scaffold_views
+      for filename in view_files
         m.template(
-          "view_#{action}.html.haml",
-          File.join('app/views', controller_class_path, controller_file_name, "#{action}.html.haml")
+          filename,
+          File.join('app/views', controller_class_path, controller_file_name, filename)
         )
       end
-      
-      # Partials:
-      for partial in partials
-        m.template(
-          "_#{partial}.html.haml",
-          File.join('app/views', controller_class_path, controller_file_name, "_#{partial}.html.haml")
-        )
-      end
-      
-      # Special Partial
-        m.template(
-          "_element.html.haml",
-          File.join('app/views', controller_class_path, controller_file_name, "_#{singular_name}.html.haml")
-        )
+      # One more view, that does not follow the pattern
+      m.template(
+        "_element.html.haml",
+        File.join('app/views', controller_class_path, controller_file_name, "_#{singular_name}.html.haml")
+      )
     end
   end
 
@@ -102,13 +93,10 @@ class ElementGenerator < Rails::Generator::NamedBase
              "Forces the generation of a plural ModelName") { |v| options[:force_plural] = v }
     end
 
-    def scaffold_views
-      %w[ index show new edit ]
+    def view_files
+       %w[ index.html.haml show.html.haml new.html.haml edit.html.haml _remote_form.html.haml _show.html.haml destroy.js.rjs]
     end
-
-    def partials
-      %w[ remote_form show]
-    end
+    
     
     def model_name
       class_name.demodulize
