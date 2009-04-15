@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090414201002) do
+ActiveRecord::Schema.define(:version => 20090415142930) do
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
@@ -99,6 +99,20 @@ ActiveRecord::Schema.define(:version => 20090414201002) do
     t.string   "name"
     t.string   "key"
     t.string   "uuid",       :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "drawing_tools", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                 :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.string   "background_image_url"
+    t.string   "stamps"
+    t.boolean  "is_grid_visible"
+    t.integer  "preferred_width"
+    t.integer  "preferred_height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
