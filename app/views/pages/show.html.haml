@@ -1,10 +1,8 @@
 #content_menu.dropdown
   %ul
-    %li= link_to_remote 'Add xhtml', :url => url_for(:action => 'add_element', :class_name => 'Xhtml', :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
-    %li= link_to_remote 'Add Open Response', :url => url_for(:action => 'add_element', :class_name => 'OpenResponse', :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
-    %li= link_to_remote 'Add Data Collector', :url => url_for(:action => 'add_element', :class_name => 'DataCollector', :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
-    %li= link_to_remote 'Add Draw Tool', :url => url_for(:action => 'add_element', :class_name => 'DrawingTool', :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
-
+    - element_types.each do |type|
+      %li= link_to_remote "Add #{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
+       
 .action_menu
   .action_menu_header_left
     = name_for_component(@page)
