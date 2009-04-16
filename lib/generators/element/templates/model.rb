@@ -19,10 +19,15 @@ class <%= class_name %> < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "<%= class_name.humanize  %> element"
+  default_value_for :name, "<%= class_name %> element"
   default_value_for :description, "description ..."
+
+  def self.display_name
+    "<%= class_name.humanize  %>"
+  end
 
 <% attributes.select(&:reference?).each do |attribute| -%>
   belongs_to :<%= attribute.name %>
 <% end -%>
+
 end
