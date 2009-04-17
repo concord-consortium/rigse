@@ -1,5 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
-  
+  map.resources :multiple_choices, :member => {
+    :destroy => :post,
+    :add_answer => :post
+  }
+
   map.resources :drawing_tools, :member => {
     :destroy => :post
   }
@@ -17,9 +21,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :data_filters
 
   map.resources :calibrations
-
-
-  map.resources :interactive_models, :multiple_choices
   
   map.resources :xhtmls, :member => {
     :destroy => :post
