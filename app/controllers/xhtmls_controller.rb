@@ -43,8 +43,12 @@ class XhtmlsController < ApplicationController
     @xhtml = Xhtml.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
+    else
+      respond_to do |format|
+        format.html 
+        format.xml  { render :xml => @xhtml }
+      end
     end
-    
   end
 
   # POST /xhtmls
