@@ -43,9 +43,14 @@ class <%= controller_class_name %>Controller < ApplicationController
     @<%= singular_name %> = <%= class_name %>.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :<%= singular_name %> => @<%= singular_name %> }
+    else
+      respond_to do |format|
+        format.html 
+        format.xml  { render :xml => @<%= singular_name %>  }
+      end
     end
-    
   end
+  
 
   # POST /<%= table_name %>
   # POST /<%= table_name %>.xml

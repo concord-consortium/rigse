@@ -94,7 +94,7 @@ class ElementGenerator < Rails::Generator::NamedBase
     end
 
     def view_files
-       %w[ index.html.haml show.html.haml new.html.haml edit.html.haml _remote_form.html.haml _show.html.haml destroy.js.rjs]
+       %w[ index.html.haml show.html.haml new.html.haml edit.html.haml _remote_form.html.haml _show.html.haml _form.html.haml destroy.js.rjs]
     end
     
     
