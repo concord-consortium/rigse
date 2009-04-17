@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090415142930) do
+ActiveRecord::Schema.define(:version => 20090415201639) do
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
@@ -192,13 +192,20 @@ ActiveRecord::Schema.define(:version => 20090415142930) do
     t.datetime "updated_at"
   end
 
+  create_table "multiple_choice_answers", :force => true do |t|
+    t.text     "answer"
+    t.integer  "multiple_choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_correct"
+  end
+
   create_table "multiple_choices", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
     t.text     "prompt"
-    t.string   "options"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
