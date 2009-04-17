@@ -2,40 +2,44 @@
 - section = @section ? @section : (@page ? page.section : nil)
 - page = @page
 
-- if investigation
-  #section_nav_menu.dropdown
-    %ul
-      - investigation.sections.each do |s|
-        = link_to s.name,url_for(s)
-
-- if section
-  #page_nav_menu.dropdown
-    %ul
-      - section.pages.each do |p|
-        = link_to p.name, url_for(p)
-
-
-%ul.menu_h
-  %li= link_to 'Home', home_path
-
+#section_nav_menu.dropdown
   - if investigation
-    %li.trail
-      &rsaquo;
-      =link_to truncate(investigation.name,:length => 25), investigation_url(investigation)
-    
-  - if section
-    %li.trail
-      &rsaquo;
-      - if (investigation.sections.size <2)
-        =link_to truncate(section.name,:length => 30), section_url(section)
-      - else
-        =dropdown_link_for(:text => truncate(section.name,:length => 20), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
-      
-  - if page
-    %li.trail
-      &rsaquo;
-      - if (section.pages.size <2)
-        =link_to truncate(page.name, :length => 25), page_url(page)
-      - else
-        =dropdown_link_for(:text => truncate(page.name, :length => 25), :id=> 'page_nav_dropdown', :content_id => 'page_nav_menu')
+    - if (investigation.sections.size > 0)
+      Sections:
+      %ul
+        - investigation.sections.each do |s|
+          %li= link_to s.name,url_for(s)
 
+#page_nav_menu.dropdown
+  - if section
+    -if (section.pages.size > 0)
+      Pages:
+      %ul
+      - section.pages.each do |p|
+        %li= link_to p.name, url_for(p)
+        
+#element_nav_menu.dropdown
+  - if page
+    -if (page.page_elements.size > 0)
+      Elements:
+      %ul
+      - page.page_elements.each do |e|
+        %li= link_to_function e.embeddable.name { |page|page[dom_id_for(embeddable, :item)].scrollTo() }
+
+- content_for :navigation_trail do
+  %ul.menu_h
+    - if investigation
+      %li.trail
+        &rsaquo;
+        =dropdown_link_for(:text => investigation.name,:length => 45, :url => investigation_url(investigation), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
+   
+    - if section
+      %li.trail
+        &rsaquo;
+        =dropdown_link_for(:text => truncate(section.name, :length => 45), :url => section_url(section), :id=> 'page_nav_dropdown', :content_id => 'page_nav_menu')
+
+      
+    - if page
+      %li.trail
+        &rsaquo;
+        =dropdown_link_for(:text => truncate(page.name, :length => 45), :url => page_url(page), :id=> 'element_nav_dropdown', :content_id => 'element_nav_menu')

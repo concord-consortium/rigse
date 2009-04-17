@@ -46,14 +46,16 @@
         theme_advanced_resizing : true
       });
   %body
+    
+    
     #body2
       /
         For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#main_content" }
           Skip to main content.
-
-    #wrapper
+    #wrapper.wrapper
+      = render :partial => 'shared/investigation_trail'
       #header
         #title
           %p
@@ -71,20 +73,19 @@
               \/
               = link_to 'Signup', signup_path
       #nav_top
-        #nav_top_left
-          %span.hidden.doNotPrint
-            Navigation:
-          = render :partial => 'shared/investigation_trail'
-        #nav_top_right
-          %ul.menu_h
-            %li= link_to 'Investigations', investigations_path
-            / %li= link_to 'Grade Span Expectations', grade_span_expectations_path
-            / %li= link_to 'Data Collectors', data_collectors_path
-            / %li= link_to 'Open Responses', open_responses_path
-            / %li= link_to 'Xhtmls', xhtmls_path
+        %span.hidden.doNotPrint
+          Navigation:
+        = yield :navigation_trail
 
-
-      #left_nav
+            
+      #left_nav.nav_menu
+        %ul.nav_menu
+          %li= link_to 'Home', home_path
+          %li= link_to 'Investigations', investigations_path
+          %li= link_to 'Grade Span Expectations', grade_span_expectations_path
+          %li= link_to 'Data Collectors', data_collectors_path
+          %li= link_to 'Open Responses', open_responses_path
+          %li= link_to 'Xhtmls', xhtmls_path
         %p
           = yield :sidebar
         %hr
@@ -110,7 +111,7 @@
           = render :partial => 'shared/site_info'
           
 
-      #main_content
+      #main_content.main_content_colors
         #content_header
           #content_header_left
             = yield :content_header_left
