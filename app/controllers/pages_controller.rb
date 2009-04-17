@@ -16,7 +16,7 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
-    @page = Page.find(params[:id], :include => :page_elements)
+    @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
     @section = @page.section
     @page_elements = @page.page_elements
     if (@page.teacher_notes.size < 1)
