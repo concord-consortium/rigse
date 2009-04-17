@@ -1,0 +1,4 @@
+%div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
+  = multiple_choice.description
+  - multiple_choice.answers.each do |answer|
+    = render :partial => "multiple_choices/show_answer", :locals => {:multiple_choice => multiple_choice, :answer => answer}

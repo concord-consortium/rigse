@@ -1,0 +1,9 @@
+%div{:id => dom_id_for(form), :class =>"item"}
+  %span
+    = form.label :answer, "answer:"
+    = form.text_field :answer
+  %span
+    = form.label :is_correct, "Correct:"
+    = form.check_box :is_correct
+  %span
+    = remove_link(form)

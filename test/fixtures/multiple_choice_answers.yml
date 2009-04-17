@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  answer: MyText
+  multiple_choice: 
+
+two:
+  answer: MyText
+  multiple_choice: 
