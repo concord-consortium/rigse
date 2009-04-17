@@ -27,7 +27,7 @@ class DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
-  default_value_for :name, "Data Collector Graph"
+  default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
 
   default_value_for :y_axis_label, "Distance"
