@@ -37,4 +37,9 @@ module JsHelper
     out
   end
 
+  def add_to_list(pattern)
+    # here is a useful prototype pattern: $$('input[name^=multiple_choice\[answers_attributes\]][type=text]')
+    # use js console in firefox to test that out.
+    # would be great to copy the last
+  end
 end
