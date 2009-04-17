@@ -100,23 +100,6 @@ class MultipleChoicesController < ApplicationController
     end
   end
   
-  ##
-  ## This is a remote_function (ajax) to be called with link_to_remote or similar. 
-  ## We expect parameter "id" as the MultipleChoice id. 
-  ## optional parameter "container" tells us what DOM ID to add our results too...
-  ## the default container is named "answers_container"
-  ##
-  def add_answer
-    @multiple_choice = MultipleChoice.find(params['id'])
-    @container = params['container'] || 'answers_container'
-    @partial = params['partial'] || 'edit_answer'
-    @answer = Answer.new
-    @multiple_choice.answers << @answer
-
-    # we will render page/add_answer.js.rjs by default....
-    # this rjs will include the appropriate html fragment
-  end
-
   # DELETE /multiple_choices/1
   # DELETE /multiple_choices/1.xml
   def destroy
@@ -137,8 +120,7 @@ class MultipleChoicesController < ApplicationController
   def add_answer
     @question = MultipleChoice.find(params[:id])
     @answer = MultipleChoiceAnswer.create
-    # @question.answers << MultipleChoiceAnswer.create
-    #     @question.save
+    # @question.answers << @answer
     @html_fragment = render_to_string(:partial => "new_answer", :locals => {:answer => @answer,:question => @question})
     respond_to do |format|
       # will render add_answer.js.rjs
