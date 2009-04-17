@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
   belongs_to :user
-  belongs_to :section, :class_name => "Section", :foreign_key => "section_id"
+  belongs_to :section
   has_many :page_elements, :order => :position
 
   has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
