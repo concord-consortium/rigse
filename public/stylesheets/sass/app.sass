@@ -60,14 +60,13 @@ fieldset
     :style horizontal
 
 
-#body2
+.wrapper
   +page_white
-
+  
 #wrapper
   +container
   :padding 10px 
   // that's the blueprint default...
-  +page_white
 
 #header
   +column(24,true)
@@ -79,16 +78,26 @@ fieldset
     :text-align right
     +column(10,true)
 
+
+.nav_menu
+  :font-size 10px
+  :display block
+  :padding
+    :left 0px
+  :margin
+    :right 0px
+  :line-height 1.5em
+  li
+    :list-style-type none
+
+    a
+      :display block
+    
 #nav_top
   +column(24,true)
   +top_and_bottom_nav_colors
   :overflow hidden
   :padding 0.5em
-  #nav_top_left
-    +column(18)
-  #nav_top_right
-    :text-align right
-    +column(6,true)
   
 #left_nav
   +column(!left_nav_columns)
@@ -96,12 +105,13 @@ fieldset
   :overflow hidden
   :line-height 1.4em
   :font-size 10px
-      
-#main_content
+    
+.main_content_colors
   +content_area_colors
+#main_content
   +column(!main_content_columns,true)
+  +content_area_colors
   :line-height 1.5em
-
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
@@ -114,20 +124,6 @@ fieldset
     +column(8,true)
     :float right
     :text-align right
-
-#content_header2
-  +content_area_colors
-  +column(!main_content_columns,true)
-  :padding 0.5em
-  #content_header2_left
-    +column(10)
-  #content_header2_right
-    +column(10,true)
-    :float right
-    :text-align right
-
-#main_content2
-  :margin 2em 0.5em 1em 0.5em
 
 #footer
   +column(24,true)
