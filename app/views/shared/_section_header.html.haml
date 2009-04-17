@@ -6,4 +6,5 @@
       / %li= toggle_more(section,"page_actions", "show/hide pages")
       %li= link_to_remote 'add page', :complete => mce_init_string(), :url => add_page_section_path(section), :html => {:class=>'action'}
       %li= edit_button_for(section, :complete => mce_init_string())
+      %li= toggle_all 'pages'
       %li{:class => 'menu delete'}= delete_button_for(section)

@@ -10,17 +10,18 @@
     %ul.menu
       %li= dropdown_link_for(:text => "add content", :id=> 'add_content_menu', :content_id => 'content_menu')
       %li= edit_button_for(@page, :complete => mce_init_string())
-      %li= toggle_all('show/hide all')
+      %li= toggle_all('page')
       %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(@page)
       %li= delete_button_for(@page)
 
-%ul#elements_container.sortable.menu
+.item_collection
+  %ul#elements_container.sortable.menu
 
-  / - if @page.page_elements.size == 1
-  /   - element = @page.page_elements[0]
-  /   = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
-  / -else 
-  - @page.page_elements.each_with_index do |element,i|
-    = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
+    / - if @page.page_elements.size == 1
+    /   - element = @page.page_elements[0]
+    /   = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
+    / -else 
+    - @page.page_elements.each_with_index do |element,i|
+      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
 
-=sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
+  =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }

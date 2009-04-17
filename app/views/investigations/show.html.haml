@@ -1,6 +1,8 @@
 = render  :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }
 
-%ul#investigation_sections_list.menu
-  - @investigation.sections.each do |section|
-    =render :partial => 'section_list_item', :locals => {:section => section}
-    =sortable_element :investigation_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:investigation_id => @investigation.id }}
+.item_collection
+
+  %ul#investigation_sections_list.menu
+    - @investigation.sections.each do |section|
+      =render :partial => 'section_list_item', :locals => {:section => section}
+      =sortable_element :investigation_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:investigation_id => @investigation.id }}
