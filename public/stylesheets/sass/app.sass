@@ -9,6 +9,7 @@
 
 p
   :padding-left 10px
+  :margin 1em 0em
 
 ol
   :padding-left 10px
@@ -95,18 +96,18 @@ fieldset
   :overflow hidden
   :line-height 1.4em
   :font-size 10px
-
       
 #main_content
   +content_area_colors
   +column(!main_content_columns,true)
   :line-height 1.5em
- 
-  
+
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.5em 0em 0.7em
+  :padding 0.5em
+  :display table
+  :float none
   #content_header_left
     +column(12)
   #content_header_right
@@ -117,7 +118,7 @@ fieldset
 #content_header2
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.5em 0em 0.7em
+  :padding 0.5em
   #content_header2_left
     +column(10)
   #content_header2_right
@@ -190,11 +191,28 @@ ul.menu
   :font-size 1em
   :font-weight bold
 
+.item_collection
+  :border
+    :width 1px
+    :style none
+  :padding 0.5em 1em
+  .item
+    :padding 0.5em 1em 1em
+    :border
+      :style none
+      :bottom
+        :width 1px
+        :style dotted
+    .action_menu
+      :width 700px
+      :background-color = !almost_white
+      ul
+        :background-color = !almost_white
+        li
+          :background-color = !almost_white
+
 .item
   :padding 0.5em
-  :margin 0em
-    :top 0.5em
-    :bottom 0.5em
   :clear both
   :border
     :width 1px
@@ -220,7 +238,7 @@ ul.quiet_list
   :padding 0em
   li
     :margin 0em
-    :padding 0.5em
+    :padding 0em 0.5em
     :list-style-type none
     :white-space nowrap
 
