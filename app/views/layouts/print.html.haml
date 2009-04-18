@@ -1,0 +1,28 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      = @page_title || APP_CONFIG[:site_name]
+    = stylesheet_link_tag 'app'
+    = stylesheet_link_tag 'window'
+    = stylesheet_link_tag 'rites-dialog'
+    = stylesheet_link_tag 'live_validation'
+    / = javascript_include_tag :defaults
+    = javascript_include_tag "prototype.js"
+    = javascript_include_tag "effects.js"
+    = javascript_include_tag "prototype-ui/prototype-ui.js"
+    = javascript_include_tag "application.js"
+    = javascript_include_tag "dragdrop.js"
+    = javascript_include_tag "misc/resizable.js"
+    = javascript_include_tag "livepipe/livepipe.js"
+    = javascript_include_tag "livepipe/tabs.js"
+    = javascript_include_tag "livepipe/window.js"
+    = javascript_include_tag "live_validation"
+    /[if IE]
+      = javascript_include_tag "flotr/excanvas.js"
+    = javascript_include_tag "flotr/flotr.js"
+
+  %body
+    #wrapper
+      #main_content
+        = yield :layout
