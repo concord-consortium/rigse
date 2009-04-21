@@ -1,6 +1,6 @@
 - investigation = @investigation ? @investigation : (@section ? @section.investigation : (@page ? @page.section.investigation : nil))
-- section = @section ? @section : (@page ? page.section : nil)
-- page = @page
+- section = @section ? @section : (@page ? @page.section : nil)
+- page = @page 
 
 #section_nav_menu.dropdown
   - if investigation && (!investigation.id.nil?)
