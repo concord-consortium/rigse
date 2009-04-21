@@ -1,6 +1,6 @@
 %div{:id => dom_id_for(section,:item), :class =>"action_menu"}
   .action_menu_header_left
-    = name_for_component(section)
+    %h3= name_for_component(section)
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(section,"page_actions", "show/hide pages")
