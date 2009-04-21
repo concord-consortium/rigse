@@ -50,7 +50,8 @@ ActionController::Routing::Routes.draw do |map|
     :add_element => :post,
     :sort_elements => :post,
     :delete_element => :post,
-    :preview => :get
+    :preview => :get,
+    :print => :get
   }
 
   # /pages/:id/add_element/:embeddable_type
