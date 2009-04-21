@@ -47,7 +47,13 @@ class SectionsController < ApplicationController
   def create
     @section = Section.create!(params[:section])
     respond_to do |format|
-      format.js
+      format.js {
+        @page = Page.create
+        @xhtml = Xhtml.create
+        @xhtml.pages << @page
+        @section.pages << @page
+        @section.save
+      }
       format.html { 
         flash[:notice] = 'Section was successfully created.'
         redirect_to(@section) }
