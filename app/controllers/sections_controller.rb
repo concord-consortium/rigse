@@ -76,14 +76,14 @@ class SectionsController < ApplicationController
     @section = Section.find(params[:id])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
-      if cancel || @section.update_attributes(params[:section])
+      if @section.update_attributes(params[:section])
         render :partial => 'shared/section_header', :locals => { :section => @section }
       else
         render :xml => @section.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @section.update_attributes(params[:page])
+        if @section.update_attributes(params[:section])
           flash[:notice] = 'Section was successfully updated.'
           format.html { redirect_to(@section) }
           format.xml  { head :ok }
@@ -138,4 +138,18 @@ class SectionsController < ApplicationController
     @page= Page.find(params['page_id'])
     @page.destroy
   end
+  
+  
+  ##
+  ##
+  ##
+  def duplicate
+    @original = Section.find(params['id'])
+    @section = @original.clone :include => {:pages => {:page_elements => :embeddable}}
+    @section.name = "copy of #{@original.name}"
+    @section.save
+    @investigation = @section.investigation
+    redirect_to :action => 'edit', :id => @section.id
+  end
+  
 end

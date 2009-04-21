@@ -169,5 +169,19 @@ class PagesController < ApplicationController
     @element = PageElement.find(params['element_id'])
     @element.destroy
   end
+  
+  
+  ##
+  ##
+  ##
+  def duplicate
+    @original = Page.find(params['id'])
+    @page = @original.clone :include => {:page_elements => :embeddable}
+    @page.name = "copy of #{@original.name}"
+    @page.save
+    @section = @page.section
+    redirect_to :action => 'edit', :id => @page.id
+  end
+
 
 end

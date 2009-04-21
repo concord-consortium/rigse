@@ -42,7 +42,8 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post,
     :add_page => :post,
     :sort_pages => :post, 
-    :delete_page => :post
+    :delete_page => :post,
+    :duplicate => :get
   }
     
   map.resources :pages, :member => {
@@ -51,7 +52,8 @@ ActionController::Routing::Routes.draw do |map|
     :sort_elements => :post,
     :delete_element => :post,
     :preview => :get,
-    :print => :get
+    :print => :get,
+    :duplicate => :get
   }
 
   # /pages/:id/add_element/:embeddable_type
