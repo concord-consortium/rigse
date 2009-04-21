@@ -33,7 +33,7 @@ module JsHelper
   def remove_link(form)
     out = ''
     out << form.hidden_field(:_delete)
-    out << link_to_function("remove", "$('#{dom_id_for(form)}').hide(); $(this).previous().value = '1'")
+    out << link_to_function("delete", "$('#{dom_id_for(form)}').hide(); $(this).previous().value = '1'", :class=>'delete')
     out
   end
 

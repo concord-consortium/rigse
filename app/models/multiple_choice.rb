@@ -5,7 +5,7 @@ class MultipleChoice < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
-  has_many :answers, :class_name => "MultipleChoiceAnswer"
+  has_many :answers, :class_name => "MultipleChoiceChoice"
   
   accepts_nested_attributes_for :answers, :allow_destroy => true
   

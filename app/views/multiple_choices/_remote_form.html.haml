@@ -8,6 +8,10 @@
       %fieldset#answers
         %legend 
           answers
+        .action_menu
+          .action_menu_header_right
+            %ul
+              %li= link_to_remote "add answer", :url => add_answer_multiple_choice_url(multiple_choice)
+        #answers
         - f.fields_for :answers do |answer_form|
           = render :partial => "edit_answer", :locals => {:multiple_choice => multiple_choice, :form => answer_form}
-      = link_to_remote "add answer", :url => add_answer_multiple_choice_url(multiple_choice)

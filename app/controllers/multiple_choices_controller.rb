@@ -119,7 +119,7 @@ class MultipleChoicesController < ApplicationController
   
   def add_answer
     @question = MultipleChoice.find(params[:id])
-    @answer = MultipleChoiceAnswer.create
+    @answer = MultipleChoiceChoice.create
     # @question.answers << @answer
     @html_fragment = render_to_string(:partial => "new_answer", :locals => {:answer => @answer,:question => @question})
     respond_to do |format|
