@@ -1,18 +1,10 @@
+
 #content_menu.dropdown
   %ul
     - element_types.each do |type|
-      %li= link_to_remote "Add #{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
-       
-.action_menu
-  .action_menu_header_left
-    = name_for_component(@page)
-  .action_menu_header_right
-    %ul.menu
-      %li= dropdown_link_for(:text => "add content", :id=> 'add_content_menu', :content_id => 'content_menu')
-      %li= edit_button_for(@page, :complete => mce_init_string())
-      %li= toggle_all('page')
-      %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(@page)
-      %li= delete_button_for(@page)
+      %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
+
+= render :partial=> 'shared/page_header', :locals=>{:page => @page }
 
 .item_collection
   %ul#elements_container.sortable.menu

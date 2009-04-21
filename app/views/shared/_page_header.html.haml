@@ -1,0 +1,11 @@
+%div{:id => dom_id_for(page,:item), :class =>"action_menu"}       
+  .action_menu
+    .action_menu_header_left
+      %h3= name_for_component(page)
+    .action_menu_header_right
+      %ul
+        %li= dropdown_link_for(:text => "add content", :id=> 'add_content_menu', :content_id => 'content_menu')
+        %li= edit_button_for(page, :complete => mce_init_string())
+        %li= toggle_all('page')
+        %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
+        %li= delete_button_for(page)

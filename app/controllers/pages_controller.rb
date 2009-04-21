@@ -66,6 +66,9 @@ class PagesController < ApplicationController
   def edit
     @page = Page.find(params[:id], :include => :page_elements)
     @page_elements = @page.page_elements
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :page => @page, :section => @page.section }
+    end
   end
 
   
@@ -91,14 +94,23 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id], :include => :page_elements)
     @page_elements = @page.page_elements
-    respond_to do |format|
-      if @page.update_attributes(params[:page])
-        flash[:notice] = 'Page was successfully updated.'
-        format.html { redirect_to(@page) }
-        format.xml  { head :ok }
+    cancel = params[:commit] == "Cancel"
+    if request.xhr?
+      if cancel || @page.update_attributes(params[:page])
+        render :partial => 'shared/page_header', :locals => { :page => @page }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
+        render :xml => @page.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @page.update_attributes(params[:page])
+          flash[:notice] = 'Page was successfully updated.'
+          format.html { redirect_to(@page) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
