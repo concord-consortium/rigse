@@ -83,7 +83,7 @@
         %ul.nav_menu
           %li= link_to 'Home', home_path
           %li= link_to 'Investigations', investigations_path
-          %li= link_to 'Grade Span Expectations', grade_span_expectations_path
+          %li= link_to 'GSEs', grade_span_expectations_path
           %li= link_to 'Data Collectors', data_collectors_path
           %li= link_to 'Open Responses', open_responses_path
           %li= link_to 'Xhtmls', xhtmls_path
@@ -91,8 +91,6 @@
           = yield :sidebar
         %hr
         %p
-          %h4
-            Selected Probeware Interface
         = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
         %hr
         %p

@@ -1,6 +1,8 @@
 #vendor_interface
-  %h4
-    = link_to vendor_interface.name, interface_user_path(current_user), { :id=>"modal" }
+  %P
+    Selected Probeware Interface:
+    %br
+    = link_to vendor_interface.name, interface_user_path(current_user), { :id=>"modal"}
   %p
     = image_tag(vendor_interface.image, :class => "vi_image", :width => 120 )
   %p
