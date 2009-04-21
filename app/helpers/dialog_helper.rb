@@ -21,7 +21,7 @@ module DialogHelper
     options_string = (options.map { |k,v| "#{k.to_s}: #{js_string_value(v)}" }).join(", ")
     page << "document.dialog = new UI.Window({#{options_string}});"
     page << <<-JAVASCRIPT
-      document.dialog.center().setHeader('New Section');
+      document.dialog.center().setHeader('#{options[:name]}');
       document.dialog.setContent("<div id='_dynamic_content_'>empty</div>");
       document.dialog.show(true);
       document.dialog.focus(true);
