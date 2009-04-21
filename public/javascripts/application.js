@@ -5,7 +5,14 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     var drop_down = $(drop_down_dom_id);
     var menu_width = menu.getDimensions().width
     var drop_down_width = drop_down.getDimensions().width
-    var left_offset = (drop_down_width - menu_width) / -2
+    if (drop_down_width < menu_width) {
+      drop_down.setStyle({
+        width: menu_width+"px"
+      }); 
+      drop_down_width = menu_width;
+    }
+    // var left_offset = (drop_down_width - menu_width) / -2
+    var left_offset = 0;
     var top_offset = menu.getDimensions().height
     var options = { setWidth: false, setHeight: false, offsetLeft:left_offset, offsetTop: top_offset};
 
