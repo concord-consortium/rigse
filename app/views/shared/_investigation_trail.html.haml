@@ -3,43 +3,43 @@
 - page = @page
 
 #section_nav_menu.dropdown
-  - if investigation
+  - if investigation && (!investigation.id.nil?)
     - if (investigation.sections.size > 0)
-      Sections:
+      %h3 Sections:
       %ul
         - investigation.sections.each do |s|
           %li= link_to s.name,url_for(s)
 
 #page_nav_menu.dropdown
-  - if section
+  - if section && (!section.id.nil?)
     -if (section.pages.size > 0)
-      Pages:
+      %h3 Pages:
       %ul
       - section.pages.each do |p|
         %li= link_to p.name, url_for(p)
         
 #element_nav_menu.dropdown
-  - if page
+  - if page && (!page.id.nil?)
     -if (page.page_elements.size > 0)
-      Elements:
+      %h3 Elements:
       %ul
       - page.page_elements.each do |e|
         %li= link_to_function e.embeddable.name { |page|page[dom_id_for(embeddable, :item)].scrollTo() }
 
 - content_for :navigation_trail do
   %ul.menu_h
-    - if investigation
+    - if investigation && (!investigation.id.nil?)
       %li.trail
         &rsaquo;
         =dropdown_link_for(:text => investigation.name,:length => 45, :url => investigation_url(investigation), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
    
-    - if section
+    - if section && (!section.id.nil?)
       %li.trail
         &rsaquo;
         =dropdown_link_for(:text => truncate(section.name, :length => 45), :url => section_url(section), :id=> 'page_nav_dropdown', :content_id => 'page_nav_menu')
 
       
-    - if page
+    - if page && (!page.id.nil?)
       %li.trail
         &rsaquo;
         =dropdown_link_for(:text => truncate(page.name, :length => 45), :url => page_url(page), :id=> 'element_nav_dropdown', :content_id => 'element_nav_menu')
