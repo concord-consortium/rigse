@@ -14,7 +14,6 @@ class GradeSpanExpectationsController < ApplicationController
   # GET /grade_span_expectations
   # GET /grade_span_expectations.xml
   def index
-    
     @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
     # :include => [:expectations => [:expectation_indicators, :stem]]
     @search_string = params[:search]
@@ -28,6 +27,31 @@ class GradeSpanExpectationsController < ApplicationController
           :locals => { :grade_span_expectations => @grade_span_expectations }
         @rendered_partial.gsub!(/&/, '&amp;')
         render :layout => false 
+      end
+    end
+  end
+
+  # POST /grade_span_expectations/select_js
+  def select_js
+    # remember the chosen domain and gradespan, it will probably continue..
+    cookies[:gradespan] = params[:gradespan]
+    cookies[:domain] = params[:domain]
+    
+    @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', params[:gradespan]])
+    @grade_span_expectations = @grade_span_expectations.select do |gse|
+      if gse.knowledge_statements.detect { |ks| 
+        ks.domain_id == params[:domain].to_i 
+        } 
+        true
+      else
+        false
+      end
+    end
+    if request.xhr?
+      render :partial => 'select_js'
+    else
+      respond_to do |format|
+        format.js
       end
     end
   end

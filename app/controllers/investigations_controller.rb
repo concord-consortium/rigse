@@ -7,6 +7,7 @@ class InvestigationsController < ApplicationController
   }
   
   before_filter :setup_object, :except => [:index, :add_step]
+
   
   protected
   
@@ -22,7 +23,10 @@ class InvestigationsController < ApplicationController
     else
       @investigation = Investigation.new
     end
+    @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
   end
+  
+  
   
   public
   
@@ -41,7 +45,6 @@ class InvestigationsController < ApplicationController
   # GET /pages/1.xml
   def show
     @investigation = Investigation.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }

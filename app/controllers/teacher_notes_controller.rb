@@ -14,7 +14,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/1.xml
   def show
     @teacher_note = TeacherNote.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @teacher_note }

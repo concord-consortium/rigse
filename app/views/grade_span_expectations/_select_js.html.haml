@@ -1,0 +1,3 @@
+%select{:multiple => :true, :name=> :grade_span_expectations}
+  - @grade_span_expectations.each do |gse|
+    %option{:value => gse.id}= truncate(gse.description,80)

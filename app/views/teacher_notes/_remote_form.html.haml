@@ -1,2 +1,5 @@
+
+= render :partial => 'teacher_notes/gse_filter'
+
 - remote_form_for(teacher_note, :update => dom_id_for(teacher_note, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = render :partial => "form", :locals => {:f => f, :teacher_note => teacher_note}
+  = render :partial => "teacher_notes/form", :locals => {:f => f, :teacher_note => teacher_note}

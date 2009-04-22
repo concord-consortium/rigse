@@ -84,8 +84,13 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
-  map.resources :grade_span_expectations, :collection => { :reparse_gses => :put }
-
+  map.resources :grade_span_expectations, :collection => { 
+    :select_js => :post,
+    :reparse_gses => :put,
+    :select => :get
+  }
+  
+  
   map.resources :images
  
   # Restful Authentication Rewrites

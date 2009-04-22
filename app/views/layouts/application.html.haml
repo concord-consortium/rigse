@@ -129,6 +129,4 @@
   #teacher_bottom 
     = link_to_function 'teacher-notes', visual_effect(:toggle_blind, 'some_data',:duration => 0.25)
     #some_data{:style=>"display: none;"}
-      %pre
-        %code
-          =ipsum(500)
+      = yield :teacher_note

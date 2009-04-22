@@ -1,3 +1,9 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_right
+      %ul.menu
+        %li= link_to 'edit', edit_teacher_note_url(@teacher_note)
+
 .content
   - field_set_tag 'body' do
     = @teacher_note.body
@@ -5,3 +11,4 @@
     %ul
       - @teacher_note.domains.each do |domain|
         %li= domain.name
+  

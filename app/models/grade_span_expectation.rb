@@ -3,7 +3,17 @@ class GradeSpanExpectation < ActiveRecord::Base
   has_many                :expectations
   belongs_to              :assessment_target
   has_many                :unifying_themes, :through => :assessment_target
+  has_many                :knowledge_statements, :through => :assessment_target
+
   acts_as_replicatable
+  
+  # our models are a bit to nested for this to work reasonably I think...
+  # named_scope :grade_span_and_domain, lambda { |gs,domain_id|
+  #   {
+  #     :joins => [:assessment_target, :knowledge_statements],
+  #     :conditions => { 'knowledge_statements.domain_id' => domain_id }  
+  #   }
+  # }
   
   #:default_scope :conditions => "grade_span LIKE '%9-11%'"  
   # above was causing errors on otto when running setup-from-scratch:
@@ -17,6 +27,10 @@ class GradeSpanExpectation < ActiveRecord::Base
   include Changeable
   
   self.extend SearchableModel
+  
+  def description
+    "#{grade_span}: #{assessment_target.description}"
+  end
   
   @@searchable_attributes = %w{grade_span}
   
