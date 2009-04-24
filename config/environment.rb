@@ -5,7 +5,7 @@
 ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.2.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -40,7 +40,7 @@ Rails::Initializer.run do |config|
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
-  config.gem "chriseppstein-compass", :lib => 'compass'
+  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -84,7 +84,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  config.active_record.observers = :user_observer
+  # config.active_record.observers = :user_observer
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
