@@ -161,6 +161,7 @@ class InvestigationsController < ApplicationController
   def duplicate
     @original = Investigation.find(params['id'])
     @investigation = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @investigation.name = "copy of #{@investigation.name}"
     @investigation.save
     redirect_to edit_investigation_url(@investigation)
   end
