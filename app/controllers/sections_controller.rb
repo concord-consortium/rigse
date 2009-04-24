@@ -1,6 +1,8 @@
 class SectionsController < ApplicationController
   
   before_filter :find_entities, :except => ['create','new']
+  in_place_edit_for :section, :name
+  
   protected 
   
   def find_entities

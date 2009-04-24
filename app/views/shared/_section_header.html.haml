@@ -1,11 +1,12 @@
 %div{:id => dom_id_for(section,:item), :class =>"action_menu"}
   .action_menu_header_left
-    %h3= name_for_component(section)
+    %h3= in_place_editor_field :section, 'name'
+    / %h3= name_for_component(section)
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(section,"page_actions", "show/hide pages")
       %li= link_to 'duplicate', duplicate_section_url(section)
-      %li= edit_button_for(section, :complete => mce_init_string())
+      / %li= edit_button_for(section, :complete => mce_init_string())
       %li= link_to_remote 'add page', :complete => mce_init_string(), :url => add_page_section_path(section), :html => {:class=>'action'}
       %li= toggle_all 'pages'
-      %li{:class => 'menu delete'}= delete_button_for(section)
+      / %li{:class => 'menu delete'}= delete_button_for(section)

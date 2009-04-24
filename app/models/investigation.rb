@@ -15,6 +15,40 @@ class Investigation < ActiveRecord::Base
       @@searchable_attributes
     end
   end
+  
+  def deep_xml
+    self.to_xml(
+      :include => {
+        :teacher_notes=>{
+          :except => [:id,:authored_entity_id, :authored_entity_type]
+        }, 
+        :sections => {
+          :exlclude => [:id,:investigation_id],
+          :include => {
+            :teacher_notes=>{
+              :except => [:id,:authored_entity_id, :authored_entity_type]
+            },
+            :pages => {
+              :exlclude => [:id,:section_id],
+              :include => {
+                :teacher_notes=>{
+                  :except => [:id,:authored_entity_id, :authored_entity_type]
+                },
+                :page_elements => {
+                  :except => [:id,:page_id],
+                  :include => {
+                    :embeddable => {
+                      :except => [:id,:embeddable_type,:embeddable_id]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    )
+  end
 
   # default_value_for :name do
   #   "New Investigation"
@@ -858,6 +892,7 @@ HEREDOC
   end
   
 end
+
 
 
 

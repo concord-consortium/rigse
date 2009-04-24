@@ -1,15 +1,15 @@
 class InvestigationsController < ApplicationController
   # GET /pages
   # GET /pages.xml
-  
   prawnto :prawn=>{
     :page_layout=>:landscape,
   }
-  
   before_filter :setup_object, :except => [:index, :add_step]
 
-  
-  protected
+  in_place_edit_for :investigation, :name
+
+  protected  
+
   
   def setup_object
     if params[:id]
@@ -164,6 +164,14 @@ class InvestigationsController < ApplicationController
     @investigation.name = "copy of #{@investigation.name}"
     @investigation.save
     redirect_to edit_investigation_url(@investigation)
+  end
+  
+  def export
+    respond_to do |format|
+      format.xml  { 
+        send_data @investigation.deep_xml, :type => :xml, :filename=>"#{@investigation.name}.xml"
+      }
+    end
   end
   
 end

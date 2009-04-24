@@ -70,7 +70,8 @@ ActionController::Routing::Routes.draw do |map|
     :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
-    :duplicate => :get
+    :duplicate => :get,
+    :export => :get
   }
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
@@ -114,6 +115,6 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'home', :action => 'index'
 
   # Install the default routes as the lowest priority.
-  # map.connect ':controller/:action/:id'
+  map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
 end
