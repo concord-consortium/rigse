@@ -1,3 +1,6 @@
-%select{:multiple => :true, :name=> :grade_span_expectations}
+%select{:multiple => :true, :name=> :grade_span_expectations, :size=>5}
   - @grade_span_expectations.each do |gse|
-    %option{:value => gse.id}= truncate(gse.description,80)
+    %option{:value => gse.id, :onmousemove => "$('gse_discription').innerHTML='#{gse.description}'"}= truncate(gse.description,70)
+%hr
+#gse_discription.tiny
+  nothing here.
