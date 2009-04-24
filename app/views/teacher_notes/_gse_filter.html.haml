@@ -7,12 +7,12 @@
   }
 
 %form#selector
-
-  - field_set_tag 'grade span' do  
+  - field_set_tag ' filter gses ' do
+    grade span:
     %select#gradespan{:name=>'gradespan', :onchange=>'log_gradespan();' }
       - grade_spans.each do |gs|
         %option{:value=>gs}= gs
-  - field_set_tag 'domain' do
+    domain:
     %select#domain{:name=>'domain', :onchange=>'log_domain();' }
       - domains.each do |domain|
         %option{:value=>domain.id}= domain.name
