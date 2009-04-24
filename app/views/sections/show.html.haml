@@ -1,5 +1,7 @@
 = render  :partial => 'shared/section_header', :locals => { :section => @section }
-
+-content_for :teacher_note do
+  = @teacher_note
+  
 .item_collection
   %ul#section_pages_list.sortable.menu
     - @section.pages.each do |page|

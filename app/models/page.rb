@@ -45,5 +45,11 @@ class Page < ActiveRecord::Base
     return component.page_elements.detect {|pe| pe.embeddable.id == component.id }
   end
 
-
+  def teacher_note
+    if teacher_notes[0]
+      return teacher_notes[0]
+    end
+    teacher_notes << TeacherNote.create
+    return teacher_notes[0]
+  end
 end

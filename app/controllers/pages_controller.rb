@@ -1,6 +1,25 @@
 class PagesController < ApplicationController
   helper :all
   
+  
+  before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  protected 
+  
+  def find_entities
+    if (params[:id])
+      @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
+      @section = @page.section
+      @investigation =@section.investigation
+      @page_elements = @page.page_elements
+    end
+    
+    if (@page)
+      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+    end
+  end
+  
+  public
+  
   # GET /page
   # GET /page.xml
   def index
@@ -16,9 +35,6 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
-    @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
-    @section = @page.section
-    @page_elements = @page.page_elements
     if (@page.teacher_notes.size < 1)
       @page.teacher_notes << TeacherNote.new
       @page.save
@@ -32,9 +48,6 @@ class PagesController < ApplicationController
   # GET /page/1/preview
   # GET /page/1.xml
   def preview
-    @page = Page.find(params[:id], :include => :page_elements)
-    @section = @page.section
-    @page_elements = @page.page_elements
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
@@ -43,9 +56,6 @@ class PagesController < ApplicationController
 
   # GET /page/1/print
   def print
-    @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
-    @section = @page.section
-    @page_elements = @page.page_elements
     respond_to do |format|
       format.html { render :layout => "layouts/print" }
       format.xml  { render :xml => @page }
@@ -64,8 +74,6 @@ class PagesController < ApplicationController
 
   # GET /page/1/edit
   def edit
-    @page = Page.find(params[:id], :include => :page_elements)
-    @page_elements = @page.page_elements
     if request.xhr?
       render :partial => 'remote_form', :locals => { :page => @page, :section => @page.section }
     end
@@ -92,8 +100,6 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
-    @page = Page.find(params[:id], :include => :page_elements)
-    @page_elements = @page.page_elements
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel || @page.update_attributes(params[:page])
@@ -118,8 +124,6 @@ class PagesController < ApplicationController
   # DELETE /page/1
   # DELETE /page/1.xml
   def destroy
-    @page = Page.find(params[:id], :include => :page_elements)
-    @page_elements = @page.page_elements
     @page.destroy
     respond_to do |format|
       format.html { redirect_to(page_url) }
@@ -153,7 +157,6 @@ class PagesController < ApplicationController
   ##
   ##  
   def sort_elements
-    @page = Page.find(params[:id], :include => :page_elements)
     @page.page_elements.each do |element|
       element.position = params['elements_container'].index(element.id.to_s) + 1
       element.save
@@ -175,12 +178,11 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
-    @original = Page.find(params['id'])
-    @page = @original.clone :include => {:page_elements => :embeddable}
-    @page.name = "copy of #{@original.name}"
-    @page.save
-    @section = @page.section
-    redirect_to :action => 'edit', :id => @page.id
+    @copy = @page.clone :include => {:page_elements => :embeddable}
+    @copy.name = "copy of #{@page.name}"
+    @copy.save
+    @section = @copy.section
+    redirect_to :action => 'edit', :id => @copy.id
   end
 
 
