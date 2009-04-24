@@ -30,4 +30,9 @@ class MultipleChoice < ActiveRecord::Base
     "Multiple Choice Question"
   end
 
+  def to_xml(options ={})
+    options[:incude] = :answers
+    super(options)
+  end
+
 end
