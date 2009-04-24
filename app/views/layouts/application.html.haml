@@ -83,9 +83,9 @@
           %li= link_to 'Home', home_path
           %li= link_to 'Investigations', investigations_path
           %li= link_to 'GSEs', grade_span_expectations_path
-          %li= link_to 'Data Collectors', data_collectors_path
-          %li= link_to 'Open Responses', open_responses_path
-          %li= link_to 'Xhtmls', xhtmls_path
+          / %li= link_to 'Data Collectors', data_collectors_path
+          / %li= link_to 'Open Responses', open_responses_path
+          / %li= link_to 'Xhtmls', xhtmls_path
         %p
           = yield :sidebar
         %hr
@@ -109,12 +109,10 @@
           = render :partial => 'shared/site_info'
           
 
+
+      #content_header.main_content_colors
+        = yield :content_header
       #main_content.main_content_colors
-        #content_header
-          #content_header_left
-            = yield :content_header_left
-          #content_header_right
-            = yield :content_header_right
         = yield :layout
         
 

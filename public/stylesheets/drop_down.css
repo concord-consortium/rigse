@@ -1,22 +1,22 @@
 /*
 Sass::SyntaxError: Undefined variable: "!dark_blue_gray".
-on line 13 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass
+on line 11 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass
 
+7:   :clear none
+8:   :float none
 9:   :background-color white
-10:   :opacity 0.8
-11:   :moz-opacity 0.8
-12:   :border-style solid 
-13:   :border-color = !dark_blue_gray
-14:   :border-width 2px
-15:   :margin 0px
-16:   :padding 0.5em
-17:   :font-size 10px
-18:   :line-height 1.5em
-19:   ul
+10: 
+11:   :border-color = !dark_blue_gray
+12:   :border-width 2px
+13:   :border-top-width 0px
+14:   :border-style solid 
+15:   
+16:   :margin 0px
+17:   :padding 0.5em
 
 
 Backtrace:
-/Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass:13
+/Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass:11
 /opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/script/variable.rb:16:in `perform'
 /opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/attr_node.rb:48:in `perform!'
 /opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
@@ -92,4 +92,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Sass::SyntaxError: Undefined variable: \"!dark_blue_gray\".\A on line 13 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass\A \A 9:   :background-color white\A 10:   :opacity 0.8\A 11:   :moz-opacity 0.8\A 12:   :border-style solid \A 13:   :border-color = !dark_blue_gray\A 14:   :border-width 2px\A 15:   :margin 0px\A 16:   :padding 0.5em\A 17:   :font-size 10px\A 18:   :line-height 1.5em\A 19:   ul\A "; }
+  content: "Sass::SyntaxError: Undefined variable: \"!dark_blue_gray\".\A on line 11 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass\A \A 7:   :clear none\A 8:   :float none\A 9:   :background-color white\A 10: \A 11:   :border-color = !dark_blue_gray\A 12:   :border-width 2px\A 13:   :border-top-width 0px\A 14:   :border-style solid \A 15:   \A 16:   :margin 0px\A 17:   :padding 0.5em\A "; }

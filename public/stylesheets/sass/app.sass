@@ -124,23 +124,20 @@ fieldset
     
 .main_content_colors
   +content_area_colors
+
 #main_content
   +column(!main_content_columns,true)
   +content_area_colors
   :line-height 1.5em
+  :padding-top 10px
 
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.5em 0px
+  :padding 0px
+  :margin 0px
   :display table
   :float none
-  #content_header_left
-    +column(12)
-  #content_header_right
-    +column(8,true)
-    :float right
-    :text-align right
 
 #footer
   +column(24,true)
