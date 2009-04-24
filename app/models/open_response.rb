@@ -17,7 +17,7 @@ class OpenResponse < ActiveRecord::Base
   
   
   def self.display_name
-    "Question"
+    "Open Response"
   end
 
 end

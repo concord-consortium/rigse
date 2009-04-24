@@ -23,6 +23,6 @@ class Xhtml < ActiveRecord::Base
   default_value_for :content, "<p>content goes here ...</p>"
 
   def self.display_name
-    "Content"
+    "Text Content"
   end
 end
