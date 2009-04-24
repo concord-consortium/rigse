@@ -3,8 +3,8 @@
   .content
     - field_set_tag 'name' do
       = f.text_field :name, :id => dom_id_for(multiple_choice, :item, :name_field)
-    - field_set_tag 'description' do
-      = f.text_area :description, :id => dom_id_for(multiple_choice, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
+    - field_set_tag 'prompt' do
+      = f.text_area :prompt, :id => dom_id_for(multiple_choice, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
       %fieldset#answers
         %legend 
           answers
