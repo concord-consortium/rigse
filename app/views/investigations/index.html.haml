@@ -7,21 +7,16 @@
         %input{ :type => "submit", :value => "Search"}
       - if @paginated_objects
         %p= page_entries_info @paginated_objects
+      %p.paginator
+        = will_paginate @paginated_objects
     .action_menu_header_right
       %ul.menu
         %li= link_to 'New investigation', new_investigation_path
-    
-    
-  %p.paginator
-    = will_paginate @paginated_objects
+        %li= toggle_all 'investigation descriptions'
+        
 
 
 .item_collection
-  %ul.menu_h
-    .left
-      %li
-    .right
-      %li= toggle_all 'investigation descriptions'
   %ul.quiet_list
     - for investigation in @pages    
       %div{ :id => dom_id_for(investigation, :item), :class => 'item' }
