@@ -21,10 +21,10 @@ body
   +reset
   :padding 0px
   +main_font
-  :background-color = !light_blue
+  :background-image url(/images/rites-bg.jpg)
+  :background-repeat repeat
   :margin 10px 
     :bottom 0px
-  // that's the blueprint default...
   
 h1 
   :padding-left 10px
@@ -61,7 +61,9 @@ fieldset
 
 
 .wrapper
-  +page_white
+  + page_white
+  :-moz-border-radius .5em
+  :-webkit-border-radius .5em
   
 #wrapper
   +container
@@ -77,7 +79,6 @@ fieldset
   #login
     :text-align right
     +column(10,true)
-
 
 .nav_menu
   :display block
@@ -96,8 +97,12 @@ fieldset
   +column(24,true)
   +top_and_bottom_nav_colors
   :overflow hidden
-  :padding 0.5em
-  
+  :padding 0.5em 0px
+  :-moz-border-radius-topright .5em
+  :-webkit-border-top-right-radius .5em
+  :-moz-border-radius-topleft .5em
+  :-webkit-border-top-left-radius .5em
+    
 #left_nav
   +column(!left_nav_columns)
   +left_nav_colors
@@ -111,10 +116,11 @@ fieldset
   +column(!main_content_columns,true)
   +content_area_colors
   :line-height 1.5em
+
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
-  :padding 0.5em
+  :padding 0.5em 0px
   :display table
   :float none
   #content_header_left
@@ -127,8 +133,13 @@ fieldset
 #footer
   +column(24,true)
   +top_and_bottom_nav_colors
-  :padding 0.5em
+  :padding 0.5em 0px
   :margin 0em
+  :-moz-border-radius-bottomright .5em
+  :-webkit-border-bottom-right-radius .5em
+  :-moz-border-radius-bottomleft .5em
+  :-webkit-border-bottom-left-radius .5em
+  
   #footer_left
     +column(12)
   #footer_right
@@ -214,6 +225,9 @@ ul.menu
     :color #DDD
   :background-color white
 
+.padded_content
+  :margin 0px 5px
+  
 .item
   :padding 0.5em
   :clear both
