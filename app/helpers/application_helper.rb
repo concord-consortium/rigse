@@ -144,7 +144,7 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
             haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
           end
@@ -154,7 +154,7 @@ module ApplicationHelper
   end
 
   def toggle_link_title(future_state, current_state)
-    "<span class='toggle'><span class='current_state'>#{current_state}</span> &raquo; <span class='future_state'>#{future_state}</span></span>"
+    "<span class='toggle'><span class='current_state'>#{current_state}</span><span class='future_state'>#{future_state}</span></span>"
   end
 
   def toggle_all(label='all', id_prefix='details_')
