@@ -121,11 +121,12 @@
 
 
       #footer
-        #footer_left
-          Questions/Feedback:
-          = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
-        #footer_right
-          / footer text on the right
+        .padded_content
+          #footer_left
+            Questions/Feedback:
+            = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
+          #footer_right
+            / footer text on the right
   #teacher_bottom 
     = link_to_function 'teacher-notes', visual_effect(:toggle_blind, 'some_data',:duration => 0.25)
     #some_data{:style=>"display: none;"}
