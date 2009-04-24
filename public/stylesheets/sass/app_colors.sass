@@ -34,18 +34,16 @@
   :color = !fg
   :background-color = !bg
   a
-    :text-decoration none
     :font-weight bold
     :padding 2px 4px 0px 4px
+    :text-decoration none
+    :background-color transparent
   a:link
     :color = !fg
-    :background-color= !bg
   a:visited
     :color = !fg
-    :background-color = !bg
   a:active
     :color = !fg
-    :background-color= !bg
   a:hover
     :color= !bg
     :background-color = !fg
@@ -64,12 +62,4 @@
     
 =top_and_bottom_nav_colors
   +color_mixer(!rieps_content_text_color,!very_dark_blue)
-  +delete_links
-
-=nav_tree_selected
-  a:before
-    :content "-"
-  a:after
-    :content "-"
-  +color_mixer(!very_dark_blue,!light_blue)
   +delete_links

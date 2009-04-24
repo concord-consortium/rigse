@@ -21,22 +21,25 @@ body
   +reset
   :padding 0px
   +main_font
-  :background-image url(/images/rites-bg.jpg)
-  :background-repeat repeat
+  :background
+    :image url(/images/rites-bg.jpg) 
+    :repeat repeat
   :margin 10px 
     :bottom 0px
   
 h1 
-  :padding-left 10px
+  :padding-left 0px
   :letter-spacing .2em
   :font 
-    :size 1.7em
+    :size 2.5em
+    :weight normal
+
 h2
   :padding-left 10px
   :letter-spacing .2em
   :font
     :size 1.5em
-    :weight bold
+    :weight normal
 
 h3
   :padding-left 10px
@@ -72,14 +75,26 @@ fieldset
 
 #header
   +column(24,true)
-  :vertical-align baseline
+  :vertical-align bottom
   :line-height 2em
-  #title
-    +column(14)
-  #login
-    :text-align right
-    +column(10,true)
-
+  :padding-bottom 10px
+  :background-color = !rieps_brown
+  :background
+    :image url(/images/header-bg.jpg) 
+    :repeat repeat
+  :color white
+  :-moz-border-radius-topright .5em
+  :-webkit-border-top-right-radius .5em
+  :-moz-border-radius-topleft .5em
+  :-webkit-border-top-left-radius .5em
+  a
+    :color white
+    :background-color transparent
+    :font-weight bold
+  a:hover
+    :color = !rieps_brown
+    :background-color white
+    
 .nav_menu
   :display block
   :padding
@@ -98,10 +113,7 @@ fieldset
   +top_and_bottom_nav_colors
   :overflow hidden
   :padding 0.5em 0px
-  :-moz-border-radius-topright .5em
-  :-webkit-border-top-right-radius .5em
-  :-moz-border-radius-topleft .5em
-  :-webkit-border-top-left-radius .5em
+
     
 #left_nav
   +column(!left_nav_columns)
@@ -194,7 +206,7 @@ ul.menu
 
 .component_title
   :font-size 1em
-  :font-weight bold
+
 
 .item_collection
   :border
@@ -202,7 +214,7 @@ ul.menu
     :style none
   :padding 0.5em 1em
   .item
-    :padding 0.5em 1em 1em
+    :padding 0.5em
     :border
       :style none
       :bottom
@@ -227,7 +239,18 @@ ul.menu
 
 .padded_content
   :margin 0px 5px
+  :float left
+
+.right_content
+  :margin 5px
+  :float right
+  :text-align right
   
+.left_content
+  :margin 5px
+  :float left
+  :text-align left
+    
 .item
   :padding 0.5em
   :clear both
@@ -300,9 +323,8 @@ ul
   :margin 0 0 5px
   
 dt
-  :font-weight bold
+  :text-decoration underline
 dd
-  :font-weight normal
   :margin-left 1.2em
 
 

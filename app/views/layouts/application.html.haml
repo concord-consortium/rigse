@@ -57,21 +57,20 @@
     #wrapper.wrapper
       = render :partial => 'shared/investigation_trail'
       #header
-        #title
-          %p
-            %h1 RITES Investigation Template
-        #login
-          %br
-            Welcome
-            = "#{current_user.name}."
-            - unless current_user.anonymous?
-              = link_to 'Preferences', preferences_user_path(current_user)
-              \/
-              = link_to 'Logout', logout_path
-            - else
-              = link_to 'Login', login_path
-              \/
-              = link_to 'Signup', signup_path
+        %span.left_content
+          %h1 RITES Authoring
+        %span.right_content
+          Welcome
+          = "#{current_user.name}."
+          - unless current_user.anonymous?
+            = link_to 'Preferences', preferences_user_path(current_user)
+            \/
+            = link_to 'Logout', logout_path
+          - else
+            = link_to 'Login', login_path
+            \/
+            = link_to 'Signup', signup_path
+            
       #nav_top
         %span.hidden.doNotPrint
           Navigation:

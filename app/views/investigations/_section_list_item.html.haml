@@ -6,19 +6,13 @@
       %div.action_menu_header_right   
         %ul.menu
           %li= link_to 'duplicate', duplicate_section_url(section)
-          %li= link_to 'edit', section
-          %li.menu=toggle_more section
+          / %li= link_to 'edit', section
+          / %li.menu=toggle_more section
           %li.menu=link_to_remote 'delete', :confirm => "delete section #{section.name}?", :url => { :controller => 'investigations', :action => 'delete_section', :params => {:id=>section.investigation.id, :section_id => section.id}}, :html => {:class=>"delete"}
     %div{:id => dom_id_for(section, :details), :class => 'content', :style =>'display:block;'}
-      %dl
-        %dt
-          description
-        %dd
-          = section.description
-        %dl
-          - section.pages.each_with_index do |page, i|
-            %dt
-              = "page: #{i+1}: " + page.name
-            - unless page.description.empty?
-              %dd  
-                =page.description
+      = section.description
+      %ul pages:
+      - section.pages.each_with_index do |page, i|
+        %li.tiny
+          = link_to "page: #{i+1}: #{page.name}", page
+          %span.tiny= page.description
