@@ -1,4 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :data_tables, :member => {
+    :destroy => :post
+  }
+
   map.resources :multiple_choices, :member => {
     :destroy => :post,
     :add_answer => :post

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090421202244) do
+ActiveRecord::Schema.define(:version => 20090427151608) do
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
@@ -82,6 +82,19 @@ ActiveRecord::Schema.define(:version => 20090421202244) do
     t.boolean  "k2_active"
     t.boolean  "k3_active"
     t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "data_tables", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "column_count"
+    t.integer  "visible_rows"
+    t.text     "column_names"
+    t.text     "column_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

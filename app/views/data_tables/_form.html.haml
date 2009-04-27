@@ -1,0 +1,18 @@
+= edit_menu_for(data_table, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
+  - field_set_tag 'column labels' do
+    %ul.menu_h
+    - data_table.headings.each_with_index do |heading,i|
+      %li
+        %input{:type=>"text", :name=>"heading_#{i}", :value=>"#{heading}", :id=>"data_table_heading_#{i}"}= heading
+
+  - field_set_tag 'Size' do
+    %ul.menu_h
+      %li
+        Number of columns:
+        = f.text_field :column_count, :size => 5
+      %li
+        Visible rows:
+        = f.text_field :visible_rows, :size => 5
