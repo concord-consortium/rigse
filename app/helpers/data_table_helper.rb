@@ -3,7 +3,7 @@ module DataTableHelper
   #
   #
   #
-  def remove_empty_headings
+  def pack_field_params
     <<-EOF_JS
     $$('.js_target').each(function (t) {
       if (t.value =='') {
@@ -19,7 +19,7 @@ module DataTableHelper
   # 
   #
   def link_add_column(link_text, dom_id="heading_list") 
-    link_to_function link_text,"$('#{dom_id}').insert('#{escape_javascript data_table_heading_tag()}')"
+    link_to_function link_text,"$('#{dom_id}').insert('#{escape_javascript data_table_heading_tag()}','top')"
   end
   
   #

@@ -1,5 +1,5 @@
 = edit_menu_for(data_table,f)
-= observe_form(dom_id_for(data_table, :edit), :function => remove_empty_headings)
+= observe_form(dom_id_for(data_table, :edit), :function => pack_field_params)
 .content
   - field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
@@ -9,8 +9,8 @@
         %ul
           %li= link_add_column 'add column', 'heading_list'
     #heading_list.menu_h
-    - data_table.headings.each do |heading|
-      = data_table_heading_tag(heading)
+      - data_table.headings.each do |heading|
+        = data_table_heading_tag(heading)
     = f.hidden_field :column_names, :id => 'column_names'
     = f.hidden_field :column_count, :id => 'column_count'
   - field_set_tag 'Visible Rows' do
