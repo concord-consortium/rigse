@@ -2,15 +2,14 @@
   User
 - form_for @user do |form|
   .item
+    %ul.menu_v
+      %li
+        = submit_tag 'Save'
+      %li
+        = submit_tag 'Cancel'
+  .content
+    = form.error_messages
+    = render :partial => 'user', :locals => { :f => form }
     .menu
-      %ul
-        %li
-          = submit_tag 'Save'
-        %li
-          = submit_tag 'Cancel'
-    .content
-      = form.error_messages
-      = render :partial => 'user', :locals => { :f => form }
-      .menu
-        - if @user.has_role?("admin", "manager")
-          = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+      - if @user.has_role?("admin", "manager")
+        = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
