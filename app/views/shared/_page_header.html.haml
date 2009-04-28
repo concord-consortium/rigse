@@ -1,8 +1,9 @@
 %div{:id => dom_id_for(page,:item), :class =>"action_menu"}       
   .action_menu
     .action_menu_header_left
-      / %h3= name_for_component(page)
-      %h3= in_place_editor_field :page, 'name'
+      .padded_content
+        %h3= in_place_editor_field :page, 'name'
+        .tiny= in_place_editor_field :page, 'description', {},{:rows=>3, :cols=>80}
     .action_menu_header_right
       %ul.menu
         %li= link_to 'duplicate', duplicate_page_url(page)

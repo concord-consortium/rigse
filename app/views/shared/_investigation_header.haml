@@ -1,8 +1,8 @@
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu_header_left
-    / %h3= name_for_component(investigation)
-    %h3= in_place_editor_field :investigation, 'name'
-    
+    .padded_content
+      %h3= in_place_editor_field :investigation, 'name'
+      .tiny=in_place_editor_field :investigation, 'description', {},{:rows=>3, :cols=>80}
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(investigation,"sections_actions", "show/hide sections")

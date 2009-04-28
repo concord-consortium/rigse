@@ -7,7 +7,8 @@ class InvestigationsController < ApplicationController
   before_filter :setup_object, :except => [:index, :add_step]
 
   in_place_edit_for :investigation, :name
-
+  in_place_edit_for :investigation, :description
+  
   protected  
 
   

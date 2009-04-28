@@ -4,7 +4,8 @@ class PagesController < ApplicationController
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
   in_place_edit_for :page, :name
-  
+  in_place_edit_for :page, :description
+    
   protected 
   
   def find_entities
