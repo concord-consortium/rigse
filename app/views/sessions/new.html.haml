@@ -1,0 +1,21 @@
+= title "Login"
+- form_tag session_path do 
+  .action_menu
+    .action_menu_header_left
+      .padded_content
+        %h3 Login
+    .action_menu_header_right
+      %ul.menu
+        %li= submit_tag 'Login', :class=>"aligned" 
+        %li= link_to 'Forgotten Password', forgot_password_path
+  
+  = label_tag 'login', 'Username', :class=>"aligned"
+  = text_field_tag 'login', @login, :class=>"aligned"
+
+
+  = label_tag :password, "Password", :class=>"aligned"
+  = password_field_tag 'password', "Password", :class=>"aligned"
+  = label_tag 'remember_me', 'Remember me', :class=>"aligned"
+  = check_box_tag 'remember_me', '1', @remember_me, :class=>"aligned" 
+
+%br
