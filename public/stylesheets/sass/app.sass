@@ -312,6 +312,14 @@ li.tiny
   :height 80px  
   :word-break break-all
 
+.flash
+  :color red
+  :font-weight bold
+  :border 1px solid
+  :display block
+  :clear both
+  :margin-top 10px
+  
 .data_table
   :width 100%
   th
@@ -342,13 +350,26 @@ dd
 
 input
   +main_font
-  :color =!dark_blue_gray
+  :color= !very_dark_blue
   :padding 0.2em
+
+  
 input[type=text]
   :border solid
+  :border-width 2px
+  :border-color= !very_dark_blue
+  :background-color= !blue_gray
+  &:focus
+    :background-color= !rieps_brown
+  
 input[type=password]
   :border solid
-  
+  :border-width 2px
+  :border-color= !very_dark_blue
+  :background-color= !blue_gray
+  &:focus
+    :background-color= !rieps_brown
+    
 .aligned
   :margin 0.25em
 label.aligned

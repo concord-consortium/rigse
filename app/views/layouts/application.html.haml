@@ -115,6 +115,8 @@
         = yield :content_header
       #main_content.main_content_colors
         = yield :layout
+        - flash.each do |key, message|
+          %p{:class=>"flash flash_#{key}"}= "#{key}:  #{message}"
         
 
 
