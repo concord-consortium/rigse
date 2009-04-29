@@ -1,22 +1,47 @@
 %div{:id => dom_id_for(data_collector, :details), :class => 'content'}
   %div{:id => dom_id_for(data_collector, :graph), :class => 'data_collector'}
     :javascript
+    
+      var default_data_#{data_collector.id} = [];
+
+      var default_x_range_#{data_collector.id} = #{data_collector.x_axis_max - data_collector.x_axis_min};
+      var default_x_factor_#{data_collector.id} = 20 / default_x_range_#{data_collector.id};
+      var default_x_step_#{data_collector.id} = default_x_range_#{data_collector.id} / 60;
+
+      var default_y_range_#{data_collector.id} = #{data_collector.y_axis_max - data_collector.y_axis_min};
+      var default_y_offset_#{data_collector.id} = default_y_range_#{data_collector.id} / 3 + #{data_collector.y_axis_min};
+      
+      for(var i = #{data_collector.x_axis_min}; i <= #{data_collector.x_axis_max}; i += default_x_step_#{data_collector.id}){
+        default_data_#{data_collector.id}.push([i, Math.sin(i * default_x_factor_#{data_collector.id}) * (default_y_range_#{data_collector.id} / 4) +  default_y_offset_#{data_collector.id}] );
+      }
+      
       Flotr.draw(
         $('#{dom_id_for(data_collector, :graph)}'),
         [ { 
-            data: [ ],
-            label: '#{data_collector.y_axis_title}',
-            lines: {show: true, fill: false},
-            points: {show: true} 
+          data:default_data_#{data_collector.id},
+          label: 'Distance (m)',
+          lines: {show: #{data_collector.connect_points}, fill: false},
+          points: {show: #{data_collector.draw_marks}}
         } ],
         { 
+          mouse:{
+                  track: #{data_collector.ruler_enabled},
+                  lineColor: 'purple',
+                  relative: true,
+                  position: 'ne',
+                  sensibility: 1, // => The smaller this value, the more precise you've to point
+                  trackDecimals: 2,
+                  trackFormatter: function(obj){ return 'x = ' + obj.x +', y = ' + obj.y; }
+                },
+                crosshair:{
+                  mode: 'xy'
+                },
+          HtmlText: false,
           legend: {show: true, max: #{data_collector.y_axis_max}},
           title: '#{data_collector.title}',
-          xaxis: { min: '#{data_collector.x_axis_min}', 
-            max: '#{data_collector.x_axis_max}', 
+          xaxis: { min: #{data_collector.x_axis_min}, max: #{data_collector.x_axis_max}, 
             title: '#{data_collector.x_axis_title }' },
-          yaxis: { min: '#{data_collector.y_axis_min}', 
-            max: '#{data_collector.y_axis_max}', 
-            title: '#{data_collector.x_axis_title }' }
+          yaxis: { min: #{data_collector.y_axis_min}, max: #{data_collector.y_axis_max}, 
+            title: '#{data_collector.y_axis_title }' }
         }
       );
