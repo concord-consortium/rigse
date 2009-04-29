@@ -110,7 +110,13 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
   
   # Restful Authentication Resources
-  map.resources :users, :member => { :preferences => [:get, :put], :interface => :get }
+  map.resources :users, :member => { 
+    :preferences => [:get, :put], 
+    :interface => :get,
+    :suspend   => :put,
+    :unsuspend => :put,
+    :purge     => :delete } 
+    
   map.resources :passwords
   map.resource :session
   

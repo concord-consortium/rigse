@@ -126,6 +126,7 @@ class UsersController < ApplicationController
   def create_new_user(attributes)
     @user = User.new(attributes)
     if @user && @user.valid?
+      debugger
       @user.register!
     end
     if @user.errors.empty?
