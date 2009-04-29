@@ -124,14 +124,13 @@ class UsersController < ApplicationController
   protected
   
   def create_new_user(attributes)
-    @user = User.new(attributes)
-    if @user && @user.valid?
-      debugger
-      @user.register!
+    @new_user = User.new(attributes)
+    if @new_user && @new_user.valid?
+      @new_user.register!
     end
-    if @user.errors.empty?
+    if @new_user.errors.empty?
       # will redirect:
-      successful_creation(@user)
+      successful_creation(@new_user)
     else
       # will redirect:
       failed_creation
@@ -145,6 +144,9 @@ class UsersController < ApplicationController
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
+    # force the current_user to anonymous, because we have not successfully created an account yet.
+    # edge case, which we might need a more integrated solution for??
+    self.current_user = User.anonymous
     flash[:error] = message
     render :action => :new
   end

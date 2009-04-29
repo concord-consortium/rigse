@@ -1,7 +1,7 @@
 = title "Rites: Sign up!"
-- @user.password = @user.password_confirmation = nil
-- form_for @user do |form|
-  %div{:id => dom_id_for(@user,:form), :class =>"action_menu"}       
+- @new_user.password = @new_user.password_confirmation = nil
+- form_for @new_user do |form|
+  %div{:id => dom_id_for(@new_user,:form), :class =>"action_menu"}       
     .action_menu
       .action_menu_header_left
         .padded_content
