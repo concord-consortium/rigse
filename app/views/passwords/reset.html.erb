@@ -1,17 +1,17 @@
 <%= title "Reset Your Password", :h2 %>
-<% form_for :user, :url => { :action => 'reset' } do |f| %>
+<% form_for :user, :url => { :action => 'update_after_forgetting' } do |f| %>
   <%= f.error_messages %>
   <p>Please enter a new password and confirm it.</p>
   <fieldset>
-    <legend>Update Password</legend>
+    <legend>Update Password for <%= @user.login %></legend>
     <ol>
       <li>
         <%= f.label :password %>
-        <%= f.password_field :password %>
+        <%= f.password_field :password, :live => false  %>
       </li>
       <li>
         <%= f.label :password_confirmation %>
-        <%= f.password_field :password_confirmation %>
+        <%= f.password_field :password_confirmation, :live => false %>
       </li>
     </ol>
   </fieldset>
