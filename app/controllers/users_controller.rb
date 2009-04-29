@@ -124,13 +124,13 @@ class UsersController < ApplicationController
   protected
   
   def create_new_user(attributes)
-    @new_user = User.new(attributes)
-    if @new_user && @new_user.valid?
-      @new_user.register!
+    @user = User.new(attributes)
+    if @user && @user.valid?
+      @user.register!
     end
-    if @new_user.errors.empty?
+    if @user.errors.empty?
       # will redirect:
-      successful_creation(@new_user)
+      successful_creation(@user)
     else
       # will redirect:
       failed_creation
