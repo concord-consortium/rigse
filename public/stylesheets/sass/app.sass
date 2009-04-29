@@ -320,8 +320,15 @@ li.tiny
   :clear both
   :margin-top 10px
 .flash_error
-  :color red
-  
+  :color= !dark_red
+
+.errorExplanation
+  :color= !dark_red
+  h2
+    :font-weight bold
+    :letter-spacing normal
+    :font-size 12pt
+
 .data_table
   :width 100%
   th
@@ -363,7 +370,7 @@ input[type=text]
   :background-color= !blue_gray
   &:focus
     :background-color= !rieps_brown
-  
+
 input[type=password]
   :border solid
   :border-width 2px
@@ -371,6 +378,10 @@ input[type=password]
   :background-color= !blue_gray
   &:focus
     :background-color= !rieps_brown
+    
+.fieldWithErrors
+  input
+    :border-color= !dark_red
     
 .aligned
   :margin 0.25em
