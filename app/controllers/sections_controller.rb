@@ -38,6 +38,14 @@ class SectionsController < ApplicationController
     end
   end
 
+  # GET /sections/1/print
+  def print
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @page }
+    end
+  end
+
   ##
   ##
   ##

@@ -53,6 +53,14 @@ class InvestigationsController < ApplicationController
     end
   end
 
+  # GET /investigations/1/print
+  def print
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @page }
+    end
+  end
+
   # GET /pages/new
   # GET /pages/new.xml
   def new

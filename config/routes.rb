@@ -47,6 +47,7 @@ ActionController::Routing::Routes.draw do |map|
     :add_page => :post,
     :sort_pages => :post, 
     :delete_page => :post,
+    :print => :get,
     :duplicate => :get
   }
     
@@ -74,6 +75,7 @@ ActionController::Routing::Routes.draw do |map|
     :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
+    :print => :get,
     :duplicate => :get,
     :export => :get
   }

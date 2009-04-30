@@ -1,0 +1,12 @@
+%h2
+  =@investigation.name
+- @investigation.sections.each do |section|
+  %h3
+    =section.name
+  - section.pages.each do |page|
+    .item
+      .menu
+        =page.name
+      .content
+        = render  :partial => 'pages/preview', :locals => { :page => page }
+    %p
