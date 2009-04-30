@@ -80,34 +80,35 @@
 
             
       #left_nav.nav_menu
-        %ul.nav_menu
-          %li= link_to 'Home', home_path
-          %li= link_to 'Investigations', investigations_path
-          %li= link_to 'GSEs', grade_span_expectations_path
-          / %li= link_to 'Data Collectors', data_collectors_path
-          / %li= link_to 'Open Responses', open_responses_path
-          / %li= link_to 'Xhtmls', xhtmls_path
-        %p
-          = yield :sidebar
-        %hr
-        %p
-        = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
-        %hr
-        %p
-          %span.sideBarText
-            Rhode Island Technology Enhanced Science 
-            %em (RITES) 
-            program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
-        %hr
-          %p.small
-            Validate the
-            %a{ :href => "http://validator.w3.org/check/referer" }
-              XHTML
-            and
-            %a{ :href => "http://jigsaw.w3.org/css-validator/check/referer" }
-              CSS of this page.
-        %hr
-          = render :partial => 'shared/site_info'
+        .padded_content
+          %ul.nav_menu
+            %li= link_to 'Home', home_path
+            %li= link_to 'Investigations', investigations_path
+            %li= link_to 'GSEs', grade_span_expectations_path
+            / %li= link_to 'Data Collectors', data_collectors_path
+            / %li= link_to 'Open Responses', open_responses_path
+            / %li= link_to 'Xhtmls', xhtmls_path
+          %p
+            = yield :sidebar
+          %hr
+          %p
+          = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
+          %hr
+          %p
+            %span.sideBarText
+              Rhode Island Technology Enhanced Science 
+              %em (RITES) 
+              program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
+          %hr
+            %p.small
+              Validate the
+              %a{ :href => "http://validator.w3.org/check/referer" }
+                XHTML
+              and
+              %a{ :href => "http://jigsaw.w3.org/css-validator/check/referer" }
+                CSS of this page.
+          %hr
+            = render :partial => 'shared/site_info'
           
 
 
