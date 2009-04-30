@@ -3,11 +3,11 @@ class SectionsController < ApplicationController
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
-    
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
+  
   protected 
   
   def find_entities
-    # @investigation = Investigation.find(params[:section_id])
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
       if (@section)
@@ -15,6 +15,21 @@ class SectionsController < ApplicationController
       end
     end
   end
+  
+  def can_edit
+    if defined? @section
+      unless @section.changeable?(current_user)
+        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@section.name}"
+        flash[:error] = error_message
+        if request.xhr?
+          render :text => "<div class='flash_error'>#{error_message}</div>"
+        else
+          redirect_back_or sections_paths
+        end
+      end
+    end
+  end
+  
   
   public
   
@@ -151,13 +166,12 @@ class SectionsController < ApplicationController
     @page.destroy
   end
   
-  
   ##
   ##
   ##
   def duplicate
     @copy = @section.clone :include => {:pages => {:page_elements => :embeddable}}
-    @copy.name = "copy of #{@original.name}"
+    @copy.name = "copy of #{@section.name}"
     @copy.save
     @investigation = @copy.investigation
     redirect_to :action => 'edit', :id => @copy.id

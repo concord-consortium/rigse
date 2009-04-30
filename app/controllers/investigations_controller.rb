@@ -6,8 +6,8 @@ class InvestigationsController < ApplicationController
   }
   before_filter :setup_object, :except => [:index]
 
-  # editing / modifying / deleting require editable_ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:duplicate,:export]
+  # editing / modifying / deleting require editable-ness
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
   
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description
@@ -43,7 +43,6 @@ class InvestigationsController < ApplicationController
     end
     @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
   end
-  
   
   public
   

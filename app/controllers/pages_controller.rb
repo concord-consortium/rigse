@@ -1,8 +1,9 @@
 class PagesController < ApplicationController
   helper :all
   
-  
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
+    
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
@@ -18,6 +19,20 @@ class PagesController < ApplicationController
     
     if (@page)
       @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+    end
+  end
+  
+  def can_edit
+    if defined? @page
+      unless @page.changeable?(current_user)
+        error_message = "you (#{current_user.login}) is not permitted to #{action_name.humanize} (#{@page.name})"
+        flash[:error] = error_message
+        if request.xhr?
+          render :text => "<div class='flash_error'>#{error_message}</div>"
+        else
+          redirect_back_or sections_paths
+        end
+      end
     end
   end
   
