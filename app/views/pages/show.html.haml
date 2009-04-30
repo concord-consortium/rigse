@@ -9,7 +9,7 @@
 = render :partial=> 'shared/page_header', :locals=>{:page => @page }
 
 .item_collection
-  %ul#elements_container.sortable.menu
+  %ul#elements_container.menu
 
     / - if @page.page_elements.size == 1
     /   - element = @page.page_elements[0]
@@ -17,5 +17,5 @@
     / -else 
     - @page.page_elements.each_with_index do |element,i|
       = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
-
-  =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
+  - if (@page.changeable?(current_user))
+    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }

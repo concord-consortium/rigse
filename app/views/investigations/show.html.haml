@@ -8,4 +8,5 @@
   %ul#investigation_sections_list.menu
     - @investigation.sections.each do |section|
       =render :partial => 'section_list_item', :locals => {:section => section}
-      =sortable_element :investigation_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:investigation_id => @investigation.id }}
+      -if (@investigation.changeable?(current_user))
+        =sortable_element :investigation_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:investigation_id => @investigation.id }}
