@@ -11,7 +11,7 @@ class DrawingTool < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{uuid name description background_image_url stamps}
   
   class <<self
     def searchable_attributes

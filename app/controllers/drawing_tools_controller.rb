@@ -24,6 +24,15 @@ class DrawingToolsController < ApplicationController
     end
   end
 
+  # GET /drawing_tools/1/print
+  def print
+    @drawing_tool = DrawingTool.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @drawing_tool }
+    end
+  end
+
   # GET /drawing_tools/new
   # GET /drawing_tools/new.xml
   def new

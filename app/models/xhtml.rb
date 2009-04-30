@@ -10,7 +10,7 @@ class Xhtml < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description content}
+  @@searchable_attributes = %w{uuid name description content}
   
   class <<self
     def searchable_attributes

@@ -1,14 +1,17 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :data_tables, :member => {
+    :print => :get,
     :destroy => :post
   }
 
   map.resources :multiple_choices, :member => {
+    :print => :get,
     :destroy => :post,
     :add_answer => :post
   }
 
   map.resources :drawing_tools, :member => {
+    :print => :get,
     :destroy => :post
   }
   
@@ -27,17 +30,20 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :calibrations
   
   map.resources :xhtmls, :member => {
+    :print => :get,
     :destroy => :post
   }
   
   # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
   map.resources :open_responses, :member  => {
+    :print => :get,
     :destroy => :post
   }
   # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
   map.resources :data_collectors, :member => {
+    :print => :get,
     :destroy => :post
   }
   # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'

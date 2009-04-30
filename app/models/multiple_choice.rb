@@ -15,7 +15,7 @@ class MultipleChoice < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{uuid name description prompt}
   
   class <<self
     def searchable_attributes

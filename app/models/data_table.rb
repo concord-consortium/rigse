@@ -12,7 +12,7 @@ class DataTable < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{uuid name description column_names column_data}
   
   class <<self
     def searchable_attributes

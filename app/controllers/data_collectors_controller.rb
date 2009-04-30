@@ -24,6 +24,15 @@ class DataCollectorsController < ApplicationController
     end
   end
 
+  # GET /data_collectors/1/print
+  def print
+    @data_collector = DataCollector.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @data_collector }
+    end
+  end
+
   # GET /data_collectors/new
   # GET /data_collectors/new.xml
   def new

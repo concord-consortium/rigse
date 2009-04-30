@@ -1,9 +1,5 @@
-%h1= "Open Response Questions: #{@open_responses.length}" 
-- content_for(:content_header_left) do
-  %ul
-    %li
--content_for(:content_header_right) do
-  %ul
-    %li
+= render :partial => 'shared/collection_menu', :locals => { :collection => @open_responses, :collection_class => OpenResponse }        
 
-= render :partial => 'open_response', :collection => @open_responses
+- @open_responses.each do |open_response|
+  %div{ :id => dom_id_for(open_response, :item), :class => 'item' }
+    = render :partial => "show", :locals => { :open_response => open_response }
