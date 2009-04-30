@@ -1,12 +1,7 @@
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu_header_left
     .padded_content
-      - if (investigation.changeable?(current_user))
-        %h3= in_place_editor_field :investigation, 'name'
-        .tiny=in_place_editor_field :investigation, 'description', {},{:rows=>3, :cols=>80}
-      - else
-        %h3= investigation.name
-        .tiny= investigation.description
+      = render :partial=>'shared/in_place_fields', :locals => {:item=>investigation}
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(investigation,"sections_actions", "show/hide sections")
