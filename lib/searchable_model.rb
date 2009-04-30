@@ -34,14 +34,20 @@ module SearchableModel
   # see: http://github.com/mislav/will_paginate/wikis/simple-search
   def search(search, page, user, includes={})
     sql_parameters = []
-    if user.has_role?("admin", "manager") || self == User
-      sql_conditions = ""
-    else
-      # re-enable this or something like this after dealing with asset visibility attributes
-      # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
-      sql_conditions = ""
-      # sql_parameters << user.id
+    sql_conditions = ""
+    # pass in a username to limit the search to the users items
+    if (!user.nil?) && (!user.id.nil?)
+      if column_names.include? 'user_id'
+        if user.has_role?("admin", "manager") || self == User
+          sql_conditions = ""
+        else
+          # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
+          sql_conditions = "(#{table_name}.user_id = ?) and "
+          sql_parameters << user.id
+        end
+      end
     end
+    
     # debugger
     sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
     # FIXME - This search should do the following: split the terms based on whitespace, then perform the search
