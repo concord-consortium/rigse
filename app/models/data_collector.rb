@@ -11,7 +11,7 @@ class DataCollector < ActiveRecord::Base
   
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
   
   class <<self
     def searchable_attributes

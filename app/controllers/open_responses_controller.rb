@@ -2,8 +2,10 @@ class OpenResponsesController < ApplicationController
   # GET /open_responses
   # GET /open_responses.xml
   def index
-    @open_responses = OpenResponse.find(:all)
-    @paginated_objects = @open_responses
+    # @open_responses = OpenResponse.find(:all)
+    # @paginated_objects = @open_responses
+
+    @open_responses = OpenResponse.search(params[:search], params[:page], self.current_user)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,6 +24,15 @@ class OpenResponsesController < ApplicationController
         format.html # show.html.erb
         format.xml  { render :xml => @open_response }
       end
+    end
+  end
+
+  # GET /open_responses/1/print
+  def print
+    @open_response = OpenResponse.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @open_response }
     end
   end
 

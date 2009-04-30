@@ -1,9 +1,11 @@
 %h3
   =@section.name
 - @section.pages.each do |page|
+  %p
+  %hr
+  %p
   .item
     .menu
       =page.name
     .content
       = render  :partial => 'pages/preview', :locals => { :page => page }
-  %p

@@ -24,6 +24,15 @@ class DataTablesController < ApplicationController
     end
   end
 
+  # GET /data_tables/1/print
+  def print
+    @data_table = DataTable.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @data_table }
+    end
+  end
+
   # GET /data_tables/new
   # GET /data_tables/new.xml
   def new

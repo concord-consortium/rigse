@@ -24,6 +24,15 @@ class XhtmlsController < ApplicationController
     end
   end
 
+  # GET /xhtmls/1/print
+  def print
+    @xhtml = Xhtml.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @xhtml }
+    end
+  end
+
   # GET /xhtmls/new
   # GET /xhtmls/new.xml
   def new

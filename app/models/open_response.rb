@@ -8,6 +8,16 @@ class OpenResponse < ActiveRecord::Base
 
   include Changeable
 
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{uuid name description prompt}
+
+  class <<self
+   def searchable_attributes
+     @@searchable_attributes
+   end
+  end
+
   default_value_for :name, "Open Response Question"
   default_value_for :description, "What is the purpose of this question ...?"
   default_value_for :prompt, <<-HEREDOC

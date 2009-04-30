@@ -24,6 +24,15 @@ class MultipleChoicesController < ApplicationController
     end
   end
 
+  # GET /multiple_choices/1/print
+  def print
+    @multiple_choice = MultipleChoice.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @multiple_choice }
+    end
+  end
+
   # GET /multiple_choices/new
   # GET /multiple_choices/new.xml
   def new
