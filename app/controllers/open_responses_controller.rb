@@ -21,7 +21,8 @@ class OpenResponsesController < ApplicationController
       render :partial => 'open_response', :locals => { :open_response => @open_response }
     else
       respond_to do |format|
-        format.html # show.html.erb
+        format.html # show.html.haml
+        format.otml { render :layout => "layouts/open_response" } # show.otml.haml
         format.xml  { render :xml => @open_response }
       end
     end

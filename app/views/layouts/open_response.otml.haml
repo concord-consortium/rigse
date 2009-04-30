@@ -1,0 +1,17 @@
+!!! XML
+%otrunk{:id => @content_for_otrunk_doc_id}
+  =otml_imports
+  %objects
+    %OTSystem
+      =otml_bundles
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h1 
+                Basic Question
+              %p
+                This is a rendering of a basic open response question
+              %object{ :refid => @content_for_open_response_object_id }/
+      %library
+        =yield :layout

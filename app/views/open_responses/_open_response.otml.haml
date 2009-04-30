@@ -1,0 +1,7 @@
+%OTQuestion{:id => dom_id_for(open_response)}
+  %prompt
+    %OTCompoundDoc
+      %bodyText= open_response.prompt
+  %input
+    %OTText{ :id => dom_id_for(open_response, :response), :rows => '2', :columns => '40' }
+      %text= open_response.default_response

@@ -1,3 +1,5 @@
+include OtmlHelper
+
 module ApplicationHelper
 
   def display_repo_info
