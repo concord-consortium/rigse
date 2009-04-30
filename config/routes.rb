@@ -1,4 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
+
+  map.resources :vendor_interfaces
+  map.resources :probe_types
+  map.resources :physical_units
+  map.resources :device_configs
+  map.resources :data_filters
+  map.resources :calibrations
+
+  map.resources :teacher_notes
+
   map.resources :data_tables, :member => {
     :print => :get,
     :destroy => :post
@@ -14,40 +24,22 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :destroy => :post
   }
-  
-  map.resources :teacher_notes
 
-  map.resources :vendor_interfaces
-
-  map.resources :probe_types
-
-  map.resources :physical_units
-
-  map.resources :device_configs
-
-  map.resources :data_filters
-
-  map.resources :calibrations
-  
   map.resources :xhtmls, :member => {
     :print => :get,
     :destroy => :post
   }
   
-  # map.resources :xhtmls, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
-
   map.resources :open_responses, :member  => {
     :print => :get,
     :destroy => :post
   }
-  # map.resources :open_responses, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
 
   map.resources :data_collectors, :member => {
     :print => :get,
     :destroy => :post
   }
-  # map.resources :data_collectors, :path_prefix => '/pages/:page_id', :name_prefix => 'page_'
-  
+
   map.resources :sections, :member => {
     :destroy => :post,
     :add_page => :post,
@@ -67,8 +59,6 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get
   }
 
-  # /pages/:id/add_element/:embeddable_type
-  # /pages/:id/:embeddable_type_controller
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
@@ -85,6 +75,7 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get,
     :export => :get
   }
+
   map.resources :investigations do |investigation|
     investigation.resources :sections do |section|
       section.resources :pages do |page|
@@ -92,9 +83,7 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
-  
 
-  
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
   map.resources :grade_span_expectations, :collection => { 
@@ -102,8 +91,7 @@ ActionController::Routing::Routes.draw do |map|
     :reparse_gses => :put,
     :select => :get
   }
-  
-  
+
   map.resources :images
  
   # Restful Authentication Rewrites
@@ -135,4 +123,5 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
+
 end
