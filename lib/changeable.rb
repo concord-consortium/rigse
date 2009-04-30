@@ -9,7 +9,7 @@ module Changeable
       if self.user == user
         true
       # any one can change an anonymous item(??)
-      elsif self.user.anonymous?
+      elsif self.un_owned?
         true
       end
     elsif self == user
@@ -17,5 +17,19 @@ module Changeable
     else
       nil
     end
+  end
+  
+  def owned?
+    if self.user.nil?
+      return false
+    end
+    if self.user.anonymous?
+      return false
+    end
+    true
+  end
+  
+  def un_owned?
+    return (! self.owned?)
   end
 end
