@@ -4,13 +4,30 @@ class InvestigationsController < ApplicationController
   prawnto :prawn=>{
     :page_layout=>:landscape,
   }
-  before_filter :setup_object, :except => [:index, :add_step]
+  before_filter :setup_object, :except => [:index]
 
+  # editing / modifying / deleting require editable_ness
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:duplicate,:export]
+  
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description
   
   protected  
 
+  def can_edit
+    if defined? @investigation
+      unless @investigation.changeable?(current_user)
+        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@investigation.name}"
+        flash[:error] = error_message
+        if request.xhr?
+          render :text => "<div class='flash_error'>#{error_message}</div>"
+        else
+          redirect_back_or investigations_path
+        end
+      end
+    end
+  end
+  
   
   def setup_object
     if params[:id]
@@ -28,13 +45,15 @@ class InvestigationsController < ApplicationController
   end
   
   
-  
   public
   
   def index
-    @pages = Investigation.search(params[:search], params[:page], self.current_user)
-    @paginated_objects = @pages
-    
+    if params[:mine_only]
+      @pages = Investigation.search(params[:search], params[:page], self.current_user)
+    else
+      @pages = Investigation.search(params[:search], params[:page], nil)
+    end
+    @paginated_objects = @pages    
 
     respond_to do |format|
       format.html # index.html.erb
@@ -84,7 +103,7 @@ class InvestigationsController < ApplicationController
   # POST /pages.xml
   def create
     @investigation = Investigation.new(params[:investigation])
-
+    @investigation.user = current_user
     respond_to do |format|
       if @investigation.save
         flash[:notice] = 'Investigation was successfully created.'
@@ -130,7 +149,7 @@ class InvestigationsController < ApplicationController
     @investigation.destroy
 
     respond_to do |format|
-      format.html { redirect_to(investigations_url) }
+      format.html { redirect_back_or(investigations_url) }
       format.xml  { head :ok }
     end
   end
@@ -171,6 +190,7 @@ class InvestigationsController < ApplicationController
     @original = Investigation.find(params['id'])
     @investigation = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @investigation.name = "copy of #{@investigation.name}"
+    @investigation.deep_set_user current_user
     @investigation.save
     redirect_to edit_investigation_url(@investigation)
   end

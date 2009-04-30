@@ -128,8 +128,10 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
+            if (component.changeable?(current_user))
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
+            end
           end
         end
       end
@@ -144,9 +146,11 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
-            haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
+            if (component.changeable?(current_user))
+              # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
+            end
           end
         end
       end
