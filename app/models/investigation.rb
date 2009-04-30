@@ -16,6 +16,22 @@ class Investigation < ActiveRecord::Base
     end
   end
   
+  def deep_set_user user
+    self.user = user
+    self.sections.each do |s| 
+      s.user = user
+      s.pages.each do |p|
+        p.user = user
+        p.page_elements.each do |e|
+          if e.embeddable
+            e.embeddable.user = user
+          end
+        end
+      end
+    end
+  end
+  
+    
   def deep_xml
     self.to_xml(
       :include => {
