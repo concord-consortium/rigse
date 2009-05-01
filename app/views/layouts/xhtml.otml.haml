@@ -1,0 +1,17 @@
+!!! XML
+%otrunk{:id => @content_for_otrunk_doc_id}
+  =otml_imports
+  %objects
+    %OTSystem
+      =otml_bundles
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h1 
+                Basic Xhtml Content
+              %p
+                This is a rendering of an xhtml text content object
+              %object{ :refid => @content_for_xhtml_object_id }/
+      %library
+        =yield :layout
