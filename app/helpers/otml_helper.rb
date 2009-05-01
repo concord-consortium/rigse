@@ -6,10 +6,11 @@ module OtmlHelper
       org.concord.framework.otrunk.view.OTFrame
       org.concord.otrunk.view.OTViewEntry
       org.concord.otrunk.view.OTViewBundle
+      org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.OTCompoundDoc
       org.concord.otrunk.ui.OTText
       org.concord.otrunk.ui.question.OTQuestion
-      org.concord.otrunk.view.document.OTDocumentViewConfig
+      org.concord.otrunk.ui.OTChoice
     }
     capture_haml do
       haml_tag :imports do
@@ -23,7 +24,8 @@ module OtmlHelper
   def otml_bundles
     view_entries = [
       ['org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
-      ['org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView']
+      ['org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
+      ['org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView']
     ]
     capture_haml do
       haml_tag :bundles do
