@@ -1,12 +1,13 @@
 module OtmlHelper
 
-  def otml_imports
+  def imports
     imports = %w{
       org.concord.otrunk.OTSystem
       org.concord.framework.otrunk.view.OTFrame
       org.concord.otrunk.view.OTViewEntry
       org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.document.OTDocumentViewConfig
+      org.concord.otrunk.view.document.OTCssText
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
       org.concord.sensor.state.OTInterfaceManager
@@ -30,6 +31,9 @@ module OtmlHelper
       org.concord.otrunk.control.OTButton
       org.concord.sensor.state.OTZeroSensor
     }
+  end
+  
+  def otml_imports
     capture_haml do
       haml_tag :imports do
         imports.each do |import|
@@ -39,8 +43,8 @@ module OtmlHelper
     end
   end
 
-  def otml_bundles
-    view_entries = [
+  def view_entries
+    [
       ['org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
       ['org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
@@ -53,28 +57,34 @@ module OtmlHelper
       ['org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView']
     ]
+  end
+
+  def ot_view_bundle
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries }
+  end
+
+  def ot_script_engine_bundle
+    engines = [
+      'org.concord.otrunk.script.js.OTJavascript', 'org.concord.otrunk.script.js.OTJavascriptEngine',
+      'org.concord.otrunk.script.jruby.OTJRuby', 'org.concord.otrunk.script.jruby.OTJRubyEngine'
+    ]
+    render :partial => "otml/ot_script_engine_bundle", :locals => { :engines => engines }
+  end
+
+  def ot_sharing_bundle
+    render :partial => "otml/ot_sharing_bundle"
+  end
+
+  def ot_interface_manager
+    vendor_interface = current_user.vendor_interface
+    render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
+  end
+
+  def ot_bundles
     capture_haml do
       haml_tag :bundles do
-        haml_tag :OTViewBundle, :showLeftPanel => 'false' do
-          haml_tag :frame do
-            haml_tag :OTFrame, :/, :useScrollPane => 'false'
-          end
-          haml_tag :viewEntries do
-            view_entries.each do |view_entry|
-              haml_tag :OTViewEntry, :/, :objectClass => view_entry[0], :viewClass => view_entry[1]
-            end
-            haml_tag :OTDocumentViewConfig, :objectClass => 'org.concord.otrunk.view.document.OTDocument', 
-              :viewClass =>'org.concord.otrunk.view.document.OTDocumentView',
-              :css => <<HEREDOC
-body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
-h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
-h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
-h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
-p { font-size:1.0em; margin: 10px 4px 10px 4px; }
-#content { margin:5px; padding:5px; }
-HEREDOC
-          end
-        end
+        haml_concat ot_view_bundle
+        haml_concat ot_interface_manager
       end
     end
   end

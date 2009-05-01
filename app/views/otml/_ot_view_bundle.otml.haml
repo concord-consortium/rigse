@@ -1,0 +1,9 @@
+%OTViewBundle{ :showLeftPanel => 'false' }
+  %frame
+    %OTFrame{ :useScrollPane => 'false' }
+  %views
+    - view_entries.each do |view_entry|
+      %OTViewEntry{ :objectClass => view_entry[0], :viewClass => view_entry[1] }/
+    %OTDocumentViewConfig{ :objectClass => 'org.concord.otrunk.view.document.OTDocument', :viewClass => 'org.concord.otrunk.view.document.OTDocumentView' }
+      %cssBlocks
+        %OTCssText{ :src => (stylesheet_path 'otml').to_s }
