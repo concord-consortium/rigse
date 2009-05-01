@@ -1,0 +1,19 @@
+%OTDataCollector{ :id => dom_id_for(data_collector), :name => data_collector.name, :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, :showControlBar => "false", :useDefaultToolBar => "false", :displayButtons => '0,3,4' }
+  %source
+    %OTDataGraphable{ :name => 'Sensor', :connectPoints => data_collector.connect_points, :drawMarks => data_collector.draw_marks, :color => "255", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
+      %dataProducer
+        %OTSensorDataProxy{ :id => dom_id_for(data_collector, :data_proxy), :name => 'dataproducer' }
+          %request
+            %OTExperimentRequest{ :period => '0.1' }
+              %sensorRequests
+                %OTSensorRequest{ :stepSize => '0.1', :type => '0', :unit => 'degC', :port => '0', :requiredMax => '40.0', :displayPrecision => '-1', :requiredMin => '0.0' }
+      %dataStore
+        %OTDataStore{ :id => dom_id_for(data_collector, :data_store), :dt => '0.1', :numberChannels => '1' }
+          %values
+          %channelDescriptions
+            %OTDataChannelDescription{ :name => 'time', :unit => 's', :precision => '-2', :numericData => 'true' }
+            %OTDataChannelDescription{ :name => 'Temperature', :unit => 'degC', :precision => '-1', :numericData => 'true' }
+  %xDataAxis
+    %OTDataAxis{ :max => data_collector.x_axis_max, :min => data_collector.x_axis_min, :units => data_collector.x_axis_units, :label => data_collector.x_axis_label, :labelFormat => 'None' }
+  %yDataAxis
+    %OTDataAxis{ :max => data_collector.y_axis_max, :min => data_collector.y_axis_min, :units => data_collector.y_axis_units, :label => data_collector.y_axis_label, :labelFormat => 'None' }

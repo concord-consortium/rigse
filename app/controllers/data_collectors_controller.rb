@@ -19,6 +19,7 @@ class DataCollectorsController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
+        format.otml { render :layout => "layouts/data_collector" } # data_collector.otml.haml
         format.xml  { render :xml => @data_collector }
       end
     end

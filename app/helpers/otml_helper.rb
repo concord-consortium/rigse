@@ -7,12 +7,28 @@ module OtmlHelper
       org.concord.otrunk.view.OTViewEntry
       org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.document.OTDocumentViewConfig
+      org.concord.sensor.state.OTDeviceConfig
+      org.concord.sensor.state.OTExperimentRequest
+      org.concord.sensor.state.OTInterfaceManager
+      org.concord.sensor.state.OTSensorDataProxy
+      org.concord.sensor.state.OTSensorRequest
       org.concord.otrunk.view.document.OTCompoundDoc
       org.concord.otrunk.ui.OTText
       org.concord.otrunk.ui.question.OTQuestion
       org.concord.otrunk.ui.OTChoice
       org.concord.graph.util.state.OTDrawingTool2
       org.concord.framework.otrunk.wrapper.OTBlob
+      org.concord.data.state.OTDataChannelDescription
+      org.concord.data.state.OTDataField
+      org.concord.data.state.OTDataStore
+      org.concord.datagraph.state.OTDataAxis
+      org.concord.datagraph.state.OTDataCollector
+      org.concord.datagraph.state.OTDataGraph
+      org.concord.datagraph.state.OTDataGraphable
+      org.concord.datagraph.state.OTMultiDataGraph
+      org.concord.datagraph.state.OTPluginView
+      org.concord.otrunk.control.OTButton
+      org.concord.sensor.state.OTZeroSensor
     }
     capture_haml do
       haml_tag :imports do
@@ -29,7 +45,13 @@ module OtmlHelper
       ['org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
       ['org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
       ['org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
-      ['org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView']
+      ['org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
+      ['org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorView'],
+      ['org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
+      ['org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
+      ['org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
+      ['org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
+      ['org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView']
     ]
     capture_haml do
       haml_tag :bundles do
@@ -57,3 +79,5 @@ HEREDOC
     end
   end
 end
+
+
