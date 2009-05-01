@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :multiple_choices, :member => {
     :print => :get,
     :destroy => :post,
-    :add_answer => :post
+    :add_choice => :post
   }
 
   map.resources :drawing_tools, :member => {

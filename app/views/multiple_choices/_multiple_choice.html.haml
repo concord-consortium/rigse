@@ -1,4 +1,4 @@
 %div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
   = multiple_choice.prompt
-  - multiple_choice.answers.each do |answer|
-    = render :partial => "multiple_choices/show_answer", :locals => {:multiple_choice => multiple_choice, :answer => answer}
+  - multiple_choice.choices.each do |choice|
+    = render :partial => "multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice}

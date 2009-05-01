@@ -19,7 +19,7 @@ class XhtmlsController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.otml { render :layout => "layouts/xhtml" } # show.otml.haml
+        format.otml { render :layout => "layouts/xhtml" } # xhtml.otml.haml
         format.xml  { render :xml => @xhtml }
       end
     end

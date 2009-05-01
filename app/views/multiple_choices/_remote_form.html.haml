@@ -5,13 +5,13 @@
       = f.text_field :name, :id => dom_id_for(multiple_choice, :item, :name_field)
     - field_set_tag 'prompt' do
       = f.text_area :prompt, :id => dom_id_for(multiple_choice, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
-      %fieldset#answers
+      %fieldset#choices
         %legend 
-          answers
+          choices
         .action_menu
           .action_menu_header_right
             %ul
-              %li= link_to_remote "add answer", :url => add_answer_multiple_choice_url(multiple_choice)
-        #answers
-        - f.fields_for :answers do |answer_form|
-          = render :partial => "edit_answer", :locals => {:multiple_choice => multiple_choice, :form => answer_form}
+              %li= link_to_remote "add choice", :url => add_choice_multiple_choice_url(multiple_choice)
+        #choices
+        - f.fields_for :choices do |choice_form|
+          = render :partial => "edit_choice", :locals => {:multiple_choice => multiple_choice, :form => choice_form}

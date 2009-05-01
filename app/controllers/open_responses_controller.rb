@@ -22,7 +22,7 @@ class OpenResponsesController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/open_response" } # show.otml.haml
+        format.otml { render :layout => "layouts/open_response" } # open_response.otml.haml
         format.xml  { render :xml => @open_response }
       end
     end

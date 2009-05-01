@@ -1,0 +1,27 @@
+%OTQuestion{:id => dom_id_for(multiple_choice)}
+  %prompt
+    %OTCompoundDoc
+      %bodyText= multiple_choice.prompt
+  %input
+    %OTText{ :id => dom_id_for(open_response, :response), :rows => '2', :columns => '40' }
+      %text= open_response.default_response
+
+
+
+a
+<OTChoice name="Multiple choice" alignContent="0">
+  <choices>
+    <OTCompoundDoc name="1. Nothing changes.">
+      <bodyText>1. Nothing changes.</bodyText>
+    </OTCompoundDoc>
+    <OTCompoundDoc name="2. Lines and dots jump around on the screen.">
+      <bodyText>2. Lines and dots jump around on the screen.</bodyText>
+    </OTCompoundDoc>
+    <OTCompoundDoc name="3. A line appears on the screen at the end of the movement.">
+      <bodyText>3. A line appears on the screen at the end of the movement.</bodyText>
+    </OTCompoundDoc>
+    <OTCompoundDoc name="4. A line is slowly drawn across the screen from left to right.">
+      <bodyText>4. A line is slowly drawn across the screen from left to right.</bodyText>
+    </OTCompoundDoc>
+  </choices>
+</OTChoice>

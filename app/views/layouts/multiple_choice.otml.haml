@@ -1,0 +1,17 @@
+!!! XML
+%otrunk{:id => @content_for_otrunk_doc_id}
+  =otml_imports
+  %objects
+    %OTSystem
+      =otml_bundles
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h1 
+                Basic Multiple Choice Question
+              %p
+                This is a rendering of a basic multiple choice question
+              %object{ :refid => @content_for_multiple_choice_object_id }/
+      %library
+        =yield :layout

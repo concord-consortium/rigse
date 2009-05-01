@@ -5,9 +5,9 @@ class MultipleChoice < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
-  has_many :answers, :class_name => "MultipleChoiceChoice"
+  has_many :choices, :class_name => "MultipleChoiceChoice"
   
-  accepts_nested_attributes_for :answers, :allow_destroy => true
+  accepts_nested_attributes_for :choices, :allow_destroy => true
   
   acts_as_replicatable
 
@@ -31,7 +31,7 @@ class MultipleChoice < ActiveRecord::Base
   end
 
   def to_xml(options ={})
-    options[:incude] = :answers
+    options[:incude] = :choices
     super(options)
   end
 

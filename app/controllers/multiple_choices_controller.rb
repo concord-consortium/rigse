@@ -19,6 +19,7 @@ class MultipleChoicesController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
+        format.otml { render :layout => "layouts/multiple_choice" } # multiple_choice.otml.haml
         format.xml  { render :xml => @multiple_choice }
       end
     end
@@ -126,13 +127,13 @@ class MultipleChoicesController < ApplicationController
     @multiple_choice.destroy    
   end
   
-  def add_answer
+  def add_choice
     @question = MultipleChoice.find(params[:id])
-    @answer = MultipleChoiceChoice.create
-    # @question.answers << @answer
-    @html_fragment = render_to_string(:partial => "new_answer", :locals => {:answer => @answer,:question => @question})
+    @choice = MultipleChoiceChoice.create
+    # @question.choices << @choice
+    @html_fragment = render_to_string(:partial => "new_choice", :locals => {:choice => @choice,:question => @question})
     respond_to do |format|
-      # will render add_answer.js.rjs
+      # will render add_choice.js.rjs
       format.js
     end
   end
