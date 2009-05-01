@@ -1,0 +1,5 @@
+%OTDrawingTool2{:id => dom_id_for(drawing_tool)}
+  %stamps
+  - if drawing_tool.background_image_url
+    %backgroundSrc
+      %OTBlob{ :src => drawing_tool.background_image_url, :name => drawing_tool.background_image_url }

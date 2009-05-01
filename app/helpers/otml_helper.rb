@@ -11,6 +11,8 @@ module OtmlHelper
       org.concord.otrunk.ui.OTText
       org.concord.otrunk.ui.question.OTQuestion
       org.concord.otrunk.ui.OTChoice
+      org.concord.graph.util.state.OTDrawingTool2
+      org.concord.framework.otrunk.wrapper.OTBlob
     }
     capture_haml do
       haml_tag :imports do
@@ -25,7 +27,9 @@ module OtmlHelper
     view_entries = [
       ['org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
-      ['org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView']
+      ['org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
+      ['org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
+      ['org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView']
     ]
     capture_haml do
       haml_tag :bundles do
