@@ -130,5 +130,15 @@ class DataCollectorsController < ApplicationController
     @data_collector.page_elements.each do |pe|
       pe.destroy
     end
-  end  
+  end
+  
+  def new_probe_type
+    @data_collector = DataCollector.find(params[:id])
+    @probe_type = ProbeType.find(params[:data_collector][:probe_type_id])
+    @data_collector.probe_type = @probe_type
+    respond_to do |format|
+      format.js # will render new_probe_type.js.rjs
+    end
+  end
+  
 end

@@ -37,7 +37,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :data_collectors, :member => {
     :print => :get,
-    :destroy => :post
+    :destroy => :post,
+    :new_probe_type => :post
   }
 
   map.resources :sections, :member => {

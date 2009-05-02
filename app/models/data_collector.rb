@@ -1,8 +1,9 @@
 class DataCollector < ActiveRecord::Base
   belongs_to :user
+  belongs_to :probe_type
+
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  has_one :probe_type
   has_many :teacher_notes, :as => :authored_entity
     
   acts_as_replicatable
@@ -17,6 +18,20 @@ class DataCollector < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+  end
+
+  def probe_type=(probe_type)
+    self.probe_type_id = probe_type.id
+    self.title = "#{probe_type.name} Data Collector"
+    self.name = self.title
+    self.y_axis_label = probe_type.name
+    self.y_axis_units = probe_type.unit
+    self.y_axis_min = probe_type.min
+    self.y_axis_max = probe_type.max
+    # self.x_axis_label
+    # self.x_axis_units
+    # self.x_axis_min
+    # self.x_axis_max
   end
 
   def y_axis_title

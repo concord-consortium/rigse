@@ -1,6 +1,6 @@
 %OTDataCollector{ :id => dom_id_for(data_collector), :name => data_collector.name, 
   :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, 
-  :showControlBar => "false", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5,6,7,8,9,10' }
+  :showControlBar => "false", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5' }
   %source
     %OTDataGraphable{ :name => 'Sensor', :connectPoints => data_collector.connect_points, 
       :drawMarks => data_collector.draw_marks, :color => "255", :xColumn => "0", :lineWidth => "2.0", 
@@ -10,13 +10,13 @@
           %request
             %OTExperimentRequest{ :period => '0.1' }
               %sensorRequests
-                %OTSensorRequest{ :stepSize => '0.1', :type => '0', :unit => 'degC', :port => '0', 
-                  :requiredMax => '40.0', :displayPrecision => '-1', :requiredMin => '0.0' }
+                %OTSensorRequest{ :stepSize => data_collector.probe_type.step_size.to_s, :type => data_collector.probe_type.ptype.to_s, :unit => 'degC', 
+                  :port => '0', :requiredMax => '40.0', :displayPrecision => "#{data_collector.probe_type.display_precision}", :requiredMin => '0.0' }/
       %dataStore
-        %OTDataStore{ :id => dom_id_for(data_collector, :data_store), :dt => '0.1', :numberChannels => '1' }
+        %OTDataStore{ :id => dom_id_for(data_collector, :data_store) }/
   %xDataAxis
     %OTDataAxis{ :max => data_collector.x_axis_max, :min => data_collector.x_axis_min, 
-      :units => data_collector.x_axis_units, :label => data_collector.x_axis_label, :labelFormat => 'None' }
+      :units => data_collector.x_axis_units, :label => data_collector.x_axis_label, :labelFormat => 'None' }/
   %yDataAxis
     %OTDataAxis{ :max => data_collector.y_axis_max, :min => data_collector.y_axis_min, 
-      :units => data_collector.y_axis_units, :label => data_collector.y_axis_label, :labelFormat => 'None' }
+      :units => data_collector.y_axis_units, :label => data_collector.y_axis_label, :labelFormat => 'None' }/

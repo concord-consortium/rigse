@@ -6,6 +6,8 @@ class ProbeType < ActiveRecord::Base
   has_many :activities, :class_name => "Itsi::Activity"
 
   belongs_to :user
+  
+  has_many :data_collectors
   has_many :probes
   has_many :vendor_interfaces, :through => :probes
   
