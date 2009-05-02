@@ -95,6 +95,13 @@ module ApplicationHelper
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
 
+  def otml_button_for(component)
+    link_to('otml', 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :show,
+      :format => :otml, 
+      :id  => component.id)
+  end
 
   def delete_button_for(model)
     controller = "#{model.class.name.pluralize.underscore}"
@@ -130,6 +137,9 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
+            restrict_to 'admin' do
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_button_for(component) }
+            end
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
@@ -148,6 +158,9 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
+            restrict_to 'admin' do
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_button_for(component) }
+            end
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
