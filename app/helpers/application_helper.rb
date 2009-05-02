@@ -95,11 +95,18 @@ module ApplicationHelper
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
 
-  def otml_button_for(component)
+  def otml_link_for(component)
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
+      :id  => component.id)
+  end
+
+  def print_link_for(component)
+    link_to('print', 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :print,
       :id  => component.id)
   end
 
@@ -138,6 +145,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
+              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat otml_button_for(component) }
             end
             if (component.changeable?(current_user))
@@ -159,7 +167,8 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_button_for(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
             end
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
