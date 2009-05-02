@@ -96,6 +96,9 @@ class DataCollectorsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @data_collector = DataCollector.find(params[:id])
+    if @data_collector.probe_type_id != params[:data_collector][:probe_type_id]
+      params['data_collector']['name'] = params['data_collector']['title']
+    end
     if request.xhr?
       if cancel || @data_collector.update_attributes(params[:data_collector])
         render :partial => 'show', :locals => { :data_collector => @data_collector }
