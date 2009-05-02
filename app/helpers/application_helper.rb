@@ -146,7 +146,7 @@ module ApplicationHelper
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
               haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_button_for(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
             end
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
