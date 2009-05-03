@@ -1,0 +1,17 @@
+!!! XML
+%otrunk{:id => @content_for_otrunk_doc_id}
+  =otml_imports
+  %objects
+    %OTSystem
+      =ot_bundles
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h1 
+                Basic Data Table
+              %p
+                This is a rendering of a basic data table
+              %object{ :refid => @content_for_data_table_object_id }/
+      %library
+        =yield :layout

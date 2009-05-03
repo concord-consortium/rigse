@@ -19,6 +19,7 @@ module OtmlHelper
       org.concord.otrunk.ui.OTChoice
       org.concord.graph.util.state.OTDrawingTool2
       org.concord.framework.otrunk.wrapper.OTBlob
+      org.concord.data.state.OTDataTable
       org.concord.data.state.OTDataChannelDescription
       org.concord.data.state.OTDataField
       org.concord.data.state.OTDataStore
@@ -55,7 +56,8 @@ module OtmlHelper
       ['org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
       ['org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
-      ['org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView']
+      ['org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
+      ['org.concord.data.state.OTDataTable', 'org.concord.data.state.OTDataTableView']
     ]
   end
 
