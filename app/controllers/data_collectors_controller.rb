@@ -96,6 +96,13 @@ class DataCollectorsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @data_collector = DataCollector.find(params[:id])
+    # FixMe
+    # If the probe_type is changed set a new default name based on the 
+    # title. This action assumes that the probe_type was changed using
+    # using the standard edit page for a data_collector. This change on
+    # the edit page uses an Ajax action (new_probe_type) to update the 
+    # defaul values for the y-axis. This assmption will not necessarily
+    # be correct with a REST update to this resource.
     if @data_collector.probe_type_id != params[:data_collector][:probe_type_id]
       params['data_collector']['name'] = params['data_collector']['title']
     end
