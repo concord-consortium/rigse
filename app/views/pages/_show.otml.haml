@@ -1,0 +1,6 @@
+- content_for(:page_elements) do
+  - @page.page_elements.each do |element|
+    .element
+      %object{ :refid => dom_id_for(element.embeddable) }/
+- @page.page_elements.each do |element|
+  = render :partial => "pages/element_container", :locals => { :element => element, :component => element.embeddable, :page => @page }

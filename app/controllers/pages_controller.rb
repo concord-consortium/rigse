@@ -18,7 +18,7 @@ class PagesController < ApplicationController
     end
     
     if (@page)
-      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+      # @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
     end
   end
   
@@ -59,6 +59,7 @@ class PagesController < ApplicationController
     end
     respond_to do |format|
       format.html # show.html.erb
+      format.otml { render :layout => "layouts/page" } # page.otml.haml
       format.xml  { render :xml => @page }
     end
   end

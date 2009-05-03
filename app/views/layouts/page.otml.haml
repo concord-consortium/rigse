@@ -1,0 +1,15 @@
+!!! XML
+%otrunk{:id => @content_for_otrunk_doc_id}
+  =otml_imports
+  %objects
+    %OTSystem
+      =ot_bundles
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h1 
+                RITES Page
+              =yield :page_elements
+      %library
+        =yield :layout
