@@ -6,12 +6,12 @@
       %OTCompoundDoc
         %bodyText
           #content
-            %h1= investigation.name
+            %h3= investigation.name
     %menu
       %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }
         %object{ :refid => dom_id_for(investigation, :menu) }/
     %content
-      %OTCardContainer{ :id => dom_id_for(investigation, :investigation_card_container), :contentsMayScroll => 'true' }
+      %OTCardContainer{ :id => dom_id_for(investigation, :investigation_card_container), :contentsMayScroll => 'false' }
         %cards
           - investigation.sections.each do |section|
             =yield "section_#{dom_id_for(section)}".to_sym
@@ -25,11 +25,14 @@
       %object{ :refid => dom_id_for(investigation, :investigation_card_container) }
     %menuRule
       %object{ :refid => 'section-rule' }
+
   %OTMenuRule{ :id => 'section-rule', :jumpToAnyCard => 'true' }
   %OTMenuRule{ :id => 'page-rule', :jumpToViewedCard => 'true', :stepAhead => 'true' }
   
   %OTNavBar{ :id => dom_id_for(investigation, :nav_bar) }
+    %topLevelCardContainer
+      %object{ :refid => dom_id_for(investigation, :investigation_card_container) }
     %menuView
-      %object{ :refid => 'menu_page_expand_view' }/
+      %object{ :refid => 'menu_accordion_section_view' }/
     %cssColor
       %object{ :refid => 'otml_css' }

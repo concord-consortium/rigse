@@ -1,35 +1,27 @@
 = render :partial => 'pages/show', :collection => section.pages, :as => :page
 
 - content_for("section_#{dom_id_for(section)}".to_sym) do
-  %OTCurriculumUnit{ :version => '2', :name => 'RITES Section' }
-    %activity
-      %OTSection{ :id => dom_id_for(section) }
-        %header
-          %OTCompoundDoc{ :id => dom_id_for(section, :header) }
-            %bodyText
-              #content
-                %h1= section.name
-        %content
-          %OTCardContainer{ :id => dom_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
-            %cards
-              - section.pages.each do |page|
-                =yield "page_#{dom_id_for(page)}".to_sym
-            %currentCard
-              %object{ :refid => dom_id_for(section.pages.first) }/
-            %viewedCards
-        %footer
-          %object{ :refid => dom_id_for(section, :nav_bar) }/
-        %north
-          %object{ :refid => dom_id_for(section, :header) }/
-        %center
-          %object{ :refid => dom_id_for(section, :page_card_container) }/
-        %south
-          %object{ :refid => dom_id_for(section, :nav_bar) }/
+  %OTSection{ :id => dom_id_for(section), :name => section.name   }
+    %header
+      %OTCompoundDoc{ :id => dom_id_for(section, :header) }
+        %bodyText
+          #content
+            %h1= section.name
+    %content
+      %OTCardContainer{ :id => dom_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
+        %cards
+          - section.pages.each do |page|
+            =yield "page_#{dom_id_for(page)}".to_sym
+        %currentCard
+          %object{ :refid => dom_id_for(section.pages.first) }/
+        %viewedCards
+    %footer
+      %object{ :refid => dom_id_for(section, :nav_bar) }/
 
 - content_for(:library) do
   %OTNavBar{ :id => dom_id_for(section, :nav_bar) }
     %menuView
-      %object{ :refid => 'menu_page_expand_view' }/
+      %object{ :refid => 'menu_page_view' }/
     %cssColor
       %object{ :refid => 'otml_css' }
  

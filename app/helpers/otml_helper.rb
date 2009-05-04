@@ -69,6 +69,7 @@ module OtmlHelper
       ['udl_container', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerView'],
       ['curriculum_unit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitView'],
       ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
+      ['menu_accordion_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.swingx.OTMenuAccordionSectionView'],
       ['menu_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuSectionView'],
       ['menu_page_expand_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageExpandView'],
       ['menu_page_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageView'],
