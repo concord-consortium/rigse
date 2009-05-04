@@ -47,7 +47,7 @@ Accordion.prototype = {
 			defaultSize : {
 				height : null,
 				width : null
-			},
+		  },
 			direction : 'vertical',
 			onEvent : 'click'
 		}, options || {});
@@ -66,7 +66,6 @@ Accordion.prototype = {
 			} else {
 				var options = {height: '0px', display:'none'};
 			}
-//			options.merge({display: 'none'});			
 			
 			this.currentAccordion = $(accordion.next(0)).setStyle(options);
 		}.bind(this));
