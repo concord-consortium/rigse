@@ -38,7 +38,6 @@ namespace :rigse do
       end
     end
   end
-  
 
   namespace :setup do
     
@@ -51,6 +50,17 @@ namespace :rigse do
     end
 
 
+    desc "setup initial probe_type for data_collectors that don't have one"
+    task :set_probe_type_for_data_collectors => :environment do
+      DataCollector.find(:all).each do |dc| 
+        if pt = ProbeType.find_by_name(dc.y_axis_label)
+          dc.probe_type = pt
+          dc.save
+        end
+      end
+    end
+    
+    
     #######################################################################
     #
     # Raise an error unless the RAILS_ENV is development
