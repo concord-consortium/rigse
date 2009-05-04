@@ -129,7 +129,7 @@ module ApplicationHelper
     if component.id.nil?
       return "new #{component.class.name.humanize}"
     end
-    if RAILS_ENV == "development" || current_user.role == 'admin'
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
       "<span class='component_title'>#{component.name}</span> <span class='dev_note'>#{component.id}</span>" 
     else
       "<span class='component_title'>#{component.name}</span>"
