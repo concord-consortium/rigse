@@ -1,6 +1,12 @@
-- content_for(:page_elements) do
-  - @page.page_elements.each do |element|
-    .element
-      %object{ :refid => dom_id_for(element.embeddable) }/
-- @page.page_elements.each do |element|
-  = render :partial => "pages/element_container", :locals => { :element => element, :component => element.embeddable, :page => @page }
+- content_for("page_#{dom_id_for(page)}".to_sym) do
+  %OTCompoundDoc{ :id => dom_id_for(page) }
+    %bodyText
+      #content
+        %h2= page.name
+        - page.page_elements.each do |element|
+          .element
+            %object{ :refid => dom_id_for(element.embeddable) }/
+
+- content_for(:library) do
+  - page.page_elements.each do |element|
+    = render :partial => "pages/element_container", :locals => { :element => element, :component => element.embeddable, :page => @page }

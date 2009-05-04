@@ -41,7 +41,7 @@ class InvestigationsController < ApplicationController
     else
       @investigation = Investigation.new
     end
-    @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
+    # @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
   end
   
   public
@@ -67,6 +67,7 @@ class InvestigationsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
+      format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
       format.pdf {render :layout => false }
     end
   end

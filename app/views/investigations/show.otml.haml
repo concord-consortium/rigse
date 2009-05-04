@@ -1,0 +1,3 @@
+- content_for(:otrunk_doc_id) do
+  =@investigation.uuid
+= render :partial => "show", :locals => { :investigation => @investigation }

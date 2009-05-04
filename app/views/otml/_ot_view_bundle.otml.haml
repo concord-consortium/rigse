@@ -3,7 +3,7 @@
     %OTFrame{ :useScrollPane => 'true' }
   %views
     - view_entries.each do |view_entry|
-      %OTViewEntry{ :objectClass => view_entry[0], :viewClass => view_entry[1] }/
+      %OTViewEntry{ :id => view_entry[0], :objectClass => view_entry[1], :viewClass => view_entry[2] }/
     %OTDocumentViewConfig{ :objectClass => 'org.concord.otrunk.view.document.OTDocument', :viewClass => 'org.concord.otrunk.view.document.OTDocumentView' }
       %cssBlocks
-        %OTCssText{ :src => 'stylesheets/otml.css' }/
+        %OTCssText{ :id => 'otml_css', :src => 'stylesheets/otml.css' }/
