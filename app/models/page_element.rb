@@ -6,6 +6,17 @@ class PageElement < ActiveRecord::Base
 
     include Changeable
 
+    def before_destroy
+      @embeddable = self.embeddable
+    end
+    
+    def after_destroy
+      @embeddable.reload
+      if @embeddable.page_elements.empty?
+        @embeddable.destroy
+      end
+    end
+
     def dom_id
       "page_element_#{self.id}"
     end

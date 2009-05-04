@@ -1,7 +1,7 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
-  has_many :page_elements, :order => :position
+  has_many :page_elements, :order => :position, :dependent => :destroy
 
   has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
   has_many :open_responses, :through => :page_elements, :source => :embeddable, :source_type => 'OpenResponse'
