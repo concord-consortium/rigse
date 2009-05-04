@@ -164,7 +164,7 @@ class PagesController < ApplicationController
     @component.save
     @element = @page.element_for(@component)
     # 
-    # # dynimically insert appropriate partial based on type.
+    # # dynamically insert appropriate partial based on type.
     # @partial = partial_for(@component)
 
     # we will render page/add_element.js.rjs by default....
