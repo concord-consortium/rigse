@@ -10,8 +10,8 @@ class SectionsController < ApplicationController
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
-      if (@section)
-        # @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
+      if (@section && request.parameters[:format] != 'otml')
+        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
       end
     end
   end

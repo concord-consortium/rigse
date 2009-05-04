@@ -16,9 +16,8 @@ class PagesController < ApplicationController
       @investigation =@section.investigation
       @page_elements = @page.page_elements
     end
-    
-    if (@page)
-      # @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+    if (@page && request.parameters[:format] != 'otml')
+      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
     end
   end
   

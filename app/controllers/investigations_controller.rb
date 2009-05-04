@@ -41,7 +41,9 @@ class InvestigationsController < ApplicationController
     else
       @investigation = Investigation.new
     end
-    # @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
+    unless request.parameters[:format] == 'otml'
+      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
+    end
   end
   
   public
