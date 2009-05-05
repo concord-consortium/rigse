@@ -3,19 +3,17 @@
 
 #accordion_nav
   :display block
-  :width 100%
   :overflow hidden
-  :margin 0px
-  :padding 0px
   :height 100%
   :font-size 12px
 
   .accordian_header
     :color= !very_dark_blue
-    :font-style oblique
+    :font-style normal
     :font-size 10px
-    :width 100%
     :display block
+    :padding 2px
+    :border 1px dotted
     a,a:active, a:visited, a:link
       :color= !very_dark_blue
       :display block
@@ -28,17 +26,22 @@
     :display block
     :overflow hidden
     :font-weight bold
+    :width auto
+    :height auto
     :background-image url(/images/accordion_header.png)
     :background-repeat repeat-x
     :background-color #d1e5f2
     :border 1px solid
+    :margin 2px
     :padding 2px
+    :cursor move
     .accordion_name
       :display block
       :float left
       a
         :display inline
         :font-weight normal
+        :cursor pointer
         &:hover
           :background-color= !very_dark_blue
           :color= !almost_white
@@ -50,6 +53,7 @@
       :background-image url(/images/expand.png)
       :background-repeat no-repeat
       :background-position center
+      :cursor pointer
       &:hover
         :background-image url(/images/expand_hover.png)
       
