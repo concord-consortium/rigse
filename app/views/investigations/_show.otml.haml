@@ -1,7 +1,7 @@
 = render :partial => 'sections/show', :collection => investigation.sections, :as => :section
 
 - content_for(:investigation) do
-  %OTUDLContainer{ :leftPanelWidth => '250' }
+  %OTUDLContainer{ :leftPanelWidth => '240' }
     %title
       %OTCompoundDoc
         %bodyText
@@ -9,9 +9,12 @@
             %h3= investigation.name
     %menu
       %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }
-        %object{ :refid => dom_id_for(investigation, :menu) }/
+        %object
+          %object{ :refid => dom_id_for(investigation, :menu) }/
+        %viewid
+          %object{ :refid => 'menu_accordion_section_view' }/
     %content
-      %OTCardContainer{ :id => dom_id_for(investigation, :investigation_card_container), :contentsMayScroll => 'false' }
+      %OTCardContainer{ :id => dom_id_for(investigation, :section_card_container), :contentsMayScroll => 'false' }
         %cards
           - investigation.sections.each do |section|
             =yield "section_#{dom_id_for(section)}".to_sym
@@ -22,17 +25,8 @@
 - content_for(:library) do
   %OTMenu{ :id => dom_id_for(investigation, :menu) }
     %cardContainer
-      %object{ :refid => dom_id_for(investigation, :investigation_card_container) }
+      %object{ :refid => dom_id_for(investigation, :section_card_container) }
     %menuRule
       %object{ :refid => 'section-rule' }
 
   %OTMenuRule{ :id => 'section-rule', :jumpToAnyCard => 'true' }
-  %OTMenuRule{ :id => 'page-rule', :jumpToViewedCard => 'true', :stepAhead => 'true' }
-  
-  %OTNavBar{ :id => dom_id_for(investigation, :nav_bar) }
-    %topLevelCardContainer
-      %object{ :refid => dom_id_for(investigation, :investigation_card_container) }
-    %menuView
-      %object{ :refid => 'menu_accordion_section_view' }/
-    %cssColor
-      %object{ :refid => 'otml_css' }

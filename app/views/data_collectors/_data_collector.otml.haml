@@ -1,6 +1,6 @@
 %OTDataCollector{ :id => dom_id_for(data_collector), :name => data_collector.name, 
   :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, 
-  :showControlBar => "false", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5' }
+  :showControlBar => "true", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5' }
   %source
     %OTDataGraphable{ :name => 'Sensor', :connectPoints => data_collector.connect_points, 
       :drawMarks => data_collector.draw_marks, :color => "255", :xColumn => "0", :lineWidth => "2.0", 

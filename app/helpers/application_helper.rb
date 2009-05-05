@@ -31,6 +31,10 @@ module ApplicationHelper
     messages
   end
 
+  def labeled_check_box(form, field, name=field.to_s.humanize)
+    form.label(field, name) + "\n" + form.check_box(field)
+  end
+  
   # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
   def check_box_tag_new(name, value = "1", options = {})
     html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
@@ -129,7 +133,7 @@ module ApplicationHelper
     if component.id.nil?
       return "new #{component.class.name.humanize}"
     end
-    if RAILS_ENV == "development" || current_user.role == 'admin'
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
       "<span class='component_title'>#{component.name}</span> <span class='dev_note'>#{component.id}</span>" 
     else
       "<span class='component_title'>#{component.name}</span>"

@@ -43,16 +43,12 @@
     - field_set_tag 'Options' do
       %ul.menu_h
         %li
-          = f.label 'Draw markers'
-          = f.check_box :draw_marks
+          = labeled_check_box(f, :draw_marks, 'Draw markers')
         %li
-          = f.label 'Connect points'
-          = f.check_box :connect_points
+          = labeled_check_box(f, :connect_points)
         %li
-          = f.label 'Autoscale enabled'
-          = f.check_box :autoscale_enabled
+          = labeled_check_box(f, :autoscale_enabled)
         %li
-          = f.label 'Ruler Enabled'
-          = f.check_box :ruler_enabled
+          = labeled_check_box(f, :ruler_enabled)
       
 = observe_field dom_id_for(data_collector, :select_probe_type), :url => new_probe_type_data_collector_path, :with => "'data_collector[probe_type_id]=' + value"
