@@ -84,7 +84,7 @@ module OtmlHelper
     else
       left_nav_panel_width = 0
     end
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => left_nav_panel_width }
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => left_nav_panel_width, :title => 'RITES sample' }
   end
 
   def ot_script_engine_bundle
