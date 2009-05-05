@@ -5,7 +5,6 @@ class DataCollector < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-    
   acts_as_replicatable
   
   include Changeable
@@ -42,6 +41,8 @@ class DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
+  DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
+  
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
 
@@ -58,30 +59,10 @@ class DataCollector < ActiveRecord::Base
                  :ruler_enabled               =>  false,
                  :show_tare                   =>  false,
                  :single_value                =>  false
-  
-  #
-  # If the y_axis_label matches an existing ProbeType#name
-  # (which it should) and none of the following attributes
-  # have been set earlier in the initialization:
-  #
-  #   y_axis_min, y_axis_max, y_axis_units
-  #
-  # Then set them to the default values for the probe_type.
-  #
-  def before_create
-    if probe_type = ProbeType.find_by_name(self.y_axis_label)
-      attrs = "#{self.y_axis_min}#{self.y_axis_max}#{self.y_axis_units}#{self.title}"
-      if attrs.empty?
-        self.y_axis_min = probe_type.min
-        self.y_axis_max = probe_type.max
-        self.y_axis_units = probe_type.unit
-        self.probe_type_id = probe_type.id
-        self.title = probe_type.name + ' Graph'
-      end
-    end
-  end
-  
-  
+
+
+  default_value_for :probe_type, DISTANCE_PROBE_TYPE
+
   def self.display_name
     "Graph"
   end
