@@ -135,11 +135,11 @@ class DataCollectorsController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    @data_collector.destroy
     # TODO:  We should move this logic into the model!
     @data_collector.page_elements.each do |pe|
       pe.destroy
     end
+    @data_collector.destroy
   end
   
   def new_probe_type

@@ -121,11 +121,11 @@ class OpenResponsesController < ApplicationController
       format.xml  { head :ok }
       format.js
     end
-    @open_response.destroy
     # TODO:  We should move this logic into the model!
     @open_response.page_elements.each do |pe|
       pe.destroy
     end
+    @open_response.destroy
 
   end
   
