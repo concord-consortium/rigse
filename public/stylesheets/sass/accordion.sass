@@ -20,7 +20,6 @@
       &:hover
         :color = !almost_white
         :background-color= !very_dark_blue
-        :font-weight normal
     
   .accordion_container
     :display block
@@ -38,6 +37,8 @@
     .accordion_name
       :display block
       :float left
+      .selected
+        :font-weight bold
       a
         :display inline
         :font-weight normal
@@ -45,6 +46,7 @@
         &:hover
           :background-color= !very_dark_blue
           :color= !almost_white
+          
     .accordion_toggle
       :display block
       :width 14px
@@ -74,14 +76,14 @@
       :clear left
       :margin 5px
       :padding 2px
+      .selected
+        :font-weight bold
       a
         :display inline
         :font-weight normal
         &:hover
           :background-color= !very_dark_blue
           :color= !almost_white
-      .page_selected
-        :font-weight bold
       .accordion_page
         :padding 2px
         :margin-top 5px

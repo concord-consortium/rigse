@@ -97,9 +97,17 @@
               %ul{:id=>sectionlistname, :class=>"accordian_header"}
                 = link_to @investigation.name, @investigation
                 - @investigation.sections.each do |section|
+                  
                   %li{:id=>dom_id_for(section,:item), :class=>"accordion_container"}
                     .accordion_name
-                      = link_to section.name, section
+                      -if defined? @section
+                        -if @section.id == section.id
+                          = link_to section.name,section, :class=> 'selected'
+                        -else 
+                          =link_to section.name,section
+                      -else
+                        =link_to section.name, section
+                      
                     .accordion_toggle
                     -pagelistname = dom_id_for(section, :page_list)
                     %ul{:id=>pagelistname, :class=>'accordion_content'}
@@ -108,7 +116,7 @@
                           .accordion_page_link
                             -if defined? @page
                               -if @page.id == p.id
-                                = link_to p.name,p, :class=> 'page_selected'
+                                = link_to p.name,p, :class=> 'selected'
                               -else 
                                 =link_to p.name,p
                             -else
