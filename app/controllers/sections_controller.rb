@@ -10,6 +10,7 @@ class SectionsController < ApplicationController
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
+      @investigation = @section.investigation
       if (@section && request.parameters[:format] != 'otml')
         @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
       end
@@ -25,8 +26,8 @@ class SectionsController < ApplicationController
           render :text => "<div class='flash_error'>#{error_message}</div>"
         else
           redirect_back_or sections_paths
-        end
       end
+    end
     end
   end
   
@@ -152,8 +153,9 @@ class SectionsController < ApplicationController
   ##
   ##  
   def sort_pages
+    paramlistname = params[:list_name].nil? ? 'section_pages_list' : params[:list_name]
     @section.pages.each do |page|
-      page.position = params['section_pages_list'].index(page.id.to_s) + 1
+      page.position = params[paramlistname].index(page.id.to_s) + 1
       page.save
     end 
     render :nothing => true
