@@ -3,7 +3,7 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles
+      =ot_bundles(:title => @page.name)
       %root
         =yield "page_#{dom_id_for(@page)}".to_sym
       %library

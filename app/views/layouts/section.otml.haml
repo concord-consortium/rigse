@@ -3,7 +3,7 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles
+      =ot_bundles(:title => @section.name)
       %root
         =yield "section_#{dom_id_for(@section)}".to_sym
       %library
