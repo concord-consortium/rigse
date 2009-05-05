@@ -6,15 +6,10 @@ class PageElement < ActiveRecord::Base
 
     include Changeable
 
+    # only destroy the embeddable if it isn't referenced by any other page elements
     def before_destroy
-      @embeddable = self.embeddable
-    end
-    
-    def after_destroy
-      @embeddable.reload
-      if @embeddable.page_elements.empty?
-        @embeddable.destroy
-      end
+      other_related_page_elements = self.embeddable.page_elements.uniq - [self]
+      self.embeddable.destroy if other_related_page_elements.empty?
     end
 
     def dom_id
