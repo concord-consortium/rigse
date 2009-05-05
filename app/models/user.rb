@@ -29,6 +29,13 @@ class User < ActiveRecord::Base
   has_many :sections
   has_many :pages
   
+  has_many :data_collectors
+  has_many :xhtmls
+  has_many :open_responses
+  has_many :multiple_choices
+  has_many :data_tables
+  has_many :drawing_tools
+  
   belongs_to :vendor_interface
 
   has_many :assessment_targets
@@ -93,7 +100,7 @@ class User < ActiveRecord::Base
   end
 
   # is this user the anonymous user?
-  def  anonymous?
+  def anonymous?
     self == User.anonymous
   end
   
