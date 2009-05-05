@@ -16,12 +16,14 @@
           %object{ :refid => dom_id_for(section.pages.first) }/
         %viewedCards
     %footer
-      %object{ :refid => dom_id_for(section, :nav_bar) }/
+      %object{ :refid => dom_id_for(section, :menu) }/
 
 - content_for(:library) do
-  %OTNavBar{ :id => dom_id_for(section, :nav_bar) }
-    %menuView
-      %object{ :refid => 'menu_page_view' }/
-    %cssColor
-      %object{ :refid => 'otml_css' }
- 
+
+  %OTMenu{ :id => dom_id_for(section, :menu) }
+    %cardContainer
+      %object{ :refid => dom_id_for(section, :page_card_container) }/
+    %menuRule
+      %object{ :refid => dom_id_for(section, :page_rule) }/
+
+  %OTMenuRule{ :id => dom_id_for(section, :page_rule), :jumpToViewedCard => 'true', :stepAhead => 'true' }/

@@ -69,17 +69,22 @@ module OtmlHelper
       ['udl_container', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerView'],
       ['curriculum_unit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitView'],
       ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
+      ['menu_page_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageView'],
       ['menu_accordion_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.swingx.OTMenuAccordionSectionView'],
       ['menu_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuSectionView'],
       ['menu_page_expand_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageExpandView'],
-      ['menu_page_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageView'],
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView']
     ]
   end
 
-  def ot_view_bundle
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries }
+  def ot_view_bundle(options={})
+    if options[:left_nav_panel]
+      left_nav_panel_width = 240
+    else
+      left_nav_panel_width = 0
+    end
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => left_nav_panel_width }
   end
 
   def ot_script_engine_bundle
@@ -99,10 +104,10 @@ module OtmlHelper
     render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
   end
 
-  def ot_bundles
+  def ot_bundles(options={})
     capture_haml do
       haml_tag :bundles do
-        haml_concat ot_view_bundle
+        haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
       end
     end
