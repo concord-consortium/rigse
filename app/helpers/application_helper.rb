@@ -31,6 +31,10 @@ module ApplicationHelper
     messages
   end
 
+  def labeled_check_box(form, field, name=field.to_s.humanize)
+    form.label(field, name) + "\n" + form.check_box(field)
+  end
+  
   # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
   def check_box_tag_new(name, value = "1", options = {})
     html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
