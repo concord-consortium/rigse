@@ -43,36 +43,3 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     }
   }
 
-// see accordian.js
-// or http://www.stickmanlabs.com/accordion/
-// for an MIT license accordian nav bar...  
-var accordian_options = {
-  // The speed of the accordion
-  resizeSpeed : 8,
-  // The classnames to look for
-  classNames : {
-  	// The standard class for the title bar
-      toggle : 'accordion_toggle',
-      // The class used for the active state of the title bar
-      toggleActive : 'accordion_toggle_active',
-      // The class used to find the content
-      content : 'accordion_content'
-  },
-  // If you don't want the accordion to stretch to fit 
-  // its content, set a value here, handy for horixontal examples.
-  defaultSize : {
-      height : null,
-      width : null
-  },
-  // The direction of the accordion
-  direction : 'vertical',
-  // Should the accordion activate on click or say on mouseover? (apple.com)
-  // onEvent : 'mouseover'
-  onEvent : 'click'
-}
-
-document.observe('dom:loaded',function() {
-  new Accordion('accordion_nav',accordian_options);
-  
-});
-
