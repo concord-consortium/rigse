@@ -1,29 +1,29 @@
 = render :partial => 'pages/show', :collection => section.pages, :as => :page
 
 - content_for("section_#{dom_id_for(section)}".to_sym) do
-  %OTSection{ :id => dom_id_for(section), :name => section.name   }
+  %OTSection{ :local_id => ot_local_id_for(section), :name => section.name   }
     %header
-      %OTCompoundDoc{ :id => dom_id_for(section, :header) }
+      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
         %bodyText
           #content
             %h1= section.name
     %content
-      %OTCardContainer{ :id => dom_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
+      %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
         %cards
           - section.pages.each do |page|
             =yield "page_#{dom_id_for(page)}".to_sym
         %currentCard
-          %object{ :refid => dom_id_for(section.pages.first) }/
+          %object{ :refid => ot_refid_for(section.pages.first) }/
         %viewedCards
     %footer
-      %object{ :refid => dom_id_for(section, :menu) }/
+      %object{ :refid => ot_refid_for(section, :menu) }/
 
 - content_for(:library) do
 
-  %OTMenu{ :id => dom_id_for(section, :menu) }
+  %OTMenu{ :local_id => ot_local_id_for(section, :menu) }
     %cardContainer
-      %object{ :refid => dom_id_for(section, :page_card_container) }/
+      %object{ :refid => ot_refid_for(section, :page_card_container) }/
     %menuRule
-      %object{ :refid => dom_id_for(section, :page_rule) }/
+      %object{ :refid => ot_refid_for(section, :page_rule) }/
 
-  %OTMenuRule{ :id => dom_id_for(section, :page_rule), :jumpToViewedCard => 'true', :stepAhead => 'true' }/
+  %OTMenuRule{ :local_id => ot_local_id_for(section, :page_rule), :jumpToViewedCard => 'true', :stepAhead => 'true' }/

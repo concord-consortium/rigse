@@ -1,5 +1,5 @@
 !!! XML
-%otrunk{:id => @content_for_otrunk_doc_id}
+%otrunk{:id => @drawing_tool.uuid}
   =ot_imports
   %objects
     %OTSystem
@@ -12,6 +12,6 @@
                 Basic Drawing Tool
               %p
                 This is a rendering of a drawing tool object
-              %object{ :refid => @content_for_drawing_tool_object_id }/
+              %object{ :refid => ot_refid_for(@drawing_tool) }/
       %library
         =yield :layout

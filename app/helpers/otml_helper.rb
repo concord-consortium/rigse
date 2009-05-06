@@ -1,5 +1,29 @@
 module OtmlHelper
 
+  def ot_refid_for(object, *prefixes)
+    if object.is_a? String
+      '${' + object + '}'
+    else
+      if prefixes.empty?
+        '${' + dom_id_for(object) + '}'
+      else
+        '${' + dom_id_for(object, prefixes) + '}'
+      end
+    end
+  end
+
+  def ot_local_id_for(object, *prefixes)
+    if object.is_a? String
+      object
+    else
+      if prefixes.empty?
+        dom_id_for(object)
+      else
+        dom_id_for(object, prefixes)
+      end
+    end
+  end
+  
   def imports
     imports = %w{
       org.concord.otrunk.OTSystem
