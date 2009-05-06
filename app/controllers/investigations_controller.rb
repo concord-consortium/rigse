@@ -169,9 +169,10 @@ class InvestigationsController < ApplicationController
   ##
   ##  
   def sort_sections
+    paramlistname = params[:list_name].nil? ? 'investigation_sections_list' : params[:list_name]    
     @investigation = Investigation.find(params[:id], :include => :sections)
     @investigation.sections.each do |section|
-      section.position = params['investigation_sections_list'].index(section.id.to_s) + 1
+      section.position = params[paramlistname].index(section.id.to_s) + 1
       section.save
     end 
     render :nothing => true

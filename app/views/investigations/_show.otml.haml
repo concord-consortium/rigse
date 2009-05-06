@@ -1,7 +1,7 @@
 = render :partial => 'sections/show', :collection => investigation.sections, :as => :section
 
 - content_for(:investigation) do
-  %OTUDLContainer{ :leftPanelWidth => '240' }
+  %OTUDLContainer{ :leftPanelWidth => investigation.left_nav_panel_width }
     %title
       %OTCompoundDoc
         %bodyText
@@ -10,23 +10,23 @@
     %menu
       %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }
         %object
-          %object{ :refid => dom_id_for(investigation, :menu) }/
+          %object{ :refid => ot_refid_for(investigation, :menu) }/
         %viewid
-          %object{ :refid => 'menu_accordion_section_view' }/
+          %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
     %content
-      %OTCardContainer{ :id => dom_id_for(investigation, :section_card_container), :contentsMayScroll => 'false' }
+      %OTCardContainer{ :local_id => ot_local_id_for(investigation, :section_card_container), :contentsMayScroll => 'false' }
         %cards
           - investigation.sections.each do |section|
             =yield "section_#{dom_id_for(section)}".to_sym
         %currentCard
-          %object{ :refid => dom_id_for(investigation.sections.first) }/
+          %object{ :refid => ot_refid_for(investigation.sections.first) }/
         %viewedCards
 
 - content_for(:library) do
-  %OTMenu{ :id => dom_id_for(investigation, :menu) }
+  %OTMenu{ :local_id => ot_local_id_for(investigation, :menu) }
     %cardContainer
-      %object{ :refid => dom_id_for(investigation, :section_card_container) }
+      %object{ :refid => ot_refid_for(investigation, :section_card_container) }
     %menuRule
-      %object{ :refid => 'section-rule' }
+      %object{ :refid => ot_refid_for('section_rule') }
 
-  %OTMenuRule{ :id => 'section-rule', :jumpToAnyCard => 'true' }
+  %OTMenuRule{ :local_id => ot_local_id_for('section_rule'), :jumpToAnyCard => 'true' }

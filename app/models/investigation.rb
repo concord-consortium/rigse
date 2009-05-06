@@ -16,6 +16,10 @@ class Investigation < ActiveRecord::Base
     end
   end
   
+  def left_nav_panel_width
+    300
+  end
+  
   def deep_set_user user
     self.user = user
     self.sections.each do |s| 

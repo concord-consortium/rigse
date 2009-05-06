@@ -1,5 +1,5 @@
 !!! XML
-%otrunk{:id => @content_for_otrunk_doc_id}
+%otrunk{:id => @multiple_choice.uuid}
   =ot_imports
   %objects
     %OTSystem
@@ -12,6 +12,6 @@
                 Basic Multiple Choice Question
               %p
                 This is a rendering of a basic multiple choice question
-              %object{ :refid => @content_for_multiple_choice_object_id }/
+              %object{ :refid => ot_refid_for(@multiple_choice) }/
       %library
         =yield :layout

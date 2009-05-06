@@ -1,5 +1,29 @@
 module OtmlHelper
 
+  def ot_refid_for(object, *prefixes)
+    if object.is_a? String
+      '${' + object + '}'
+    else
+      if prefixes.empty?
+        '${' + dom_id_for(object) + '}'
+      else
+        '${' + dom_id_for(object, prefixes) + '}'
+      end
+    end
+  end
+
+  def ot_local_id_for(object, *prefixes)
+    if object.is_a? String
+      object
+    else
+      if prefixes.empty?
+        dom_id_for(object)
+      else
+        dom_id_for(object, prefixes)
+      end
+    end
+  end
+  
   def imports
     imports = %w{
       org.concord.otrunk.OTSystem
@@ -79,13 +103,9 @@ module OtmlHelper
   end
 
   def ot_view_bundle(options={})
-    if options[:left_nav_panel]
-      left_nav_panel_width = 240
-    else
-      left_nav_panel_width = 0
-    end
+    @left_nav_panel_width =  options[:left_nav_panel_width] || 0
     title = options[:title] || 'RITES sample'
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => left_nav_panel_width, :title => title }
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => @left_nav_panel_width, :title => title }
   end
 
   def ot_script_engine_bundle
