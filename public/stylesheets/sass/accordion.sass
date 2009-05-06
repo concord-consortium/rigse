@@ -25,7 +25,6 @@
   .accordion_container
     :display block
     :overflow hidden
-    :font-weight bold
     :width auto
     :height auto
     :background-image url(/images/accordion_header.png)
@@ -35,6 +34,9 @@
     :margin 2px
     :padding 2px
     :cursor move
+    .description
+      :font-size 9px
+      :clear both
     .accordion_name
       :display block
       :float left
@@ -47,6 +49,7 @@
         &:hover
           :background-color= !very_dark_blue
           :color= !almost_white
+
           
     .accordion_toggle
       :display block
@@ -85,6 +88,9 @@
         &:hover
           :background-color= !very_dark_blue
           :color= !almost_white
+      ul
+        :padding 2px
+        :padding-left 0px
       .accordion_page
         :padding 2px
         :margin-top 5px
