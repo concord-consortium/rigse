@@ -51,4 +51,4 @@
         %li
           = labeled_check_box(f, :ruler_enabled)
       
-= observe_field dom_id_for(data_collector, :select_probe_type), :url => new_probe_type_data_collector_path, :with => "'data_collector[probe_type_id]=' + value"
+= observe_form dom_id_for(data_collector, :edit), :url => change_probe_type_data_collector_path(data_collector)
