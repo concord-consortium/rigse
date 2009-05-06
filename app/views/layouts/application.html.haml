@@ -54,7 +54,6 @@
       });
   %body
     
-    
     #body2
       /
         For non-visual user agents:
@@ -64,9 +63,9 @@
     #wrapper.wrapper
       = render :partial => 'shared/investigation_trail'
       #header
-        %span.left_content
+        .left_content
           %h1 RITES Authoring
-        %span.right_content
+        .right_content
           Welcome
           = "#{current_user.name}."
           - unless current_user.anonymous?
@@ -82,78 +81,25 @@
         %span.hidden.doNotPrint
           Navigation:
         != "&nbsp;"
-        / = yield :navigation_trail
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'Activities', investigations_path
           %li.trail= link_to 'My Activities', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
-            
-      #left_nav.nav_menu
-        .padded_content
-        - if @investigation
-          #accordion_nav
-            - sectionlistname = dom_id_for(@investigation, :accordion_section_list)
-            %ul{:id=>sectionlistname, :class=>"accordion_header"}
-              = link_to @investigation.name, @investigation
-              - @investigation.sections.each do |section|
-              
-                %li{:id=>dom_id_for(section,:item), :class=>"accordion_container"}
-                  .accordion_name
-                    -if (defined? @section) && (@section.id == section.id)
-                      = link_to section.name,section, :class=> 'selected'
-                    -else
-                      =link_to section.name, section
-                  
-                  .accordion_toggle
-                  -pagelistname = dom_id_for(section, :accordion_page_list)
-                  .accordion_content{:style=>'display: none;'}
-                    .description=section.description
-                    %ul{:id=>pagelistname}
-                      - section.pages.each do |p|
-                        %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
-                          .accordion_page_link
-                            = image_tag('red_dot.png')
-                            -if (defined? @page) && (@page.id == p.id)
-                              = link_to p.name,p, :class=> 'selected'
-                            -else
-                              =link_to p.name,p
-                    =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
-              =sortable_element sectionlistname.to_sym, :url=> {:controller=> :investigations, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @investigation.id }}
-            
-          / 
-            = yield :sidebar
-            %hr
-            %p
-            = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
-            %hr
-            %p
-              %span.sideBarText
-                Rhode Island Technology Enhanced Science 
-                %em (RITES) 
-                program is a targeted Math-Science Partnership designed to improve secondary science learning statewide.
-            %hr
-              %p.small
-                Validate the
-                %a{ :href => "http://validator.w3.org/check/referer" }
-                  XHTML
-                and
-                %a{ :href => "http://jigsaw.w3.org/css-validator/check/referer" }
-                  CSS of this page.
-            %hr
-              = render :partial => 'shared/site_info'
-          
+      
+      #content_container      
+        #left_nav.nav_menu
+          .padded_content
+          - if @investigation
+            = render :partial => 'shared/accordian_nav'
 
-
-      #content_header.main_content_colors
-        = yield :content_header
-      #main_content.main_content_colors
-        #flash
-          - flash.each do |key, message|
-            %div{:class=>"flash flash_#{key}"}= message
-        = yield :layout
-
-
+        #main_content.main_content_colors
+          #content_header.main_content_colors
+            = yield :content_header
+          #flash
+            - flash.each do |key, message|
+              %div{:class=>"flash flash_#{key}"}= message
+          = yield :layout
 
       #footer
         .padded_content

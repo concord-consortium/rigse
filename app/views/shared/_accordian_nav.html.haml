@@ -1,0 +1,28 @@
+#accordion_nav
+  - sectionlistname = dom_id_for(@investigation, :accordion_section_list)
+  %ul{:id=>sectionlistname, :class=>"accordion_header"}
+    = link_to @investigation.name, @investigation
+    - @investigation.sections.each do |section|
+    
+      %li{:id=>dom_id_for(section,:accordion_item), :class=>"accordion_container"}
+        .accordion_name
+          -if (defined? @section) && (@section.id == section.id)
+            = link_to section.name,section, :class=> 'selected'
+          -else
+            =link_to section.name, section
+        
+        .accordion_toggle
+        -pagelistname = dom_id_for(section, :accordion_page_list)
+        .accordion_content{:style=>'display: none;'}
+          .description=section.description
+          %ul{:id=>pagelistname}
+            - section.pages.each do |p|
+              %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
+                .accordion_page_link
+                  = image_tag('red_dot.png')
+                  -if (defined? @page) && (@page.id == p.id)
+                    = link_to p.name,p, :class=> 'selected'
+                  -else
+                    =link_to p.name,p
+          =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
+    =sortable_element sectionlistname.to_sym, :url=> {:controller=> :investigations, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @investigation.id }}

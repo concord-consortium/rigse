@@ -114,27 +114,29 @@ fieldset
   :overflow hidden
   :padding 0.5em 0px
 
-    
-#left_nav
-  +column(!left_nav_columns)
-  +left_nav_colors
-  :overflow hidden
-  :line-height 1.4em
-  :font-size 12px
-  :height 800px
 .main_content_colors
   +content_area_colors
-
-#main_content
-  +column(!main_content_columns,true)
-  +content_area_colors
-  :line-height 1.5em
-
-#content_header
-  +content_area_colors
-  +column(!main_content_columns,true)
-  :padding 0px
-  :margin 0px
+  
+#content_container
+  +column(24,true)
+  :min-height 600px
+  :height auto !important
+  :line-height 1.4em
+  :font-size 12px
+  #left_nav
+    +column(!left_nav_columns)
+    +left_nav_colors
+    :overflow hidden
+    :height 100% !important
+  #main_content
+    +column(!main_content_columns,true)
+    +content_area_colors
+    :height 100%
+    #content_header
+      +content_area_colors
+      +column(!main_content_columns,true)
+      :padding 0px
+      :margin 0px
 
 #footer
   +column(24,true)
@@ -202,7 +204,13 @@ ul.menu
 .component_title
   :font-size 1em
 
-
+.in_place_editor_field
+  :min-width 5em
+  :width auto !important
+  :min-height 1.5em
+  :height auto !important
+  :padding 2px
+  
 .item_collection
   :border
     :width 1px
