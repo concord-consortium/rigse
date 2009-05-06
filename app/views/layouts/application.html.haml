@@ -113,6 +113,7 @@
                       - section.pages.each do |p|
                         %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
                           .accordion_page_link
+                            = image_tag('red_dot.png')
                             -if (defined? @page) && (@page.id == p.id)
                               = link_to p.name,p, :class=> 'selected'
                             -else
