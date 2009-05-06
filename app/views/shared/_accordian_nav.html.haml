@@ -16,13 +16,12 @@
         .accordion_content{:style=>'display: none;'}
           .description=section.description
           %ul{:id=>pagelistname}
-            - section.pages.each do |p|
+            - section.pages.each_with_index do |p,i|
               %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
                 .accordion_page_link
-                  = image_tag('red_dot.png')
                   -if (defined? @page) && (@page.id == p.id)
-                    = link_to p.name,p, :class=> 'selected'
+                    = link_to "#{i+1}:#{p.name}",p, :class=> 'selected'
                   -else
-                    =link_to p.name,p
+                    =link_to "#{i+1}: #{p.name}",p
           =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
     =sortable_element sectionlistname.to_sym, :url=> {:controller=> :investigations, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @investigation.id }}
