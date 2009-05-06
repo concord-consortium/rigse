@@ -7,6 +7,7 @@ var has_cookie = function(toggle_element)         { return (readCookie(id_for_to
 var set_cookie = function(toggle_element)         { createCookie(id_for_toggle(toggle_element),'true'); }
 var remove_cookie = function(toggle_element)      { eraseCookie(id_for_toggle(toggle_element)); }
 var is_on = function(toggle_element) { return toggle_element.hasClassName(open_class); }
+var is_a_toggle = function(element) { return (element.hasClassName(open_class) || element.hasClassName(closed_class)) ; }
 
 var turn_on = function(toggle_element,duration) { 
   toggle_element.addClassName(open_class);
@@ -22,22 +23,26 @@ var turn_off = function(toggle_element,duration) {
 
 var toggle = function(event) {
   toggle_element = event.element()
-  if (is_on(toggle_element)) {
-    turn_off(toggle_element,default_duration);
-    remove_cookie(toggle_element);
-  }
-  else {
-    turn_on(toggle_element,default_duration);
-    set_cookie(toggle_element);
+  if(is_a_toggle(toggle_element)) {
+    if (is_on(toggle_element)) {
+      turn_off(toggle_element,default_duration);
+      remove_cookie(toggle_element);
+    }
+    else {
+      turn_on(toggle_element,default_duration);
+      set_cookie(toggle_element);
+    }
+    event.stop()
   }
 }
 
 document.observe('dom:loaded', function() {
   $$("." + closed_class).each(function(element){
-    element.observe('click',toggle);
     turn_off(element,0);
     if (has_cookie(element)) {
       turn_on(element,0);
     }
   });
 })
+
+document.observe('click',toggle);
