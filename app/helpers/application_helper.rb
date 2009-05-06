@@ -2,6 +2,29 @@ include OtmlHelper
 
 module ApplicationHelper
 
+  #
+  # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
+  #
+  # This helper is normally used with ActiveRecord objects.
+  #
+  #   @model = Model.find(3)
+  #   dom_id_for(@model)                        # => "model_3"
+  #   dom_id_for(@model, :item)                 # => "item_model_3"
+  #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
+  #
+  def dom_id_for(component, *optional_prefixes)
+    prefix = ''
+    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
+    class_name = component.class.name.underscore
+    id_string = component.id.to_s
+    "#{prefix}#{class_name}_#{id_string}"
+  end
+
+  def dom_class_for(component)
+    component.class.name.underscore
+  end
+
+
   def display_repo_info
     if repo = Grit::Repo.new(".")
       last_commit = repo.commits.first
@@ -66,28 +89,6 @@ module ApplicationHelper
   def render_edit_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
-  end
-
-  #
-  # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
-  #
-  # This helper is normally used with ActiveRecord objects.
-  #
-  #   @model = Model.find(3)
-  #   dom_id_for(@model)                        # => "model_3"
-  #   dom_id_for(@model, :item)                 # => "item_model_3"
-  #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
-  #
-  def dom_id_for(component, *optional_prefixes)
-    prefix = ''
-    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
-    class_name = component.class.name.underscore
-    id_string = component.id.to_s
-    "#{prefix}#{class_name}_#{id_string}"
-  end
-
-  def dom_class_for(component)
-    component.class.name.underscore
   end
 
   def edit_button_for(component, options={})

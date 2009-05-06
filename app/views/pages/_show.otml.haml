@@ -1,11 +1,11 @@
 - content_for("page_#{dom_id_for(page)}".to_sym) do
-  %OTCompoundDoc{ :id => dom_id_for(page), :name => page.name }
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page), :name => page.name }
     %bodyText
       #content
         %h2= page.name
         - page.page_elements.each do |element|
           .element
-            %object{ :refid => dom_id_for(element.embeddable) }/
+            %object{ :refid => ot_refid_for(element.embeddable) }/
 
 - content_for(:library) do
   - page.page_elements.each do |element|
