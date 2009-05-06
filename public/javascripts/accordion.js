@@ -1,7 +1,7 @@
 var default_duration = 0.2;
 var open_class = 'accordion_toggle_active';
 var closed_class = 'accordion_toggle';
-var element_for_toggle = function(toggle_element) { return $(toggle_element).next('ul'); }
+var element_for_toggle = function(toggle_element) { return $(toggle_element).next('.accordion_content'); }
 var id_for_toggle = function(toggle_element)      { return $(toggle_element).up().identify();   }
 var has_cookie = function(toggle_element)         { return (readCookie(id_for_toggle(toggle_element)) == "true");    }
 var set_cookie = function(toggle_element)         { createCookie(id_for_toggle(toggle_element),'true'); }
@@ -38,7 +38,7 @@ var toggle = function(event) {
 
 document.observe('dom:loaded', function() {
   $$("." + closed_class).each(function(element){
-    turn_off(element,0);
+    // turn_off(element,0);
     if (has_cookie(element)) {
       turn_on(element,0);
     }

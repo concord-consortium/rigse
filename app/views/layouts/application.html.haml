@@ -107,15 +107,17 @@
                   
                   .accordion_toggle
                   -pagelistname = dom_id_for(section, :accordion_page_list)
-                  %ul{:id=>pagelistname, :class=>'accordion_content'}
-                    - section.pages.each do |p|
-                      %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
-                        .accordion_page_link
-                          -if (defined? @page) && (@page.id == p.id)
-                            = link_to p.name,p, :class=> 'selected'
-                          -else
-                            =link_to p.name,p
-                  =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
+                  .accordion_content{:style=>'display: none;'}
+                    .description=section.description
+                    %ul{:id=>pagelistname}
+                      - section.pages.each do |p|
+                        %li{:id => dom_id_for(p, :accordion_item), :class => 'accordion_page'}
+                          .accordion_page_link
+                            -if (defined? @page) && (@page.id == p.id)
+                              = link_to p.name,p, :class=> 'selected'
+                            -else
+                              =link_to p.name,p
+                    =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
               =sortable_element sectionlistname.to_sym, :url=> {:controller=> :investigations, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @investigation.id }}
             
           / 
