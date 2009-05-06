@@ -1,7 +1,7 @@
 = render :partial => 'sections/show', :collection => investigation.sections, :as => :section
 
 - content_for(:investigation) do
-  %OTUDLContainer{ :leftPanelWidth => '240' }
+  %OTUDLContainer{ :leftPanelWidth => investigation.left_nav_panel_width }
     %title
       %OTCompoundDoc
         %bodyText
