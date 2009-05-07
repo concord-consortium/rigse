@@ -146,6 +146,7 @@ class SectionsController < ApplicationController
     if (params['id']) 
       @section = Section.find(params['id'])
       @page.section = @section
+      @page.save
     end
   end
   

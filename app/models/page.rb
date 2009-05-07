@@ -7,11 +7,12 @@ class Page < ActiveRecord::Base
   has_many :open_responses, :through => :page_elements, :source => :embeddable, :source_type => 'OpenResponse'
   has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
   has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
+  has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
   
   has_many :teacher_notes, :as => :authored_entity
   
   acts_as_replicatable
-  acts_as_list
+  acts_as_list :scope => :section
   
   include Changeable
   # validates_presence_of :name, :on => :create, :message => "can't be blank"
@@ -19,8 +20,17 @@ class Page < ActiveRecord::Base
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   
   default_value_for :position, 1;
-  default_value_for :name, "untitled page"
   default_value_for :description, "describe the purpose of this page here..."
+
+  UNTITLED_PAGE_NAME = 'unititled page'
+  
+  def name
+    if self[:name] && !self[:name].empty?
+      self[:name]
+    else
+      UNTITLED_PAGE_NAME
+    end
+  end
 
   # 
   # after_create :add_xhtml
