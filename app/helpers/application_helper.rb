@@ -100,6 +100,14 @@ module ApplicationHelper
     success  = options[:success]  || nil
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
+  
+  def run_link_for(component)
+    link_to('run', 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :show,
+      :format => :jnlp, 
+      :id  => component.id)
+  end
 
   def otml_link_for(component)
     link_to('otml', 
@@ -173,6 +181,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
+              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
             end
