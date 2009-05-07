@@ -149,7 +149,7 @@ module JnlpHelper
     xml.resources {
       xml.j2se :version => "1.5+", 'max-heap-size' => "128m", 'initial-heap-size' => "32m"
       resource_jars.each do |resource|
-        xml.jar :version => resource[1], :href => resource[0]
+        xml.jar :href => resource[0], :version => resource[1]
       end
     }
   end
@@ -157,7 +157,7 @@ module JnlpHelper
   def jnlp_resources_linux(xml)
     xml.resources(:os => "Linux") { 
       linux_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
@@ -165,7 +165,7 @@ module JnlpHelper
   def jnlp_resources_macosx(xml)
     xml.resources(:os => "Mac OS X") { 
       macos_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
@@ -173,7 +173,7 @@ module JnlpHelper
   def jnlp_resources_windows(xml)
     xml.resources(:os => "Windows") { 
       windows_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
