@@ -6,6 +6,7 @@
         = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
     .action_menu_header_right
       %ul.menu
+        %li= link_to 'run', page_url(@page, :format => :jnlp)
         %li= toggle_all('elements')
         %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
         - if (page.changeable?(current_user))

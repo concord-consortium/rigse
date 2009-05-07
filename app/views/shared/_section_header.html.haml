@@ -6,6 +6,7 @@
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(section,"page_actions", "show/hide pages")
+      %li= link_to 'run', section_url(@section, :format => :jnlp)
       %li= link_to 'duplicate', duplicate_section_url(section)
       / %li= edit_button_for(section, :complete => mce_init_string())
       %li= toggle_all 'pages'
