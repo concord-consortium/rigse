@@ -11,8 +11,11 @@ class SectionsController < ApplicationController
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
       @investigation = @section.investigation
-      if (@section && request.parameters[:format] != 'otml')
-        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
+      format = request.parameters[:format]
+      unless format == 'otml' || format == 'jnlp'
+        if @section
+          @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
+        end
       end
     end
   end
@@ -51,6 +54,7 @@ class SectionsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
+      format.jnlp { render :layout => false }
       format.xml  { render :xml => @section }
     end
   end

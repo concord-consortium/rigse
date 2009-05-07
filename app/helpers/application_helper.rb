@@ -1,4 +1,5 @@
 include OtmlHelper
+include JnlpHelper
 
 module ApplicationHelper
 
