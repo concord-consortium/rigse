@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Question
-              %p
-                This is a rendering of a basic open response question
+              %h3
+                = OpenResponse.display_name + ': ' + @open_response.name
               %object{ :refid => ot_refid_for(@open_response) }/
       %library
         =yield :layout

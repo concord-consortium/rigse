@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Drawing Tool
-              %p
-                This is a rendering of a drawing tool object
+              %h3
+                = DrawingTool.display_name + ': ' + @drawing_tool.name
               %object{ :refid => ot_refid_for(@drawing_tool) }/
       %library
         =yield :layout

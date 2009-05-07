@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Data Collector
-              %p
-                This is a rendering of a data collector graph
+              %h3
+                = DataCollector.display_name + ': ' + @data_collector.name
               %object{ :refid => ot_refid_for(@data_collector) }/
       %library
         =yield :layout

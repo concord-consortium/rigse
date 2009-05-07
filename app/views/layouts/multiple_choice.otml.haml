@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Multiple Choice Question
-              %p
-                This is a rendering of a basic multiple choice question
+              %h3
+                = MultipleChoice.display_name + ': ' + @multiple_choice.name
               %object{ :refid => ot_refid_for(@multiple_choice) }/
       %library
         =yield :layout
