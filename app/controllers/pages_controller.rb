@@ -16,8 +16,11 @@ class PagesController < ApplicationController
       @investigation =@section.investigation
       @page_elements = @page.page_elements
     end
-    if (@page && request.parameters[:format] != 'otml')
-      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+    format = request.parameters[:format]
+    unless format == 'otml' || format == 'jnlp'
+      if @page
+        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
+      end
     end
   end
   
@@ -59,6 +62,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => "layouts/page" } # page.otml.haml
+      format.jnlp { render :layout => false }
       format.xml  { render :xml => @page }
     end
   end

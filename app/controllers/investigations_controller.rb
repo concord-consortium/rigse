@@ -41,8 +41,11 @@ class InvestigationsController < ApplicationController
     else
       @investigation = Investigation.new
     end
-    unless request.parameters[:format] == 'otml'
-      @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
+    format = request.parameters[:format]
+    unless format == 'otml' || format == 'jnlp'
+      if @investigation
+        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @investigation.teacher_note}
+      end
     end
   end
   
@@ -70,6 +73,7 @@ class InvestigationsController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
       format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
+      format.jnlp { render :layout => false }
       format.pdf {render :layout => false }
     end
   end

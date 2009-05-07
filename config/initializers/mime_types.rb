@@ -5,3 +5,4 @@
 # Mime::Type.register_alias "text/html", :iphone
 
 Mime::Type.register "text/xml", :otml
+Mime::Type.register "application/x-java-jnlp-file", :jnlp
