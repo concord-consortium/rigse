@@ -19,7 +19,8 @@
           - investigation.sections.each do |section|
             =yield "section_#{dom_id_for(section)}".to_sym
         %currentCard
-          %object{ :refid => ot_refid_for(investigation.sections.first) }/
+          - if investigation.sections.first
+            %object{ :refid => ot_refid_for(investigation.sections.first) }/
         %viewedCards
 
 - content_for(:library) do

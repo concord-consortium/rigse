@@ -16,6 +16,10 @@ class Section < ActiveRecord::Base
   default_value_for :name, "name of section"
   default_value_for :description, "describe the purpose of this section here..."
 
+  def self.display_name
+    'Section'
+  end
+
   # default_value_for :pages do
   #   [Page.create()]
   # end

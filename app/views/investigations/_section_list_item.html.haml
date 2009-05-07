@@ -5,6 +5,7 @@
         =link_to name_for_component(section), section
       %div.action_menu_header_right   
         %ul.menu
+          %li= run_link_for(section)
           - if (section.changeable?(current_user))
             %li= link_to 'duplicate', duplicate_section_url(section)
             / %li= link_to 'edit', section

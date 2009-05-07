@@ -111,15 +111,16 @@ module ApplicationHelper
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
   
-  def run_link_for(component)
-    display_name = component.class.display_name
-    link_to('run', {
+  def run_link_for(component, prefix='')
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_to("#{prefix}run #{component_display_name}", {
         :controller => component.class.name.pluralize.underscore, 
         :action => :show,
         :format => :jnlp, 
         :id  => component.id
       },
-      :title => "Start this #{display_name} in a Java application. The first time you run this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+      :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def otml_link_for(component)
