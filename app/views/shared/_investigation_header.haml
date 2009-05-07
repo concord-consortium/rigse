@@ -5,7 +5,7 @@
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(investigation,"sections_actions", "show/hide sections")
-      %li= link_to 'run', investigation_url(@investigation, :format => :jnlp), :title => "Start the Activity: '#{@investigation.name}' in a Java application. The first time you run this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
+      %li= run_link_for(@investigation)
       %li= toggle_all 'section descriptions'
       %li= link_to 'duplicate', duplicate_investigation_url(investigation)
       / %li= edit_button_for(investigation, :complete => mce_init_string())

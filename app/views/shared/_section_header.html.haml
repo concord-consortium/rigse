@@ -6,7 +6,7 @@
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(section,"page_actions", "show/hide pages")
-      %li= link_to 'run', section_url(@section, :format => :jnlp), :title => "Start just this Section from the Activity: '#{@section.investigation.name}' in a Java application. The first time you run this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
+      %li= run_link_for(@section)
       %li= link_to 'duplicate', duplicate_section_url(section)
       / %li= edit_button_for(section, :complete => mce_init_string())
       %li= toggle_all 'pages'
