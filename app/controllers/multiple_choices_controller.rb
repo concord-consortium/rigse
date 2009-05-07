@@ -20,6 +20,7 @@ class MultipleChoicesController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/multiple_choice" } # multiple_choice.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @multiple_choice } }
         format.xml  { render :xml => @multiple_choice }
       end
     end

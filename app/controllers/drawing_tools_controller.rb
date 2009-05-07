@@ -20,6 +20,7 @@ class DrawingToolsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/drawing_tool" } # drawing_tool.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @drawing_tool } }
         format.xml  { render :xml => @drawing_tool }
       end
     end

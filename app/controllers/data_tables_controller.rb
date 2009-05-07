@@ -20,6 +20,7 @@ class DataTablesController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/data_table" } # data_table.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @data_table } }
         format.xml  { render :xml => @data_table }
       end
     end

@@ -143,6 +143,16 @@ module JnlpHelper
       ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-macosx-nar.jar', '2.1.7-r2']
     ]
   end
+
+  def system_properties
+    [
+     ['otrunk.view.export_image', 'true'],
+     ['otrunk.view.author', 'true'],
+     ['_otrunk.view.debug', 'true'],
+     ['otrunk.view.mode', 'student'],
+     ['otrunk.view.status', 'true']
+    ]
+  end
   
   def jnlp_resources(xml)
     xml.resources {
@@ -150,6 +160,9 @@ module JnlpHelper
       xml.jar :href => "net/sf/sail/sail-data-emf/sail-data-emf.jar", :main => true, :version => "0.1.0-20090506.165007-1170"
       resource_jars.each do |resource|
         xml.jar :href => resource[0], :version => resource[1]
+      end
+      system_properties.each do |property|
+        xml.property :name => property[0], :value => property[1]
       end
     }
   end

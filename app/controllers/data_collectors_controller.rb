@@ -20,6 +20,7 @@ class DataCollectorsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/data_collector" } # data_collector.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @data_collector } }
         format.xml  { render :xml => @data_collector }
       end
     end

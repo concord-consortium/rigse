@@ -101,12 +101,25 @@ module ApplicationHelper
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
   end
   
-  def run_link_for(component)
-    link_to('run', 
+  def otml_url_for(component)
+    url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
-      :format => :jnlp, 
-      :id  => component.id)
+      :format => :otml, 
+      :id  => component.id,
+      :only_path => false )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+  end
+  
+  def run_link_for(component)
+    display_name = component.class.display_name
+    link_to('run', {
+        :controller => component.class.name.pluralize.underscore, 
+        :action => :show,
+        :format => :jnlp, 
+        :id  => component.id
+      },
+      :title => "Start this #{display_name} in a Java application. The first time you run this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def otml_link_for(component)

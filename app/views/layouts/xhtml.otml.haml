@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Xhtml Content
-              %p
-                This is a rendering of an xhtml text content object
+              %h3
+                = Xhtml.display_name + ': ' + @xhtml.name
               %object{ :refid => ot_refid_for(@xhtml) }/
       %library
         =yield :layout
