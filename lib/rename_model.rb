@@ -40,7 +40,7 @@ end
 
 def exec(command)
   puts command
-  # puts %x[command]
+  puts %x[#{command}]
 end
 
 rename ('Investigation','Activity')
