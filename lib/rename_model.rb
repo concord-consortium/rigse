@@ -1,22 +1,46 @@
+# for magic rails strings:
+require 'rubygems'
+require 'active_support'
 
+# Process files in the app/ directory:
+# renaming model files, and repacing substrings matching model name.
+# use with caution, and check results with git before committing.
 
-
-# note to self!! Exclude DB directory!
-def rename(old_name,new_name,exludes)
+def rename(old_name,new_name)
   #rename files:
   types = "{rb,haml,erb,html}"
-  Dir.glob(File.join("../app/**","*.#{types}")) do |name| 
-    if name =~ /#{old_name}/
-      exec "mv #{name} #{name.gsub(old_name,new_name)}"
+
+  # specify the replacesments list, to ensure 
+  # the correct ordering of 'each'...
+  replacements = [
+    {
+      :old => old_name.tableize.pluralize,
+      :new => new_name.tableize.pluralize
+    },{
+      :old => old_name.tableize,
+      :new => new_name.tableize
+    },{
+      :old => old_name.classify,
+      :new => new_name.classify
+    },{
+      :old => old_name.foreign_key,
+      :new => new_name.foreign_key
+    }
+  ]
+  replacements.each do |replacement|
+    Dir.glob(File.join("../app/**","*.#{types}")) do |filename| 
+      if filename =~ /#{replacement[:old]}/
+        exec "mv #{filename} #{filename.gsub(replacement[:old],replacement[:new])}"
+      end
+      exec "sed -i -n 's/#{replacement[:old]}/#{replacement[:new]}/g' #{filename}"
     end
-    exec "sed #{name} 's/#{old_name}/#{new_name}/g'"
   end
 end
 
 
 def exec(command)
-  # puts command
-  puts %x[command]
+  puts command
+  # puts %x[command]
 end
 
-rename ('investigation','activity',[])
+rename ('Investigation','Activity')
