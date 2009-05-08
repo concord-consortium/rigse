@@ -92,6 +92,15 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
 
+  def wrap_edit_link_around_content(component, content, options={})
+    url      = options[:url]      || edit_url_for(component)
+    update   = options[:update]   || dom_id_for(component, :item)
+    method   = options[:method]   || :get
+    complete = options[:complete] || nil
+    success  = options[:success]  || nil
+    link_to_remote(content, :url => url, :update => update, :method => method, :complete => complete, :success => success)
+  end
+
   def edit_button_for(component, options={})
     url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
@@ -99,6 +108,28 @@ module ApplicationHelper
     complete = options[:complete] || nil
     success  = options[:success]  || nil
     link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
+  end
+  
+  def otml_url_for(component)
+    url = url_for( 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :show,
+      :format => :otml, 
+      :id  => component.id,
+      :only_path => false )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+  end
+  
+  def run_link_for(component, prefix='')
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_to("#{prefix}run #{component_display_name}", {
+        :controller => component.class.name.pluralize.underscore, 
+        :action => :show,
+        :format => :jnlp, 
+        :id  => component.id
+      },
+      :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def otml_link_for(component)
@@ -173,6 +204,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
+              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
             end

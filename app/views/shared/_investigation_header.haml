@@ -5,6 +5,7 @@
   .action_menu_header_right
     %ul.menu
       / %li= toggle_more(investigation,"sections_actions", "show/hide sections")
+      %li= run_link_for(@investigation)
       %li= toggle_all 'section descriptions'
       %li= link_to 'duplicate', duplicate_investigation_url(investigation)
       / %li= edit_button_for(investigation, :complete => mce_init_string())

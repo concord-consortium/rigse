@@ -8,10 +8,8 @@
         %OTCompoundDoc
           %bodyText
             #content
-              %h1 
-                Basic Data Table
-              %p
-                This is a rendering of a basic data table
+              %h3
+                = DataTable.display_name + ': ' + @data_table.name
               %object{ :refid => ot_refid_for(@data_table) }/
       %library
         =yield :layout

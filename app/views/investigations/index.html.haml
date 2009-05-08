@@ -11,8 +11,8 @@
         = will_paginate @paginated_objects
     .action_menu_header_right
       %ul.menu
-        %li= link_to 'create investigation', new_investigation_path
-        %li= toggle_all 'investigation descriptions'
+        %li= link_to 'create activity', new_investigation_path
+        %li= toggle_all 'activity descriptions'
         
 
 .item_collection
@@ -24,6 +24,7 @@
             =link_to name_for_component(investigation), investigation
           %div.action_menu_header_right   
             %ul.menu
+              %li= run_link_for(investigation)
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
               %li.menu=link_to 'export (xml)', export_investigation_url(investigation)
               - if (investigation.changeable?(current_user))

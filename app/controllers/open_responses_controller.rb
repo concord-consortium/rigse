@@ -23,6 +23,7 @@ class OpenResponsesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/open_response" } # open_response.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @open_response } }
         format.xml  { render :xml => @open_response }
       end
     end

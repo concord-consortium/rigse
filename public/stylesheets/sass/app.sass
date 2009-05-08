@@ -217,24 +217,29 @@ ul.menu
   :padding 2px
   
 .item_collection
+  :background-color white
   :border
     :width 1px
     :style none
   :padding 0.5em 1em
   .item
+    :margin-bottom 4px
+    :background-color = !almost_white
     :padding 0.5em
     :border
       :style none
-      :bottom
-        :width 1px
-        :style dotted
     .action_menu
-      :width 700px
+      :width 695px
       :background-color = !almost_white
       ul
         :background-color = !almost_white
         li
           :background-color = !almost_white
+  .item:hover
+    :border
+      :width 2px
+      :style dotted
+      :color blue
 
 .content
   :font-size 1em
@@ -244,6 +249,11 @@ ul.menu
     :style solid
     :color #DDD
   :background-color white
+  :cursor text
+  a
+    :background-color transparent
+  a:hover
+    :background-color transparent
 
 .padded_content
   :margin 0px 5px

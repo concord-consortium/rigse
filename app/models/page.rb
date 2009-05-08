@@ -22,6 +22,10 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
+  def self.display_name
+    'Page'
+  end
+
   UNTITLED_PAGE_NAME = 'unititled page'
   
   def name

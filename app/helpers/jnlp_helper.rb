@@ -20,7 +20,6 @@ module JnlpHelper
       ['rhino/js/js.jar', '1.5R4.1'],
       ['script/jsr223/jsr223.jar', '1.0'],
       ['xstream/xstream/xstream.jar', '1.1.2'],
-      ['net/sf/sail/sail-data-emf/sail-data-emf.jar', '0.1.0-20090506.165007-1170', 'main => "true'],
       ['org/eclipse/emf/ecore/ecore.jar', '2.2.0'],
       ['org/eclipse/emf/common/common.jar', '2.2.0'],
       ['org/eclipse/emf/ecore-xmi/ecore-xmi.jar', '2.2.0'],
@@ -90,13 +89,13 @@ module JnlpHelper
       ['org/concord/external/tts/narrator/narrator.jar', '1.1'],
       ['org/concord/external/tts/freetts/freetts.jar', '1.1'],
       ['org/concord/external/tts/en_us/en_us.jar', '1.1'],
-      ['org/concord/external/tts/cmutimelex/cmutimelexml.jar', '1.1'],
-      ['org/concord/external/tts/cmulex/cmulexml.jar', '1.1'],
+      ['org/concord/external/tts/cmutimelex/cmutimelex.jar', '1.1'],
+      ['org/concord/external/tts/cmulex/cmulex.jar', '1.1'],
       ['org/concord/external/tts/cmudict04/cmudict04.jar', '1.1'],
       ['org/concord/external/tts/cmu_us_kal/cmu_us_kal.jar', '1.1'],
       ['org/concord/external/tts/cmu_time_awb/cmu_time_awb.jar', '1.1'],
-      ['org/concord/otrunk/otrunk-swingx/otrunk-swingxml.jar', '0.1.0-20090506.171126-79'],
-      ['org/swinglabs/swingx/swingxml.jar', '0.9.5-2'],
+      ['org/concord/otrunk/otrunk-swingx/otrunk-swingx.jar', '0.1.0-20090506.171126-79'],
+      ['org/swinglabs/swingx/swingx.jar', '0.9.5-2'],
       ['org/concord/otrunk/otrunk-diy/otrunk-diy.jar', '0.1.0-20080326.093552-20'],
       ['org/concord/sensor-native/sensor-native.jar', '0.1.0-20090505.043216-187'],
       ['org/concord/sensor/sensor-vernier/sensor-vernier.jar', '0.1.0-20090502.033056-175'],
@@ -144,12 +143,26 @@ module JnlpHelper
       ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-macosx-nar.jar', '2.1.7-r2']
     ]
   end
+
+  def system_properties
+    [
+     ['otrunk.view.export_image', 'true'],
+     ['otrunk.view.author', 'true'],
+     ['_otrunk.view.debug', 'true'],
+     ['otrunk.view.mode', 'student'],
+     ['otrunk.view.status', 'true']
+    ]
+  end
   
   def jnlp_resources(xml)
     xml.resources {
       xml.j2se :version => "1.5+", 'max-heap-size' => "128m", 'initial-heap-size' => "32m"
+      xml.jar :href => "net/sf/sail/sail-data-emf/sail-data-emf.jar", :main => true, :version => "0.1.0-20090506.165007-1170"
       resource_jars.each do |resource|
-        xml.jar :version => resource[1], :href => resource[0]
+        xml.jar :href => resource[0], :version => resource[1]
+      end
+      system_properties.each do |property|
+        xml.property :name => property[0], :value => property[1]
       end
     }
   end
@@ -157,7 +170,7 @@ module JnlpHelper
   def jnlp_resources_linux(xml)
     xml.resources(:os => "Linux") { 
       linux_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
@@ -165,7 +178,7 @@ module JnlpHelper
   def jnlp_resources_macosx(xml)
     xml.resources(:os => "Mac OS X") { 
       macos_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
@@ -173,7 +186,7 @@ module JnlpHelper
   def jnlp_resources_windows(xml)
     xml.resources(:os => "Windows") { 
       windows_native_jars.each do |resource|
-        xml.nativelib :version => resource[1], :href => resource[0]
+        xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
