@@ -26,8 +26,6 @@
     / = javascript_include_tag "livepipe/tabs"
     = javascript_include_tag "livepipe/window"
     = javascript_include_tag "live_validation"
-    = javascript_include_tag "cookie"
-    = javascript_include_tag "accordion"    
     = javascript_include_tag "controls"
     /[if IE]
       = javascript_include_tag "flotr/excanvas"
@@ -38,7 +36,10 @@
     = javascript_include_tag "tiny_mce/tiny_mce"
     / lets load the applications js last...
     = javascript_include_tag "application"
-    
+    = javascript_include_tag "cookie"
+    = javascript_include_tag "accordion"
+    = javascript_include_tag "item_selectable"
+
     :javascript
       tinyMCE.init({
         mode : "textareas",

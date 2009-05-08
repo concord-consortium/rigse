@@ -218,28 +218,34 @@ ul.menu
   
 .item_collection
   :background-color white
-  :border
-    :width 1px
-    :style none
-  :padding 0.5em 1em
+  :padding 0.5em 0em
   .item
-    :margin-bottom 4px
-    :background-color = !almost_white
+    :margin-bottom 10px
+    :background-color= !almost_white
     :padding 0.5em
     :border
-      :style none
+      :style dotted
+      :color= !almost_white
+      :width 2px
     .action_menu
       :width 695px
-      :background-color = !almost_white
+      :background-color= !almost_white
       ul
-        :background-color = !almost_white
+        :background-color= !almost_white
         li
-          :background-color = !almost_white
-  .item:hover
-    :border
-      :width 2px
-      :style dotted
-      :color blue
+          :background-color= !almost_white
+    &.selected
+      :border
+        :style solid
+        :color= !light_brown
+    &.selectable
+      :border
+        :style solid
+        :color= !almost_white
+      &:hover
+        :border
+          :style dotted
+          :color= !light_brown
 
 .content
   :font-size 1em
@@ -253,6 +259,7 @@ ul.menu
   a
     :background-color transparent
   a:hover
+    :color inherit
     :background-color transparent
 
 .padded_content
