@@ -2,7 +2,7 @@ module DialogHelper
 
 
   
-  # Pass in investigation_id, or anything else you wanted in options
+  # Pass in activity_id, or anything else you wanted in options
   def modal_dialog_for(page, component, options={})
     defaults = {
       :name       => "new #{component.class.name.humanize}",

@@ -68,7 +68,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :page_elements
 
-  map.resources :investigations, :member => {
+  map.resources :activities, :member => {
     :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
@@ -77,8 +77,8 @@ ActionController::Routing::Routes.draw do |map|
     :export => :get
   }
 
-  map.resources :investigations do |investigation|
-    investigation.resources :sections do |section|
+  map.resources :activities do |activity|
+    activity.resources :sections do |section|
       section.resources :pages do |page|
         page.resources :page_elements
       end

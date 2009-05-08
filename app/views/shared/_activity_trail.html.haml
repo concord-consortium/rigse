@@ -1,13 +1,13 @@
-- investigation = @investigation ? @investigation : (@section ? @section.investigation : (@page ? @page.section.investigation : nil))
+- activity = @activity ? @activity : (@section ? @section.activity : (@page ? @page.section.activity : nil))
 - section = @section ? @section : (@page ? @page.section : nil)
 - page = @page 
 
 #section_nav_menu.dropdown
-  - if investigation && (!investigation.id.nil?)
-    - if (investigation.sections.size > 0)
+  - if activity && (!activity.id.nil?)
+    - if (activity.sections.size > 0)
       %h3 Sections:
       %ul
-        - investigation.sections.each do |s|
+        - activity.sections.each do |s|
           %li= link_to s.name,url_for(s)
 
 #page_nav_menu.dropdown
@@ -28,10 +28,10 @@
 
 - content_for :navigation_trail do
   %ul.menu_h
-    - if investigation && (!investigation.id.nil?)
+    - if activity && (!activity.id.nil?)
       %li.trail
         &rsaquo;
-        =dropdown_link_for(:text => investigation.name,:length => 45, :url => investigation_url(investigation), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
+        =dropdown_link_for(:text => activity.name,:length => 45, :url => activity_url(activity), :id=> 'section_nav_dropdown', :content_id => 'section_nav_menu')
    
     - if section && (!section.id.nil?)
       %li.trail

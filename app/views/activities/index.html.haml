@@ -1,0 +1,33 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+        - content_tag :label do
+          = text_field_tag :search, params[:search], :size => 30
+        %input{ :type => "submit", :value => "Search"}
+      - if @paginated_objects
+        %p= page_entries_info @paginated_objects
+      %p.paginator
+        = will_paginate @paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        %li= link_to 'create activity', new_activity_path
+        %li= toggle_all 'activity descriptions'
+        
+
+.item_collection
+  %ul.quiet_list
+    - for activity in @pages    
+      %div{ :id => dom_id_for(activity, :item), :class => 'item' }
+        %div.action_menu
+          %div.action_menu_header_left   
+            =link_to name_for_component(activity), activity
+          %div.action_menu_header_right   
+            %ul.menu
+              %li= run_link_for(activity)
+              %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
+              %li.menu=link_to 'export (xml)', export_activity_url(activity)
+              - if (activity.changeable?(current_user))
+                %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete ivestigation #{activity.id}", :method => :delete 
+        %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
+          %p=activity.description

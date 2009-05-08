@@ -1,10 +1,10 @@
 class Section < ActiveRecord::Base
-  belongs_to :investigation
+  belongs_to :activity
   belongs_to :user
   has_many :pages, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
     
-  acts_as_list :scope => :investigation_id
+  acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
 
   acts_as_replicatable
@@ -42,6 +42,6 @@ end
 #   t.string   "description"
 #   t.integer  "user_id"
 #   t.integer  "position"
-#   t.integer  "investigation_id"
+#   t.integer  "activity_id"
 #   t.string   "uuid",             :limit => 36
 # end

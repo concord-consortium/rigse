@@ -1,4 +1,4 @@
-class Investigation < ActiveRecord::Base
+class Activity < ActiveRecord::Base
   belongs_to :user
   has_many :sections, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
@@ -47,7 +47,7 @@ class Investigation < ActiveRecord::Base
           :except => [:id,:authored_entity_id, :authored_entity_type]
         }, 
         :sections => {
-          :exlclude => [:id,:investigation_id],
+          :exlclude => [:id,:activity_id],
           :include => {
             :teacher_notes=>{
               :except => [:id,:authored_entity_id, :authored_entity_type]
@@ -75,7 +75,7 @@ class Investigation < ActiveRecord::Base
   end
 
   # default_value_for :name do
-  #   "New Investigation"
+  #   "New Activity"
   # end
   # 
   # default_value_for :description do
@@ -212,7 +212,7 @@ class Investigation < ActiveRecord::Base
 
   def self.create_from_itsi(itsi_activity, rites_user)
     itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-    investigation = Investigation.create do |i|
+    activity = Activity.create do |i|
       i.name = itsi_prefix
       i.user = rites_user
       i.description = itsi_activity.description
@@ -220,8 +220,8 @@ class Investigation < ActiveRecord::Base
 
     name = itsi_activity.name
     section_desc = "ITSI Activities have a series of pages in just one section"
-    section = Investigation.create_section(name, section_desc)
-    investigation.sections << section
+    section = Activity.create_section(name, section_desc)
+    activity.sections << section
 
     # introduction
     #   name: Introduction
@@ -234,15 +234,15 @@ class Investigation < ActiveRecord::Base
     name = "Introduction"
     page_desc = "ITSI Activities start with a Discovery Question."
     extract_question_prompt = itsi_activity.introduction_text_response || itsi_activity.introduction_drawing_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.introduction, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.introduction, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
       if itsi_activity.introduction_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.introduction_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
     end
 
@@ -252,9 +252,9 @@ class Investigation < ActiveRecord::Base
 
     name = "Standards"
     page_desc = "What standards does this ITSI Activity cover?"
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.standards)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.standards)
     unless body.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
     end
 
@@ -264,9 +264,9 @@ class Investigation < ActiveRecord::Base
 
     name = "Materials"
     page_desc = "What materials does this ITSI Activity require?"
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.materials)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.materials)
     unless body.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
     end
   
@@ -276,9 +276,9 @@ class Investigation < ActiveRecord::Base
 
     name = "Safety"
     page_desc = "Are there any safety considerations to be aware of in this ITSI Activity?"
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.safety)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.safety)
     unless body.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
     end
     
@@ -293,15 +293,15 @@ class Investigation < ActiveRecord::Base
     name = "Procedure"
     page_desc = "What procedures should be performed to get ready for this ITSI Activity?."
     extract_question_prompt = itsi_activity.proced_text_response || itsi_activity.proced_drawing_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.proced, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.proced, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
       if itsi_activity.proced_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.proced_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
     end
 
@@ -320,18 +320,18 @@ class Investigation < ActiveRecord::Base
     page_desc = "Have the learner think about and predict the outcome of an experiment."
     extract_question_prompt = itsi_activity.prediction_text_response || 
       itsi_activity.prediction_drawing_response || itsi_activity.prediction_graph_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.predict, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.predict, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
       if itsi_activity.prediction_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.prediction_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
       if itsi_activity.prediction_graph_response
-        Investigation.add_prediction_graph_response_to_page(page, question_prompt)
+        Activity.add_prediction_graph_response_to_page(page, question_prompt)
       end
     end
     
@@ -358,22 +358,22 @@ class Investigation < ActiveRecord::Base
     page_desc = "The learner conducts experiments using probes and models."
     extract_question_prompt = itsi_activity.collectdata_text_response || 
       itsi_activity.collectdata_drawing_response || itsi_activity.collectdata_graph_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.collectdata, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.collectdata, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
       if itsi_activity.collectdata_probe_active
         probe_type = ProbeType.find(itsi_activity.probe_type_id)
-        Investigation.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
+        Activity.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
       end
       if itsi_activity.collectdata_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.collectdata_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
       if itsi_activity.collectdata_graph_response
-        Investigation.add_prediction_graph_response_to_page(page, question_prompt)
+        Activity.add_prediction_graph_response_to_page(page, question_prompt)
       end
     end
     #   xhtml: collectdata2
@@ -393,18 +393,18 @@ class Investigation < ActiveRecord::Base
     #
 
     extract_question_prompt = itsi_activity.collectdata2_text_response || itsi_activity.collectdata2_drawing_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.collectdata2, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.collectdata2, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      Investigation.add_xhtml_to_page(page, body)
+      Activity.add_xhtml_to_page(page, body)
       if itsi_activity.collectdata2_probe_active
         probe_type = ProbeType.find(itsi_activity.probe_type_id)
-        Investigation.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata2_probe_multi)
+        Activity.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata2_probe_multi)
       end
       if itsi_activity.collectdata2_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.collectdata2_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
     end
 
@@ -425,18 +425,18 @@ class Investigation < ActiveRecord::Base
 
 
     extract_question_prompt = itsi_activity.collectdata3_text_response || itsi_activity.collectdata3_drawing_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.collectdata3, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.collectdata3, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      Investigation.add_xhtml_to_page(page, body)
+      Activity.add_xhtml_to_page(page, body)
       if itsi_activity.collectdata3_probe_active
         probe_type = ProbeType.find(itsi_activity.probe_type_id)
-        Investigation.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata3_probe_multi)
+        Activity.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata3_probe_multi)
       end
       if itsi_activity.collectdata3_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.collectdata3_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
     end
     
@@ -450,9 +450,9 @@ class Investigation < ActiveRecord::Base
 
     name = "Analysis"
     page_desc = "How can learners reflect and analyze the experiments they just completed?"
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.analysis)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.analysis)
     unless body.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
     end
 
@@ -466,14 +466,14 @@ class Investigation < ActiveRecord::Base
 
     name = "Conclusion"
     page_desc = "What are some reasonable conclusions a learner might come to after this ITSI Activity?"
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.conclusion)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.conclusion)
     unless body.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
     end
     
     # further
-    #   name: Further Investigations
+    #   name: Further Activities
     #   xhtml: further
     #   data_collector
     #     further_probe_active
@@ -489,25 +489,25 @@ class Investigation < ActiveRecord::Base
     #   drawing
     #     further_drawing_response
 
-    name = "Further Investigations"
-    page_desc = "Think about any further investigations a learner might want to try."
+    name = "Further Activities"
+    page_desc = "Think about any further activities a learner might want to try."
     extract_question_prompt = itsi_activity.further_text_response || itsi_activity.further_drawing_response
-    body, question_prompt = Investigation.process_textile_content(itsi_activity.further, extract_question_prompt)
+    body, question_prompt = Activity.process_textile_content(itsi_activity.further, extract_question_prompt)
     unless body.empty? && question_prompt.empty?
-      page, page_element = Investigation.add_page_to_section(section, name, body, page_desc)
+      page, page_element = Activity.add_page_to_section(section, name, body, page_desc)
       section.pages << page
       if itsi_activity.further_text_response
-        Investigation.add_open_response_to_page(page, question_prompt)
+        Activity.add_open_response_to_page(page, question_prompt)
       end
       if itsi_activity.further_drawing_response
-        Investigation.add_drawing_response_to_page(page, question_prompt)
+        Activity.add_drawing_response_to_page(page, question_prompt)
       end
     end
-    investigation
+    activity
   end
 
   # def self.create_from_itsi(itsi_activity)
-  #   investigation = Investigation.create do |i|
+  #   activity = Activity.create do |i|
   #     i.name = itsi_activity.name
   #     i.description = itsi_activity.description
   #   end
@@ -515,7 +515,7 @@ class Investigation < ActiveRecord::Base
   #     page_element = Xhtml.create do |x|
   #       x.name = "Introduction"
   #       x.description = ""
-  #       x.content = Investigation.process_itsi_image_links(RedCloth.new(itsi_activity.introduction).to_html)
+  #       x.content = Activity.process_itsi_image_links(RedCloth.new(itsi_activity.introduction).to_html)
   #     end
   #     page = Page.create do |p|
   #       p.name = "Introduction: page 1"
@@ -527,14 +527,14 @@ class Investigation < ActiveRecord::Base
   #       s.description = "An ITSI Introduction is focused on a Discovery Question that drives the Activity."
   #       s.pages << page
   #     end
-  #     investigation.sections << introduction
-  #     investigation.save!
+  #     activity.sections << introduction
+  #     activity.save!
   #   end
   #   unless itsi_activity.materials.empty?
   #   page_element = Xhtml.create do |x|
   #     x.name = "Materials"
   #     x.description = ""
-  #     x.content = Investigation.process_itsi_image_links(RedCloth.new(itsi_activity.introduction).to_html)
+  #     x.content = Activity.process_itsi_image_links(RedCloth.new(itsi_activity.introduction).to_html)
   #   end
   #   page = Page.create do |p|
   #     p.name = "Materials: page 1"
@@ -546,17 +546,17 @@ class Investigation < ActiveRecord::Base
   #     s.description = "An ITSI Introduction is focused on a Discovery Question that drives the Activity."
   #     s.pages << page
   #   end
-  #   investigation = Investigation.create do |i|
+  #   activity = Activity.create do |i|
   #     i.name = itsi_activity.name
   #     i.description = itsi_activity.description
   #     i.sections << section
   #   end
-  #   investigation
+  #   activity
   # end    
     
 @@opening_xhtml= <<HEREDOC
   <h3>Procedures</h3>  
-  <p><em>What investigations will you and your students do and how are they connected to the objectives?</em></p>
+  <p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
   <p></p>
   <h4>What will you be doing?</h4>
   <p><em>How do you activate and assess students’ prior knowledge and connect it to this new learning?</em></li>
@@ -614,12 +614,12 @@ HEREDOC
   # 
   # default_value_for :sections do 
   #   results = []
-  #   results << Investigation.make_summary
-  #   results << Investigation.make_engage
-  #   results << Investigation.make_explore
-  #   results << Investigation.make_engage2
-  #   results << Investigation.make_explore2
-  #   results << Investigation.make_wrap_up  
+  #   results << Activity.make_summary
+  #   results << Activity.make_engage
+  #   results << Activity.make_explore
+  #   results << Activity.make_engage2
+  #   results << Activity.make_explore2
+  #   results << Activity.make_wrap_up  
   #   results
   # end
   # 
@@ -628,7 +628,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_summary
+  # def Activity.make_summary
   #    summary = Section.create(
   # 
   #       :name => 'Summary',
@@ -657,7 +657,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_engage
+  # def Activity.make_engage
   #   engage = Section.create(
   #  
   #      :name => 'Engage',
@@ -705,7 +705,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_explore
+  # def Activity.make_explore
   #   explore = Section.create(
   #  
   #      :name => 'Explore',
@@ -790,7 +790,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_engage2
+  # def Activity.make_engage2
   #   engage = Section.create(
   #  
   #      :name => 'Engage (second section)',
@@ -836,7 +836,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_explore2
+  # def Activity.make_explore2
   #   explore = Section.create(
   #  
   #      :name => 'Explore (second section)',
@@ -902,7 +902,7 @@ HEREDOC
   # ##
   # ##
   # ##
-  # def Investigation.make_wrap_up
+  # def Activity.make_wrap_up
   #   wrap_up = Section.create(
   #     :name => 'Wrap-up',
   #     :description => 'This section contains notes and materials for the teacher only.'
@@ -910,12 +910,12 @@ HEREDOC
   # 
   #   page = Page.create(
   #     :name => "Page 1",
-  #     :description => "What investigations will you and your students do and how are they connected to the objectives?"
+  #     :description => "What activities will you and your students do and how are they connected to the objectives?"
   #   )
   #   
   #   xhtml = Xhtml.create(
   #     :name => "Opening Proceedure",
-  #     :description => "What investigations will you and your students do and how are they connected to the objectives?",
+  #     :description => "What activities will you and your students do and how are they connected to the objectives?",
   #     :content => <<-DONE
   #       <p>
   #       Let’s look at a real protein and a mutation in it that causes a disease.
@@ -951,7 +951,7 @@ end
 # 
 # Recent Schema definition:
 #
-# create_table "investigations", :force => true do |t|
+# create_table "activities", :force => true do |t|
 #   t.integer  "user_id"
 #   t.string   "name"
 #   t.text     "context"

@@ -1,9 +1,9 @@
 #accordion_nav
-  - sectionlistname = dom_id_for(@investigation, :accordion_section_list)
+  - sectionlistname = dom_id_for(@activity, :accordion_section_list)
   %ul{:id=>sectionlistname, :class=>"accordion_header"}
-    = link_to @investigation.name, @investigation
-    = run_link_for(@investigation, '&#187; ')
-    - @investigation.sections.each do |section|
+    = link_to @activity.name, @activity
+    = run_link_for(@activity, '&#187; ')
+    - @activity.sections.each do |section|
     
       %li{:id=>dom_id_for(section,:accordion_item), :class=>"accordion_container"}
         .accordion_name
@@ -25,4 +25,4 @@
                   -else
                     =link_to "#{i+1}: #{p.name}",p
           =sortable_element pagelistname.to_sym, :url=> {:controller=> :sections, :action => 'sort_pages', :params => {:list_name=>pagelistname,:id => section.id }}
-    =sortable_element sectionlistname.to_sym, :url=> {:controller=> :investigations, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @investigation.id }}
+    =sortable_element sectionlistname.to_sym, :url=> {:controller=> :activities, :action => 'sort_sections', :params => {:list_name=>sectionlistname,:id => @activity.id }}

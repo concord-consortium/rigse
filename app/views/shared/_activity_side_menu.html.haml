@@ -1,8 +1,8 @@
 - content_for :sidebar do
   .step_tree
-    %h3=link_to investigation.name, investigation_url(investigation)
+    %h3=link_to activity.name, activity_url(activity)
     %ul.menu_v
-    - investigation.sections.each do |section|
+    - activity.sections.each do |section|
       - if @section && @section.id == section.id
         %li.menu_v.selected
           =link_to section.name, section_url(section), :class => "selected"

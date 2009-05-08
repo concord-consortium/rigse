@@ -13,7 +13,7 @@ class PagesController < ApplicationController
     if (params[:id])
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
       @section = @page.section
-      @investigation =@section.investigation
+      @activity =@section.activity
       @page_elements = @page.page_elements
     end
     format = request.parameters[:format]
@@ -43,8 +43,8 @@ class PagesController < ApplicationController
   # GET /page
   # GET /page.xml
   def index
-    # @investigation = Investigation.find(params['section_id'])
-    # @pages = @investigation.pages
+    # @activity = Activity.find(params['section_id'])
+    # @pages = @activity.pages
     @pages = Page.find(:all)
     respond_to do |format|
       format.html # index.html.erb
