@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090507214232) do
+ActiveRecord::Schema.define(:version => 20090511153929) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -192,6 +192,15 @@ ActiveRecord::Schema.define(:version => 20090507214232) do
     t.string   "name"
     t.text     "description"
     t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "investigations", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

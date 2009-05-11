@@ -8,7 +8,7 @@ require 'active_support'
 
 def rename(old_name,new_name)
   #rename files:
-  types = "{rb,haml,erb,html}"
+  types = "{rb,haml,erb,html,rjs,js}"
 
   # specify the replacesments list, to ensure 
   # the correct ordering of 'each'...
