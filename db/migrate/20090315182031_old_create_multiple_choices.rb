@@ -1,4 +1,4 @@
-class CreateMultipleChoices < ActiveRecord::Migration
+class OldCreateMultipleChoices < ActiveRecord::Migration
   def self.up
     create_table :multiple_choices do |t|
       t.integer     :user_id

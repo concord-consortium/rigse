@@ -1,0 +1,15 @@
+%div{:id => dom_id_for(activity,:item), :class =>"action_menu"}
+  .action_menu_header_left
+    .padded_content
+      = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
+  .action_menu_header_right
+    %ul.menu
+      / %li= toggle_more(activity,"sections_actions", "show/hide sections")
+      %li= run_link_for(@activity)
+      %li= toggle_all 'section descriptions'
+      %li= link_to 'duplicate', duplicate_activity_url(activity)
+      / %li= edit_button_for(activity, :complete => mce_init_string())
+      - if (activity.changeable?(current_user))
+        %li= link_to_remote 'add section', :complete => mce_init_string(), :url => add_section_activity_path(activity),:html => {:class=>'action'}
+        %li{:class => 'menu delete'}= delete_button_for(activity)
+

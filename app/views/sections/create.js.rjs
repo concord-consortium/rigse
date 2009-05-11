@@ -1,9 +1,9 @@
 page << "document.dialog.close()"
 
-safe_js(page,'investigation_sections_list') do
-  page.insert_html :bottom, 'investigation_sections_list', render(:partial => 'investigations/section_list_item', :locals => {
+safe_js(page,'activity_sections_list') do
+  page.insert_html :bottom, 'activity_sections_list', render(:partial => 'activities/section_list_item', :locals => {
     :section => @section})
-  page.sortable :investigation_sections_list, :url=> {:controller => 'investigations', :action => 'sort_sections', :params => {:id => @section.investigation_id}}
+  page.sortable :activity_sections_list, :url=> {:controller => 'activities', :action => 'sort_sections', :params => {:id => @section.activity_id}}
   page.visual_effect :highlight, dom_id_for(@section, :item)
 end
 

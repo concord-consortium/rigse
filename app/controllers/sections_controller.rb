@@ -10,7 +10,7 @@ class SectionsController < ApplicationController
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
-      @investigation = @section.investigation
+      @activity = @section.activity
       format = request.parameters[:format]
       unless format == 'otml' || format == 'jnlp'
         if @section
@@ -101,7 +101,7 @@ class SectionsController < ApplicationController
   # GET /pages/1/edit
   def edit
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :section => @section, :investigation => @section.investigation }
+      render :partial => 'remote_form', :locals => { :section => @section, :activity => @section.activity }
     end
   end
   
@@ -181,7 +181,7 @@ class SectionsController < ApplicationController
     @copy = @section.clone :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
-    @investigation = @copy.investigation
+    @activity = @copy.activity
     redirect_to :action => 'edit', :id => @copy.id
   end
   

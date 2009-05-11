@@ -13,7 +13,7 @@ class PagesController < ApplicationController
     if (params[:id])
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
       @section = @page.section
-      @investigation =@section.investigation
+      @activity =@section.activity
       @page_elements = @page.page_elements
     end
     format = request.parameters[:format]
@@ -43,8 +43,8 @@ class PagesController < ApplicationController
   # GET /page
   # GET /page.xml
   def index
-    # @investigation = Investigation.find(params['section_id'])
-    # @pages = @investigation.pages
+    # @activity = Activity.find(params['section_id'])
+    # @pages = @activity.pages
     @pages = Page.find(:all)
     respond_to do |format|
       format.html # index.html.erb
@@ -122,23 +122,15 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
-    cancel = params[:commit] == "Cancel"
-    if request.xhr?
-      if cancel || @page.update_attributes(params[:page])
-        render :partial => 'shared/page_header', :locals => { :page => @page }
+    respond_to do |format|
+      if @page.update_attributes(params[:page])
+        flash[:notice] = 'Page was successfully updated.'
+        format.html { redirect_to(@page) }
+        format.xml  { head :ok }
+        format.js 
       else
-        render :xml => @page.errors, :status => :unprocessable_entity
-      end
-    else
-      respond_to do |format|
-        if @page.update_attributes(params[:page])
-          flash[:notice] = 'Page was successfully updated.'
-          format.html { redirect_to(@page) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
-        end
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
       end
     end
   end

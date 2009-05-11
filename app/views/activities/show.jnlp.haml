@@ -1,0 +1,1 @@
+= render :partial => "shared/jnlp", :locals => { :runnable_object => @activity, :escaped_otml_url => URI.escape(activity_url(@activity, :format => :otml), /[#{URI::REGEXP::PATTERN::RESERVED}\s]/) }

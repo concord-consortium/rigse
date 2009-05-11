@@ -63,11 +63,11 @@ namespace :rigse do
     desc "erase and import ITSI activities"
     task :erase_and_import_itsi_activities => :environment do
       if ActiveRecord::Base.configurations['itsi']
-        Investigation.find(:all, :conditions => "name like 'ITSI%'").each {|i| print '.'; i.destroy }
+        Activity.find(:all, :conditions => "name like 'ITSI%'").each {|i| print '.'; i.destroy }
         itsi_user = Itsi::User.find_by_login('itest')
         rites_user = User.find_by_email(APP_CONFIG[:admin_email])
         itsi_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, false, true)
-        itsi_activities.each {|a| print '.'; Investigation.create_from_itsi(a, rites_user) }
+        itsi_activities.each {|a| print '.'; Activity.create_from_itsi(a, rites_user) }
       else
         puts "need an ITSI specification in database.yml to run this task"
       end

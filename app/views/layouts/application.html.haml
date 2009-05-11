@@ -26,8 +26,6 @@
     / = javascript_include_tag "livepipe/tabs"
     = javascript_include_tag "livepipe/window"
     = javascript_include_tag "live_validation"
-    = javascript_include_tag "cookie"
-    = javascript_include_tag "accordion"    
     = javascript_include_tag "controls"
     /[if IE]
       = javascript_include_tag "flotr/excanvas"
@@ -38,7 +36,10 @@
     = javascript_include_tag "tiny_mce/tiny_mce"
     / lets load the applications js last...
     = javascript_include_tag "application"
-    
+    = javascript_include_tag "cookie"
+    = javascript_include_tag "accordion"
+    = javascript_include_tag "item_selectable"
+
     :javascript
       tinyMCE.init({
         mode : "textareas",
@@ -61,7 +62,7 @@
         %a.hidden.doNotPrint{ :href => "#main_content" }
           Skip to main content.
     #wrapper.wrapper
-      = render :partial => 'shared/investigation_trail'
+      = render :partial => 'shared/activity_trail'
       #header
         .left_content
           %h1 RITES Authoring
@@ -83,18 +84,20 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          %li.trail= link_to 'Activities', investigations_path
-          %li.trail= link_to 'My Activities', :controller=> :investigations, :action=> :index, :mine_only => 'y'
+          %li.trail= link_to 'Activities', activities_path
+          %li.trail= link_to 'My Activities', :controller=> :activities, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
-      
+
       #content_container      
         #left_nav.nav_menu
-          - if @investigation
+          - if @activity
             = render :partial => 'shared/accordian_nav'
 
         #main_content.main_content_colors
           #content_header.main_content_colors
             = yield :content_header
+          #js_flash{:style=>"display: none;"}
+
           #flash
             - flash.each do |key, message|
               %div{:class=>"flash flash_#{key}"}= message
