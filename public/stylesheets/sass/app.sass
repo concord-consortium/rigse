@@ -229,6 +229,8 @@ ul.menu
       :width 2px
     .action_menu
       :background-color= !almost_white
+      &:hover
+        :opacity 1
       ul
         :background-color= !almost_white
         li
@@ -237,14 +239,22 @@ ul.menu
       :border
         :style solid
         :color= !light_brown
+        :opacity 0.7
+      .action_menu
+        :opacity 1
     &.selectable
       :border
         :style solid
         :color= !almost_white
+        :opacity 0.7 
       &:hover
         :border
           :style dotted
           :color= !light_brown
+      .action_menu
+        :opacity 0.25
+        &:hover
+          :opacity 1
 
 .content
   :font-size 1em
@@ -402,14 +412,14 @@ dd
 input
   +main_font
   :color= !very_dark_blue
-  :padding 0.2em
+  :padding 0.2e
 
   
 input[type=text]
   :border solid
   :border-width 2px
   :border-color= !very_dark_blue
-  :background-color= !blue_gray
+  :background-color #d1e5f2
   &:focus
     :background-color= !light_brown
 

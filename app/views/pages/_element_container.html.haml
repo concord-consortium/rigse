@@ -1,6 +1,3 @@
 %li{:id => dom_id_for(element), :class => 'menu' }
   %div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item selectable sortable': 'item' }
-    - if((defined? edit) && edit==true)
-      = render_edit_partial_for(component)
-    -else
-      = render_show_partial_for(component)
+    = render_show_partial_for(component)
