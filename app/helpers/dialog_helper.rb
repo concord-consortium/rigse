@@ -1,9 +1,7 @@
 module DialogHelper
-
-
   
   # Pass in activity_id, or anything else you wanted in options
-  def modal_dialog_for(page, component, options={})
+  def modal_dialog_for(js_page, component, options={})
     defaults = {
       :name       => "new #{component.class.name.humanize}",
       :theme      => 'rites',
@@ -19,14 +17,14 @@ module DialogHelper
     }
     options = defaults.merge(options)
     options_string = (options.map { |k,v| "#{k.to_s}: #{js_string_value(v)}" }).join(", ")
-    page << "document.dialog = new UI.Window({#{options_string}});"
-    page << <<-JAVASCRIPT
+    js_page << "document.dialog = new UI.Window({#{options_string}});"
+    js_page << <<-JAVASCRIPT
       document.dialog.center().setHeader('#{options[:name]}');
       document.dialog.setContent("<div id='_dynamic_content_'>empty</div>");
       document.dialog.show(true);
       document.dialog.focus(true);
       JAVASCRIPT
-    page['_dynamic_content_'].update(render :layout => false, :partial => options[:partial], :locals => options);
+    js_page['_dynamic_content_'].update(render :layout => false, :partial => options[:partial], :locals => options);
   end
 
 

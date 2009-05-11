@@ -122,23 +122,15 @@ class PagesController < ApplicationController
   # PUT /page/1
   # PUT /page/1.xml
   def update
-    cancel = params[:commit] == "Cancel"
-    if request.xhr?
-      if cancel || @page.update_attributes(params[:page])
-        render :partial => 'shared/page_header', :locals => { :page => @page }
+    respond_to do |format|
+      if @page.update_attributes(params[:page])
+        flash[:notice] = 'Page was successfully updated.'
+        format.html { redirect_to(@page) }
+        format.xml  { head :ok }
+        format.js 
       else
-        render :xml => @page.errors, :status => :unprocessable_entity
-      end
-    else
-      respond_to do |format|
-        if @page.update_attributes(params[:page])
-          flash[:notice] = 'Page was successfully updated.'
-          format.html { redirect_to(@page) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
-        end
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
       end
     end
   end
