@@ -1,4 +1,4 @@
-class CreateInteractiveModels < ActiveRecord::Migration
+class OldCreateInteractiveModels < ActiveRecord::Migration
   def self.up
     create_table :interactive_models do |t|
       t.integer     :user_id
