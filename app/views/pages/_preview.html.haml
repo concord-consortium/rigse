@@ -1,2 +1,3 @@
 - page.page_elements.each do |element|
-  = render_content_partial_for(element.embeddable)
+  %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
+    = render_content_partial_for(element.embeddable)
