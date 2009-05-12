@@ -251,6 +251,14 @@ module ApplicationHelper
     end
   end
   
-
+  def simple_div_helper_that_yields
+    capture_haml do
+      haml_tag :div, :class => 'simple_div' do
+        if block_given? 
+          haml_concat yield
+        end
+      end
+    end
+  end
   
 end
