@@ -7,6 +7,9 @@ var item_select = function(event) {
   element = event.element();
   element = $(element); // extend
   selected = get_selectable(element)
+  // deselect everyone first:
+  item_deselect();
+  
   if (selected) {
     console.log("clicked");
     if (selected.hasClassName(selected_class)) {
@@ -22,7 +25,6 @@ var item_select = function(event) {
       var show_dom_id = "display_"+type+ "_" +id;
     }
     else {
-      item_deselect();
       selected.addClassName(selected_class);
       selected.removeClassName(unselected_class);
     }
