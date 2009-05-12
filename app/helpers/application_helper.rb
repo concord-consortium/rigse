@@ -77,14 +77,10 @@ module ApplicationHelper
     end
   end
 
+
   def render_show_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
-  end
-
-  def render_content_partial_for(component)
-    class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
   def render_edit_partial_for(component)
@@ -102,7 +98,13 @@ module ApplicationHelper
     dom_id = dom_id_for(component, :edit_link)
 
     capture_haml do
-      haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
+      if component.changeable?(current_user)
+        haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
+          if block_given? 
+            yield
+          end
+        end
+      else
         if block_given? 
           yield
         end
@@ -183,10 +185,11 @@ module ApplicationHelper
   end
 
   def edit_menu_for(component, form)
+    component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat name_for_component(component)
+          
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
@@ -205,6 +208,7 @@ module ApplicationHelper
   end
 
   def show_menu_for(component, options={})
+    component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
