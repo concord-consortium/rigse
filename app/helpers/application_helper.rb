@@ -102,7 +102,7 @@ module ApplicationHelper
     dom_id = dom_id_for(component, :edit_link)
 
     capture_haml do
-      haml_tag :div, :id=> dom_id, :class => 'editable_block', :onclick=> js_function  do
+      haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
         if block_given? 
           yield
         end
