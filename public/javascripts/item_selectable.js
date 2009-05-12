@@ -1,5 +1,5 @@
-var selected_class = 'selected';
-var unselected_class = 'selectable';
+var selected_class = 'item_selected';
+var unselected_class = 'item_selectable';
 var get_selectable = function(element) { return (element.hasClassName(unselected_class) || element.hasClassName(selected_class) || element.up("." + unselected_class)) || element.up("." + selected_class)}
 var is_selected = function(element) { return element.hasClassName(selected_class)}
 
