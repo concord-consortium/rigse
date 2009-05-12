@@ -1,6 +1,3 @@
 - options = { :complete => mce_init_string }
-%div{:id=>dom_id_for(xhtml, :display)}
-  = show_menu_for(xhtml, options)
-  = render :partial => "xhtmls/xhtml", :locals => { :xhtml => xhtml }
-%div{:id=>dom_id_for(xhtml, :form), :style=>'display: none;'}
-  = render :partial => "xhtmls/remote_form", :locals => { :xhtml => xhtml}
+= show_menu_for(xhtml, options)
+= render :partial => "xhtmls/xhtml", :locals => { :xhtml => xhtml }

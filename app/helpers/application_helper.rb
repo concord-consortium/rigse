@@ -92,13 +92,18 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
 
-  def wrap_edit_link_around_content(component, content, options={})
+  def wrap_edit_link_around_content(component, options={}, &block)
     url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    link_to_remote(content, :url => url, :update => update, :method => method, :complete => complete, :success => success)
+    js_function = remote_function(:url => url, :update => update, :method => method, :complete => complete, :success => success)
+    dom_id = dom_id_for(component, :edit_link)
+    
+    concat("<div id=\"edit_link_for\" onclick=\"#{js_function}\">", block.binding)
+    yield
+    concat("</div>", block.binding)
   end
 
   def edit_button_for(component, options={})
