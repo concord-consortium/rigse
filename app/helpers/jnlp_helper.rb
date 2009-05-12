@@ -120,8 +120,18 @@ module JnlpHelper
       ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-linux-nar.jar', '2.1.7-r2']
     ]
   end
-  
+
   def macos_native_jars
+    [
+      ['org/concord/external/jri/libjri-native-osx/libjri-native-osx-macosx-nar.jar', '0.4-1-20081104.174859-5'],
+      ['org/concord/external/jna/jna-jnidispatch/jna-jnidispatch-macosx-nar.jar', '3.0.9'],
+      ['org/mozdev/mozswing/mozswing-cocoautils/mozswing-cocoautils-macosx-nar.jar', '1.0-20080124.063453-1'],
+      ['org/concord/sensor/vernier/vernier-goio/vernier-goio-macosx-nar.jar', '1.4.0'],
+      ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-macosx-nar.jar', '2.1.7-r2']
+    ]
+  end
+  
+  def windows_native_jars
     [
       ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-linux-nar.jar', '2.1.7-r2'],
       ['org/concord/external/jna/jna-jnidispatch/jna-jnidispatch-win32-nar.jar', '3.0.9'],
@@ -131,16 +141,6 @@ module JnlpHelper
       ['org/concord/ftdi-serial-wrapper-native/ftdi-serial-wrapper-native-win32-nar.jar', '0.1.0-20070303.181906-4'],
       ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-win32-nar.jar', '2.1.7-r2'],
       ['org/concord/sensor/ti/ti-cbl/ti-cbl-win32-nar.jar', '0.1.1']
-    ]
-  end
-  
-  def windows_native_jars
-    [
-      ['org/concord/external/jri/libjri-native-osx/libjri-native-osx-macosx-nar.jar', '0.4-1-20081104.174859-5'],
-      ['org/concord/external/jna/jna-jnidispatch/jna-jnidispatch-macosx-nar.jar', '3.0.9'],
-      ['org/mozdev/mozswing/mozswing-cocoautils/mozswing-cocoautils-macosx-nar.jar', '1.0-20080124.063453-1'],
-      ['org/concord/sensor/vernier/vernier-goio/vernier-goio-macosx-nar.jar', '1.4.0'],
-      ['org/concord/external/rxtx/rxtx-serial/rxtx-serial-macosx-nar.jar', '2.1.7-r2']
     ]
   end
 
