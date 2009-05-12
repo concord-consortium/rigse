@@ -18,4 +18,4 @@
     - @page.page_elements.each_with_index do |element,i|
       = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
   - if (@page.changeable?(current_user))
-    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
+    =sortable_element :elements_container,  :handle=> 'sortable', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }

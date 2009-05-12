@@ -1,7 +1,0 @@
-%div{:id => dom_id_for(xhtml, :details), :class => 'content'}
-  - if (xhtml.changeable?(current_user))
-    = wrap_edit_link_around_content(xhtml, options={:complete => mce_init_string}) do
-      = xhtml.content
-  - else
-    = xhtml.content
-    

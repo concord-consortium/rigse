@@ -1,3 +1,13 @@
-- options = { :complete => mce_init_string }
-= show_menu_for(data_table, options)
-= render :partial => "data_tables/data_table", :locals => { :data_table => data_table }
+%div{:id => dom_id_for(data_table, :details), :class => 'content'}
+  = wrap_edit_link_around_content(data_table, options={:complete => mce_init_string}) do
+    %table.data_table
+      %thead
+        %tr
+          -1.upto(data_table.column_count) do |index|
+            %th= data_table.heading(index)
+      %tr
+        -1.upto(data_table.visible_rows) do |row_index|
+          %tr
+          -1.upto(data_table.column_count) do |column_index|
+            %td
+              %input{:type=>"text", :name=>"data_table_data_#{row_index}_#{column_index}", :value=>"#{data_table.cell_data(row_index,column_index)}", :size=>6, :id=>"data_table_data_#{row_index}_#{column_index}"}
