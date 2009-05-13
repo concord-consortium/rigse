@@ -1,6 +1,6 @@
 - options = { :complete => mce_init_string }
 - if defined? page_element
-  %div{ :id => dom_id_for(page_element, :item), :class => 'page_element' }
+  %div{ :id => dom_id_for(page_element, :item), :class => 'container_element' }
     = show_menu_for(page_element, options)
     %div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item item_selectable ': 'item' }  
       = render_show_partial_for(component)
