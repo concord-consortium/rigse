@@ -1,5 +1,4 @@
 = render :partial => 'shared/collection_menu', :locals => { :collection => @xhtmls, :collection_class => Xhtml }        
 
 - @xhtmls.each do |xhtml|
-  %div{ :id => dom_id_for(xhtml, :item), :class => 'item' }
-    = render :partial => "show", :locals => { :xhtml => xhtml }
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => xhtml}

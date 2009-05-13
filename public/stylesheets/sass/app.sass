@@ -218,44 +218,48 @@ ul.menu
   
 .item_collection
   :background-color white
-  :padding 0.5em 0em
-  .item
-    :margin-bottom 10px
+  :padding 0.5em 0em 
+  
+.item
+  :margin-bottom 10px
+  :background-color= !almost_white
+  :padding 0.5em
+  :border
+    :style dotted
+    :color= !almost_white
+    :width 2px
+  .action_menu
     :background-color= !almost_white
-    :padding 0.5em
-    :border
-      :style dotted
-      :color= !almost_white
-      :width 2px
-    .action_menu
+    :font-size 9px
+    &:hover
+      :opacity 1
+    ul
       :background-color= !almost_white
-      :font-size 9px
-      &:hover
-        :opacity 1
-      ul
+      li
         :background-color= !almost_white
-        li
-          :background-color= !almost_white
-    &.item_selected
+  &.item_selected
+    :border
+      :width 2px
+      :style solid
+      :color= !light_brown
+      :opacity 0.7
+    .action_menu
+      :opacity 1
+  &.item_selectable
+    :border
+      :width 2px
+      :style solid
+      :color= !almost_white
+      :opacity 0.7 
+    &:hover
       :border
-        :style solid
+        :width 2px
+        :style dotted
         :color= !light_brown
-        :opacity 0.7
-      .action_menu
-        :opacity 1
-    &.item_selectable
-      :border
-        :style solid
-        :color= !almost_white
-        :opacity 0.7 
+    .action_menu
+      :opacity 0.25
       &:hover
-        :border
-          :style dotted
-          :color= !light_brown
-      .action_menu
-        :opacity 0.25
-        &:hover
-          :opacity 1
+        :opacity 1
 .sortable
   .action_menu
     :opacity 0.5

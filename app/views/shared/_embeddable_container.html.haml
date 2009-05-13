@@ -1,0 +1,4 @@
+- options = { :complete => mce_init_string }
+= show_menu_for(component, options)
+%div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item item_selectable ': 'item' }
+  = render_show_partial_for(component)
