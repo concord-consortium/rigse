@@ -144,9 +144,13 @@ class DataCollectorsController < ApplicationController
   end
   
   def change_probe_type
-    @data_collector = DataCollector.find(params[:id])
-    @probe_type = ProbeType.find(params[:data_collector][:probe_type_id])
-    @data_collector.probe_type = @probe_type
+    edited_data_collector = DataCollector.new(params[:data_collector])
+    original_data_collector = DataCollector.find(params[:id])
+    if edited_data_collector.probe_type_id != original_data_collector.probe_type_id
+      probe_type = ProbeType.find(params[:data_collector][:probe_type_id])
+      edited_data_collector.probe_type = probe_type
+    end
+    @data_collector = edited_data_collector
     respond_to do |format|
       format.js # will render change_probe_type.js.rjs
     end
