@@ -1,1 +1,10 @@
-= render :partial => "multiple_choices/multiple_choice", :locals => { :multiple_choice => multiple_choice }
+%OTQuestion{:local_id => ot_local_id_for(multiple_choice)}
+  %prompt
+    %OTCompoundDoc
+      %bodyText= multiple_choice.prompt
+  %input
+    %OTChoice{ :name => 'Multiple choice', :alignContent => '0' }
+      %choices
+        - multiple_choice.choices.each_with_index do |choice, i|
+          %OTCompoundDoc{ :name => "#{i+1}. #{choice.choice}" }
+            %bodyText= choice.choice
