@@ -66,7 +66,9 @@ ActionController::Routing::Routes.draw do |map|
     page.resources :data_collectors
   end
   
-  map.resources :page_elements
+  map.resources :page_elements, :member => {
+    :destroy => :post
+  }
 
   map.resources :activities, :member => {
     :add_section => :post,
