@@ -31,6 +31,23 @@ class Section < ActiveRecord::Base
     teacher_notes << TeacherNote.create
     return teacher_notes[0]
   end
+
+  def next(page)
+    index = pages.index(page)
+    if index
+      return pages[index+1]
+    end
+    return nil
+  end
+  
+  def previous(page)
+    index = pages.index(page)
+    if index && (index > 0)
+      return pages[index-1]
+    end
+    return nil
+  end
+
 end
 
 

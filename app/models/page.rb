@@ -66,4 +66,19 @@ class Page < ActiveRecord::Base
     teacher_notes << TeacherNote.create
     return teacher_notes[0]
   end
+  
+  def next
+    if section
+      return section.next(self)
+    end
+    return nil
+  end
+  
+  def previous
+    if section
+      return section.previous(self)
+    end
+    return nil
+  end
+  
 end
