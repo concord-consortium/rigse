@@ -159,9 +159,11 @@ module ApplicationHelper
   end
 
   def delete_button_for(model)
+    # find the page_element for the embeddable
+    embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
     controller = "#{model.class.name.pluralize.underscore}"
-    link_to_remote('delete',  
-      :confirm => "Delete  #{model.class.human_name} named #{model.name}?", 
+    link_to_remote('X',  
+      :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", 
       :html => {:class => 'delete'}, 
       :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
   end
@@ -172,7 +174,6 @@ module ApplicationHelper
       :id  => component.id }
   end
 
-  
   def name_for_component(component)
     if component.id.nil?
       return "new #{component.class.name.humanize}"
@@ -194,10 +195,6 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
-            end
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
@@ -209,22 +206,22 @@ module ApplicationHelper
   end
 
   def show_menu_for(component, options={})
-    component = (component.respond_to? :embeddable) ? component.embeddable : component
+    embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat name_for_component(component)
+          haml_concat name_for_component(embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(embeddable) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(embeddable) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(embeddable) }
             end
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(embeddable, options) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
             end
           end
