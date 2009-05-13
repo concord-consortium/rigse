@@ -1,2 +1,1 @@
-%div{ :id => dom_id_for(@multiple_choice, :item), :class => 'item' }
-  = render :partial => "show", :locals => { :multiple_choice => @multiple_choice }
+= render :partial => 'shared/embeddable_container', :locals=> {:component => @multiple_choice}
