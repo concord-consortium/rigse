@@ -3,8 +3,6 @@
     - element_types.each do |type|
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #gear_menu.dropdown
-  Actions:
-  %hr
   %ul
     %li= run_link_for(@page)
     %li= toggle_all('elements')
@@ -19,13 +17,13 @@
       .padded_content
         = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
     .action_menu_header_right
-      = dropdown_link_for :text=>image_tag("gear.png"), :class => 'rollover', :id=> 'add_gear_menu', :content_id => 'gear_menu'
-      = dropdown_link_for :text=>image_tag("plus.png"), :class => 'rollover', :id=> 'add_content_menu', :content_id => 'content_menu'
+      = dropdown_link_for :text=>image_tag("gear.png"), :class => 'rollover', :id=> 'add_gear_menu', :content_id => 'gear_menu', :title => 'actions for this page'
+      = dropdown_link_for :text=>image_tag("plus.png"), :class => 'rollover', :id=> 'add_content_menu', :content_id => 'content_menu', :title => 'add content to this page'
       - if (page.previous)
-        = link_to image_tag("left.png"), page.previous, :class => 'rollover'
+        = link_to image_tag("left.png"), page.previous, :class => 'rollover', :title => 'previous page'
       - else
         .rollover= image_tag("blank.png")
       - if (page.next)
-        = link_to image_tag("right.png"), page.next, :class => 'rollover'
+        = link_to image_tag("right.png"), page.next, :class => 'rollover', :title => 'next page'
       - else
         .rollover= image_tag("blank.png")
