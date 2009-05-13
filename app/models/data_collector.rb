@@ -5,6 +5,15 @@ class DataCollector < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
+  
+  belongs_to :prediction_graph_source,
+    :class_name => "DataCollector",
+    :foreign_key => "prediction_graph_id"
+
+  has_many :prediction_graph_destinations,
+    :class_name => "DataCollector",
+    :foreign_key => "prediction_graph_id"
+  
   acts_as_replicatable
   
   include Changeable
@@ -18,7 +27,11 @@ class DataCollector < ActiveRecord::Base
       @@searchable_attributes
     end
   end
-
+  
+  def self.prediction_graphs
+    DataCollector.find_all_by_graph_type_id(2)
+  end
+  
   def probe_type=(probe_type)
     self.probe_type_id = probe_type.id
     self.title = "#{probe_type.name} Data Collector"
@@ -31,6 +44,18 @@ class DataCollector < ActiveRecord::Base
     # self.x_axis_units
     # self.x_axis_min
     # self.x_axis_max
+  end
+
+  def self.graph_types
+    [["Sensor", 1], ["Prediction", 2]]
+  end
+  
+  def graph_type_id
+    self[:graph_type_id] || 1
+  end
+  
+  def graph_type
+    DataCollector.graph_types[graph_type_id-1][0]
   end
 
   def y_axis_title

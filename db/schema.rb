@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090511153929) do
+ActiveRecord::Schema.define(:version => 20090513163256) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(:version => 20090511153929) do
     t.boolean  "single_value",                             :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "graph_type_id"
+    t.integer  "prediction_graph_id"
   end
 
   create_table "data_filters", :force => true do |t|
@@ -205,11 +207,96 @@ ActiveRecord::Schema.define(:version => 20090511153929) do
     t.datetime "updated_at"
   end
 
+  create_table "jnlp_icons", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "href"
+    t.integer  "height"
+    t.integer  "width"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "jnlp_jars", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "type"
+    t.string   "os"
+    t.boolean  "main"
+    t.string   "href"
+    t.integer  "size"
+    t.integer  "size_pack_gz"
+    t.boolean  "signature_verified"
+    t.string   "version_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "jnlp_jars_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "jnlp_jar_id"
+    t.integer "versioned_jnlp_id"
+  end
+
+  create_table "jnlp_native_libraries", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "type"
+    t.string   "os"
+    t.boolean  "main"
+    t.string   "href"
+    t.integer  "size"
+    t.integer  "size_pack_gz"
+    t.boolean  "signature_verified"
+    t.string   "version_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "jnlp_native_libraries_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "jnlp_native_library_id"
+    t.integer "versioned_jnlp_id"
+  end
+
+  create_table "jnlp_properties", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "value"
+    t.string   "os"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "jnlp_properties_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "jnlp_property_id"
+    t.integer "versioned_jnlp_id"
+  end
+
   create_table "knowledge_statements", :force => true do |t|
     t.integer  "domain_id"
     t.integer  "number"
     t.string   "description"
     t.string   "uuid",        :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_families", :force => true do |t|
+    t.integer  "maven_jnlp_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "snapshot_version"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlps", :force => true do |t|
+    t.string   "uuid"
+    t.string   "host"
+    t.string   "path"
+    t.string   "name"
+    t.text     "mj_object"
+    t.string   "local_cache_dir"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -404,6 +491,30 @@ ActiveRecord::Schema.define(:version => 20090511153929) do
     t.string   "image"
     t.string   "uuid"
     t.integer  "device_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "versioned_jnlps", :force => true do |t|
+    t.integer  "maven_jnlp_family_id"
+    t.integer  "jnlp_icon_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "main_class"
+    t.string   "argument"
+    t.boolean  "offline_allowed"
+    t.boolean  "local_resource_signatures_verified"
+    t.boolean  "include_pack_gz"
+    t.string   "spec"
+    t.string   "codebase"
+    t.string   "href"
+    t.string   "j2se"
+    t.integer  "max_heap_size"
+    t.integer  "initial_heap_size"
+    t.string   "title"
+    t.string   "vendor"
+    t.string   "homepage"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
