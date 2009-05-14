@@ -282,14 +282,14 @@ module ApplicationHelper
     link_to image_tag(image, :alt=>options[:title]),url,options
   end
   
-  def remote_link_button(image,_url,options={})
+  def remote_link_button(image,url,options={})
     defaults = {
       :class      => 'rollover',
-      :url        => _url
+      :url        => url,
+      :update     => 'my_modal'
     }
-    logger.info("URL PASSED IN: #{_url}")
     options = defaults.merge(options)
-    link_to_remote image_tag(image, :alt=>options[:title]),options,:class=>options[:class], :id=>options[:id]
+    link_to_remote image_tag(image, :alt=>options[:title]),url,options
   end
   
   def function_link_button(image,javascript,options={})
