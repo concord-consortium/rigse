@@ -43,3 +43,10 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     }
   }
 
+var show_teacher_note = function() {
+  $('teacher_note').show();
+}
+
+var show_author_note = function() {
+    $('author_note').show();
+}

@@ -8,6 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :calibrations
 
   map.resources :teacher_notes
+  map.resources :author_notes
 
   map.resources :data_tables, :member => {
     :print => :get,
