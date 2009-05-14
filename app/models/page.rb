@@ -10,7 +10,9 @@ class Page < ActiveRecord::Base
   has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
   
   has_many :teacher_notes, :as => :authored_entity
-  
+  has_many :author_notes, :as => :authored_entity
+  include Noteable # convinience methods for notes...
+    
   acts_as_replicatable
   acts_as_list :scope => :section
   

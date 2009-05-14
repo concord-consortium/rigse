@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090513163256) do
+ActiveRecord::Schema.define(:version => 20090514183250) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
     t.string   "description"
     t.string   "grade_span"
     t.string   "uuid",                   :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "author_notes", :force => true do |t|
+    t.text     "body"
+    t.text     "author"
+    t.string   "uuid",                 :limit => 36
+    t.integer  "authored_entity_id"
+    t.string   "authored_entity_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -2,34 +2,25 @@ class Section < ActiveRecord::Base
   belongs_to :activity
   belongs_to :user
   has_many :pages, :order => :position, :dependent => :destroy
-  has_many :teacher_notes, :as => :authored_entity
-    
+  
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
 
   acts_as_replicatable
 
   include Changeable
-
+  
+  has_many :teacher_notes, :as => :authored_entity
+  has_many :author_notes, :as => :authored_entity
+  include Noteable # convinience methods for notes...
+  
   validates_presence_of :name, :on => :create, :message => "can't be blank"
   
   default_value_for :name, "name of section"
   default_value_for :description, "describe the purpose of this section here..."
-
+  
   def self.display_name
     'Section'
-  end
-
-  # default_value_for :pages do
-  #   [Page.create()]
-  # end
-  
-  def teacher_note
-    if teacher_notes[0]
-      return teacher_notes[0]
-    end
-    teacher_notes << TeacherNote.create
-    return teacher_notes[0]
   end
 
   def next(page)
