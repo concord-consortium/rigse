@@ -1,6 +1,6 @@
 .content
   %h3
-  = "#{author_note.authored_entity.type}"
+    = "#{author_note.authored_entity.type.name.humanize} #{author_note.authored_entity.name}"
   - field_set_tag 'Body' do
     = f.text_area :body, :id => dom_id_for(author_note, :item, :body_field)
   = f.hidden_field :authored_entity_type
