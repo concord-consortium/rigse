@@ -16,20 +16,6 @@ module JsHelper
     page << "}" 
   end
   
-  
-  
-  def dropdown_link_for(options ={})
-    defaults = {
-      :url        => "#",
-      :text       => 'add content',
-      :content_id => 'dropdown',
-      :id         => 'add_content',
-      :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
-    }
-    options = defaults.merge(options)
-    return link_to options[:text], options[:url], options
-  end
-  
 
   def remove_link(form)
     out = ''

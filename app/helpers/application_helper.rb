@@ -248,6 +248,41 @@ module ApplicationHelper
   end
 
 
+  def dropdown_link_for(options ={})
+    defaults = {
+      :url        => "#",
+      :text       => 'add content',
+      :content_id => 'dropdown',
+      :id         => 'add_content',
+      :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
+    }
+    options = defaults.merge(options)
+    return link_to options[:text], options[:url], options
+  end
+
+  def dropdown_button(image,options={})
+    name = image.gsub(/\..*/,'') # remove extension of filename
+    defaults = {
+      :name       =>  name,
+      :text       =>  image_tag(image,:title => name),
+      :class      => 'rollover',
+      :content_id => "#{name}_menu",
+      :id         => "button_#{name}_menu"
+    }
+    options = defaults.merge(options)
+    dropdown_link_for options
+  end
+  
+  def link_button(image,url,options={})
+    defaults = {
+      :class      => 'rollover'
+    }
+    options = defaults.merge(options)
+    
+    link_to image_tag(image, :alt=>options[:title]),url,options
+  end
+  
+  
   def tab_for(component, options={})
     if(options[:active])
       "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
