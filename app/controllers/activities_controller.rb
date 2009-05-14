@@ -44,7 +44,12 @@ class ActivitiesController < ApplicationController
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
       if @activity
-        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @activity.teacher_note}
+        teacher_note = @activity.teacher_note || TeacherNote.new
+        teacher_note.authored_entity = @activity
+        author_note = @activity.author_note || AuthorNote.new
+        author_note.authored_entity = @activity 
+        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => teacher_note}
+        @author_note = render_to_string :partial => 'author_notes/remote_form', :locals => {:author_note => author_note}
       end
     end
   end
