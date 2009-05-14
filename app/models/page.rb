@@ -1,6 +1,10 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+
+  # this doesn't work
+  # belongs_to :activity, :through => :section
+
   has_many :page_elements, :order => :position, :dependent => :destroy
 
   has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
@@ -8,6 +12,7 @@ class Page < ActiveRecord::Base
   has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
   has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
   has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
+  has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
   
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity

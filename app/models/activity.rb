@@ -1,6 +1,7 @@
 class Activity < ActiveRecord::Base
   belongs_to :user
   has_many :sections, :order => :position, :dependent => :destroy
+  has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convinience methods for notes...
