@@ -1,5 +1,7 @@
 -content_for :teacher_note do
   = @teacher_note
+-content_for :author_note do
+  = @author_note
   
 = render  :partial => 'shared/activity_header', :locals => { :activity => @activity }
 

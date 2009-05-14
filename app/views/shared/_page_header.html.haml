@@ -17,7 +17,8 @@
       .padded_content
         = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
     .action_menu_header_right
-      = dropdown_button ("actions.png", :title => "actions for this page")
+      = render :partial => "shared/notes_menu", :locals => {:authorable => page}
+      = dropdown_button "actions.png", :title => "actions for this page"
       - if (page.changeable?(current_user))
         = dropdown_button "add.png", :title => 'add content to this page'
       - if (page.previous)

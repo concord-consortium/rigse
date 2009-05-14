@@ -17,7 +17,8 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
-    id_string = component.id.to_s
+    id = component.id.nil? ? Time.now.to_i : component.id
+    id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
 
@@ -278,9 +279,28 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    
     link_to image_tag(image, :alt=>options[:title]),url,options
   end
+  
+  def remote_link_button(image,url,options={})
+    defaults = {
+      :class      => 'rollover',
+      :url        => url,
+      :update     => 'my_modal'
+    }
+    options = defaults.merge(options)
+    link_to_remote image_tag(image, :alt=>options[:title]),url,options
+  end
+  
+  def function_link_button(image,javascript,options={})
+    javascript ||= "alert('Hello world!'); return false;"
+    defaults = {
+      :class      => 'rollover'
+    }
+    options = defaults.merge(options)
+    link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
+  end
+  
   
   
   def tab_for(component, options={})
