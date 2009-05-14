@@ -106,7 +106,8 @@ module OtmlHelper
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
     title = options[:title] || 'RITES sample'
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :left_nav_panel_width => @left_nav_panel_width, :title => title }
+    use_scroll_pane = (options[:use_scroll_pane] || false).to_s
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title }
   end
 
   def ot_script_engine_bundle
