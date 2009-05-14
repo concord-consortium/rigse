@@ -179,10 +179,9 @@ module ApplicationHelper
       return "new #{component.class.name.humanize}"
     end
     if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{component.name}</span>" +
-      "<span class='dev_note'> #{link_to component.id, component}</span>" 
+      return "<span class='component_title'>#{component.name}</span><span class='dev_note'> #{component.id}</span>" 
     else
-      "<span class='component_title'>#{component.name}</span>"
+      return "<span class='component_title'>#{component.name}</span>"
     end
   end
 
@@ -210,7 +209,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat name_for_component(embeddable)
+          haml_concat link_to name_for_component(embeddable), embeddable
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
