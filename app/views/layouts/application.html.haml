@@ -54,7 +54,11 @@
         theme_advanced_resizing : true
       });
   %body
-    
+    #notes
+      #teacher_note{:style=>"display: none;"}
+        = yield :teacher_note
+      #author_note{:style=>"display: none;"}
+        = yield :author_note
     #body2
       /
         For non-visual user agents:
@@ -110,7 +114,3 @@
             = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
           #footer_right
             / footer text on the right
-  #teacher_bottom 
-    = link_to_function 'teacher-notes', visual_effect(:toggle_blind, 'some_data',:duration => 0.25)
-    #some_data{:style=>"display: none;"}
-      = yield :teacher_note
