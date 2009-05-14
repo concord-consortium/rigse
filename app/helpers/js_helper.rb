@@ -23,10 +23,11 @@ module JsHelper
       :url        => "#",
       :text       => 'add content',
       :content_id => 'dropdown',
-      :id         => 'add_content'
+      :id         => 'add_content',
+      :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
     }
     options = defaults.merge(options)
-    return link_to options[:text], options[:url], :onmouseover => "dropdown_for('#{options[:id]}','#{options[:content_id]}')", :id=>options[:id]
+    return link_to options[:text], options[:url], options
   end
   
 

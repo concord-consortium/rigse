@@ -30,6 +30,7 @@ module OtmlHelper
       org.concord.framework.otrunk.view.OTFrame
       org.concord.otrunk.view.OTViewEntry
       org.concord.otrunk.view.OTViewBundle
+      org.concord.otrunk.view.OTFolderObject
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.OTCssText
       org.concord.sensor.state.OTDeviceConfig

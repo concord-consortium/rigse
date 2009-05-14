@@ -150,6 +150,7 @@ class PagesController < ApplicationController
   ## We expect parameters "page_id" and "closs_name"
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
+
   def add_element
     @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
@@ -178,16 +179,7 @@ class PagesController < ApplicationController
     render :nothing => true
   end
 
-  ##
-  ##
-  ##
-  def delete_element
-    @dom_id = params['dom_id']
-    @element = PageElement.find(params['element_id'])
-    @element.destroy
-  end
-  
-  
+
   ##
   ##
   ##

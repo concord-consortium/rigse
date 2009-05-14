@@ -4,9 +4,25 @@
     %p
       - field_set_tag 'Title' do
         = f.text_field :title, :size => 60
-    %p
-    - field_set_tag 'Probe Type' do
-      = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_probe_type)})
+
+    - field_set_tag 'Major options' do
+      %p
+        %ul.menu_h
+          %li
+            Graph type: 
+            = f.select(:graph_type_id, DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
+          %li
+            Probe type: 
+            = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_probe_type)})
+      %p
+        %ul.menu_h
+          %li
+            Include data from a prediction graph:
+            = f.select(:prediction_graph_id, DataCollector.prediction_graphs.collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
+      %p
+        %ul.menu_h
+          %li
+            = labeled_check_box(f, :multiple_graphable_enabled, 'Enable multiple graphs')
 
     %p
       - field_set_tag 'Y axis' do
@@ -40,7 +56,7 @@
               %li
                 X Max
                 = f.text_field :x_axis_max, :size => 10
-    - field_set_tag 'Options' do
+    - field_set_tag 'Minor options' do
       %ul.menu_h
         %li
           = labeled_check_box(f, :draw_marks, 'Draw markers')
@@ -51,4 +67,4 @@
         %li
           = labeled_check_box(f, :ruler_enabled)
       
-= observe_form dom_id_for(data_collector, :edit), :url => change_probe_type_data_collector_path(data_collector)
+= observe_form(dom_id_for(data_collector, :edit), :url => change_probe_type_data_collector_path(data_collector))

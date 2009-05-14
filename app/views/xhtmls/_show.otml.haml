@@ -1,1 +1,2 @@
-= render :partial => "xhtmls/xhtml", :locals => { :xhtml => xhtml }
+%OTCompoundDoc{:local_id => ot_local_id_for(xhtml)}
+  %bodyText= xhtml.content

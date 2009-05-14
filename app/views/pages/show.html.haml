@@ -1,21 +1,12 @@
 -content_for :teacher_note do
   = @teacher_note
   
-#content_menu.dropdown
-  %ul
-    - element_types.each do |type|
-      %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
 
 = render :partial=> 'shared/page_header', :locals=>{:page => @page }
 
 .item_collection
   %ul#elements_container.menu
-
-    / - if @page.page_elements.size == 1
-    /   - element = @page.page_elements[0]
-    /   = render :partial => 'element_container', :locals => {:element => element, :editable => true, :component => element.embeddable, :page => @page }
-    / -else 
     - @page.page_elements.each_with_index do |element,i|
-      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page => @page }
+      = render :partial => 'element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => @page }
   - if (@page.changeable?(current_user))
-    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id } }
+    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

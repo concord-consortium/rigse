@@ -77,14 +77,10 @@ module ApplicationHelper
     end
   end
 
+
   def render_show_partial_for(component)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
-  end
-
-  def render_content_partial_for(component)
-    class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/#{class_name}", :locals => { class_name.to_sym => component }
   end
 
   def render_edit_partial_for(component)
@@ -92,13 +88,28 @@ module ApplicationHelper
     render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
   end
 
-  def wrap_edit_link_around_content(component, content, options={})
+  def wrap_edit_link_around_content(component, options={})
     url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    link_to_remote(content, :url => url, :update => update, :method => method, :complete => complete, :success => success)
+    js_function = remote_function(:url => url, :update => update, :method => method, :complete => complete, :success => success)
+    dom_id = dom_id_for(component, :edit_link)
+
+    capture_haml do
+      if component.changeable?(current_user)
+        haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
+          if block_given? 
+            yield
+          end
+        end
+      else
+        if block_given? 
+          yield
+        end
+      end
+    end
   end
 
   def edit_button_for(component, options={})
@@ -148,9 +159,11 @@ module ApplicationHelper
   end
 
   def delete_button_for(model)
+    # find the page_element for the embeddable
+    embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
     controller = "#{model.class.name.pluralize.underscore}"
-    link_to_remote('delete',  
-      :confirm => "Delete  #{model.class.human_name} named #{model.name}?", 
+    link_to_remote('X',  
+      :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", 
       :html => {:class => 'delete'}, 
       :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
   end
@@ -161,30 +174,27 @@ module ApplicationHelper
       :id  => component.id }
   end
 
-  
   def name_for_component(component)
     if component.id.nil?
       return "new #{component.class.name.humanize}"
     end
     if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{component.name}</span> <span class='dev_note'>#{component.id}</span>" 
+      "<span class='component_title'>#{component.name}</span>" +
+      "<span class='dev_note'> #{link_to component.id, component}</span>" 
     else
       "<span class='component_title'>#{component.name}</span>"
     end
   end
 
   def edit_menu_for(component, form)
+    component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat name_for_component(component)
+          
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
-            end
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
@@ -196,21 +206,22 @@ module ApplicationHelper
   end
 
   def show_menu_for(component, options={})
+    embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat name_for_component(component)
+          haml_concat name_for_component(embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(component) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(embeddable) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(embeddable) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(embeddable) }
             end
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(component, options) }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(embeddable, options) }
               haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
             end
           end
@@ -246,6 +257,14 @@ module ApplicationHelper
     end
   end
   
-
+  def simple_div_helper_that_yields
+    capture_haml do
+      haml_tag :div, :class => 'simple_div' do
+        if block_given? 
+          haml_concat yield
+        end
+      end
+    end
+  end
   
 end

@@ -1,5 +1,3 @@
 = render :partial => 'shared/collection_menu', :locals => { :collection => @open_responses, :collection_class => OpenResponse }        
-
 - @open_responses.each do |open_response|
-  %div{ :id => dom_id_for(open_response, :item), :class => 'item' }
-    = render :partial => "show", :locals => { :open_response => open_response }
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => open_response}

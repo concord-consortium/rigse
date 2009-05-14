@@ -199,8 +199,9 @@ ul.menu
 .dev_note
   :font-size 0.7em
   :font-style italic
-  :color = !dev_note_color
-  
+  :color red
+
+    
 .legend
   :font-size 0.8em
   :letter-spacing 0.1em
@@ -212,40 +213,55 @@ ul.menu
 .in_place_editor_field
   :min-width 5em
   :width auto !important
-  :min-height 1.5em
+  :min-height 1em
   :height auto !important
-  :padding 2px
+  :padding 1px
+  :margin 0px
   
 .item_collection
   :background-color white
-  :padding 0.5em 0em
-  .item
-    :margin-bottom 10px
-    :background-color= !almost_white
-    :padding 0.5em
-    :border
-      :style dotted
-      :color= !almost_white
-      :width 2px
-    .action_menu
-      :background-color= !almost_white
-      ul
-        :background-color= !almost_white
-        li
-          :background-color= !almost_white
-    &.selected
-      :border
-        :style solid
-        :color= !light_brown
-    &.selectable
-      :border
-        :style solid
-        :color= !almost_white
-      &:hover
-        :border
-          :style dotted
-          :color= !light_brown
+  :padding 0.5em 0em 
 
+.container_element
+  :background-color #CBE1F2
+  :padding 2px
+  :margin-top 5px
+  &:hover
+    :background-color #BCD6EA
+  .action_menu
+    :font-size 9px
+    :border-bottom 1px solid
+    :opacity 0.2
+    &:hover
+      :opacity 1
+    
+.item
+  :background-color white
+  :padding 0.5em
+  :padding-top 0px
+  :padding-bottom 0px
+  ul
+    :background-color= !almost_white
+    li
+      :background-color= !almost_white
+  &.item_selected
+    :border
+      :width 2px
+      :style solid
+      :color= !light_brown
+      :opacity 0.7
+  &.item_selectable
+    :border
+      :width 2px
+      :style solid
+      :color= !almost_white
+      :opacity 0.7 
+    &:hover
+      :border
+        :width 2px
+        :style dotted
+        :color= !light_brown
+  
 .content
   :font-size 1em
   :white-space normal
@@ -331,13 +347,13 @@ li.tiny
   :height 400px
     
 .tinymce_textarea
-  :width 700pxt
-  :height 200px  
+  :width 700px
+  :height 700px  
   :word-break break-all
 
 .tinymce_textarea_short
   :width 700px
-  :height 80px  
+  :height 100px  
   :word-break break-all
 
 #js_flash
@@ -402,14 +418,14 @@ dd
 input
   +main_font
   :color= !very_dark_blue
-  :padding 0.2em
+  :padding 0.2e
 
   
 input[type=text]
   :border solid
   :border-width 2px
   :border-color= !very_dark_blue
-  :background-color= !blue_gray
+  :background-color #d1e5f2
   &:focus
     :background-color= !light_brown
 

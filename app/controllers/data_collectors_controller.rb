@@ -53,6 +53,8 @@ class DataCollectorsController < ApplicationController
   # GET /data_collectors/1/edit
   def edit
     @data_collector = DataCollector.find(params[:id])
+    session[:original_probe_type_id] = @data_collector.probe_type_id
+    session[:new_probe_type_id] = nil
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_collector => @data_collector }
     else
@@ -145,10 +147,17 @@ class DataCollectorsController < ApplicationController
   
   def change_probe_type
     @data_collector = DataCollector.find(params[:id])
-    @probe_type = ProbeType.find(params[:data_collector][:probe_type_id])
-    @data_collector.probe_type = @probe_type
-    respond_to do |format|
-      format.js # will render change_probe_type.js.rjs
+    probe_type_id = params[:data_collector][:probe_type_id]
+    case probe_type_id
+    when session[:original_probe_type_id] && !session[:new_probe_type_id]
+      render :nothing => true
+    when session[:original_probe_type_id] && !session[:new_probe_type_id]
+      session[:new_probe_type_id] = nil
+    when session[:new_probe_type_id]
+      @data_collector.update_attributes(params[:data_collector])
+    else
+      @data_collector.probe_type = ProbeType.find(probe_type_id)
+      session[:new_probe_type_id] = probe_type_id
     end
   end
   

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090511153929) do
+ActiveRecord::Schema.define(:version => 20090513163256) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(:version => 20090511153929) do
     t.boolean  "single_value",                             :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "graph_type_id"
+    t.integer  "prediction_graph_id"
   end
 
   create_table "data_filters", :force => true do |t|

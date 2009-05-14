@@ -1,5 +1,3 @@
 = render :partial => 'shared/collection_menu', :locals => { :collection => @data_collectors, :collection_class => DataCollector }        
-
 - @data_collectors.each do |data_collector|
-  %div{ :id => dom_id_for(data_collector, :item), :class => 'item' }
-    = render :partial => "show", :locals => { :data_collector => data_collector }
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => data_collector}
