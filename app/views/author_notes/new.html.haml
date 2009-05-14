@@ -1,0 +1,7 @@
+%h1 new author note
+
+- form_for(@author_note) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => {:f => f, :author_note => @author_note}
+
+= link_to 'Back', author_notes_path
