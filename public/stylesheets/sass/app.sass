@@ -197,10 +197,11 @@ ul.menu
     :display none
 
 .dev_note
-  :font-size 0.7em
-  :font-style italic
-  :color red
-
+  :font-size 0.6em
+  :color= !dev_note_color
+  a a:visited a:active a:hover
+  
+  
     
 .legend
   :font-size 0.8em
@@ -223,11 +224,11 @@ ul.menu
   :padding 0.5em 0em 
 
 .container_element
-  :background-color #CBE1F2
+  :background-color= !container_box_color
   :padding 2px
   :margin-top 5px
   &:hover
-    :background-color #BCD6EA
+    :background-color= !container_box_hover_color
   .action_menu
     :font-size 9px
     :border-bottom 1px solid
@@ -268,7 +269,6 @@ ul.menu
   :border
     :width 0px
     :style solid
-    :color #DDD
   :background-color white
   :cursor text
   a
@@ -425,7 +425,7 @@ input[type=text]
   :border solid
   :border-width 2px
   :border-color= !very_dark_blue
-  :background-color #d1e5f2
+  :background-color= !text_input_color
   &:focus
     :background-color= !light_brown
 
