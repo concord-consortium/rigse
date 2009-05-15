@@ -99,6 +99,11 @@ class User < ActiveRecord::Base
     roles << Role.find_by_title('member')
   end
 
+  # return the user who is the site administrator
+  def self.site_admin
+    User.find_by_email(APP_CONFIG[:admin_email])
+  end
+  
   # is this user the anonymous user?
   def anonymous?
     self == User.anonymous
