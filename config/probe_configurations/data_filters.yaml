@@ -2,33 +2,36 @@
 - otrunk_object_class: org.concord.data.state.OTLinearProducerFilter
   name: Linear Filter
   k0_active: true
-  k2_active: false
+  updated_at: 2009-05-15 17:21:05 Z
+  k2_active: 
   k1_active: true
-  uuid: 
+  uuid: c57e61ba-4174-11de-aad1-001ff3caa767
   id: 1
   description: "The Linear Filter applies a two-point linear transformation to the input data: Y = k0 + k1 * X."
-  previous_user_id: 
-  k3_active: false
-  user_id: 
+  k3_active: 
+  user_id: 5
+  created_at: 2009-05-15 13:21:05 Z
 - otrunk_object_class: org.concord.data.state.OTIntegratingProducerFilter
   name: Integrating Filter
-  k0_active: false
-  k2_active: false
-  k1_active: false
-  uuid: 
+  k0_active: 
+  updated_at: 2009-05-15 17:21:05 Z
+  k2_active: 
+  k1_active: 
+  uuid: c57f2ed8-4174-11de-aad1-001ff3caa767
   id: 2
   description: The Integrating Filter applies a simple integration filter to the input data. This filter takes no parameters.
-  previous_user_id: 
-  k3_active: false
-  user_id: 
+  k3_active: 
+  user_id: 5
+  created_at: 2009-05-15 13:21:05 Z
 - otrunk_object_class: org.concord.data.state.OTDifferentiatingProducerFilter
   name: Differentiating Filter
-  k0_active: false
-  k2_active: false
-  k1_active: false
-  uuid: 
+  k0_active: 
+  updated_at: 2009-05-15 17:21:05 Z
+  k2_active: 
+  k1_active: 
+  uuid: c57fd2d4-4174-11de-aad1-001ff3caa767
   id: 3
   description: "Take the derivative of the values.  "
-  previous_user_id: 
-  k3_active: false
-  user_id: 
+  k3_active: 
+  user_id: 5
+  created_at: 2009-05-15 13:21:05 Z
