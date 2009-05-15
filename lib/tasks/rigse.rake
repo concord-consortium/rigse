@@ -15,6 +15,12 @@ namespace :rigse do
   }
   
   
+  desc "display info about the site admin user"
+  task :display_site_admin => :environment do
+    puts User.site_admin.to_yaml
+  end
+  
+  
   #######################################################################
   #
   # List all plugins available to quick install
@@ -65,7 +71,7 @@ namespace :rigse do
       if ActiveRecord::Base.configurations['itsi']
         Activity.find(:all, :conditions => "name like 'ITSI%'").each {|i| print '.'; i.destroy }
         itsi_user = Itsi::User.find_by_login('itest')
-        rites_user = User.find_by_email(APP_CONFIG[:admin_email])
+        rites_user = User.site_admin
         itsi_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, false, true)
         itsi_activities.each {|a| print '.'; Activity.create_from_itsi(a, rites_user) }
       else
