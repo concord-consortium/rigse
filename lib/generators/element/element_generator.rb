@@ -66,8 +66,19 @@ class ElementGenerator < Rails::Generator::NamedBase
         puts filename
         m.template(filename,File.join('app/views', controller_class_path, controller_file_name, filename))
       end
-  
-    end
+      puts <<-END_OF_TEXT
+      Your page element should now be installed.
+      
+      * run the migration that was created with "rake db:migrate"
+      
+      * Try browsing to localhost:3000/#{controller_file_name}/new to create one!
+      
+      * Edit the form in app/views/#{controller_file_name}/_form.html.haml, and reload & repeat.
+      
+      * Once you are satisfied, you should add the element to the list of elements in app/helpers/pages_helper.rb
+      
+      END_OF_TEXT
+    end    
   end
 
   protected

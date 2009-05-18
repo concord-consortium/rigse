@@ -32,7 +32,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       render :partial => 'remote_form', :locals => { :<%= singular_name %> => @<%= singular_name %> }
     else
       respond_to do |format|
-        format.html { render :partial=>'<%= singular_name %>', :locals => { :<%= singular_name %> => @<%= singular_name %> }, :layout=>false }
+        format.html # renders new.html.haml
         format.xml  { render :xml => @<%= singular_name %> }
       end
     end
