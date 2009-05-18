@@ -43,7 +43,7 @@ class XhtmlsController < ApplicationController
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
     else
       respond_to do |format|
-        format.html { render :partial=>'xhtml', :locals => { :xhtml => @xhtml }, :layout=>false }
+        format.html
         format.xml  { render :xml => @xhtml }
       end
     end
