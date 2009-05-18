@@ -58,8 +58,14 @@ class ElementGenerator < Rails::Generator::NamedBase
         'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
       )
       
+      
       # Routes:
       m.route_resources controller_file_name 
+      
+      # Layout:
+      m.template(
+        'layout.otml.haml', File.join('app/views/layouts', controller_class_path, "#{file_name}.otml.haml")
+      )
       
       # Views:
       view_files.each do |filename|
