@@ -32,20 +32,27 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/1/edit
   def edit
     @author_note = AuthorNote.find(params[:id])
+    respond_to do |format|
+      format.js   { render :update do |page| 
+        page.visual_effect :highlite, 'note' 
+        end 
+      }
+    end
   end
 
   # POST /author_notes
   # POST /author_notes.xml
   def create
-    @author_note = AuthorNote.new(params[:author_note])
-    respond_to do |format|
-      if @author_note.save
-        flash[:notice] = 'AuthorNote was successfully created.'
-        format.html { redirect_to(@author_note) }
-        format.xml  { render :xml => @author_note, :status => :created, :location => @author_note }
+    @author_note = AuthorNote.new(params[:author_note])    
+    if @author_note.save
+      flash[:notice] = 'AuthorNote was successfully created.'
+      if (request.xhr?)
+         render :text => "<div class='notice'>Author note saved</div>"
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @author_note.errors, :status => :unprocessable_entity }
+        respond_to do |format|
+          format.html { redirect_to(@author_note) }
+          format.xml  { render :xml => @author_note, :status => :created, :location => @author_note }
+        end
       end
     end
   end
@@ -54,14 +61,15 @@ class AuthorNotesController < ApplicationController
   # PUT /author_notes/1.xml
   def update
     @author_note = AuthorNote.find(params[:id])
-    respond_to do |format|
-      if @author_note.update_attributes(params[:author_note])
-        flash[:notice] = 'AuthorNote was successfully updated.'
-        format.html { redirect_to(@author_note) }
-        format.xml  { head :ok }
+    if @author_note.update_attributes(params[:author_note])
+      if (request.xhr?)
+         render :text => "<div class='notice'>Author note saved</div>"
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @author_note.errors, :status => :unprocessable_entity }
+        respond_to do |format|
+          flash[:notice] = 'AuthorNote was successfully created.'
+          format.html { redirect_to(@author_note) }
+          format.xml  { render :xml => @author_note, :status => :created, :location => @author_note }
+        end
       end
     end
   end
