@@ -1,0 +1,38 @@
+--- 
+development: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: rites_template_git_development
+  password: *****
+  pool: 5
+test: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: rites_template_git_test
+  password: *****
+  pool: 5
+production: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: rites_template_git_development
+  password: *****
+  pool: 5
+staging: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: risge_staging
+  password: 
+  pool: 5
+
+itsi: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: production_itsi_prod
+  password: *****
+  pool: 5
+  asset_url: http://itsidiy.concord.org
