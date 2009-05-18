@@ -11,7 +11,6 @@ var item_select = function(event) {
   item_deselect();
   
   if (selected) {
-    console.log("clicked");
     if (selected.hasClassName(selected_class)) {
       var type = '';
       var id = '';
@@ -20,7 +19,6 @@ var item_select = function(event) {
         type = match[1];
         id = match[2];
       });
-      console.log('edit-click on class='+type+' id='+id);
       var edit_dom_id = "form_"   +type+ "_" +id;
       var show_dom_id = "display_"+type+ "_" +id;
     }

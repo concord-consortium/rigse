@@ -54,11 +54,7 @@
         theme_advanced_resizing : true
       });
   %body
-    #notes
-      #teacher_note{:style=>"display: none;"}
-        = yield :teacher_note
-      #author_note{:style=>"display: none;"}
-        = yield :author_note
+    #note{:style=>"display: none;"}
     #body2
       /
         For non-visual user agents:
