@@ -18,14 +18,6 @@ class PagesController < ApplicationController
     end
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
-      if @page
-          teacher_note = @page.teacher_note || TeacherNote.new
-          teacher_note.authored_entity = @page
-          author_note = @page.author_note || AuthorNote.new
-          author_note.authored_entity = @page 
-          @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => teacher_note}
-          @author_note = render_to_string :partial => 'author_notes/remote_form', :locals => {:author_note => author_note}
-      end
     end
   end
   
@@ -60,15 +52,55 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
-    if (@page.teacher_notes.size < 1)
-      @page.teacher_notes << TeacherNote.new
-      @page.save
-    end
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => "layouts/page" } # page.otml.haml
       format.jnlp { render :layout => false }
       format.xml  { render :xml => @page }
+    end
+  end
+
+
+  def show_teacher_note
+    if @page.teacher_note.nil?
+      @page.teacher_note = TeacherNote.create 
+      # TODO: Who owns the teacher note? is this correct?
+      @page.teacher_note.author = current_user
+      @page.save
+    end
+    if @page.teacher_note.author == current_user
+      render :update do |page|
+          page.replace_html  'teacher_note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
+          page.visual_effect :toggle_blind, 'note'
+      end
+    else
+      render :update do |page|
+        page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
+        page.visual_effect :toggle_blind, 'note'
+      end
+    end
+  end
+
+
+  def show_author_note
+    if @page.author_note.nil?
+      author_note = AuthorNote.create
+      author_note.authored_entity = @page
+      author_note.author = current_user;
+      author_note.save
+      @page.author_note = author_note
+      @page.save
+    end
+    if @page.author_note.author == current_user
+      render :update do |page|
+          page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @page.author_note}
+          page.visual_effect :toggle_blind, 'note'
+      end
+    else
+      render :update do |page|
+        page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @page.teacher_note}
+        page.visual_effect :toggle_blind, 'note'
+      end
     end
   end
 
