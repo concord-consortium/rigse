@@ -92,7 +92,7 @@
         #left_nav.nav_menu
           - if @investigation 
             = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
-          - if @activity
+          - elsif @activity
             = render :partial => 'shared/accordian_nav'
 
         #main_content.main_content_colors
