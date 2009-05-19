@@ -1,6 +1,3 @@
-require 'rake'
-require 'hpricot'
-
 #
 # adapted from:
 #   http://www.samsaffron.com/archive/2008/02/02/Redo+your+migrations+in+Rails+and+keep+your+data
