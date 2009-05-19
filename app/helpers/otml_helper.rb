@@ -64,6 +64,7 @@ module OtmlHelper
       org.concord.otrunk.ui.menu.OTMenuRule
       org.concord.otrunk.ui.menu.OTNavBar
       org.concord.otrunk.view.OTViewChild
+      org.concord.otrunkmw.OTModelerPage
     }
   end
   
@@ -99,7 +100,8 @@ module OtmlHelper
       ['menu_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuSectionView'],
       ['menu_page_expand_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageExpandView'],
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
-      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView']
+      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
+      ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView']
     ]
   end
 

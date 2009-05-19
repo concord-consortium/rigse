@@ -23,7 +23,7 @@ class MwModelerPage < ActiveRecord::Base
   default_value_for :description, "description ..."
 
   def self.display_name
-    "Mwmodelerpage"
+    "Molecular Workbench Model"
   end
 
 
