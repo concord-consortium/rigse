@@ -9,16 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090514183250) do
+ActiveRecord::Schema.define(:version => 20090519154638) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_template"
+    t.integer  "position"
+    t.integer  "investigation_id"
   end
 
   create_table "assessment_targets", :force => true do |t|
