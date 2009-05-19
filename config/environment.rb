@@ -33,8 +33,7 @@ Rails::Initializer.run do |config|
   config.gem "haml", :version => '>= 2.0.7'  
   config.gem "RedCloth", :version => '>= 4.1.1'
   config.gem "uuidtools"
-  config.gem "hpricot"
-  # config.gem "hpricot", :version => '0.6.164'
+  config.gem "hpricot", :version => '0.6.164'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
