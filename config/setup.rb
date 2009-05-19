@@ -3,19 +3,37 @@ require 'fileutils'
 require 'yaml'
 require 'erb'
 
-# We require the uuidtools gem -- make sure it's available.
-begin
-  require 'uuidtools'
-rescue Gem::LoadError 
-  Please "install the uuidtools gem and run setup again: sudo gem install uuidtools"
-end
+APPLICATION = "'RITES Investigations'"
+puts "\nInitial setup of #{APPLICATION} Rails application ...\n"
 
+JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
-$LOAD_PATH << File.join(%W{#{RAILS_ROOT} vendor gems highline-1.4.0 lib})
 
-require 'highline.rb'
-require 'highline/import.rb'
+def jruby_command
+  JRUBY ? "jruby -S" : ""
+end
+
+def gem_install_command_strings(missing_gems)
+  # jruby -S gem install uuidtools -v1.0.5 uuidtools -v1.0.6
+  missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.collect do |gem_name_and_version|
+    if JRUBY
+      "  jruby -S gem install #{gem_name_and_version}\n"
+    else
+      "  sudo gem install #{gem_name_and_version}\n"
+    end
+  end
+end
+
+def rails_file_path(*args)
+  File.join([RAILS_ROOT] + args)
+end
+
+def rails_file_exists?(*args)
+  File.exists?(rails_file_path(args))
+end
+
+@db_config_path = rails_file_path(%w{config database.yml})
 
 def copy_file(source, destination)
 
@@ -24,23 +42,81 @@ def copy_file(source, destination)
        to: #{destination}
 
 HEREDOC
-
   FileUtils.cp(source, destination)
-
 end
 
-def rails_file_path(*args)
-  File.join([RAILS_ROOT] + args)
+@missing_gems = []
+@gems_needed_at_start = [
+  ['uuidtools', '>= 1.0.7'],
+  ['highline', '>= 1.5.0'],
+  ['haml-edge', '>= 2.1.8'],
+  ['mime-types', '>=1.16'],
+  ['diff-lcs', '>= 1.1.2'],
+  ['prawn', '>= 0.4.1'],
+  ['prawn-format', '>= 0.1.1']
+]
+
+if JRUBY 
+  @gems_needed_at_start << ['activerecord-jdbcmysql-adapter', '>= 0.9.1']
+  @gems_needed_at_start << ['jruby-openssl', '>=0.5']
+end
+@gems_needed_at_start.each do |gem_name_and_version|
+  begin
+    gem gem_name_and_version[0], gem_name_and_version[1]
+  rescue Gem::LoadError
+    @missing_gems << gem_name_and_version
+  end
+  begin
+    require gem_name_and_version[0]
+  rescue LoadError
+  end
 end
 
+if @missing_gems.length > 0
+  message = "\n\n*** Please install the following gems: (#{@missing_gems.join(', ')}) and run config/setup.rb again.\n"
+  message << "\n#{gem_install_command_strings(@missing_gems)}\n"
+  raise message
+end
 
-def rails_file_exists?(*args)
-  File.exists?(rails_file_path(args))
+# Continuing after sucessfully requiring the necessary gems ..
+
+require 'highline/import'
+
+# returns true if @db_name_prefix on entry == @db_name_prefix on exit
+# false otherwise
+def confirm_database_name_prefix
+  original_db_name_prefix = @db_name_prefix
+  puts <<HEREDOC
+
+The default prefix for specifying the database names will be: #{@db_name_prefix}.
+
+You can specify a different prefix for the database names:
+
+HEREDOC
+  @db_name_prefix = ask("  database name prefix: ") { |q| q.default = @db_name_prefix }
+  @db_name_prefix != original_db_name_prefix
+end
+
+def create_new_database_yml
+  raise "the instance variable @db_name_prefix must be set before calling create_new_database_yml" unless @db_name_prefix
+  @db_config = YAML::load(IO.read(rails_file_path(%w{config database.mysql.sample.yml})))
+  %w{development test staging production}.each do |env|
+    @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
+  end
+  puts <<HEREDOC
+
+       creating: #{RAILS_ROOT}/config/database.yml
+  from template: #{RAILS_ROOT}/config/database.sample.mysql.yml
+
+  using database name prefix: #{@db_name_prefix}
+
+HEREDOC
+  File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
 end
 
 puts <<HEREDOC
 
-This setup program will help you configure a new RI-GSE instance.
+This setup program will help you configure a new #{APPLICATION} instance.
 
 HEREDOC
 
@@ -48,30 +124,16 @@ HEREDOC
 # check for config/database.yml
 #
 
-db_config_path = rails_file_path(%w{config database.yml})
-
-unless File.exists?(db_config_path)
+unless File.exists?(@db_config_path)
   puts <<HEREDOC
 
 The Rails database configuration file does not yet exist.
 
 HEREDOC
-
-  db_config = YAML::load(IO.read(rails_file_path(%w{config database.mysql.sample.yml})))
-  new_db_name = APP_DIR_NAME.gsub(/\W/, '_')
-
-  %w{development test staging production}.each do |env|
-    db_config[env]['database'] = "#{new_db_name}_#{env}"
-  end
-
-  puts <<HEREDOC
-       creating: #{RAILS_ROOT}/config/database.yml
-  from template: #{RAILS_ROOT}/config/database.sample.mysql.yml
-
-HEREDOC
-  
-  File.open(db_config_path, 'w') {|f| f.write db_config.to_yaml }
-
+  @db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
+  confirm_database_name_prefix
+  create_new_database_yml
+  @new_database_yml_created = true
 end
 
 #
@@ -92,7 +154,6 @@ end
 #
 # check for log/development.log
 #
-
 
 dev_log_path = rails_file_path(%w{log development.log})
 
@@ -152,23 +213,40 @@ Specify values for the mysql database name, username and password
 for the Rails database configuration file.
 HEREDOC
 
-db_config = YAML::load(IO.read(db_config_path))
+@db_config = YAML::load(IO.read(@db_config_path))
+
+@db_name_prefix = @db_config['development']['database'][/(.*)_development/, 1]
+create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix 
 
 %w{development test production}.each do |env|
   puts "\nSetting parameters for the #{env} database:\n\n"
-  db_config[env]['database'] = ask("  database name: ") { |q| q.default = db_config[env]['database'] }
-  db_config[env]['username'] = ask("       username: ") { |q| q.default = db_config[env]['username'] }
-  db_config[env]['password'] = ask("       password: ") { |q| q.default = db_config[env]['password'] }
+  @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
+  @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
+  @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
 end
 
 puts <<HEREDOC
 
+If you have access to a ITSI database for importing ITSI Activities into RITES 
+specify those values for the mysql database name, host, username, password, and asset_url.
+
+HEREDOC
+
+puts "\nSetting parameters for the ITSI database:\n\n"
+@db_config['itsi']['database']  = ask("  database name: ") { |q| q.default = @db_config['itsi']['database'] }
+@db_config['itsi']['host']      = ask("           host: ") { |q| q.default = @db_config['itsi']['host']  }
+@db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
+@db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
+@db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
+
+puts <<HEREDOC
+
 Here is the updated database configuration:
-#{db_config.to_yaml} 
+#{@db_config.to_yaml} 
 HEREDOC
   
 if agree("OK to save to config/database.yml? (y/n): ")
-  File.open(db_config_path, 'w') {|f| f.write db_config.to_yaml }
+  File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
 end
 
 #
@@ -189,17 +267,17 @@ puts <<HEREDOC
 
 Updating the Rails mailer configuration file: config/mailer.yml
 
-You will need to specify values for the SMTP mail server this RI-GSE instance will
+You will need to specify values for the SMTP mail server this #{APPLICATION} instance will
 use to send outgoing mail. In addition you need to specify the hostname of this
-specific RI-GSE instance.
+specific #{APPLICATION} instance.
 
 The SMTP parameters are used to send user account activation emails to new 
-users and the hostname of the RI-GSE is used as part of account activation url
+users and the hostname of the #{APPLICATION} is used as part of account activation url
 rendered into the body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the RI-GSE without the protocol: (example: #{mailer_config[:host]})
+  the hostname of the #{APPLICATION} without the protocol: (example: #{mailer_config[:host]})
 
 If you do not have a working SMTP server select the test deliver method
 instead of the smtp delivery method. The activivation emails will appear 
@@ -210,7 +288,7 @@ command:
 
 You will also need to specify:
 
-  the hostname of the RI-GSE without the protocol: (example: #{mailer_config[:host]})
+  the hostname of the #{APPLICATION} application without the protocol: (example: #{mailer_config[:host]})
 
 and a series of SMTP server values:
 
@@ -225,36 +303,36 @@ HEREDOC
 
 say("\nChoose mail delivery type: #{deliv_types}:\n\n")
 
-mailer_config[:delivery_type] =            ask("   delivery type: ", delivery_types) { |q|
+mailer_config[:delivery_type] =            ask("    delivery type: ", delivery_types) { |q|
   q.default = "test"
 }
 
-mailer_config[:host] =                     ask("    RI-GSE hostname: ") { |q| q.default = mailer_config[:host] }
+mailer_config[:host] =                     ask("    #{APPLICATION} hostname: ") { |q| q.default = mailer_config[:host] }
 
 mailer_config[:smtp][:address] =           ask("    SMTP address: ") { |q| 
   q.default = mailer_config[:smtp][:address]
 }
 
-mailer_config[:smtp][:port] =              ask("       SMTP port: ", Integer) { |q| 
+mailer_config[:smtp][:port] =              ask("    SMTP port: ", Integer) { |q| 
   q.default = mailer_config[:smtp][:port]
   q.in = 25..65535 
 }
 
-mailer_config[:smtp][:domain] =            ask("     SMTP domain: ") { |q| 
+mailer_config[:smtp][:domain] =            ask("    SMTP domain: ") { |q| 
   q.default = mailer_config[:smtp][:domain]
 }
 
 say("\nChoose SMTP authentication type: #{auth_types}:\n\n")
 
-mailer_config[:smtp][:authentication] =    ask("  SMTP auth type: ", authentication_types) { |q|
+mailer_config[:smtp][:authentication] =    ask("    SMTP auth type: ", authentication_types) { |q|
   q.default = "login"
 }
 
-mailer_config[:smtp][:user_name] =        ask("   SMTP username: ") { |q| 
+mailer_config[:smtp][:user_name] =         ask("    SMTP username: ") { |q| 
   q.default = mailer_config[:smtp][:user_name]
 }
 
-mailer_config[:smtp][:password] =         ask("   SMTP password: ") { |q| 
+mailer_config[:smtp][:password] =          ask("    SMTP password: ") { |q| 
   q.default = mailer_config[:smtp][:password]
 }
 
@@ -268,4 +346,4 @@ if agree("OK to save to config/mailer.yml? (y/n): ")
   File.open(mailer_config_path, 'w') {|f| f.write mailer_config.to_yaml }
 end
 
-puts "\nTo complete the RI-GSE Rails application setup run:\n\n  rake rigse:setup:new_rigse_from_scratch\n\n"
+puts "\nTo complete setup of the RITES Investigations Rails application setup run:\n\n  #{jruby_command} rake rigse:setup:new_rigse_from_scratch\n\n"
