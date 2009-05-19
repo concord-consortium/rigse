@@ -8,11 +8,88 @@ and run this rake task:
 
   rake rigse:setup:new_rigse_from_scratch
 
+h2. Some video walk-throughs
+
+The Page Elements Model Part I:   http://screencast.com/t/8M2ISjcM
+Page Elements Model Part II:      http://screencast.com/t/YyqOHfItL
+HAML, Compass and SASS:           http://screencast.com/t/68yJOeCRcN
+PageElement View partials:        http://screencast.com/t/800TVxOC
+HAML, Compass and SASS:           http://screencast.com/t/68yJOeCRcN
+Javascript use in Rites           http://screencast.com/t/z7Vkt32iTp
+
+
+---
+
+h3.The Page Elements Model Part I: 
+
+http://screencast.com/t/8M2ISjcM
+
+Install github version of railroad with aasm patches from 
+  http://github.com/ddollar/railroad/tree/master
+
+Generate a graph of the projects models using railroad:
+  railroad -o models.dot -M
+ 
+Open that file (models.dot) with omnigraffle, or traslate to some other image format using the dot tool.
+
+
+---
+
+h3. Page Elements Model Part II:
+
+http://screencast.com/t/YyqOHfItL
+
+Using mysql query browser (part of the osx mysql binary distrobution) to view schema.
+http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
+
+Use the generator to generate page elements eg:
+  ./script/generate element xhtml content:text
+
+---
+
+h3. PageElement View partials:  
+http://screencast.com/t/800TVxOC
+
+Showed the relationship between:
+  pages/show.html.haml
+  pages/element_container.html.haml 
+  shared/_embeddable_container.html.haml
+  <embeddable_type>/_show.html.haml
+
+---
+HAML, Compass and SASS:
+http://screencast.com/t/68yJOeCRcN
+Brief introduction to the technologies generally, and how we use them specifically
+
+HAML & SASS: http://haml.hamptoncatlin.com/
+Compass: http://compass-style.org/
+BluePrint: http://www.blueprintcss.org/
+
+
+---
+
+h3. Javascript use in Rites
+
+http://screencast.com/t/z7Vkt32iTp
+What javascript librararies we are using, and what things we have written by ourselves;
+Stuff we did:
+  accordion view
+  drop-downs
+Other libraries
+  prototype http://www.prototypejs.org/
+  scriptaculous http://script.aculo.us/
+  tinymce http://tinymce.moxiecode.com/
+  flotr http://solutoire.com/flotr/
+
+  
+gured server is the 'staging' server (in config/deploy/staging.rb )
+
+
 
 h2. Capistrano Recipies (and problems)
 
 cap deploy should work to deploy to rites.dev.concord.org (otto).
-See config/deploy.rb.  Right now the only properly configured server is the 'staging' server (in config/deploy/staging.rb )
+See config/deploy.rb.  Right now the only properly confiIndex:
 
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
 <code> sudo chmod -R g+w ./cached-copy/ </code>
