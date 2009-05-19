@@ -25,7 +25,8 @@ set :rails_env, "production"
 #############################################################
 
 set :scm, :git
-set :branch, "master"
+set :branch, "stable"
+set :git_enable_submodules, 1
 # wondering if we can do something special for this? create
 # a special deploy user on github?
 set(:scm_user) do
@@ -104,6 +105,13 @@ namespace :deploy do
     sudo "sh -c 'cd #{deploy_to}/current; rake gems:install'"
   end
   
+  desc "chown folders to be owned by apache"
+  task :chown_folders, :roles => :app do
+    sudo "chown -R apache.users #{deploy_to}"
+    sudo "chmod -R g+w #{deploy_to}"
+  end
+  
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
+after 'deploy:symlink', 'deploy:chown_folders'
