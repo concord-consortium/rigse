@@ -22,7 +22,7 @@ server and a mysql username/password with enough permissions to create and drop 
     cd rigse2
 
     # follow instructions for installing necessary gem prerequisites
-    # until config/setup.rb complete's successfully
+    # until config/setup.rb completes successfully
     jruby -S config/setup.rb
 
     # finish installing necessary gems for rails application
