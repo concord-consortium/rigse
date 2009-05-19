@@ -105,13 +105,13 @@ namespace :deploy do
     sudo "sh -c 'cd #{deploy_to}/current; rake gems:install'"
   end
   
-  desc "chown folders to be owned by apache"
-  task :chown_folders, :roles => :app do
+  desc "set correct file permissions of the deployed files"
+  task :set_permissions, :roles => :app do
     sudo "chown -R apache.users #{deploy_to}"
-    sudo "chmod -R g+w #{deploy_to}"
+    sudo "chmod -R g+rw #{deploy_to}"
   end
   
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
-after 'deploy:symlink', 'deploy:chown_folders'
+after 'deploy:symlink', 'deploy:set_permissions'
