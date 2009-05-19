@@ -1,5 +1,3 @@
-require 'rake'
-
 namespace :db do
   desc "Dump the current database to a MySQL file" 
   task :database_dump do
