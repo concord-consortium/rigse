@@ -1,0 +1,6 @@
+%OTText{ :local_id => ot_local_id_for( mw_modeler_page, :name ), :rows => '2', :columns => '40' }
+  %text= mw_modeler_page.name
+%OTCompoundDoc{:local_id => ot_local_id_for(mw_modeler_page)}
+  %bodyText
+    = mw_modeler_page.description  
+    %object{ :refid => ot_refid_for(mw_modeler_page, :name) }
