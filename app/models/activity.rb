@@ -89,7 +89,7 @@ class Activity < ActiveRecord::Base
   #   [new_section]
   # end
 
-  # ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
+  ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
 
   def self.process_textile_content(textile_content, split_last_paragraph=false)
     doc = Hpricot(RedCloth.new(textile_content).to_html)
