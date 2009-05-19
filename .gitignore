@@ -6,10 +6,12 @@ doc/api
 doc/app
 coverage
 db/*.sqlite3
+db/*.sql
 config/database.yml
 config/initializers/site_keys.rb
 config/mailer.yml
 config/additional_users.yml
+config/settings.yml
 public/images/0*
 public/stylesheets/app.css
 nbproject
