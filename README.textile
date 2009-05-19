@@ -168,6 +168,11 @@ rake rigse:setup:import_gses_from_file
 
 We should solve this one sooner rather than later.
 
+h2. other Rake tasks:
+
+* rigse:make:investigations. This task simply finds all activities with no parent investigation, 
+and creates a new investigation for that activity. The created investigation has the same name and description as the activity it contains.
+
 h1. haml
 
 we use haml for some templates
