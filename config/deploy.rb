@@ -29,10 +29,10 @@ set :branch, "master"
 # wondering if we can do something special for this? create
 # a special deploy user on github?
 set(:scm_user) do
-  Capistrano::CLI.ui.ask "Enter the starting port number: "
+  Capistrano::CLI.ui.ask "Enter your git username: "
 end
 set(:scm_passphrase) do
-  Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
+  Capistrano::CLI.password_prompt( "Enter your git password: ")
 end
 set :repository, "git://github.com/stepheneb/rigse.git"
 set :deploy_via, :remote_cache
