@@ -1,0 +1,6 @@
+= edit_menu_for(mw_modeler_page, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(mw_modeler_page, :item, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(mw_modeler_page, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
