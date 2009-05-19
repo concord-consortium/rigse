@@ -117,6 +117,7 @@ class ActivitiesController < ApplicationController
     @activity.user = current_user
     respond_to do |format|
       if @activity.save
+        format.js  # render the js file
         flash[:notice] = 'Activity was successfully created.'
         format.html { redirect_to(@activity) }
         format.xml  { render :xml => @activity, :status => :created, :location => @activity }
