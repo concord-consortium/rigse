@@ -1,6 +1,5 @@
 development:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_development
   username: root
@@ -9,7 +8,6 @@ development:
   
 test:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_test
   username: root
@@ -18,7 +16,6 @@ test:
   
 staging:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_staging
   username: root
@@ -27,7 +24,6 @@ staging:
   
 production:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_production
   username: root
