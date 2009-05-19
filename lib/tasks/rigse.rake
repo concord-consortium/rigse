@@ -1,5 +1,15 @@
 namespace :rigse do
   
+  JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
+
+  def jruby_system_command
+    JRUBY ? "jruby -S" : ""
+  end
+
+  def jruby_run_command
+    JRUBY ? "jruby " : "ruby "
+  end
+  
   PLUGIN_LIST = {
     :acts_as_taggable_on_steroids => 'http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids',
     :attachment_fu => 'git://github.com/technoweenie/attachment_fu.git',
@@ -81,14 +91,20 @@ namespace :rigse do
     
     #######################################################################
     #
-    # Raise an error unless the RAILS_ENV is development
+    # Raise an error unless the RAILS_ENV is development,
+    # unless the user REALLY wants to run in another mode.
     #
     #######################################################################
     desc "Raise an error unless the RAILS_ENV is development"
-    task :development_environment_only do
-      raise "Hey, development only you monkey!" unless RAILS_ENV == 'development'
+    task :development_environment_only => :environment  do
+      unless RAILS_ENV == 'development'
+        puts "\nNormally you will only be running this task in development mode.\n"
+        puts "You are running in #{RAILS_ENV} mode.\n"
+        unless agree("Are you sure you want to do this?  (y/n)", true)
+          raise "task stopped by user"
+        end
+      end
     end
-    
     
     #######################################################################
     #
@@ -134,19 +150,21 @@ HEREDOC
     #######################################################################
     desc "setup a new rigse instance"
     task :new_rigse_from_scratch => :environment do
+      db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+
+      Rake::Task['rigse:setup:development_environment_only'].invoke
       
       puts <<HEREDOC
 
-This task will drop your extsing rigse database, rebuild it from scratch, 
+This task will drop the existing rigse database: #{db_config['database']}, rebuild it from scratch, 
 and install default users.
   
 HEREDOC
       if agree("Do you want to do this?  (y/n)", true)
         begin
           Rake::Task['db:drop'].invoke
-        rescue Exception
+        rescue StandardException
         end
-        Rake::Task['rigse:setup:development_environment_only'].invoke
         Rake::Task['db:create'].invoke
         Rake::Task['db:migrate'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
@@ -158,20 +176,31 @@ HEREDOC
   
         puts <<HEREDOC
 
-You can now start RI-GSE in develelopment mode by running this command:
+You can now start the applictation in develelopment mode by running this command:
 
-  script/server
+  #{jruby_run_command}script/server
 
 You can re-edit the initial configuration parameters by running the
 setup script again:
 
-  ruby config/setup.rb
+  #{jruby_run_command}config/setup.rb
 
 You can re-create the database from scratch and setup default users 
 again by running this rake task again:
 
-  rake rigse:setup:new_rigse_from_scratch
-  
+  #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+
+If you have acess to an ITSI database you can also import ITSI activities 
+into RITES by running this rake task:
+
+  #{jruby_system_command} rake rigse:setup:erase_and_import_itsi_activities
+
+* if you are developing locally and are using the same database for both development and production
+  environments the ITSI import will run much faster in production mode:
+
+  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:erase_and_import_itsi_activities
+
+
 HEREDOC
       end
     end
@@ -293,14 +322,20 @@ This task creates seven roles (if they dont already exist):
   student
   guest
 
-In addition it create four new default users with these login names:
+It creates one user with an admin role. 
 
-  anonymous
-  admin
+  The default values for the admin user are taken from config/settings.yml.
+  Edit the values in this file if you want to specify a different default admin user.
+
+In addition it creates three new default users with these login names:
+
   researcher
   member
+  anonymous
 
-You can edit the default settings for these users.
+You can edit the default settings for all of these users.
+
+First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
 
 HEREDOC
 
@@ -312,10 +347,10 @@ HEREDOC
       student_role = Role.find_or_create_by_title('student')
       guest_role = Role.find_or_create_by_title('guest')
 
-      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
-      admin_user = User.create(:login => "admin", :email => "admin@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Admin", :last_name => "User")
+      admin_user = User.create(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
       researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
       member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
+      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
 
       [admin_user, researcher_user, member_user, anonymous_user].each do |user|
         user = edit_user(user)
@@ -346,10 +381,10 @@ HEREDOC
       student_role = Role.find_or_create_by_title('student')
       guest_role = Role.find_or_create_by_title('guest')
 
-      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
-      admin_user = User.create(:login => "admin", :email => "admin@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Admin", :last_name => "User")
+      admin_user = User.create(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
       researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
       member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
+      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
 
       [admin_user, researcher_user, member_user].each do |user|
         user.save
@@ -358,6 +393,7 @@ HEREDOC
       end
       admin_user.roles << admin_role 
       researcher_user.roles << researcher_role
+      member_user.roles << member_role
     end
     
     #######################################################################
@@ -367,9 +403,11 @@ HEREDOC
     #######################################################################
     desc "force setup a new rigse instance, with no prompting! Danger!"
     task :force_new_rigse_from_scratch => :environment do
+      
+      db_config = ActiveRecord::Base.configurations[RAILS_ENV]
 
       puts <<-HEREDOC
-      This task will drop your extsing rigse database, rebuild it from scratch, 
+      This task will drop your existing rigse database: #{db_config['database']}, rebuild it from scratch, 
       and install default users.
       HEREDOC
         # save the old data?

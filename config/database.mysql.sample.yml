@@ -33,3 +33,16 @@ production:
   username: root
   password:
   pool: 5
+
+# Reference to a local copy of the ITSI database for use in 
+# importing ITSI activities into this RITES instance.
+itsi:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
+  encoding: utf8
+  host: localhost
+  database: production_itsi_prod
+  username: root
+  password: 
+  asset_url: http://itsidiy.concord.org
+  pool: 5
