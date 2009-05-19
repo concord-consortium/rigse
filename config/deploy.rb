@@ -1,8 +1,41 @@
-set :stages, %w(staging production)
-set :default_stage, "staging"
+set :stages, %w(development staging production)
+set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
 
+#############################################################
+#  Application
+#############################################################
+
+set :application, "rites"
+set :deploy_to, "/web/rites.concord.org"
+
+#############################################################
+#  Settings
+#############################################################
+
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
+set :use_sudo, true
+set :scm_verbose, true
+set :rails_env, "production" 
+  
+#############################################################
+#  Git
+#############################################################
+
+set :scm, :git
+set :branch, "master"
+# wondering if we can do something special for this? create
+# a special deploy user on github?
+set(:scm_user) do
+  Capistrano::CLI.ui.ask "Enter the starting port number: "
+end
+set(:scm_passphrase) do
+  Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
+end
+set :repository, "git://github.com/stepheneb/rigse.git"
+set :deploy_via, :remote_cache
 
 namespace :db do
   desc 'Dumps the production database to db/production_data.sql on the remote server'
@@ -40,6 +73,21 @@ namespace :db do
 end
 
 namespace :deploy do
+  #############################################################
+  #  Passenger
+  #############################################################
+      
+  # Restart passenger on deploy
+  desc "Restarting passenger with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+  
+  [:start, :stop].each do |t|
+    desc "#{t} task is a no-op with passenger"
+    task t, :roles => :app do ; end
+  end
+
   desc "setup a new version of rigse from-scratch using rake task of similar name"
   task :from_scratch do
     run "cd #{deploy_to}/current; rake rigse:setup:force_new_rigse_from_scratch"
