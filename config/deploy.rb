@@ -49,14 +49,21 @@ namespace :db do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} db:dump --trace" 
   end
+  
+  desc 'Loads the production database in db/production_data.sql on the remote server'
+  task :remote_db_load, :roles => :db, :only => { :primary => true } do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} db:load --trace" 
+  end
 
   desc 'Downloads db/production_data.sql from the remote production environment to your local machine'
   task :remote_db_download, :roles => :db, :only => { :primary => true } do  
-    execute_on_servers(options) do |servers|
-      self.sessions[servers.first].sftp.connect do |tsftp|
-        tsftp.download!("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql")
-      end
-    end
+    download("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql", :via => :sftp)
+  end
+  
+  desc 'Uploads db/production_data.sql to the remote production environment from your local machine'
+  task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
+    upload("db/production_data.sql", "#{deploy_to}/#{current_dir}/db/production_data.sql", :via => :sftp)
   end
 
   desc 'Cleans up data dump file'
@@ -69,9 +76,16 @@ namespace :db do
   end 
 
   desc 'Dumps, downloads and then cleans up the production data dump'
-  task :remote_db_runner do
+  task :fetch_remote_db do
     remote_db_dump
     remote_db_download
+    remote_db_cleanup
+  end
+  
+  desc 'Uploads, inserts, and then cleans up the production data dump'
+  task :push_remote_db do
+    remote_db_upload
+    remote_db_load
     remote_db_cleanup
   end
   

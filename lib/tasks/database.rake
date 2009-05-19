@@ -6,9 +6,10 @@ namespace :db do
     db_config = ActiveRecord::Base.configurations[RAILS_ENV]
     case db_config["adapter"]
     when 'mysql'
+      # make sure we can connect to the db...
       ActiveRecord::Base.establish_connection(db_config)
       File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
-        cmd = "mysqldump"
+        cmd = "mysqldump --lock-tables=false --add-drop-table --quick --extended-insert"
         if db_config["host"]
           cmd << " -h #{db_config["host"]}"
         end
@@ -28,6 +29,32 @@ namespace :db do
       File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
         f << `sqlite3  #{db_config["database"]} .dump`
       end
+    else
+      raise "Task not supported by '#{db_config['adapter']}'" 
+    end
+  end
+  
+    task :load => :environment do
+    db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    case db_config["adapter"]
+    when 'mysql'
+      cmd = "mysql"
+      if db_config["host"]
+        cmd << " -h #{db_config["host"]}"
+      end
+      if db_config["username"]
+        cmd << " -u #{db_config["username"]}"
+      end
+      if db_config["password"]
+        cmd << " -p#{db_config["password"]}"
+      end
+      cmd << " #{db_config["database"]} < db/#{RAILS_ENV}_data.sql"
+      # puts "Fetching database\n#{cmd}"
+      puts "Loading database from: db/#{RAILS_ENV}_data.sql"
+      puts `#{cmd}`
+    when 'sqlite3'
+      ActiveRecord::Base.establish_connection(db_config)
+      puts`sqlite3  #{db_config["database"]} < db/#{RAILS_ENV}_data.sql`
     else
       raise "Task not supported by '#{db_config['adapter']}'" 
     end
