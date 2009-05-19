@@ -1,12 +1,26 @@
 h1. rigse
 
-After checking out the code for the first time switch to the rites_rails23 branch:
+h2. Initial install:
 
-  git checkout -b rites_rails2_3
+Tested with trunk jruby, you will need a running mysql
+server and a mysql username/password with enough
+permissions to create and drop databases.
 
-and run this rake task:
+git clone git@github.com:stepheneb/rigse.git
+cd rigse2
 
-  rake rigse:setup:new_rigse_from_scratch
+# follow instructions for installing necessary gem prerequisites
+# until config/setup.rb complete's successfully
+jruby -S config/setup.rb
+
+# finish installing necessary gems for rails application
+jruby -S rake gems:install
+
+# setup database and application settings
+jruby -S rake rigse:setup:new_rigse_from_scratch
+
+# start server
+jruby script/server
 
 h2. Some video walk-throughs
 
