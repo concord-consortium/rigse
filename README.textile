@@ -38,26 +38,26 @@ server and a mysql username/password with enough permissions to create and drop 
 
 h2. Some video walk-throughs
 
-The Page Elements Model Part I:   http://screencast.com/t/8M2ISjcM
-Page Elements Model Part II:      http://screencast.com/t/YyqOHfItL
-HAML, Compass and SASS:           http://screencast.com/t/68yJOeCRcN
-PageElement View partials:        http://screencast.com/t/800TVxOC
-HAML, Compass and SASS:           http://screencast.com/t/68yJOeCRcN
-Javascript use in Rites           http://screencast.com/t/z7Vkt32iTp
+* "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
+* "Page Elements Model Part II":http://screencast.com/t/YyqOHfItL
+* "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
+* "PageElement View partials":http://screencast.com/t/800TVxOC
+* "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
+* "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
 
 
 ---
 
-h3.The Page Elements Model Part I: 
+h3. The Page Elements Model Part I: 
 
-http://screencast.com/t/8M2ISjcM
+screencast: "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
 
-Install github version of railroad with aasm patches from 
-  http://github.com/ddollar/railroad/tree/master
+Install github version of railroad with aasm patches from http://github.com/ddollar/railroad/tree/master
 
 Generate a graph of the projects models using railroad:
-  railroad -o models.dot -M
- 
+
+<code> railroad -o models.dot -M </code> 
+
 Open that file (models.dot) with omnigraffle, or traslate to some other image format using the dot tool.
 
 
@@ -65,54 +65,57 @@ Open that file (models.dot) with omnigraffle, or traslate to some other image fo
 
 h3. Page Elements Model Part II:
 
-http://screencast.com/t/YyqOHfItL
+screencast: "Page Elements Model Part II":http://screencast.com/t/YyqOHfItL
 
 Using mysql query browser (part of the osx mysql binary distrobution) to view schema.
 http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
 
 Use the generator to generate page elements eg:
-  ./script/generate element xhtml content:text
+
+<code> ./script/generate element xhtml content:text </code> 
 
 ---
 
-h3. PageElement View partials:  
-http://screencast.com/t/800TVxOC
+h3. PageElement View partials:
 
-Showed the relationship between:
-  pages/show.html.haml
-  pages/element_container.html.haml 
-  shared/_embeddable_container.html.haml
-  <embeddable_type>/_show.html.haml
+screencast: "PageElement View partials":http://screencast.com/t/800TVxOC
+
+Shows the relationship between:
+* pages/show.html.haml
+* pages/element_container.html.haml 
+* shared/_embeddable_container.html.haml
+* <embeddable_type>/_show.html.haml
 
 ---
-HAML, Compass and SASS:
-http://screencast.com/t/68yJOeCRcN
+
+h3. HAML, Compass and SASS:
+
+screencast: "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
+
 Brief introduction to the technologies generally, and how we use them specifically
 
-HAML & SASS: http://haml.hamptoncatlin.com/
-Compass: http://compass-style.org/
-BluePrint: http://www.blueprintcss.org/
-
+* "HAML & SASS":http://haml.hamptoncatlin.com/
+* "Compass: http":http//compass-style.org/
+* "BluePrint: http":http//www.blueprintcss.org/
 
 ---
 
 h3. Javascript use in Rites
 
-http://screencast.com/t/z7Vkt32iTp
+screencast: "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
+
 What javascript librararies we are using, and what things we have written by ourselves;
 Stuff we did:
-  accordion view
-  drop-downs
+* accordion view
+* drop-downs
 Other libraries
-  prototype http://www.prototypejs.org/
-  scriptaculous http://script.aculo.us/
-  tinymce http://tinymce.moxiecode.com/
-  flotr http://solutoire.com/flotr/
+* "prototype":http://www.prototypejs.org/
+* "scriptaculous":http://script.aculo.us/
+* "tinymce":http://tinymce.moxiecode.com/
+* "flotr":http://solutoire.com/flotr/
 
-  
+
 gured server is the 'staging' server (in config/deploy/staging.rb )
-
-
 
 h2. Capistrano Recipies (and problems)
 
@@ -147,15 +150,10 @@ we use haml for some templates
 see: http://haml.hamptoncatlin.com/
 
 to install this plugin we followed this procedure:
-1. gem install --no-ri haml
-2. haml --rails path/to/rigse_app
+# <code>gem install --no-ri haml</code> 
+# <code>haml --rails path/to/rigse_app</code>
 
 !http://clients.fudgestudios.com/chester.jpg!
-
-h1. rigse
-
-
-h2. Install
 
 
 h2. notes for collaborating developers
@@ -189,6 +187,9 @@ admin role is predefined along with a default admin user. See the migrations for
 h3. Open ID Authentication
 
 Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
+
+_However I've (stepheneb) removed this to make debugging the authentication simnpler and it 
+seems as though open-id is not becoming widespread._
 
 h3. Will Paginate
 
