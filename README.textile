@@ -86,22 +86,52 @@ gured server is the 'staging' server (in config/deploy/staging.rb )
 
 
 
-h2. Capistrano Recipies (and problems)
+h2. Capistrano Recipes (and problems)
 
-cap deploy should work to deploy to rites.dev.concord.org (otto).
-See config/deploy.rb.  Right now the only properly confiIndex:
+See config/deploy.rb for intimate details.
+
+<code>cap deploy</code> should work to deploy to development (rites.dev.concord.org (otto)).
+<code>cap staging deploy</code> will go to staging (rites-investigations.staging.concord.org (seymour)).
+<code>cap production deploy</code> will go to production (rites-investigations.concord.org (seymour)).
 
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
 <code> sudo chmod -R g+w ./cached-copy/ </code>
 
-There are three custom cap tasks defined in config/deploy.rb  One works, One sometimes works, and the last ones  *doesn't!*
+There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
+
+There are 4 basic commands:
+* <code>rake db:dump</code>
+** This dumps the current environment's database to db/... eg db/production_data.sql or db/development_data.sql
+* <code>rake db:load</code>
+** This overwrites your current db with a sql dump from db/ into the current environment's db, provided a dump exists for your current environment
+* <code>cap (production|staging|development) db:fetch_remote_db</code>
+** The same as db:dump, except it dumps the database from whichever remote instance you chose
+* <code>cap (staging|development) db:push_remote_db</code>
+** Same as db:load, except the remote database is overwritten
+
+*Download the production database to use locally*
+* <code>cap production db:fetch_remote_db</code>
+* <code>cp db/production_data.sql db/development_data.sql</code>
+* <code>rake db:load</code>
+
+*Reset the Staging or Development database with Production's version*
+* <code>cap production db:fetch_remote_db</code>
+* <code>cap staging db:push_remote_db</code>   or   <code>cap development db:push_remote_db</code>
+
+*Update Staging or Development with a copy of your local database*
+* <code>rake db:dump</code>
+* <code>cap staging db:push_remote_db</code>   or   <code>cap development db:push_remote_db</code>
+
+*Note*: For safety, you can't push a database to production. If you accidentally try, you'll get a message saying you can't do that.
+
+There are three custom deployment-oriented cap tasks defined in config/deploy.rb  One works, One sometimes works, and the first one *doesn't!*
 * cap deploy:from_scratch does not work. 
 ** It would need to be able to let users answer questions.
 ** Instead of dropping the database, we would have to simply drop tables. (rails user does not have perms to drop dbs)
 * cap deploy:install_gems does seem to work, unless there are dependancies on the gem being installed.
 * cap deploy:shared_symlinks does work, and it links in the shared resources that we use. (like config/database.yml)
 
-Workarounds for cap deploy:from_scratch:  I usually just end up loggin in to otto, dropping all the tables, 
+Workarounds for cap deploy:from_scratch:  I usually just end up logging in to otto, dropping all the tables, 
 and then running the various rake tasks by hand:
 
 <code><pre>
