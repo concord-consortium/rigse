@@ -1,6 +1,3 @@
-require 'rake'
-require 'hpricot'
-
 namespace :rigse do
   namespace :setup do
     #
@@ -8,6 +5,8 @@ namespace :rigse do
     #
     desc 'import grade span expectations from file config/rigse_data/*'
     task :import_gses_from_file => :environment do
+      require 'hpricot'
+      
       puts <<-HEREDOC
 
 *** import grade span expectations from file config/rigse_data/*
