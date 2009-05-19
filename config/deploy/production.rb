@@ -3,6 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/rites-investigations"
+set :branch, "production"
 
 #############################################################
 #  Servers

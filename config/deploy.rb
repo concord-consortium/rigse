@@ -25,7 +25,7 @@ set :rails_env, "production"
 #############################################################
 
 set :scm, :git
-set :branch, "stable"
+set :branch, "production"
 set :git_enable_submodules, 1
 # wondering if we can do something special for this? create
 # a special deploy user on github?
