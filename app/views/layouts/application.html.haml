@@ -90,6 +90,8 @@
 
       #content_container      
         #left_nav.nav_menu
+          - if @investigation 
+            = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
           - if @activity
             = render :partial => 'shared/accordian_nav'
 
