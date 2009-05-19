@@ -1,41 +1,35 @@
---- 
-development: 
-  encoding: utf8
+development:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: root
-  database: rites_development
-  password: *****
-  pool: 5
-test: 
+  adapter: mysql
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  database: risge_development
   username: root
-  database: rites_test
-  password: *****
+  password:
   pool: 5
-staging: 
+  
+test:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  database: risge_test
   username: root
-  database: rites_staging
-  password: *****
+  password:
   pool: 5
-production: 
+  
+staging:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  database: risge_staging
   username: root
-  database: rites_production
-  password: *****
+  password:
   pool: 5
-
-# Reference to a local copy of the ITSI database for use in 
-# importing ITSI activities into this RITES instance.
-itsi: 
+  
+production:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  database: production_itsi_prod
-  host: localhost
+  database: risge_production
   username: root
-  password: *****
+  password:
   pool: 5
-  asset_url: http://itsidiy.concord.org
