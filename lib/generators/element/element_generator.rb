@@ -81,8 +81,11 @@ class ElementGenerator < Rails::Generator::NamedBase
       
       * Edit the form in app/views/#{controller_file_name}/_form.html.haml, and reload & repeat.
       
-      * Once you are satisfied, you should add the element to the list of elements in app/helpers/pages_helper.rb
+      * Once you are satisfied, you should add the element to the method element_types() in app/helpers/pages_helper.rb
       
+      * Edit app/models/page.rb and add the following line:
+      
+      *  has_many :#{controller_file_name}, :through => :page_elements, :source => :embeddable, :source_type => '#{class_name}'
       END_OF_TEXT
     end    
   end
