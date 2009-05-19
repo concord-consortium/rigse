@@ -16,6 +16,14 @@ class Activity < ActiveRecord::Base
     end
   end
   
+  def teacher_note
+    if teacher_notes[0]
+      return teacher_notes[0]
+    end
+    teacher_notes << TeacherNote.create
+    return teacher_notes[0]
+  end
+  
   def self.display_name
     'Activity'
   end
