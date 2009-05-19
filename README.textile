@@ -117,13 +117,7 @@ Other libraries
 
 gured server is the 'staging' server (in config/deploy/staging.rb )
 
-h2. Capistrano Recipes (and problems)
-
-See config/deploy.rb for intimate details.
-
-<code>cap deploy</code> should work to deploy to development (rites.dev.concord.org (otto)).
-<code>cap staging deploy</code> will go to staging (rites-investigations.staging.concord.org (seymour)).
-<code>cap production deploy</code> will go to production (rites-investigations.concord.org (seymour)).
+h2. Capistrano Recipies (and problems)
 
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
 <code> sudo chmod -R g+w ./cached-copy/ </code>
