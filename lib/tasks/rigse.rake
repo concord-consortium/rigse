@@ -293,7 +293,7 @@ This task creates seven roles (if they dont already exist):
   student
   guest
 
-In addition it creates four new default users with these login names:
+In addition it create four new default users with these login names:
 
   anonymous
   admin
@@ -301,8 +301,6 @@ In addition it creates four new default users with these login names:
   member
 
 You can edit the default settings for these users.
-
-Creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
 
 HEREDOC
 
@@ -314,11 +312,10 @@ HEREDOC
       student_role = Role.find_or_create_by_title('student')
       guest_role = Role.find_or_create_by_title('guest')
 
-      admin_user = User.create(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
-
+      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
+      admin_user = User.create(:login => "admin", :email => "admin@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Admin", :last_name => "User")
       researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
       member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
-      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
 
       [admin_user, researcher_user, member_user, anonymous_user].each do |user|
         user = edit_user(user)
