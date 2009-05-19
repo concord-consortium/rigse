@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090519154638) do
+ActiveRecord::Schema.define(:version => 20090519192628) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -228,6 +228,16 @@ ActiveRecord::Schema.define(:version => 20090519154638) do
     t.datetime "updated_at"
   end
 
+  create_table "modeler_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "multiple_choice_choices", :force => true do |t|
     t.text     "choice"
     t.integer  "multiple_choice_id"
@@ -242,6 +252,16 @@ ActiveRecord::Schema.define(:version => 20090519154638) do
     t.string   "name"
     t.text     "description"
     t.text     "prompt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "mw_modeler_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
