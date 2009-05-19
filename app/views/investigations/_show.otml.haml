@@ -1,4 +1,4 @@
-= render :partial => 'activitiess/show', :collection => investigation.activities, :as => :activity
+= render :partial => 'activities/show', :collection => investigation.activities, :as => :activity
 
 - content_for(:investigation) do
   %OTUDLContainer{ :leftPanelWidth => investigation.left_nav_panel_width }
@@ -12,12 +12,21 @@
         %object
           %object{ :refid => ot_refid_for(investigation, :menu) }/
         %viewid
-          %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
+          %object{ :refid => ot_refid_for('menu_accordion_activity_view') }/
     %content
-      %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false' :loadViewOnlyOnDemand => 'false' :closeViewOnExit => 'false'}
+      %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'false', :closeViewOnExit => 'false'}
         %cards
           - investigation.activities.each do |activity|
-            =yield "activity_#{dom_id_for(activity)}".to_sym
+            %OTSection
+              %content
+                %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
+                  %cards
+                    - activity.sections.each do |section|
+                      =yield "section_#{dom_id_for(section)}".to_sym
+                  %currentCard
+                    - if activity.sections.first
+                      %object{ :refid => ot_refid_for(activity.sections.first) }/
+                  %viewedCards
         %currentCard
           - if investigation.activities.first
             %object{ :refid => ot_refid_for(investigation.activities.first) }/
@@ -28,6 +37,6 @@
     %cardContainer
       %object{ :refid => ot_refid_for(investigation, :activity_card_container) }
     %menuRule
-      %object{ :refid => ot_refid_for('section_rule') }
+      %object{ :refid => ot_refid_for('activity_rule') }
 
-  %OTMenuRule{ :local_id => ot_local_id_for('section_rule'), :jumpToAnyCard => 'true' }
+  %OTMenuRule{ :local_id => ot_local_id_for('activity_rule'), :jumpToAnyCard => 'true' }

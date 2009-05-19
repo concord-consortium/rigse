@@ -24,4 +24,8 @@ class Investigation < ActiveRecord::Base
     'Activity'
   end
   
+  def left_nav_panel_width
+     300
+  end
+  
 end
