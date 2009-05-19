@@ -2,21 +2,36 @@ h1. rigse
 
 h2. prerequisites
 
-# git
-# rubygems 
-sudo gem sources -a http://gems.github.com
-After checking out the code for the first time switch to the np2 branch:
+Working git, ruby or jruby, rubgems, mysql.
 
-  git branch --track np2 origin/np2
-  git checkout -b np2
+h2. Initial install:
 
+New setup scripts tested with trunk jruby, you will need a running mysql
+server and a mysql username/password with enough permissions to create and drop databases.
 
-cp config/database.sample.yml config/database.yml
+# If you are a committer in this repo:
 
-rake rigse:setup:regenerate_rest_auth_site_key
-and run this rake task:
+git clone git@github.com:stepheneb/rigse.git
 
-  rake rigse:setup:new_rigse_from_scratch
+# otherwise:
+
+git clone git://github.com/stepheneb/rigse.git
+
+cd rigse2
+
+# follow instructions for installing necessary gem prerequisites
+# until config/setup.rb complete's successfully
+jruby -S config/setup.rb
+
+# finish installing necessary gems for rails application
+jruby -S rake gems:install
+
+# setup database and application settings
+jruby -S rake rigse:setup:new_rigse_from_scratch
+
+# start server
+jruby script/server
+
 
 h2. Some video walk-throughs
 
