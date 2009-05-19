@@ -10,10 +10,13 @@ class SectionsController < ApplicationController
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
-      @activity = @section.activity
       format = request.parameters[:format]
       unless format == 'otml' || format == 'jnlp'
         if @section
+          @activity = @section.activity
+          if @activity 
+            @investigation = @activity.investigation
+          end
           teacher_note = @section.teacher_note || TeacherNote.new
           teacher_note.authored_entity = @section
           author_note = @section.author_note || AuthorNote.new

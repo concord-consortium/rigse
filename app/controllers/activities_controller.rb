@@ -44,6 +44,7 @@ class ActivitiesController < ApplicationController
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
       if @activity
+        @investigation = @avtivity.investigation
         teacher_note = @activity.teacher_note || TeacherNote.new
         teacher_note.authored_entity = @activity
         author_note = @activity.author_note || AuthorNote.new

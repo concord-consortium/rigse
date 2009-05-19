@@ -12,8 +12,15 @@ class PagesController < ApplicationController
   def find_entities
     if (params[:id])
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
-      @section = @page.section
-      @activity =@section.activity
+      if @page
+        @section = @page.section
+        if @section
+          @activity =@section.activity
+          if @activity
+            @investigation = @activity.investigation
+          end
+        end
+      end
       @page_elements = @page.page_elements
     end
     format = request.parameters[:format]
