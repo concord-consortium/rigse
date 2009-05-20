@@ -1,9 +1,9 @@
 / locals: investigation
 #accordion_nav
   - activity_list_name = dom_id_for(investigation, :accordion_section_list)
-  .padded_content= link_to investigation.name, investigation
-  %br
+
   %ul{:id=>activity_list_name, :class=>"accordion_header"}
+    = link_to investigation.name, investigation
     - investigation.activities.each do |activity|
       %li{:id=>dom_id_for(activity,:accordion_item), :class=>"accordion_container"}
         .accordion_name
