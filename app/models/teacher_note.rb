@@ -6,5 +6,5 @@ class TeacherNote < ActiveRecord::Base
   
   belongs_to :authored_entity, :polymorphic => true
   acts_as_replicatable
-  
+  include Changeable
 end
