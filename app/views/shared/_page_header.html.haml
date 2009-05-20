@@ -35,3 +35,5 @@
         = link_button "next_page.png", page.next, :title => 'next page'
       - else
         .rollover= image_tag("next_page_disabled.png")
+      - if (page.section)
+        = link_button "up.png", page.section, :title => 'go to section'
