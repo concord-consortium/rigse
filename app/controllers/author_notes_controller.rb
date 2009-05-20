@@ -1,5 +1,6 @@
 class AuthorNotesController < ApplicationController
   
+  before_filter :setup_object, :except => [:index]
   
   def setup_object
     if params[:id]
@@ -14,13 +15,13 @@ class AuthorNotesController < ApplicationController
       @author_note = AuthorNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@author_note.nil?)
         @author_note = AuthorNote.new
-        @author_note.authored_entity_type=params[:authored_entity_type]
-        @author_note.authored_entity_id=params[:authored_entity_id]
-        @author_note.author = current_user;s
+        @author_note.usered_entity_type=params[:authored_entity_type]
+        @author_note.usered_entity_id=params[:authored_entity_id]
+        @author_note.user = current_user;s
       end
     else
       @author_note = AuthorNote.new
-      @author_note.author = current_user;
+      @author_note.user = current_user;
     end
   end
   
@@ -46,7 +47,7 @@ class AuthorNotesController < ApplicationController
   end
 
   def show_author_note
-    if @author_note.author == current_user
+    if @author_note.user == current_user
       render :update do |page|
           page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @author_note}
           page.visual_effect :toggle_blind, 'note'
