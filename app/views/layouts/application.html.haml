@@ -84,8 +84,8 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          %li.trail= link_to 'Activities', activities_path
-          %li.trail= link_to 'My Activities', :controller=> :activities, :action=> :index, :mine_only => 'y'
+          %li.trail= link_to 'Investigations', investigations_path
+          %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
 
       #content_container      

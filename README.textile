@@ -52,7 +52,7 @@ h3. The Page Elements Model Part I:
 
 screencast: "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
 
-Install github version of railroad with aasm patches from http://github.com/ddollar/railroad/tree/master
+Install github version of railroad with aasm patches from "ddolar's repo":http://github.com/ddollar/railroad/tree/master
 
 Generate a graph of the projects models using railroad:
 
@@ -67,8 +67,8 @@ h3. Page Elements Model Part II:
 
 screencast: "Page Elements Model Part II":http://screencast.com/t/YyqOHfItL
 
-Using mysql query browser (part of the osx mysql binary distrobution) to view schema.
-http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
+Using mysql query browser (part of the osx mysql binary distrobution) to view schema:
+"Mysql gui-tools":http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
 
 Use the generator to generate page elements eg:
 
