@@ -76,7 +76,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :investigations, :member => {
     :add_activity => :post,
     :sort_activities => :post,
-    :delete_section => :post,
+    :delete_activity => :post,
     :print => :get,
     :duplicate => :get,
     :export => :get

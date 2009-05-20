@@ -3,7 +3,7 @@ safe_js(page,'investigation_sections_list') do
 end
 
 [:item,:tab].each do |domid|
-  safe_js(page,dom_id_for(@section, domid)) do
-    page.remove dom_id_for(@section, domid)
+  safe_js(page,dom_id_for(@activity, domid)) do
+    page.remove dom_id_for(@activity, domid)
   end
 end 
