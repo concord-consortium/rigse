@@ -1,5 +1,5 @@
 - if (item.changeable?(current_user))
-  %h3= in_place_editor_field item.class.name.underscore.to_sym, 'name'
+  %h3= "#{item.class}: #{in_place_editor_field item.class.name.underscore.to_sym, 'name'}"
   .tiny=in_place_editor_field item.class.name.underscore.to_sym, 'description', {},{:rows=>3, :cols=>80}
 - else
   %h3= item.name
