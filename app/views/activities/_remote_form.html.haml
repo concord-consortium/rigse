@@ -1,5 +1,5 @@
 - remote_form_for(activity, :update => dom_id_for(activity, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = edit_menu_for(activity, f)
+  = edit_menu_for(activity, f, :omit_cancel => true)
   = f.hidden_field 'investigation_id', :value =>investigation.id
   - field_set_tag 'name' do
     = f.text_field :name
