@@ -12,12 +12,12 @@
         %object
           %object{ :refid => ot_refid_for(investigation, :menu) }/
         %viewid
-          %object{ :refid => ot_refid_for('menu_accordion_activity_view') }/
+          %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'false', :closeViewOnExit => 'false'}
         %cards
           - investigation.activities.each do |activity|
-            %OTSection
+            %OTSection{ :local_id => ot_local_id_for(activity, :activity_section)}
               %content
                 %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                   %cards
@@ -29,7 +29,7 @@
                   %viewedCards
         %currentCard
           - if investigation.activities.first
-            %object{ :refid => ot_refid_for(investigation.activities.first) }/
+            %object{ :refid => ot_refid_for(investigation.activities.first, :activity_section) }/
         %viewedCards
 
 - content_for(:library) do
