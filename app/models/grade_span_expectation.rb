@@ -29,7 +29,19 @@ class GradeSpanExpectation < ActiveRecord::Base
   self.extend SearchableModel
   
   def description
-    "#{grade_span}: #{assessment_target.description}"
+    "#{assessment_target.description}"
+  end
+  
+  def domain
+    return knowledge_statements[0].domain
+  end
+  
+  def theme_keys
+    unifying_themes.map{ |t| t.key}.join("+")
+  end
+  
+  def gse_key
+    return "#{domain.key}#{assessment_target.number} (#{grade_span}) #{theme_keys}"
   end
   
   @@searchable_attributes = %w{grade_span}
