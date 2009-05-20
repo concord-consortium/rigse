@@ -17,7 +17,7 @@
       %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'false', :closeViewOnExit => 'false'}
         %cards
           - investigation.activities.each do |activity|
-            %OTSection{ :local_id => ot_local_id_for(activity, :activity_section)}
+            %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
               %content
                 %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                   %cards
