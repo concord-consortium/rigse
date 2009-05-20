@@ -2,7 +2,7 @@
   = function_link_button "teacher_note.png", "show_teacher_note();", :title => "view teacher note for this page"
 - else
   - if (authorable.changeable?(current_user))
-    = function_link_button "no_teacher_note.png", "how_teacher_note();", :title => "create a teacher note for this page"
+    = function_link_button "no_teacher_note.png", "show_teacher_note();", :title => "create a teacher note for this page"
   - else
     = link_button "no_teacher_note.png", "#", :title => "there is no teacher note for this page"
 
