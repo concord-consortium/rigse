@@ -186,7 +186,7 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form, kwds={})
+  def edit_menu_for(component, form, kwds={:omit_cancel => true})
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do

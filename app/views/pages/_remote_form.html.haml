@@ -1,5 +1,5 @@
 - remote_form_for(page, :update => dom_id_for(page, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = edit_menu_for(page, f, :omit_cancel => true)
+  = edit_menu_for(page, f)
   = f.hidden_field :section_id, :value => page.section.id
   - field_set_tag 'name' do
     = f.text_field :name
