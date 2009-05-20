@@ -18,10 +18,14 @@
           %ul{:id=>section_list_name}
             - activity.sections.each_with_index do |s,i|
               %li{:id => dom_id_for(s, :accordion_item), :class => 'accordion_section'}
-                .accordion_page_link
-                  -if (defined? @section) && (@section.id == s.id)
-                    = link_to "#{i+1}:#{s.name}",s, :class=> 'selected'
-                  -else
-                    =link_to "#{i+1}: #{s.name}",s
+                -if (defined? @section) && (@section.id == s.id)
+                  = link_to "#{i+1}:#{s.name}",s, :class=> 'selected'
+                -else
+                  =link_to "#{i+1}: #{s.name}",s
+                -s.pages.each_with_index do |p,i|
+                  - if (defined? @page) && (p.id == @page.id)
+                    = link_button "this_page.png", "#", :title => "you are here"
+                  - else
+                    = link_button "other_page.png", p, :title => "go to #{p.name}"
           =sortable_element section_list_name.to_sym, :url=> {:controller=> :activities, :action => 'sort_sections', :params => {:list_name=>section_list_name,:id => activity.id }}
     =sortable_element activity_list_name.to_sym, :url=> {:controller=> :investigations, :action => 'sort_activities', :params => {:list_name=>activity_list_name,:id => investigation.id }}
