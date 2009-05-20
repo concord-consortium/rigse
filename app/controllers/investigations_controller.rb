@@ -200,7 +200,7 @@ class InvestigationsController < ApplicationController
   ##
   def duplicate
     @original = Investigation.find(params['id'])
-    @investigation = @original.clone :include => {:activities => {:pages => {:page_elements => :embeddable}}}
+    @investigation = @original.clone :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
     @investigation.name = "copy of #{@investigation.name}"
     @investigation.deep_set_user current_user
     @investigation.save
