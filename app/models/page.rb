@@ -32,14 +32,28 @@ class Page < ActiveRecord::Base
   def self.display_name
     'Page'
   end
-
-  UNTITLED_PAGE_NAME = 'unititled page'
+  
+  def page_number
+    if (!self.section.nil?)
+      self.section.pages.each_with_index do |p,i|
+        if (p.id==self.id)
+          return i+1
+        end
+      end
+    end
+    1
+  end
+  
+  def default_page_name
+    return "Page #{page_number}"
+  end
+  
   
   def name
     if self[:name] && !self[:name].empty?
       self[:name]
     else
-      UNTITLED_PAGE_NAME
+      default_page_name
     end
   end
 
