@@ -89,28 +89,6 @@ class PagesController < ApplicationController
   end
 
 
-  def show_author_note
-    if @page.author_note.nil?
-      author_note = AuthorNote.create
-      author_note.authored_entity = @page
-      author_note.author = current_user;
-      author_note.save
-      @page.author_note = author_note
-      @page.save
-    end
-    if @page.author_note.author == current_user
-      render :update do |page|
-          page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @page.author_note}
-          page.visual_effect :toggle_blind, 'note'
-      end
-    else
-      render :update do |page|
-        page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @page.teacher_note}
-        page.visual_effect :toggle_blind, 'note'
-      end
-    end
-  end
-
   # GET /page/1/preview
   # GET /page/1.xml
   def preview

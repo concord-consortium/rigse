@@ -1,4 +1,30 @@
 class AuthorNotesController < ApplicationController
+  
+  
+  def setup_object
+    if params[:id]
+      if params[:id].length == 36
+        @author_note = AuthorNote.find(:first, :conditions => ['uuid=?',params[:id]])
+      else
+        @author_note = AuthorNote.find(params[:id])
+      end
+    elsif params[:author_note]
+      @author_note = AuthorNote.new(params[:activity])
+    elsif params[:authored_entity_type] && params[:authored_entity_id]
+      @author_note = AuthorNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
+      if (@author_note.nil?)
+        @author_note = AuthorNote.new
+        @author_note.authored_entity_type=params[:authored_entity_type]
+        @author_note.authored_entity_id=params[:authored_entity_id]
+        @author_note.author = current_user;s
+      end
+    else
+      @author_note = AuthorNote.new
+      @author_note.author = current_user;
+    end
+  end
+  
+  
   # GET /author_notes
   # GET /author_notes.xml
   def index
@@ -19,6 +45,20 @@ class AuthorNotesController < ApplicationController
     end
   end
 
+  def show_author_note
+    if @author_note.author == current_user
+      render :update do |page|
+          page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @author_note}
+          page.visual_effect :toggle_blind, 'note'
+      end
+    else
+      render :update do |page|
+        page.replace_html  'note', :partial => 'author_notes/show', :locals => { :author_note => @author_note}
+        page.visual_effect :toggle_blind, 'note'
+      end
+    end
+  end
+  
   # GET /author_notes/new
   # GET /author_notes/new.xml
   def new
@@ -79,7 +119,6 @@ class AuthorNotesController < ApplicationController
   def destroy
     @author_note = AuthorNote.find(params[:id])
     @author_note.destroy
-
     respond_to do |format|
       format.html { redirect_to(author_notes_url) }
       format.xml  { head :ok }
