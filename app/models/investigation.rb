@@ -1,6 +1,7 @@
 class Investigation < ActiveRecord::Base
 
   belongs_to :user
+  belongs_to :grade_span_expectation
   has_many :activities, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
@@ -12,8 +13,6 @@ class Investigation < ActiveRecord::Base
   
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
-  
-  
   
   class <<self
     def searchable_attributes
