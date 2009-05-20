@@ -186,7 +186,7 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form)
+  def edit_menu_for(component, form, kwds={:omit_cancel => true})
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -197,7 +197,7 @@ module ApplicationHelper
           haml_tag :ul, {:class => 'menu'} do
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
             end
           end
         end
