@@ -3,7 +3,9 @@
     %li= run_link_for(@investigation)
     %li= toggle_all('activities')
     %li= link_to 'duplicate', duplicate_investigation_url(investigation)
-
+    - if (investigation.changeable?(current_user))
+      %li= link_to 'edit investigation details', edit_investigation_url(investigation)
+    
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
     .action_menu_header_left
@@ -13,5 +15,7 @@
     .action_menu_header_right
       = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
       = dropdown_button "actions.png", :title => "actions for this investigation"
-      = link_to_remote image_tag("add.png", :alt=>'add new activity'), :title => 'add new activity', :complete => mce_init_string(), :url => add_activity_investigation_path(investigation), :html => {:class=>'rollover'}
-
+      - if (investigation.changeable?(current_user))
+        = link_button "add.png", add_activity_investigation_path(investigation), :title => "add new activity"
+      - else
+        = link_button "add_disabled.png", "#", :title => "can't add activities"
