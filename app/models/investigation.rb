@@ -21,7 +21,7 @@ class Investigation < ActiveRecord::Base
   end
   
   def self.display_name
-    'Activity'
+    'Investigation'
   end
   
   def left_nav_panel_width
