@@ -38,7 +38,7 @@ module SearchableModel
     # pass in a username to limit the search to the users items
     if (!user.nil?) && (!user.id.nil?)
       if column_names.include? 'user_id'
-        if user.has_role?("admin", "manager") || self == User
+        if self == User
           sql_conditions = ""
         else
           # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
