@@ -7,9 +7,9 @@
     = link_button "no_teacher_note.png", "#", :title => "there is no teacher note for this page"
 
 -if authorable.author_note
-  = remote_link_button "author_note.png", url_for (:controller=>'author_notes', :action=>'show_author_note', :id=>authorable.author_note.id),  :title => "show the author note for this page"
+  = remote_link_button "author_note.png", :url=> url_for (:controller=>'author_notes', :action=>'show_author_note', :id=>authorable.author_note.id),  :title => "show the author note for this page"
 - else
   - if (authorable.changeable?(current_user))
-    = remote_link_button "no_author_note.png", :url=>url_for (:controller=>'author_notes', :action=>'show_author_note', :authorable_entity_id=>authorable.id,:authorabe_entity_type=>authorable.class.name.underscore), :title => "create an author note for this page"
+    = remote_link_button "no_author_note.png", :url=>url_for (:controller=>'author_notes', :action=>'show_author_note', :authored_entity_id=>authorable.id,:authored_entity_type=>authorable.class.name), :title => "create an author note for this page"
   - else
     = link_button "no_author_note.png", "#", :title => "there is no author note for this page"

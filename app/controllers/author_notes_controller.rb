@@ -15,13 +15,13 @@ class AuthorNotesController < ApplicationController
       @author_note = AuthorNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@author_note.nil?)
         @author_note = AuthorNote.new
-        @author_note.usered_entity_type=params[:authored_entity_type]
-        @author_note.usered_entity_id=params[:authored_entity_id]
-        @author_note.user = current_user;s
+        @author_note.authored_entity_type=params[:authored_entity_type]
+        @author_note.authored_entity_id=params[:authored_entity_id]
+        @author_note.user = current_user
       end
     else
       @author_note = AuthorNote.new
-      @author_note.user = current_user;
+      @author_note.user = current_user
     end
   end
   
