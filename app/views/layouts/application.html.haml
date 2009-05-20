@@ -40,19 +40,8 @@
     = javascript_include_tag "accordion"
     = javascript_include_tag "item_selectable"
 
-    :javascript
-      tinyMCE.init({
-        mode : "textareas",
-        theme : "advanced",
-        theme_advanced_buttons1     : "justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,",
-        theme_advanced_buttons1_add : "|,fontselect,fontsizeselect|,bullist,numlist,hr|,undo,redo,link,unlink,image",
-        theme_advanced_buttons2 : "",
-        theme_advanced_buttons3 : "",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_statusbar_location : "bottom",
-        theme_advanced_resizing : true
-      });
+    = javascript_tag mce_init_string
+
   %body
     #note{:style=>"display: none;"}
     #body2
@@ -109,6 +98,6 @@
         .padded_content
           #footer_left
             Questions/Feedback:
-            = mail_to("stephen@concord.org", "Send us an email", :subject => "RITES question", :encode => "javascript")
+            = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
           #footer_right
             / footer text on the right
