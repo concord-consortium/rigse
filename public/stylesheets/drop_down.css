@@ -12,7 +12,7 @@ on line 26 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.s
 29:       :top 2px
 30:     :margin 0px
 31:     :width 100%
-32: 
+32:     :white-space nowrap
 
 
 Backtrace:
@@ -97,4 +97,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Sass::SyntaxError: Undefined mixin 'color_mixer'.\A on line 26 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass\A \A 22:     :list-style-type none\A 23:     :width 100%\A 24:     :font-weight normal\A 25:   li\A 26:     +color_mixer(!very_dark_blue,!almost_white)\A 27:     :list-style-type none\A 28:     :padding 0px\A 29:       :top 2px\A 30:     :margin 0px\A 31:     :width 100%\A 32: \A "; }
+  content: "Sass::SyntaxError: Undefined mixin 'color_mixer'.\A on line 26 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass\A \A 22:     :list-style-type none\A 23:     :width 100%\A 24:     :font-weight normal\A 25:   li\A 26:     +color_mixer(!very_dark_blue,!almost_white)\A 27:     :list-style-type none\A 28:     :padding 0px\A 29:       :top 2px\A 30:     :margin 0px\A 31:     :width 100%\A 32:     :white-space nowrap\A "; }
