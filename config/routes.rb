@@ -79,7 +79,8 @@ ActionController::Routing::Routes.draw do |map|
     :delete_activity => :post,
     :print => :get,
     :duplicate => :get,
-    :export => :get
+    :export => :get,
+    :destroy => :post
   }
   
   map.resources :activities, :member => {
