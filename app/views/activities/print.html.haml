@@ -1,4 +1,1 @@
-%h2
-  =@activity.name
-- @activity.sections.each do |section|
-  = render  :partial => 'sections/print', :locals => { :section => section }
+= render :partial=>"activities/print", :locals=>{:activity => @activity}
