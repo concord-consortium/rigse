@@ -160,9 +160,10 @@ class ActivitiesController < ApplicationController
   def destroy
     @activity = Activity.find(params[:id])
     @activity.destroy
-
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_back_or(activities_url) }
+      format.js
       format.xml  { head :ok }
     end
   end

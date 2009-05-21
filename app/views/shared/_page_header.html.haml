@@ -35,5 +35,10 @@
         = link_button "next_page.png", page.next, :title => 'next page'
       - else
         .rollover= image_tag("next_page_disabled.png")
+      - if (page.changeable?(current_user))
+        - if (page.section)
+          = delete_button_for(page, :redirect => url_for(page.section))
+        - else
+          = delete_button_for(page)
       - if (page.section)
         = link_button "up.png", page.section, :title => 'go to section'

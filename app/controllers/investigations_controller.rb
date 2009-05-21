@@ -161,6 +161,7 @@ class InvestigationsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_back_or(activities_url) }
+      format.js
       format.xml  { head :ok }
     end
   end

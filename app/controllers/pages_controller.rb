@@ -162,8 +162,10 @@ class PagesController < ApplicationController
   # DELETE /page/1.xml
   def destroy
     @page.destroy
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
+      format.js
       format.xml  { head :ok }
     end
   end
