@@ -159,14 +159,16 @@ module ApplicationHelper
       :id  => component.id)
   end
 
-  def delete_button_for(model)
+  def delete_button_for(model, options={})
     # find the page_element for the embeddable
     embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
     controller = "#{model.class.name.pluralize.underscore}"
-    link_to_remote('X',  
-      :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", 
-      :html => {:class => 'delete'}, 
-      :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
+    if options[:redirect]
+      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
+    else
+      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+    end
+    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.human_name.downcase}"
   end
 
   def edit_url_for(component)

@@ -143,8 +143,10 @@ class SectionsController < ApplicationController
   ##
   def destroy
     @section.destroy
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
+      format.js
       format.xml  { head :ok }
     end
   end
