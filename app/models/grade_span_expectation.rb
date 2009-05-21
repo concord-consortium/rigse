@@ -1,9 +1,13 @@
 class GradeSpanExpectation < ActiveRecord::Base
-  belongs_to              :user
-  has_many                :expectations
-  belongs_to              :assessment_target
-  has_many                :unifying_themes, :through => :assessment_target
-  has_many                :knowledge_statements, :through => :assessment_target
+  belongs_to :user
+
+  has_many :expectations
+  has_many :expectation_stems, :through => :expectations
+  has_many :expectation_indicators, :through => :expectations
+
+  belongs_to :assessment_target
+  has_many :unifying_themes, :through => :assessment_target
+  has_many :knowledge_statements, :through => :assessment_target
 
   acts_as_replicatable
   
