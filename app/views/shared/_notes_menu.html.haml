@@ -1,8 +1,8 @@
 - if authorable.teacher_note
-  = function_link_button "teacher_note.png", "show_teacher_note();", :title => "view teacher note for this page"
+  = remote_link_button "teacher_note.png", :url=> url_for (:controller=>'teacher_notes', :action=>'show_teacher_note', :id=>authorable.teacher_note.id),  :title => "show the teacher note for this page"
 - else
   - if (authorable.changeable?(current_user))
-    = function_link_button "no_teacher_note.png", "show_teacher_note();", :title => "create a teacher note for this page"
+    = remote_link_button "no_teacher_note.png", :url=>url_for (:controller=>'teacher_notes', :action=>'show_teacher_note', :authored_entity_id=>authorable.id,:authored_entity_type=>authorable.class.name), :title => "create a teacher note for this page"
   - else
     = link_button "no_teacher_note.png", "#", :title => "there is no teacher note for this page"
 

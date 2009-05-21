@@ -47,7 +47,7 @@ class AuthorNotesController < ApplicationController
   end
 
   def show_author_note
-    if @author_note.user == current_user
+    if(@author_note.changeable?(current_user))
       render :update do |page|
           page.replace_html  'note', :partial => 'author_notes/remote_form', :locals => { :author_note => @author_note}
           page.visual_effect :toggle_blind, 'note'
@@ -63,7 +63,6 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/new
   # GET /author_notes/new.xml
   def new
-    @author_note = AuthorNote.new
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @author_note }
@@ -72,7 +71,6 @@ class AuthorNotesController < ApplicationController
 
   # GET /author_notes/1/edit
   def edit
-    @author_note = AuthorNote.find(params[:id])
     respond_to do |format|
       format.js   { render :update do |page| 
         page.visual_effect :highlite, 'note' 
@@ -101,13 +99,24 @@ class AuthorNotesController < ApplicationController
   # PUT /author_notes/1
   # PUT /author_notes/1.xml
   def update
-    @author_note = AuthorNote.find(params[:id])
-    if @author_note.update_attributes(params[:author_note])
+    if(@author_note.changeable?(current_user))
+      if @author_note.update_attributes(params[:author_note])
+        if (request.xhr?)
+           render :text => "<div class='notice'>Author note saved</div>"
+        else
+          respond_to do |format|
+            flash[:notice] = 'AuthorNote was successfully created.'
+            format.html { redirect_to(@author_note) }
+            format.xml  { render :xml => @author_note, :status => :created, :location => @author_note }
+          end
+        end
+      end
+    else
       if (request.xhr?)
-         render :text => "<div class='notice'>Author note saved</div>"
+         render :text => "<div class='notice'>You can not create author notes</div>"
       else
         respond_to do |format|
-          flash[:notice] = 'AuthorNote was successfully created.'
+          flash[:notice] = 'You can not create author notes'
           format.html { redirect_to(@author_note) }
           format.xml  { render :xml => @author_note, :status => :created, :location => @author_note }
         end
@@ -118,8 +127,9 @@ class AuthorNotesController < ApplicationController
   # DELETE /author_notes/1
   # DELETE /author_notes/1.xml
   def destroy
-    @author_note = AuthorNote.find(params[:id])
-    @author_note.destroy
+    if(@author_note.changeable?(current_user))
+      @author_note.destroy
+    end
     respond_to do |format|
       format.html { redirect_to(author_notes_url) }
       format.xml  { head :ok }
