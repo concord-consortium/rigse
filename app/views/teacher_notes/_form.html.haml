@@ -1,11 +1,8 @@
 .content
-  %h3
-    = "#{teacher_note.authored_entity.type.name.humanize} "
-  / - field_set_tag 'Select GSEs: ' do
-  /   #selectbox
+  %h3= "Teacher notes for: #{teacher_note.authored_entity.name}"
   - field_set_tag 'Body' do
-    = f.text_area :body, :id => dom_id_for(teacher_note, :item, :body_field)
-    
+    = f.text_area :body, :id => dom_id_for(teacher_note, :form, :body_field), :style=>'width: 100%;'
   = f.hidden_field :authored_entity_type
-  = f.hidden_field :authored_entity_id  
+  = f.hidden_field :authored_entity_id
+  = f.hidden_field :user_id
   = f.submit "Save"  

@@ -1,3 +1,7 @@
-- options = { :complete => mce_init_string }
-= show_menu_for(teacher_note, options)
-= render :partial => "teacher_notes/teacher_note", :locals => { :teacher_note => teacher_note }
+.content
+  %h3= "Teacher notes for: <em>#{teacher_note.authored_entity.name}</em>"
+  %hr
+  = teacher_note.body
+  %br
+  %br
+  .tiny= link_to_function ('close',"$('note').hide();")
