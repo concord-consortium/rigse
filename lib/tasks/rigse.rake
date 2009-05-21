@@ -76,19 +76,6 @@ namespace :rigse do
       end
     end
     
-    desc "erase and import ITSI activities"
-    task :erase_and_import_itsi_activities => :environment do
-      if ActiveRecord::Base.configurations['itsi']
-        Activity.find(:all, :conditions => "name like 'ITSI%'").each {|i| print '.'; i.destroy }
-        itsi_user = Itsi::User.find_by_login('itest')
-        rites_user = User.site_admin
-        itsi_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, false, true)
-        itsi_activities.each {|a| print '.'; Activity.create_from_itsi(a, rites_user) }
-      else
-        puts "need an ITSI specification in database.yml to run this task"
-      end
-    end
-    
     #######################################################################
     #
     # Raise an error unless the RAILS_ENV is development,
@@ -190,15 +177,25 @@ again by running this rake task again:
 
   #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
 
-If you have acess to an ITSI database you can also import ITSI activities 
+If you have access to an ITSI database you can also import ITSI activities 
 into RITES by running this rake task:
 
-  #{jruby_system_command} rake rigse:setup:erase_and_import_itsi_activities
+  #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
 
 * if you are developing locally and are using the same database for both development and production
   environments the ITSI import will run much faster in production mode:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:erase_and_import_itsi_activities
+  RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
+
+If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
+you can also import these ITSI activities into RITES Investigations by running this rake task:
+
+  #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
+
+* if you are developing locally and are using the same database for both development and production
+  environments the ITSI import will run much faster in production mode:
+
+  RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
 
 
 HEREDOC
@@ -261,19 +258,23 @@ HEREDOC
         pw = User.make_token
         additional_users.each do |user_config|
           puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['email']}"
-          u = User.create(:login => user_config[0], 
-            :first_name => user_config[1]['first_name'], 
-            :last_name => user_config[1]['last_name'], 
-            :email => user_config[1]['email'], 
-            :password => pw, 
-            :password_confirmation => pw)
-          u = User.find_by_login(user_config[0])
-          u.register!
-          u.activate!
-          role_title = user_config[1]['role']
-          if role_title
-            role = Role.find_by_title(role_title)
-            u.roles << role
+          if u = User.find_by_email(user_config[1]['email'])
+            puts "  *** user: #{u.name} already exists ...\n"
+          else
+            u = User.create(:login => user_config[0], 
+              :first_name => user_config[1]['first_name'], 
+              :last_name => user_config[1]['last_name'], 
+              :email => user_config[1]['email'], 
+              :password => pw, 
+              :password_confirmation => pw)
+            u = User.find_by_login(user_config[0])
+            u.register!
+            u.activate!
+            role_title = user_config[1]['role']
+            if role_title
+              role = Role.find_by_title(role_title)
+              u.roles << role
+            end
           end
         end
         puts "\n"

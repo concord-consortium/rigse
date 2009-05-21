@@ -259,7 +259,7 @@ end
 puts <<HEREDOC
 
 If you have access to a ITSI database for importing ITSI Activities into RITES 
-specify those values for the mysql database name, host, username, password, and asset_url.
+specify the values for the mysql database name, host, username, password, and asset_url.
 
 HEREDOC
 
@@ -269,6 +269,18 @@ puts "\nSetting parameters for the ITSI database:\n\n"
 @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
 @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
 @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
+
+
+If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
+specify the values for the mysql database name, host, username, password.
+
+HEREDOC
+
+puts "\nSetting parameters for the CCPortal database:\n\n"
+@db_config['ccportal']['database']  = ask("  database name: ") { |q| q.default = @db_config['ccportal']['database'] }
+@db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
+@db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
+@db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
 
 puts <<HEREDOC
 
