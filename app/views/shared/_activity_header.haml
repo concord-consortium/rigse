@@ -14,7 +14,8 @@
     .action_menu_header_right
       = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
       = dropdown_button "actions.png", :title => "actions for this page"
-      = link_to_remote image_tag("add.png", :alt=>'add new section'), :title => 'add new section', :complete => mce_init_string(), :url => add_section_activity_path(activity), :html => {:class=>'rollover'}
+      - if (activity.changeable?(current_user))
+        = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
       - if (activity.investigation)
         = link_button "up.png", activity.investigation, :title => 'go to investigation'
 
