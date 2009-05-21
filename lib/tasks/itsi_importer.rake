@@ -229,6 +229,12 @@ namespace :rigse do
           probe_type = ProbeType.find(itsi_activity.probe_type_id)
           add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
         end
+        if itsi_activity.collectdata_model_active
+          model = itsi_activity.model
+          if model.model_type.name == "Molecular Workbench"
+            add_mw_model_to_page(page, model)
+          end
+        end
         if itsi_activity.collectdata_text_response
           add_open_response_to_page(page, question_prompt)
         end
@@ -264,6 +270,12 @@ namespace :rigse do
           probe_type = ProbeType.find(itsi_activity.probe_type_id)
           add_data_collector_to_page(page, probe_type, itsi_activity.collectdata2_probe_multi)
         end
+        if itsi_activity.collectdata2_model_active
+          model = itsi_activity.second_model
+          if model.model_type.name == "Molecular Workbench"
+            add_mw_model_to_page(page, model)
+          end
+        end
         if itsi_activity.collectdata2_text_response
           add_open_response_to_page(page, question_prompt)
         end
@@ -294,6 +306,12 @@ namespace :rigse do
         if itsi_activity.collectdata3_probe_active
           probe_type = ProbeType.find(itsi_activity.probe_type_id)
           add_data_collector_to_page(page, probe_type, itsi_activity.collectdata3_probe_multi)
+        end
+        if itsi_activity.collectdata3_model_active
+          model = itsi_activity.third_model
+          if model.model_type.name == "Molecular Workbench"
+            add_mw_model_to_page(page, model)
+          end
         end
         if itsi_activity.collectdata3_text_response
           add_open_response_to_page(page, question_prompt)
@@ -362,6 +380,16 @@ namespace :rigse do
         section = add_section_to_activity(activity, name, page_desc)
         page, page_element = add_page_to_section(section, name, body, page_desc)
         section.pages << page
+        if itsi_activity.further_probe_active
+          probe_type = ProbeType.find(itsi_activity.further_probetype_id)
+          add_data_collector_to_page(page, probe_type, itsi_activity.further_probe_multi)
+        end
+        if itsi_activity.further_model_active
+          model = itsi_activity.fourth_model
+          if model.model_type.name == "Molecular Workbench"
+            add_mw_model_to_page(page, model)
+          end
+        end
         if itsi_activity.further_text_response
           add_open_response_to_page(page, question_prompt)
         end
@@ -432,6 +460,15 @@ namespace :rigse do
       end
     end
 
+    def add_mw_model_to_page(page, model)
+      page_element = MwModelerPage.create do |mw|
+        mw.name = model.name
+        mw.description = model.description
+        mw.authored_data_url = model.url
+      end
+      page_element.pages << page
+    end
+    
     def add_open_response_to_page(page, question_prompt)
       page_element = OpenResponse.create do |o|
         o.name = page.name + ": Open Response Question"
@@ -478,6 +515,7 @@ namespace :rigse do
         d.name = page.name + ": #{probe_type.name} Data Collector"
         d.title = d.name
         d.probe_type = probe_type
+        d.multiple_graphable_enabled = multiple_graphs
         d.description = "This a Data Collector Graph that will collect data from a #{probe_type.name} sensor."
       end
       page_element.pages << page
