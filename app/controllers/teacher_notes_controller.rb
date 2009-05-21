@@ -82,14 +82,18 @@ class TeacherNotesController < ApplicationController
   # POST /teacher_notes.xml
   def create
     @teacher_note = TeacherNote.new(params[:teacher_note])
-    respond_to do |format|
-      if @teacher_note.save
-        flash[:notice] = 'TeacherNote was successfully created.'
-        format.html { redirect_to(@teacher_note) }
-        format.xml  { render :xml => @teacher_note, :status => :created, :location => @teacher_note }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
+    if (request.xhr?)
+       render :text => "<div class='notice'>teacher note saved</div>"
+    else
+      respond_to do |format|
+        if @teacher_note.save
+          flash[:notice] = 'TeacherNote was successfully created.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { render :xml => @teacher_note, :status => :created, :location => @teacher_note }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
@@ -97,24 +101,19 @@ class TeacherNotesController < ApplicationController
   # PUT /teacher_notes/1
   # PUT /teacher_notes/1.xml
   def update
-    if(@teacher_note.changeable?(current_user))
+    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
-         render :text => "<div class='notice'>Author note saved</div>"
+        render :text => "<div class='notice'>teacher note saved</div>"
       else
         respond_to do |format|
-          if @teacher_note.update_attributes(params[:teacher_note])
-            flash[:notice] = 'TeacherNote was successfully updated.'
-            format.html { redirect_to(@teacher_note) }
-            format.xml  { head :ok }
-          else
-            format.html { render :action => "edit" }
-            format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
-          end
+          flash[:notice] = 'TeacherNote was successfully updated.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
         end
       end
-    else 
+    else
       if (request.xhr?)
-         render :text => "<div class='notice'>Author note saved</div>"
+         render :text => "<div class='notice'>Cant save note.</div>"
       else
         respond_to do |format|
           flash[:notice] = 'You can not modify this Teachernote.'
