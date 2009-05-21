@@ -16,6 +16,6 @@
       = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
       = dropdown_button "actions.png", :title => "actions for this investigation"
       - if (investigation.changeable?(current_user))
-        = link_button "add.png", add_activity_investigation_path(investigation), :title => "add new activity"
+        = remote_link_button "add.png", :url => add_activity_investigation_path(investigation), :title => "add new activity"
       - else
         = link_button "add_disabled.png", "#", :title => "can't add activities"
