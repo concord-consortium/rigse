@@ -1,0 +1,6 @@
+
+.item
+  - page.page_elements.each do |element|
+    %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
+      = render_show_partial_for(element.embeddable)
+= render :partial => "shared/print_teacher_notes", :locals => {:item => page}

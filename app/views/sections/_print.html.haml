@@ -1,0 +1,10 @@
+= render :partial => 'shared/print_teacher_notes', :locals => {:item => section}
+%h3
+  =section.name
+- section.pages.each do |page|
+  .item
+    .menu
+      =page.name
+    .content
+      = render  :partial => 'pages/print', :locals => { :page => page }
+
