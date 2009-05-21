@@ -17,5 +17,6 @@
       = dropdown_button "actions.png", :title => "actions for this investigation"
       - if (investigation.changeable?(current_user))
         = remote_link_button "add.png", :url => add_activity_investigation_path(investigation), :title => "add new activity"
+        = delete_button_for(investigation)
       - else
         = link_button "add_disabled.png", "#", :title => "can't add activities"
