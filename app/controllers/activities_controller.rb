@@ -7,12 +7,20 @@ class ActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index]
 
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
+  before_filter :can_create, :only => [:new, :create]
   
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
   
   protected  
+
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create activities"
+      redirect_back_or activities_path
+    end
+  end
 
   def can_edit
     if defined? @activity
