@@ -3,11 +3,20 @@ class PagesController < ApplicationController
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
-    
+  before_filter :can_create, :only => [:new, :create]
+  
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
   protected 
+  
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create pages"
+      redirect_back_or pages_path
+    end
+  end
+  
   
   def find_entities
     if (params[:id])
@@ -31,12 +40,12 @@ class PagesController < ApplicationController
   def can_edit
     if defined? @page
       unless @page.changeable?(current_user)
-        error_message = "you (#{current_user.login}) is not permitted to #{action_name.humanize} (#{@page.name})"
+        error_message = "you (#{current_user.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
         else
-          redirect_back_or sections_paths
+          redirect_back_or investigations_path
         end
       end
     end

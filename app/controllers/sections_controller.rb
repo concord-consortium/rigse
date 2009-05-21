@@ -3,9 +3,18 @@ class SectionsController < ApplicationController
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
+  before_filter :can_create, :only => [:new, :create]
   protected 
+  
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create sections"
+      redirect_back_or sections_path
+    end
+  end
+  
   
   def find_entities
     if (params[:id])
