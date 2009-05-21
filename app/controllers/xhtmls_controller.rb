@@ -1,8 +1,8 @@
 class XhtmlsController < ApplicationController
   # GET /xhtmls
   # GET /xhtmls.xml
-  def index    
-    @xhtmls = Xhtml.search(params[:search], params[:page], self.current_user)
+  def index
+    @xhtmls = Xhtml.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

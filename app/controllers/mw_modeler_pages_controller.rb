@@ -2,7 +2,7 @@ class MwModelerPagesController < ApplicationController
   # GET /mw_modeler_pages
   # GET /mw_modeler_pages.xml
   def index    
-    @mw_modeler_pages = MwModelerPage.search(params[:search], params[:page], self.current_user)
+    @mw_modeler_pages = MwModelerPage.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

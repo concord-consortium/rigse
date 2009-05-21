@@ -2,7 +2,7 @@ class DataTablesController < ApplicationController
   # GET /data_tables
   # GET /data_tables.xml
   def index    
-    @data_tables = DataTable.search(params[:search], params[:page], self.current_user)
+    @data_tables = DataTable.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

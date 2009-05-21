@@ -2,7 +2,7 @@ class DrawingToolsController < ApplicationController
   # GET /drawing_tools
   # GET /drawing_tools.xml
   def index    
-    @drawing_tools = DrawingTool.search(params[:search], params[:page], self.current_user)
+    @drawing_tools = DrawingTool.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
