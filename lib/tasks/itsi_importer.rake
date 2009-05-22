@@ -11,10 +11,13 @@ namespace :rigse do
       puts
       itsi_user = Itsi::User.find_by_login('itest')
       rites_itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
-      itsi_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, false, true)
+      itsi_probe_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, false, true)
+      itsi_model_activities = Itsi::Activity.find_all_by_user_id_and_collectdata_model_active_and_public(itsi_user, true, true)
+      itsi_activities = itsi_probe_activities + itsi_model_activities
+      puts "importing #{itsi_activities.length} ITSI Activities ..."
       itsi_activities.each do |itsi_activity| 
         print '.'
-        ItsiImporter.create_investigation_from_itsi(itsi_activity, rites_itsi_import_user)
+        ItsiImporter.create_investigation_from_itsi_activity(itsi_activity, rites_itsi_import_user)
       end
     end
 

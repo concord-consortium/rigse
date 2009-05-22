@@ -145,7 +145,7 @@ namespace :import do
   end
 
   desc 'erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal'
-  task :import:erase_and_import_ccp_itsi_units, :roles => :app do
+  task :erase_and_import_ccp_itsi_units, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
