@@ -60,6 +60,8 @@ ActionController::Routing::Routes.draw do |map|
     :add_element => :post,
     :sort_elements => :post,
     :delete_element => :post,
+    :paste  => :post,
+    :paste_link => :post,
     :preview => :get,
     :print => :get,
     :duplicate => :get
