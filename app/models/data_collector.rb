@@ -53,7 +53,11 @@ class DataCollector < ActiveRecord::Base
   def graph_type_id
     self[:graph_type_id] || 1
   end
-  
+
+  def graph_type_id=(gid)
+    self[:graph_type_id] = gid
+  end
+
   def graph_type
     DataCollector.graph_types[graph_type_id-1][0]
   end

@@ -5,6 +5,7 @@
 #actions_menu.dropdown
   %ul
     %li= run_link_for(@page)
+    %li= print_link_for(@page)
     %li= toggle_all('elements')
     %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
     - if (page.changeable?(current_user))

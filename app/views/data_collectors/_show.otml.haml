@@ -1,4 +1,4 @@
-%OTDataCollector{ :local_id => ot_local_id_for(data_collector), :name => data_collector.name, 
+%OTDataCollector{ :local_id => ot_local_id_for(data_collector), :name => h(data_collector.name), 
   :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, 
   :showControlBar => "true", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5' }
   - if data_collector.graph_type == 'Sensor'

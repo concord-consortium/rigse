@@ -82,17 +82,24 @@ class TeacherNotesController < ApplicationController
   # POST /teacher_notes.xml
   def create
     @teacher_note = TeacherNote.new(params[:teacher_note])
-    if (request.xhr?)
-       render :text => "<div class='notice'>teacher note saved</div>"
-    else
-      respond_to do |format|
-        if @teacher_note.save
-          flash[:notice] = 'TeacherNote was successfully created.'
+    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
+      if (request.xhr?)
+        render :text => "<div class='notice'>teacher note saved</div>"
+      else
+        respond_to do |format|
+          flash[:notice] = 'TeacherNote was successfully updated.'
           format.html { redirect_to(@teacher_note) }
-          format.xml  { render :xml => @teacher_note, :status => :created, :location => @teacher_note }
-        else
-          format.html { render :action => "new" }
-          format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
+          format.xml  { head :ok }
+        end
+      end
+    else
+      if (request.xhr?)
+         render :text => "<div class='notice'>Cant save note.</div>"
+      else
+        respond_to do |format|
+          flash[:notice] = 'You can not modify this Teachernote.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
         end
       end
     end

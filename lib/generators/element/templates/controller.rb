@@ -2,7 +2,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml
   def index    
-    @<%= table_name %> = <%= class_name %>.search(params[:search], params[:page], self.current_user)
+    @<%= table_name %> = <%= class_name %>.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

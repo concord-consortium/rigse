@@ -2,7 +2,7 @@ class DataCollectorsController < ApplicationController
   # GET /data_collectors
   # GET /data_collectors.xml
   def index
-    @data_collectors = DataCollector.search(params[:search], params[:page], self.current_user)
+    @data_collectors = DataCollector.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html

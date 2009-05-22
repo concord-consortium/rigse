@@ -2,10 +2,9 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %title
-      = @page_title || APP_CONFIG[:site_name]
+      = "#{@page_title || APP_CONFIG[:site_name]} (for printing)"
     = stylesheet_link_tag 'print', :media => :print
     = stylesheet_link_tag 'print', :media => :screen
-    = stylesheet_link_tag 'window'
 
     / = javascript_include_tag :defaults
     = javascript_include_tag "prototype.js"
