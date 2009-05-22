@@ -119,7 +119,7 @@ module ApplicationHelper
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
+    remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.human_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
   end
   
   def otml_url_for(component)
@@ -223,16 +223,20 @@ module ApplicationHelper
           haml_concat link_to name_for_component(embeddable), embeddable
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(embeddable) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(embeddable) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(embeddable) }
-            end
+              haml_tag :div, :class => 'dropdown', :id => "actions_#{embeddable.name}_menu" do
+              haml_tag :ul do
+              haml_tag(:li) { haml_concat run_link_for(embeddable) }
+              haml_tag(:li) { haml_concat print_link_for(embeddable) }
+              haml_tag(:li) { haml_concat otml_link_for(embeddable) }
+              end
+              end
+              haml_concat dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page"
+              
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(embeddable, options) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
+              haml_concat edit_button_for(embeddable, options)
+              haml_concat delete_button_for(component)
             end
           end
         end
@@ -273,11 +277,17 @@ module ApplicationHelper
 
   def dropdown_button(image,options={})
     name = image.gsub(/\..*/,'') # remove extension of filename
+    if options[:name_postfix]
+      postfix = options[:name_postfix]
+      content_id = "#{name}_#{postfix}_menu"
+    else
+      content_id = "#{name}_menu"
+    end
     defaults = {
       :name       =>  name,
       :text       =>  image_tag(image,:title => name),
       :class      => 'rollover',
-      :content_id => "#{name}_menu",
+      :content_id => content_id,
       :id         => "button_#{name}_menu"
     }
     options = defaults.merge(options)
