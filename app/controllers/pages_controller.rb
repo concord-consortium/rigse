@@ -228,4 +228,31 @@ class PagesController < ApplicationController
   end
 
 
+  def paste_link
+    render :partial => 'pages/paste_link'
+  end
+  
+  
+  #
+  # Must be  js method, so don't even worry about it.
+  #
+  def paste
+    if @page.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.clone :include => {:page_elements => :embeddable}
+        if (@component)
+          @container = params['container'] || 'elements_container'
+          @component.name = "copy of #{@component.name}"
+          @component.user = @page.user
+          @component.pages << @page
+          @component.save
+          @element = @page.element_for(@component)
+        end
+      end
+    end
+  end
 end
