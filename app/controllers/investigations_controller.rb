@@ -49,6 +49,7 @@ class InvestigationsController < ApplicationController
     else
       @investigation = Investigation.new
     end
+    @page_title = @investigation.name
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
       if @investigation
