@@ -13,8 +13,14 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
   before_filter :check_user
+  before_filter :setup_container
   
   protected
+  
+  def setup_container
+    @container_type = self.class.controller_name.classify
+    @container_id =  request.symbolized_path_parameters[:id]
+  end
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
