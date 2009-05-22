@@ -23,8 +23,7 @@ class NLogoModel < ActiveRecord::Base
   default_value_for :description, "description ..."
 
   def self.display_name
-    "NLogoModel"
+    "Net Logo Model"
   end
-
 
 end
