@@ -209,10 +209,7 @@ class ItsiImporter
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
         end
         if itsi_activity.collectdata_model_active
-          model = itsi_activity.model
-          if model.model_type.name == "Molecular Workbench"
-            ItsiImporter.add_mw_model_to_page(page, model)
-          end
+          add_model_to_page(page, itsi_activity.model)
         end
         if itsi_activity.collectdata_text_response
           ItsiImporter.add_open_response_to_page(page, question_prompt)
@@ -439,8 +436,28 @@ class ItsiImporter
       end
     end
 
+    def add_model_to_page(page, model)
+      case model.model_type.name
+      when "Molecular Workbench"
+        ItsiImporter.add_mw_model_to_page(page, model)
+      when "NetLogo"
+        ItsiImporter.add_nl_model_to_page(page, model)
+      else
+        add_xhtml_to_page(page, "unsupported model type: #{model.model_type.name}")
+      end
+    end
+
     def add_mw_model_to_page(page, model)
       page_embeddable = MwModelerPage.create do |mw|
+        mw.name = model.name
+        mw.description = model.description
+        mw.authored_data_url = model.url
+      end
+      page_embeddable.pages << page
+    end
+
+    def add_nl_model_to_page(page, model)
+      page_embeddable = NLogoModel.create do |mw|
         mw.name = model.name
         mw.description = model.description
         mw.authored_data_url = model.url
