@@ -146,14 +146,15 @@ module ApplicationHelper
         })
   end
   
-  def paste_link_for(component_id,acceptable_types,options={})
+  def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
+    container_id         = options[:container_id] || params[:container_id]
     
     return "paste (nothing in clipboard)" unless clipboard_data_type
     
     if acceptable_types.include?(clipboard_data_type) 
-      url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>component_id
+      url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
       return link_to_remote ("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
     end
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"

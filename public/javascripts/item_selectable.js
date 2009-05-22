@@ -71,6 +71,7 @@ var copy = function() {
   new Ajax.Updater({ success: 'paste_link' }, 'paste_link', {
     parameters: { 
       authenticity_token:AUTH_TOKEN,
+      container_id: container_id,
       clipboard_data_type: document.selected_type, 
       clipboard_data_id:document.selected_id}
   });

@@ -229,7 +229,7 @@ class PagesController < ApplicationController
 
 
   def paste_link
-    render :partial => 'pages/paste_link'
+    render :partial => 'pages/paste_link', :locals => {:params => params}
   end
   
   
