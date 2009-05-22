@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090522160121) do
+ActiveRecord::Schema.define(:version => 20090522223149) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20090522160121) do
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
+    t.integer  "original_id"
   end
 
   create_table "assessment_targets", :force => true do |t|

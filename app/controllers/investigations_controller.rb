@@ -242,6 +242,7 @@ class InvestigationsController < ApplicationController
       if (@original) 
         @component = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
         if (@component)
+          # @component.original = @original
           @container = params[:container] || 'investigation_activities_list'
           @component.name = "copy of #{@component.name}"
           @component.deep_set_user current_user
