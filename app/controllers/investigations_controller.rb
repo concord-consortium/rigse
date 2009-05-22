@@ -225,4 +225,31 @@ class InvestigationsController < ApplicationController
     end
   end
   
+  def paste_link
+    render :partial => 'pages/paste_link', :locals => {:params => params}
+  end
+  
+  
+  #
+  # Must be  js method, so don't even worry about it.
+  #
+  def paste
+    if @investigation.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+        if (@component)
+          @container = params[:container] || 'investigation_activities_list'
+          @component.name = "copy of #{@component.name}"
+          @component.deep_set_user current_user
+          @component.save
+        end
+      end
+    end
+  end
+  
+  
 end
