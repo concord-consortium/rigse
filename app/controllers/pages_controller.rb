@@ -243,7 +243,7 @@ class PagesController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.clone :include => {:page_elements => :embeddable}
+        @component = @original.clone 
         if (@component)
           @container = params['container'] || 'elements_container'
           @component.name = "copy of #{@component.name}"
