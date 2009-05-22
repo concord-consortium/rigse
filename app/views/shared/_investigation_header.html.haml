@@ -1,6 +1,7 @@
 #actions_menu.dropdown
   %ul
     %li= run_link_for(@investigation)
+    %li= print_link_for(@investigation)
     %li= toggle_all('activities')
     %li= link_to 'duplicate', duplicate_investigation_url(investigation)
     - if (investigation.changeable?(current_user))

@@ -23,7 +23,9 @@ class PagesController < ApplicationController
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
       if @page
         @section = @page.section
+        @@page_title = @page.name
         if @section
+          @page_title="#{@section.name} : #{@page.name}"
           @activity =@section.activity
           if @activity
             @investigation = @activity.investigation

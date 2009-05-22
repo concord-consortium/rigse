@@ -22,6 +22,7 @@ class SectionsController < ApplicationController
       format = request.parameters[:format]
       unless format == 'otml' || format == 'jnlp'
         if @section
+          @page_title=@section.name
           @activity = @section.activity
           if @activity 
             @investigation = @activity.investigation
