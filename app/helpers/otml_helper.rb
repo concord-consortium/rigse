@@ -59,7 +59,7 @@ module OtmlHelper
       org.concord.otrunk.view.document.OTCssText
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunkmw.OTModelerPage
-      org.concord.otrunknl.OTNLogoModel
+      org.concord.otrunknl4.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
@@ -103,7 +103,7 @@ module OtmlHelper
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl.OTNLogoModel', 'org.concord.otrunknl.OTNLogoModelView']
+      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView']
     ]
   end
 
