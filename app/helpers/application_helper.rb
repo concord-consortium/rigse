@@ -132,6 +132,20 @@ module ApplicationHelper
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
   
+  def print_link_for(component)
+     component_display_name = component.class.name.humanize
+      name = component.name
+      link_to("print #{component_display_name}", {
+          :controller => component.class.name.pluralize.underscore, 
+          :action => :print, 
+          :id  => component.id
+        },
+        {
+          :target => "#{component.name} printout",
+          :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
+        })
+  end
+  
   def run_link_for(component, prefix='')
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -152,12 +166,6 @@ module ApplicationHelper
       :id  => component.id)
   end
 
-  def print_link_for(component)
-    link_to('print', 
-      :controller => component.class.name.pluralize.underscore, 
-      :action => :print,
-      :id  => component.id)
-  end
 
   def delete_button_for(model, options={})
     # find the page_element for the embeddable
