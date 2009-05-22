@@ -11,7 +11,7 @@
             / %li= link_to 'edit', section
             / %li.menu=toggle_more section
             %li.menu=link_to_remote 'delete', :confirm => "delete section #{section.name}?", :url => { :controller => 'activities', :action => 'delete_section', :params => {:id=>section.activity.id, :section_id => section.id}}, :html => {:class=>"delete"}
-    %div{:id => dom_id_for(section, :details), :class => 'content', :style =>'display:block;'}
+    %div{:id => dom_id_for(section, :details), :class => 'content item_selectable', :style =>'display:block;'}
       = section.description
       %ul.tiny
       - section.pages.each_with_index do |page, i|
