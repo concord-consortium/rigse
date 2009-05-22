@@ -280,15 +280,17 @@ module ApplicationHelper
     if options[:name_postfix]
       postfix = options[:name_postfix]
       content_id = "#{name}_#{postfix}_menu"
+      id = "button_#{name}_#{postfix}_menu"
     else
       content_id = "#{name}_menu"
+      id = "button_#{name}_menu"
     end
     defaults = {
       :name       =>  name,
       :text       =>  image_tag(image,:title => name),
       :class      => 'rollover',
       :content_id => content_id,
-      :id         => "button_#{name}_menu"
+      :id         => id
     }
     options = defaults.merge(options)
     dropdown_link_for options
