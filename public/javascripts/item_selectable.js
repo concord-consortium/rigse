@@ -75,6 +75,4 @@ var copy = function() {
       clipboard_data_id:document.selected_id}
   });
 }
-
-
 document.observe('click',item_select);
