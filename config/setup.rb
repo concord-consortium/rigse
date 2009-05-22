@@ -270,6 +270,7 @@ puts "\nSetting parameters for the ITSI database:\n\n"
 @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
 @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
 
+puts <<HEREDOC
 
 If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
 specify the values for the mysql database name, host, username, password.
