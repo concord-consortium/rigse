@@ -148,7 +148,6 @@ namespace :import do
   task :import:erase_and_import_ccp_itsi_units, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
-    rake rigse:import:erase_and_import_ccp_itsi_units
   end
 
 end
