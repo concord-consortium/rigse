@@ -119,7 +119,7 @@ module ApplicationHelper
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.human_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
+    remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.display_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
   end
   
   def otml_url_for(component)
@@ -133,7 +133,7 @@ module ApplicationHelper
   end
   
   def print_link_for(component)
-     component_display_name = component.class.name.humanize
+     component_display_name = component.class.display_name.downcase
       name = component.name
       link_to("print #{component_display_name}", {
           :controller => component.class.name.pluralize.underscore, 
@@ -176,7 +176,7 @@ module ApplicationHelper
     else
       url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
     end
-    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.human_name.downcase}"
+    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
   def edit_url_for(component)
