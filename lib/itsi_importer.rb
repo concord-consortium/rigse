@@ -458,6 +458,7 @@ class ItsiImporter
     end
 
     def add_drawing_response_to_page(page, question_prompt)
+      add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
       page_embeddable = DrawingTool.create do |dt|
         dt.name = page.name + ": Drawing Tool"
         dt.description = "Drawing tool."
@@ -465,16 +466,8 @@ class ItsiImporter
       page_embeddable.pages << page
     end
 
-    def add_xhtml_to_page(page, html_content)
-      page_embeddable = Xhtml.create do |x|
-        x.name = page.name + ": Body Content (html)"
-        x.description = ""
-        x.content = html_content
-      end
-      page_embeddable.pages << page
-    end
-
     def add_prediction_graph_response_to_page(page, question_prompt)
+      add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
       page_embeddable = DataCollector.create do |d|
         d.name = page.name + ": Prediction graph for #{@@first_probe_type.name}."
         d.title = d.name
@@ -497,6 +490,15 @@ class ItsiImporter
           @@prediction_graph = nil
         end
         d.description = "This a Data Collector Graph that will collect data from a #{probe_type.name} sensor."
+      end
+      page_embeddable.pages << page
+    end
+
+    def add_xhtml_to_page(page, html_content)
+      page_embeddable = Xhtml.create do |x|
+        x.name = page.name + ": Body Content (html)"
+        x.description = ""
+        x.content = html_content
       end
       page_embeddable.pages << page
     end

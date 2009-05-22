@@ -3,7 +3,7 @@ namespace :rigse do
     
     require 'hpricot'
     
-    desc "erase and import ITSI activities"
+    desc "erase and import ITSI activities from the ITSI DIY"
     task :erase_and_import_itsi_activities => :environment do
       raise "need an 'itsi' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['itsi']
       ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
@@ -18,7 +18,7 @@ namespace :rigse do
       end
     end
 
-    desc "erase and import ITSI Units from indexed from the CCPortal"
+    desc "erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal"
     task :erase_and_import_ccp_itsi_units => :environment do
       raise "need an 'itsi' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['itsi']
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
