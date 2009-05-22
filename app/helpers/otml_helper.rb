@@ -26,45 +26,46 @@ module OtmlHelper
   
   def imports
     imports = %w{
-      org.concord.otrunk.OTSystem
-      org.concord.framework.otrunk.view.OTFrame
-      org.concord.otrunk.view.OTViewEntry
-      org.concord.otrunk.view.OTViewBundle
-      org.concord.otrunk.view.OTFolderObject
-      org.concord.otrunk.view.document.OTDocumentViewConfig
-      org.concord.otrunk.view.document.OTCssText
-      org.concord.sensor.state.OTDeviceConfig
-      org.concord.sensor.state.OTExperimentRequest
-      org.concord.sensor.state.OTInterfaceManager
-      org.concord.sensor.state.OTSensorDataProxy
-      org.concord.sensor.state.OTSensorRequest
-      org.concord.otrunk.view.document.OTCompoundDoc
-      org.concord.otrunk.ui.OTText
-      org.concord.otrunk.ui.question.OTQuestion
-      org.concord.otrunk.ui.OTChoice
-      org.concord.graph.util.state.OTDrawingTool2
-      org.concord.framework.otrunk.wrapper.OTBlob
-      org.concord.data.state.OTDataTable
       org.concord.data.state.OTDataChannelDescription
       org.concord.data.state.OTDataField
       org.concord.data.state.OTDataStore
+      org.concord.data.state.OTDataTable
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
       org.concord.datagraph.state.OTDataGraph
       org.concord.datagraph.state.OTDataGraphable
       org.concord.datagraph.state.OTMultiDataGraph
       org.concord.datagraph.state.OTPluginView
+      org.concord.framework.otrunk.view.OTFrame
+      org.concord.framework.otrunk.wrapper.OTBlob
+      org.concord.graph.util.state.OTDrawingTool2
+      org.concord.otrunk.OTSystem
       org.concord.otrunk.control.OTButton
-      org.concord.sensor.state.OTZeroSensor
-      org.concord.otrunk.ui.OTUDLContainer
       org.concord.otrunk.ui.OTCardContainer
+      org.concord.otrunk.ui.OTChoice
       org.concord.otrunk.ui.OTCurriculumUnit
+      org.concord.otrunk.ui.OTText
+      org.concord.otrunk.ui.OTUDLContainer
       org.concord.otrunk.ui.OTSection
       org.concord.otrunk.ui.menu.OTMenu
       org.concord.otrunk.ui.menu.OTMenuRule
       org.concord.otrunk.ui.menu.OTNavBar
+      org.concord.otrunk.ui.question.OTQuestion
+      org.concord.otrunk.view.OTFolderObject
+      org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.OTViewChild
+      org.concord.otrunk.view.OTViewEntry
+      org.concord.otrunk.view.document.OTCompoundDoc
+      org.concord.otrunk.view.document.OTCssText
+      org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunkmw.OTModelerPage
+      org.concord.otrunknl.OTNLogoModel
+      org.concord.sensor.state.OTZeroSensor
+      org.concord.sensor.state.OTDeviceConfig
+      org.concord.sensor.state.OTExperimentRequest
+      org.concord.sensor.state.OTInterfaceManager
+      org.concord.sensor.state.OTSensorDataProxy
+      org.concord.sensor.state.OTSensorRequest
     }
   end
   
@@ -101,7 +102,8 @@ module OtmlHelper
       ['menu_page_expand_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageExpandView'],
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
-      ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView']
+      ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
+      ['n_logo_model', 'org.concord.otrunknl.OTNLogoModel', 'org.concord.otrunknl.OTNLogoModelView']
     ]
   end
 

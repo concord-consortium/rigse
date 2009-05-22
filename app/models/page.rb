@@ -13,6 +13,8 @@ class Page < ActiveRecord::Base
   has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
   has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
   has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
+  has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
+  has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
   
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
