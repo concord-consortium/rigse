@@ -16,7 +16,6 @@ namespace :rigse do
       itsi_activities = itsi_probe_activities + itsi_model_activities
       puts "importing #{itsi_activities.length} ITSI Activities ..."
       itsi_activities.each do |itsi_activity| 
-        print '.'
         ItsiImporter.create_investigation_from_itsi_activity(itsi_activity, rites_itsi_import_user)
       end
     end
@@ -31,7 +30,6 @@ namespace :rigse do
       rites_itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSI')
       ccp_itsi_project.units.each do |ccp_itsi_unit|
-        print '.'
         ItsiImporter.create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, rites_itsi_import_user)
       end
     end

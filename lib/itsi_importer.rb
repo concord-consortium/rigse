@@ -16,6 +16,7 @@ class ItsiImporter
     
     def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, rites_user, logging=false)
       itsi_prefix = "ITSI Unit: #{ccp_itsi_unit.unit_name}"
+      print "creating: #{itsi_prefix}: "
       investigation = Investigation.create do |i|
         i.name = itsi_prefix
         i.user = rites_user
@@ -30,10 +31,12 @@ class ItsiImporter
           print "-x-"
         end
       end
+      puts
     end
 
     def create_investigation_from_itsi_activity(itsi_activity, rites_user, logging=false)
       itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+      puts "creating: #{itsi_prefix}"
       investigation = Investigation.create do |i|
         i.name = itsi_prefix
         i.user = rites_user
