@@ -28,6 +28,14 @@ class DataCollector < ActiveRecord::Base
     end
   end
   
+  def other_data_collectors_in_activity_scope(scope)
+    if scope && scope.class != DataCollector
+      scope.activity.data_collectors - [self]
+    else
+      []
+    end
+  end
+  
   def self.prediction_graphs
     DataCollector.find_all_by_graph_type_id(2)
   end
@@ -47,7 +55,7 @@ class DataCollector < ActiveRecord::Base
   end
 
   def self.graph_types
-    [["Sensor", 1], ["Prediction", 2]]
+    [["Sensor", 1], ["Prediction", 2], ["Static", 3]]
   end
   
   def graph_type_id

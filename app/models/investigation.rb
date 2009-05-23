@@ -6,6 +6,14 @@ class Investigation < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   
+  has_many :data_collectors,
+     :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+     INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+     INNER JOIN pages ON page_elements.page_id = pages.id    
+     INNER JOIN sections ON pages.section_id = sections.id  
+     INNER JOIN activities ON sections.activity_id = activity.id  
+     WHERE activity.investigatio_id = #{id}'  
+  
   acts_as_replicatable
   
   include Changeable

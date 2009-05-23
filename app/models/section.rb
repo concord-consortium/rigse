@@ -2,6 +2,12 @@ class Section < ActiveRecord::Base
   belongs_to :activity
   belongs_to :user
   has_many :pages, :order => :position, :dependent => :destroy
+
+  has_many :data_collectors,
+     :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+     INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+     INNER JOIN pages ON page_elements.page_id = pages.id
+     WHERE pages.section_id = #{id}'
   
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 

@@ -155,7 +155,7 @@ module ApplicationHelper
     
     if acceptable_types.include?(clipboard_data_type) 
       url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return link_to_remote ("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
+      return link_to_remote("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
     end
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
@@ -198,7 +198,9 @@ module ApplicationHelper
   def edit_url_for(component)
     { :controller => component.class.name.pluralize.underscore, 
       :action => :edit, 
-      :id  => component.id }
+      :id  => component.id,
+      :container_type => @container_type,
+      :container_id => @container_id }
   end
 
   def name_for_component(component)
@@ -236,7 +238,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat link_to name_for_component(embeddable), embeddable
+          haml_concat(link_to name_for_component(embeddable), embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
@@ -247,7 +249,7 @@ module ApplicationHelper
               haml_tag(:li) { haml_concat otml_link_for(embeddable) }
               end
               end
-              haml_concat dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page"
+              haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
               
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
@@ -288,7 +290,7 @@ module ApplicationHelper
       :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
     }
     options = defaults.merge(options)
-    return link_to options[:text], options[:url], options
+    link_to(options[:text], options[:url], options)
   end
 
   def dropdown_button(image,options={})
@@ -341,8 +343,6 @@ module ApplicationHelper
     link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
   end
   
-  
-  
   def tab_for(component, options={})
     if(options[:active])
       "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
@@ -360,5 +360,4 @@ module ApplicationHelper
       end
     end
   end
-
 end

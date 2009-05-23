@@ -53,6 +53,7 @@ class DataCollectorsController < ApplicationController
   # GET /data_collectors/1/edit
   def edit
     @data_collector = DataCollector.find(params[:id])
+    @scope = get_scope
     session[:original_probe_type_id] = @data_collector.probe_type_id
     session[:new_probe_type_id] = nil
     if request.xhr?
@@ -147,18 +148,37 @@ class DataCollectorsController < ApplicationController
   
   def change_probe_type
     @data_collector = DataCollector.find(params[:id])
-    probe_type_id = params[:data_collector][:probe_type_id]
-    case probe_type_id
-    when session[:original_probe_type_id] && !session[:new_probe_type_id]
-      render :nothing => true
-    when session[:original_probe_type_id] && !session[:new_probe_type_id]
-      session[:new_probe_type_id] = nil
-    when session[:new_probe_type_id]
-      @data_collector.update_attributes(params[:data_collector])
+    @scope = get_scope
+    probe_type_id = params[:data_collector][:probe_type_id].to_i
+    if session[:new_probe_type_id]
+      if session[:new_probe_type_id] == probe_type_id
+        render :nothing => true
+      elsif session[:original_probe_type_id] == probe_type_id
+        session[:new_probe_type_id] = nil
+      else
+        @data_collector.probe_type = ProbeType.find(probe_type_id)
+        session[:new_probe_type_id] = probe_type_id
+      end
     else
-      @data_collector.probe_type = ProbeType.find(probe_type_id)
-      session[:new_probe_type_id] = probe_type_id
+      if session[:original_probe_type_id] == probe_type_id
+        render :nothing => true
+      else
+        @data_collector.probe_type = ProbeType.find(probe_type_id)
+        session[:new_probe_type_id] = probe_type_id
+      end
     end
   end
   
+  protected
+  
+  def get_scope
+    begin
+      @scope = @data_collector
+      if container_type = params[:container_type] 
+        @scope = container_type.constantize.find(params[:container_id])
+      end
+    rescue ActiveRecord::RecordNotFound
+    end
+  end
+
 end
