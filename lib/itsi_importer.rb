@@ -16,19 +16,24 @@ class ItsiImporter
     
     def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, rites_user, logging=false)
       itsi_prefix = "ITSI Unit: #{ccp_itsi_unit.unit_name}"
-      print "creating: #{itsi_prefix}: "
+      puts "creating: #{itsi_prefix}: "
       investigation = Investigation.create do |i|
         i.name = itsi_prefix
         i.user = rites_user
         i.description = "An ITSI unit is a collection of ITSI Activities"
       end
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
-        primary_key = ccp_itsi_activity.diy_identifier
-        if !primary_key.empty? && itsi_activity = Itsi::Activity.find(primary_key)
-          ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
-          print ", ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-        else
-          print "-x-"
+        foreign_key = ccp_itsi_activity.diy_identifier
+        begin
+          unless foreign_key.empty?
+            itsi_activity = Itsi::Activity.find(foreign_key)
+            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
+            puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+          else
+            puts "  -- foreign key empty for ITSI Activity --"
+          end
+        rescue ActiveRecord::RecordNotFound
+          puts "  -- itsi activity id: #{itsi_activity.id} not found --"
         end
       end
       puts
