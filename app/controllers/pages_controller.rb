@@ -191,8 +191,21 @@ class PagesController < ApplicationController
     @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
 
-    # dynamically instatiate the component based on its type.
-    @component = Kernel.const_get(params['class_name']).create
+    # dynamically instantiate the component based on its type.
+    component_class = Kernel.const_get(params['class_name'])
+    if component_class == DataCollector
+      if probe_type_id = session[:last_saved_probe_type_id]
+        probe_type = ProbeType.find(probe_type_id)
+        @component = DataCollector.new
+        @component.probe_type = probe_type
+        @component.save
+      else
+        @component = DataCollector.create
+      end
+      session[:last_saved_probe_type_id] = @component.probe_type_id
+    else
+      @component = component_class.create
+    end
     @component.pages << @page
     @component.save
     @element = @page.element_for(@component)

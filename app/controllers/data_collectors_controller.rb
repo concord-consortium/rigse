@@ -38,8 +38,12 @@ class DataCollectorsController < ApplicationController
   # GET /data_collectors/new
   # GET /data_collectors/new.xml
   def new
-    @data_collector = DataCollector.new
-
+    if probe_type_id = session[:last_saved_probe_type_id]
+      @data_collector = DataCollector.new(:probe_type_id => probe_type_id)
+    else
+      @data_collector = DataCollector.new
+    end
+    
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_collector => @data_collector }
     else
@@ -54,7 +58,7 @@ class DataCollectorsController < ApplicationController
   def edit
     @data_collector = DataCollector.find(params[:id])
     @scope = get_scope
-    session[:original_probe_type_id] = @data_collector.probe_type_id
+    session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     session[:new_probe_type_id] = nil
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_collector => @data_collector }
@@ -70,6 +74,7 @@ class DataCollectorsController < ApplicationController
   # POST /data_collectors.xml
   def create
     @data_collector = DataCollector.new(params[:data_collector])
+    session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 
@@ -112,6 +117,7 @@ class DataCollectorsController < ApplicationController
     end
     if request.xhr?
       if cancel || @data_collector.update_attributes(params[:data_collector])
+        session[:last_saved_probe_type_id] = params[:data_collector][:probe_type_id]
         render :partial => 'show', :locals => { :data_collector => @data_collector }
       else
         render :xml => @data_collector.errors, :status => :unprocessable_entity
@@ -120,6 +126,8 @@ class DataCollectorsController < ApplicationController
       respond_to do |format|
         if cancel || @data_collector.update_attributes(params[:data_collector])
           flash[:notice] = 'DataCollector was successfully updated.'
+          session[:last_saved_probe_type_id] = params[:data_collector][:probe_type_id]
+          
           format.html { redirect_to(@data_collector) }
           format.xml  { head :ok }
         else

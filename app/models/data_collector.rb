@@ -13,7 +13,7 @@ class DataCollector < ActiveRecord::Base
   has_many :prediction_graph_destinations,
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
-  
+
   acts_as_replicatable
   
   include Changeable
