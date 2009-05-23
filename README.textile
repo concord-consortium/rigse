@@ -218,7 +218,7 @@ containers you will also need to run this task also:
   cap staging convert:wrap_orphaned_activities_in_investigations
 </code>
 
-Test the staging server:http://rites-investigations.staging.concord.org/
+Test the staging server: http://rites-investigations.staging.concord.org/
 
 If the authors confirm that there are no blockers then let people know when the
 update will take place and perform these tasks on the production server.
