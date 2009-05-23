@@ -181,10 +181,10 @@ If you don't already have a local branch of staging
 
 Switch to the staging branch and merge from master
 
-<code>
+<code><pre>
   git co staging
   git merge master
-</code>
+</pre></code>
 
 Push your copy of staging to the gihub repository:
 
@@ -206,10 +206,10 @@ If there are migrations that need to be run
 
 If the ITSI importers have been updated and you want to run them again:
 
-<code>
+<code><pre>
   cap staging import:erase_and_import_itsi_activities
   cap staging import:erase_and_import_ccp_itsi_units
-</code>
+</pre></code>
 
 Until the production site is updated with the code that implements Investigation 
 containers you will also need to run this task also:
