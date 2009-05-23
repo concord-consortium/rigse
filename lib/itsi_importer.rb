@@ -26,7 +26,7 @@ class ItsiImporter
         primary_key = ccp_itsi_activity.diy_identifier
         if !primary_key.empty? && itsi_activity = Itsi::Activity.find(primary_key)
           ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
-          print "-#{primary_key}-"
+          print ", ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
         else
           print "-x-"
         end

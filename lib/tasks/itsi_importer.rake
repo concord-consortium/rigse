@@ -29,6 +29,7 @@ namespace :rigse do
       puts
       rites_itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSI')
+      puts "importing #{ccp_itsi_project.units.length} ITSI Units ..."
       ccp_itsi_project.units.each do |ccp_itsi_unit|
         ItsiImporter.create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, rites_itsi_import_user)
       end
