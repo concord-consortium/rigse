@@ -1,6 +1,7 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+  has_one :activity, :through => :section
 
   # this doesn't work
   # belongs_to :activity, :through => :section
