@@ -141,7 +141,7 @@ namespace :import do
   desc 'erase and import ITSI activities from the ITSI DIY'
   task :erase_and_import_itsi_activities, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:erase_and_import_itsi_activities --trace" 
+      "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_itsi_activities --trace" 
   end
 
   desc 'erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal'
@@ -151,6 +151,20 @@ namespace :import do
   end
 
 end
+
+#############################################################
+#  Convert
+#############################################################
+
+namespace :convert do
+  desc 'wrap orphaned activities in a parent investigation'
+  task :wrap_orphaned_activities_in_investigations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:make:investigations --trace" 
+  end
+
+end
+
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'
