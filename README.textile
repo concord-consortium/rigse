@@ -168,6 +168,60 @@ rake rigse:setup:import_gses_from_file
 
 We should solve this one sooner rather than later.
 
+h2. Updating the RITES staging server.
+
+Once the master branch has been deployed to the dev site, tested
+and found reliable enough to deploy to staging here's how to do it.
+
+If you don't already have a local branch of staging
+
+<code>
+  git branch --track staging origin/staging
+</code>
+
+Switch to the staging branch and merge from master
+
+<code>
+  git co staging
+  git merge master
+</code>
+
+Push your copy of staging to the gihub repository:
+
+<code>
+  git push origin staging
+</code>
+
+Deploy the new code to the staging server:
+
+<code>
+  cap staging deploy
+</code>
+
+If there are migrations that need to be run
+
+<code>
+  cap staging deploy:migrate
+</code>
+
+If the ITSI importers have been updated and you want to run them again:
+
+<code>
+  cap staging import:erase_and_import_itsi_activities
+  cap staging import:erase_and_import_ccp_itsi_units
+</code>
+
+Until the production site is updated with the code that implements Investigation 
+containers you will also need to run this task also:
+
+<code>
+  cap staging convert:wrap_orphaned_activities_in_investigations
+</code>
+
+Test the staging server:http://rites-investigations.concord.org
+
+If the authors confirm that there are no blockers then let people know when the
+update will take place and perform these tasks on the production server.
 h2. other Rake tasks:
 
 * rigse:make:investigations. This task simply finds all activities with no parent investigation, 
