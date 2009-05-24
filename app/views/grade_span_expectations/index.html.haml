@@ -3,7 +3,7 @@
     .action_menu_header_left
       .left_content
         - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
-          Grade Span: 
+          Grade span or key: 
           - content_tag :label do
             = text_field_tag :search, params[:search], :size => 16
           %input{ :type => "submit", :value => "Search"}
@@ -18,4 +18,4 @@
   %p.paginator
     
 
-= render :partial => 'expectation_list', :locals => { :grade_span_expectations => @grade_span_expectations }
+= render :partial => 'grade_span_expectation', :collection => @grade_span_expectations

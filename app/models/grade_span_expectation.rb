@@ -87,7 +87,7 @@ class GradeSpanExpectation < ActiveRecord::Base
   # it would be nice to extend SearchableModel to support this kind of spec
   # @@searchable_attributes = ['grade_span',  :include => [{:expectation_stems => :description}, {:expectation_indicators => :description} ]
   
-  @@searchable_attributes = ['grade_span']
+  @@searchable_attributes = %w{grade_span gse_key}
 
   self.extend SearchableModel
   
@@ -109,8 +109,9 @@ class GradeSpanExpectation < ActiveRecord::Base
     unifying_themes.map{ |t| t.key}.join("+")
   end
   
-  def gse_key
-    return "#{domain.key}#{assessment_target.number} (#{grade_span}) #{theme_keys}"
+  def set_gse_key
+    self.gse_key = "#{domain.key}#{assessment_target.number} (#{grade_span}) #{theme_keys}"
+    self.save
   end
-  
+
 end
