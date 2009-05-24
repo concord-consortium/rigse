@@ -1,18 +1,6 @@
 %div{:class =>"item", :id=>dom_id_for(grade_span_expectation)}
   - assessment_target = grade_span_expectation.assessment_target
-  %ul.menu_h
-    %li
-      Grade Span: 
-      = h(grade_span_expectation.grade_span)
-      ,
-    %li
-      Assessment Target: 
-      number:
-      = h(assessment_target.number)
-    %li
-      key:
-      = h(grade_span_expectation.gse_key)
-  
+  = name_for_gse(grade_span_expectation)  
   %div{:class =>"content", :id=>dom_id_for(grade_span_expectation,:details)}
     %dl
       %dt Domain
