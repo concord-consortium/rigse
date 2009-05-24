@@ -111,6 +111,8 @@ ActionController::Routing::Routes.draw do |map|
     :select_js => :post,
     :reparse_gses => :put,
     :select => :get
+  }, :member => {
+      :print => :get
   }
 
   map.resources :images

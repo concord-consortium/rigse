@@ -67,6 +67,15 @@ class GradeSpanExpectationsController < ApplicationController
     end
   end
 
+  # GET /investigations/1/print
+  def print
+    @grade_span_expectation = GradeSpanExpectation.find(params[:id])
+    respond_to do |format|
+      format.html { render :layout => "layouts/print" }
+      format.xml  { render :xml => @investigation }
+    end
+  end
+
   # GET /grade_span_expectations/new
   # GET /grade_span_expectations/new.xml
   def new
