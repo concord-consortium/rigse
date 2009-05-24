@@ -3,9 +3,6 @@ class Page < ActiveRecord::Base
   belongs_to :section
   has_one :activity, :through => :section
 
-  # this doesn't work
-  # belongs_to :activity, :through => :section
-
   has_many :page_elements, :order => :position, :dependent => :destroy
 
   has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
