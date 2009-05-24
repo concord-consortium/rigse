@@ -91,8 +91,6 @@ class GradeSpanExpectation < ActiveRecord::Base
 
   self.extend SearchableModel
   
-  @@searchable_attributes = %w{name description}
-  
   class <<self
     def searchable_attributes
       @@searchable_attributes
