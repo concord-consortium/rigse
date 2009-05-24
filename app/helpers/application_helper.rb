@@ -217,14 +217,9 @@ module ApplicationHelper
   def name_for_gse(gse)
     capture_haml do
       haml_tag(:ul, :class => 'menu_h') do
-        haml_tag(:li) { haml_concat('Grade span: ' + h(gse.grade_span)) }
+        haml_tag(:li) { haml_concat(link_to('Grade span: ' + h(gse.grade_span),  grade_span_expectation_path(gse))) }
         haml_tag(:li) { haml_concat('Assessment target: ' + h(gse.assessment_target.number)) }
         haml_tag(:li) { haml_concat('Key' + h(gse.gse_key)) }
-        if RAILS_ENV == "development" || current_user.has_role?('admin')
-          haml_tag(:li) do
-            haml_tag(:span, :class => 'dev_note') { haml_concat(link_to gse.id, grade_span_expectation_path(gse)) }
-          end
-        end
       end
     end
   end
