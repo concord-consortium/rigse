@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090524183918) do
+ActiveRecord::Schema.define(:version => 20090526152312) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -202,16 +202,6 @@ ActiveRecord::Schema.define(:version => 20090524183918) do
     t.datetime "updated_at"
   end
 
-  create_table "interactive_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.string   "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
@@ -388,21 +378,6 @@ ActiveRecord::Schema.define(:version => 20090524183918) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-  end
-
-  create_table "teacher_notes_assessment_targets", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "assessment_target_id"
-  end
-
-  create_table "teacher_notes_domains", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "domain_id"
-  end
-
-  create_table "teacher_notes_unifying_themes", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "unifying_theme_id"
   end
 
   create_table "unifying_themes", :force => true do |t|
