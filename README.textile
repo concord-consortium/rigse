@@ -122,6 +122,8 @@ h2. Capistrano Recipies (and problems)
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
 <code> sudo chmod -R g+w ./cached-copy/ </code>
 
+h3. Database recipes
+
 There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
 
 There are 4 basic commands:
@@ -149,6 +151,8 @@ There are 4 basic commands:
 
 *Note*: For safety, you can't push a database to production. If you accidentally try, you'll get a message saying you can't do that.
 
+h3. Deployment recipes
+
 There are three custom deployment-oriented cap tasks defined in config/deploy.rb  One works, One sometimes works, and the first one *doesn't!*
 * cap deploy:from_scratch does not work. 
 ** It would need to be able to let users answer questions.
@@ -168,6 +172,83 @@ rake rigse:setup:import_gses_from_file
 
 We should solve this one sooner rather than later.
 
+h3. Miscellaneous recipes
+
+*Set the gse_key field for existing GradeSpanExpectations*
+* <code>cap convert:set_gse_keys</code>
+
+h2. Updating the RITES staging server.
+
+Once the master branch has been deployed to the dev site, tested
+and found reliable enough to deploy to staging here's how to do it.
+
+If you don't already have a local branch of staging
+
+<code>
+  git branch --track staging origin/staging
+</code>
+
+Switch to the staging branch and merge from master
+
+<code><pre>
+  git co staging
+  git merge master
+</pre></code>
+
+Push your copy of the staging branch to the gihub repository:
+
+<code>
+  git push origin staging
+</code>
+
+Copy the production database to this file <code>db/production_data.sql</code> in your local working directory.
+
+<code>
+  cap production db:remote_db_download
+</code>
+
+Deploy the new code to the staging server:
+
+<code>
+  cap staging deploy
+</code>
+
+Copy <code>db/production_data.sql</code> in your local directory to the staging server
+
+<code>
+  cap production db:remote_db_upload
+</code>
+
+Replace the tables in the production database on the staging server with data here: <code>db/production_data.sql</code>.
+
+<code>
+  cap staging db:remote_db_load
+</code>
+
+If there are migrations that need to be run
+
+<code>
+  cap staging deploy:migrate
+</code>
+
+If the ITSI importers have been updated and you want to run them again:
+
+<code><pre>
+  cap staging import:erase_and_import_itsi_activities
+  cap staging import:erase_and_import_ccp_itsi_units
+</pre></code>
+
+Until the production site is updated with the code that implements Investigation 
+containers you will also need to run this task also:
+
+<code>
+  cap staging convert:wrap_orphaned_activities_in_investigations
+</code>
+
+Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
+
+If the authors confirm that there are no blockers then let people know when the
+update will take place and perform these tasks on the production server.
 h2. other Rake tasks:
 
 * rigse:make:investigations. This task simply finds all activities with no parent investigation, 

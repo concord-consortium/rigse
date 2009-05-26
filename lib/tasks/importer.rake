@@ -16,6 +16,14 @@ HEREDOC
       
       parser = Parser.new
       parser.process_rigse_data
+    end    
+  end
+  namespace :convert do
+    desc 'set new grade_span_expectation attribute: gse_key'
+    task :set_gse_keys => :environment do
+      gses = GradeSpanExpectation.find(:all)
+      puts "resetting gse_key for #{gses.length} GradeSpanExpectations"
+      gses.each { |gse|  gse.set_gse_key }
     end
   end
 end

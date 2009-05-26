@@ -124,6 +124,12 @@ class InvestigationsController < ApplicationController
   def create
     @investigation = Investigation.new(params[:investigation])
     @investigation.user = current_user
+    begin
+      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      params[:investigation][:grade_span_expectation] = gse
+    rescue
+      logger.error('could not find gse')
+    end
     respond_to do |format|
       if @investigation.save
         flash[:notice] = 'Investigation was successfully created.'
@@ -140,6 +146,12 @@ class InvestigationsController < ApplicationController
   # PUT /pages/1.xml
   def update
     cancel = params[:commit] == "Cancel"
+    begin
+      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      params[:investigation][:grade_span_expectation] = gse
+    rescue
+      logger.error('could not find gse')
+    end
     @investigation = Investigation.find(params[:id])
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
@@ -226,7 +238,7 @@ class InvestigationsController < ApplicationController
   end
   
   def paste_link
-    render :partial => 'pages/paste_link', :locals => {:params => params}
+    render :partial => 'investigations/paste_link', :locals => {:params => params}
   end
   
   

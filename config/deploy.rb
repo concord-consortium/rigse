@@ -163,8 +163,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:make:investigations --trace" 
   end
 
+  desc 'set new grade_span_expectation attribute: gse_key'
+  task :set_gse_keys, :roles => :db, :only => { :primary => true } do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
+  end
 end
-
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'

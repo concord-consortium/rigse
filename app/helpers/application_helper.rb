@@ -214,6 +214,16 @@ module ApplicationHelper
     end
   end
 
+  def name_for_gse(gse)
+    capture_haml do
+      haml_tag(:ul, :class => 'menu_h') do
+        haml_tag(:li) { haml_concat(link_to('GSE: ' + h(gse.gse_key),  grade_span_expectation_path(gse))) }
+        haml_tag(:li) { haml_concat('Grade span: ' + h(gse.grade_span)) }
+        haml_tag(:li) { haml_concat('Assessment target: ' + h(gse.assessment_target.number)) }
+      end
+    end
+  end
+
   def edit_menu_for(component, form, kwds={:omit_cancel => true})
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
