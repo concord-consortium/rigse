@@ -20,11 +20,11 @@ tinyMCE.init({
     paste_auto_cleanup_on_paste : true,
     paste_preprocess : function(pl, o) {
         // Content string containing the HTML from the clipboard
-        alert(o.content);
+        // alert(o.content);
     },
     paste_postprocess : function(pl, o) {
         // Content DOM node containing the DOM structure of the clipboard
-        alert(o.node.innerHTML);
+        // alert(o.node.innerHTML);
     },
     theme_advanced_statusbar_location : 'bottom',
     convert_newlines_to_brs : false,
