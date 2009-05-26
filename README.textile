@@ -195,13 +195,13 @@ Switch to the staging branch and merge from master
   git merge master
 </pre></code>
 
-Push your copy of staging to the gihub repository:
+Push your copy of the staging branch to the gihub repository:
 
 <code>
   git push origin staging
 </code>
 
-Copy the production database to this file in your local working directory: <code>db/production_data.sql</code>
+Copy the production database to this file <code>db/production_data.sql</code> in your local working directory.
 
 <code>
   cap production db:remote_db_download
@@ -213,10 +213,16 @@ Deploy the new code to the staging server:
   cap staging deploy
 </code>
 
-Copy your local copy of the production database _(<code>db/production_data.sql</code>)_ to the staging server database:
+Copy <code>db/production_data.sql</code> in your local directory to the staging server
 
 <code>
   cap production db:remote_db_upload
+</code>
+
+Replace the tables in the production database on the staging server with data here: <code>db/production_data.sql</code>.
+
+<code>
+  cap staging db:remote_db_load
 </code>
 
 If there are migrations that need to be run
