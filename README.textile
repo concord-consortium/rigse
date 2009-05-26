@@ -201,10 +201,22 @@ Push your copy of staging to the gihub repository:
   git push origin staging
 </code>
 
+Copy the production database to this file in your local working directory: <code>db/production_data.sql</code>
+
+<code>
+  cap production db:remote_db_download
+</code>
+
 Deploy the new code to the staging server:
 
 <code>
   cap staging deploy
+</code>
+
+Copy your local copy of the production database _(<code>db/production_data.sql</code>)_ to the staging server database:
+
+<code>
+  cap production db:remote_db_upload
 </code>
 
 If there are migrations that need to be run
