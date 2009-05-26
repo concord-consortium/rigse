@@ -60,6 +60,8 @@ class UsersController < ApplicationController
     case
     when (!params[:activation_code].blank?) && user && !user.active?
       user.activate!
+      member_role = Role.find_by_title('member')
+      user.roles << member_role
       flash[:notice] = "Signup complete! Please sign in to continue."
       redirect_to login_path
     when params[:activation_code].blank?
