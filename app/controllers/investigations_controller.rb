@@ -226,7 +226,7 @@ class InvestigationsController < ApplicationController
   end
   
   def paste_link
-    render :partial => 'pages/paste_link', :locals => {:params => params}
+    render :partial => 'investigations/paste_link', :locals => {:params => params}
   end
   
   
