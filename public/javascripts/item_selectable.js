@@ -68,12 +68,27 @@ var copy = function() {
   createCookie('clipboard_data_id',document.selected_id);
   alert(template.evaluate({type:document.selected_type, id:document.selected_id}));
   // replace the paste button, much harder?
-  new Ajax.Updater({ success: 'paste_link' }, 'paste_link', {
-    parameters: { 
-      authenticity_token:AUTH_TOKEN,
-      container_id: container_id,
-      clipboard_data_type: document.selected_type, 
-      clipboard_data_id:document.selected_id}
+  new Ajax.Updater({ 
+      onCreate: 'show_wait()',
+      onComplete: 'hide_wait()',
+      success: 'paste_link' 
+    }, 
+    'paste_link', {
+      parameters: { 
+        authenticity_token:AUTH_TOKEN,
+        container_id: container_id,
+        clipboard_data_type: document.selected_type, 
+        clipboard_data_id:document.selected_id
+      }
   });
 }
+
+var show_wait = function () {
+  $('waiter').show();
+}
+
+var hide_wait = function () {
+  $('waiter').hide();
+}
+
 document.observe('click',item_select);
