@@ -122,14 +122,14 @@ class InvestigationsController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
-    @investigation = Investigation.new(params[:investigation])
-    @investigation.user = current_user
     begin
       gse = GradeSpanExpectation.find(params[:grade_span_expectation])
       params[:investigation][:grade_span_expectation] = gse
     rescue
       logger.error('could not find gse')
     end
+    @investigation = Investigation.new(params[:investigation])
+    @investigation.user = current_user
     respond_to do |format|
       if @investigation.save
         flash[:notice] = 'Investigation was successfully created.'
