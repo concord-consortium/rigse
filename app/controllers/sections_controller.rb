@@ -109,6 +109,7 @@ class SectionsController < ApplicationController
         @page.user = current_user
         @xhtml = Xhtml.create
         @xhtml.user = current_user
+        @xhtml.save!
         @xhtml.pages << @page
         @section.pages << @page
         @section.save
