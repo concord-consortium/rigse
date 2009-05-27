@@ -1,5 +1,5 @@
 .item
-  = edit_menu_for(data_collector, f)
+  = edit_menu_for(data_collector, f, {:omit_cancel => true}, scope)
   .content
     %p
       - field_set_tag 'Title' do
@@ -68,4 +68,4 @@
         %li
           = labeled_check_box(f, :ruler_enabled)
       
-= observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_data_collector_path(data_collector) + "?container_id=#{@container_id}&container_type=#{@container_type}"))
+= observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_data_collector_path(data_collector) + "?scope_id=#{scope.id}&scope_type=#{scope.class}"))
