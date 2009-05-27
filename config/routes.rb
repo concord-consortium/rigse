@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :raw_otmls
+
   map.resources :n_logo_models
 
   map.resources :mw_modeler_pages
