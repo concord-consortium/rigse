@@ -125,15 +125,19 @@ class RawOtmlsController < ApplicationController
   
   # GET /raw_otmls/1/content
   def content
-    @raw_otml = RawOtml.find(params[:id])
-    if request.xhr?
-      render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
+    if request.post? or request.put?
+      update_content
     else
-      respond_to do |format|
-        format.html # content.html.haml
-        format.otml { render :xml => @raw_otml.content, :layout => false } # raw_otml_content.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
-        format.xml  { render :xml => @raw_otml.content, :layout => false }
+      @raw_otml = RawOtml.find(params[:id])
+      if request.xhr?
+        render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
+      else
+        respond_to do |format|
+          format.html # content.html.haml
+          format.otml { render :layout => "layouts/raw_otml_content" } # raw_otml_content.otml.haml
+          format.jnlp { render :partial => "shared/jnlp", :locals => { :runnable_object => @raw_otml, :escaped_otml_url => otml_url_content } }
+          format.xml  { render :xml => @raw_otml.content, :layout => false }
+        end
       end
     end
   end
@@ -142,6 +146,7 @@ class RawOtmlsController < ApplicationController
   def update_content
     @raw_otml = RawOtml.find(params[:id])
     content = request.raw_post
+    # TODO extract only what's under /otrunk/objects/OTSystem/root
     if request.xhr?
       render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
     else
@@ -157,5 +162,17 @@ class RawOtmlsController < ApplicationController
         end
       end
     end
+  end
+  
+  private 
+  
+  def otml_url_content
+    url = url_for(
+      :controller =>  @raw_otml.class.name.pluralize.underscore, 
+      :action => :content,
+      :format => :otml, 
+      :id  => @raw_otml.id,
+      :only_path => false )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 end

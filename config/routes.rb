@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :raw_otmls, :member => {
-    :content => :get,
+    :content => [:get, :put, :post],
     :update_content => [:put, :post]
   }
 
