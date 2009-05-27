@@ -258,19 +258,18 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
               haml_tag :div, :class => 'dropdown', :id => "actions_#{embeddable.name}_menu" do
-              haml_tag :ul do
-              haml_tag(:li) { haml_concat run_link_for(embeddable) }
-              haml_tag(:li) { haml_concat print_link_for(embeddable) }
-              haml_tag(:li) { haml_concat otml_link_for(embeddable) }
-              end
+                haml_tag :ul do
+                  haml_tag(:li) { haml_concat run_link_for(embeddable) }
+                  haml_tag(:li) { haml_concat print_link_for(embeddable) }
+                  haml_tag(:li) { haml_concat otml_link_for(embeddable) }
+                end
               end
               haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
-              
-            if (component.changeable?(current_user))
-              # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_concat edit_button_for(embeddable, options)
-              haml_concat delete_button_for(component)
-            end
+          end              
+          if (embeddable.changeable?(current_user))
+            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            haml_concat edit_button_for(embeddable, options)
+            haml_concat delete_button_for(component)
           end
         end
       end
