@@ -82,6 +82,10 @@
           %li.trail= link_to 'Investigations', investigations_path
           %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
+          
+        - if current_user.has_role?('admin')
+          %ul.menu_h.right
+            %li= link_to 'Users', users_path
 
       #content_container      
         #left_nav.nav_menu

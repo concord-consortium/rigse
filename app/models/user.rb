@@ -50,6 +50,17 @@ class User < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{login first_name last_name email}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+  
 
   # we will lazy load the anonymous user later
   @@anonymous_user = nil 
