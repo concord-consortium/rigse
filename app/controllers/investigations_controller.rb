@@ -192,6 +192,7 @@ class InvestigationsController < ApplicationController
   ##
   def add_activity
     @activity = Activity.new
+    @activity.user = current_user
     @investigation = Investigation.find(params['id'])
     @activity.investigation = @investigation
   end

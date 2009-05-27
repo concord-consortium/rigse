@@ -207,8 +207,11 @@ class PagesController < ApplicationController
       @component = component_class.create
     end
     @component.pages << @page
+    @component.user = current_user
     @component.save
     @element = @page.element_for(@component)
+    @element.user = current_user
+    @element.save
     # 
     # # dynamically insert appropriate partial based on type.
     # @partial = partial_for(@component)
