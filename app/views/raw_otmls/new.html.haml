@@ -1,0 +1,3 @@
+- form_for(@raw_otml, :before => "tinyMCE.triggerSave(true,true)") do |f|
+  .item
+    = render :partial => 'form', :locals => { :raw_otml => @raw_otml, :f => f }

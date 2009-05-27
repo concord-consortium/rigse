@@ -1,0 +1,6 @@
+%OTText{ :local_id => ot_local_id_for( raw_otml, :name ), :rows => '2', :columns => '40' }
+  %text= raw_otml.name
+%OTCompoundDoc{:local_id => ot_local_id_for(raw_otml)}
+  %bodyText
+    = raw_otml.description  
+    %object{ :refid => ot_refid_for(raw_otml, :name) }
