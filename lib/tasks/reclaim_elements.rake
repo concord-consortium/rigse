@@ -6,26 +6,34 @@ namespace :rigse do
     task :reclaim_elements => :environment do
        investigations = Activity.find(:all)
         investigations.each do |i|
+          current_user = i.user 
+          if (current_user)
+            puts "working with #{current_user.login}"
+          else
+            puts "skipping investigation #{i.name} : #{i.id} which has no owner!"
+            next
+          end
           i.sections.each do |s|
+            if (s.user.nil?)
+              puts "no user for section #{s.name}: #{s.id} will change to #{current_user.login}"
+              s.user = current_user;
+              s.save!
+            end
             s.pages.each do |p|
+              if (p.user.nil?)
+                puts "no user for page #{p.name}: #{p.id} will change to #{current_user.login}"
+                p.user = current_user;
+                p.save!
+              end
               p.page_elements.each do |elem|
-                current_user = p.user
-                if (current_user)
-                  puts "working with #{current_user.login}"
-                else
-                  puts "skipping page with no owner!"
-                  next
-                end
                 embedable = elem.embeddable
                 if (embedable)
                   user = embedable.user
                   if (!user)
-                    puts "no user for #{embedable.class.name}: #{embedable.id} will change to #{current_user}"
+                    puts "no user for #{embedable.class.name}: #{embedable.id} will change to #{current_user.login}"
                     embedable.user = current_user
                     embedable.save!
                   end
-                else
-                  puts "no #{embedable} for #{elem}"
                 end
               end
             end
