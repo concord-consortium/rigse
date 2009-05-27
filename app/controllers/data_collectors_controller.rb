@@ -61,7 +61,7 @@ class DataCollectorsController < ApplicationController
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     session[:new_probe_type_id] = nil
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :data_collector => @data_collector }
+      render :partial => 'remote_form', :locals => { :data_collector => @data_collector, :scope => @scope }
     else
       respond_to do |format|
         format.html 
@@ -182,7 +182,9 @@ class DataCollectorsController < ApplicationController
   def get_scope
     begin
       @scope = @data_collector
-      if container_type = params[:container_type] 
+      if container_type = params[:scope_type]
+        @scope = container_type.constantize.find(params[:scope_id])
+      elsif container_type = params[:container_type] 
         @scope = container_type.constantize.find(params[:container_id])
       end
     rescue ActiveRecord::RecordNotFound
