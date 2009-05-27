@@ -123,6 +123,7 @@ class RawOtmlsController < ApplicationController
     @raw_otml.destroy    
   end
   
+  # GET /raw_otmls/1/content
   def content
     @raw_otml = RawOtml.find(params[:id])
     if request.xhr?
@@ -133,6 +134,21 @@ class RawOtmlsController < ApplicationController
         format.otml { render :layout => "layouts/raw_otml_content" } # raw_otml_content.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
         format.xml  { render :raw_otml => @raw_otml }
+      end
+    end
+  end
+  
+  # PUT/POST /raw_otmls/1/content
+  def update_content
+    @raw_otml = RawOtml.find(params[:id])
+    content = request.raw_post
+    if request.xhr?
+      render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
+    else
+      respond_to do |format|
+        format.html { redirect_to(@raw_otml) }
+        format.otml { head :ok }
+        format.xml  { head :ok }
       end
     end
   end
