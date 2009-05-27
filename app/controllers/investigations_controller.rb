@@ -104,7 +104,7 @@ class InvestigationsController < ApplicationController
   # GET /pages/new.xml
   def new
     @investigation = Investigation.new
-
+    @investigation.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @investigation }
