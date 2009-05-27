@@ -168,7 +168,15 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
   end
+
+  desc 'find page_elements whithout owners and recalim them'
+  task :reclaim_page_elements, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace" 
+  end
+  
 end
+
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'
