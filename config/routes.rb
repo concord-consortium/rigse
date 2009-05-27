@@ -1,5 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :raw_otmls
+  map.resources :raw_otmls, :member => {
+    :content => :get,
+    :update_content => [:put, :post]
+  }
 
   map.resources :n_logo_models
 

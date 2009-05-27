@@ -131,9 +131,9 @@ class RawOtmlsController < ApplicationController
     else
       respond_to do |format|
         format.html # content.html.haml
-        format.otml { render :layout => "layouts/raw_otml_content" } # raw_otml_content.otml.haml
+        format.otml { render :xml => @raw_otml.content, :layout => false } # raw_otml_content.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
-        format.xml  { render :raw_otml => @raw_otml }
+        format.xml  { render :xml => @raw_otml.content, :layout => false }
       end
     end
   end
@@ -145,10 +145,16 @@ class RawOtmlsController < ApplicationController
     if request.xhr?
       render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
     else
+      @raw_otml.content = content
       respond_to do |format|
-        format.html { redirect_to(@raw_otml) }
-        format.otml { head :ok }
-        format.xml  { head :ok }
+        format.html { render :action => "content" }
+        if @raw_otml.save
+          format.otml { head :ok }
+          format.xml  { head :ok }
+        else
+          format.otml  { render :xml => @raw_otml.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @raw_otml.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
