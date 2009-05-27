@@ -144,25 +144,25 @@ module JnlpHelper
     ]
   end
 
-  def system_properties
+  def system_properties(authoring = false)
     [
      ['otrunk.view.export_image', 'true'],
      ['otrunk.view.author', 'true'],
      ['_otrunk.view.debug', 'true'],
-     ['otrunk.view.mode', 'student'],
+     (authoring ? ['otrunk.view.mode', 'authoring'] : ['otrunk.view.mode', 'student']),
      ['otrunk.view.status', 'true']
     ]
   end
   
-  def jnlp_resources(xml)
+  def jnlp_resources(xml, options = {})
     xml.resources {
       xml.j2se :version => "1.5+", 'max-heap-size' => "128m", 'initial-heap-size' => "32m"
       xml.jar :href => "net/sf/sail/sail-data-emf/sail-data-emf.jar", :main => true, :version => "0.1.0-20090506.165007-1170"
       resource_jars.each do |resource|
         xml.jar :href => resource[0], :version => resource[1]
       end
-      system_properties.each do |property|
-        xml.property :name => property[0], :value => property[1]
+      system_properties(options[:authoring]).each do |property|
+        xml.property(:name => property[0], :value => property[1])
       end
     }
   end

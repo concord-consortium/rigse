@@ -16,7 +16,11 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev") {
     xml << "    <all-permissions />"
   }
 
-  jnlp_resources(xml)
+  begin
+    jnlp_resources(xml, {:authoring => authoring})
+  rescue NameError
+    jnlp_resources(xml)
+  end
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)

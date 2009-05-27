@@ -135,7 +135,7 @@ class RawOtmlsController < ApplicationController
         respond_to do |format|
           format.html # content.html.haml
           format.otml { render :layout => "layouts/raw_otml_content" } # raw_otml_content.otml.haml
-          format.jnlp { render :partial => "shared/jnlp", :locals => { :runnable_object => @raw_otml, :escaped_otml_url => otml_url_content } }
+          format.jnlp { render :partial => "shared/jnlp", :locals => { :runnable_object => @raw_otml, :escaped_otml_url => otml_url_content, :authoring => "true" } }
           format.xml  { render :xml => @raw_otml.content, :layout => false }
         end
       end
@@ -145,8 +145,8 @@ class RawOtmlsController < ApplicationController
   # PUT/POST /raw_otmls/1/content
   def update_content
     @raw_otml = RawOtml.find(params[:id])
-    content = request.raw_post
-    # TODO extract only what's under /otrunk/objects/OTSystem/root
+    # extract only what's under /otrunk/objects/OTSystem/root
+    content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
     if request.xhr?
       render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
     else
