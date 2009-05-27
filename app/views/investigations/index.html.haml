@@ -22,7 +22,9 @@
       %div{ :id => dom_id_for(investigation, :item), :class => 'item' }
         %div.action_menu
           %div.action_menu_header_left   
-            =link_to name_for_component(investigation), investigation
+            = link_to name_for_component(investigation), investigation
+            %span.author
+              = investigation.user.name
           %div.action_menu_header_right   
             %ul.menu
               %li= run_link_for(investigation)
