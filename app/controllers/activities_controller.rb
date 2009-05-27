@@ -105,7 +105,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/new.xml
   def new
     @activity = Activity.new
-
+    @activty.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @activity }
@@ -183,6 +183,7 @@ class ActivitiesController < ApplicationController
   def add_section
     @section = Section.new
     @activity = Activity.find(params['id'])
+    @section.user = current_user
     @section.activity = @activity
   end
   

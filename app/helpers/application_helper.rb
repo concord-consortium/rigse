@@ -113,13 +113,48 @@ module ApplicationHelper
     end
   end
 
-  def edit_button_for(component, options={})
-    url      = options[:url]      || edit_url_for(component)
+  def edit_button_for(component, options={}, scope=false)
+    url      = options[:url]      || edit_url_for(component, scope)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
     remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.display_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
+  end
+
+  def edit_url_for(component, scope=false)
+    if scope
+      { :controller => component.class.name.pluralize.underscore, 
+        :action => :edit, 
+        :id  => component.id,
+        :scope_type => scope.class,
+        :scope_id =>scope.id}
+    else
+      { :controller => component.class.name.pluralize.underscore, 
+        :action => :edit, 
+        :id  => component.id,
+        :container_type => @container_type,
+        :container_id => @container_id }
+    end
+  end
+
+  def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
+    component = (component.respond_to? :embeddable) ? component.embeddable : component
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag :ul, {:class => 'menu'} do
+            if (component.changeable?(current_user))
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
+            end
+          end
+        end
+      end
+    end
   end
   
   def otml_url_for(component)
@@ -159,9 +194,7 @@ module ApplicationHelper
     end
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
-  
-  
-  
+
   def run_link_for(component, prefix='')
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -182,7 +215,6 @@ module ApplicationHelper
       :id  => component.id)
   end
 
-
   def delete_button_for(model, options={})
     # find the page_element for the embeddable
     embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
@@ -193,14 +225,6 @@ module ApplicationHelper
       url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
     end
     remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
-  end
-
-  def edit_url_for(component)
-    { :controller => component.class.name.pluralize.underscore, 
-      :action => :edit, 
-      :id  => component.id,
-      :container_type => @container_type,
-      :container_id => @container_id }
   end
 
   def name_for_component(component)
@@ -224,25 +248,6 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form, kwds={:omit_cancel => true})
-    component = (component.respond_to? :embeddable) ? component.embeddable : component
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          
-        end
-        haml_tag :div, :class => 'action_menu_header_right' do
-          haml_tag :ul, {:class => 'menu'} do
-            if (component.changeable?(current_user))
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
-            end
-          end
-        end
-      end
-    end
-  end
-
   def show_menu_for(component, options={})
     embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
@@ -253,19 +258,18 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
               haml_tag :div, :class => 'dropdown', :id => "actions_#{embeddable.name}_menu" do
-              haml_tag :ul do
-              haml_tag(:li) { haml_concat run_link_for(embeddable) }
-              haml_tag(:li) { haml_concat print_link_for(embeddable) }
-              haml_tag(:li) { haml_concat otml_link_for(embeddable) }
-              end
+                haml_tag :ul do
+                  haml_tag(:li) { haml_concat run_link_for(embeddable) }
+                  haml_tag(:li) { haml_concat print_link_for(embeddable) }
+                  haml_tag(:li) { haml_concat otml_link_for(embeddable) }
+                end
               end
               haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
-              
-            if (component.changeable?(current_user))
-              # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_concat edit_button_for(embeddable, options)
-              haml_concat delete_button_for(component)
-            end
+          end              
+          if (embeddable.changeable?(current_user))
+            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            haml_concat edit_button_for(embeddable, options)
+            haml_concat delete_button_for(component)
           end
         end
       end
