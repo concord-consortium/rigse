@@ -1,0 +1,3 @@
+= render :partial => 'investigations/gse_filter'
+- form_for (@investigation,:before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f}

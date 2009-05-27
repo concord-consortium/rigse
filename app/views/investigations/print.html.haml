@@ -1,0 +1,5 @@
+= render :partial => 'shared/print_teacher_notes', :locals => {:item => @investigation}
+.investigation
+  %h2=@investigation.name
+  - @investigation.activities.each do |activity|
+    = render  :partial => 'activities/print', :locals => { :activity => activity }

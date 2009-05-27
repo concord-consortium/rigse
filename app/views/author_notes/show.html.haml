@@ -1,0 +1,9 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_right
+      %ul.menu
+        %li= link_to 'edit', edit_author_note_url(@teacher_note)
+
+.content
+  - field_set_tag 'body' do
+    = @author_note.body

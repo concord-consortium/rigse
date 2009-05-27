@@ -1,17 +1,26 @@
 development: &non_production_settings
   site_url: http://localhost:3000
-  site_name: RITES Authoring Template
+  site_name: RITES Investigations (development)
   admin_email: stephen.bannasch@gmail.com
-  
+  admin_login: stephen
+  admin_first_name: Stephen
+  admin_last_name: Bannasch
+
 test:
   <<: *non_production_settings
 
 staging:
   site_url: http://rites.dev.concord.org
-  site_name: RITES Authoring Template
+  site_name: RITES Investigations (staging)
   admin_email: stephen.bannasch@gmail.com
+  admin_login: stephen
+  admin_first_name: Stephen
+  admin_last_name: Bannasch
   
 production:
   site_url: http://rites.dev.concord.org
-  site_name: RITES Authoring Template
+  site_name: RITES Investigations
   admin_email: stephen.bannasch@gmail.com
+  admin_login: stephen
+  admin_first_name: Stephen
+  admin_last_name: Bannasch

@@ -14,7 +14,7 @@ class Itsi::User < Itsi::Itsi
 
   has_many :activities, :class_name => "Itsi::Activity", :order => 'name'
   has_many :models, :class_name => "Itsi::Model"
-  has_many :model_types, :class_name => "Itsi::ModelTypes"
+  has_many :model_types, :class_name => "Itsi::ModelType"
 
   def name
     "#{first_name} #{last_name}"

@@ -6,7 +6,7 @@
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
         %bodyText
           #content
-            %h1= section.name
+            %h1= h(section.name)
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
         %cards

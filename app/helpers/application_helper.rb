@@ -17,7 +17,8 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
-    id_string = component.id.to_s
+    id = component.id.nil? ? Time.now.to_i : component.id
+    id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
 
@@ -118,7 +119,7 @@ module ApplicationHelper
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    link_to_remote('edit', :url => url, :update => update, :method => method, :complete => complete, :success => success)
+    remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.display_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
   end
   
   def otml_url_for(component)
@@ -130,6 +131,36 @@ module ApplicationHelper
       :only_path => false )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
+  
+  def print_link_for(component)
+     component_display_name = component.class.display_name.downcase
+      name = component.name
+      link_to("print #{component_display_name}", {
+          :controller => component.class.name.pluralize.underscore, 
+          :action => :print, 
+          :id  => component.id
+        },
+        {
+          :target => "#{component.name} printout",
+          :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
+        })
+  end
+  
+  def paste_link_for(acceptable_types,options={})
+    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
+    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
+    container_id         = options[:container_id] || params[:container_id]
+    
+    return "paste (nothing in clipboard)" unless clipboard_data_type
+    
+    if acceptable_types.include?(clipboard_data_type) 
+      url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
+      return link_to_remote("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
+    end
+    return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
+  end
+  
+  
   
   def run_link_for(component, prefix='')
     component_display_name = component.class.display_name.downcase
@@ -151,27 +182,25 @@ module ApplicationHelper
       :id  => component.id)
   end
 
-  def print_link_for(component)
-    link_to('print', 
-      :controller => component.class.name.pluralize.underscore, 
-      :action => :print,
-      :id  => component.id)
-  end
 
-  def delete_button_for(model)
+  def delete_button_for(model, options={})
     # find the page_element for the embeddable
     embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
     controller = "#{model.class.name.pluralize.underscore}"
-    link_to_remote('X',  
-      :confirm => "Delete  #{embeddable.class.human_name} named #{embeddable.name}?", 
-      :html => {:class => 'delete'}, 
-      :url => url_for(:controller => controller, :action => 'destroy', :id=>model.id))
+    if options[:redirect]
+      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
+    else
+      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+    end
+    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
   def edit_url_for(component)
     { :controller => component.class.name.pluralize.underscore, 
       :action => :edit, 
-      :id  => component.id }
+      :id  => component.id,
+      :container_type => @container_type,
+      :container_id => @container_id }
   end
 
   def name_for_component(component)
@@ -185,7 +214,17 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form)
+  def name_for_gse(gse)
+    capture_haml do
+      haml_tag(:ul, :class => 'menu_h') do
+        haml_tag(:li) { haml_concat(link_to('GSE: ' + h(gse.gse_key),  grade_span_expectation_path(gse))) }
+        haml_tag(:li) { haml_concat('Grade span: ' + h(gse.grade_span)) }
+        haml_tag(:li) { haml_concat('Assessment target: ' + h(gse.assessment_target.number)) }
+      end
+    end
+  end
+
+  def edit_menu_for(component, form, kwds={:omit_cancel => true})
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -196,7 +235,7 @@ module ApplicationHelper
           haml_tag :ul, {:class => 'menu'} do
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") }
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
             end
           end
         end
@@ -209,19 +248,23 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat link_to name_for_component(embeddable), embeddable
+          haml_concat(link_to name_for_component(embeddable), embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_tag :ul, {:class => 'menu'} do
             restrict_to 'admin' do
-              haml_tag(:li, {:class => 'menu'}) { haml_concat run_link_for(embeddable) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat print_link_for(embeddable) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat otml_link_for(embeddable) }
-            end
+              haml_tag :div, :class => 'dropdown', :id => "actions_#{embeddable.name}_menu" do
+              haml_tag :ul do
+              haml_tag(:li) { haml_concat run_link_for(embeddable) }
+              haml_tag(:li) { haml_concat print_link_for(embeddable) }
+              haml_tag(:li) { haml_concat otml_link_for(embeddable) }
+              end
+              end
+              haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
+              
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat edit_button_for(embeddable, options) }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat delete_button_for(component) }
+              haml_concat edit_button_for(embeddable, options)
+              haml_concat delete_button_for(component)
             end
           end
         end
@@ -257,17 +300,25 @@ module ApplicationHelper
       :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
     }
     options = defaults.merge(options)
-    return link_to options[:text], options[:url], options
+    link_to(options[:text], options[:url], options)
   end
 
   def dropdown_button(image,options={})
     name = image.gsub(/\..*/,'') # remove extension of filename
+    if options[:name_postfix]
+      postfix = options[:name_postfix]
+      content_id = "#{name}_#{postfix}_menu"
+      id = "button_#{name}_#{postfix}_menu"
+    else
+      content_id = "#{name}_menu"
+      id = "button_#{name}_menu"
+    end
     defaults = {
       :name       =>  name,
       :text       =>  image_tag(image,:title => name),
       :class      => 'rollover',
-      :content_id => "#{name}_menu",
-      :id         => "button_#{name}_menu"
+      :content_id => content_id,
+      :id         => id
     }
     options = defaults.merge(options)
     dropdown_link_for options
@@ -278,10 +329,29 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    
     link_to image_tag(image, :alt=>options[:title]),url,options
   end
   
+  def remote_link_button(image,options={})
+    defaults = {
+      :html       => {
+        :class => options[:class] || 'rollover',
+        :id    => options[:id]
+        },
+      :title => options[:title] || 'no note here'
+    }
+    options = defaults.merge(options)
+    link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
+  end
+  
+  def function_link_button(image,javascript,options={})
+    javascript ||= "alert('Hello world!'); return false;"
+    defaults = {
+      :class      => 'rollover'
+    }
+    options = defaults.merge(options)
+    link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
+  end
   
   def tab_for(component, options={})
     if(options[:active])
@@ -300,5 +370,4 @@ module ApplicationHelper
       end
     end
   end
-  
 end

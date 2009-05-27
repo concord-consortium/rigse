@@ -1,0 +1,11 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @investigation.uuid }
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles({:left_nav_panel_width => @investigation.left_nav_panel_width, :title => @investigation.name})
+      %root
+        =yield :investigation
+      %library
+        =yield :library

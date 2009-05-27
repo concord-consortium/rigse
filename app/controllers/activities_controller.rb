@@ -7,12 +7,20 @@ class ActivitiesController < ApplicationController
   before_filter :setup_object, :except => [:index]
 
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
+  before_filter :can_create, :only => [:new, :create]
   
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
   
   protected  
+
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create activities"
+      redirect_back_or activities_path
+    end
+  end
 
   def can_edit
     if defined? @activity
@@ -44,7 +52,14 @@ class ActivitiesController < ApplicationController
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
       if @activity
-        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @activity.teacher_note}
+        @page_title = @activity.name
+        @investigation = @activity.investigation
+        teacher_note = @activity.teacher_note || TeacherNote.new
+        teacher_note.authored_entity = @activity
+        author_note = @activity.author_note || AuthorNote.new
+        author_note.authored_entity = @activity 
+        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => teacher_note}
+        @author_note = render_to_string :partial => 'author_notes/remote_form', :locals => {:author_note => author_note}
       end
     end
   end
@@ -112,6 +127,7 @@ class ActivitiesController < ApplicationController
     @activity.user = current_user
     respond_to do |format|
       if @activity.save
+        format.js  # render the js file
         flash[:notice] = 'Activity was successfully created.'
         format.html { redirect_to(@activity) }
         format.xml  { render :xml => @activity, :status => :created, :location => @activity }
@@ -153,9 +169,10 @@ class ActivitiesController < ApplicationController
   def destroy
     @activity = Activity.find(params[:id])
     @activity.destroy
-
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_back_or(activities_url) }
+      format.js
       format.xml  { head :ok }
     end
   end

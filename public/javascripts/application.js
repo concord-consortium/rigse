@@ -11,8 +11,8 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
       }); 
       drop_down_width = menu_width;
     }
-    // var left_offset = (drop_down_width - menu_width) / -2
-    var left_offset = 0;
+    var left_offset = (drop_down_width - menu_width) / -2
+    //var left_offset = 0;
     var top_offset = menu.getDimensions().height
     var options = { setWidth: false, setHeight: false, offsetLeft:left_offset, offsetTop: top_offset};
 
@@ -43,3 +43,10 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     }
   }
 
+var show_teacher_note = function() {
+  $('teacher_note').show();
+}
+
+var show_author_note = function() {
+    $('author_note').show();
+}

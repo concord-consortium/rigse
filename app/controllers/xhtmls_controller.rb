@@ -1,8 +1,8 @@
 class XhtmlsController < ApplicationController
   # GET /xhtmls
   # GET /xhtmls.xml
-  def index    
-    @xhtmls = Xhtml.search(params[:search], params[:page], self.current_user)
+  def index
+    @xhtmls = Xhtml.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -43,7 +43,7 @@ class XhtmlsController < ApplicationController
       render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
     else
       respond_to do |format|
-        format.html { render :partial=>'xhtml', :locals => { :xhtml => @xhtml }, :layout=>false }
+        format.html
         format.xml  { render :xml => @xhtml }
       end
     end

@@ -8,8 +8,8 @@ class ProbeType < ActiveRecord::Base
   belongs_to :user
   
   has_many :data_collectors
-  has_many :probes
-  has_many :vendor_interfaces, :through => :probes
+  # has_many :probes
+  # has_many :vendor_interfaces, :through => :probes
   
   has_many :calibrations
 

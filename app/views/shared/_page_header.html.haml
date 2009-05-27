@@ -4,7 +4,10 @@
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => @page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #actions_menu.dropdown
   %ul
+    %li#copy_link copy (disabled)
+    %li#paste_link= paste_link_for(page_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
     %li= run_link_for(@page)
+    %li= print_link_for(@page)
     %li= toggle_all('elements')
     %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
     - if (page.changeable?(current_user))
@@ -17,14 +20,28 @@
       .padded_content
         = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
     .action_menu_header_right
-      = dropdown_button ("actions.png", :title => "actions for this page")
+      = render :partial => "shared/notes_menu", :locals => {:authorable => page}
+      = dropdown_button "actions.png", :title => "actions for this page"
       - if (page.changeable?(current_user))
         = dropdown_button "add.png", :title => 'add content to this page'
       - if (page.previous)
         = link_button "previous_page.png", page.previous, :title => "go to previous page"
       - else
-        .rollover= image_tag("blank.png")
+        .rollover= image_tag("previous_page_disabled.png")
+      - if page.section
+        - page.section.pages.each do |p|
+          - if (p.id == page.id)
+            = link_button "this_page.png", "#", :title => "you are here"
+          - else
+            = link_button "other_page.png", p, :title => "go to #{p.name}"
       - if (page.next)
         = link_button "next_page.png", page.next, :title => 'next page'
       - else
-        .rollover= image_tag("blank.png")
+        .rollover= image_tag("next_page_disabled.png")
+      - if (page.changeable?(current_user))
+        - if (page.section)
+          = delete_button_for(page, :redirect => url_for(page.section))
+        - else
+          = delete_button_for(page)
+      - if (page.section)
+        = link_button "up.png", page.section, :title => 'go to section'

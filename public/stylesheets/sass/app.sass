@@ -4,7 +4,7 @@
 @import app_fonts.sass
 @import app_metrics.sass
 @import action_menu_tab.sass
-@import teacher_overlay.sass
+@import notes.sass
 @import drop_down.sass
 
 p
@@ -212,6 +212,7 @@ ul.menu
   :font-size 1em
 
 .in_place_editor_field
+  :display inline
   :min-width 5em
   :width auto !important
   :min-height 1em
@@ -230,9 +231,9 @@ ul.menu
   &:hover
     :background-color= !container_box_hover_color
   .action_menu
-    :font-size 9px
+    :font-size 10px
     :border-bottom 1px solid
-    :opacity 0.2
+    :opacity .8
     &:hover
       :opacity 1
     
@@ -263,6 +264,21 @@ ul.menu
         :style dotted
         :color= !light_brown
   
+.mceContentBody
+  :font-size 0.8em
+  :white-space normal
+  :border
+    :width 0px
+    :style solid
+  :background-image none
+  :background-color white
+  :cursor text
+  a
+    :background-color transparent
+  a:hover
+    :color inherit
+    :background-color transparent
+
 .content
   :font-size 1em
   :white-space normal

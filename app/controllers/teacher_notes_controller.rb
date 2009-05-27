@@ -1,9 +1,52 @@
 class TeacherNotesController < ApplicationController
+  
+  before_filter :setup_object, :except => [:index]
+  
+  
+  def setup_object
+    if params[:id]
+      if params[:id].length == 36
+        @teacher_note = TeacherNote.find(:first, :conditions => ['uuid=?',params[:id]])
+      else
+        @teacher_note = TeacherNote.find(params[:id])
+      end
+    elsif params[:teacher_note]
+      @teacher_note = TeacherNote.new(params[:activity])
+    elsif params[:authored_entity_type] && params[:authored_entity_id]
+      @teacher_note = TeacherNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
+      if (@teacher_note.nil?)
+        @teacher_note = TeacherNote.new
+        @teacher_note.authored_entity_type=params[:authored_entity_type]
+        @teacher_note.authored_entity_id=params[:authored_entity_id]
+        @teacher_note.user = current_user
+      end
+    else
+      @teacher_note = TeacherNote.new
+      @teacher_note.user = current_user
+    end
+  end
+  
+  
+  
+  def show_teacher_note
+    if @teacher_note.changeable?(current_user)
+      render :update do |page|
+          page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @teacher_note}
+          page.visual_effect :toggle_blind, 'note'
+      end
+    else
+      render :update do |page|
+        page.replace_html  'note', :partial => 'teacher_notes/show', :locals => { :teacher_note => @teacher_note  }
+        page.visual_effect :toggle_blind, 'note'
+      end
+    end
+  end
+  
+  
   # GET /teacher_notes
   # GET /teacher_notes.xml
   def index
     @teacher_notes = TeacherNote.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @teacher_notes }
@@ -24,7 +67,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/new.xml
   def new
     @teacher_note = TeacherNote.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @teacher_note }
@@ -40,15 +82,25 @@ class TeacherNotesController < ApplicationController
   # POST /teacher_notes.xml
   def create
     @teacher_note = TeacherNote.new(params[:teacher_note])
-
-    respond_to do |format|
-      if @teacher_note.save
-        flash[:notice] = 'TeacherNote was successfully created.'
-        format.html { redirect_to(@teacher_note) }
-        format.xml  { render :xml => @teacher_note, :status => :created, :location => @teacher_note }
+    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
+      if (request.xhr?)
+        render :text => "<div class='notice'>teacher note saved</div>"
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
+        respond_to do |format|
+          flash[:notice] = 'TeacherNote was successfully updated.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
+        end
+      end
+    else
+      if (request.xhr?)
+         render :text => "<div class='notice'>Cant save note.</div>"
+      else
+        respond_to do |format|
+          flash[:notice] = 'You can not modify this Teachernote.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
+        end
       end
     end
   end
@@ -56,16 +108,25 @@ class TeacherNotesController < ApplicationController
   # PUT /teacher_notes/1
   # PUT /teacher_notes/1.xml
   def update
-    @teacher_note = TeacherNote.find(params[:id])
-
-    respond_to do |format|
-      if @teacher_note.update_attributes(params[:teacher_note])
-        flash[:notice] = 'TeacherNote was successfully updated.'
-        format.html { redirect_to(@teacher_note) }
-        format.xml  { head :ok }
+    if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
+      if (request.xhr?)
+        render :text => "<div class='notice'>teacher note saved</div>"
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @teacher_note.errors, :status => :unprocessable_entity }
+        respond_to do |format|
+          flash[:notice] = 'TeacherNote was successfully updated.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
+        end
+      end
+    else
+      if (request.xhr?)
+         render :text => "<div class='notice'>Cant save note.</div>"
+      else
+        respond_to do |format|
+          flash[:notice] = 'You can not modify this Teachernote.'
+          format.html { redirect_to(@teacher_note) }
+          format.xml  { head :ok }
+        end
       end
     end
   end
@@ -73,12 +134,18 @@ class TeacherNotesController < ApplicationController
   # DELETE /teacher_notes/1
   # DELETE /teacher_notes/1.xml
   def destroy
-    @teacher_note = TeacherNote.find(params[:id])
-    @teacher_note.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(teacher_notes_url) }
-      format.xml  { head :ok }
+    if(@teacher_note.changeable?(current_user))
+      @teacher_note.destroy
+      respond_to do |format|
+        format.html { redirect_to(teacher_notes_url) }
+        format.xml  { head :ok }
+      end
+    else 
+      respond_to do |format|
+        flash[:notice] = 'You can not modify this Teachernote.'
+        format.html { redirect_to(@teacher_note) }
+        format.xml  { head :ok }
+      end
     end
   end
 end

@@ -1,14 +1,21 @@
-%h1 User
+%p
+  = link_to 'back to Users list', users_path
+
 - form_for @user do |form|
+  .action_menu
+    .action_menu_header
+      .action_menu_header_right
+        %ul.menu
+          %li
+            = submit_tag 'Save'
+          %li
+            = submit_tag 'Cancel'
+
   .item
-    %ul.menu_v
-      %li
-        = submit_tag 'Save'
-      %li
-        = submit_tag 'Cancel'
-  .content
-    = form.error_messages
-    = render :partial => 'user', :locals => { :f => form }
-    .menu
-      - if @user.has_role?("admin", "manager")
-        = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+    .content
+      = form.error_messages
+      = render :partial => 'form', :locals => { :f => form }
+      = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => @user.vendor_interface }
+      .menu
+        - if @user.has_role?("admin", "manager")
+          = render :partial => 'roles', :locals => { :f => form, :roles => @roles }

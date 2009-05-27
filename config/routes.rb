@@ -1,4 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :n_logo_models
+
+  map.resources :mw_modeler_pages
+
 
   map.resources :vendor_interfaces
   map.resources :probe_types
@@ -8,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :calibrations
 
   map.resources :teacher_notes
+  map.resources :author_notes
 
   map.resources :data_tables, :member => {
     :print => :get,
@@ -55,6 +60,8 @@ ActionController::Routing::Routes.draw do |map|
     :add_element => :post,
     :sort_elements => :post,
     :delete_element => :post,
+    :paste  => :post,
+    :paste_link => :post,
     :preview => :get,
     :print => :get,
     :duplicate => :get
@@ -70,13 +77,24 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post
   }
 
+  map.resources :investigations, :member => {
+    :add_activity => :post,
+    :sort_activities => :post,
+    :delete_activity => :post,
+    :print => :get,
+    :duplicate => :get,
+    :export => :get,
+    :destroy => :post
+  }
+  
   map.resources :activities, :member => {
     :add_section => :post,
     :sort_sections => :post,
     :delete_section => :post,
     :print => :get,
     :duplicate => :get,
-    :export => :get
+    :export => :get,
+    :destroy => :post
   }
 
   map.resources :activities do |activity|
@@ -93,6 +111,8 @@ ActionController::Routing::Routes.draw do |map|
     :select_js => :post,
     :reparse_gses => :put,
     :select => :get
+  }, :member => {
+      :print => :get
   }
 
   map.resources :images

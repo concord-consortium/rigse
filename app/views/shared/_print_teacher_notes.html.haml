@@ -1,0 +1,8 @@
+- content_for(:teacher_notes) do
+  - if (item.teacher_note && item.teacher_note.body && item.teacher_note.body != "")
+    %li.teacher_note
+      .heading
+        %div{:class=>"teacher_note #{item.class.name.underscore}"}
+          = "#{item.name}:" 
+      .content
+        = item.teacher_note.body

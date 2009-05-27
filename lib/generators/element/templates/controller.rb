@@ -2,7 +2,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml
   def index    
-    @<%= table_name %> = <%= class_name %>.search(params[:search], params[:page], self.current_user)
+    @<%= table_name %> = <%= class_name %>.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,8 +18,10 @@ class <%= controller_class_name %>Controller < ApplicationController
       render :partial => '<%= singular_name %>', :locals => { :<%= singular_name %> => @<%= singular_name %> }
     else
       respond_to do |format|
-        format.html # show.html.erb
-        format.xml  { render :xml => @<%= singular_name %> }
+        format.html # show.html.haml
+        format.otml { render :layout => "layouts/<%= singular_name %>" } # <%= singular_name %>.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @<%= singular_name %> } }
+        format.xml  { render :<%= singular_name %> => @<%= singular_name %> }
       end
     end
   end
@@ -32,7 +34,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       render :partial => 'remote_form', :locals => { :<%= singular_name %> => @<%= singular_name %> }
     else
       respond_to do |format|
-        format.html { render :partial=>'<%= singular_name %>', :locals => { :<%= singular_name %> => @<%= singular_name %> }, :layout=>false }
+        format.html # renders new.html.haml
         format.xml  { render :xml => @<%= singular_name %> }
       end
     end
@@ -55,7 +57,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # POST /<%= table_name %>
   # POST /<%= table_name %>.xml
   def create
-    @<%= singular_name %> = <%= class_name %>.new(params[:xhtml])
+    @<%= singular_name %> = <%= class_name %>.new(params[:<%= singular_name %>])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 

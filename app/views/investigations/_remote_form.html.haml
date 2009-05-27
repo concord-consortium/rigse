@@ -1,0 +1,3 @@
+= render :partial => 'investigations/gse_filter'
+- remote_form_for(investigation, :update => dom_id_for(investigation, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => 'investigations/form', :locals => {:investigation=>investigation,:f => f}

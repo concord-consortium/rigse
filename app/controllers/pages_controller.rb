@@ -3,36 +3,51 @@ class PagesController < ApplicationController
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
-    
+  before_filter :can_create, :only => [:new, :create]
+  
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
   protected 
   
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create pages"
+      redirect_back_or pages_path
+    end
+  end
+  
+  
   def find_entities
     if (params[:id])
       @page = Page.find(params[:id], :include => [:section, :teacher_notes, { :page_elements => :embeddable}])
-      @section = @page.section
-      @activity =@section.activity
+      if @page
+        @section = @page.section
+        @@page_title = @page.name
+        if @section
+          @page_title="#{@section.name} : #{@page.name}"
+          @activity =@section.activity
+          if @activity
+            @investigation = @activity.investigation
+          end
+        end
+      end
       @page_elements = @page.page_elements
     end
     format = request.parameters[:format]
     unless format == 'otml' || format == 'jnlp'
-      if @page
-        @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @page.teacher_note}
-      end
     end
   end
   
   def can_edit
     if defined? @page
       unless @page.changeable?(current_user)
-        error_message = "you (#{current_user.login}) is not permitted to #{action_name.humanize} (#{@page.name})"
+        error_message = "you (#{current_user.login}) are not permitted to #{action_name.humanize} (#{@page.name})"
         flash[:error] = error_message
         if request.xhr?
           render :text => "<div class='flash_error'>#{error_message}</div>"
         else
-          redirect_back_or sections_paths
+          redirect_back_or investigations_path
         end
       end
     end
@@ -55,10 +70,6 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
-    if (@page.teacher_notes.size < 1)
-      @page.teacher_notes << TeacherNote.new
-      @page.save
-    end
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => "layouts/page" } # page.otml.haml
@@ -66,6 +77,28 @@ class PagesController < ApplicationController
       format.xml  { render :xml => @page }
     end
   end
+
+
+  def show_teacher_note
+    if @page.teacher_note.nil?
+      @page.teacher_note = TeacherNote.create 
+      # TODO: Who owns the teacher note? is this correct?
+      @page.teacher_note.author = current_user
+      @page.save
+    end
+    if @page.teacher_note.author == current_user
+      render :update do |page|
+          page.replace_html  'teacher_note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
+          page.visual_effect :toggle_blind, 'note'
+      end
+    else
+      render :update do |page|
+        page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
+        page.visual_effect :toggle_blind, 'note'
+      end
+    end
+  end
+
 
   # GET /page/1/preview
   # GET /page/1.xml
@@ -84,7 +117,8 @@ class PagesController < ApplicationController
     end
   end
 
-  # GET /page/new
+  # GET /page/
+  
   # GET /page/new.xml
   def new
     @page = Page.new
@@ -139,8 +173,10 @@ class PagesController < ApplicationController
   # DELETE /page/1.xml
   def destroy
     @page.destroy
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
+      format.js
       format.xml  { head :ok }
     end
   end
@@ -155,8 +191,21 @@ class PagesController < ApplicationController
     @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
 
-    # dynamically instatiate the component based on its type.
-    @component = Kernel.const_get(params['class_name']).create
+    # dynamically instantiate the component based on its type.
+    component_class = Kernel.const_get(params['class_name'])
+    if component_class == DataCollector
+      if probe_type_id = session[:last_saved_probe_type_id]
+        probe_type = ProbeType.find(probe_type_id)
+        @component = DataCollector.new
+        @component.probe_type = probe_type
+        @component.save
+      else
+        @component = DataCollector.create
+      end
+      session[:last_saved_probe_type_id] = @component.probe_type_id
+    else
+      @component = component_class.create
+    end
     @component.pages << @page
     @component.save
     @element = @page.element_for(@component)
@@ -192,4 +241,31 @@ class PagesController < ApplicationController
   end
 
 
+  def paste_link
+    render :partial => 'pages/paste_link', :locals => {:params => params}
+  end
+  
+  
+  #
+  # Must be  js method, so don't even worry about it.
+  #
+  def paste
+    if @page.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.clone 
+        if (@component)
+          @container = params['container'] || 'elements_container'
+          @component.name = "copy of #{@component.name}"
+          @component.user = @page.user
+          @component.pages << @page
+          @component.save
+          @element = @page.element_for(@component)
+        end
+      end
+    end
+  end
 end

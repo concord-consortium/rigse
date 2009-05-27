@@ -4,4 +4,4 @@
       %bodyText= open_response.prompt
   %input
     %OTText{ :local_id => ot_local_id_for(open_response, :response), :rows => '2', :columns => '40' }
-      %text= open_response.default_response
+      %text= h(open_response.default_response)

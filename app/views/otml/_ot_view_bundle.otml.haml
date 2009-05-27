@@ -1,6 +1,6 @@
 %OTViewBundle{ :showLeftPanel => 'false' }
   %frame
-    %OTFrame{ :useScrollPane => 'false', :width => 840 + left_nav_panel_width, :height => '700', :title => title }
+    %OTFrame{ :useScrollPane => use_scroll_pane, :width => 840 + left_nav_panel_width, :height => '700', :title => h(title) }
   %views
     - view_entries.each do |view_entry|
       %OTViewEntry{ :local_id => ot_local_id_for(view_entry[0]), :objectClass => view_entry[1], :viewClass => view_entry[2] }/

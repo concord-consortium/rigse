@@ -1,15 +1,30 @@
-%div{:id => dom_id_for(activity,:item), :class =>"action_menu"}
-  .action_menu_header_left
-    .padded_content
-      = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
-  .action_menu_header_right
-    %ul.menu
-      / %li= toggle_more(activity,"sections_actions", "show/hide sections")
-      %li= run_link_for(@activity)
-      %li= toggle_all 'section descriptions'
+#actions_menu.dropdown
+  %ul
+    %li= run_link_for(@activity)
+    %li= print_link_for(@activity)
+    %li#copy_link copy (disabled)
+    %li= toggle_all('sections')
+    - if (activity.changeable?(current_user))
       %li= link_to 'duplicate', duplicate_activity_url(activity)
-      / %li= edit_button_for(activity, :complete => mce_init_string())
+      %li#paste_link= paste_link_for([nil],{:container_id => @container_id}) # see pages_helper.rb
+      
+%div{:id => dom_id_for(activity,:item), :class =>"action_menu"}
+  .action_menu
+    .action_menu_header_left
+      .padded_content
+      .padded_content
+        = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
+    .action_menu_header_right
+      = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
+      = dropdown_button "actions.png", :title => "actions for this page"
       - if (activity.changeable?(current_user))
-        %li= link_to_remote 'add section', :complete => mce_init_string(), :url => add_section_activity_path(activity),:html => {:class=>'action'}
-        %li{:class => 'menu delete'}= delete_button_for(activity)
+        = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
+        - if (activity.investigation)
+          = delete_button_for(activity, :redirect => url_for(activity.investigation))
+        - else
+          = delete_button_for(activity)
+      - else
+        = link_button "add_disabled.png", "#", :title => "can't add activities"
+      - if (activity.investigation)
+        = link_button "up.png", activity.investigation, :title => 'go to investigation'
 

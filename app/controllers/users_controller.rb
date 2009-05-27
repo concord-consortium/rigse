@@ -1,8 +1,30 @@
 class UsersController < ApplicationController
   # skip_before_filter :verify_authenticity_token, :only => :create
   
-  access_rule 'admin', :only => [:index, :new, :edit, :update, :destroy]
+  access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
   access_rule 'admin || manager', :only => :index
+  
+  def index
+    if params[:mine_only]
+      @users = User.search(params[:search], params[:page], self.current_user)
+    else
+      @users = User.search(params[:search], params[:page], nil)
+    end
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @pages }
+    end
+  end
+  
+  # GET /users/1
+  # GET /users/1.xml
+  def show
+    @user = User.find(params[:id])
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @user }
+    end
+  end
   
   def new
     @user = User.new
@@ -38,12 +60,14 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     
-    unless params[:commit] == "Cancel"
+    if params[:commit] == "Cancel"
+      redirect_to users_path
+    else
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
           flash[:notice] = "User: #{@user.name} was successfully updated."
-          format.html { redirect_to(root_path) }
+          format.html { redirect_to(@user) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
@@ -60,6 +84,7 @@ class UsersController < ApplicationController
     case
     when (!params[:activation_code].blank?) && user && !user.active?
       user.activate!
+      user.make_user_a_member
       flash[:notice] = "Signup complete! Please sign in to continue."
       redirect_to login_path
     when params[:activation_code].blank?

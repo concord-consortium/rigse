@@ -13,7 +13,7 @@ class DataCollector < ActiveRecord::Base
   has_many :prediction_graph_destinations,
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
-  
+
   acts_as_replicatable
   
   include Changeable
@@ -25,6 +25,14 @@ class DataCollector < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+  end
+  
+  def other_data_collectors_in_activity_scope(scope)
+    if scope && scope.class != DataCollector
+      scope.activity.data_collectors - [self]
+    else
+      []
     end
   end
   
@@ -47,13 +55,17 @@ class DataCollector < ActiveRecord::Base
   end
 
   def self.graph_types
-    [["Sensor", 1], ["Prediction", 2]]
+    [["Sensor", 1], ["Prediction", 2], ["Static", 3]]
   end
   
   def graph_type_id
     self[:graph_type_id] || 1
   end
-  
+
+  def graph_type_id=(gid)
+    self[:graph_type_id] = gid
+  end
+
   def graph_type
     DataCollector.graph_types[graph_type_id-1][0]
   end

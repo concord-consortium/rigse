@@ -58,22 +58,36 @@ class ElementGenerator < Rails::Generator::NamedBase
         'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
       )
       
+      
       # Routes:
       m.route_resources controller_file_name 
       
-      # Views:
-      for filename in view_files
-        m.template(
-          filename,
-          File.join('app/views', controller_class_path, controller_file_name, filename)
-        )
-      end
-      # One more view, that does not follow the pattern
+      # Layout:
       m.template(
-        "_element.html.haml",
-        File.join('app/views', controller_class_path, controller_file_name, "_#{singular_name}.html.haml")
+        'layout.otml.haml', File.join('app/views/layouts', controller_class_path, "#{file_name}.otml.haml")
       )
-    end
+      
+      # Views:
+      view_files.each do |filename|
+        puts filename
+        m.template(filename,File.join('app/views', controller_class_path, controller_file_name, filename))
+      end
+      puts <<-END_OF_TEXT
+      Your page element should now be installed.
+      
+      * run the migration that was created with "rake db:migrate"
+      
+      * Try browsing to localhost:3000/#{controller_file_name}/new to create one!
+      
+      * Edit the form in app/views/#{controller_file_name}/_form.html.haml, and reload & repeat.
+      
+      * Once you are satisfied, you should add the element to the method element_types() in app/helpers/pages_helper.rb
+      
+      * Edit app/models/page.rb and add the following line:
+      
+      *  has_many :#{controller_file_name}, :through => :page_elements, :source => :embeddable, :source_type => '#{class_name}'
+      END_OF_TEXT
+    end    
   end
 
   protected
@@ -94,7 +108,11 @@ class ElementGenerator < Rails::Generator::NamedBase
     end
 
     def view_files
-       %w[ index.html.haml show.html.haml new.html.haml edit.html.haml _remote_form.html.haml _show.html.haml _form.html.haml destroy.js.rjs]
+      types = "{haml,erb,html,rjs,js}"
+      path = File.join(File.dirname(__FILE__), 'templates');
+      pattern = File.join(path,"*.#{types}")
+      names = (Dir.glob(pattern).map {|f| File.basename(f)})
+      names
     end
     
     

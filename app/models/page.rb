@@ -1,6 +1,8 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+  has_one :activity, :through => :section
+
   has_many :page_elements, :order => :position, :dependent => :destroy
 
   has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
@@ -8,9 +10,14 @@ class Page < ActiveRecord::Base
   has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
   has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
   has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
+  has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
+  has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
+  has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
   
   has_many :teacher_notes, :as => :authored_entity
-  
+  has_many :author_notes, :as => :authored_entity
+  include Noteable # convinience methods for notes...
+    
   acts_as_replicatable
   acts_as_list :scope => :section
   
@@ -25,14 +32,28 @@ class Page < ActiveRecord::Base
   def self.display_name
     'Page'
   end
-
-  UNTITLED_PAGE_NAME = 'unititled page'
+  
+  def page_number
+    if (!self.section.nil?)
+      self.section.pages.each_with_index do |p,i|
+        if (p.id==self.id)
+          return i+1
+        end
+      end
+    end
+    1
+  end
+  
+  def default_page_name
+    return "Page #{page_number}"
+  end
+  
   
   def name
     if self[:name] && !self[:name].empty?
       self[:name]
     else
-      UNTITLED_PAGE_NAME
+      default_page_name
     end
   end
 

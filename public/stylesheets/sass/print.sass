@@ -1,3 +1,65 @@
+@import compass/reset.sass
+@import app_colors.sass
+@import app_fonts.sass
+@import app_metrics.sass
 @import blueprint.sass
 
-+blueprint-print
++blueprint-typography
+
+#wrapper
+  :margin 10px
+  :padding 10px 
+  :width auto
+  :float none  
+
+.menu
+  :font
+    :weight bold
+    
+.item
+  :border
+    :top  1px solid
+  :margin 2em
+.teacher_note
+  :margin
+    :top 2em
+  .note_for
+    :font
+      :weight normal
+  .heading
+    :font
+      :weight bold
+  .page    
+    :font
+      :size 1em
+  .section
+    :font
+      :size 1.2em
+  .activity
+    :font
+      :size 1.4em
+  
+#main_content
+  :display block
+  :width 70%
+  :float left
+  :min-height 600px
+  :height auto !important
+
+#teacher_content
+  :display block
+  :width 20%
+  :float right
+  :padding 1em
+  :border
+    :left 1px dotted
+  :height 100%
+.page
+  :page-break-after always
+.section
+
+.data_collector
+  :display block
+  :width 400px
+  :height 200px
+

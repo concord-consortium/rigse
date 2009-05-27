@@ -2,7 +2,7 @@ class MultipleChoicesController < ApplicationController
   # GET /multiple_choices
   # GET /multiple_choices.xml
   def index    
-    @multiple_choices = MultipleChoice.search(params[:search], params[:page], self.current_user)
+    @multiple_choices = MultipleChoice.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

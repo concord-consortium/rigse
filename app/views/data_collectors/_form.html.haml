@@ -9,16 +9,17 @@
       %p
         %ul.menu_h
           %li
-            Graph type: 
-            = f.select(:graph_type_id, DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
-          %li
             Probe type: 
             = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_probe_type)})
+          %li
+            Graph type: 
+            = f.select(:graph_type_id, DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
+          
       %p
         %ul.menu_h
           %li
-            Include data from a prediction graph:
-            = f.select(:prediction_graph_id, DataCollector.prediction_graphs.collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
+            Include data from another graph in this Activity:
+            = f.select(:prediction_graph_id, data_collector.other_data_collectors_in_activity_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
       %p
         %ul.menu_h
           %li
@@ -67,4 +68,4 @@
         %li
           = labeled_check_box(f, :ruler_enabled)
       
-= observe_form(dom_id_for(data_collector, :edit), :url => change_probe_type_data_collector_path(data_collector))
+= observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_data_collector_path(data_collector) + "?container_id=#{@container_id}&container_type=#{@container_type}"))

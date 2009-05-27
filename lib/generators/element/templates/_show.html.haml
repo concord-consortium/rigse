@@ -1,3 +1,3 @@
-- options = { :complete => mce_init_string }
-= show_menu_for(<%= singular_name %>, options)
-= render :partial => "<%= plural_name %>/<%= singular_name %>", :locals => { :<%= singular_name %> => <%= singular_name %> }
+%div{:id => dom_id_for(<%= singular_name %>, :details), :class => 'content'}
+  = wrap_edit_link_around_content(<%= singular_name %>, options={:complete => mce_init_string}) do
+    = <%= singular_name %>.description

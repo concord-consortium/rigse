@@ -9,16 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090513163256) do
+ActiveRecord::Schema.define(:version => 20090526152312) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_template"
+    t.integer  "position"
+    t.integer  "investigation_id"
+    t.integer  "original_id"
   end
 
   create_table "assessment_targets", :force => true do |t|
@@ -30,6 +33,16 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
     t.string   "uuid",                   :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "author_notes", :force => true do |t|
+    t.text     "body"
+    t.string   "uuid",                 :limit => 36
+    t.integer  "authored_entity_id"
+    t.string   "authored_entity_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   create_table "big_ideas", :force => true do |t|
@@ -172,6 +185,7 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
     t.string   "uuid",                 :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "gse_key"
   end
 
   create_table "images", :force => true do |t|
@@ -188,23 +202,14 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
     t.datetime "updated_at"
   end
 
-  create_table "interactive_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.string   "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",                      :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "grade_span_expectation_id"
   end
 
   create_table "knowledge_statements", :force => true do |t|
@@ -230,6 +235,28 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
     t.string   "name"
     t.text     "description"
     t.text     "prompt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "mw_modeler_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "n_logo_models", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
+    t.integer  "width"
+    t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -345,27 +372,12 @@ ActiveRecord::Schema.define(:version => 20090513163256) do
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
-    t.text     "author"
     t.string   "uuid",                 :limit => 36
     t.integer  "authored_entity_id"
     t.string   "authored_entity_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "teacher_notes_assessment_targets", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "assessment_target_id"
-  end
-
-  create_table "teacher_notes_domains", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "domain_id"
-  end
-
-  create_table "teacher_notes_unifying_themes", :force => true do |t|
-    t.integer "teacher_note_id"
-    t.integer "unifying_theme_id"
+    t.integer  "user_id"
   end
 
   create_table "unifying_themes", :force => true do |t|

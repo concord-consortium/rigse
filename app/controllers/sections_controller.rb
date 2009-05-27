@@ -3,18 +3,36 @@ class SectionsController < ApplicationController
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   
+  before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
+  before_filter :can_create, :only => [:new, :create]
   protected 
+  
+  def can_create
+    if (current_user.anonymous?)
+      flash[:error] = "Anonymous users can not create sections"
+      redirect_back_or sections_path
+    end
+  end
+  
   
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
-      @activity = @section.activity
       format = request.parameters[:format]
       unless format == 'otml' || format == 'jnlp'
         if @section
-          @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => @section.teacher_note}
+          @page_title=@section.name
+          @activity = @section.activity
+          if @activity 
+            @investigation = @activity.investigation
+          end
+          teacher_note = @section.teacher_note || TeacherNote.new
+          teacher_note.authored_entity = @section
+          author_note = @section.author_note || AuthorNote.new
+          author_note.authored_entity = @section 
+          @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => teacher_note}
+          @author_note = render_to_string :partial => 'author_notes/remote_form', :locals => {:author_note => author_note}
         end
       end
     end
@@ -135,8 +153,10 @@ class SectionsController < ApplicationController
   ##
   def destroy
     @section.destroy
+    @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
+      format.js
       format.xml  { head :ok }
     end
   end

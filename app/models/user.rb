@@ -50,6 +50,17 @@ class User < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{login first_name last_name email}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+  
 
   # we will lazy load the anonymous user later
   @@anonymous_user = nil 
@@ -99,6 +110,11 @@ class User < ActiveRecord::Base
     roles << Role.find_by_title('member')
   end
 
+  # return the user who is the site administrator
+  def self.site_admin
+    User.find_by_email(APP_CONFIG[:admin_email])
+  end
+  
   # is this user the anonymous user?
   def anonymous?
     self == User.anonymous

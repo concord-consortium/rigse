@@ -5,7 +5,7 @@ class OpenResponsesController < ApplicationController
     # @open_responses = OpenResponse.find(:all)
     # @paginated_objects = @open_responses
 
-    @open_responses = OpenResponse.search(params[:search], params[:page], self.current_user)
+    @open_responses = OpenResponse.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

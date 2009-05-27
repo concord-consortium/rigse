@@ -6,8 +6,8 @@ class VendorInterface < ActiveRecord::Base
   has_many :users
   has_many :device_configs
   # belongs_to :author, :class_name => 'User'
-  has_many :probes
-  has_many :probe_types, :through => :probes
+  # has_many :probes
+  # has_many :probe_types, :through => :probes
   
   @@searchable_attributes = %w{name description}
   class <<self

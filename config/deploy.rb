@@ -25,7 +25,7 @@ set :rails_env, "production"
 #############################################################
 
 set :scm, :git
-set :branch, "stable"
+set :branch, "production"
 set :git_enable_submodules, 1
 # wondering if we can do something special for this? create
 # a special deploy user on github?
@@ -131,6 +131,43 @@ namespace :deploy do
     sudo "chmod -R g+rw #{deploy_to}"
   end
   
+end
+
+#############################################################
+#  IMPORT
+#############################################################
+
+namespace :import do
+  desc 'erase and import ITSI activities from the ITSI DIY'
+  task :erase_and_import_itsi_activities, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_itsi_activities --trace" 
+  end
+
+  desc 'erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal'
+  task :erase_and_import_ccp_itsi_units, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
+  end
+
+end
+
+#############################################################
+#  Convert
+#############################################################
+
+namespace :convert do
+  desc 'wrap orphaned activities in a parent investigation'
+  task :wrap_orphaned_activities_in_investigations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:make:investigations --trace" 
+  end
+
+  desc 'set new grade_span_expectation attribute: gse_key'
+  task :set_gse_keys, :roles => :db, :only => { :primary => true } do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
+  end
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'

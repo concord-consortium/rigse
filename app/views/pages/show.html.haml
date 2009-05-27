@@ -1,9 +1,5 @@
--content_for :teacher_note do
-  = @teacher_note
   
-
 = render :partial=> 'shared/page_header', :locals=>{:page => @page }
-
 .item_collection
   %ul#elements_container.menu
     - @page.page_elements.each_with_index do |element,i|

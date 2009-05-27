@@ -1,0 +1,7 @@
+.content
+  %h3= "Author notes for: <em>#{author_note.authored_entity.name}</em>"
+  %hr
+  = author_note.body
+  %br
+  %br
+  .tiny= link_to_function ('close',"$('note').hide();")

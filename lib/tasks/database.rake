@@ -1,5 +1,3 @@
-require 'rake'
-
 namespace :db do
   desc "Dump the current database to a MySQL file" 
   task :dump => :environment do
@@ -34,8 +32,23 @@ namespace :db do
     end
   end
   
-    task :load => :environment do
+  require 'activerecord'
+  class RemoveTables < ActiveRecord::Migration
+    def self.up
+      ActiveRecord::Base.connection.tables.each do |table|
+        drop_table(table)
+      end
+    end
+    
+    def self.down
+    end
+  end
+  
+  task :load => :environment do
     db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    
+    RemoveTables.up
+    
     case db_config["adapter"]
     when 'mysql'
       cmd = "mysql"
