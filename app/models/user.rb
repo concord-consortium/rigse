@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
 
   # Relationships
   has_and_belongs_to_many :roles
+  has_many :investigations
   has_many :activities
   has_many :sections
   has_many :pages
@@ -35,6 +36,8 @@ class User < ActiveRecord::Base
   has_many :multiple_choices
   has_many :data_tables
   has_many :drawing_tools
+  has_many :mw_modeler_pages
+  has_many :n_logo_models
   
   belongs_to :vendor_interface
 
