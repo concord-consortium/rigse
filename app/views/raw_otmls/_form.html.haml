@@ -3,4 +3,6 @@
   - field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(raw_otml, :item, :name_field)
   - field_set_tag 'description' do
-    = f.text_area :description, :id => dom_id_for(raw_otml, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
+    = f.text_area :description, :id => dom_id_for(raw_otml, :item, :textarea), :rows => 4, :cols => 80, :class => 'mceNoEditor'
+  - field_set_tag 'content' do
+    = f.text_area :content, :id => dom_id_for(raw_otml, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'

@@ -1,3 +1,1 @@
-%div{ :id => dom_id_for(@raw_otml, :item), :class => 'item' }
-  = render :partial => "show", :locals => { :raw_otml => @raw_otml }
-  = render :partial => "show_content", :locals => { :raw_otml => @raw_otml }
+= render :partial => 'shared/embeddable_container', :locals=> {:component => @raw_otml}

@@ -40,6 +40,20 @@ class RawOtmlsController < ApplicationController
     end
   end
 
+  def show
+    @raw_otml = RawOtml.find(params[:id])
+    if request.xhr?
+      render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
+    else
+      respond_to do |format|
+        format.html # show.html.haml
+        format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
+        format.xml  { render :raw_otml => @raw_otml }
+      end
+    end
+  end
+
   # GET /raw_otmls/1/edit
   def edit
     @raw_otml = RawOtml.find(params[:id])
@@ -48,6 +62,8 @@ class RawOtmlsController < ApplicationController
     else
       respond_to do |format|
         format.html 
+        format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
         format.xml  { render :xml => @raw_otml  }
       end
     end
