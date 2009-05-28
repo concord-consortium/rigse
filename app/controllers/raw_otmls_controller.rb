@@ -10,22 +10,6 @@ class RawOtmlsController < ApplicationController
     end
   end
 
-  # GET /raw_otmls/1
-  # GET /raw_otmls/1.xml
-  def show
-    @raw_otml = RawOtml.find(params[:id])
-    if request.xhr?
-      render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
-    else
-      respond_to do |format|
-        format.html # show.html.haml
-        format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
-        format.xml  { render :raw_otml => @raw_otml }
-      end
-    end
-  end
-
   # GET /raw_otmls/new
   # GET /raw_otmls/new.xml
   def new
@@ -41,6 +25,7 @@ class RawOtmlsController < ApplicationController
   end
 
   def show
+    @authoring = false
     @raw_otml = RawOtml.find(params[:id])
     if request.xhr?
       render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
@@ -56,6 +41,7 @@ class RawOtmlsController < ApplicationController
 
   # GET /raw_otmls/1/edit
   def edit
+    @authoring = true
     @raw_otml = RawOtml.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :raw_otml => @raw_otml }
@@ -63,7 +49,7 @@ class RawOtmlsController < ApplicationController
       respond_to do |format|
         format.html 
         format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
+        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable_object => @raw_otml } }
         format.xml  { render :xml => @raw_otml  }
       end
     end
@@ -108,10 +94,14 @@ class RawOtmlsController < ApplicationController
       else
         render :xml => @raw_otml.errors, :status => :unprocessable_entity
       end
+    elsif request.symbolized_path_parameters[:format] == 'otml'
+      content = Hpricot.XML(request.raw_post).to_s
+      @raw_otml.update_attributes(:content => content)
+      render :nothing => true
     else
       respond_to do |format|
         if @raw_otml.update_attributes(params[:raw_otml])
-          flash[:notice] = 'Rawotml was successfully updated.'
+          flash[:notice] = 'Raw otml was successfully updated.'
           format.html { redirect_to(@raw_otml) }
           format.xml  { head :ok }
         else
@@ -157,6 +147,8 @@ class RawOtmlsController < ApplicationController
       end
     end
   end
+  
+  protected
   
   # PUT/POST /raw_otmls/1/content
   def update_content

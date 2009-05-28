@@ -137,6 +137,17 @@ module ApplicationHelper
       :only_path => false )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
+
+  def edit_otml_url_for(component)
+    url = url_for( 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :edit,
+      :format => :otml, 
+      :id  => component.id,
+      :only_path => false )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+  end
+
   
   def print_link_for(component)
      component_display_name = component.class.display_name.downcase

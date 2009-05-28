@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include RoleRequirementSystem
 
+  self.allow_forgery_protection = false
+
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
