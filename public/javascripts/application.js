@@ -20,14 +20,14 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     
     menu.observe('mouseout',function(event) {
       var mouse_over_element = event.relatedTarget;
-      if(mouse_over_element != drop_down) {
-        hide()
+      if(mouse_over_element && mouse_over_element != drop_down) {
+        hide();
       }
     });
     
     drop_down.observe('mouseout', function(event) {
       var mouse_over_element = event.relatedTarget;
-      if(!mouse_over_element.descendantOf(drop_down) || event.toElement == menu) {
+      if(mouse_over_element && (!mouse_over_element.descendantOf(drop_down) || event.toElement == menu)) {
         hide()
       }
     });

@@ -49,16 +49,18 @@ var item_deselect = function() {
 }
 
 var update_links = function() {
-  if(document.selected_type !=null) {
-    var template = new Template('<a>copy #{type}:#{id}</a>');
-    $('copy_link').addClassName('copy_enabled');
-    $('copy_link').observe('click',copy);
-    $('copy_link').update(template.evaluate({type:document.selected_type, id:document.selected_id}));    
-  }
-  else {
-    $('copy_link').addClassName('copy_disabled');
-    $('copy_link').stopObserving();  
-    $('copy_link').update('copy (nothing selected)');
+  if ($('copy_link')) {
+    if(document.selected_type !=null) {
+      var template = new Template('<a>copy #{type}:#{id}</a>');
+      $('copy_link').addClassName('copy_enabled');
+      $('copy_link').observe('click',copy);
+      $('copy_link').update(template.evaluate({type:document.selected_type, id:document.selected_id}));    
+    }
+    else {
+      $('copy_link').addClassName('copy_disabled');
+      $('copy_link').stopObserving();  
+      $('copy_link').update('copy (nothing selected)');
+    }
   }
 }
 
