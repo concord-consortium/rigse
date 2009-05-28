@@ -5,6 +5,7 @@
     %div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item item_selectable ': 'item' }  
       = render_show_partial_for(component)
 - else
-  %div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item item_selectable ': 'item' }
+  %div{ :id => dom_id_for(component), :class => 'container_element' }
     = show_menu_for(component, options)
-    = render_show_partial_for(component)
+    %div{ :id => dom_id_for(component, :item), :class => component.changeable?(current_user) ? 'item item_selectable ': 'item' }
+      = render_show_partial_for(component)
