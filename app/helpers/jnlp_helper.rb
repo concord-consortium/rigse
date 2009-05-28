@@ -145,13 +145,18 @@ module JnlpHelper
   end
 
   def system_properties(authoring = false)
-    [
+    arr = [
      ['otrunk.view.export_image', 'true'],
      ['otrunk.view.author', 'true'],
      ['_otrunk.view.debug', 'true'],
      (authoring ? ['otrunk.view.mode', 'authoring'] : ['otrunk.view.mode', 'student']),
      ['otrunk.view.status', 'true']
     ]
+    if authoring
+      arr << ['otrunk.remote_save_data', 'true']
+      arr << ['otrunk.rest_enabled', 'true']
+    end
+    arr
   end
   
   def jnlp_resources(xml, options = {})
