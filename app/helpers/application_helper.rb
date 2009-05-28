@@ -121,7 +121,13 @@ module ApplicationHelper
     success  = options[:success]  || nil
     remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.display_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
   end
-  
+
+  def otrunk_edit_button_for(component, options={})
+    controller = component.class.name.pluralize.underscore
+    id = component.id
+    link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
+  end
+
   def otml_url_for(component)
     url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
@@ -263,6 +269,9 @@ module ApplicationHelper
               
             if (component.changeable?(current_user))
               # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+              restrict_to 'admin' do
+                haml_concat otrunk_edit_button_for(embeddable, options)                
+              end
               haml_concat edit_button_for(embeddable, options)
               haml_concat delete_button_for(component)
             end
