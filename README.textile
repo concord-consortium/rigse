@@ -216,7 +216,7 @@ Copy the production database to this file <code>db/production_data.sql</code> in
 Copy <code>db/production_data.sql</code> in your local directory to the staging server
 
 <code>
-  cap production db:remote_db_upload
+  cap staging db:remote_db_upload
 </code>
 
 Replace the tables in the production database on the staging server with data here: <code>db/production_data.sql</code>.
@@ -237,13 +237,6 @@ If the ITSI importers have been updated and you want to run them again:
   cap staging import:erase_and_import_itsi_activities
   cap staging import:erase_and_import_ccp_itsi_units
 </pre></code>
-
-Until the production site is updated with the code that implements Investigation 
-containers you will also need to run this task also:
-
-<code>
-  cap staging convert:wrap_orphaned_activities_in_investigations
-</code>
 
 Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
 
