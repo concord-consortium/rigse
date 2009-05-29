@@ -46,7 +46,7 @@ Rails::Initializer.run do |config|
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
-  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
+  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
 
   config.gem "jnlp", :version => '>= 0.0.2'
   
