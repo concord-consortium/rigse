@@ -1,5 +1,5 @@
 class KnowledgeStatement < ActiveRecord::Base
-  belongs_to :user
+  # belongs_to :user
   belongs_to :domain
   has_many :assessment_targets
   has_many :unifying_themes, :through => :assessment_targets
