@@ -14,6 +14,9 @@ class VendorInterfacesController < ApplicationController
   # GET /vendor_interfaces/1.xml
   def show
     @vendor_interface = VendorInterface.find(params[:id])
+    if request.xhr?
+      render :partial => 'vendor_interface', :locals => { :vendor_interface => @vendor_interface }
+    else
 
     respond_to do |format|
       format.html # show.html.erb

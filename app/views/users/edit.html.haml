@@ -15,7 +15,7 @@
     .content
       = form.error_messages
       = render :partial => 'form', :locals => { :f => form }
-      = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => @user.vendor_interface }
       .menu
         - if @user.has_role?("admin", "manager")
           = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+      = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
