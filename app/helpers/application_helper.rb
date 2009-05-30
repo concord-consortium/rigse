@@ -26,6 +26,9 @@ module ApplicationHelper
     component.class.name.underscore
   end
 
+  def short_name(name)
+    name.strip.downcase.gsub(/\W+/, '_')
+  end
 
   def display_repo_info
     if repo = Grit::Repo.new(".")
