@@ -187,6 +187,16 @@ module ApplicationHelper
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 
+  def update_otml_url_for(component)
+    url = url_for( 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :update,
+      :format => :otml, 
+      :id  => component.id,
+      :only_path => false )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+  end
+
   
   def print_link_for(component)
      component_display_name = component.class.display_name.downcase
@@ -289,6 +299,9 @@ module ApplicationHelper
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            restrict_to 'admin' do
+              haml_concat otrunk_edit_button_for(embeddable, options)                
+            end
             haml_concat edit_button_for(embeddable, options)
             haml_concat delete_button_for(component)
           end

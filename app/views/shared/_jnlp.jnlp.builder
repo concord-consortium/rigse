@@ -15,7 +15,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev") {
   xml.security {
     xml << "    <all-permissions />"
   }
-  jnlp_resources(xml, {:authoring => authoring})
+  jnlp_resources(xml, {:authoring => authoring, :runnable_object => runnable_object})
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)
