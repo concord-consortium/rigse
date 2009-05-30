@@ -187,14 +187,18 @@ module ApplicationHelper
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 
-  def update_otml_url_for(component)
+  def update_otml_url_for(component, escape=true)
     url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
       :action => :update,
       :format => :otml, 
       :id  => component.id,
       :only_path => false )
-    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+    if escape
+      URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+    else
+      url
+    end
   end
 
   

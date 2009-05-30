@@ -22,7 +22,7 @@ module JnlpHelper
 
   def system_properties(options={})
     if options[:authoring]
-      authoring_properties = [['otrunk.remote_url', update_otml_url_for(options[:runnable_object])]]
+      authoring_properties = [['otrunk.remote_url', update_otml_url_for(options[:runnable_object], false)]]
       jnlp_adaptor.system_properties + authoring_properties
     else
       jnlp_adaptor.system_properties
