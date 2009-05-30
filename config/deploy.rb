@@ -155,6 +155,26 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
   end
+  
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+  
+end
+
+#############################################################
+#  DELETE
+#############################################################
+
+namespace :delete do
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+  
 end
 
 #############################################################
