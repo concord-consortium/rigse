@@ -150,13 +150,11 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
 
+  desc "generate MavenJnlp family of resources fron CC jnlp server"
   task :generate_maven_jnlp_family_of_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
   end
-  
-
-generate_maven_jnlp_family_of_resources
 end
 
 #############################################################
