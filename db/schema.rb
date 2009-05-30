@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090529155541) do
+ActiveRecord::Schema.define(:version => 20090530190904) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -316,7 +316,7 @@ ActiveRecord::Schema.define(:version => 20090529155541) do
     t.string   "spec"
     t.string   "codebase"
     t.string   "href"
-    t.string   "j2se"
+    t.string   "j2se_version"
     t.integer  "max_heap_size"
     t.integer  "initial_heap_size"
     t.string   "title"
