@@ -22,7 +22,7 @@ class JnlpAdaptor
   end
 
   def macos_native_jars
-    @jnlp.native_libraries.find_all_by_os('macos').collect { |nl| [nl.href, nl.version_str] }
+    @jnlp.native_libraries.find_all_by_os('mac_os_x').collect { |nl| [nl.href, nl.version_str] }
   end
   
   def windows_native_jars
