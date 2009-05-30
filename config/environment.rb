@@ -28,12 +28,7 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  if defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
-    config.gem "hpricot", :version => '0.6.164'
-  else
-    config.gem "hpricot", :version => '0.6.164'
-    # config.gem "hpricot"
-  end
+  config.gem "hpricot", :version => '0.6.164'
 
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
@@ -48,7 +43,7 @@ Rails::Initializer.run do |config|
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
 
-  config.gem "jnlp", :version => '>= 0.0.2'
+  config.gem "jnlp", :version => '>= 0.0.5'
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
