@@ -90,6 +90,7 @@ class SectionsController < ApplicationController
   ##
   def new
     @section = Section.new
+    @section.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @section }
@@ -101,10 +102,14 @@ class SectionsController < ApplicationController
   ##
   def create
     @section = Section.create!(params[:section])
+    @section.user = current_user
     respond_to do |format|
       format.js {
         @page = Page.create
+        @page.user = current_user
         @xhtml = Xhtml.create
+        @xhtml.user = current_user
+        @xhtml.save!
         @xhtml.pages << @page
         @section.pages << @page
         @section.save

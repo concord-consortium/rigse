@@ -1,5 +1,5 @@
 class GradeSpanExpectation < ActiveRecord::Base
-  belongs_to :user
+  # belongs_to :user
 
   has_many :expectations
   has_many :expectation_stems, :through => :expectations

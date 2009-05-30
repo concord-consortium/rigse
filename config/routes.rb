@@ -4,6 +4,22 @@ ActionController::Routing::Routes.draw do |map|
     :update_content => [:put, :post]
   }
 
+  map.resources :native_libraries
+
+  map.resources :jars
+
+  map.resources :properties
+
+  map.resources :versioned_jnlps
+
+  map.resources :versioned_jnlp_urls
+
+  map.resources :icons
+
+  map.resources :maven_jnlp_families
+
+  map.resources :maven_jnlp_servers
+
   map.resources :n_logo_models
 
   map.resources :mw_modeler_pages

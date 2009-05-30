@@ -1,0 +1,2 @@
+module MavenJnlp::NativeLibrariesHelper
+end

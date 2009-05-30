@@ -1,16 +1,21 @@
-%fieldset
-  %legend
-    User
-  %ul.quiet_list
-    %li
-      = f.label :first_name, 'First name', :class=>"aligned"
-      = f.text_field :first_name, :class=>"aligned"
-    %li
-      = f.label :last_name, 'Last name', :class=>"aligned"
-      = f.text_field :last_name, :class=>"aligned"
-    %li
-      = f.label :login, 'Login', :class=>"aligned"
-      = f.text_field :login,  :live => false, :class=>"aligned"
-    %li
-      = f.label :email, 'Email', :class=>"aligned"
-      = f.text_field :email,  :live => false, :class=>"aligned"
+%div{ :id => dom_id_for(user, :item), :class => 'item' }
+  %div.action_menu
+    %div.action_menu_header_left   
+      =link_to name_for_component(user), user
+    %div.action_menu_header_right   
+      %ul.menu
+        - if (user.changeable?(current_user))
+          %li.menu=link_to 'edit', edit_user_path(user)
+  %div{:id => dom_id_for(user, :details), :class => 'tiny'}
+    %ul.menu_h
+      %li
+        login:
+        = user.login
+      %li
+        email:
+        = user.email
+      %li
+        Roles: 
+      - user.roles.each do |r| 
+        %li
+          = r.title.capitalize

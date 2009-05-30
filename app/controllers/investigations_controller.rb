@@ -104,7 +104,7 @@ class InvestigationsController < ApplicationController
   # GET /pages/new.xml
   def new
     @investigation = Investigation.new
-
+    @investigation.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @investigation }
@@ -122,6 +122,12 @@ class InvestigationsController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
+    begin
+      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      params[:investigation][:grade_span_expectation] = gse
+    rescue
+      logger.error('could not find gse')
+    end
     @investigation = Investigation.new(params[:investigation])
     @investigation.user = current_user
     respond_to do |format|
@@ -140,6 +146,12 @@ class InvestigationsController < ApplicationController
   # PUT /pages/1.xml
   def update
     cancel = params[:commit] == "Cancel"
+    begin
+      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      params[:investigation][:grade_span_expectation] = gse
+    rescue
+      logger.error('could not find gse')
+    end
     @investigation = Investigation.find(params[:id])
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
@@ -180,6 +192,7 @@ class InvestigationsController < ApplicationController
   ##
   def add_activity
     @activity = Activity.new
+    @activity.user = current_user
     @investigation = Investigation.find(params['id'])
     @activity.investigation = @investigation
   end

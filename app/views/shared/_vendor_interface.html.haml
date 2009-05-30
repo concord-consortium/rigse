@@ -1,9 +1,11 @@
 #vendor_interface
-  %P
-    Selected Probeware Interface:
-    %br
-    = link_to vendor_interface.name, interface_user_path(current_user), { :id=>"modal"}
-  %p
-    = image_tag(vendor_interface.image, :class => "vi_image", :width => 120 )
-  %p
-    = vendor_interface.description
+  %fieldset
+    %legend
+      Selected Probeware Interface: 
+      
+    = f.collection_select(:vendor_interface_id, VendorInterface.all, :id, :name)
+
+    #vendor_interface
+      = render :partial => 'vendor_interfaces/vendor_interface', :locals => { :vendor_interface => vendor_interface }
+
+= observe_field(:vendor_interface_id, :url => vendor_interface_path(vendor_interface), :update => 'vendor_interface', :with => 'name' )

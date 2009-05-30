@@ -100,7 +100,7 @@ namespace :deploy do
   # Restart passenger on deploy
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{current_path}/tmp/restart.txt"
+    sudo "touch #{current_path}/tmp/restart.txt"
   end
   
   [:start, :stop].each do |t|
@@ -150,6 +150,31 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
 
+  desc "generate MavenJnlp family of resources fron CC jnlp server"
+  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+  end
+  
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+  
+end
+
+#############################################################
+#  DELETE
+#############################################################
+
+namespace :delete do
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+  
 end
 
 #############################################################
@@ -168,7 +193,15 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
   end
+
+  desc 'find page_elements whithout owners and recalim them'
+  task :reclaim_page_elements, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace" 
+  end
+  
 end
+
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'
