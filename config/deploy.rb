@@ -100,7 +100,7 @@ namespace :deploy do
   # Restart passenger on deploy
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "sudo touch #{current_path}/tmp/restart.txt"
+    sudo "touch #{current_path}/tmp/restart.txt"
   end
   
   [:start, :stop].each do |t|
