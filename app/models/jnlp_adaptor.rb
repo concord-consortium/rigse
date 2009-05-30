@@ -1,11 +1,20 @@
 class JnlpAdaptor
+  
+  attr_reader :jnlp
+  
   def initialize
     @all_otrunk_snapshot_family = MavenJnlp::MavenJnlpFamily.find_by_name('all-otrunk-snapshot')
     @jnlp = @all_otrunk_snapshot_family.snapshot_jnlp_url.versioned_jnlp
   end
   
   def resource_jars
-    @jnlp.jars.collect { |jar| [jar.href, jar.version_str] }
+    @jnlp.jars.collect do |jar|
+      if jar.main
+        [jar.href, jar.version_str, true]
+      else
+        [jar.href, jar.version_str]
+      end
+    end
   end
   
   def linux_native_jars
@@ -32,5 +41,3 @@ class JnlpAdaptor
     jnlp_properties + custom_properties
   end
 end
-  
-    
