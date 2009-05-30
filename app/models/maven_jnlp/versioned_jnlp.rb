@@ -37,7 +37,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     jnlp.spec                     = jnlp_object.spec
     jnlp.codebase                 = jnlp_object.codebase
     jnlp.href                     = jnlp_object.href
-    jnlp.j2se                     = jnlp_object.j2se
+    jnlp.j2se_version             = jnlp_object.j2se_version
     jnlp.max_heap_size            = jnlp_object.max_heap_size
     jnlp.initial_heap_size        = jnlp_object.initial_heap_size
     jnlp.title                    = jnlp_object.title
