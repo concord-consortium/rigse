@@ -201,7 +201,6 @@ module ApplicationHelper
     end
   end
 
-  
   def print_link_for(component)
      component_display_name = component.class.display_name.downcase
       name = component.name
