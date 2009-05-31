@@ -22,18 +22,24 @@ module JnlpHelper
 
   def system_properties(options={})
     if options[:authoring]
-      authoring_properties = [['otrunk.remote_url', update_otml_url_for(options[:runnable_object], false)]]
-      jnlp_adaptor.system_properties + authoring_properties
+      additional_properties = [
+        ['otrunk.view.mode', 'authoring'],
+        ['otrunk.remote_save_data', 'true'],
+        ['otrunk.rest_enabled', 'true'],
+        ['otrunk.remote_url', update_otml_url_for(options[:runnable_object], false)]
+      ]
     else
-      jnlp_adaptor.system_properties
+      additional_properties = [
+        ['otrunk.view.mode', 'student'],
+      ]
     end
+    jnlp_adaptor.system_properties + additional_properties
   end
   
   def jnlp_resources(xml, options = {})
     jnlp = jnlp_adaptor.jnlp
     xml.resources {
-      xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => jnlp.max_heap_size, 'initial-heap-size' => jnlp.initial_heap_size
-      xml.jar :href => "net/sf/sail/sail-data-emf/sail-data-emf.jar", :main => true, :version => "0.1.0-20090506.165007-1170"
+      xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
       resource_jars.each do |resource|
         if resource[2]
           xml.jar :href => resource[0], :main => true, :version => resource[1]
