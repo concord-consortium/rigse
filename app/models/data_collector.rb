@@ -14,6 +14,8 @@ class DataCollector < ActiveRecord::Base
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  serialize :data_store_values
+  
   acts_as_replicatable
   
   include Changeable
@@ -102,5 +104,39 @@ class DataCollector < ActiveRecord::Base
 
   def self.display_name
     "Graph"
+  end
+  
+  def update_from_otml_library_content
+    olc = Hash.from_xml(otml_library_content)
+    if ot_data_collector = olc['ot_data_collector']
+      self.name = ot_data_collector['name']
+      self.title = ot_data_collector['title']
+      self.autoscale_enabled = ot_data_collector['auto_scale_enabled'] == 'true'
+      if ot_data_axis = ot_data_collector['x_data_axis']['ot_data_axis']
+        self.x_axis_label = ot_data_axis['label']
+        self.x_axis_units = ot_data_axis['units']
+        self.x_axis_min   = ot_data_axis['min']
+        self.x_axis_max   = ot_data_axis['max']
+      end
+      if ot_data_axis = ot_data_collector['y_data_axis']['ot_data_axis']
+        self.y_axis_label = ot_data_axis['label']
+        self.y_axis_units = ot_data_axis['units']
+        self.y_axis_min   = ot_data_axis['min']
+        self.y_axis_max   = ot_data_axis['max']
+      end
+      if ot_data_graphable = ot_data_collector['source']['ot_data_graphable']
+         self.connect_points = ot_data_graphable['connect_points']
+         self.draw_marks = ot_data_graphable['draw_marks'] == 'true'
+         self.connect_points = ot_data_graphable['connect_points']
+         self.connect_points = ot_data_graphable['connect_points']
+         self.connect_points = ot_data_graphable['connect_points']
+         if ot_data_store = ot_data_graphable['data_store']['ot_data_store']
+           if values = ot_data_store['values']
+             self.data_store_values = values['float'].collect { |v| v.to_f }
+           end
+         end
+      end
+      self.save
+    end
   end
 end
