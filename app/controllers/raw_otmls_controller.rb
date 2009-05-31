@@ -95,7 +95,7 @@ class RawOtmlsController < ApplicationController
         render :xml => @raw_otml.errors, :status => :unprocessable_entity
       end
     elsif request.symbolized_path_parameters[:format] == 'otml'
-      content = Hpricot.XML(request.raw_post).to_s
+      content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
       @raw_otml.update_attributes(:content => content)
       render :nothing => true
     else
