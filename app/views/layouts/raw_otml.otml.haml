@@ -6,13 +6,6 @@
     %OTSystem
       =ot_bundles(:title => @raw_otml.name, :authoring => @authoring)
       %root
-        - if @authoring
-          = @raw_otml.content
-        - else
-          %OTCompoundDoc
-            %bodyText#content
-              %h3= RawOtml.display_name + ': ' + @raw_otml.name
-              %object{ :refid => ot_refid_for(@raw_otml) }
-
+        = @raw_otml.otml_content
       %library
         =yield :layout

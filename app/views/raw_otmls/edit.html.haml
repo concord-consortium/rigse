@@ -2,4 +2,4 @@
   .item
     = render :partial => 'form', :locals => { :raw_otml => @raw_otml, :f => f }
   .content
-    = "<p>Edit the content link to a jnlp here.<br/><pre>#{@raw_otml.content}</pre></p>"
+    = "<p>Edit the content link to a jnlp here.<br/><pre>#{@raw_otml.otml_content}</pre></p>"

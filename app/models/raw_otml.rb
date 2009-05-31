@@ -20,8 +20,8 @@ class RawOtml < ActiveRecord::Base
   end
 
   default_value_for :name, "RawOtml element"
-  default_value_for :description, "description ..."
-  default_value_for :content, "<OTCompoundDoc>\n  <bodyText>\n    <div id='content'>Put your content here.</div>\n  </bodyText>\n</OTCompoundDoc>"
+  default_value_for :description, "A simple OTCompoundDoc example ..."
+  default_value_for :otml_content, "<OTCompoundDoc>\n  <bodyText>\n    <div id='content'>Put your content here.</div>\n  </bodyText>\n</OTCompoundDoc>"
 
   def self.display_name
     "Raw Otml"

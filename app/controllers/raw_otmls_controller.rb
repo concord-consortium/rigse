@@ -95,8 +95,8 @@ class RawOtmlsController < ApplicationController
         render :xml => @raw_otml.errors, :status => :unprocessable_entity
       end
     elsif request.symbolized_path_parameters[:format] == 'otml'
-      content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
-      @raw_otml.update_attributes(:content => content)
+      otml_content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
+      @raw_otml.update_attributes(:otml_content => otml_content)
       render :nothing => true
     else
       respond_to do |format|
@@ -127,60 +127,5 @@ class RawOtmlsController < ApplicationController
       pe.destroy
     end
     @raw_otml.destroy    
-  end
-  
-  # GET /raw_otmls/1/content
-  def content
-    if request.post? or request.put?
-      update_content
-    else
-      @raw_otml = RawOtml.find(params[:id])
-      if request.xhr?
-        render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
-      else
-        respond_to do |format|
-          format.html # content.html.haml
-          format.otml { render :layout => "layouts/raw_otml_content" } # raw_otml_content.otml.haml
-          format.jnlp { render :partial => "shared/jnlp", :locals => { :runnable_object => @raw_otml, :escaped_otml_url => otml_url_content, :authoring => "true" } }
-          format.xml  { render :xml => @raw_otml.content, :layout => false }
-        end
-      end
-    end
-  end
-  
-  protected
-  
-  # PUT/POST /raw_otmls/1/content
-  def update_content
-    @raw_otml = RawOtml.find(params[:id])
-    # extract only what's under /otrunk/objects/OTSystem/root
-    content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
-    if request.xhr?
-      render :partial => 'raw_otml', :locals => { :raw_otml => @raw_otml }
-    else
-      @raw_otml.content = content
-      respond_to do |format|
-        format.html { render :action => "content" }
-        if @raw_otml.save
-          format.otml { head :ok }
-          format.xml  { head :ok }
-        else
-          format.otml  { render :xml => @raw_otml.errors, :status => :unprocessable_entity }
-          format.xml  { render :xml => @raw_otml.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-  end
-  
-  private 
-  
-  def otml_url_content
-    url = url_for(
-      :controller =>  @raw_otml.class.name.pluralize.underscore, 
-      :action => :content,
-      :format => :otml, 
-      :id  => @raw_otml.id,
-      :only_path => false )
-    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 end
