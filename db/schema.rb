@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090530190904) do
+ActiveRecord::Schema.define(:version => 20090531163106) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -95,6 +95,9 @@ ActiveRecord::Schema.define(:version => 20090530190904) do
     t.datetime "updated_at"
     t.integer  "graph_type_id"
     t.integer  "prediction_graph_id"
+    t.text     "otml_root_content"
+    t.text     "otml_library_content"
+    t.text     "data_store_values"
   end
 
   create_table "data_filters", :force => true do |t|
@@ -454,10 +457,10 @@ ActiveRecord::Schema.define(:version => 20090530190904) do
 
   create_table "raw_otmls", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
-    t.text     "content"
+    t.text     "otml_content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
