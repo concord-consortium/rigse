@@ -7,7 +7,7 @@ class CreateRawOtmls < ActiveRecord::Migration
       t.string    "name"
       t.text      "description"
       
-      t.text :content
+      t.text :otml_content
 
       t.timestamps
     end
