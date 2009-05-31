@@ -402,6 +402,30 @@ module ApplicationHelper
     end
   end
   
+  def generate_javascript_datastore(data_collector)
+    # 
+    # data: [ [1,2.5], [2,3.7], [2.5,6.78] ]
+    # 
+    js = ''
+    if data_collector.data_store_values.length > 0
+      js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
+    else
+      js << "var default_data_#{data_collector.id} = [];\n"
+
+      js << "var default_x_range_#{data_collector.id} = #{data_collector.x_axis_max - data_collector.x_axis_min};\n"
+      js << "var default_x_factor_#{data_collector.id} = 20 / default_x_range_#{data_collector.id};\n"
+      js << "var default_x_step_#{data_collector.id} = default_x_range_#{data_collector.id} / 60;\n"
+
+      js << "var default_y_range_#{data_collector.id} = #{data_collector.y_axis_max - data_collector.y_axis_min};\n"
+      js << "var default_y_offset_#{data_collector.id} = default_y_range_#{data_collector.id} / 3 + #{data_collector.y_axis_min};\n"
+      
+      js << "for(var i = #{data_collector.x_axis_min.to_i}; i <= #{data_collector.x_axis_max.to_i}; i += default_x_step_#{data_collector.id}){\n"
+      js << "  default_data_#{data_collector.id}.push([i, Math.sin(i * default_x_factor_#{data_collector.id}) * (default_y_range_#{data_collector.id} / 4) +  default_y_offset_#{data_collector.id}] );\n"
+      js << "}\n"
+    end
+    js
+  end
+  
   def simple_div_helper_that_yields
     capture_haml do
       haml_tag :div, :class => 'simple_div' do

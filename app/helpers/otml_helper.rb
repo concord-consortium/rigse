@@ -32,6 +32,7 @@ module OtmlHelper
       org.concord.data.state.OTDataTable
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
+      org.concord.otrunk.graph.OTDataCollectorViewConfig
       org.concord.datagraph.state.OTDataGraph
       org.concord.datagraph.state.OTDataGraphable
       org.concord.datagraph.state.OTMultiDataGraph
@@ -116,7 +117,7 @@ module OtmlHelper
       ['choice_radio_button_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
 #      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
 #      ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
-      ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorEditView'],
+      ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.otrunk.graph.OTDataCollectorEditView'],
 #      ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
 #      ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
       ['data_drawing_tool_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.otrunk.graph.OTDataDrawingToolEditView'],
@@ -170,6 +171,30 @@ module OtmlHelper
       end
     end
   end
+  
+  
+  # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
+  #   - if data_collector.data_store_values.length > 0
+  #     %values
+  #       - data_collector.data_store_values.each do |value|
+  #         %float= value
+  # 
+  def generate_otml_datastore(data_collector)
+    capture_haml do
+      haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+        if data_collector.data_store_values.length > 0
+          haml_tag :values do
+            data_collector.data_store_values.each do |value|
+              haml_tag(:float, :<) do
+                haml_concat(value)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
 end
 
 
