@@ -67,9 +67,10 @@
           = labeled_check_box(f, :autoscale_enabled)
         %li
           = labeled_check_box(f, :ruler_enabled)
-    - field_set_tag 'otml_root_content' do
-      = f.text_area :otml_root_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
-    - field_set_tag 'otml_library_content' do
-      = f.text_area :otml_library_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
+    - if current_user.has_role?('admin')
+      - field_set_tag 'otml_root_content' do
+        = f.text_area :otml_root_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
+      - field_set_tag 'otml_library_content' do
+        = f.text_area :otml_library_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
 
 = observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_data_collector_path(data_collector) + "?scope_id=#{scope.id}&scope_type=#{scope.class}"))

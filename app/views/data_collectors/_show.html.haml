@@ -36,7 +36,8 @@
           }
         );
 
-- field_set_tag 'otml: root_content' do
-  %pre= h(data_collector.otml_root_content)
-- field_set_tag 'otml: library_content' do
-  %pre= h(data_collector.otml_library_content)
+- if current_user.has_role?('admin')
+  - field_set_tag 'otml: root_content' do
+    %pre= h(data_collector.otml_root_content)
+  - field_set_tag 'otml: library_content' do
+    %pre= h(data_collector.otml_library_content)
