@@ -133,6 +133,8 @@ class DataCollector < ActiveRecord::Base
          if ot_data_store = ot_data_graphable['data_store']['ot_data_store']
            if values = ot_data_store['values']
              self.data_store_values = values['float'].collect { |v| v.to_f }
+           else
+             self.data_store_values = []
            end
          end
       end

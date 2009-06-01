@@ -407,8 +407,12 @@ module ApplicationHelper
     # data: [ [1,2.5], [2,3.7], [2.5,6.78] ]
     # 
     js = ''
-    if data_collector.data_store_values.length > 0
-      js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
+    if data_collector.data_store_values
+      if data_collector.data_store_values.length > 0
+        js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
+      else
+        js << "var default_data_#{data_collector.id} = [];\n"        
+      end
     else
       js << "var default_data_#{data_collector.id} = [];\n"
 
