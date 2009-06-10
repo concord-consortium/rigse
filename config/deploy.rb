@@ -118,6 +118,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
+    run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
   end
     
   desc "install required gems for application"
@@ -167,7 +168,12 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:import:generate_otrunk_examples_rails_models --trace" 
   end
-  
+
+  desc"Delete the otrunk-example models (Rails models)."
+  task :delete_otrunk_example_models, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace" 
+  end
 end
 
 #############################################################

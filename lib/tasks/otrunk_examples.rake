@@ -54,7 +54,7 @@ namespace :rigse do
 
     def git_clone_otrunk_examples
       Dir.chdir(File.dirname(otrunk_examples_dir)) do
-        puts "\ncreating local got repository of otrunk-examples: #{otrunk_examples_dir}"
+        puts "\ncreating local git repository of otrunk-examples: #{otrunk_examples_dir}"
         `git clone git://github.com/stepheneb/otrunk-examples.git`
       end      
     end
