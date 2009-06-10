@@ -174,6 +174,14 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace" 
   end
+
+  desc"Create git clone of otrunk-examples in <shared_path>/public/otrunk-examples"
+  task :create_git_clone_of_otrunk_examples, :roles => :app do
+    run "cd #{shared_path} && " +
+      "mkdir -p public && " +
+      "cd public && " +
+      "git clone git://github.com/stepheneb/otrunk-examples.git"
+  end
 end
 
 #############################################################
