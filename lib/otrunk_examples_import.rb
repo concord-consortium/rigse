@@ -57,10 +57,10 @@ class OtrunkExampleImport
       @launch_type = @doc.search("launchConfiguration").attr(:type).split('.')[-1]
       list_entry_values = @doc.search("listAttribute[@key='org.eclipse.jdt.launching.CLASSPATH']/listEntry").collect {|le| le['value']}
       project_attr = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.PROJECT_ATTR']")
-      if project_attr
-        @project_name = project_attr.attr(:value)
-      else
+      if project_attr.empty?
         @project_name = 'unnamed'
+      else
+        @project_name = project_attr.attr(:value)
       end
       @projects_dir = @path.split(project_name)[0]
       @category = @path[/#{@project_name}\/(.*)\//, 1]
