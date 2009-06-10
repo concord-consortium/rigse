@@ -62,7 +62,7 @@ namespace :rigse do
     desc "create or update a git clone of otrunk-examples in lib/otrunk/otrunk-examples"
     task :create_or_update_otrunk_examples => :environment do
       FileUtils.mkdir_p(otrunk_lib_dir) unless File.exists? otrunk_lib_dir
-      if File.exists? otrunk_examples_dir
+      if File.exists? File.join(otrunk_examples_dir, '.git')
         git_update_otrunk_examples
       else
         git_clone_otrunk_examples
