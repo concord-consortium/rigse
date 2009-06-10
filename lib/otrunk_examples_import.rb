@@ -51,9 +51,8 @@ class OtrunkExampleImport
                   :projects, :internal_archives, :main_type, :program_arguments, :vm_arguments, :valid
     def initialize(path)
       @path = path
-      dirname = File.dirname(@path)
-      @name = File.basename(path).chomp('.launch')
-      @body = File.read(path)
+      @name = File.basename(@path).chomp('.launch')
+      @body = File.read(@path)
       @doc = Hpricot::XML(@body)
       @launch_type = @doc.search("launchConfiguration").attr(:type).split('.')[-1]
       list_entry_values = @doc.search("listAttribute[@key='org.eclipse.jdt.launching.CLASSPATH']/listEntry").collect {|le| le['value']}
