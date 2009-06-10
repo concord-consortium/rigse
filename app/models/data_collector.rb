@@ -105,6 +105,14 @@ class DataCollector < ActiveRecord::Base
   def self.display_name
     "Graph"
   end
+
+  def self.authorable_in_java?
+    true
+  end
+
+  def authorable_in_java?
+    DataCollector.authorable_in_java?
+  end
   
   def update_from_otml_library_content
     olc = Hash.from_xml(otml_library_content)

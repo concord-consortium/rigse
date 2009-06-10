@@ -302,8 +302,13 @@ module ApplicationHelper
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            restrict_to 'admin' do
-              haml_concat otrunk_edit_button_for(embeddable, options)                
+            restrict_to 'admin || manager' do
+              begin
+                if embeddable.authorable_in_java?
+                  haml_concat otrunk_edit_button_for(embeddable, options)
+                end
+              rescue NoMethodError
+              end
             end
             haml_concat edit_button_for(embeddable, options)
             haml_concat delete_button_for(component)
@@ -330,7 +335,6 @@ module ApplicationHelper
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
   end
-
 
   def dropdown_link_for(options ={})
     defaults = {
