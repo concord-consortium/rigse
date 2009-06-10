@@ -1,4 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :otrunk_imports
+
+  map.resources :otml_categories
+
+  map.resources :otml_files
+
+  map.resources :otrunk_view_entries
+
   map.resources :raw_otmls
 
   map.resources :native_libraries

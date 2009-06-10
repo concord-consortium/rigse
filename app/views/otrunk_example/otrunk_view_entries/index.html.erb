@@ -1,0 +1,26 @@
+<h1>Listing otrunk_view_entries</h1>
+
+<table>
+  <tr>
+    <th>Uuid</th>
+    <th>Otml import</th>
+    <th>Classname</th>
+    <th>Fq classname</th>
+  </tr>
+
+<% @otrunk_view_entries.each do |otrunk_view_entry| %>
+  <tr>
+    <td><%=h otrunk_view_entry.uuid %></td>
+    <td><%=h otrunk_view_entry.otml_import_id %></td>
+    <td><%=h otrunk_view_entry.classname %></td>
+    <td><%=h otrunk_view_entry.fq_classname %></td>
+    <td><%= link_to 'Show', otrunk_view_entry %></td>
+    <td><%= link_to 'Edit', edit_otrunk_view_entry_path(otrunk_view_entry) %></td>
+    <td><%= link_to 'Destroy', otrunk_view_entry, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New otrunk_view_entry', new_otrunk_view_entry_path %>

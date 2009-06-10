@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090531163106) do
+ActiveRecord::Schema.define(:version => 20090602130223) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -385,6 +385,73 @@ ActiveRecord::Schema.define(:version => 20090531163106) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
+    t.integer "otml_category_id"
+    t.integer "otrunk_import_id"
+  end
+
+  add_index "otml_categories_otrunk_imports", ["otml_category_id", "otrunk_import_id"], :name => "otc_oti", :unique => true
+
+  create_table "otml_files_otrunk_imports", :id => false, :force => true do |t|
+    t.integer "otml_file_id"
+    t.integer "otrunk_import_id"
+  end
+
+  add_index "otml_files_otrunk_imports", ["otml_file_id", "otrunk_import_id"], :name => "otf_oti", :unique => true
+
+  create_table "otml_files_otrunk_view_entries", :id => false, :force => true do |t|
+    t.integer "otml_file_id"
+    t.integer "otrunk_view_entry_id"
+  end
+
+  add_index "otml_files_otrunk_view_entries", ["otml_file_id", "otrunk_view_entry_id"], :name => "otf_otve", :unique => true
+
+  create_table "otrunk_example_otml_categories", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otml_categories", ["name"], :name => "index_otrunk_example_otml_categories_on_name", :unique => true
+
+  create_table "otrunk_example_otml_files", :force => true do |t|
+    t.string   "uuid"
+    t.integer  "otml_category_id"
+    t.string   "name"
+    t.string   "path"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otml_files", ["otml_category_id"], :name => "index_otrunk_example_otml_files_on_otml_category_id"
+  add_index "otrunk_example_otml_files", ["path"], :name => "index_otrunk_example_otml_files_on_path", :unique => true
+
+  create_table "otrunk_example_otrunk_imports", :force => true do |t|
+    t.string   "uuid"
+    t.string   "classname"
+    t.string   "fq_classname"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otrunk_imports", ["fq_classname"], :name => "index_otrunk_example_otrunk_imports_on_fq_classname", :unique => true
+
+  create_table "otrunk_example_otrunk_view_entries", :force => true do |t|
+    t.string   "uuid"
+    t.integer  "otrunk_import_id"
+    t.string   "classname"
+    t.string   "fq_classname"
+    t.boolean  "standard_view"
+    t.boolean  "standard_edit_view"
+    t.boolean  "edit_view"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
     t.integer  "page_id"
