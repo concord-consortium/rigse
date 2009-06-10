@@ -140,7 +140,18 @@ class DataCollector < ActiveRecord::Base
          self.connect_points = ot_data_graphable['connect_points']
          if ot_data_store = ot_data_graphable['data_store']['ot_data_store']
            if values = ot_data_store['values']
-             self.data_store_values = values['float'].collect { |v| v.to_f }
+             if delta_time = ot_data_store['dt']
+               delta_time = delta_time.to_f
+               time = 0.0
+               self.data_store_values = []
+               values['float'].each do |v|
+                 self.data_store_values << time
+                 self.data_store_values << v.to_f
+                 time += delta_time
+               end
+             else
+               self.data_store_values = values['float'].collect { |v| v.to_f }
+             end
            else
              self.data_store_values = []
            end
