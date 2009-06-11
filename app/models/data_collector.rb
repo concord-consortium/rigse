@@ -123,14 +123,14 @@ class DataCollector < ActiveRecord::Base
       if ot_data_axis = ot_data_collector['x_data_axis']['ot_data_axis']
         self.x_axis_label = ot_data_axis['label']
         self.x_axis_units = ot_data_axis['units']
-        self.x_axis_min   = ot_data_axis['min']
-        self.x_axis_max   = ot_data_axis['max']
+        self.x_axis_min   = ot_data_axis['min'].to_f
+        self.x_axis_max   = ot_data_axis['max'].to_f
       end
       if ot_data_axis = ot_data_collector['y_data_axis']['ot_data_axis']
         self.y_axis_label = ot_data_axis['label']
         self.y_axis_units = ot_data_axis['units']
-        self.y_axis_min   = ot_data_axis['min']
-        self.y_axis_max   = ot_data_axis['max']
+        self.y_axis_min   = ot_data_axis['min'].to_f
+        self.y_axis_max   = ot_data_axis['max'].to_f
       end
       if ot_data_graphable = ot_data_collector['source']['ot_data_graphable']
          self.connect_points = ot_data_graphable['connect_points']
