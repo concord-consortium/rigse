@@ -114,7 +114,7 @@ class DataCollectorsController < ApplicationController
     # title. This action assumes that the probe_type was changed using
     # using the standard edit page for a data_collector. This change on
     # the edit page uses an Ajax action (new_probe_type) to update the 
-    # defaul values for the y-axis. This assmption will not necessarily
+    # default values for the y-axis. This assmption will not necessarily
     # be correct with a REST update to this resource.
     if request.symbolized_path_parameters[:format] == 'otml'
       otml_root_content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
@@ -173,19 +173,17 @@ class DataCollectorsController < ApplicationController
     if session[:new_probe_type_id]
       if session[:new_probe_type_id] == probe_type_id
         render :nothing => true
-      elsif session[:original_probe_type_id] == probe_type_id
+      elsif session[:last_saved_probe_type_id] == probe_type_id
         session[:new_probe_type_id] = nil
       else
         @data_collector.probe_type = ProbeType.find(probe_type_id)
         session[:new_probe_type_id] = probe_type_id
       end
+    elsif session[:last_saved_probe_type_id] == probe_type_id
+      render :nothing => true
     else
-      if session[:original_probe_type_id] == probe_type_id
-        render :nothing => true
-      else
-        @data_collector.probe_type = ProbeType.find(probe_type_id)
-        session[:new_probe_type_id] = probe_type_id
-      end
+      @data_collector.probe_type = ProbeType.find(probe_type_id)
+      session[:new_probe_type_id] = probe_type_id
     end
   end
   
