@@ -143,7 +143,12 @@ module OtmlHelper
     title = options[:title] || 'RITES sample'
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
     authoring = options[:authoring] || false
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :authoring_view_entries => authoring_view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title, :authoring => authoring }
+    if authoring
+      current_mode = 'authoring'
+    else
+      current_mode = 'student'
+    end
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :authoring_view_entries => authoring_view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title, :authoring => authoring, :current_mode => current_mode }
   end
 
   def ot_script_engine_bundle
