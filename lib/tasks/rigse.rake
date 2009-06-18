@@ -160,10 +160,12 @@ HEREDOC
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
+        Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
   
         puts <<HEREDOC
 
-You can now start the applictation in develelopment mode by running this command:
+You can now start the application in develelopment mode by running this command:
 
   #{jruby_run_command}script/server
 

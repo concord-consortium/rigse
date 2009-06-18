@@ -2,7 +2,7 @@ h1. rigse
 
 h2. prerequisites
 
-Working git, ruby or jruby, rubgems, mysql.
+Working git, ruby or jruby, rubgems.
 
 h2. Initial install:
 
@@ -19,7 +19,7 @@ server and a mysql username/password with enough permissions to create and drop 
 
     git clone git://github.com/stepheneb/rigse.git
 
-    cd rigse2
+    cd rigse
 
     # follow instructions for installing necessary gem prerequisites
     # until config/setup.rb completes successfully
@@ -258,6 +258,7 @@ to install this plugin we followed this procedure:
 
 !http://clients.fudgestudios.com/chester.jpg!
 
+h2. Updating the RITES staging server.
 
 h2. notes for collaborating developers
 
