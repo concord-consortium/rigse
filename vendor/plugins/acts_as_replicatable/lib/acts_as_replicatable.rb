@@ -18,6 +18,8 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# requires gem uuidtools version 2.0.0 or newer
 
 module Foo #:nodoc:
   module Acts #:nodoc:
@@ -45,7 +47,7 @@ module Foo #:nodoc:
         def generate_uuid
           # if we have a uuid, don't generate a new one
           if ! self.uuid
-            self.uuid = UUID.timestamp_create().to_s
+            self.uuid = UUIDTools::UUID.timestamp_create.to_s
           end
         end
       end    

@@ -117,7 +117,7 @@ HEREDOC
       
       if agree("Do you want to do this?  (y/n)", true)
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
-        site_key = UUID.timestamp_create().to_s
+        site_key = UUIDTools::UUID.timestamp_create.to_s
 
         site_keys_rb = <<HEREDOC
 REST_AUTH_SITE_KEY = '#{site_key}'
