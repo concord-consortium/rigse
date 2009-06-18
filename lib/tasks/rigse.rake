@@ -57,7 +57,6 @@ namespace :rigse do
 
   namespace :setup do
     
-    require 'uuidtools'
     require 'highline/import'
     require 'fileutils'
     
@@ -100,6 +99,8 @@ namespace :rigse do
     #######################################################################
     desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
     task :regenerate_rest_auth_site_key => :environment do
+      
+      require 'uuidtools'
       
       puts <<HEREDOC
 
