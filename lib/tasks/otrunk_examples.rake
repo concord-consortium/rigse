@@ -3,8 +3,8 @@ namespace :rigse do
 
     require 'hpricot'
     require 'fileutils'
-    require 'otrunk_examples_import'
-
+    # require 'otrunk_examples_import'
+    autoload :OtrunkExampleImport, "otrunk_examples_import"
     def otrunk_lib_dir
       @otrunk_lib_dir || @otrunk_lib_dir = File.join(RAILS_ROOT, 'lib', 'otrunk')
     end
