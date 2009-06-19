@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090619194024) do
+ActiveRecord::Schema.define(:version => 20090619194701) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -65,6 +65,32 @@ ActiveRecord::Schema.define(:version => 20090619194024) do
     t.integer  "chromosomes_color"
     t.boolean  "fatal_characteristics"
     t.integer  "biologica_world_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_organisms_biologica_pedigrees", :id => false, :force => true do |t|
+    t.integer  "biologica_pedigree_id"
+    t.integer  "biologica_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_pedigrees", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                    :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "height"
+    t.integer  "width"
+    t.boolean  "crossover_enabled"
+    t.boolean  "sex_text_visible"
+    t.boolean  "organism_images_visible"
+    t.boolean  "top_controls_visible"
+    t.boolean  "reset_button_visible"
+    t.integer  "organism_image_size"
+    t.integer  "minimum_number_children"
+    t.integer  "maximum_number_children"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -500,15 +526,14 @@ ActiveRecord::Schema.define(:version => 20090619194024) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
     t.text     "description"
     t.integer  "user_id"
     t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "section_id"
+    t.string   "uuid",         :limit => 36
     t.boolean  "teacher_only",               :default => false
   end
 
@@ -575,15 +600,14 @@ ActiveRecord::Schema.define(:version => 20090619194024) do
   end
 
   create_table "sections", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
     t.text     "description"
     t.integer  "user_id"
     t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "activity_id"
+    t.string   "uuid",         :limit => 36
     t.boolean  "teacher_only",               :default => false
   end
 

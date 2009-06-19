@@ -20,9 +20,17 @@ class CreateBiologicaPedigrees < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    create_table :biologica_organisms_biologica_pedigrees, :id => false do |t|
+      t.integer :biologica_pedigree_id
+      t.integer :biologica_organism_id
+
+      t.timestamps
+    end
   end
 
   def self.down
     drop_table :biologica_pedigrees
+    drop_table :biologica_organisms_biologica_pedigrees
   end
 end

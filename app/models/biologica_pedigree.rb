@@ -5,6 +5,8 @@ class BiologicaPedigree < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
+  has_and_belongs_to_many :biologica_organisms
+  
   acts_as_replicatable
 
   include Changeable
@@ -19,11 +21,11 @@ class BiologicaPedigree < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "BiologicaPedigree element"
+  default_value_for :name, "Biologica Pedigree element"
   default_value_for :description, "description ..."
 
   def self.display_name
-    "Biologicapedigree"
+    "Biologica Pedigree"
   end
 
 
