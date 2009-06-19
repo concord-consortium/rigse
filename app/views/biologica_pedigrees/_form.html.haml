@@ -1,0 +1,6 @@
+= edit_menu_for(biologica_pedigree, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(biologica_pedigree, :item, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(biologica_pedigree, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'

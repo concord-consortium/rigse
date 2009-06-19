@@ -1,0 +1,6 @@
+%OTText{ :local_id => ot_local_id_for( biologica_pedigree, :name ), :rows => '2', :columns => '40' }
+  %text= biologica_pedigree.name
+%OTCompoundDoc{:local_id => ot_local_id_for(biologica_pedigree)}
+  %bodyText
+    = biologica_pedigree.description  
+    %object{ :refid => ot_refid_for(biologica_pedigree, :name) }
