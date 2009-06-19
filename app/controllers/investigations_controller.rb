@@ -238,14 +238,17 @@ class InvestigationsController < ApplicationController
     end
   end
   
+  #
+  # Construct a link suitable for a 'paste' action in this controller.
+  #
   def paste_link
     render :partial => 'investigations/paste_link', :locals => {:params => params}
   end
   
-  
   #
-  # Must be  js method, so don't even worry about it.
-  #
+  # In an Investigation controller, we only accept activity clipboard data,
+  # see: views/investigations/_paste_link
+  # 
   def paste
     if @investigation.changeable?(current_user)
       clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
