@@ -4,21 +4,21 @@ class Page < ActiveRecord::Base
   has_one :activity, :through => :section
 
   has_many :page_elements, :order => :position, :dependent => :destroy
+  
+  @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
+        BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+  #      BiologicaChromosome,
+  #      BiologicaChromosomeZoom,
+  #      BiologicaBreedOffspring,
+        BiologicaPedigree,
+  #      BiologicaMultipleOrganism,
+  #      BiologicaMeiosisView,
+      ]
 
-  has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
-  has_many :open_responses, :through => :page_elements, :source => :embeddable, :source_type => 'OpenResponse'
-  has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
-  has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
-  has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
-  has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
-  has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
-  has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
-  
-  # Biologica models
-  has_many :biologica_worlds, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaWorld'
-  has_many :biologica_organisms, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaOrganism'
-  has_many :biologica_static_organisms, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaStaticOrganism'
-  
+  @@element_types.each do |type|
+    eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+  end
+
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convinience methods for notes...
@@ -36,7 +36,7 @@ class Page < ActiveRecord::Base
 
 
   def Page::element_types
-    [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism]
+    @@element_types
   end
 
   def Page::paste_acceptable_types
