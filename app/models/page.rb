@@ -34,6 +34,15 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
+
+  def Page::element_types
+    [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism]
+  end
+
+  def Page::paste_acceptable_types
+    Page::element_types.map {|t| t.name.underscore}
+  end
+
   def self.display_name
     'Page'
   end
@@ -105,6 +114,15 @@ class Page < ActiveRecord::Base
       return section.previous(self)
     end
     return nil
+  end
+  
+  def deep_set_user user
+    self.user = user
+    self.page_elements.each do |e|
+      if e.embeddable
+        e.embeddable.user = user
+      end
+    end
   end
   
 end

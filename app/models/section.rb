@@ -44,8 +44,16 @@ class Section < ActiveRecord::Base
     end
     return nil
   end
-
+  
+  def deep_set_user user
+    self.user = user
+    self.pages.each do |p|
+      p.deep_set_user(user)
+    end
+  end
+  
 end
+
 
 
 #  Recent schema definition:
