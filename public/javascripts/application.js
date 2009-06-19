@@ -1,6 +1,24 @@
+/*******************************
+Some global helper functions:
+*******************************/
+debug = function (message) {
+  if(console.log) {
+    console.log(message);
+  }
+}
+
+auth_token = function () {
+  if (typeof(AUTH_TOKEN) == "undefined") {
+    return false;
+  }
+  return AUTH_TOKEN;
+}
+
+
+
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
-var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
+dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     var menu = $(menu_dom_id);
     var drop_down = $(drop_down_dom_id);
     var menu_width = menu.getDimensions().width
@@ -43,10 +61,10 @@ var dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     }
   }
 
-var show_teacher_note = function() {
+show_teacher_note = function() {
   $('teacher_note').show();
 }
 
-var show_author_note = function() {
+show_author_note = function() {
     $('author_note').show();
 }

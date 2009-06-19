@@ -1,4 +1,0 @@
-page.visual_effect :highlight, @container
-page.insert_html :bottom, @container, render (:partial => 'activity_list_item', :locals => {:activity => @component})
-page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
-page[dom_id_for(@component, :item)].scrollTo()
