@@ -434,6 +434,26 @@ module ApplicationHelper
     js
   end
   
+  # expects styles to contain space seperated list of style classes.
+  def style_for_teachers(component,style_classes=[])
+    if (component.respond_to? 'teacher_only?') && component.teacher_only?
+      style_classes << 'teacher_only' # funny, just adding a style text
+    end
+    return style_classes
+  end
+  
+  
+  def style_for_component(component,style_classes=[]) 
+    style_classes << 'item'
+    if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
+      style_classes << 'movable'
+      style_classes << 'selectable'
+      style_classes << 'item_selectable'
+    end
+    style_classes = style_for_teachers(component,style_classes)
+    return style_classes.join(" ")
+  end
+  
   def simple_div_helper_that_yields
     capture_haml do
       haml_tag :div, :class => 'simple_div' do

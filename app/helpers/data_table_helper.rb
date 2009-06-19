@@ -5,13 +5,13 @@ module DataTableHelper
   #
   def pack_field_params
     <<-EOF_JS
-    $$('.js_target').each(function (t) {
+    $$('.data_table_js_field_target').each(function (t) {
       if (t.value =='') {
         t.remove();
       }
     })
-    $('column_names').value = $$('.js_target').pluck('value').join(',');
-    $('column_count').value = $$('.js_target').size()
+    $('column_names').value = $$('.data_table_js_field_target').pluck('value').join(',');
+    $('column_count').value = $$('.data_table_js_field_target').size()
     EOF_JS
   end
   
@@ -27,7 +27,10 @@ module DataTableHelper
   #
   def data_table_heading_tag(heading = "new column")
     <<-EOF_HTML
-      <input type="text" size="16" name="heading" class="js_target" value="#{heading}"/>
+    <div class="deletable_field_container">
+      <input type="text" size="16" name="heading" class="data_table_js_field_target" value="#{heading}"></input>
+      #{function_link_button('delete.png',"$(this).up().remove();")}
+    </div>
     EOF_HTML
   end
   
