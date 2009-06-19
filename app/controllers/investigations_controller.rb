@@ -14,7 +14,6 @@ class InvestigationsController < ApplicationController
   in_place_edit_for :investigation, :description
   
   protected  
-
   def can_create
     if (current_user.anonymous?)
       flash[:error] = "Anonymous users can not create investigaitons"
@@ -238,11 +237,12 @@ class InvestigationsController < ApplicationController
     end
   end
   
+
   #
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'investigations/paste_link', :locals => {:params => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['activity'],:parmas => params}
   end
   
   #
@@ -266,7 +266,14 @@ class InvestigationsController < ApplicationController
         end
       end
     end
+
+    render :update do |page|
+      page.insert_html :bottom, @container, render (:partial => 'activity_list_item', :locals => {:activity => @component})
+      page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
+      page[dom_id_for(@component, :item)].scrollTo()
+      page.visual_effect :highlight, dom_id_for(@component, :item)
+    end
   end
-  
+
   
 end

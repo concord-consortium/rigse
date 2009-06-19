@@ -245,9 +245,10 @@ class PagesController < ApplicationController
 
 
   def paste_link
-    render :partial => 'pages/paste_link', :locals => {:params => params}
+    # render :partial => 'pages/paste_link', :locals => {:params => params}
+    # render :text => paste_link_for(page_paste_acceptable_types,params)
+    render :partial => 'shared/paste_link', :locals =>{:types => Page::paste_acceptable_types,:parmas => params}
   end
-  
   
   #
   # Must be  js method, so don't even worry about it.
@@ -268,6 +269,12 @@ class PagesController < ApplicationController
           @component.save
           @element = @page.element_for(@component)
         end
+      end
+      render :update do |page|
+        page.insert_html :bottom, @container, render(:partial => 'element_container', :locals => {:edit => true, :page_element => @element, :component => @component, :page => @page })
+        page.sortable 'elements_container', :url=> {:action => 'sort_elements', :params => {:page_id => @page.id }}
+        page[dom_id_for(@component, :item)].scrollTo()  
+        page.visual_effect :highlight, dom_id_for(@component, :item)
       end
     end
   end
