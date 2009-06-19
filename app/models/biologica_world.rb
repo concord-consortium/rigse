@@ -36,6 +36,7 @@ class BiologicaWorld < ActiveRecord::Base
 
   default_value_for :name, "Biologica World element"
   default_value_for :description, "description ..."
+  default_value_for :species_path, @@available_species_paths['Dragon']
 
   def self.display_name
     "Biologica World"
