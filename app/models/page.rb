@@ -45,7 +45,7 @@ class Page < ActiveRecord::Base
   end
   
   def default_page_name
-    return "Page #{page_number}"
+    return "#{page_number}"
   end
   
   
