@@ -6,11 +6,11 @@ class Page < ActiveRecord::Base
   has_many :page_elements, :order => :position, :dependent => :destroy
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
-  #      BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+        BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
   #      BiologicaChromosome,
   #      BiologicaChromosomeZoom,
   #      BiologicaBreedOffspring,
-  #      BiologicaPedigree,
+        BiologicaPedigree,
   #      BiologicaMultipleOrganism,
   #      BiologicaMeiosisView,
       ]
