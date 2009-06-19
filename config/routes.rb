@@ -1,4 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :biologica_static_organisms
+
+  map.resources :biologica_organisms
+
+  map.resources :biologica_worlds
+
   map.resources :otrunk_imports
 
   map.resources :otml_categories
