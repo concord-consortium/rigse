@@ -1,6 +1,3 @@
-%OTText{ :local_id => ot_local_id_for( biologica_static_organism, :name ), :rows => '2', :columns => '40' }
-  %text= biologica_static_organism.name
-%OTCompoundDoc{:local_id => ot_local_id_for(biologica_static_organism)}
-  %bodyText
-    = biologica_static_organism.description  
-    %object{ :refid => ot_refid_for(biologica_static_organism, :name) }
+%OTStaticOrganism{ :local_id => ot_local_id_for(biologica_static_organism)}
+  %organism
+    %object{ :refid => ot_refid_for(biologica_static_organism.biologica_organism) }

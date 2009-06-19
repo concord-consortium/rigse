@@ -20,11 +20,11 @@ class BiologicaStaticOrganism < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "BiologicaStaticOrganism element"
+  default_value_for :name, "Biologica Static Organism element"
   default_value_for :description, "description ..."
 
   def self.display_name
-    "Biologicastaticorganism"
+    "Biologica Static Organism View"
   end
   
   def organisms_in_activity_scope(scope)

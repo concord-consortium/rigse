@@ -14,6 +14,11 @@ class Page < ActiveRecord::Base
   has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
   has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
   
+  # Biologica models
+  has_many :biologica_worlds, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaWorld'
+  has_many :biologica_organisms, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaOrganism'
+  has_many :biologica_static_organisms, :through => :page_elements, :source => :embeddable, :source_type => 'BiologicaStaticOrganism'
+  
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convinience methods for notes...

@@ -2,7 +2,7 @@ module PagesHelper
 
   
   def element_types
-    [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel]
+    [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism]
   end
 
   def page_acceptable_types
