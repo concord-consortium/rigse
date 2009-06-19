@@ -1,6 +1,6 @@
 var selected_class = 'item_selected';
 var unselected_class = 'item_selectable';
-var rites_document;
+var rites_document = {};
 
 var is_selected = function(element) { return element.hasClassName(selected_class)}
 var selected = function(toggle_element)         { return (readCookie(id_for_toggle(toggle_element)) == "true");    }
@@ -50,7 +50,7 @@ var item_deselect = function() {
 }
 
 var update_links = function() {
-  if(rites_document) {
+  if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !=null) {
       var template = new Template('<a>copy #{type}:#{id}</a>');
       $('copy_link').addClassName('copy_enabled');
@@ -71,27 +71,31 @@ var copy = function() {
   createCookie('clipboard_data_id',rites_document.selected_id);
   alert(template.evaluate({type:rites_document.selected_type, id:rites_document.selected_id}));
   // replace the paste button, much harder?
+  var params = {
+    container_id: container_id,
+    clipboard_data_type: rites_document.selected_type, 
+    clipboard_data_id:rites_document.selected_id
+  };
+  if (auth_token() ) {
+    params.authenticity_token = auth_token();
+  }
   new Ajax.Updater({ 
       // onCreate: 'show_wait()',
       // onComplete: 'hide_wait()',
       success: 'paste_link' 
-    }, 
-    'paste_link', {
-      parameters: { 
-        authenticity_token:AUTH_TOKEN,
-        container_id: container_id,
-        clipboard_data_type: rites_document.selected_type, 
-        clipboard_data_id:rites_document.selected_id
-      }
-  });
+    }, 'paste_link', { parameters: params });
 }
 
 var show_wait = function () {
-  $('waiter').show();
+  if($('waiter')) {
+    $('waiter').show();
+  }
 }
 
 var hide_wait = function () {
-  $('waiter').hide();
+  if($('waiter')) {
+    $('waiter').hide();
+  }
 }
 
 document.observe('click',item_select);
