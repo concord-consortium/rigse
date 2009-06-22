@@ -36,6 +36,9 @@ class Investigation < ActiveRecord::Base
      300
   end
   
+  def parent
+    return nil
+  end
   
   def deep_set_user user
     self.user = user

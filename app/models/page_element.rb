@@ -15,5 +15,10 @@ class PageElement < ActiveRecord::Base
     def dom_id
       "page_element_#{self.id}"
     end
-    
+    def teacher_only?
+      false
+    end
+    def parent
+      return page
+    end
 end

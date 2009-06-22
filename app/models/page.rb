@@ -13,7 +13,7 @@ class Page < ActiveRecord::Base
   #      BiologicaPedigree,
   #      BiologicaMultipleOrganism,
   #      BiologicaMeiosisView,
-      ]
+      ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|
     eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -92,6 +92,10 @@ class Page < ActiveRecord::Base
       return component
     end
     return component.page_elements.detect {|pe| pe.embeddable.id == component.id }
+  end
+
+  def parent
+    return section
   end
 
   def teacher_note
