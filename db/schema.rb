@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090602130223) do
+ActiveRecord::Schema.define(:version => 20090619194024) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20090602130223) do
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
+    t.boolean  "teacher_only",                   :default => false
   end
 
   create_table "assessment_targets", :force => true do |t|
@@ -213,6 +214,7 @@ ActiveRecord::Schema.define(:version => 20090602130223) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "grade_span_expectation_id"
+    t.boolean  "teacher_only",                            :default => false
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -469,12 +471,13 @@ ActiveRecord::Schema.define(:version => 20090602130223) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -546,12 +549,13 @@ ActiveRecord::Schema.define(:version => 20090602130223) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "sections", ["position"], :name => "index_sections_on_position"

@@ -4,16 +4,21 @@ class Page < ActiveRecord::Base
   has_one :activity, :through => :section
 
   has_many :page_elements, :order => :position, :dependent => :destroy
-
-  has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
-  has_many :open_responses, :through => :page_elements, :source => :embeddable, :source_type => 'OpenResponse'
-  has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
-  has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
-  has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
-  has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
-  has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
-  has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
   
+  @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
+  #      BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+  #      BiologicaChromosome,
+  #      BiologicaChromosomeZoom,
+  #      BiologicaBreedOffspring,
+  #      BiologicaPedigree,
+  #      BiologicaMultipleOrganism,
+  #      BiologicaMeiosisView,
+      ]
+
+  @@element_types.each do |type|
+    eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+  end
+
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convinience methods for notes...
@@ -28,6 +33,15 @@ class Page < ActiveRecord::Base
   
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
+
+
+  def Page::element_types
+    @@element_types
+  end
+
+  def Page::paste_acceptable_types
+    Page::element_types.map {|t| t.name.underscore}
+  end
 
   def self.display_name
     'Page'
@@ -100,6 +114,15 @@ class Page < ActiveRecord::Base
       return section.previous(self)
     end
     return nil
+  end
+  
+  def deep_set_user user
+    self.user = user
+    self.page_elements.each do |e|
+      if e.embeddable
+        e.embeddable.user = user
+      end
+    end
   end
   
 end

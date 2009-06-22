@@ -4,6 +4,7 @@ class JnlpAdaptor
   
   def initialize
     @all_otrunk_snapshot_family = MavenJnlp::MavenJnlpFamily.find_by_name('all-otrunk-snapshot')
+    @all_otrunk_snapshot_family.update_snapshot_jnlp_url
     @jnlp = @all_otrunk_snapshot_family.snapshot_jnlp_url.versioned_jnlp
   end
   

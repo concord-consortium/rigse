@@ -48,16 +48,8 @@ class Activity < ActiveRecord::Base
   
   def deep_set_user user
     self.user = user
-    self.sections.each do |s| 
-      s.user = user
-      s.pages.each do |p|
-        p.user = user
-        p.page_elements.each do |e|
-          if e.embeddable
-            e.embeddable.user = user
-          end
-        end
-      end
+    self.sections.each do |s|
+      s.deep_set_user(user)
     end
   end
   

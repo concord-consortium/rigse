@@ -210,4 +210,38 @@ class SectionsController < ApplicationController
     redirect_to :action => 'edit', :id => @copy.id
   end
   
+  #
+  # Construct a link suitable for a 'paste' action in this controller.
+  #
+  def paste_link
+    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:parmas => params}
+  end
+
+  #
+  # In a section controller, we only accept page clipboard data,
+  # 
+  def paste
+    if @section.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.clone :include =>  {:page_elements => :embeddable}
+        if (@component)
+          # @component.original = @original
+          @container = params[:container] || 'section_pages_list'
+          @component.name = "copy of #{@component.name}"
+          @component.deep_set_user current_user
+          @component.save
+        end
+      end
+    end
+    render :update do |page|
+      page.insert_html :bottom, @container, render (:partial => 'page_list_item', :locals => {:page => @component})
+      page.sortable :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }}
+      page[dom_id_for(@component, :item)].scrollTo()
+      page.visual_effect :highlight, dom_id_for(@component, :item)
+    end
+  end  
 end
