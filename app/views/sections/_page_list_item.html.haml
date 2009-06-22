@@ -1,5 +1,5 @@
 %li{:id => dom_id_for(page, :container), :class => 'container_element menu' }
-  %div{ :id => dom_id_for(page, :item), :class => page.changeable?(current_user) ? 'sortable item item_selectable' : 'item' }
+  %div{ :id => dom_id_for(page, :item), :class => style_for_item(page) }
     %div.action_menu
       %div.action_menu_header_left
         =link_to name_for_component(page), page
