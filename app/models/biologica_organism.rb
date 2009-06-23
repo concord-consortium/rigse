@@ -10,7 +10,7 @@ class BiologicaOrganism < ActiveRecord::Base
   has_many :biologica_chromosomes
 #  has_many :biologica_chroomosome_zooms
 #  has_many :biologica_multiple_organisms
-#  has_many :biologica_breed_offsprings
+
   has_and_belongs_to_many :biologica_pedigrees
   
 #  has_many :biologica_meiosis_views
@@ -24,6 +24,17 @@ class BiologicaOrganism < ActiveRecord::Base
     end
     return []
   end
+  
+#  has_many :biologica_breed_offsprings
+# the same goes for the breed offspring views.
+def biologica_breed_offsprings
+  if self.sex == 0  # MALE
+    return BiologicaBreedOffspring.find(:all, :conditions => {:father_organism_id => self.id})
+  elsif self.sex == 1
+    return BiologicaBreedOffspring.find(:all, :conditions => {:mother_organism_id => self.id})
+  end
+  return []
+end
   
   acts_as_replicatable
 

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090623185210) do
+ActiveRecord::Schema.define(:version => 20090623193550) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -50,6 +50,19 @@ ActiveRecord::Schema.define(:version => 20090623185210) do
     t.integer  "unifying_theme_id"
     t.string   "description"
     t.string   "uuid",              :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_breed_offsprings", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "mother_organism_id"
+    t.integer  "father_organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

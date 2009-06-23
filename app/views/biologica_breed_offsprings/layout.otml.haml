@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @biologica_breed_offspring.uuid}
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles(:title => @biologica_breed_offspring.name)
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = BiologicaBreedOffspring.display_name + ': ' + @biologica_breed_offspring.name
+              %object{ :refid => ot_refid_for(@biologica_breed_offspring) }
+      %library
+        =yield :layout

@@ -9,7 +9,7 @@ class Page < ActiveRecord::Base
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
         BiologicaChromosome,
   #      BiologicaChromosomeZoom,
-  #      BiologicaBreedOffspring,
+        BiologicaBreedOffspring,
         BiologicaPedigree,
   #      BiologicaMultipleOrganism,
         BiologicaMeiosisView,
