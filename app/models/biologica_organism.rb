@@ -8,12 +8,22 @@ class BiologicaOrganism < ActiveRecord::Base
   
   has_many :biologica_static_organisms
   has_many :biologica_chromosomes
-#  has_many :biologica_chromosomes
 #  has_many :biologica_chroomosome_zooms
-#  has_many :biologica_meiosis_views
 #  has_many :biologica_multiple_organisms
 #  has_many :biologica_breed_offsprings
   has_and_belongs_to_many :biologica_pedigrees
+  
+#  has_many :biologica_meiosis_views
+# Can we model this via normal rails associations?
+# It can be associated via either BiologicaMeiosisView.father_organism_id or BiologicaMeiosisView.mother_organism_id
+  def biologica_meiosis_views
+    if self.sex == 0  # MALE
+      return BiologicaMeiosisView.find(:all, :conditions => {:father_organism_id => self.id})
+    elsif self.sex == 1
+      return BiologicaMeiosisView.find(:all, :conditions => {:mother_organism_id => self.id})
+    end
+    return []
+  end
   
   acts_as_replicatable
 
@@ -42,6 +52,14 @@ class BiologicaOrganism < ActiveRecord::Base
   def self.display_name
     "Biologica Organism"
   end
-
+  
+  
+  def self.male
+    0
+  end
+  
+  def self.female
+    1
+  end
 
 end

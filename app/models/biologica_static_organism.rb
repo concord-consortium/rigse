@@ -35,5 +35,4 @@ class BiologicaStaticOrganism < ActiveRecord::Base
     end
   end
 
-
 end

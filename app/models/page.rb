@@ -12,7 +12,7 @@ class Page < ActiveRecord::Base
   #      BiologicaBreedOffspring,
         BiologicaPedigree,
   #      BiologicaMultipleOrganism,
-  #      BiologicaMeiosisView,
+        BiologicaMeiosisView,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|

@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :biologica_meiosis_views
+
   map.resources :biologica_chromosomes
 
   map.resources :biologica_pedigrees
