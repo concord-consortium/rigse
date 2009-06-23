@@ -27,8 +27,7 @@ class Parser
     pre_parse
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
-    #parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses test.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
     GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
   end
 
