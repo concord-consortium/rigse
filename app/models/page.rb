@@ -7,7 +7,7 @@ class Page < ActiveRecord::Base
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
-  #      BiologicaChromosome,
+        BiologicaChromosome,
   #      BiologicaChromosomeZoom,
   #      BiologicaBreedOffspring,
         BiologicaPedigree,

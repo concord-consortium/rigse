@@ -7,6 +7,7 @@ class BiologicaOrganism < ActiveRecord::Base
   belongs_to :biologica_world
   
   has_many :biologica_static_organisms
+  has_many :biologica_chromosomes
 #  has_many :biologica_chromosomes
 #  has_many :biologica_chroomosome_zooms
 #  has_many :biologica_meiosis_views
