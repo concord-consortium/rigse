@@ -2,33 +2,36 @@ require 'open-uri'
 require 'yaml'
 require 'spreadsheet'
 require 'hpricot'
+
 ####################################################################
 # Parser --
 ####################################################################
 class Parser
+  
   attr_accessor :logger
+  
   def initialize
     @domains = {}
     @themes = {}
     @logger = Logger.new(STDOUT)
   end
 
-  #
-  #
-  #
-  def process_rigse_data
-    # should delete old stuff
-    remove_old_data
-
-    make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
+  def pre_parse
+    remove_old_data #should delete old stuff
+    @domains = make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
     make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
+    @assessment_target_regex = build_assessment_target_regex(@domains.keys)
+  end
+  
+  def process_rigse_data
+    pre_parse
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
-    GradeSpanExpectation.find(:all).each { |gse|  gse.set_gse_key }
+    #parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses test.xhtml}))
+    GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
   end
-  #
-  #
+
   #
   def clean_text(text) 
     if(text)
@@ -63,14 +66,16 @@ class Parser
   #
   #
   def make_domains(domain_yaml)
+    domains = {}
     data = YAML::load(File.open(domain_yaml))
     data.keys.each do |key| 
       puts key
       d = Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
       puts d.inspect
-      @domains[key] = d
+      domains[key] = d
     end
+    domains
   end
 
   #
@@ -130,12 +135,11 @@ class Parser
       when 2
         import_unifying_themes table
       else
-        import_gses table
+        import_gses(table) if is_gses_table(table)
       end
     end
   end
-
-
+  
   #
   #
   #
@@ -200,53 +204,55 @@ class Parser
     end   
   end
 
-  #
-  #
-  #s
+  ## table: an HTML table that contains GSEs
   def import_gses(table)
-    row_number = 0
-    knowledge_statement=nil
     assessment_targets = []
-    (table/:tr).each do | row |
-      row_number = row_number + 1
-      column = 0
-      (row/:td).each do | data |
-        column = column + 1 
-        columntext = data.inner_text
-        clean_text(columntext)
+    row_number = 1
+    (table/:tr).each do |row|
+      column = 1
+      (row/:td).each do |data|
+        colspan = data['colspan'].nil? ? 1 : data['colspan'].to_i
+        column_text = data.inner_text.strip
+        clean_text(column_text)
         case row_number
-        when 2,5
-          assessment_targets[column] = parse_assesment_target columntext
-        when 4,7
-          assessment_target_index = (column / 2.0).ceil
-          if (assessment_targets[assessment_target_index])
-            grade_span_expectation = parse_grade_span_expectation(data.inner_text,assessment_targets[assessment_target_index])
+        when 2, 5
+          #@logger.debug("ROW=#{row_number} COL=#{column} TXT=#{column_text}")
+          assessment_target = parse_assessment_target(column_text)
+          colspan.times do |i|
+            assessment_targets[column + i] = assessment_target
+          end
+        when 4, 6, 7
+          #@logger.debug("ROW=#{row_number} COL=#{column} TXT=#{column_text}")
+          assessment_target = assessment_targets[column]
+          if assessment_target
+            grade_span_expectation = parse_grade_span_expectation(column_text, assessment_target)
           end
         end # end case
-
+        column += colspan
       end # end for data
+      row_number += 1
     end # end for row
-
   end # end for method declaration
 
-
-  #
-  #
-  #
-  def parse_assesment_target(text)
+  def parse_assessment_target(text)
+    text.strip!
     assessment_target = nil
-    domain_regex = @domains.keys.join("|")
-    space_or_dashes = "[\s|-|–|-]+"
+    #domain_regex = @domains.keys.join("|")
+    #space_or_dashes = "[\s|-|–|-]+"
     # (ESS)\s*([0-9]+)\s*\(([K|0-9|\-|\–|\-|\s])+\)[\s|\-|\–|\-][\s|\-|\–|\-]*([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]*(\d+)(.+)
-    regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\s])+\)[\s|\-|\–]*([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]*(\d+)(.+)/mx
+    #regex = /(#{domain_regex})\s*([0-9]+)\s*\(([K|0-9|\-|\–|\s])+\)[\s|\-|\–]*([A-Z|\s|\+]+)\s*[\s|\-|\–|\-]*(\d+)(.+)/mx
+
+    regex = @assessment_target_regex
 
     matches = text.match(regex)
     if (matches)
-      (domain_key,ek_key,grade_span,unifying_theme_key,number,target) = matches.captures
+      (domain_key,ek_key,grade_span,unifying_theme_key) = matches.captures
+      ## Getting number and target seperately because number of matches
+      ## for unifying_theme_key is variable
+      (number, target) = matches.captures[-2..-1] 
 
-      themes = unifying_theme_key.split('+');
-      themes.map { |theme| theme.strip }
-      unifying_theme_key = themes[0]
+      themes = unifying_theme_key.split(/[\+\s]+/);
+      #unifying_theme_key = themes[0]
 
       domain = @domains[domain_key.strip]
 
@@ -259,21 +265,25 @@ class Parser
       end
 
       assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
-      unifying_theme = @themes[unifying_theme_key.strip]
-      if (unifying_theme)
-        assessment_target.unifying_theme = unifying_theme
-      else
-        logger.warn "could not find unifying theme that matches: #{unifying_theme_key}"
-      end
+      #unifying_theme = @themes[unifying_theme_key.strip]
+      #if (unifying_theme)
+      #  assessment_target.unifying_theme = unifying_theme
+      #else
+      #  logger.warn "could not find unifying theme that matches: #{unifying_theme_key}"
+      #end
       assessment_target.description = target
       assessment_target.grade_span = grade_span
       assessment_target.save
-    else
+      themes.each do |theme|
+        AssessmentTargetUnifyingTheme.new(:assessment_target_id => assessment_target.id,
+          :unifying_theme_id => @themes[theme].id).save!
+      end
+      return assessment_target
+    elsif !text.match(/\ANo further targets/i)
       logger.warn "can't parse assessment target text is #{text}"
     end
-    return assessment_target
+    nil
   end # end for method dec
-
 
   #
   #
@@ -313,5 +323,35 @@ class Parser
     end
     return gse
   end # end for method dec
-
+  
+  def is_gses_table(table)
+    rows = table.search(:tr)
+    heading = rows[0].at(:td).inner_text.strip
+    unless heading =~ /^#{@domains.keys.join('|')}/
+      table_number = table.attributes['class'].gsub("Table", "")
+      logger.info("Not a GSES table: table \##{table_number}")
+      return false
+    end
+    if rows[1] and rows[1].search(:td).size == 3
+      return true
+    else
+      return false
+    end
+  end
+  
+  def build_assessment_target_regex(domain_keys)
+    domain_ptn = domain_keys.join("|")
+    grade_ptn = '1?[K0-9]-1?[K0-9]'
+    theme_ptn = '[A-Z]{3}([\+\s]+[A-Z]{3})*'
+    num_ptn = '\d+'
+    
+    ## group 1: domain key (e.g. 'LS')
+    ## group 2: ek key (e.g. '1')
+    ## group 3: grade span (e.g. 'K-2')
+    ## group 4: unifying theme (e.g. 'INQ+POC')
+    ## group -2: target number (e.g. '1')
+    ## group -1: target text
+    regex = /\A(#{domain_ptn})\s*([1-9]+)\s*\((#{grade_ptn})\)[\s\-]*(#{theme_ptn})[\s\-]*(#{num_ptn})(.*)/mo
+  end
+  
 end # end for class
