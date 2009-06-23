@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
   #      BiologicaChromosomeZoom,
         BiologicaBreedOffspring,
         BiologicaPedigree,
-  #      BiologicaMultipleOrganism,
+        BiologicaMultipleOrganism,
         BiologicaMeiosisView,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 

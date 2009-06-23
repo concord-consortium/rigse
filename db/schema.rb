@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090623193550) do
+ActiveRecord::Schema.define(:version => 20090623194610) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -93,6 +93,25 @@ ActiveRecord::Schema.define(:version => 20090623193550) do
     t.boolean  "alignment_control_visible"
     t.integer  "father_organism_id"
     t.integer  "mother_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_multiple_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "organism_image_size"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_multiple_organisms_biologica_organisms", :id => false, :force => true do |t|
+    t.integer  "biologica_multiple_organism_id"
+    t.integer  "biologica_organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
