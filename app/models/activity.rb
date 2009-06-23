@@ -32,6 +32,10 @@ class Activity < ActiveRecord::Base
     end
   end
   
+  def parent
+    return investigation
+  end
+  
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]

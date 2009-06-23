@@ -1,10 +1,10 @@
 - form_for(@activity) do |f|
   = f.error_messages
-  %ul.menu
-    %li.menu= "#{@activity.name} show/hide:"
-    %li.menu= f.submit "Save"
+  = edit_menu_for(@activity, f)
   - field_set_tag 'Activity Name' do
     = f.text_field :name
-
+  - field_set_tag 'Teacher only' do
+    = f.check_box :teacher_only 
+    (check here if this activity is for teachers only)
   - field_set_tag 'Activity Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'tinymce_textarea'

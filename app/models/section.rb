@@ -29,6 +29,10 @@ class Section < ActiveRecord::Base
     'Section'
   end
 
+  def parent
+    return activity
+  end
+  
   def next(page)
     index = pages.index(page)
     if index

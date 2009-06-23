@@ -146,7 +146,13 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          
+          haml_tag(:h3,{:class => 'menu'}) do
+             haml_concat component.class.name.humanize
+             if component.respond_to? 'name'
+               haml_concat ": "
+               haml_concat component.name
+             end
+          end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
@@ -284,8 +290,9 @@ module ApplicationHelper
 
   def show_menu_for(component, options={})
     embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
+    view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
-      haml_tag :div, :class => 'action_menu' do
+      haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat(link_to name_for_component(embeddable), embeddable)
         end
@@ -434,6 +441,26 @@ module ApplicationHelper
     js
   end
   
+  # expects styles to contain space seperated list of style classes.
+  def style_for_teachers(component,style_classes=[])
+    if (teacher_only?(component))
+      style_classes << 'teacher_only' # funny, just adding a style text
+    end
+    return style_classes
+  end
+  
+  
+  def style_for_item(component,style_classes=[]) 
+    style_classes << 'item'
+    if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
+      style_classes << 'movable'
+      style_classes << 'selectable'
+      style_classes << 'item_selectable'
+    end
+    style_classes = style_for_teachers(component,style_classes)
+    return style_classes.join(" ")
+  end
+  
   def simple_div_helper_that_yields
     capture_haml do
       haml_tag :div, :class => 'simple_div' do
@@ -443,4 +470,20 @@ module ApplicationHelper
       end
     end
   end
+  
+  #
+  # is a component viewable only by teacher
+  #
+  def teacher_only?(thing)
+    if (thing.teacher_only?)
+      return true;
+    end
+    while ((thing = thing.parent()) != nil) 
+      if (thing.teacher_only?)
+        return true
+      end
+    end
+    return false
+  end
+  
 end

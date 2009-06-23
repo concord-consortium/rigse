@@ -1,9 +1,10 @@
 - form_for(@section) do |f|
-  %ul.menu
-    %li.menu= "#{@section.name}:"
-    %li.menu= f.submit "Save"
+  = f.error_messages
+  = edit_menu_for(@section, f)
+  - field_set_tag 'Teacher only' do
+    = f.check_box :teacher_only 
+    (check here if this section is for teachers only)
   - field_set_tag 'Section Name' do
     = f.text_field :name
-
   - field_set_tag 'Section Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'tinymce_textarea'

@@ -1,5 +1,5 @@
 %li{:id => dom_id_for(section, :container), :class => 'menu container_element' }
-  %div{ :id => dom_id_for(section, :item), :class => section.activity.changeable?(current_user) ? 'item movable content item_selectable' : 'item' }
+  %div{ :id => dom_id_for(section, :item), :class => style_for_item(section) }
     %div.action_menu
       %div.action_menu_header_left   
         =link_to name_for_component(section), section
@@ -16,5 +16,5 @@
       %ul.tiny
       - section.pages.each_with_index do |page, i|
         %li.tiny
-          = link_to "page: #{i+1}: #{page.name}", page
+          = link_to "page: #{page.name}", page
           %span.tiny= page.description

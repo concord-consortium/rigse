@@ -11,37 +11,43 @@
     %li= toggle_all('elements')
     %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
     - if (page.changeable?(current_user))
+      %li= link_to 'edit page details', edit_page_url(page)
       %li= link_to 'duplicate', duplicate_page_url(page)
+
+- if (teacher_only? @page)
+  - view_class = "action_menu teacher_only"
+- else
+  - view_class = "action_menu"
+
       
-%div{:id => dom_id_for(page,:item), :class =>"action_menu"}       
-  .action_menu
-    .action_menu_header_left
-      .padded_content
-      .padded_content
-        = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
-    .action_menu_header_right
-      = render :partial => "shared/notes_menu", :locals => {:authorable => page}
-      = dropdown_button "actions.png", :title => "actions for this page"
-      - if (page.changeable?(current_user))
-        = dropdown_button "add.png", :title => 'add content to this page'
-      - if (page.previous)
-        = link_button "previous_page.png", page.previous, :title => "go to previous page"
-      - else
-        .rollover= image_tag("previous_page_disabled.png")
-      - if page.section
-        - page.section.pages.each do |p|
-          - if (p.id == page.id)
-            = link_button "this_page.png", "#", :title => "you are here"
-          - else
-            = link_button "other_page.png", p, :title => "go to #{p.name}"
-      - if (page.next)
-        = link_button "next_page.png", page.next, :title => 'next page'
-      - else
-        .rollover= image_tag("next_page_disabled.png")
-      - if (page.changeable?(current_user))
-        - if (page.section)
-          = delete_button_for(page, :redirect => url_for(page.section))
+%div{:id => dom_id_for(page,:item), :class =>view_class}
+  .action_menu_header_left
+    .padded_content
+    .padded_content
+      = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
+  .action_menu_header_right
+    = render :partial => "shared/notes_menu", :locals => {:authorable => page}
+    = dropdown_button "actions.png", :title => "actions for this page"
+    - if (page.changeable?(current_user))
+      = dropdown_button "add.png", :title => 'add content to this page'
+    - if (page.previous)
+      = link_button "previous_page.png", page.previous, :title => "go to previous page"
+    - else
+      .rollover= image_tag("previous_page_disabled.png")
+    - if page.section
+      - page.section.pages.each do |p|
+        - if (p.id == page.id)
+          = link_button "this_page.png", "#", :title => "you are here"
         - else
-          = delete_button_for(page)
+          = link_button "other_page.png", p, :title => "go to #{p.name}"
+    - if (page.next)
+      = link_button "next_page.png", page.next, :title => 'next page'
+    - else
+      .rollover= image_tag("next_page_disabled.png")
+    - if (page.changeable?(current_user))
       - if (page.section)
-        = link_button "up.png", page.section, :title => 'go to section'
+        = delete_button_for(page, :redirect => url_for(page.section))
+      - else
+        = delete_button_for(page)
+    - if (page.section)
+      = link_button "up.png", page.section, :title => 'go to section'
