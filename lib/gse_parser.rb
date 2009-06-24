@@ -56,6 +56,7 @@ class GseParser
       AssessmentTarget,
       AssessmentTargetUnifyingTheme,
       GradeSpanExpectation,
+      ExpectationIndicator,
       ExpectationStem,
       Expectation,
       UnifyingTheme, 
