@@ -140,6 +140,13 @@ end
 #############################################################
 
 namespace :import do
+  
+  desc 'import grade span expectations from files in config/rigse_data/'
+  task :import_gses_from_file, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:import_gses_from_file --trace" 
+  end
+  
   desc 'erase and import ITSI activities from the ITSI DIY'
   task :erase_and_import_itsi_activities, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
