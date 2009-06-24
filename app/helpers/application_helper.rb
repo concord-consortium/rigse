@@ -173,13 +173,14 @@ module ApplicationHelper
     link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
   end
 
-  def otml_url_for(component)
+  def otml_url_for(component,options={})
     url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
       :id  => component.id,
-      :only_path => false )
+      :only_path => false,
+      :teacher_mode => options[:teacher_mode] )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 
@@ -235,24 +236,26 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, prefix='')
+  def run_link_for(component, prefix='',params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_to("#{prefix}run #{component_display_name}", {
         :controller => component.class.name.pluralize.underscore, 
         :action => :show,
         :format => :jnlp, 
-        :id  => component.id
+        :id  => component.id,
+        :params => params
       },
       :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def otml_link_for(component)
+  def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
-      :id  => component.id)
+      :id  => component.id,
+      :params => params)
   end
 
   def delete_button_for(model, options={})

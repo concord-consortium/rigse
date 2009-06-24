@@ -69,6 +69,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def show
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => 'layouts/section' } # section.otml.haml

@@ -1,1 +1,1 @@
-= render :partial => "shared/jnlp", :locals => { :runnable_object => runnable_object, :escaped_otml_url => otml_url_for(runnable_object), :authoring => false }
+= render :partial => "shared/jnlp", :locals => { :runnable_object => runnable_object, :escaped_otml_url => otml_url_for(runnable_object,:teacher_mode=>defined? teacher_mode), :authoring => false }
