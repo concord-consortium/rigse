@@ -6,13 +6,13 @@ class Page < ActiveRecord::Base
   has_many :page_elements, :order => :position, :dependent => :destroy
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
-  #      BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
-  #      BiologicaChromosome,
+        BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+        BiologicaChromosome,
   #      BiologicaChromosomeZoom,
-  #      BiologicaBreedOffspring,
-  #      BiologicaPedigree,
-  #      BiologicaMultipleOrganism,
-  #      BiologicaMeiosisView,
+        BiologicaBreedOffspring,
+        BiologicaPedigree,
+        BiologicaMultipleOrganism,
+        BiologicaMeiosisView,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|

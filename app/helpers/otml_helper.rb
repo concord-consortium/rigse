@@ -69,6 +69,16 @@ module OtmlHelper
       org.concord.sensor.state.OTInterfaceManager
       org.concord.sensor.state.OTSensorDataProxy
       org.concord.sensor.state.OTSensorRequest
+      org.concord.otrunk.biologica.OTWorld
+      org.concord.otrunk.biologica.OTOrganism
+      org.concord.otrunk.biologica.OTStaticOrganism
+      org.concord.otrunk.biologica.OTChromosome
+      org.concord.otrunk.biologica.OTChromosomeZoom
+      org.concord.otrunk.biologica.OTBreedOffspring
+      org.concord.otrunk.biologica.OTPedigree
+      org.concord.otrunk.biologica.OTMultipleOrganism
+      org.concord.otrunk.biologica.OTFamily
+      org.concord.otrunk.biologica.OTSex
     } + (@otrunk_imports || []).uniq
   end
   
@@ -106,7 +116,17 @@ module OtmlHelper
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView']
+      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView'],
+      ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismView'],
+      ['biologica_chromosome','org.concord.otrunk.biologica.OTChromosome','org.concord.otrunk.biologica.ui.OTChromosomeView'],
+      ['biologica_chromosome_zoom','org.concord.otrunk.biologica.OTChromosomeZoom','org.concord.otrunk.biologica.ui.OTChromosomeZoomView'],
+      ['biologica_breed_offspring','org.concord.otrunk.biologica.OTBreedOffspring','org.concord.otrunk.biologica.ui.OTBreedOffspringView'],
+      ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeView'],
+      ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismView'],
+      ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView']
     ] + (@otrunk_view_entries || []).uniq
   end
   
@@ -134,7 +154,17 @@ module OtmlHelper
 #      ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
 #      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_edit_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageEditView'],
-      ['n_logo_model_edit_view', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelEditView']
+      ['n_logo_model_edit_view', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelEditView'],
+      ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.biologica.OTWorldEditView'],
+      ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.biologica.OTOrganismEditView'],
+      ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismEditView'],
+      ['biologica_chromosome','org.concord.otrunk.biologica.OTChromosome','org.concord.otrunk.biologica.ui.OTChromosomeEditView'],
+      ['biologica_chromosome_zoom','org.concord.otrunk.biologica.OTChromosomeZoom','org.concord.otrunk.biologica.ui.OTChromosomeZoomEditView'],
+      ['biologica_breed_offspring','org.concord.otrunk.biologica.OTBreedOffspring','org.concord.otrunk.biologica.ui.OTBreedOffspringEditView'],
+      ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeEditView'],
+      ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismEditView'],
+      ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexEditView']
     ] + (@otrunk_edit_view_entries || []).uniq
   end
 

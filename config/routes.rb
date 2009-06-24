@@ -1,4 +1,20 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :biologica_multiple_organisms
+
+  map.resources :biologica_breed_offsprings
+
+  map.resources :biologica_meiosis_views
+
+  map.resources :biologica_chromosomes
+
+  map.resources :biologica_pedigrees
+
+  map.resources :biologica_static_organisms
+
+  map.resources :biologica_organisms
+
+  map.resources :biologica_worlds
+
   map.resources :otrunk_imports
 
   map.resources :otml_categories
