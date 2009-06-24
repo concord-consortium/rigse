@@ -272,7 +272,7 @@ class GseParser
       #else
       #  logger.warn "could not find unifying theme that matches: #{unifying_theme_key}"
       #end
-      assessment_target.description = target
+      assessment_target.description = target.strip
       assessment_target.grade_span = grade_span
       assessment_target.save
       themes.each do |theme|
