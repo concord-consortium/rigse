@@ -329,16 +329,6 @@ ActiveRecord::Schema.define(:version => 20090622145952) do
     t.datetime "updated_at"
   end
 
-  create_table "interactive_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.string   "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36

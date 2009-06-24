@@ -4,9 +4,9 @@ require 'spreadsheet'
 require 'hpricot'
 
 ####################################################################
-# Parser --
+# GseParser --
 ####################################################################
-class Parser
+class GseParser
   
   attr_accessor :logger
   
@@ -27,8 +27,7 @@ class Parser
     pre_parse
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
-    #parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses test.xhtml}))
+    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
     GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
   end
 
@@ -50,16 +49,18 @@ class Parser
   #
   #
   def remove_old_data
-    classes_to_clean = [
-      Domain,
+    # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+    # the autogenerating primary key index ... not certain about other databases
+    [ Domain,
       KnowledgeStatement,
       AssessmentTarget,
       GradeSpanExpectation,
       ExpectationStem,
       Expectation,
       UnifyingTheme, 
-      BigIdea]
-      classes_to_clean.each { | c| c.destroy_all }
+      BigIdea].each do |klass|
+        ActiveRecord::Base.connection.delete("TRUNCATE `#{klass.table_name}`")
+    end
   end
 
   #
@@ -271,7 +272,7 @@ class Parser
       #else
       #  logger.warn "could not find unifying theme that matches: #{unifying_theme_key}"
       #end
-      assessment_target.description = target
+      assessment_target.description = target.strip
       assessment_target.grade_span = grade_span
       assessment_target.save
       themes.each do |theme|

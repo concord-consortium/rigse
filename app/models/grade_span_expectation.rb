@@ -1,6 +1,8 @@
 class GradeSpanExpectation < ActiveRecord::Base
   # belongs_to :user
 
+  has_many :investigations
+  
   has_many :expectations
   has_many :expectation_stems, :through => :expectations
   has_many :expectation_indicators, :through => :expectations
