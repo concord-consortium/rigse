@@ -17,7 +17,8 @@
       %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
         %cards
           - activity.sections.each do |section|
-            =yield "section_#{dom_id_for(section)}".to_sym
+            - unless ((section.teacher_only?) && (!teacher_mode))
+              =yield "section_#{dom_id_for(section)}".to_sym
         %currentCard
           - if activity.sections.first
             %object{ :refid => ot_refid_for(activity.sections.first) }/

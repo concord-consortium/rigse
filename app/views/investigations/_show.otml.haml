@@ -17,16 +17,17 @@
       %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'false', :closeViewOnExit => 'false'}
         %cards
           - investigation.activities.each do |activity|
-            %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
-              %content
-                %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
-                  %cards
-                    - activity.sections.each do |section|
-                      =yield "section_#{dom_id_for(section)}".to_sym
-                  %currentCard
-                    - if activity.sections.first
-                      %object{ :refid => ot_refid_for(activity.sections.first) }/
-                  %viewedCards
+            - unless ((activity.teacher_only?) && (!teacher_mode))
+              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
+                %content
+                  %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
+                    %cards
+                      - activity.sections.each do |section|
+                        =yield "section_#{dom_id_for(section)}".to_sym
+                    %currentCard
+                      - if activity.sections.first
+                        %object{ :refid => ot_refid_for(activity.sections.first) }/
+                    %viewedCards
         %currentCard
           - if investigation.activities.first
             %object{ :refid => ot_refid_for(investigation.activities.first, :activity_section) }/

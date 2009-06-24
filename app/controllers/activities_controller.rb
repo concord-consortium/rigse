@@ -85,6 +85,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1.xml
   def show
     @activity = Activity.find(params[:id])
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @activity }
