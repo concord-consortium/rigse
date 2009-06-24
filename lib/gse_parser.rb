@@ -54,6 +54,7 @@ class GseParser
     [ Domain,
       KnowledgeStatement,
       AssessmentTarget,
+      AssessmentTargetUnifyingTheme,
       GradeSpanExpectation,
       ExpectationStem,
       Expectation,
