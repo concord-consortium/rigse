@@ -58,7 +58,7 @@ end
   default_value_for :name, "Biologica Organism element"
   default_value_for :description, "description ..."
   default_value_for :sex, -1
-  default_value_for :allow_fatal_characteristics, true
+  default_value_for :fatal_characteristics, true
 
   def self.display_name
     "Biologica Organism"
