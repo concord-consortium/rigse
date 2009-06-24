@@ -1,6 +1,7 @@
 #actions_menu.dropdown
   %ul
     %li= run_link_for(@activity)
+    %li= run_link_for(@activity,'teacher-mode-',{:teacher_mode=>true})
     %li= print_link_for(@activity)
     %li#copy_link copy (disabled)
     %li= toggle_all('sections')
