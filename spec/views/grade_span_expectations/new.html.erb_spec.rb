@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe "/grade_span_expectations/new.html.erb" do
-  include GradeSpanExpectationsHelper
   
   before(:each) do
     assigns[:grade_span_expectation] = stub_model(GradeSpanExpectation,
