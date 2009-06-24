@@ -14,7 +14,7 @@ namespace :rigse do
         puts "Saving gse specification from #{investigations_with_gses.length} Investigations ..."
         inv_gse_cache = investigations_with_gses.collect  do |inv|
           gse = inv.grade_span_expectation
-          puts "  Investigation: #{inv.id}: #{inv.name}, GSE: #{gse.id}: #{gse.gse_key}, #{gse.assessment_target_id}, #{gse.grade_span}"
+          puts "  Investigation: #{inv.id}: #{inv.name}, GSE: #{gse.id}: #{gse.gse_key}, #{gse.assessment_target_id}, #{gse.grade_span}, #{gse.assessment_target.description}"
           [inv, gse.assessment_target.description, gse.grade_span]
         end
       end
@@ -43,7 +43,7 @@ HEREDOC
           if gse
             inv.grade_span_expectation = gse
             inv.save!
-            puts "#{gse.id}: #{gse.gse_key}, #{gse.assessment_target_id}, #{gse.grade_span}"
+            puts "#{gse.id}: #{gse.gse_key}, #{gse.assessment_target_id}, #{gse.grade_span}, #{gse.assessment_target.description}"
           else
             inv.grade_span_expectation = nil
             inv.save!
