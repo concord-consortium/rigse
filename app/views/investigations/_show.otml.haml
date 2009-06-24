@@ -1,4 +1,4 @@
-= render :partial => 'activities/show', :collection => investigation.activities, :as => :activity
+= render :partial => 'activities/show', :locals => {:teacher_mode => teacher_mode}, :collection => investigation.activities, :as => :activity
 
 - content_for(:investigation) do
   %OTUDLContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }

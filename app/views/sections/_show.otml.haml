@@ -1,4 +1,4 @@
-= render :partial => 'pages/show', :collection => section.pages, :as => :page
+= render :partial => 'pages/show', :locals => {:teacher_mode => teacher_mode}, :collection => section.pages, :as => :page
 
 - content_for("section_#{dom_id_for(section)}".to_sym) do
   %OTSection{ :local_id => ot_local_id_for(section), :name => section.name   }
