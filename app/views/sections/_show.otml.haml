@@ -5,17 +5,24 @@
     %header
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
         %bodyText
-          #content
-            %h1= h(section.name)
+          - if teacher_only?(section)
+            - if teacher_mode
+              #content.teacher_mode
+                %h1= h(section.name)
+          - else
+            #content
+              %h1= h(section.name)
+            
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
         %cards
           - section.pages.each do |page|
-            - unless ((page.teacher_only?) && (!teacher_mode))
+            - unless ((teacher_only?(page)) && (!teacher_mode))
               =yield "page_#{dom_id_for(page)}".to_sym
         %currentCard
           - if section.pages.first
-            %object{ :refid => ot_refid_for(section.pages.first) }/
+            - unless ((teacher_only?(section.pages.first)) && (!teacher_mode))
+              %object{ :refid => ot_refid_for(section.pages.first) }/
         %viewedCards
     %footer
       %object{ :refid => ot_refid_for(section, :menu) }/

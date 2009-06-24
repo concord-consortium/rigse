@@ -5,8 +5,13 @@
     %title
       %OTCompoundDoc
         %bodyText
-          #content
-            %h3= h(investigation.name)
+          - if teacher_only?(investigation)
+            - if teacher_mode
+              #content.teacher_mode
+                %h3= h(investigation.name)
+          - else
+            #content
+              %h3= h(investigation.name)
     %menu
       %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }
         %object
@@ -17,19 +22,20 @@
       %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'false', :closeViewOnExit => 'false'}
         %cards
           - investigation.activities.each do |activity|
-            - unless ((activity.teacher_only?) && (!teacher_mode))
+            - unless ((teacher_only?(activity)) && (!teacher_mode))
               %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
                 %content
                   %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                     %cards
                       - activity.sections.each do |section|
-                        =yield "section_#{dom_id_for(section)}".to_sym
+                        - unless ((teacher_only?(section)) && (!teacher_mode))
+                          =yield "section_#{dom_id_for(section)}".to_sym
                     %currentCard
-                      - if activity.sections.first
+                      - if (activity.sections.first && (!teacher_only?(activity.sections.first))) || teacher_mode
                         %object{ :refid => ot_refid_for(activity.sections.first) }/
                     %viewedCards
         %currentCard
-          - if investigation.activities.first
+          - if (investigation.activities.first && (!teacher_only?(investigation.activities.first))) || teacher_mode
             %object{ :refid => ot_refid_for(investigation.activities.first, :activity_section) }/
         %viewedCards
 
@@ -41,3 +47,4 @@
       %object{ :refid => ot_refid_for('activity_rule') }
 
   %OTMenuRule{ :local_id => ot_local_id_for('activity_rule'), :jumpToAnyCard => 'true' }
+  

@@ -5,23 +5,30 @@
     %title
       %OTCompoundDoc
         %bodyText
-          #content
-            %h3= h(activity.name)
-    %menu
-      %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }
-        %object
-          %object{ :refid => ot_refid_for(activity, :menu) }/
-        %viewid
-          %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
+          - if teacher_only?(activity)
+            - if teacher_mode
+              #content.teacher_mode
+                %h3= h(activity.name)
+          - else
+            #content
+              %h3= h(activity.name)
+    - unless ((teacher_only?(activity)) && (!teacher_mode))          
+      %menu
+        %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }       
+          %object
+            %object{ :refid => ot_refid_for(activity, :menu) }/
+          %viewid
+            %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
         %cards
           - activity.sections.each do |section|
-            - unless ((section.teacher_only?) && (!teacher_mode))
+            - unless ((teacher_only?(section)) && (!teacher_mode))
               =yield "section_#{dom_id_for(section)}".to_sym
         %currentCard
           - if activity.sections.first
-            %object{ :refid => ot_refid_for(activity.sections.first) }/
+            - unless ((teacher_only?(activity.sections.first)) && (!teacher_mode))
+              %object{ :refid => ot_refid_for(activity.sections.first) }/
         %viewedCards
 
 - content_for(:library) do
