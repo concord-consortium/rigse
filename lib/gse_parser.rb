@@ -4,9 +4,9 @@ require 'spreadsheet'
 require 'hpricot'
 
 ####################################################################
-# Parser --
+# GseParser --
 ####################################################################
-class Parser
+class GseParser
   
   attr_accessor :logger
   
@@ -49,16 +49,18 @@ class Parser
   #
   #
   def remove_old_data
-    classes_to_clean = [
-      Domain,
+    # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+    # the autogenerating primary key index ... not certain about other databases
+    [ Domain,
       KnowledgeStatement,
       AssessmentTarget,
       GradeSpanExpectation,
       ExpectationStem,
       Expectation,
       UnifyingTheme, 
-      BigIdea]
-      classes_to_clean.each { | c| c.destroy_all }
+      BigIdea].each do |klass|
+        ActiveRecord::Base.connection.delete("TRUNCATE `#{klass.table_name}`")
+    end
   end
 
   #
