@@ -43,6 +43,7 @@ class BiologicaChromosomesController < ApplicationController
   # GET /biologica_chromosomes/1/edit
   def edit
     @biologica_chromosome = BiologicaChromosome.find(params[:id])
+    @scope = get_scope(@biologica_chromosome)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_chromosome => @biologica_chromosome }
     else

@@ -43,6 +43,7 @@ class BiologicaBreedOffspringsController < ApplicationController
   # GET /biologica_breed_offsprings/1/edit
   def edit
     @biologica_breed_offspring = BiologicaBreedOffspring.find(params[:id])
+    @scope = get_scope(@biologica_breed_offspring)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
     else
