@@ -269,7 +269,7 @@ class InvestigationsController < ApplicationController
     end
 
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'activity_list_item', :locals => {:activity => @component})
+      page.insert_html :bottom, @container, render(:partial => 'activity_list_item', :locals => {:activity => @component})
       page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)

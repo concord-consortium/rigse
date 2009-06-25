@@ -236,7 +236,7 @@ class SectionsController < ApplicationController
       end
     end
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'page_list_item', :locals => {:page => @component})
+      page.insert_html :bottom, @container, render(:partial => 'page_list_item', :locals => {:page => @component})
       page.sortable :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)

@@ -297,7 +297,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat(link_to name_for_component(embeddable), embeddable)
+          haml_concat link_to(name_for_component(embeddable), embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
@@ -308,7 +308,7 @@ module ApplicationHelper
                   haml_tag(:li) { haml_concat otml_link_for(embeddable) }
                 end
               end
-              haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
+              haml_concat(dropdown_button("actions.png", :name_postfix => embeddable.name, :title => "actions for this page"))
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
