@@ -63,6 +63,7 @@ class Activity < ActiveRecord::Base
     self.sections.each do |s|
       s.deep_set_user(user)
     end
+    self.save
   end
   
     
