@@ -4,6 +4,7 @@ class PageElementsController < ApplicationController
   # DELETE /page_elements/1.xml
   def destroy
     @page_element = PageElement.find(params[:id])
+    @page_element.update_investigation_timestamp
     @page_element.destroy
     respond_to do |format|
       format.html { redirect_to(page_elements_url) }

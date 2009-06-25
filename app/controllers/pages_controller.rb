@@ -142,6 +142,7 @@ class PagesController < ApplicationController
     @page = Page.create(params[:page])
     respond_to do |format|
       if @page.save
+        @page.update_investigation_timestamp
         format.js
         flash[:notice] = 'PageEmbedables was successfully created.'
         format.html { redirect_to(@page) }
@@ -158,6 +159,7 @@ class PagesController < ApplicationController
   def update
     respond_to do |format|
       if @page.update_attributes(params[:page])
+        @page.update_investigation_timestamp
         flash[:notice] = 'Page was successfully updated.'
         format.html { redirect_to(@page) }
         format.xml  { head :ok }
@@ -172,6 +174,7 @@ class PagesController < ApplicationController
   # DELETE /page/1
   # DELETE /page/1.xml
   def destroy
+    @page.update_investigation_timestamp
     @page.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -212,6 +215,8 @@ class PagesController < ApplicationController
     @element = @page.element_for(@component)
     @element.user = current_user
     @element.save
+    @element.update_investigation_timestamp
+    
     # 
     # # dynamically insert appropriate partial based on type.
     # @partial = partial_for(@component)

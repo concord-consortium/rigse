@@ -198,6 +198,7 @@ class SectionsController < ApplicationController
   ##
   def delete_page
     @page= Page.find(params['page_id'])
+    @page.update_investigation_timestamp
     @page.destroy
   end
   

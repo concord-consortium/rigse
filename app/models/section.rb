@@ -61,7 +61,7 @@ class Section < ActiveRecord::Base
     update_investigation_timestamp if super(name, value)
   end
 
-  ## Update timestamp of investigation that the activity belongs to 
+  ## Update timestamp of investigation that the section belongs to 
   def update_investigation_timestamp
     activity = self.activity
     activity.update_investigation_timestamp if activity
