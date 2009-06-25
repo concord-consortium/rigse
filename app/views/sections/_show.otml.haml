@@ -26,6 +26,28 @@
         %viewedCards
     %footer
       %object{ :refid => ot_refid_for(section, :menu) }/
+    - if teacher_mode    
+      %east
+        %OTViewChild{ :useScrollPane => "true" }
+          %object
+            %OTCompoundDoc
+              %bodyText
+                #content.teacher_notes
+                  %h1= "Teacher Notes"
+                  %h2= "Section Notes"
+                  .section_teacher_notes
+                    - if section.teacher_note
+                      = section.teacher_note.body
+                    - else
+                      = "no teacher notes for section"
+                  %h2= "Page Notes"
+                  - section.pages.each do |page|
+                    %h3= page.name
+                    .page_teacher_notes
+                      - if page.teacher_note                    
+                        = page.teacher_note.body
+                      - else
+                        = "no teacher notes for page"
 
 - content_for(:library) do
 
