@@ -39,11 +39,11 @@ class BiologicaPedigree < ActiveRecord::Base
   default_value_for :crossover_enabled, false
   default_value_for :sex_text_visible, false
   default_value_for :organism_images_visible, false
-  default_value_for :organism_image_size => 0
-  default_value_for :top_controls_visible => true
-  default_value_for :reset_button_visible => true
-  default_value_for :minimum_number_children => 3
-  default_value_for :maximum_number_children => 5
+  default_value_for :organism_image_size, 0
+  default_value_for :top_controls_visible, true
+  default_value_for :reset_button_visible, true
+  default_value_for :minimum_number_children, 3
+  default_value_for :maximum_number_children, 5
 
   def self.display_name
     "Biologica Pedigree"
