@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 class InnerPagePage
   def <(other)
-    return (self.page.name < other.page.name)
+    return (self.position < other.position)
   end
 end
 
@@ -20,12 +20,10 @@ class InnerPage
 
   def shuffle
     self.inner_page_pages.size.downto(1) { |n| self.inner_page_pages.push self.inner_page_pages.delete_at(rand(n)) }
-    self.inner_page_pages.each_with_index { |ip,i| ip.position = i; ip.save }
   end
 
   def sort_by_name
-    self.inner_page_pages.sort! {|a,b| a.page.name <=> b.page.name} 
-    self.inner_page_pages.each_with_index {|ip,i| ip.position = i; ip.save}
+    self.inner_page_pages.sort {|a,b| a.page.name <=> b.page.name}
   end
 
   def inspect
@@ -56,6 +54,7 @@ describe InnerPage do
   end
   
   it "should contain many sub-pages" do
+
     @inner_page.sub_pages << @page
     @inner_page.save
     id = @inner_page.id
@@ -66,31 +65,35 @@ describe InnerPage do
   end
   
   it "should be able to sort the sub-pages" do
-    1.upto(7).each do |i|
+    1.upto(10).each do |i|
       p = Page.create(:name => "page #{i}")
       p.save
       @inner_page.sub_pages << p
     end
+    @inner_page.save
+    @inner_page = InnerPage.find(@inner_page.id)
+    assert @inner_page.is_contiguous
     
     @inner_page.shuffle
-    @inner_page.save
-    @inner_page = InnerPage.find(@inner_page.id)
+    @inner_page.inspect
     assert (!@inner_page.is_contiguous)
-    
-    @inner_page.sort_by_name
-    assert (@inner_page.is_contiguous) 
-    @inner_page.save
-    @inner_page = InnerPage.find(@inner_page.id)
-    assert (@inner_page.is_contiguous)
-    
-    last_page = Page.create!(:name =>"last page")
-    @inner_page.sub_pages << last_page
     @inner_page.save
     @inner_page = InnerPage.find(@inner_page.id)
     @inner_page.inspect
-    assert @inner_page.sub_pages.last == last_page
+    assert (!@inner_page.is_contiguous)
+    
+    @inner_page.sort_by_name
+    @inner_page.save
+    @inner_page = InnerPage.find(@inner_page.id)
+    @inner_page.inspect
+    assert (@inner_page.is_contiguous)   
   end
   
-
+  it "should have sub-pages that contain page elements" do
+  end
+  
+  it "should throw an error if you try to add a inner-page to an inner-page" do
+  end
+  
 
 end

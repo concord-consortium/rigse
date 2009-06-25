@@ -506,12 +506,14 @@ module ApplicationHelper
   # is a component viewable only by teacher
   #
   def teacher_only?(thing)
-    if (thing.teacher_only?)
+    if (thing.respond_to?("teacher_ony?") && thing.teacher_only?)
       return true;
     end
-    while ((thing = thing.parent()) != nil) 
-      if (thing.teacher_only?)
-        return true
+    if (thing.respond_to?("parent"))
+      while ((thing = thing.parent()) != nil) 
+        if (thing.teacher_only?)
+          return true
+        end
       end
     end
     return false
