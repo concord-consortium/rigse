@@ -42,7 +42,7 @@ describe Expectation do
     two.save
     @expectation.expectation_indicators << one
     @expectation.expectation_indicators << two
-    @expectation.expectation_indicators.size.should be 2 
+    @expectation.expectation_indicators.size.should be(2) 
     @expectation.save
   end
   

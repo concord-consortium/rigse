@@ -1,5 +1,12 @@
 module OtmlHelper
 
+  def ot_menu_display_name(object)
+    if teacher_only?(object) 
+      return "+ #{object.name}"
+    end
+    return object.name
+  end
+  
   def ot_refid_for(object, *prefixes)
     if object.is_a? String
       '${' + object + '}'

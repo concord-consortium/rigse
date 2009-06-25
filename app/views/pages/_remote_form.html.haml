@@ -1,9 +1,4 @@
 - remote_form_for(page, :update => dom_id_for(page, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = edit_menu_for(page, f)
-  = f.hidden_field :section_id, :value => page.section.id
-  - field_set_tag 'name' do
-    = f.text_field :name
-  - field_set_tag 'description' do
-    = f.text_area :description, :id => 'description_field', :class => 'tinymce_textarea'
+  = render :partial => 'pages/form', :locals => {:page=>page, :f => f}
   
 = javascript_tag("$('page_name').activate();");

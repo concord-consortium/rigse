@@ -82,6 +82,8 @@ class InvestigationsController < ApplicationController
   # GET /pages/1.xml
   def show
     @investigation = Investigation.find(params[:id])
+    # display for teachers? Later we can determin via roles?
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
@@ -192,8 +194,7 @@ class InvestigationsController < ApplicationController
   def add_activity
     @activity = Activity.new
     @activity.user = current_user
-    @investigation = Investigation.find(params['id'])
-    @activity.investigation = @investigation
+    @activity.investigation = Investigation.find(params['id'])
   end
   
   ##
@@ -269,7 +270,7 @@ class InvestigationsController < ApplicationController
     end
 
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'activity_list_item', :locals => {:activity => @component})
+      page.insert_html :bottom, @container, render(:partial => 'activity_list_item', :locals => {:activity => @component})
       page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)

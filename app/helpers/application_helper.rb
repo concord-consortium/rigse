@@ -173,13 +173,14 @@ module ApplicationHelper
     link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
   end
 
-  def otml_url_for(component)
+  def otml_url_for(component,options={})
     url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
       :id  => component.id,
-      :only_path => false )
+      :only_path => false,
+      :teacher_mode => options[:teacher_mode] )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 
@@ -235,24 +236,26 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, prefix='')
+  def run_link_for(component, prefix='',params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_to("#{prefix}run #{component_display_name}", {
         :controller => component.class.name.pluralize.underscore, 
         :action => :show,
         :format => :jnlp, 
-        :id  => component.id
+        :id  => component.id,
+        :params => params
       },
       :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def otml_link_for(component)
+  def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
-      :id  => component.id)
+      :id  => component.id,
+      :params => params)
   end
 
   def delete_button_for(model, options={})
@@ -294,7 +297,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat(link_to name_for_component(embeddable), embeddable)
+          haml_concat link_to(name_for_component(embeddable), embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
@@ -305,7 +308,7 @@ module ApplicationHelper
                   haml_tag(:li) { haml_concat otml_link_for(embeddable) }
                 end
               end
-              haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
+              haml_concat(dropdown_button("actions.png", :name_postfix => embeddable.name, :title => "actions for this page"))
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }

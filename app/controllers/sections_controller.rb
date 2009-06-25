@@ -69,6 +69,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def show
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
@@ -176,11 +177,8 @@ class SectionsController < ApplicationController
   ##
   def add_page
     @page= Page.new
-    if (params['id']) 
-      @section = Section.find(params['id'])
-      @page.section = @section
-      @page.save
-    end
+    @page.section = Section.find(params['id'])
+    @page.user = current_user
   end
   
   ##
@@ -242,7 +240,7 @@ class SectionsController < ApplicationController
       end
     end
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'page_list_item', :locals => {:page => @component})
+      page.insert_html :bottom, @container, render(:partial => 'page_list_item', :locals => {:page => @component})
       page.sortable :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)

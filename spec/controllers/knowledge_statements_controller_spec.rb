@@ -8,7 +8,7 @@ describe KnowledgeStatementsController do
   
   describe "responding to GET index" do
 
-    it "should expose all knowledge_statements as @knowledge_statements" do
+    it "should expose an array of all the @knowledge_statements" do
       KnowledgeStatement.should_receive(:find).with(:all).and_return([mock_knowledge_statement])
       get :index
       assigns[:knowledge_statements].should == [mock_knowledge_statement]

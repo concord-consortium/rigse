@@ -1,23 +1,53 @@
-= render :partial => 'pages/show', :collection => section.pages, :as => :page
+= render :partial => 'pages/show', :locals => {:teacher_mode => teacher_mode}, :collection => section.pages, :as => :page
 
 - content_for("section_#{dom_id_for(section)}".to_sym) do
-  %OTSection{ :local_id => ot_local_id_for(section), :name => section.name   }
+  %OTSection{ :local_id => ot_local_id_for(section), :name => ot_menu_display_name(section)   }
     %header
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
         %bodyText
-          #content
-            %h1= h(section.name)
+          - if teacher_only?(section)
+            - if teacher_mode
+              #content.teacher_mode
+                %h1= h(section.name)
+          - else
+            #content
+              %h1= h(section.name)
+            
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
         %cards
           - section.pages.each do |page|
-            =yield "page_#{dom_id_for(page)}".to_sym
+            - unless ((teacher_only?(page)) && (!teacher_mode))
+              =yield "page_#{dom_id_for(page)}".to_sym
         %currentCard
           - if section.pages.first
-            %object{ :refid => ot_refid_for(section.pages.first) }/
+            - unless ((teacher_only?(section.pages.first)) && (!teacher_mode))
+              %object{ :refid => ot_refid_for(section.pages.first) }/
         %viewedCards
     %footer
       %object{ :refid => ot_refid_for(section, :menu) }/
+    - if teacher_mode    
+      %east
+        %OTViewChild{ :useScrollPane => "true" }
+          %object
+            %OTCompoundDoc
+              %bodyText
+                #content.teacher_notes
+                  %h1= "Teacher Notes"
+                  %h2= "Section Notes"
+                  .section_teacher_notes
+                    - if section.teacher_note
+                      = section.teacher_note.body
+                    - else
+                      = "no teacher notes for section"
+                  %h2= "Page Notes"
+                  - section.pages.each do |page|
+                    %h3= page.name
+                    .page_teacher_notes
+                      - if page.teacher_note                    
+                        = page.teacher_note.body
+                      - else
+                        = "no teacher notes for page"
 
 - content_for(:library) do
 

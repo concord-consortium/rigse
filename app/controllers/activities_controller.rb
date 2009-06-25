@@ -68,16 +68,18 @@ class ActivitiesController < ApplicationController
   public
   
   def index
-    if params[:mine_only]
-      @pages = Activity.search(params[:search], params[:page], self.current_user)
-    else
-      @pages = Activity.search(params[:search], params[:page], nil)
-    end
-    @paginated_objects = @pages    
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @pages }
+      format.html do
+        if params[:mine_only]
+          @activities = Activity.search(params[:search], params[:page], self.current_user)
+        else
+          @activities = Activity.search(params[:search], params[:page], nil)
+        end
+      end
+      format.xml do
+        @activities = Activity,find(:all)
+        render :xml => @activities
+      end
     end
   end
 
@@ -85,6 +87,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1.xml
   def show
     @activity = Activity.find(params[:id])
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @activity }
@@ -187,9 +190,8 @@ class ActivitiesController < ApplicationController
   ##
   def add_section
     @section = Section.new
-    @activity = Activity.find(params['id'])
+    @section.activity = Activity.find(params['id'])
     @section.user = current_user
-    @section.activity = @activity
   end
   
   ##
@@ -254,7 +256,7 @@ class ActivitiesController < ApplicationController
       end
     end
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'section_list_item', :locals => {:section => @component})
+      page.insert_html :bottom, @container, render(:partial => 'section_list_item', :locals => {:section => @component})
       page.sortable :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => @activity.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)

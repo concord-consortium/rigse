@@ -2,14 +2,10 @@ class ExpectationsController < ApplicationController
   # GET /expectations
   # GET /expectations.xml
   def index
-    @expectations = Expectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
-    # :include => [:expectations => [:expectation_indicators, :stem]]
-    @search_string = params[:search]
-    @paginated_objects = @expectations
-
+    @expectations = Expectation.find(:all)
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @expectations }
+      format.html 
+      format.xml { render :xml => @expectations }
     end
   end
 

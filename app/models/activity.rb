@@ -8,7 +8,7 @@ class Activity < ActiveRecord::Base
   has_many :author_notes, :as => :authored_entity
   
   [DataCollector, BiologicaOrganism].each do |klass|
-    puts "has_many :#{klass.table_name},
+    eval "has_many :#{klass.table_name},
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       INNER JOIN pages ON page_elements.page_id = pages.id 
