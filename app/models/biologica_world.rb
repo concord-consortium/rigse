@@ -41,6 +41,14 @@ class BiologicaWorld < ActiveRecord::Base
   def self.display_name
     "Biologica World"
   end
+  
+  def self.by_scope(scope)
+    if scope && scope.class != BiologicaWorld
+      scope.activity.biologica_worlds
+    else
+      []
+    end
+  end
 
 
 end

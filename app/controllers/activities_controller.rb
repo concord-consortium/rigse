@@ -5,7 +5,7 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index]
-
+  before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create]
@@ -21,6 +21,10 @@ class ActivitiesController < ApplicationController
       flash[:error] = "Anonymous users can not create activities"
       redirect_back_or activities_path
     end
+  end
+  
+  def render_scope
+    @render_scope = @activity
   end
 
   def can_edit
@@ -131,6 +135,7 @@ class ActivitiesController < ApplicationController
     @activity.user = current_user
     respond_to do |format|
       if @activity.save
+        @activity.update_investigation_timestamp
         format.js  # render the js file
         flash[:notice] = 'Activity was successfully created.'
         format.html { redirect_to(@activity) }
@@ -149,6 +154,7 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id])
     if request.xhr?
       if cancel || @activity.update_attributes(params[:activity])
+        @activity.update_investigation_timestamp unless cancel
         render :partial => 'shared/activity_header', :locals => { :activity => @activity }
       else
         render :xml => @activity.errors, :status => :unprocessable_entity
@@ -156,6 +162,7 @@ class ActivitiesController < ApplicationController
     else
       respond_to do |format|
         if @activity.update_attributes(params[:activity])
+          @activity.update_investigation_timestamp unless cancel
           flash[:notice] = 'Activity was successfully updated.'
           format.html { redirect_to(@activity) }
           format.xml  { head :ok }
@@ -172,6 +179,7 @@ class ActivitiesController < ApplicationController
   # DELETE /pages/1.xml
   def destroy
     @activity = Activity.find(params[:id])
+    @activity.update_investigation_timestamp
     @activity.destroy
     @redirect = params[:redirect]
     respond_to do |format|
@@ -208,6 +216,7 @@ class ActivitiesController < ApplicationController
   ##
   def delete_section
     @section= Section.find(params['section_id'])
+    @section.update_investigation_timestamp
     @section.destroy
   end  
   

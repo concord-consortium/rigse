@@ -8,8 +8,8 @@ class BiologicaOrganism < ActiveRecord::Base
   
   has_many :biologica_static_organisms
   has_many :biologica_chromosomes
-#  has_many :biologica_chroomosome_zooms
-
+  
+  has_and_belongs_to_many :biologica_chroomosome_zooms
   has_and_belongs_to_many :biologica_multiple_organisms
   has_and_belongs_to_many :biologica_pedigrees
   
@@ -71,6 +71,14 @@ end
   
   def self.female
     1
+  end
+  
+  def self.by_scope(scope)
+    if scope && scope.class != BiologicaOrganism
+      scope.activity.biologica_organisms
+    else
+      []
+    end
   end
 
 end

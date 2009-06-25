@@ -30,6 +30,7 @@ class BiologicaMultipleOrganismsController < ApplicationController
   # GET /biologica_multiple_organisms/new.xml
   def new
     @biologica_multiple_organism = BiologicaMultipleOrganism.new
+    @scope = get_scope(@biologica_multiple_organism)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
     else

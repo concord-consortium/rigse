@@ -43,6 +43,7 @@ class BiologicaMeiosisViewsController < ApplicationController
   # GET /biologica_meiosis_views/1/edit
   def edit
     @biologica_meiosis_view = BiologicaMeiosisView.find(params[:id])
+    @scope = get_scope(@biologica_meiosis_view)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
     else

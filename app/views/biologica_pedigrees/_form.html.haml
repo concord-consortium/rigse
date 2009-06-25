@@ -6,7 +6,7 @@
     = f.text_area :description, :id => dom_id_for(biologica_pedigree, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
   - field_set_tag 'starting organisms' do
     = "<select name='biologica_pedigree[biologica_organism_ids][]' multiple='true' size='5'>"
-    = BiologicaOrganism.all.collect {|o| selected = false; selected = true if biologica_pedigree.biologica_organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
+    = BiologicaOrganism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_pedigree.biologica_organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
     = "</select>"
   - field_set_tag 'options' do
     = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_pedigree, :item, :width_field)) + " "

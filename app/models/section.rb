@@ -8,6 +8,11 @@ class Section < ActiveRecord::Base
      INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
      INNER JOIN pages ON page_elements.page_id = pages.id
      WHERE pages.section_id = #{id}'
+     
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    WHERE pages.section_id = #{id}'
   
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
@@ -54,6 +59,17 @@ class Section < ActiveRecord::Base
     self.pages.each do |p|
       p.deep_set_user(user)
     end
+  end
+  
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the section belongs to 
+  def update_investigation_timestamp
+    activity = self.activity
+    activity.update_investigation_timestamp if activity
   end
   
 end

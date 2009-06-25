@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :biologica_chromosome_zooms
+
   
   map.resources :biologica_multiple_organisms
   map.resources :biologica_breed_offsprings

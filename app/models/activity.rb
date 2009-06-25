@@ -7,7 +7,7 @@ class Activity < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   
-  [DataCollector, BiologicaOrganism].each do |klass|
+  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
     eval "has_many :#{klass.table_name},
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
@@ -15,6 +15,12 @@ class Activity < ActiveRecord::Base
       INNER JOIN sections ON pages.section_id = sections.id  
       WHERE sections.activity_id = \#\{id\}'"
   end
+  
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id}'
   
   include Noteable # convinience methods for notes...
   
@@ -498,7 +504,21 @@ HEREDOC
     teacher_notes << TeacherNote.create
     return teacher_notes[0]
   end
-  
+
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the activity belongs to 
+  def update_investigation_timestamp
+    investigation = self.investigation
+    if investigation
+      investigation.update_attributes(:updated_at => Time.now)
+      investigation.save!
+    end
+  end
+    
 end
 
 
