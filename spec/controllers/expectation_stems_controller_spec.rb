@@ -8,7 +8,7 @@ describe ExpectationStemsController do
   
   describe "responding to GET index" do
 
-    it "should expose all expectation_stems as @expectation_stems" do
+    it "should expose an array of all the @expectation_stems" do
       ExpectationStem.should_receive(:find).with(:all).and_return([mock_expectation_stem])
       get :index
       assigns[:expectation_stems].should == [mock_expectation_stem]

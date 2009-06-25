@@ -1,15 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe GradeSpanExpectationsController do
 
   def mock_grade_span_expectation(stubs={})
     @mock_grade_span_expectation ||= mock_model(GradeSpanExpectation, stubs)
   end
-  
+
   describe "responding to GET index" do
 
-    it "should expose all grade_span_expectations as @grade_span_expectations" do
-      GradeSpanExpectation.should_receive(:find).with(:all).and_return([mock_grade_span_expectation])
+    it "should expose a paginated array of @grade_span_expectations" do
+      GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_grade_span_expectation])
       get :index
       assigns[:grade_span_expectations].should == [mock_grade_span_expectation]
     end
@@ -18,7 +19,7 @@ describe GradeSpanExpectationsController do
   
       it "should render all grade_span_expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        GradeSpanExpectation.should_receive(:find).with(:all).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
+        GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
         grade_span_expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
