@@ -8,11 +8,12 @@ class Page < ActiveRecord::Base
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
         BiologicaChromosome,
-  #      BiologicaChromosomeZoom,
+        BiologicaChromosomeZoom,
         BiologicaBreedOffspring,
         BiologicaPedigree,
         BiologicaMultipleOrganism,
         BiologicaMeiosisView,
+        # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|
