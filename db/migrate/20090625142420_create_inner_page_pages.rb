@@ -10,7 +10,7 @@ class CreateInnerPagePages < ActiveRecord::Migration
     end
     add_index :inner_page_pages, :position
     add_index :inner_page_pages, :inner_page_id
-    add_index :inner_page_pages, :sub_page_id
+    add_index :inner_page_pages, :page_id
   end
 
   def self.down

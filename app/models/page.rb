@@ -12,7 +12,7 @@ class Page < ActiveRecord::Base
   #   WHERE pages.section_id = #{id}'
 
   has_many :page_elements, :order => :position, :dependent => :destroy
-  has_many :inner_page_pages # maybe. Not required.
+  has_many :inner_page_pages 
   has_many :inner_pages, :through => :inner_page_pages
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
