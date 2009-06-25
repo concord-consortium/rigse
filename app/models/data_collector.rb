@@ -25,7 +25,7 @@ class DataCollector < ActiveRecord::Base
   
   acts_as_replicatable
   
-  send_update_events_to :investigation
+  # send_update_events_to :investigation
   
   include Changeable
   
