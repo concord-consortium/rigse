@@ -1,8 +1,9 @@
-%OTViewBundle{ :showLeftPanel => 'false', :current_mode => current_mode }
+%OTViewBundle{ :showLeftPanel => 'false', :currentMode => current_mode }
   %frame
     %OTFrame{ :useScrollPane => use_scroll_pane, :width => 840 + left_nav_panel_width, :height => '700', :title => h(title) }
-  - if authoring
-    %modes
+  %modes
+    %OTViewMode{:name => "student"}      
+    - if authoring
       %OTViewMode{:name => "authoring"}
         %map
           - authoring_view_entries.each do |view_entry|
@@ -10,6 +11,7 @@
               %OTViewEntry{ :objectClass => view_entry[1], :viewClass => view_entry[2] }
           %entry{:key => '${document_view_config}'}
             = render :partial => "otml/ot_authoring_document_view_config"
+
   %views
     - view_entries.each do |view_entry|
       %OTViewEntry{ :local_id => ot_local_id_for(view_entry[0]), :objectClass => view_entry[1], :viewClass => view_entry[2] }/
