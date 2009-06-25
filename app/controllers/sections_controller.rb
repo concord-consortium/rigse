@@ -113,6 +113,7 @@ class SectionsController < ApplicationController
         @xhtml.pages << @page
         @section.pages << @page
         @section.save
+        @section.update_investigation_timestamp
       }
       format.html { 
         flash[:notice] = 'Section was successfully created.'
@@ -135,6 +136,7 @@ class SectionsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if @section.update_attributes(params[:section])
+        @section.update_investigation_timestamp
         render :partial => 'shared/section_header', :locals => { :section => @section }
       else
         render :xml => @section.errors, :status => :unprocessable_entity
@@ -142,6 +144,7 @@ class SectionsController < ApplicationController
     else
       respond_to do |format|
         if @section.update_attributes(params[:section])
+          @section.update_investigation_timestamp
           flash[:notice] = 'Section was successfully updated.'
           format.html { redirect_to(@section) }
           format.xml  { head :ok }
@@ -158,6 +161,7 @@ class SectionsController < ApplicationController
   ##
   def destroy
     @section.destroy
+    @section.update_investigation_timestamp
     @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
