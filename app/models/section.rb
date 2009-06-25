@@ -61,6 +61,17 @@ class Section < ActiveRecord::Base
     end
   end
   
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the section belongs to 
+  def update_investigation_timestamp
+    activity = self.activity
+    activity.update_investigation_timestamp if activity
+  end
+  
 end
 
 

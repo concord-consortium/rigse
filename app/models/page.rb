@@ -129,5 +129,16 @@ class Page < ActiveRecord::Base
       end
     end
   end
+
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the page belongs to
+  def update_investigation_timestamp
+    section = self.section
+    section.update_investigation_timestamp if section
+  end
   
 end

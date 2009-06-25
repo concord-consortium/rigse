@@ -504,7 +504,21 @@ HEREDOC
     teacher_notes << TeacherNote.create
     return teacher_notes[0]
   end
-  
+
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the activity belongs to 
+  def update_investigation_timestamp
+    investigation = self.investigation
+    if investigation
+      investigation.update_attributes(:updated_at => Time.now)
+      investigation.save!
+    end
+  end
+    
 end
 
 
