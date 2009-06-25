@@ -9,7 +9,7 @@ class BiologicaOrganism < ActiveRecord::Base
   has_many :biologica_static_organisms
   has_many :biologica_chromosomes
   
-  has_and_belongs_to_many :biologica_chroomosome_zooms
+  has_and_belongs_to_many :biologica_chromosome_zooms
   has_and_belongs_to_many :biologica_multiple_organisms
   has_and_belongs_to_many :biologica_pedigrees
   

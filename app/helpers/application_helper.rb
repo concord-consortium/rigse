@@ -474,6 +474,16 @@ module ApplicationHelper
     end
   end
   
+  def in_render_scope?(thing)
+    if @render_scope
+      if @render_scope.respond_to?("page_elements")
+        embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.uniq
+        return embeddables.include?(thing)
+      end
+    end
+    return false
+  end
+  
   #
   # is a component viewable only by teacher
   #
