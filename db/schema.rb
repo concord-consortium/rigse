@@ -362,6 +362,29 @@ ActiveRecord::Schema.define(:version => 20090625153321) do
     t.datetime "updated_at"
   end
 
+  create_table "inner_page_pages", :force => true do |t|
+    t.integer  "inner_page_id"
+    t.integer  "sub_page_id"
+    t.integer  "user_id"
+    t.string   "uuid",          :limit => 36
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
+  add_index "inner_page_pages", ["position"], :name => "index_inner_page_pages_on_position"
+  add_index "inner_page_pages", ["sub_page_id"], :name => "index_inner_page_pages_on_sub_page_id"
+
+  create_table "inner_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
