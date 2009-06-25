@@ -68,16 +68,18 @@ class ActivitiesController < ApplicationController
   public
   
   def index
-    if params[:mine_only]
-      @pages = Activity.search(params[:search], params[:page], self.current_user)
-    else
-      @pages = Activity.search(params[:search], params[:page], nil)
-    end
-    @paginated_objects = @pages    
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @pages }
+      format.html do
+        if params[:mine_only]
+          @activities = Activity.search(params[:search], params[:page], self.current_user)
+        else
+          @activities = Activity.search(params[:search], params[:page], nil)
+        end
+      end
+      format.xml do
+        @activities = Activity,find(:all)
+        render :xml => @activities
+      end
     end
   end
 
@@ -249,7 +251,7 @@ class ActivitiesController < ApplicationController
       end
     end
     render :update do |page|
-      page.insert_html :bottom, @container, render (:partial => 'section_list_item', :locals => {:section => @component})
+      page.insert_html :bottom, @container, render(:partial => 'section_list_item', :locals => {:section => @component})
       page.sortable :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => @activity.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)
