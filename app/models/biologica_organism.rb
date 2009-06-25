@@ -72,5 +72,13 @@ end
   def self.female
     1
   end
+  
+  def self.by_scope(scope)
+    if scope && scope.class != BiologicaOrganism
+      scope.activity.biologica_organisms
+    else
+      []
+    end
+  end
 
 end
