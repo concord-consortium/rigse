@@ -475,10 +475,16 @@ module ApplicationHelper
   end
   
   def in_render_scope?(thing)
+    if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
+      return true
+    end
+    
     if @render_scope
       if @render_scope.respond_to?("page_elements")
         embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.uniq
-        return embeddables.include?(thing)
+        if embeddables.include?(thing)
+          return true
+        end
       end
     end
     return false
@@ -490,6 +496,8 @@ module ApplicationHelper
         haml_tag :object, :refid => ot_refid_for(thing)
       end
     else
+      @render_scope_additional_objects ||= []
+      @render_scope_additional_objects << thing
       render_show_partial_for(thing)
     end
   end
