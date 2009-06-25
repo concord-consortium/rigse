@@ -1,7 +1,6 @@
 namespace :rigse do
   namespace :import do
-
-    require 'hpricot'
+    
     require 'fileutils'
     # require 'otrunk_examples_import'
     autoload :OtrunkExampleImport, "otrunk_examples_import"
@@ -101,6 +100,7 @@ namespace :rigse do
     
     desc "create or update: #{otrunk_model_classes_path}"
     task :create_or_update_otrunk_model_classes => :create_or_update_otrunk_examples do
+      require 'hpricot'
       puts "\nupdating #{otrunk_model_classes_path} ..."
       otrunk_imports = [] 
       Dir["#{otrunk_examples_dir}/**/*.otml"].each do |f| 
@@ -113,6 +113,7 @@ namespace :rigse do
     
     desc "Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
     task :generate_otrunk_examples_rails_models => :create_or_update_otrunk_examples do
+      require 'hpricot'
       puts "\nintrospecting otrunk-examples ...\n"
       ot = OtrunkExampleImport::OtIntrospect.new(otrunk_examples_dir)
       puts "\ncreating #{ot.categories.length} OtmlCategory objects:"

@@ -36,6 +36,5 @@
     %cardContainer
       %object{ :refid => ot_refid_for(activity, :section_card_container) }
     %menuRule
-      %object{ :refid => ot_refid_for('section_rule') }
+      %OTMenuRule{ :jumpToAnyCard => 'true' }
 
-  %OTMenuRule{ :local_id => ot_local_id_for('section_rule'), :jumpToAnyCard => 'true' }
