@@ -173,12 +173,8 @@ class SectionsController < ApplicationController
   ##
   def add_page
     @page= Page.new
+    @page.section = Section.find(params['id'])
     @page.user = current_user
-    if (params['id']) 
-      @section = Section.find(params['id'])
-      @page.section = @section
-      @page.save
-    end
   end
   
   ##

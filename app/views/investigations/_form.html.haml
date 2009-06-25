@@ -13,6 +13,6 @@
   = f.text_field :name
 
 - field_set_tag 'description' do
-  = f.text_area :description, :id => 'description_field', :class => 'tinymce_textarea'
+  = f.text_area :description, :id => 'description_field', :class => 'mceNoEditor'
 
 = javascript_tag("$('investigation_name').activate();")

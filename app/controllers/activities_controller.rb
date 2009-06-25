@@ -184,9 +184,8 @@ class ActivitiesController < ApplicationController
   ##
   def add_section
     @section = Section.new
-    @activity = Activity.find(params['id'])
+    @section.activity = Activity.find(params['id'])
     @section.user = current_user
-    @section.activity = @activity
   end
   
   ##
