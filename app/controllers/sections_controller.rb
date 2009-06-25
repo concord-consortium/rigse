@@ -4,6 +4,7 @@ class SectionsController < ApplicationController
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
   
+  before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
   protected 
@@ -15,6 +16,9 @@ class SectionsController < ApplicationController
     end
   end
   
+  def render_scope
+    @render_scope = @section
+  end
   
   def find_entities
     if (params[:id])

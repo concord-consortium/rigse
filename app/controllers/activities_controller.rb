@@ -5,7 +5,7 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index]
-
+  before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create]
@@ -21,6 +21,10 @@ class ActivitiesController < ApplicationController
       flash[:error] = "Anonymous users can not create activities"
       redirect_back_or activities_path
     end
+  end
+  
+  def render_scope
+    @render_scope = @activity
   end
 
   def can_edit

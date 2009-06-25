@@ -8,6 +8,11 @@ class Section < ActiveRecord::Base
      INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
      INNER JOIN pages ON page_elements.page_id = pages.id
      WHERE pages.section_id = #{id}'
+     
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    WHERE pages.section_id = #{id}'
   
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 

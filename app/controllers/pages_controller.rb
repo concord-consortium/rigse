@@ -2,13 +2,18 @@ class PagesController < ApplicationController
   helper :all
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
   
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
-  protected 
+  protected
+  
+  def render_scope
+    @render_scope = @page
+  end
   
   def can_create
     if (current_user.anonymous?)

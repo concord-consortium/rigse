@@ -12,9 +12,16 @@ class Investigation < ActiveRecord::Base
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       INNER JOIN pages ON page_elements.page_id = pages.id 
       INNER JOIN sections ON pages.section_id = sections.id
-      INNER JOIN activities ON sections.activity_id = activity.id
-      WHERE activity.investigation_id = \#\{id\}'"
+      INNER JOIN activities ON sections.activity_id = activities.id
+      WHERE activities.investigation_id = \#\{id\}'"
   end
+  
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN sections ON pages.section_id = sections.id
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
   
   acts_as_replicatable
   

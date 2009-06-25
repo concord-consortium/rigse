@@ -16,6 +16,12 @@ class Activity < ActiveRecord::Base
       WHERE sections.activity_id = \#\{id\}'"
   end
   
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id}'
+  
   include Noteable # convinience methods for notes...
   
   acts_as_replicatable
