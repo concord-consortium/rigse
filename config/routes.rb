@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :biologica_chromosome_zooms
+  map.resources :inner_pages
 
-  
   map.resources :biologica_multiple_organisms
   map.resources :biologica_breed_offsprings
   map.resources :biologica_meiosis_views
