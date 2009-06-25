@@ -1,5 +1,4 @@
 require 'rake'
-require 'hpricot'
 
 namespace :rigse do
   namespace :make do
@@ -8,6 +7,7 @@ namespace :rigse do
     #
     desc 'wrap orphaned activities in a parent investigation'
     task :investigations => :environment do
+      require 'hpricot'
       puts "Creating parent investiations for activities without a parent."
       ParentInvestigation.parent_activities # see lib/parent_investigations.rb
     end
