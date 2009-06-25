@@ -1,6 +1,8 @@
 class Section < ActiveRecord::Base
   belongs_to :activity
   belongs_to :user
+  has_one :investigation, :through => :section
+  
   has_many :pages, :order => :position, :dependent => :destroy
 
   has_many :data_collectors,

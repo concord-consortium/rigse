@@ -4,6 +4,13 @@ class PageElement < ActiveRecord::Base
     acts_as_list :scope => :page_id
     belongs_to :embeddable, :polymorphic => true
 
+    # this could work if the finder sql was redone
+    # has_one :investigation,
+    #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+    #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+    #   INNER JOIN pages ON page_elements.page_id = pages.id
+    #   WHERE pages.section_id = #{id}'
+
     include Changeable
 
     # only destroy the embeddable if it isn't referenced by any other page elements

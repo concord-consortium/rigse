@@ -14,9 +14,18 @@ class DataCollector < ActiveRecord::Base
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  # this could work if the finder sql was redone
+  # has_many :investigations,
+  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   INNER JOIN pages ON page_elements.page_id = pages.id
+  #   WHERE pages.section_id = #{id}'
+
   serialize :data_store_values
   
   acts_as_replicatable
+  
+  # send_update_events_to :investigation
   
   include Changeable
   
