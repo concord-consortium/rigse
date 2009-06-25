@@ -11,19 +11,19 @@ describe BigIdeasController do
     end
   
     it "should map #show" do
-      route_for(:controller => "big_ideas", :action => "show", :id => 1).should == "/big_ideas/1"
+      route_for(:controller => "big_ideas", :action => "show", :id => "1").should == "/big_ideas/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "big_ideas", :action => "edit", :id => 1).should == "/big_ideas/1/edit"
+      route_for(:controller => "big_ideas", :action => "edit", :id => "1").should == "/big_ideas/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "big_ideas", :action => "update", :id => 1).should == "/big_ideas/1"
+      route_for(:controller => "big_ideas", :action => "update", :id => "1").should == {:path => "/big_ideas/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "big_ideas", :action => "destroy", :id => 1).should == "/big_ideas/1"
+      route_for(:controller => "big_ideas", :action => "destroy", :id => "1").should == {:path => "/big_ideas/1", :method => :delete}
     end
   end
 
