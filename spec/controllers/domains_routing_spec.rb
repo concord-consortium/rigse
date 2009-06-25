@@ -11,19 +11,19 @@ describe DomainsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "domains", :action => "show", :id => 1).should == "/domains/1"
+      route_for(:controller => "domains", :action => "show", :id => "1").should == "/domains/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "domains", :action => "edit", :id => 1).should == "/domains/1/edit"
+      route_for(:controller => "domains", :action => "edit", :id => "1").should == "/domains/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "domains", :action => "update", :id => 1).should == "/domains/1"
+      route_for(:controller => "domains", :action => "update", :id => "1").should == {:path => "/domains/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "domains", :action => "destroy", :id => 1).should == "/domains/1"
+      route_for(:controller => "domains", :action => "destroy", :id => "1").should == {:path => "/domains/1", :method => :delete}
     end
   end
 

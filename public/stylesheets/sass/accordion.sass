@@ -27,7 +27,7 @@
     :overflow hidden
     :width auto
     :height auto
-    :background-image url(/images/accordion_header.png)
+
     :background-repeat repeat-x
     :background-color #d1e5f2
     :border 1px solid
@@ -123,8 +123,11 @@
         :float left
         :cursor move
         :background-color= !almost_white
+        a.accordion_section_title
+          :width 95% !important
         &:hover
           :color= !very_dark_blue
           :background-color white
         .selected
           :border-width 2px
+

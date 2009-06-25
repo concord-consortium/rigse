@@ -11,19 +11,19 @@ describe KnowledgeStatementsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "knowledge_statements", :action => "show", :id => 1).should == "/knowledge_statements/1"
+      route_for(:controller => "knowledge_statements", :action => "show", :id => "1").should == "/knowledge_statements/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "knowledge_statements", :action => "edit", :id => 1).should == "/knowledge_statements/1/edit"
+      route_for(:controller => "knowledge_statements", :action => "edit", :id => "1").should == "/knowledge_statements/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "knowledge_statements", :action => "update", :id => 1).should == "/knowledge_statements/1"
+      route_for(:controller => "knowledge_statements", :action => "update", :id => "1").should == {:path => "/knowledge_statements/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "knowledge_statements", :action => "destroy", :id => 1).should == "/knowledge_statements/1"
+      route_for(:controller => "knowledge_statements", :action => "destroy", :id => "1").should == {:path => "/knowledge_statements/1", :method => :delete}
     end
   end
 

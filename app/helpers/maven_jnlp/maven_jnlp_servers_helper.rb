@@ -1,0 +1,2 @@
+module MavenJnlp::MavenJnlpServersHelper
+end

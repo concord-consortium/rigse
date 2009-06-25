@@ -27,20 +27,22 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
+
+  config.gem "arrayfields"
+  config.gem "hpricot", :version => '0.6.164'
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
   config.gem "haml", :version => '>= 2.0.7'  
   config.gem "RedCloth", :version => '>= 4.1.1'
-  config.gem "uuidtools"
-  config.gem "hpricot"
-  # config.gem "hpricot", :version => '0.6.164'
+  config.gem "uuidtools", :version => '>= 2.0.0'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
+  config.gem "jnlp", :version => '>= 0.0.5.1'
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'

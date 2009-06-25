@@ -26,6 +26,9 @@ module ApplicationHelper
     component.class.name.underscore
   end
 
+  def short_name(name)
+    name.strip.downcase.gsub(/\W+/, '_')
+  end
 
   def display_repo_info
     if repo = Grit::Repo.new(".")
@@ -143,7 +146,13 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          
+          haml_tag(:h3,{:class => 'menu'}) do
+             haml_concat component.class.name.humanize
+             if component.respond_to? 'name'
+               haml_concat ": "
+               haml_concat component.name
+             end
+          end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
@@ -157,16 +166,48 @@ module ApplicationHelper
     end
   end
   
-  def otml_url_for(component)
+
+  def otrunk_edit_button_for(component, options={})
+    controller = component.class.name.pluralize.underscore
+    id = component.id
+    link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
+  end
+
+  def otml_url_for(component,options={})
     url = url_for( 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
       :id  => component.id,
+      :only_path => false,
+      :teacher_mode => options[:teacher_mode] )
+    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+  end
+
+  def edit_otml_url_for(component)
+    url = url_for( 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :edit,
+      :format => :otml, 
+      :id  => component.id,
       :only_path => false )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
-  
+
+  def update_otml_url_for(component, escape=true)
+    url = url_for( 
+      :controller => component.class.name.pluralize.underscore, 
+      :action => :update,
+      :format => :otml, 
+      :id  => component.id,
+      :only_path => false )
+    if escape
+      URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+    else
+      url
+    end
+  end
+
   def print_link_for(component)
      component_display_name = component.class.display_name.downcase
       name = component.name
@@ -195,24 +236,26 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, prefix='')
+  def run_link_for(component, prefix='',params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_to("#{prefix}run #{component_display_name}", {
         :controller => component.class.name.pluralize.underscore, 
         :action => :show,
         :format => :jnlp, 
-        :id  => component.id
+        :id  => component.id,
+        :params => params
       },
       :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def otml_link_for(component)
+  def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
       :action => :show,
       :format => :otml, 
-      :id  => component.id)
+      :id  => component.id,
+      :params => params)
   end
 
   def delete_button_for(model, options={})
@@ -250,10 +293,11 @@ module ApplicationHelper
 
   def show_menu_for(component, options={})
     embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
+    view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
-      haml_tag :div, :class => 'action_menu' do
+      haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat(link_to name_for_component(embeddable), embeddable)
+          haml_concat link_to(name_for_component(embeddable), embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
@@ -264,10 +308,18 @@ module ApplicationHelper
                   haml_tag(:li) { haml_concat otml_link_for(embeddable) }
                 end
               end
-              haml_concat(dropdown_button "actions.png", :name_postfix => embeddable.name, :title => "actions for this page")
+              haml_concat(dropdown_button("actions.png", :name_postfix => embeddable.name, :title => "actions for this page"))
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            restrict_to 'admin || manager' do
+              begin
+                if embeddable.authorable_in_java?
+                  haml_concat otrunk_edit_button_for(embeddable, options)
+                end
+              rescue NoMethodError
+              end
+            end
             haml_concat edit_button_for(embeddable, options)
             haml_concat delete_button_for(component)
           end
@@ -293,7 +345,6 @@ module ApplicationHelper
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
     end
   end
-
 
   def dropdown_link_for(options ={})
     defaults = {
@@ -365,6 +416,54 @@ module ApplicationHelper
     end
   end
   
+  def generate_javascript_datastore(data_collector)
+    # 
+    # data: [ [1,2.5], [2,3.7], [2.5,6.78] ]
+    # 
+    js = ''
+    if data_collector.data_store_values
+      if data_collector.data_store_values.length > 0
+        js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
+      else
+        js << "var default_data_#{data_collector.id} = [];\n"        
+      end
+    else
+      js << "var default_data_#{data_collector.id} = [];\n"
+
+      js << "var default_x_range_#{data_collector.id} = #{data_collector.x_axis_max - data_collector.x_axis_min};\n"
+      js << "var default_x_factor_#{data_collector.id} = 20 / default_x_range_#{data_collector.id};\n"
+      js << "var default_x_step_#{data_collector.id} = default_x_range_#{data_collector.id} / 60;\n"
+
+      js << "var default_y_range_#{data_collector.id} = #{data_collector.y_axis_max - data_collector.y_axis_min};\n"
+      js << "var default_y_offset_#{data_collector.id} = default_y_range_#{data_collector.id} / 3 + #{data_collector.y_axis_min};\n"
+      
+      js << "for(var i = #{data_collector.x_axis_min.to_i}; i <= #{data_collector.x_axis_max.to_i}; i += default_x_step_#{data_collector.id}){\n"
+      js << "  default_data_#{data_collector.id}.push([i, Math.sin(i * default_x_factor_#{data_collector.id}) * (default_y_range_#{data_collector.id} / 4) +  default_y_offset_#{data_collector.id}] );\n"
+      js << "}\n"
+    end
+    js
+  end
+  
+  # expects styles to contain space seperated list of style classes.
+  def style_for_teachers(component,style_classes=[])
+    if (teacher_only?(component))
+      style_classes << 'teacher_only' # funny, just adding a style text
+    end
+    return style_classes
+  end
+  
+  
+  def style_for_item(component,style_classes=[]) 
+    style_classes << 'item'
+    if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
+      style_classes << 'movable'
+      style_classes << 'selectable'
+      style_classes << 'item_selectable'
+    end
+    style_classes = style_for_teachers(component,style_classes)
+    return style_classes.join(" ")
+  end
+  
   def simple_div_helper_that_yields
     capture_haml do
       haml_tag :div, :class => 'simple_div' do
@@ -374,4 +473,20 @@ module ApplicationHelper
       end
     end
   end
+  
+  #
+  # is a component viewable only by teacher
+  #
+  def teacher_only?(thing)
+    if (thing.teacher_only?)
+      return true;
+    end
+    while ((thing = thing.parent()) != nil) 
+      if (thing.teacher_only?)
+        return true
+      end
+    end
+    return false
+  end
+  
 end

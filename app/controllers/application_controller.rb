@@ -3,12 +3,13 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include RoleRequirementSystem
 
+  self.allow_forgery_protection = false
+
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
   
   helper :all # include all helpers, all the time
-  protect_from_forgery :secret => 'b0a876313f3f9195e9bd01473bc5cd06'
   filter_parameter_logging :password, :password_confirmation
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
@@ -25,6 +26,18 @@ class ApplicationController < ActionController::Base
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
     render :file => File.join(RAILS_ROOT, 'public', '404.html'), :status => 404
+  end
+  
+  def get_scope(default)
+    begin
+      @scope = default
+      if container_type = params[:scope_type]
+        @scope = container_type.constantize.find(params[:scope_id])
+      elsif container_type = params[:container_type] 
+        @scope = container_type.constantize.find(params[:container_id])
+      end
+    rescue ActiveRecord::RecordNotFound
+    end
   end
   
   private

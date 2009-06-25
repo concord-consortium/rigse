@@ -2,6 +2,7 @@
   %ul
     %li#copy_link copy (disabled)
     %li= run_link_for(@investigation)
+    %li= run_link_for(@investigation,'teacher-mode-',{:teacher_mode=>true})
     %li= print_link_for(@investigation)
     %li= toggle_all('activities')
     %li= link_to 'duplicate', duplicate_investigation_url(investigation)

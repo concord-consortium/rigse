@@ -14,15 +14,22 @@ class GradeSpanExpectationsController < ApplicationController
   # GET /grade_span_expectations
   # GET /grade_span_expectations.xml
   def index
-    @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
     # :include => [:expectations => [:expectation_indicators, :stem]]
-    @search_string = params[:search]
-    @paginated_objects = @grade_span_expectations
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @grade_span_expectations }
+      format.html do
+        @search_string = params[:search]
+        if params[:mine_only]
+          @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], self.current_user, [{:expectations => [:expectation_indicators, :expectation_stem]}])
+        else
+          @grade_span_expectations = GradeSpanExpectation.search(params[:search], params[:page], nil)
+        end
+      end
+      format.xml do
+        @grade_span_expectations = GradeSpanExpectation.find(:all)
+        render :xml => @grade_span_expectations
+      end
       format.pdf do
+        @grade_span_expectations = GradeSpanExpectation,find(:all)        
         @rendered_partial = render_to_string :partial => 'expectation_list.html.haml', 
           :locals => { :grade_span_expectations => @grade_span_expectations }
         @rendered_partial.gsub!(/&/, '&amp;')

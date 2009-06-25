@@ -8,7 +8,7 @@ describe UnifyingThemesController do
   
   describe "responding to GET index" do
 
-    it "should expose all unifying_themes as @unifying_themes" do
+    it "should expose an array of all the @unifying_themes" do
       UnifyingTheme.should_receive(:find).with(:all).and_return([mock_unifying_theme])
       get :index
       assigns[:unifying_themes].should == [mock_unifying_theme]

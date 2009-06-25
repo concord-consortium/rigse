@@ -29,6 +29,10 @@ class Section < ActiveRecord::Base
     'Section'
   end
 
+  def parent
+    return activity
+  end
+  
   def next(page)
     index = pages.index(page)
     if index
@@ -44,8 +48,27 @@ class Section < ActiveRecord::Base
     end
     return nil
   end
+  
+  def deep_set_user user
+    self.user = user
+    self.pages.each do |p|
+      p.deep_set_user(user)
+    end
+  end
+  
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
 
+  ## Update timestamp of investigation that the activity belongs to 
+  def update_investigation_timestamp
+    activity = self.activity
+    activity.update_investigation_timestamp if activity
+  end
+  
 end
+
 
 
 #  Recent schema definition:

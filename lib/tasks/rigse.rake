@@ -57,7 +57,6 @@ namespace :rigse do
 
   namespace :setup do
     
-    require 'uuidtools'
     require 'highline/import'
     require 'fileutils'
     
@@ -101,6 +100,8 @@ namespace :rigse do
     desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
     task :regenerate_rest_auth_site_key => :environment do
       
+      require 'uuidtools'
+      
       puts <<HEREDOC
 
 This task will re-generate a REST_AUTH_SITE_KEY and update
@@ -117,7 +118,7 @@ HEREDOC
       
       if agree("Do you want to do this?  (y/n)", true)
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
-        site_key = UUID.timestamp_create().to_s
+        site_key = UUIDTools::UUID.timestamp_create.to_s
 
         site_keys_rb = <<HEREDOC
 REST_AUTH_SITE_KEY = '#{site_key}'
@@ -160,10 +161,12 @@ HEREDOC
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
+        Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
   
         puts <<HEREDOC
 
-You can now start the applictation in develelopment mode by running this command:
+You can now start the application in develelopment mode by running this command:
 
   #{jruby_run_command}script/server
 

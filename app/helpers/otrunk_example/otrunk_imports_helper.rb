@@ -1,0 +1,2 @@
+module OtrunkExample::OtrunkImportsHelper
+end

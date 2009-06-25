@@ -1,9 +1,4 @@
 - remote_form_for(activity, :update => dom_id_for(activity, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = edit_menu_for(activity, f)
-  = f.hidden_field 'investigation_id', :value =>investigation.id
-  - field_set_tag 'name' do
-    = f.text_field :name
-  - field_set_tag 'description' do
-    = f.text_area :description, :id => 'description_field', :class => 'tinymce_textarea'
-
+  = render :partial => 'activities/form', :locals => {:activity=>activity,:f => f}
+  
 = javascript_tag("$('activity_name').activate();")

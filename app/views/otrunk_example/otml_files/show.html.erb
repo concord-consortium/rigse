@@ -1,0 +1,28 @@
+<p>
+  <b>Uuid:</b>
+  <%=h @otml_file.uuid %>
+</p>
+
+<p>
+  <b>Otml category:</b>
+  <%=h @otml_file.otml_category_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @otml_file.name %>
+</p>
+
+<p>
+  <b>Path:</b>
+  <%=h @otml_file.path %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%=h @otml_file.content %>
+</p>
+
+
+<%= link_to 'Edit', edit_otml_file_path(@otml_file) %> |
+<%= link_to 'Back', otml_files_path %>

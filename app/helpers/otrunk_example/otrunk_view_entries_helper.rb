@@ -1,0 +1,2 @@
+module OtrunkExample::OtrunkViewEntriesHelper
+end

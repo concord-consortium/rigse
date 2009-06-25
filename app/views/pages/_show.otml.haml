@@ -1,11 +1,19 @@
 - content_for("page_#{dom_id_for(page)}".to_sym) do
   %OTCompoundDoc{ :local_id => ot_local_id_for(page), :name => page.name }
     %bodyText
-      #content
-        %h2= h(page.name)
-        - page.page_elements.each do |element|
-          .element
-            %object{ :refid => ot_refid_for(element.embeddable) }/
+      - if teacher_only?(page)
+        - if teacher_mode
+          #content.teacher_mode
+            %h2= h(page.name)
+            - page.page_elements.each do |element|
+              .element
+                %object{ :refid => ot_refid_for(element.embeddable) }/
+      - else
+        #content
+          %h2= h(page.name)
+          - page.page_elements.each do |element|
+            .element
+              %object{ :refid => ot_refid_for(element.embeddable) }/
 
 - content_for(:library) do
   - page.page_elements.each do |element|

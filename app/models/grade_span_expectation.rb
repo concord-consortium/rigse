@@ -1,12 +1,13 @@
 class GradeSpanExpectation < ActiveRecord::Base
-  belongs_to :user
+  # belongs_to :user
 
+  has_many :investigations
+  
   has_many :expectations
   has_many :expectation_stems, :through => :expectations
   has_many :expectation_indicators, :through => :expectations
 
   belongs_to :assessment_target
-  has_many :unifying_themes, :through => :assessment_target
   has_many :knowledge_statements, :through => :assessment_target
 
   acts_as_replicatable
@@ -106,11 +107,11 @@ class GradeSpanExpectation < ActiveRecord::Base
   end
   
   def theme_keys
-    unifying_themes.map{ |t| t.key}.join("+")
+    assessment_target.unifying_themes.map{ |t| t.key}.join("+")
   end
   
   def set_gse_key
-    self.gse_key = "#{domain.key}#{assessment_target.number} (#{grade_span}) #{theme_keys}"
+    self.gse_key = "#{domain.key}#{assessment_target.knowledge_statement.number} (#{grade_span}) #{theme_keys} - #{assessment_target.number}"
     self.save
   end
 

@@ -69,6 +69,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def show
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
@@ -113,6 +114,7 @@ class SectionsController < ApplicationController
         @xhtml.pages << @page
         @section.pages << @page
         @section.save
+        @section.update_investigation_timestamp
       }
       format.html { 
         flash[:notice] = 'Section was successfully created.'
@@ -135,6 +137,7 @@ class SectionsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if @section.update_attributes(params[:section])
+        @section.update_investigation_timestamp
         render :partial => 'shared/section_header', :locals => { :section => @section }
       else
         render :xml => @section.errors, :status => :unprocessable_entity
@@ -142,6 +145,7 @@ class SectionsController < ApplicationController
     else
       respond_to do |format|
         if @section.update_attributes(params[:section])
+          @section.update_investigation_timestamp
           flash[:notice] = 'Section was successfully updated.'
           format.html { redirect_to(@section) }
           format.xml  { head :ok }
@@ -158,6 +162,7 @@ class SectionsController < ApplicationController
   ##
   def destroy
     @section.destroy
+    @section.update_investigation_timestamp
     @redirect = params[:redirect]
     respond_to do |format|
       format.html { redirect_to(page_url) }
@@ -172,11 +177,8 @@ class SectionsController < ApplicationController
   ##
   def add_page
     @page= Page.new
-    if (params['id']) 
-      @section = Section.find(params['id'])
-      @page.section = @section
-      @page.save
-    end
+    @page.section = Section.find(params['id'])
+    @page.user = current_user
   end
   
   ##
@@ -210,4 +212,38 @@ class SectionsController < ApplicationController
     redirect_to :action => 'edit', :id => @copy.id
   end
   
+  #
+  # Construct a link suitable for a 'paste' action in this controller.
+  #
+  def paste_link
+    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:parmas => params}
+  end
+
+  #
+  # In a section controller, we only accept page clipboard data,
+  # 
+  def paste
+    if @section.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.clone :include =>  {:page_elements => :embeddable}
+        if (@component)
+          # @component.original = @original
+          @container = params[:container] || 'section_pages_list'
+          @component.name = "copy of #{@component.name}"
+          @component.deep_set_user current_user
+          @component.save
+        end
+      end
+    end
+    render :update do |page|
+      page.insert_html :bottom, @container, render(:partial => 'page_list_item', :locals => {:page => @component})
+      page.sortable :section_pages_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_pages', :params => {:section_id => @section.id }}
+      page[dom_id_for(@component, :item)].scrollTo()
+      page.visual_effect :highlight, dom_id_for(@component, :item)
+    end
+  end  
 end

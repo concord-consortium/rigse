@@ -15,13 +15,13 @@
                     :unit => 'degC', :port => '0', :requiredMax => '40.0', :displayPrecision => "#{data_collector.probe_type.display_precision}", 
                     :requiredMin => '0.0' }/
           %dataStore
-            %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store) }/
+            = generate_otml_datastore(data_collector)
     - when 'Prediction'
       %source
         %OTDataGraphable{ :name => h(truncate(data_collector.name, 12)), :controllable => 'true', :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
         :color => "0xff0000", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
           %dataStore
-            %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store) }/
+            = generate_otml_datastore(data_collector)
       %dataSetFolder
         %OTFolderObject/
   - if prediction_graph = data_collector.prediction_graph_source

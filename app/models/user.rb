@@ -41,14 +41,14 @@ class User < ActiveRecord::Base
   
   belongs_to :vendor_interface
 
-  has_many :assessment_targets
-  has_many :big_ideas
-  has_many :domains
-  has_many :expectations
-  has_many :expectation_stems
-  has_many :grade_span_expectations
-  has_many :knowledge_statements
-  has_many :unifying_themes
+  # has_many :assessment_targets
+  # has_many :big_ideas
+  # has_many :domains
+  # has_many :expectations
+  # has_many :expectation_stems
+  # has_many :grade_span_expectations
+  # has_many :knowledge_statements
+  # has_many :unifying_themes
 
   acts_as_replicatable
 

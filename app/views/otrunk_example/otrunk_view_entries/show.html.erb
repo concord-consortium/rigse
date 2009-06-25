@@ -1,0 +1,23 @@
+<p>
+  <b>Uuid:</b>
+  <%=h @otrunk_view_entry.uuid %>
+</p>
+
+<p>
+  <b>Otml import:</b>
+  <%=h @otrunk_view_entry.otml_import_id %>
+</p>
+
+<p>
+  <b>Classname:</b>
+  <%=h @otrunk_view_entry.classname %>
+</p>
+
+<p>
+  <b>Fq classname:</b>
+  <%=h @otrunk_view_entry.fq_classname %>
+</p>
+
+
+<%= link_to 'Edit', edit_otrunk_view_entry_path(@otrunk_view_entry) %> |
+<%= link_to 'Back', otrunk_view_entries_path %>

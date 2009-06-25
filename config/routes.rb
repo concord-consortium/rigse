@@ -1,8 +1,36 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :biologica_multiple_organisms
+  map.resources :biologica_breed_offsprings
+  map.resources :biologica_meiosis_views
+  map.resources :biologica_chromosomes
+  map.resources :biologica_pedigrees
+  map.resources :biologica_static_organisms
+  map.resources :biologica_organisms
+  map.resources :biologica_worlds
+
+  map.resources :raw_otmls
+
+  map.namespace(:otrunk_example) do |otrunk_example|
+    otrunk_example.resources :otrunk_imports
+    otrunk_example.resources :otml_categories
+    otrunk_example.resources :otml_files
+    otrunk_example.resources :otrunk_view_entries
+  end
+
+  map.namespace(:maven_jnlp) do |maven_jnlp|
+    maven_jnlp.resources :native_libraries
+    maven_jnlp.resources :jars
+    maven_jnlp.resources :properties
+    maven_jnlp.resources :versioned_jnlps
+    maven_jnlp.resources :versioned_jnlp_urls
+    maven_jnlp.resources :icons
+    maven_jnlp.resources :maven_jnlp_families
+    maven_jnlp.resources :maven_jnlp_servers
+  end
+
   map.resources :n_logo_models
-
   map.resources :mw_modeler_pages
-
 
   map.resources :vendor_interfaces
   map.resources :probe_types

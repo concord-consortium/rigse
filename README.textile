@@ -2,7 +2,7 @@ h1. rigse
 
 h2. prerequisites
 
-Working git, ruby or jruby, rubgems, mysql.
+Working git, ruby or jruby, rubgems.
 
 h2. Initial install:
 
@@ -19,7 +19,7 @@ server and a mysql username/password with enough permissions to create and drop 
 
     git clone git://github.com/stepheneb/rigse.git
 
-    cd rigse2
+    cd rigse
 
     # follow instructions for installing necessary gem prerequisites
     # until config/setup.rb completes successfully
@@ -216,7 +216,7 @@ Copy the production database to this file <code>db/production_data.sql</code> in
 Copy <code>db/production_data.sql</code> in your local directory to the staging server
 
 <code>
-  cap production db:remote_db_upload
+  cap staging db:remote_db_upload
 </code>
 
 Replace the tables in the production database on the staging server with data here: <code>db/production_data.sql</code>.
@@ -238,13 +238,6 @@ If the ITSI importers have been updated and you want to run them again:
   cap staging import:erase_and_import_ccp_itsi_units
 </pre></code>
 
-Until the production site is updated with the code that implements Investigation 
-containers you will also need to run this task also:
-
-<code>
-  cap staging convert:wrap_orphaned_activities_in_investigations
-</code>
-
 Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
 
 If the authors confirm that there are no blockers then let people know when the
@@ -265,6 +258,7 @@ to install this plugin we followed this procedure:
 
 !http://clients.fudgestudios.com/chester.jpg!
 
+h2. Updating the RITES staging server.
 
 h2. notes for collaborating developers
 

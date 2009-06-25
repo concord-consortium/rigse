@@ -24,7 +24,7 @@ module DialogHelper
       document.dialog.show(true);
       document.dialog.focus(true);
       JAVASCRIPT
-    js_page['_dynamic_content_'].update(render :layout => false, :partial => options[:partial], :locals => options);
+    js_page['_dynamic_content_'].update(render(:layout => false, :partial => options[:partial], :locals => options))
   end
 
 

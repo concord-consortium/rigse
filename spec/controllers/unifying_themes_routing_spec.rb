@@ -11,19 +11,19 @@ describe UnifyingThemesController do
     end
   
     it "should map #show" do
-      route_for(:controller => "unifying_themes", :action => "show", :id => 1).should == "/unifying_themes/1"
+      route_for(:controller => "unifying_themes", :action => "show", :id => "1").should == "/unifying_themes/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "unifying_themes", :action => "edit", :id => 1).should == "/unifying_themes/1/edit"
+      route_for(:controller => "unifying_themes", :action => "edit", :id => "1").should == "/unifying_themes/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "unifying_themes", :action => "update", :id => 1).should == "/unifying_themes/1"
+      route_for(:controller => "unifying_themes", :action => "update", :id => "1").should == {:path => "/unifying_themes/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "unifying_themes", :action => "destroy", :id => 1).should == "/unifying_themes/1"
+      route_for(:controller => "unifying_themes", :action => "destroy", :id => "1").should == {:path => "/unifying_themes/1", :method => :delete}
     end
   end
 

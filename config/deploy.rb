@@ -100,7 +100,7 @@ namespace :deploy do
   # Restart passenger on deploy
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "sudo touch #{current_path}/tmp/restart.txt"
+    sudo "touch #{current_path}/tmp/restart.txt"
   end
   
   [:start, :stop].each do |t|
@@ -117,7 +117,9 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
+    run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
   end
     
   desc "install required gems for application"
@@ -138,6 +140,13 @@ end
 #############################################################
 
 namespace :import do
+  
+  desc 'import grade span expectations from files in config/rigse_data/'
+  task :import_gses_from_file, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:import_gses_from_file --trace" 
+  end
+  
   desc 'erase and import ITSI activities from the ITSI DIY'
   task :erase_and_import_itsi_activities, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -150,6 +159,50 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
 
+  desc "generate MavenJnlp family of resources fron CC jnlp server"
+  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+  end
+  
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+
+  desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
+  task :generate_otrunk_examples_rails_models, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:generate_otrunk_examples_rails_models --trace" 
+  end
+
+  desc"Delete the otrunk-example models (Rails models)."
+  task :delete_otrunk_example_models, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace" 
+  end
+
+  desc"Create git clone of otrunk-examples in <shared_path>/public/otrunk-examples"
+  task :create_git_clone_of_otrunk_examples, :roles => :app do
+    run "cd #{shared_path} && " +
+      "mkdir -p public && " +
+      "cd public && " +
+      "git clone git://github.com/stepheneb/otrunk-examples.git"
+  end
+end
+
+#############################################################
+#  DELETE
+#############################################################
+
+namespace :delete do
+  desc "delete all the MavenJnlp resources"
+  task :delete_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
+  end
+  
 end
 
 #############################################################
