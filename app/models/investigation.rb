@@ -5,14 +5,16 @@ class Investigation < ActiveRecord::Base
   has_many :activities, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-  
-  has_many :data_collectors,
-     :finder_sql => 'SELECT data_collectors.* FROM data_collectors
-     INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
-     INNER JOIN pages ON page_elements.page_id = pages.id    
-     INNER JOIN sections ON pages.section_id = sections.id  
-     INNER JOIN activities ON sections.activity_id = activity.id  
-     WHERE activity.investigatio_id = #{id}'  
+     
+  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
+    eval "has_many :#{klass.table_name},
+      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
+      INNER JOIN pages ON page_elements.page_id = pages.id 
+      INNER JOIN sections ON pages.section_id = sections.id
+      INNER JOIN activities ON sections.activity_id = activity.id
+      WHERE activity.investigation_id = \#\{id\}'"
+  end
   
   acts_as_replicatable
   

@@ -28,6 +28,18 @@ class ApplicationController < ActionController::Base
     render :file => File.join(RAILS_ROOT, 'public', '404.html'), :status => 404
   end
   
+  def get_scope(default)
+    begin
+      @scope = default
+      if container_type = params[:scope_type]
+        @scope = container_type.constantize.find(params[:scope_id])
+      elsif container_type = params[:container_type] 
+        @scope = container_type.constantize.find(params[:container_id])
+      end
+    rescue ActiveRecord::RecordNotFound
+    end
+  end
+  
   private
 
   def check_user

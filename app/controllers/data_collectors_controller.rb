@@ -59,7 +59,7 @@ class DataCollectorsController < ApplicationController
   def edit
     @authoring = true
     @data_collector = DataCollector.find(params[:id])
-    @scope = get_scope
+    @scope = get_scope(@data_collector)
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     session[:new_probe_type_id] = nil
     if request.xhr?
@@ -168,7 +168,7 @@ class DataCollectorsController < ApplicationController
   
   def change_probe_type
     @data_collector = DataCollector.find(params[:id])
-    @scope = get_scope
+    @scope = get_scope(@data_collector)
     probe_type_id = params[:data_collector][:probe_type_id].to_i
     if session[:new_probe_type_id]
       if session[:new_probe_type_id] == probe_type_id
@@ -184,20 +184,6 @@ class DataCollectorsController < ApplicationController
     else
       @data_collector.probe_type = ProbeType.find(probe_type_id)
       session[:new_probe_type_id] = probe_type_id
-    end
-  end
-  
-  protected
-  
-  def get_scope
-    begin
-      @scope = @data_collector
-      if container_type = params[:scope_type]
-        @scope = container_type.constantize.find(params[:scope_id])
-      elsif container_type = params[:container_type] 
-        @scope = container_type.constantize.find(params[:container_id])
-      end
-    rescue ActiveRecord::RecordNotFound
     end
   end
 
