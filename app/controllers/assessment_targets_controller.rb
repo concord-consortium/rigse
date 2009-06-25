@@ -4,7 +4,6 @@ class AssessmentTargetsController < ApplicationController
   def index
     # :include => [:expectations => [:expectation_indicators, :stem]]
     @search_string = params[:search]
-    @paginated_objects = @assessment_targets
 
     respond_to do |format|
       format.html do
