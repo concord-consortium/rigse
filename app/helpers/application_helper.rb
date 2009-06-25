@@ -484,6 +484,16 @@ module ApplicationHelper
     return false
   end
   
+  def render_scoped_reference(thing)
+    if in_render_scope?(thing)
+      capture_haml do
+        haml_tag :object, :refid => ot_refid_for(thing)
+      end
+    else
+      render_show_partial_for(thing)
+    end
+  end
+  
   #
   # is a component viewable only by teacher
   #
