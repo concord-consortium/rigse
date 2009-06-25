@@ -61,6 +61,7 @@ class Section < ActiveRecord::Base
     self.pages.each do |p|
       p.deep_set_user(user)
     end
+    self.save
   end
   
   ## in_place_edit_for calls update_attribute.

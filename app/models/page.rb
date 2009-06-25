@@ -1,6 +1,7 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+
   has_one :activity, :through => :section
 
   # this could work if the finder sql was redone
@@ -11,6 +12,8 @@ class Page < ActiveRecord::Base
   #   WHERE pages.section_id = #{id}'
 
   has_many :page_elements, :order => :position, :dependent => :destroy
+  has_many :inner_page_pages # maybe. Not required.
+  has_many :inner_pages, :through => :inner_page_pages
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
@@ -42,7 +45,6 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
-
   def Page::element_types
     @@element_types
   end
@@ -56,14 +58,14 @@ class Page < ActiveRecord::Base
   end
   
   def page_number
-    if (!self.section.nil?)
-      self.section.pages.each_with_index do |p,i|
+    if (!self.parent.nil?)
+      self.parent.pages.each_with_index do |p,i|
         if (p.id==self.id)
           return i+1
         end
       end
     end
-    1
+     1
   end
   
   def default_page_name
@@ -79,6 +81,11 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_element(element)
+    element.pages << self
+    element.save
+  end
+  
   # 
   # after_create :add_xhtml
   # 
@@ -103,9 +110,9 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return section
+    return (section || inner_pages[0] || nil)
   end
-
+  
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -115,15 +122,15 @@ class Page < ActiveRecord::Base
   end
   
   def next
-    if section
-      return section.next(self)
+    if parent
+      return parent.next(self)
     end
     return nil
   end
   
   def previous
-    if section
-      return section.previous(self)
+    if parent
+      return parent.previous(self)
     end
     return nil
   end
@@ -133,8 +140,10 @@ class Page < ActiveRecord::Base
     self.page_elements.each do |e|
       if e.embeddable
         e.embeddable.user = user
+        e.embeddable.save
       end
     end
+    self.save
   end
 
   ## in_place_edit_for calls update_attribute.

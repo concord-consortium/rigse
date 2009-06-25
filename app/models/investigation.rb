@@ -54,6 +54,7 @@ class Investigation < ActiveRecord::Base
     self.activities.each do |a| 
       a.deep_set_user(user)
     end
+    self.save
   end
   
   
