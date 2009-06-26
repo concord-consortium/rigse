@@ -474,16 +474,50 @@ module ApplicationHelper
     end
   end
   
+  def in_render_scope?(thing)
+    if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
+      return true
+    end
+    
+    if @render_scope
+      if @render_scope.respond_to?("page_elements")
+        embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.uniq
+        if embeddables.include?(thing)
+          return true
+        end
+      end
+    end
+    return false
+  end
+  
+  def render_scoped_reference(thing)
+    if in_render_scope?(thing)
+      capture_haml do
+        haml_tag :object, :refid => ot_refid_for(thing)
+      end
+    else
+      @render_scope_additional_objects ||= []
+      @render_scope_additional_objects << thing
+      render_show_partial_for(thing)
+    end
+  end
+  
   #
-  # is a component viewable only by teacher
+  # is a component viewable only by teacher?
+  # cascading logic.
+  # TODO: generic container-based method-forwarding mechanism
   #
   def teacher_only?(thing)
-    if (thing.teacher_only?)
+    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
       return true;
     end
-    while ((thing = thing.parent()) != nil) 
-      if (thing.teacher_only?)
-        return true
+    if (thing.respond_to?("parent"))
+      while (thing = thing.parent)
+        if (thing.respond_to?("teacher_only?"))
+          if thing.teacher_only? 
+            return true
+          end
+        end
       end
     end
     return false

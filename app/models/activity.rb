@@ -44,6 +44,12 @@ class Activity < ActiveRecord::Base
     return investigation
   end
   
+  def children
+    sections
+  end
+
+  include TreeNode     
+
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -65,6 +71,7 @@ class Activity < ActiveRecord::Base
     self.sections.each do |s|
       s.deep_set_user(user)
     end
+    self.save
   end
   
     

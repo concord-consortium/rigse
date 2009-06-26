@@ -42,27 +42,18 @@ class Section < ActiveRecord::Base
     return activity
   end
   
-  def next(page)
-    index = pages.index(page)
-    if index
-      return pages[index+1]
-    end
-    return nil
+  def children
+    return pages
   end
-  
-  def previous(page)
-    index = pages.index(page)
-    if index && (index > 0)
-      return pages[index-1]
-    end
-    return nil
-  end
-  
+
+  include TreeNode
+      
   def deep_set_user user
     self.user = user
     self.pages.each do |p|
       p.deep_set_user(user)
     end
+    self.save
   end
   
 end

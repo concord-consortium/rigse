@@ -49,11 +49,18 @@ class Investigation < ActiveRecord::Base
     return nil
   end
   
+  def children
+    return activities
+  end
+  
+  include TreeNode     
+
   def deep_set_user user
     self.user = user
     self.activities.each do |a| 
       a.deep_set_user(user)
     end
+    self.save
   end
   
   

@@ -1,5 +1,5 @@
 %OTBreedOffspring{ :local_id => ot_local_id_for( biologica_breed_offspring), :width => biologica_breed_offspring.width, :height => biologica_breed_offspring.height }
   %fatherOrganism
-    %object{ :refid => ot_refid_for(biologica_breed_offspring.father_organism) }
+    = render_scoped_reference(biologica_breed_offspring.father_organism)
   %motherOrganism
-    %object{ :refid => ot_refid_for(biologica_breed_offspring.mother_organism) }
+    = render_scoped_reference(biologica_breed_offspring.mother_organism)

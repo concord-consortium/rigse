@@ -1,6 +1,7 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+
   has_one :activity, :through => :section
 
   # this could work if the finder sql was redone
@@ -11,6 +12,8 @@ class Page < ActiveRecord::Base
   #   WHERE pages.section_id = #{id}'
 
   has_many :page_elements, :order => :position, :dependent => :destroy
+  has_many :inner_page_pages 
+  has_many :inner_pages, :through => :inner_page_pages
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
@@ -20,6 +23,7 @@ class Page < ActiveRecord::Base
         BiologicaPedigree,
         BiologicaMultipleOrganism,
         BiologicaMeiosisView,
+        InnerPage
         # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
@@ -57,20 +61,34 @@ class Page < ActiveRecord::Base
   end
   
   def page_number
-    if (!self.section.nil?)
-      self.section.pages.each_with_index do |p,i|
-        if (p.id==self.id)
-          return i+1
-        end
-      end
+    if (self.parent)
+      return self.parent.children.index(self)
     end
-    1
+    return 0
+  end
+  
+  def find_section
+    case parent
+      when Section 
+        return parent
+      when InnerPage
+        # kind of hackish:
+        if(parent.pages[0])
+          reutrn parent.pages[0].section
+        end
+    end
+    return nil
+  end
+  
+  def find_activity
+    if(find_section)
+      return find_section.activity
+    end
   end
   
   def default_page_name
     return "#{page_number}"
   end
-  
   
   def name
     if self[:name] && !self[:name].empty?
@@ -80,6 +98,11 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_element(element)
+    element.pages << self
+    element.save
+  end
+  
   # 
   # after_create :add_xhtml
   # 
@@ -104,9 +127,9 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return section
+    return (section || inner_pages[0] || nil)
   end
-
+  
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -115,27 +138,17 @@ class Page < ActiveRecord::Base
     return teacher_notes[0]
   end
   
-  def next
-    if section
-      return section.next(self)
-    end
-    return nil
-  end
-  
-  def previous
-    if section
-      return section.previous(self)
-    end
-    return nil
-  end
-  
+  include TreeNode
+      
   def deep_set_user user
     self.user = user
     self.page_elements.each do |e|
       if e.embeddable
         e.embeddable.user = user
+        e.embeddable.save
       end
     end
+    self.save
   end
 
   def investigation

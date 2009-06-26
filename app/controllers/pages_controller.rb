@@ -145,10 +145,11 @@ class PagesController < ApplicationController
   # POST /page.xml
   def create
     @page = Page.create(params[:page])
+    @page.user = current_user
     respond_to do |format|
       if @page.save
         format.js
-        flash[:notice] = 'PageEmbedables was successfully created.'
+        flash[:notice] = 'page was successfully created.'
         format.html { redirect_to(@page) }
         format.xml  { render :xml => @page, :status => :created, :location => @page }
       else
