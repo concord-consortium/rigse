@@ -32,8 +32,8 @@ Rails::Initializer.run do |config|
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
   config.gem "haml", :version => '>= 2.0.7'  
   config.gem "RedCloth", :version => '>= 4.1.1'
-  config.gem "uuidtools"
-  config.gem "hpricot"
+  config.gem "uuidtools", :version => '= 1.0.7'
+  config.gem "hpricot", :version => '0.6.164'
   # config.gem "hpricot", :version => '0.6.164'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
