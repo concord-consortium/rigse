@@ -42,6 +42,12 @@ class Activity < ActiveRecord::Base
     return investigation
   end
   
+  def children
+    sections
+  end
+
+  include TreeNode     
+
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -519,7 +525,7 @@ HEREDOC
       investigation.save!
     end
   end
-    
+  
 end
 
 

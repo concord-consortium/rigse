@@ -121,20 +121,8 @@ class Page < ActiveRecord::Base
     return teacher_notes[0]
   end
   
-  def next
-    if parent
-      return parent.next(self)
-    end
-    return nil
-  end
-  
-  def previous
-    if parent
-      return parent.previous(self)
-    end
-    return nil
-  end
-  
+  include TreeNode
+      
   def deep_set_user user
     self.user = user
     self.page_elements.each do |e|
