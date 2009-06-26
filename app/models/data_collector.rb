@@ -29,6 +29,9 @@ class DataCollector < ActiveRecord::Base
   
   include Changeable
   
+  include Cloneable
+  @@cloneable_associations = [:prediction_graph_destinations]
+  
   self.extend SearchableModel
   
   @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
@@ -36,6 +39,9 @@ class DataCollector < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
   

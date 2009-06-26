@@ -10,6 +10,9 @@ class BiologicaPedigree < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  
+  include Cloneable
+  @@cloneable_associations = [:biologica_organisms]
 
   self.extend SearchableModel
   
@@ -29,6 +32,9 @@ class BiologicaPedigree < ActiveRecord::Base
     end
     def available_image_sizes
       @@available_image_sizes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 

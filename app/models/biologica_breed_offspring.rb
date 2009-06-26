@@ -11,6 +11,9 @@ class BiologicaBreedOffspring < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  
+  include Cloneable
+  @@cloneable_associations = [:father_organism, :mother_organism]
 
   self.extend SearchableModel
   
@@ -19,6 +22,9 @@ class BiologicaBreedOffspring < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 
