@@ -17,9 +17,9 @@ describe GseParser do
 
   it "should parse assesment targets" do
     sample_text = 'PS1 (5-8) INQ-1 Investigate the relationships among mass, volume and density.'
-    @parser.parse_assesment_target(sample_text).should_not be_nil
+    @parser.parse_assessment_target(sample_text).should_not be_nil
     sample_text = 'LS2 (9-11) SAE+FAF -10 Explain how the immune system, endocrine system, or nervous system works and draw conclusions about how systems interact to maintain homeostasis in the human body.'
-    @parser.parse_assesment_target(sample_text).should_not be_nil
+    @parser.parse_assessment_target(sample_text).should_not be_nil
   end
 
   it "should parse grade span expectation texts" do
@@ -32,7 +32,7 @@ describe GseParser do
 
   it "should not parse some bad entities" do
     sample_text = 'No further targets for EK PS1 at the K-4 Grade Span'
-    @parser.parse_assesment_target(sample_text).should be_nil
+    @parser.parse_assessment_target(sample_text).should be_nil
   end
 
   it "should create domains that have names" do
@@ -85,11 +85,11 @@ describe GseParser do
 
   it "should create grade span expectations that have expectation stems that have expectations" do
     @grade_span_expectations.each do |gse|
-      es = gse.expectation_stems
-      if es.length > 0
-        ex = es.expectations
-        if ex.length > 0
-          ex[0].should be_a_kind_of(Expectation)
+      expectation_stems = gse.expectation_stems
+      if expectation_stems.length > 0
+        expectations = expectation_stems[0].expectations
+        if expectations.length > 0
+          expectations[0].should be_a_kind_of(Expectation)
         end
       end
     end
@@ -109,22 +109,17 @@ describe GseParser do
     end
   end
 
-  it "should create expectations that have descriptions" do
-    @expectations.each do |ex|
-      ex.description.should_not be_empty
+  it "should create expectations with one expectation_stem that has a description" do
+    @expectations.each do |expectation|
+      expectation.expectation_stem.description.should_not be_empty
     end
   end
 
-  it "should create expectations that have ordinal markers" do
-    @expectations.each do |ex|
-      ex.ordinal.should_not be_empty
+  it "should create expectation_indicators that have ordinal markers" do
+    @expectations.each do |expectation|
+      expectation.expectation_indicators.each do |expectation_indicator|
+        expectation_indicator.ordinal.should_not be_empty
+      end
     end
   end
-
-  it "should create expectation_stems that have stems" do
-    @expectation_stems.each do |ex_stem|
-      ex_stem.stem.should_not be_empty
-    end
-  end
-
 end
