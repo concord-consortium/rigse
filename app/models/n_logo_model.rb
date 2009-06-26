@@ -22,18 +22,8 @@ class NLogoModel < ActiveRecord::Base
   default_value_for :name, "NLogoModel element"
   default_value_for :description, "description ..."
 
-  send_update_events_to :investigations
-
   def self.display_name
     "Net Logo Model"
-  end
-
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
   end
 
 end

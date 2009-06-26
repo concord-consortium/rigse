@@ -1,15 +1,14 @@
-class BiologicaMultipleOrganism < ActiveRecord::Base
-  
+class InnerPage < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
-  
-  has_and_belongs_to_many :biologica_organisms
+  has_many :inner_page_pages, :order => :position, :dependent => :destroy
+  has_many :sub_pages, :class_name => "Page", :through => :inner_page_pages, :source => "page"
   
   acts_as_replicatable
 
   include Changeable
+  include TreeNode
 
   self.extend SearchableModel
   
@@ -21,14 +20,19 @@ class BiologicaMultipleOrganism < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "Biologica Multiple Organism element"
+  default_value_for :name, "InnerPage element"
   default_value_for :description, "description ..."
-  default_value_for :height, 400
-  default_value_for :width, 400
 
   def self.display_name
-    "Biologica Multiple Organism"
+    "Innerpage"
   end
 
-
+  def parent
+    pages[0]
+  end
+  
+  def children
+    sub_pages
+  end
+  
 end

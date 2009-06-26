@@ -22,18 +22,7 @@ class Xhtml < ActiveRecord::Base
   default_value_for :description, "description ..."
   default_value_for :content, "<p>content goes here ...</p>"
 
-  send_update_events_to :investigations
-  
   def self.display_name
     "Text Content"
   end
-  
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
-  end
-  
 end

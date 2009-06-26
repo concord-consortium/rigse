@@ -25,18 +25,9 @@ class OpenResponse < ActiveRecord::Base
   HEREDOC
   default_value_for :default_response, "Place answer here!"
   
-  send_update_events_to :investigations
   
   def self.display_name
     "Open Response"
-  end
-
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
   end
 
 end

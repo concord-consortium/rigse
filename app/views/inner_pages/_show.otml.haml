@@ -1,0 +1,6 @@
+%OTText{ :local_id => ot_local_id_for( inner_page, :name ), :rows => '2', :columns => '40' }
+  %text= inner_page.name
+%OTCompoundDoc{:local_id => ot_local_id_for(inner_page)}
+  %bodyText
+    = inner_page.description  
+    %object{ :refid => ot_refid_for(inner_page, :name) }

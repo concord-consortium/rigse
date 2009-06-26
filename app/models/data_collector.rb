@@ -110,8 +110,6 @@ class DataCollector < ActiveRecord::Base
 
 
   default_value_for :probe_type, DISTANCE_PROBE_TYPE
-  
-  send_update_events_to :investigations
 
   def self.display_name
     "Graph"
@@ -171,13 +169,4 @@ class DataCollector < ActiveRecord::Base
       self.save
     end
   end
-  
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
-  end
-
 end

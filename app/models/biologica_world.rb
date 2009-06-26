@@ -38,8 +38,6 @@ class BiologicaWorld < ActiveRecord::Base
   default_value_for :description, "description ..."
   default_value_for :species_path, @@available_species_paths['Dragon']
 
-  send_update_events_to :investigations
-
   def self.display_name
     "Biologica World"
   end
@@ -52,12 +50,5 @@ class BiologicaWorld < ActiveRecord::Base
     end
   end
 
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
-  end
 
 end

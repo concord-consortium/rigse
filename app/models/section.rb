@@ -1,7 +1,7 @@
 class Section < ActiveRecord::Base
   belongs_to :activity
   belongs_to :user
-  has_one :investigation, :through => :activity
+  has_one :investigation, :through => :section
   
   has_many :pages, :order => :position, :dependent => :destroy
 
@@ -32,8 +32,6 @@ class Section < ActiveRecord::Base
   default_value_for :name, "name of section"
   default_value_for :description, "describe the purpose of this section here..."
   
-  send_update_events_to :investigation
-  
   def self.display_name
     'Section'
   end
@@ -56,6 +54,17 @@ class Section < ActiveRecord::Base
     self.save
   end
   
+  ## in_place_edit_for calls update_attribute.
+  def update_attribute(name, value)
+    update_investigation_timestamp if super(name, value)
+  end
+
+  ## Update timestamp of investigation that the section belongs to 
+  def update_investigation_timestamp
+    activity = self.activity
+    activity.update_investigation_timestamp if activity
+  end
+    
 end
 
 

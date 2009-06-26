@@ -22,18 +22,7 @@ class DrawingTool < ActiveRecord::Base
   default_value_for :name, "Drawingtool element"
   default_value_for :description, "description ..."
 
-  send_update_events_to :investigations
-
   def self.display_name
     "Draw Tool"
   end
-  
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
-    end
-  end
-
 end
