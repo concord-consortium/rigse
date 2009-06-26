@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :inner_pages, :member => {
     :destroy => :post,
     :add_page => :post,
+    :add_element => :post,
+    :set_page => :post,
     :sort_pages => :post, 
     :delete_page => :post
   }
