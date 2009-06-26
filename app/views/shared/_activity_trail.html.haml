@@ -1,5 +1,5 @@
-- activity = @activity ? @activity : (@section ? @section.activity : (@page ? @page.section.activity : nil))
-- section = @section ? @section : (@page ? @page.section : nil)
+- activity = @activity ? @activity : (@section ? @section.activity : (@page ? @page.find_activity : nil))
+- section = @section ? @section : (@page ? @page.find_section : nil)
 - page = @page 
 
 #section_nav_menu.dropdown
