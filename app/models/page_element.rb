@@ -29,10 +29,4 @@ class PageElement < ActiveRecord::Base
       return page
     end
     
-    ## Update timestamp of investigation that the page element belongs to
-    def update_investigation_timestamp
-      page = self.page
-      page.update_investigation_timestamp if page
-    end
-
 end

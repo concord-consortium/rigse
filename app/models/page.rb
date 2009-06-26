@@ -48,6 +48,8 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
+  send_update_events_to :investigation
+  
   def Page::element_types
     @@element_types
   end
@@ -151,15 +153,10 @@ class Page < ActiveRecord::Base
     self.save
   end
 
-  ## in_place_edit_for calls update_attribute.
-  def update_attribute(name, value)
-    update_investigation_timestamp if super(name, value)
-  end
-
-  ## Update timestamp of investigation that the page belongs to
-  def update_investigation_timestamp
+  def investigation
     section = self.section
-    section.update_investigation_timestamp if section
+    activity = section ? section.activity : null
+    investigation = activity ? activity.investigation : null
   end
   
 end
