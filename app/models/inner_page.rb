@@ -23,6 +23,10 @@ class InnerPage < ActiveRecord::Base
   default_value_for :name, "InnerPage element"
   default_value_for :description, "description ..."
 
+  def self.dont_make_associations
+    true
+  end
+  
   def self.display_name
     "Innerpage"
   end

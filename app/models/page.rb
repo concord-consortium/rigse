@@ -28,7 +28,9 @@ class Page < ActiveRecord::Base
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|
-    eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    unless defined? type.dont_make_associations
+      eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    end
   end
 
   has_many :teacher_notes, :as => :authored_entity
