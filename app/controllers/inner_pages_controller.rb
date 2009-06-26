@@ -75,7 +75,7 @@ class InnerPagesController < ApplicationController
     @element = @page.element_for(@component)
     @element.user = current_user
     @element.save
-    @element.update_investigation_timestamp
+    # @element.update_investigation_timestamp
     @page.reload
     render :partial => "page", :locals => {:sub_page => @page, :inner_page => @inner_page}
   end
