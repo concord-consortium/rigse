@@ -1,6 +1,8 @@
 
 quentin:
   id:                        1
+  vendor_interface_id:       1
+  uuid:                      7aef8f84-627b-11de-97fe-001ff3caa767
   login:                     quentin
   email:                     quentin@example.com
   salt:                      356a192b7913b04c54574d18c28d46e6395428ab # SHA1('0')
@@ -14,10 +16,12 @@ quentin:
       
 aaron:
   id:                        2
+  uuid:                      8ddb615e-627b-11de-97fe-001ff3caa767
+  vendor_interface_id:       1
   login:                     aaron
   email:                     aaron@example.com
-  salt:                      da4b9237bacccdf19c0760cab7aec4a8359010b0 # SHA1('1')
-  crypted_password:          92e0e243685cb0159b1cec342fbb9a92fc8a86fa # 'monkey'
+  salt:                      8a85935e10b9bc49e1449d7076d2a0ca9a351e9d # SHA1('1')
+  crypted_password:          1639fea160cb7d9cf530e7a88ab21377ca679f60 # 'monkey'
   created_at:                <%= 1.days.ago.to_s :db %>
   remember_token_expires_at: 
   remember_token:            
@@ -29,6 +33,8 @@ aaron:
 
 old_password_holder:
   id:                        3
+  uuid:                      95edf87a-627b-11de-97fe-001ff3caa767
+  vendor_interface_id:       1
   login:                     old_password_holder
   email:                     salty_dog@example.com
   salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
