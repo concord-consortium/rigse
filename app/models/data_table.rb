@@ -26,6 +26,7 @@ class DataTable < ActiveRecord::Base
   default_value_for :column_count, 3
   default_value_for :visible_rows, 9
 
+  send_update_events_to :investigations
 
   def self.row_delimiter
     "\n"
@@ -89,5 +90,12 @@ class DataTable < ActiveRecord::Base
     "Data Table"
   end
 
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
 end

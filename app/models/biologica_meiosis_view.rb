@@ -32,9 +32,18 @@ class BiologicaMeiosisView < ActiveRecord::Base
   default_value_for :controlled_alignment_enabled, false
   default_value_for :alignment_control_visible, false
 
+  send_update_events_to :investigations
+
   def self.display_name
     "Biologica Meiosis View"
   end
 
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
 end
