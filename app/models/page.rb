@@ -62,7 +62,7 @@ class Page < ActiveRecord::Base
   
   def page_number
     if (self.parent)
-      return self.parent.children.index(self)
+      return self.parent.children.index(self)+1
     end
     return 0
   end
@@ -74,7 +74,7 @@ class Page < ActiveRecord::Base
       when InnerPage
         # kind of hackish:
         if(parent.pages[0])
-          reutrn parent.pages[0].section
+          return parent.pages[0].section
         end
     end
     return nil
