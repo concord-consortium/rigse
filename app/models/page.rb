@@ -23,6 +23,7 @@ class Page < ActiveRecord::Base
         BiologicaPedigree,
         BiologicaMultipleOrganism,
         BiologicaMeiosisView,
+        InnerPage
         # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
@@ -58,20 +59,34 @@ class Page < ActiveRecord::Base
   end
   
   def page_number
-    if (!self.parent.nil?)
-      self.parent.pages.each_with_index do |p,i|
-        if (p.id==self.id)
-          return i+1
-        end
-      end
+    if (self.parent)
+      return self.parent.index(self)
     end
-     1
+    return 0
+  end
+  
+  def find_section
+    case parent
+      when Section 
+        return parent
+      when InnerPage
+        # kind of hackish:
+        if(parent.pages[0])
+          reutrn parent.pages[0].section
+        end
+    end
+    return nil
+  end
+  
+  def find_activity
+    if(find_section)
+      return find_section.activity
+    end
   end
   
   def default_page_name
     return "#{page_number}"
   end
-  
   
   def name
     if self[:name] && !self[:name].empty?

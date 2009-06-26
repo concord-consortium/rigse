@@ -8,6 +8,7 @@ class InnerPage < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  include TreeNode
 
   self.extend SearchableModel
   
@@ -26,5 +27,12 @@ class InnerPage < ActiveRecord::Base
     "Innerpage"
   end
 
-
+  def parent
+    pages[0]
+  end
+  
+  def children
+    sub_pages
+  end
+  
 end
