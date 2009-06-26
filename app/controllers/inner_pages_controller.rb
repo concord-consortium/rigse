@@ -10,6 +10,19 @@ class InnerPagesController < ApplicationController
     end
   end
 
+
+  def add_page
+    @inner_page = InnerPage.find(params['inner_page_id'])
+    logger.info(params)
+    new_page = Page.create
+    new_page.user = current_user
+    @inner_page.sub_pages << new_page
+    new_page.save
+    new_page.inner_page_pages.user = current_user
+    @inner_page.save
+    render :action => :show
+  end
+
   # GET /inner_pages/1
   # GET /inner_pages/1.xml
   def show
@@ -30,6 +43,7 @@ class InnerPagesController < ApplicationController
   # GET /inner_pages/new.xml
   def new
     @inner_page = InnerPage.new
+    @inner_page.user = current_user
     if request.xhr?
       render :partial => 'remote_form', :locals => { :inner_page => @inner_page }
     else
