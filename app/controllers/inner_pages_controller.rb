@@ -13,7 +13,6 @@ class InnerPagesController < ApplicationController
   
   def add_page
     @inner_page = InnerPage.find(params['id'])
-    logger.info(params)
     @new_page = Page.create
     @new_page.user = current_user
     @inner_page.sub_pages << @new_page
@@ -23,6 +22,17 @@ class InnerPagesController < ApplicationController
     render :update do |page|
        page['inner_page_area'].replace_html(page_html)
        # page['inner_page_area'].replace_html("page_html")
+    end
+  end
+  
+  def delete_page
+    @inner_page = InnerPage.find(params['id'])
+    @page = Page.find(params['page_id'])
+    @inner_page.delete_page(@page)
+    
+    page_html = render_to_string :partial => "page", :locals => {:sub_page => @inner_page[0], :inner_page => @inner_page}
+    render :update do |page|
+       page['inner_page_area'].replace_html(page_html)
     end
   end
 
@@ -77,6 +87,7 @@ class InnerPagesController < ApplicationController
   # GET /inner_pages/1.xml
   def show
     @inner_page = InnerPage.find(params[:id])
+    @page = @inner_page.children[0]
     if request.xhr?
       render :partial => 'inner_page', :locals => { :inner_page => @inner_page }
     else

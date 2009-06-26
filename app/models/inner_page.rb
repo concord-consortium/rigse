@@ -39,4 +39,18 @@ class InnerPage < ActiveRecord::Base
     sub_pages
   end
   
+  def delete_page(page)
+    if (index = sub_pages.index(page))
+      inner_page_pages[index].remove_from_list
+      # inner_page_pages.compact
+      # inner_page_pages.each_with_index do |ipp,index|
+      #   ipp.position=index
+      #   ipp.save
+      # end
+      # page.destroy? or is that being to harsh?
+    end
+    self.reload
+  end
+  
+  
 end

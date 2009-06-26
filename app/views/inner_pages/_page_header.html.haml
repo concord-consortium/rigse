@@ -44,9 +44,6 @@
     - else
       .rollover= image_tag("next_page_disabled.png")
     - if (page.changeable?(current_user))
-      - if (page.section)
-        = delete_button_for(page, :redirect => url_for(page.section))
-      - else
-        = delete_button_for(page)
+      = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_inner_page_path(:page_id =>page), :title => "delete page"
     - if (page.section)
       = link_button "up.png", page.section, :title => 'go to section'
