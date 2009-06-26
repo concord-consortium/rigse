@@ -60,7 +60,7 @@ class Page < ActiveRecord::Base
   
   def page_number
     if (self.parent)
-      return self.parent.index(self)
+      return self.parent.children.index(self)
     end
     return 0
   end
