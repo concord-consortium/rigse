@@ -26,9 +26,13 @@ class InnerPage
     self.inner_page_pages.sort {|a,b| a.page.name <=> b.page.name}
   end
 
+  @verbose = false
+  
   def inspect
-    self.inner_page_pages.each do |i| 
-      puts "#{i.id} #{i.position} #{i.page.name}"
+    if @verbose
+      self.inner_page_pages.each do |i| 
+        puts "#{i.id} #{i.position} #{i.page.name}"
+      end
     end
   end
 end
@@ -65,7 +69,7 @@ describe InnerPage do
   end
   
   it "should be able to sort the sub-pages" do
-    1.upto(10).each do |i|
+    (1..10).each do |i|
       p = Page.create(:name => "page #{i}")
       p.save
       @inner_page.sub_pages << p
