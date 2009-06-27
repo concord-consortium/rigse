@@ -74,7 +74,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
       
       it "exposes a newly created otrunk_view_entry as @otrunk_view_entry" do
         OtrunkExample::OtrunkViewEntry.should_receive(:new).with({'these' => 'params'}).and_return(mock_otrunk_view_entry(:save => true))
-        post :create, :otrunk_view_entry => {:these => 'params'}
+        post :create, :otrunk_view_entry => {'these' => 'params'}
         assigns(:otrunk_view_entry).should equal(mock_otrunk_view_entry)
       end
 
@@ -90,7 +90,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
 
       it "exposes a newly created but unsaved otrunk_view_entry as @otrunk_view_entry" do
         OtrunkExample::OtrunkViewEntry.stub!(:new).with({'these' => 'params'}).and_return(mock_otrunk_view_entry(:save => false))
-        post :create, :otrunk_view_entry => {:these => 'params'}
+        post :create, :otrunk_view_entry => {'these' => 'params'}
         assigns(:otrunk_view_entry).should equal(mock_otrunk_view_entry)
       end
 
@@ -111,7 +111,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
       it "updates the requested otrunk_view_entry" do
         OtrunkExample::OtrunkViewEntry.should_receive(:find).with("37").and_return(mock_otrunk_view_entry)
         mock_otrunk_view_entry.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :otrunk_view_entry => {:these => 'params'}
+        put :update, :id => "37", :otrunk_view_entry => {'these' => 'params'}
       end
 
       it "exposes the requested otrunk_view_entry as @otrunk_view_entry" do
@@ -133,7 +133,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
       it "updates the requested otrunk_view_entry" do
         OtrunkExample::OtrunkViewEntry.should_receive(:find).with("37").and_return(mock_otrunk_view_entry)
         mock_otrunk_view_entry.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :otrunk_view_entry => {:these => 'params'}
+        put :update, :id => "37", :otrunk_view_entry => {'these' => 'params'}
       end
 
       it "exposes the otrunk_view_entry as @otrunk_view_entry" do
