@@ -1,3 +1,26 @@
+namespace :rigse do
+  namespace :test do
+
+    def instance_to_fixture(object, name_attr)
+      result =''
+      result << object.send(name_attr) + ":\n"
+      object.attributes.each do |attr|
+        result << sprintf("%-30s%-0s", "  #{attr[0]}:", " #{attr[1]}\n")
+      end
+      result << "\n"
+    end
+
+    desc "Saves users.yaml to spec/fixtures" 
+    task :create_fixtures => :environment do 
+      dir = File.join(RAILS_ROOT, 'spec/fixtures')
+      FileUtils.mkdir_p(dir)
+      FileUtils.chdir(dir) do
+        File.open("users.yml", 'w') do |f|
+          quentin = User.new(:login => 'quentin', :email => 'quentin@example.com', :password => "monkey", :password_confirmation => "monkey")
+          quentin.encrypt_password
+          aaron   = User.new(:login => 'aaron', :email => 'aaron@example.com', :password => "monkey", :password_confirmation => "monkey")
+          aaron.encrypt_password
+          users_yaml = <<HEREDOC
 
 quentin:
   id:                        1
@@ -5,8 +28,8 @@ quentin:
   uuid:                      7aef8f84-627b-11de-97fe-001ff3caa767
   login:                     quentin
   email:                     quentin@example.com
-  salt:                      a184e8a07aed45e22d8aef227e13cfded57f2cc2
-  crypted_password:          8984ef934aa428506b3d587499bd3ef960ed9d60
+  salt:                      #{quentin.salt}
+  crypted_password:          #{quentin.crypted_password}
   created_at:                <%= 5.days.ago.to_s :db  %>
   remember_token_expires_at: <%= 1.days.from_now.to_s %>
   remember_token:            77de68daecd823babbb58edb1c8e14d7106e83bb
@@ -20,8 +43,8 @@ aaron:
   vendor_interface_id:       1
   login:                     aaron
   email:                     aaron@example.com
-  salt:                      2b64c544cb39a495929c4e92c7ab1882368aaa35
-  crypted_password:          b782400f713f7d96b1fec1a403f5ae409ec448cd
+  salt:                      #{aaron.salt}
+  crypted_password:          #{aaron.crypted_password}
   created_at:                <%= 1.days.ago.to_s :db %>
   remember_token_expires_at: 
   remember_token:            
@@ -43,3 +66,11 @@ old_password_holder:
   activated_at:              <%= 5.days.ago.to_s :db %>
   state:                     active
 
+HEREDOC
+          f.write users_yaml
+        end
+      end
+    end
+
+  end
+end
