@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe GseParser do
   before(:all) do
-    @parser = GseParser.new
+    @parser = GseParser.new(:verbose => false)
     @parser.process_rigse_data
     @domains = Domain.find(:all)
     @big_ideas = BigIdea.find(:all)
