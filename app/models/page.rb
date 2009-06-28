@@ -1,9 +1,19 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+
   has_one :activity, :through => :section
 
+  # this could work if the finder sql was redone
+  # has_one :investigation,
+  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   INNER JOIN pages ON page_elements.page_id = pages.id
+  #   WHERE pages.section_id = #{id}'
+
   has_many :page_elements, :order => :position, :dependent => :destroy
+  has_many :inner_page_pages 
+  has_many :inner_pages, :through => :inner_page_pages
   
   @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
         BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
@@ -13,11 +23,14 @@ class Page < ActiveRecord::Base
         BiologicaPedigree,
         BiologicaMultipleOrganism,
         BiologicaMeiosisView,
+        InnerPage
         # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|
-    eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    unless defined? type.dont_make_associations
+      eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    end
   end
 
   has_many :teacher_notes, :as => :authored_entity
@@ -35,7 +48,8 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
-
+  send_update_events_to :investigation
+  
   def Page::element_types
     @@element_types
   end
@@ -49,20 +63,34 @@ class Page < ActiveRecord::Base
   end
   
   def page_number
-    if (!self.section.nil?)
-      self.section.pages.each_with_index do |p,i|
-        if (p.id==self.id)
-          return i+1
-        end
-      end
+    if (self.parent)
+      return self.parent.children.index(self)+1
     end
-    1
+    return 0
+  end
+  
+  def find_section
+    case parent
+      when Section 
+        return parent
+      when InnerPage
+        # kind of hackish:
+        if(parent.pages[0])
+          return parent.pages[0].section
+        end
+    end
+    return nil
+  end
+  
+  def find_activity
+    if(find_section)
+      return find_section.activity
+    end
   end
   
   def default_page_name
     return "#{page_number}"
   end
-  
   
   def name
     if self[:name] && !self[:name].empty?
@@ -72,6 +100,11 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_element(element)
+    element.pages << self
+    element.save
+  end
+  
   # 
   # after_create :add_xhtml
   # 
@@ -96,9 +129,9 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return section
+    return (section || inner_pages[0] || nil)
   end
-
+  
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -107,27 +140,22 @@ class Page < ActiveRecord::Base
     return teacher_notes[0]
   end
   
-  def next
-    if section
-      return section.next(self)
-    end
-    return nil
-  end
-  
-  def previous
-    if section
-      return section.previous(self)
-    end
-    return nil
-  end
-  
+  include TreeNode
+      
   def deep_set_user user
     self.user = user
     self.page_elements.each do |e|
       if e.embeddable
         e.embeddable.user = user
+        e.embeddable.save
       end
     end
+    self.save
+  end
+
+  def investigation
+    activity = find_activity
+    investigation = activity ? activity.investigation : null
   end
   
 end

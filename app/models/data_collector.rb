@@ -14,9 +14,18 @@ class DataCollector < ActiveRecord::Base
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  # this could work if the finder sql was redone
+  # has_many :investigations,
+  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   INNER JOIN pages ON page_elements.page_id = pages.id
+  #   WHERE pages.section_id = #{id}'
+
   serialize :data_store_values
   
   acts_as_replicatable
+  
+  # send_update_events_to :investigation
   
   include Changeable
   
@@ -101,6 +110,8 @@ class DataCollector < ActiveRecord::Base
 
 
   default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  
+  send_update_events_to :investigations
 
   def self.display_name
     "Graph"
@@ -160,4 +171,13 @@ class DataCollector < ActiveRecord::Base
       self.save
     end
   end
+  
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
+
 end

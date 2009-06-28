@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 require File.dirname(__FILE__) + '/../spec_helper'
 
-# Be sure to include AuthenticatedTestHelper in spec/spec_helper.rb instead.
-# Then, you can remove it from this and the functional test.
-include AuthenticatedTestHelper
-
 describe User do
   fixtures :users
 
@@ -126,8 +122,8 @@ describe User do
     ].each do |name_str|
       it "'#{name_str}'" do
         lambda do
-          u = create_user(:name => name_str)
-          u.errors.on(:name).should     be_nil
+          u = create_user(:first_name => name_str)
+          u.errors.on(:first_name).should     be_nil
         end.should change(User, :count).by(1)
       end
     end
@@ -138,8 +134,8 @@ describe User do
      ].each do |name_str|
       it "'#{name_str}'" do
         lambda do
-          u = create_user(:name => name_str)
-          u.errors.on(:name).should_not be_nil
+          u = create_user(:first_name => name_str)
+          u.errors.on(:first_name).should_not be_nil
         end.should_not change(User, :count)
       end
     end
@@ -205,7 +201,7 @@ describe User do
   end
 
   it 'remembers me for one week' do
-    before = 1.week.from_now.utc
+    before = 1.week.ago.utc
     users(:quentin).remember_me_for 1.week
     after = 1.week.from_now.utc
     users(:quentin).remember_token.should_not be_nil
@@ -218,11 +214,11 @@ describe User do
     users(:quentin).remember_me_until time
     users(:quentin).remember_token.should_not be_nil
     users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.should == time
+    users(:quentin).remember_token_expires_at.utc.to_s(:db).should == time.to_s(:db)
   end
 
   it 'remembers me default two weeks' do
-    before = 2.weeks.from_now.utc
+    before = 2.weeks.ago.utc
     users(:quentin).remember_me
     after = 2.weeks.from_now.utc
     users(:quentin).remember_token.should_not be_nil

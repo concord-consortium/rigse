@@ -16,6 +16,12 @@ class Activity < ActiveRecord::Base
       WHERE sections.activity_id = \#\{id\}'"
   end
   
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id}'
+  
   include Noteable # convinience methods for notes...
   
   acts_as_replicatable
@@ -25,6 +31,8 @@ class Activity < ActiveRecord::Base
   self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}
+  
+  send_update_events_to :investigation
   
   class <<self
     def searchable_attributes
@@ -36,6 +44,12 @@ class Activity < ActiveRecord::Base
     return investigation
   end
   
+  def children
+    sections
+  end
+
+  include TreeNode     
+
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -57,6 +71,7 @@ class Activity < ActiveRecord::Base
     self.sections.each do |s|
       s.deep_set_user(user)
     end
+    self.save
   end
   
     
@@ -499,20 +514,6 @@ HEREDOC
     return teacher_notes[0]
   end
 
-  ## in_place_edit_for calls update_attribute.
-  def update_attribute(name, value)
-    update_investigation_timestamp if super(name, value)
-  end
-
-  ## Update timestamp of investigation that the activity belongs to 
-  def update_investigation_timestamp
-    investigation = self.investigation
-    if investigation
-      investigation.update_attributes(:updated_at => Time.now)
-      investigation.save!
-    end
-  end
-    
 end
 
 

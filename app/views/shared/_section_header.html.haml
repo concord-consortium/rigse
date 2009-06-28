@@ -23,6 +23,8 @@
     = dropdown_button "actions.png", :title => "actions for this page"
     - if (section.changeable?(current_user))
       = remote_link_button "add.png", :url => add_page_section_path(section), :title => "add new page"
+    = render :partial => "shared/dot_pager", :locals => {:node => section}    
+    - if (section.changeable?(current_user))      
       - if (section.activity)
         = delete_button_for(section, :redirect => url_for(section.activity))
       - else

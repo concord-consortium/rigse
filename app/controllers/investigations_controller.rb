@@ -5,7 +5,7 @@ class InvestigationsController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index]
-
+  before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
   before_filter :can_create, :only => [:new, :create]
@@ -19,6 +19,10 @@ class InvestigationsController < ApplicationController
       flash[:error] = "Anonymous users can not create investigaitons"
       redirect_back_or investigations_path
     end
+  end
+  
+  def render_scope
+    @render_scope = @investigation
   end
   
   def can_edit
@@ -215,7 +219,7 @@ class InvestigationsController < ApplicationController
   ##
   def delete_activity
     @activity= Activity.find(params['activity_id'])
-    @activity.update_investigation_timestamp
+    # @activity.update_investigation_timestamp
     @activity.destroy
   end  
   

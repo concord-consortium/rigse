@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe MavenJnlp::VersionedJnlp do
   before(:each) do
     @valid_attributes = {
-      :maven_jnlp_family_id => 1,
+      :versioned_jnlp_url_id => 1,
       :jnlp_icon_id => 1,
       :uuid => "value for uuid",
       :name => "value for name",
@@ -11,11 +11,11 @@ describe MavenJnlp::VersionedJnlp do
       :argument => "value for argument",
       :offline_allowed => false,
       :local_resource_signatures_verified => false,
-      :include_pack_gz => false,
+      :include_pack_gzip => false,
       :spec => "value for spec",
       :codebase => "value for codebase",
       :href => "value for href",
-      :j2se => "value for j2se",
+      :j2se_version => "value for j2se",
       :max_heap_size => 1,
       :initial_heap_size => 1,
       :title => "value for title",

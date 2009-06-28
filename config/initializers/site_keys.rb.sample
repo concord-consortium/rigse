@@ -35,4 +35,5 @@ REST_AUTH_SITE_KEY         = 'some moderately long, unpredictable text'
 # * http://www.owasp.org/index.php/Hashing_Java
 # * "An Illustrated Guide to Cryptographic Hashes":http://www.unixwiz.net/techtips/iguide-crypto-hashes.html
 
+REST_AUTH_SITE_KEY = 'f14b80ba-628b-11de-8956-001ff3caa767'
 REST_AUTH_DIGEST_STRETCHES = 10

@@ -2,13 +2,18 @@ class PagesController < ApplicationController
   helper :all
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
   
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
-  protected 
+  protected
+  
+  def render_scope
+    @render_scope = @page
+  end
   
   def can_create
     if (current_user.anonymous?)
@@ -140,10 +145,11 @@ class PagesController < ApplicationController
   # POST /page.xml
   def create
     @page = Page.create(params[:page])
+    @page.user = current_user
     respond_to do |format|
       if @page.save
         format.js
-        flash[:notice] = 'PageEmbedables was successfully created.'
+        flash[:notice] = 'page was successfully created.'
         format.html { redirect_to(@page) }
         format.xml  { render :xml => @page, :status => :created, :location => @page }
       else
@@ -212,6 +218,7 @@ class PagesController < ApplicationController
     @element = @page.element_for(@component)
     @element.user = current_user
     @element.save
+    
     # 
     # # dynamically insert appropriate partial based on type.
     # @partial = partial_for(@component)
