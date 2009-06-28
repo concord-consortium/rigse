@@ -57,6 +57,7 @@ namespace :rigse do
 
   namespace :setup do
     
+    gem "uuidtools", '= 1.0.7'
     require 'uuidtools'
     require 'highline/import'
     require 'fileutils'
