@@ -64,9 +64,11 @@ class Page < ActiveRecord::Base
   
   def page_number
     if (self.parent)
-      return self.parent.children.index(self)+1
+      index = self.parent.children.index(self)
+      ## If index is nil, assume it's a new page
+      return index ? index + 1 : self.parent.children.size + 1
     end
-    return 0
+    0
   end
   
   def find_section
@@ -158,4 +160,11 @@ class Page < ActiveRecord::Base
     investigation = activity ? activity.investigation : nil
   end
   
+  def has_inner_page?
+    i_pages = page_elements.collect {|e| e.embeddable_type == InnerPage.name}
+    if (i_pages.size > 0) 
+      return true
+    end
+    return false
+  end
 end
