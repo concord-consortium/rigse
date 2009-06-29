@@ -10,6 +10,9 @@ class BiologicaChromosomeZoom < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  
+  include Cloneable
+  @@cloneable_associations = [:biologica_organisms]
 
   self.extend SearchableModel
   
@@ -18,6 +21,9 @@ class BiologicaChromosomeZoom < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 
