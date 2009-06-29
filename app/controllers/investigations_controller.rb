@@ -5,7 +5,7 @@ class InvestigationsController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index]
-
+  before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
   before_filter :can_create, :only => [:new, :create]
@@ -14,12 +14,15 @@ class InvestigationsController < ApplicationController
   in_place_edit_for :investigation, :description
   
   protected  
-
   def can_create
     if (current_user.anonymous?)
       flash[:error] = "Anonymous users can not create investigaitons"
       redirect_back_or investigations_path
     end
+  end
+  
+  def render_scope
+    @render_scope = @investigation
   end
   
   def can_edit
@@ -83,6 +86,8 @@ class InvestigationsController < ApplicationController
   # GET /pages/1.xml
   def show
     @investigation = Investigation.find(params[:id])
+    # display for teachers? Later we can determin via roles?
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
@@ -193,8 +198,7 @@ class InvestigationsController < ApplicationController
   def add_activity
     @activity = Activity.new
     @activity.user = current_user
-    @investigation = Investigation.find(params['id'])
-    @activity.investigation = @investigation
+    @activity.investigation = Investigation.find(params['id'])
   end
   
   ##
@@ -215,6 +219,7 @@ class InvestigationsController < ApplicationController
   ##
   def delete_activity
     @activity= Activity.find(params['activity_id'])
+    # @activity.update_investigation_timestamp
     @activity.destroy
   end  
   
@@ -223,7 +228,7 @@ class InvestigationsController < ApplicationController
   ##
   def duplicate
     @original = Investigation.find(params['id'])
-    @investigation = @original.clone :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
+    @investigation = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
     @investigation.name = "copy of #{@investigation.name}"
     @investigation.deep_set_user current_user
     @investigation.save
@@ -238,14 +243,18 @@ class InvestigationsController < ApplicationController
     end
   end
   
+
+  #
+  # Construct a link suitable for a 'paste' action in this controller.
+  #
   def paste_link
-    render :partial => 'investigations/paste_link', :locals => {:params => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['activity'],:parmas => params}
   end
   
-  
   #
-  # Must be  js method, so don't even worry about it.
-  #
+  # In an Investigation controller, we only accept activity clipboard data,
+  # see: views/investigations/_paste_link
+  # 
   def paste
     if @investigation.changeable?(current_user)
       clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
@@ -253,7 +262,7 @@ class InvestigationsController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'investigation_activities_list'
@@ -263,7 +272,14 @@ class InvestigationsController < ApplicationController
         end
       end
     end
+
+    render :update do |page|
+      page.insert_html :bottom, @container, render(:partial => 'activity_list_item', :locals => {:activity => @component})
+      page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
+      page[dom_id_for(@component, :item)].scrollTo()
+      page.visual_effect :highlight, dom_id_for(@component, :item)
+    end
   end
-  
+
   
 end

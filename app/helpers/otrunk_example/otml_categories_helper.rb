@@ -1,0 +1,2 @@
+module OtrunkExample::OtmlCategoriesHelper
+end

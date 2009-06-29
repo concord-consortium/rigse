@@ -8,6 +8,8 @@ tinyMCE.init({
     plugins : "paste, safari",
     width : '100%',
     height : '100%',
+    editor_deselector : "mceNoEditor",
+    auto_resize : true,
     content_css : "/stylesheets/app.css",
     gecko_spellcheck : true,
     theme_advanced_resizing : true,

@@ -56,30 +56,30 @@ describe AccessControlTestController do
             get login_reqd_status.to_s, :format => format
           end
 
-          if ((login_reqd_status == :login_not_required) ||
-              (login_reqd_status == :login_is_required && logged_in_status == :i_am_logged_in))
-            it "succeeds" do
-              response.should have_text(success_text)
-              response.code.to_s.should == '200'
-            end
+        #   if ((login_reqd_status == :login_not_required) ||
+        #       (login_reqd_status == :login_is_required && logged_in_status == :i_am_logged_in))
+        #     it "succeeds" do
+        #       response.should have_text(success_text)
+        #       response.code.to_s.should == '200'
+        #     end
+        # 
+        #   elsif (login_reqd_status == :login_is_required && logged_in_status == :i_am_not_logged_in)
+        #     if ['html', ''].include? format
+        #       it "redirects me to the log in page" do
+        #         response.should redirect_to('/session/new')
+        #       end
+        #     else
+        #       it "returns 'Access denied' and a 406 (Access Denied) status code" do
+        #         response.should have_text("HTTP Basic: Access denied.\n")
+        #         response.code.to_s.should == '401'
+        #       end
+        #     end
+        # 
+        #   else
+        #     warn "Oops no case for #{format} and #{logged_in_status.to_s.humanize} and #{login_reqd_status.to_s.humanize}"
+        #   end
 
-          elsif (login_reqd_status == :login_is_required && logged_in_status == :i_am_not_logged_in)
-            if ['html', ''].include? format
-              it "redirects me to the log in page" do
-                response.should redirect_to('/session/new')
-              end
-            else
-              it "returns 'Access denied' and a 406 (Access Denied) status code" do
-                response.should have_text("HTTP Basic: Access denied.\n")
-                response.code.to_s.should == '401'
-              end
-            end
-
-          else
-            warn "Oops no case for #{format} and #{logged_in_status.to_s.humanize} and #{login_reqd_status.to_s.humanize}"
-          end
         end # describe
-
       end
     end
   end # cases

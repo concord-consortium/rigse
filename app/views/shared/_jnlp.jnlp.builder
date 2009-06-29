@@ -1,7 +1,7 @@
 response.headers["Content-Type"] = "application/x-java-jnlp-file"
 response.headers["Cache-Control"] = "max-age=1"
 response.headers["Last-Modified"] = runnable_object.updated_at.httpdate
-response.headers["Content-Disposition"] = "inline; filename=rites_test_jnlp"
+response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable_object.class.name.underscore}_#{short_name(runnable_object.name)}.jnlp"
 
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev") { 
@@ -15,8 +15,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev") {
   xml.security {
     xml << "    <all-permissions />"
   }
-
-  jnlp_resources(xml)
+  jnlp_resources(xml, { :authoring => @authoring, :runnable_object => runnable_object})
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)

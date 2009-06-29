@@ -14,9 +14,23 @@ class DataCollector < ActiveRecord::Base
     :class_name => "DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  # this could work if the finder sql was redone
+  # has_many :investigations,
+  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   INNER JOIN pages ON page_elements.page_id = pages.id
+  #   WHERE pages.section_id = #{id}'
+
+  serialize :data_store_values
+  
   acts_as_replicatable
   
+  # send_update_events_to :investigation
+  
   include Changeable
+  
+  include Cloneable
+  @@cloneable_associations = [:prediction_graph_destinations]
   
   self.extend SearchableModel
   
@@ -25,6 +39,9 @@ class DataCollector < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
   
@@ -99,8 +116,74 @@ class DataCollector < ActiveRecord::Base
 
 
   default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  
+  send_update_events_to :investigations
 
   def self.display_name
     "Graph"
   end
+
+  def self.authorable_in_java?
+    true
+  end
+
+  def authorable_in_java?
+    DataCollector.authorable_in_java?
+  end
+  
+  def update_from_otml_library_content
+    olc = Hash.from_xml(otml_library_content)
+    if ot_data_collector = olc['ot_data_collector']
+      self.name = ot_data_collector['name']
+      self.title = ot_data_collector['title']
+      self.autoscale_enabled = ot_data_collector['auto_scale_enabled'] == 'true'
+      if ot_data_axis = ot_data_collector['x_data_axis']['ot_data_axis']
+        self.x_axis_label = ot_data_axis['label']
+        self.x_axis_units = ot_data_axis['units']
+        self.x_axis_min   = ot_data_axis['min'].to_f
+        self.x_axis_max   = ot_data_axis['max'].to_f
+      end
+      if ot_data_axis = ot_data_collector['y_data_axis']['ot_data_axis']
+        self.y_axis_label = ot_data_axis['label']
+        self.y_axis_units = ot_data_axis['units']
+        self.y_axis_min   = ot_data_axis['min'].to_f
+        self.y_axis_max   = ot_data_axis['max'].to_f
+      end
+      if ot_data_graphable = ot_data_collector['source']['ot_data_graphable']
+         self.connect_points = ot_data_graphable['connect_points']
+         self.draw_marks = ot_data_graphable['draw_marks'] == 'true'
+         self.connect_points = ot_data_graphable['connect_points']
+         self.connect_points = ot_data_graphable['connect_points']
+         self.connect_points = ot_data_graphable['connect_points']
+         if ot_data_store = ot_data_graphable['data_store']['ot_data_store']
+           if values = ot_data_store['values']
+             if delta_time = ot_data_store['dt']
+               delta_time = delta_time.to_f
+               time = 0.0
+               self.data_store_values = []
+               values['float'].each do |v|
+                 self.data_store_values << time
+                 self.data_store_values << v.to_f
+                 time += delta_time
+               end
+             else
+               self.data_store_values = values['float'].collect { |v| v.to_f }
+             end
+           else
+             self.data_store_values = []
+           end
+         end
+      end
+      self.save
+    end
+  end
+  
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
+
 end

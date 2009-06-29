@@ -1,0 +1,24 @@
+<h1>Listing otrunk_imports</h1>
+
+<table>
+  <tr>
+    <th>Uuid</th>
+    <th>Classname</th>
+    <th>Fq classname</th>
+  </tr>
+
+<% @otrunk_imports.each do |otrunk_import| %>
+  <tr>
+    <td><%=h otrunk_import.uuid %></td>
+    <td><%=h otrunk_import.classname %></td>
+    <td><%=h otrunk_import.fq_classname %></td>
+    <td><%= link_to 'Show', otrunk_import %></td>
+    <td><%= link_to 'Edit', edit_otrunk_import_path(otrunk_import) %></td>
+    <td><%= link_to 'Destroy', otrunk_import, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New otrunk_import', new_otrunk_import_path %>

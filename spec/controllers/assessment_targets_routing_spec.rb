@@ -11,19 +11,19 @@ describe AssessmentTargetsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "assessment_targets", :action => "show", :id => 1).should == "/assessment_targets/1"
+      route_for(:controller => "assessment_targets", :action => "show", :id => "1").should == "/assessment_targets/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "assessment_targets", :action => "edit", :id => 1).should == "/assessment_targets/1/edit"
+      route_for(:controller => "assessment_targets", :action => "edit", :id => "1").should == "/assessment_targets/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "assessment_targets", :action => "update", :id => 1).should == "/assessment_targets/1"
+      route_for(:controller => "assessment_targets", :action => "update", :id => "1").should == {:path => "/assessment_targets/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "assessment_targets", :action => "destroy", :id => 1).should == "/assessment_targets/1"
+      route_for(:controller => "assessment_targets", :action => "destroy", :id => "1").should == {:path => "/assessment_targets/1", :method => :delete}
     end
   end
 

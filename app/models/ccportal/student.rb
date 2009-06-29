@@ -1,11 +1,6 @@
 class Ccportal::Student < Ccportal::Member
   has_many :class_students, :foreign_key => :member_id, :class_name => 'Ccportal::ClassStudent'
   has_many :courses, :through => :class_students, :foreign_key => :class_id, :class_name => 'Ccportal::Course'
-  has_many :modified_times, :foreign_key => :student_id, :class_name => "ModifiedTime" do
-    def by_activity(activity)
-      find(:all, :conditions => {:activity_id => activity.id})
-    end
-  end
 
   has_many :teachers,
     :class_name => 'Ccportal::Teacher',

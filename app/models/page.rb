@@ -1,19 +1,38 @@
 class Page < ActiveRecord::Base
   belongs_to :user
   belongs_to :section
+
   has_one :activity, :through => :section
 
-  has_many :page_elements, :order => :position, :dependent => :destroy
+  # this could work if the finder sql was redone
+  # has_one :investigation,
+  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
+  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   INNER JOIN pages ON page_elements.page_id = pages.id
+  #   WHERE pages.section_id = #{id}'
 
-  has_many :xhtmls, :through => :page_elements, :source => :embeddable, :source_type => 'Xhtml'
-  has_many :open_responses, :through => :page_elements, :source => :embeddable, :source_type => 'OpenResponse'
-  has_many :multiple_choices, :through => :page_elements, :source => :embeddable, :source_type => 'MultipleChoice'
-  has_many :data_collectors, :through => :page_elements, :source => :embeddable, :source_type => 'DataCollector'
-  has_many :data_tables, :through => :page_elements, :source => :embeddable, :source_type => 'DataTable'
-  has_many :drawing_tools, :through => :page_elements, :source => :embeddable, :source_type => 'DrawingTool'
-  has_many :mw_modeler_pages, :through => :page_elements, :source => :embeddable, :source_type => 'MwModelerPage'
-  has_many :n_logo_models, :through => :page_elements, :source => :embeddable, :source_type => 'NLogoModel'
+  has_many :page_elements, :order => :position, :dependent => :destroy
+  has_many :inner_page_pages 
+  has_many :inner_pages, :through => :inner_page_pages
   
+  @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
+        BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+        BiologicaChromosome,
+        BiologicaChromosomeZoom,
+        BiologicaBreedOffspring,
+        BiologicaPedigree,
+        BiologicaMultipleOrganism,
+        BiologicaMeiosisView,
+        InnerPage
+        # BiologicaDna,
+      ].sort() { |a,b| a.display_name <=> b.display_name }
+
+  @@element_types.each do |type|
+    unless defined? type.dont_make_associations
+      eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    end
+  end
+
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convinience methods for notes...
@@ -29,25 +48,51 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
+  send_update_events_to :investigation
+  
+  def Page::element_types
+    @@element_types
+  end
+
+  def Page::paste_acceptable_types
+    Page::element_types.map {|t| t.name.underscore}
+  end
+
   def self.display_name
     'Page'
   end
   
   def page_number
-    if (!self.section.nil?)
-      self.section.pages.each_with_index do |p,i|
-        if (p.id==self.id)
-          return i+1
-        end
-      end
+    if (self.parent)
+      index = self.parent.children.index(self)
+      ## If index is nil, assume it's a new page
+      return index ? index + 1 : self.parent.children.size + 1
     end
-    1
+    0
+  end
+  
+  def find_section
+    case parent
+      when Section 
+        return parent
+      when InnerPage
+        # kind of hackish:
+        if(parent.pages[0])
+          return parent.pages[0].section
+        end
+    end
+    return nil
+  end
+  
+  def find_activity
+    if(find_section)
+      return find_section.activity
+    end
   end
   
   def default_page_name
-    return "Page #{page_number}"
+    return "#{page_number}"
   end
-  
   
   def name
     if self[:name] && !self[:name].empty?
@@ -57,6 +102,11 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_element(element)
+    element.pages << self
+    element.save
+  end
+  
   # 
   # after_create :add_xhtml
   # 
@@ -80,6 +130,10 @@ class Page < ActiveRecord::Base
     return component.page_elements.detect {|pe| pe.embeddable.id == component.id }
   end
 
+  def parent
+    return (section || inner_pages[0] || nil)
+  end
+  
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -88,18 +142,29 @@ class Page < ActiveRecord::Base
     return teacher_notes[0]
   end
   
-  def next
-    if section
-      return section.next(self)
+  include TreeNode
+      
+  def deep_set_user user
+    self.user = user
+    self.page_elements.each do |e|
+      if e.embeddable
+        e.embeddable.user = user
+        e.embeddable.save
+      end
     end
-    return nil
+    self.save
+  end
+
+  def investigation
+    activity = find_activity
+    investigation = activity ? activity.investigation : nil
   end
   
-  def previous
-    if section
-      return section.previous(self)
+  def has_inner_page?
+    i_pages = page_elements.collect {|e| e.embeddable_type == InnerPage.name}
+    if (i_pages.size > 0) 
+      return true
     end
-    return nil
+    return false
   end
-  
 end

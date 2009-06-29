@@ -1,5 +1,12 @@
 module OtmlHelper
 
+  def ot_menu_display_name(object)
+    if teacher_only?(object) 
+      return "+ #{object.name}"
+    end
+    return object.name
+  end
+  
   def ot_refid_for(object, *prefixes)
     if object.is_a? String
       '${' + object + '}'
@@ -32,6 +39,7 @@ module OtmlHelper
       org.concord.data.state.OTDataTable
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
+      org.concord.otrunk.graph.OTDataCollectorViewConfig
       org.concord.datagraph.state.OTDataGraph
       org.concord.datagraph.state.OTDataGraphable
       org.concord.datagraph.state.OTMultiDataGraph
@@ -55,9 +63,11 @@ module OtmlHelper
       org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.OTViewChild
       org.concord.otrunk.view.OTViewEntry
+      org.concord.otrunk.view.OTViewMode
       org.concord.otrunk.view.document.OTCompoundDoc
       org.concord.otrunk.view.document.OTCssText
       org.concord.otrunk.view.document.OTDocumentViewConfig
+      org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig
       org.concord.otrunkmw.OTModelerPage
       org.concord.otrunknl4.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
@@ -66,7 +76,17 @@ module OtmlHelper
       org.concord.sensor.state.OTInterfaceManager
       org.concord.sensor.state.OTSensorDataProxy
       org.concord.sensor.state.OTSensorRequest
-    }
+      org.concord.otrunk.biologica.OTWorld
+      org.concord.otrunk.biologica.OTOrganism
+      org.concord.otrunk.biologica.OTStaticOrganism
+      org.concord.otrunk.biologica.OTChromosome
+      org.concord.otrunk.biologica.OTChromosomeZoom
+      org.concord.otrunk.biologica.OTBreedOffspring
+      org.concord.otrunk.biologica.OTPedigree
+      org.concord.otrunk.biologica.OTMultipleOrganism
+      org.concord.otrunk.biologica.OTFamily
+      org.concord.otrunk.biologica.OTSex
+    } + (@otrunk_imports || []).uniq
   end
   
   def ot_imports
@@ -103,15 +123,69 @@ module OtmlHelper
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView']
-    ]
+      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView'],
+      ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismView'],
+      ['biologica_chromosome','org.concord.otrunk.biologica.OTChromosome','org.concord.otrunk.biologica.ui.OTChromosomeView'],
+      ['biologica_chromosome_zoom','org.concord.otrunk.biologica.OTChromosomeZoom','org.concord.otrunk.biologica.ui.OTChromosomeZoomView'],
+      ['biologica_breed_offspring','org.concord.otrunk.biologica.OTBreedOffspring','org.concord.otrunk.biologica.ui.OTBreedOffspringView'],
+      ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeView'],
+      ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismView'],
+      ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView']
+    ] + (@otrunk_view_entries || []).uniq
+  end
+  
+  def authoring_view_entries
+    [
+      ['text_edit_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditEditView'],
+      ['question_edit_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionEditView'],
+      ['choice_radio_button_edit_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
+#      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
+#      ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
+      ['data_collector_edit_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.otrunk.graph.OTDataCollectorEditView'],
+#      ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
+#      ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
+      ['data_drawing_tool_edit_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.otrunk.graph.OTDataDrawingToolEditView'],
+#      ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
+#      ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
+      ['data_table_edit_view', 'org.concord.data.state.OTDataTable', 'org.concord.otrunk.ui.swing.OTDataTableEditView'],
+      ['udl_container_edit_view', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerEditView'],
+      ['curriculum_unit_edit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitEditView'],
+#      ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
+      ['menu_page_edit_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageEditView'],
+#      ['menu_accordion_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.swingx.OTMenuAccordionSectionView'],
+      ['menu_section_edit_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuSectionEditView'],
+      ['menu_page_expand_edit_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageEditView'],
+#      ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
+#      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
+      ['modeler_page_edit_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageEditView'],
+      ['n_logo_model_edit_view', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelEditView'],
+      ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.biologica.OTWorldEditView'],
+      ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.biologica.OTOrganismEditView'],
+      ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismEditView'],
+      ['biologica_chromosome','org.concord.otrunk.biologica.OTChromosome','org.concord.otrunk.biologica.ui.OTChromosomeEditView'],
+      ['biologica_chromosome_zoom','org.concord.otrunk.biologica.OTChromosomeZoom','org.concord.otrunk.biologica.ui.OTChromosomeZoomEditView'],
+      ['biologica_breed_offspring','org.concord.otrunk.biologica.OTBreedOffspring','org.concord.otrunk.biologica.ui.OTBreedOffspringEditView'],
+      ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeEditView'],
+      ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismEditView'],
+      ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexEditView']
+    ] + (@otrunk_edit_view_entries || []).uniq
   end
 
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
     title = options[:title] || 'RITES sample'
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title }
+    authoring = options[:authoring] || false
+    if authoring
+      current_mode = 'authoring'
+    else
+      current_mode = 'student'
+    end
+    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :authoring_view_entries => authoring_view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title, :authoring => authoring, :current_mode => current_mode }
   end
 
   def ot_script_engine_bundle
@@ -139,6 +213,30 @@ module OtmlHelper
       end
     end
   end
+  
+  
+  # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
+  #   - if data_collector.data_store_values.length > 0
+  #     %values
+  #       - data_collector.data_store_values.each do |value|
+  #         %float= value
+  # 
+  def generate_otml_datastore(data_collector)
+    capture_haml do
+      haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+        if data_collector.data_store_values && data_collector.data_store_values.length > 0
+          haml_tag :values do
+            data_collector.data_store_values.each do |value|
+              haml_tag(:float, :<) do
+                haml_concat(value)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
 end
 
 

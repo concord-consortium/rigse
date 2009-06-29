@@ -8,7 +8,7 @@ describe ImagesController do
   
   describe "responding to GET index" do
 
-    it "should expose all images as @images" do
+    it "should expose an array of all the @images" do
       Image.should_receive(:find).with(:all).and_return([mock_image])
       get :index
       assigns[:images].should == [mock_image]

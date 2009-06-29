@@ -57,8 +57,6 @@ namespace :rigse do
 
   namespace :setup do
     
-    gem "uuidtools", '= 1.0.7'
-    require 'uuidtools'
     require 'highline/import'
     require 'fileutils'
     
@@ -102,6 +100,9 @@ namespace :rigse do
     desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
     task :regenerate_rest_auth_site_key => :environment do
       
+      gem "uuidtools", '>= 2.0.0'
+      require 'uuidtools'
+      
       puts <<HEREDOC
 
 This task will re-generate a REST_AUTH_SITE_KEY and update
@@ -118,7 +119,7 @@ HEREDOC
       
       if agree("Do you want to do this?  (y/n)", true)
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
-        site_key = UUID.timestamp_create().to_s
+        site_key = UUIDTools::UUID.timestamp_create.to_s
 
         site_keys_rb = <<HEREDOC
 REST_AUTH_SITE_KEY = '#{site_key}'
@@ -161,10 +162,12 @@ HEREDOC
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
+        Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
   
         puts <<HEREDOC
 
-You can now start the applictation in develelopment mode by running this command:
+You can now start the application in develelopment mode by running this command:
 
   #{jruby_run_command}script/server
 
@@ -301,6 +304,21 @@ HEREDOC
           u.save
         end
       end
+    end
+   
+    #######################################################################
+    #
+    # Delete existing users and restore default users and roles
+    #
+    #######################################################################   
+    desc "Delete existing users and restore default users and roles"
+    task :delete_users_and_restore_default_users_roles => :environment do
+      # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+      # the autogenerating primary key index ... not certain about other databases
+      puts
+      puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
+      Rake::Task['rigse:setup:default_users_roles'].invoke
+      Rake::Task['rigse:setup:create_additional_users'].invoke
     end
    
    

@@ -51,7 +51,7 @@ end
 
 @missing_gems = []
 @gems_needed_at_start = [
-  ['uuidtools', '>= 1.0.7'],
+  ['uuidtools', '>= 2.0.0'],
   ['highline', '>= 1.5.0'],
   ['haml-edge', '>= 2.1.8'],
   ['mime-types', '>=1.16'],
@@ -219,7 +219,7 @@ The Rails site keys authentication tokens file does not yet exist:
 
 HEREDOC
 
-site_key = UUID.timestamp_create().to_s
+site_key = UUIDTools::UUID.timestamp_create.to_s
 
   site_keys_rb = <<HEREDOC
 REST_AUTH_SITE_KEY         = '#{site_key}'

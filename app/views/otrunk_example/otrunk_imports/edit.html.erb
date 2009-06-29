@@ -1,0 +1,24 @@
+<h1>Editing otrunk_import</h1>
+
+<% form_for(@otrunk_import) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :uuid %><br />
+    <%= f.text_field :uuid %>
+  </p>
+  <p>
+    <%= f.label :classname %><br />
+    <%= f.text_field :classname %>
+  </p>
+  <p>
+    <%= f.label :fq_classname %><br />
+    <%= f.text_field :fq_classname %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @otrunk_import %> |
+<%= link_to 'Back', otrunk_imports_path %>

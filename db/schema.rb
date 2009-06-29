@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090526152312) do
+ActiveRecord::Schema.define(:version => 20090625153321) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -22,11 +22,16 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
+    t.boolean  "teacher_only",                   :default => false
+  end
+
+  create_table "assessment_target_unifying_themes", :id => false, :force => true do |t|
+    t.integer "assessment_target_id"
+    t.integer "unifying_theme_id"
   end
 
   create_table "assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
-    t.integer  "unifying_theme_id"
     t.integer  "number"
     t.string   "description"
     t.string   "grade_span"
@@ -49,6 +54,162 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.integer  "unifying_theme_id"
     t.string   "description"
     t.string   "uuid",              :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_breed_offsprings", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "mother_organism_id"
+    t.integer  "father_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_chromosome_zooms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                                     :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "chromosome_a_visible"
+    t.boolean  "chromosome_b_visible"
+    t.integer  "chromosome_position_in_base_pairs"
+    t.float    "chromosome_position_in_cm"
+    t.boolean  "draw_crossover"
+    t.boolean  "draw_genes"
+    t.boolean  "draw_markers"
+    t.boolean  "draw_tracks"
+    t.string   "g_browse_url_template"
+    t.boolean  "image_label_characteristics_text_visible"
+    t.boolean  "image_label_lock_symbol_visible"
+    t.boolean  "image_label_name_text_visible"
+    t.boolean  "image_label_sex_text_visible"
+    t.integer  "image_label_size"
+    t.boolean  "image_label_species_text_visible"
+    t.integer  "organism_label_type"
+    t.integer  "zoom_level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_chromosome_zooms_biologica_organisms", :id => false, :force => true do |t|
+    t.integer  "biologica_chromosome_zoom_id"
+    t.integer  "biologica_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_chromosomes", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                  :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "biologica_organism_id"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_meiosis_views", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.boolean  "replay_button_enabled"
+    t.boolean  "controlled_crossover_enabled"
+    t.boolean  "crossover_control_visible"
+    t.boolean  "controlled_alignment_enabled"
+    t.boolean  "alignment_control_visible"
+    t.integer  "father_organism_id"
+    t.integer  "mother_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_multiple_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "organism_image_size"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_multiple_organisms_biologica_organisms", :id => false, :force => true do |t|
+    t.integer  "biologica_multiple_organism_id"
+    t.integer  "biologica_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                  :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "sex"
+    t.string   "alleles"
+    t.string   "strain"
+    t.integer  "chromosomes_color"
+    t.boolean  "fatal_characteristics"
+    t.integer  "biologica_world_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_organisms_biologica_pedigrees", :id => false, :force => true do |t|
+    t.integer  "biologica_pedigree_id"
+    t.integer  "biologica_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_pedigrees", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                    :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "height"
+    t.integer  "width"
+    t.boolean  "crossover_enabled"
+    t.boolean  "sex_text_visible"
+    t.boolean  "organism_images_visible"
+    t.boolean  "top_controls_visible"
+    t.boolean  "reset_button_visible"
+    t.integer  "organism_image_size"
+    t.integer  "minimum_number_children"
+    t.integer  "maximum_number_children"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_static_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                  :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "biologica_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "biologica_worlds", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "species_path"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -95,6 +256,9 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "updated_at"
     t.integer  "graph_type_id"
     t.integer  "prediction_graph_id"
+    t.text     "otml_root_content"
+    t.text     "otml_library_content"
+    t.text     "data_store_values"
   end
 
   create_table "data_filters", :force => true do |t|
@@ -202,6 +366,39 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "updated_at"
   end
 
+  create_table "inner_page_pages", :force => true do |t|
+    t.integer  "inner_page_id"
+    t.integer  "page_id"
+    t.integer  "user_id"
+    t.string   "uuid",          :limit => 36
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
+  add_index "inner_page_pages", ["page_id"], :name => "index_inner_page_pages_on_page_id"
+  add_index "inner_page_pages", ["position"], :name => "index_inner_page_pages_on_position"
+
+  create_table "inner_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "interactive_models", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "investigations", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                      :limit => 36
@@ -210,6 +407,12 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "grade_span_expectation_id"
+    t.boolean  "teacher_only",                            :default => false
+  end
+
+  create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "jar_id"
+    t.integer "versioned_jnlp_id"
   end
 
   create_table "knowledge_statements", :force => true do |t|
@@ -217,6 +420,107 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.integer  "number"
     t.string   "description"
     t.string   "uuid",        :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_icons", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "href"
+    t.integer  "height"
+    t.integer  "width"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_jars", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.boolean  "main"
+    t.string   "os"
+    t.string   "href"
+    t.integer  "size"
+    t.integer  "size_pack_gz"
+    t.boolean  "signature_verified"
+    t.string   "version_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_maven_jnlp_families", :force => true do |t|
+    t.integer  "maven_jnlp_server_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "snapshot_version"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_maven_jnlp_servers", :force => true do |t|
+    t.string   "uuid"
+    t.string   "host"
+    t.string   "path"
+    t.string   "name"
+    t.string   "local_cache_dir"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_native_libraries", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.boolean  "main"
+    t.string   "os"
+    t.string   "href"
+    t.integer  "size"
+    t.integer  "size_pack_gz"
+    t.boolean  "signature_verified"
+    t.string   "version_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_properties", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "value"
+    t.string   "os"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_versioned_jnlp_urls", :force => true do |t|
+    t.string   "uuid"
+    t.integer  "maven_jnlp_family_id"
+    t.string   "path"
+    t.string   "url"
+    t.string   "version_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maven_jnlp_versioned_jnlps", :force => true do |t|
+    t.integer  "versioned_jnlp_url_id"
+    t.integer  "jnlp_icon_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.string   "main_class"
+    t.string   "argument"
+    t.boolean  "offline_allowed"
+    t.boolean  "local_resource_signatures_verified"
+    t.boolean  "include_pack_gzip"
+    t.string   "spec"
+    t.string   "codebase"
+    t.string   "href"
+    t.string   "j2se_version"
+    t.integer  "max_heap_size"
+    t.integer  "initial_heap_size"
+    t.string   "title"
+    t.string   "vendor"
+    t.string   "homepage"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -261,6 +565,11 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "updated_at"
   end
 
+  create_table "native_libraries_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "native_library_id"
+    t.integer "versioned_jnlp_id"
+  end
+
   create_table "open_responses", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",             :limit => 36
@@ -271,6 +580,73 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
+    t.integer "otml_category_id"
+    t.integer "otrunk_import_id"
+  end
+
+  add_index "otml_categories_otrunk_imports", ["otml_category_id", "otrunk_import_id"], :name => "otc_oti", :unique => true
+
+  create_table "otml_files_otrunk_imports", :id => false, :force => true do |t|
+    t.integer "otml_file_id"
+    t.integer "otrunk_import_id"
+  end
+
+  add_index "otml_files_otrunk_imports", ["otml_file_id", "otrunk_import_id"], :name => "otf_oti", :unique => true
+
+  create_table "otml_files_otrunk_view_entries", :id => false, :force => true do |t|
+    t.integer "otml_file_id"
+    t.integer "otrunk_view_entry_id"
+  end
+
+  add_index "otml_files_otrunk_view_entries", ["otml_file_id", "otrunk_view_entry_id"], :name => "otf_otve", :unique => true
+
+  create_table "otrunk_example_otml_categories", :force => true do |t|
+    t.string   "uuid"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otml_categories", ["name"], :name => "index_otrunk_example_otml_categories_on_name", :unique => true
+
+  create_table "otrunk_example_otml_files", :force => true do |t|
+    t.string   "uuid"
+    t.integer  "otml_category_id"
+    t.string   "name"
+    t.string   "path"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otml_files", ["otml_category_id"], :name => "index_otrunk_example_otml_files_on_otml_category_id"
+  add_index "otrunk_example_otml_files", ["path"], :name => "index_otrunk_example_otml_files_on_path", :unique => true
+
+  create_table "otrunk_example_otrunk_imports", :force => true do |t|
+    t.string   "uuid"
+    t.string   "classname"
+    t.string   "fq_classname"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otrunk_imports", ["fq_classname"], :name => "index_otrunk_example_otrunk_imports_on_fq_classname", :unique => true
+
+  create_table "otrunk_example_otrunk_view_entries", :force => true do |t|
+    t.string   "uuid"
+    t.integer  "otrunk_import_id"
+    t.string   "classname"
+    t.string   "fq_classname"
+    t.boolean  "standard_view"
+    t.boolean  "standard_edit_view"
+    t.boolean  "edit_view"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
     t.integer  "page_id"
@@ -288,12 +664,13 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -336,6 +713,21 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
     t.datetime "updated_at"
   end
 
+  create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "property_id"
+    t.integer "versioned_jnlp_id"
+  end
+
+  create_table "raw_otmls", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "otml_content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", :force => true do |t|
     t.string  "title"
     t.integer "position"
@@ -350,12 +742,13 @@ ActiveRecord::Schema.define(:version => 20090526152312) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "sections", ["position"], :name => "index_sections_on_position"

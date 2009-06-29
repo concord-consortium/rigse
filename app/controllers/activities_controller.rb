@@ -5,7 +5,7 @@ class ActivitiesController < ApplicationController
     :page_layout=>:landscape,
   }
   before_filter :setup_object, :except => [:index]
-
+  before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create]
@@ -13,6 +13,7 @@ class ActivitiesController < ApplicationController
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
   
+
   protected  
 
   def can_create
@@ -20,6 +21,10 @@ class ActivitiesController < ApplicationController
       flash[:error] = "Anonymous users can not create activities"
       redirect_back_or activities_path
     end
+  end
+  
+  def render_scope
+    @render_scope = @activity
   end
 
   def can_edit
@@ -67,16 +72,18 @@ class ActivitiesController < ApplicationController
   public
   
   def index
-    if params[:mine_only]
-      @pages = Activity.search(params[:search], params[:page], self.current_user)
-    else
-      @pages = Activity.search(params[:search], params[:page], nil)
-    end
-    @paginated_objects = @pages    
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @pages }
+      format.html do
+        if params[:mine_only]
+          @activities = Activity.search(params[:search], params[:page], self.current_user)
+        else
+          @activities = Activity.search(params[:search], params[:page], nil)
+        end
+      end
+      format.xml do
+        @activities = Activity,find(:all)
+        render :xml => @activities
+      end
     end
   end
 
@@ -84,6 +91,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/1.xml
   def show
     @activity = Activity.find(params[:id])
+    @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @activity }
@@ -182,9 +190,8 @@ class ActivitiesController < ApplicationController
   ##
   def add_section
     @section = Section.new
-    @activity = Activity.find(params['id'])
+    @section.activity = Activity.find(params['id'])
     @section.user = current_user
-    @section.activity = @activity
   end
   
   ##
@@ -213,11 +220,46 @@ class ActivitiesController < ApplicationController
   ##
   def duplicate
     @original = Activity.find(params['id'])
-    @activity = @original.clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @activity.name = "copy of #{@activity.name}"
     @activity.deep_set_user current_user
     @activity.save
     redirect_to edit_activity_url(@activity)
+  end
+  
+  #
+  # Construct a link suitable for a 'paste' action in this controller.
+  #
+  def paste_link
+    render :partial => 'shared/paste_link', :locals =>{:types => ['section'],:parmas => params}
+  end
+
+  #
+  # In an Activities controller, we only accept section clipboard data,
+  # 
+  def paste
+    if @activity.changeable?(current_user)
+      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
+      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
+      klass = clipboard_data_type.pluralize.classify.constantize
+      @original = klass.find(clipboard_data_id)
+      if (@original) 
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:pages => {:page_elements => :embeddable}}
+        if (@component)
+          # @component.original = @original
+          @container = params[:container] || 'activity_sections_list'
+          @component.name = "copy of #{@component.name}"
+          @component.deep_set_user current_user
+          @component.save
+        end
+      end
+    end
+    render :update do |page|
+      page.insert_html :bottom, @container, render(:partial => 'section_list_item', :locals => {:section => @component})
+      page.sortable :activity_sections_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_sections', :params => {:activity_id => @activity.id }}
+      page[dom_id_for(@component, :item)].scrollTo()
+      page.visual_effect :highlight, dom_id_for(@component, :item)
+    end
   end
   
   def export

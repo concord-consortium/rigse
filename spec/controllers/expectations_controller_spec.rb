@@ -8,7 +8,7 @@ describe ExpectationsController do
   
   describe "responding to GET index" do
 
-    it "should expose all expectations as @expectations" do
+    it "should expose an array of all the @expectations" do
       Expectation.should_receive(:find).with(:all).and_return([mock_expectation])
       get :index
       assigns[:expectations].should == [mock_expectation]

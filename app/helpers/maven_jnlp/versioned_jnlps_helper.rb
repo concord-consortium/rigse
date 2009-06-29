@@ -1,0 +1,2 @@
+module MavenJnlp::VersionedJnlpsHelper
+end

@@ -7,12 +7,20 @@ class Activity < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   
-  has_many :data_collectors,
-     :finder_sql => 'SELECT data_collectors.* FROM data_collectors
-     INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
-     INNER JOIN pages ON page_elements.page_id = pages.id    
-     INNER JOIN sections ON pages.section_id = sections.id  
-     WHERE sections.activity_id = #{id}'  
+  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
+    eval "has_many :#{klass.table_name},
+      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
+      INNER JOIN pages ON page_elements.page_id = pages.id 
+      INNER JOIN sections ON pages.section_id = sections.id  
+      WHERE sections.activity_id = \#\{id\}'"
+  end
+  
+  has_many :page_elements,
+    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id}'
   
   include Noteable # convinience methods for notes...
   
@@ -24,12 +32,24 @@ class Activity < ActiveRecord::Base
   
   @@searchable_attributes = %w{name description}
   
+  send_update_events_to :investigation
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
   end
   
+  def parent
+    return investigation
+  end
+  
+  def children
+    sections
+  end
+
+  include TreeNode     
+
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -48,17 +68,10 @@ class Activity < ActiveRecord::Base
   
   def deep_set_user user
     self.user = user
-    self.sections.each do |s| 
-      s.user = user
-      s.pages.each do |p|
-        p.user = user
-        p.page_elements.each do |e|
-          if e.embeddable
-            e.embeddable.user = user
-          end
-        end
-      end
+    self.sections.each do |s|
+      s.deep_set_user(user)
     end
+    self.save
   end
   
     
@@ -500,7 +513,7 @@ HEREDOC
     teacher_notes << TeacherNote.create
     return teacher_notes[0]
   end
-  
+
 end
 
 

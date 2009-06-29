@@ -5,10 +5,10 @@
         - content_tag :label do
           = text_field_tag :search, params[:search], :size => 30
         %input{ :type => "submit", :value => "Search"}
-      - if @paginated_objects
-        %p= page_entries_info @paginated_objects
+      - if @activities
+        %p= page_entries_info @activities
       %p.paginator
-        = will_paginate @paginated_objects
+        = will_paginate @activities
     .action_menu_header_right
       %ul.menu
         -unless current_user.anonymous?

@@ -6,14 +6,16 @@
       %dt Domain
       %dd
         = h(assessment_target.knowledge_statement.domain.name)
-      %dt Unifying Theme
+      %dt Unifying Themes
       %dd
-        = assessment_target.unifying_theme ? h(assessment_target.unifying_theme.name) : "null"
-      %dt Big Ideas
-      %dd
-        - if assessment_target.unifying_theme
-          - for big_idea in assessment_target.unifying_theme.big_ideas do
-            = big_idea ? "#{h(big_idea.description)}; " : "null"
+        - themes = assessment_target.unifying_themes
+        - themes.each do |theme|
+          %ul
+            %li
+              = theme ? h(theme.name) : "null"
+              %br
+              - theme.big_ideas.each do |big_idea|
+                = big_idea ? "#{h(big_idea.description)}; " : "null"
       %dt Knowledge Statement
       %dd
         = assessment_target.knowledge_statement ? h(assessment_target.knowledge_statement.description) : "null"

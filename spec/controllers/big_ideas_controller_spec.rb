@@ -8,7 +8,7 @@ describe BigIdeasController do
   
   describe "responding to GET index" do
 
-    it "should expose all big_ideas as @big_ideas" do
+    it "should expose an array of all the @big_ideas" do
       BigIdea.should_receive(:find).with(:all).and_return([mock_big_idea])
       get :index
       assigns[:big_ideas].should == [mock_big_idea]

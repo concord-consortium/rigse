@@ -10,8 +10,11 @@ module Ccportal
       end
     end
 
-  #  self.table_name_prefix = ""
-    establish_connection :ccportal
-
+    #  self.table_name_prefix = ""
+    begin
+      establish_connection :ccportal
+    rescue
+      puts "unable to establish connection for ccportal (models/ccportal/ccportal)"
+    end
   end
 end

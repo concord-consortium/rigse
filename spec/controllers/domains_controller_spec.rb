@@ -8,7 +8,7 @@ describe DomainsController do
   
   describe "responding to GET index" do
 
-    it "should expose all domains as @domains" do
+    it "should expose an array of all the @domains" do
       Domain.should_receive(:find).with(:all).and_return([mock_domain])
       get :index
       assigns[:domains].should == [mock_domain]

@@ -1,4 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe AssessmentTargetsController do
 
@@ -8,8 +9,8 @@ describe AssessmentTargetsController do
   
   describe "responding to GET index" do
 
-    it "should expose all assessment_targets as @assessment_targets" do
-      AssessmentTarget.should_receive(:find).with(:all).and_return([mock_assessment_target])
+    it "should expose an array of all the @assessment_targets" do
+      AssessmentTarget.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_assessment_target])
       get :index
       assigns[:assessment_targets].should == [mock_assessment_target]
     end

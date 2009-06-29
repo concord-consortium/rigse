@@ -6,6 +6,7 @@
 @import action_menu_tab.sass
 @import notes.sass
 @import drop_down.sass
+@import data_table.sass
 
 p
   :margin 1em 0em
@@ -15,6 +16,8 @@ ol
   :list-style-type decimal
   :list-style-position inside
 
+em
+  :font-style italic 
 
 body
   +reset
@@ -76,12 +79,12 @@ fieldset
 #header
   +column(24,true)
   :vertical-align bottom
-  :line-height 2em
-  :padding-bottom 10px
+  :line-height 1.25em
+  :padding-bottom 1.25em
   :background-color = !rieps_brown
   :background
     :image url(/images/header-bg.jpg) 
-    :repeat repeat
+    :repeat repeat-x
   :color white
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
@@ -107,6 +110,20 @@ fieldset
 
     a
       :display block
+      
+#waiter
+  :z-index 20
+  :font-size 9pt
+  :margin 1em
+  :padding 4em
+  +content_area_colors
+  :text-align left  
+  :position fixed
+  :margin-left 25%
+  :width 50%
+  :z-index 20
+  :height auto
+  :border 2px solid
     
 #nav_top
   +column(24,true)
@@ -116,7 +133,7 @@ fieldset
 
 .main_content_colors
   +content_area_colors
-  
+
 #content_container
   :display block
   +column(24,true)
@@ -200,9 +217,10 @@ ul.menu
   :font-size 0.6em
   :color= !dev_note_color
   a a:visited a:active a:hover
+
+.teacher_only
+  :background-color= !teacher_only_color !important
   
-  
-    
 .legend
   :font-size 0.8em
   :letter-spacing 0.1em
@@ -389,10 +407,9 @@ li.tiny
 .flash
   +left_nav_colors
   :font-weight bold
-  :border 1px solid
+  :text-align center
   :display block
   :clear both
-  :margin-top 10px
 .flash_error
   :color= !dark_red
 
