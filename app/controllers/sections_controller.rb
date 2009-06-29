@@ -229,7 +229,7 @@ class SectionsController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.clone :include =>  {:page_elements => :embeddable}
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'section_pages_list'
