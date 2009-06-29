@@ -31,6 +31,7 @@ module SendUpdateEvents
       
       def _update_time(record)
         obj = record.send @destination
+        return unless obj
         dest_recs = obj.is_a?(Array) ? obj : [obj]
         dest_recs.each do |dest_rec|
           dest_rec.update_attribute(:updated_at, Time.now)

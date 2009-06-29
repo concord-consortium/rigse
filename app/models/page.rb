@@ -155,7 +155,7 @@ class Page < ActiveRecord::Base
 
   def investigation
     activity = find_activity
-    investigation = activity ? activity.investigation : null
+    investigation = activity ? activity.investigation : nil
   end
   
 end
