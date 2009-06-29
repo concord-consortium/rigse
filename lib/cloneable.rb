@@ -17,7 +17,7 @@ module Cloneable
 #    end
 #  end
 
-  def clone(options)
+  def clone(options = {})
     new_assocs = self.class.cloneable_associations
     # puts("new associations are: '#{new_assocs.join("','")}'")
     if new_assocs.size > 0
