@@ -267,7 +267,7 @@ class PagesController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.clone 
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
         if (@component)
           @container = params['container'] || 'elements_container'
           @component.name = "copy of #{@component.name}"

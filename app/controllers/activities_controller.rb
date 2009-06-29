@@ -244,7 +244,7 @@ class ActivitiesController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.clone :include => {:pages => {:page_elements => :embeddable}}
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:pages => {:page_elements => :embeddable}}
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'activity_sections_list'

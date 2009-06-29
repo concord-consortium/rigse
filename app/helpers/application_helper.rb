@@ -297,7 +297,8 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat link_to(name_for_component(embeddable), embeddable)
+          #haml_concat link_to(name_for_component(embeddable), embeddable)
+          haml_concat name_for_component(embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
