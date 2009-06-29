@@ -41,6 +41,9 @@ end
   acts_as_replicatable
 
   include Changeable
+  
+  include Cloneable
+  @@cloneable_associations = [:biologica_world]
 
   self.extend SearchableModel
   
@@ -54,6 +57,9 @@ end
     end
     def available_sexes
       @@available_sexes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 
