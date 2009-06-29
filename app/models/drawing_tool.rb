@@ -19,7 +19,7 @@ class DrawingTool < ActiveRecord::Base
     end
   end
 
-  default_value_for :name, "Drawingtool element"
+  default_value_for :name, "Draw Tool"
   default_value_for :description, "description ..."
 
   send_update_events_to :investigations
