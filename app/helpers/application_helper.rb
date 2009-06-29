@@ -503,15 +503,21 @@ module ApplicationHelper
   end
   
   #
-  # is a component viewable only by teacher
+  # is a component viewable only by teacher?
+  # cascading logic.
+  # TODO: generic container-based method-forwarding mechanism
   #
   def teacher_only?(thing)
-    if (thing.teacher_only?)
+    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
       return true;
     end
-    while ((thing = thing.parent()) != nil) 
-      if (thing.teacher_only?)
-        return true
+    if (thing.respond_to?("parent"))
+      while (thing = thing.parent)
+        if (thing.respond_to?("teacher_only?"))
+          if thing.teacher_only? 
+            return true
+          end
+        end
       end
     end
     return false

@@ -33,9 +33,18 @@ class BiologicaBreedOffspring < ActiveRecord::Base
   default_value_for :width, 400
   default_value_for :height, 200
   
+  send_update_events_to :investigations
+  
   def self.display_name
     "Biologica Breed Offspring"
   end
 
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
 end

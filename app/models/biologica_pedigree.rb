@@ -51,9 +51,18 @@ class BiologicaPedigree < ActiveRecord::Base
   default_value_for :minimum_number_children, 3
   default_value_for :maximum_number_children, 5
 
+  send_update_events_to :investigations
+
   def self.display_name
     "Biologica Pedigree"
   end
 
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
 end

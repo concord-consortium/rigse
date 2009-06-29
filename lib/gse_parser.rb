@@ -10,10 +10,18 @@ class GseParser
   
   attr_accessor :logger
   
-  def initialize
+  def initialize(options={})
     @domains = {}
     @themes = {}
+    @verbose = true
     @logger = Logger.new(STDOUT)
+    if options.has_key?(:verbose)
+      @verbose = options[:verbose]
+      logger.level = Logger::ERROR unless @verbose
+    else
+      @verbose = true
+      logger.level = Logger::INFO
+    end
   end
 
   def pre_parse
@@ -72,10 +80,10 @@ class GseParser
     domains = {}
     data = YAML::load(File.open(domain_yaml))
     data.keys.each do |key| 
-      puts key
+      logger.info(key)
       d = Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
-      puts d.inspect
+      logger.info(d.inspect)
       domains[key] = d
     end
     domains

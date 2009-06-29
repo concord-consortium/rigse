@@ -32,6 +32,8 @@ class Activity < ActiveRecord::Base
   
   @@searchable_attributes = %w{name description}
   
+  send_update_events_to :investigation
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -42,6 +44,12 @@ class Activity < ActiveRecord::Base
     return investigation
   end
   
+  def children
+    sections
+  end
+
+  include TreeNode     
+
   def teacher_note
     if teacher_notes[0]
       return teacher_notes[0]
@@ -506,20 +514,6 @@ HEREDOC
     return teacher_notes[0]
   end
 
-  ## in_place_edit_for calls update_attribute.
-  def update_attribute(name, value)
-    update_investigation_timestamp if super(name, value)
-  end
-
-  ## Update timestamp of investigation that the activity belongs to 
-  def update_investigation_timestamp
-    investigation = self.investigation
-    if investigation
-      investigation.update_attributes(:updated_at => Time.now)
-      investigation.save!
-    end
-  end
-    
 end
 
 

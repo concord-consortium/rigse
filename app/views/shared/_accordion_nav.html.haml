@@ -28,8 +28,8 @@
                 -s.pages.each_with_index do |p,i|
                   - style = teacher_only?(p) ? "rollover teacher_only" : "rollover"
                   - if (defined? @page) && (p.id == @page.id)
-                    = link_button "this_page.png", "#", :title => "you are here", :class => style
+                    = link_button "this_node.png", "#", :title => "you are here", :class => style
                   - else
-                    = link_button "other_page.png", p, :title => "go to #{p.name}", :class => style
+                    = link_button "other_node.png", p, :title => "go to #{p.name}", :class => style
           =sortable_element section_list_name.to_sym, :url=> {:controller=> :activities, :action => 'sort_sections', :params => {:list_name=>section_list_name,:id => activity.id }}
     =sortable_element activity_list_name.to_sym, :url=> {:controller=> :investigations, :action => 'sort_activities', :params => {:list_name=>activity_list_name,:id => investigation.id }}

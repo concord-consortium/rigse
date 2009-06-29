@@ -40,9 +40,18 @@ class BiologicaChromosomeZoom < ActiveRecord::Base
   default_value_for :organism_label_type, 0
   default_value_for :zoom_level, 0
 
+  send_update_events_to :investigations
+  
   def self.display_name
     "Biologica Chromosome Zoom"
   end
 
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
 end

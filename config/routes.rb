@@ -1,6 +1,13 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :biologica_chromosome_zooms
-  map.resources :inner_pages
+  map.resources :inner_pages, :member => {
+    :destroy => :post,
+    :add_page => :post,
+    :add_element => :post,
+    :set_page => :post,
+    :sort_pages => :post, 
+    :delete_page => :post
+  }
 
   map.resources :biologica_multiple_organisms
   map.resources :biologica_breed_offsprings

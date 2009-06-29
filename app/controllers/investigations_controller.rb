@@ -219,7 +219,7 @@ class InvestigationsController < ApplicationController
   ##
   def delete_activity
     @activity= Activity.find(params['activity_id'])
-    @activity.update_investigation_timestamp
+    # @activity.update_investigation_timestamp
     @activity.destroy
   end  
   

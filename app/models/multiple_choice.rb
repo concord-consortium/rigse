@@ -26,6 +26,8 @@ class MultipleChoice < ActiveRecord::Base
   default_value_for :name, "Multiple Choice Question element"
   default_value_for :description, "description ..."
 
+  send_update_events_to :investigations
+
   def self.display_name
     "Multiple Choice Question"
   end
@@ -33,6 +35,14 @@ class MultipleChoice < ActiveRecord::Base
   def to_xml(options ={})
     options[:incude] = :choices
     super(options)
+  end
+
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
   end
 
 end

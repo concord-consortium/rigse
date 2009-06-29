@@ -29,6 +29,8 @@ class BiologicaStaticOrganism < ActiveRecord::Base
   default_value_for :name, "Biologica Static Organism element"
   default_value_for :description, "description ..."
 
+  send_update_events_to :investigations
+
   def self.display_name
     "Biologica Static Organism View"
   end
@@ -38,6 +40,14 @@ class BiologicaStaticOrganism < ActiveRecord::Base
       scope.activity.biologica_organisms - [self]
     else
       []
+    end
+  end
+
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
     end
   end
 

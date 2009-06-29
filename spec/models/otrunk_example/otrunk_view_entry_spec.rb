@@ -4,7 +4,7 @@ describe OtrunkExample::OtrunkViewEntry do
   before(:each) do
     @valid_attributes = {
       :uuid => "value for uuid",
-      :otml_import_id => 1,
+      :otrunk_import_id => 1,
       :classname => "value for classname",
       :fq_classname => "value for fq_classname"
     }

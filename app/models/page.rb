@@ -15,12 +15,22 @@ class Page < ActiveRecord::Base
   has_many :inner_page_pages 
   has_many :inner_pages, :through => :inner_page_pages
   
-  @@element_types = [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,BiologicaChromosome,BiologicaChromosomeZoom,BiologicaBreedOffspring,BiologicaPedigree,BiologicaMultipleOrganism,BiologicaMeiosisView,
+  @@element_types =     [DataCollector,DrawingTool,OpenResponse,Xhtml,MultipleChoice,DataTable,MwModelerPage,NLogoModel,
+        BiologicaWorld,BiologicaOrganism,BiologicaStaticOrganism,
+        BiologicaChromosome,
+        BiologicaChromosomeZoom,
+        BiologicaBreedOffspring,
+        BiologicaPedigree,
+        BiologicaMultipleOrganism,
+        BiologicaMeiosisView,
+        InnerPage
         # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 
   @@element_types.each do |type|
-    eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    unless defined? type.dont_make_associations
+      eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+    end
   end
 
   has_many :teacher_notes, :as => :authored_entity
@@ -38,6 +48,8 @@ class Page < ActiveRecord::Base
   default_value_for :position, 1;
   default_value_for :description, "describe the purpose of this page here..."
 
+  send_update_events_to :investigation
+  
   def Page::element_types
     @@element_types
   end
@@ -51,20 +63,34 @@ class Page < ActiveRecord::Base
   end
   
   def page_number
-    if (!self.parent.nil?)
-      self.parent.pages.each_with_index do |p,i|
-        if (p.id==self.id)
-          return i+1
-        end
-      end
+    if (self.parent)
+      return self.parent.children.index(self)+1
     end
-     1
+    return 0
+  end
+  
+  def find_section
+    case parent
+      when Section 
+        return parent
+      when InnerPage
+        # kind of hackish:
+        if(parent.pages[0])
+          return parent.pages[0].section
+        end
+    end
+    return nil
+  end
+  
+  def find_activity
+    if(find_section)
+      return find_section.activity
+    end
   end
   
   def default_page_name
     return "#{page_number}"
   end
-  
   
   def name
     if self[:name] && !self[:name].empty?
@@ -114,20 +140,8 @@ class Page < ActiveRecord::Base
     return teacher_notes[0]
   end
   
-  def next
-    if parent
-      return parent.next(self)
-    end
-    return nil
-  end
-  
-  def previous
-    if parent
-      return parent.previous(self)
-    end
-    return nil
-  end
-  
+  include TreeNode
+      
   def deep_set_user user
     self.user = user
     self.page_elements.each do |e|
@@ -139,15 +153,9 @@ class Page < ActiveRecord::Base
     self.save
   end
 
-  ## in_place_edit_for calls update_attribute.
-  def update_attribute(name, value)
-    update_investigation_timestamp if super(name, value)
-  end
-
-  ## Update timestamp of investigation that the page belongs to
-  def update_investigation_timestamp
-    section = self.section
-    section.update_investigation_timestamp if section
+  def investigation
+    activity = find_activity
+    investigation = activity ? activity.investigation : nil
   end
   
 end
