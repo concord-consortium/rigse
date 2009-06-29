@@ -82,12 +82,14 @@ class InnerPagesController < ApplicationController
   def show
     @inner_page = InnerPage.find(params[:id])
     @page = @inner_page.children[0]
+    @teacher_mode = params['teacher_mode'] || false
+    
     if request.xhr?
-      render :partial => 'inner_page', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first }
+      render :partial => 'inner_page', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first}
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/inner_page" } # inner_page.otml.haml
+        format.otml { render :layout => "layouts/inner_page"} # inner_page.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @inner_page } }
         format.xml  { render :inner_page => @inner_page }
       end
