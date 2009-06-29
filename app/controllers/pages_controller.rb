@@ -243,7 +243,7 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @page.deep_clone :no_duplicates => true, :include => {:page_elements => :embeddable}
+    @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
     @copy.name = "copy of #{@page.name}"
     @copy.save
     @section = @copy.section

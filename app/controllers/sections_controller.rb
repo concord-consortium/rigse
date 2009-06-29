@@ -205,7 +205,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @section.deep_clone :no_duplicates => true, :include => {:pages => {:page_elements => :embeddable}}
+    @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
     @activity = @copy.activity
