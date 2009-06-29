@@ -1,11 +1,5 @@
 %div{ :id => dom_id_for(inner_page, :item), :class => 'item' }
-  .action_menu
-    .action_menu_header_left
-      inner page
-    .action_menu_header_right
-      = remote_link_button "add.png", :url => add_page_inner_page_path(inner_page), :title => "add new page"
-      
-  #inner_page_area
-    - if inner_page.sub_pages.first
-      = render :partial=> 'inner_pages/page', :locals=>{:sub_page => inner_page.sub_pages.first, :inner_page => inner_page}
+  %div{ :id => dom_id_for(inner_page, :inner_page_area), :class => 'item' }
+    = render :partial=> 'inner_pages/page', :locals=>{:sub_page => inner_page.sub_pages.first, :inner_page => inner_page}
+
      

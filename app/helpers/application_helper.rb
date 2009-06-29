@@ -359,7 +359,7 @@ module ApplicationHelper
   end
 
   def dropdown_button(image,options={})
-    name = image.gsub(/\..*/,'') # remove extension of filename
+    name = options[:name] || image.gsub(/\..*/,'') # remove extension of filename
     if options[:name_postfix]
       postfix = options[:name_postfix]
       content_id = "#{name}_#{postfix}_menu"
@@ -370,7 +370,7 @@ module ApplicationHelper
     end
     defaults = {
       :name       =>  name,
-      :text       =>  image_tag(image,:title => name),
+      :text       =>  image_tag(image,:title => options[:title] || name),
       :class      => 'rollover',
       :content_id => content_id,
       :id         => id

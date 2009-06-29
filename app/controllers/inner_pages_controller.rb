@@ -3,7 +3,6 @@ class InnerPagesController < ApplicationController
   # GET /inner_pages.xml
   def index    
     @inner_pages = InnerPage.search(params[:search], params[:page], nil)
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @inner_pages}
@@ -15,25 +14,19 @@ class InnerPagesController < ApplicationController
     @inner_page = InnerPage.find(params['id'])
     @new_page = Page.create
     @new_page.user = current_user
-    @inner_page.sub_pages << @new_page
-    @new_page.save
-    @inner_page.save
-    page_html = render_to_string :partial => "page", :locals => {:sub_page => @new_page, :inner_page => @inner_page}
-    render :update do |page|
-       page['inner_page_area'].replace_html(page_html)
-       # page['inner_page_area'].replace_html("page_html")
-    end
+    @inner_page << @new_page
+    render :partial => "page", :locals => {:sub_page => @new_page, :inner_page => @inner_page}
   end
   
   def delete_page
     @inner_page = InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
+    last_number = @page.page_number
+    last_number = last_number - 1 
     @inner_page.delete_page(@page)
-    
-    page_html = render_to_string :partial => "page", :locals => {:sub_page => @inner_page[0], :inner_page => @inner_page}
-    render :update do |page|
-       page['inner_page_area'].replace_html(page_html)
-    end
+    last_number = last_number > 1 ? (last_number -1) : 0
+    @page = @inner_page.sub_pages[last_number]
+    render :partial => "page", :locals => {:sub_page => @inner_page.sub_pages[last_number], :inner_page => @inner_page}
   end
 
   def set_page
@@ -51,6 +44,7 @@ class InnerPagesController < ApplicationController
   ## optional parameter "container" tells us what DOM ID to add our results too...
   ##
   def add_element
+    @inner_page = InnerPage.find(params['id'])
     @page = Page.find(params['page_id'])
     @container = params['container'] || 'elements_container'
 
@@ -89,7 +83,7 @@ class InnerPagesController < ApplicationController
     @inner_page = InnerPage.find(params[:id])
     @page = @inner_page.children[0]
     if request.xhr?
-      render :partial => 'inner_page', :locals => { :inner_page => @inner_page }
+      render :partial => 'inner_page', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first }
     else
       respond_to do |format|
         format.html # show.html.haml

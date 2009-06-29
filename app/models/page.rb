@@ -160,4 +160,11 @@ class Page < ActiveRecord::Base
     investigation = activity ? activity.investigation : nil
   end
   
+  def has_inner_page?
+    i_pages = page_elements.collect {|e| e.embeddable_type == InnerPage.name}
+    if (i_pages.size > 0) 
+      return true
+    end
+    return false
+  end
 end
