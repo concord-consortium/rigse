@@ -4,7 +4,6 @@ module DeepCloning
   def self.included(base) #:nodoc:
     base.alias_method_chain :clone, :deep_cloning
     base.module_eval do
-      # FIXME Need to be able to recursively except attributes
       @@no_dupes = false
       @@seen_source_objects = {}
       @@never_clone_attrs = []
