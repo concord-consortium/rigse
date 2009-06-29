@@ -3,9 +3,9 @@
     = inner_page.menu_name
   .action_menu_header_right
     - if (inner_page.changeable?(current_user))
-      = remote_link_button "add.png", :url => add_page_inner_page_path(inner_page, :id=>inner_page.id), :title => "add new page", :update => 'inner_page_area'
+      = remote_link_button "add.png", :url => add_page_inner_page_path(inner_page, :id=>inner_page.id), :title => "add new page", :update => dom_id_for(inner_page, :inner_page_area)
     
-- if inner_page.sub_pages.first
+- if sub_page
   = render :partial=> 'inner_pages/page_header', :locals=>{:page => sub_page, :inner_page=>inner_page}
   = sub_page.name
   = sub_page.description

@@ -3,7 +3,6 @@ class InnerPagesController < ApplicationController
   # GET /inner_pages.xml
   def index    
     @inner_pages = InnerPage.search(params[:search], params[:page], nil)
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @inner_pages}
@@ -27,11 +26,7 @@ class InnerPagesController < ApplicationController
     @inner_page.delete_page(@page)
     last_number = last_number > 1 ? (last_number -1) : 0
     @page = @inner_page.sub_pages[last_number]
-    if (@page)
-       render :partial => "page", :locals => {:sub_page => @inner_page.sub_pages[last_number], :inner_page => @inner_page}
-    else
-     render :text => "<div></div>"
-    end
+    render :partial => "page", :locals => {:sub_page => @inner_page.sub_pages[last_number], :inner_page => @inner_page}
   end
 
   def set_page
@@ -88,7 +83,7 @@ class InnerPagesController < ApplicationController
     @inner_page = InnerPage.find(params[:id])
     @page = @inner_page.children[0]
     if request.xhr?
-      render :partial => 'inner_page', :locals => { :inner_page => @inner_page }
+      render :partial => 'inner_page', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first }
     else
       respond_to do |format|
         format.html # show.html.haml

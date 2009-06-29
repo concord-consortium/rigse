@@ -1,7 +1,7 @@
 #inner_page_add_menu.dropdown
   %ul
     - Page::element_types.each do |type|
-      %li= link_to_remote "#{type.display_name}", :update =>:inner_page_area, :url => url_for(:controller =>'inner_pages', :action => 'add_element', :class_name => type.name, :id=>inner_page.id, :page_id => page.id), :html => {:class=>'action'}, :complete => mce_init_string
+      %li= link_to_remote "#{type.display_name}", :update =>dom_id_for(inner_page, :inner_page_area), :url => url_for(:controller =>'inner_pages', :action => 'add_element', :class_name => type.name, :id=>inner_page.id, :page_id => page.id), :html => {:class=>'action'}, :complete => mce_init_string
 
 / The action for the inner pages is temporarily disabled... 
 /
@@ -34,7 +34,7 @@
     - if (page.changeable?(current_user))
       = dropdown_button "add.png", :name=> 'inner_page_add', :title => 'add content to this page'
     - if (page.previous)
-      = remote_link_button "previous_node.png", :url => set_page_inner_page_path(:page_id =>page.previous, :id=>inner_page.id), :title => "go to previous page", :update => :inner_page_area
+      = remote_link_button "previous_node.png", :url => set_page_inner_page_path(:page_id =>page.previous, :id=>inner_page.id), :title => "go to previous page", :update => dom_id_for(inner_page, :inner_page_area)
     - else
       .rollover= image_tag("previous_node_disabled.png")
     / - if page.parent
@@ -44,10 +44,10 @@
     /     - else
     /       = link_button "other_node.png", p, :title => "go to #{p.name}"
     - if (page.next)
-      = remote_link_button "next_node.png", :url => set_page_inner_page_path(:page_id => page.next,:id=>inner_page.id), :title => 'next page', :update => :inner_page_area
+      = remote_link_button "next_node.png", :url => set_page_inner_page_path(:page_id => page.next,:id=>inner_page.id), :title => 'next page', :update => dom_id_for(inner_page, :inner_page_area)
     - else
       .rollover= image_tag("next_node_disabled.png")
     - if (page.changeable?(current_user))
-      = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_inner_page_path(:page_id =>page, :id=>inner_page.id), :title => "delete page", :update => :inner_page_area
+      = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_inner_page_path(:page_id =>page, :id=>inner_page.id), :title => "delete page", :update => dom_id_for(inner_page, :inner_page_area)
     - if (page.section)
       = link_button "up.png", page.section, :title => 'go to section'

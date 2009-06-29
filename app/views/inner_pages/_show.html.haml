@@ -1,5 +1,5 @@
 %div{ :id => dom_id_for(inner_page, :item), :class => 'item' }
-  #inner_page_area
+  %div{ :id => dom_id_for(inner_page, :inner_page_area), :class => 'item' }
     = render :partial=> 'inner_pages/page', :locals=>{:sub_page => inner_page.sub_pages.first, :inner_page => inner_page}
 
      
