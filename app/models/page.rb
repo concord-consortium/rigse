@@ -64,9 +64,11 @@ class Page < ActiveRecord::Base
   
   def page_number
     if (self.parent)
-      return self.parent.children.index(self)+1
+      index = self.parent.children.index(self)
+      ## If index is nil, assume it's a new page
+      return index ? index + 1 : self.parent.children.size + 1
     end
-    return 0
+    0
   end
   
   def find_section
