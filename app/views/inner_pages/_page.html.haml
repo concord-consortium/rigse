@@ -7,6 +7,4 @@
     
 - if sub_page
   = render :partial=> 'inner_pages/page_header', :locals=>{:page => sub_page, :inner_page=>inner_page}
-  = sub_page.name
-  = sub_page.description
   = render :partial=> 'pages/show', :locals=>{:page => sub_page, :inner_page=>inner_page}
