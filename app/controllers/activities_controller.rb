@@ -250,6 +250,7 @@ class ActivitiesController < ApplicationController
           @container = params[:container] || 'activity_sections_list'
           @component.name = "copy of #{@component.name}"
           @component.deep_set_user current_user
+          @component.activity = @activity
           @component.save
         end
       end
