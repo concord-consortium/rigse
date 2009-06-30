@@ -235,6 +235,7 @@ class SectionsController < ApplicationController
           @container = params[:container] || 'section_pages_list'
           @component.name = "copy of #{@component.name}"
           @component.deep_set_user current_user
+          @component.section = @section
           @component.save
         end
       end

@@ -268,6 +268,7 @@ class InvestigationsController < ApplicationController
           @container = params[:container] || 'investigation_activities_list'
           @component.name = "copy of #{@component.name}"
           @component.deep_set_user current_user
+          @component.investigation = @investigation
           @component.save
         end
       end

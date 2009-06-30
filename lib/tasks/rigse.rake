@@ -100,6 +100,7 @@ namespace :rigse do
     desc "regenerate the REST_AUTH_SITE_KEY -- all passwords will become invalid"
     task :regenerate_rest_auth_site_key => :environment do
       
+      gem "uuidtools", '>= 2.0.0'
       require 'uuidtools'
       
       puts <<HEREDOC

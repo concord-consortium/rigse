@@ -82,9 +82,9 @@ module ApplicationHelper
   end
 
 
-  def render_show_partial_for(component)
+  def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
+    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)
@@ -297,7 +297,8 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat link_to(name_for_component(embeddable), embeddable)
+          #haml_concat link_to(name_for_component(embeddable), embeddable)
+          haml_concat name_for_component(embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
@@ -312,13 +313,11 @@ module ApplicationHelper
           end              
           if (embeddable.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            restrict_to 'admin || manager' do
-              begin
-                if embeddable.authorable_in_java?
-                  haml_concat otrunk_edit_button_for(embeddable, options)
-                end
-              rescue NoMethodError
+            begin
+              if embeddable.authorable_in_java?
+                haml_concat otrunk_edit_button_for(embeddable, options)
               end
+            rescue NoMethodError
             end
             haml_concat edit_button_for(embeddable, options)
             haml_concat delete_button_for(component)

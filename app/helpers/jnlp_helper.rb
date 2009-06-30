@@ -23,6 +23,7 @@ module JnlpHelper
   def system_properties(options={})
     if options[:authoring]
       additional_properties = [
+        ['otrunk.view.author', 'true'],
         ['otrunk.view.mode', 'authoring'],
         ['otrunk.remote_save_data', 'true'],
         ['otrunk.rest_enabled', 'true'],
@@ -31,6 +32,7 @@ module JnlpHelper
     else
       additional_properties = [
         ['otrunk.view.mode', 'student'],
+        ['otrunk.view.no_user', 'true' ],
       ]
     end
     jnlp_adaptor.system_properties + additional_properties

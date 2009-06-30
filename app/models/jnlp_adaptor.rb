@@ -34,9 +34,6 @@ class JnlpAdaptor
     jnlp_properties = @jnlp.properties.collect { |prop| [prop.name, prop.value] }
     custom_properties = [
      ['otrunk.view.export_image', 'true'],
-     ['otrunk.view.author', 'true'],
-     ['_otrunk.view.debug', 'true'],
-     ['otrunk.view.mode', 'student'],
      ['otrunk.view.status', 'true']
     ]
     jnlp_properties + custom_properties
