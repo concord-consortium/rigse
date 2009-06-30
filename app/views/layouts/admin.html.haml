@@ -86,21 +86,17 @@
           
         - if current_user.has_role?('admin')
           %ul.menu_h.right
-            %li= link_to 'Users', users_path
+            %li= link_to 'Admin', admin_path
 
       #content_container      
-        #left_nav.nav_menu
-          put something here some time.
+        #content_header.main_content_colors
+          = yield :content_header
+        #js_flash{:style=>"display: none;"}
 
-        #main_content.main_content_colors
-          #content_header.main_content_colors
-            = yield :content_header
-          #js_flash{:style=>"display: none;"}
-
-          #flash
-            - flash.each do |key, message|
-              %div{:class=>"flash flash_#{key}"}= message
-          = yield :layout
+        #flash
+          - flash.each do |key, message|
+            %div{:class=>"flash flash_#{key}"}= message
+        = yield :layout
 
       #footer
         .padded_content
