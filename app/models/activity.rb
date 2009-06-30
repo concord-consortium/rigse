@@ -68,9 +68,21 @@ class Activity < ActiveRecord::Base
   
   def deep_set_user user
     self.user = user
+    
     self.sections.each do |s|
       s.deep_set_user(user)
     end
+    
+    self.teacher_notes.each do |tn|
+      tn.user = user
+      tn.save
+    end
+    
+    self.author_notes.each do |an|
+      an.user = user
+      an.save
+    end
+    
     self.save
   end
   
