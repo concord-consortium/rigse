@@ -13,7 +13,7 @@ module ActiveScaffold::Actions
     protected
     
     def show_respond_to_json
-      render :text => response_object.to_yaml, :content_type => Mime::YAML, :status => response_status
+      render :text => response_object.to_json, :content_type => Mime::JSON, :status => response_status
     end
 
     def show_respond_to_yaml
@@ -44,7 +44,8 @@ module ActiveScaffold::Actions
     end
     private 
     def show_authorized_filter
-      raise ActiveScaffold::ActionNotAllowed unless self.send(active_scaffold_config.show.link.security_method)
+      link = active_scaffold_config.show.link || active_scaffold_config.show.class.link
+      raise ActiveScaffold::ActionNotAllowed unless self.send(link.security_method)
     end
     def show_formats
       (default_formats + active_scaffold_config.formats + active_scaffold_config.show.formats).uniq

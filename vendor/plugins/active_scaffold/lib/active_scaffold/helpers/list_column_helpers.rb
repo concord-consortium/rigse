@@ -35,8 +35,12 @@ module ActiveScaffold
                   firsts = value.first(column.associated_limit + 1).collect { |v| v.to_label }
                   firsts[column.associated_limit] = '…' if firsts.length > column.associated_limit
                 end
-                formatted_value = clean_column_value(format_value(firsts.join(', ')))
-                formatted_value << " (#{value.length})" if column.associated_number? and column.associated_limit and firsts.length > column.associated_limit
+                if column.associated_limit == 0
+                  formatted_value = value.length if column.associated_number?
+                else
+                  formatted_value = clean_column_value(format_value(firsts.join(', ')))
+                  formatted_value << " (#{value.length})" if column.associated_number? and column.associated_limit and firsts.length > column.associated_limit
+                end
                 formatted_value
             end
           end
@@ -120,7 +124,7 @@ module ActiveScaffold
       ## Overrides
       ##
       def active_scaffold_column_text(column, record)
-        truncate(clean_column_value(record.send(column.name)), :length => 50)
+        truncate(clean_column_value(record.send(column.name)), :length => column.options[:truncate] || 50)
       end
 
       def active_scaffold_column_checkbox(column, record)

@@ -60,8 +60,8 @@ module ActiveScaffold
       end
 
       def javascript_for_update_column(column, scope, options)
-        if column.options[:update_column]
-          url_params = {:action => 'render_field', :id => @record.id}
+        if column.options.is_a?(Hash) && column.options[:update_column]
+          url_params = {:action => 'render_field', :id => params[:id]}
           url_params[:controller] = controller.class.active_scaffold_controller_for(@record.class).controller_path if scope
 
           parameters = "column=#{column.name}"
@@ -86,7 +86,7 @@ module ActiveScaffold
         selected = associated.nil? ? nil : associated.id
         method = column.association.macro == :belongs_to ? column.association.primary_key_name : column.name
         options[:name] += '[id]'
-        select(:record, method, select_options.uniq, {:selected => selected, :include_blank => as_(:_select_)}, options)
+        select(:record, method, select_options.uniq, {:selected => selected, :include_blank => as_(:_select_)}, options.merge(column.options))
       end
 
       def active_scaffold_input_plural_association(column, options)

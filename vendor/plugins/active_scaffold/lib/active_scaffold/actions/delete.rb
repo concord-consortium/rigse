@@ -36,7 +36,7 @@ module ActiveScaffold::Actions
     end
 
     def destroy_respond_to_yaml
-      render :text => successful? ? "" : response_object.to_json, :content_type => Mime::JSON, :status => response_status
+      render :text => successful? ? "" : response_object.to_yaml, :content_type => Mime::YAML, :status => response_status
     end
 
     def destroy_find_record
@@ -57,7 +57,8 @@ module ActiveScaffold::Actions
     end
     private
     def delete_authorized_filter
-      raise ActiveScaffold::ActionNotAllowed unless self.send(active_scaffold_config.delete.link.security_method)
+      link = active_scaffold_config.delete.link || active_scaffold_config.delete.class.link
+      raise ActiveScaffold::ActionNotAllowed unless self.send(link.security_method)
     end
     def destroy_formats
       (default_formats + active_scaffold_config.formats + active_scaffold_config.delete.formats).uniq

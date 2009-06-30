@@ -92,7 +92,7 @@ module ActiveScaffold::Actions
     end
 
     def do_update_column
-      do_edit
+      @record = active_scaffold_config.model.find(params[:id])
       if @record.authorized_for?(:action => :update, :column => params[:column])
         params[:value] ||= @record.column_for_attribute(params[:column]).default unless @record.column_for_attribute(params[:column]).null
         @record.send("#{params[:column]}=", params[:value])
@@ -113,7 +113,8 @@ module ActiveScaffold::Actions
     end
     private
     def update_authorized_filter
-      raise ActiveScaffold::ActionNotAllowed unless self.send(active_scaffold_config.update.link.security_method)
+      link = active_scaffold_config.update.link || active_scaffold_config.update.class.link
+      raise ActiveScaffold::ActionNotAllowed unless self.send(link.security_method)
     end
     def edit_formats
       (default_formats + active_scaffold_config.formats).uniq
