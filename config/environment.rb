@@ -9,6 +9,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot.rb')
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -33,7 +34,7 @@ Rails::Initializer.run do |config|
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
-  config.gem "haml", :version => '>= 2.0.7'  
+  # config.gem "haml", :version => '>= 2.0.7'  
   config.gem "RedCloth", :version => '>= 4.1.1'
   config.gem "uuidtools", :version => '>= 2.0.0'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
