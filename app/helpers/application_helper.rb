@@ -82,9 +82,9 @@ module ApplicationHelper
   end
 
 
-  def render_show_partial_for(component)
+  def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component }
+    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)

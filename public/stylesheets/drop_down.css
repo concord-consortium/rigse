@@ -1,100 +1,50 @@
-/*
-Sass::SyntaxError: Undefined mixin 'color_mixer'.
-on line 26 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass
-
-22:     :list-style-type none
-23:     :width 100%
-24:     :font-weight normal
-25:   li
-26:     +color_mixer(!very_dark_blue,!almost_white)
-27:     :list-style-type none
-28:     :padding 0px
-29:       :top 2px
-30:     :margin 0px
-31:     :width 100%
-32:     :white-space nowrap
-
-
-Backtrace:
-/Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass:26
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/mixin_node.rb:14:in `_perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `map'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:60:in `perform!'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/rule_node.rb:138:in `perform!'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `map'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:60:in `perform!'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/rule_node.rb:138:in `perform!'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `map'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:64:in `perform_children'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:60:in `perform!'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:55:in `_perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/tree/node.rb:45:in `perform'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/engine.rb:104:in `render'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:75:in `update_stylesheet'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:60:in `update_stylesheets'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:55:in `each'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:55:in `update_stylesheets'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:53:in `each'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin.rb:53:in `update_stylesheets'
-/opt/local/lib/ruby/gems/1.8/gems/haml-2.1.0/lib/sass/plugin/rails.rb:16:in `process'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/base.rb:391:in `process'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/base.rb:386:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/routing/route_set.rb:433:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:88:in `dispatch'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:111:in `_call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:82:in `initialize'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/head.rb:9:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/head.rb:9:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/methodoverride.rb:24:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/params_parser.rb:15:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/rewindable_input.rb:25:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/session/abstract_store.rb:122:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:29:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/connection_adapters/abstract/query_cache.rb:34:in `cache'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:9:in `cache'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/query_cache.rb:28:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/activerecord/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/reloader.rb:9:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/failsafe.rb:11:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `synchronize'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/lock.rb:11:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/dispatcher.rb:106:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/rails/rack/static.rb:31:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:46:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:40:in `each'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/urlmap.rb:40:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/rails/rack/log_tailer.rb:17:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/content_length.rb:13:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/chunked.rb:15:in `call'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/handler/mongrel.rb:61:in `process'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:159:in `process_client'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:158:in `each'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:158:in `process_client'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `run'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `initialize'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `new'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:285:in `run'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `initialize'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `new'
-/opt/local/lib/ruby/gems/1.8/gems/mongrel-1.1.5/lib/mongrel.rb:268:in `run'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/actionpack/lib/action_controller/vendor/rack-1.0/rack/handler/mongrel.rb:34:in `run'
-/Users/npaessel/lab/ruby/rigse/vendor/rails/railties/lib/commands/server.rb:111
-/opt/local/lib/ruby/vendor_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
-/opt/local/lib/ruby/vendor_ruby/1.8/rubygems/custom_require.rb:31:in `require'
-./script/server:3
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Sass::SyntaxError: Undefined mixin 'color_mixer'.\A on line 26 of /Users/npaessel/lab/ruby/rigse/public/stylesheets/sass/drop_down.sass\A \A 22:     :list-style-type none\A 23:     :width 100%\A 24:     :font-weight normal\A 25:   li\A 26:     +color_mixer(!very_dark_blue,!almost_white)\A 27:     :list-style-type none\A 28:     :padding 0px\A 29:       :top 2px\A 30:     :margin 0px\A 31:     :width 100%\A 32:     :white-space nowrap\A "; }
+.dropdown {
+  z-index: 10;
+  display: block;
+  position: absolute;
+  left: -1000px;
+  top: 0px;
+  clear: none;
+  float: none;
+  background-color: white;
+  margin: 0px;
+  padding: 0.5em;
+  font-size: 10px;
+  line-height: 1.5em;
+  -moz-border-radius-bottomright: .5em;
+  -webkit-border-bottom-right-radius: .5em;
+  -moz-border-radius-bottomleft: .5em;
+  -webkit-border-bottom-left-radius: .5em; }
+  .dropdown ul {
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+    width: 100%;
+    font-weight: normal; }
+  .dropdown li {
+    color: #00233a;
+    background-color: #f2f8fc;
+    list-style-type: none;
+    padding: 0px;
+    padding-top: 2px;
+    margin: 0px;
+    width: 100%;
+    white-space: nowrap; }
+    .dropdown li a {
+      font-weight: bold;
+      padding: 0px;
+      text-decoration: none;
+      background-color: transparent; }
+    .dropdown li a:link {
+      color: #00233a; }
+    .dropdown li a:visited {
+      color: #00233a; }
+    .dropdown li a:active {
+      color: #00233a; }
+    .dropdown li a:hover {
+      color: #f2f8fc;
+      background-color: #00233a; }
+  .dropdown a {
+    margin: 0px;
+    padding: 0px;
+    display: block; }
