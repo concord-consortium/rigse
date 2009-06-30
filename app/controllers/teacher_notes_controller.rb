@@ -1,8 +1,7 @@
 class TeacherNotesController < ApplicationController
   
   before_filter :setup_object, :except => [:index]
-  
-  
+    
   def setup_object
     if params[:id]
       if params[:id].length == 36
@@ -12,6 +11,9 @@ class TeacherNotesController < ApplicationController
       end
     elsif params[:teacher_note]
       @teacher_note = TeacherNote.new(params[:activity])
+      @teacher_note.authored_entity_type=params[:authored_entity_type]
+      @teacher_note.authored_entity_id=params[:authored_entity_id]
+      @teacher_note.user = current_user
     elsif params[:authored_entity_type] && params[:authored_entity_id]
       @teacher_note = TeacherNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@teacher_note.nil?)
@@ -25,8 +27,6 @@ class TeacherNotesController < ApplicationController
       @teacher_note.user = current_user
     end
   end
-  
-  
   
   def show_teacher_note
     if @teacher_note.changeable?(current_user)
@@ -56,7 +56,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/1
   # GET /teacher_notes/1.xml
   def show
-    @teacher_note = TeacherNote.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @teacher_note }
@@ -66,7 +65,6 @@ class TeacherNotesController < ApplicationController
   # GET /teacher_notes/new
   # GET /teacher_notes/new.xml
   def new
-    @teacher_note = TeacherNote.new
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @teacher_note }
@@ -75,13 +73,11 @@ class TeacherNotesController < ApplicationController
 
   # GET /teacher_notes/1/edit
   def edit
-    @teacher_note = TeacherNote.find(params[:id])
   end
 
   # POST /teacher_notes
   # POST /teacher_notes.xml
   def create
-    @teacher_note = TeacherNote.new(params[:teacher_note])
     if (@teacher_note.changeable?(current_user) && @teacher_note.update_attributes(params[:teacher_note]))
       if (request.xhr?)
         render :text => "<div class='notice'>teacher note saved</div>"
