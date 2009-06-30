@@ -165,14 +165,15 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
   
+  map.admin '/admin', :controller =>'admin/users'
+  
   # Restful Authentication Resources
   map.resources :users, :member => { 
     :preferences => [:get, :put], 
     :interface => :get,
     :suspend   => :put,
     :unsuspend => :put,
-    :purge     => :delete },
-    :active_scaffold => :true 
+    :purge     => :delete }
     
   map.resources :passwords
   map.resource :session

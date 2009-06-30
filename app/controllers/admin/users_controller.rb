@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Admin::UsersController < ApplicationController
   # skip_before_filter :verify_authenticity_token, :only => :create
   # 
   # access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
