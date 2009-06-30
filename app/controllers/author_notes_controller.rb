@@ -11,6 +11,9 @@ class AuthorNotesController < ApplicationController
       end
     elsif params[:author_note]
       @author_note = AuthorNote.new(params[:activity])
+      @author_note.authored_entity_type=params[:authored_entity_type]
+      @author_note.authored_entity_id=params[:authored_entity_id]
+      @author_note.user = current_user
     elsif params[:authored_entity_type] && params[:authored_entity_id]
       @author_note = AuthorNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@author_note.nil?)
@@ -39,7 +42,6 @@ class AuthorNotesController < ApplicationController
   # GET /author_notes/1
   # GET /author_notes/1.xml
   def show
-    @author_note = AuthorNote.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @author_note }
@@ -82,8 +84,7 @@ class AuthorNotesController < ApplicationController
   # POST /author_notes
   # POST /author_notes.xml
   def create
-    @author_note = AuthorNote.new(params[:author_note])    
-    if @author_note.save
+    if (@author_note.changeable?(current_user) && @author_note.update_attributes(params[:author_note]))      
       flash[:notice] = 'AuthorNote was successfully created.'
       if (request.xhr?)
          render :text => "<div class='notice'>Author note saved</div>"
