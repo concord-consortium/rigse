@@ -201,7 +201,11 @@ module OtmlHelper
   end
 
   def ot_interface_manager
-    vendor_interface = current_user.vendor_interface
+    # FIXME
+    # hard-coded to be'vernier_goio' because we don't have access to
+    # the real current_user when this request comes from a Java client.
+    # see: http://jira.concord.org/browse/RITES-211
+    vendor_interface = VendorInterface.find(6)  
     render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
   end
 
@@ -209,7 +213,7 @@ module OtmlHelper
     capture_haml do
       haml_tag :bundles do
         haml_concat ot_view_bundle(options)
-        # haml_concat ot_interface_manager
+        haml_concat ot_interface_manager
       end
     end
   end
