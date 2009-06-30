@@ -1,0 +1,111 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      = @page_title || APP_CONFIG[:site_name]
+    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
+    %meta{ :name => "distribution", :content => "all" }
+    %meta{ :name => "robots", :content => "all" }
+    %meta{ :name => "resource-type", :content => "document" }
+    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
+    = stylesheet_link_tag 'app'
+    = stylesheet_link_tag 'accordion'
+    = stylesheet_link_tag 'window'
+    = stylesheet_link_tag 'rites-dialog'
+    = stylesheet_link_tag 'live_validation'
+    
+
+    / = javascript_include_tag :defaults
+    = javascript_include_tag "prototype"
+    = javascript_include_tag "effects"
+    = javascript_include_tag "prototype-ui/prototype-ui"
+    = javascript_include_tag "dragdrop"
+    = javascript_include_tag "misc/resizable"
+    / i would like to get rid of all the livepipe stuff..
+    = javascript_include_tag "livepipe/livepipe"
+    = javascript_include_tag "livepipe/window"
+    = javascript_include_tag "live_validation"
+    = javascript_include_tag "controls"
+    /[if IE]
+      = javascript_include_tag "flotr/excanvas"
+    = javascript_include_tag "flotr/flotr"
+    = javascript_include_tag "tiny_mce/tiny_mce"
+    / lets load the applications js last...
+    = javascript_include_tag "application"
+    = javascript_include_tag "cookie"
+    = javascript_include_tag "accordion"
+    = javascript_include_tag "item_selectable"
+    = active_scaffold_includes
+
+    = javascript_tag mce_init_string
+    - if protect_against_forgery?
+      = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
+    - if (defined? @container_id) && @container_id
+      = javascript_tag "var container_id = #{@container_id};"
+    - if defined? @container_type && @container_type
+      = javascript_tag "var container_type = '#{@container_type}';"
+      
+    
+  %body
+    #note{:style=>"display: none;"}
+    #waiter{:style=>"display: none;"}
+      please wait
+      = image_tag "ajax-loader.gif"
+    #body2
+      /
+        For non-visual user agents:
+      #top
+        %a.hidden.doNotPrint{ :href => "#main_content" }
+          Skip to main content.
+    #wrapper.wrapper
+      #header
+        .left_content
+          %h1= APP_CONFIG[:site_name]
+        .right_content
+          Welcome
+          = "#{current_user.name}."
+          - unless current_user.anonymous?
+            = link_to 'Preferences', preferences_user_path(current_user)
+            \/
+            = link_to 'Logout', logout_path
+          - else
+            = link_to 'Login', login_path
+            \/
+            = link_to 'Signup', signup_path
+            
+      #nav_top
+        %span.hidden.doNotPrint
+          Navigation:
+        != "&nbsp;"
+        %ul.menu_h
+          %li.trail= link_to 'Home', home_path
+          %li.trail= link_to 'Investigations', investigations_path
+          %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
+          %li.trail= link_to 'GSEs', grade_span_expectations_path
+          
+        - if current_user.has_role?('admin')
+          %ul.menu_h.right
+            %li= link_to 'Users', users_path
+
+      #content_container      
+        #left_nav.nav_menu
+          put something here some time.
+
+        #main_content.main_content_colors
+          #content_header.main_content_colors
+            = yield :content_header
+          #js_flash{:style=>"display: none;"}
+
+          #flash
+            - flash.each do |key, message|
+              %div{:class=>"flash flash_#{key}"}= message
+          = yield :layout
+
+      #footer
+        .padded_content
+          #footer_left
+            Questions/Feedback:
+            = mail_to("stephen@concord.org", "Send us an email", :subject => "rights question", :encode => "javascript")
+          #footer_right
+            / footer text on the right

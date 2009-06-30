@@ -171,7 +171,8 @@ ActionController::Routing::Routes.draw do |map|
     :interface => :get,
     :suspend   => :put,
     :unsuspend => :put,
-    :purge     => :delete } 
+    :purge     => :delete },
+    :active_scaffold => :true 
     
   map.resources :passwords
   map.resource :session

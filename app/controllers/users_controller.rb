@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
   # access_rule 'admin || manager', :only => :index
   # 
-
+  layout "admin"
   active_scaffold :user do |config|
     config.columns = [:first_name, :last_name, :login, :email, :roles, :vendor_interface]
   end
