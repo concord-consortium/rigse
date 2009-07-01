@@ -702,10 +702,10 @@ ActiveRecord::Schema.define(:version => 20090701202743) do
 
   create_table "raw_otmls", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
-    t.text     "content"
+    t.text     "otml_content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
