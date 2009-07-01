@@ -44,6 +44,7 @@ Rails::Initializer.run do |config|
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
   config.gem "jnlp", :version => '>= 0.0.5.1'
+  config.gem "has_many_polymorphs", :version => ">= 2.13"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
