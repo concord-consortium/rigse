@@ -472,6 +472,7 @@ module ApplicationHelper
   end
   
   def in_render_scope?(thing)
+    return true if thing == nil
     if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
       return true
     end
