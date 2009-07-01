@@ -235,7 +235,9 @@ class PagesController < ApplicationController
       element.position = params['elements_container'].index(element.id.to_s) + 1
       element.save
     end 
-    render :nothing => true
+    render :update do |page|
+      page << "flatten_sortables();"
+    end
   end
 
 

@@ -7,6 +7,18 @@ debug = function (message) {
   }
 }
 
+css_attr = function(selector,attr) {
+  $$(selector).each(
+    function(elem) {
+      debug(elem.getStyle(attr));
+    }
+  );
+}
+
+zindex = function(selector) {
+  css_attr(selector,'z-index');
+}
+
 auth_token = function () {
   if (typeof(AUTH_TOKEN) == "undefined") {
     return false;
@@ -14,7 +26,13 @@ auth_token = function () {
   return AUTH_TOKEN;
 }
 
-
+flatten_sortables = function() {
+  $$('.sortable').each(
+    function(i) {
+      i.setStyle({zIndex: 'auto'});
+    }
+  );
+}
 
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
@@ -23,12 +41,20 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     var drop_down = $(drop_down_dom_id);
     var menu_width = menu.getDimensions().width
     var drop_down_width = drop_down.getDimensions().width
+
+    drop_down.hide();
+    drop_down.show();
+    drop_down.setStyle({
+      'z-index': 2000
+    });
+    
     if (drop_down_width < menu_width) {
       drop_down.setStyle({
         width: menu_width+"px"
       }); 
       drop_down_width = menu_width;
     }
+    
     var left_offset = (drop_down_width - menu_width) / -2
     //var left_offset = 0;
     var top_offset = menu.getDimensions().height
@@ -51,8 +77,7 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     });
   
     drop_down.observe('click', function(event) {
-       drop_down.setStyle({left: "-1000px"});
-       drop_down.stopObserving();
+      hide();
     });
     
     function hide() {
