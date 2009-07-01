@@ -1,5 +1,5 @@
 %li{:id => dom_id_for(activity, :container), :class => 'menu container_element' }
-  %div{ :id => dom_id_for(activity, :item), :class => activity.investigation.changeable?(current_user) ? 'item movable item_selectable' : 'item' }
+  %div{ :id => dom_id_for(activity, :item), :class => style_for_item(activity) }
     %div.action_menu
       %div.action_menu_header_left   
         =link_to name_for_component(activity), activity
