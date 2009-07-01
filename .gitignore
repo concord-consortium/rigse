@@ -37,3 +37,4 @@ config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
 public/otrunk-examples/
 public/stylesheets/data_table.css
+public/blank.html
