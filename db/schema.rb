@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090630183705) do
+ActiveRecord::Schema.define(:version => 20090701202743) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -706,6 +706,158 @@ ActiveRecord::Schema.define(:version => 20090630183705) do
     t.string   "name"
     t.text     "description"
     t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_clazzes", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string   "class_word"
+    t.string   "status"
+    t.integer  "course_id"
+    t.integer  "semester_id"
+    t.integer  "teacher_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_courses", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "school_id"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_courses_grade_levels", :id => false, :force => true do |t|
+    t.integer  "grade_level_id"
+    t.integer  "course_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_districts", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_grade_levels", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "order"
+    t.integer  "school_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_grade_levels_teachers", :id => false, :force => true do |t|
+    t.integer  "grade_level_id"
+    t.integer  "teacher_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_learners", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "student_id"
+    t.integer  "offering_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_offerings", :force => true do |t|
+    t.string   "uuid",          :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.string   "status"
+    t.integer  "clazz_id"
+    t.integer  "runnable_id"
+    t.string   "runnable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_school_memberships", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "member_id"
+    t.string   "member_type"
+    t.integer  "school_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_schools", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "district_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_semesters", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "school_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_student_clazzes", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "clazz_id"
+    t.integer  "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_students", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "grade_level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_subjects", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "teacher_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rites_portal_teachers", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
