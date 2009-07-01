@@ -83,7 +83,7 @@ end
   
   def self.by_scope(scope)
     if scope && scope.class != BiologicaOrganism
-      scope.activity.biologica_organisms
+      scope.activity.investigation.biologica_organisms
     else
       []
     end
