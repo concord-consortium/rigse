@@ -131,6 +131,12 @@ class User < ActiveRecord::Base
     @@anonymous_user ||=  User.find_by_login('anonymous')
   end
 
+  # a bit of a silly method to help the code in lib/changeable.rb so
+  # it doesn't have to special-case findingthe owner of a user object
+  def user
+    self
+  end
+  
   protected
     
   def make_activation_code
