@@ -1,6 +1,3 @@
-require 'rails_generator'
-require 'rails_generator/scripts/generate'
-
 class NcesParser
   
   def initialize(district_layout_file, school_layout_file, year)
