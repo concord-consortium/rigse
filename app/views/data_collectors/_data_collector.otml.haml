@@ -36,3 +36,5 @@
   %yDataAxis
     %OTDataAxis{ :max => data_collector.y_axis_max, :min => data_collector.y_axis_min, 
       :units => data_collector.y_axis_units, :label => data_collector.y_axis_label, :labelFormat => 'None' }/
+- if data_collector.prediction_graph_source
+  = render_scoped_reference(data_collector.prediction_graph_source)
