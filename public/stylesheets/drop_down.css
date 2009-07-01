@@ -1,7 +1,7 @@
 .dropdown {
-  z-index: 10;
+  z-index: 1000;
   display: block;
-  position: absolute;
+  position: fixed;
   left: -1000px;
   top: 0px;
   clear: none;
