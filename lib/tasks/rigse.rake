@@ -378,8 +378,10 @@ HEREDOC
       [admin_user, researcher_user, member_user, anonymous_user, student_user, teacher_user].each do |user|
         user = edit_user(user)
         user.save
-        user.register!
-        user.activate!
+        unless user.state == 'active'
+          user.register!
+          user.activate!
+        end
       end
 
       admin_user.roles << admin_role if ! admin_user.roles.include? admin_role
