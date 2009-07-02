@@ -4,6 +4,6 @@ class RitesPortalToVersion20090701153612 < ActiveRecord::Migration
   end
 
   def self.down
-    Engines.plugins["rites_portal"].migrate(20090630133011)
+    Engines.plugins["rites_portal"].migrate(0)
   end
 end
