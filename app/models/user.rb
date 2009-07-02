@@ -93,7 +93,16 @@ class User < ActiveRecord::Base
     _fullname.strip != "" ? _fullname : login
   end
   
+  def removed_investigation
+    unless self.has_investigations?
+      self.remove_role('author')
+    end
+  end
   
+  def has_investigations?
+    investigations.length > 0
+  end
+
   # Check if a user has a role.
   #
   # Returns True if User has one of the roles.
@@ -113,6 +122,18 @@ class User < ActiveRecord::Base
 
   def does_not_have_role?(*role_list)
     !has_role?(role_list)
+  end
+
+  def add_role(role)
+    unless has_role?(role)
+      roles << Role.find_by_title(role)
+    end
+  end
+
+  def remove_role(role)
+    if has_role?(role)
+      roles.delete Role.find_by_title(role)
+    end
   end
 
   def make_user_a_member
