@@ -367,21 +367,29 @@ HEREDOC
       student_role = Role.find_or_create_by_title('student')
       guest_role = Role.find_or_create_by_title('guest')
 
-      admin_user = User.create(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
-      researcher_user = User.create(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
-      member_user = User.create(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
-      anonymous_user = User.create(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
+      admin_user = User.find_or_create_by_login(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
+      researcher_user = User.find_or_create_by_login(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
+      member_user = User.find_or_create_by_login(:login => 'member', :first_name => 'Member', :last_name => 'User', :email => 'member@concord.org', :password => "password", :password_confirmation => "password")
+      anonymous_user = User.find_or_create_by_login(:login => "anonymous", :email => "anonymous@concord.org", :password => "password", :password_confirmation => "password", :first_name => "Anonymous", :last_name => "User")
+      
+      teacher_user = User.find_or_create_by_login(:login => 'teacher', :first_name => 'Teacher', :last_name => 'User', :email => 'teacher@concord.org', :password => "password", :password_confirmation => "password")
+      student_user = User.find_or_create_by_login(:login => 'student', :first_name => 'Student', :last_name => 'User', :email => 'student@concord.org', :password => "password", :password_confirmation => "password")
 
-      [admin_user, researcher_user, member_user, anonymous_user].each do |user|
+      [admin_user, researcher_user, member_user, anonymous_user, student_user, teacher_user].each do |user|
         user = edit_user(user)
         user.save
         user.register!
         user.activate!
       end
 
-      admin_user.roles << admin_role 
-      researcher_user.roles << researcher_role
-      member_user.roles << member_role
+      admin_user.roles << admin_role if ! admin_user.roles.include? admin_role
+      researcher_user.roles << researcher_role if ! researcher_user.roles.include? researcher_role
+      member_user.roles << member_role if ! member_user.roles.include? member_role
+      teacher_user.roles << teacher_role if ! teacher_user.roles.include? teacher_role
+      student_user.roles << student_role if ! student_user.roles.include? student_role
+      
+      Teacher.find_or_create_by_user(:user => teacher_user)
+      Student.find_or_create_by_user(:user => student_user)
       
     end
 
