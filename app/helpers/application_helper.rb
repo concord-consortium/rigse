@@ -81,7 +81,6 @@ module ApplicationHelper
     end
   end
 
-
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
@@ -522,4 +521,11 @@ module ApplicationHelper
     return false
   end
   
+  def render_project_info
+    unless @rendered_project_info
+      render :partial => "home/project_info"
+      @rendered_project_info = true
+    end
+  end
+
 end
