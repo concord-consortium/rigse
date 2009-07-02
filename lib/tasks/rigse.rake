@@ -388,8 +388,8 @@ HEREDOC
       teacher_user.roles << teacher_role if ! teacher_user.roles.include? teacher_role
       student_user.roles << student_role if ! student_user.roles.include? student_role
       
-      Teacher.find_or_create_by_user(:user => teacher_user)
-      Student.find_or_create_by_user(:user => student_user)
+      RitesPortal::Teacher.find_or_create_by_user(:user => teacher_user)
+      RitesPortal::Student.find_or_create_by_user(:user => student_user)
       
     end
 
