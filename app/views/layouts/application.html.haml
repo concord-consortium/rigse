@@ -87,9 +87,8 @@
           %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
           
-        - if current_user.has_role?('admin')
-          %ul.menu_h.right
-            %li= link_to 'Users', users_path
+          = yield :top_menu_items
+          
 
       #content_container      
         #left_nav.nav_menu
@@ -97,6 +96,8 @@
             = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
           - elsif @activity
             = render :partial => 'shared/accordian_nav'
+          
+          = yield :side_bar
 
         #main_content.main_content_colors
           #content_header.main_content_colors
