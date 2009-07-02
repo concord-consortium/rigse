@@ -42,6 +42,9 @@ class User < ActiveRecord::Base
   has_many :mw_modeler_pages
   has_many :n_logo_models
   
+  has_one :portal_teacher, :class_name => "RitesPortal::Teacher"
+  has_one :portal_student, :class_name => "RitesPortal::Student"
+  
   belongs_to :vendor_interface
 
   # has_many :assessment_targets
