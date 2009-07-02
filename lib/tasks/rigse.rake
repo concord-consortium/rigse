@@ -332,12 +332,13 @@ HEREDOC
 
       puts <<HEREDOC
 
-This task creates seven roles (if they dont already exist):
+This task creates eight roles (if they dont already exist):
 
   admin
   manager
   researcher
   teacher
+  author
   member
   student
   guest
@@ -359,13 +360,21 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
 
 HEREDOC
 
-      admin_role = Role.find_or_create_by_title('admin')
-      manager_role = Role.find_or_create_by_title('manager')
-      researcher_role = Role.find_or_create_by_title('researcher')
-      teacher_role = Role.find_or_create_by_title('teacher')
-      member_role = Role.find_or_create_by_title('member')
-      student_role = Role.find_or_create_by_title('student')
-      guest_role = Role.find_or_create_by_title('guest')
+      roles_in_order = [
+        admin_role = Role.find_or_create_by_title('admin'),
+        manager_role = Role.find_or_create_by_title('manager'),
+        researcher_role = Role.find_or_create_by_title('researcher'),
+        teacher_role = Role.find_or_create_by_title('teacher'),
+        author_role = Role.find_or_create_by_title('author'),
+        member_role = Role.find_or_create_by_title('member'),
+        student_role = Role.find_or_create_by_title('student'),
+        guest_role = Role.find_or_create_by_title('guest')
+      ]
+      
+      # to make sure the list is ordered correctly in case a new role is added
+      roles_in_order.each_with_index do |role, i|
+        role.insert_at(i)
+      end
 
       admin_user = User.find_or_create_by_login(:login => APP_CONFIG[:admin_login], :email => APP_CONFIG[:admin_email], :password => "password", :password_confirmation => "password", :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name])
       researcher_user = User.find_or_create_by_login(:login => 'researcher', :first_name => 'Researcher', :last_name => 'User', :email => 'researcher@concord.org', :password => "password", :password_confirmation => "password")
@@ -382,14 +391,16 @@ HEREDOC
           user.register!
           user.activate!
         end
+        user.roles.clear
       end
 
-      admin_user.roles << admin_role if ! admin_user.roles.include? admin_role
-      researcher_user.roles << researcher_role if ! researcher_user.roles.include? researcher_role
-      member_user.roles << member_role if ! member_user.roles.include? member_role
-      teacher_user.roles << teacher_role if ! teacher_user.roles.include? teacher_role
-      student_user.roles << student_role if ! student_user.roles.include? student_role
-      
+      admin_user.add_role('admin')
+      researcher_user.add_role('researcher')
+      member_user.add_role('member')
+      teacher_user.add_role('teacher')
+      student_user.add_role('student')
+      anonymous_user.add_role('guest')
+
       RitesPortal::Teacher.find_or_create_by_user_id(:user_id => teacher_user.id)
       RitesPortal::Student.find_or_create_by_user_id(:user_id => student_user.id)
       
