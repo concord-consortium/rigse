@@ -5,7 +5,7 @@ class Investigation < ActiveRecord::Base
   has_many :activities, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-     
+
   [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
     eval "has_many :#{klass.table_name},
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
@@ -37,6 +37,10 @@ class Investigation < ActiveRecord::Base
     end
   end
   
+  def after_save
+    self.user.add_role('author') 
+  end
+  
   def self.display_name
     'Investigation'
   end
@@ -55,12 +59,14 @@ class Investigation < ActiveRecord::Base
   
   include TreeNode     
 
-  def deep_set_user user
-    self.user = user
+  def deep_set_user(new_user)
+    original_user = self.user
+    self.user = new_user
     self.activities.each do |a| 
-      a.deep_set_user(user)
+      a.deep_set_user(new_user)
     end
     self.save
+    original_user.removed_investigation
   end
   
   
