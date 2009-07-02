@@ -1,0 +1,10 @@
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Member' do
+      Hello Member
+%p
+  Select the
+  = link_to 'Investigations', investigations_path
+  link to browse existing pages or write your own.
+
+- render_project_info

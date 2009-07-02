@@ -1,0 +1,8 @@
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Teacher' do
+      Hello Teacher
+%p
+  Select the
+  = link_to 'Investigations', investigations_path
+  link to browse Investigations you can use with your classes.

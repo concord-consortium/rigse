@@ -1,0 +1,13 @@
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Guest' do
+      Hello Guest
+
+- field_set_tag "You're not logged in!" do
+  %p
+    = link_to 'Login', login_path
+    if you are a registered user or 
+    = link_to 'Signup', signup_path
+    and become a member.
+
+- render_project_info

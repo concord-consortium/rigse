@@ -1,0 +1,13 @@
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Author' do
+      Hello Author
+
+- content_for(:authored_investigations) do
+  - field_set_tag "Investigations you've authored" do
+    %ul
+      - current_user.investigations.each do |inv|
+        %li
+          = link_to name_for_component(inv), inv
+
+- render_project_info
