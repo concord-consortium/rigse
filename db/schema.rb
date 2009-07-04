@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090701202743) do
+ActiveRecord::Schema.define(:version => 20090703051156) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -777,6 +777,680 @@ ActiveRecord::Schema.define(:version => 20090701202743) do
     t.datetime "updated_at"
   end
 
+  create_table "rites_portal_nces06_districts", :force => true do |t|
+    t.string  "LEAID",  :limit => 7
+    t.string  "FIPST",  :limit => 2
+    t.string  "STID",   :limit => 14
+    t.string  "NAME",   :limit => 60
+    t.string  "PHONE",  :limit => 10
+    t.string  "MSTREE", :limit => 30
+    t.string  "MCITY",  :limit => 30
+    t.string  "MSTATE", :limit => 2
+    t.string  "MZIP",   :limit => 5
+    t.string  "MZIP4",  :limit => 4
+    t.string  "LSTREE", :limit => 30
+    t.string  "LCITY",  :limit => 30
+    t.string  "LSTATE", :limit => 2
+    t.string  "LZIP",   :limit => 5
+    t.string  "LZIP4",  :limit => 4
+    t.string  "KIND",   :limit => 1
+    t.string  "UNION",  :limit => 3
+    t.string  "CONUM",  :limit => 5
+    t.string  "CONAME", :limit => 30
+    t.string  "CSA",    :limit => 3
+    t.string  "CBSA",   :limit => 5
+    t.string  "METMIC", :limit => 1
+    t.string  "MSC",    :limit => 1
+    t.string  "ULOCAL", :limit => 2
+    t.string  "CDCODE", :limit => 4
+    t.float   "LATCOD"
+    t.float   "LONCOD"
+    t.string  "BOUND",  :limit => 1
+    t.string  "GSLO",   :limit => 2
+    t.string  "GSHI",   :limit => 2
+    t.string  "AGCHRT", :limit => 1
+    t.integer "SCH"
+    t.float   "TEACH"
+    t.integer "UG"
+    t.integer "PK12"
+    t.integer "MEMBER"
+    t.integer "MIGRNT"
+    t.integer "SPECED"
+    t.integer "ELL"
+    t.float   "PKTCH"
+    t.float   "KGTCH"
+    t.float   "ELMTCH"
+    t.float   "SECTCH"
+    t.float   "UGTCH"
+    t.float   "TOTTCH"
+    t.float   "AIDES"
+    t.float   "CORSUP"
+    t.float   "ELMGUI"
+    t.float   "SECGUI"
+    t.float   "TOTGUI"
+    t.float   "LIBSPE"
+    t.float   "LIBSUP"
+    t.float   "LEAADM"
+    t.float   "LEASUP"
+    t.float   "SCHADM"
+    t.float   "SCHSUP"
+    t.float   "STUSUP"
+    t.float   "OTHSUP"
+    t.string  "IGSLO",  :limit => 1
+    t.string  "IGSHI",  :limit => 1
+    t.string  "ISCH",   :limit => 1
+    t.string  "ITEACH", :limit => 1
+    t.string  "IUG",    :limit => 1
+    t.string  "IPK12",  :limit => 1
+    t.string  "IMEMB",  :limit => 1
+    t.string  "IMIGRN", :limit => 1
+    t.string  "ISPEC",  :limit => 1
+    t.string  "IELL",   :limit => 1
+    t.string  "IPKTCH", :limit => 1
+    t.string  "IKGTCH", :limit => 1
+    t.string  "IELTCH", :limit => 1
+    t.string  "ISETCH", :limit => 1
+    t.string  "IUGTCH", :limit => 1
+    t.string  "ITOTCH", :limit => 1
+    t.string  "IAIDES", :limit => 1
+    t.string  "ICOSUP", :limit => 1
+    t.string  "IELGUI", :limit => 1
+    t.string  "ISEGUI", :limit => 1
+    t.string  "ITOGUI", :limit => 1
+    t.string  "ILISPE", :limit => 1
+    t.string  "ILISUP", :limit => 1
+    t.string  "ILEADM", :limit => 1
+    t.string  "ILESUP", :limit => 1
+    t.string  "ISCADM", :limit => 1
+    t.string  "ISCSUP", :limit => 1
+    t.string  "ISTSUP", :limit => 1
+    t.string  "IOTSUP", :limit => 1
+  end
+
+  create_table "rites_portal_nces06_schools", :force => true do |t|
+    t.integer "nces_district_id"
+    t.string  "NCESSCH",          :limit => 12
+    t.string  "FIPST",            :limit => 2
+    t.string  "LEAID",            :limit => 7
+    t.string  "SCHNO",            :limit => 5
+    t.string  "STID",             :limit => 14
+    t.string  "SEASCH",           :limit => 20
+    t.string  "LEANM",            :limit => 60
+    t.string  "SCHNAM",           :limit => 50
+    t.string  "PHONE",            :limit => 10
+    t.string  "MSTREE",           :limit => 30
+    t.string  "MCITY",            :limit => 30
+    t.string  "MSTATE",           :limit => 2
+    t.string  "MZIP",             :limit => 5
+    t.string  "MZIP4",            :limit => 4
+    t.string  "LSTREE",           :limit => 30
+    t.string  "LCITY",            :limit => 30
+    t.string  "LSTATE",           :limit => 2
+    t.string  "LZIP",             :limit => 5
+    t.string  "LZIP4",            :limit => 4
+    t.string  "KIND",             :limit => 1
+    t.string  "STATUS",           :limit => 1
+    t.string  "ULOCAL",           :limit => 2
+    t.float   "LATCOD"
+    t.float   "LONCOD"
+    t.string  "CDCODE",           :limit => 4
+    t.string  "CONUM",            :limit => 5
+    t.string  "CONAME",           :limit => 30
+    t.float   "FTE"
+    t.string  "GSLO",             :limit => 2
+    t.string  "GSHI",             :limit => 2
+    t.string  "LEVEL",            :limit => 1
+    t.string  "TITLEI",           :limit => 1
+    t.string  "STITLI",           :limit => 1
+    t.string  "MAGNET",           :limit => 1
+    t.string  "CHARTR",           :limit => 1
+    t.string  "SHARED",           :limit => 1
+    t.integer "FRELCH"
+    t.integer "REDLCH"
+    t.integer "TOTFRL"
+    t.integer "MIGRNT"
+    t.integer "PK"
+    t.integer "AMPKM"
+    t.integer "AMPKF"
+    t.integer "AMPKU"
+    t.integer "ASPKM"
+    t.integer "ASPKF"
+    t.integer "ASPKU"
+    t.integer "HIPKM"
+    t.integer "HIPKF"
+    t.integer "HIPKU"
+    t.integer "BLPKM"
+    t.integer "BLPKF"
+    t.integer "BLPKU"
+    t.integer "WHPKM"
+    t.integer "WHPKF"
+    t.integer "WHPKU"
+    t.integer "KG"
+    t.integer "AMKGM"
+    t.integer "AMKGF"
+    t.integer "AMKGU"
+    t.integer "ASKGM"
+    t.integer "ASKGF"
+    t.integer "ASKGU"
+    t.integer "HIKGM"
+    t.integer "HIKGF"
+    t.integer "HIKGU"
+    t.integer "BLKGM"
+    t.integer "BLKGF"
+    t.integer "BLKGU"
+    t.integer "WHKGM"
+    t.integer "WHKGF"
+    t.integer "WHKGU"
+    t.integer "G01"
+    t.integer "AM01M"
+    t.integer "AM01F"
+    t.integer "AM01U"
+    t.integer "AS01M"
+    t.integer "AS01F"
+    t.integer "AS01U"
+    t.integer "HI01M"
+    t.integer "HI01F"
+    t.integer "HI01U"
+    t.integer "BL01M"
+    t.integer "BL01F"
+    t.integer "BL01U"
+    t.integer "WH01M"
+    t.integer "WH01F"
+    t.integer "WH01U"
+    t.integer "G02"
+    t.integer "AM02M"
+    t.integer "AM02F"
+    t.integer "AM02U"
+    t.integer "AS02M"
+    t.integer "AS02F"
+    t.integer "AS02U"
+    t.integer "HI02M"
+    t.integer "HI02F"
+    t.integer "HI02U"
+    t.integer "BL02M"
+    t.integer "BL02F"
+    t.integer "BL02U"
+    t.integer "WH02M"
+    t.integer "WH02F"
+    t.integer "WH02U"
+    t.integer "G03"
+    t.integer "AM03M"
+    t.integer "AM03F"
+    t.integer "AM03U"
+    t.integer "AS03M"
+    t.integer "AS03F"
+    t.integer "AS03U"
+    t.integer "HI03M"
+    t.integer "HI03F"
+    t.integer "HI03U"
+    t.integer "BL03M"
+    t.integer "BL03F"
+    t.integer "BL03U"
+    t.integer "WH03M"
+    t.integer "WH03F"
+    t.integer "WH03U"
+    t.integer "G04"
+    t.integer "AM04M"
+    t.integer "AM04F"
+    t.integer "AM04U"
+    t.integer "AS04M"
+    t.integer "AS04F"
+    t.integer "AS04U"
+    t.integer "HI04M"
+    t.integer "HI04F"
+    t.integer "HI04U"
+    t.integer "BL04M"
+    t.integer "BL04F"
+    t.integer "BL04U"
+    t.integer "WH04M"
+    t.integer "WH04F"
+    t.integer "WH04U"
+    t.integer "G05"
+    t.integer "AM05M"
+    t.integer "AM05F"
+    t.integer "AM05U"
+    t.integer "AS05M"
+    t.integer "AS05F"
+    t.integer "AS05U"
+    t.integer "HI05M"
+    t.integer "HI05F"
+    t.integer "HI05U"
+    t.integer "BL05M"
+    t.integer "BL05F"
+    t.integer "BL05U"
+    t.integer "WH05M"
+    t.integer "WH05F"
+    t.integer "WH05U"
+    t.integer "G06"
+    t.integer "AM06M"
+    t.integer "AM06F"
+    t.integer "AM06U"
+    t.integer "AS06M"
+    t.integer "AS06F"
+    t.integer "AS06U"
+    t.integer "HI06M"
+    t.integer "HI06F"
+    t.integer "HI06U"
+    t.integer "BL06M"
+    t.integer "BL06F"
+    t.integer "BL06U"
+    t.integer "WH06M"
+    t.integer "WH06F"
+    t.integer "WH06U"
+    t.integer "G07"
+    t.integer "AM07M"
+    t.integer "AM07F"
+    t.integer "AM07U"
+    t.integer "AS07M"
+    t.integer "AS07F"
+    t.integer "AS07U"
+    t.integer "HI07M"
+    t.integer "HI07F"
+    t.integer "HI07U"
+    t.integer "BL07M"
+    t.integer "BL07F"
+    t.integer "BL07U"
+    t.integer "WH07M"
+    t.integer "WH07F"
+    t.integer "WH07U"
+    t.integer "G08"
+    t.integer "AM08M"
+    t.integer "AM08F"
+    t.integer "AM08U"
+    t.integer "AS08M"
+    t.integer "AS08F"
+    t.integer "AS08U"
+    t.integer "HI08M"
+    t.integer "HI08F"
+    t.integer "HI08U"
+    t.integer "BL08M"
+    t.integer "BL08F"
+    t.integer "BL08U"
+    t.integer "WH08M"
+    t.integer "WH08F"
+    t.integer "WH08U"
+    t.integer "G09"
+    t.integer "AM09M"
+    t.integer "AM09F"
+    t.integer "AM09U"
+    t.integer "AS09M"
+    t.integer "AS09F"
+    t.integer "AS09U"
+    t.integer "HI09M"
+    t.integer "HI09F"
+    t.integer "HI09U"
+    t.integer "BL09M"
+    t.integer "BL09F"
+    t.integer "BL09U"
+    t.integer "WH09M"
+    t.integer "WH09F"
+    t.integer "WH09U"
+    t.integer "G10"
+    t.integer "AM10M"
+    t.integer "AM10F"
+    t.integer "AM10U"
+    t.integer "AS10M"
+    t.integer "AS10F"
+    t.integer "AS10U"
+    t.integer "HI10M"
+    t.integer "HI10F"
+    t.integer "HI10U"
+    t.integer "BL10M"
+    t.integer "BL10F"
+    t.integer "BL10U"
+    t.integer "WH10M"
+    t.integer "WH10F"
+    t.integer "WH10U"
+    t.integer "G11"
+    t.integer "AM11M"
+    t.integer "AM11F"
+    t.integer "AM11U"
+    t.integer "AS11M"
+    t.integer "AS11F"
+    t.integer "AS11U"
+    t.integer "HI11M"
+    t.integer "HI11F"
+    t.integer "HI11U"
+    t.integer "BL11M"
+    t.integer "BL11F"
+    t.integer "BL11U"
+    t.integer "WH11M"
+    t.integer "WH11F"
+    t.integer "WH11U"
+    t.integer "G12"
+    t.integer "AM12M"
+    t.integer "AM12F"
+    t.integer "AM12U"
+    t.integer "AS12M"
+    t.integer "AS12F"
+    t.integer "AS12U"
+    t.integer "HI12M"
+    t.integer "HI12F"
+    t.integer "HI12U"
+    t.integer "BL12M"
+    t.integer "BL12F"
+    t.integer "BL12U"
+    t.integer "WH12M"
+    t.integer "WH12F"
+    t.integer "WH12U"
+    t.integer "UG"
+    t.integer "AMUGM"
+    t.integer "AMUGF"
+    t.integer "AMUGU"
+    t.integer "ASUGM"
+    t.integer "ASUGF"
+    t.integer "ASUGU"
+    t.integer "HIUGM"
+    t.integer "HIUGF"
+    t.integer "HIUGU"
+    t.integer "BLUGM"
+    t.integer "BLUGF"
+    t.integer "BLUGU"
+    t.integer "WHUGM"
+    t.integer "WHUGF"
+    t.integer "WHUGU"
+    t.integer "MEMBER"
+    t.integer "AM"
+    t.integer "AMALM"
+    t.integer "AMALF"
+    t.integer "AMALU"
+    t.integer "ASIAN"
+    t.integer "ASALM"
+    t.integer "ASALF"
+    t.integer "ASALU"
+    t.integer "HISP"
+    t.integer "HIALM"
+    t.integer "HIALF"
+    t.integer "HIALU"
+    t.integer "BLACK"
+    t.integer "BLALM"
+    t.integer "BLALF"
+    t.integer "BLALU"
+    t.integer "WHITE"
+    t.integer "WHALM"
+    t.integer "WHALF"
+    t.integer "WHALU"
+    t.integer "TOTETH"
+    t.float   "PUPTCH"
+    t.integer "TOTGRD"
+    t.string  "IFTE",             :limit => 1
+    t.string  "IGSLO",            :limit => 1
+    t.string  "IGSHI",            :limit => 1
+    t.string  "ITITLI",           :limit => 1
+    t.string  "ISTITL",           :limit => 1
+    t.string  "IMAGNE",           :limit => 1
+    t.string  "ICHART",           :limit => 1
+    t.string  "ISHARE",           :limit => 1
+    t.string  "IFRELC",           :limit => 1
+    t.string  "IREDLC",           :limit => 1
+    t.string  "ITOTFR",           :limit => 1
+    t.string  "IMIGRN",           :limit => 1
+    t.string  "IPK",              :limit => 1
+    t.string  "IAMPKM",           :limit => 1
+    t.string  "IAMPKF",           :limit => 1
+    t.string  "IAMPKU",           :limit => 1
+    t.string  "IASPKM",           :limit => 1
+    t.string  "IASPKF",           :limit => 1
+    t.string  "IASPKU",           :limit => 1
+    t.string  "IHIPKM",           :limit => 1
+    t.string  "IHIPKF",           :limit => 1
+    t.string  "IHIPKU",           :limit => 1
+    t.string  "IBLPKM",           :limit => 1
+    t.string  "IBLPKF",           :limit => 1
+    t.string  "IBLPKU",           :limit => 1
+    t.string  "IWHPKM",           :limit => 1
+    t.string  "IWHPKF",           :limit => 1
+    t.string  "IWHPKU",           :limit => 1
+    t.string  "IKG",              :limit => 1
+    t.string  "IAMKGM",           :limit => 1
+    t.string  "IAMKGF",           :limit => 1
+    t.string  "IAMKGU",           :limit => 1
+    t.string  "IASKGM",           :limit => 1
+    t.string  "IASKGF",           :limit => 1
+    t.string  "IASKGU",           :limit => 1
+    t.string  "IHIKGM",           :limit => 1
+    t.string  "IHIKGF",           :limit => 1
+    t.string  "IHIKGU",           :limit => 1
+    t.string  "IBLKGM",           :limit => 1
+    t.string  "IBLKGF",           :limit => 1
+    t.string  "IBLKGU",           :limit => 1
+    t.string  "IWHKGM",           :limit => 1
+    t.string  "IWHKGF",           :limit => 1
+    t.string  "IWHKGU",           :limit => 1
+    t.string  "IG01",             :limit => 1
+    t.string  "IAM01M",           :limit => 1
+    t.string  "IAM01F",           :limit => 1
+    t.string  "IAM01U",           :limit => 1
+    t.string  "IAS01M",           :limit => 1
+    t.string  "IAS01F",           :limit => 1
+    t.string  "IAS01U",           :limit => 1
+    t.string  "IHI01M",           :limit => 1
+    t.string  "IHI01F",           :limit => 1
+    t.string  "IHI01U",           :limit => 1
+    t.string  "IBL01M",           :limit => 1
+    t.string  "IBL01F",           :limit => 1
+    t.string  "IBL01U",           :limit => 1
+    t.string  "IWH01M",           :limit => 1
+    t.string  "IWH01F",           :limit => 1
+    t.string  "IWH01U",           :limit => 1
+    t.string  "IG02",             :limit => 1
+    t.string  "IAM02M",           :limit => 1
+    t.string  "IAM02F",           :limit => 1
+    t.string  "IAM02U",           :limit => 1
+    t.string  "IAS02M",           :limit => 1
+    t.string  "IAS02F",           :limit => 1
+    t.string  "IAS02U",           :limit => 1
+    t.string  "IHI02M",           :limit => 1
+    t.string  "IHI02F",           :limit => 1
+    t.string  "IHI02U",           :limit => 1
+    t.string  "IBL02M",           :limit => 1
+    t.string  "IBL02F",           :limit => 1
+    t.string  "IBL02U",           :limit => 1
+    t.string  "IWH02M",           :limit => 1
+    t.string  "IWH02F",           :limit => 1
+    t.string  "IWH02U",           :limit => 1
+    t.string  "IG03",             :limit => 1
+    t.string  "IAM03M",           :limit => 1
+    t.string  "IAM03F",           :limit => 1
+    t.string  "IAM03U",           :limit => 1
+    t.string  "IAS03M",           :limit => 1
+    t.string  "IAS03F",           :limit => 1
+    t.string  "IAS03U",           :limit => 1
+    t.string  "IHI03M",           :limit => 1
+    t.string  "IHI03F",           :limit => 1
+    t.string  "IHI03U",           :limit => 1
+    t.string  "IBL03M",           :limit => 1
+    t.string  "IBL03F",           :limit => 1
+    t.string  "IBL03U",           :limit => 1
+    t.string  "IWH03M",           :limit => 1
+    t.string  "IWH03F",           :limit => 1
+    t.string  "IWH03U",           :limit => 1
+    t.string  "IG04",             :limit => 1
+    t.string  "IAM04M",           :limit => 1
+    t.string  "IAM04F",           :limit => 1
+    t.string  "IAM04U",           :limit => 1
+    t.string  "IAS04M",           :limit => 1
+    t.string  "IAS04F",           :limit => 1
+    t.string  "IAS04U",           :limit => 1
+    t.string  "IHI04M",           :limit => 1
+    t.string  "IHI04F",           :limit => 1
+    t.string  "IHI04U",           :limit => 1
+    t.string  "IBL04M",           :limit => 1
+    t.string  "IBL04F",           :limit => 1
+    t.string  "IBL04U",           :limit => 1
+    t.string  "IWH04M",           :limit => 1
+    t.string  "IWH04F",           :limit => 1
+    t.string  "IWH04U",           :limit => 1
+    t.string  "IG05",             :limit => 1
+    t.string  "IAM05M",           :limit => 1
+    t.string  "IAM05F",           :limit => 1
+    t.string  "IAM05U",           :limit => 1
+    t.string  "IAS05M",           :limit => 1
+    t.string  "IAS05F",           :limit => 1
+    t.string  "IAS05U",           :limit => 1
+    t.string  "IHI05M",           :limit => 1
+    t.string  "IHI05F",           :limit => 1
+    t.string  "IHI05U",           :limit => 1
+    t.string  "IBL05M",           :limit => 1
+    t.string  "IBL05F",           :limit => 1
+    t.string  "IBL05U",           :limit => 1
+    t.string  "IWH05M",           :limit => 1
+    t.string  "IWH05F",           :limit => 1
+    t.string  "IWH05U",           :limit => 1
+    t.string  "IG06",             :limit => 1
+    t.string  "IAM06M",           :limit => 1
+    t.string  "IAM06F",           :limit => 1
+    t.string  "IAM06U",           :limit => 1
+    t.string  "IAS06M",           :limit => 1
+    t.string  "IAS06F",           :limit => 1
+    t.string  "IAS06U",           :limit => 1
+    t.string  "IHI06M",           :limit => 1
+    t.string  "IHI06F",           :limit => 1
+    t.string  "IHI06U",           :limit => 1
+    t.string  "IBL06M",           :limit => 1
+    t.string  "IBL06F",           :limit => 1
+    t.string  "IBL06U",           :limit => 1
+    t.string  "IWH06M",           :limit => 1
+    t.string  "IWH06F",           :limit => 1
+    t.string  "IWH06U",           :limit => 1
+    t.string  "IG07",             :limit => 1
+    t.string  "IAM07M",           :limit => 1
+    t.string  "IAM07F",           :limit => 1
+    t.string  "IAM07U",           :limit => 1
+    t.string  "IAS07M",           :limit => 1
+    t.string  "IAS07F",           :limit => 1
+    t.string  "IAS07U",           :limit => 1
+    t.string  "IHI07M",           :limit => 1
+    t.string  "IHI07F",           :limit => 1
+    t.string  "IHI07U",           :limit => 1
+    t.string  "IBL07M",           :limit => 1
+    t.string  "IBL07F",           :limit => 1
+    t.string  "IBL07U",           :limit => 1
+    t.string  "IWH07M",           :limit => 1
+    t.string  "IWH07F",           :limit => 1
+    t.string  "IWH07U",           :limit => 1
+    t.string  "IG08",             :limit => 1
+    t.string  "IAM08M",           :limit => 1
+    t.string  "IAM08F",           :limit => 1
+    t.string  "IAM08U",           :limit => 1
+    t.string  "IAS08M",           :limit => 1
+    t.string  "IAS08F",           :limit => 1
+    t.string  "IAS08U",           :limit => 1
+    t.string  "IHI08M",           :limit => 1
+    t.string  "IHI08F",           :limit => 1
+    t.string  "IHI08U",           :limit => 1
+    t.string  "IBL08M",           :limit => 1
+    t.string  "IBL08F",           :limit => 1
+    t.string  "IBL08U",           :limit => 1
+    t.string  "IWH08M",           :limit => 1
+    t.string  "IWH08F",           :limit => 1
+    t.string  "IWH08U",           :limit => 1
+    t.string  "IG09",             :limit => 1
+    t.string  "IAM09M",           :limit => 1
+    t.string  "IAM09F",           :limit => 1
+    t.string  "IAM09U",           :limit => 1
+    t.string  "IAS09M",           :limit => 1
+    t.string  "IAS09F",           :limit => 1
+    t.string  "IAS09U",           :limit => 1
+    t.string  "IHI09M",           :limit => 1
+    t.string  "IHI09F",           :limit => 1
+    t.string  "IHI09U",           :limit => 1
+    t.string  "IBL09M",           :limit => 1
+    t.string  "IBL09F",           :limit => 1
+    t.string  "IBL09U",           :limit => 1
+    t.string  "IWH09M",           :limit => 1
+    t.string  "IWH09F",           :limit => 1
+    t.string  "IWH09U",           :limit => 1
+    t.string  "IG10",             :limit => 1
+    t.string  "IAM10M",           :limit => 1
+    t.string  "IAM10F",           :limit => 1
+    t.string  "IAM10U",           :limit => 1
+    t.string  "IAS10M",           :limit => 1
+    t.string  "IAS10F",           :limit => 1
+    t.string  "IAS10U",           :limit => 1
+    t.string  "IHI10M",           :limit => 1
+    t.string  "IHI10F",           :limit => 1
+    t.string  "IHI10U",           :limit => 1
+    t.string  "IBL10M",           :limit => 1
+    t.string  "IBL10F",           :limit => 1
+    t.string  "IBL10U",           :limit => 1
+    t.string  "IWH10M",           :limit => 1
+    t.string  "IWH10F",           :limit => 1
+    t.string  "IWH10U",           :limit => 1
+    t.string  "IG11",             :limit => 1
+    t.string  "IAM11M",           :limit => 1
+    t.string  "IAM11F",           :limit => 1
+    t.string  "IAM11U",           :limit => 1
+    t.string  "IAS11M",           :limit => 1
+    t.string  "IAS11F",           :limit => 1
+    t.string  "IAS11U",           :limit => 1
+    t.string  "IHI11M",           :limit => 1
+    t.string  "IHI11F",           :limit => 1
+    t.string  "IHI11U",           :limit => 1
+    t.string  "IBL11M",           :limit => 1
+    t.string  "IBL11F",           :limit => 1
+    t.string  "IBL11U",           :limit => 1
+    t.string  "IWH11M",           :limit => 1
+    t.string  "IWH11F",           :limit => 1
+    t.string  "IWH11U",           :limit => 1
+    t.string  "IG12",             :limit => 1
+    t.string  "IAM12M",           :limit => 1
+    t.string  "IAM12F",           :limit => 1
+    t.string  "IAM12U",           :limit => 1
+    t.string  "IAS12M",           :limit => 1
+    t.string  "IAS12F",           :limit => 1
+    t.string  "IAS12U",           :limit => 1
+    t.string  "IHI12M",           :limit => 1
+    t.string  "IHI12F",           :limit => 1
+    t.string  "IHI12U",           :limit => 1
+    t.string  "IBL12M",           :limit => 1
+    t.string  "IBL12F",           :limit => 1
+    t.string  "IBL12U",           :limit => 1
+    t.string  "IWH12M",           :limit => 1
+    t.string  "IWH12F",           :limit => 1
+    t.string  "IWH12U",           :limit => 1
+    t.string  "IUG",              :limit => 1
+    t.string  "IAMUGM",           :limit => 1
+    t.string  "IAMUGF",           :limit => 1
+    t.string  "IAMUGU",           :limit => 1
+    t.string  "IASUGM",           :limit => 1
+    t.string  "IASUGF",           :limit => 1
+    t.string  "IASUGU",           :limit => 1
+    t.string  "IHIUGM",           :limit => 1
+    t.string  "IHIUGF",           :limit => 1
+    t.string  "IHIUGU",           :limit => 1
+    t.string  "IBLUGM",           :limit => 1
+    t.string  "IBLUGF",           :limit => 1
+    t.string  "IBLUGU",           :limit => 1
+    t.string  "IWHUGM",           :limit => 1
+    t.string  "IWHUGF",           :limit => 1
+    t.string  "IWHUGU",           :limit => 1
+    t.string  "IMEMB",            :limit => 1
+    t.string  "IAM",              :limit => 1
+    t.string  "IAMALM",           :limit => 1
+    t.string  "IAMALF",           :limit => 1
+    t.string  "IAMALU",           :limit => 1
+    t.string  "IASIAN",           :limit => 1
+    t.string  "IASALM",           :limit => 1
+    t.string  "IASALF",           :limit => 1
+    t.string  "IASALU",           :limit => 1
+    t.string  "IHISP",            :limit => 1
+    t.string  "IHIALM",           :limit => 1
+    t.string  "IHIALF",           :limit => 1
+    t.string  "IHIALU",           :limit => 1
+    t.string  "IBLACK",           :limit => 1
+    t.string  "IBLALM",           :limit => 1
+    t.string  "IBLALF",           :limit => 1
+    t.string  "IBLALU",           :limit => 1
+    t.string  "IWHITE",           :limit => 1
+    t.string  "IWHALM",           :limit => 1
+    t.string  "IWHALF",           :limit => 1
+    t.string  "IWHALU",           :limit => 1
+    t.string  "IETH",             :limit => 1
+    t.string  "IPUTCH",           :limit => 1
+    t.string  "ITOTGR",           :limit => 1
+  end
+
   create_table "rites_portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
     t.string   "name"
@@ -835,11 +1509,11 @@ ActiveRecord::Schema.define(:version => 20090701202743) do
   end
 
   create_table "rites_portal_students", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "user_id"
-    t.integer  "grade_level"
+    t.integer  "grade_level_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
