@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090703051156) do
+ActiveRecord::Schema.define(:version => 20090704075811) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -867,6 +867,10 @@ ActiveRecord::Schema.define(:version => 20090703051156) do
     t.string  "IOTSUP", :limit => 1
   end
 
+  add_index "rites_portal_nces06_districts", ["LEAID"], :name => "index_rites_portal_nces06_districts_on_LEAID"
+  add_index "rites_portal_nces06_districts", ["NAME"], :name => "index_rites_portal_nces06_districts_on_NAME"
+  add_index "rites_portal_nces06_districts", ["STID"], :name => "index_rites_portal_nces06_districts_on_STID"
+
   create_table "rites_portal_nces06_schools", :force => true do |t|
     t.integer "nces_district_id"
     t.string  "NCESSCH",          :limit => 12
@@ -1450,6 +1454,10 @@ ActiveRecord::Schema.define(:version => 20090703051156) do
     t.string  "IPUTCH",           :limit => 1
     t.string  "ITOTGR",           :limit => 1
   end
+
+  add_index "rites_portal_nces06_schools", ["NCESSCH"], :name => "index_rites_portal_nces06_schools_on_NCESSCH"
+  add_index "rites_portal_nces06_schools", ["SCHNAM"], :name => "index_rites_portal_nces06_schools_on_SCHNAM"
+  add_index "rites_portal_nces06_schools", ["STID"], :name => "index_rites_portal_nces06_schools_on_STID"
 
   create_table "rites_portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
