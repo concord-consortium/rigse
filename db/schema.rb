@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090704075811) do
+ActiveRecord::Schema.define(:version => 20090704191549) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -743,11 +743,12 @@ ActiveRecord::Schema.define(:version => 20090704075811) do
   end
 
   create_table "rites_portal_districts", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nces_district_id"
   end
 
   create_table "rites_portal_grade_levels", :force => true do |t|
@@ -1485,12 +1486,13 @@ ActiveRecord::Schema.define(:version => 20090704075811) do
   end
 
   create_table "rites_portal_schools", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nces_school_id"
   end
 
   create_table "rites_portal_semesters", :force => true do |t|
