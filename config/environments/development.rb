@@ -32,3 +32,6 @@ unless RUBY_PLATFORM =~ /java/
   Debugger.settings[:autoeval] = 1
   Debugger.settings[:reload_source_on_change] = 1
 end
+
+# to help with development with engines (which are plugins)
+config.reload_plugins = true
