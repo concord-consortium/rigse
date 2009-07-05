@@ -177,6 +177,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
   
   # Home Page
+  map.home '/readme', :controller => 'home', :action => 'readme'
   map.home '/home', :controller => 'home', :action => 'index'
   map.root :controller => 'home', :action => 'index'
 
