@@ -65,6 +65,15 @@ class Investigation < ActiveRecord::Base
     self.activities.each do |a| 
       a.deep_set_user(new_user)
     end
+    self.teacher_notes.each do |tn|
+      tn.user = user
+      tn.save
+    end
+    
+    self.author_notes.each do |an|
+      an.user = user
+      an.save
+    end
     self.save
     original_user.removed_investigation
   end

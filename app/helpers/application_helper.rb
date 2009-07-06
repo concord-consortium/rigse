@@ -452,11 +452,9 @@ module ApplicationHelper
   
   
   def style_for_item(component,style_classes=[]) 
-    style_classes << 'item'
+    style_classes << 'item' << 'selectable' << 'item_selectable'
     if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
       style_classes << 'movable'
-      style_classes << 'selectable'
-      style_classes << 'item_selectable'
     end
     style_classes = style_for_teachers(component,style_classes)
     return style_classes.join(" ")
@@ -473,6 +471,7 @@ module ApplicationHelper
   end
   
   def in_render_scope?(thing)
+    return true if thing == nil
     if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
       return true
     end
@@ -489,6 +488,7 @@ module ApplicationHelper
   end
   
   def render_scoped_reference(thing)
+    return "" if thing == nil
     if in_render_scope?(thing)
       capture_haml do
         haml_tag :object, :refid => ot_refid_for(thing)

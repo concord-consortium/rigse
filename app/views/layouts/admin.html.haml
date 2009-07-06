@@ -15,6 +15,7 @@
     = stylesheet_link_tag 'rites-dialog'
     = stylesheet_link_tag 'live_validation'
     
+
     / = javascript_include_tag :defaults
     = javascript_include_tag "prototype"
     = javascript_include_tag "effects"
@@ -23,22 +24,19 @@
     = javascript_include_tag "misc/resizable"
     / i would like to get rid of all the livepipe stuff..
     = javascript_include_tag "livepipe/livepipe"
-    / = javascript_include_tag "livepipe/tabs"
     = javascript_include_tag "livepipe/window"
     = javascript_include_tag "live_validation"
     = javascript_include_tag "controls"
     /[if IE]
       = javascript_include_tag "flotr/excanvas"
     = javascript_include_tag "flotr/flotr"
-    / = javascript_include_tag "in_place_rich_editor/patch_inplaceeditor_1-8-1.js"
-    / = javascript_include_tag "in_place_rich_editor/patch_inplaceeditor_editonblank_1-8-1.js"
-    / = javascript_include_tag "in_place_rich_editor/inplacericheditor.js"
     = javascript_include_tag "tiny_mce/tiny_mce"
     / lets load the applications js last...
     = javascript_include_tag "application"
     = javascript_include_tag "cookie"
     = javascript_include_tag "accordion"
     = javascript_include_tag "item_selectable"
+    = active_scaffold_includes
 
     = javascript_tag mce_init_string
     - if protect_against_forgery?
@@ -61,7 +59,6 @@
         %a.hidden.doNotPrint{ :href => "#main_content" }
           Skip to main content.
     #wrapper.wrapper
-      = render :partial => 'shared/activity_trail'
       #header
         .left_content
           %h1= APP_CONFIG[:site_name]
@@ -86,27 +83,20 @@
           %li.trail= link_to 'Investigations', investigations_path
           %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           %li.trail= link_to 'GSEs', grade_span_expectations_path
-
-          = yield :top_menu_items
+          
+        - if current_user.has_role?('admin')
+          %ul.menu_h.right
+            %li= link_to 'Admin', admin_path
 
       #content_container      
-        #left_nav.nav_menu
-          - if @investigation 
-            = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
-          - elsif @activity
-            = render :partial => 'shared/accordian_nav'
-          
-          = yield :side_bar
+        #content_header.main_content_colors
+          = yield :content_header
+        #js_flash{:style=>"display: none;"}
 
-        #main_content.main_content_colors
-          #content_header.main_content_colors
-            = yield :content_header
-          #js_flash{:style=>"display: none;"}
-
-          #flash
-            - flash.each do |key, message|
-              %div{:class=>"flash flash_#{key}"}= message
-          = yield :layout
+        #flash
+          - flash.each do |key, message|
+            %div{:class=>"flash flash_#{key}"}= message
+        = yield :layout
 
       #footer
         .padded_content

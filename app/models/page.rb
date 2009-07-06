@@ -152,6 +152,15 @@ class Page < ActiveRecord::Base
         e.embeddable.save
       end
     end
+    self.teacher_notes.each do |tn|
+      tn.user = user
+      tn.save
+    end
+    
+    self.author_notes.each do |an|
+      an.user = user
+      an.save
+    end
     self.save
   end
 
