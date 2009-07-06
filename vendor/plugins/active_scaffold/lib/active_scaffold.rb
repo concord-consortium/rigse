@@ -152,10 +152,14 @@ module ActiveScaffold
     # Searches in the namespace of the current controller for singular and plural versions of the conventional "#{model}Controller" syntax.
     # You may override this method to customize the search routine.
     def active_scaffold_controller_for(klass)
-      # namespace = self.to_s.split('::')[0...-1].join('::') + '::'
-      namespace = ""
+      namespace = self.to_s.split('::')[0...-1].join('::') + '::'
+      klass_no_namespace = klass.to_s.split('::').last
+      internal_active_scaffold_controller_for(klass, klass_no_namespace, namespace)
+    end
+    
+    def internal_active_scaffold_controller_for(klass, model, namespace = "")      
       error_message = []
-      ["#{klass.to_s.underscore.pluralize}", "#{klass.to_s.underscore.pluralize.singularize}"].each do |controller_name|
+      ["#{model.underscore.pluralize}", "#{model.underscore.pluralize.singularize}"].each do |controller_name|
         begin
           controller = "#{namespace}#{controller_name.camelize}Controller".constantize
         rescue NameError => error
