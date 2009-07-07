@@ -85,14 +85,13 @@ class InvestigationsController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
-    @investigation = Investigation.find(params[:id])
     # display for teachers? Later we can determin via roles?
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
       format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
-      format.jnlp { render :layout => false }
+      format.jnlp { render_jnlp(@investigation) }
       format.pdf {render :layout => false }
     end
   end

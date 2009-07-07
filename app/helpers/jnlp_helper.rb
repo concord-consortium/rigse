@@ -4,6 +4,23 @@ module JnlpHelper
     @jnlp_adaptor || @jnlp_adaptor = JnlpAdaptor.new
   end
   
+  def render_jnlp(runnable)
+    render( :layout => false, 
+      :partial => "shared/jnlp", 
+      :locals => { :teacher_mode => params[:teacher_mode], 
+                   :runnable_object => runnable, 
+                   :escaped_otml_url => 
+                          URI.escape(
+                            url_for(:controller => runnable.class.name.demodulize.pluralize, 
+                                    :action => :show, 
+                                    :format => :otml, 
+                                    :id => runnable.id, 
+                                    :teacher_mode => params[:teacher_mode]),
+                            /[#{URI::REGEXP::PATTERN::RESERVED}\s]/) 
+         } 
+      )
+  end
+  
   def resource_jars
     jnlp_adaptor.resource_jars
   end

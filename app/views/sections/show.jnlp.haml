@@ -1,4 +1,0 @@
-- if @teacher_mode
-  = render :partial => "shared/jnlp", :locals => { :teacher_mode => @teacher_mode, :runnable_object => @section, :escaped_otml_url => URI.escape(section_url(@section, :format => :otml, :teacher_mode => @teacher_mode), /[#{URI::REGEXP::PATTERN::RESERVED}\s]/) }
-- else
-  = render :partial => "shared/jnlp", :locals => {:runnable_object => @section, :escaped_otml_url => URI.escape(section_url(@section, :format => :otml), /[#{URI::REGEXP::PATTERN::RESERVED}\s]/) }  

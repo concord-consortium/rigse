@@ -77,7 +77,7 @@ class SectionsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
-      format.jnlp { render :layout => false }
+      format.jnlp { render_jnlp(@section) }
       format.xml  { render :xml => @section }
     end
   end
