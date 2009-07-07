@@ -96,3 +96,5 @@ end
 
 require 'prawn'
 require 'prawn/format'
+
+require 'portal_configuration'
