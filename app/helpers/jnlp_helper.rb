@@ -5,18 +5,16 @@ module JnlpHelper
   end
   
   def render_jnlp(runnable)
+    # FIXME can't figure out why otml_url_for, doesn't work here
+    # otml_url_for(runnable)
+    url = polymorphic_url(runnable, :format =>  :otml, :teacher_mode => params[:teacher_mode])
+    url = URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+    
     render( :layout => false, 
       :partial => "shared/jnlp", 
       :locals => { :teacher_mode => params[:teacher_mode], 
                    :runnable_object => runnable, 
-                   :escaped_otml_url => 
-                          URI.escape(
-                            url_for(:controller => runnable.class.name.demodulize.pluralize, 
-                                    :action => :show, 
-                                    :format => :otml, 
-                                    :id => runnable.id, 
-                                    :teacher_mode => params[:teacher_mode]),
-                            /[#{URI::REGEXP::PATTERN::RESERVED}\s]/) 
+        :escaped_otml_url => url
          } 
       )
   end
