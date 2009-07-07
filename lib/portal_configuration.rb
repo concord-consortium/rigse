@@ -1,5 +1,5 @@
 # Add some investigation functionality to the User model
-class User < ActiveRecord::Base
+User.class_eval do
   has_many :investigations
   has_many :activities
   has_many :sections
