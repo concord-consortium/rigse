@@ -1,0 +1,12 @@
+%div{ :id => dom_id_for(investigation, :item), :class => 'item' }
+  %div.action_menu
+    %div.action_menu_header_left   
+      = link_to name_for_component(investigation), investigation
+      %span.author
+        = investigation.user.name
+  %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
+    %p=investigation.description
+    - if params[:mine_only]
+      %p
+        %i 
+          = updated_time_text(investigation)

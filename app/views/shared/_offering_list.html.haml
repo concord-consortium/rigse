@@ -1,0 +1,4 @@
+- for investigation in Investigation.find(:all, :limit => 10) do 
+  = render :partial => "investigations/list_one", :locals => {:investigation => investigation}
+  = draggable_element dom_id_for(investigation,:item), :revert => true
+
