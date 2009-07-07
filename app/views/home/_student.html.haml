@@ -2,3 +2,11 @@
   %p
     - field_set_tag 'Student' do
       Hello Student
+
+%p
+  Content for the Student:
+  = current_user.name   
+  - student = current_user.portal_student  
+  - if student
+    = render :partial => 'rites_portal/clazzes/list_for_student', :locals => { :student => student }
+  
