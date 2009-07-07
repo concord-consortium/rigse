@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090704191549) do
+ActiveRecord::Schema.define(:version => 20090707173703) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1375,10 +1375,10 @@ ActiveRecord::Schema.define(:version => 20090704191549) do
 
   create_table "raw_otmls", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
-    t.text     "otml_content"
+    t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -2228,6 +2228,14 @@ ActiveRecord::Schema.define(:version => 20090704191549) do
   create_table "roles_users", :id => false, :force => true do |t|
     t.integer "role_id"
     t.integer "user_id"
+  end
+
+  create_table "sds_configs", :force => true do |t|
+    t.integer  "runnable_id"
+    t.string   "runnable_type"
+    t.integer  "sds_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sections", :force => true do |t|
