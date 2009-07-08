@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090707173703) do
+ActiveRecord::Schema.define(:version => 20090708193235) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1451,8 +1451,6 @@ ActiveRecord::Schema.define(:version => 20090707173703) do
 
   create_table "rites_portal_learners", :force => true do |t|
     t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
     t.integer  "student_id"
     t.integer  "offering_id"
     t.datetime "created_at"
@@ -2143,8 +2141,6 @@ ActiveRecord::Schema.define(:version => 20090707173703) do
 
   create_table "rites_portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
-    t.string   "name"
-    t.text     "description"
     t.string   "status"
     t.integer  "clazz_id"
     t.integer  "runnable_id"
@@ -2201,8 +2197,6 @@ ActiveRecord::Schema.define(:version => 20090707173703) do
 
   create_table "rites_portal_students", :force => true do |t|
     t.string   "uuid",           :limit => 36
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.integer  "grade_level_id"
     t.datetime "created_at"
@@ -2219,9 +2213,7 @@ ActiveRecord::Schema.define(:version => 20090707173703) do
   end
 
   create_table "rites_portal_teachers", :force => true do |t|
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
+    t.string   "uuid",       :limit => 36
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
