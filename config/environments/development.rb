@@ -23,7 +23,7 @@ ActiveSupport::Dependencies.load_once_paths.delete('vendor/plugins/rites_portal'
 # textmate-footnotes
 # Rails errors displayed in browser are generated with links to textmate
 # see: http://wiki.github.com/josevalim/rails-footnotes
-# config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
+config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
 
 unless RUBY_PLATFORM =~ /java/
   # See: http://www.datanoise.com/ruby-debug/
