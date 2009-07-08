@@ -1,0 +1,5 @@
+- for investigation in Investigation.find(:all, :limit => 10) do 
+  - offering = RitesPortal::Offering.new(:runnable_type => "Investigation", :clazz => clazz, :runnable_id => investigation.id)
+  = render :partial => "shared/offering_for_teacher", :locals => {:offering => offering}
+  = draggable_element dom_id_for(investigation,:item), :revert => true
+

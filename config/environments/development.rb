@@ -16,10 +16,14 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+# see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
+ActiveSupport::Dependencies.explicitly_unloadable_constants << 'RitesPortal'
+ActiveSupport::Dependencies.load_once_paths.delete('vendor/plugins/rites_portal')
+  
 # textmate-footnotes
 # Rails errors displayed in browser are generated with links to textmate
 # see: http://wiki.github.com/josevalim/rails-footnotes
-config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
+# config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
 
 unless RUBY_PLATFORM =~ /java/
   # See: http://www.datanoise.com/ruby-debug/
