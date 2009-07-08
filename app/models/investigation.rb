@@ -1,5 +1,7 @@
 class Investigation < ActiveRecord::Base
-
+  
+  cattr_accessor :publication_states
+  
   belongs_to :user
   belongs_to :grade_span_expectation
   has_many :activities, :order => :position, :dependent => :destroy
@@ -25,6 +27,23 @@ class Investigation < ActiveRecord::Base
   
   acts_as_replicatable
   
+  #
+  # acts_as_state_machine for publication status:
+  #
+  include AASM 
+  aasm_initial_state :draft
+  aasm_column :publication_status
+  @@publication_states = [:draft,:published]
+  @@publication_states.each { |s| aasm_state s}
+  
+  aasm_event :publish do
+    transitions :to => :published, :from => [:draft]
+  end
+  
+  aasm_event :un_publish do
+    transitions :to => :draft, :from => [:published]
+  end  
+  
   include Changeable
   include Noteable # convinience methods for notes...
   
@@ -38,7 +57,9 @@ class Investigation < ActiveRecord::Base
   end
   
   def after_save
-    self.user.add_role('author') 
+    if self.user
+      self.user.add_role('author') 
+    end
   end
   
   def self.display_name

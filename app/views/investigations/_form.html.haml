@@ -9,6 +9,11 @@
         [select a new grade-span or domain above to change]
       - else
         select a grade span and domain from the above lists...
+  
+
+- field_set_tag 'Publication Status' do
+  = f.select :publication_status, Investigation.publication_states.map{|s|s.to_s}        
+
 - field_set_tag 'name' do
   = f.text_field :name
 
