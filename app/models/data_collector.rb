@@ -57,6 +57,13 @@ class DataCollector < ActiveRecord::Base
     DataCollector.find_all_by_graph_type_id(2)
   end
   
+  def ot_button_str
+    buttons = '0,1,2,3,4'
+    buttons << ',5' if ruler_enabled
+    buttons << ',6' if autoscale_enabled
+    buttons
+  end
+  
   def probe_type=(probe_type)
     self.probe_type_id = probe_type.id
     self.title = "#{probe_type.name} Data Collector"
