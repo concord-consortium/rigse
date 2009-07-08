@@ -18,6 +18,7 @@ config.action_mailer.raise_delivery_errors = false
 
 # see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
 ActiveSupport::Dependencies.explicitly_unloadable_constants << 'RitesPortal'
+ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'
 ActiveSupport::Dependencies.load_once_paths.delete('vendor/plugins/rites_portal')
   
 # textmate-footnotes
