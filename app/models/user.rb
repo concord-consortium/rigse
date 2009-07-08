@@ -1,4 +1,4 @@
-require RAILS_ROOT + "/vendor/plugins/rites_portal/app/models/user"
+load RAILS_ROOT + "/vendor/plugins/rites_portal/app/models/user.rb"
 
 class User < ActiveRecord::Base
   has_many :investigations
