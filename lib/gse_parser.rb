@@ -286,8 +286,7 @@ class GseParser
       assessment_target.grade_span = grade_span
       assessment_target.save
       themes.each do |theme|
-        AssessmentTargetUnifyingTheme.new(:assessment_target_id => assessment_target.id,
-          :unifying_theme_id => @themes[theme].id).save!
+        assessment_target.add_unifying_theme(@themes[theme])
       end
       return assessment_target
     elsif !text.match(/\ANo further targets/i)
