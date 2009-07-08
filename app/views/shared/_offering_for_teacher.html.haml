@@ -1,4 +1,22 @@
-= offering.runnable.name
-= link_to 'run as learner', rites_portal_offering_url(offering, :format => :jnlp)
-= otml_link_for(offering.runnable)
-= run_link_for(offering.runnable)
+%div{ :id => dom_id_for(offering.runnable, :item), :class => 'item' }
+  %div.action_menu
+    %div.action_menu_header_left   
+      = link_to name_for_component(offering.runnable), offering.runnable
+      %span.author
+        = offering.runnable.user.name
+    %div.action_menu_header_right
+      %div{ :id => dom_id_for(offering.runnable, :offering_menu)}
+        - if (offering.id)
+          = link_to 'run as learner', rites_portal_offering_url(offering, :format => :jnlp)
+          = otml_link_for(offering.runnable)
+          = run_link_for(offering.runnable)
+        - else
+          (this offering has no id)
+          
+      
+  %div{:id => dom_id_for(offering.runnable, :details), :class => 'tiny'}
+    %p=offering.runnable.description
+    - if params[:mine_only]
+      %p
+        %i 
+          = updated_time_text(offering.runnable)
