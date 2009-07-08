@@ -1,6 +1,6 @@
 %OTDataCollector{ :local_id => ot_local_id_for(data_collector), :name => h(data_collector.name), 
   :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, 
-  :showControlBar => "true", :useDefaultToolBar => "false", :displayButtons => '0,1,2,3,4,5' }
+  :showControlBar => (data_collector.graph_type == 'Sensor').to_s, :useDefaultToolBar => "false", :displayButtons => data_collector.ot_button_str }
   - case data_collector.graph_type 
     - when 'Sensor'
       %source
@@ -24,6 +24,12 @@
             = generate_otml_datastore(data_collector)
       %dataSetFolder
         %OTFolderObject/
+    - when 'Static'
+      %source
+        %OTDataGraphable{ :name => h(truncate(data_collector.name, 12)), :controllable => 'false', :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
+        :color => "0xff0000", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
+          %dataStore
+            = generate_otml_datastore(data_collector)    
   - if prediction_graph = data_collector.prediction_graph_source
     %graphables
       %OTDataGraphable{ :name => h(truncate(prediction_graph.name, 12)), :controllable => 'true', :connectPoints => prediction_graph.connect_points.to_s, :drawMarks => prediction_graph.draw_marks.to_s, 
