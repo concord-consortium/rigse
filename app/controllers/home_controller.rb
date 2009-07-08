@@ -5,4 +5,6 @@ class HomeController < ApplicationController
     render :layout => false
   end
   
+  def pick_signup    
+  end
 end

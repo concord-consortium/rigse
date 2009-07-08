@@ -161,6 +161,8 @@ ActionController::Routing::Routes.draw do |map|
   map.home '/home', :controller => 'home', :action => 'index'
   map.root :controller => 'home', :action => 'index'
 
+  map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
+  
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
