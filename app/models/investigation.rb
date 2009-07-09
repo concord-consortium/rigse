@@ -27,9 +27,12 @@ class Investigation < ActiveRecord::Base
   
   acts_as_replicatable
   
-  #
-  # acts_as_state_machine for publication status:
-  #
+  
+  # use rubyist-aasm gem (acts_as_state_machine) 
+  # for publication status:
+  # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem
+  # and http://www.ruby-forum.com/topic/179721
+  # for a discussion on how the new aasm gem differs from the old plugin...
   include AASM 
   aasm_initial_state :draft
   aasm_column :publication_status
