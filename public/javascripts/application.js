@@ -34,6 +34,17 @@ flatten_sortables = function() {
   );
 }
 
+// take a extended dom_element and return a model name and id
+decode_model = function(elem) {
+  var dom_id = elem.identify() 
+  var match = dom_id.gsub(/(.*)_([0-9]+)/, function(match){
+    return match;
+  });
+  var matches = match.split(",");
+  return {type:matches[1], id: matches[2]};
+ }
+
+
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 dropdown_for = function(menu_dom_id,drop_down_dom_id) {
