@@ -1,8 +1,16 @@
 .padded_content
   %h3 Welcome to RITES Investigations
   - current_user.roles.each do |role|
+    - next if ["student","teacher"].include? role.title
     = render :partial => role.title
+  
+  - if current_user.portal_teacher
+    = render :partial => "teacher"
+    
+  - if current_user.portal_student
+    = render :partial => "student"
 
   = yield :authored_investigations
 
-  = yield :project_info
+  - if current_user.roles.detect {|r| r.title == "guest" }
+    = yield :project_info

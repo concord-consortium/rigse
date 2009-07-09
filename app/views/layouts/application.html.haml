@@ -83,11 +83,9 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          %li.trail= link_to 'Investigations', investigations_path
-          %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
-          %li.trail= link_to 'GSEs', grade_span_expectations_path
-
-          = yield :top_menu_items
+          - yield :top_menu_items
+          - @top_menu_items.flatten.uniq.each do |i|
+            %li.trail= i
 
       #content_container      
         #left_nav.nav_menu

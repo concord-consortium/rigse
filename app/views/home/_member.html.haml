@@ -1,10 +1,14 @@
+- content_for :top_menu_items do
+  - add_top_menu_item(link_to('Investigations', investigations_path))
+  - add_top_menu_item(link_to('My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'))
+  - add_top_menu_item(link_to('GSEs', grade_span_expectations_path))
+
 - content_for(:side_bar) do
   %p
     - field_set_tag 'Member' do
       Hello Member
-%p
-  Select the
-  = link_to 'Investigations', investigations_path
-  link to browse existing pages or write your own.
-
-- render_project_info
+- field_set_tag 'Author' do
+  %p
+    Select the
+    = link_to 'Investigations', investigations_path
+    link to browse existing pages or write your own.

@@ -1,3 +1,6 @@
+- content_for :top_menu_items do
+  - add_top_menu_item(link_to('Investigations', investigations_path))
+
 - content_for(:side_bar) do
   %p
     - field_set_tag 'Guest' do
@@ -9,5 +12,3 @@
     if you are a registered user or 
     = link_to 'Signup', pick_signup_path
     and become a member.
-
-- render_project_info

@@ -1,9 +1,7 @@
 - content_for :top_menu_items do
-  %li.trail= link_to 'Users', users_path
+  - add_top_menu_item(link_to('Users', users_path))
 
 - content_for(:side_bar) do
   %p
     - field_set_tag 'Admin' do
       Hello Admin
-
-- render_project_info

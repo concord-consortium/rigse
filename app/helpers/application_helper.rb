@@ -521,11 +521,9 @@ module ApplicationHelper
     return false
   end
   
-  def render_project_info
-    unless @rendered_project_info
-      render :partial => "home/project_info"
-      @rendered_project_info = true
-    end
+  def add_top_menu_item(link)
+    @top_menu_items ||= []
+    @top_menu_items << link
   end
 
 end

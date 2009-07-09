@@ -1,13 +1,17 @@
+- content_for :top_menu_items do
+  - add_top_menu_item(link_to('Investigations', investigations_path))
+
 - content_for(:side_bar) do
   %p
     - field_set_tag 'Teacher' do
       Hello Teacher
-%p
-  Select the
-  = link_to 'Investigations', investigations_path
-  link to browse Investigations you can use with your classes.
+- field_set_tag 'Teacher' do
+  %p
+    Select the
+    = link_to 'Investigations', investigations_path
+    link to browse Investigations you can use with your classes.
 
-- teacher = current_user.portal_teacher  
-- if teacher
-  %p= render :partial => 'rites_portal/clazzes/list_for_teacher', :locals => { :teacher => teacher }
+  - teacher = current_user.portal_teacher  
+  - if teacher
+    %p= render :partial => 'rites_portal/clazzes/list_for_teacher', :locals => { :teacher => teacher }
   
