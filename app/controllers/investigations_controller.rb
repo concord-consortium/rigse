@@ -281,5 +281,22 @@ class InvestigationsController < ApplicationController
     end
   end
 
+
+  # POST /grade_span_expectations/select_js
+  def list_filter
+    # remember the chosen domain and gradespan, it will probably continue..
+    cookies[:gradespan] = @grade_span = params[:gradespan] || "%" # default to all grade_spans
+    cookies[:domain] = @domain_id = params[:domain].to_i
+
+    @investigations = Investigation.grade_and_domain(@grade_span,@domain_id)
+  
+    if request.xhr?
+      render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations}
+    else
+      respond_to do |format|
+        format.js
+      end
+    end
+  end
   
 end

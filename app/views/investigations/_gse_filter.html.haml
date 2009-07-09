@@ -1,19 +1,13 @@
-:javascript
-  function log_gradespan() {
-    //console.log('gradespan: ' + $F('gradespan'))
-  }
-  function log_domain() {
-    //console.log('domain: ' + $F('domain'))
-  }
-
-%form#selector
-  - field_set_tag ' filter gses ' do
-    grade span:
-    %select#gradespan{:name=>'gradespan', :onchange=>'log_gradespan();' }
-      - grade_spans.each do |gs|
-        %option{:value=>gs}= gs
-    domain:
-    %select#domain{:name=>'domain', :onchange=>'log_domain();' }
-      - domains.each do |domain|
-        %option{:value=>domain.id}= domain.name
-= observe_form :selector, :url => { :controller=>'grade_span_expectations', :action => "select_js"}, :update => {:success => 'selectbox'}
+%form#gse_selector
+  - field_set_tag ' filter ' do
+    %span{:style=>"white-space: nowrap;"}
+      grade span:
+      %select#gradespan{:name=>'gradespan'}
+        %option{:value=>"%"}= "all grades"
+        - grade_spans.each do |gs|
+          %option{:value=>gs}= gs
+    %span{:style=>"white-space: nowrap;"}      
+      domain:
+      %select#domain{:name=>'domain'}
+        - domains.each do |domain|
+          %option{:value=>domain.id}= domain.name

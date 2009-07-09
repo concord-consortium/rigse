@@ -1,3 +1,4 @@
 = render :partial => 'investigations/gse_filter'
+= observe_form :gse_selector, :url => { :controller=>'grade_span_expectations', :action => "select_js"}, :update => {:success => 'selectbox'}
 - form_for (@investigation,:before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f}

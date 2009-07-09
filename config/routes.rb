@@ -121,7 +121,8 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post
+    :destroy => :post,
+    :list_filter => :post
   }
   
   map.resources :activities, :member => {
