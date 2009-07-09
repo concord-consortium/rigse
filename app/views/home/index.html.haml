@@ -11,6 +11,3 @@
     = render :partial => "student"
 
   = yield :authored_investigations
-
-  - if current_user.roles.detect {|r| r.title == "guest" }
-    = yield :project_info
