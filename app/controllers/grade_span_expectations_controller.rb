@@ -41,19 +41,11 @@ class GradeSpanExpectationsController < ApplicationController
   # POST /grade_span_expectations/select_js
   def select_js
     # remember the chosen domain and gradespan, it will probably continue..
-    cookies[:gradespan] = params[:gradespan]
-    cookies[:domain] = params[:domain]
-    
-    @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', params[:gradespan]])
-    @grade_span_expectations = @grade_span_expectations.select do |gse|
-      if gse.knowledge_statements.detect { |ks| 
-        ks.domain_id == params[:domain].to_i 
-        } 
-        true
-      else
-        false
-      end
-    end
+    cookies[:gradespan] = @grade_span = params[:gradespan] || "%" # default to all grade_spans
+    cookies[:domain] = @domain_id = params[:domain].to_i
+
+    @grade_span_expectations = GradeSpanExpectation.grade_and_domain(@grade_span,@domain_id)
+  
     if request.xhr?
       render :partial => 'select_js'
     else
