@@ -527,5 +527,10 @@ module ApplicationHelper
       @rendered_project_info = true
     end
   end
+  
+  def add_top_menu_item(link)
+    @top_menu_items ||= []
+    @top_menu_items << link
+  end
 
 end
