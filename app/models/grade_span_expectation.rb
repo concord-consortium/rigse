@@ -12,14 +12,15 @@ class GradeSpanExpectation < ActiveRecord::Base
 
   acts_as_replicatable
   
-  # our models are a bit to nested for this to work reasonably I think...
-  # named_scope :grade_span_and_domain, lambda { |gs,domain_id|
-  #   {
-  #     :joins => [:assessment_target, :knowledge_statements],
-  #     :conditions => { 'knowledge_statements.domain_id' => domain_id }  
-  #   }
-  # }
   
+  # brittle;,because we must know too much about table names ...
+  named_scope :grade_and_domain, lambda { |gs,domain_id|
+    {
+      :joins => "JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)",
+      :conditions =>[ 'knowledge_statements.domain_id = ? and grade_span_expectations.grade_span LIKE ?', domain_id, gs ]
+    }
+  }
+  # 
   #:default_scope :conditions => "grade_span LIKE '%9-11%'"  
   # above was causing errors on otto when running setup-from-scratch:
   # 

@@ -38,7 +38,7 @@ class Investigation < ActiveRecord::Base
   aasm_column :publication_status
   @@publication_states = [:draft,:published]
   @@publication_states.each { |s| aasm_state s}
-  
+
   aasm_event :publish do
     transitions :to => :published, :from => [:draft]
   end
@@ -46,7 +46,24 @@ class Investigation < ActiveRecord::Base
   aasm_event :un_publish do
     transitions :to => :draft, :from => [:published]
   end  
+  # end acts_as_state_machine stuff
   
+  # for convinience (will not work in find_by_* &etc.)
+  [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
+  
+  # brittle;,because we must know too much about table names ...
+  named_scope :grade_and_domain, lambda { |gs,domain_id|
+    {
+      :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)",
+      :conditions =>[ 'knowledge_statements.domain_id = ? and grade_span_expectations.grade_span LIKE ?', domain_id, gs ]
+    }
+  }
+  
+  named_scope :published, 
+  {
+    :conditions =>{:publication_status => "published"}
+  }
+
   include Changeable
   include Noteable # convinience methods for notes...
   
@@ -58,6 +75,13 @@ class Investigation < ActiveRecord::Base
       @@searchable_attributes
     end
   end
+  
+  def self.find_by_grade_span_and_domain_id(grade_span,domain_id)
+    @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
+    @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
+    # @investigations.flatten!.compact!
+  end
+  
   
   def after_save
     if self.user
