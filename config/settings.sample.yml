@@ -1,6 +1,8 @@
 development: &non_production_settings
   site_url: http://localhost:3000
   site_name: RITES Investigations (development)
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
@@ -15,6 +17,8 @@ test:
 staging:
   site_url: http://rites.dev.concord.org
   site_name: RITES Investigations (staging)
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
@@ -26,6 +30,8 @@ staging:
 production:
   site_url: http://rites.dev.concord.org
   site_name: RITES Investigations
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
