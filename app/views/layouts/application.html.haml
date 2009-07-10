@@ -76,6 +76,9 @@
             = link_to 'Login', login_path
             \/
             = link_to 'Signup', pick_signup_path
+          - if @original_user.has_role?('admin', 'manager')
+            \/
+            = link_to 'Switch', switch_user_path(current_user)
             
       #nav_top
         %span.hidden.doNotPrint
