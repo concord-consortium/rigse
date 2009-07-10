@@ -1,4 +1,4 @@
-class InvestigationsController < ApplicationController
+class InvestigationsController < AuthoringController
   # GET /pages
   # GET /pages.xml
   prawnto :prawn=>{
