@@ -400,6 +400,11 @@ HEREDOC
           :email => APP_CONFIG[:admin_email], 
           :password => "password", :password_confirmation => "password"),
 
+        manager_user = User.find_or_create_by_login(:login => 'manager', 
+          :first_name => 'Manager', :last_name => 'User', 
+          :email => 'manager@concord.org', 
+          :password => "password", :password_confirmation => "password"),
+
         researcher_user = User.find_or_create_by_login(:login => 'researcher', 
           :first_name => 'Researcher', :last_name => 'User', 
           :email => 'researcher@concord.org', 
@@ -450,6 +455,7 @@ HEREDOC
       end
 
       admin_user.add_role('admin')
+      manager_user.add_role('manager')
       researcher_user.add_role('researcher')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
