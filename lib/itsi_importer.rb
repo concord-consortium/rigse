@@ -81,7 +81,6 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
         if itsi_activity.introduction_text_response
           ItsiImporter.add_open_response_to_page(page, question_prompt)
         end
@@ -100,7 +99,6 @@ class ItsiImporter
       unless body.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
       end
 
       # materials
@@ -113,7 +111,6 @@ class ItsiImporter
       unless body.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
       end
 
       # safety
@@ -126,7 +123,6 @@ class ItsiImporter
       unless body.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
       end
 
       # procedure
@@ -144,7 +140,6 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
         if itsi_activity.proced_text_response
           ItsiImporter.add_open_response_to_page(page, question_prompt)
         end
@@ -172,7 +167,6 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
         if itsi_activity.prediction_text_response
           ItsiImporter.add_open_response_to_page(page, question_prompt)
         end
@@ -211,7 +205,6 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
         if itsi_activity.collectdata_probe_active
           probe_type = ProbeType.find(itsi_activity.probe_type_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
@@ -319,7 +312,6 @@ class ItsiImporter
       unless body.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
       end
 
       # conclusion
@@ -336,7 +328,6 @@ class ItsiImporter
       unless body.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
       end
 
       # further
@@ -363,7 +354,6 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        section.pages << page
         if itsi_activity.further_probe_active
           probe_type = ProbeType.find(itsi_activity.further_probetype_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.further_probe_multi)
@@ -428,7 +418,7 @@ class ItsiImporter
           p.name = "#{name}"
           p.description = page_description
         end
-        [page, nil]
+        page_embeddable = nil
       else
         page_embeddable = Xhtml.create do |x|
           x.name = name + ": Body Content (html)"
@@ -440,8 +430,9 @@ class ItsiImporter
           p.description = page_description
           page_embeddable.pages << p
         end
-        [page, page_embeddable]
       end
+      section.pages << page
+      [page, page_embeddable]
     end
 
     def add_model_to_page(page, model)
