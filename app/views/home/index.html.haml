@@ -1,7 +1,6 @@
 .padded_content
   %h3 Welcome to RITES Investigations
   - current_user.roles.each do |role|
-    - next if ["student","teacher"].include? role.title
     = render :partial => role.title
   
   - if current_user.portal_teacher
