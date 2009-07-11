@@ -462,16 +462,16 @@ HEREDOC
       
       default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
 
-      site_district = RitesPortal::District.find_or_create_by_name(APP_CONFIG[:site_district])
+      site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
       site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
       site_district.save!
-      site_school = RitesPortal::School.find_or_create_by_name_and_district_id(APP_CONFIG[:site_school], site_district.id)
+      site_school = Portal::School.find_or_create_by_name_and_district_id(APP_CONFIG[:site_school], site_district.id)
       site_school.description = "This is a virtual school used as a default for Teachers, Classes and Students that don't belong to any other schools."
       site_school.save!
 
       # start with two semesters
-      site_school_fall_semester = RitesPortal::Semester.find_or_create_by_name_and_school_id('Fall', site_school.id)
-      site_school_spring_semester = RitesPortal::Semester.find_or_create_by_name_and_school_id('Spring', site_school.id)
+      site_school_fall_semester = Portal::Semester.find_or_create_by_name_and_school_id('Fall', site_school.id)
+      site_school_spring_semester = Portal::Semester.find_or_create_by_name_and_school_id('Spring', site_school.id)
 
       # we need at least one grade level, lets start with ninth grade
       attributes = {
@@ -479,17 +479,17 @@ HEREDOC
         :description => '9th grade',
         :school_id => site_school.id
       }
-      unless ninth_grade = RitesPortal::GradeLevel.find(:first, :conditions => attributes)
-        ninth_grade = RitesPortal::GradeLevel.create!(attributes)
+      unless ninth_grade = Portal::GradeLevel.find(:first, :conditions => attributes)
+        ninth_grade = Portal::GradeLevel.create!(attributes)
       end
       
       # default course
-      site_school_default_course = RitesPortal::Course.find_or_create_by_name_and_school_id('default course', site_school.id)
+      site_school_default_course = Portal::Course.find_or_create_by_name_and_school_id('default course', site_school.id)
       site_school_default_course.grade_levels << ninth_grade
       
       # default_school_teacher = teacher_user.portal_teacher.find_or_create_by_school_id(site_school.id)
       unless default_school_teacher = teacher_user.portal_teacher
-        default_school_teacher = RitesPortal::Teacher.create!(:user_id => teacher_user.id)
+        default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grade_levels << ninth_grade
 
@@ -504,8 +504,8 @@ HEREDOC
         :class_word => 'abc12345',
         :description => 'This is a default class created for the default school ... etc'
       }
-      unless default_course_class = RitesPortal::Clazz.find(:first, :conditions => attributes)
-        default_course_class = RitesPortal::Clazz.create!(attributes)
+      unless default_course_class = Portal::Clazz.find(:first, :conditions => attributes)
+        default_course_class = Portal::Clazz.create!(attributes)
       end
       default_course_class.status = 'open'
       default_course_class.save
@@ -516,8 +516,8 @@ HEREDOC
         :runnable_id => default_investigation.id,
         :runnable_type => default_investigation.class.name
       }
-      unless offering = RitesPortal::Offering.find(:first, :conditions => attributes)
-        offering = RitesPortal::Offering.create!(attributes)
+      unless offering = Portal::Offering.find(:first, :conditions => attributes)
+        offering = Portal::Offering.create!(attributes)
       end
       offering.status = 'active'
       offering.save
@@ -527,8 +527,8 @@ HEREDOC
         :user_id => student_user.id,
         :grade_level_id => ninth_grade.id
       }
-      unless default_student = RitesPortal::Student.find(:first, :conditions => attributes)
-        default_student = RitesPortal::Student.create!(attributes)
+      unless default_student = Portal::Student.find(:first, :conditions => attributes)
+        default_student = Portal::Student.create!(attributes)
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class

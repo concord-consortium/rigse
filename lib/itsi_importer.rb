@@ -3,9 +3,9 @@ class ItsiImporter
   class <<self
     
     def find_or_create_itsi_import_user
-      unless user = User.find_by_login('rites_itsi_import_user')
+      unless user = User.find_by_login('itsi_import_user')
         member_role = Role.find_by_title('member')
-        user = User.create(:login => 'rites_itsi_import_user', :first_name => 'ITSI', :last_name => 'Importer', :email => 'rites_itsi_import_user@concord.org', :password => "it$iu$er", :password_confirmation => "it$iu$er")
+        user = User.create(:login => 'itsi_import_user', :first_name => 'ITSI', :last_name => 'Importer', :email => 'itsi_import_user@concord.org', :password => "it$iu$er", :password_confirmation => "it$iu$er")
         user.save
         user.register!
         user.activate!
@@ -14,12 +14,12 @@ class ItsiImporter
       user
     end
     
-    def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, rites_user, logging=false)
+    def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, logging=false)
       itsi_prefix = "ITSI Unit: #{ccp_itsi_unit.unit_name}"
       puts "creating: #{itsi_prefix}: "
       investigation = Investigation.create do |i|
         i.name = itsi_prefix
-        i.user = rites_user
+        i.user = user
         i.description = "An ITSI unit is a collection of ITSI Activities"
       end
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
@@ -27,7 +27,7 @@ class ItsiImporter
         begin
           unless foreign_key.empty?
             itsi_activity = Itsi::Activity.find(foreign_key)
-            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
+            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user)
             puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
           else
             puts "  -- foreign key empty for ITSI Activity --"
@@ -39,18 +39,18 @@ class ItsiImporter
       puts
     end
 
-    def create_investigation_from_itsi_activity(itsi_activity, rites_user, logging=false)
+    def create_investigation_from_itsi_activity(itsi_activity, user, logging=false)
       itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
       puts "creating: #{itsi_prefix}"
       investigation = Investigation.create do |i|
         i.name = itsi_prefix
-        i.user = rites_user
+        i.user = user
         i.description = itsi_activity.description
       end
-      ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
+      ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user)
     end
 
-    def add_itsi_activity_to_investigation(investigation, itsi_activity, rites_user)
+    def add_itsi_activity_to_investigation(investigation, itsi_activity, user)
       @@prediction_graph = nil
       if itsi_activity.collectdata_probe_active
         @@first_probe_type = ProbeType.find(itsi_activity.probe_type_id)
@@ -61,7 +61,7 @@ class ItsiImporter
       itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
       activity = Activity.create do |i|
         i.name = itsi_prefix
-        i.user = rites_user
+        i.user = user
         i.description = itsi_activity.description
       end
       investigation.activities << activity
