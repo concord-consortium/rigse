@@ -3,10 +3,10 @@
   - current_user.roles.each do |role|
     = render :partial => role.title
   
-  - if current_user.portal_teacher
+  - if @portal_teacher
     = render :partial => "teacher"
     
-  - if current_user.portal_student
+  - if @portal_student
     = render :partial => "student"
 
   = yield :authored_investigations

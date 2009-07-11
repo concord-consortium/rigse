@@ -6,8 +6,5 @@
 -field_set_tag 'Student' do
   %p
     Content for the Student:
-    = current_user.name   
-    - student = current_user.portal_student  
-    - if student
-      = render :partial => 'portal/clazzes/list_for_student', :locals => { :student => student }
+  = render :partial => 'portal/clazzes/list_for_student', :locals => { :student => @portal_student }
   
