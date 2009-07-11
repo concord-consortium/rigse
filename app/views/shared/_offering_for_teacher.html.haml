@@ -7,7 +7,7 @@
     %div.action_menu_header_right
       %div{ :id => dom_id_for(offering, :offering_menu)}
         - if (offering.id)
-          = link_to 'run as learner', rites_portal_offering_url(offering, :format => :jnlp)
+          = link_to 'run as learner', portal_offering_url(offering, :format => :jnlp)
           = otml_link_for(offering.runnable)
           = run_link_for(offering.runnable)
         - else

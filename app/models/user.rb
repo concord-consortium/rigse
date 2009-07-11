@@ -1,4 +1,4 @@
-require_dependency RAILS_ROOT + "/vendor/plugins/rites_portal/app/models/user.rb"
+require_dependency RAILS_ROOT + "/vendor/plugins/portal/app/models/user.rb"
 
 class User < ActiveRecord::Base
   has_many :investigations
