@@ -7,14 +7,3 @@
   %p
     - field_set_tag 'Member' do
       Hello Member
-- field_set_tag 'Author' do
-  %p
-    Select the
-    = link_to 'Investigations', investigations_path
-    link to browse existing investigations or write your own.
-  - if current_user.investigations.size > 0
-    %em= "Investigations you've authored"
-    %ul
-      - current_user.investigations.each do |inv|
-        %li
-          = link_to name_for_component(inv), inv
