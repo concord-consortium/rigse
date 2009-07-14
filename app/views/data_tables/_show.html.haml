@@ -15,4 +15,5 @@
               = render :partial => "data_tables/cell", :locals => {:data_table => data_table, :x => column_index, :y => row_index}
 
     %input{:id =>dom_id_for(data_table, :cell_data), :type => :hidden, :name => :data, :value => data_table.data}
+- if (data_table.changeable? current_user)
   = watch_data_fields(data_table,form_id,data_id)
