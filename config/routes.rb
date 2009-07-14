@@ -53,7 +53,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :data_tables, :member => {
     :print => :get,
-    :destroy => :post
+    :destroy => :post,
+    :update_cell_data => :post
   }
 
   map.resources :multiple_choices, :member => {

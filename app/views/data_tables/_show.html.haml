@@ -1,5 +1,7 @@
+- data_id  = dom_id_for(data_table, :cell_data)
+- form_id  = dom_id_for(data_table, :form_edit_cells)
 %div{:id => dom_id_for(data_table, :details), :class => 'content'}
-  = wrap_edit_link_around_content(data_table, options={:complete => mce_init_string}) do
+  %form{:name=> form_id,:id=> form_id}
     %table.data_table
       %thead
         %tr
@@ -9,5 +11,9 @@
         -1.upto(data_table.visible_rows) do |row_index|
           %tr
           -1.upto(data_table.column_count) do |column_index|
-            %td
-              %input{:type=>"text", :name=>"data_table_data_#{row_index}_#{column_index}", :value=>"#{data_table.cell_data(row_index,column_index)}", :size=>6, :id=>"data_table_data_#{row_index}_#{column_index}"}
+            %td{:id =>dom_id_for(data_table, "cell_container_#{row_index}_#{column_index}".to_sym)}
+              = render :partial => "data_tables/cell", :locals => {:data_table => data_table, :x => column_index, :y => row_index}
+
+    %input{:id =>dom_id_for(data_table, :cell_data), :type => :hidden, :name => :data, :value => data_table.data}
+- if (data_table.changeable? current_user)
+  = watch_data_fields(data_table,form_id,data_id)

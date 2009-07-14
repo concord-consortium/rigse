@@ -28,49 +28,18 @@ class DataTable < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.row_delimiter
-    "\n"
-  end
-
-  def self.column_delimiter
+  def self.record_delimiter
     ","
   end
 
   def headings=(heading_array)
-    self.column_names = heading_array.join(DataTable::column_delimiter)
-  end
-
-  def data=(data_array)
-    text = ""
-    data_array.each do |row|
-      text << row.join(DataTable::column_delimiter) << DataTable::row_delimiter
-    end
-    self.column_data = text
+    self.column_names = heading_array.join(DataTable.record_delimiter)
   end
   
   def headings
     return unless self.column_names
-    self.column_names.split(DataTable::column_delimiter)
+    self.column_names.split(DataTable.record_delimiter)
   end
-  
-  def data
-    return unless self.column_data
-    column_data.split(DataTable::row_delimiter).map { |row| row.split(DataTable::column_delimiter) }
-  end
-
-  #
-  # There are probably are faster, more efficient ways to pull out these indicies....
-  #
-  def cell_data(row_index,column_index)
-    begin
-      return data[row_index-1][column_index-1]
-    rescue
-      logger.error "bad cell number: Row:#{row_index}, Column:#{column_index}"
-      logger.error $!
-      return ""
-    end
-  end
-
 
   #
   # There are probably are better / simpler  / faster ways to pull out indecies.
@@ -84,7 +53,27 @@ class DataTable < ActiveRecord::Base
       return ""
     end
   end
+  
+  def data=(data_array)
+    self.column_data = data_array.join(DataTable.record_delimiter)
+  end
 
+  def data
+    return unless self.column_data
+    column_data.split(DataTable.record_delimiter)
+  end
+
+  #
+  # There are probably are faster, more efficient ways to pull out these indicies....
+  #
+  def cell_data(column_index,row_index)
+    if column_index > column_count
+      logger.error "bad cell column: Column:#{column_index}"
+      return nil
+    end
+    index = (row_index -1) * column_count + (column_index -1)
+    return data[index]
+  end
 
   def self.display_name
     "Data Table"

@@ -131,4 +131,19 @@ class DataTablesController < ApplicationController
     end
     @data_table.destroy    
   end
+  
+  def update_cell_data
+    @data_table = DataTable.find(params[:id])
+    if @data_table.changeable? current_user
+      @data_table.column_data = params[:data]
+      if @data_table.save
+        # TODO: give some good feedback to the author 
+        # that the data has been updated.
+        # render :update do |page|
+        #   page << "debug('ok + #{@data_table.data}')"
+        # end
+      end
+    end
+    render :nothing => true
+  end
 end
