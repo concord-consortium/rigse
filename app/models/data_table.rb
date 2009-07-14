@@ -59,7 +59,7 @@ class DataTable < ActiveRecord::Base
   end
 
   def data
-    return unless self.column_data
+    return [] unless self.column_data
     column_data.split(DataTable.record_delimiter)
   end
 
@@ -69,7 +69,7 @@ class DataTable < ActiveRecord::Base
   def cell_data(column_index,row_index)
     if column_index > column_count
       logger.error "bad cell column: Column:#{column_index}"
-      return nil
+      return ""
     end
     index = (row_index -1) * column_count + (column_index -1)
     return data[index]
