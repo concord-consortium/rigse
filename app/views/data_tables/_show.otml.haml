@@ -4,7 +4,7 @@
       %channelDescriptions
         - data_table.column_names.split(',').each do |column_name| 
           %OTDataChannelDescription{ :name => column_name, :numericData => 'false' }/
-      %values
-        - data_table.column_count.times do
-          - data_table.visible_rows.times do
-            %string/
+      %valuesString
+        - 1.upto data_table.visible_rows do |y|
+          - 1.upto data_table.column_count do |x|
+            ="#{data_table.cell_data(x,y)}"
