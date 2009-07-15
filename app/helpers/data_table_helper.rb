@@ -1,19 +1,5 @@
 module DataTableHelper
   
-  #
-  #
-  #
-  def pack_field_params
-    <<-EOF_JS
-    $$('.data_table_js_field_target').each(function (t) {
-      if (t.value =='') {
-        t.remove();
-      }
-    })
-    $('column_names').value = $$('.data_table_js_field_target').pluck('value').join(',');
-    $('column_count').value = $$('.data_table_js_field_target').size()
-    EOF_JS
-  end
   
   #
   # 
@@ -34,4 +20,63 @@ module DataTableHelper
     EOF_HTML
   end
   
+  #
+  #
+  #
+  def pack_field_params
+    <<-EOF_JS
+    $$('.data_table_js_field_target').each(function (t) {
+      if (t.value =='') {
+        t.remove();
+      }
+    })
+    $('column_names').value = $$('.data_table_js_field_target').pluck('value').join(',');
+    $('column_count').value = $$('.data_table_js_field_target').size();
+    EOF_JS
+  end
+  
+  #
+  # TODO: Confine to one form dom element.
+  #
+  def pack_cells(data_table)
+    <<-EOF_JS
+    $('#{data_id(data_table)}').value = $$('.#{data_cell_class(data_table)}').pluck('value').join(',');
+    EOF_JS
+  end
+  
+  
+  
+  #
+  # Probably would be good to extract this to a haml partial
+  #
+  # def data_table_cell_tag(cell_value = "cell",ix=0,iy=0)
+  #   <<-EOF_HTML
+  #   <div class="data_table_cell_conainer">
+  #     <input type="text" size="16" name="cell_#{ix}_#{iy}" class="data_table_cell" value="#{cell_value}"></input>
+  #   </div>
+  #   EOF_HTML
+  # end  
+
+
+  def form_id(data_table)
+    dom_id_for(data_table, :data_cell_form)
+  end
+
+  def data_id(data_table)
+    dom_id_for(data_table, :data)  
+  end
+  
+  def data_cell_class(data_table)
+     dom_id_for(data_table, :data_table_cell)
+  end
+
+  def watch_data_fields(data_table)
+    observe_form(form_id(data_table), 
+      :before => pack_cells(data_table),
+      :url => { :controller => :data_tables, :action => :update_cell_data, :id => data_table.id}, 
+      :with => "'data=' + $('#{data_id(data_table)}').value")
+  end
 end
+
+  
+
