@@ -3,15 +3,44 @@
 - content_for("section_#{dom_id_for(section)}".to_sym) do
   %OTSection{ :local_id => ot_local_id_for(section), :name => ot_menu_display_name(section)   }
     %header
-      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
-        %bodyText
-          - if teacher_only?(section)
-            - if teacher_mode
-              #content.teacher_mode
-                %h1= h(section.name)
-          - else
-            #content
-              %h1= h(section.name)
+      %OTCardContainer{ :local_id => ot_local_id_for(section, :section_header_container), :height => 200, :contentsMayScroll => 'true' }
+        %cards
+          %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header), :authorPageHeight => 200 }
+            %bodyText
+              - if teacher_mode
+                - if teacher_only?(section)
+                  #content.teacher_mode
+                    %h1= h(section.name)
+                - else
+                  #content
+                    %h1= h(section.name)
+                %br
+                #teacher_notes.teacher_mode
+                  - if section.investigation
+                    - if section.investigation.teacher_notes.size > 0
+                      %h3= "Investigation notes:"
+                      .activity_teacher_note= section.investigation.teacher_notes[0].body
+                  
+                  - if section.activity 
+                    - if section.activity.teacher_notes.size > 0
+                      %h3= "Activity notes:"
+                      .activity_teacher_note= section.activity.teacher_notes[0].body
+                  
+                  - if section.teacher_notes.size > 0
+                    %h3= "Section notes:"
+                    .section_teacher_note= section.teacher_notes[0].body
+
+                  - section.pages.each do |page|
+                    .page_teacher_notes
+                      - if page.teacher_notes.size > 0
+                        %h3="Page notes (#{page.name}):"
+                        .page_teacher_note= page.teacher_notes[0].body
+                 
+              - else
+                #content
+                  %h1= h(section.name)
+        %currentCard
+          %object{ :refid => ot_local_id_for(section, :header) }/
             
     %content
       %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
@@ -26,28 +55,7 @@
         %viewedCards
     %footer
       %object{ :refid => ot_refid_for(section, :menu) }/
-    - if teacher_mode    
-      %east
-        %OTViewChild{ :useScrollPane => "true" }
-          %object
-            %OTCompoundDoc
-              %bodyText
-                #content.teacher_notes
-                  %h1= "Teacher Notes"
-                  %h2= "Section Notes"
-                  .section_teacher_notes
-                    - if section.teacher_note
-                      = section.teacher_note.body
-                    - else
-                      = "no teacher notes for section"
-                  %h2= "Page Notes"
-                  - section.pages.each do |page|
-                    %h3= page.name
-                    .page_teacher_notes
-                      - if page.teacher_note                    
-                        = page.teacher_note.body
-                      - else
-                        = "no teacher notes for page"
+
 
 - content_for(:library) do
 
