@@ -105,6 +105,7 @@ class User < ActiveRecord::Base
   #  user.has_role?(%w{admin manager})
   #
   def has_role?(*role_list)
+    roles.reload
     (roles.map{ |r| r.title.downcase } & role_list.flatten).length > 0
   end
 
@@ -112,6 +113,29 @@ class User < ActiveRecord::Base
     !has_role?(role_list)
   end
 
+  def add_role(role)
+    unless has_role?(role)
+      roles << Role.find_by_title(role)
+    end
+  end
+
+  def remove_role(role)
+    if has_role?(role)
+      roles.delete Role.find_by_title(role)
+    end
+  end
+
+  def set_role_ids(role_ids)
+    all_roles = Role.find(:all)
+    all_roles.each do |role|
+      if role_ids.find { |id| id.to_i == role.id }
+        add_role(role.title)
+      else
+        remove_role(role.title)
+      end
+    end
+  end
+  
   def make_user_a_member
     roles << Role.find_by_title('member')
   end
