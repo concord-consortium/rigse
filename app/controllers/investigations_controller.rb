@@ -131,7 +131,12 @@ class InvestigationsController < ApplicationController
   def edit
     
     @investigation = Investigation.find(params[:id])
-    @gse = @investigation.grade_span_expectation
+    # if there is no gse assign a default one:
+    unless @gse = @investigation.grade_span_expectation
+      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @investigation.grade_span_expectation = @gse
+      @investigation.save!
+    end
     
     session[:original_gse_id] = session[:gse_id] = @gse.id
     session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
