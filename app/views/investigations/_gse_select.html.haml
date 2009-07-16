@@ -1,2 +1,3 @@
 expectation:
-= select(:investigation, :grade_span_expectation_id, related_gses.collect { |gse| [gse.gse_key, gse.id] }, { :selected => gse.id, :include_blank => "Select a GSE" })
+= select(:investigation, :grade_span_expectation_id, related_gses.collect { |gse| [gse.gse_key, gse.id] }, { :selected => selected_gse.id || "", :include_blank => "Select a GSE" })
+= observe_field :grade_span, :url => { :action => "gse_select" }, :with => 'grade_span', :update => {:success => 'gse_select'}

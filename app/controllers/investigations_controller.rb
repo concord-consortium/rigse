@@ -198,14 +198,14 @@ class InvestigationsController < ApplicationController
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
-      render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse }
+      render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @selected_gse }
     else
       respond_to do |format|
-        format.js { render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse } }
+        format.js { render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @selected_gse } }
       end
     end
-    
   end
+  
   
   # PUT /pages/1
   # PUT /pages/1.xml
