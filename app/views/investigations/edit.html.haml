@@ -1,5 +1,5 @@
 - form_for (@investigation,:before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f}
+  = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f, :selected_gse => @gse, :related_gses => @related_gses}
 
 - field_set_tag 'Current GSE' do
   #current_gse_description
@@ -9,4 +9,4 @@
 
 = observe_field :domain_id, :url => { :action => "gse_select" }, :with => 'domain_id', :update => {:success => 'gse_select'}
 
-= observe_field :investigation_grade_span_expectation_id, :url => { :controller=>'grade_span_expectations', :action => "summary"}, :with => 'id' , :update => {:success => 'gse_summary_container'}
+
