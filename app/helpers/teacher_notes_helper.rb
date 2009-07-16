@@ -9,9 +9,8 @@ module TeacherNotesHelper
       :name => 'teacher_note[domain_ids][]' 
   end
 
-  
   def grade_spans
-    GradeSpanExpectation.find(:all, :select => "DISTINCT(grade_span)").map() { |i| i.grade_span}
+    GradeSpanExpectation.grade_spans
   end
   
   def domains
