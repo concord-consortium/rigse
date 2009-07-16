@@ -72,6 +72,7 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
+          @user.set_role_ids(params[:user][:role_ids])
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do 
             if request.env["HTTP_REFERER"] =~ /preferences/
