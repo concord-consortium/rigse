@@ -119,7 +119,7 @@ class InvestigationsController < ApplicationController
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :investigation => @investigation }
+      render :partial => 'remote_form', :locals => { :investigation => @investigation, :related_gses => @related_gses, :selected_gse =>@gse}
     end
     respond_to do |format|
       format.html # new.html.erb
@@ -129,7 +129,6 @@ class InvestigationsController < ApplicationController
 
   # GET /pages/1/edit
   def edit
-    
     @investigation = Investigation.find(params[:id])
     # if there is no gse assign a default one:
     unless @gse = @investigation.grade_span_expectation
@@ -145,7 +144,7 @@ class InvestigationsController < ApplicationController
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :investigation => @investigation }
+      render :partial => 'remote_form', :locals => { :investigation => @investigation,:related_gses => @related_gses, :selected_gse => @gse}
     end
   end
 
@@ -198,14 +197,14 @@ class InvestigationsController < ApplicationController
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
-      render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse }
+      render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @selected_gse }
     else
       respond_to do |format|
-        format.js { render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse } }
+        format.js { render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @selected_gse } }
       end
     end
-    
   end
+  
   
   # PUT /pages/1
   # PUT /pages/1.xml
