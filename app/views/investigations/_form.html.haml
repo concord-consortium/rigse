@@ -1,18 +1,9 @@
 = edit_menu_for(investigation, f)
-- field_set_tag 'Selected GSE: ' do
-  #selectbox
-    #gse_discription
-      - if investigation.grade_span_expectation
-        %h3=investigation.grade_span_expectation.gse_key
-        =investigation.grade_span_expectation.description
-        %br
-        [select a new grade-span or domain above to change]
-      - else
-        select a grade span and domain from the above lists...
 - field_set_tag 'name' do
   = f.text_field :name
 
 - field_set_tag 'description' do
-  = f.text_area :description, :id => 'description_field', :class => 'mceNoEditor'
+  = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 80, :class => 'mceNoEditor'
+
 
 = javascript_tag("$('investigation_name').activate();")
