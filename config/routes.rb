@@ -147,10 +147,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
   map.resources :grade_span_expectations, :collection => { 
     :select_js => :post,
+    :summary => :post,
     :reparse_gses => :put,
     :select => :get
   }, :member => {
-      :print => :get
+    :print => :get
   }
 
   map.resources :images
