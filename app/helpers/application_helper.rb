@@ -489,6 +489,7 @@ module ApplicationHelper
   end
   
   def render_scoped_reference(thing)
+    return "" if thing == nil
     if in_render_scope?(thing)
       capture_haml do
         haml_tag :object, :refid => ot_refid_for(thing)

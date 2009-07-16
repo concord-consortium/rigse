@@ -10,6 +10,16 @@ class GradeSpanExpectation < ActiveRecord::Base
   belongs_to :assessment_target
   has_many :knowledge_statements, :through => :assessment_target
 
+  has_many :domains,
+    :finder_sql => 'SELECT domains.* FROM domains
+    INNER JOIN knowledge_statements ON knowledge_statements.domain_id = domains.id 
+    INNER JOIN assessment_targets ON knowledge_statements.id = assessment_targets.knowledge_statement_id 
+    WHERE  assessment_targets.id = #{assessment_target_id}'
+
+  def domain
+    domains.first
+  end
+  
   acts_as_replicatable
   
   # our models are a bit to nested for this to work reasonably I think...
@@ -92,18 +102,24 @@ class GradeSpanExpectation < ActiveRecord::Base
 
   self.extend SearchableModel
   
+  # class methods
   class <<self
+
     def searchable_attributes
       @@searchable_attributes
     end
+
+    # FIXME
+    # this should be a separate model ...
+    # and a start at this is in the portal code
+    def grade_spans
+      find(:all).collect { |gse| gse.grade_span }.uniq - ["K-2", "3-4"]
+    end
+
   end
 
   def description
     "#{assessment_target.description}"
-  end
-  
-  def domain
-    knowledge_statements[0].domain
   end
   
   def theme_keys

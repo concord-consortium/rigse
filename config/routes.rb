@@ -53,7 +53,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :data_tables, :member => {
     :print => :get,
-    :destroy => :post
+    :destroy => :post,
+    :update_cell_data => :post
   }
 
   map.resources :multiple_choices, :member => {
@@ -146,10 +147,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
   map.resources :grade_span_expectations, :collection => { 
     :select_js => :post,
+    :summary => :post,
     :reparse_gses => :put,
     :select => :get
   }, :member => {
-      :print => :get
+    :print => :get
   }
 
   map.resources :images
@@ -165,13 +167,15 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
   
+  map.admin '/admin', :controller =>'admin/users'
+  
   # Restful Authentication Resources
   map.resources :users, :member => { 
     :preferences => [:get, :put], 
     :interface => :get,
     :suspend   => :put,
     :unsuspend => :put,
-    :purge     => :delete } 
+    :purge     => :delete }
     
   map.resources :passwords
   map.resource :session

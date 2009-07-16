@@ -49,7 +49,7 @@ class BiologicaWorld < ActiveRecord::Base
   
   def self.by_scope(scope)
     if scope && scope.class != BiologicaWorld
-      scope.activity.biologica_worlds
+      scope.activity.investigation.biologica_worlds
     else
       []
     end

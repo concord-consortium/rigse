@@ -6,16 +6,6 @@
       %dt Domain
       %dd
         = h(assessment_target.knowledge_statement.domain.name)
-      %dt Unifying Themes
-      %dd
-        - themes = assessment_target.unifying_themes
-        - themes.each do |theme|
-          %ul
-            %li
-              = theme ? h(theme.name) : "null"
-              %br
-              - theme.big_ideas.each do |big_idea|
-                = big_idea ? "#{h(big_idea.description)}; " : "null"
       %dt Knowledge Statement
       %dd
         = assessment_target.knowledge_statement ? h(assessment_target.knowledge_statement.description) : "null"
@@ -28,4 +18,14 @@
           = h(expectation.expectation_stem.description)
           %ul
             - for expectation_indicator in expectation.expectation_indicators do
-              %li= h(expectation_indicator.description)
+              %li= h(expectation_indicator.description)      
+      - themes = assessment_target.unifying_themes
+      - more_than_one = themes.length > 1
+      %dt= "Unifying #{more_than_one ? 'Themes' : 'Theme' } and related Big Ideas"
+      %dd
+        %ul
+          - themes.each do |theme|
+            %li
+              = "Big Ideas in #{theme.name}"
+              %p
+                = theme.big_ideas.collect { |big_idea| big_idea.description }.join('; ')
