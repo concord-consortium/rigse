@@ -110,6 +110,17 @@ class InvestigationsController < ApplicationController
   def new
     @investigation = Investigation.new
     @investigation.user = current_user
+    @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+    @investigation.grade_span_expectation = @gse
+    session[:original_gse_id] = session[:gse_id] = @gse.id
+    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+    domain = Domain.find(@gse.domain.id)
+    gses = domain.grade_span_expectations 
+    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    if request.xhr?
+      render :partial => 'remote_form', :locals => { :investigation => @investigation }
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @investigation }
@@ -118,7 +129,16 @@ class InvestigationsController < ApplicationController
 
   # GET /pages/1/edit
   def edit
+    
     @investigation = Investigation.find(params[:id])
+    @gse = @investigation.grade_span_expectation
+    
+    session[:original_gse_id] = session[:gse_id] = @gse.id
+    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+    domain = Domain.find(@gse.domain.id)
+    gses = domain.grade_span_expectations 
+    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation }
     end
@@ -147,16 +167,44 @@ class InvestigationsController < ApplicationController
     end
   end
 
+  def gse_select
+    if params[:grade_span_expectation]
+      @selected_gse = GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
+      session[:gse_id] = @selected_gse.id
+    else
+      @selected_gse = GradeSpanExpectation.find_by_id(session[:gse_id])
+    end
+    # remember the chosen domain and grade_span, it will probably continue.
+    if grade_span = params[:grade_span]
+      session[:grade_span] = grade_span
+      domain_id = session[:domain_id]
+    elsif params[:domain_id]
+      domain_id = params[:domain_id].to_i
+      session[:domain_id] = domain_id
+      grade_span = session[:grade_span]
+    else
+      grade_span = session[:grade_span]
+      domain_id = session[:domain_id]
+    end
+    # FIXME 
+    # domains (as an associated model) are way too far away from a gse
+    # I added some finder_sql to the domain model to make this faster
+    domain = Domain.find(domain_id)
+    gses = domain.grade_span_expectations 
+    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    if request.xhr?
+      render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse }
+    else
+      respond_to do |format|
+        format.js { render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @selected_gse } }
+      end
+    end
+    
+  end
+  
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
-    cancel = params[:commit] == "Cancel"
-    begin
-      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
-      params[:investigation][:grade_span_expectation] = gse
-    rescue
-      logger.error('could not find gse')
-    end
     @investigation = Investigation.find(params[:id])
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])

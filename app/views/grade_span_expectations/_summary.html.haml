@@ -1,0 +1,8 @@
+%div{ :id => 'gse_summary' }
+  %dl
+    - for expectation in grade_span_expectation.expectations do
+      %dt= h(expectation.expectation_stem.description)
+      %dd
+        %ul
+          - for expectation_indicator in expectation.expectation_indicators do
+            %li= h(expectation_indicator.description)      
