@@ -1,24 +1,6 @@
 - form_for (@investigation,:before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f}
 
-  - field_set_tag 'Select GSE' do
-    - field_set_tag 'filter' do
-      #gse_filter
-        %ul.menu_h
-          %li
-            grade span:
-            = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans, @gse.grade_span))
-          %li
-            domain:
-            = select_tag(:domain_id, options_for_select(domains.collect { |d| [d.name, d.id] }, @gse.domain.id))
-          %li#gse_select
-            = render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :gse => @gse }
-        
-        %p
-        #gse_summary_container
-          - if @gse
-            = render :partial => 'grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
-    
 - field_set_tag 'Current GSE' do
   #current_gse_description
     = render :partial => 'grade_span_expectations/grade_span_expectation', :locals => { :grade_span_expectation => @investigation.grade_span_expectation }
