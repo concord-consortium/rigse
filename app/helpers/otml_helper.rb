@@ -1,4 +1,4 @@
-module OtmlHelper
+  module OtmlHelper
 
   def ot_menu_display_name(object)
     if teacher_only?(object) 
@@ -50,6 +50,7 @@ module OtmlHelper
       org.concord.otrunk.OTSystem
       org.concord.otrunk.control.OTButton
       org.concord.otrunk.ui.OTCardContainer
+      org.concord.otrunk.ui.OTTabContainer
       org.concord.otrunk.ui.OTChoice
       org.concord.otrunk.ui.OTCurriculumUnit
       org.concord.otrunk.ui.OTText
@@ -121,6 +122,7 @@ module OtmlHelper
       ['menu_section_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuSectionView'],
       ['menu_page_expand_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageExpandView'],
       ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
+      ['tab_container_view','org.concord.otrunk.ui.OTTabContainer', 'org.concord.otrunk.ui.swing.OTTabContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
       ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView'],
