@@ -462,6 +462,10 @@ HEREDOC
       
       default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
 
+      # make sure that corresponding SdsUsers exist for all the default users
+      default_user_list.each { |user| user.create_sds_counterpart }
+      
+      # make a default district and school
       site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
       site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
       site_district.save!
@@ -534,6 +538,8 @@ HEREDOC
       default_student.clazzes << default_course_class
       # default_student = student_user.student || student_user.student.create!
       # 
+      offering.find_or_create_learner(default_student)
+      
       puts
     end
 
