@@ -87,6 +87,8 @@
       org.concord.otrunk.biologica.OTMultipleOrganism
       org.concord.otrunk.biologica.OTFamily
       org.concord.otrunk.biologica.OTSex
+      org.concord.otrunk.labbook.OTLabbook
+      org.concord.otrunk.labbook.OTLabbookButton
     } + (@otrunk_imports || []).uniq
   end
   
@@ -135,7 +137,9 @@
       ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeView'],
       ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismView'],
       ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
-      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView']
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView'],
+      ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton' 'org.concord.otrunk.labbook.ui.OTLabbookButtonEditView'],
+      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView']
     ] + (@otrunk_view_entries || []).uniq
   end
   
