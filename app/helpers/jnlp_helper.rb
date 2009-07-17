@@ -8,15 +8,19 @@ module JnlpHelper
     # FIXME can't figure out why otml_url_for, doesn't work here
     # otml_url_for(runnable)
     url = polymorphic_url(runnable, :format =>  :otml, :teacher_mode => params[:teacher_mode])
-    url = URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-    
-    render( :layout => false, 
-      :partial => "shared/jnlp", 
-      :locals => { :teacher_mode => params[:teacher_mode], 
-                   :runnable_object => runnable, 
-        :escaped_otml_url => url
-         } 
-      )
+    escaped_otml_url = URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+
+    sds_connection = Portal::SdsConnect::Connect    
+    config_url = sds_connection.offering_url(sds_connection.config['default_offering_id']) + 
+      "/config/#{sds_connection.config['default_workgroup_id']}" + 
+      "/0/view?sailotrunk.hidetree=false&amp;sailotrunk.otmlurl=#{escaped_otml_url}"
+    render( :layout => false, :partial => "shared/jnlp", 
+      :locals => { 
+        :teacher_mode => params[:teacher_mode], 
+        :runnable_object => runnable, 
+        :config_url => config_url
+      } 
+    )
   end
   
   def render_learner_jnlp(learner)
@@ -28,11 +32,11 @@ module JnlpHelper
     
     @learner = true
     
-    render( :layout => false,
-    :partial => "shared/jnlp",
-    :locals => { :runnable_object => learner.offering.runnable,
-      :config_url => config_url
-    }
+    render( :layout => false, :partial => "shared/jnlp",
+      :locals => { 
+        :runnable_object => learner.offering.runnable,
+        :config_url => config_url
+      }
     )
   end
 

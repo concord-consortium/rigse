@@ -9,6 +9,8 @@ development:
   curnit_id: 1
   username: 
   password: 
+  default_offering_id: 1
+  default_workgroup_id: 1
 
 production:
   host: http://sds.local/1
@@ -16,3 +18,5 @@ production:
   curnit_id: 1
   username: 
   password: 
+  default_offering_id: 1
+  default_workgroup_id: 1
