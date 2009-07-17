@@ -52,7 +52,7 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
   def newest_snapshot_version
     begin
       open("#{url}/#{name}-CURRENT_VERSION.txt").read
-    rescue OpenURI::HTTPError
+    rescue OpenURI::HTTPError, SocketError
       snapshot_version
     end
   end
