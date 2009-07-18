@@ -86,7 +86,7 @@ namespace :rigse do
       unless RAILS_ENV == 'development'
         puts "\nNormally you will only be running this task in development mode.\n"
         puts "You are running in #{RAILS_ENV} mode.\n"
-        unless agree("Are you sure you want to do this?  (y/n)", true)
+        unless agree("Are you sure you want to do this?  (y/n) ", true)
           raise "task stopped by user"
         end
       end
