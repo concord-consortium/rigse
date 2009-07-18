@@ -8,13 +8,13 @@ unless defined? config_url
 end
 
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev") { 
+xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) { 
   xml.information { 
     xml.title "CC OTrunk Application"
     xml.vendor "Created by the Concord Consortium"
     xml.homepage :href => "http://confluence.concord.org/display/TMS/OTrunk+Examples"
     xml.description "CC OTrunk Application built on SAIL"
-    xml.icon :href => "http://rails.dev.concord.org/sds/images/sail_orangecirc_64.gif", :height => "64", :width => "64"
+    xml.icon :href => path_to_image("sail_orangecirc_64.gif"), :height => "64", :width => "64"
   }
   xml.security {
     xml << "    <all-permissions />"

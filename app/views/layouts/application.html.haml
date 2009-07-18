@@ -86,10 +86,14 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          - @top_menu_items ||= []
-          - yield :top_menu_items
-          - @top_menu_items.flatten.uniq.each do |i|
-            %li.trail= i
+          %li.trail= link_to 'Investigations', investigations_path
+          - unless current_user.anonymous?
+            %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
+          
+        - if current_user.has_role?('admin')
+          %ul.menu_h_right
+            %li.trail= link_to 'GSEs', grade_span_expectations_path
+            %li= link_to 'Admin', admin_path
 
       #content_container      
         #left_nav.nav_menu

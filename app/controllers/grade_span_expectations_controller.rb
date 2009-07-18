@@ -40,17 +40,48 @@ class GradeSpanExpectationsController < ApplicationController
 
   # POST /grade_span_expectations/select_js
   def select_js
-    # remember the chosen domain and gradespan, it will probably continue..
-    cookies[:gradespan] = @grade_span = params[:gradespan] || "%" # default to all grade_spans
-    cookies[:domain] = @domain_id = params[:domain].to_i
-
-    @grade_span_expectations = GradeSpanExpectation.grade_and_domain(@grade_span,@domain_id)
-  
+    if params[:grade_span_expectation]
+      @selected_gse = GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
+      session[:gse_id] = @selected_gse.id
+    else
+      @selected_gse = GradeSpanExpectation.find_by_id(session[:gse_id])
+    end
+    # remember the chosen domain and grade_span, it will probably continue.
+    if grade_span = params[:grade_span]
+      session[:grade_span] = grade_span
+      domain_id = session[:domain_id]
+    elsif params[:domain_id]
+      domain_id = params[:domain_id].to_i
+      session[:domain_id] = domain_id
+      grade_span = session[:grade_span]
+    else
+      grade_span = session[:grade_span]
+      domain_id = session[:domain_id]
+    end
+    # FIXME 
+    # domains (as an associated model) are way too far away from a gse
+    # I added some finder_sql to the domain model to make this faster
+    domain = Domain.find(domain_id)
+    gses = domain.grade_span_expectations 
+    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
-      render :partial => 'select_js'
+      render :partial => 'select_js', :locals => { :related_gses => @related_gses, :gse => @selected_gse }
     else
       respond_to do |format|
-        format.js
+        format.js { render :partial => 'select_js', :locals => { :grade_span_expectations => @grade_span_expectations, :selected_gse => @selected_gse } }
+      end
+    end
+  end
+
+  # GET /grade_span_expectations/1/summary
+  def summary
+    @grade_span_expectation = GradeSpanExpectation.find(params[:id])
+    
+    if request.xhr?
+      render :partial => 'summary', :locals => { :grade_span_expectations => @grade_span_expectations, :grade_span_expectation =>  @grade_span_expectation }
+    else
+      respond_to do |format|
+        format.js { render :partial => 'select_js', :locals => { :grade_span_expectations => @grade_span_expectations, :grade_span_expectation =>  @grade_span_expectation } }
       end
     end
   end
