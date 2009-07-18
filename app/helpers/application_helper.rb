@@ -522,4 +522,12 @@ module ApplicationHelper
     @top_menu_items << link
   end
 
+  def htmlize_teacher_note_body(teacher_note)
+    if teacher_note.body
+      teacher_note.body.gsub(/\n/,"<br/>")
+    else
+      "<br/>"
+    end
+  end
+  
 end

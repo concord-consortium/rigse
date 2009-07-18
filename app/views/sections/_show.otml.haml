@@ -44,15 +44,14 @@
               - if section.investigation.teacher_notes.size > 0
                 %h3= "Investigation notes:"
                 .activity_teacher_note= section.investigation.teacher_notes[0].body.gsub(/\n/,"<br/>")
-  
             - if section.activity 
               - if section.activity.teacher_notes.size > 0
                 %h3= "Activity notes:"
-                .activity_teacher_note= section.activity.teacher_notes[0].body.gsub(/\n/,"<br/>")
+                .activity_teacher_note= htmlize_teacher_note_body(section.activity.teacher_notes[0])
   
             - if section.teacher_notes.size > 0
               %h3= "Section notes:"
-              .section_teacher_note= section.teacher_notes[0].body.gsub(/\n/,"<br/>")
+              .section_teacher_note= htmlize_teacher_note_body(section.teacher_notes[0])
 
             - section.pages.each do |page|
               .page_teacher_notes
