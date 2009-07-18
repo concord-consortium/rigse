@@ -43,7 +43,7 @@
             - if section.investigation
               - if section.investigation.teacher_notes.size > 0
                 %h3= "Investigation notes:"
-                .activity_teacher_note= section.investigation.teacher_notes[0].body.gsub(/\n/,"<br/>")
+                .activity_teacher_note= htmlize_teacher_note_body(section.investigation.teacher_notes[0])
             - if section.activity 
               - if section.activity.teacher_notes.size > 0
                 %h3= "Activity notes:"
