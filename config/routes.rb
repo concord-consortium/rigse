@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :lab_book_snapshots
+
   map.resources :biologica_chromosome_zooms
   map.resources :inner_pages, :member => {
     :destroy => :post,

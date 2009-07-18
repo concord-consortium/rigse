@@ -23,7 +23,8 @@ class Page < ActiveRecord::Base
         BiologicaPedigree,
         BiologicaMultipleOrganism,
         BiologicaMeiosisView,
-        InnerPage
+        InnerPage,
+        LabBookSnapshot
         # BiologicaDna,
       ].sort() { |a,b| a.display_name <=> b.display_name }
 

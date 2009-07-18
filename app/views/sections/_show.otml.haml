@@ -29,8 +29,15 @@
         %object{ :refid => ot_refid_for(section, :page_card_container)}/
       
     %footer
-      %object{ :refid => ot_refid_for(section, :menu) }/
-
+      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :teacher_notes) }
+        %bodyText
+          %table
+            %tr
+              %td
+                %object{ :refid => ot_refid_for(section, :menu) }/
+              %td
+                %object{:refid =>'labbook'}/
+          
 
 
 - content_for(:library) do
