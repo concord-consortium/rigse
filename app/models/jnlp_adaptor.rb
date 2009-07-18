@@ -3,9 +3,10 @@ class JnlpAdaptor
   attr_reader :jnlp
   
   def initialize
-    @all_otrunk_snapshot_family = MavenJnlp::MavenJnlpFamily.find_by_name('all-otrunk-snapshot')
-    @all_otrunk_snapshot_family.update_snapshot_jnlp_url
-    @jnlp = @all_otrunk_snapshot_family.snapshot_jnlp_url.versioned_jnlp
+    @default_maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
+    @jnlp_family = @default_maven_jnlp_server.maven_jnlp_families.find_by_name(APP_CONFIG[:default_maven_jnlp_family])
+    @jnlp_family.update_snapshot_jnlp_url
+    @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
   end
   
   def resource_jars
