@@ -394,6 +394,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
+    t.string   "publication_status"
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -692,36 +693,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.string  "uuid"
   end
 
-  create_table "probe_types", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.integer "ptype"
-    t.float   "step_size"
-    t.integer "display_precision"
-    t.integer "port"
-    t.string  "unit"
-    t.float   "min"
-    t.float   "max"
-    t.float   "period"
-    t.string  "uuid"
-  end
-
-  create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
-    t.integer "property_id"
-    t.integer "versioned_jnlp_id"
-  end
-
-  create_table "raw_otmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "otml_content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "rites_portal_clazzes", :force => true do |t|
+  create_table "portal_clazzes", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -736,7 +708,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_courses", :force => true do |t|
+  create_table "portal_courses", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -746,14 +718,14 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_courses_grade_levels", :id => false, :force => true do |t|
+  create_table "portal_courses_grade_levels", :id => false, :force => true do |t|
     t.integer  "grade_level_id"
     t.integer  "course_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_districts", :force => true do |t|
+  create_table "portal_districts", :force => true do |t|
     t.string   "uuid",             :limit => 36
     t.string   "name"
     t.text     "description"
@@ -762,7 +734,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.integer  "nces_district_id"
   end
 
-  create_table "rites_portal_grade_levels", :force => true do |t|
+  create_table "portal_grade_levels", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -772,14 +744,14 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_grade_levels_teachers", :id => false, :force => true do |t|
+  create_table "portal_grade_levels_teachers", :id => false, :force => true do |t|
     t.integer  "grade_level_id"
     t.integer  "teacher_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_learners", :force => true do |t|
+  create_table "portal_learners", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.integer  "student_id"
     t.integer  "offering_id"
@@ -787,7 +759,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_nces06_districts", :force => true do |t|
+  create_table "portal_nces06_districts", :force => true do |t|
     t.string  "LEAID",  :limit => 7
     t.string  "FIPST",  :limit => 2
     t.string  "STID",   :limit => 14
@@ -877,11 +849,11 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.string  "IOTSUP", :limit => 1
   end
 
-  add_index "rites_portal_nces06_districts", ["LEAID"], :name => "index_rites_portal_nces06_districts_on_LEAID"
-  add_index "rites_portal_nces06_districts", ["NAME"], :name => "index_rites_portal_nces06_districts_on_NAME"
-  add_index "rites_portal_nces06_districts", ["STID"], :name => "index_rites_portal_nces06_districts_on_STID"
+  add_index "portal_nces06_districts", ["LEAID"], :name => "index_rites_portal_nces06_districts_on_LEAID"
+  add_index "portal_nces06_districts", ["NAME"], :name => "index_rites_portal_nces06_districts_on_NAME"
+  add_index "portal_nces06_districts", ["STID"], :name => "index_rites_portal_nces06_districts_on_STID"
 
-  create_table "rites_portal_nces06_schools", :force => true do |t|
+  create_table "portal_nces06_schools", :force => true do |t|
     t.integer "nces_district_id"
     t.string  "NCESSCH",          :limit => 12
     t.string  "FIPST",            :limit => 2
@@ -1465,11 +1437,11 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.string  "ITOTGR",           :limit => 1
   end
 
-  add_index "rites_portal_nces06_schools", ["NCESSCH"], :name => "index_rites_portal_nces06_schools_on_NCESSCH"
-  add_index "rites_portal_nces06_schools", ["SCHNAM"], :name => "index_rites_portal_nces06_schools_on_SCHNAM"
-  add_index "rites_portal_nces06_schools", ["STID"], :name => "index_rites_portal_nces06_schools_on_STID"
+  add_index "portal_nces06_schools", ["NCESSCH"], :name => "index_rites_portal_nces06_schools_on_NCESSCH"
+  add_index "portal_nces06_schools", ["SCHNAM"], :name => "index_rites_portal_nces06_schools_on_SCHNAM"
+  add_index "portal_nces06_schools", ["STID"], :name => "index_rites_portal_nces06_schools_on_STID"
 
-  create_table "rites_portal_offerings", :force => true do |t|
+  create_table "portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
     t.string   "status"
     t.integer  "clazz_id"
@@ -1479,7 +1451,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_school_memberships", :force => true do |t|
+  create_table "portal_school_memberships", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -1492,7 +1464,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_schools", :force => true do |t|
+  create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
@@ -1502,7 +1474,15 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.integer  "nces_school_id"
   end
 
-  create_table "rites_portal_semesters", :force => true do |t|
+  create_table "portal_sds_configs", :force => true do |t|
+    t.integer  "configurable_id"
+    t.string   "configurable_type"
+    t.integer  "sds_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "portal_semesters", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -1513,7 +1493,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_student_clazzes", :force => true do |t|
+  create_table "portal_student_clazzes", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -1525,7 +1505,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_students", :force => true do |t|
+  create_table "portal_students", :force => true do |t|
     t.string   "uuid",           :limit => 36
     t.integer  "user_id"
     t.integer  "grade_level_id"
@@ -1533,7 +1513,7 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_subjects", :force => true do |t|
+  create_table "portal_subjects", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
@@ -1542,9 +1522,38 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "updated_at"
   end
 
-  create_table "rites_portal_teachers", :force => true do |t|
+  create_table "portal_teachers", :force => true do |t|
     t.string   "uuid",       :limit => 36
     t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "probe_types", :force => true do |t|
+    t.integer "user_id"
+    t.string  "name"
+    t.integer "ptype"
+    t.float   "step_size"
+    t.integer "display_precision"
+    t.integer "port"
+    t.string  "unit"
+    t.float   "min"
+    t.float   "max"
+    t.float   "period"
+    t.string  "uuid"
+  end
+
+  create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
+    t.integer "property_id"
+    t.integer "versioned_jnlp_id"
+  end
+
+  create_table "raw_otmls", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "otml_content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1558,14 +1567,6 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
   create_table "roles_users", :id => false, :force => true do |t|
     t.integer "role_id"
     t.integer "user_id"
-  end
-
-  create_table "sds_configs", :force => true do |t|
-    t.integer  "runnable_id"
-    t.string   "runnable_type"
-    t.integer  "sds_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "sections", :force => true do |t|
