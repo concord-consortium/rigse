@@ -228,6 +228,11 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace" 
   end
   
+  desc 'rake rigse:convert:run_deep_set_user_on_all_investigations'
+  task :deep_set_user_on_all_investigations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
+  end
 end
 
 
