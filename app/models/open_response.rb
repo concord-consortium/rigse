@@ -23,7 +23,8 @@ class OpenResponse < ActiveRecord::Base
   default_value_for :prompt, <<-HEREDOC
   <p>You can use HTML content to <b>write</b> the prompt of the question ...</p>
   HEREDOC
-  default_value_for :default_response, "Please place your answer here."
+  # as per RITES-260 "Open response text field should be empty"
+  default_value_for :default_response, "" 
   
   send_update_events_to :investigations
   
