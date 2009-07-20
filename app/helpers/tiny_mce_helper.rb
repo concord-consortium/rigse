@@ -16,7 +16,7 @@ tinyMCE.init({
     theme_advanced_resizing_use_cookie : true,
     theme_advanced_toolbar_location : 'top',
     theme_advanced_buttons1     : 'justifyleft,justifycenter,justifyfull,|,bold,italic,underline,|,fontselect,fontsizeselect,',
-    theme_advanced_buttons1_add : '|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall',
+    theme_advanced_buttons1_add : 'sup,sub,|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall',
     theme_advanced_buttons2 : '',
     theme_advanced_buttons3 : '',
     paste_auto_cleanup_on_paste : true,
