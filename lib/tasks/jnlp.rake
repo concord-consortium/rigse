@@ -3,16 +3,29 @@ namespace :rigse do
     
     require 'highline/import'
     
-    desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-    task :generate_maven_jnlp_family_of_resources => :environment do
-      
+    desc "generate names for existing MavenJnlpServers that don't have them"
+    task :generate_names_for_maven_jnlp_servers => :environment do
       maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
       maven_jnlp_servers.each do |server|
         attrs = { :host => server[:host], :path => server[:path] }
         if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attrs)
-          mj_server.name = server[:name]
-          mj_server.save!
+          unless mj_server.name
+            puts "MavenJnlpServer: name: #{server[:name]} => #{attrs.inspect}"
+            mj_server.name = server[:name]
+            mj_server.save!
+          end
+        end
+      end
+    end
+    
+    desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
+    task :generate_maven_jnlp_family_of_resources => :generate_names_for_maven_jnlp_servers do
+      maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
+      maven_jnlp_servers.each do |server|
+        if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => server)
+          puts "MavenJnlpServer: #{server.inspect} already exists."
         else
+          puts "creating MavenJnlpServer: #{server.inspect}."
           mj_server = MavenJnlp::MavenJnlpServer.create!(server)
         end
       end
