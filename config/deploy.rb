@@ -161,7 +161,13 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
 
-  desc "generate MavenJnlp family of resources fron CC jnlp server"
+  desc "generate names for existing MavenJnlpServers that don't have them"
+  task :generate_names_for_maven_jnlp_servers, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
+  end
+
+  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
   task :generate_maven_jnlp_family_of_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
@@ -243,19 +249,30 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
   end
 
-  desc 'find page_elements whithout owners and recalim them'
+  desc 'find page_elements whithout owners and reclaim them'
   task :reclaim_page_elements, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace" 
   end
   
-  desc 'rake rigse:convert:run_deep_set_user_on_all_investigations'
+  desc 'transfer any Investigations owned by the anonymous user to the site admin user'
+  task :transfer_investigations_owned_by_anonymous, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:transfer_investigations_owned_by_anonymous --trace"
+  end
+  
+  desc 'deep set user ownership on all investigations'
   task :deep_set_user_on_all_investigations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
   end
-end
 
+  desc 'add the author role to all users who have authored an Investigation'
+  task :add_author_role_to_authors, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:add_author_role_to_authors --trace"
+  end
+end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'
