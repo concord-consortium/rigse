@@ -8,7 +8,7 @@ class InvestigationsController < AuthoringController
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export, :gse_select]
-  before_filter :can_create, :only => [:new, :create]
+  before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description

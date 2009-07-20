@@ -23,5 +23,4 @@
         - if @gse
           = render :partial => 'grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
 
-
-= javascript_tag("$('investigation_name').activate();")
+= javascript_tag("focus_first_field();");

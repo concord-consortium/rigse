@@ -26,7 +26,8 @@
           %div.action_menu_header_right   
             %ul.menu
               %li= run_link_for(activity)
-              %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
+              - unless(current_user.anonymous?)
+                %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
               %li.menu=link_to 'export (xml)', export_activity_url(activity)
               - if (activity.changeable?(current_user))
                 %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete ivestigation #{activity.id}", :method => :delete 
