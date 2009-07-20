@@ -15,6 +15,7 @@
     /[if IE]
       = javascript_include_tag "flotr/excanvas.js"
     = javascript_include_tag "flotr/flotr.js"
+    = javascript_include_tag "canvas2image.js"
 
   %body
     #wrapper
@@ -24,3 +25,8 @@
         %h3 Teacher Notes:
         %ol
           = yield :teacher_notes
+  :javascript
+    var canvs = $$('canvas');  
+    canvs.each ( function(_canvas) {
+      _canvas.replace(Canvas2Image.saveAsPNG(_canvas, true));
+    });
