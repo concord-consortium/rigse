@@ -15,7 +15,11 @@
 
   = label_tag :password, "Password", :class=>"aligned"
   = password_field_tag 'password', "Password", :class=>"aligned"
-  = label_tag 'remember_me', 'Remember me', :class=>"aligned"
-  = check_box_tag 'remember_me', '1', @remember_me, :class=>"aligned" 
+  
+  / TODO: Find out why remember_me was not working, and FIX.
+  / Ed had requested that in the meantime, we make the checkbox go-away.
+  / from Jira RITES-275
+  / = label_tag 'remember_me', 'Remember me', :class=>"aligned"
+  / = check_box_tag 'remember_me', '1', @remember_me, :class=>"aligned" 
 
 %br
