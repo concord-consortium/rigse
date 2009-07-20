@@ -192,6 +192,25 @@ namespace :import do
       "cd public && " +
       "git clone git://github.com/stepheneb/otrunk-examples.git"
   end
+
+  desc"Download nces data files from NCES websites"
+  task :download_nces_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:download_nces_data --trace" 
+  end
+
+  desc "Import nces data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states"
+  task :nces_data_from_files, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_file --trace" 
+  end
+
+  desc"reload the default probe and vendor_interface configurations."
+  task :reload_probe_configurations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace" 
+  end
+
 end
 
 #############################################################
