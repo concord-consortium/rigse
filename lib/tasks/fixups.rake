@@ -8,6 +8,7 @@ namespace :rigse do
       User.find(:all).each do |user|
         if user.has_investigations?
           print '.'
+          STDOUT.flush
           user.add_role('author')
         end
       end
@@ -19,20 +20,29 @@ namespace :rigse do
       User.find(:all).each do |user|
         unless user.has_investigations?
           print '.'
+          STDOUT.flush
           user.remove_role('author')
         end
       end
       puts
     end
 
-    desc 'transfer any Investigations owned by the anonymous user to the admin user'
+    desc 'transfer any Investigations owned by the anonymous user to the site admin user'
     task :transfer_investigations_owned_by_anonymous => :environment do
       admin_user = User.find_by_login(APP_CONFIG[:admin_login])
-      User.find_by_login('anonymous').investigations.each do |inv|
-        puts "transferring ownership of #{inv.id}: #{inv.name} from anonymous to #{admin_user.login}"
-        inv.deep_set_user(admin_user)
+      anonymous_investigations = User.find_by_login('anonymous').investigations
+      if anonymous_investigations.length > 0
+        puts "#{anonymous_investigations.length} Investigations owned by the anonymous user"
+        puts "resetting ownership to the site admin user: #{admin_user.name}"
+        anonymous_investigations.each do |inv|
+          inv.deep_set_user(admin_user)
+          print '.'
+          STDOUT.flush
+        end
+      else
+        puts 'no Investigations owned by the anonymous user'
       end
     end
   end
-
 end
+
