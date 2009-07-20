@@ -34,6 +34,13 @@ flatten_sortables = function() {
   );
 }
 
+focus_first_field = function() {
+  var first_form = document.forms[0];
+  var inputs = first_form.getInputs('text');
+  if (inputs && inputs[0])
+    inputs[0].activate();
+}
+
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 dropdown_for = function(menu_dom_id,drop_down_dom_id) {
