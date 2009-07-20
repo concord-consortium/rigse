@@ -28,7 +28,8 @@
           %div.action_menu_header_right   
             %ul.menu
               %li= run_link_for(investigation)
-              %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
+              - unless(current_user.anonymous?)
+                %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
               %li.menu=link_to 'export (xml)', export_investigation_url(investigation)
               - if (investigation.changeable?(current_user))
                 %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete investigation #{investigation.id}", :method => :delete 
