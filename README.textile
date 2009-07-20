@@ -36,6 +36,49 @@ server and a mysql username/password with enough permissions to create and drop 
   </code>
 </pre>
 
+_there's a bunch more that needs to go here_
+
+h2. Updating after pulling the commits on July 20 that merged the with-portal branch
+
+<pre>
+  <code>
+    # finish setting up production sds portal realm 
+    # http://saildataservice.concord.org/26
+    # jnlp: http://saildataservice.concord.org/26/jnlp/490
+    # curnit: http://saildataservice.concord.org/26/curnit/640
+    # offering for default_offering: http://saildataservice.concord.org/26/offering/9331
+    # sail_user for defaul user: http://saildataservice.concord.org/26/sail_user/37595
+    # default workgroup for default offering and default sail user:
+    # http://saildataservice.concord.org/26/workgroup/68284
+
+    # on server:
+    sudo gem install has_many_polymorphs haml
+    cd shared
+    mkdir -p engines/portal/config/nces_data
+    # update settings.yml with new parameters in settings.sample.yml
+
+    # on remote
+    cap production db:fetch_remote_db
+    cap deploy
+    cap deploy:install_gems
+    cap db:push_remote_db
+    cap deploy:migrate
+    cap import:download_nces_data
+    cap import:nces_data_from_files
+
+    # on server
+    rake rigse:setup:default_users_roles --trace
+
+    # on remotes
+    cap import:generate_names_for_maven_jnlp_servers
+    cap convert:transfer_investigations_owned_by_anonymous
+    cap convert:deep_set_user_on_all_investigations
+    cap convert:add_author_role_to_authors
+
+    cap deploy:restart
+  </code>
+</pre>
+
 h2. Some video walk-throughs
 
 * "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
