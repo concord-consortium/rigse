@@ -164,6 +164,7 @@ ActionController::Routing::Routes.draw do |map|
   # Home Page
   map.home '/readme', :controller => 'home', :action => 'readme'
   map.home '/home', :controller => 'home', :action => 'index'
+  map.about '/about', :controller => 'home', :action => 'about'
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'

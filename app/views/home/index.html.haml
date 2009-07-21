@@ -1,5 +1,6 @@
 .padded_content
   %h3 Welcome to RITES Investigations
+  
   - current_user.roles.each do |role|
     = render :partial => role.title
   

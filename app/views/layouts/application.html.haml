@@ -75,7 +75,7 @@
           - else
             = link_to 'Login', login_path
             \/
-            = link_to 'Signup', pick_signup_path
+            = link_to 'Sign Up', pick_signup_path
           - if @original_user.has_role?('admin', 'manager')
             \/
             = link_to 'Switch', switch_user_path(current_user)
@@ -86,12 +86,15 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          %li.trail= link_to 'Investigations', investigations_path
+          %li.trail= link_to 'About', about_path
           - unless current_user.anonymous?
+            %li.trail= link_to 'Investigations', investigations_path
             %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
           
         - if current_user.has_role?('admin')
           %ul.menu_h_right
+            %li.trail= link_to 'Districts', portal_districts_path
+            %li.trail= link_to 'Schools', portal_schools_path
             %li.trail= link_to 'GSEs', grade_span_expectations_path
             %li= link_to 'Users', users_path
 
