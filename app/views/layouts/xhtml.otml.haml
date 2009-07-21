@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @xhtml.name)
+      =ot_bundles(:title => h(@xhtml.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = Xhtml.display_name + ': ' + @xhtml.name
+                = h(Xhtml.display_name + ': ' + @xhtml.name)
               %object{ :refid => ot_refid_for(@xhtml) }/
       %library
         =yield :layout

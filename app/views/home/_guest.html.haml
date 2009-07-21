@@ -7,11 +7,7 @@
       Hello Guest
 
 - field_set_tag "You're not logged in!" do
-  %p
-    = link_to 'Login', login_path
-    if you are a registered user or 
-    = link_to 'Signup', pick_signup_path
-    and become a member.
+  %p= render :partial => 'sessions/new'
     
 - render_project_info
 = yield :project_info

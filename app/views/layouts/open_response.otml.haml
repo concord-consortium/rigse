@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @open_response.name)
+      =ot_bundles(:title => h(@open_response.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = OpenResponse.display_name + ': ' + @open_response.name
+                = h(OpenResponse.display_name + ': ' + @open_response.name)
               %object{ :refid => ot_refid_for(@open_response) }/
       %library
         =yield :layout

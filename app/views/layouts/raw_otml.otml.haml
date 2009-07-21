@@ -4,7 +4,7 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @raw_otml.name, :authoring => @authoring)
+      =ot_bundles(:title => h(@raw_otml.name), :authoring => @authoring)
       %root
         = @raw_otml.otml_content
       %library

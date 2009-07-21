@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @multiple_choice.name)
+      =ot_bundles(:title => h(@multiple_choice.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = MultipleChoice.display_name + ': ' + @multiple_choice.name
+                = h(MultipleChoice.display_name + ': ' + @multiple_choice.name)
               %object{ :refid => ot_refid_for(@multiple_choice) }/
       %library
         =yield :layout
