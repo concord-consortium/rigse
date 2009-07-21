@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @mw_modeler_page.name)
+      =ot_bundles(:title => h(@mw_modeler_page.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = MwModelerPage.display_name + ': ' + @mw_modeler_page.name
+                = h(MwModelerPage.display_name + ': ' + @mw_modeler_page.name)
               %object{ :refid => ot_refid_for(@mw_modeler_page) }
       %library
         =yield :layout
