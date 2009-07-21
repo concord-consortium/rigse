@@ -4,7 +4,7 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles({:left_nav_panel_width => @investigation.left_nav_panel_width, :title => @investigation.name})
+      =ot_bundles({:left_nav_panel_width => @investigation.left_nav_panel_width, :title => h(@investigation.name)})
       %root
         =yield :investigation
       %library

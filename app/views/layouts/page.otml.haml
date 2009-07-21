@@ -4,7 +4,7 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles({:title => @page.name, :use_scroll_pane => true})
+      =ot_bundles({:title => h(@page.name), :use_scroll_pane => true})
       %root
         =yield "page_#{dom_id_for(@page)}".to_sym
       %library

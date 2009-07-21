@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @data_table.name)
+      =ot_bundles(:title => h(@data_table.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = DataTable.display_name + ': ' + @data_table.name
+                = h(DataTable.display_name + ': ' + @data_table.name)
               %object{ :refid => ot_refid_for(@data_table) }/
       %library
         =yield :layout
