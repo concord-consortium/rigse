@@ -108,6 +108,8 @@ require 'portal_configuration'
 
 # Special-case for when the migration that adds the default_user
 # attribute hasn't been run yet.
+# TODO: This causes troubles when the user table is not present.
+# Like on a fresh install, or in various migration situations
 if User.site_admin.respond_to? :default_user
   if APP_CONFIG[:enable_default_users]
     User.unsuspend_default_users
