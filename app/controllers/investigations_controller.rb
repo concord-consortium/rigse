@@ -74,7 +74,11 @@ class InvestigationsController < AuthoringController
     elsif params[:include_drafts]
       @investigations = Investigation.search(params[:search], params[:page], nil)
     else
-      search = (params[:search].split << ["published"]).join(" ")
+      if search = params[:search]
+        search = (search.split << ["published"]).join(" ")
+      else
+        search = "published"
+      end
       @investigations = Investigation.search(search, params[:page], nil)
     end
     @paginated_objects = @investigations    
