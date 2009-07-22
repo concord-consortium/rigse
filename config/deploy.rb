@@ -272,6 +272,13 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:add_author_role_to_authors --trace"
   end
+
+  desc "set publication_status to 'draft' for all Investigations without publication_status"
+  task :set_publication_status_to_draft, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
+  end
+
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
