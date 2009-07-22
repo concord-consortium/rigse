@@ -18,56 +18,56 @@
 
     %content
       - if teacher_mode
-        %OTTabContainer{:local_id => "tab_container", :name => "Tab Container"}
-          %tabs
-            %entry{:key => section.name}
-              %object{:refid => ot_refid_for(section, :page_card_container)}
-            %entry{:key => "Teacher notes"}
-              %object{:refid => ot_refid_for(section, :teacher_notes_container) }
-
+        %object{ :refid => ot_refid_for(section, :tab_container)}/
       - else
         %object{ :refid => ot_refid_for(section, :page_card_container)}/
       
     %footer
-      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :teacher_notes) }
+      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :footer) }
         %bodyText
           %table
             %tr
-              %td
+              %td{:width => '50%'}
                 %object{ :refid => ot_refid_for(section, :menu) }/
               %td
-                %object{:refid =>'labbook'}/
+                lab book
+                %object{:refid =>'${labbook}'}/
           
-
-
 - content_for(:library) do
+  %OTTabContainer{:local_id => ot_local_id_for(section, :tab_container), :name => ot_local_id_for(section, :tab_container)}
+    %tabs
+      %entry{:key => section.name}
+        %object{:refid => ot_refid_for(section, :page_card_container)}
+      %entry{:key => "Teacher notes"}
+        %object{:refid => ot_refid_for(section, :teacher_notes_container) }
+        
   %OTCardContainer{ :local_id => ot_local_id_for(section, :teacher_notes_container), :contentsMayScroll => 'true' }
     %cards
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :teacher_notes) }
         %bodyText
           %br
-          #teacher_notes.teacher_mode
-            - if section.investigation
-              - if section.investigation.teacher_notes.size > 0
-                %h3= "Investigation notes:"
-                .activity_teacher_note= htmlize_teacher_note_body(section.investigation.teacher_notes[0])
-            - if section.activity 
-              - if section.activity.teacher_notes.size > 0
-                %h3= "Activity notes:"
-                .activity_teacher_note= htmlize_teacher_note_body(section.activity.teacher_notes[0])
+          .teacher_mode
+            - if section.investigation && section.investigation.has_good_teacher_note?
+              %h3= "Investigation notes:"
+              .activity_teacher_note= h(section.investigation.teacher_note_otml)
   
-            - if section.teacher_notes.size > 0
+            - if section.activity && section.activity.has_good_teacher_note?
+              %h3= "Activity notes:"
+              .activity_teacher_note= h(section.activity.teacher_note_otml)
+  
+            - if section.has_good_teacher_note?
               %h3= "Section notes:"
-              .section_teacher_note= htmlize_teacher_note_body(section.teacher_notes[0])
+              .section_teacher_note= h(section.teacher_note_otml)
 
             - section.pages.each do |page|
               .page_teacher_notes
-                - if page.teacher_notes.size > 0
+                - if page.has_good_teacher_note?
                   %h3="Page notes (#{page.name}):"
-                  .page_teacher_note= page.teacher_notes[0].body
+                  .page_teacher_note= h(page.teacher_note_otml)
     %currentCard
       %object{ :refid => ot_refid_for(section, :teacher_notes) }/
-              
+    %viewedCards
+    
   %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
     %cards
       - section.pages.each do |page|

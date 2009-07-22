@@ -1,13 +1,13 @@
+- content_for :top_menu_items do
+  - add_top_menu_item(link_to('Investigations', investigations_path))
+
 - content_for(:side_bar) do
-  .padded_content
-    = render :partial => 'project_summary'
+  %p
+    - field_set_tag 'Guest' do
+      Hello Guest
 
-%p 
-  %strong
-    You're not logged in! Please log in or sign up.
-
-%ul.quiet_list
-  %li= render :partial => 'sessions/new'
-  %li
-    If you don't already have an account please sign up.
-    = render :partial => 'shared/signup_paths'
+- field_set_tag "You're not logged in!" do
+  %p= render :partial => 'sessions/new'
+    
+- render_project_info
+= yield :project_info
