@@ -471,10 +471,17 @@ dd
 input
   +main_font
   :color= !very_dark_blue
-  :padding 0.2e
+  :padding 0.2em
 
   
 input[type=text]
+  :border solid
+  :border-width 2px
+  :border-color= !very_dark_blue
+  :background-color= !text_input_color
+  &:focus
+    :background-color= !light_brown
+textarea
   :border solid
   :border-width 2px
   :border-color= !very_dark_blue
@@ -495,8 +502,26 @@ input[type=password]
     :border-color= !dark_red
     
 .aligned
-  :margin 0.25em
-  
+  :margin 1em
+  :vertical-align top
+  ol 
+    :margin 0px
+    :padding 0px
+  li
+    :list-style none
+    :padding 5px
+    :margin 0px
+    :vertical-align top
+
+    label
+      :width 30%
+      :display inline-block
+      :clear none
+      :font-weight bold
+      :vertical-align top
+      :line-height 1.8em
+    input
+      :margin 0px
 .drop_target
   :min-height 400px !important
   :height 100%
