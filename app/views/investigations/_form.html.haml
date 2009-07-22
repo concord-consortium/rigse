@@ -1,14 +1,16 @@
 = edit_menu_for(investigation, f)
-- field_set_tag 'name' do
-  = f.text_field :name
-  public: 
-  - if investigation.published?
-    %input{:type=> "checkbox", :name => "public", :value => "1", :checked => "checked"}
-  - else
-    %input{:type=> "checkbox", :name => "public", :value => "0"}
-
-- field_set_tag 'description' do
-  = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 80, :class => 'mceNoEditor'
+- field_set_tag 'Investigation details' do
+  .aligned
+    %ol
+      %li
+        %label Name
+        = f.text_field :name, :class => 'aligned'
+      %li
+        %label Publication status
+        = f.select :publication_status, {"published" => "published", "draft" => "draft"}, :class => 'aligned'
+      %li
+        %label Description
+        = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 
 - field_set_tag 'Select GSE' do
   - field_set_tag 'filter' do

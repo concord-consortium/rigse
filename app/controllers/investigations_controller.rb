@@ -216,16 +216,6 @@ class InvestigationsController < AuthoringController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
-      
-    if (params[:public])
-      if @investigation.draft?
-        @investigation.publish!
-      end
-    else
-      if @investigation.published?
-        @investigation.un_publish!
-      end
-    end
 
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
@@ -247,7 +237,6 @@ class InvestigationsController < AuthoringController
     end
   end
   
-
   # DELETE /pages/1
   # DELETE /pages/1.xml
   def destroy
