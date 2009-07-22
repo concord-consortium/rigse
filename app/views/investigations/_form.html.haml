@@ -4,10 +4,10 @@
     %ol
       %li
         %label.right Name
-        = f.text_field :name, :class => 'aligned'
+        = f.text_field :name
       %li
         %label.right Publication status
-        = f.select :publication_status, {"published" => "published", "draft" => "draft"}, :class => 'aligned'
+        = f.select :publication_status, Investigation.publication_states
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'

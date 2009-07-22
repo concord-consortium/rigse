@@ -36,7 +36,7 @@ class Investigation < ActiveRecord::Base
   include AASM 
   aasm_initial_state :draft
   aasm_column :publication_status
-  @@publication_states = [:draft,:published]
+  @@publication_states = [:draft,:published,:private]
   @@publication_states.each { |s| aasm_state s}
 
   aasm_event :publish do
