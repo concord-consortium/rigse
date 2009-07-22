@@ -1,7 +1,19 @@
 .action_menu
   %h3 Available Investigations
   .tiny (drag to your class offering list on the left)
-  = render :partial => 'investigations/gse_filter'
-  = observe_form :gse_selector, :url => list_filter_investigation_url, :update => {:success => 'offering_list'}
+  
+  / %form{:name => :gse_selector, :id => :gse_selector}
+  / - field_set_tag 'Select GSE' do
+  /   - field_set_tag 'filter' do
+  /     #gse_filter
+  /       %ul.menu_h
+  /         %li
+  /           grade span:
+  /           = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans))
+  /         %li
+  /           domain:
+  /           = select_tag(:domain_id, options_for_select(Domain.find(:all).collect { |d| [d.name, d.id] }))
+  /       
+  / = observe_form :gse_selector, :url => list_filter_investigation_url, :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => Investigation.published, :clazz => clazz}
