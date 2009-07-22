@@ -70,15 +70,18 @@ class InvestigationsController < AuthoringController
   
   def index
     if params[:mine_only]
-      @pages = Investigation.search(params[:search], params[:page], self.current_user)
+      @investigations = Investigation.search(params[:search], params[:page], self.current_user)
+    elsif params[:include_drafts]
+      @investigations = Investigation.search(params[:search], params[:page], nil)
     else
-      @pages = Investigation.search(params[:search], params[:page], nil)
+      search = (params[:search].split << ["published"]).join(" ")
+      @investigations = Investigation.search(search, params[:page], nil)
     end
-    @paginated_objects = @pages    
+    @paginated_objects = @investigations    
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @pages }
+      format.xml  { render :xml => @investigations }
     end
   end
 

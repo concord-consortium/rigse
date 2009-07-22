@@ -68,7 +68,7 @@ class Investigation < ActiveRecord::Base
   include Noteable # convinience methods for notes...
   
   self.extend SearchableModel
-  @@searchable_attributes = %w{name description}
+  @@searchable_attributes = %w{name description publication_status}
   
   class <<self
     def searchable_attributes
