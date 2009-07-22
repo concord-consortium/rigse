@@ -49,7 +49,7 @@ namespace :rigse do
     task :pub_status => :environment do
       Investigation.find(:all).each do |i|
         if i.publication_status.nil?
-          i.publication_status = 'draft'
+          i.update_attribute(:publication_status,'draft')
         end
       end
     end
