@@ -453,8 +453,34 @@ HEREDOC
         end
         user.roles.clear
       end
+      
+      # Setting the default_user boolean allows suspending and unsuspending
+      # the whole group of default_users like this:
+      #
+      #   User.suspend_default_users
+      #
+      #   User.unsuspend_default_users
+      #
+      # The anonymous users is a proxy user for vistitors who are
+      # not logged in so it is not in the class of default users
+      # who can be suspended.
+      #
+      # The admin user is based on the user specified in settings.yml and
+      # also can't be suspended.
+      #
+      suspendable_default_users = default_user_list - [anonymous_user, admin_user]
+      suspendable_default_users.each do |user|
+        user.default_user = true
+        user.save!
+      end
 
       admin_user.add_role('admin')
+      
+      # Set the site_admin attribute to true for the site_admin.
+      # This will be used more later for performance reasons as 
+      # we integrate permission_sets into membership models.
+      admin_user.update_attribute(:site_admin, true)
+      
       manager_user.add_role('manager')
       researcher_user.add_role('researcher')
       member_user.add_role('member')

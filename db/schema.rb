@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090717200759) do
+ActiveRecord::Schema.define(:version => 20090722180712) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1629,6 +1629,8 @@ ActiveRecord::Schema.define(:version => 20090717200759) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "vendor_interface_id"
+    t.boolean  "default_user",                             :default => false
+    t.boolean  "site_admin",                               :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

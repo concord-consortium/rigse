@@ -7,6 +7,7 @@ development: &non_production_settings
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
+  enable_default_users: true
   states_and_provinces:
     - RI
     - MA
@@ -30,6 +31,7 @@ staging:
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
+  enable_default_users: true
   states_and_provinces:
     - RI
     - MA
@@ -50,6 +52,7 @@ production:
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
+  enable_default_users: false
   states_and_provinces:
     - RI
     - MA
