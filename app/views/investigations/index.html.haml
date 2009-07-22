@@ -5,6 +5,8 @@
         - content_tag :label do
           = text_field_tag :search, params[:search], :size => 30
         %input{ :type => "submit", :value => "Search"}
+        include_drafts
+        = check_box_tag 'include_drafts'                  
       - if @paginated_objects
         %p= page_entries_info @paginated_objects
       %p.paginator
@@ -18,7 +20,7 @@
 
 .item_collection
   %ul.quiet_list
-    - for investigation in @pages    
+    - for investigation in @investigations    
       %div{ :id => dom_id_for(investigation, :item), :class => 'item' }
         %div.action_menu
           %div.action_menu_header_left   

@@ -9,6 +9,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot.rb')
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -33,7 +34,7 @@ Rails::Initializer.run do |config|
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
-  config.gem "haml", :version => '>= 2.0.7'  
+  config.gem "haml", :version => '>= 2.2.0'  
   config.gem "RedCloth", :version => '>= 4.1.1'
   config.gem "uuidtools", :version => '>= 2.0.0'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
@@ -43,6 +44,8 @@ Rails::Initializer.run do |config|
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
   config.gem "jnlp", :version => '>= 0.0.5.1'
+  config.gem "has_many_polymorphs", :version => ">= 2.13"
+  config.gem "ar-extensions", ">= 0.9.1"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -86,10 +89,64 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  config.active_record.observers = :user_observer
+  # config.active_record.observers = :user_observer
+  
+  config.after_initialize do
+    opts = config.has_many_polymorphs_options
+    opts[:file_pattern] = Array(opts[:file_pattern])
+    opts[:file_pattern] << "#{RAILS_ROOT}/vendor/plugins/rites_portal/app/models/**/*.rb"
+    config.has_many_polymorphs_options = opts
+  end
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
 
 require 'prawn'
 require 'prawn/format'
+
+require 'portal_configuration'
+
+# Special-case for when the migration that adds the default_user
+# attribute hasn't been run yet.
+if User.site_admin.respond_to? :default_user
+  if APP_CONFIG[:enable_default_users]
+    User.unsuspend_default_users
+  else
+    User.suspend_default_users
+  end
+end
+
+# We have to override the autoload method since the default doesn't handle namespaces well...
+module HasManyPolymorphs
+  def self.autoload
+
+    _logger_debug "autoload hook invoked"
+    
+    options[:requirements].each do |requirement|
+      _logger_warn "forcing requirement load of #{requirement}"
+      require requirement
+    end
+  
+    Dir.glob(options[:file_pattern]).each do |filename|
+      next if filename =~ /#{options[:file_exclusions].join("|")}/
+      open filename do |file|
+        if file.grep(/#{options[:methods].join("|")}/).any?
+          begin
+            file.rewind
+            model = File.basename(filename)[0..-4].camelize
+            class_regexp = /class\s+([^\s]+)\s+</
+            line = file.grep(class_regexp).first
+            if line =~ class_regexp  ## Should match unless no lines were found
+              model = $1
+            end
+            _logger_warn "preloading parent model #{model}"
+            model.constantize
+          rescue Object => e
+            _logger_warn "#{model} could not be preloaded: #{e.inspect}"
+          end
+        end
+      end
+    end
+  end  
+    
+end

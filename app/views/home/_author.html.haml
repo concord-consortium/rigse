@@ -1,0 +1,15 @@
+- content_for :top_menu_items do
+  - add_top_menu_item(link_to('My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'))
+  - add_top_menu_item(link_to('GSEs', grade_span_expectations_path))
+
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Author' do
+      Hello Author
+
+- content_for(:authored_investigations) do
+  - field_set_tag "Investigations you've authored" do
+    %ul
+      - current_user.investigations.each do |inv|
+        %li
+          = link_to name_for_component(inv), inv

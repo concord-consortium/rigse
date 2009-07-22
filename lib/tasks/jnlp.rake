@@ -3,27 +3,57 @@ namespace :rigse do
     
     require 'highline/import'
     
-    desc "generate MavenJnlp family of resources from CC jnlp server"
-    task :generate_maven_jnlp_family_of_resources => :environment do
-      attributes = { :host => 'http://jnlp.concord.org', :path => '/dev/org/concord/maven-jnlp/' }
-      unless mj = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attributes)
-        mj = MavenJnlp::MavenJnlpServer.create!(attributes)
+    desc "generate names for existing MavenJnlpServers that don't have them"
+    task :generate_names_for_maven_jnlp_servers => :environment do
+      maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
+      maven_jnlp_servers.each do |server|
+        attrs = { :host => server[:host], :path => server[:path] }
+        if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attrs)
+          unless mj_server.name
+            puts "MavenJnlpServer: name: #{server[:name]} => #{attrs.inspect}"
+            mj_server.name = server[:name]
+            mj_server.save!
+          end
+        end
       end
-      puts <<HEREDOC
+    end
+    
+    desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
+    task :generate_maven_jnlp_family_of_resources => :generate_names_for_maven_jnlp_servers do
+      maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
+      maven_jnlp_servers.each do |server|
+        if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => server)
+          puts "MavenJnlpServer: #{server.inspect} already exists."
+        else
+          puts "creating MavenJnlpServer: #{server.inspect}."
+          mj_server = MavenJnlp::MavenJnlpServer.create!(server)
+        end
+      end
+      
+      servers = MavenJnlp::MavenJnlpServer.find(:all)
+      servers.each do |mj_server|
 
-Generating MavenJnlp family of resources from CC jnlp server: 
+        puts <<HEREDOC
 
-  :host => #{attributes[:host]}
-  :path => #{attributes[:path]}
+Generate MavenJnlp family of resources from this jnlp server specification?
+
+  name: #{mj_server.name}
+  host: #{mj_server.host}
+  path: #{mj_server.path}
   
 HEREDOC
-      mj.create_maven_jnlp_families
-      puts <<HEREDOC
+        if agree("Do you want to do this? (y/n) ", true)  
+          mj_server.create_maven_jnlp_families
+          puts <<HEREDOC
 completed ...
 
-#{mj.maven_jnlp_object.summarize}
+#{mj_server.maven_jnlp_object.summarize}
 
 HEREDOC
+        else
+          puts "\n  skipped ...\n"
+        end
+      end
     end
 
     desc "delete all the MavenJnlp resources"

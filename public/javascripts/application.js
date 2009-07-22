@@ -34,6 +34,17 @@ flatten_sortables = function() {
   );
 }
 
+// take a extended dom_element and return a model name and id
+decode_model = function(elem) {
+  var dom_id = elem.identify() 
+  var match = dom_id.gsub(/(.*)_([0-9]+)/, function(match){
+    return match;
+  });
+  var matches = match.split(",");
+  return {type:matches[1], id: matches[2]};
+ }
+
+
 focus_first_field = function() {
   var first_form = document.forms[0];
   var inputs = first_form.getInputs('text');

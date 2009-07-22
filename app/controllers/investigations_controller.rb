@@ -1,4 +1,4 @@
-class InvestigationsController < ApplicationController
+class InvestigationsController < AuthoringController
   # GET /pages
   # GET /pages.xml
   prawnto :prawn=>{
@@ -70,29 +70,35 @@ class InvestigationsController < ApplicationController
   
   def index
     if params[:mine_only]
-      @pages = Investigation.search(params[:search], params[:page], self.current_user)
+      @investigations = Investigation.search(params[:search], params[:page], self.current_user)
+    elsif params[:include_drafts]
+      @investigations = Investigation.search(params[:search], params[:page], nil)
     else
-      @pages = Investigation.search(params[:search], params[:page], nil)
+      if search = params[:search]
+        search = (search.split << ["published"]).join(" ")
+      else
+        search = "published"
+      end
+      @investigations = Investigation.search(search, params[:page], nil)
     end
-    @paginated_objects = @pages    
+    @paginated_objects = @investigations    
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @pages }
+      format.xml  { render :xml => @investigations }
     end
   end
 
   # GET /pages/1
   # GET /pages/1.xml
   def show
-    @investigation = Investigation.find(params[:id])
     # display for teachers? Later we can determin via roles?
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @investigation }
       format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
-      format.jnlp { render :layout => false }
+      format.jnlp { render_jnlp(@investigation) }
       format.pdf {render :layout => false }
     end
   end
@@ -210,6 +216,7 @@ class InvestigationsController < ApplicationController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
+
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
         render :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }
@@ -230,7 +237,6 @@ class InvestigationsController < ApplicationController
     end
   end
   
-
   # DELETE /pages/1
   # DELETE /pages/1.xml
   def destroy
@@ -334,5 +340,22 @@ class InvestigationsController < ApplicationController
     end
   end
 
+
+  # POST /grade_span_expectations/select_js
+  def list_filter
+    # remember the chosen domain and gradespan, it will probably continue..
+    cookies[:gradespan] = @grade_span = params[:gradespan] || "%" # default to all grade_spans
+    cookies[:domain] = @domain_id = params[:domain].to_i
+
+    @investigations = Investigation.grade_and_domain(@grade_span,@domain_id)
+  
+    if request.xhr?
+      render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations}
+    else
+      respond_to do |format|
+        format.js
+      end
+    end
+  end
   
 end

@@ -75,7 +75,10 @@
           - else
             = link_to 'Login', login_path
             \/
-            = link_to 'Signup', signup_path
+            = link_to 'Sign Up', pick_signup_path
+          - if @original_user.has_role?('admin', 'manager')
+            \/
+            = link_to 'Switch', switch_user_path(current_user)
             
       #nav_top
         %span.hidden.doNotPrint
@@ -83,14 +86,17 @@
         != "&nbsp;"
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
-          %li.trail= link_to 'Investigations', investigations_path
+          %li.trail= link_to 'About', about_path
           - unless current_user.anonymous?
-            %li.trail= link_to 'My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'
+            %li.trail= link_to 'Investigations', investigations_path
+            %li.trail= link_to 'My Investigations', investigations_path(:mine_only => 'y')
           
         - if current_user.has_role?('admin')
           %ul.menu_h_right
+            %li.trail= link_to 'Districts', portal_districts_path
+            %li.trail= link_to 'Schools', portal_schools_path
             %li.trail= link_to 'GSEs', grade_span_expectations_path
-            %li= link_to 'Admin', admin_path
+            %li= link_to 'Users', users_path
 
       #content_container      
         #left_nav.nav_menu
@@ -98,6 +104,8 @@
             = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
           - elsif @activity
             = render :partial => 'shared/accordian_nav'
+          
+          = yield :side_bar
 
         #main_content.main_content_colors
           #content_header.main_content_colors

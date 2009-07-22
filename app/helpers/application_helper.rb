@@ -81,7 +81,6 @@ module ApplicationHelper
     end
   end
 
-
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
     render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
@@ -509,6 +508,26 @@ module ApplicationHelper
       end
     end
     return false
+  end
+  
+  def render_project_info
+    unless @rendered_project_info
+      render :partial => "home/project_info"
+      @rendered_project_info = true
+    end
+  end
+  
+  def add_top_menu_item(link)
+    @top_menu_items ||= []
+    @top_menu_items << link
+  end
+
+  def htmlize_teacher_note_body(teacher_note)
+    if teacher_note.body
+      teacher_note.body.gsub(/\n/,"<br/>")
+    else
+      "<br/>"
+    end
   end
   
 end

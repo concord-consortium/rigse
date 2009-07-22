@@ -1,7 +1,5 @@
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
-  include AuthenticatedSystem
-  include RoleRequirementSystem
 
   self.allow_forgery_protection = false
 
@@ -10,10 +8,8 @@ class ApplicationController < ActionController::Base
   end
   
   helper :all # include all helpers, all the time
-  filter_parameter_logging :password, :password_confirmation
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
-  before_filter :check_user
   before_filter :setup_container
   
   protected
@@ -38,23 +34,6 @@ class ApplicationController < ActionController::Base
       end
     rescue ActiveRecord::RecordNotFound
     end
-  end
-  
-  private
-
-  def check_user
-    if logged_in?
-      self.current_user = current_user
-    else
-      self.current_user = User.anonymous 
-    end
-  end
-
-
-  def redirect_back_or(path)
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    redirect_to path
   end
 
 end
