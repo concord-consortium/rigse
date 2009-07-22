@@ -87,7 +87,7 @@
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          - unless current_user.anonymous?
+          - unless current_user.anonymous? || current_user.portal_student
             %li.trail= link_to 'Investigations', investigations_path
             %li.trail= link_to 'My Investigations', investigations_path(:mine_only => 'y')
           
