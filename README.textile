@@ -75,6 +75,7 @@ h2. Updating after pulling the commits on July 20 that merged the with-portal br
     cap convert:transfer_investigations_owned_by_anonymous
     cap convert:deep_set_user_on_all_investigations
     cap convert:add_author_role_to_authors
+    cap convert:set_publication_status_to_draft
 
     cap deploy:restart
   </code>
