@@ -216,6 +216,17 @@ class InvestigationsController < AuthoringController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
+      
+    if (params[:public])
+      if @investigation.draft?
+        @investigation.publish!
+      end
+    else
+      if @investigation.published?
+        @investigation.un_publish!
+      end
+    end
+
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
         render :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }

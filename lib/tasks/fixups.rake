@@ -43,6 +43,17 @@ namespace :rigse do
         puts 'no Investigations owned by the anonymous user'
       end
     end
+    
+    
+    desc 'ensure investigations have publication_status'
+    task :pub_status => :environment do
+      Investigation.find(:all).each do |i|
+        if i.publication_status.nil?
+          i.publication_status = 'draft'
+        end
+      end
+    end
+    
   end
 end
 
