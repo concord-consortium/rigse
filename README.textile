@@ -57,6 +57,7 @@ h2. Updating after pulling the commits on July 20 that merged the with-portal br
     cd shared
     mkdir -p engines/portal/config/nces_data
     # update settings.yml with new parameters in settings.sample.yml
+    # on real staging and production sites enable_default_users should be false
 
     # on remote
     cap production db:fetch_remote_db
