@@ -3,10 +3,10 @@
   .aligned
     %ol
       %li
-        %label Name
+        %label.right Name
         = f.text_field :name, :class => 'aligned'
       %li
-        %label Publication status
+        %label.right Publication status
         = f.select :publication_status, {"published" => "published", "draft" => "draft"}, :class => 'aligned'
       %li
         %label Description
