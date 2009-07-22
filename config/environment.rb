@@ -106,11 +106,15 @@ require 'prawn/format'
 
 require 'portal_configuration'
 
-# if APP_CONFIG[:enable_default_users]
-#   User.unsuspend_default_users
-# else
-#   User.suspend_default_users
-# end
+# Special-case for when the migration that adds the default_user
+# attribute hasn't been run yet.
+if User.site_admin.respond_to? :default_user
+  if APP_CONFIG[:enable_default_users]
+    User.unsuspend_default_users
+  else
+    User.suspend_default_users
+  end
+end
 
 # We have to override the autoload method since the default doesn't handle namespaces well...
 module HasManyPolymorphs
