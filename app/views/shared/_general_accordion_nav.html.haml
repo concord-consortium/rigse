@@ -7,12 +7,12 @@
 / TODO: some way to dynmically specify the sorting methods?
 #accordion_nav
   - top_container_id = dom_id_for(top_node, :accordion_container_list)
-  - top_controller ||= top_node.class.name.dasherize.pluralize
-  - sub_controller ||= top_node.children[0] ? top_node.children[0].class.name.dasherize.pluralize : nil
+  - top_controller ||= top_node.class.name.tableize
+  - sub_controller ||= top_node.children[0] ? top_node.children[0].class.name.tableize : nil
   - if  sub_controller 
     - top_action ||= "sort_#{sub_controller}"
     - if top_node.children[0].children[0]
-      - sub_action ||= "sort_#{top_node.children[0].children[0].class.name.dasherize.pluralize}" 
+      - sub_action ||= "sort_#{top_node.children[0].children[0].class.name.tableize}" 
 
   %ul{:id=>top_container_id, :class=>"accordion_header"}
     = link_to top_node.name, top_node
