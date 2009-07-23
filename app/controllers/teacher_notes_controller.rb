@@ -2,6 +2,17 @@ class TeacherNotesController < ApplicationController
   
   before_filter :setup_object, :except => [:index]
     
+  protected
+  
+  def set_owner(note)
+    if (! note.authored_entity.nil?)
+      note.user = note.authored_entity.user
+    else
+      note.user = current_user
+    end
+  end
+  
+  public
   def setup_object
     if params[:id]
       if params[:id].length == 36
@@ -13,18 +24,18 @@ class TeacherNotesController < ApplicationController
       @teacher_note = TeacherNote.new(params[:activity])
       @teacher_note.authored_entity_type=params[:authored_entity_type]
       @teacher_note.authored_entity_id=params[:authored_entity_id]
-      @teacher_note.user = current_user
+      set_owner @teacher_note
     elsif params[:authored_entity_type] && params[:authored_entity_id]
       @teacher_note = TeacherNote.find_by_authored_entity_type_and_authored_entity_id(params[:authored_entity_type],params[:authored_entity_id])
       if (@teacher_note.nil?)
         @teacher_note = TeacherNote.new
         @teacher_note.authored_entity_type=params[:authored_entity_type]
         @teacher_note.authored_entity_id=params[:authored_entity_id]
-        @teacher_note.user = current_user
+        set_owner @teacher_note
       end
     else
       @teacher_note = TeacherNote.new
-      @teacher_note.user = current_user
+      set_owner @teacher_note
     end
   end
   

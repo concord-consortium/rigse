@@ -135,14 +135,6 @@ class Page < ActiveRecord::Base
     return (section || inner_pages[0] || nil)
   end
   
-  def teacher_note
-    if teacher_notes[0]
-      return teacher_notes[0]
-    end
-    teacher_notes << TeacherNote.create
-    return teacher_notes[0]
-  end
-  
   include TreeNode
       
   def deep_set_user user
