@@ -49,21 +49,21 @@
           .teacher_mode
             - if section.investigation && section.investigation.has_good_teacher_note?
               %h3= "Investigation notes:"
-              .activity_teacher_note= h(section.investigation.teacher_note_otml)
+              .activity_teacher_note= section.investigation.teacher_note_otml
   
             - if section.activity && section.activity.has_good_teacher_note?
               %h3= "Activity notes:"
-              .activity_teacher_note= h(section.activity.teacher_note_otml)
+              .activity_teacher_note= section.activity.teacher_note_otml
   
             - if section.has_good_teacher_note?
               %h3= "Section notes:"
-              .section_teacher_note= h(section.teacher_note_otml)
+              .section_teacher_note= section.teacher_note_otml
 
             - section.pages.each do |page|
               .page_teacher_notes
                 - if page.has_good_teacher_note?
                   %h3="Page notes (#{page.name}):"
-                  .page_teacher_note= h(page.teacher_note_otml)
+                  .page_teacher_note= page.teacher_note_otml
     %currentCard
       %object{ :refid => ot_refid_for(section, :teacher_notes) }/
     %viewedCards
