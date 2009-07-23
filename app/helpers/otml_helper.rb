@@ -52,6 +52,7 @@
       org.concord.otrunk.ui.OTCardContainer
       org.concord.otrunk.ui.OTTabContainer
       org.concord.otrunk.ui.OTChoice
+      org.concord.otrunk.ui.swing.OTChoiceViewConfig
       org.concord.otrunk.ui.OTCurriculumUnit
       org.concord.otrunk.ui.OTText
       org.concord.otrunk.ui.OTUDLContainer
