@@ -117,9 +117,11 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
+    run "ln -nfs #{shared_path}/engines/portal/config/nces_data #{release_path}/vendor/plugins/portal/config/nces_data"
   end
     
   desc "install required gems for application"
@@ -159,7 +161,13 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace" 
   end
 
-  desc "generate MavenJnlp family of resources fron CC jnlp server"
+  desc "generate names for existing MavenJnlpServers that don't have them"
+  task :generate_names_for_maven_jnlp_servers, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
+  end
+
+  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
   task :generate_maven_jnlp_family_of_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
@@ -190,6 +198,25 @@ namespace :import do
       "cd public && " +
       "git clone git://github.com/stepheneb/otrunk-examples.git"
   end
+
+  desc"Download nces data files from NCES websites"
+  task :download_nces_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:download_nces_data --trace" 
+  end
+
+  desc "Import nces data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states"
+  task :nces_data_from_files, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_file --trace" 
+  end
+
+  desc"reload the default probe and vendor_interface configurations."
+  task :reload_probe_configurations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace" 
+  end
+
 end
 
 #############################################################
@@ -222,14 +249,37 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace" 
   end
 
-  desc 'find page_elements whithout owners and recalim them'
+  desc 'find page_elements whithout owners and reclaim them'
   task :reclaim_page_elements, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace" 
   end
   
-end
+  desc 'transfer any Investigations owned by the anonymous user to the site admin user'
+  task :transfer_investigations_owned_by_anonymous, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:transfer_investigations_owned_by_anonymous --trace"
+  end
+  
+  desc 'deep set user ownership on all investigations'
+  task :deep_set_user_on_all_investigations, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
+  end
 
+  desc 'add the author role to all users who have authored an Investigation'
+  task :add_author_role_to_authors, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:add_author_role_to_authors --trace"
+  end
+
+  desc "set publication_status to 'draft' for all Investigations without publication_status"
+  task :set_publication_status_to_draft, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
+  end
+
+end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:set_permissions'

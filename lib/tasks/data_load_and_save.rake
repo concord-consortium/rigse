@@ -84,7 +84,7 @@ namespace :db do
     desc "Load just the probe configurations from yaml fixtures in config/probe_configurations." 
     task :load_probe_configurations => :environment do 
       dir = RAILS_ROOT + '/config/probe_configurations'
-      rites_user_id = User.site_admin.id
+      user_id = User.site_admin.id
       FileUtils.chdir(dir) do
         tables = %w{device_configs data_filters vendor_interfaces physical_units calibrations probe_types}
         tables.each do |tbl|
@@ -105,7 +105,7 @@ namespace :db do
                   data[c.name] = fixture[c.name] if fixture[c.name]
                   # if there is a field named user_id set it's value to the id for the rites site admin
                   if c.name == 'user_id'
-                    data[c.name] = rites_user_id
+                    data[c.name] = user_id
                   end
                 end
                 ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'

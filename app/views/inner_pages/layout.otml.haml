@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @inner_page.name)
+      =ot_bundles(:title => h(@inner_page.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = InnerPage.display_name + ': ' + @inner_page.name
+                = h(InnerPage.display_name + ': ' + @inner_page.name)
               %object{ :refid => ot_refid_for(@inner_page) }
       %library
         =yield :layout

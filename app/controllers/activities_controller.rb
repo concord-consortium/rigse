@@ -8,7 +8,7 @@ class ActivitiesController < ApplicationController
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
-  before_filter :can_create, :only => [:new, :create]
+  before_filter :can_create, :only => [:new, :create,:duplicate]
   
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
@@ -90,13 +90,12 @@ class ActivitiesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
-    @activity = Activity.find(params[:id])
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @activity }
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
-      format.jnlp { render :layout => false }
+      format.jnlp { render_jnlp(@activity) }
       format.pdf {render :layout => false }
     end
   end

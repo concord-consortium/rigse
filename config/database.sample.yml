@@ -36,3 +36,11 @@ itsi:
   password: *****
   pool: 5
   asset_url: http://itsidiy.concord.org
+  
+rites_portal:
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: rites_portal
+  password: *****
+  pool: 5

@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @biologica_world.name)
+      =ot_bundles(:title => h(@biologica_world.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = BiologicaWorld.display_name + ': ' + @biologica_world.name
+                = h(BiologicaWorld.display_name + ': ' + @biologica_world.name)
               %object{ :refid => ot_refid_for(@biologica_world) }
       %library
         =yield :layout

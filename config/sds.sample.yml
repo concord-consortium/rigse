@@ -1,0 +1,22 @@
+
+#
+# SDS configuration file
+#
+
+development:
+  host: http://sds.local/1
+  jnlp_id: 1
+  curnit_id: 1
+  username: 
+  password: 
+  default_offering_id: 1
+  default_workgroup_id: 1
+
+production:
+  host: http://sds.local/1
+  jnlp_id: 1
+  curnit_id: 1
+  username: 
+  password: 
+  default_offering_id: 1
+  default_workgroup_id: 1

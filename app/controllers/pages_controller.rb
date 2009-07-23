@@ -78,7 +78,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.otml { render :layout => "layouts/page" } # page.otml.haml
-      format.jnlp { render :layout => false }
+      format.jnlp { render_jnlp(@page) }
       format.xml  { render :xml => @page }
     end
   end

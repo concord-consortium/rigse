@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @biologica_multiple_organism.name)
+      =ot_bundles(:title => h(@biologica_multiple_organism.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = BiologicaMultipleOrganism.display_name + ': ' + @biologica_multiple_organism.name
+                = h(BiologicaMultipleOrganism.display_name + ': ' + @biologica_multiple_organism.name)
               %object{ :refid => ot_refid_for(@biologica_multiple_organism) }
       %library
         =yield :layout

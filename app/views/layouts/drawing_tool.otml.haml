@@ -4,13 +4,13 @@
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => @drawing_tool.name)
+      =ot_bundles(:title => h(@drawing_tool.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = DrawingTool.display_name + ': ' + @drawing_tool.name
+                = h(DrawingTool.display_name + ': ' + @drawing_tool.name)
               %object{ :refid => ot_refid_for(@drawing_tool) }/
       %library
         =yield :layout

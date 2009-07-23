@@ -16,6 +16,11 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+# see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
+ActiveSupport::Dependencies.explicitly_unloadable_constants << 'Portal'
+ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'
+ActiveSupport::Dependencies.load_once_paths.delete_if {|p| p =~ /vendor\/plugins\/portal/ }
+  
 # textmate-footnotes
 # Rails errors displayed in browser are generated with links to textmate
 # see: http://wiki.github.com/josevalim/rails-footnotes
@@ -32,3 +37,6 @@ unless RUBY_PLATFORM =~ /java/
   Debugger.settings[:autoeval] = 1
   Debugger.settings[:reload_source_on_change] = 1
 end
+
+# to help with development with engines (which are plugins)
+config.reload_plugins = true

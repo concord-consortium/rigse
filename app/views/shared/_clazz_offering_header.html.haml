@@ -1,0 +1,5 @@
+.action_menu
+  %h4= "Offerings for Class #{clazz_name}"
+  .tiny (drag items from the right into your class)
+#clazz_offerings.drop_target
+  = yield :clazz_listing

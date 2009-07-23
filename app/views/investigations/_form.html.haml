@@ -1,9 +1,16 @@
 = edit_menu_for(investigation, f)
-- field_set_tag 'name' do
-  = f.text_field :name
-
-- field_set_tag 'description' do
-  = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 80, :class => 'mceNoEditor'
+- field_set_tag 'Investigation details' do
+  .aligned
+    %ol
+      %li
+        %label.right Name
+        = f.text_field :name
+      %li
+        %label.right Publication status
+        = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
+      %li
+        %label Description
+        = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 
 - field_set_tag 'Select GSE' do
   - field_set_tag 'filter' do
@@ -23,5 +30,4 @@
         - if @gse
           = render :partial => 'grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
 
-
-= javascript_tag("$('investigation_name').activate();")
+= javascript_tag("focus_first_field();");

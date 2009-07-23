@@ -1,26 +1,66 @@
 development: &non_production_settings
   site_url: http://localhost:3000
   site_name: RITES Investigations (development)
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
-
+  enable_default_users: true
+  states_and_provinces:
+    - RI
+    - MA
+  default_maven_jnlp_server: concord
+  default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_servers:
+    - 
+      :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  
 test:
   <<: *non_production_settings
 
 staging:
   site_url: http://rites.dev.concord.org
   site_name: RITES Investigations (staging)
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
+  enable_default_users: true
+  states_and_provinces:
+    - RI
+    - MA
+  default_maven_jnlp_server: concord
+  default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_servers:
+    - 
+      :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
   
 production:
   site_url: http://rites.dev.concord.org
   site_name: RITES Investigations
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
   admin_last_name: Bannasch
+  enable_default_users: false
+  states_and_provinces:
+    - RI
+    - MA
+  default_maven_jnlp_server: concord
+  default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_servers:
+    - 
+      :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  

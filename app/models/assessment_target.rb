@@ -4,7 +4,7 @@ class AssessmentTarget < ActiveRecord::Base
   belongs_to :knowledge_statement
   has_many :grade_span_expectations
   has_many :assessment_target_unifying_themes
-  has_many :unifying_themes, :through => :assessment_target_unifying_themes
+  has_and_belongs_to_many :unifying_themes, :join_table => :assessment_target_unifying_themes
 
   acts_as_replicatable
 
@@ -19,5 +19,13 @@ class AssessmentTarget < ActiveRecord::Base
       @@searchable_attributes
     end
   end
+
+  def add_unifying_theme(theme)
+    self.unifying_themes << theme unless has_unifying_theme?(theme)
+  end 
   
+  def has_unifying_theme?(theme)
+    (self.unifying_themes.collect { |t| t.id }).include?(theme.id)
+  end
+   
 end

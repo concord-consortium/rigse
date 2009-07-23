@@ -1,4 +1,4 @@
-h1. rigse
+h1. RITES Investigations Portal and Authoring System
 
 h2. prerequisites
 
@@ -35,6 +35,63 @@ server and a mysql username/password with enough permissions to create and drop 
     jruby script/server
   </code>
 </pre>
+
+_there's a bunch more that needs to go here_
+
+h2. Updating after pulling the commits on July 20 that merged the with-portal branch
+
+<pre>
+  <code>
+    # finish setting up production sds portal realm 
+    # http://saildataservice.concord.org/26
+    # jnlp: http://saildataservice.concord.org/26/jnlp/490
+    # curnit: http://saildataservice.concord.org/26/curnit/640
+    # offering for default_offering: http://saildataservice.concord.org/26/offering/9331
+    # sail_user for defaul user: http://saildataservice.concord.org/26/sail_user/37595
+    # default workgroup for default offering and default sail user:
+    # http://saildataservice.concord.org/26/workgroup/68284
+
+    # on server:
+    create shared/config/sds.yml using the form in sds.sample.yml with the values from the sds portal realm
+    sudo gem install has_many_polymorphs haml
+    cd shared
+    mkdir -p engines/portal/config/nces_data
+    # update settings.yml with new parameters in settings.sample.yml
+    # on real staging and production sites enable_default_users should be false
+
+    # on remote
+    cap production db:fetch_remote_db
+    cap deploy
+    cap deploy:install_gems
+    cap db:push_remote_db
+    cap deploy:migrate
+    cap import:download_nces_data
+    cap import:nces_data_from_files
+
+    # on server
+    rake rigse:setup:default_users_roles --trace
+
+    # on remotes
+    cap import:generate_names_for_maven_jnlp_servers
+    cap convert:transfer_investigations_owned_by_anonymous
+    cap convert:deep_set_user_on_all_investigations
+    cap convert:add_author_role_to_authors
+    cap convert:set_publication_status_to_draft
+
+    cap deploy:restart
+  </code>
+</pre>
+
+h3. Setting up a local SAIL Data Service and JNLP Web Start servelet
+
+You can also setup both a local SDS and jnlp web start server for a development environment with less dependence on outside services.
+
+*"Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5*
+
+has several sections with useful information:
+
+# "Install Sail Data Service":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-5InstallSailDataService
+# "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
 
 h2. Some video walk-throughs
 

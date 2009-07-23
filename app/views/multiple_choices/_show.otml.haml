@@ -6,5 +6,5 @@
     %OTChoice{ :name => 'Multiple choice', :alignContent => '0' }
       %choices
         - multiple_choice.choices.each_with_index do |choice, i|
-          %OTCompoundDoc{ :name => "#{i+1}. #{h(truncate(choice.choice, 20))}" }
-            %bodyText= choice.choice
+          %OTText{:name => "#{i+1}. #{h(choice.choice)}"}
+
