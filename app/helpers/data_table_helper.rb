@@ -1,5 +1,20 @@
 module DataTableHelper
   
+  #
+  # Only render a data table title in the body of the table
+  # if the author has changed the title from the original default 
+  # name: 'DataTable element', or changed the title from the new
+  # default which is an empty string: ''
+  #
+  def data_table_title(data_table)
+    unless data_table.name.empty? || (data_table.name == 'DataTable element')
+      capture_haml do
+        haml_tag :div, :class => :data_table_title do
+          haml_concat(data_table.name)
+        end
+      end
+    end
+  end
   
   #
   # 
