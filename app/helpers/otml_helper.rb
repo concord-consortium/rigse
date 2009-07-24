@@ -229,7 +229,24 @@
       end
     end
   end
-  
+
+  def ot_sensor_data_proxy(data_collector)
+    probe_type = data_collector.probe_type
+    capture_haml do
+      haml_tag :OTSensorDataProxy, :local_id => ot_local_id_for(data_collector, :data_proxy) do
+         haml_tag :request do
+           haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
+             haml_tag :sensorRequests do
+               haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
+                :type => probe_type.ptype.to_s, :unit => probe_type.unit, :port => probe_type.port.to_s, 
+                :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
+                :displayPrecision => "#{data_collector.probe_type.display_precision}"
+            end
+          end
+        end
+      end
+    end
+  end
   
   # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
   #   - if data_collector.data_store_values.length > 0
