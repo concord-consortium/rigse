@@ -1,4 +1,23 @@
 class DataCollectorsController < ApplicationController
+
+
+  protected
+  def changed_calibration?(calibration_id)
+    if session[:calibration_id] == calibration_id
+      return false
+    end
+    true
+  end
+  
+  def changed_probe_type?(probe_type_id)
+    if session[:probe_type_id] == probe_type_id
+      return false
+    end
+    true
+  end
+  
+  public
+  
   # GET /data_collectors
   # GET /data_collectors.xml
   def index
@@ -166,43 +185,41 @@ class DataCollectorsController < ApplicationController
     end
     @data_collector.destroy
   end
+    
+  def changed_probe_info?(probe_type_id,calibration_id)
+    return changed_probe_type?(probe_type_id) || changed_calibration?(calibration_id)
+  end
   
   def change_probe_type
-    @data_collector = DataCollector.find(params[:id])
-    @scope = get_scope(@data_collector)
-    probe_type_id = params[:data_collector][:probe_type_id].to_i
-    probe_type = ProbeType.find(probe_type_id)
-    if session[:new_probe_type_id]
-      if session[:new_probe_type_id] == probe_type_id
-        render :nothing => true
-      elsif session[:last_saved_probe_type_id] == probe_type_id
-        session[:new_probe_type_id] = nil
+    probe_type_id = params[:data_collector][:probe_type_id]
+    calibration_id = params[:data_collector][:calibration_id]
+    # If probe_type or calibrations change, we change some other values.
+    if changed_probe_info?(probe_type_id,calibration_id)
+      @data_collector = DataCollector.find(params[:id])
+      @scope = get_scope(@data_collector)
+      @data_collector.probe_type = ProbeType.find(probe_type_id.to_i)
+      @data_collector.title = "#{@data_collector.probe_type.name} Data Collector"
+      @data_collector.y_axis_label = @data_collector.probe_type.name
+      @data_collector.y_axis_units = @data_collector.probe_type.unit
+      @data_collector.y_axis_min = @data_collector.probe_type.min
+      @data_collector.y_axis_max = @data_collector.probe_type.max
+      if changed_calibration?(calibration_id) 
+        if calibration_id.to_i > 0
+          @data_collector.calibration = Calibration.find(calibration_id.to_i)
+          @data_collector.title = "#{@data_collector.calibration.name} Data Collector"
+          @data_collector.y_axis_label = @data_collector.calibration.quantity
+          @data_collector.y_axis_units = @data_collector.calibration.unit_symbol_text
+        else
+          @data_collector.calibration = nil
+        end
       else
-        @data_collector.probe_type = ProbeType.find(probe_type_id)
-        session[:new_probe_type_id] = probe_type_id
-      end
-    elsif session[:last_saved_probe_type_id] == probe_type_id
-      render :nothing => true
-    else
-      # had to move the setting of titles &etc. to here instead of the model,
-      # which might make some sense actually...
-      @data_collector.probe_type = probe_type
-      @data_collector.calibration = nil # loose the calibration info
-      @data_collector.title = "#{probe_type.name} Data Collector"
-      @data_collector.y_axis_label = probe_type.name
-      @data_collector.y_axis_units = probe_type.unit
-      @data_collector.y_axis_min = probe_type.min
-      @data_collector.y_axis_max = probe_type.max
-      if @data_collector.calibration 
-        @data_collector.title = "#{@data_collector.calibration} Data Collector"
-        @data_collector.y_axis_label = @data_collector.calibration.quantity
-        @data_collector.y_axis_units = @data_collector.calibration.unit_symbol_text
-      end
-      if @data_collector.static
-        @data_collector.title = "Static #{@data_collector.title }"
+        @data_collector.calibration = nil
       end
       @data_collector.name = @data_collector.title
-      session[:new_probe_type_id] = probe_type_id
+      session[:calibration_id]= calibration_id
+      session[:probe_type_id]= probe_type_id
+    else
+      render :nothing => true;
     end
   end
 

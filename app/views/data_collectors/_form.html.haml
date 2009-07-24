@@ -3,7 +3,6 @@
   .content
     %p
       - field_set_tag 'Title' do
-        = data_collector.title
         = f.text_field :title, :size => 60
 
     - field_set_tag 'Major options' do
@@ -86,4 +85,3 @@
         = f.text_area :otml_library_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
 
 = observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_data_collector_path(data_collector) + "?scope_id=#{scope.id}&scope_type=#{scope.class}"))
-/= observe_field (dom_id_for(data_collector,:select_probe_type), :url=> {:controller=> :data_collectors, :action => :change_probe_type, :id => data_collector.id}, :with=>'probe_type');
