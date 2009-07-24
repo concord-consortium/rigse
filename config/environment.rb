@@ -110,12 +110,17 @@ require 'portal_configuration'
 # attribute hasn't been run yet.
 # TODO: This causes troubles when the user table is not present.
 # Like on a fresh install, or in various migration situations
-if User.site_admin.respond_to? :default_user
-  if APP_CONFIG[:enable_default_users]
-    User.unsuspend_default_users
-  else
-    User.suspend_default_users
+begin
+  site_admin = User.site_admin
+  if site_admin.respond_to? :default_user
+    if APP_CONFIG[:enable_default_users]
+      User.unsuspend_default_users
+    else
+      User.suspend_default_users
+    end
   end
+rescue Mysql::Error => e
+  puts "e"
 end
 
 # We have to override the autoload method since the default doesn't handle namespaces well...
