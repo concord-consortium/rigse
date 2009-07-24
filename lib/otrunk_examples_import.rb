@@ -124,5 +124,101 @@ class OtrunkExampleImport
       artifact_types = %w{otml_files otml_imports otml_view_entries otml_launch_files projects internal_archives}
       artifact_types.each { |artifact_type| puts sprintf("%-20s %-s", "#{artifact_type}:", "#{self.send(artifact_type).length}") }
     end
+
+    def create_otml_categories
+      puts "\ncreating #{self.categories.length} OtmlCategory objects:"
+      self.categories.each do |otc|
+        unless OtrunkExample::OtmlCategory.find_by_name(otc)
+          print 'o'; STDOUT.flush
+          OtrunkExample::OtmlCategory.create!(:name => otc)
+        end
+      end
+    end
+
+    def create_otml_files
+      puts "\n\ncreating #{self.otml_files.length} OtmlFile objects: "
+      self.otml_files.each do |otf|
+        unless OtrunkExample::OtmlFile.find(:first, :conditions => { :path => otf.path })
+          ar_otml_category = OtrunkExample::OtmlCategory.find_by_name(otf.category)
+          attributes = {
+            :name => otf.name, 
+            :path => otf.path, 
+            :otml_category_id => ar_otml_category.id
+          }
+          OtrunkExample::OtmlFile.create!(attributes)
+          print 'o'; STDOUT.flush
+        else
+          print '.'; STDOUT.flush
+        end
+      end
+    end
+
+    def create_otrunk_imports
+      puts "\n\ncreating #{self.otml_imports.length} OtrunkImport objects: "
+      self.otml_imports.each do |oti|
+        unless OtrunkExample::OtrunkImport.find(:first, :conditions => { :fq_classname => oti.fq_classname })
+          OtrunkExample::OtrunkImport.create!(:classname => oti.classname, :fq_classname => oti.fq_classname)
+          print 'o'; STDOUT.flush
+        else
+          print '.'; STDOUT.flush
+        end
+      end
+    end
+
+    def create_otml_view_entries
+      puts "\n\ncreating #{self.otml_view_entries.length} OtrunkViewEntry objects: "
+      self.otml_view_entries.each do |otve|
+        if otve
+          ar_otrunk_import = OtrunkExample::OtrunkImport.find_by_fq_classname(otve.fq_object_classname)
+          ar_otrunk_view_entry = OtrunkExample::OtrunkViewEntry.find(:first, :conditions => { :fq_classname => otve.fq_view_classname })
+          if ar_otrunk_import && !ar_otrunk_view_entry
+            attributes = {
+              :classname => otve.view_classname, 
+              :fq_classname => otve.fq_view_classname, 
+              :otrunk_import_id => ar_otrunk_import.id
+            }
+            OtrunkExample::OtrunkViewEntry.create!(attributes)
+            print 'o'; STDOUT.flush
+          else
+            print '.'; STDOUT.flush
+          end
+        else
+          print 'x'; STDOUT.flush
+        end
+      end
+    end
+
+    def create_otml_file_associations
+      puts "\n\nassociating otml_files with otrunk_imports and otrunk_view_entries ..."
+      self.otml_files.each do |otfile|
+        print 'o'; STDOUT.flush
+        ar_otml_file = OtrunkExample::OtmlFile.find_by_path(otfile.path)
+        otfile.imports.each do |import|
+          ar_otml_import = OtrunkExample::OtrunkImport.find_by_fq_classname(import)
+          unless ar_otml_file.otrunk_imports.exists?(ar_otml_import)
+            ar_otml_file.otrunk_imports << ar_otml_import
+          end
+        end
+        otfile.view_entries.each do |ve|
+          ar_otml_view_entry = OtrunkExample::OtrunkViewEntry.find_by_fq_classname(ve[0])
+          if ar_otml_view_entry && !ar_otml_file.otrunk_view_entries.exists?(ar_otml_view_entry)
+            ar_otml_file.otrunk_view_entries << ar_otml_view_entry
+          end
+        end
+      end
+    end
+
+    def create_otml_category_associations
+      puts "\n\nassociating otml_categories with otrunk_imports ..."
+      OtrunkExample::OtmlCategory.find(:all).each do |category|
+        print 'o'; STDOUT.flush
+        imports = category.otml_files.collect { |ot_file| ot_file.otrunk_imports }.flatten.uniq
+        imports.each do |import|
+          unless category.otrunk_imports.exists?(import)
+            category.otrunk_imports << import
+          end
+        end
+      end
+    end
   end
 end

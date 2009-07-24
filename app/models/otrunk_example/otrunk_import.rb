@@ -1,8 +1,10 @@
 class OtrunkExample::OtrunkImport < ActiveRecord::Base
   set_table_name "otrunk_example_otrunk_imports"
   
-  has_and_belongs_to_many :otml_files, :uniq => true, :extend => HasOrBelongsToManyExtensions
-  has_and_belongs_to_many :otml_categories, :uniq => true, :extend => HasOrBelongsToManyExtensions
+  has_and_belongs_to_many :otml_files, :class_name => 'OtrunkExample::OtmlFile', :uniq => true, :extend => HasOrBelongsToManyExtensions
+  has_and_belongs_to_many :otml_categories, :class_name => 'OtrunkExample::OtmlCategory', :uniq => true, :extend => HasOrBelongsToManyExtensions
+  # has_and_belongs_to_many :otml_files, :uniq => true
+  # has_and_belongs_to_many :otml_categories, :uniq => true
 
   has_many :otrunk_view_entries, :class_name => 'OtrunkExample::OtrunkViewEntry'
   
