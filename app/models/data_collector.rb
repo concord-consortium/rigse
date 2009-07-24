@@ -145,6 +145,10 @@ class DataCollector < ActiveRecord::Base
   
   send_update_events_to :investigations
 
+  def display_type
+    graph_type
+  end
+  
   def self.display_name
     "Graph"
   end

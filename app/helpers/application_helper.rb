@@ -140,7 +140,7 @@ module ApplicationHelper
         :container_id => @container_id }
     end
   end
-
+  
   def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
@@ -271,13 +271,24 @@ module ApplicationHelper
   end
 
   def name_for_component(component)
-    if component.id.nil?
-      return "new #{component.class.name.humanize}"
-    end
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
-      return "<span class='component_title'>#{component.name}</span><span class='dev_note'> #{component.id}</span>" 
+    if component.class.respond_to? :display_name
+      name = component.class.display_name
     else
-      return "<span class='component_title'>#{component.name}</span>"
+      name = component.class.name.humanize
+    end
+    if component.respond_to? :display_type
+      name = "#{component.display_type} #{name}"
+    end
+    name << ': '
+    name << case
+      when component.id.nil? then "(new)"
+      when component.name == component.class.default_value('name') then ''
+      else component.name
+    end    
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
+      "<span class='component_title'>#{name}</span><span class='dev_note'> #{link_to (component.id, url_for(component))}</span>" 
+    else
+      "<span class='component_title'>#{name}</span>"
     end
   end
 

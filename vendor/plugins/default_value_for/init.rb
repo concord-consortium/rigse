@@ -20,6 +20,7 @@
 
 module DefaultValueForPlugin
 	class NormalValueContainer
+	  attr_reader :value
 		def initialize(value)
 			@value = value
 		end
@@ -40,6 +41,13 @@ module DefaultValueForPlugin
 	end
 	
 	module ClassMethods
+	  def default_value(attribute)
+	    container = self._default_attribute_values[attribute]
+	    case
+	      when container.respond_to?(:value) then container.value
+        else nil        
+      end
+    end
 		def default_value_for(attribute, value = nil, &block)
 			if !method_defined?(:initialize_with_defaults)
 				include(InstanceMethods)

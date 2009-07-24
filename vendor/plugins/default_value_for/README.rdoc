@@ -163,6 +163,20 @@ It works with anything for which there's an assignment method:
   user.age    # => 20
   user.instance_variable_get('@registering')    # => true
 
+== The Class method default_value
+
+Default values that are not defined with blocks can be read back using the
+Class method default_value.
+
+  # continuing the previous example ...
+  #
+  # If you wanted to know whether a particular instance of a User 
+  # model (user) still contained the default value for the name attribute:
+  
+  if user.name == User.default_value('name')
+    puts "please change the default value for :name"
+  end
+
 === Caveats
 
 A conflict can occur if your model class overrides the 'initialize' method,
