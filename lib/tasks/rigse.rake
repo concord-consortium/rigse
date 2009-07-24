@@ -117,7 +117,7 @@ this change to take effect.
 
 HEREDOC
       
-      if agree("Do you want to do this?  (y/n)", true)
+      if agree("Do you want to do this?  (y/n) ", true)
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
         site_key = UUIDTools::UUID.timestamp_create.to_s
 
@@ -137,33 +137,41 @@ HEREDOC
     # New from scratch
     #
     #######################################################################
-    desc "setup a new rigse instance"
-    task :new_rigse_from_scratch => :environment do
+    desc "setup a new rites instance, run: ruby config/setup.rb first"
+    task :new_rites_app => :environment do
       db_config = ActiveRecord::Base.configurations[RAILS_ENV]
 
-      Rake::Task['rigse:setup:development_environment_only'].invoke
+      # Rake::Task['rigse:setup:development_environment_only'].invoke
       
       puts <<HEREDOC
 
-This task will drop the existing rigse database: #{db_config['database']}, rebuild it from scratch, 
-and install default users.
+This task will:
+
+1. drop the existing database: #{db_config['database']} and rebuild it from scratch
+2. install any addition gems that are needed
+3. generate a set of the RI Grade Span Expectation
+4. generate the maven_jnlp resources
+5. download and generate nces district and school resource
+6. create default roles, users, distrcit, school, teacher, student, class, and offering
   
 HEREDOC
-      if agree("Do you want to do this?  (y/n)", true)
+      if agree("Do you want to do this?  (y/n) ", true)
         begin
           Rake::Task['db:drop'].invoke
         rescue StandardException
         end
         Rake::Task['db:create'].invoke
         Rake::Task['db:migrate'].invoke
-        Rake::Task['rigse:setup:default_users_roles'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
-        Rake::Task['rigse:setup:import_gses_from_file'].invoke
-        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['gems:install'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
+        Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
         Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
         Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
+        Rake::Task['portal:setup:download_nces_data'].invoke
+        Rake::Task['portal:setup:import_nces_from_file'].invoke
+        Rake::Task['rigse:setup:default_users_roles'].invoke
   
         puts <<HEREDOC
 
