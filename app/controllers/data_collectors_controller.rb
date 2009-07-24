@@ -109,7 +109,8 @@ class DataCollectorsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @data_collector = DataCollector.find(params[:id])
-    # FixMe
+
+    # FixMe [this has at least been moved out of the model -n]
     # If the probe_type is changed set a new default name based on the 
     # title. This action assumes that the probe_type was changed using
     # using the standard edit page for a data_collector. This change on
@@ -170,6 +171,7 @@ class DataCollectorsController < ApplicationController
     @data_collector = DataCollector.find(params[:id])
     @scope = get_scope(@data_collector)
     probe_type_id = params[:data_collector][:probe_type_id].to_i
+    probe_type = ProbeType.find(probe_type_id)
     if session[:new_probe_type_id]
       if session[:new_probe_type_id] == probe_type_id
         render :nothing => true
@@ -182,7 +184,24 @@ class DataCollectorsController < ApplicationController
     elsif session[:last_saved_probe_type_id] == probe_type_id
       render :nothing => true
     else
-      @data_collector.probe_type = ProbeType.find(probe_type_id)
+      # had to move the setting of titles &etc. to here instead of the model,
+      # which might make some sense actually...
+      @data_collector.probe_type = probe_type
+      @data_collector.calibration = nil # loose the calibration info
+      @data_collector.title = "#{probe_type.name} Data Collector"
+      @data_collector.y_axis_label = probe_type.name
+      @data_collector.y_axis_units = probe_type.unit
+      @data_collector.y_axis_min = probe_type.min
+      @data_collector.y_axis_max = probe_type.max
+      if @data_collector.calibration 
+        @data_collector.title = "#{@data_collector.calibration} Data Collector"
+        @data_collector.y_axis_label = @data_collector.calibration.quantity
+        @data_collector.y_axis_units = @data_collector.calibration.unit_symbol_text
+      end
+      if @data_collector.static
+        @data_collector.title = "Static #{@data_collector.title }"
+      end
+      @data_collector.name = @data_collector.title
       session[:new_probe_type_id] = probe_type_id
     end
   end
