@@ -1,4 +1,5 @@
 %div{:id => dom_id_for(data_table, :details), :class => 'content'}
+  = data_table_title(data_table)
   %form{:name=> form_id(data_table),:id=> form_id(data_table)}
     %table.data_table
       %thead
