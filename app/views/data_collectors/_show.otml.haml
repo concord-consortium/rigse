@@ -10,8 +10,13 @@
           :name => 'Sensor', :controllable => 'false', 
           :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
           :color => "0x00ff", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
-          %dataProducer
-            = ot_sensor_data_proxy(data_collector)
+          - if (data_collector.calibration)
+            = otml_for_calibration_filter(data_collector.calibration) do
+              %dataProducer
+                = ot_sensor_data_proxy(data_collector)
+          - else
+            %dataProducer
+              = ot_sensor_data_proxy(data_collector)
           %dataStore
             = generate_otml_datastore(data_collector)
     - when 'Prediction'

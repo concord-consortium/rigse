@@ -269,6 +269,21 @@
       end
     end
   end
+  
+  def otml_for_calibration_filter(calibration)
+    filter = calibration.data_filter
+    if filter
+      capture_haml do
+        ot_name = filter.otrunk_object_class.split(".")[-1]
+        haml_tag ot_name.to_sym, :sourceChanel => "1" do
+          haml_tag :source
+          if block_given? 
+            yield
+          end
+        end
+      end
+    end
+  end
 
 end
 
