@@ -266,6 +266,12 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
   end
+  
+  desc 'clean up teacher notes owned by the wrong user'
+  task :clean_teacher_notes, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:clean_teacher_notes --trace"
+  end
 
   desc 'add the author role to all users who have authored an Investigation'
   task :add_author_role_to_authors, :roles => :app do
