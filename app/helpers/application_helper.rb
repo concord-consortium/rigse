@@ -14,6 +14,7 @@ module ApplicationHelper
   #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
   #
   def dom_id_for(component, *optional_prefixes)
+    optional_prefixes.flatten!
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
