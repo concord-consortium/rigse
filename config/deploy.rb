@@ -288,7 +288,7 @@ namespace :convert do
   desc "Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor"
   task :data_collectors_with_invalid_graph_types, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:convert:fix_data_collectors_with_invalid_graph_types --trace"
+      "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
 data_collector_static_graph_type_to_attribute
