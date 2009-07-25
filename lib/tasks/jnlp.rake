@@ -20,6 +20,8 @@ namespace :rigse do
     
     desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
     task :generate_maven_jnlp_family_of_resources => :generate_names_for_maven_jnlp_servers do
+      puts 
+      puts
       maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
       maven_jnlp_servers.each do |server|
         if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => server)
@@ -40,13 +42,14 @@ Generate MavenJnlp family of resources from this jnlp server specification?
   name: #{mj_server.name}
   host: #{mj_server.host}
   path: #{mj_server.path}
-  
+
+[this normally takes about 10 minutes]
+
 HEREDOC
         if agree("Do you want to do this? (y/n) ", true)  
           mj_server.create_maven_jnlp_families
           puts <<HEREDOC
 completed ...
-
 #{mj_server.maven_jnlp_object.summarize}
 
 HEREDOC

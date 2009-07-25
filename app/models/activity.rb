@@ -48,15 +48,8 @@ class Activity < ActiveRecord::Base
     sections
   end
 
-  include TreeNode     
+  include TreeNode
 
-  def teacher_note
-    if teacher_notes[0]
-      return teacher_notes[0]
-    end
-    teacher_notes << TeacherNote.create
-    return teacher_notes[0]
-  end
   
   def self.display_name
     'Activity'
@@ -65,28 +58,7 @@ class Activity < ActiveRecord::Base
   def left_nav_panel_width
     300
   end
-  
-  def deep_set_user user
-    self.user = user
-    
-    self.sections.each do |s|
-      s.deep_set_user(user)
-    end
-    
-    self.teacher_notes.each do |tn|
-      tn.user = user
-      tn.save
-    end
-    
-    self.author_notes.each do |an|
-      an.user = user
-      an.save
-    end
-    
-    self.save
-  end
-  
-    
+      
   def deep_xml
     self.to_xml(
       :include => {
@@ -517,14 +489,6 @@ HEREDOC
   #   wrap_up.pages << page 
   #   wrap_up
   # end
-  
-  def teacher_note
-    if teacher_notes[0]
-      return teacher_notes[0]
-    end
-    teacher_notes << TeacherNote.create
-    return teacher_notes[0]
-  end
 
 end
 

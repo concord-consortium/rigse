@@ -135,35 +135,8 @@ class Page < ActiveRecord::Base
     return (section || inner_pages[0] || nil)
   end
   
-  def teacher_note
-    if teacher_notes[0]
-      return teacher_notes[0]
-    end
-    teacher_notes << TeacherNote.create
-    return teacher_notes[0]
-  end
-  
   include TreeNode
-      
-  def deep_set_user user
-    self.user = user
-    self.page_elements.each do |e|
-      if e.embeddable
-        e.embeddable.user = user
-        e.embeddable.save
-      end
-    end
-    self.teacher_notes.each do |tn|
-      tn.user = user
-      tn.save
-    end
-    
-    self.author_notes.each do |an|
-      an.user = user
-      an.save
-    end
-    self.save
-  end
+  
 
   def investigation
     activity = find_activity
@@ -176,5 +149,10 @@ class Page < ActiveRecord::Base
       return true
     end
     return false
+  end
+  
+  def children
+    # maybe what is the child we wonder?
+    return page_elements.map { |e| e.embeddable }
   end
 end

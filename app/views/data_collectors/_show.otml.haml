@@ -1,41 +1,39 @@
 %OTDataCollector{ :local_id => ot_local_id_for(data_collector), :name => h(data_collector.name), 
   :title => data_collector.title, :autoScaleEnabled => data_collector.autoscale_enabled.to_s, 
-  :showControlBar => (data_collector.graph_type == 'Sensor').to_s, :useDefaultToolBar => "false", :displayButtons => data_collector.ot_button_str }
+  :showControlBar => (!data_collector.static).to_s, 
+  :useDefaultToolBar => "false", :displayButtons => data_collector.ot_button_str,
+  :multipleGraphableEnabled => data_collector.multiple_graphable_enabled.to_s }
   - case data_collector.graph_type 
     - when 'Sensor'
       %source
-        %OTDataGraphable{ :name => 'Sensor', :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
-        :color => "0x00ff", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
-          %dataProducer
-            %OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy), :name => 'dataproducer' }
-              %request
-                %OTExperimentRequest{ :period => '0.1' }
-                  %sensorRequests
-                    %OTSensorRequest{ :stepSize => data_collector.probe_type.step_size.to_s, :type => data_collector.probe_type.ptype.to_s, 
-                    :unit => 'degC', :port => '0', :requiredMax => '40.0', :displayPrecision => "#{data_collector.probe_type.display_precision}", 
-                    :requiredMin => '0.0' }/
+        %OTDataGraphable{ :local_id => ot_local_id_for(data_collector, :source, :data_graphable), 
+          :name => 'Sensor', :connectPoints => data_collector.connect_points.to_s, 
+          :drawMarks => data_collector.draw_marks.to_s, :color => "0x00ff", 
+          :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
+          - unless data_collector.static
+            - if (data_collector.calibration)
+              = otml_for_calibration_filter(data_collector.calibration) do
+                %dataProducer
+                  = ot_sensor_data_proxy(data_collector)
+            - else
+              %dataProducer
+                = ot_sensor_data_proxy(data_collector)
           %dataStore
             = generate_otml_datastore(data_collector)
-    - when 'Prediction'
+    - else
       %source
-        %OTDataGraphable{ :name => h(truncate(data_collector.name, 12)), :controllable => 'true', :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
-        :color => "0xff0000", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
+        %OTDataGraphable{ :local_id => ot_local_id_for(data_collector, :source, :data_graphable),
+          :controllable => (!data_collector.static).to_s,
+          :name => h(truncate(data_collector.name, 12)), :connectPoints => data_collector.connect_points.to_s, 
+          :drawMarks => data_collector.draw_marks.to_s, :color => "0xff0000", 
+          :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
           %dataStore
             = generate_otml_datastore(data_collector)
       %dataSetFolder
         %OTFolderObject/
-    - when 'Static'
-      %source
-        %OTDataGraphable{ :name => h(truncate(data_collector.name, 12)), :controllable => 'false', :connectPoints => data_collector.connect_points.to_s, :drawMarks => data_collector.draw_marks.to_s, 
-        :color => "0xff0000", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
-          %dataStore
-            = generate_otml_datastore(data_collector)    
   - if prediction_graph = data_collector.prediction_graph_source
     %graphables
-      %OTDataGraphable{ :name => h(truncate(prediction_graph.name, 12)), :controllable => 'true', :connectPoints => prediction_graph.connect_points.to_s, :drawMarks => prediction_graph.draw_marks.to_s, 
-      :color => "0xff0000", :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
-        %dataStore
-          %object{ :refid => ot_refid_for(prediction_graph, :data_store) }/
+      %object{ :refid => ot_refid_for(prediction_graph, :source, :data_graphable) }/
 
   %xDataAxis
     %OTDataAxis{ :max => data_collector.x_axis_max, :min => data_collector.x_axis_min, 

@@ -14,6 +14,7 @@ module ApplicationHelper
   #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
   #
   def dom_id_for(component, *optional_prefixes)
+    optional_prefixes.flatten!
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
@@ -33,11 +34,12 @@ module ApplicationHelper
   def display_repo_info
     if repo = Grit::Repo.new(".")
       last_commit = repo.commits.first
-      content_tag('ul', :class => 'tiny') do
+      content_tag('ul', :class => 'tiny menu_h') do
         list = ''
-        list << content_tag('li') { "commit: #{truncate(last_commit.id, :length => 16)}" }
-        list << content_tag('li') { "author: #{last_commit.author.name}" }
-        list << content_tag('li') { "date: #{last_commit.authored_date.strftime('%a %b %d %H:%M:%S')}" }
+        list << content_tag('li') { repo.head.name }
+        list << content_tag('li') { "<a href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
+        list << content_tag('li') { last_commit.author.name }
+        list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
       end
     end
   end
@@ -139,7 +141,7 @@ module ApplicationHelper
         :container_id => @container_id }
     end
   end
-
+  
   def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
@@ -270,13 +272,28 @@ module ApplicationHelper
   end
 
   def name_for_component(component)
-    if component.id.nil?
-      return "new #{component.class.name.humanize}"
-    end
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
-      return "<span class='component_title'>#{component.name}</span><span class='dev_note'> #{component.id}</span>" 
+    if component.class.respond_to? :display_name
+      name = component.class.display_name
     else
-      return "<span class='component_title'>#{component.name}</span>"
+      name = component.class.name.humanize
+    end
+    if component.respond_to? :display_type
+      name = "#{component.display_type} #{name}"
+    end
+    name << ': '
+    default_name = ''
+    if component.class.respond_to?(:default_value)
+      default_name = component.class.default_value('name')
+    end
+    name << case
+      when component.id.nil? then "(new)"
+      when component.name == component.class.default_value('name') then ''
+      else component.name
+    end    
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
+      "<span class='component_title'>#{name}</span><span class='dev_note'> #{link_to (component.id, url_for(component))}</span>" 
+    else
+      "<span class='component_title'>#{name}</span>"
     end
   end
 

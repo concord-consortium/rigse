@@ -26,6 +26,7 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
         :url         => version_object.url,
         :version_str => version_object.version)
       vju.save!
+      print '.'; STDOUT.flush
     end
   end
   

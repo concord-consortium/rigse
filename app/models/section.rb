@@ -47,23 +47,6 @@ class Section < ActiveRecord::Base
   end
 
   include TreeNode
-      
-  def deep_set_user user
-    self.user = user
-    self.pages.each do |p|
-      p.deep_set_user(user)
-    end
-    self.teacher_notes.each do |tn|
-      tn.user = user
-      tn.save
-    end
-    
-    self.author_notes.each do |an|
-      an.user = user
-      an.save
-    end
-    self.save
-  end
   
 end
 

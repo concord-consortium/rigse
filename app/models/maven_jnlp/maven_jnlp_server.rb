@@ -47,13 +47,19 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   
   def create_maven_jnlp_families
     maven_jnlp_object.maven_jnlp_families.each do |mjf_object|
-      mjf = self.maven_jnlp_families.build(
-        :name             => mjf_object.name,
-        :url              => mjf_object.url,
-        :snapshot_version => mjf_object.snapshot_version)
-      mjf.save!
-      mjf.create_versioned_jnlp_urls(mjf_object)
+      if self.maven_jnlp_families.find_by_url(mjf_object.url)
+        puts "\nmaven_jnlp_family: #{mjf_object.url} "
+        puts "already exists "
+      else
+        mjf = self.maven_jnlp_families.build(
+          :name             => mjf_object.name,
+          :url              => mjf_object.url,
+          :snapshot_version => mjf_object.snapshot_version)
+        mjf.save!
+        puts "\n\nmaven_jnlp_family: #{mjf_object.url} "
+        puts "generating versioned_jnlp resources:"
+        mjf.create_versioned_jnlp_urls(mjf_object)
+      end
     end
   end
-
 end

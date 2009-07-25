@@ -84,27 +84,6 @@ class PagesController < ApplicationController
   end
 
 
-  def show_teacher_note
-    if @page.teacher_note.nil?
-      @page.teacher_note = TeacherNote.create 
-      # TODO: Who owns the teacher note? is this correct?
-      @page.teacher_note.author = current_user
-      @page.save
-    end
-    if @page.teacher_note.author == current_user
-      render :update do |page|
-          page.replace_html  'teacher_note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
-          page.visual_effect :toggle_blind, 'note'
-      end
-    else
-      render :update do |page|
-        page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals => { :teacher_note => @page.teacher_note}
-        page.visual_effect :toggle_blind, 'note'
-      end
-    end
-  end
-
-
   # GET /page/1/preview
   # GET /page/1.xml
   def preview

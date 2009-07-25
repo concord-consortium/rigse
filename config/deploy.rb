@@ -266,6 +266,12 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
   end
+  
+  desc 'clean up teacher notes owned by the wrong user'
+  task :clean_teacher_notes, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:clean_teacher_notes --trace"
+  end
 
   desc 'add the author role to all users who have authored an Investigation'
   task :add_author_role_to_authors, :roles => :app do
@@ -277,6 +283,12 @@ namespace :convert do
   task :set_publication_status_to_draft, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
+  end
+
+  desc "Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor"
+  task :data_collectors_with_invalid_graph_types, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
 end

@@ -11,10 +11,21 @@
           %li
             Probe type: 
             = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_probe_type)})
+         
           %li
             Graph type: 
             = f.select(:graph_type_id, DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
-          
+            
+          %li
+            Static: 
+            = f.check_box :static
+      
+      - if data_collector.valid_calibrations.size > 0
+        %p
+          %ul.menu_h
+            %li
+              = "alternate probe calibration for #{data_collector.probe_type.name}"
+              = f.select(:calibration_id, data_collector.calibration_select, {:include_blank => "no custom calibration" }, { :id => dom_id_for(data_collector, :select_calibration)})
       %p
         %ul.menu_h
           %li

@@ -17,6 +17,8 @@ class Calibration < ActiveRecord::Base
   belongs_to :probe_type
   belongs_to :data_filter
   
+  delegate :unit_symbol_text, :unit_symbol, :quantity, :to=>:physical_unit
+  
   def self.new (options=nil)
     c = super(options)
     c.probe_type = ProbeType.find_by_name("Raw Voltage") unless c.probe_type

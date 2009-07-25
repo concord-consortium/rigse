@@ -1,7 +1,8 @@
 class DataCollector < ActiveRecord::Base
   belongs_to :user
   belongs_to :probe_type
-
+  belongs_to :calibration
+  
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
@@ -64,22 +65,40 @@ class DataCollector < ActiveRecord::Base
     buttons
   end
   
-  def probe_type=(probe_type)
-    self.probe_type_id = probe_type.id
-    self.title = "#{probe_type.name} Data Collector"
-    self.name = self.title
-    self.y_axis_label = probe_type.name
-    self.y_axis_units = probe_type.unit
-    self.y_axis_min = probe_type.min
-    self.y_axis_max = probe_type.max
-    # self.x_axis_label
-    # self.x_axis_units
-    # self.x_axis_min
-    # self.x_axis_max
+  def valid_calibrations
+    probe_type.calibrations
   end
 
+  # move to helper
+  def calibration_select
+    self.valid_calibrations.collect {|c| [c.name,c.id] }
+  end
+  
+  # def calibration
+  #   return nil
+  # end
+  # 
+  # def calibration=(calibration)
+  #   if probe_type.calibrations.include?(calibration)
+  #     puts "hazzza"
+  #   else
+  #     puts "boo"
+  #   end
+  # end
+
+  # def probe_type=(probe_type)
+  #   self.calibration = nil
+  #   self.probe_type_id = probe_type.id
+  #   self.title = "#{probe_type.name} Data Collector"
+  #   self.name = self.title
+  #   self.y_axis_label = probe_type.name
+  #   self.y_axis_units = probe_type.unit
+  #   self.y_axis_min = probe_type.min
+  #   self.y_axis_max = probe_type.max
+  # end
+
   def self.graph_types
-    [["Sensor", 1], ["Prediction", 2], ["Static", 3]]
+    [["Sensor", 1], ["Prediction", 2]]
   end
   
   def graph_type_id
@@ -126,6 +145,10 @@ class DataCollector < ActiveRecord::Base
   
   send_update_events_to :investigations
 
+  def display_type
+    graph_type
+  end
+  
   def self.display_name
     "Graph"
   end

@@ -53,7 +53,39 @@ namespace :rigse do
         end
       end
     end
-    
+
+    desc 'Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor'
+    task :data_collectors_with_invalid_graph_types => :environment do
+      puts <<HEREDOC
+
+This task will search for all Data Collectors with a graph_type_id == 3 (Static)
+which was used to indicate a static graph type, and set the graph_type_id to 1 
+(Sensor) and set the new boolean attribute static to true.
+
+In addition it will set the graph_type_id to 1 if the existing graph_type_id is nil.
+These DataCollectors appeared to be created by the ITSI importer.
+
+There is no way for this transformation to uncover where the original graph was a 
+sensor or prediction grapg_type so it sets it to 1 (Sensor).
+
+HEREDOC
+      old_style_static_graphs = DataCollector.find_all_by_graph_type_id(3)
+      puts "converting #{old_style_static_graphs.length} old style static graphs and changing type to Sensor"
+      attributes = { :graph_type_id => 1, :static => true }
+      old_style_static_graphs.each do |dc| 
+        dc.update_attributes(attributes)
+        print '.'; STDOUT.flush
+      end
+      puts
+      nil_graph_types = DataCollector.find_all_by_graph_type_id(nil)
+      puts "changing type of #{nil_graph_types.length} DataCollectors with nil graph_type_ids to Sensor"
+      attributes = { :graph_type_id => 1, :static => false }
+      nil_graph_types.each do |dc| 
+        dc.update_attributes(attributes)
+        print '.'; STDOUT.flush
+      end
+      puts
+    end
   end
 end
 

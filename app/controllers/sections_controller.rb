@@ -31,12 +31,6 @@ class SectionsController < ApplicationController
           if @activity 
             @investigation = @activity.investigation
           end
-          teacher_note = @section.teacher_note || TeacherNote.new
-          teacher_note.authored_entity = @section
-          author_note = @section.author_note || AuthorNote.new
-          author_note.authored_entity = @section 
-          @teacher_note = render_to_string :partial => 'teacher_notes/remote_form', :locals => {:teacher_note => teacher_note}
-          @author_note = render_to_string :partial => 'author_notes/remote_form', :locals => {:author_note => author_note}
         end
       end
     end

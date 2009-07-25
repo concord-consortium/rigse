@@ -178,6 +178,12 @@ fieldset
   #footer_right
     :text-align right
     +column(12,true)
+    :float right
+
+#under_footer
+  +column(25,true)
+  :text-align center
+  :padding 2px 0px
 
 ul.menu_h_right
   :display inline
@@ -440,8 +446,17 @@ li.tiny
     :letter-spacing normal
     :font-size 12pt
 
+.data_table_title
+  :font-size 1.2em
+  :font-style bold
+  :padding 5px 10px 10px 10px
+  :text-align center
+
 .data_table
   :width 100%
+  .title
+    :font-size 18pt
+    :font-style bold    
   th
     :font-size 12pt
     :text-decoration underline

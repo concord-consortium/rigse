@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090722180712) do
+ActiveRecord::Schema.define(:version => 20090724205717) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -257,6 +257,8 @@ ActiveRecord::Schema.define(:version => 20090722180712) do
     t.text     "otml_root_content"
     t.text     "otml_library_content"
     t.text     "data_store_values"
+    t.integer  "calibration_id"
+    t.boolean  "static"
   end
 
   create_table "data_filters", :force => true do |t|
