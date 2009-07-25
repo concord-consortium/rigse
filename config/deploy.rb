@@ -291,7 +291,6 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
-data_collector_static_graph_type_to_attribute
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
