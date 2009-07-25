@@ -42,10 +42,15 @@ module DefaultValueForPlugin
 	
 	module ClassMethods
 	  def default_value(attribute)
-	    container = self._default_attribute_values[attribute]
-	    case
-	      when container.respond_to?(:value) then container.value
-        else nil        
+	    if self.respond_to?(:_default_attribute_values)
+  	    container = self._default_attribute_values[attribute]
+  	    if container.respond_to?(:value)
+  	      container.value
+	      else
+	        nil
+        end
+      else
+        nil
       end
     end
 		def default_value_for(attribute, value = nil, &block)
