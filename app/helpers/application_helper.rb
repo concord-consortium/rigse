@@ -33,13 +33,16 @@ module ApplicationHelper
 
   def display_repo_info
     if repo = Grit::Repo.new(".")
-      last_commit = repo.commits.first
+      branch = repo.head.name
+      last_commit = repo.commits(branch).first
+      message = last_commit.message
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
-        list << content_tag('li') { repo.head.name }
+        list << content_tag('li') { branch }
         list << content_tag('li') { "<a href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
         list << content_tag('li') { last_commit.author.name }
         list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
+        list << content_tag('li') { truncate(message, :length => 70) }
       end
     end
   end
