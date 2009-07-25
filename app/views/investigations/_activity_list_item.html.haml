@@ -2,7 +2,7 @@
   %div{ :id => dom_id_for(activity, :item), :class => style_for_item(activity) }
     %div.action_menu
       %div.action_menu_header_left   
-        =link_to name_for_component(activity), activity
+        = link_to_container(activity)
       %div.action_menu_header_right   
         %ul.menu
           %li= run_link_for(activity)

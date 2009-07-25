@@ -1,7 +1,7 @@
 %div{ :id => dom_id_for(runnable), :class => 'item' }
   %div.action_menu
     %div.action_menu_header_left   
-      =name_for_component(runnable)
+      = title_for_component(runnable)
       %span.author
         = runnable.user.name
         

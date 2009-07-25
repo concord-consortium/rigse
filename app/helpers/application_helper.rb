@@ -151,11 +151,7 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_tag(:h3,{:class => 'menu'}) do
-             haml_concat component.class.name.humanize
-             if component.respond_to? 'name'
-               haml_concat ": "
-               haml_concat component.name
-             end
+            haml_concat title_for_component(component)
           end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
@@ -274,6 +270,19 @@ module ApplicationHelper
     remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
+  def link_to_container(container)
+    link_to name_for_component(container), container, :class => 'container_link'
+  end
+  
+  def title_for_component(component)
+    title = name_for_component(component)
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
+      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>" 
+    else
+      "<span class='component_title'>#{title}</span>"
+    end
+  end
+    
   def name_for_component(component)
     if component.class.respond_to? :display_name
       name = component.class.display_name
@@ -293,11 +302,6 @@ module ApplicationHelper
       when component.name == component.class.default_value('name') then ''
       else component.name
     end    
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{name}</span><span class='dev_note'> #{link_to (component.id, url_for(component))}</span>" 
-    else
-      "<span class='component_title'>#{name}</span>"
-    end
   end
 
   def name_for_gse(gse)
@@ -316,8 +320,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          #haml_concat link_to(name_for_component(embeddable), embeddable)
-          haml_concat name_for_component(embeddable)
+          haml_concat title_for_component(embeddable)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
             restrict_to 'admin' do
