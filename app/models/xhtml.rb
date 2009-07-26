@@ -7,10 +7,11 @@ class Xhtml < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
-  include SoftTruncate
 
+  include TruncatableXhtml
   def before_save
-    self.name = extract
+    truncated_xhtml = truncate_from_xhtml(content)
+    self.name = truncated_xhtml unless truncated_xhtml.empty?
   end
   
   self.extend SearchableModel
@@ -41,12 +42,4 @@ class Xhtml < ActiveRecord::Base
     end
   end
 
-  def extract(limit=24, soft_limit=8)
-    child = Hpricot.XML(content).children.first
-    while child.kind_of? Hpricot::Elem
-      child = child.children.first
-    end
-    extracted_text = child.to_s.gsub(/\s*\n/, ' ')
-    soft_truncate(extracted_text, limit, soft_limit)
-  end
 end

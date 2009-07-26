@@ -1,4 +1,20 @@
-module SoftTruncate
+module TruncatableXhtml
+  #
+  # Extracts and soft truncates text from an xhtml document stored
+  # in the an attribute for models this module is included in.
+  #
+  def truncate_from_xhtml(attribute, limit=24, soft_limit=8)
+    begin
+      child = Hpricot.XML(attribute).children.first
+      while child.kind_of? Hpricot::Elem
+        child = child.children.first
+      end
+      extracted_text = child.to_s.gsub(/\s*\n/, ' ')
+      soft_truncate(extracted_text, limit, soft_limit)
+    rescue ArgumentError
+      ''
+    end
+  end
   #
   # Truncates a string to length characters with an additional 
   # optional soft limit. If a soft_limit length is specified  
