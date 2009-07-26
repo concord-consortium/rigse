@@ -10,7 +10,7 @@ module DataTableHelper
     unless data_table.name.empty? || (data_table.name == 'DataTable element')
       capture_haml do
         haml_tag :div, :class => :data_table_title do
-          haml_concat(data_table.name)
+          haml_concat(h(data_table.name))
         end
       end
     end
