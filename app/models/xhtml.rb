@@ -7,7 +7,12 @@ class Xhtml < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
+  include SoftTruncate
 
+  def before_save
+    self.name = extract
+  end
+  
   self.extend SearchableModel
   
   @@searchable_attributes = %w{uuid name description content}
@@ -35,5 +40,13 @@ class Xhtml < ActiveRecord::Base
       invs << inv if inv
     end
   end
-  
+
+  def extract(limit=24, soft_limit=8)
+    child = Hpricot.XML(content).children.first
+    while child.kind_of? Hpricot::Elem
+      child = child.children.first
+    end
+    extracted_text = child.to_s.gsub(/\s*\n/, ' ')
+    soft_truncate(extracted_text, limit, soft_limit)
+  end
 end

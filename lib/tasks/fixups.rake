@@ -43,8 +43,7 @@ namespace :rigse do
         puts 'no Investigations owned by the anonymous user'
       end
     end
-    
-    
+
     desc 'ensure investigations have publication_status'
     task :pub_status => :environment do
       Investigation.find(:all).each do |i|
@@ -86,6 +85,16 @@ HEREDOC
       end
       puts
     end
+
+    desc 'copy truncated portion of Xhtml content into name'
+    task :copy_truncated_portion_of_xhtml_content_into_name => :environment do
+      puts "\nprocessing #{Xhtml.count} Xhtml model instances, extracting truncated text from content and generating name attribute}\n"
+      Xhtml.find_in_batches(:batch_size => 100) do |group|
+        group.each { |x| x.save! }
+        print '.'; STDOUT.flush
+      end
+    end
+    
   end
 end
 
