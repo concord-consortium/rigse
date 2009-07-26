@@ -64,8 +64,8 @@ which was used to indicate a static graph type, and set the graph_type_id to 1
 In addition it will set the graph_type_id to 1 if the existing graph_type_id is nil.
 These DataCollectors appeared to be created by the ITSI importer.
 
-There is no way for this transformation to uncover where the original graph was a 
-sensor or prediction grapg_type so it sets it to 1 (Sensor).
+There is no way for this transformation to tell whether the original graph was a 
+sensor or prediction graph_type so it sets the type to 1 (Sensor).
 
 HEREDOC
       old_style_static_graphs = DataCollector.find_all_by_graph_type_id(3)
