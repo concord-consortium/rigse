@@ -291,10 +291,10 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
-  desc "copy truncated portion of Xhtml content into name"
-  task :copy_truncated_portion_of_xhtml_content_into_name, :roles => :app do
+  desc "copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name"
+  task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_portion_of_xhtml_content_into_name --trace"
+      "rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_xhtml_into_name --trace"
   end
 
 end

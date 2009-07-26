@@ -86,12 +86,14 @@ HEREDOC
       puts
     end
 
-    desc 'copy truncated portion of Xhtml content into name'
-    task :copy_truncated_portion_of_xhtml_content_into_name => :environment do
-      puts "\nprocessing #{Xhtml.count} Xhtml model instances, extracting truncated text from content and generating name attribute}\n"
-      Xhtml.find_in_batches(:batch_size => 100) do |group|
-        group.each { |x| x.save! }
-        print '.'; STDOUT.flush
+    desc 'copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name'
+    task :copy_truncated_xhtml_into_name => :environment do
+      [Xhtml, OpenResponse, MultipleChoice].each do |klass|
+        puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute}\n"
+        klass.find_in_batches(:batch_size => 100) do |group|
+          group.each { |x| x.save! }
+          print '.'; STDOUT.flush
+        end
       end
     end
     
