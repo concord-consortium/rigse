@@ -88,6 +88,8 @@ HEREDOC
 
     desc 'copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name'
     task :copy_truncated_xhtml_into_name => :environment do
+      models = [Xhtml, OpenResponse, MultipleChoice]
+      puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
       [Xhtml, OpenResponse, MultipleChoice].each do |klass|
         puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute}\n"
         klass.find_in_batches(:batch_size => 100) do |group|
@@ -95,6 +97,7 @@ HEREDOC
           print '.'; STDOUT.flush
         end
       end
+      puts
     end
     
   end
