@@ -5,8 +5,14 @@ class JnlpAdaptor
   def initialize
     @default_maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
     @jnlp_family = @default_maven_jnlp_server.maven_jnlp_families.find_by_name(APP_CONFIG[:default_maven_jnlp_family])
-    @jnlp_family.update_snapshot_jnlp_url
-    @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
+    default_version_str = APP_CONFIG[:default_jnlp_version]
+    if default_version_str == 'snapshot'
+      @jnlp_family.update_snapshot_jnlp_url
+      @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
+    else
+      jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+      @jnlp = jnlp_url.versioned_jnlp
+    end
   end
   
   def resource_jars

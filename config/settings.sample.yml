@@ -13,6 +13,7 @@ development: &non_production_settings
     - MA
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  default_jnlp_version: snapshot
   maven_jnlp_servers:
     - 
       :name: concord
@@ -37,6 +38,7 @@ staging:
     - MA
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
     - 
       :name: concord
@@ -58,6 +60,7 @@ production:
     - MA
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
     - 
       :name: concord

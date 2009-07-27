@@ -3,8 +3,8 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
   
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   has_many :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
-  has_many :versioned_jnlps, :through => :versioned_jnlp_url, :class_name => "MavenJnlp::VersionedJnlpUrl"
-
+  # has_many :versioned_jnlps, :through => :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
+  
   acts_as_replicatable
   
   include Changeable
