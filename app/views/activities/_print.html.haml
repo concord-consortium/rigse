@@ -1,5 +1,3 @@
-= render :partial => 'shared/print_teacher_notes', :locals => {:item => activity}
-.activity
-  %h3=activity.name
-  - activity.sections.each do |section|
-    = render  :partial => 'sections/print', :locals => { :section => section }
+- activity.sections.each do |section|
+  = render  :partial => 'sections/print', :locals => { :section => section }
+  

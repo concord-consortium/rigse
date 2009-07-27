@@ -2,7 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %title
-      = "#{@page_title || APP_CONFIG[:site_name]} (for printing)"
+      = yield :printing_title
     = stylesheet_link_tag 'print', :media => :print
     = stylesheet_link_tag 'print', :media => :screen
 
@@ -19,12 +19,8 @@
 
   %body
     #wrapper
-      #main_content
-        = yield :layout
-      #teacher_content
-        %h3 Teacher Notes:
-        %ol
-          = yield :teacher_notes
+      = yield :layout
+
   :javascript
     var canvs = $$('canvas');  
     canvs.each ( function(_canvas) {

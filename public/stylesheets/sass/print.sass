@@ -1,69 +1,66 @@
 @import compass/reset.sass
-@import app_colors.sass
-@import app_fonts.sass
-@import app_metrics.sass
 @import blueprint.sass
 
 +blueprint-typography
 
 #wrapper
-  :margin 10px
-  :padding 10px 
-  :width auto
-  :float none  
+  :margin 1em
+  :display block
+  :float left
 
 .menu
   :font
     :weight bold
-    
-.item
-  :border
-    :top  1px solid
-  :margin 2em
-.teacher_note
-  :margin
-    :top 2em
-  .note_for
-    :font
-      :weight normal
-  .heading
-    :font
-      :weight bold
-  .page    
-    :font
-      :size 1em
-  .section
-    :font
-      :size 1.2em
-  .activity
-    :font
-      :size 1.4em
-  
-#main_content
-  :display block
-  :width 70%
-  :float left
-  :min-height 600px
-  :height auto !important
 
-#teacher_content
-  :display block
-  :width 20%
-  :float right
-  :padding 1em
-  :border
-    :left 1px dotted
-  :height 100%
+
 .page
-  :page-break-after always
-
-.item
-  :page-break-inside avoid
-  
-.data_collector
   :display block
-  :width 500px
-  :height 300px
+  :page-break-after always
+  :float left
+  :margin 0px
+  :padding 0px
+  :width 100%
+  :min-height 500px
+  :height auto
+  
+  .page_content
+    :display block
+    :width 70%
+    :float left
+    :height auto
+    :margin 1em
+    
+    .item
+      :page-break-inside avoid
+      :display block
+      :float left
+      :width 100%
+      :clear both
+      :margin 2em
+
+    .data_collector
+      :page-break-inside avoid
+      :display block
+      :float left
+      :clear both
+      :width 400px
+      :height 200px
+    
+  .teacher_content
+    :display block
+    :float right
+    :padding 1em
+    :width 20%
+    :border
+      :left 1px dotted
+    :height auto
+    
+    .teacher_notes
+      .teacher_note
+        :font
+          :size .9em
+  
+  
 
 input
   :border dotted  
