@@ -288,34 +288,7 @@
       end
     end
   end
-
-
-  # show teacher notes if this is the first page of the section.
-  def show_teacher_notes(page)
-    section = page.section
-    if page.has_good_teacher_note?
-      return true
-    end
-    section = page.section
-    if section
-      if section.pages.first == page
-        if section.has_good_teacher_note?
-          return true
-        end
-        activity = section.activity
-        if activity && activity.sections.first == section && activity.has_good_teacher_note?
-          return true
-        end
-        if activity && activity.investigation
-          investigation = activity.investigation
-          if investigation.activities.first == activity && investigation.has_good_teacher_note?
-            return true
-          end
-        end
-      end
-    end
-    return false
-  end
+  
 
 end
 
