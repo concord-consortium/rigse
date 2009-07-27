@@ -46,12 +46,15 @@ decode_model = function(elem) {
 
 
 focus_first_field = function() {
-  // this pattern will not work for us, because sometimes
-  // we have multiple forms on a page.
-  // var first_form = document.forms[0];
-  // var inputs = first_form.getInputs('text');
-  // if (inputs && inputs[0])
-  //   inputs[0].activate();
+  // This will only work if there is one and only one 
+  // form in the document... there is probably a better way..
+  if (document.forms.size ==1) {
+    var first_form = document.forms[0];
+    var inputs = first_form.getInputs('text');
+    if (inputs && inputs[0]) {
+      inputs[0].activate();
+    }
+  }
 }
 
 // Place your application-specific JavaScript functions and classes here
