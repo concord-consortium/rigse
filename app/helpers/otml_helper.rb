@@ -31,6 +31,10 @@
     end
   end
   
+  def data_filter_inports
+    DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+  end
+  
   def imports
     imports = %w{
       org.concord.data.state.OTDataChannelDescription
@@ -94,7 +98,7 @@
       org.concord.otrunk.labbook.OTLabbookEntryChooser
       org.concord.otrunk.util.OTLabbookBundle
       org.concord.otrunk.util.OTLabbookEntry
-    } + (@otrunk_imports || []).uniq
+    } + data_filter_inports + (@otrunk_imports || []).uniq
   end
   
   def ot_imports
