@@ -17,10 +17,7 @@
               %h1= h(section.name)
 
     %content
-      - if teacher_mode
-        %object{ :refid => ot_refid_for(section, :tab_container)}/
-      - else
-        %object{ :refid => ot_refid_for(section, :page_card_container)}/
+      %object{ :refid => ot_refid_for(section, :page_card_container)}/
       
     %footer
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :footer) }
@@ -34,40 +31,6 @@
                 %object{:refid =>'${labbook}'}/
           
 - content_for(:library) do
-  %OTTabContainer{:local_id => ot_local_id_for(section, :tab_container), :name => ot_local_id_for(section, :tab_container)}
-    %tabs
-      %entry{:key => section.name}
-        %object{:refid => ot_refid_for(section, :page_card_container)}
-      %entry{:key => "Teacher notes"}
-        %object{:refid => ot_refid_for(section, :teacher_notes_container) }
-        
-  %OTCardContainer{ :local_id => ot_local_id_for(section, :teacher_notes_container), :contentsMayScroll => 'true' }
-    %cards
-      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :teacher_notes) }
-        %bodyText
-          %br
-          .teacher_mode
-            - if section.investigation && section.investigation.has_good_teacher_note?
-              %h3= "Investigation notes:"
-              .activity_teacher_note= section.investigation.teacher_note_otml
-  
-            - if section.activity && section.activity.has_good_teacher_note?
-              %h3= "Activity notes:"
-              .activity_teacher_note= section.activity.teacher_note_otml
-  
-            - if section.has_good_teacher_note?
-              %h3= "Section notes:"
-              .section_teacher_note= section.teacher_note_otml
-
-            - section.pages.each do |page|
-              .page_teacher_notes
-                - if page.has_good_teacher_note?
-                  %h3="Page notes (#{page.name}):"
-                  .page_teacher_note= page.teacher_note_otml
-    %currentCard
-      %object{ :refid => ot_refid_for(section, :teacher_notes) }/
-    %viewedCards
-    
   %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
     %cards
       - section.pages.each do |page|

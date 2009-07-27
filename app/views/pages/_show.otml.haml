@@ -2,8 +2,18 @@
   - page.page_elements.each do |element|
     = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => @page }
 
+
 - content_for("page_#{dom_id_for(page)}".to_sym) do
-  %OTCompoundDoc{ :local_id => ot_local_id_for(page), :name => page.name }
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :content), :name => page.name }
+    %bodyText 
+      - if teacher_mode && show_teacher_notes(page)
+        %object{ :refid => ot_refid_for(page, :tab_container) }/
+      - else
+        %object{ :refid => ot_refid_for(page, :tab_content) }/
+      
+- content_for(:library) do
+
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
       - if teacher_only?(page)
         - if teacher_mode
@@ -19,3 +29,31 @@
             .element
               = yield "element_#{dom_id_for(element.embeddable)}".to_sym
               %object{ :refid => ot_refid_for(element.embeddable) }/
+
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
+    %bodyText
+      %br
+      .teacher_mode
+        - if page.section.investigation && page.section.investigation.has_good_teacher_note?
+          %h3= "Investigation notes:"
+          .activity_teacher_note= page.section.investigation.teacher_note_otml
+
+        - if page.section.activity && page.section.activity.has_good_teacher_note?
+          %h3= "Activity notes:"
+          .activity_teacher_note= page.section.activity.teacher_note_otml
+
+        - if page.section.has_good_teacher_note?
+          %h3= "Section notes:"
+          .section_teacher_note= page.section.teacher_note_otml
+        - if page.has_good_teacher_note?
+          %h3="Page notes (#{page.name}):"
+          .page_teacher_note= page.teacher_note_otml
+              
+              
+  %OTTabContainer{:local_id => ot_local_id_for(page, :tab_container), :name => page.name}
+    %tabs
+      %entry{:key => page.name}
+        %object{ :refid => ot_refid_for(page, :tab_content) }/
+      %entry{:key => "Teacher notes"}        
+        %object{ :refid => ot_refid_for(page, :teacher_notes) }/
+
