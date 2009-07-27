@@ -1,8 +1,3 @@
-- content_for(:library) do
-  - page.page_elements.each do |element|
-    = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => @page }
-
-
 - content_for("page_#{dom_id_for(page)}".to_sym) do
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :content), :name => page.name }
     %bodyText 
@@ -12,6 +7,8 @@
         %object{ :refid => ot_refid_for(page, :tab_content) }/
       
 - content_for(:library) do
+  - page.page_elements.each do |element|
+    = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => @page }
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
