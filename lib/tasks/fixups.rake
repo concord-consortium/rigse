@@ -91,7 +91,7 @@ HEREDOC
       models = [Xhtml, OpenResponse, MultipleChoice]
       puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
       [Xhtml, OpenResponse, MultipleChoice].each do |klass|
-        puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute}\n"
+        puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute\n"
         klass.find_in_batches(:batch_size => 100) do |group|
           group.each { |x| x.save! }
           print '.'; STDOUT.flush
