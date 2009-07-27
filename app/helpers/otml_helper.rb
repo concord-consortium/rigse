@@ -278,7 +278,7 @@
     if filter = calibration.data_filter
       capture_haml do
         ot_name = filter.otrunk_object_class.split(".")[-1]
-        haml_tag ot_name.to_sym, :sourceChanel => "1" do
+        haml_tag ot_name.to_sym, :sourceChannel => "1" do
           haml_tag :source do
             if block_given? 
               yield
