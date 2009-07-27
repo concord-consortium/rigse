@@ -11,12 +11,11 @@
           :drawMarks => data_collector.draw_marks.to_s, :color => "0x00ff", 
           :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
           - unless data_collector.static
-            - if (data_collector.calibration)
-              = otml_for_calibration_filter(data_collector.calibration) do
-                %dataProducer
+            %dataProducer
+              - if (data_collector.calibration)
+                = otml_for_calibration_filter(data_collector.calibration) do
                   = ot_sensor_data_proxy(data_collector)
-            - else
-              %dataProducer
+              - else
                 = ot_sensor_data_proxy(data_collector)
           %dataStore
             = generate_otml_datastore(data_collector)
