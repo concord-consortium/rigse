@@ -172,23 +172,11 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
   end
-  
-  desc "delete all the MavenJnlp resources"
-  task :delete_maven_jnlp_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
-  end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
   task :generate_otrunk_examples_rails_models, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:import:generate_otrunk_examples_rails_models --trace" 
-  end
-
-  desc"Delete the otrunk-example models (Rails models)."
-  task :delete_otrunk_example_models, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace" 
   end
 
   desc"Create git clone of otrunk-examples in <shared_path>/public/otrunk-examples"
@@ -224,12 +212,19 @@ end
 #############################################################
 
 namespace :delete do
+  
   desc "delete all the MavenJnlp resources"
-  task :delete_maven_jnlp_resources, :roles => :app do
+  task :maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace" 
   end
   
+  desc"Delete the otrunk-example models (Rails models)."
+  task :otrunk_example_models, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace" 
+  end
+
 end
 
 #############################################################
