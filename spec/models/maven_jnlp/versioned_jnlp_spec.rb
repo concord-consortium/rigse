@@ -2,6 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe MavenJnlp::VersionedJnlp do
   before(:each) do
+    @versioned_jnlp_url_attributes = {
+      :maven_jnlp_family_id => 1,
+      :path => "value for path",
+      :url => "value for url",
+      :version_str => "value for version_str"
+    }
+    MavenJnlp::VersionedJnlpUrl.create!(@versioned_jnlp_url_attributes)
+    
     @valid_attributes = {
       :versioned_jnlp_url_id => 1,
       :jnlp_icon_id => 1,
