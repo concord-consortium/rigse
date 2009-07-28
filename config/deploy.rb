@@ -292,6 +292,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_xhtml_into_name --trace"
   end
 
+  desc "create default Project from config/settings.yml"
+  task :create_default_project_from_config_settings_yml, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} create_default_project_from_config_settings_yml --trace"
+  end
+
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'

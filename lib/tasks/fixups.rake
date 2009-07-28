@@ -100,6 +100,11 @@ HEREDOC
       puts
     end
     
+    desc 'create default Project from config/settings.yml'
+    task :create_default_project_from_config_settings_yml => :environment do
+      Admin::Project.create_or_update_from_settings_yml
+    end
+    
   end
 end
 

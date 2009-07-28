@@ -3,6 +3,8 @@ require 'fileutils'
 class Admin::Project < ActiveRecord::Base
   set_table_name "admin_projects"
   
+  belongs_to :user
+
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
 
@@ -78,8 +80,8 @@ class Admin::Project < ActiveRecord::Base
       else
         snapshot_enabled = false
       end
-      project.user = User.site_admin
       project = Admin::Project.find_or_create_by_name_and_url(name, url)
+      project.user = User.site_admin
       project.states_and_provinces = states_and_provinces
       project.maven_jnlp_server = maven_jnlp_server
       project.maven_jnlp_family = jnlp_family
