@@ -24,6 +24,10 @@ class DataCollector < ActiveRecord::Base
 
   serialize :data_store_values
   
+  def before_save
+    self.name = self.title
+  end
+  
   acts_as_replicatable
   
   # send_update_events_to :investigation
