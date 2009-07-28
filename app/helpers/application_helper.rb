@@ -31,6 +31,51 @@ module ApplicationHelper
     name.strip.downcase.gsub(/\W+/, '_')
   end
 
+  def display_system_info
+    list1 = 
+      content_tag('ul', :class => 'tiny menu_h') do
+        list = ''
+        git_repo_info.collect { |info| list << content_tag('li') { info } }
+        list << content_tag('li') { '|' }
+        maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+        list
+      end
+    # list2 = 
+    #   content_tag('ul', :class => 'tiny menu_h') do
+    #     list = ''
+    #     maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+    #     list
+    #   end
+    # "#{list1}\n<br />#{list2}"
+  end
+
+  def git_repo_info
+    if repo = Grit::Repo.new(".")
+      branch = repo.head.name
+      last_commit = repo.commits(branch).first
+      link = "<a href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
+      name = last_commit.author.name
+      date = last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
+      message = truncate(last_commit.message, :length => 70)
+      [branch, link, name, date, message]
+    else
+      []
+    end
+  end
+
+  def maven_jnlp_info
+    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    link = "<a href='#{url}'>#{version}</a>"
+    info = [name, link]
+    if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+      info << "(snapshot)"
+    else
+      info << "(frozen)"
+    end
+  end    
+
   def display_repo_info
     if repo = Grit::Repo.new(".")
       branch = repo.head.name
