@@ -40,17 +40,16 @@ class Admin::Project < ActiveRecord::Base
 
   def generate_settings_yml
     app_config = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")
-    env = RAILS_ENV
-    app_config[RAILS_ENV]['site_name'] = name
-    app_config[RAILS_ENV]['site_url'] = url
-    app_config[RAILS_ENV]['description'] = description
-    app_config[RAILS_ENV]['states_and_provinces'] = states_and_provinces
-    app_config[RAILS_ENV]['default_maven_jnlp_server'] = maven_jnlp_server.name
-    app_config[RAILS_ENV]['default_maven_jnlp_family'] = maven_jnlp_family.name
-    if snapshot_enabled
+    app_config[RAILS_ENV]['site_name'] = self.name
+    app_config[RAILS_ENV]['site_url'] = self.url
+    app_config[RAILS_ENV]['description'] = self.description
+    app_config[RAILS_ENV]['states_and_provinces'] = self.states_and_provinces
+    app_config[RAILS_ENV]['default_maven_jnlp_server'] = self.maven_jnlp_server.name
+    app_config[RAILS_ENV]['default_maven_jnlp_family'] = self.maven_jnlp_family.name
+    if self.snapshot_enabled
       app_config[RAILS_ENV]['default_jnlp_version'] = 'snapshot'
     else
-      app_config[RAILS_ENV]['default_jnlp_version'] = jnlp_version_str
+      app_config[RAILS_ENV]['default_jnlp_version'] = self.jnlp_version_str
     end
     app_config.to_yaml
   end
@@ -80,7 +79,17 @@ class Admin::Project < ActiveRecord::Base
       else
         snapshot_enabled = false
       end
-      project = Admin::Project.find_or_create_by_name_and_url(name, url)
+      attributes = {
+        :user => User.site_admin,
+        :states_and_provinces => states_and_provinces,
+        :maven_jnlp_server => maven_jnlp_server,
+        :maven_jnlp_family => jnlp_family,
+        :jnlp_version_str => jnlp_version_str,
+        :snapshot_enabled => snapshot_enabled
+      }
+      unless project = Admin::Project.find_by_name_and_url(name, url)
+        project = Admin::Project.create!(attributes)
+      end
       project.user = User.site_admin
       project.states_and_provinces = states_and_provinces
       project.maven_jnlp_server = maven_jnlp_server
