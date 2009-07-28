@@ -66,6 +66,7 @@ class InvestigationsController < AuthoringController
     if params[:mine_only]
       @investigations = Investigation.search(params[:search], params[:page], self.current_user)
     elsif params[:include_drafts]
+      session[:include_drafts] = true
       @investigations = Investigation.search(params[:search], params[:page], nil)
     else
       if search = params[:search]

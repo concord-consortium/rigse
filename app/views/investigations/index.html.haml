@@ -6,7 +6,7 @@
           = text_field_tag :search, params[:search], :size => 30
         %input{ :type => "submit", :value => "Search"}
         include_drafts
-        = check_box_tag 'include_drafts'                  
+        = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]           
       - if @paginated_objects
         %p= page_entries_info @paginated_objects
       %p.paginator
