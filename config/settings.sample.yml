@@ -3,6 +3,7 @@ development: &non_production_settings
   site_name: RITES Investigations (development)
   site_district: RITES Investigations-district
   site_school: RITES Investigations-school
+  description: ""
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
@@ -28,6 +29,7 @@ staging:
   site_name: RITES Investigations (staging)
   site_district: RITES Investigations-district
   site_school: RITES Investigations-school
+  description: ""
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
@@ -50,6 +52,7 @@ production:
   site_name: RITES Investigations
   site_district: RITES Investigations-district
   site_school: RITES Investigations-school
+  description: ""
   admin_email: stephen.bannasch@gmail.com
   admin_login: stephen
   admin_first_name: Stephen
