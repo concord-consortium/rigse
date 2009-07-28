@@ -41,6 +41,7 @@
       org.concord.data.state.OTDataField
       org.concord.data.state.OTDataStore
       org.concord.data.state.OTDataTable
+      org.concord.data.state.OTTimeLimitDataProducerFilter
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
       org.concord.otrunk.graph.OTDataCollectorViewConfig
@@ -270,6 +271,25 @@
               end
             end
           end
+        end
+      end
+    end
+  end
+  
+  def otml_for_time_limit_filter(limit, seconds)
+    ms = (seconds * 1000).to_i
+    capture_haml do
+      if limit
+        haml_tag :OTTimeLimitDataProducerFilter, :sourceChannel => "1", :timeLimit => ms do
+          haml_tag :source do
+            if block_given? 
+              yield
+            end
+          end
+        end
+      else
+        if block_given? 
+          yield
         end
       end
     end

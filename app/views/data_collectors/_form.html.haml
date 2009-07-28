@@ -35,7 +35,6 @@
         %ul.menu_h
           %li
             = labeled_check_box(f, :multiple_graphable_enabled, 'Enable multiple graphs')
-
     %p
       - field_set_tag 'Y axis' do
         %ul.menu_h
@@ -68,6 +67,15 @@
               %li
                 X Max
                 = f.text_field :x_axis_max, :size => 10
+    %p
+      - field_set_tag 'Data Collection Time Limit' do
+        %ul.menu_h
+          %li
+            = labeled_check_box(f, :time_limit_status, 'Enabled: ')
+          %li
+            Time Limit (s):
+            = f.text_field :time_limit_seconds, :size => 10
+    
     - field_set_tag 'Minor options' do
       %ul.menu_h
         %li
