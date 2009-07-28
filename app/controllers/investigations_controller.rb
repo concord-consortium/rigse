@@ -69,6 +69,7 @@ class InvestigationsController < AuthoringController
       session[:include_drafts] = true
       @investigations = Investigation.search(params[:search], params[:page], nil)
     else
+      session[:include_drafts] = false
       if search = params[:search]
         search = (search.split << ["published"]).join(" ")
       else
