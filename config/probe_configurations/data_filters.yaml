@@ -35,3 +35,15 @@
   k3_active: 
   user_id: 5
   created_at: 2009-05-15 13:21:05 Z
+- otrunk_object_class: org.concord.data.state.OTHoltsMethodSmoothing
+  name: Holts Smoothing Filter
+  k0_active: true
+  updated_at: 2009-05-15 17:21:05 Z
+  k2_active: 
+  k1_active: true
+  uuid: fb00c758-7b1f-11de-9134-001ff3caa767
+  id: 4
+  description: "Smooths the data. Default values for coefficients: k0 (level smoothing): 0.5, k1 (trend smoothing): 0.5. "
+  k3_active: 
+  user_id: 5
+  created_at: 2009-05-15 13:21:05 Z
