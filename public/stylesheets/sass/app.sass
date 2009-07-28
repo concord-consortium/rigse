@@ -81,25 +81,33 @@ fieldset
 
 #header
   +column(24,true)
-  :vertical-align bottom
-  :line-height 1.25em
-  :padding-bottom 1.25em
+  :padding 0px
+  :margin 0px
   :background-color = !rieps_brown
   :background
-    :image url(/images/header-bg.jpg) 
+    :image url(/images/header-bg2.jpg) 
     :repeat repeat-x
-  :color white
+  :color = !very_dark_blue
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
   a
-    :color white
+    :color = !very_dark_blue
     :background-color transparent
     :font-weight bold
   a:hover
     :color = !rieps_brown
     :background-color white
+  .left_content
+    +column(24,true)
+    :float left
+    :text-align left
+
+  .right_content
+    +column(24,true)
+    :float right
+    :text-align right
     
 .nav_menu
   :display block
@@ -340,6 +348,10 @@ ul.menu
 .padded_content
   :margin 0px 5px
   :float left
+
+.padded_content_right
+  :margin 0px 5px
+  :float right
 
 .right_content
   :margin 5px
