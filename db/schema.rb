@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090724205717) do
+ActiveRecord::Schema.define(:version => 20090728024843) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -259,6 +259,8 @@ ActiveRecord::Schema.define(:version => 20090724205717) do
     t.text     "data_store_values"
     t.integer  "calibration_id"
     t.boolean  "static"
+    t.boolean  "time_limit_status",                        :default => false
+    t.float    "time_limit_seconds"
   end
 
   create_table "data_filters", :force => true do |t|
