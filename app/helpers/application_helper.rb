@@ -353,7 +353,8 @@ module ApplicationHelper
     name << case
       when component.id.nil? then "(new)"
       when component.name == component.class.default_value('name') then ''
-      else component.name
+      when component.name then component.name
+      else ''
     end    
   end
 

@@ -66,19 +66,20 @@
         .left_content
           %h1= APP_CONFIG[:site_name]
         .right_content
-          Welcome
-          = "#{current_user.name}."
-          - unless current_user.anonymous?
-            = link_to 'Preferences', preferences_user_path(current_user)
-            \/
-            = link_to 'Logout', logout_path
-          - else
-            = link_to 'Login', login_path
-            \/
-            = link_to 'Sign Up', pick_signup_path
-          - if @original_user.has_role?('admin', 'manager')
-            \/
-            = link_to 'Switch', switch_user_path(current_user)
+          .padded_content_right
+            Welcome
+            = "#{current_user.name}."
+            - unless current_user.anonymous?
+              = link_to 'Preferences', preferences_user_path(current_user)
+              \/
+              = link_to 'Logout', logout_path
+            - else
+              = link_to 'Login', login_path
+              \/
+              = link_to 'Sign Up', pick_signup_path
+            - if @original_user.has_role?('admin', 'manager')
+              \/
+              = link_to 'Switch', switch_user_path(current_user)
             
       #nav_top
         %span.hidden.doNotPrint

@@ -4,34 +4,42 @@ class MultipleChoice < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-  
-  has_many :choices, :class_name => "MultipleChoiceChoice"
+  has_many :choices, :class_name => "MultipleChoiceChoice", :dependent => :destroy
   
   accepts_nested_attributes_for :choices, :allow_destroy => true
   
   acts_as_replicatable
 
   include Changeable
-  
   include TruncatableXhtml
-  def before_save
-    truncated_xhtml = truncate_from_xhtml(prompt)
-    self.name = truncated_xhtml unless truncated_xhtml.empty?
-  end
-
+  include Cloneable
   self.extend SearchableModel
-  
+    
+  @@cloneable_associations = [:choices]
   @@searchable_attributes = %w{uuid name description prompt}
   
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
+    def cloneable_associations
+      @@cloneable_associations
+    end
+  end
+
+  def before_save
+    truncated_xhtml = truncate_from_xhtml(prompt)
+    self.name = truncated_xhtml unless truncated_xhtml.empty?
   end
 
   default_value_for :name, "Multiple Choice Question element"
   default_value_for :description, "description ..."
-
+  default_value_for :prompt, "Why do you think ..."
+  default_value_for :choices, [
+    MultipleChoiceChoice.new(:choice => 'a'),
+    MultipleChoiceChoice.new(:choice => 'b'),
+    MultipleChoiceChoice.new(:choice => 'c')
+  ]
   send_update_events_to :investigations
 
   def self.display_name

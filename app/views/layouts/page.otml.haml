@@ -8,4 +8,5 @@
       %root
         =yield "page_#{dom_id_for(@page)}".to_sym
       %library
+        %OTLabbook{:local_id =>'labbook'}/
         =yield :library

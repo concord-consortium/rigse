@@ -40,7 +40,6 @@
         %viewedCards
 
 - content_for(:library) do
-  %OTLabbook{:local_id =>'labbook'}/
   %OTMenu{ :local_id => ot_local_id_for(investigation, :menu) }
     %cardContainer
       %object{ :refid => ot_refid_for(investigation, :activity_card_container) }
