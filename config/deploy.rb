@@ -295,7 +295,7 @@ namespace :convert do
   desc "create default Project from config/settings.yml"
   task :create_default_project_from_config_settings_yml, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} create_default_project_from_config_settings_yml --trace"
+      "rake RAILS_ENV=#{rails_env} rigse:convert:create_default_project_from_config_settings_yml --trace"
   end
 
 end
