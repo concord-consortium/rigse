@@ -80,6 +80,8 @@ class Admin::Project < ActiveRecord::Base
         snapshot_enabled = false
       end
       attributes = {
+        :name => name,
+        :url => url,
         :user => User.site_admin,
         :states_and_provinces => states_and_provinces,
         :maven_jnlp_server => maven_jnlp_server,
