@@ -18,6 +18,7 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
+    class_name.gsub!('/', '_')
     id = component.id.nil? ? Time.now.to_i : component.id
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
@@ -65,16 +66,22 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    name = @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = @jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = @jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
-    if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    if @project.snapshot_enabled
       info << "(snapshot)"
     else
       info << "(frozen)"
     end
+    
+    # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    #   info << "(snapshot)"
+    # else
+    #   info << "(frozen)"
+    # end
   end    
 
   def display_repo_info
@@ -361,34 +368,37 @@ module ApplicationHelper
   end
 
   def show_menu_for(component, options={})
-    embeddable = (component.respond_to? :embeddable) ? component.embeddable : component
+    is_embeddable = (component.respond_to? :embeddable)
+    component = is_embeddable ? component.embeddable : component
     view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(embeddable)
+          haml_concat title_for_component(component)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
+          if is_embeddable
             restrict_to 'admin' do
-              haml_tag :div, :class => 'dropdown', :id => "actions_#{embeddable.name}_menu" do
+              haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
                 haml_tag :ul do
-                  haml_tag(:li) { haml_concat run_link_for(embeddable) }
-                  haml_tag(:li) { haml_concat print_link_for(embeddable) }
-                  haml_tag(:li) { haml_concat otml_link_for(embeddable) }
+                  haml_tag(:li) { haml_concat run_link_for(component) }
+                  haml_tag(:li) { haml_concat print_link_for(component) }
+                  haml_tag(:li) { haml_concat otml_link_for(component) }
                 end
               end
-              haml_concat(dropdown_button("actions.png", :name_postfix => embeddable.name, :title => "actions for this page"))
+              haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
+            end
           end              
-          if (embeddable.changeable?(current_user))
+          if (component.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             begin
-              if embeddable.authorable_in_java?
-                haml_concat otrunk_edit_button_for(embeddable, options)
+              if component.authorable_in_java?
+                haml_concat otrunk_edit_button_for(component, options)
               end
             rescue NoMethodError
             end
-            haml_concat edit_button_for(embeddable, options)
-            haml_concat delete_button_for(component)
+            haml_concat edit_button_for(component, options)
+            haml_concat delete_button_for(component)  unless options[:omit_delete]
           end
         end
       end
