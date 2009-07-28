@@ -277,7 +277,11 @@
   end
   
   def otml_for_time_limit_filter(limit, seconds)
-    ms = (seconds * 1000).to_i
+    if seconds
+      ms = (seconds * 1000).to_i
+    else
+      ms = 0
+    end 
     capture_haml do
       if limit
         haml_tag :OTTimeLimitDataProducerFilter, :sourceChannel => "1", :timeLimit => ms do
@@ -294,7 +298,7 @@
       end
     end
   end
-  
+
   def otml_for_calibration_filter(calibration)
     if filter = calibration.data_filter
       capture_haml do
