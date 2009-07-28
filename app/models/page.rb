@@ -47,7 +47,7 @@ class Page < ActiveRecord::Base
   accepts_nested_attributes_for :page_elements, :allow_destroy => true 
   
   default_value_for :position, 1;
-  default_value_for :description, "describe the purpose of this page here..."
+  default_value_for :description, ""
 
   send_update_events_to :investigation
   
