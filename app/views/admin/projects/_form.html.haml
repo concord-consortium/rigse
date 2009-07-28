@@ -1,0 +1,18 @@
+.item
+  = edit_menu_for(admin_project, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name, :size => 60
+        %li
+          Url:
+          = f.text_field :url,  :size => 60
+
+    - field_set_tag 'Maven Jnlp', { :id => dom_id_for(admin_project, :maven_jnlp) } do
+      = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
+    %p
+      Description
+      = f.text_area :description, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
+

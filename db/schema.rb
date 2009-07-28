@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090728024843) do
+ActiveRecord::Schema.define(:version => 20090728154001) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -23,6 +23,21 @@ ActiveRecord::Schema.define(:version => 20090728024843) do
     t.integer  "investigation_id"
     t.integer  "original_id"
     t.boolean  "teacher_only",                   :default => false
+  end
+
+  create_table "admin_projects", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "url"
+    t.text     "description"
+    t.text     "states_and_provinces"
+    t.integer  "maven_jnlp_server_id"
+    t.integer  "maven_jnlp_family_id"
+    t.string   "jnlp_version_str"
+    t.boolean  "snapshot_enabled"
+    t.string   "uuid",                 :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "assessment_target_unifying_themes", :id => false, :force => true do |t|

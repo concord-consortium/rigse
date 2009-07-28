@@ -1,8 +1,16 @@
 class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
   set_table_name "maven_jnlp_maven_jnlp_families"
   
+  has_many :projects, :class_name => "Admin::Project"
+  
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
+
+  has_many :most_recent_comments, :class_name => 'Comment', :order => 'id DESC', :limit => 10
+
   has_many :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
+
+  has_many :recent_versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl", :order => 'id DESC', :limit => 20
+  
   # has_many :versioned_jnlps, :through => :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
   
   acts_as_replicatable

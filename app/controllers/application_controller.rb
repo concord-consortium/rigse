@@ -11,12 +11,20 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
   before_filter :setup_container
+  before_filter :setup_project
   
   protected
   
   def setup_container
     @container_type = self.class.controller_name.classify
     @container_id =  request.symbolized_path_parameters[:id]
+  end
+  
+  def setup_project
+    name = APP_CONFIG[:site_name]
+    url  = APP_CONFIG[:site_url]
+    @project = Admin::Project.find_by_name_and_url(name, url)
+    @jnlp_adaptor = JnlpAdaptor.new(@project)
   end
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound

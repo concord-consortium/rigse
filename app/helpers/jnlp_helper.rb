@@ -1,9 +1,5 @@
 module JnlpHelper
   
-  def jnlp_adaptor
-    @jnlp_adaptor || @jnlp_adaptor = JnlpAdaptor.new
-  end
-  
   def render_jnlp(runnable)
     # FIXME can't figure out why otml_url_for, doesn't work here
     # otml_url_for(runnable)
@@ -41,19 +37,19 @@ module JnlpHelper
   end
 
   def resource_jars
-    jnlp_adaptor.resource_jars
+    @jnlp_adaptor.resource_jars
   end
 
   def linux_native_jars
-    jnlp_adaptor.linux_native_jars
+    @jnlp_adaptor.linux_native_jars
   end
 
   def macos_native_jars
-    jnlp_adaptor.macos_native_jars
+    @jnlp_adaptor.macos_native_jars
   end
   
   def windows_native_jars
-    jnlp_adaptor.windows_native_jars
+    @jnlp_adaptor.windows_native_jars
   end
 
   def system_properties(options={})
@@ -75,11 +71,11 @@ module JnlpHelper
         ['otrunk.view.no_user', 'true' ],
       ]
     end
-    jnlp_adaptor.system_properties + additional_properties
+    @jnlp_adaptor.system_properties + additional_properties
   end
   
   def jnlp_resources(xml, options = {})
-    jnlp = jnlp_adaptor.jnlp
+    jnlp = @jnlp_adaptor.jnlp
     xml.resources {
       xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
       resource_jars.each do |resource|
