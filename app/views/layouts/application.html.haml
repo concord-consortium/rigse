@@ -50,6 +50,29 @@
       
     
   %body
+    #launch_warning{:class=>"alert",:style=>"display: none;"}
+      .padded_content
+        %h2
+          Mac OS X Web Start Fix
+        %hr
+        %p
+          If you are using Java 1.5 on Mac OS X 10.4 or 10.5, you will need to run our Fix MacOS Java 1.5 
+          Web Start Utility once on each computer before you launch any activities. 
+        %p
+          Without the fix, activities that you have run before will freeze during download. 
+          %a{:href=>"http://jnlp.concord.org/dev/org/concord/maven-jnlp/web-start-fix/web-start-fix.jnlp"}
+            Click here to run it now.
+        %p
+          %strong
+            WARNING: 
+          If you update Java on your Macintosh you will need to fix this problem again.
+        %p
+          %a
+            [Click anywhere to close this window.]
+        %p
+          Don't show again:
+          %input{:type=>'checkbox', :onclick=>"createCookie('launch_warning','true');"}
+            
     #note{:style=>"display: none;"}
     #waiter{:style=>"display: none;"}
       please wait
@@ -61,6 +84,8 @@
         %a.hidden.doNotPrint{ :href => "#main_content" }
           Skip to main content.
     #wrapper.wrapper
+
+    
       = render :partial => 'shared/activity_trail'
       #header
         .left_content
@@ -128,3 +153,4 @@
       #under_footer
         - if current_user.has_role?('admin')
           = display_system_info
+          

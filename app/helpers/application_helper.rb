@@ -292,6 +292,7 @@ module ApplicationHelper
         :id  => component.id,
         :params => params
       },
+      :onclick => "show_alert($('launch_warning'),false);",
       :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
