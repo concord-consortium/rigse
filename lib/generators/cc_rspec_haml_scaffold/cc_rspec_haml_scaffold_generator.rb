@@ -12,7 +12,7 @@ class CcRspecHamlScaffoldGenerator < RspecScaffoldGenerator
     # remove the generation of 'scaffold.css'
     rspec_manifest.actions.delete_if { |action| action[1][1] == 'public/stylesheets/scaffold.css' }
     # add haml versions of the basic view actions
-    %w{index show new edit}.each do |action|
+    %w{index show edit _form _show _remote_form}.each do |action|
       rspec_manifest.template("cc_rspec_haml_scaffold:view_#{action}.haml.erb", 
         File.join('app/views', controller_class_path, controller_file_name, "#{action}.html.haml")
       )
@@ -23,6 +23,30 @@ class CcRspecHamlScaffoldGenerator < RspecScaffoldGenerator
   
   protected
   
+  def displayable_attributes
+    attributes - [attributes.find {|a| a.name == 'uuid' }]
+  end
+  
+  def attribute_is_id?(attribute)
+    attribute.name[/_id$/]
+  end
+  
+  def local_singular_name
+    table_name.singularize
+  end
+
+  def local_plural_name
+    table_name
+  end
+
+  def plural_name_without_id(attribute)
+    singular_name_without_id(attribute) + 's'
+  end
+
+  def singular_name_without_id(attribute)
+    attribute.name[/(.*)_id$/, 1]
+  end
+  
   # The following two methods the view templates were copied from
   # http://github.com/dfischer/rspec-haml-scaffold-generator/tree
   # The code in dfischer/rspec-haml-scaffold-generator is distributed under a BSD-type license:
@@ -30,7 +54,7 @@ class CcRspecHamlScaffoldGenerator < RspecScaffoldGenerator
   
   def form_link_for(table_name, singular_name)
     if !@controller_name.split("/")[1].nil?
-      return "[:#{@controller_class_nesting.downcase}, @#{singular_name.singularize}]"  
+      return "[:#{@controller_class_nesting.downcase}, @#{c.singularize}]"  
     else
       return "@#{singular_name.singularize}"
     end    
