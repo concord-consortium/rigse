@@ -109,10 +109,16 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
     }
   }
 
-show_teacher_note = function() {
-  $('teacher_note').show();
+
+show_alert = function(elem, force) {
+  if (force || (!readCookie(elem.identify()))) {
+    Effect.toggle(elem, 'blind', {});
+    new Effect.Opacity('wrapper', { from: 1.0, to: 0.25, duration: 0.25 });
+    elem.observe('click', function(event) {
+      Effect.toggle(elem, 'blind', {});
+      new Effect.Opacity('wrapper', { from: 0.25, to: 1.0, duration: 0.25 });
+      elem.stopObserving();
+    });
+  }
 }
 
-show_author_note = function() {
-    $('author_note').show();
-}
