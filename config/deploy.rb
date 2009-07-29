@@ -136,7 +136,7 @@ namespace :deploy do
   end
   
   desc "Create asset packages for production" 
-  task :after_update_code, :roles => :app do
+  task :create_asset_packages, :roles => :app do
     run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
     run "cd #{deploy_to}/current && rake asset:packager:build_all"
   end
@@ -313,4 +313,5 @@ namespace :convert do
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
-after 'deploy:symlink', 'deploy:set_permissions'
+after 'deploy:symlink', 'deploy:create_asset_packages'
+after 'deploy:create_asset_packages', 'deploy:set_permissions'
