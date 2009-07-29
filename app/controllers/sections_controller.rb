@@ -69,20 +69,17 @@ class SectionsController < ApplicationController
   def show
     @teacher_mode = params[:teacher_mode]
     respond_to do |format|
-      format.html # show.html.erb
+      format.html {
+        if params['print'] 
+          render :print, :layout => "layouts/print"
+        end
+      }
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
       format.jnlp { render_jnlp(@section) }
       format.xml  { render :xml => @section }
     end
   end
 
-  # GET /sections/1/print
-  def print
-    respond_to do |format|
-      format.html { render :layout => "layouts/print" }
-      format.xml  { render :xml => @page }
-    end
-  end
 
   ##
   ##

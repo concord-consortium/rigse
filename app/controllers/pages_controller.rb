@@ -76,7 +76,11 @@ class PagesController < ApplicationController
   # GET /page/1.xml
   def show
     respond_to do |format|
-      format.html # show.html.erb
+      format.html {
+        if params['print'] 
+          render :print, :layout => "layouts/print"
+        end
+      }
       format.otml { render :layout => "layouts/page" } # page.otml.haml
       format.jnlp { render_jnlp(@page) }
       format.xml  { render :xml => @page }
@@ -93,13 +97,6 @@ class PagesController < ApplicationController
     end
   end
 
-  # GET /page/1/print
-  def print
-    respond_to do |format|
-      format.html { render :layout => "layouts/print" }
-      format.xml  { render :xml => @page }
-    end
-  end
 
   # GET /page/
   

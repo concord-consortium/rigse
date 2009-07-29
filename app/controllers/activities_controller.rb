@@ -85,20 +85,16 @@ class ActivitiesController < ApplicationController
   # GET /pages/1.xml
   def show
     @teacher_mode = params[:teacher_mode]
-    respond_to do |format|
-      format.html # show.html.erb
+      respond_to do |format|
+        format.html {
+          if params['print'] 
+            render :print, :layout => "layouts/print"
+          end
+        }
       format.xml  { render :xml => @activity }
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.jnlp { render_jnlp(@activity) }
       format.pdf {render :layout => false }
-    end
-  end
-
-  # GET /activities/1/print
-  def print
-    respond_to do |format|
-      format.html { render :layout => "layouts/print" }
-      format.xml  { render :xml => @page }
     end
   end
 

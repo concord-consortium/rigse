@@ -266,8 +266,9 @@ module ApplicationHelper
       name = component.name
       link_to("print #{component_display_name}", {
           :controller => component.class.name.pluralize.underscore, 
-          :action => :print, 
-          :id  => component.id
+          :id  => component.id,
+          :action => :show,
+          :print => true
         },
         {
           :target => "#{component.name} printout",

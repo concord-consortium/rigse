@@ -90,20 +90,16 @@ class InvestigationsController < AuthoringController
   def show
     # display for teachers? Later we can determin via roles?
     @teacher_mode = params[:teacher_mode]
-    respond_to do |format|
-      format.html # show.html.erb
+      respond_to do |format|
+        format.html {
+          if params['print'] 
+            render :print, :layout => "layouts/print"
+          end
+        }
       format.xml  { render :xml => @investigation }
       format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
       format.jnlp { render_jnlp(@investigation) }
       format.pdf {render :layout => false }
-    end
-  end
-
-  # GET /investigations/1/print
-  def print
-    respond_to do |format|
-      format.html { render :layout => "layouts/print" }
-      format.xml  { render :xml => @investigation }
     end
   end
 
