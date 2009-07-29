@@ -530,7 +530,8 @@ HEREDOC
         default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grade_levels << ninth_grade
-
+      site_school.members << default_school_teacher
+      
       # default_school_teacher.courses << site_school_default_course
 
       # default class
@@ -570,6 +571,7 @@ HEREDOC
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
+      site_school.members << default_student
       # default_student = student_user.student || student_user.student.create!
       # 
       offering.find_or_create_learner(default_student)
