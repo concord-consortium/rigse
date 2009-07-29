@@ -134,8 +134,10 @@
             = render :partial => 'shared/accordian_nav'
           - elsif @school
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @school, :selects => [@school,@teacher,@clazz,@student]}
-          - elsif @teacher
-            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @teacher, :selects => [@teacher,@clazz,@student]}  
+          - elsif @portal_teacher
+            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@clazz,@student]}  
+          -  elsif @portal_student
+            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_student, :selects => [@school,@clazz,@offering]}
           = yield :side_bar
 
         #main_content.main_content_colors

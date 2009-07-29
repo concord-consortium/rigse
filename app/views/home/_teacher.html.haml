@@ -5,9 +5,5 @@
   %p
     - field_set_tag 'Teacher' do
       Hello Teacher
-- field_set_tag 'Teacher' do
-  %p
-    Select the #{link_to 'Investigations', investigations_path}
-    link to browse Investigations you can use with your classes.
-  %p= render :partial => 'portal/clazzes/list_for_teacher', :locals => { :teacher => @portal_teacher }
+= render :partial => 'portal/clazzes/list_for_teacher', :locals => { :teacher => @portal_teacher }
   
