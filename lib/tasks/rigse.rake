@@ -152,7 +152,8 @@ This task will:
 3. generate a set of the RI Grade Span Expectation
 4. generate the maven_jnlp resources
 5. download and generate nces district and school resource
-6. create default roles, users, distrcit, school, teacher, student, class, and offering
+6. create default roles, users, district, school, teacher, student, class, and offering
+7. create a default project and associate it with the maven_jnlp resources
   
 HEREDOC
       if agree("Do you want to do this?  (y/n) ", true)
@@ -172,6 +173,7 @@ HEREDOC
         Rake::Task['portal:setup:download_nces_data'].invoke
         Rake::Task['portal:setup:import_nces_from_file'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
+        Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
   
         puts <<HEREDOC
 
