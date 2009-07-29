@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20090729020220) do
     t.integer  "maven_jnlp_family_id"
     t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
+    t.boolean  "enable_default_users"
     t.string   "uuid",                 :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
