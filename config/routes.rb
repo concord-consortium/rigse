@@ -1,4 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.namespace(:admin) do |admin|
+    admin.resources :projects, :member => { :update_form => :put }
+  end
+  
   map.resources :lab_book_snapshots
 
   map.resources :biologica_chromosome_zooms

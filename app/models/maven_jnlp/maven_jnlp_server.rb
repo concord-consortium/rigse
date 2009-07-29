@@ -1,6 +1,8 @@
 class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   set_table_name "maven_jnlp_maven_jnlp_servers"
   
+  has_many :projects, :class_name => "Admin::Project"
+
   has_many :maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily"
   
   acts_as_replicatable
