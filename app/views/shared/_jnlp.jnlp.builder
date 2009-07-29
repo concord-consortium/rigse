@@ -8,7 +8,7 @@ unless defined? config_url
 end
 
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) { 
+xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) { 
   xml.information { 
     xml.title "CC OTrunk Application"
     xml.vendor "Created by the Concord Consortium"
