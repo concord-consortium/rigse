@@ -6,7 +6,6 @@
 module Changeable
   
   def changeable?(user)
-    
     # the Anonymous user can't change anything, always return false
     if(user.anonymous?)
       return false;
@@ -35,13 +34,17 @@ module Changeable
   end
   
   def owned?
-    if self.user.nil?
-      return false
+    if self.respond_to? :user
+      if self.user.nil?
+        return false
+      end
+      if self.user.anonymous?
+        return false
+      end
+      true
+    else
+      false
     end
-    if self.user.anonymous?
-      return false
-    end
-    true
   end
   
   def un_owned?
