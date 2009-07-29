@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090728154001) do
+ActiveRecord::Schema.define(:version => 20090729020220) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -509,14 +509,17 @@ ActiveRecord::Schema.define(:version => 20090728154001) do
   end
 
   create_table "maven_jnlp_versioned_jnlp_urls", :force => true do |t|
-    t.string   "uuid"
-    t.integer  "maven_jnlp_family_id"
-    t.string   "path"
-    t.string   "url"
-    t.string   "version_str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "uuid"
+    t.integer "maven_jnlp_family_id"
+    t.string  "path"
+    t.string  "url"
+    t.string  "version_str"
+    t.string  "date_str",             :limit => 15
   end
+
+  add_index "maven_jnlp_versioned_jnlp_urls", ["date_str"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_date_str"
+  add_index "maven_jnlp_versioned_jnlp_urls", ["maven_jnlp_family_id"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_maven_jnlp_family_id"
+  add_index "maven_jnlp_versioned_jnlp_urls", ["version_str"], :name => "index_maven_jnlp_versioned_jnlp_urls_on_version_str"
 
   create_table "maven_jnlp_versioned_jnlps", :force => true do |t|
     t.integer  "versioned_jnlp_url_id"

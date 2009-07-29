@@ -17,6 +17,10 @@ class MavenJnlp::VersionedJnlpUrl < ActiveRecord::Base
       @@searchable_attributes
     end
   end
+  
+  def before_save
+    self.date_str = version_str[/-(.*)/, 1]
+  end
 
   def versioned_jnlp
     MavenJnlp::VersionedJnlp.find_by_versioned_jnlp_url_id(self.id) || create_versioned_jnlp

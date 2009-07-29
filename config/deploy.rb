@@ -298,6 +298,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:create_default_project_from_config_settings_yml --trace"
   end
 
+  desc "generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls"
+  task :generate_date_str_for_versioned_jnlp_urls, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:generate_date_str_for_versioned_jnlp_urls --trace"
+  end
+
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
