@@ -43,3 +43,6 @@ public/stylesheets/active_scaffold/default/stylesheet-ie.css
 public/stylesheets/active_scaffold/default/stylesheet.css
 public/blank.html
 public/plugin_assets/portal
+.sass-cache
+public/javascripts/base_packaged.js
+public/stylesheets/base_packaged.css

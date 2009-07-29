@@ -137,7 +137,7 @@ namespace :deploy do
   
   desc "Create asset packages for production" 
   task :after_update_code, :roles => :app do
-    run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/"
+    run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
     run "cd #{deploy_to}/current && rake asset:packager:build_all"
   end
   

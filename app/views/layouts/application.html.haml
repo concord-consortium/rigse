@@ -9,37 +9,15 @@
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
-    = stylesheet_link_tag 'app'
-    = stylesheet_link_tag 'accordion'
-    = stylesheet_link_tag 'window'
-    = stylesheet_link_tag 'rites-dialog'
-    = stylesheet_link_tag 'live_validation'
-    
-    / = javascript_include_tag :defaults
-    = javascript_include_tag "prototype"
-    = javascript_include_tag "effects"
-    = javascript_include_tag "prototype-ui/prototype-ui"
-    = javascript_include_tag "dragdrop"
-    = javascript_include_tag "misc/resizable"
-    / i would like to get rid of all the livepipe stuff..
-    = javascript_include_tag "livepipe/livepipe"
-    / = javascript_include_tag "livepipe/tabs"
-    = javascript_include_tag "livepipe/window"
-    = javascript_include_tag "live_validation"
-    = javascript_include_tag "controls"
-    /[if IE]
-      = javascript_include_tag "flotr/excanvas"
-    = javascript_include_tag "flotr/flotr"
-    / = javascript_include_tag "in_place_rich_editor/patch_inplaceeditor_1-8-1.js"
-    / = javascript_include_tag "in_place_rich_editor/patch_inplaceeditor_editonblank_1-8-1.js"
-    / = javascript_include_tag "in_place_rich_editor/inplacericheditor.js"
-    = javascript_include_tag "tiny_mce/tiny_mce"
-    / lets load the applications js last...
-    = javascript_include_tag "application"
-    = javascript_include_tag "cookie"
-    = javascript_include_tag "accordion"
-    = javascript_include_tag "item_selectable"
 
+    / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
+    / see the yaml file too: config/asset_packages.yml
+    = stylesheet_link_merged :base
+    = javascript_include_merged :base
+    / tiny_mce didn't play nice with the asset_packager..
+    = javascript_include_tag "tiny_mce/tiny_mce"
+    
+    / shouldn't probably do this here:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
       = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"

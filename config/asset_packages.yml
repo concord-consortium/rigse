@@ -2,11 +2,36 @@
 javascripts: 
 - base: 
   - prototype
+  - prototype-ui/prototype-ui
   - effects
   - dragdrop
   - controls
+  - scriptaculous
+  - misc/resizable
+  - livepipe/livepipe
+  - livepipe/window
+  - flotr/excanvas
+  - flotr/flotr
+  - canvas2image
   - application
+  - cookie
+  - accordion
+  - item_selectable
+  
+  # doesn't seem to work
+  # - tiny_mce/tiny_mce
+
 stylesheets: 
-- base:
-  - base
+- base: 
+  - app
+  - accordion
+  - window
+  - action_menu_tab
+  - rites-dialog
+  - live_validation
+  - rites_otml
+  # no longer used:
+  # - scaffold
+  # - sliding_doors_tabs
+  # - teacher_overlay
 
