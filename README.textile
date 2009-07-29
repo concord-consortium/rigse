@@ -379,6 +379,10 @@ h3. Asset Packager
 *RITES Authoring and portal site use this now* 
 see "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
 
+cap deploy will trigger the asset_packager to run.
+you can also run locally by hand: rake asset:packager:build_all
+
+Assets are configured in config/asset_packages.yml
 Packages up your css/javascript so you're not sending 143 files down to the user at the same time. Reduces
 load times and saves you bandwidth.
 
