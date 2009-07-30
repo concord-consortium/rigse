@@ -290,10 +290,14 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, prefix='',params={})
+  def run_link_for(component, as_name=nil,params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_to("#{prefix}run #{component_display_name}", {
+    link_text = "preview #{component_display_name}"
+    if as_name
+      link_text << "as #{as_name}"
+    end
+    link_to(link_text, {
         :controller => component.class.name.pluralize.underscore, 
         :action => :show,
         :format => :jnlp, 
@@ -301,7 +305,7 @@ module ApplicationHelper
         :params => params
       },
       :onclick => "show_alert($('launch_warning'),false);",
-      :title => "Start the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def otml_link_for(component, params={})
