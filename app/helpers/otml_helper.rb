@@ -203,7 +203,16 @@
     else
       current_mode = 'student'
     end
-    render :partial => "otml/ot_view_bundle", :locals => { :view_entries => view_entries, :authoring_view_entries => authoring_view_entries, :use_scroll_pane => use_scroll_pane, :left_nav_panel_width => @left_nav_panel_width, :title => title, :authoring => authoring, :current_mode => current_mode }
+    render :partial => "otml/ot_view_bundle", 
+      :locals => { :view_entries => view_entries, 
+                   :authoring_view_entries => authoring_view_entries, 
+                   :use_scroll_pane => use_scroll_pane,
+                   :body_width => 840,
+                   :height => 700,
+                   :left_nav_panel_width => @left_nav_panel_width, 
+                   :title => title, 
+                   :authoring => authoring, 
+                   :current_mode => current_mode }
   end
 
   def ot_script_engine_bundle
