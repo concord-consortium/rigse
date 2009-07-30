@@ -1,4 +1,3 @@
-= offering.runnable.name
-= link_to 'run as learner', portal_offering_url(offering, :format => :jnlp)
-= otml_link_for(offering.runnable)
-= run_link_for(offering.runnable)
+%h4= offering.runnable.name
+.tiny= offering.description
+= link_to 'run investigation', portal_offering_url(offering, :format => :jnlp)
