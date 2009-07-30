@@ -1,9 +1,14 @@
 class InvestigationsController < AuthoringController
-  # GET /pages
-  # GET /pages.xml
-  prawnto :prawn=>{
-    :page_layout=>:landscape,
-  }
+  
+  # This doesn't work, but the technique is described here:
+  # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
+  # caches_page :show if => Proc.new { |c| c.request.format == :otml }
+
+  # caches_action :show
+  cache_sweeper :investigation_sweeper, :only => [ :update ]
+
+  prawnto :prawn=>{ :page_layout=>:landscape }
+
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
@@ -13,7 +18,16 @@ class InvestigationsController < AuthoringController
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description
   
+  after_filter :cache_otml
+
   protected  
+
+  def cache_otml
+    if request.format == :otml
+      cache_page(response.body, request.path)
+    end
+  end
+
   def can_create
     if (current_user.anonymous?)
       flash[:error] = "Anonymous users can not create investigaitons"
