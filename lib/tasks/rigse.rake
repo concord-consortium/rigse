@@ -457,6 +457,7 @@ HEREDOC
 
       default_user_list.each do |user|
         user.save!
+        user.unsuspend! if user.state == 'suspended'
         unless user.state == 'active'
           user.register!
           user.activate!
@@ -483,6 +484,8 @@ HEREDOC
         user.default_user = true
         user.save!
       end
+
+      User.suspend_default_users unless APP_CONFIG[:enable_default_users]
 
       admin_user.add_role('admin')
       
