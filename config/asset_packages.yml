@@ -29,7 +29,7 @@ stylesheets:
   - action_menu_tab
   - rites-dialog
   - live_validation
-  - rites_otml
+  # - rites_otml
   # no longer used:
   # - scaffold
   # - sliding_doors_tabs
