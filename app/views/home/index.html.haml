@@ -1,6 +1,7 @@
 .padded_content
   %h3 Welcome to RITES Investigations
 %br
+%br
 - current_user.roles.each do |role|
   = render :partial => role.title
 
@@ -11,3 +12,4 @@
   = render :partial => "student"
 
 = yield :authored_investigations
+  
