@@ -22,13 +22,34 @@
       :color = !almost_white  !important
       :background-color= !very_dark_blue  !important
   
+.accordion_toggle
+  :display block
+  :width 14px
+  :height 16px
+  :float right
+  :background-image url(/images/expand.png)
+  :background-repeat no-repeat
+  :background-position center
+  :cursor pointer
+  &:hover
+    :background-image url(/images/expand_hover.png)
+
+.accordion_toggle_active
+  :display block
+  :width 14px
+  :height 16px
+  :float right
+  :background-image url(/images/collapse.png)
+  :background-repeat no-repeat
+  :background-position center
+  &:hover
+    :background-image url(/images/collapse_hover.png)
+
 .accordion_container
   :display block
   :overflow hidden
   :width auto
   :height auto
-
-  :background-repeat repeat-x
   :background-color #d1e5f2
   :border 1px solid
   :margin 2px
@@ -40,57 +61,29 @@
   .accordion_name
     :display block
     :float left
-    .selected
-      :font-weight bold
-    a
-      :display inline
-      :font-weight normal
-      :cursor pointer
-      &:hover
-        :background-color= !very_dark_blue !important
-        :color= !almost_white  !important
-
-        
-  .accordion_toggle
-    :display block
-    :width 14px
-    :height 16px
-    :float right
-    :background-image url(/images/expand.png)
-    :background-repeat no-repeat
-    :background-position center
+  .selected
+    :font-weight bold !important
+  a
+    :display inline
+    :font-weight normal !important
     :cursor pointer
     &:hover
-      :background-image url(/images/expand_hover.png)
+      :background-color= !very_dark_blue !important
+      :color= !almost_white  !important
+  .action
+    a
+      :font-weight bold !important
     
-  .accordion_toggle_active
-    :display block
-    :width 14px
-    :height 16px
-    :float right
-    :background-image url(/images/collapse.png)
-    :background-repeat no-repeat
-    :background-position center
-    &:hover
-      :background-image url(/images/collapse_hover.png)
-  
   .accordion_content
     :display block
     :overflow hidden
     :clear left
     :margin 5px
     :padding 2px
-    .selected
-      :font-weight bold
-    a
-      :display inline
-      :font-weight normal
-      &:hover
-        :background-color= !very_dark_blue  !important
-        :color= !almost_white  !important
     ul
       :padding 2px
       :padding-left 0px
+      
     .accordion_page
       :padding 2px
       :margin-top 5px
@@ -111,6 +104,9 @@
         :background-color white
       .selected
         :border-width 2px
+    th
+      :text-decoration underline
+      :font-variant small-caps
 
     .accordion_section
       :padding 2px

@@ -1,13 +1,13 @@
 .padded_content
   %h3 Welcome to RITES Investigations
-  
-  - current_user.roles.each do |role|
-    = render :partial => role.title
-  
-  - if @portal_teacher
-    = render :partial => "teacher"
-    
-  - if @portal_student
-    = render :partial => "student"
+%br
+- current_user.roles.each do |role|
+  = render :partial => role.title
 
-  = yield :authored_investigations
+- if @portal_teacher
+  = render :partial => "teacher"
+  
+- if @portal_student
+  = render :partial => "student"
+
+= yield :authored_investigations
