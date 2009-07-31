@@ -619,4 +619,13 @@ module ApplicationHelper
     end
   end
   
+  def runnable_list(options)
+    # for now, just find all published ones...
+    investigations = Investigation.published
+    if options[:clazz]
+      investigations = investigations - options[:clazz].offerings.map { |o| o.runnable }
+    end
+    investigations
+  end
+  
 end
