@@ -3,36 +3,6 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
   end
-  
-  map.resources :lab_book_snapshots
-
-  map.resources :biologica_chromosome_zooms
-  map.resources :inner_pages, :member => {
-    :destroy => :post,
-    :add_page => :post,
-    :add_element => :post,
-    :set_page => :post,
-    :sort_pages => :post, 
-    :delete_page => :post
-  }
-
-  map.resources :biologica_multiple_organisms
-  map.resources :biologica_breed_offsprings
-  map.resources :biologica_meiosis_views
-  map.resources :biologica_chromosomes
-  map.resources :biologica_pedigrees
-  map.resources :biologica_static_organisms
-  map.resources :biologica_organisms
-  map.resources :biologica_worlds
-
-  map.resources :raw_otmls
-
-  map.namespace(:otrunk_example) do |otrunk_example|
-    otrunk_example.resources :otrunk_imports
-    otrunk_example.resources :otml_categories
-    otrunk_example.resources :otml_files
-    otrunk_example.resources :otrunk_view_entries
-  end
 
   map.namespace(:maven_jnlp) do |maven_jnlp|
     maven_jnlp.resources :native_libraries
@@ -45,9 +15,6 @@ ActionController::Routing::Routes.draw do |map|
     maven_jnlp.resources :maven_jnlp_servers
   end
 
-  map.resources :n_logo_models
-  map.resources :mw_modeler_pages
-
   map.resources :vendor_interfaces
   map.resources :probe_types
   map.resources :physical_units
@@ -57,6 +24,44 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :teacher_notes
   map.resources :author_notes
+  
+  
+#
+# ********* Start of Page embeddable objects *********
+#
+
+  map.resources :lab_book_snapshots, :member => { :destroy => :post }
+
+  map.resources :inner_pages, :member => {
+    :destroy => :post,
+    :add_page => :post,
+    :add_element => :post,
+    :set_page => :post,
+    :sort_pages => :post, 
+    :delete_page => :post
+  }
+
+  map.resources :biologica_chromosome_zooms, :member => { :destroy => :post }
+  map.resources :biologica_multiple_organisms, :member => { :destroy => :post }
+  map.resources :biologica_breed_offsprings, :member => { :destroy => :post }
+  map.resources :biologica_meiosis_views, :member => { :destroy => :post }
+  map.resources :biologica_chromosomes, :member => { :destroy => :post }
+  map.resources :biologica_pedigrees, :member => { :destroy => :post }
+  map.resources :biologica_static_organisms, :member => { :destroy => :post }
+  map.resources :biologica_organisms, :member => { :destroy => :post }
+  map.resources :biologica_worlds, :member => { :destroy => :post }
+
+  map.resources :raw_otmls, :member => { :destroy => :post }
+
+  map.namespace(:otrunk_example) do |otrunk_example|
+    otrunk_example.resources :otrunk_imports
+    otrunk_example.resources :otml_categories
+    otrunk_example.resources :otml_files
+    otrunk_example.resources :otrunk_view_entries
+  end
+
+  map.resources :n_logo_models, :member => { :destroy => :post }
+  map.resources :mw_modeler_pages, :member => { :destroy => :post }
 
   map.resources :data_tables, :member => {
     :print => :get,
@@ -112,6 +117,10 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get
   }
 
+#
+# ********* End of Page embeddable objects *********
+#
+
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
@@ -163,8 +172,6 @@ ActionController::Routing::Routes.draw do |map|
   }
 
   map.resources :images
-  
-  map.admin '/admin', :controller =>'admin/users'
   
   # Home Page
   map.home '/readme', :controller => 'home', :action => 'readme'
