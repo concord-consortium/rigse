@@ -436,12 +436,12 @@ HEREDOC
           :password => "password", :password_confirmation => "password"),
 
         teacher_user = User.find_or_create_by_login(:login => 'teacher', 
-          :first_name => 'Teacher', :last_name => 'User', 
+          :first_name => 'Valerie', :last_name => 'Frizzle', 
           :email => 'teacher@concord.org', 
           :password => "password", :password_confirmation => "password"),
 
         student_user = User.find_or_create_by_login(:login => 'student', 
-          :first_name => 'Student', :last_name => 'User', 
+          :first_name => 'Jackie', :last_name => 'Demeter', 
           :email => 'student@concord.org', 
           :password => "password", :password_confirmation => "password")
       ]
@@ -541,7 +541,7 @@ HEREDOC
 
       # default class
       attributes = {
-        :name => 'default class',
+        :name => 'Fun with Investigations',
         :course_id => site_school_default_course.id,
         :semester_id => site_school_fall_semester.id,
         :teacher_id => default_school_teacher.id,
