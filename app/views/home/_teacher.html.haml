@@ -5,5 +5,7 @@
   %p
     - field_set_tag 'Teacher' do
       Hello Teacher
-= render :partial => 'portal/clazzes/list_for_teacher', :locals => { :teacher => @portal_teacher }
+%br
+%br
+= render :partial => 'portal/teachers/show', :locals => { :teacher => @portal_teacher }
   
