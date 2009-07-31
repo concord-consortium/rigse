@@ -9,6 +9,10 @@
         %li
           Url:
           = f.text_field :url,  :size => 60
+        %li
+          Enable Default Users:
+          = f.check_box :enable_default_users
+          (default users should normally be disabled on a production system)
 
     - field_set_tag 'Maven Jnlp', { :id => dom_id_for(admin_project, :maven_jnlp) } do
       = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }

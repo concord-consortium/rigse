@@ -1,10 +1,1 @@
-- content_for(:side_bar) do
-  %p
-    - field_set_tag 'Student' do
-      Hello Student
-
--field_set_tag 'Student' do
-  %p
-    Content for the Student:
-  = render :partial => 'portal/clazzes/list_for_student', :locals => { :student => @portal_student }
-  
+= render :partial => 'portal/students/show', :locals => { :student => @portal_student }

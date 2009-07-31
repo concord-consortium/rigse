@@ -1,6 +1,6 @@
 %OTViewBundle{ :showLeftPanel => 'false', :currentMode => current_mode }
   %frame
-    %OTFrame{ :useScrollPane => use_scroll_pane, :width => 840 + left_nav_panel_width, :height => '700', :title => h(title) }
+    %OTFrame{ :useScrollPane => use_scroll_pane, :width => body_width + left_nav_panel_width, :height => height, :title => h(title) }
   %modes
     %OTViewMode{:name => "student"}      
     - if authoring

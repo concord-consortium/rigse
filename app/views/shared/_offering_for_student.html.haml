@@ -1,4 +1,6 @@
-= offering.runnable.name
-= link_to 'run as learner', portal_offering_url(offering, :format => :jnlp)
-= otml_link_for(offering.runnable)
-= run_link_for(offering.runnable)
+.item
+  %ul.quiet_list
+    %li
+      = link_to offering.runnable.name, portal_offering_url(offering, :format => :jnlp)
+    %li
+      .tiny= offering.description

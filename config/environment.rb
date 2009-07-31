@@ -1,8 +1,8 @@
-#b Be sure to restart your server when you modify this file
+# Be sure to restart your server when you modify this file
 
 # Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
-ENV['RAILS_ENV'] ||= 'production'
+# ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
@@ -90,13 +90,15 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :user_observer
-  
+
   config.after_initialize do
     opts = config.has_many_polymorphs_options
     opts[:file_pattern] = Array(opts[:file_pattern])
     opts[:file_pattern] << "#{RAILS_ROOT}/vendor/plugins/rites_portal/app/models/**/*.rb"
     config.has_many_polymorphs_options = opts
   end
+  
+  config.load_paths << "#{RAILS_ROOT}/app/sweepers"
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
