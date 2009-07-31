@@ -3,7 +3,3 @@
   - add_top_menu_item(link_to('My Investigations', :controller=> :investigations, :action=> :index, :mine_only => 'y'))
   - add_top_menu_item(link_to('GSEs', grade_span_expectations_path))
 
-- content_for(:side_bar) do
-  %p
-    - field_set_tag 'Member' do
-      Hello Member
