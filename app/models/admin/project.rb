@@ -47,6 +47,7 @@ class Admin::Project < ActiveRecord::Base
     app_config = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")
     app_config[RAILS_ENV]['site_name'] = self.name
     app_config[RAILS_ENV]['site_url'] = self.url
+    app_config[RAILS_ENV]['enable_default_users'] = self.enable_default_users
     app_config[RAILS_ENV]['description'] = self.description
     app_config[RAILS_ENV]['states_and_provinces'] = self.states_and_provinces
     app_config[RAILS_ENV]['default_maven_jnlp_server'] = self.maven_jnlp_server.name
@@ -59,18 +60,31 @@ class Admin::Project < ActiveRecord::Base
     app_config.to_yaml
   end
   
+  def display_type
+    self.default_project? ? 'Default ' : ''
+  end
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    
+    # Admin::Project.default_project
+    def default_project
+      name, url = default_project_name_url
+      find_by_name_and_url(name, url)
+    end
+    
+    def default_project_name_url
+      [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
     
     def display_name
       "Project"
     end
     
-    def create_or_update_from_settings_yml
-      name = APP_CONFIG[:site_name]
-      url  = APP_CONFIG[:site_url]
+    def create_or_update__default_project_from_settings_yml
+      name, url = default_project_name_url
       states_and_provinces = APP_CONFIG[:states_and_provinces]
       maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
       jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(APP_CONFIG[:default_maven_jnlp_family])
@@ -111,4 +125,9 @@ class Admin::Project < ActiveRecord::Base
     end
   end
   
+  def default_project?
+    default_name, default_url = Admin::Project.default_project_name_url
+    self.name == default_name && self.url == default_url
+  end
+    
 end

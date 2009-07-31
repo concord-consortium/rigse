@@ -21,9 +21,7 @@ class ApplicationController < ActionController::Base
   end
   
   def setup_project
-    name = APP_CONFIG[:site_name]
-    url  = APP_CONFIG[:site_url]
-    @project = Admin::Project.find_by_name_and_url(name, url)
+    @project = Admin::Project.default_project
     @jnlp_adaptor = JnlpAdaptor.new(@project)
   end
   

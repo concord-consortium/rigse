@@ -70,7 +70,14 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects.xml
   def index
     @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
+    default_project = Admin::Project.default_project
 
+    # If default_project is in collection to be displayed then put it first.
+    unless @admin_projects.length == 1 || @admin_projects[0].default_project?
+      if @admin_projects.delete(default_project)
+        @admin_projects.unshift(default_project)
+      end
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @admin_projects }
