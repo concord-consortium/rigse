@@ -28,6 +28,11 @@ class Admin::Project < ActiveRecord::Base
     if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
       write_to_settings_yml
     end
+    if self.enable_default_users
+      User.unsuspend_default_users
+    else
+      User.suspend_default_users
+    end
   end
 
   def write_to_settings_yml
@@ -70,6 +75,7 @@ class Admin::Project < ActiveRecord::Base
       maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
       jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(APP_CONFIG[:default_maven_jnlp_family])
       jnlp_version_str = APP_CONFIG[:default_jnlp_version]
+      enable_default_users = APP_CONFIG[:enable_default_users]
 
       if jnlp_version_str == 'snapshot'
         snapshot_enabled = true
@@ -83,6 +89,7 @@ class Admin::Project < ActiveRecord::Base
         :name => name,
         :url => url,
         :user => User.site_admin,
+        :enable_default_users => enable_default_users,
         :states_and_provinces => states_and_provinces,
         :maven_jnlp_server => maven_jnlp_server,
         :maven_jnlp_family => jnlp_family,
@@ -93,6 +100,7 @@ class Admin::Project < ActiveRecord::Base
         project = Admin::Project.create!(attributes)
       end
       project.user = User.site_admin
+      project.enable_default_users = enable_default_users
       project.states_and_provinces = states_and_provinces
       project.maven_jnlp_server = maven_jnlp_server
       project.maven_jnlp_family = jnlp_family
