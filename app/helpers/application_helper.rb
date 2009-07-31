@@ -375,8 +375,11 @@ module ApplicationHelper
   end
 
   def show_menu_for(component, options={})
-    is_embeddable = (component.respond_to? :embeddable)
-    component = is_embeddable ? component.embeddable : component
+    is_page_element = (component.respond_to? :embeddable)
+    deletable_element = component
+    if is_page_element
+      component = component.embeddable
+    end
     view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
@@ -384,7 +387,7 @@ module ApplicationHelper
           haml_concat title_for_component(component)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          if is_embeddable
+          if is_page_element
             restrict_to 'admin' do
               haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
                 haml_tag :ul do
@@ -405,7 +408,7 @@ module ApplicationHelper
             rescue NoMethodError
             end
             haml_concat edit_button_for(component, options)
-            haml_concat delete_button_for(component)  unless options[:omit_delete]
+            haml_concat delete_button_for(deletable_element)  unless options[:omit_delete]
           end
         end
       end
