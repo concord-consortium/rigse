@@ -297,13 +297,9 @@ module ApplicationHelper
     if as_name
       link_text << "as #{as_name}"
     end
-    link_to(link_text, {
-        :controller => component.class.name.pluralize.underscore, 
-        :action => :show,
-        :format => :jnlp, 
-        :id  => component.id,
-        :params => params
-      },
+    
+    url = polymorphic_url(component, :format => :jnlp, :params => params)
+    link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
