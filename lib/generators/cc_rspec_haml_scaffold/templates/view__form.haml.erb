@@ -1,0 +1,15 @@
+.item
+  = edit_menu_for(<%= local_singular_name %>, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+<% for attribute in displayable_attributes -%>
+        %li
+          <%= attribute.column.human_name %>:
+<%- if attribute_is_id?(attribute) %>
+          - if <%= local_singular_name %>.<%= singular_name_without_id(attribute) %> && (<%= local_singular_name %>.<%= singular_name_without_id(attribute) %>.respond_to? :name)
+            =h(<%= local_singular_name %>.<%= singular_name_without_id(attribute) %>.name)
+<%- else %>
+          =f.<%= attribute.field_type %> :<%= attribute.name %> 
+<% end %>    
+<% end %>    

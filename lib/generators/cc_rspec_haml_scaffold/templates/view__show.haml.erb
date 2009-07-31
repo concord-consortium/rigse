@@ -1,0 +1,22 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(<%= local_singular_name %>), :class => "container_element" }
+  = show_menu_for(<%= local_singular_name %>, options)
+
+  %div{:id => dom_id_for(<%= local_singular_name %>, :item), :class => 'item'}
+    %div{:id => dom_id_for(<%= local_singular_name %>, :details), :class => 'content'}
+      = wrap_edit_link_around_content(<%= local_singular_name %>, options={:complete => mce_init_string}) do
+        %h4= h(<%= local_singular_name %>.name)
+        %p
+          %ul.menu_v
+<% for attribute in displayable_attributes -%>
+            %li
+              <%= attribute.column.human_name %>:
+<% if attribute_is_id?(attribute) -%>
+              - if <%= local_singular_name %>.<%= attribute.name %> && (<%= local_singular_name %>.<%= attribute.name %>.respond_to? :name)
+                =h(<%= local_singular_name %>.<%= attribute.name %>.name)
+              - else
+                'no related resource'
+<% else -%>
+              =h(<%= local_singular_name %>.<%= attribute.name %>)
+<% end -%>    
+<% end -%>    
