@@ -33,7 +33,8 @@ class RawOtmlsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @raw_otml } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @raw_otml }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @raw_otml } }
         format.xml  { render :raw_otml => @raw_otml }
       end
     end
@@ -49,7 +50,7 @@ class RawOtmlsController < ApplicationController
       respond_to do |format|
         format.html 
         format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
-        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable_object => @raw_otml } }
+        format.jnlp { render :partial => 'shared/edit', :locals => { :runnable => @raw_otml } }
         format.xml  { render :xml => @raw_otml  }
       end
     end

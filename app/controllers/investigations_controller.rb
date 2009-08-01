@@ -110,10 +110,11 @@ class InvestigationsController < AuthoringController
             render :print, :layout => "layouts/print"
           end
         }
-      format.xml  { render :xml => @investigation }
-      format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
-      format.jnlp { render_jnlp(@investigation) }
-      format.pdf {render :layout => false }
+      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @investigation } }
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation } }
+      format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
+      format.xml    { render :xml => @investigation }
+      format.pdf    { render :layout => false }
     end
   end
 

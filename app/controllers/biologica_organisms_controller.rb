@@ -20,7 +20,8 @@ class BiologicaOrganismsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/biologica_organism" } # biologica_organism.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @biologica_organism } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism } }
         format.xml  { render :biologica_organism => @biologica_organism }
       end
     end

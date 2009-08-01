@@ -18,7 +18,7 @@ module JnlpHelper
     render( :layout => false, :partial => "shared/jnlp", 
       :locals => { 
         :teacher_mode => params[:teacher_mode], 
-        :runnable_object => runnable, 
+        :runnable => runnable, 
         :config_url => config_url
       } 
     )
@@ -34,7 +34,7 @@ module JnlpHelper
     @learner = true
     
     render( :layout => false, :partial => "shared/jnlp",
-            :locals => { :runnable_object => learner.offering.runnable, :config_url => config_url } )
+            :locals => { :runnable => learner.offering.runnable, :config_url => config_url } )
   end
 
   def resource_jars
@@ -60,7 +60,7 @@ module JnlpHelper
         ['otrunk.view.mode', 'authoring'],
         ['otrunk.remote_save_data', 'true'],
         ['otrunk.rest_enabled', 'true'],
-        ['otrunk.remote_url', update_otml_url_for(options[:runnable_object], false)]
+        ['otrunk.remote_url', update_otml_url_for(options[:runnable], false)]
       ]
     elsif options[:learner]
       additional_properties = [
