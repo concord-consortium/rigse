@@ -1,5 +1,10 @@
 module JnlpHelper
   
+  def full_url_for_image(path)
+    host = root_path(:only_path => false)[0..-2]
+    host + path_to_image(path)
+  end
+  
   def render_jnlp(runnable)
     # FIXME can't figure out why otml_url_for, doesn't work here
     # otml_url_for(runnable)
@@ -29,11 +34,7 @@ module JnlpHelper
     @learner = true
     
     render( :layout => false, :partial => "shared/jnlp",
-      :locals => { 
-        :runnable_object => learner.offering.runnable,
-        :config_url => config_url
-      }
-    )
+            :locals => { :runnable_object => learner.offering.runnable, :config_url => config_url } )
   end
 
   def resource_jars
