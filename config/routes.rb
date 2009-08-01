@@ -1,4 +1,22 @@
 ActionController::Routing::Routes.draw do |map|
+
+  map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :bundle_loggers do |bundle_logger|
+      bundle_logger.resources :bundle_contents
+    end
+    dataservice.resources :console_loggers do |bundle_logger|
+      bundle_logger.resources :console_contents
+    end
+    
+  end
+  # 
+  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'update', :conditions => { :method => :post }
+  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'show',   :conditions => { :method => :get }
+  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'destroy',:conditions => { :method => :delete }    
+  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'update', :conditions => { :method => :post }
+  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'show',   :conditions => { :method => :get }
+  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'destroy',:conditions => { :method => :delete }    
+
   
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
@@ -180,6 +198,8 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
+
+  # map. ':controller/:action/:id.:format'
   
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
