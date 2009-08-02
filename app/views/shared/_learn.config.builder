@@ -3,8 +3,7 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
     xml.void(:property => "bundlePoster") { 
       xml.object(:class => "net.sf.sail.emf.launch.BundlePoster") { 
         xml.void(:property => "postUrl") { 
-          debugger
-          xml.string dataservice_console_logger_console_contents_url(console_logger, :format => :xml)
+          xml.string dataservice_console_logger_console_contents_url(console_logger, :format => :bundle)
         }
       }
     }
@@ -18,16 +17,14 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
     xml.void(:property => "portfolioUrlProvider") { 
       xml.object(:class => "net.sf.sail.emf.launch.XmlUrlStringProviderImpl") { 
         xml.void(:property => "urlString") { 
-          debugger
-          xml.string dataservice_bundle_logger_url(bundle_logger, :format => :xml)
+          xml.string dataservice_bundle_logger_url(bundle_logger, :format => :bundle)
         }
       }
     }
     xml.void(:property => "bundlePoster") { 
       xml.object(:class => "net.sf.sail.emf.launch.BundlePoster") { 
         xml.void(:property => "postUrl") { 
-          debugger
-          xml.string dataservice_bundle_logger_bundle_contents_url(bundle_logger, :format => :xml)
+          xml.string dataservice_bundle_logger_bundle_contents_url(bundle_logger, :format => :bundle)
         }
       }
     }
