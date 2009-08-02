@@ -310,6 +310,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:generate_date_str_for_versioned_jnlp_urls --trace"
   end
 
+  desc "Create default users and roles and portal resources"
+  task :default_users_roles_and_portal_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles_and_portal_resources --trace"
+  end
+
 end
 
 after 'deploy:update_code', 'deploy:shared_symlinks'
