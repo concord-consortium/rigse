@@ -318,6 +318,8 @@ namespace :convert do
 
 end
 
+before 'deploy:restart', 'deploy:set_permissions'
+
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:set_permissions'
