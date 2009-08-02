@@ -10,6 +10,14 @@ namespace :rigse do
     JRUBY ? "jruby " : "ruby "
   end
   
+  def agree_check_in_development_mode
+    if RAILS_ENV == 'development'
+      agree("Accept defaults? (y/n) ", true)
+    else
+      true
+    end
+  end
+  
   PLUGIN_LIST = {
     :acts_as_taggable_on_steroids => 'http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids',
     :attachment_fu => 'git://github.com/technoweenie/attachment_fu.git',
@@ -172,7 +180,7 @@ HEREDOC
         Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
         Rake::Task['portal:setup:import_nces_from_file'].invoke
-        Rake::Task['rigse:setup:default_users_roles'].invoke
+        Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
         Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
   
         puts <<HEREDOC
@@ -330,18 +338,18 @@ HEREDOC
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
-      Rake::Task['rigse:setup:default_users_roles'].invoke
+      Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
       Rake::Task['rigse:setup:create_additional_users'].invoke
     end
    
    
     #######################################################################
     #
-    # Create default users, roles, district, school, course, and class
+    # Create default users, roles, district, school, course, and class, and greade_levels
     #
     #######################################################################   
-    desc "Create default users and roles"
-    task :default_users_roles => :environment do
+    desc "Create default users and roles and portal resources"
+    task :default_users_roles_and_portal_resources => :environment do
 
       puts <<HEREDOC
 
@@ -379,7 +387,6 @@ and a default School in that district: #{APP_CONFIG[:site_school]}.
 
 The default Teacher user will be a Teacher in the school: #{APP_CONFIG[:site_school]} and
 will be teaching a course named 'default course' and a class in that course named 'default class'
-
 
 First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
 HEREDOC
@@ -449,7 +456,8 @@ HEREDOC
       edit_user_list = default_user_list - [anonymous_user]
       
       edit_user_list.each { |user| display_user(user) }
-      unless agree("Accept defaults? (y/n) ", true)
+      
+      unless agree_check_in_development_mode
         edit_user_list.each do |user|
           user = edit_user(user)  if agree("Edit #{user.login}?  (y/n) ", true)
         end
