@@ -503,6 +503,23 @@ HEREDOC
 
       # make sure that corresponding SdsUsers exist for all the default users
       default_user_list.each { |user| user.create_sds_counterpart }
+
+      grade_levels_in_order = [
+        grade_level_6  = Portal::GradeLevel.find_or_create_by_name(:name => '6',  :description => '9th grade'),
+        grade_level_7  = Portal::GradeLevel.find_or_create_by_name(:name => '7',  :description => '9th grade'),
+        grade_level_8  = Portal::GradeLevel.find_or_create_by_name(:name => '8',  :description => '9th grade'),
+        grade_level_9  = Portal::GradeLevel.find_or_create_by_name(:name => '9',  :description => '9th grade'),
+        grade_level_10 = Portal::GradeLevel.find_or_create_by_name(:name => '10', :description => '9th grade'),
+        grade_level_11 = Portal::GradeLevel.find_or_create_by_name(:name => '11', :description => '9th grade'),
+        grade_level_12 = Portal::GradeLevel.find_or_create_by_name(:name => '12', :description => '9th grade')
+      ]
+
+      # to make sure the list is ordered correctly in case a new grade level is added
+      # grade_levels_in_order.each_with_index do |grade_level, i|
+      #   grade_level.insert_at(i)
+      # end
+      
+
       
       # make a default district and school
       site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
@@ -545,7 +562,7 @@ HEREDOC
         :course_id => site_school_default_course.id,
         :semester_id => site_school_fall_semester.id,
         :teacher_id => default_school_teacher.id,
-        :class_word => 'abc12345',
+        :class_word => 'abc123456',
         :description => 'This is a default class created for the default school ... etc'
       }
       unless default_course_class = Portal::Clazz.find(:first, :conditions => attributes)
