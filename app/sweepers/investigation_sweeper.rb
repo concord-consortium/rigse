@@ -9,7 +9,7 @@ class InvestigationSweeper < ActionController::Caching::Sweeper
   
   # If we update an existing investigation, the cached version of that investigation is stale 
   def after_update(investigation)
-    path = "#{RAILS_ROOT}/public/investigations/#{investigation.id}.otml"
+    path = "#{ActionController::Base.page_cache_directory}/investigations/#{investigation.id}.otml"
     File.delete(path) if File.exists?(path)
   end
 

@@ -80,7 +80,9 @@ Rails::Initializer.run do |config|
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
-  config.action_controller.session_store = :active_record_store
+  
+  # Set the default location for page caching
+  config.action_controller.page_cache_directory = RAILS_ROOT + '/public/page_cache'
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -97,6 +99,8 @@ Rails::Initializer.run do |config|
     opts[:file_pattern] << "#{RAILS_ROOT}/vendor/plugins/rites_portal/app/models/**/*.rb"
     config.has_many_polymorphs_options = opts
   end
+
+  config.action_controller.session_store = :active_record_store
   
   config.load_paths << "#{RAILS_ROOT}/app/sweepers"
 end
