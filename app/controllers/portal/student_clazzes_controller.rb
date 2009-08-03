@@ -74,12 +74,12 @@ class Portal::StudentClazzesController < ApplicationController
   # DELETE /portal_student_clazzes/1
   # DELETE /portal_student_clazzes/1.xml
   def destroy
-    @student_clazz = Portal::StudentClazz.find(params[:id])
-    @student_clazz.destroy
-
+    @portal_student_clazz = Portal::StudentClazz.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(portal_student_clazzes_url) }
       format.xml  { head :ok }
+      format.js
     end
+    @portal_student_clazz.destroy
   end
 end
