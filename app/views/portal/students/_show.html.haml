@@ -1,3 +1,16 @@
 
-Select a RITES Investigation to run from the list below:
+%p
+  Select a RITES Investigation to run from the list below:
 = render :partial => 'portal/clazzes/list_for_student', :locals => { :student => student }
+
+%p
+  Or enter a new class word to join another class.
+  - form_for @portal_student do |f|
+    - field_set_tag 'class_word' do
+      .aligned
+        %ul
+          %li
+            = label_tag :clazz, 'Class Word: ', :class=>"right"
+            = text_field :clazz, :class_word, {:live => false}
+
+    = f.submit 'Submit'

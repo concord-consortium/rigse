@@ -50,5 +50,13 @@ class Portal::Student < ActiveRecord::Base
     clazzes.map! {|c| c.extend(FixupClazzes)}
   end
 
-  
+  def process_class_word(class_word)
+    if clazz = Portal::Clazz.find_by_class_word(class_word)
+      unless self.student_clazzes.find_by_clazz_id(clazz.id)
+        self.student_clazzes.create!(:clazz_id => clazz.id, :student_id => self.id, :start_time => Time.now)
+      end
+    else
+      nil
+    end
+  end
 end

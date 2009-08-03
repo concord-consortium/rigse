@@ -119,7 +119,6 @@ class Portal::StudentsController < ApplicationController
   # PUT /portal_students/1.xml
   def update
     @student = Portal::Student.find(params[:id])
-
     respond_to do |format|
       if @student.update_attributes(params[:student])
         flash[:notice] = 'Portal::Student was successfully updated.'
@@ -128,6 +127,10 @@ class Portal::StudentsController < ApplicationController
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
+      end
+      class_word = params[:clazz][:class_word]
+      if class_word
+        @student.process_class_word(class_word)
       end
     end
   end
