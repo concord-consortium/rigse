@@ -1,0 +1,12 @@
+<h1>Editing nces06_district</h1>
+
+<% form_for(@nces06_district) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @nces06_district %> |
+<%= link_to 'Back', portal_nces06_districts_path %>

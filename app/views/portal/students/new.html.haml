@@ -1,0 +1,5 @@
+- if defined? @clazz
+  %h3="Adding a new student to #{h(@clazz.name)}"
+- else
+  %h3="new student info:"
+= render :partial => 'form', :locals => {:student => @student, :clazz => @clazz, :signup => false}

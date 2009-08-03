@@ -1,0 +1,39 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div.item_collection{ :id => dom_id_for(clazz)}
+%div{:id=>dom_id_for(clazz,:accordion_container), :class=>"accordion_container"}
+  %div{:class=>"accordion_name"}
+    .action= link_to "Class: #{clazz.name}", portal_clazz_path(clazz)
+  %div{:id=>dom_id_for(clazz,:accordion_toggle), :class=>"accordion_toggle"}
+  %div{:id=>dom_id_for(clazz,:accordion_content), :class=>"accordion_content", :style=>'display: none;'}
+    .action_menu
+      .action_menu_header_left
+        = link_to clazz.name, portal_clazz_path(clazz)
+      .action_menu_header_right
+        -if clazz.changeable?(current_user)
+          = link_button "edit.png",  edit_portal_clazz_url(clazz), :title => "edit #{clazz.name.downcase}"
+    %div{:id => dom_id_for(clazz, :item), :class => 'item'}
+
+      %div{:id => dom_id_for(clazz, :details), :class => 'content'}
+        %h4= h(clazz.name)
+        %p
+          %ul.menu_v
+            %li
+              Name:
+              =h(clazz.name)
+            %li
+              Teacher:
+              - if clazz.teacher && (clazz.teacher.respond_to? :name)
+                =h(clazz.teacher.name)
+            - if (clazz.teacher.respond_to? :schools) && clazz.teacher.schools.size > 0
+              %li
+                school:
+                =h(clazz.teacher.schools.first.name)
+            
+              - else
+                'no teacher'
+            %li
+              Description:
+              = clazz.description
+        %p
+        = render :partial => 'portal/students/list_for_clazz', :locals => {:clazz => clazz}
+        = render :partial => 'portal/offerings/list_for_clazz', :locals => {:clazz => clazz}

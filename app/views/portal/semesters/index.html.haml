@@ -1,0 +1,14 @@
+%h1 Listing Semesters
+%br
+%table{:width=>"100%"}
+  - @semesters.each do |semester|
+    %tr
+      %td= semester.id
+      %td= semester.name
+      %td= link_to 'Show', semester
+      %td= link_to 'Edit', semester 
+      %td= link_to 'Destroy', semester 
+  
+%br
+
+= link_to 'New Semester', new_portal_semester_path

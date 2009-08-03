@@ -1,0 +1,27 @@
+
+%div{:id=>dom_id_for(clazz,:students_container), :class=>"accordion_container"}
+  %div{:class=>"accordion_name"}
+    Students:
+  %div{:id=>dom_id_for(clazz,:students_toggle), :class=>"accordion_toggle"}
+  %div{:id=>dom_id_for(clazz,:students_content), :class=>"accordion_content", :style=>'display: none;'}
+    .action_menu
+      .action_menu_header_right
+        - if clazz.changeable?(current_user)
+          = link_button "add.png", new_portal_student_path(:clazz_id => clazz.id), :title => "add a student to #{clazz.name}"
+    .item
+      %table{:width=>"100%"}
+        %tr
+          %th
+            Student name
+          %th
+            Student login
+          %th
+            Grade level
+        - clazz.students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}.each do |student|
+          %tr
+            %td
+              = link_to student.user.name, student
+            %td
+              = student.user.login
+            %td
+              = student.grade_level ? student.grade_level.name : "unknown"
