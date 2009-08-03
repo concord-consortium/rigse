@@ -11,7 +11,7 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :schools, :through => :school_memberships
   
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
-  has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id"
+  has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
   
   has_and_belongs_to_many :grade_levels, :join_table => "portal_grade_levels_teachers", :class_name => "Portal::GradeLevel"
   

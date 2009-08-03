@@ -5,5 +5,5 @@ class Portal::Semester < ActiveRecord::Base
   
   belongs_to :school, :class_name => "Portal::School", :foreign_key => "school_id"
   
-  has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "semester_id"
+  has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "semester_id", :source => :clazz
 end
