@@ -1,26 +1,15 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.namespace(:portal) do |portal|
-    portal.namespace(:scaffold) do |scaff|
-      scaff.resources :clazzes, :active_scaffold => true 
-      scaff.resources :courses, :active_scaffold => true 
-      scaff.resources :districts, :active_scaffold => true 
-      scaff.resources :grade_levels, :active_scaffold => true 
-      scaff.resources :learners, :active_scaffold => true 
-      scaff.resources :offerings, :active_scaffold => true 
-      scaff.resources :schools, :active_scaffold => true 
-      scaff.resources :school_memberships, :active_scaffold => true 
-      scaff.resources :semesters, :active_scaffold => true 
-      scaff.resources :students, :active_scaffold => true 
-      scaff.resources :student_clazzes, :active_scaffold => true 
-      scaff.resources :subjects, :active_scaffold => true 
-      scaff.resources :teachers, :active_scaffold => true
-    end
     portal.resources :clazzes, :as => 'classes', :member => {
         :add_offering => [:get,:post],
         :remove_offering => [:get, :post],
         :edit_offerings => [:get,:post]
-    } 
+    }
+    portal.resources :clazzes do |clazz|
+      clazz.resources :student_clazzes
+    end
+      
     portal.resources :courses
     portal.resources :districts
     portal.resources :grade_levels
