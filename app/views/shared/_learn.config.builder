@@ -38,7 +38,6 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         }
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.otmlurl"
-          debugger
           xml.string polymorphic_url(runnable, :format => :otml)
         }
       }
