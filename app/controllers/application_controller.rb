@@ -23,6 +23,8 @@ class ApplicationController < ActionController::Base
   before_filter :original_user
   before_filter :portal_resources
 
+  Portal::School.find(:first).members.count
+  
   protected
   
   def setup_container
