@@ -16,18 +16,4 @@ class Portal::Offering < ActiveRecord::Base
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
   end
   
-  ###################################################
-  ### SDS Specific code
-  ###################################################
-  after_create :create_sds_counterpart
-  
-  # Find or creates a learner for this sds runnable object
-  # and for the specified user.
-  def create_sds_counterpart
-    self.create_sds_config(:sds_id => Portal::SdsConnect::Connect.create_offering(self.runnable.name, Portal::SdsConnect::Connect.jnlp_id, Portal::SdsConnect::Connect.curnit_id))
-  end
-  
-  ###################################################
-  ### End SDS Specific code
-  ###################################################
 end
