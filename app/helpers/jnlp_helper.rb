@@ -23,19 +23,6 @@ module JnlpHelper
       } 
     )
   end
-  
-  def render_learner_jnlp(learner)
-    # FIXME can't figure out why otml_url_for, doesn't work here
-    # otml_url_for(runnable)
-    otml_url = polymorphic_url(learner.offering.runnable, :format =>  :otml)
-    otml_url = URI.escape(otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-    config_url = learner.sds_config_url('sailotrunk.otmlurl' => otml_url, :savedata => true)
-    
-    @learner = true
-    
-    render( :layout => false, :partial => "shared/jnlp",
-            :locals => { :runnable => learner.offering.runnable, :config_url => config_url } )
-  end
 
   def resource_jars
     @jnlp_adaptor.resource_jars
