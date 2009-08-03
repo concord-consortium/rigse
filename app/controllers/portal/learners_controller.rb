@@ -14,7 +14,10 @@ class Portal::LearnersController < ApplicationController
   # GET /portal_learners/1.xml
   def show
     @learner = Portal::Learner.find(params[:id])
-
+    
+    @learner.console_logger = Dataservice::ConsoleLogger.create! unless @learner.console_logger
+    @learner.bundle_logger = Dataservice::BundleLogger.create! unless @learner.bundle_logger
+    
     respond_to do |format|
       format.html # show.html.erb
       format.config { render :partial => 'shared/learn', 
