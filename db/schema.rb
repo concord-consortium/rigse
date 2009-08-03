@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090801065519) do
+ActiveRecord::Schema.define(:version => 20090803082306) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1523,14 +1523,6 @@ ActiveRecord::Schema.define(:version => 20090801065519) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
-  end
-
-  create_table "portal_sds_configs", :force => true do |t|
-    t.integer  "configurable_id"
-    t.string   "configurable_type"
-    t.integer  "sds_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "portal_semesters", :force => true do |t|
