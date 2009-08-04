@@ -41,78 +41,80 @@ class Portal::StudentsController < ApplicationController
     @user = @student.user
   end
 
+  #
+  # To create a student we need:
+  # * information to create a new user or a reference to an existing user
+  # Normally this is combined with a clazz or a token for finding a class.
+  # When a student self-registers they are given the option of providing a 'class_word'.
+  # A 'class_word' is a token which can be used to find a specific class.
+  # If a 'class_word' is not provided then other params must be provided that
+  # can be used to find an existing clazz.
+  # In addition a grade_level needs to be generated.
+  #
+  # If everything gets created or referenced correctly a Portal::StudentClass is generated.
+  #
   # POST /portal_students
   # POST /portal_students.xml
+  #
   def create
-    success = false
-    begin
-      user_params = params[:user]
-      user_params[:login] = Portal::Student.generate_user_login(user_params[:first_name], user_params[:last_name])
-      user_params[:email] = Portal::Student.generate_user_email
-      @user = User.new(user_params)
-      # temporarily disable sending email notifications for state change events
-      @user.skip_notifications = true
-      @user.register!
-      @user.save!
+    debugger
+    @clazz = find_clazz_from_params
+    @grade_level = find_grade_level_from_params
+    user_attributes = generate_user_attributes_from_params
+    @user = User.new(user_attributes)
+
+    # temporarily disable sending email notifications for state change events
+    @user.skip_notifications = true
+    @user.register!
+    user_created = @user.save
+    if user_created
       @user.activate!
-      
-      # check the multitude of ways that a class might have been passed in
-      if params[:clazz_id]
-        @clazz = Portal::Clazz.find(params[:clazz_id])
-      elsif params[:class_word]
-        @clazz = Portal::Clazz.find_by_class_word(params[:class_word])
-      elsif params[:clazz]
-        if params[:clazz][:id]
-          @clazz = Portal::Clazz.find(params[:clazz][:id])
-        elsif params[:clazz][:class_word]
-          @clazz = Portal::Clazz.find_by_class_word(params[:clazz][:class_word])
-        end
-      end
-
-      grade_level = Portal::GradeLevel.find_by_name('9')
-      if course = @clazz.course
-        grade_levels = course.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      elsif teacher = @clazz.teacher
-        grade_levels = teacher.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      end
-
-      @student = Portal::Student.create!(:user_id => @user.id, :grade_level_id => grade_level.id)
-
-      if @student.save && @clazz
-        @student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @student.id, :start_time => Time.now)
-      end
-      
-      success = true
-    rescue => e
-      logger.warn("Failed to create Student: #{e}\n#{e.backtrace.join("\n")}")
+      @student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
     end
     respond_to do |format|
-      if success
-        flash[:notice] = 'Student was successfully created.'
-        if @clazz
-          if params[:clazz][:class_word]
-            format.html { render 'signup_success' }
-          else
-            format.html { redirect_to(@clazz) }
-          end
+      if user_created && @clazz && @student && @grade_level
+        @student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @student.id, :start_time => Time.now)
+        if params[:clazz][:class_word]
+          format.html { render 'signup_success' }
         else
-          format.html { redirect_to(@student) }
+          format.html { redirect_to(@clazz) }
         end
-        format.xml  { render :xml => @student, :status => :created, :location => @student }
-      else
-        if ! @student
-          @student = Portal::Student.new
-        end
+      else  # something didn't get created or referenced correctly
         if params[:clazz][:class_word]
           format.html { render :action => "signup" }
+          format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
         else
           format.html { render :action => "new" }
+          format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
         end
-        format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
       end
     end
+    
+    # respond_to do |format|
+    #   if success
+    #     flash[:notice] = 'Student was successfully created.'
+    #     if @clazz
+    #       if params[:clazz][:class_word]
+    #         format.html { render 'signup_success' }
+    #       else
+    #         format.html { redirect_to(@clazz) }
+    #       end
+    #     else
+    #       format.html { redirect_to(@student) }
+    #     end
+    #     format.xml  { render :xml => @student, :status => :created, :location => @student }
+    #   else
+    #     if ! @student
+    #       @student = Portal::Student.new
+    #     end
+    #     if params[:clazz][:class_word]
+    #       format.html { render :action => "signup" }
+    #     else
+    #       format.html { render :action => "new" }
+    #     end
+    #     format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PUT /portal_students/1
@@ -156,5 +158,44 @@ class Portal::StudentsController < ApplicationController
       format.html # new.html.erb
       format.xml  { render :xml => @student }
     end
-  end 
+  end
+  
+  protected
+  
+  def find_clazz_from_params
+    # check the multitude of ways that a class might have been passed in
+    clazz = case
+    when params[:clazz_id] then
+      Portal::Clazz.find(params[:clazz_id])
+    when params[:class_word] then
+      Portal::Clazz.find_by_class_word(params[:class_word])
+    when params[:clazz] && params[:clazz][:id] then
+      Portal::Clazz.find(params[:clazz][:id])
+    when params[:clazz][:class_word] then
+      Portal::Clazz.find_by_class_word(params[:clazz][:class_word])
+    else
+      raise 'no class specified'
+    end
+    clazz
+  end
+  
+  def find_grade_level_from_params
+    grade_level = Portal::GradeLevel.find_by_name('9')
+    if course = @clazz.course
+      grade_levels = course.grade_levels
+      grade_level = grade_levels[0] if grade_levels[0]
+    else teacher = @clazz.teacher
+      grade_levels = teacher.grade_levels
+      grade_level = grade_levels[0] if grade_levels[0]
+    end
+    grade_level
+  end
+  
+  def generate_user_attributes_from_params
+    user_attributes = params[:user]
+    user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
+    user_attributes[:email] = Portal::Student.generate_user_email
+    user_attributes
+  end
+  
 end

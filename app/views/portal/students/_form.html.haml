@@ -1,5 +1,6 @@
 - form_for @student do |f|
-  = f.error_messages
+  = error_messages_for 'user'
+  = error_messages_for 'student'
   - field_set_tag 'name' do
     .aligned
       %ul
