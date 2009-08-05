@@ -1,5 +1,3 @@
-require 'zlib'
-
 #
 # Rack middleware to decode and expand posted content 
 # with a content-encoding of: 'b64gzip'
@@ -53,48 +51,3 @@ module Rack
     end
   end
 end
-    
-  # req = Rack::Request.new(env)
-  # body = req.body
-  # scheme = req.scheme
-  # script_name = req.script_name
-  # path_info = req.path_info
-  # port = req.port
-  # request_method = req.request_method
-  # query_string = req.query_string
-  # content_length = req.content_length
-  # content_type = req.content_type
-  # content_encoding = req.content_encoding
-  # session = req.session
-  # session_options = req.session_options
-  
-  # status, headers, response = @app.call(env)
-  # 
-  # if request.env['HTTP_CONTENT_ENCODING'] == 'b64gzip'
-  #   content = Zlib::GzipReader.new(StringIO.new(B64::B64.decode(request.raw_post))).read
-  # else
-  #   content = request.raw_post
-  # end
-  # digest = Digest::MD5.hexdigest(content)
-  # if request.env['HTTP_CONTENT_MD5'] != nil
-  #   if digest != request.env['HTTP_CONTENT_MD5']
-  #     raise "Bundle MD5 Mismatch"
-  #   end
-  # end
-  
-  # http://pastie.org/404695
-  # def call(env)
-  #   dup._call(env)
-  # end
-  # 
-  # def _call(env)
-  #   @start = Time.now
-  #   @status, @headers, @response = @app.call(env)
-  #   @stop = Time.now
-  #   [@status, @headers, self]
-  # end
-  # 
-  # def each(&block)
-  #   block.call("<!-- #{@message}: #{@stop - @start} -->\n") if @headers["Content-Type"].include? "text/html"
-  #   @response.each(&block)
-  # end
