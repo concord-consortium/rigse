@@ -7,7 +7,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   def body
     unless bundle = self[:body]
-      debugger
       bundle = File.read(File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml'))
     end
     bundle
