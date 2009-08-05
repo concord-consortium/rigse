@@ -15,13 +15,18 @@ class ConsoleContent
       end
     end
     if console_content
-      [201, {'Content-Type' => 'text/xml', 'Last-Modified' => console_content.created_at.httpdate, 'Content-Length' => '0' }, []]
+      [201, 
+        { 'Content-Type' => 'text/xml', 
+          'Last-Modified' => console_content.created_at.httpdate, 
+          'Content-Length' => '0' },
+        []
+      ]
     else
       [404, { 'Content-Type' => 'text/html' }, ['Not Found']]
     end
   ensure
-    # Release the connections back to the pool.
+    # If we accessed ActiveRecord then release the connections back to the pool. 
     # see: http://blog.codefront.net/2009/06/15/activerecord-rails-metal-too-many-connections/
-    ActiveRecord::Base.clear_active_connections!      
+    ActiveRecord::Base.clear_active_connections! if console_logger_id
   end
 end
