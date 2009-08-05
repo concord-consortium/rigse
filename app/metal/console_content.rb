@@ -15,7 +15,7 @@ class ConsoleContent
       end
     end
     if console_content
-      [201, {}, []]
+      [201, {'Content-Type' => 'text/xml', 'Last-Modified' => console_content.created_at.httpdate, 'Content-Length' => '0' }, []]
     else
       [404, { 'Content-Type' => 'text/html' }, ['Not Found']]
     end

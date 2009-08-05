@@ -15,7 +15,7 @@ class BundleContent
       end
     end
     if bundle_content
-      [201, {}, []]
+      [201, {'Content-Type' => 'text/xml', 'Last-Modified' => bundle_content.created_at.httpdate, 'Content-Length' => '0' }, []]
     else
       [404, { 'Content-Type' => 'text/html' }, ['Not Found']]
     end
