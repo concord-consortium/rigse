@@ -124,8 +124,9 @@
           #js_flash{:style=>"display: none;"}
 
           #flash
-            - flash.each do |key, message|
-              %div{:class=>"flash flash_#{key}"}= message
+            .padded_contents
+              - flash.each do |key, message|
+                %div{:class=>"flash flash_#{key}"}= message
           = yield :layout
 
       #footer
