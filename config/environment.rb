@@ -12,7 +12,22 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   
-  # config.middleware.use "ExpandB64Gzip"
+  # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
+  #   $ rake middleware
+  #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
+  #   use Rack::Lock
+  #   use ActionController::Failsafe
+  #   use ActionController::Reloader
+  #   use ActiveRecord::ConnectionAdapters::ConnectionManagement
+  #   use ActiveRecord::QueryCache
+  #   use ActiveRecord::SessionStore, #<Proc:0x0192dfc8@(eval):8>
+  #   use Rack::ExpandB64Gzip
+  #   use ActionController::ParamsParser
+  #   use Rack::MethodOverride
+  #   use Rack::Head
+  #   run ActionController::Dispatcher.new
+  
+  config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
   
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
