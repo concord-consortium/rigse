@@ -57,7 +57,6 @@ class Portal::StudentsController < ApplicationController
   # POST /portal_students.xml
   #
   def create
-    debugger
     @clazz = find_clazz_from_params
     @grade_level = find_grade_level_from_params
     user_attributes = generate_user_attributes_from_params
