@@ -15,7 +15,7 @@ class Dataservice::BundleLoggersController < ApplicationController
   def show
     @bundle_logger = Dataservice::BundleLogger.find(params[:id])
     if bc = @bundle_logger.latest_bundle_content[0]
-      content = bc.body
+      content = Dataservice::BundleLogger::OPEN_ELEMENT_EPORTFOLIO + bc.body + Dataservice::BundleLogger::CLOSE_ELEMENT_EPORTFOLIO
     else
       content =  File.read(File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml'))
     end
