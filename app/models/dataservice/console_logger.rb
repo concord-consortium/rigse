@@ -3,4 +3,6 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
   
   has_one  :learner, :class_name => "Portal::Learner"
   has_many :console_contents, :class_name => "Dataservice::ConsoleContent", :order => :position, :dependent => :destroy
+  has_many :latest_console_content, :class_name => "Dataservice::ConsoleContent", :order => :position, :dependent => :destroy, :limit => 1
+
 end
