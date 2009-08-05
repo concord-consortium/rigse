@@ -14,15 +14,15 @@ class Dataservice::BundleLoggersController < ApplicationController
   # GET /dataservice_bundle_loggers/1.xml
   def show
     @bundle_logger = Dataservice::BundleLogger.find(params[:id])
-    if bc = @bundle_logger.latest_bundle_content[0]
-      content = Dataservice::BundleLogger::OPEN_ELEMENT_EPORTFOLIO + bc.body + Dataservice::BundleLogger::CLOSE_ELEMENT_EPORTFOLIO
+    if bundle_content = @bundle_logger.bundle_contents.last
+      eportfolio_bundle = bundle_content.eportfolio
     else
-      content =  File.read(File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml'))
+      eportfolio_bundle =  Dataservice::BundleContent::EMPTY_EPORTFOLIO_BUNDLE
     end
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => content }
-      format.bundle {render :xml => content }
+      format.xml  { render :xml => eportfolio_bundle }
+      format.bundle {render :xml => eportfolio_bundle }
     end
   end
 
