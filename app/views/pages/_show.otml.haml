@@ -30,21 +30,34 @@
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
     %bodyText
       %br
-      .teacher_mode
+      %table.teacher_mode{:width=>"90%", :valign=>"top"}
         - if should_show_teacher_note? page, :investigation
-          %h3= "Investigation notes:"
-          .activity_teacher_note= page.section.investigation.teacher_note_otml
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "Investigation notes:"
+            %td
+              .activity_teacher_note= page.section.investigation.teacher_note_otml
 
         - if should_show_teacher_note? page, :activity
-          %h3= "Activity notes:"
-          .activity_teacher_note= page.section.activity.teacher_note_otml
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "Activity notes:"
+            %td
+              .activity_teacher_note= page.section.activity.teacher_note_otml
 
         - if should_show_teacher_note? page, :section
-          %h3= "Section notes:"
-          .section_teacher_note= page.section.teacher_note_otml
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "Section notes:"
+            %td
+              .section_teacher_note= page.section.teacher_note_otml
         - if page.has_good_teacher_note?
-          %h3="Page notes (#{page.name}):"
-          .page_teacher_note= page.teacher_note_otml
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3="Page notes (#{page.name}):"
+            %td
+              .page_teacher_note= page.teacher_note_otml
+
               
               
   %OTTabContainer{:local_id => ot_local_id_for(page, :tab_container), :name => page.name}
