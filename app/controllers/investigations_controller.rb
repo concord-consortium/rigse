@@ -5,7 +5,7 @@ class InvestigationsController < AuthoringController
   # caches_page :show if => Proc.new { |c| c.request.format == :otml }
 
   # caches_action :show
-  cache_sweeper :investigation_sweeper, :only => [ :update ]
+  # cache_sweeper :investigation_sweeper, :only => [ :update ]
 
   prawnto :prawn=>{ :page_layout=>:landscape }
 
