@@ -35,10 +35,10 @@ ActiveRecord::Schema.define(:version => 20090803082306) do
     t.integer  "maven_jnlp_family_id"
     t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
+    t.boolean  "enable_default_users"
     t.string   "uuid",                 :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "enable_default_users"
   end
 
   create_table "assessment_target_unifying_themes", :id => false, :force => true do |t|
