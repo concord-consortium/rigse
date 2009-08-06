@@ -18,7 +18,6 @@ class InvestigationsController < AuthoringController
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description
   
-  cache_sweeper :investigation_sweeper
   after_filter :cache_otml
 
   protected  
