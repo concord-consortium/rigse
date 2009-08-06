@@ -17,53 +17,6 @@ class Admin::ProjectsController < ApplicationController
     current_user.has_role?('admin')
   end
   
-  def can_create
-    if (current_user.anonymous?)
-      flash[:error] = "Anonymous users can not create activities"
-      redirect_back_or activities_path
-    end
-  end
-  
-  def render_scope
-    @render_scope = @admin_project
-  end
-
-  def can_edit
-    if defined? @activity
-      unless @activity.changeable?(current_user)
-        error_message = "you (#{current_user.login}) can not #{action_name.humanize} #{@activity.name}"
-        flash[:error] = error_message
-        if request.xhr?
-          render :text => "<div class='flash_error'>#{error_message}</div>"
-        else
-          redirect_back_or activities_path
-        end
-      end
-    end
-  end
-  
-  
-  def setup_object
-    if params[:id]
-      if params[:id].length == 36
-        @activity = Activity.find(:first, :conditions => ['uuid=?',params[:id]])
-      else
-        @activity = Activity.find(params[:id])
-      end
-    elsif params[:activity]
-      @activity = Activity.new(params[:activity])
-    else
-      @activity = Activity.new
-    end
-    format = request.parameters[:format]
-    unless format == 'otml' || format == 'jnlp'
-      if @activity
-        @page_title = @activity.name
-        @investigation = @activity.investigation
-      end
-    end
-  end
-  
   public
   
   # GET /admin/projects
