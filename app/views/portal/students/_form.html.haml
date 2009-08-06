@@ -1,6 +1,6 @@
-- form_for @student do |f|
+- form_for portal_student do |f|
   = error_messages_for 'user'
-  = error_messages_for 'student'
+  = error_messages_for 'portal_student'
   - field_set_tag 'name' do
     .aligned
       %ul
@@ -12,7 +12,7 @@
           = text_field :user, :last_name, {:live => false}
         - unless signup
           %li 
-            = label_tag :student, 'grade level: ', :class=>"right" 
+            = label_tag :portal_student, 'grade level: ', :class=>"right" 
             = f.collection_select(:grade_level_id, (current_user.portal_teacher ? current_user.portal_teacher.schools.collect{|s| s.grade_levels}.flatten.uniq : []), :id, :name, options ={:prompt => "-Select a grade level"}, :class =>"string")
             - if @clazz
               = hidden_field :clazz, :id, {}

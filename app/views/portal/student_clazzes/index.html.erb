@@ -4,11 +4,11 @@
   <tr>
   </tr>
 
-<% @student_clazzes.each do |student_clazz| %>
+<% @portal_student_clazzes.each do |portal_student_clazz| %>
   <tr>
-    <td><%= link_to 'Show', student_clazz %></td>
-    <td><%= link_to 'Edit', edit_portal_student_clazz_path(student_clazz) %></td>
-    <td><%= link_to 'Destroy', student_clazz, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Show', portal_student_clazz %></td>
+    <td><%= link_to 'Edit', edit_portal_student_clazz_path(portal_student_clazz) %></td>
+    <td><%= link_to 'Destroy', portal_student_clazz, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

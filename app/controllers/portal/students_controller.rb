@@ -2,47 +2,47 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students
   # GET /portal_students.xml
   def index
-    @students = Portal::Student.all
+    @portal_students = Portal::Student.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @students }
+      format.xml  { render :xml => @portal_students }
     end
   end
 
   # GET /portal_students/1
   # GET /portal_students/1.xml
   def show
-    @student = Portal::Student.find(params[:id])
+    @portal_student = Portal::Student.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @student }
+      format.xml  { render :xml => @portal_student }
     end
   end
 
   # GET /portal_students/new
   # GET /portal_students/new.xml
   def new
-    @student = Portal::Student.new
+    @portal_student = Portal::Student.new
     @user = User.new
     if params[:clazz_id]
       @clazz = Portal::Clazz.find(params[:clazz_id])
     end
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @student }
+      format.xml  { render :xml => @portal_student }
     end
   end
 
   # GET /portal_students/1/edit
   def edit
-    @student = Portal::Student.find(params[:id])
-    @user = @student.user
+    @portal_student = Portal::Student.find(params[:id])
+    @user = @portal_student.user
   end
 
   #
-  # To create a student we need:
+  # To create a portal_student we need:
   # * information to create a new user or a reference to an existing user
   # Normally this is combined with a clazz or a token for finding a class.
   # When a student self-registers they are given the option of providing a 'class_word'.
@@ -68,23 +68,25 @@ class Portal::StudentsController < ApplicationController
     user_created = @user.save
     if user_created
       @user.activate!
-      @student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
+      @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
     end
     respond_to do |format|
-      if user_created && @clazz && @student && @grade_level
-        @student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @student.id, :start_time => Time.now)
+      if user_created && @clazz && @portal_student && @grade_level
+        @portal_student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
         if params[:clazz][:class_word]
           format.html { render 'signup_success' }
         else
           format.html { redirect_to(@clazz) }
         end
       else  # something didn't get created or referenced correctly
+        @portal_student = Portal::Student.new unless @portal_student
+        @user = User.new unless @user
         if params[:clazz][:class_word]
           format.html { render :action => "signup" }
-          format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
         else
           format.html { render :action => "new" }
-          format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
         end
       end
     end
@@ -119,19 +121,19 @@ class Portal::StudentsController < ApplicationController
   # PUT /portal_students/1
   # PUT /portal_students/1.xml
   def update
-    @student = Portal::Student.find(params[:id])
+    @portal_student = Portal::Student.find(params[:id])
     respond_to do |format|
-      if @student.update_attributes(params[:student])
+      if @portal_student.update_attributes(params[:portal_student])
         flash[:notice] = 'Portal::Student was successfully updated.'
-        format.html { redirect_to(@student) }
+        format.html { redirect_to(@portal_student) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
       end
       class_word = params[:clazz][:class_word]
       if class_word
-        @student.process_class_word(class_word)
+        @portal_student.process_class_word(class_word)
       end
     end
   end
@@ -139,8 +141,8 @@ class Portal::StudentsController < ApplicationController
   # DELETE /portal_students/1
   # DELETE /portal_students/1.xml
   def destroy
-    @student = Portal::Student.find(params[:id])
-    @student.destroy
+    @portal_student = Portal::Student.find(params[:id])
+    @portal_student.destroy
 
     respond_to do |format|
       format.html { redirect_to(portal_students_url) }
@@ -151,11 +153,11 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/signup
   # GET /portal_students/signup.xml
   def signup
-    @student = Portal::Student.new
+    @portal_student = Portal::Student.new
     @user = User.new
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @student }
+      format.xml  { render :xml => @portal_student }
     end
   end
   

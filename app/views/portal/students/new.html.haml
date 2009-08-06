@@ -2,4 +2,4 @@
   %h3="Adding a new student to #{h(@clazz.name)}"
 - else
   %h3="new student info:"
-= render :partial => 'form', :locals => {:student => @student, :clazz => @clazz, :signup => false}
+= render :partial => 'form', :locals => {:portal_student => @portal_student, :clazz => @clazz, :signup => false}
