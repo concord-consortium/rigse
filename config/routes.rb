@@ -63,15 +63,7 @@ ActionController::Routing::Routes.draw do |map|
     end
     
   end
-  # 
-  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'update', :conditions => { :method => :post }
-  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'show',   :conditions => { :method => :get }
-  # dataservice.connect 'bundle_logger/:id',   :controller => 'dataservice/bundle_logger',  :action => 'destroy',:conditions => { :method => :delete }    
-  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'update', :conditions => { :method => :post }
-  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'show',   :conditions => { :method => :get }
-  # dataservice.connect 'bundle_contents/:id', :controller => 'dataservice/bundle_content', :action => 'destroy',:conditions => { :method => :delete }    
 
-  
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
   end
@@ -85,6 +77,14 @@ ActionController::Routing::Routes.draw do |map|
     maven_jnlp.resources :icons
     maven_jnlp.resources :maven_jnlp_families
     maven_jnlp.resources :maven_jnlp_servers
+  end
+
+
+  map.namespace(:otrunk_example) do |otrunk_example|
+    otrunk_example.resources :otrunk_imports
+    otrunk_example.resources :otml_categories
+    otrunk_example.resources :otml_files
+    otrunk_example.resources :otrunk_view_entries
   end
 
   map.resources :vendor_interfaces
@@ -124,13 +124,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :biologica_worlds, :member => { :destroy => :post }
 
   map.resources :raw_otmls, :member => { :destroy => :post }
-
-  map.namespace(:otrunk_example) do |otrunk_example|
-    otrunk_example.resources :otrunk_imports
-    otrunk_example.resources :otml_categories
-    otrunk_example.resources :otml_files
-    otrunk_example.resources :otrunk_view_entries
-  end
 
   map.resources :n_logo_models, :member => { :destroy => :post }
   map.resources :mw_modeler_pages, :member => { :destroy => :post }
@@ -213,6 +206,9 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post,
     :list_filter => :post
   }
+
+  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  
   
   map.resources :activities, :member => {
     :add_section => :post,
