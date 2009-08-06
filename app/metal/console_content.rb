@@ -9,16 +9,19 @@ class ConsoleContent
   POST_BODY = 'rack.input'.freeze
   
   def self.call(env)
-    if console_logger_id = env["PATH_INFO"][/\/dataservice\/console_loggers\/(\d+)\/console_contents\.console/, 1]
+    if console_logger_id = env["PATH_INFO"][/\/dataservice\/console_loggers\/(\d+)\/console_contents\.bundle/, 1]
       if console_logger = Dataservice::ConsoleLogger.find(console_logger_id)
-        console_content = console_logger.console_contents.create(:body => env[POST_BODY].read)
+        if console_content = console_logger.console_contents.create(:body => env[POST_BODY].read)
+          digest = Digest::MD5.hexdigest(console_content.body)
+        end
       end
     end
     if console_content
       [201, 
         { 'Content-Type' => 'text/xml', 
           'Last-Modified' => console_content.created_at.httpdate, 
-          'Content-Length' => '0' },
+          'Content-Length' => '0',
+          'Content-MD5' => digest },
         []
       ]
     else
