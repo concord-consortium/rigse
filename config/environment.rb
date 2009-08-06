@@ -11,7 +11,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-  
+
   # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
   #   $ rake middleware
   #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
@@ -28,6 +28,7 @@ Rails::Initializer.run do |config|
   #   run ActionController::Dispatcher.new
   
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
+  
   
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -108,7 +109,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  # config.active_record.observers = :user_observer
+  config.active_record.observers = :investigation_observer
 
   config.after_initialize do
     opts = config.has_many_polymorphs_options
@@ -118,8 +119,7 @@ Rails::Initializer.run do |config|
   end
 
   config.action_controller.session_store = :active_record_store
-  
-  config.load_paths << "#{RAILS_ROOT}/app/sweepers"
+
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')

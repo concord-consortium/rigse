@@ -26,8 +26,7 @@ class Investigation < ActiveRecord::Base
     WHERE activities.investigation_id = #{id}'
   
   acts_as_replicatable
-  
-  
+
   # use rubyist-aasm gem (acts_as_state_machine) 
   # for publication status:
   # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem

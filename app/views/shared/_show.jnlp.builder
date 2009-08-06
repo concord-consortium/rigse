@@ -21,6 +21,6 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
   jnlp_resources_windows(xml)
 
   xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n"
-  xml.argument polymorphic_url(runnable, :format =>  :config)
+  xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => teacher_mode)
   xml << "  </application-desc>\n"
 }

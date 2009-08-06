@@ -28,7 +28,11 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         }
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.otmlurl"
-          xml.string polymorphic_url(runnable, :format => :otml)
+          if teacher_mode
+            xml.string investigation_teacher_otml_url(runnable)
+          else
+            xml.string polymorphic_url(runnable, :format => :otml)
+          end
         }
       }
     }
