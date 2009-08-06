@@ -99,7 +99,7 @@ Rails::Initializer.run do |config|
   # (create the session table with "rake db:sessions:create")
   
   # Set the default location for page caching
-  config.action_controller.page_cache_directory = RAILS_ROOT + '/public/page_cache'
+  config.action_controller.page_cache_directory = RAILS_ROOT + '/public'
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
