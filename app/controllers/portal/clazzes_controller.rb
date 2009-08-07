@@ -99,16 +99,18 @@ class Portal::ClazzesController < ApplicationController
     dom_id = params[:dragged_dom_id]
     container = params[:dropped_dom_id]
     runnable_id = params[:runnable_id]
-    runnable_type = params[:runnable_type].classify
-    @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
-    if @offering
-      @offering.save
-      @clazz.reload
-    end
-    render :update do |page|
-      page << "var element = $('#{dom_id}');"
-      page << "element.remove();"
-      page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+    unless params[:runnable_type] == 'portal_offering'
+      runnable_type = params[:runnable_type].classify
+      @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@clazz.id,runnable_type,runnable_id)
+      if @offering
+        @offering.save
+        @clazz.reload
+      end
+      render :update do |page|
+        page << "var element = $('#{dom_id}');"
+        page << "element.remove();"
+        page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+      end
     end
   end
   
