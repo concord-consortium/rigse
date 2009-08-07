@@ -20,15 +20,14 @@ class Portal::OfferingsController < ApplicationController
       format.xml  { render :xml => @offering }
       format.jnlp {
         # check if the user is a student in this offering's class
-        portal_student = current_user.portal_student
-        # create a learner for the user if it doesnt' exist
-        learner = @offering.find_or_create_learner(portal_student)        
-        # render a jnlp for this learner
-        # render :partial => 'shared/jnlp_for_learner', :locals => {:learner => learner}
-        # render :partial => 'shared/jnlp_for_learner', :locals => {:learner => learner}
-        
-        render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
-        
+        if portal_student = current_user.portal_student
+          # create a learner for the user if one doesnt' exist
+          learner = @offering.find_or_create_learner(portal_student)        
+          render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+        else 
+          # The current_user is a teacher (or another user acting like a teacher)
+          render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+        end
       }
     end
   end
