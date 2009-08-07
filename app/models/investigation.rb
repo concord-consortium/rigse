@@ -75,6 +75,12 @@ class Investigation < ActiveRecord::Base
     end
   end
   
+  # Enables a teacher note to call the investigation method of an
+  # authored_entity to find the relavent investigation
+  def investigation
+    self
+  end
+  
   def self.find_by_grade_span_and_domain_id(grade_span,domain_id)
     @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
     @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
