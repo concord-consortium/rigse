@@ -316,6 +316,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles_and_portal_resources --trace"
   end
 
+  desc "Create bundle and console loggers for learners"
+  task :create_bundle_and_console_loggers_for_learners, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:create_bundle_and_console_loggers_for_learners --trace"
+  end
+
 end
 
 before 'deploy:restart', 'deploy:set_permissions'
