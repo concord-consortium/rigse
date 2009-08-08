@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/staging/rites-investigations"
-set :branch, "dataservice_rails_2_3_3_portal_staging"
+set :branch, "staging"
 
 #############################################################
 #  Servers
