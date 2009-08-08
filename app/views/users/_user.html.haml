@@ -1,0 +1,21 @@
+%div{ :id => dom_id_for(user, :item), :class => 'item' }
+  %div.action_menu
+    %div.action_menu_header_left   
+      =link_to name_for_component(user), user
+    %div.action_menu_header_right   
+      %ul.menu
+        - if (user.changeable?(current_user))
+          %li.menu=link_to 'edit', edit_user_path(user)
+  %div{:id => dom_id_for(user, :details), :class => 'tiny'}
+    %ul.menu_h
+      %li
+        login:
+        = user.login
+      %li
+        email:
+        = user.email
+      %li
+        Roles: 
+      - user.roles.each do |r| 
+        %li
+          = r.title.capitalize

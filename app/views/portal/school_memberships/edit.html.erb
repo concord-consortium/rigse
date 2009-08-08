@@ -1,0 +1,12 @@
+<h1>Editing school_membership</h1>
+
+<% form_for(@school_membership) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @school_membership %> |
+<%= link_to 'Back', portal_school_memberships_path %>

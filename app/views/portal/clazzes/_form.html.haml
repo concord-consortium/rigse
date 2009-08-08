@@ -1,0 +1,11 @@
+- form_for @clazz do |f|
+  - field_set_tag 'name' do
+    = f.text_field :name
+  - field_set_tag 'description' do
+    = f.text_area :description
+  - field_set_tag 'semester' do
+    = f.collection_select(:semester_id, @semesters, :id, :name, options ={:prompt => "-Select a semester"}, :class =>"string") 
+  - field_set_tag 'sign up word' do
+    = f.text_field :class_word
+  = f.hidden_field :teacher_id
+  = f.submit 'save '

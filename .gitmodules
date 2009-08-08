@@ -1,9 +1,3 @@
 [submodule "vendor/plugins/attachment_fu"]
 	path = vendor/plugins/attachment_fu
 	url = git://github.com/technoweenie/attachment_fu.git
-[submodule "vendor/plugins/engines"]
-	path = vendor/plugins/engines
-	url = git://github.com/lazyatom/engines.git
-[submodule "vendor/plugins/portal"]
-	path = vendor/plugins/portal
-	url = git@github.com:psndcsrv/rites_portal.git

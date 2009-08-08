@@ -1,5 +1,69 @@
 ActionController::Routing::Routes.draw do |map|
+
+  map.namespace(:portal) do |portal|
+    portal.resources :clazzes, :as => 'classes', :member => {
+        :add_offering => [:get,:post],
+        :remove_offering => [:get, :post],
+        :edit_offerings => [:get,:post]
+    }
+    portal.resources :clazzes do |clazz|
+      clazz.resources :student_clazzes
+    end
+      
+    portal.resources :courses
+    portal.resources :districts
+    portal.resources :grade_levels
+    portal.resources :learners
+    portal.resources :offerings
+    portal.resources :schools
+    portal.resources :school_memberships
+    portal.resources :semesters
+    portal.resources :students, :collection => {
+      :signup => [:get]
+    }
+    portal.resources :student_clazzes, :as => 'student_classes'
+    portal.resources :subjects
+    portal.resources :teachers
+    
+    portal.home 'readme', :controller => 'home', :action => 'readme'
+    
+  end
   
+  # Restful Authentication Rewrites
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.register '/register', :controller => 'users', :action => 'create'
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
+  map.forgot_password '/forgot_password', :controller => 'passwords', :action => 'new'
+  map.change_password '/change_password/:reset_code', :controller => 'passwords', :action => 'reset'
+  map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
+  map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
+
+  # Restful Authentication Resources
+  map.resources :users, :member => { 
+    :preferences => [:get, :put], 
+    :switch => [:get, :put], 
+    :interface => :get,
+    :suspend   => :put,
+    :unsuspend => :put,
+    :purge     => :delete }
+    
+  map.resources :passwords
+  map.resource :session
+
+# ----------------------------------------------
+
+  map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :bundle_loggers do |bundle_logger|
+      bundle_logger.resources :bundle_contents
+    end
+    dataservice.resources :console_loggers do |bundle_logger|
+      bundle_logger.resources :console_contents
+    end
+    
+  end
+
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
   end
@@ -13,6 +77,14 @@ ActionController::Routing::Routes.draw do |map|
     maven_jnlp.resources :icons
     maven_jnlp.resources :maven_jnlp_families
     maven_jnlp.resources :maven_jnlp_servers
+  end
+
+
+  map.namespace(:otrunk_example) do |otrunk_example|
+    otrunk_example.resources :otrunk_imports
+    otrunk_example.resources :otml_categories
+    otrunk_example.resources :otml_files
+    otrunk_example.resources :otrunk_view_entries
   end
 
   map.resources :vendor_interfaces
@@ -52,13 +124,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :biologica_worlds, :member => { :destroy => :post }
 
   map.resources :raw_otmls, :member => { :destroy => :post }
-
-  map.namespace(:otrunk_example) do |otrunk_example|
-    otrunk_example.resources :otrunk_imports
-    otrunk_example.resources :otml_categories
-    otrunk_example.resources :otml_files
-    otrunk_example.resources :otrunk_view_entries
-  end
 
   map.resources :n_logo_models, :member => { :destroy => :post }
   map.resources :mw_modeler_pages, :member => { :destroy => :post }
@@ -141,6 +206,9 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post,
     :list_filter => :post
   }
+
+  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  
   
   map.resources :activities, :member => {
     :add_section => :post,
@@ -180,6 +248,8 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
+
+  # map. ':controller/:action/:id.:format'
   
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

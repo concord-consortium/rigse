@@ -121,7 +121,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
-    run "ln -nfs #{shared_path}/engines/portal/config/nces_data #{release_path}/vendor/plugins/portal/config/nces_data"
+    run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
   end
     
   desc "install required gems for application"
@@ -314,6 +314,12 @@ namespace :convert do
   task :default_users_roles_and_portal_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles_and_portal_resources --trace"
+  end
+
+  desc "Create bundle and console loggers for learners"
+  task :create_bundle_and_console_loggers_for_learners, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:create_bundle_and_console_loggers_for_learners --trace"
   end
 
 end

@@ -1,0 +1,16 @@
+Select a RITES Investigation to run from the list below:
+= render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
+
+%p
+  Or enter a new class word to join another class.
+  - form_for portal_student do |f|
+    - field_set_tag 'Class Word' do
+      %ul.menu_h
+        %li
+          = label_tag :clazz, 'New Class Word: ', :class=>"right"
+          = text_field :clazz, :class_word, {:live => false}
+        %li
+          = f.submit 'Submit'
+      %p 
+        A Class Word is created by a Teacher when he or she creates a new RITES Investigations class. 
+        If you have been given the Class Word you can enter that word here to become a member of that class.

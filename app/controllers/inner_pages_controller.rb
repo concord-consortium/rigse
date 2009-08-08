@@ -90,7 +90,8 @@ class InnerPagesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/inner_page"} # inner_page.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @inner_page } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @inner_page }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @inner_page } }
         format.xml  { render :inner_page => @inner_page }
       end
     end

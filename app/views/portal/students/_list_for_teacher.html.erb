@@ -1,0 +1,1 @@
+<%= select nil,nil,teacher.clazzes.collect{|c| c.students}.flatten.uniq.collect{|s| [s.name, s.id]}%> Info | Reports | Remove

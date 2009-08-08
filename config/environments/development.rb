@@ -17,9 +17,9 @@ config.action_controller.perform_caching             = true
 config.action_mailer.raise_delivery_errors = false
 
 # see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
-ActiveSupport::Dependencies.explicitly_unloadable_constants << 'Portal'
-ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'
-ActiveSupport::Dependencies.load_once_paths.delete_if {|p| p =~ /vendor\/plugins\/portal/ }
+# ActiveSupport::Dependencies.explicitly_unloadable_constants << 'Portal'
+# ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'
+# ActiveSupport::Dependencies.load_once_paths.delete_if {|p| p =~ /vendor\/plugins\/portal/ }
   
 # textmate-footnotes
 # Rails errors displayed in browser are generated with links to textmate
@@ -39,4 +39,4 @@ unless RUBY_PLATFORM =~ /java/
 end
 
 # to help with development with engines (which are plugins)
-config.reload_plugins = true
+# config.reload_plugins = true

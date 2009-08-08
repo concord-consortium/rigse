@@ -20,7 +20,8 @@ class NLogoModelsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/n_logo_model" } # n_logo_model.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @n_logo_model } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model } }
         format.xml  { render :n_logo_model => @n_logo_model }
       end
     end

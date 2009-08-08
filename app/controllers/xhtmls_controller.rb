@@ -20,7 +20,8 @@ class XhtmlsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.otml { render :layout => "layouts/xhtml" } # xhtml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @xhtml } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @xhtml }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @xhtml } }
         format.xml  { render :xml => @xhtml }
       end
     end

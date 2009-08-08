@@ -1,0 +1,9 @@
+.item
+  = edit_menu_for(district, f)
+  .content
+    %p
+      - field_set_tag 'Name' do
+        = f.text_field :name, :size => 60
+    %p
+      - field_set_tag 'Description' do
+        = f.text_area :description, :id => dom_id_for(district, :item, :description, :textarea), :class => 'tinymce_textarea'

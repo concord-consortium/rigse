@@ -36,7 +36,6 @@ end
 @db_config_path = rails_file_path(%w{config database.yml})
 @settings_config_path = rails_file_path(%w{config settings.yml})
 @mailer_config_path = rails_file_path(%w{config mailer.yml})
-@sds_config_path= rails_file_path(%w{config sds.yml})
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
@@ -136,18 +135,6 @@ HEREDOC
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
 end
 
-def create_new_sds_yml
-  sample_path = rails_file_path(%w{config sds.sample.yml})
-  @sds_config = YAML::load(IO.read(sample_path))
-  puts <<HEREDOC
-
-       creating: #{@sds_config_path}
-  from template: #{sample_path}
-
-HEREDOC
-  File.open(@sds_config_path, 'w') {|f| f.write @sds_config.to_yaml }
-end
-
 def create_new_mailer_yml
   sample_path = rails_file_path(%w{config mailer.sample.yml})
   @mailer_config = YAML::load(IO.read(sample_path))
@@ -197,23 +184,6 @@ HEREDOC
     @new_database_yml_created = true
   end
 end
-
-#
-# check for config/sds.yml
-#
-def check_for_config_sds_yml
-
-  unless File.exists?(@sds_config_path)
-    puts <<HEREDOC
-
-  The SAIL Data Service configuration file does not yet exist.
-
-HEREDOC
-    create_new_sds_yml
-    @new_settings_yml_created = true
-  end
-end
-
 
 #
 # check for config/settings.yml
@@ -473,119 +443,6 @@ HEREDOC
   
     if agree("OK to save to config/settings.yml? (y/n): ")
       File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
-    end
-  end
-end
-
-#
-# update config/settings.yml
-#
-def update_config_sds_yml
-  @sds_config = YAML::load(IO.read(@sds_config_path))
-  puts <<HEREDOC
-----------------------------------------
-
-Updating the SAIL Data Service configuration file: config/sds.yml
-
-You will need to create a portal realm in a working SAIL Data Service application
-for this RITES instance.
-
-Creating an SDS Portal Realm:
-
-Login to the SDS, create a new portal realm and set the following portal realm attribute to true:
-
-  Learner Session Parameters
-  Return last non-empty session bundle only and create the following resources:
-
-Then create the following resources:
-
-  1. jnlp
-  2. curnit
-  3. offering (referencing the jnlp and curnit)
-  4. sail_user
-
-Then make a workgroup that references the offering and the sail_user.
-
-The offering, workgroup, and sail_user created will be used as defaults when
-running Investigations that don't save data.
-
-Here are the current settings in config/sds.yml:
-
-#{@sds_config.to_yaml} 
-HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
-
-    %w{development staging production}.each do |env|
-      puts "\n#{env}:\n"
-      puts <<HEREDOC
-
-The SDS host is the url to the SAIL Data Service and the appropriate portal realm.
-
-HEREDOC
-
-      @sds_config[env]['host'] =         ask("            host: ") { |q| q.default = @sds_config[env]['host'] }
-      puts <<HEREDOC
-
-Supply a valid jnlp_id and curnit_id from the SDS portal realm.
-
-HEREDOC
-      @sds_config[env]['jnlp_id'] =        ask("           jnlp_id: ") { |q| q.default = @sds_config[env]['jnlp_id'] }
-      @sds_config[env]['curnit_id'] =      ask("         curnit_id: ") { |q| q.default = @sds_config[env]['curnit_id'] }
-      puts <<HEREDOC
-
-Supply a valid default_offering_id and default_workgroup_id from the SDS portal realm.
-
-HEREDOC
-      @sds_config[env]['default_offering_id'] =      ask("         admin_login: ") { |q| q.default = @sds_config[env]['default_offering_id'] }
-      @sds_config[env]['default_workgroup_id'] = ask("    admin_first_name: ") { |q| q.default = @sds_config[env]['default_workgroup_id'] }
-      @sds_config[env]['admin_last_name'] =  ask("     admin_last_name: ") { |q| q.default = @sds_config[env]['admin_last_name'] }
-
-      # 
-      # site_district and site_school
-      #
-      puts <<HEREDOC
-
-The site district is a virtual district that contains the site school.
-Any full member can become part of the site school and district.
-
-HEREDOC
-      @sds_config[env]['site_district']   =  ask("     site_district: ") { |q| q.default = @sds_config[env]['site_district'] }
-      @sds_config[env]['site_school']     =  ask("       site_school: ") { |q| q.default = @sds_config[env]['site_school'] }
-  
-      # 
-      # ---- states_and_provinces ----
-      #
-      get_states_and_provinces_settings(env)
-
-      # 
-      # ---- enable_default_users ----
-      #
-      puts <<HEREDOC
-
-A number of default users are created that are good for testing but insecure for 
-production deployments. Setting this value to true will enable the default users
-setting it to false will disable the default_users for this envioronment.
-
-HEREDOC
-      default_users = @sds_config[env]['enable_default_users'].to_s
-      default_users = ask("  enable_default_users: ", ['true', 'false']) { |q| q.default = default_users }
-      @sds_config[env]['enable_default_users'] = eval(default_users)
-
-      # 
-      # ---- maven_jnlp ----
-      #
-      get_maven_jnlp_settings(env)
-
-    end
-
-    puts <<HEREDOC
-
-Here are the updated application settings:
-#{@sds_config.to_yaml} 
-HEREDOC
-  
-    if agree("OK to save to config/settings.yml? (y/n): ")
-      File.open(@sds_config_path, 'w') {|f| f.write @sds_config.to_yaml }
     end
   end
 end

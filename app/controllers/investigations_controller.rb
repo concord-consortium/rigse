@@ -12,7 +12,7 @@ class InvestigationsController < AuthoringController
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :can_edit, :except => [:index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -102,19 +102,29 @@ class InvestigationsController < AuthoringController
   # GET /pages/1
   # GET /pages/1.xml
   def show
-    # display for teachers? Later we can determin via roles?
+    # display for teachers? Later we can determin via roles?    
     @teacher_mode = params[:teacher_mode]
-      respond_to do |format|
-        format.html {
-          if params['print'] 
-            render :print, :layout => "layouts/print"
-          end
-        }
-      format.xml  { render :xml => @investigation }
-      format.otml { render :layout => 'layouts/investigation' } # investigation.otml.haml
-      format.jnlp { render_jnlp(@investigation) }
-      format.pdf {render :layout => false }
+    respond_to do |format|
+      format.html {
+        if params['print'] 
+          render :print, :layout => "layouts/print"
+        end
+      }
+      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
+      format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
+      format.xml    { render :xml => @investigation }
+      format.pdf    { render :layout => false }
     end
+  end
+
+
+  # GET /investigations/1.otml/teacher_otml
+  # GET /pages/1.xml
+  def teacher
+    # display for teachers? Later we can determin via roles?
+    @teacher_mode = true
+    render :layout => 'layouts/investigation', :action => :show
   end
 
   # GET /pages/new
