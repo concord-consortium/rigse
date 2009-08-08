@@ -1,0 +1,2 @@
+module Dataservice::ConsoleContentsHelper
+end

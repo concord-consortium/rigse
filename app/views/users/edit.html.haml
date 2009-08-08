@@ -1,0 +1,20 @@
+%p
+  = link_to 'back to Users list', users_path
+
+- form_for @user do |form|
+  .action_menu
+    .action_menu_header
+      .action_menu_header_right
+        %ul.menu
+          %li
+            = submit_tag 'Save'
+          %li
+            = submit_tag 'Cancel'
+
+  .item
+    .content
+      = form.error_messages
+      = render :partial => 'form', :locals => { :f => form }
+      - if current_user.has_role?("admin", "manager")
+        = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+      = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

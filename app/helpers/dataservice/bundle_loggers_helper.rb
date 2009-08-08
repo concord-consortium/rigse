@@ -1,0 +1,2 @@
+module Dataservice::BundleLoggersHelper
+end

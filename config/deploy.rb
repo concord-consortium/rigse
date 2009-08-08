@@ -121,7 +121,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
-    run "ln -nfs #{shared_path}/engines/portal/config/nces_data #{release_path}/vendor/plugins/portal/config/nces_data"
+    run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
   end
     
   desc "install required gems for application"

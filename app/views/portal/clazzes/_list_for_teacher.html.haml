@@ -1,0 +1,13 @@
+%div{:id=>dom_id_for(teacher,:item), :class=>"item"}
+  .action_menu
+    .action_menu_header_left
+      Classes:        
+    .action_menu_header_right
+      - if teacher.changeable?(current_user)
+        = link_button "add.png",  new_portal_clazz_path(:teacher_id => teacher.id), :title => "add a new class"
+  %hr
+  .item
+    .item_collection
+      - teacher.clazzes.each do |c|
+        = render :partial => 'portal/clazzes/show', :locals => {:clazz => c}
+

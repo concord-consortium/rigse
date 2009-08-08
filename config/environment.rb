@@ -9,9 +9,27 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
-require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot.rb')
 
 Rails::Initializer.run do |config|
+
+  # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
+  #   $ rake middleware
+  #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
+  #   use Rack::Lock
+  #   use ActionController::Failsafe
+  #   use ActionController::Reloader
+  #   use ActiveRecord::ConnectionAdapters::ConnectionManagement
+  #   use ActiveRecord::QueryCache
+  #   use ActiveRecord::SessionStore, #<Proc:0x0192dfc8@(eval):8>
+  #   use Rack::ExpandB64Gzip
+  #   use ActionController::ParamsParser
+  #   use Rack::MethodOverride
+  #   use Rack::Head
+  #   run ActionController::Dispatcher.new
+  
+  config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
+  
+  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -80,7 +98,9 @@ Rails::Initializer.run do |config|
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
-  config.action_controller.session_store = :active_record_store
+  
+  # Set the default location for page caching
+  config.action_controller.page_cache_directory = RAILS_ROOT + '/public'
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -89,7 +109,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  # config.active_record.observers = :user_observer
+  config.active_record.observers = :investigation_observer
 
   config.after_initialize do
     opts = config.has_many_polymorphs_options
@@ -97,8 +117,9 @@ Rails::Initializer.run do |config|
     opts[:file_pattern] << "#{RAILS_ROOT}/vendor/plugins/rites_portal/app/models/**/*.rb"
     config.has_many_polymorphs_options = opts
   end
-  
-  config.load_paths << "#{RAILS_ROOT}/app/sweepers"
+
+  config.action_controller.session_store = :active_record_store
+
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
@@ -121,7 +142,8 @@ begin
       User.suspend_default_users
     end
   end
-rescue Mysql::Error => e
+rescue StandardError => e
+# rescue Mysql::Error => e
   puts "e"
 end
 

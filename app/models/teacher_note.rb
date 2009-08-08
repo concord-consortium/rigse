@@ -5,6 +5,14 @@ class TeacherNote < ActiveRecord::Base
   has_and_belongs_to_many :unifying_themes, :join_table => "teacher_notes_unifying_themes"
   
   belongs_to :authored_entity, :polymorphic => true
+
   acts_as_replicatable
   include Changeable
+  
+  # send_update_events_to :investigation
+  # 
+  def after_update
+    self.authored_entity.investigation.touch
+  end
+
 end

@@ -1,0 +1,31 @@
+
+%div{:id=>dom_id_for(clazz,:students_container), :class=>"accordion_container"}
+  %div{:class=>"accordion_name"}
+    Students:
+  %div{:id=>dom_id_for(clazz,:students_toggle), :class=>"accordion_toggle"}
+  %div{:id=>dom_id_for(clazz,:students_content), :class=>"accordion_content", :style=>'display: none;'}
+    .action_menu
+      .action_menu_header_right
+        - if clazz.changeable?(current_user)
+          = link_button "add.png", new_portal_student_path(:clazz_id => clazz.id), :title => "add a student to #{clazz.name}"
+    .item
+      %table{:width=>"100%"}
+        %tr
+          %th
+            Student name
+          %th
+            Student login
+          %th
+            Grade level
+        - clazz.students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}.each do |portal_student|
+          - portal_student_clazz = clazz.student_clazzes.find_by_student_id(portal_student.id)
+          %tr{:id=>dom_id_for(portal_student_clazz)}
+            %td
+              = link_to portal_student.user.name, portal_student
+            %td
+              = portal_student.user.login
+            %td
+              = portal_student.grade_level ? portal_student.grade_level.name : "unknown"
+            %td
+              = remote_link_button "delete.png", :url => portal_clazz_student_clazz_url(clazz, portal_student_clazz), :confirm => "This action will remove the student: '#{portal_student.name}' from the class: #{clazz.name}. \nAre you sure you want to do this?", :method => :delete, :title => "remove #{portal_student.name} from #{clazz.name}"
+             

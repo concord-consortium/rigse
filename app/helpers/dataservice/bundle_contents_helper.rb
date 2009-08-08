@@ -1,0 +1,2 @@
+module Dataservice::BundleContentsHelper
+end

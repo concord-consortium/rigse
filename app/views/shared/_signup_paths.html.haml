@@ -1,0 +1,12 @@
+- field_set_tag "Sign Up" do
+  %p
+    If you are a Teacher in an existing RITES School signup as a Teacher.
+    = button_to 'Sign up as a teacher', :new_portal_teacher
+
+  %p
+    If you are a student of a Teacher who is using RITES Investigations sign up here.
+    = button_to 'Sign up as a student', :signup_portal_students
+
+  %p
+    Otherwise if you are an author sign up as a member. Members can run and author RITES Investigations.
+    = button_to 'Sign up as a member', :signup

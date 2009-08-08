@@ -1,0 +1,12 @@
+<h1>Editing subject</h1>
+
+<% form_for(@subject) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @subject %> |
+<%= link_to 'Back', portal_subjects_path %>

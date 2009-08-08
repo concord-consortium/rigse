@@ -1,0 +1,14 @@
+%h1 Listing clazzes
+
+%table
+  - @courses.each do |course|
+    %tr
+      %td= course.id
+      %td= course.name
+      %td= link_to 'Show', course
+      %td= link_to 'Edit', course 
+      %td= link_to 'Destroy', course 
+  
+%br /
+
+= link_to 'New clazz', new_portal_clazz_path

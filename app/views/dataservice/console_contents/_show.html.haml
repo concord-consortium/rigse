@@ -1,0 +1,15 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(dataservice_console_content), :class => "container_element" }
+  = show_menu_for(dataservice_console_content, options)
+
+  %div{:id => dom_id_for(dataservice_console_content, :item), :class => 'item'}
+    %div{:id => dom_id_for(dataservice_console_content, :details), :class => 'content'}
+      = wrap_edit_link_around_content(dataservice_console_content, options={:complete => mce_init_string}) do
+        %h4= h(dataservice_console_content.name)
+        %p
+          %ul.menu_v
+            %li
+              Body:
+              =h(dataservice_console_content.body)
+    
+    

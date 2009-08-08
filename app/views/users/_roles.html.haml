@@ -1,0 +1,8 @@
+%fieldset
+  %legend
+    Roles
+  %ul.menu_h
+    - roles.each do |r| 
+      %li
+        = r.title.capitalize
+        = check_box_tag "user[role_ids][]", r.id, @user.roles.include?(r)

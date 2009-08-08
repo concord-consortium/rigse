@@ -1,0 +1,9 @@
+.item#vi_1
+  .menu
+    / %ul
+    /   %li
+    /     / = submit_tag 'Save'
+    /   %li
+    /     / = submit_tag 'Cancel'
+  .content
+    = render :partial => 'shared/vendor_interface', :locals => { :vendor_interface => current_user.vendor_interface }
