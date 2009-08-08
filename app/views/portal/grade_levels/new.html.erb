@@ -1,0 +1,11 @@
+<h1>New grade_level</h1>
+
+<% form_for(@grade_level) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', portal_grade_levels_path %>

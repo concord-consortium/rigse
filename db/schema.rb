@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090729020220) do
+ActiveRecord::Schema.define(:version => 20090803082306) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -300,6 +300,32 @@ ActiveRecord::Schema.define(:version => 20090729020220) do
     t.integer  "visible_rows"
     t.text     "column_names"
     t.text     "column_data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "dataservice_bundle_contents", :force => true do |t|
+    t.integer  "bundle_logger_id"
+    t.integer  "position"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "dataservice_bundle_loggers", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "dataservice_console_contents", :force => true do |t|
+    t.integer  "console_logger_id"
+    t.integer  "position"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "dataservice_console_loggers", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -775,11 +801,13 @@ ActiveRecord::Schema.define(:version => 20090729020220) do
   end
 
   create_table "portal_learners", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",              :limit => 36
     t.integer  "student_id"
     t.integer  "offering_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "bundle_logger_id"
+    t.integer  "console_logger_id"
   end
 
   create_table "portal_nces06_districts", :force => true do |t|
@@ -1495,14 +1523,6 @@ ActiveRecord::Schema.define(:version => 20090729020220) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
-  end
-
-  create_table "portal_sds_configs", :force => true do |t|
-    t.integer  "configurable_id"
-    t.string   "configurable_type"
-    t.integer  "sds_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "portal_semesters", :force => true do |t|

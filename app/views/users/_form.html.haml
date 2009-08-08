@@ -1,0 +1,17 @@
+%fieldset
+  %legend
+    User: 
+    = @user.name
+  %ul.quiet_list
+    %li
+      = f.label :first_name, 'First name', :class => "aligned"
+      = f.text_field :first_name, :live => false, :class => "aligned"
+    %li
+      = f.label :last_name, 'Last name', :class=>"aligned"
+      = f.text_field :last_name, :live => false, :class => "aligned"
+    %li
+      = f.label :login, 'Login', :class=>"aligned"
+      = f.text_field :login, :live => false, :class => "aligned"
+    %li
+      = f.label :email, 'Email', :class=>"aligned"
+      = f.text_field :email, :live => false, :class => "aligned"

@@ -37,7 +37,7 @@ class Admin::Project < ActiveRecord::Base
 
   def write_to_settings_yml
     new_settings = generate_settings_yml
-    FileUtils.copy("#{RAILS_ROOT}/config/settings.yml", "#{RAILS_ROOT}/config/settings-backup.yml")
+    # FileUtils.copy("#{RAILS_ROOT}/config/settings.yml", "#{RAILS_ROOT}/config/settings-backup.yml")
     File.open("#{RAILS_ROOT}/config/settings.yml", 'w') do |f|
       f.write new_settings
     end

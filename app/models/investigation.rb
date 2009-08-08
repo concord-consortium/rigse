@@ -26,8 +26,7 @@ class Investigation < ActiveRecord::Base
     WHERE activities.investigation_id = #{id}'
   
   acts_as_replicatable
-  
-  
+
   # use rubyist-aasm gem (acts_as_state_machine) 
   # for publication status:
   # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem
@@ -74,6 +73,12 @@ class Investigation < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+  end
+  
+  # Enables a teacher note to call the investigation method of an
+  # authored_entity to find the relavent investigation
+  def investigation
+    self
   end
   
   def self.find_by_grade_span_and_domain_id(grade_span,domain_id)

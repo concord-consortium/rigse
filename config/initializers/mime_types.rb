@@ -4,5 +4,7 @@
 # Mime::Type.register "text/richtext", :rtf
 # Mime::Type.register_alias "text/html", :iphone
 
-Mime::Type.register "text/xml", :otml
 Mime::Type.register "application/x-java-jnlp-file", :jnlp
+Mime::Type.register "text/bundle", :bundle
+Mime::Type.register "text/bundle", :config
+Mime::Type.register "text/xml", :otml

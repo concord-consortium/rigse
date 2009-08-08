@@ -20,7 +20,8 @@ class MwModelerPagesController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/mw_modeler_page" } # mw_modeler_page.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @mw_modeler_page } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page } }
         format.xml  { render :mw_modeler_page => @mw_modeler_page }
       end
     end

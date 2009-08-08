@@ -20,7 +20,8 @@ class BiologicaChromosomeZoomsController < ApplicationController
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/biologica_chromosome_zoom" } # biologica_chromosome_zoom.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable_object => @biologica_chromosome_zoom } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome_zoom }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome_zoom } }
         format.xml  { render :biologica_chromosome_zoom => @biologica_chromosome_zoom }
       end
     end

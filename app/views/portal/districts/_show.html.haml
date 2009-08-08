@@ -1,0 +1,9 @@
+- options = { :complete => mce_init_string }
+%div{ :id => dom_id_for(district), :class => "container_element" }
+  = show_menu_for(district, options)
+
+  %div{:id => dom_id_for(district, :item), :class => 'item'}
+    %div{:id => dom_id_for(district, :details), :class => 'content'}
+      = wrap_edit_link_around_content(district, options={:complete => mce_init_string}) do
+        %h4= h(district.name)
+        %p= h(district.description)

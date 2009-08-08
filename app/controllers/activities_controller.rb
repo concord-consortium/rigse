@@ -91,9 +91,10 @@ class ActivitiesController < ApplicationController
             render :print, :layout => "layouts/print"
           end
         }
-      format.xml  { render :xml => @activity }
+      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @activity } }
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @activity } }            
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
-      format.jnlp { render_jnlp(@activity) }
+      format.xml  { render :xml => @activity }
       format.pdf {render :layout => false }
     end
   end

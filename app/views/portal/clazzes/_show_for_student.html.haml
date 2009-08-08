@@ -1,0 +1,10 @@
+
+- options = { :omit_delete => true }
+%div.item_collection{ :id => dom_id_for(clazz)}
+  %div{:id => dom_id_for(clazz, :item), :class => 'item'}
+    .action_menu
+      .action_menu_header_left
+        = clazz.name
+      .action_menu_header_right
+        = clazz.teacher.name
+    = render :partial => 'shared/offering_for_student', :collection => clazz.offerings, :as => :offering

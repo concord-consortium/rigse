@@ -1,7 +1,7 @@
 response.headers["Content-Type"] = "application/x-java-jnlp-file"
 response.headers["Cache-Control"] = "max-age=1"
-response.headers["Last-Modified"] = runnable_object.updated_at.httpdate
-response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable_object.class.name.underscore}_#{short_name(runnable_object.name)}.jnlp"
+response.headers["Last-Modified"] = runnable.updated_at.httpdate
+response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
 
 unless defined? config_url
   config_url = "http://saildataservice.concord.org/2/offering/144/config/540/0/view?sailotrunk.hidetree=false&amp;sailotrunk.otmlurl=#{escaped_otml_url}"
@@ -19,7 +19,7 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
   xml.security {
     xml << "    <all-permissions />"
   }
-  jnlp_resources(xml, { :authoring => @authoring, :learner => @learner, :runnable_object => runnable_object } )
+  jnlp_resources(xml, { :authoring => @authoring, :learner => @learner, :runnable => runnable } )
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)

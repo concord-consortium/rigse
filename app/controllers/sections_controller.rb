@@ -74,8 +74,9 @@ class SectionsController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
+      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @section } }
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @section } }      
       format.otml { render :layout => 'layouts/section' } # section.otml.haml
-      format.jnlp { render_jnlp(@section) }
       format.xml  { render :xml => @section }
     end
   end

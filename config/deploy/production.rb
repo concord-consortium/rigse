@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/rites-investigations"
-set :branch, "production"
+set :branch, "dataservice_rails_2_3_3_portal_production"
 
 #############################################################
 #  Servers
