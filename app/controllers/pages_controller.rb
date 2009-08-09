@@ -75,6 +75,7 @@ class PagesController < ApplicationController
   # GET /page/1
   # GET /page/1.xml
   def show
+    @teacher_mode = params[:teacher_mode] || @page.teacher_only
     respond_to do |format|
       format.html {
         if params['print'] 
