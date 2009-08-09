@@ -81,8 +81,8 @@ class PagesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @page } }
-      format.config { render :partial => 'shared/show', :locals => { :runnable => @page } }      
+      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }      
       format.otml { render :layout => "layouts/page" } # page.otml.haml
       format.xml  { render :xml => @page }
     end

@@ -38,7 +38,7 @@
     %currentCard
       - if section.pages.first
         - unless ((teacher_only?(section.pages.first)) && (!teacher_mode))
-          %object{ :refid => ot_refid_for(section.pages.first) }/
+          %object{ :refid => ot_refid_for(section.pages.first, :content) }/
     %viewedCards
   %OTMenu{ :local_id => ot_local_id_for(section, :menu), :moveToNextSectionAllowed => 'true' }
     %cardContainer
