@@ -23,9 +23,9 @@ class InvestigationsController < AuthoringController
   protected  
 
   def cache_otml
-    # if request.format == :otml
-    #   cache_page(response.body, request.path)
-    # end
+    if request.format == :otml
+      cache_page(response.body, request.path)
+    end
   end
 
   def can_create
