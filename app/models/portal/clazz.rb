@@ -14,7 +14,23 @@ class Portal::Clazz < ActiveRecord::Base
   
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
+  
   include Changeable
+
+  self.extend SearchableModel
+
+  @@searchable_attributes = %w{name description}
+
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Class"
+    end
+  end
+  
   def title
     semester_name = semester ? semester.name : 'unknown'
     "Class: #{name}, Semester: #{semester_name}"

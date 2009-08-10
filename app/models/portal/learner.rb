@@ -21,4 +21,9 @@ class Portal::Learner < ActiveRecord::Base
     learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
   end
 
+  class <<self
+    def display_name
+      "Learner"
+    end
+  end
 end
