@@ -59,8 +59,6 @@ class User < ActiveRecord::Base
   has_one :portal_teacher, :class_name => "Portal::Teacher"
   has_one :portal_student, :class_name => "Portal::Student"
   
-  has_one :sds_config, :class_name => "Portal::SdsConfig", :as => :configurable
-  
   belongs_to :vendor_interface
 
   acts_as_replicatable
