@@ -27,7 +27,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.new
     @user = User.new
     if params[:clazz_id]
-      @clazz = Portal::Clazz.find(params[:clazz_id])
+      @portal_clazz = Portal::Clazz.find(params[:clazz_id])
     end
     respond_to do |format|
       format.html # new.html.erb
@@ -48,7 +48,7 @@ class Portal::StudentsController < ApplicationController
   # When a student self-registers they are given the option of providing a 'class_word'.
   # A 'class_word' is a token which can be used to find a specific class.
   # If a 'class_word' is not provided then other params must be provided that
-  # can be used to find an existing clazz.
+  # can be used to find an existing portal_clazz.
   # In addition a grade_level needs to be generated.
   #
   # If everything gets created or referenced correctly a Portal::StudentClass is generated.
@@ -57,7 +57,7 @@ class Portal::StudentsController < ApplicationController
   # POST /portal_students.xml
   #
   def create
-    @clazz = find_clazz_from_params
+    @portal_clazz = find_clazz_from_params
     @grade_level = find_grade_level_from_params
     user_attributes = generate_user_attributes_from_params
     @user = User.new(user_attributes)
@@ -71,12 +71,12 @@ class Portal::StudentsController < ApplicationController
       @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
     end
     respond_to do |format|
-      if user_created && @clazz && @portal_student && @grade_level
-        @portal_student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
+      if user_created && @portal_clazz && @portal_student && @grade_level
+        @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
         if params[:clazz][:class_word]
           format.html { render 'signup_success' }
         else
-          format.html { redirect_to(@clazz) }
+          format.html { redirect_to(@portal_clazz) }
         end
       else  # something didn't get created or referenced correctly
         @portal_student = Portal::Student.new unless @portal_student
@@ -94,11 +94,11 @@ class Portal::StudentsController < ApplicationController
     # respond_to do |format|
     #   if success
     #     flash[:notice] = 'Student was successfully created.'
-    #     if @clazz
+    #     if @portal_clazz
     #       if params[:clazz][:class_word]
     #         format.html { render 'signup_success' }
     #       else
-    #         format.html { redirect_to(@clazz) }
+    #         format.html { redirect_to(@portal_clazz) }
     #       end
     #     else
     #       format.html { redirect_to(@student) }

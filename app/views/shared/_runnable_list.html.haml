@@ -17,4 +17,4 @@
   /       
   = observe_form :gse_selector, :url => list_filter_investigation_url, :update => {:success => 'offering_list'}
 #offering_list.drop_target
-  = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => runnable_list(:clazz => clazz), :clazz => clazz}
+  = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => runnable_list(:portal_clazz => portal_clazz), :portal_clazz => portal_clazz}
