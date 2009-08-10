@@ -14,6 +14,7 @@ config/initializers/site_keys.rb
 config/mailer.yml
 config/additional_users.yml
 config/settings.yml
+config/nces_data
 public/images/0*
 nbproject
 config/db_backup/
