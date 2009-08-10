@@ -30,7 +30,7 @@
                 %object{:refid =>'${labbook}'}/
           
 - content_for(:library) do
-  %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true' }
+  %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
     %cards
       - section.pages.each do |page|
         - unless ((teacher_only?(page)) && (!teacher_mode))
