@@ -2,8 +2,6 @@ class Portal::Offering < ActiveRecord::Base
   set_table_name :portal_offerings
   
   acts_as_replicatable
-  
-  has_one :sds_config, :class_name => "Portal::SdsConfig", :as => :configurable
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true
