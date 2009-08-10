@@ -127,8 +127,6 @@ end
 require 'prawn'
 require 'prawn/format'
 
-require 'portal_configuration'
-
 # Special-case for when the migration that adds the default_user
 # attribute hasn't been run yet.
 # TODO: This causes troubles when the user table is not present.
@@ -178,6 +176,5 @@ module HasManyPolymorphs
         end
       end
     end
-  end  
-    
+  end
 end
