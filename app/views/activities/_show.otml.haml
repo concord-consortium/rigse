@@ -20,7 +20,7 @@
           %viewid
             %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
     %content
-      %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
+      %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
         %cards
           - activity.sections.each do |section|
             - unless ((teacher_only?(section)) && (!teacher_mode))
