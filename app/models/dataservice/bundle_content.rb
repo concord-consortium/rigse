@@ -4,15 +4,14 @@ class Dataservice::BundleContent < ActiveRecord::Base
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
   acts_as_list :scope => :bundle_logger_id
 
-  EMPTY_EPORTFOLIO_BUNDLE_PATH = File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml')
-  EMPTY_EPORTFOLIO_BUNDLE = File.read(EMPTY_EPORTFOLIO_BUNDLE_PATH)
-  EMPTY_BUNDLE = " <sessionBundles />\n"
+  include SailBundleContent
   
-  def body
-    self[:body] || EMPTY_BUNDLE
+  def otml
+    @otml || @otml = self.extract_otml
   end
   
-  def eportfolio
-    Dataservice::BundleLogger::OPEN_ELEMENT_EPORTFOLIO + self.body + Dataservice::BundleLogger::CLOSE_ELEMENT_EPORTFOLIO
+  def extract_otml
+    ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(sock_entries[0]))).read
   end
+  
 end
