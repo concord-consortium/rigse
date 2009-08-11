@@ -4,9 +4,7 @@ require 'fileutils'
 namespace :portal do
   namespace :setup do
     
-    PORTAL_ROOT = File.dirname(File.dirname(__FILE__))
-    
-    nces_dir = File.join(PORTAL_ROOT, 'config', 'nces_data')
+    nces_dir = File.join(RAILS_ROOT, 'config', 'nces_data')
     school_layout_file = File.join(nces_dir, 'psu061blay.txt')
     district_layout_file = File.join(nces_dir, 'pau061blay.txt')
     

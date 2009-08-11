@@ -322,6 +322,20 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:create_bundle_and_console_loggers_for_learners --trace"
   end
 
+  # Tuesday, August 11, 2009
+  
+  desc "Find and report on invalid Dataservice::BundleContent objects"
+  task :find_and_report_on_invalid_dataservice_bundle_content_objects, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:find_and_report_on_invalid_dataservice_bundle_content_objects --trace"
+  end
+
+  desc "Find and delete invalid Dataservice::BundleContent objects"
+  task :find_and_delete_invalid_dataservice_bundle_content_objects, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:find_and_delete_invalid_dataservice_bundle_content_objects --trace"
+  end
+
 end
 
 before 'deploy:restart', 'deploy:set_permissions'

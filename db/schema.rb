@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090803082306) do
+ActiveRecord::Schema.define(:version => 20090811185540) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -307,7 +307,7 @@ ActiveRecord::Schema.define(:version => 20090803082306) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body"
+    t.text     "body",             :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
   end

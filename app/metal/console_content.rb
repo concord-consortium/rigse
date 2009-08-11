@@ -1,16 +1,15 @@
 # Allow the metal piece to run in isolation
 require(File.dirname(__FILE__) + "/../../config/environment") unless defined?(Rails)
-require 'rack/utils'
 
 # /dataservice/console_loggers/7/console_contents.console
 
 class ConsoleContent
   
-  POST_BODY = 'rack.input'.freeze
+  POST_BODY = 'rack.input'.freeze unless defined?(POST_BODY)
   
   def self.call(env)
     if console_logger_id = env["PATH_INFO"][/\/dataservice\/console_loggers\/(\d+)\/console_contents\.bundle/, 1]
-      if console_logger = Dataservice::ConsoleLogger.find(console_logger_id)
+      if console_logger = ::Dataservice::ConsoleLogger.find(console_logger_id)
         if console_content = console_logger.console_contents.create(:body => env[POST_BODY].read)
           digest = Digest::MD5.hexdigest(console_content.body)
         end

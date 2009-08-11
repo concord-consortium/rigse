@@ -17,6 +17,7 @@ javascripts:
   - cookie
   - accordion
   - item_selectable
+  - live_validation
   
   # doesn't seem to work
   # - tiny_mce/tiny_mce

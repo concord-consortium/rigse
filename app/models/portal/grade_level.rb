@@ -9,4 +9,18 @@ class Portal::GradeLevel < ActiveRecord::Base
   
   has_and_belongs_to_many :teachers, :join_table => "portal_grade_levels_teachers", :class_name => "Portal::Teacher"
   has_and_belongs_to_many :courses, :join_table => "portal_courses_grade_levels", :class_name => "Portal::Course"
+  
+  self.extend SearchableModel
+
+  @@searchable_attributes = %w{name description}
+
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Grade Level"
+    end
+  end
 end
