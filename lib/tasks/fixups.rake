@@ -124,6 +124,53 @@ HEREDOC
       end
     end
 
+    desc "Create bundle and console loggers for learners"
+    task :create_bundle_and_console_loggers_for_learners => :environment do
+      Portal::Learner.find(:all).each do |learner|
+        learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
+        learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
+        learner.save!
+      end
+    end
+
+    def find_and_report_on_invalid_bundle_contents(&block)
+      count = Dataservice::BundleContent.count
+      puts "\nScanning #{count} Dataservice::BundleContent model instances for invalid bodies\n\n"      
+      invalid = []
+      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |group|
+        invalid << group.find_all { |bc| !bc.valid? }
+        print '.'; STDOUT.flush
+      end
+      invalid.flatten!
+      if invalid.empty?
+        puts "\n\nAll #{count} were valid.\n\n"
+      else
+        puts "\n\nFound #{invalid.length} invalid Dataservice::BundleContent models.\n\n"
+        invalid.each do |bc|
+          learner = bc.bundle_logger.learner
+          puts "id: #{bc.id}"
+          puts " learner name: #{learner.name}; login: #{learner.student.user.login}"
+          puts " investigation: id:#{learner.offering.runnable.id} name:#{learner.offering.name}"
+          puts " date #{bc.created_at}"
+          yield(bc) if block
+          puts
+        end
+      end
+    end
+
+    desc "Find and report on invalid Dataservice::BundleContent objects"
+    task :find_and_report_on_invalid_dataservice_bundle_content_objects => :environment do
+      find_and_report_on_invalid_bundle_contents
+    end
+
+    desc "Find and delete invalid Dataservice::BundleContent objects"
+    task :find_and_delete_invalid_dataservice_bundle_content_objects => :environment do
+      find_and_report_on_invalid_bundle_contents do |bc|
+        puts
+        puts " deleting Dataservice::BundleContent id:#{bc.id}..."
+        bc.destroy        
+      end
+    end
   end
 end
 
