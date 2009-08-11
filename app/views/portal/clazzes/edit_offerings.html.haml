@@ -2,7 +2,7 @@
   %tr
     %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
       .action_menu
-        %h4= "Offerings for Class #{@clazz_name}"
+        %h4= "Offerings for #{@portal_clazz.name}"
         .tiny (drag items from the right into your class)
       #clazz_offerings.drop_target
         - @portal_clazz.offerings.each do |offering|
