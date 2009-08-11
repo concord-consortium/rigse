@@ -10,4 +10,5 @@
     - teacher.clazzes.each do |c|
       %div{ :id=>dom_id_for(c, :item) }
         = render :partial => 'portal/clazzes/show', :locals => {:portal_clazz => c}
+        %p
 
