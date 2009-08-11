@@ -12,7 +12,7 @@ class InvestigationsController < AuthoringController
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :can_edit, :except => [:list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -360,10 +360,10 @@ class InvestigationsController < AuthoringController
   # POST /grade_span_expectations/select_js
   def list_filter
     # remember the chosen domain and gradespan, it will probably continue..
-    cookies[:gradespan] = @grade_span = params[:gradespan] || "%" # default to all grade_spans
-    cookies[:domain] = @domain_id = params[:domain].to_i
+    cookies[:gradespan] = @grade_span = params[:grade_span] || "%" # default to all grade_spans
+    cookies[:domain] = @domain_id = params[:domain_id].to_i
 
-    @investigations = Investigation.grade_and_domain(@grade_span,@domain_id)
+    @investigations = Investigation.published.grade_and_domain(@grade_span,@domain_id)
   
     if request.xhr?
       render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations}
