@@ -3,17 +3,19 @@
   .tiny (drag to your class offering list on the left)
   
   %form{ :id => 'gse_selector'}
-    - field_set_tag 'Select GSE' do
-      - field_set_tag 'filter' do
-        #gse_filter
-          %ul.menu_h
-            = hidden_field_tag 'class_id', portal_clazz.id
-            %li
-              grade span:
-              = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans))
-            %li
-              domain:
-              = select_tag(:domain_id, options_for_select(Domain.find(:all).collect { |d| [d.name, d.id] }))     
-= observe_form 'gse_selector', :url => list_filter_investigation_url, :update => {:success => 'offering_list'}
+    = hidden_field_tag 'class_id', portal_clazz.id
+    - field_set_tag 'Find Investigations' do
+      .aligned
+        %ul      
+          %li
+            = label_tag :filter, 'Grades: ', :class=>"right"
+            = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans))
+          %li
+            = label_tag :filter, 'Domain: ', :class=>"right"
+            = select_tag(:domain_id, options_for_select(Domain.find(:all).collect { |d| [d.name, d.id] }))
+          %li
+            = label_tag :filter, 'Name: ', :class=>"right"
+            = text_field_tag :name
+= observe_form 'gse_selector', :url => list_filter_investigation_url, :frequency => 1, :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => runnable_list(:portal_clazz => portal_clazz), :portal_clazz => portal_clazz}

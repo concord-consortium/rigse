@@ -9,7 +9,7 @@ class InvestigationsController < AuthoringController
 
   prawnto :prawn=>{ :page_layout=>:landscape }
 
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index,:list_filter]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
@@ -362,9 +362,9 @@ class InvestigationsController < AuthoringController
     # remember the chosen domain and gradespan, it will probably continue..
     cookies[:gradespan] = @grade_span = params[:grade_span] || "%" # default to all grade_spans
     cookies[:domain] = @domain_id = params[:domain_id].to_i
+    name = params[:name]
+    @investigations = Investigation.published.like(name).with_gse.grade(@grade_span).domain(@domain_id)
 
-    @investigations = Investigation.published.grade_and_domain(@grade_span,@domain_id)
-  
     if request.xhr?
       render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations}
     else
