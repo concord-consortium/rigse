@@ -1,11 +1,19 @@
-- form_for @clazz do |f|
-  - field_set_tag 'name' do
-    = f.text_field :name
-  - field_set_tag 'description' do
-    = f.text_area :description
-  - field_set_tag 'semester' do
-    = f.collection_select(:semester_id, @semesters, :id, :name, options ={:prompt => "-Select a semester"}, :class =>"string") 
-  - field_set_tag 'sign up word' do
-    = f.text_field :class_word
-  = f.hidden_field :teacher_id
-  = f.submit 'save '
+.item
+  = edit_menu_for(portal_clazz, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name, :size => 60
+        %li
+          Class Word: 
+          = f.text_field :class_word, :size => 24
+        %li
+          Semester: 
+          = f.collection_select(:semester_id, @semesters, :id, :name, options ={:prompt => "-Select a semester"}, :class =>"string") 
+    %p
+      Description
+      = f.text_area :description, :id => dom_id_for(portal_clazz, :item, :textarea), :class => 'tinymce_textarea'
+    = f.hidden_field :teacher_id
+

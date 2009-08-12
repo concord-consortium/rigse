@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090803082306) do
+ActiveRecord::Schema.define(:version => 20090812005333) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -307,10 +307,17 @@ ActiveRecord::Schema.define(:version => 20090803082306) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body"
+    t.text     "body",             :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "otml",             :limit => 2147483647
+    t.boolean  "processed"
+    t.boolean  "valid_xml"
+    t.boolean  "empty"
+    t.string   "uuid",             :limit => 36
   end
+
+  add_index "dataservice_bundle_contents", ["bundle_logger_id"], :name => "index_dataservice_bundle_contents_on_bundle_logger_id"
 
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at"

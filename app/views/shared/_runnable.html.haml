@@ -8,4 +8,4 @@
   %div{:id => dom_id_for(runnable, :details), :class => 'tiny'}
     %p=runnable.description
 
-= draggable_element dom_id_for(runnable), :revert => true          
+= draggable_element dom_id_for(runnable), :revert => true , :scroll => 'window'

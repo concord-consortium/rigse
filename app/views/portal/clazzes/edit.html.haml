@@ -1,3 +1,2 @@
-%h3= "Change '#{h(@clazz.name)}' details"
-= render :partial => "form"
-
+- form_for(@portal_clazz) do |f|
+  = render :partial => 'form', :locals => { :portal_clazz => @portal_clazz, :f => f }

@@ -5,4 +5,6 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
   
   acts_as_list :scope => :console_logger_id
   
+  include SailBundleContent
+  
 end

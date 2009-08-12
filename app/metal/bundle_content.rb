@@ -1,16 +1,15 @@
 # Allow the metal piece to run in isolation
 require(File.dirname(__FILE__) + "/../../config/environment") unless defined?(Rails)
-require 'rack/utils'
 
 # /dataservice/bundle_loggers/7/bundle_contents.bundle
 
 class BundleContent
   
-  POST_BODY = 'rack.input'.freeze
+  POST_BODY = 'rack.input'.freeze unless defined?(POST_BODY)
   
   def self.call(env)
     if bundle_logger_id = env["PATH_INFO"][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
-      if bundle_logger = Dataservice::BundleLogger.find(bundle_logger_id)
+      if bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
         if bundle_content = bundle_logger.bundle_contents.create(:body => env[POST_BODY].read)
           digest = Digest::MD5.hexdigest(bundle_content.body)
         end

@@ -14,4 +14,17 @@ class Portal::Offering < ActiveRecord::Base
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
   end
   
+  self.extend SearchableModel
+
+  @@searchable_attributes = %w{status}
+
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Offering"
+    end
+  end
 end

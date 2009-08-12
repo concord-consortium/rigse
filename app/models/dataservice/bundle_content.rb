@@ -2,17 +2,40 @@ class Dataservice::BundleContent < ActiveRecord::Base
   set_table_name :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
+
   acts_as_list :scope => :bundle_logger_id
 
-  EMPTY_EPORTFOLIO_BUNDLE_PATH = File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml')
-  EMPTY_EPORTFOLIO_BUNDLE = File.read(EMPTY_EPORTFOLIO_BUNDLE_PATH)
-  EMPTY_BUNDLE = " <sessionBundles />\n"
+  acts_as_replicatable
+
+  include SailBundleContent
   
-  def body
-    self[:body] || EMPTY_BUNDLE
+  def before_create
+    process_bundle
+  end
+
+  def before_save
+    process_bundle unless processed
   end
   
-  def eportfolio
-    Dataservice::BundleLogger::OPEN_ELEMENT_EPORTFOLIO + self.body + Dataservice::BundleLogger::CLOSE_ELEMENT_EPORTFOLIO
+  def process_bundle
+    self.processed = true
+    self.valid_xml = valid_xml?
+    if valid_xml
+      self.otml = extract_otml
+      self.empty = true unless self.otml
+    end
   end
+    
+  def extract_otml
+    if body[/ot.learner.data/]
+      otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
+      s = StringIO.new(B64::B64.decode(otml_b64gzip))
+      z = ::Zlib::GzipReader.new(s)
+      z.read
+      # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
+    else
+      nil
+    end
+  end
+  
 end

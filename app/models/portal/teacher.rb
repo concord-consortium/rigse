@@ -7,8 +7,8 @@ class Portal::Teacher < ActiveRecord::Base
   
   # because of has many polymorphs, we SHOULDN't need the following relationships defined, but
   # HACK: noah went ahead, and explicitly defined them, because it wasn't working.
-  has_many :school_memberships, :as => :member
-  has_many :schools, :through => :school_memberships
+  has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
+  has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
   
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
   has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
@@ -18,7 +18,12 @@ class Portal::Teacher < ActiveRecord::Base
   [:name, :first_name, :login, :password, :last_name, :email, :vendor_interface].each { |m| delegate m, :to => :user }
   
   include Changeable
-  
+
+  class <<self
+    def display_name
+      "Teacher"
+    end
+  end
   
   ##
   ##

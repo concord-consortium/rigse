@@ -6,4 +6,18 @@ class Portal::Semester < ActiveRecord::Base
   belongs_to :school, :class_name => "Portal::School", :foreign_key => "school_id"
   
   has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "semester_id", :source => :clazz
+  
+  self.extend SearchableModel
+
+  @@searchable_attributes = %w{name description}
+
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Semester"
+    end
+  end
 end
