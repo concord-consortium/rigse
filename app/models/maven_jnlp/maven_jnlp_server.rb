@@ -17,6 +17,21 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def generate_names_for_maven_jnlp_servers
+      maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
+      maven_jnlp_servers.each do |server|
+        attrs = { :host => server[:host], :path => server[:path] }
+        if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attrs)
+          unless mj_server.name
+            puts "MavenJnlpServer: name: #{server[:name]} => #{attrs.inspect}"
+            mj_server.name = server[:name]
+            mj_server.save!
+          end
+        end
+      end
+    end
+    
   end
 
   def maven_jnlp_object
