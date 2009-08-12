@@ -1,4 +1,4 @@
-container_dom_id = dom_id_for(@portal_clazz, :accordion_container)
+container_dom_id = dom_id_for(@portal_clazz, :item)
 safe_js(page,container_dom_id) do
   page.remove container_dom_id
 end
