@@ -16,6 +16,6 @@
           %li
             = label_tag :filter, 'Name: ', :class=>"right"
             = text_field_tag :name
-= observe_form 'gse_selector', :url => list_filter_investigation_url, :frequency => 1, :update => {:success => 'offering_list'}
+= observe_form 'gse_selector', :url => list_filter_investigation_url, :frequency => 2, :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => runnable_list(:portal_clazz => portal_clazz), :portal_clazz => portal_clazz}
