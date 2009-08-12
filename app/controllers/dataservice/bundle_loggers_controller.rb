@@ -14,7 +14,7 @@ class Dataservice::BundleLoggersController < ApplicationController
   # GET /dataservice_bundle_loggers/1.xml
   def show
     @bundle_logger = Dataservice::BundleLogger.find(params[:id])
-    if bundle_content = @bundle_logger.bundle_contents.last
+    if bundle_content = @bundle_logger.last_non_empty_bundle_content
       eportfolio_bundle = bundle_content.eportfolio
     else
       eportfolio_bundle =  Dataservice::BundleContent::EMPTY_EPORTFOLIO_BUNDLE
