@@ -165,7 +165,7 @@ class Portal::StudentsController < ApplicationController
   
   def find_clazz_from_params
     # check the multitude of ways that a class might have been passed in
-    clazz = case
+   @portal_clazz  = case
     when params[:clazz_id] then
       Portal::Clazz.find(params[:clazz_id])
     when params[:class_word] then
@@ -177,15 +177,15 @@ class Portal::StudentsController < ApplicationController
     else
       raise 'no class specified'
     end
-    clazz
+   @portal_clazz
   end
   
   def find_grade_level_from_params
     grade_level = Portal::GradeLevel.find_by_name('9')
-    if course = @clazz.course
+    if course =@portal_clazz.course
       grade_levels = course.grade_levels
       grade_level = grade_levels[0] if grade_levels[0]
-    else teacher = @clazz.teacher
+    else teacher =@portal_clazz.teacher
       grade_levels = teacher.grade_levels
       grade_level = grade_levels[0] if grade_levels[0]
     end
