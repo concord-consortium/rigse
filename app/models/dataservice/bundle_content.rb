@@ -18,10 +18,12 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def process_bundle
-    self.valid_xml = valid_xml?
-    self.otml = extract_otml
-    self.empty = true unless self.otml
     self.processed = true
+    self.valid_xml = valid_xml?
+    if valid_xml
+      self.otml = extract_otml
+      self.empty = true unless self.otml
+    end
   end
     
   def extract_otml
