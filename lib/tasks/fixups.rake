@@ -149,8 +149,8 @@ HEREDOC
         invalid.each do |bc|
           learner = bc.bundle_logger.learner
           puts "id: #{bc.id}"
-          puts " learner name: #{learner.name}; login: #{learner.student.user.login}"
-          puts " investigation: id:#{learner.offering.runnable.id} name:#{learner.offering.name}"
+          puts " learner #{learner.id}: #{learner.name}; #{learner.student.user.login}"
+          puts " investigation: #{learner.offering.runnable.id}: #{learner.offering.name}"
           puts " date #{bc.created_at}"
           yield(bc) if block
           puts
@@ -171,6 +171,17 @@ HEREDOC
         bc.destroy        
       end
     end
+
+    desc "generate otml, valid_xml, and empty attributes for BundleContent objects"
+    task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects => :environment do
+      count = Dataservice::BundleContent.count
+      puts "\nRe-saving #{count} Dataservice::BundleContent model instances\n\n"      
+      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |group|
+        group.each { |bc| !bc.save! }
+        print '.'; STDOUT.flush
+      end
+    end
+
   end
 end
 

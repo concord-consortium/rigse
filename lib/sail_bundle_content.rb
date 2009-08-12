@@ -17,11 +17,15 @@ module SailBundleContent
     Dataservice::BundleLogger::OPEN_ELEMENT_EPORTFOLIO + self.body + Dataservice::BundleLogger::CLOSE_ELEMENT_EPORTFOLIO
   end
 
-  def valid?
+  def valid_xml?
     body[VALID_CLOSING_ELEMENT_INDEX..-1] == VALID_CLOSING_ELEMENT
   end
 
-  def sock_entries
+  def empty?
+    !body[/<sockEntries value=/]
+  end
+  
+  def sock_entry_values
     body.scan(/<sockEntries value="(.*)"/).flatten
   end
 end
