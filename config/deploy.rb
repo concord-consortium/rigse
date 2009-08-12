@@ -16,6 +16,7 @@ set :deploy_to, "/web/rites.concord.org"
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
+ssh_options[:compression] = true
 set :use_sudo, true
 set :scm_verbose, true
 set :rails_env, "production" 
