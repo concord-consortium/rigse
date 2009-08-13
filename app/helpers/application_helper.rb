@@ -219,6 +219,21 @@ module ApplicationHelper
     end
   end
   
+  def accordion_for(model, title, dom_prefix='')
+    capture_haml do
+      haml_tag :div, :id => dom_id_for(model, dom_prefix), :class => 'accordion_container' do
+        haml_tag :div, :class => 'accordion_name' do
+          haml_concat title
+        end
+        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle}"), :class => 'accordion_toggle'
+        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content}"), :class => 'accordion_content', :style=>'display: none;' do
+          if block_given?
+            yield
+          end
+        end
+      end
+    end
+  end
 
   def otrunk_edit_button_for(component, options={})
     controller = component.class.name.pluralize.underscore
@@ -329,8 +344,8 @@ module ApplicationHelper
     link_to name_for_component(container), container, :class => 'container_link'
   end
   
-  def title_for_component(component)
-    title = name_for_component(component)
+  def title_for_component(component, options={})
+    title = name_for_component(component, options)
     if RAILS_ENV == "development" || current_user.has_role?('admin')
       "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>" 
     else
@@ -338,16 +353,19 @@ module ApplicationHelper
     end
   end
     
-  def name_for_component(component)
-    if component.class.respond_to? :display_name
-      name = component.class.display_name
-    else
-      name = component.class.name.humanize
+  def name_for_component(component, options={})
+    name = ''
+    unless options[:hide_componenent_name]
+      if component.class.respond_to? :display_name
+        name << component.class.display_name
+      else
+        name << component.class.name.humanize
+      end
+      if component.respond_to? :display_type
+        name = "#{component.display_type} #{name}"
+      end
+      name << ': '
     end
-    if component.respond_to? :display_type
-      name = "#{component.display_type} #{name}"
-    end
-    name << ': '
     default_name = ''
     if component.class.respond_to?(:default_value)
       default_name = component.class.default_value('name')
@@ -380,7 +398,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(component)
+          haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           if is_page_element
