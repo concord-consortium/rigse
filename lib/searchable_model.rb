@@ -65,6 +65,7 @@ module SearchableModel
     # (user_id = ? or public = '1') and name like ? or description like ?, 1, %%, %%, 2
     # debugger
     
-    paginate(:per_page => 20, :page => page, :conditions => conditions, :include => includes)
+    per_page = self.per_page || 20
+    paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
   end
 end
