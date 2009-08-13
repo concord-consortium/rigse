@@ -3,19 +3,19 @@
   .tiny (drag to your class offering list on the left)
   
   %form{ :id => 'gse_selector'}
-    = hidden_field_tag 'class_id', portal_clazz.id
+    = hidden_field_tag 'portal_clazz_id', portal_clazz_id
     - field_set_tag 'Find Investigations' do
       .aligned
         %ul      
           %li
             = label_tag :filter, 'Grades: ', :class=>"right"
-            = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans))
+            = select(nil,  :grade_span, GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
           %li
             = label_tag :filter, 'Domain: ', :class=>"right"
-            = select_tag(:domain_id, options_for_select(Domain.find(:all).collect { |d| [d.name, d.id] }))
+            = select(nil,  :domain_id, Domain.find(:all).collect { |d| [d.name, d.id] }, { :selected => domain_id, :include_blank => "all domains" })
           %li
             = label_tag :filter, 'Name: ', :class=>"right"
             = text_field_tag :name
 = observe_form 'gse_selector', :url => list_filter_investigation_url, :frequency => 2, :update => {:success => 'offering_list'}
 #offering_list.drop_target
-  = render :partial => 'investigations/runnable_list.html.haml', :locals => {:runnables => runnable_list(:portal_clazz => portal_clazz), :portal_clazz => portal_clazz}
+  = render :partial => 'investigations/runnable_list.html.haml', :locals => {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => ""}

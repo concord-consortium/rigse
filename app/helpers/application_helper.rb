@@ -616,10 +616,17 @@ module ApplicationHelper
   end
   
   def runnable_list(options)
-    # for now, just find all published ones...
-    investigations = Investigation.published
-    if options[:clazz]
-      investigations = investigations - options[:clazz].offerings.map { |o| o.runnable }
+    grade_span = options[:grade_span] || ""
+    domain_id = options[:domain_id].to_i
+    name = options[:name]
+    if domain_id > 0
+      investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+    else
+      investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+    end
+    portal_clazz = options[:portal_clazz] || options[:portal_clazz_id] ? Portal::Clazz.find(options[:portal_clazz_id]) : nil
+    if portal_clazz
+      investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
     end
     investigations
   end

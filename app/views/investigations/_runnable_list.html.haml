@@ -1,3 +1,3 @@
-- for runnable in runnables
+- for runnable in runnable_list(:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => name)
   = render :partial => "shared/runnable", :locals => {:runnable => runnable}
 
