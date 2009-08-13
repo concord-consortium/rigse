@@ -364,10 +364,10 @@ class InvestigationsController < AuthoringController
     session[:domain_id] = cookies[:domain_id] = domain_id = params[:domain_id].to_i
     session[:include_drafts] = cookies[:include_drafts] = include_drafts = params[:include_drafts]
     name = params[:name]
-    runnables = Investigation.search_list({:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id], :include_drafts=>include_drafts})
+    runnables = Investigation.search_list({:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id], :include_drafts=>include_drafts,:paginate=>true})
     if request.xhr?
       if (params[:index])
-        render :partial => 'investigations/search_list', :locals => {:investigations => runnables}
+        render :partial => 'investigations/search_list', :locals => {:investigations => runnables, :paginated_objects => runnables}
       else
         render :partial => 'investigations/runnable_list', :locals => {:runnables => runnables}
       end

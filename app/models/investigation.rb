@@ -195,7 +195,7 @@ class Investigation < ActiveRecord::Base
       investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
     end
     if options[:paginate]
-      investigations = Investigation.paginate :page => params[:page], :order => 'created_at DESC'
+      investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
     else
       investigations
     end
