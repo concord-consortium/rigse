@@ -55,11 +55,13 @@ ActionController::Routing::Routes.draw do |map|
 # ----------------------------------------------
 
   map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :bundle_contents
     dataservice.resources :bundle_loggers do |bundle_logger|
       bundle_logger.resources :bundle_contents
     end
-    dataservice.resources :console_loggers do |bundle_logger|
-      bundle_logger.resources :console_contents
+    dataservice.resources :console_contents
+    dataservice.resources :console_loggers do |console_logger|
+      console_logger.resources :console_contents
     end
     
   end
