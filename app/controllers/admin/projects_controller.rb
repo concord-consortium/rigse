@@ -14,7 +14,10 @@ class Admin::ProjectsController < ApplicationController
   protected  
 
   def admin_only
-    current_user.has_role?('admin')
+    unless current_user.has_role?('admin')
+      flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
   end
   
   public
