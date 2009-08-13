@@ -362,10 +362,15 @@ class InvestigationsController < AuthoringController
     # remember the chosen domain and gradespan, it will probably continue..
     session[:grade_span] = cookies[:grade_span] = grade_span = params[:grade_span] || ""
     session[:domain_id] = cookies[:domain_id] = domain_id = params[:domain_id].to_i
+    session[:include_drafts] = cookies[:include_drafts] = include_drafts = params[:include_drafts]
     name = params[:name]
-    portal_clazz = nil
+    runnables = Investigation.search_list({:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id], :include_drafts=>include_drafts})
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id]}
+      if (params[:index])
+        render :partial => 'investigations/search_list', :locals => {:investigations => runnables}
+      else
+        render :partial => 'investigations/runnable_list', :locals => {:runnables => runnables}
+      end
     else
       respond_to do |format|
         format.js

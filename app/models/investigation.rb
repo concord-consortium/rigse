@@ -173,5 +173,32 @@ class Investigation < ActiveRecord::Base
     )
   end
   
+  def self.search_list(options)
+    grade_span = options[:grade_span] || ""
+    domain_id = options[:domain_id].to_i
+    name = options[:name]
+    if domain_id > 0
+      if (options[:include_drafts])
+        investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+      else
+        investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+      end
+    else
+      if (options[:include_drafts])
+        investigations = Investigation.like(name).with_gse.grade(grade_span)
+      else
+        investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+      end
+    end
+    portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+    if portal_clazz
+      investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
+    end
+    if options[:paginate]
+      investigations = Investigation.paginate :page => params[:page], :order => 'created_at DESC'
+    else
+      investigations
+    end
+  end  
   
 end

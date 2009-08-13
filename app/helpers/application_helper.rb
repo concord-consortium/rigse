@@ -308,7 +308,7 @@ module ApplicationHelper
   def run_link_for(component, as_name=nil,params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params[:link_text] || "preview #{component_display_name}"
+    link_text = params.delete(:link_text) || "preview #{component_display_name}"
     if as_name
       link_text << "as #{as_name}"
     end
@@ -634,19 +634,7 @@ module ApplicationHelper
   end
   
   def runnable_list(options)
-    grade_span = options[:grade_span] || ""
-    domain_id = options[:domain_id].to_i
-    name = options[:name]
-    if domain_id > 0
-      investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
-    else
-      investigations = Investigation.published.like(name).with_gse.grade(grade_span)
-    end
-    portal_clazz = options[:portal_clazz] || options[:portal_clazz_id] ? Portal::Clazz.find(options[:portal_clazz_id]) : nil
-    if portal_clazz
-      investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
-    end
-    investigations
+    Investigation.search_list(options)
   end
   
 end
