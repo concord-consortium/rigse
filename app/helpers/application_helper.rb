@@ -308,7 +308,7 @@ module ApplicationHelper
   def run_link_for(component, as_name=nil,params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = "preview #{component_display_name}"
+    link_text = params[:link_text] || "preview #{component_display_name}"
     if as_name
       link_text << "as #{as_name}"
     end
