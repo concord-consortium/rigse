@@ -360,13 +360,12 @@ class InvestigationsController < AuthoringController
   # POST /grade_span_expectations/select_js
   def list_filter
     # remember the chosen domain and gradespan, it will probably continue..
-    cookies[:gradespan] = @grade_span = params[:grade_span] || "%" # default to all grade_spans
-    cookies[:domain] = @domain_id = params[:domain_id].to_i
+    session[:grade_span] = cookies[:grade_span] = grade_span = params[:grade_span] || ""
+    session[:domain_id] = cookies[:domain_id] = domain_id = params[:domain_id].to_i
     name = params[:name]
-    @investigations = Investigation.published.like(name).with_gse.grade(@grade_span).domain(@domain_id)
-
+    portal_clazz = nil
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations}
+      render :partial => 'investigations/runnable_list', :locals => {:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id]}
     else
       respond_to do |format|
         format.js
