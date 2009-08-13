@@ -66,6 +66,7 @@ class Investigation < ActiveRecord::Base
   }
   
   named_scope :grade, lambda { |gs|
+    gs = gs.size > 0 ? gs : "%"
     {
       :conditions =>[ 'grade_span_expectations.grade_span LIKE ?', gs ]
     }
