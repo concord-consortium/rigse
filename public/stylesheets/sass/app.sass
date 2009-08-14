@@ -540,28 +540,29 @@ input[type=password]
     :border-color= !dark_red
     
 .aligned
-  :margin 1em
-  :vertical-align top
   ol 
+    :margin 0px
+    :padding 0px
+  ul
     :margin 0px
     :padding 0px
   li
     :list-style none
     :padding 5px
     :margin 0px
-    :vertical-align top
 
     label
       :width 30%
       :display inline-block
       :clear none
       :font-weight bold
-      :vertical-align top
       :line-height 1.8em
+      
     label.right
       :text-align right
     input
       :margin 0px
+      
 .drop_target
   :min-height 400px !important
   :height 100%
@@ -570,5 +571,9 @@ input[type=password]
   :padding 5px
 .drop_target_selected
   :background-color= !yellowish_color
-  
+.progress_container
+  :background-color= !rieps_content_text_color
+  :display block
+  :height 2em
+  :width 100%
 
