@@ -113,7 +113,7 @@ class InvestigationsController < AuthoringController
     @paginated_objects = @investigations
     
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations, :paginated_objects =>@investigations}
+      render :partial => 'investigations/runnable_list', :locals => {:investigations => @investigations, :paginated_objects =>@investigations}
     else
       respond_to do |format|
         format.js
