@@ -53,7 +53,6 @@ class InvestigationsController < AuthoringController
     end
   end
   
-  
   def setup_object
     if params[:id]
       if params[:id].length == 36
@@ -74,30 +73,58 @@ class InvestigationsController < AuthoringController
     end
   end
   
-  public
-  
-  def index
-    if params[:mine_only]
-      @investigations = Investigation.search(params[:search], params[:page], self.current_user)
-    elsif params[:include_drafts]
-      session[:include_drafts] = true
-      @investigations = Investigation.search(params[:search], params[:page], nil)
-    else
-      session[:include_drafts] = false
-      if search = params[:search]
-        search = (search.split << ["published"]).join(" ")
+  def param_find(token_sym, force_nil=false)
+    token = token_sym.to_s
+     eval_string = <<-EOF
+      if params[:#{token}]
+        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
+      elsif force_nil
+         session[:#{token}] = cookies[:#{token}] = nil
       else
-        search = "published"
+        #{token} = session[:#{token}] || cookies[:#{token}]
       end
-      @investigations = Investigation.search(search, params[:page], nil)
-    end
-    @paginated_objects = @investigations    
+    EOF
+    eval eval_string
+  end
+  
+  public
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @investigations }
+  # POST /grade_span_expectations/select_js
+  def index
+    @grade_span = param_find(:grade_span)
+    @domain_id = param_find(:domain_id)
+    @include_drafts = params[:include_drafts]
+    @name = param_find(:name)
+    pagenation = params[:page]
+    if (pagenation)
+      @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+    @investigations = Investigation.search_list({
+      :domain_id => @domain_id, 
+      :grade_span => @grade_span, 
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id, 
+      :include_drafts => @include_drafts, 
+      :paginate => true, 
+      :page => pagenation
+    })
+    @paginated_objects = @investigations
+    
+    if request.xhr?
+      render :partial => 'investigations/runnable_list', :locals => {:runnables => @investigations, :paginated_objects =>@investigations}
+    else
+      respond_to do |format|
+        format.js
+        format.html do
+          render 'index'
+        end
+      end
     end
   end
+
+
 
   # GET /pages/1
   # GET /pages/1.xml
@@ -353,28 +380,6 @@ class InvestigationsController < AuthoringController
       page.sortable :investigation_activities_list, :handle=> 'sort-handle', :dropOnEmpty => true, :url=> {:action => 'sort_activities', :params => {:investigation_id => @investigation.id }}
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)
-    end
-  end
-
-
-  # POST /grade_span_expectations/select_js
-  def list_filter
-    # remember the chosen domain and gradespan, it will probably continue..
-    session[:grade_span] = cookies[:grade_span] = grade_span = params[:grade_span] || ""
-    session[:domain_id] = cookies[:domain_id] = domain_id = params[:domain_id].to_i
-    session[:include_drafts] = cookies[:include_drafts] = include_drafts = params[:include_drafts]
-    name = params[:name]
-    runnables = Investigation.search_list({:domain_id => domain_id, :grade_span => grade_span, :name => name, :portal_clazz_id => params[:portal_clazz_id], :include_drafts=>include_drafts,:paginate=>true})
-    if request.xhr?
-      if (params[:index])
-        render :partial => 'investigations/search_list', :locals => {:investigations => runnables, :paginated_objects => runnables}
-      else
-        render :partial => 'investigations/runnable_list', :locals => {:runnables => runnables}
-      end
-    else
-      respond_to do |format|
-        format.js
-      end
     end
   end
   
