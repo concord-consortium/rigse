@@ -13,7 +13,7 @@
           %li= link_to 'create investigation', new_investigation_path
 
 - for investigation in investigations
-  %div{ :id => dom_id_for(investigation), :class => 'investigation' }
+  %div{ :id => dom_id_for(investigation), :class => 'runnable' }
     = accordion_for(investigation, investigation.name, :investigation) do  
       %div.action_menu
         %div.action_menu_header_left   
