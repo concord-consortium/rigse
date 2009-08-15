@@ -1,12 +1,11 @@
 %div{ :id => dom_id_for(offering), :class => 'offering' }
-  = accordion_for(offering, run_link_for(offering.runnable,nil,{:link_text => "preview #{offering.name}"})) do  
+  = accordion_for(offering,offering.name) do  
     %div{:id => dom_id_for(offering, :details), :class => 'tiny'}
-      = link_to_container(offering.runnable)
-      %span.author
-      = offering.runnable.user.name
-      %p=offering.runnable.description
-      - if params[:mine_only]
-        %p
-          %i 
-            = updated_time_text(offering.runnable)
+      .action_menu
+        .action_menu_header_right
+          %ul
+            %li= run_link_for(offering.runnable,nil,{:link_text => "preview #{offering.name}"})
+      %span.author= offering.runnable.user.name
+      %p= offering.runnable.description
+      %p= updated_time_text(offering.runnable)
 = draggable_element dom_id_for(offering), :revert => true          
