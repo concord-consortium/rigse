@@ -16,7 +16,7 @@ set :deploy_to, "/web/rites.concord.org"
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
-ssh_options[:compression] = true
+ssh_options[:compression] = false
 set :use_sudo, true
 set :scm_verbose, true
 set :rails_env, "production" 
@@ -58,13 +58,19 @@ namespace :db do
   end
 
   desc 'Downloads db/production_data.sql from the remote production environment to your local machine'
-  task :remote_db_download, :roles => :db, :only => { :primary => true } do  
+  task :remote_db_download, :roles => :db, :only => { :primary => true } do
+    ssh_compression = ssh_options[:compression] 
+    ssh_options[:compression] = true
     download("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql", :via => :sftp)
+    ssh_options[:compression] = ssh_compression
   end
   
   desc 'Uploads db/production_data.sql to the remote production environment from your local machine'
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
+    ssh_compression = ssh_options[:compression] 
+    ssh_options[:compression] = true
     upload("db/production_data.sql", "#{deploy_to}/#{current_dir}/db/production_data.sql", :via => :sftp)
+    ssh_options[:compression] = ssh_compression
   end
 
   desc 'Cleans up data dump file'
