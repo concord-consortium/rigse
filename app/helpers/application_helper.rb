@@ -51,7 +51,9 @@ module ApplicationHelper
   end
 
   def git_repo_info
-    if repo = Grit::Repo.new(".") && head = repo.head
+    # using && doesn't work here, in the second assignment 
+    # lvar: repo is nil -- not sure why yet
+    if repo = Grit::Repo.new(".") and head = repo.head
       branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
