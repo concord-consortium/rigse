@@ -51,8 +51,8 @@ module ApplicationHelper
   end
 
   def git_repo_info
-    if repo = Grit::Repo.new(".")
-      branch = repo.head.name
+    if repo = Grit::Repo.new(".") && head = repo.head
+      branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
       link = "<a title='#{message}' href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
