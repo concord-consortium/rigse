@@ -96,6 +96,8 @@ class Portal::ClazzesController < ApplicationController
   ## END OF CRUD METHODS
   def edit_offerings
     @portal_clazz = Portal::Clazz.find(params[:id])
+    @grade_span = session[:grade_span] ||= cookies[:grade_span]
+    @domain_id = session[:domain_id] ||= cookies[:domain_id]
   end
   
   # HACK:

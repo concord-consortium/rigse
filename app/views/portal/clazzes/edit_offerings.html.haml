@@ -1,15 +1,15 @@
 %table{:width => "95%",:style=>"vertical-align:top;"}
   %tr
     %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
+      = render :partial => "shared/runnable_list", :locals => {:portal_clazz_id => @portal_clazz.id, :is_teacher => true, :domain_id => @domain_id, :grade_span => @grade_span}
+    
+    %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
       .action_menu
         %h4= "Offerings for #{@portal_clazz.name}"
-        .tiny (drag items from the right into your class)
+        .tiny (drag items from the left into your class)
       #clazz_offerings.drop_target
         - @portal_clazz.offerings.each do |offering|
           = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
 
-    %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
-      = render :partial => "shared/runnable_list", :locals => {:portal_clazz => @portal_clazz, :is_teacher => true}
-
-= drop_receiving_element 'clazz_offerings', :url=> {:action=>'add_offering'}, :before => "element.hide();", :with => "{runnable_id: decode_model(element).id, runnable_type: decode_model(element).type, dragged_dom_id: element.id, dropped_dom_id: 'clazz_offerings'}"
-= drop_receiving_element 'offering_list',  :url=> {:action=>'remove_offering'}, :before => "element.hide();", :with => "{offering_id: decode_model(element).id, dragged_dom_id: element.id, dropped_dom_id: 'offering_list'}"
+= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'}, :before => "element.hide();", :with => "{runnable_id: decode_model(element).id, runnable_type: decode_model(element).type, dragged_dom_id: element.id, dropped_dom_id: 'clazz_offerings'}"
+= drop_receiving_element 'offering_list',  :hoverclass=> 'drop_target_selected', :accept => 'offering', :url=> {:action=>'remove_offering'}, :before => "element.hide();", :with => "{offering_id: decode_model(element).id, dragged_dom_id: element.id, dropped_dom_id: 'offering_list'}"

@@ -50,17 +50,38 @@ class Investigation < ActiveRecord::Base
   # for convinience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
   
-  # brittle;,because we must know too much about table names ...
-  named_scope :grade_and_domain, lambda { |gs,domain_id|
+  #
+  # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
+  # Investigation.with_gse.grade('9-11') == good
+  # Investigation.grade('9-11') == bad
+  #
+  named_scope :with_gse, {
+    :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+  }
+  
+  named_scope :domain, lambda { |domain_id| 
     {
-      :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)",
-      :conditions =>[ 'knowledge_statements.domain_id = ? and grade_span_expectations.grade_span LIKE ?', domain_id, gs ]
+      :conditions =>[ 'knowledge_statements.domain_id = ?', domain_id]
+    }
+  }
+  
+  named_scope :grade, lambda { |gs|
+    gs = gs.size > 0 ? gs : "%"
+    {
+      :conditions =>[ 'grade_span_expectations.grade_span LIKE ?', gs ]
     }
   }
   
   named_scope :published, 
   {
     :conditions =>{:publication_status => "published"}
+  }
+
+  named_scope :like, lambda { |name|
+    name = "%#{name}%"
+    {
+     :conditions =>[ "investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
+    }
   }
 
   include Changeable
@@ -152,5 +173,32 @@ class Investigation < ActiveRecord::Base
     )
   end
   
+  def self.search_list(options)
+    grade_span = options[:grade_span] || ""
+    domain_id = options[:domain_id].to_i
+    name = options[:name]
+    if domain_id > 0
+      if (options[:include_drafts])
+        investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+      else
+        investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+      end
+    else
+      if (options[:include_drafts])
+        investigations = Investigation.like(name).with_gse.grade(grade_span)
+      else
+        investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+      end
+    end
+    portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+    if portal_clazz
+      investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
+    end
+    if options[:paginate]
+      investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+    else
+      investigations
+    end
+  end  
   
 end

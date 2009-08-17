@@ -58,20 +58,42 @@ class UsersController < ApplicationController
   
   # /users/1/switch
   def switch
+    # @original_user is setup in app/controllers/application_controller.rb
     unless @original_user.has_role?('admin', 'manager')
       redirect_to('/home')
     else
       if request.get?
         @user = User.find(params[:id])
-        all_users = User.find_all_by_state('active')
-        all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+        
+        all_users = User.active.find(:all)
         all_users.delete(current_user)
+        all_users.delete(User.anonymous)
+        all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+
         recent_users = []
         (session[:recently_switched_from_users]  || []).each do |user_id|
           recent_user = all_users.find { |u| u.id == user_id }
           recent_users << all_users.delete(recent_user) if recent_user
         end
-        @user_list = [ { :name => 'recent' , :users => recent_users }, { :name => 'all', :users => all_users } ]
+        
+        users = all_users.group_by do |u|
+          case
+          when u.default_user then :default_users
+          when u.email[/no-email/] then :no_email
+          else :email
+          end
+        end        
+        users[:no_email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        users[:email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+
+        @user_list = [ { :name => 'recent' , :users => recent_users },
+                       { :name => 'guest', :users => [User.anonymous] },
+                       { :name => 'regular', :users => users[:email] }, 
+                       { :name => 'students' , :users => users[:no_email] } 
+                     ]
+        unless users[:default_users].empty?
+          @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
+        end
       elsif request.put?
         if params[:commit] == "Switch"
           if switch_to_user = User.find(params[:user][:id])

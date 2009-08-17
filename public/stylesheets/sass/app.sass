@@ -67,7 +67,19 @@ fieldset
   ul
     :style horizontal
 
-
+pre
+  :overflow auto
+  :background-color #ffffe0
+  :border 1px solid
+  :margin 0.5em 0.5em 1em 0.5em
+  :padding 0.5em 1em 1em 1em
+  :font-family monospace
+  :font
+    :size 0.9em
+    :weight normal
+  :background-color #ffffe
+  :line-height 1.1em
+  
 .wrapper
   + page_white
   :-moz-border-radius .5em
@@ -229,7 +241,7 @@ ul.menu_h
     :display inline
     :list-style-type none
     :white-space nowrap
-    
+
 ul.menu
   :display inline
   :list-style-type none
@@ -528,33 +540,41 @@ input[type=password]
     :border-color= !dark_red
     
 .aligned
-  :margin 1em
-  :vertical-align top
   ol 
+    :margin 0px
+    :padding 0px
+  ul
     :margin 0px
     :padding 0px
   li
     :list-style none
     :padding 5px
     :margin 0px
-    :vertical-align top
 
     label
       :width 30%
       :display inline-block
       :clear none
       :font-weight bold
-      :vertical-align top
       :line-height 1.8em
+      
     label.right
       :text-align right
     input
       :margin 0px
+      
 .drop_target
   :min-height 400px !important
   :height 100%
   :min-width 50px
   :background-color #ead9c7
   :padding 5px
-
+.drop_target_selected
+  :background-color= !yellowish_color
+.progress_container
+  :background-color= !rieps_content_text_color
+  :display block
+  :overflow hidden
+  :height 2.5em
+  :width 100%
 

@@ -55,11 +55,13 @@ ActionController::Routing::Routes.draw do |map|
 # ----------------------------------------------
 
   map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :bundle_contents
     dataservice.resources :bundle_loggers do |bundle_logger|
       bundle_logger.resources :bundle_contents
     end
-    dataservice.resources :console_loggers do |bundle_logger|
-      bundle_logger.resources :console_contents
+    dataservice.resources :console_contents
+    dataservice.resources :console_loggers do |console_logger|
+      console_logger.resources :console_contents
     end
     
   end
@@ -203,10 +205,9 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post,
-    :list_filter => :post
+    :destroy => :post
   }
-
+  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   
   
