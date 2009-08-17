@@ -14,6 +14,11 @@ class User < ActiveRecord::Base
   has_many :drawing_tools
   has_many :mw_modeler_pages
   has_many :n_logo_models
+
+  named_scope :active, { :conditions => { :state => 'active' } }  
+  named_scope :no_email, { :conditions => "email LIKE 'no-email-%'" }
+  named_scope :email, { :conditions => "email NOT LIKE 'no-email-%'" }
+  named_scope :default, { :conditions => { :default_user => true } }
   
   # has_many :assessment_targets
   # has_many :big_ideas
@@ -32,6 +37,19 @@ class User < ActiveRecord::Base
   include Authorization::AasmRoles
   
   attr_accessor :skip_notifications
+
+  before_validation :strip_spaces
+  
+  # strip leading and trailing spaces from names, login and email
+  def strip_spaces  
+    # these are conditionalized because it is called before the validation
+    # so the validation will make sure they are setup correctly
+    self.first_name? && self.first_name.strip!
+    self.last_name? && self.last_name.strip!
+    self.login? && self.login.strip!
+    self.email? && self.email.strip!
+    self
+  end
 
   # Validations
   
@@ -121,8 +139,13 @@ class User < ActiveRecord::Base
   end
   
   def name
-    _fullname = "#{first_name} #{last_name}"
-    _fullname.strip != "" ? _fullname : login
+    _fullname = "#{first_name} #{last_name}".strip
+    _fullname.empty? ? login : _fullname
+  end
+
+  def name_and_login
+    _fullname = "#{first_name} #{last_name}".strip
+    _fullname.empty? ? login : "#{_fullname} (#{login})"
   end
 
   # Check if a user has a role.
@@ -182,7 +205,7 @@ class User < ActiveRecord::Base
   
   # class method for returning the anonymous user
   def self.anonymous
-    @@anonymous_user ||=  User.find_by_login('anonymous')
+    @@anonymous_user ||=  @@anonymous_user = User.find_by_login('anonymous')
   end
 
   # a bit of a silly method to help the code in lib/changeable.rb so
@@ -197,8 +220,4 @@ class User < ActiveRecord::Base
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
-end
-
-
-class User < ActiveRecord::Base
 end
