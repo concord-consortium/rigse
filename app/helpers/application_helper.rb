@@ -322,7 +322,7 @@ module ApplicationHelper
     else
       url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
     end
-    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :method => :delete, :title => "delete #{embeddable.class.display_name.downcase}"
+    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
   def link_to_container(container)
