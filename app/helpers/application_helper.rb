@@ -305,6 +305,34 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
+  def run_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("run.png",  url, 
+      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
+  def preview_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("preview.png",  url, 
+      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
+  def preview_link_for(component, as_name=nil,params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "preview #{component_display_name}"
+    if as_name
+      link_text << "as #{as_name}"
+    end
+    
+    url = polymorphic_url(component, :format => :jnlp, :params => params)
+    link_button("preview.png", url, 
+      :onclick => "show_alert($('launch_warning'),false);",
+      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
   def run_link_for(component, as_name=nil,params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -314,7 +342,7 @@ module ApplicationHelper
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    link_to(link_text, url, 
+    link_button("run.png", url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
@@ -340,8 +368,8 @@ module ApplicationHelper
     remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
-  def link_to_container(container)
-    link_to name_for_component(container), container, :class => 'container_link'
+  def link_to_container(container, options={})
+    link_to name_for_component(container, options), container, :class => 'container_link'
   end
   
   def title_for_component(component, options={})
