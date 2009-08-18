@@ -7,8 +7,12 @@ class Portal::Teacher < ActiveRecord::Base
   
   # because of has many polymorphs, we SHOULDN't need the following relationships defined, but
   # HACK: noah went ahead, and explicitly defined them, because it wasn't working.
-  has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
-  has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
+  #
+  # And now (20090813) it appears to be working so I've commented it out.
+  # It's presence was generating duplicate school_membership models when a Teacher registered.
+  #
+  # has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
+  # has_many :schools, :through => :school_memberships, :class_name => "Portal::School", :uniq => true
   
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
   has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
