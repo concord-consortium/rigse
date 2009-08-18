@@ -78,9 +78,13 @@ class Admin::Project < ActiveRecord::Base
     def default_project_name_url
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
-    
+
     def display_name
       "Project"
+    end
+    
+    def summary_info
+      default_project.summary_info
     end
     
     def create_or_update__default_project_from_settings_yml
@@ -129,5 +133,29 @@ class Admin::Project < ActiveRecord::Base
     default_name, default_url = Admin::Project.default_project_name_url
     self.name == default_name && self.url == default_url
   end
+  
+  def summary_info
+    puts <<HEREDOC
+
+Portal::District: #{Portal::District.count}
+Portal::School:   #{Portal::School.count}
+Portal::Course:   #{Portal::Course.count}
+Portal::Clazz:    #{Portal::Clazz.count}
+Portal::Teacher:  #{Portal::Teacher.count}
+
+Portal::Student:  #{Portal::Student.count}
+Portal::Offering: #{Portal::Offering.count}
+Portal::Learner:  #{Portal::Learner.count}
+
+Dataservice::BundleLogger:  #{Dataservice::BundleLogger.count}
+Dataservice::BundleContent: #{Dataservice::BundleContent.count}
+
+# code template for use in script/console
+
+ut = User.find_by_login('teacher'); us = User.find_by_login('student')
+t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
+
+HEREDOC
     
+  end 
 end
