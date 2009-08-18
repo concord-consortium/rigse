@@ -64,7 +64,6 @@ class UsersController < ApplicationController
     else
       if request.get?
         @user = User.find(params[:id])
-        
         all_users = User.active.find(:all)
         all_users.delete(current_user)
         all_users.delete(User.anonymous)
