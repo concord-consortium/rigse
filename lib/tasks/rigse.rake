@@ -351,6 +351,9 @@ HEREDOC
     desc "Create default users and roles and portal resources"
     task :default_users_roles_and_portal_resources => :environment do
 
+      # some constants that should probably be moved to settings.yml
+      DEFAULT_CLASS_NAME = 'Fun with Investigations'
+      
       puts <<HEREDOC
 
 This task creates six roles (if they dont already exist):
@@ -382,11 +385,13 @@ You can edit the default settings for all of these users.
 
 It also creates one published Investigation owned by the Author user.
 
-It also create a default School District :#{APP_CONFIG[:site_district]}.
-and a default School in that district: #{APP_CONFIG[:site_school]}.
+It also create a default School District: '#{APP_CONFIG[:site_district]}'.
+and a default School in that district: '#{APP_CONFIG[:site_school]}'.
 
 The default Teacher user will be a Teacher in the school: #{APP_CONFIG[:site_school]} and
-will be teaching a course named 'default course' and a class in that course named 'default class'
+will be teaching a course named 'Fun with Investigations' and a class in that course named '#{DEFAULT_CLASS_NAME}'
+
+A student named: 'Student User' will be created and will be a learner in the default class: '#{DEFAULT_CLASS_NAME}'.
 
 First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
 HEREDOC
@@ -509,26 +514,21 @@ HEREDOC
       
       default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
 
-      # make sure that corresponding SdsUsers exist for all the default users
-      default_user_list.each { |user| user.create_sds_counterpart }
-
       grade_levels_in_order = [
-        grade_level_6  = Portal::GradeLevel.find_or_create_by_name(:name => '6',  :description => '9th grade'),
-        grade_level_7  = Portal::GradeLevel.find_or_create_by_name(:name => '7',  :description => '9th grade'),
-        grade_level_8  = Portal::GradeLevel.find_or_create_by_name(:name => '8',  :description => '9th grade'),
+        grade_level_6  = Portal::GradeLevel.find_or_create_by_name(:name => '6',  :description => '6th grade'),
+        grade_level_7  = Portal::GradeLevel.find_or_create_by_name(:name => '7',  :description => '7th grade'),
+        grade_level_8  = Portal::GradeLevel.find_or_create_by_name(:name => '8',  :description => '8th grade'),
         grade_level_9  = Portal::GradeLevel.find_or_create_by_name(:name => '9',  :description => '9th grade'),
-        grade_level_10 = Portal::GradeLevel.find_or_create_by_name(:name => '10', :description => '9th grade'),
-        grade_level_11 = Portal::GradeLevel.find_or_create_by_name(:name => '11', :description => '9th grade'),
-        grade_level_12 = Portal::GradeLevel.find_or_create_by_name(:name => '12', :description => '9th grade')
+        grade_level_10 = Portal::GradeLevel.find_or_create_by_name(:name => '10', :description => '10th grade'),
+        grade_level_11 = Portal::GradeLevel.find_or_create_by_name(:name => '11', :description => '11th grade'),
+        grade_level_12 = Portal::GradeLevel.find_or_create_by_name(:name => '12', :description => '12th grade')
       ]
 
       # to make sure the list is ordered correctly in case a new grade level is added
       # grade_levels_in_order.each_with_index do |grade_level, i|
       #   grade_level.insert_at(i)
       # end
-      
 
-      
       # make a default district and school
       site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
       site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
@@ -552,7 +552,9 @@ HEREDOC
       end
       
       # default course
-      site_school_default_course = Portal::Course.find_or_create_by_name_and_school_id('default course', site_school.id)
+      # This model is currently underdeveloped and not implemented into the app properly 
+      # Use the default class name for now
+      site_school_default_course = Portal::Course.find_or_create_by_name_and_school_id(DEFAULT_CLASS_NAME, site_school.id)
       site_school_default_course.grade_levels << ninth_grade
       
       # default_school_teacher = teacher_user.portal_teacher.find_or_create_by_school_id(site_school.id)
@@ -566,7 +568,7 @@ HEREDOC
 
       # default class
       attributes = {
-        :name => 'Fun with Investigations',
+        :name => DEFAULT_CLASS_NAME,
         :course_id => site_school_default_course.id,
         :semester_id => site_school_fall_semester.id,
         :teacher_id => default_school_teacher.id,
@@ -602,11 +604,35 @@ HEREDOC
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
       site_school.members << default_student
+      #
       # default_student = student_user.student || student_user.student.create!
       # 
-      offering.find_or_create_learner(default_student)
-      
-      puts
+      # To make a new learner you need an existing student and offering -- presumably
+      # an offering that the student is not already a learner in.
+      #
+      # >> u = User.find_by_login('student'); s = u.portal_student; o = Portal::Offering.find(:first)
+      # => #<Portal::Offering id: 51, uuid: "5158a04a-888a-11de-8336-001ff3caa767", status: "active", clazz_id: 7, runnable_id: 510, runnable_type: "Investigation", created_at: "2009-08-14 04:24:12", updated_at: "2009-08-14 04:24:12">
+      # >> a = { :student_id => s.id, :offering_id => o.id }; default_learner = Portal::Learner.find(:first, :conditions => a)
+      # => nil
+      # >> l = o.learners.create(:student => s)
+      # => #<Portal::Learner id: 238, uuid: "fc3a0a62-88df-11de-872e-001ff3caa767", student_id: 1, offering_id: 51, created_at: "2009-08-14 14:37:26", updated_at: "2009-08-14 14:37:26", bundle_logger_id: nil, console_logger_id: nil>
+      #
+      # When moving from older versions of learner objects (before 20090814)
+      # to newer ones check whether the learner has defined valid_loggers?
+      # and if not, use the instance method Learner#create_new_loggers to create
+      # them
+      #
+      attributes = {
+        :student_id => default_student.id,
+        :offering_id => offering.id
+      }
+      if default_learner = Portal::Learner.find(:first, :conditions => attributes)
+        unless default_learner.valid_loggers?
+          default_learner.create_new_loggers
+        end
+      else
+        offering.learners.create(:student => default_student)
+      end
     end
 
 
