@@ -12,6 +12,14 @@ development: &non_production_settings
   states_and_provinces:
     - RI
     - MA
+  active_grades:
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   default_jnlp_version: snapshot
@@ -36,8 +44,16 @@ staging:
   admin_last_name: Bannasch
   enable_default_users: true
   states_and_provinces:
-    - RI
-    - MA
+  - RI
+  - MA
+  active_grades:
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   default_jnlp_version: 0.1.0-20090724.190238
@@ -59,8 +75,16 @@ production:
   admin_last_name: Bannasch
   enable_default_users: false
   states_and_provinces:
-    - RI
-    - MA
+  - RI
+  - MA
+  active_grades:
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   default_jnlp_version: 0.1.0-20090724.190238

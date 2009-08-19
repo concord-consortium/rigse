@@ -125,6 +125,15 @@ class Admin::Project < ActiveRecord::Base
       project.jnlp_version_str = jnlp_version_str
       project.snapshot_enabled = snapshot_enabled
       project.save!
+      active_grades = APP_CONFIG[:active_grades]
+      Portal::Grade.find(:all).each do |grade|
+        if (active_grades & [grade.name.to_i]).empty?
+          grade.active = false
+        else
+          grade.active = true
+        end
+        grade.save!
+      end
       project
     end
   end
