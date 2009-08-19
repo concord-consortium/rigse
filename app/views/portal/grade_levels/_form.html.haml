@@ -1,0 +1,23 @@
+.item
+  = edit_menu_for(portal_grade_level, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Has grade levels:
+
+          - if portal_grade_level.has_grade_levels && (portal_grade_level.has_grade_levels.respond_to? :name)
+            =h(portal_grade_level.has_grade_levels.name)
+    
+        %li
+          Has grade levels type:
+
+          =f.text_field :has_grade_levels_type 
+    
+        %li
+          Grade:
+
+          - if portal_grade_level.grade && (portal_grade_level.grade.respond_to? :name)
+            =h(portal_grade_level.grade.name)
+    
+    

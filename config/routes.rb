@@ -12,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
       
     portal.resources :courses
     portal.resources :districts
+    portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners
     portal.resources :offerings

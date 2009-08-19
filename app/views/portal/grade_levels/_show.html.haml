@@ -1,0 +1,29 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(portal_grade_level), :class => "container_element" }
+  = show_menu_for(portal_grade_level, options)
+
+  %div{:id => dom_id_for(portal_grade_level, :item), :class => 'item'}
+    %div{:id => dom_id_for(portal_grade_level, :details), :class => 'content'}
+      = wrap_edit_link_around_content(portal_grade_level, options={:complete => mce_init_string}) do
+        %h4= h(portal_grade_level.name)
+        %p
+          %ul.menu_v
+            %li
+              Has grade levels:
+              - if portal_grade_level.has_grade_levels_id && (portal_grade_level.has_grade_levels_id.respond_to? :name)
+                =h(portal_grade_level.has_grade_levels_id.name)
+              - else
+                'no related resource'
+    
+            %li
+              Has grade levels type:
+              =h(portal_grade_level.has_grade_levels_type)
+    
+            %li
+              Grade:
+              - if portal_grade_level.grade_id && (portal_grade_level.grade_id.respond_to? :name)
+                =h(portal_grade_level.grade_id.name)
+              - else
+                'no related resource'
+    
+    
