@@ -321,7 +321,7 @@ module ApplicationHelper
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def preview_link_for(component, as_name=nil,params={})
+  def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "preview #{component_display_name}"
@@ -332,10 +332,14 @@ module ApplicationHelper
     url = polymorphic_url(component, :format => :jnlp, :params => params)
     link_button("preview.png", url, 
       :onclick => "show_alert($('launch_warning'),false);",
+      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.") + 
+    link_to(link_text, url, 
+      :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  
   end
 
-  def run_link_for(component, as_name=nil,params={})
+  def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "preview #{component_display_name}"
@@ -515,7 +519,7 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    link_to image_tag(image, :alt=>options[:title]),url,options
+    link_to image_tag(image, :alt=>options[:title]), url, options
   end
   
   def remote_link_button(image,options={})
@@ -667,4 +671,8 @@ module ApplicationHelper
     Investigation.search_list(options)
   end
   
+  def students_in_class(all_students)
+    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+  end
+
 end
