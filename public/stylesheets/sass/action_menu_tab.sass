@@ -41,25 +41,25 @@
   :width 18px
   :overflow hidden
   :border none
-  
+
+
 a.rollover a.rollover:visited a.rollover:active
   :padding 0px
   :margin 0px
   :margin-right 1em
   :display block
-  :clear none
-  :float left
   :height 18px
   :width 18px
   :overflow hidden
   :border none
-  
+
+
 a.rollover:hover 
   :display block
   :text-indent -18px
   :background-color inherit !important
 
-      
+    
 .action_menu
   :font-size 11px
   :margin 0px
@@ -93,7 +93,11 @@ a.rollover:hover
         a, a:visited, a:active
           :border-bottom-width 2px
           :border-style solid
-          
+        a.rollover
+          :border-style none
+          img
+            :border-style none
+
   .action_menu_left
     :float left
     :display table-cell

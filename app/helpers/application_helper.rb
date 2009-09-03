@@ -326,17 +326,17 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "preview #{component_display_name}"
     if as_name
-      link_text << "as #{as_name}"
+      link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    link_button("preview.png", url, 
+    button = link_button("preview.png", url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.") + 
-    link_to(link_text, url, 
+    text = link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
-  
+    "#{button} #{text}"
   end
 
   def run_link_for(component, as_name=nil, params={})
@@ -344,13 +344,15 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "preview #{component_display_name}"
     if as_name
-      link_text << "as #{as_name}"
+      link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    link_button("run.png", url, 
+    button = link_button("run.png", url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+    text = link_to link_text,url
+    "#{button} #{text}"
   end
 
   def otml_link_for(component, params={})
@@ -519,7 +521,7 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    link_to image_tag(image, :alt=>options[:title]), url, options
+    link_to image_tag(image, :alt=>options[:title]) , url, options
   end
   
   def remote_link_button(image,options={})
