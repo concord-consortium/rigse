@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090812005333) do
+ActiveRecord::Schema.define(:version => 20090819034711) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -791,18 +791,29 @@ ActiveRecord::Schema.define(:version => 20090812005333) do
   end
 
   create_table "portal_grade_levels", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",                  :limit => 36
     t.string   "name"
     t.text     "description"
-    t.integer  "order"
-    t.integer  "school_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "has_grade_levels_id"
+    t.string   "has_grade_levels_type"
+    t.integer  "grade_id"
   end
 
   create_table "portal_grade_levels_teachers", :id => false, :force => true do |t|
     t.integer  "grade_level_id"
     t.integer  "teacher_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "portal_grades", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "position"
+    t.string   "uuid"
+    t.boolean  "active",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -816,6 +827,10 @@ ActiveRecord::Schema.define(:version => 20090812005333) do
     t.integer  "bundle_logger_id"
     t.integer  "console_logger_id"
   end
+
+  add_index "portal_learners", ["bundle_logger_id"], :name => "index_portal_learners_on_bundle_logger_id"
+  add_index "portal_learners", ["console_logger_id"], :name => "index_portal_learners_on_console_logger_id"
+  add_index "portal_learners", ["offering_id"], :name => "index_portal_learners_on_offering_id"
 
   create_table "portal_nces06_districts", :force => true do |t|
     t.string  "LEAID",  :limit => 7
@@ -1577,6 +1592,7 @@ ActiveRecord::Schema.define(:version => 20090812005333) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "domain_id"
   end
 
   create_table "probe_types", :force => true do |t|
