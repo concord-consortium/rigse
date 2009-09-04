@@ -22,7 +22,7 @@
   :margin 0px
   :padding 0px
   :width 100%
-  
+
   .page_content
     :display block
     :width 70%
@@ -30,15 +30,14 @@
     :margin 1em
 
     .item
-
       :display block
       :float left
       :width 100%
       :clear both
       :margin 2em
-
+      :page-break-inside avoid
+    
     .data_collector
-
       :display block
       :float left
       :clear both
@@ -58,8 +57,10 @@
         :font
           :size .9em
   
+img
+  :float left
+  :margin 1em
   
-
 input
   :border dotted  
   :border-width 1px
@@ -68,5 +69,6 @@ input[type=text]
   :padding-left 10px
   :padding-right 10px
   :margin-left 2em
+  :min-height 150px
   
 
