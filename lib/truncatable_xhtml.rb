@@ -65,4 +65,76 @@ module TruncatableXhtml
     afterword << ' ...' if afterpart.length > afterword.length
     firstpart << afterword
   end
+  
+  ##
+  ## Two good places to look for XhtmlContent
+  ##
+  DEFAULT_TABLES = [
+    "content",
+    "prompt"
+  ]
+  DEFAULT_REPLACEABLES=  [
+    /\s+style\s?=\s?"(.*?)"/,
+    /&nbsp;/
+  ]
+  
+  ##
+  ## These methods are added to the class when 
+  ## this module is included:
+  ##
+  module ClassMethods
+    ## has_html_tables (you can specify table names that have html content)
+    ##  @param table_anames = names of attributes that might have html content.
+    ##  @ param replaceables = patterns we want to exlude from the sanitized output.
+    def has_html_tables(table_names = DEFAULT_TABLES,replaceables = DEFAULT_REPLACEABLES)
+      define_method("html_tables") do
+        table_names
+      end
+      define_method("html_replacements") do
+        replaceables
+      end
+    end
+  end
+  
+  
+  ##
+  ## Called when a class extends this module:
+  ##
+  def self.included(clazz)
+    clazz.extend(ClassMethods)
+    clazz.has_html_tables
+    
+    ## add before_save hooks
+    clazz.class_eval {
+      alias old_before_save before_save
+      def before_save
+        self.old_before_save
+        if (self.respond_to? 'name')
+          self.html_tables.each do |tablename|
+            if self.respond_to? tablename
+              truncated_xhtml = truncate_from_xhtml(self.send tablename)
+              self.name = truncated_xhtml unless truncated_xhtml.empty?
+            end
+          end
+        end
+        self.replace_offensive_html
+      end
+    }
+  end
+  
+  ##
+  ## remove any HTML patterns that we don't want.
+  ##
+  def replace_offensive_html
+    puts "calling replace_offensive_html"
+    html_tables.each do |tablename|
+      if self.respond_to? tablename
+        html_replacements.each do |replace_me|
+          self.send("#{tablename}=",(self.send tablename).gsub(replace_me,""))
+        end
+      end
+    end
+    self
+  end
+  
 end
