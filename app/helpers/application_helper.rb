@@ -330,13 +330,13 @@ module ApplicationHelper
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    button = link_button("preview.png", url, 
+    link_button("preview.png", url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.") + 
-    text = link_to(link_text, url, 
+    link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
-    "#{button} #{text}"
+
   end
 
   def run_link_for(component, as_name=nil, params={})
@@ -355,6 +355,16 @@ module ApplicationHelper
     "#{button} #{text}"
   end
 
+  def print_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "print #{component_display_name}"
+    params.merge!({:print => true})
+    url = polymorphic_url(component,:params => params)
+    button = link_button("print.png", url, 
+      :title => "print the #{component_display_name}: '#{name}'");
+  end
+  
   def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
