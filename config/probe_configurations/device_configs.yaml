@@ -69,3 +69,38 @@
   config_string: _auto_
   user_id: 5
   created_at: 2009-05-15 13:18:53 Z
+- vendor_interface_id: 10
+  uuid: e26884a4-93fe-11de-9836-001ff3caa767
+  id: 11
+  config_string: none
+  user_id: 5
+  created_at: 2009-08-28 19:11:44 Z
+  updated_at: 2009-08-28 19:11:44 Z
+- vendor_interface_id: 11
+  uuid: e26893ea-93fe-11de-9836-001ff3caa767
+  id: 12
+  config_string: none
+  user_id: 5
+  created_at: 2009-08-28 19:11:44 Z
+  updated_at: 2009-08-28 19:11:44 Z
+- vendor_interface_id: 12
+  uuid: e268a1dc-93fe-11de-9836-001ff3caa767
+  id: 13
+  config_string: none
+  user_id: 5
+  created_at: 2009-08-28 19:11:44 Z
+  updated_at: 2009-08-28 19:11:44 Z
+- vendor_interface_id: 13
+  uuid: e268aede-93fe-11de-9836-001ff3caa767
+  id: 14
+  config_string: none
+  user_id: 5
+  created_at: 2009-08-28 19:11:44 Z
+  updated_at: 2009-08-28 19:11:44 Z
+- vendor_interface_id: 14
+  uuid: e268bf3c-93fe-11de-9836-001ff3caa767
+  id: 15
+  config_string: none
+  user_id: 5
+  created_at: 2009-08-28 19:11:44 Z
+  updated_at: 2009-08-28 19:11:44 Z
