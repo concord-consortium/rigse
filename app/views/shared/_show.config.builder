@@ -1,4 +1,18 @@
-xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") { 
+xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
+  xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {
+    xml.void("property" => "cookieProperties") {
+      xml.object("class" => "java.util.Properties") {
+        xml.void("method" => "setProperty") {
+          xml.string("*.concord.org")
+          xml.string("fake_session_key")
+        }
+        xml.void("method" => "setProperty") {
+          xml.string("*")
+          xml.string("another_fake_session_key")
+        }
+      }
+    }
+  }
   xml.object(:class => "net.sf.sail.emf.launch.ConsoleLogServiceImpl") { 
   }
   xml.object(:class => "org.telscenter.sailotrunk.OtmlUrlCurnitProvider") { 
