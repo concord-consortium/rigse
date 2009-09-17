@@ -51,3 +51,6 @@ public/investigations
 public/page_cache
 config/settings-backup.yml
 doc/guides
+public/stylesheets/itsi.css
+public/stylesheets/itsi_colors.css
+public/stylesheets/itsi_fonts.css
