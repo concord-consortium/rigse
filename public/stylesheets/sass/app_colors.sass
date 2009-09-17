@@ -1,34 +1,30 @@
-// RIPES colors
-!blue_gray = #9DB3C1
-!rieps_body_background = !blue_gray
-!very_dark_blue = #00233A
-!rieps_brown = #A86922
-!rieps_logo_background = !rieps_brown
-
-!dark_blue_gray = #4F758D
-!rieps_content_header_text_color = !dark_blue_gray
-
+!itsi_green = #004A16
+!itsi_light_green = #E0EDE3
+!itsi_brown = #6A0E04
+!light_green = !itsi_light_green
 !almost_white = #F2F8FC
-!light_blue = #BCD6EA
-!rieps_content_text_color = !light_blue
-
-!dev_note_color = #808080
-!legend_color = !dark_blue_gray
-
-!very_dark = #202E37
-!dark_red = #9B3243
-!rieps_footer_link = !dark_red
-
-!light_brown = #dcbc96
-
 !container_box_color = #CBE1F2
 !container_box_hover_color = #BCD6EA
-
 !lightish_blue  = #d1e5f2
-!text_input_color = !lightish_blue 
 !teacher_only_color = #eedddd 
-
 !yellowish_color = #ffffa0
+
+!itsi_body_background = !itsi_light_green
+!itsi_logo_background = !itsi_brown
+!itsi_content_header_text_color = !itsi_brown
+!itsi_content_text_color = !itsi_light_green
+
+!dev_note_color =!itsi_brown
+!legend_color = !itsi_brown
+!dark_red = !itsi_brown
+!very_dark = !itsi_brown
+
+!itsi_footer_link = !dark_red
+
+!text_input_color = !itsi_light_green 
+!input_border_color = !itsi_brown
+!input_color = !itsi_light_green
+!input_focus_color = !input_color
 
 =delete_links
   a.delete:link 
@@ -59,18 +55,17 @@
     :color= !bg
     :background-color = !fg
         
-=page_white
-  +color_mixer(!rieps_brown,white)
-  +delete_links
+
 
 =left_nav_colors
-  +color_mixer(!rieps_brown,!rieps_content_text_color)
+  +color_mixer(!itsi_brown,white)
   +delete_links
 
 =content_area_colors
-  +color_mixer(!very_dark_blue,!almost_white)
+  +color_mixer(!itsi_brown,white)
   +delete_links
-    
+
 =top_and_bottom_nav_colors
-  +color_mixer(!rieps_content_text_color,!very_dark_blue)
+  +color_mixer(!itsi_brown,!itsi_light_green)
   +delete_links
+
