@@ -1,8 +1,9 @@
 - content_for :top_menu_items do
   - add_top_menu_item(link_to('Investigations', investigations_path))
 
-- field_set_tag "You're not logged in!" do
-  %p= render :partial => 'sessions/new'
+.padded_content
+  You are not logged in:
+  =render :partial => 'sessions/new'
     
-- render_project_info
-= yield :project_info
+  - render_project_info
+  = yield :project_info
