@@ -7,6 +7,8 @@
 @import notes.sass
 @import drop_down.sass
 @import data_table.sass
+
+
 p
   :margin 1em 0em
 
@@ -24,40 +26,35 @@ body
   
   +main_font
   :background
-    :image url(/images/rites-bg.jpg) 
-    :repeat repeat
+    :color = !itsi_brown
   :margin 10px 
     :bottom 0px
 
 h1,h2,h3,h4,h5
   :padding-top 0.5em
-
+  :font-weight bold
 h2,h3,h4,h5
   :padding-bottom 0.25em
 
 h1 
-  :letter-spacing .15em
+  :letter-spacing 110%
   :font 
     :size 2.5em
-    :weight normal
 
 h2
   :letter-spacing .15em
   :font
     :size 1.5em
-    :weight normal
 
 h3
   :letter-spacing .15em
   :font
     :size 1.3em
-    :weight normal
 
 h4
   :padding-left 10px
   :font
     :size 1.3em
-    :weight normal
 
 fieldset
   :background-color white
@@ -81,7 +78,8 @@ pre
   :line-height 1.1em
   
 .wrapper
-  + page_white
+  :border 2px solid
+  :background-color white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
   
@@ -94,30 +92,31 @@ pre
   +column(24,true)
   :padding 0px
   :margin 0px
-  :background-color = !rieps_brown
-  :background
-    :image url(/images/header-bg2.jpg) 
-    :repeat repeat-x
-  :color = !very_dark_blue
+  :height auto
+  :background-color white
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
+  :color = !itsi_brown
   a
-    :color = !very_dark_blue
+    :color = !itsi_green
     :background-color transparent
     :font-weight bold
   a:hover
-    :color = !rieps_brown
+    :color = !itsi_brown
     :background-color white
   .left_content
     +column(24,true)
-    :float left
     :text-align left
+    :float none
+    :clear none
+    img
+      :float left
+      :clear none
 
   .right_content
     +column(24,true)
-    :float right
     :text-align right
     
 .nav_menu
@@ -313,7 +312,7 @@ ul.menu
     :border
       :width 2px
       :style solid
-      :color= !light_brown
+      :color= !light_green
       :opacity 0.7
   &.item_selectable
     :border
@@ -325,7 +324,7 @@ ul.menu
       :border
         :width 2px
         :style dotted
-        :color= !light_brown
+        :color= !light_green
   
 .mceContentBody
   :font-size 0.8em
@@ -356,6 +355,22 @@ ul.menu
     :color inherit
     :background-color transparent
 
+.legal
+  :font-size 0.5em
+  :line-height 0.5em
+  :white-space normal
+  :text-align center
+  :color = !itsi_brown
+  :border
+    :width 0px
+    :style solid
+  :background-color white
+  a
+    :background-color transparent
+  a:hover
+    :color inherit
+    :background-color transparent
+  
 .padded_content
   :margin 0px 5px
   :float left
@@ -452,7 +467,7 @@ li.tiny
   :font-size 24pt
   :opacity 0.9
   :color= !almost_white
-  :background-color= !very_dark_blue
+  :background-color= !very_dark
   :z-index 400
     
 .flash
@@ -510,32 +525,32 @@ dd
 
 input
   +main_font
-  :color= !very_dark_blue
+  :color= !very_dark
   :padding 0.2em
 
   
 input[type=text]
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !text_input_color
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
 textarea
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !text_input_color
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
 
 input[type=password]
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !blue_gray
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
     
 .fieldWithErrors
   input
@@ -574,7 +589,7 @@ input[type=password]
 .drop_target_selected
   :background-color= !yellowish_color
 .progress_container
-  :background-color= !rieps_content_text_color
+  :background-color= !itsi_content_text_color
   :display block
   :overflow hidden
   :height 2.5em
