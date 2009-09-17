@@ -1,8 +1,8 @@
 #teacher_bottom {
   font-size: 12px;
-  font-family: verdana, optima, helvetica, arial, sans-serif;
-  color: #bcd6ea;
-  background-color: #00233a;
+  font-family: "Trebuchet MS",verdana,sans-serif;
+  color: #6a0e04;
+  background-color: #e0ede3;
   z-index: 10;
   display: block;
   width: 100%;
@@ -20,31 +20,31 @@
     text-decoration: none;
     background-color: transparent; }
   #teacher_bottom a:link {
-    color: #bcd6ea; }
+    color: #6a0e04; }
   #teacher_bottom a:visited {
-    color: #bcd6ea; }
+    color: #6a0e04; }
   #teacher_bottom a:active {
-    color: #bcd6ea; }
+    color: #6a0e04; }
   #teacher_bottom a:hover {
-    color: #00233a;
-    background-color: #bcd6ea; }
+    color: #e0ede3;
+    background-color: #6a0e04; }
   #teacher_bottom a.delete:link {
-    color: #9b3243; }
+    color: #6a0e04; }
   #teacher_bottom a.delete:active {
-    color: #9b3243; }
+    color: #6a0e04; }
   #teacher_bottom a.delete:visited {
-    color: #9b3243; }
+    color: #6a0e04; }
   #teacher_bottom a.delete:hover {
     color: white;
-    background-color: #9b3243; }
+    background-color: #6a0e04; }
 
 #some_data {
   z-index: 20;
   font-size: 9pt;
   margin: 1em;
   padding: 1em;
-  color: #00233a;
-  background-color: #f2f8fc;
+  color: #6a0e04;
+  background-color: white;
   opacity: 1.0;
   moz-opacity: 1.0;
   text-align: left;
@@ -61,20 +61,20 @@
     text-decoration: none;
     background-color: transparent; }
   #some_data a:link {
-    color: #00233a; }
+    color: #6a0e04; }
   #some_data a:visited {
-    color: #00233a; }
+    color: #6a0e04; }
   #some_data a:active {
-    color: #00233a; }
+    color: #6a0e04; }
   #some_data a:hover {
-    color: #f2f8fc;
-    background-color: #00233a; }
+    color: white;
+    background-color: #6a0e04; }
   #some_data a.delete:link {
-    color: #9b3243; }
+    color: #6a0e04; }
   #some_data a.delete:active {
-    color: #9b3243; }
+    color: #6a0e04; }
   #some_data a.delete:visited {
-    color: #9b3243; }
+    color: #6a0e04; }
   #some_data a.delete:hover {
     color: white;
-    background-color: #9b3243; }
+    background-color: #6a0e04; }
