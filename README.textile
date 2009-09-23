@@ -29,12 +29,24 @@ server and a mysql username/password with enough permissions to create and drop 
     jruby -S rake gems:install
 
     # setup database and application settings
-    jruby -S rake rigse:setup:new_rigse_from_scratch
+    RAILS_ENV=production jruby -S rake rigse:setup:new_rigse_from_scratch
 
     # start server
     jruby script/server
   </code>
 </pre>
+
+
+h3. Here are some bugs with setup from scratch:
+
+Setup from scatch no longer works. Here are some things that need to be fixed before the setup task can be run:
+# Admin::Project.create_or_update__default_project_from_settings_yml is run in rites.rb (a rails iniitializer) it fails. (commented out)
+# in data_collector.rb DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance') must be commented out before migrations are run.
+# rigse:setup:assign_vernier_golink_to_users task no longer exists (it is called from rigse:setup:new_rigse_from_scratch ) (commented out)
+# ActiveRecord::ActiveRecordError: Unknown column 'portal_students.grade_id' in 'where clause': SELECT * FROM `portal_students` ...
+# ( :grade_level_id => grade_9.id in default_users_roles_and_portal_resources.rake)
+# NPE in NoMethodError nil.maven_jnlp_server in app/models/jnlp_adaptor.rb:6:in `initialize' (because dev database was not created when following above instructions)
+# NOTE: the tasks in
 
 _there's a bunch more that needs to go here_
 
