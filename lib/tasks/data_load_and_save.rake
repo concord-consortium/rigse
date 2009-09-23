@@ -1,16 +1,45 @@
 #
 # adapted from:
 #   http://www.samsaffron.com/archive/2008/02/02/Redo+your+migrations+in+Rails+and+keep+your+data
+# NOTE: 09-26-2009 knowuh: these migrations do not seem  to work with models which have our scoped name-spaces.
+#
+
+@dbconfig = YAML::load(File.open('config/database.yml')) 
+
+def username(enviro)
+  @dbconfig[enviro]["username"]
+end
+
+def password(enviro)
+  @dbconfig[enviro]["password"]
+end
+
+def database(enviro)
+  @dbconfig[enviro]["database"]
+end
+
+# something like this will ONLY WORKO ON MYSQL!
+def clone_production
+  %w|test development|.each do |enviro|
+    puts "trying with environment #{enviro}"
+    %x[ mysqldump --add-drop-table -u #{username(enviro)} -p#{password(enviro)}  #{database(enviro)} | mysql -u #{username('production')} -p#{password('production')} #{database('production')}  ]
+  end
+end
 
 def interesting_tables
   tables = ActiveRecord::Base.connection.tables.sort
   tables.reject! do |tbl|
-    %w{schema_migrations sessions roles_users}.include?(tbl)
+    %w{schema_migrations sessions roles_users admin_projects}.include?(tbl)
   end
   tables
 end
 
 namespace :db do
+  desc "clone the production db to development and testing (MYSQL ONLY!)"
+  task :clone do
+    clone_production
+  end
+  
   namespace :backup do
 
     desc "Reload the database and rerun migrations" 
