@@ -275,7 +275,7 @@ HEREDOC
       # default student
       attributes = {
         :user_id => student_user.id,
-        :grade_id => grade_9.id
+        :grade_level_id => grade_9.id
       }
       unless default_student = Portal::Student.find(:first, :conditions => attributes)
         default_student = Portal::Student.create!(attributes)
