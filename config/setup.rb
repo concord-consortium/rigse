@@ -3,6 +3,8 @@ require 'fileutils'
 require 'yaml'
 require 'erb'
 
+# should be run from the projects rails root.
+# Update: this doesn't seem to be working anymore..
 APPLICATION = "'RITES Investigations'"
 puts "\nInitial setup of #{APPLICATION} Rails application ...\n"
 
@@ -35,6 +37,7 @@ end
 
 @db_config_path = rails_file_path(%w{config database.yml})
 @settings_config_path = rails_file_path(%w{config settings.yml})
+@sds_config_path = rails_file_path(%w{config sds.yml})
 @mailer_config_path = rails_file_path(%w{config mailer.yml})
 
 @new_database_yml_created = false
@@ -135,6 +138,23 @@ HEREDOC
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
 end
 
+
+
+
+def create_new_sds_yml
+  sample_path = rails_file_path(%w{config sds.sample.yml})
+  @sds_config = YAML::load(IO.read(sample_path))
+  puts <<HEREDOC
+
+       creating: #{@sds_config_path}
+  from template: #{sample_path}
+
+HEREDOC
+  File.open(@sds_config_path, 'w') {|f| f.write @sds_config.to_yaml }
+end
+
+
+
 def create_new_mailer_yml
   sample_path = rails_file_path(%w{config mailer.sample.yml})
   @mailer_config = YAML::load(IO.read(sample_path))
@@ -167,6 +187,8 @@ HEREDOC
   end
 end
 
+
+
 #
 # check for config/database.yml
 #
@@ -196,9 +218,28 @@ def check_for_config_settings_yml
 
 HEREDOC
     create_new_settings_yml
+    @new_settings_yml_created = true
+  end
+end
+
+
+
+#
+# check for config/sds.yml
+#
+def check_for_config_sds_yml
+  unless File.exists?(@sds_config_path)
+    puts <<HEREDOC
+
+  The SDS settings file #{@sds_config_path} does not yet exist.
+
+HEREDOC
+    create_new_sds_yml
     @new_sds_yml_created = true
   end
 end
+
+
 
 #
 # check for config/mailer.yml
@@ -565,7 +606,7 @@ check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-update_config_sds_yml
+# update_config_sds_yml
 update_config_mailer_yml
 
 puts <<HEREDOC
