@@ -125,7 +125,7 @@ class DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
-  DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
+  # DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
   
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
@@ -145,7 +145,7 @@ class DataCollector < ActiveRecord::Base
                  :single_value                =>  false
 
 
-  default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  # default_value_for :probe_type, DISTANCE_PROBE_TYPE
   
   send_update_events_to :investigations
 
