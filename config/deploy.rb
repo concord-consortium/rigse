@@ -7,8 +7,8 @@ require 'capistrano/ext/multistage'
 #  Application
 #############################################################
 
-set :application, "rites"
-set :deploy_to, "/web/rites.concord.org"
+set :application, "itsisu-investigations"
+set :deploy_to, "/web/production/itsisu_investigations"
 
 #############################################################
 #  Settings
