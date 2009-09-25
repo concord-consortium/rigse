@@ -109,7 +109,6 @@ class InvestigationsController < AuthoringController
       :paginate => true, 
       :page => pagenation
     })
-    debugger
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_user.id }
     end
