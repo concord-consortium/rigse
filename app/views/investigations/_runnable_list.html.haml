@@ -9,8 +9,8 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        -if current_user.has_role? "author"
-          %li= link_to 'create investigation', new_investigation_path
+        / -if current_user.has_role? "author"
+        %li= link_to 'create investigation', new_investigation_path
 
 - for investigation in investigations
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }

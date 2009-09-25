@@ -102,14 +102,17 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts,true)
     end
     @investigations = Investigation.search_list({
-      :domain_id => @domain_id, 
-      :grade_span => @grade_span, 
+      :ignore_gse => true,
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id, 
       :include_drafts => @include_drafts, 
       :paginate => true, 
       :page => pagenation
     })
+    debugger
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
     @paginated_objects = @investigations
     
     if request.xhr?
