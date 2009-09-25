@@ -48,6 +48,23 @@ Setup from scatch no longer works. Here are some things that need to be fixed be
 # NPE in NoMethodError nil.maven_jnlp_server in app/models/jnlp_adaptor.rb:6:in `initialize' (because dev database was not created when following above instructions)
 # NOTE: the tasks in
 
+h3. when deploying to a new server
+
+# create required directories on your server eg:
+## /web/production/APP_NAME/shared/log 
+## /web/production/APP_NAME/shared/config
+## /web/production/APP_NAME/shared/initializers
+## /web/production/APP_NAME/releases
+# put configuration files in /web/production/APP_NAME/shared/config
+## at a minimum you need database.yml and initializers/site_key.rb
+# modify the deploy recipies (in your local config/deploy.rb and config/deploy)
+# deploy cap deploy ( it will fail, but it will get far enough to make some of the other things below possible)
+# run ruby config/setup.rb on the server
+# comment out the one line in config/initializers/rites.rb
+# make sure config/nces_data isn't there
+# run RAILS_ENV=production rake rigse:setup:new_rites_app
+
+
 _there's a bunch more that needs to go here_
 
 h2. Updating after pulling the commits on July 20 that merged the with-portal branch
@@ -93,6 +110,8 @@ h2. Updating after pulling the commits on July 20 that merged the with-portal br
     cap deploy:restart
   </code>
 </pre>
+
+
 
 h3. Setting up a local SAIL Data Service and JNLP Web Start servelet
 
@@ -193,7 +212,8 @@ h2. Capistrano Recipies (and problems)
 
 h3. Database recipes
 
-There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
+There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. 
+Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
 
 There are 4 basic commands:
 * <code>rake db:dump</code>
