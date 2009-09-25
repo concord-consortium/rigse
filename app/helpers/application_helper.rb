@@ -307,62 +307,71 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
+  
   def run_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("run.png",  url, 
-      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+    link_button("itsi_run.png",  url, 
+      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);") 
   end
 
   def preview_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("preview.png",  url, 
-      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+    link_button("itsi_preview.png",  url, 
+      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);")      
   end
 
   def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "preview #{component_display_name}"
+    link_text = params.delete(:link_text) || "preview "
     if as_name
       link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    link_button("preview.png", url, 
-      :onclick => "show_alert($('launch_warning'),false);",
-      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.") + 
+    preview_button_for(component) +
     link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
-
   end
 
   def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "preview #{component_display_name}"
+    link_text = params.delete(:link_text) || "run "
     if as_name
       link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
-    button = link_button("run.png", url, 
-      :onclick => "show_alert($('launch_warning'),false);",
-      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
-    text = link_to link_text,url
-    "#{button} #{text}"
+    run_button_for(component) +
+    link_to(link_text, url, 
+        :onclick => "show_alert($('launch_warning'),false);",
+        :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
+  def duplicate_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    url = duplicate_investigation_url(component)
+    link_button("itsi_copy.png", url, 
+      :title => "copy the #{component_display_name}: '#{name}'") +
+    link_to ('copy', url)
+  end
+  
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "print #{component_display_name}"
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    button = link_button("print.png", url, 
-      :title => "print the #{component_display_name}: '#{name}'");
+    link_button("itsi_print.png", url, 
+      :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to (link_text,url)
   end
   
   def otml_link_for(component, params={})
