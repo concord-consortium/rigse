@@ -29,7 +29,10 @@ body
     :color = !itsi_brown
   :margin 10px 
     :bottom 0px
-
+  :background-position right top
+  :background-image url("/images/cc_corner_logo_white.png")
+  :background-repeat no-repeat
+  
 h1,h2,h3,h4,h5
   :padding-top 0.5em
   :font-weight bold
@@ -39,7 +42,7 @@ h2,h3,h4,h5
 h1 
   :letter-spacing 110%
   :font 
-    :size 2.5em
+    :size 5.5em
 
 h2
   :letter-spacing .15em
@@ -82,6 +85,7 @@ pre
   :background-color white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
+
   
 #wrapper
   +container
@@ -99,6 +103,7 @@ pre
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
   :color = !itsi_brown
+
   a
     :color = !itsi_green
     :background-color transparent
@@ -579,6 +584,7 @@ input[type=password]
       :text-align right
     input
       :margin 0px
+      :margin-top 4px
       
 .drop_target
   :min-height 400px !important

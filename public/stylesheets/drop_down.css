@@ -8,6 +8,7 @@
   float: none;
   background-color: white;
   margin: 0px;
+  margin-left: 3px;
   padding: 0.5em;
   font-size: 10px;
   line-height: 1.5em;
@@ -28,6 +29,7 @@
     list-style-type: none;
     padding: 0px;
     padding-top: 2px;
+    padding-right: 20px;
     margin: 0px;
     width: 100%;
     white-space: nowrap; }
