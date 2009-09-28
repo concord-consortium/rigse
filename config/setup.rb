@@ -40,7 +40,6 @@ end
 @new_database_yml_created = false
 @new_settings_yml_created = false
 @new_mailer_yml = false
-@new_sds_yml_created = false
 
 def copy_file(source, destination)
 
@@ -196,7 +195,6 @@ def check_for_config_settings_yml
 
 HEREDOC
     create_new_settings_yml
-    @new_sds_yml_created = true
   end
 end
 
@@ -559,24 +557,24 @@ HEREDOC
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
-check_for_config_sds_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-update_config_sds_yml
 update_config_mailer_yml
 
 puts <<HEREDOC
 
 To complete setup of the RITES Investigations Rails application setup run:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+  rake db:create:all
+  RAILS_ENV=production #{jruby_system_command} rake db:migrate
+  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
-These scripts will take about 30 minutes to run and are much faster if you are running
-Rails in production mode. If you are using separate databases for development and production
-and want to run these tasks to populate a development database I recommend temporarily 
+These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
+Rails in production mode and using JRuby. If you are using separate databases for development and 
+production and want to run these tasks to populate a development database I recommend temporarily 
 identifying the development database as production for the purpose of generating these data.
 
 HEREDOC
