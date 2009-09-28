@@ -584,8 +584,6 @@ puts <<HEREDOC
 
 To complete setup of the RITES Investigations Rails application setup run:
 
-  rake db:create:all
-  RAILS_ENV=production #{jruby_system_command} rake db:migrate
   RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
