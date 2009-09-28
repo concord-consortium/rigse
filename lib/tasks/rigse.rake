@@ -167,7 +167,7 @@ HEREDOC
       if agree("Do you want to do this?  (y/n) ", true)
         begin
           Rake::Task['db:drop'].invoke
-        rescue StandardException
+        rescue StandardError
         end
         Rake::Task['db:create'].invoke
         Rake::Task['db:migrate'].invoke
