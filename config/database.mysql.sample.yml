@@ -1,6 +1,5 @@
 development:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_development
   username: root
@@ -9,7 +8,6 @@ development:
   
 test:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_test
   username: root
@@ -18,7 +16,6 @@ test:
   
 staging:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_staging
   username: root
@@ -27,7 +24,6 @@ staging:
   
 production:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   database: risge_production
   username: root
@@ -38,7 +34,6 @@ production:
 # importing ITSI activities into this RITES instance.
 itsi:
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  adapter: mysql
   encoding: utf8
   host: localhost
   database: production_itsi_prod
@@ -50,8 +45,8 @@ itsi:
 # Reference to the CCPortal database (or a local copy) for use in 
 # importing ITSI activities into this RITES instance.
 ccportal: 
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   encoding: utf8
-  adapter: mysql
   host: localhost
   username: root
   database: ccportal
