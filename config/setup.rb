@@ -90,7 +90,7 @@ require 'highline/import'
 
 # returns true if @db_name_prefix on entry == @db_name_prefix on exit
 # false otherwise
-def confirm_database_name_prefix
+def confirm_database_name_prefix_user_password
   original_db_name_prefix = @db_name_prefix
   puts <<HEREDOC
 
@@ -100,7 +100,13 @@ You can specify a different prefix for the database names:
 
 HEREDOC
   @db_name_prefix = ask("  database name prefix: ") { |q| q.default = @db_name_prefix }
-  @db_name_prefix == original_db_name_prefix
+  if @db_name_prefix == original_db_name_prefix
+    @db_user = ask("  database username: ") { |q| q.default = 'root' }
+    @db_password = ask("  database password: ") { |q| q.default = 'password' }
+    true
+  else
+    false
+  end
 end
 
 def create_new_database_yml
@@ -110,7 +116,14 @@ def create_new_database_yml
   @db_config = YAML::load(IO.read(sample_path))
   %w{development test staging production}.each do |env|
     @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
+    @db_config[env]['user'] = @db_user
+    @db_config[env]['password'] = @db_password
   end
+  %w{itsi ccportal}.each do |external_db|
+    @db_config[external_db]['user'] = @db_user
+    @db_config[external_db]['password'] = @db_password
+  end
+
   puts <<HEREDOC
 
        creating: #{@db_config_path}
@@ -178,7 +191,7 @@ def check_for_config_database_yml
 
 HEREDOC
     @db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
-    confirm_database_name_prefix
+    confirm_database_name_prefix_user_password
     create_new_database_yml
     @new_database_yml_created = true
   end
@@ -281,13 +294,14 @@ Here are the current settings in config/database.yml:
 #{@db_config.to_yaml} 
 HEREDOC
   unless agree("Accept defaults? (y/n) ", true)
-    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix 
+    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix_user_password 
 
     %w{development test production}.each do |env|
       puts "\nSetting parameters for the #{env} database:\n\n"
       @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
       @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
       @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
+      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
     end
 
     puts <<HEREDOC
@@ -303,6 +317,7 @@ HEREDOC
     @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
     @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
     @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
+    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
@@ -316,6 +331,7 @@ HEREDOC
     @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
     @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
     @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
+    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
