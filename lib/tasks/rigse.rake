@@ -175,7 +175,7 @@ HEREDOC
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
-        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
         Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
