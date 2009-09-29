@@ -5,9 +5,8 @@
     %li= print_link_for(@investigation)
     - unless(current_user.anonymous?)
       %li= duplicate_link_for(@investigation)
-
-    - if (investigation.changeable?(current_user))
-      %li= link_to 'rename', edit_investigation_url(investigation)
+    / - if (investigation.changeable?(current_user))
+    /   %li= link_to 'rename', edit_investigation_url(investigation)
      
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
