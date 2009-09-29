@@ -68,7 +68,7 @@
             - else
               = link_to 'Login', login_path
               \/
-              = link_to 'Sign Up', pick_signup_path
+              = link_to 'Sign Up', signup_path
             - if @original_user.has_role?('admin', 'manager')
               \/
               = link_to 'Switch', switch_user_path(current_user)
@@ -82,7 +82,7 @@
           %li.trail= link_to 'About', about_path
           - unless current_user.anonymous? || current_user.portal_student
             %li.trail= link_to 'Investigations', investigations_path
-            %li.trail= link_to 'My Investigations', investigations_path(:mine_only => 'y')
+            / %li.trail= link_to 'My Investigations', investigations_path(:mine_only => 'y')
           
         - if current_user.has_role?('admin')
           %ul.menu_h_right
