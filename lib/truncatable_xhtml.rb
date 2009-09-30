@@ -73,10 +73,13 @@ module TruncatableXhtml
     "content",
     "prompt"
   ]
-  DEFAULT_REPLACEABLES=  [
-    /\s+style\s?=\s?"(.*?)"/,
-    /&nbsp;/
-  ]
+  # DEFAULT_REPLACEABLES=  [
+  #   /\s+style\s?=\s?"(.*?)"/,
+  #   /&nbsp;/
+  # ]
+  
+  # carlolyn wants full control I think:
+  DEFAULT_REPLACEABLES=  [ ]
   
   ##
   ## These methods are added to the class when 
