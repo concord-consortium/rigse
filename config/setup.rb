@@ -10,19 +10,21 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
+# Add the unpacked gems in vendor/gems to the $LOAD_PATH
+Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
+  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
+end
+
+require 'uuidtools'
+require 'highline/import'
+
 def jruby_system_command
   JRUBY ? "jruby -S" : ""
 end
 
 def gem_install_command_strings(missing_gems)
-  # jruby -S gem install uuidtools -v1.0.5 uuidtools -v1.0.6
-  missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.collect do |gem_name_and_version|
-    if JRUBY
-      "  jruby -S gem install #{gem_name_and_version}\n"
-    else
-      "  sudo gem install #{gem_name_and_version}\n"
-    end
-  end
+  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
+  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
 def rails_file_path(*args)
@@ -52,20 +54,18 @@ HEREDOC
 end
 
 @missing_gems = []
-@gems_needed_at_start = [
-  ['uuidtools', '>= 2.0.0'],
-  ['highline', '>= 1.5.0'],
-  ['haml', '>= 2.1.8'],
-  ['mime-types', '>=1.16'],
-  ['diff-lcs', '>= 1.1.2'],
-  ['prawn', '>= 0.4.1'],
-  ['prawn-format', '>= 0.1.1']
-]
 
+# These gems need to be installed with the Ruby VM for the web application
 if JRUBY 
-  @gems_needed_at_start << ['activerecord-jdbcmysql-adapter', '>= 0.9.1']
-  @gems_needed_at_start << ['jruby-openssl', '>=0.5']
+  @gems_needed_at_start = [
+    ['rake', '>=0.8.7'],
+    ['activerecord-jdbcmysql-adapter', '>= 0.9.1'],
+    ['jruby-openssl', '>=0.5.2']
+  ]
+else
+  @gems_needed_at_start << [['mysql', '>= 2.7']]
 end
+
 @gems_needed_at_start.each do |gem_name_and_version|
   begin
     gem gem_name_and_version[0], gem_name_and_version[1]
@@ -582,9 +582,22 @@ update_config_mailer_yml
 
 puts <<HEREDOC
 
-To complete setup of the RITES Investigations Rails application setup run:
+To complete setup of the RITES Investigations Rails application setup first
+install a few more gems that require compilation when they are installed:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
+  Ruby:
+    rake gems:install
+    
+  JRuby:
+    jruby -S rake gems:install
+
+Then run this rake task:
+
+  Ruby:
+    RAILS_ENV=production rake rigse:setup:new_rites_app
+
+  JRuby:
+    RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
 Rails in production mode and using JRuby. If you are using separate databases for development and 
