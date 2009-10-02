@@ -359,6 +359,18 @@ HEREDOC
   @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
 end
 
+def get_valid_sakai_instances(env)
+  puts <<HEREDOC
+
+Specify the sakai server urls from which it is ok to receive linktool requests.
+Delimit multiple items with spaces.
+
+HEREDOC
+  sakai_instances = @settings_config[env]['valid_sakai_instances'].join(' ')
+  sakai_instances =  ask("   valid_sakai_instances: ") { |q| q.default = sakai_instances }
+  @settings_config[env]['valid_sakai_instances'] = sakai_instances.split
+end
+
 def get_maven_jnlp_settings(env)
   puts <<HEREDOC
 
@@ -427,6 +439,11 @@ HEREDOC
       # ---- states_and_provinces ----
       #
       get_states_and_provinces_settings(env)
+      
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_valid_sakai_instances(env)
 
       # 
       # ---- enable_default_users ----

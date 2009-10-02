@@ -23,6 +23,8 @@ development: &non_production_settings
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   default_jnlp_version: snapshot
+  valid_sakai_instances:
+  - http://localhost:3000/
   maven_jnlp_servers:
     - 
       :name: concord
