@@ -21,7 +21,7 @@ class SakaiLinkController < ApplicationController
     @sign = params[:sign]
     @query_string = request.query_string
     
-    @serverurl << '/' if (@serverurl !~ /\/$/)
+    @serverurl << '/' if (@serverurl && @serverurl !~ /\/$/)
     
     @fail_reason = ""
     
