@@ -53,7 +53,7 @@ namespace :db do
       end
     rescue
       case config['adapter']
-      when 'mysql'
+      when /mysql/
         @charset   = ENV['CHARSET']   || 'utf8'
         @collation = ENV['COLLATION'] || 'utf8_unicode_ci'
         begin
