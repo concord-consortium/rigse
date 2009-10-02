@@ -23,6 +23,8 @@ class SakaiLinkController < ApplicationController
     
     @serverurl << '/' if (@serverurl !~ /\/$/)
     
+    @fail_reason = ""
+    
     driver = DRIVERS[@serverurl]
     success = false
     if driver
@@ -37,8 +39,14 @@ class SakaiLinkController < ApplicationController
           session[:original_user_id] = current_user.id
           successful_login
           success = true
+        else
+          @fail_reason = "You don't appear to have a valid Investigations account. If your account in Sakai was created within the last 24 hours, wait 24 hours and try again. Otherwise, please contact your site administrator."
         end
+      else
+        @fail_reason = "Sakai could not validate your session. Please make sure your Sakai session is still active."
       end
+    else
+      @fail_reason = "Your request came from an unknown sakai server. Please contact your site administrator."
     end
     if ! success
       self.current_user = User.anonymous
