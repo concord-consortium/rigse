@@ -63,7 +63,7 @@ if JRUBY
     ['jruby-openssl', '>=0.5.2']
   ]
 else
-  @gems_needed_at_start << [['mysql', '>= 2.7']]
+  @gems_needed_at_start = [['mysql', '>= 2.7']]
 end
 
 @gems_needed_at_start.each do |gem_name_and_version|
