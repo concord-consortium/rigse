@@ -72,7 +72,11 @@ class Admin::Project < ActiveRecord::Base
     # Admin::Project.default_project
     def default_project
       name, url = default_project_name_url
-      find_by_name_and_url(name, url)
+      proj = find_by_name_and_url(name, url)
+      if ! proj
+        logger.warn("No default project found for: #{name}, #{url}")
+      end
+      proj
     end
     
     def default_project_name_url
