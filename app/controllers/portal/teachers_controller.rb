@@ -102,7 +102,7 @@ class Portal::TeachersController < ApplicationController
   
   def successful_creation(user)
     flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation code."
+    flash[:notice] << " We're sending you an email with your activation link."
     redirect_back_or_default(root_path)
   end
   
