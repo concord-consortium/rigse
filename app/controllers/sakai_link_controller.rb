@@ -29,11 +29,12 @@ class SakaiLinkController < ApplicationController
     success = false
     if driver
       @response = driver.testsign(@query_string)
-      logger.warn "Testsign response: '#{@response}'"
-      if @response == "success"
+      # logger.warn "Testsign response: '#{@response}'"
+      # the linktool doc says testsign should return "success", but in reality it returns "true"
+      if @response == "true"
         # FIXME We may or may not be mapping the sakai internal unique id to the login field...
         user = User.find_by_login(@internaluser)
-        logger.warn("Login (#{@internaluser}) found user: #{user}")
+        # logger.warn("Login (#{@internaluser}) found user: #{user}")
         if user
           self.current_user = user
           session[:original_user_id] = current_user.id
