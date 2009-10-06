@@ -12,8 +12,17 @@
 # So I'm using this method to find out if the standard "ActiveRecord::Base" 
 # connection in the connection_pool is working:
 #
-#   ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
+#   ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
 #
-if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
+# and counting on generating a Mysql::Error if the database has not yet been created
+#
+# This is not optimal because it's special-cased for MySql and I'll still need to test 
+# again to see if it works when creating an app from scratch. 
+
+begin
+  ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
+  puts "running Admin::Project.create_or_update__default_project_from_settings_yml"
   Admin::Project.create_or_update__default_project_from_settings_yml
+rescue Mysql::Error
+  puts "not running Admin::Project.create_or_update__default_project_from_settings_yml"
 end
