@@ -50,7 +50,7 @@ namespace :db do
     RemoveTables.up
     
     case db_config["adapter"]
-    when 'mysql'
+    when /mysql/
       cmd = "mysql"
       if db_config["host"]
         cmd << " -h #{db_config["host"]}"
