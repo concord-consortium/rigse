@@ -360,7 +360,7 @@ module ApplicationHelper
     url = duplicate_investigation_url(component)
     link_button("itsi_copy.png", url, 
       :title => "copy the #{component_display_name}: '#{name}'") +
-    link_to ('copy', url)
+    link_to('copy', url)
   end
   
   def print_link_for(component, params={})
@@ -371,7 +371,7 @@ module ApplicationHelper
     url = polymorphic_url(component,:params => params)
     link_button("itsi_print.png", url, 
       :title => "print the #{component_display_name}: '#{name}'") + 
-    link_to (link_text,url)
+    link_to(link_text,url)
   end
   
   def otml_link_for(component, params={})
