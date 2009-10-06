@@ -27,7 +27,8 @@
     background-color: #f2f8fc;
     list-style-type: none;
     padding: 0px;
-    padding-top: 2px;
+    padding-top: 6px;
+    padding-right: 20px;
     margin: 0px;
     width: 100%;
     white-space: nowrap; }
@@ -46,7 +47,7 @@
       color: #f2f8fc;
       background-color: #00233a; }
   .dropdown a {
-    margin: 0px;
+    margin-left: 5px;
     padding: 0px;
     display: block; }
   .dropdown a.rollover {
