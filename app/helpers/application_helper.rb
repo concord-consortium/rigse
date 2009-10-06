@@ -311,7 +311,7 @@ module ApplicationHelper
   def run_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("itsi_run.png",  url, 
+    link_button("run.png",  url, 
       :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);") 
   end
@@ -319,7 +319,7 @@ module ApplicationHelper
   def preview_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("itsi_preview.png",  url, 
+    link_button("preview.png",  url, 
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);")      
   end
@@ -354,13 +354,24 @@ module ApplicationHelper
         :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
+  def edit_link_for(component, params={}) 
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "edit "
+    url = polymorphic_url(component, :action => :edit, :params => params)
+    edit_button_for(component) +
+    link_to(link_text, url, 
+        :title => "edit the #{component_display_name}: '#{name}'")
+  end
+  
   def duplicate_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    url = duplicate_investigation_url(component)
-    link_button("itsi_copy.png", url, 
-      :title => "copy the #{component_display_name}: '#{name}'") +
-    link_to('copy', url)
+    #url = duplicate_investigation_url(component)
+    url = polymorphic_url(component, :action => :duplicate, :params => params)
+    link_button("copy.png", url, 
+      :title => "duplicate the #{component_display_name}: '#{name}'") +
+    link_to('duplicate', url)
   end
   
   def print_link_for(component, params={})
@@ -369,7 +380,7 @@ module ApplicationHelper
     link_text = params.delete(:link_text) || "print #{component_display_name}"
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("itsi_print.png", url, 
+    link_button("print.png", url, 
       :title => "print the #{component_display_name}: '#{name}'") + 
     link_to(link_text,url)
   end
