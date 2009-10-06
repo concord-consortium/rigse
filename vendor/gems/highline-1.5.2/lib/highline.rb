@@ -9,14 +9,16 @@
 #
 # This is Free Software.  See LICENSE and COPYING for details.
 
-require "highline/system_extensions"
-require "highline/question"
-require "highline/menu"
-require "highline/color_scheme"
 require "erb"
 require "optparse"
 require "stringio"
 require "abbrev"
+require "highline/compatibility"
+require "highline/system_extensions"
+require "highline/question"
+require "highline/menu"
+require "highline/color_scheme"
+
 
 #
 # A HighLine object is a "high-level line oriented" shell over an input and an 
@@ -29,7 +31,7 @@ require "abbrev"
 #
 class HighLine
   # The version of the installed library.
-  VERSION = "1.5.0".freeze
+  VERSION = "1.5.2".freeze
   
   # An internal HighLine error.  User code does not need to trap this.
   class QuestionError < StandardError
@@ -247,15 +249,19 @@ class HighLine
       end
     rescue QuestionError
       retry
-    rescue ArgumentError
-      explain_error(:invalid_type)
+    rescue ArgumentError, NameError => error
+      raise if error.is_a?(NoMethodError)
+      if error.message =~ /ambiguous/
+        # the assumption here is that OptionParser::Completion#complete
+        # (used for ambiguity resolution) throws exceptions containing 
+        # the word 'ambiguous' whenever resolution fails
+        explain_error(:ambiguous_completion)
+      else
+        explain_error(:invalid_type)
+      end
       retry
     rescue Question::NoAutoCompleteMatch
       explain_error(:no_completion)
-      retry
-    rescue NameError
-      raise if $!.is_a?(NoMethodError)
-      explain_error(:ambiguous_completion)
       retry
     ensure
       @question = nil    # Reset Question object.
@@ -619,11 +625,11 @@ class HighLine
       else
         raw_no_echo_mode if stty = CHARACTER_MODE == "stty"
         
-        line = ""
+        line            = ""
         backspace_limit = 0
         begin
 
-          while character = (stty ? @input.getc : get_character(@input))
+          while character = (stty ? @input.getbyte : get_character(@input))
             # honor backspace and delete
             if character == 127 or character == 8
               line.slice!(-1, 1)
@@ -646,7 +652,11 @@ class HighLine
                       # do nothing
                   end
               else
-                @output.print(@question.echo)
+                if @question.echo == true
+                  @output.print(character.chr)
+                else
+                  @output.print(@question.echo)
+                end
               end
               @output.flush
             end
@@ -664,7 +674,7 @@ class HighLine
         @question.change_case(@question.remove_whitespace(line))
       end
     elsif @question.character == :getc
-      @question.change_case(@input.getc.chr)
+      @question.change_case(@input.getbyte.chr)
     else
       response = get_character(@input).chr
       if @question.overwrite
@@ -719,9 +729,9 @@ class HighLine
   # newlines will not be affected by this process, but additional newlines
   # may be added.
   #
-  def wrap( lines )
+  def wrap( text )
     wrapped = [ ]
-    lines.each do |line|
+    text.each_line do |line|
       while line =~ /([^\n]{#{@wrap_at + 1},})/
         search  = $1.dup
         replace = $1.dup
