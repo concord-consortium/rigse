@@ -6,6 +6,14 @@ namespace :rigse do
     # require 'highline/import'
     autoload :Highline, 'highline'
     
+    def agree_check_in_development_mode
+      if RAILS_ENV == 'development'
+        HighLine.new.agree("Accept defaults? (y/n) ")
+      else
+        true
+      end
+    end
+    
     def display_user(user)
       puts <<HEREDOC
 
@@ -146,7 +154,7 @@ HEREDOC
       
       edit_user_list.each { |user| display_user(user) }
       
-      unless HighLine.new.agree_check_in_development_mode
+      unless agree_check_in_development_mode
         edit_user_list.each do |user|
           user = edit_user(user)  if HighLine.new.agree("Edit #{user.login}?  (y/n) ")
         end

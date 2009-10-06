@@ -9,30 +9,7 @@ namespace :rigse do
   def jruby_run_command
     JRUBY ? "jruby " : "ruby "
   end
-  
-  def agree_check_in_development_mode
-    if RAILS_ENV == 'development'
-      HighLine.new.agree("Accept defaults? (y/n) ")
-    else
-      true
-    end
-  end
-  
-  PLUGIN_LIST = {
-    :acts_as_taggable_on_steroids => 'http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids',
-    :attachment_fu => 'git://github.com/technoweenie/attachment_fu.git',
-    :bundle_fu => 'git://github.com/timcharper/bundle-fu.git',
-    :fudge_form => 'git://github.com/JimNeath/fudge_form.git',
-    :haml => 'git://github.com/nex3/haml.git',
-    :jrails => 'git://github.com/aaronchi/jrails.git',
-    :paperclip => 'git://github.com/thoughtbot/paperclip.git',
-    :salty_slugs => 'git://github.com/norbauer/salty_slugs.git',
-    :shoulda => 'git://github.com/thoughtbot/shoulda.git',
-    :spawn => 'git://github.com/tra/spawn.git',
-    :workling => 'git://github.com/purzelrakete/workling.git'
-  }
-  
-  
+
   desc "display info about the site admin user"
   task :display_site_admin => :environment do
     puts User.site_admin.to_yaml
