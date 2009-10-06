@@ -37,7 +37,8 @@ Generate MavenJnlp family of resources from this jnlp server specification?
 [this normally takes about 10 minutes]
 
 HEREDOC
-        if HighLine.agree("Do you want to do this? (y/n) ")  
+        hl = HighLine.new
+        if hl.agree("Do you want to do this? (y/n) ")  
           mj_server.create_maven_jnlp_families
           puts <<HEREDOC
 completed ...
@@ -65,7 +66,8 @@ This will delete all the data in the following tables:
   MavenJnlp::Icon: #{MavenJnlp::Icon.count} records
 
 HEREDOC
-      if HighLine.agree("Do you want to do this?  (y/n)")
+      hl = HighLine.new
+      if hl.agree("Do you want to do this?  (y/n)")
         MavenJnlp::MavenJnlpServer.delete_all
         MavenJnlp::MavenJnlpFamily.delete_all
         MavenJnlp::VersionedJnlpUrl.delete_all
