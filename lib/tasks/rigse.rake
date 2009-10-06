@@ -12,7 +12,7 @@ namespace :rigse do
   
   def agree_check_in_development_mode
     if RAILS_ENV == 'development'
-      agree("Accept defaults? (y/n) ", true)
+      HighLine.agree("Accept defaults? (y/n) ")
     else
       true
     end
@@ -65,7 +65,9 @@ namespace :rigse do
 
   namespace :setup do
     
-    require 'highline/import'
+    # require 'highline/import'
+    autoload :Highline, 'highline'
+
     require 'fileutils'
     
     def rails_file_path(*args)
@@ -94,7 +96,7 @@ namespace :rigse do
       unless RAILS_ENV == 'development'
         puts "\nNormally you will only be running this task in development mode.\n"
         puts "You are running in #{RAILS_ENV} mode.\n"
-        unless agree("Are you sure you want to do this?  (y/n) ", true)
+        unless HighLine.agree("Are you sure you want to do this?  (y/n) ")
           raise "task stopped by user"
         end
       end
@@ -125,7 +127,7 @@ this change to take effect.
 
 HEREDOC
       
-      if agree("Do you want to do this?  (y/n) ", true)
+      if HighLine.agree("Do you want to do this?  (y/n) ")
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
         site_key = UUIDTools::UUID.timestamp_create.to_s
 
@@ -164,7 +166,7 @@ This task will:
 7. create a default project and associate it with the maven_jnlp resources
   
 HEREDOC
-      if agree("Do you want to do this?  (y/n) ", true)
+      if HighLine.agree("Do you want to do this?  (y/n) ")
         begin
           Rake::Task['db:drop'].invoke
         rescue StandardError

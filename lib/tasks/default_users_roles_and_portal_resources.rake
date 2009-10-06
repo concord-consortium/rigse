@@ -1,8 +1,10 @@
 namespace :rigse do
   namespace :setup do
-    
-    require 'highline/import'
+
     require 'fileutils'
+    
+    # require 'highline/import'
+    autoload :Highline, 'highline'
     
     def display_user(user)
       puts <<HEREDOC
@@ -16,13 +18,12 @@ HEREDOC
     end
   
     def edit_user(user)
-      require 'highline/import'
-      user.login =                 ask("            login: ") {|q| q.default = user.login}
-      user.email =                 ask("            email: ") {|q| q.default = user.email}
-      user.first_name =            ask("       first name: ") {|q| q.default = user.first_name}
-      user.last_name =             ask("        last name: ") {|q| q.default = user.last_name}
-      user.password =              ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
-      user.password_confirmation = ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
+      user.login =                 HighLine.ask("            login: ") {|q| q.default = user.login}
+      user.email =                 HighLine.ask("            email: ") {|q| q.default = user.email}
+      user.first_name =            HighLine.ask("       first name: ") {|q| q.default = user.first_name}
+      user.last_name =             HighLine.ask("        last name: ") {|q| q.default = user.last_name}
+      user.password =              HighLine.ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
+      user.password_confirmation = HighLine.ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
       user
     end
 
@@ -145,9 +146,9 @@ HEREDOC
       
       edit_user_list.each { |user| display_user(user) }
       
-      unless agree_check_in_development_mode
+      unless HighLine.agree_check_in_development_mode
         edit_user_list.each do |user|
-          user = edit_user(user)  if agree("Edit #{user.login}?  (y/n) ", true)
+          user = edit_user(user)  if HighLine.agree("Edit #{user.login}?  (y/n) ")
         end
       end
 
