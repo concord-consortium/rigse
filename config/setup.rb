@@ -84,10 +84,6 @@ if @missing_gems.length > 0
   raise message
 end
 
-# Continuing after sucessfully requiring the necessary gems ..
-
-require 'highline/import'
-
 # returns true if @db_name_prefix on entry == @db_name_prefix on exit
 # false otherwise
 def confirm_database_name_prefix_user_password
@@ -293,7 +289,7 @@ Here are the current settings in config/database.yml:
 
 #{@db_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
     create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix_user_password 
 
     %w{development test production}.each do |env|
@@ -338,7 +334,7 @@ HEREDOC
     Here is the updated database configuration:
     #{@db_config.to_yaml} 
 HEREDOC
-  
+
     if agree("OK to save to config/database.yml? (y/n): ")
       File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
     end
@@ -412,7 +408,7 @@ Here are the current settings in config/settings.yml:
 
 #{@settings_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     %w{development staging production}.each do |env|
       puts "\n#{env}:\n"
@@ -531,7 +527,7 @@ Here are the current settings in config/mailer.yml:
 
 #{@mailer_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     say("\nChoose mail delivery type: #{deliv_types}:\n\n")
 
@@ -602,18 +598,12 @@ puts <<HEREDOC
 To complete setup of the RITES Investigations Rails application setup first
 install a few more gems that require compilation when they are installed:
 
-  Ruby:
+  MRI Ruby:
     rake gems:install
+    RAILS_ENV=production rake rigse:setup:new_rites_app
     
   JRuby:
     jruby -S rake gems:install
-
-Then run this rake task:
-
-  Ruby:
-    RAILS_ENV=production rake rigse:setup:new_rites_app
-
-  JRuby:
     RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
