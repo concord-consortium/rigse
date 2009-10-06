@@ -18,12 +18,12 @@ HEREDOC
     end
   
     def edit_user(user)
-      user.login =                 HighLine.ask("            login: ") {|q| q.default = user.login}
-      user.email =                 HighLine.ask("            email: ") {|q| q.default = user.email}
-      user.first_name =            HighLine.ask("       first name: ") {|q| q.default = user.first_name}
-      user.last_name =             HighLine.ask("        last name: ") {|q| q.default = user.last_name}
-      user.password =              HighLine.ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
-      user.password_confirmation = HighLine.ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
+      user.login =                 HighLine.new.ask("            login: ") {|q| q.default = user.login}
+      user.email =                 HighLine.new.ask("            email: ") {|q| q.default = user.email}
+      user.first_name =            HighLine.new.ask("       first name: ") {|q| q.default = user.first_name}
+      user.last_name =             HighLine.new.ask("        last name: ") {|q| q.default = user.last_name}
+      user.password =              HighLine.new.ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
+      user.password_confirmation = HighLine.new.ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
       user
     end
 
@@ -146,9 +146,9 @@ HEREDOC
       
       edit_user_list.each { |user| display_user(user) }
       
-      unless HighLine.agree_check_in_development_mode
+      unless HighLine.new.agree_check_in_development_mode
         edit_user_list.each do |user|
-          user = edit_user(user)  if HighLine.agree("Edit #{user.login}?  (y/n) ")
+          user = edit_user(user)  if HighLine.new.agree("Edit #{user.login}?  (y/n) ")
         end
       end
 
