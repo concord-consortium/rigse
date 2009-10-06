@@ -59,7 +59,7 @@ end
 if JRUBY 
   @gems_needed_at_start = [
     ['rake', '>=0.8.7'],
-    ['activerecord-jdbcmysql-adapter', '>= 0.9.1'],
+    ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
     ['jruby-openssl', '>=0.5.2']
   ]
 else
