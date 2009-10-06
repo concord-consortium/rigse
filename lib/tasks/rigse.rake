@@ -14,31 +14,6 @@ namespace :rigse do
   task :display_site_admin => :environment do
     puts User.site_admin.to_yaml
   end
-  
-  
-  #######################################################################
-  #
-  # List all plugins available to quick install
-  #
-  #######################################################################  
-  desc 'List all plugins available to quick install'
-  task :install do
-    puts "\nAvailable Plugins\n=================\n\n"
-    plugins = PLUGIN_LIST.keys.sort_by { |k| k.to_s }.map { |key| [key, PLUGIN_LIST[key]] }
-    
-    plugins.each do |plugin|
-      puts "#{plugin.first.to_s.gsub('_', ' ').capitalize.ljust(30)} rake rigse:install:#{plugin.first.to_s}\n"
-    end
-    puts "\n"
-  end
-  
-  namespace :install do
-    PLUGIN_LIST.each_pair do |key, value|
-      task key do
-        system('script/plugin', 'install', value, '--force')
-      end
-    end
-  end
 
   namespace :setup do
     
