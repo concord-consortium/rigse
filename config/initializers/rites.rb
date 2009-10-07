@@ -16,9 +16,20 @@
 #
 # and counting on generating an error if the database has not yet been created
 #
-# This is not optimal because it's special-cased for MySql and I'll still need to test 
-# again to see if it works when creating an app from scratch. 
-
+# This is only tested right now with mysql through both MRI and JRuby using jdbc and mysql.
+#
+# JRuby throws a RuntimeError
+# 
+#   RuntimeError: The driver encountered an error: com.mysql.jdbc.exceptions.MySQLSyntaxErrorException: 
+#   Unknown database 'rites_development'
+# 
+# MRI throws a Mysql::Error. Unfortunately Mysql::Error isn't defined as a constant until 
+# after the ActiveRecord statement that causes the error is called for the first time, but 
+# Mysql::Error inherits from StandardError so that will do.
+# 
+#   Mysql::Error.ancestors
+#   => [Mysql::Error, StandardError, ...
+#
 begin
   ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
   puts "running Admin::Project.create_or_update__default_project_from_settings_yml"

@@ -6,7 +6,7 @@ Working git, ruby or jruby, rubgems.
 
 h2. Initial install:
 
-New setup scripts tested with trunk jruby, you will need a running mysql
+The latest setup scripts have been tested with 1.4.0.RC0 of JRuby, you will need a running mysql
 server and a mysql username/password with enough permissions to create and drop the 
 database you intend to use with RITES.
 
@@ -14,31 +14,17 @@ database you intend to use with RITES.
   <code>
     # If you are a committer in this repo:
 
-    git clone git@github.com:stepheneb/rigse.git
+    git clone git@github.com:stepheneb/rigse.git rites
 
     # otherwise:
 
-    git clone git://github.com/stepheneb/rigse.git
+    git clone git://github.com/stepheneb/rigse.git rites
 
-    cd rigse
+    cd rites
 
     # follow instructions for installing necessary gem prerequisites
     # until config/setup.rb completes successfully
     jruby config/setup.rb
-    
-    # *** JRuby Note:
-    # ***
-    # *** There is a UI bug when using the gem highline with JRuby
-    # *** When highline displays a prompt and asks for input:
-    # *** 
-    # ***   Accept defaults? (y/n)
-    # *** 
-    # *** In JRuby that prompt will instead often look like this:
-    # *** 
-    # ***   Accept defaults? (y/n) stty: stdin isn't a terminal
-    # ***   stty: stdin isn't a terminal
-    # *** 
-    # *** You can ignore this error and enter 'y' and enter.
 
     # finish installing necessary gems for rails application
     jruby -S rake gems:install
@@ -47,9 +33,51 @@ database you intend to use with RITES.
     jruby -S rake rigse:setup:new_rigse_from_scratch
 
     # start server
-    jruby script/server
+    jruby -J-server script/server -e production
   </code>
 </pre>
+
+h2. Copying the production database to a development environment
+
+If you have ssh access to the RITES production server you can get a copy of the production database on
+your local development instance with the following steps:
+
+<pre>
+  <code>
+    cap production db:fetch_remote_db
+    RAILS_ENV=production jruby -S rake db:load
+    RAILS_ENV=production jruby -S rake db:migrate
+  </code>
+</pre>
+
+In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on 
+the server you copied the production data from.
+
+<pre>
+  <code>
+    cap production db:copy_remote_site_keys
+  </code>
+</pre>
+
+h2. Recreating a new application from scratch
+
+Recreating a new RITES application from scratch from an existing application.
+
+<pre>
+  <code>
+    rake db:drop:all
+    git clean -fXd
+    jruby config/setup.rb
+    jruby -S rake gems:install
+    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+  </code>
+</pre>
+
+The '-fxd' parameters to to git clean:
+
+# d: Remove untracked directories in addition to untracked files.
+# X: Remove only files ignored by git.
+# f: force removal
 
 h3. Setting up a local JNLP Web Start servlet
 
