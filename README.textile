@@ -319,6 +319,15 @@ h2. notes for collaborating developers
 # This project was derived from BORT, which is basically like an archetype. Other notes in this document are taken from the Bort docs.
 # 
 
+h2. Creating the sakai integration demo user accounts.
+
+*OCT 7 2009 This documentation should go away* as soon as we no longer need to import sakai users by hand.
+<code><pre>
+  RAILS_ENV=production script/console
+  require 'lib/sakaidemo'
+</pre><code>
+
+
 h1. Rendering OTML
 
 The sass template rites.otml.sass generates the css file: rites.otml.css which is used for styling the xhtml content in
@@ -381,6 +390,7 @@ you can also run locally by hand: rake asset:packager:build_all
 Assets are configured in config/asset_packages.yml
 Packages up your css/javascript so you're not sending 143 files down to the user at the same time. Reduces
 load times and saves you bandwidth.
+
 
 h2. Routes
 
