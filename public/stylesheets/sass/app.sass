@@ -19,9 +19,7 @@ em
   :font-style italic 
 
 body
-  +reset
   :padding 0px
-  
   +main_font
   :background
     :image url(/images/rites-bg.jpg) 
@@ -81,7 +79,7 @@ pre
   :line-height 1.1em
   
 .wrapper
-  + page_white
+  +page_white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
   
@@ -261,7 +259,6 @@ ul.menu
 .dev_note
   :font-size 0.6em
   :color= !dev_note_color
-  a a:visited a:active a:hover
 
 .teacher_only
   :background-color= !teacher_only_color !important
@@ -416,6 +413,8 @@ li.tiny
     
 .tiny
   :font-size 0.80em
+  p
+    :margin 0.2em
   
 .small_left_menu
   :font-size 10px

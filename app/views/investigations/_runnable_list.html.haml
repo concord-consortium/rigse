@@ -14,7 +14,7 @@
 
 - for investigation in investigations
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }
-    = accordion_for(investigation, investigation.name, :investigation) do  
+    = accordion_for(investigation, (preview_button_for(investigation) + link_to_container(investigation, :hide_componenent_name => true)), :investigation) do  
       %div.action_menu
         %div.action_menu_header_left   
           = link_to_container(investigation)
@@ -22,7 +22,7 @@
             = investigation.user.name
         %div.action_menu_header_right   
           %ul.menu
-            %li= run_link_for(investigation)
+            %li= preview_button_for(investigation)
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
@@ -31,6 +31,9 @@
         %p=investigation.description
         %p
           %i= updated_time_text(investigation)
+        %p
+          %i
+            Used in: #{investigation.offerings.length} classes.
 
   =draggable_element dom_id_for(investigation), :revert => true , :scroll => 'window'
 

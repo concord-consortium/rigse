@@ -307,20 +307,84 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, as_name=nil,params={})
+  
+  def run_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("run.png",  url, 
+      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);") 
+  end
+
+  def preview_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("preview.png",  url, 
+      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);")      
+  end
+
+  def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "preview #{component_display_name}"
+    link_text = params.delete(:link_text) || "preview "
     if as_name
-      link_text << "as #{as_name}"
+      link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
+    preview_button_for(component) +
     link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
+  def run_link_for(component, as_name=nil, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "run "
+    if as_name
+      link_text << " as #{as_name}"
+    end
+    
+    url = polymorphic_url(component, :format => :jnlp, :params => params)
+    run_button_for(component) +
+    link_to(link_text, url, 
+        :onclick => "show_alert($('launch_warning'),false);",
+        :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
+  def edit_link_for(component, params={}) 
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "edit "
+    url = polymorphic_url(component, :action => :edit, :params => params)
+    edit_button_for(component) +
+    link_to(link_text, url, 
+        :title => "edit the #{component_display_name}: '#{name}'")
+  end
+  
+  def duplicate_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    #url = duplicate_investigation_url(component)
+    url = polymorphic_url(component, :action => :duplicate, :params => params)
+    link_button("copy.png", url, 
+      :title => "duplicate the #{component_display_name}: '#{name}'") +
+    link_to('duplicate', url)
+  end
+  
+  def print_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "print #{component_display_name}"
+    params.merge!({:print => true})
+    url = polymorphic_url(component,:params => params)
+    link_button("print.png", url, 
+      :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to(link_text,url)
+  end
+  
   def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
@@ -342,8 +406,8 @@ module ApplicationHelper
     remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
-  def link_to_container(container)
-    link_to name_for_component(container), container, :class => 'container_link'
+  def link_to_container(container, options={})
+    link_to name_for_component(container, options), container, :class => 'container_link'
   end
   
   def title_for_component(component, options={})
@@ -487,7 +551,7 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    link_to image_tag(image, :alt=>options[:title]),url,options
+    link_to image_tag(image, :alt=>options[:title]) , url, options
   end
   
   def remote_link_button(image,options={})
@@ -639,4 +703,8 @@ module ApplicationHelper
     Investigation.search_list(options)
   end
   
+  def students_in_class(all_students)
+    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+  end
+
 end

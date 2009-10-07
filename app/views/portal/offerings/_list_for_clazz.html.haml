@@ -1,13 +1,8 @@
-%div{:id=>dom_id_for(portal_clazz,:offering_container), :class=>"accordion_container"}
-  %div{:id=>dom_id_for(portal_clazz,:offering_name), :class=>"accordion_name"}
-    Investigations: 
-    = portal_clazz.offerings.length
-  %div{:id=>dom_id_for(portal_clazz,:offering_toggle), :class=>"accordion_toggle"}
-  %div{:id=>dom_id_for(portal_clazz,:offering_content), :class=>"accordion_content", :style=>'display: none;'}
-    .action_menu
-      .action_menu_header_right
-        - if portal_clazz.changeable?(current_user)
-          .action= link_to 'assign investigations', edit_offerings_portal_clazz_path(portal_clazz)
-    - portal_clazz.offerings.each do |offering|
-      = render :partial =>'portal/offerings/show', :locals => {:offering => offering}
+= accordion_for(portal_clazz, "Investigations: #{portal_clazz.offerings.length}", 'offering_container') do
+  .action_menu
+    .action_menu_header_right
+      - if portal_clazz.changeable?(current_user)
+        .action= link_to 'assign investigations', edit_offerings_portal_clazz_path(portal_clazz)
+  - portal_clazz.offerings.each do |offering|
+    = render :partial =>'portal/offerings/show', :locals => {:offering => offering}
 

@@ -38,12 +38,15 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   end
   
   def name
-    learner = self.learner
-    user = learner.student.user
-    name = user.name
-    login = user.login
-    runnable_name = (learner.offering.runnable ? learner.offering.runnable.name : "invalid offering runnable")
-    "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_contents.count} sessions"
+    if learner = self.learner
+      user = learner.student.user
+      name = user.name
+      login = user.login
+      runnable_name = (learner.offering.runnable ? learner.offering.runnable.name : "invalid offering runnable")
+      "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_contents.count} sessions"
+    else
+      "no associated learner"
+    end
   end
   
 end

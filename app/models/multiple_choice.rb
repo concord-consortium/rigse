@@ -27,11 +27,6 @@ class MultipleChoice < ActiveRecord::Base
     end
   end
 
-  def before_save
-    truncated_xhtml = truncate_from_xhtml(prompt)
-    self.name = truncated_xhtml unless truncated_xhtml.empty?
-  end
-
   default_value_for :name, "Multiple Choice Question element"
   default_value_for :description, "description ..."
   default_value_for :prompt, "Why do you think ..."

@@ -15,3 +15,6 @@ end
 
 require 'cucumber/rails/rspec'
 require 'webrat/core/matchers'
+
+# Make visible for testing
+ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)

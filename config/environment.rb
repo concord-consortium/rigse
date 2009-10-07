@@ -7,6 +7,8 @@
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
+JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
+
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -109,7 +111,8 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  config.active_record.observers = :user_observer, :investigation_observer
+
+  # ... observers are now started in config/initializers/observers.rb
 
   config.action_controller.session_store = :active_record_store
 

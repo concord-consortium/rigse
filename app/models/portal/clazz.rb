@@ -12,6 +12,9 @@ class Portal::Clazz < ActiveRecord::Base
   
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
   
+  has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
+  has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
+  
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
   

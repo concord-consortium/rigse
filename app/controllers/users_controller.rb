@@ -64,7 +64,6 @@ class UsersController < ApplicationController
     else
       if request.get?
         @user = User.find(params[:id])
-        
         all_users = User.active.find(:all)
         all_users.delete(current_user)
         all_users.delete(User.anonymous)
@@ -224,19 +223,15 @@ class UsersController < ApplicationController
       @user.register!
     end
     if @user.errors.empty?
-      # will redirect:
-      successful_creation(@user)
+      self.current_user = User.anonymous
+      render :action => :thanks
     else
       # will redirect:
       failed_creation
     end
   end
   
-  def successful_creation(user)
-    flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation code."
-    redirect_back_or_default(root_path)
-  end
+
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
     # force the current_user to anonymous, because we have not successfully created an account yet.

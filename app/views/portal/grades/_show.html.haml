@@ -1,0 +1,19 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(portal_grade), :class => "container_element" }
+  = show_menu_for(portal_grade, options)
+
+  %div{:id => dom_id_for(portal_grade, :item), :class => 'item'}
+    %div{:id => dom_id_for(portal_grade, :details), :class => 'content'}
+      = wrap_edit_link_around_content(portal_grade, options={:complete => mce_init_string}) do
+        %h4= h(portal_grade.name)
+        %p
+          %ul.menu_v
+            %li
+              Name:
+              =h(portal_grade.name)
+    
+            %li
+              Description:
+              =h(portal_grade.description)
+    
+    

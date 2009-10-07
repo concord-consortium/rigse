@@ -1,4 +1,4 @@
-- form_for @teacher do |f|
+- form_for @portal_teacher do |f|
   = error_messages_for 'user'
   = error_messages_for 'teacher'
   - field_set_tag 'personal info' do
@@ -15,13 +15,21 @@
         %li
           = label_tag :user, 'Email: ', :class=>"right"
           = text_field :user, :email, {:live => false}
+  
   - field_set_tag 'school' do
     .aligned
       %ul
         %li
-          = label_tag :teacher, 'School: ', :class=>"right"
-          = collection_select(:teacher, :school_ids, Portal::School.find(:all), :id, :name, options ={:prompt => "schools..",:multiple => true})
-  = render :partial => 'shared/login_fields', :locals => {:user => @teacher.user, :teacher => @teacher}
+          = label_tag :school, 'School: ', :class=>"right"
+          = select_tag('school[id]', option_groups_from_collection_for_select(@portal_districts, :schools , :name, :id, :name  ))
+        %li
+          = label_tag :grade, 'Grade: ', :class=>"right"
+          = select_tag('grade[id]', options_for_select(@portal_grades.map { |g| [g.name, g.id] }, @default_grade_id ) )
+        %li
+          = label_tag :domain, 'Domain: ', :class=>"right"
+          = select_tag('domain[id]', options_for_select(@domains.map { |d| [d.name, d.id] } ) )
+        
+  = render :partial => 'shared/login_fields', :locals => { :user => @portal_teacher.user }
 
   .aligned
     = f.submit 'Submit'

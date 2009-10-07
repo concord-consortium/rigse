@@ -10,19 +10,21 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
+# Add the unpacked gems in vendor/gems to the $LOAD_PATH
+Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
+  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
+end
+
+require 'uuidtools'
+require 'highline/import'
+
 def jruby_system_command
   JRUBY ? "jruby -S" : ""
 end
 
 def gem_install_command_strings(missing_gems)
-  # jruby -S gem install uuidtools -v1.0.5 uuidtools -v1.0.6
-  missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.collect do |gem_name_and_version|
-    if JRUBY
-      "  jruby -S gem install #{gem_name_and_version}\n"
-    else
-      "  sudo gem install #{gem_name_and_version}\n"
-    end
-  end
+  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
+  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
 def rails_file_path(*args)
@@ -40,7 +42,6 @@ end
 @new_database_yml_created = false
 @new_settings_yml_created = false
 @new_mailer_yml = false
-@new_sds_yml_created = false
 
 def copy_file(source, destination)
 
@@ -53,20 +54,18 @@ HEREDOC
 end
 
 @missing_gems = []
-@gems_needed_at_start = [
-  ['uuidtools', '>= 2.0.0'],
-  ['highline', '>= 1.5.0'],
-  ['haml', '>= 2.1.8'],
-  ['mime-types', '>=1.16'],
-  ['diff-lcs', '>= 1.1.2'],
-  ['prawn', '>= 0.4.1'],
-  ['prawn-format', '>= 0.1.1']
-]
 
+# These gems need to be installed with the Ruby VM for the web application
 if JRUBY 
-  @gems_needed_at_start << ['activerecord-jdbcmysql-adapter', '>= 0.9.1']
-  @gems_needed_at_start << ['jruby-openssl', '>=0.5']
+  @gems_needed_at_start = [
+    ['rake', '>=0.8.7'],
+    ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
+    ['jruby-openssl', '>=0.5.2']
+  ]
+else
+  @gems_needed_at_start = [['mysql', '>= 2.7']]
 end
+
 @gems_needed_at_start.each do |gem_name_and_version|
   begin
     gem gem_name_and_version[0], gem_name_and_version[1]
@@ -85,13 +84,9 @@ if @missing_gems.length > 0
   raise message
 end
 
-# Continuing after sucessfully requiring the necessary gems ..
-
-require 'highline/import'
-
 # returns true if @db_name_prefix on entry == @db_name_prefix on exit
 # false otherwise
-def confirm_database_name_prefix
+def confirm_database_name_prefix_user_password
   original_db_name_prefix = @db_name_prefix
   puts <<HEREDOC
 
@@ -101,7 +96,13 @@ You can specify a different prefix for the database names:
 
 HEREDOC
   @db_name_prefix = ask("  database name prefix: ") { |q| q.default = @db_name_prefix }
-  @db_name_prefix == original_db_name_prefix
+  if @db_name_prefix == original_db_name_prefix
+    @db_user = ask("  database username: ") { |q| q.default = 'root' }
+    @db_password = ask("  database password: ") { |q| q.default = 'password' }
+    true
+  else
+    false
+  end
 end
 
 def create_new_database_yml
@@ -111,7 +112,14 @@ def create_new_database_yml
   @db_config = YAML::load(IO.read(sample_path))
   %w{development test staging production}.each do |env|
     @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
+    @db_config[env]['user'] = @db_user
+    @db_config[env]['password'] = @db_password
   end
+  %w{itsi ccportal}.each do |external_db|
+    @db_config[external_db]['user'] = @db_user
+    @db_config[external_db]['password'] = @db_password
+  end
+
   puts <<HEREDOC
 
        creating: #{@db_config_path}
@@ -179,7 +187,7 @@ def check_for_config_database_yml
 
 HEREDOC
     @db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
-    confirm_database_name_prefix
+    confirm_database_name_prefix_user_password
     create_new_database_yml
     @new_database_yml_created = true
   end
@@ -196,7 +204,6 @@ def check_for_config_settings_yml
 
 HEREDOC
     create_new_settings_yml
-    @new_sds_yml_created = true
   end
 end
 
@@ -282,14 +289,15 @@ Here are the current settings in config/database.yml:
 
 #{@db_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
-    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix 
+  unless agree("Accept defaults? (y/n) ")
+    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix_user_password 
 
     %w{development test production}.each do |env|
       puts "\nSetting parameters for the #{env} database:\n\n"
       @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
       @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
       @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
+      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
     end
 
     puts <<HEREDOC
@@ -305,6 +313,7 @@ HEREDOC
     @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
     @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
     @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
+    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
@@ -318,13 +327,14 @@ HEREDOC
     @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
     @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
     @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
+    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
     Here is the updated database configuration:
     #{@db_config.to_yaml} 
 HEREDOC
-  
+
     if agree("OK to save to config/database.yml? (y/n): ")
       File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
     end
@@ -343,6 +353,18 @@ HEREDOC
   states_and_provinces = @settings_config[env]['states_and_provinces'].join(' ')
   states_and_provinces =  ask("   states_and_provinces: ") { |q| q.default = states_and_provinces }
   @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
+end
+
+def get_valid_sakai_instances(env)
+  puts <<HEREDOC
+
+Specify the sakai server urls from which it is ok to receive linktool requests.
+Delimit multiple items with spaces.
+
+HEREDOC
+  sakai_instances = @settings_config[env]['valid_sakai_instances'].join(' ')
+  sakai_instances =  ask("   valid_sakai_instances: ") { |q| q.default = sakai_instances }
+  @settings_config[env]['valid_sakai_instances'] = sakai_instances.split
 end
 
 def get_maven_jnlp_settings(env)
@@ -386,7 +408,7 @@ Here are the current settings in config/settings.yml:
 
 #{@settings_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     %w{development staging production}.each do |env|
       puts "\n#{env}:\n"
@@ -413,6 +435,11 @@ HEREDOC
       # ---- states_and_provinces ----
       #
       get_states_and_provinces_settings(env)
+      
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_valid_sakai_instances(env)
 
       # 
       # ---- enable_default_users ----
@@ -500,7 +527,7 @@ Here are the current settings in config/mailer.yml:
 
 #{@mailer_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     say("\nChoose mail delivery type: #{deliv_types}:\n\n")
 
@@ -559,24 +586,29 @@ HEREDOC
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
-check_for_config_sds_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-update_config_sds_yml
 update_config_mailer_yml
 
 puts <<HEREDOC
 
-To complete setup of the RITES Investigations Rails application setup run:
+To complete setup of the RITES Investigations Rails application setup first
+install a few more gems that require compilation when they are installed:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+  MRI Ruby:
+    rake gems:install
+    RAILS_ENV=production rake rigse:setup:new_rites_app
+    
+  JRuby:
+    jruby -S rake gems:install
+    RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
-These scripts will take about 30 minutes to run and are much faster if you are running
-Rails in production mode. If you are using separate databases for development and production
-and want to run these tasks to populate a development database I recommend temporarily 
+These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
+Rails in production mode and using JRuby. If you are using separate databases for development and 
+production and want to run these tasks to populate a development database I recommend temporarily 
 identifying the development database as production for the purpose of generating these data.
 
 HEREDOC

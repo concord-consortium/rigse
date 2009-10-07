@@ -1,9 +1,8 @@
-- options = { :complete => mce_init_string }
-%div{ :id => dom_id_for(district), :class => "container_element" }
-  = show_menu_for(district, options)
-
-  %div{:id => dom_id_for(district, :item), :class => 'item'}
-    %div{:id => dom_id_for(district, :details), :class => 'content'}
-      = wrap_edit_link_around_content(district, options={:complete => mce_init_string}) do
-        %h4= h(district.name)
-        %p= h(district.description)
+- options = { :omit_delete => true, :hide_componenent_name => true }
+= accordion_for(portal_district, show_menu_for(portal_district, options)) do
+  %div{:id => dom_id_for(portal_district, :item), :class => 'item'}
+    %div{:id => dom_id_for(portal_district, :details), :class => 'content'}
+      = wrap_edit_link_around_content(portal_district, options={:complete => mce_init_string}) do
+        %h4= h(portal_district.name)
+        %p= h(portal_district.description)    
+      = render :partial => 'portal/schools/show', :collection => portal_district.schools, :as => :portal_school

@@ -7,6 +7,8 @@ class Investigation < ActiveRecord::Base
   has_many :activities, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
+  
+  has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
 
   [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
     eval "has_many :#{klass.table_name},
@@ -94,6 +96,45 @@ class Investigation < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def display_name
+      "Investigation"
+    end
+    
+    def find_by_grade_span_and_domain_id(grade_span,domain_id)
+      @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
+      @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
+      # @investigations.flatten!.compact!
+    end
+
+    def search_list(options)
+      grade_span = options[:grade_span] || ""
+      domain_id = options[:domain_id].to_i
+      name = options[:name]
+      if domain_id > 0
+        if (options[:include_drafts])
+          investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+        else
+          investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+        end
+      else
+        if (options[:include_drafts])
+          investigations = Investigation.like(name).with_gse.grade(grade_span)
+        else
+          investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+        end
+      end
+      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+      if portal_clazz
+        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
+      end
+      if options[:paginate]
+        investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+      else
+        investigations
+      end
+    end  
+    
   end
   
   # Enables a teacher note to call the investigation method of an
@@ -102,21 +143,10 @@ class Investigation < ActiveRecord::Base
     self
   end
   
-  def self.find_by_grade_span_and_domain_id(grade_span,domain_id)
-    @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
-    @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
-    # @investigations.flatten!.compact!
-  end
-  
-  
   def after_save
     if self.user
       self.user.add_role('author') 
     end
-  end
-  
-  def self.display_name
-    'Investigation'
   end
   
   def left_nav_panel_width
@@ -172,33 +202,5 @@ class Investigation < ActiveRecord::Base
       }
     )
   end
-  
-  def self.search_list(options)
-    grade_span = options[:grade_span] || ""
-    domain_id = options[:domain_id].to_i
-    name = options[:name]
-    if domain_id > 0
-      if (options[:include_drafts])
-        investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
-      else
-        investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
-      end
-    else
-      if (options[:include_drafts])
-        investigations = Investigation.like(name).with_gse.grade(grade_span)
-      else
-        investigations = Investigation.published.like(name).with_gse.grade(grade_span)
-      end
-    end
-    portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-    if portal_clazz
-      investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
-    end
-    if options[:paginate]
-      investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
-    else
-      investigations
-    end
-  end  
-  
+
 end

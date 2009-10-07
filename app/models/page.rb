@@ -69,8 +69,17 @@ class Page < ActiveRecord::Base
     Page::element_types.map {|t| t.name.underscore}
   end
 
-  def self.display_name
-    'Page'
+  self.extend SearchableModel
+  @@searchable_attributes = %w{name description}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+    
+    def display_name
+      "Page"
+    end
   end
   
   def page_number

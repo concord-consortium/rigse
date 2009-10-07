@@ -72,15 +72,23 @@ class Admin::Project < ActiveRecord::Base
     # Admin::Project.default_project
     def default_project
       name, url = default_project_name_url
-      find_by_name_and_url(name, url)
+      proj = find_by_name_and_url(name, url)
+      if ! proj
+        logger.warn("No default project found for: #{name}, #{url}")
+      end
+      proj
     end
     
     def default_project_name_url
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
-    
+
     def display_name
       "Project"
+    end
+    
+    def summary_info
+      default_project.summary_info
     end
     
     def create_or_update__default_project_from_settings_yml
@@ -121,6 +129,17 @@ class Admin::Project < ActiveRecord::Base
       project.jnlp_version_str = jnlp_version_str
       project.snapshot_enabled = snapshot_enabled
       project.save!
+      active_grades = APP_CONFIG[:active_grades]
+      if ActiveRecord::Base.connection.table_exists?('portal_grades')
+        Portal::Grade.find(:all).each do |grade|
+          if (active_grades & [grade.name.to_i]).empty?
+            grade.active = false
+          else
+            grade.active = true
+          end
+          grade.save!
+        end
+      end
       project
     end
   end
@@ -129,5 +148,29 @@ class Admin::Project < ActiveRecord::Base
     default_name, default_url = Admin::Project.default_project_name_url
     self.name == default_name && self.url == default_url
   end
+  
+  def summary_info
+    puts <<HEREDOC
+
+Portal::District: #{Portal::District.count}
+Portal::School:   #{Portal::School.count}
+Portal::Course:   #{Portal::Course.count}
+Portal::Clazz:    #{Portal::Clazz.count}
+Portal::Teacher:  #{Portal::Teacher.count}
+
+Portal::Student:  #{Portal::Student.count}
+Portal::Offering: #{Portal::Offering.count}
+Portal::Learner:  #{Portal::Learner.count}
+
+Dataservice::BundleLogger:  #{Dataservice::BundleLogger.count}
+Dataservice::BundleContent: #{Dataservice::BundleContent.count}
+
+# code template for use in script/console
+
+ut = User.find_by_login('teacher'); us = User.find_by_login('student')
+t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
+
+HEREDOC
     
+  end 
 end

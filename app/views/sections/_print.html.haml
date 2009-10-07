@@ -1,3 +1,4 @@
-- section.pages.each do |page|
-  = render  :partial => 'pages/print', :locals => { :page => page }
+.section
+  - section.pages.each do |page|
+    = render  :partial => 'pages/print', :locals => { :page => page }
 

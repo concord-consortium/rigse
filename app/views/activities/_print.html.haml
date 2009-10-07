@@ -1,3 +1,4 @@
-- activity.sections.each do |section|
-  = render  :partial => 'sections/print', :locals => { :section => section }
+.activity
+  - activity.sections.each do |section|
+    = render  :partial => 'sections/print', :locals => { :section => section }
   

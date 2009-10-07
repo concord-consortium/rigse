@@ -1,10 +1,6 @@
 %div{ :id => dom_id_for(offering), :class => 'offering' }
-  = accordion_for(offering,offering.name) do  
+  = accordion_for(offering, preview_link_for(offering.runnable, nil, :link_text => offering.runnable.name)) do  
     %div{:id => dom_id_for(offering, :details), :class => 'tiny'}
-      .action_menu
-        .action_menu_header_right
-          %ul
-            %li= run_link_for(offering.runnable,nil,{:link_text => "preview #{offering.name}"})
       %span.author= offering.runnable.user.name
       %p= offering.runnable.description
       %p= updated_time_text(offering.runnable)
