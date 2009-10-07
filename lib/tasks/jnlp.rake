@@ -37,7 +37,7 @@ Generate MavenJnlp family of resources from this jnlp server specification?
 [this normally takes about 10 minutes]
 
 HEREDOC
-        if HighLine.new.agree("Do you want to do this? (y/n) ")  
+        if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this? (y/n) ")  
           mj_server.create_maven_jnlp_families
           puts <<HEREDOC
 completed ...

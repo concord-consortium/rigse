@@ -119,6 +119,7 @@ This task will:
   
 HEREDOC
       if HighLine.new.agree("Do you want to do this?  (y/n) ")
+      if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
         begin
           Rake::Task['db:drop'].invoke
         rescue StandardError
