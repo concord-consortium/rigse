@@ -43,7 +43,6 @@ set :deploy_via, :remote_cache
 #  DB
 #############################################################
 
-
 namespace :db do
   desc 'Dumps the production database to db/production_data.sql on the remote server'
   task :remote_db_dump, :roles => :db, :only => { :primary => true } do
@@ -94,6 +93,11 @@ namespace :db do
     remote_db_upload
     remote_db_load
     remote_db_cleanup
+  end
+
+  desc 'Copies config/initializers/site_keys.rb from the remote environment to your local machine'
+  task :copy_remote_site_keys, :roles => :app do
+    download("#{deploy_to}/shared/config/initializers/site_keys.rb", "config/initializers/site_keys.rb", :via => :sftp)
   end
   
 
