@@ -10,6 +10,10 @@ namespace :rigse do
     JRUBY ? "jruby " : "ruby "
   end
 
+  def jruby_run_server_command
+    jruby_run_command + (JRUBY ? "-J-server " : "")
+  end
+
   desc "display info about the site admin user"
   task :display_site_admin => :environment do
     puts User.site_admin.to_yaml
@@ -109,16 +113,17 @@ HEREDOC
 
 This task will:
 
-1. drop the existing database: #{db_config['database']} and rebuild it from scratch
-2. install any addition gems that are needed
+1. drop the existing database: '#{db_config['database']}' and rebuild it from scratch
+2. load default probe, interface, and calibration reesources
 3. generate a set of the RI Grade Span Expectation
 4. generate the maven_jnlp resources
 5. download and generate nces district and school resource
 6. create default roles, users, district, school, teacher, student, class, and offering
-7. create a default project and associate it with the maven_jnlp resources
+7. download, introspect, and create models represented otrunk-examples 
+8. download and import NCES school and district data
+9. create a default project and associate it with the maven_jnlp resources
   
 HEREDOC
-      if HighLine.new.agree("Do you want to do this?  (y/n) ")
       if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
         begin
           Rake::Task['db:drop'].invoke
@@ -129,27 +134,31 @@ HEREDOC
         Rake::Task['gems:install'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
         Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
         Rake::Task['portal:setup:import_nces_from_file'].invoke
-        Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
         Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
+        Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
+        Rake::Task['rigse:setup:create_additional_users'].invoke
   
         puts <<HEREDOC
 
-You can now start the application in develelopment mode by running this command:
+Start the application in development mode by running this command:
 
-  #{jruby_run_command}script/server
+  #{jruby_run_server_command}script/server
 
-You can re-edit the initial configuration parameters by running the
+Start the application in production mode by running this command:
+
+  #{jruby_run_server_command}script/server -e production
+
+Re-edit the initial configuration parameters by running the
 setup script again:
 
   #{jruby_run_command}config/setup.rb
 
-You can re-create the database from scratch and setup default users 
+Re-create the database from scratch and setup default users 
 again by running this rake task again:
 
   #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
