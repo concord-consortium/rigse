@@ -3,6 +3,8 @@ class Portal::Nces06School < ActiveRecord::Base
   
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
   
+  has_one :school, :class_name => "Portal::School", :foreign_key => "nces_school_id"
+  
   self.extend SearchableModel
 
   @@searchable_attributes = %w{NCESSCH LEAID SCHNO SCHNAM PHONE MSTREE MCITY MSTATE MZIP}
