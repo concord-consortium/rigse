@@ -91,7 +91,7 @@ class Admin::Project < ActiveRecord::Base
       default_project.summary_info
     end
     
-    def create_or_update__default_project_from_settings_yml
+    def create_or_update_default_project_from_settings_yml
       name, url = default_project_name_url
       states_and_provinces = APP_CONFIG[:states_and_provinces]
       maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
@@ -132,7 +132,7 @@ class Admin::Project < ActiveRecord::Base
       active_grades = APP_CONFIG[:active_grades]
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
         Portal::Grade.find(:all).each do |grade|
-          if (active_grades & [grade.name.to_i]).empty?
+          if (active_grades & [grade.name]).empty?
             grade.active = false
           else
             grade.active = true

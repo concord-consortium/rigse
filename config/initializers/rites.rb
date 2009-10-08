@@ -32,9 +32,9 @@
 #
 begin
   ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
-  puts "running Admin::Project.create_or_update__default_project_from_settings_yml"
+  puts "running Admin::Project.create_or_update_default_project_from_settings_yml"
   Admin::Project.create_or_update__default_project_from_settings_yml
 rescue RuntimeError, StandardError
-  puts "database doesn't exist ... run migrations or load a database schema"
-  puts "not running Admin::Project.create_or_update__default_project_from_settings_yml"
+  puts "the database or some required models in the database don't exist ... run migrations, load a database schema, or create resources"
+  puts "not running Admin::Project.create_or_update_default_project_from_settings_yml"
 end
