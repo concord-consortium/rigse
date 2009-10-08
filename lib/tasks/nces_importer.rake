@@ -7,7 +7,11 @@ namespace :portal do
     nces_dir = File.join(RAILS_ROOT, 'config', 'nces_data')
     school_layout_file = File.join(nces_dir, 'psu061blay.txt')
     district_layout_file = File.join(nces_dir, 'pau061blay.txt')
-    
+
+    # 
+    # task: portal:setup:download_nces_data
+    # Download NCES CCD data files from NCES website
+    # 
     desc 'Download NCES CCD data files from NCES website'
     task :download_nces_data do
       puts <<HEREDOC
@@ -44,13 +48,21 @@ HEREDOC
         end
       end
     end
-    
+
+    # 
+    # task: portal:setup:generate_nces_tables_migration
+    # Generate migration file for nces tables
+    #
     desc 'Generate migration file for nces tables'
     task :generate_nces_tables_migration => :environment do
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006)
       parser.create_tables_migration
     end
 
+    # 
+    # task: portal:setup:generate_nces_indexes_migration
+    # Generate migration file for nces indexes
+    # 
     desc 'Generate migration file for nces indexes'
     task :generate_nces_indexes_migration => :environment do
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006)
@@ -81,6 +93,10 @@ HEREDOC
       parser.load_db(district_data_fpaths, school_data_fpaths)
     end
 
+    #
+    # task: portal:setup:create_districts_and_schools_from_nces_data
+    # Create districts and schools from NCES records for States listed in settings.yml
+    # 
     desc 'Create districts and schools from NCES records for States listed in settings.yml'
     task :create_districts_and_schools_from_nces_data => :environment do
       states_and_provinces = APP_CONFIG[:states_and_provinces]
