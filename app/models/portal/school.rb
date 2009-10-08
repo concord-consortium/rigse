@@ -29,6 +29,9 @@ class Portal::School < ActiveRecord::Base
   
   has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/school_memberships"
 
+  named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
+  named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
+
   include Changeable
 
   self.extend SearchableModel
