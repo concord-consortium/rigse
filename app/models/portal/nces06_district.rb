@@ -18,4 +18,9 @@ class Portal::Nces06District < ActiveRecord::Base
       "NCES District"
     end
   end
+  
+  def capitalized_name
+    self.NAME.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+  end
+  
 end

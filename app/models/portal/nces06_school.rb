@@ -18,4 +18,8 @@ class Portal::Nces06School < ActiveRecord::Base
       "NCES School"
     end
   end
+  
+  def capitalized_name
+    self.SCHNAM.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+  end
 end
