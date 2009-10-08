@@ -35,12 +35,23 @@ def rails_file_exists?(*args)
   File.exists?(rails_file_path(args))
 end
 
-@db_config_path = rails_file_path(%w{config database.yml})
-@settings_config_path = rails_file_path(%w{config settings.yml})
-@mailer_config_path = rails_file_path(%w{config mailer.yml})
+@db_config_path                = rails_file_path(%w{config database.yml})
+@db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
+@settings_config_path          = rails_file_path(%w{config settings.yml})
+@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
+@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
+@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
+@mailer_config_path            = rails_file_path(%w{config mailer.yml})
+@mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
+
+@db_sample_config              = YAML::load(IO.read(@db_config_sample_path))
+@settings_sample_config        = YAML::load(IO.read(@settings_config_sample_path))
+@rinet_data_sample_config      = YAML::load(IO.read(@rinet_data_config_sample_path))
+@mailer_sample_config          = YAML::load(IO.read(@mailer_config_sample_path))
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
+@rinet_data_yml = false
 @new_mailer_yml = false
 
 def copy_file(source, destination)
@@ -107,9 +118,8 @@ end
 
 def create_new_database_yml
   raise "the instance variable @db_name_prefix must be set before calling create_new_database_yml" unless @db_name_prefix
-  
-  sample_path = rails_file_path(%w{config database.mysql.sample.yml})
-  @db_config = YAML::load(IO.read(sample_path))
+
+  @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
     @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
     @db_config[env]['user'] = @db_user
@@ -123,7 +133,7 @@ def create_new_database_yml
   puts <<HEREDOC
 
        creating: #{@db_config_path}
-  from template: #{sample_path}
+  from template: #{@db_config_sample_path}
 
   using database name prefix: #{@db_name_prefix}
 
@@ -132,27 +142,36 @@ HEREDOC
 end
 
 def create_new_settings_yml
-  sample_path = rails_file_path(%w{config settings.sample.yml})
-  @settings_config = YAML::load(IO.read(sample_path))
+  @settings_config = @settings_config_sample
   puts <<HEREDOC
 
        creating: #{@settings_config_path}
-  from template: #{sample_path}
+  from template: #{@settings_config_sample_path}
 
 HEREDOC
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
 end
 
 def create_new_mailer_yml
-  sample_path = rails_file_path(%w{config mailer.sample.yml})
-  @mailer_config = YAML::load(IO.read(sample_path))
+  @mailer_config = @mailer_config_sample
   puts <<HEREDOC
 
        creating: #{@mailer_config_path}
-  from template: #{sample_path}
+  from template: #{@mailer_config_sample_path}
 
 HEREDOC
   File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
+end
+
+def create_new_rinet_data_yml
+  @rinet_data_config = @rinet_data_config_sample
+  puts <<HEREDOC
+
+       creating: #{@rinet_data_config_path}
+  from template: #{@rinet_data_config_sample_path}
+
+HEREDOC
+  File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
 end
 
 # 
@@ -204,6 +223,52 @@ def check_for_config_settings_yml
 
 HEREDOC
     create_new_settings_yml
+  else
+    @settings_config = YAML::load(IO.read(@settings_config_path))
+    %w{development staging production}.each do |env|
+      unless @settings_config[env]['valid_sakai_instances']
+        puts <<HEREDOC
+
+  The valid_sakai_instances parameter does not yet exist in the y#{env} section of settings.yml
+
+  Copying the values in the sample: #{@settings_sample_config[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+
+HEREDOC
+        @settings_config[env]['valid_sakai_instances'] = @settings_sample_config[env]['valid_sakai_instances']
+      end
+
+      unless @settings_config[env]['states_and_provinces']
+        puts <<HEREDOC
+
+  The states_and_provinces parameter does not yet exist in settings.yml
+
+  Copying the values in the sample: #{@settings_sample_config[env]['states_and_provinces'].join(', ')} into settings.yml.
+
+HEREDOC
+        @settings_config[env]['states_and_provinces'] = @settings_sample_config[env]['states_and_provinces']
+      end
+
+      unless @settings_config[env]['active_grades']
+        puts <<HEREDOC
+
+  The active_grades parameter does not yet exist in settings.yml
+
+  Copying the values in the sample: #{@settings_sample_config[env]['active_grades'].join(', ')} into settings.yml.
+
+HEREDOC
+        @settings_config[env]['active_grades'] = @settings_sample_config[env]['active_grades']
+      end
+      unless @settings_config[env]['active_school_levels']
+        puts <<HEREDOC
+
+  The active_school_levels parameter does not yet exist in settings.yml
+
+  Copying the values in the sample: #{@settings_sample_config[env]['active_school_levels'].join(', ')} into settings.yml.
+
+HEREDOC
+        @settings_config[env]['active_school_levels'] = @settings_sample_config[env]['active_school_levels']
+      end
+    end
   end
 end
 
@@ -218,6 +283,21 @@ def check_for_config_mailer_yml
 
 HEREDOC
     create_new_mailer_yml
+  end
+end
+
+#
+# check for config/rinet_data.yml
+#
+def check_for_config_rinet_data_yml
+  unless File.exists?(@rinet_data_config_path)
+    puts <<HEREDOC
+
+  The RITES RINET CSV import configuration file does not yet exist.
+
+HEREDOC
+    create_new_rinet_data_yml
+    @new_rinet_data_yml_created = true
   end
 end
 
@@ -255,7 +335,16 @@ def check_for_config_initializers_site_keys_rb
 
   The Rails site keys authentication tokens file does not yet exist: 
 
-    #{site_keys_path} created.
+    new #{site_keys_path} created.
+
+    If you have copied a production database from another app instance you will
+    need to have the same site keys authentication tokens in order for the existing
+    User passwords to work.
+    
+    If you have ssh access to the production deploy site you can install a copy 
+    with this capistrano task:
+
+      cap production db:copy_remote_site_keys
 
 HEREDOC
 
@@ -341,6 +430,54 @@ HEREDOC
   end
 end
 
+#
+# update config/rinet_data.yml
+#
+def update_config_rinet_data_yml
+  @rinet_data_config = YAML::load(IO.read(@rinet_data_config_path))
+
+  puts <<HEREDOC
+----------------------------------------
+
+Updating the RINET CSV Account import configuration file: config/rinet_data.yml
+
+Specify values for the host, username and password for the RINET SFTP
+site to download Sakai account data in CSV format.
+
+Here are the current settings in config/rinet_data.yml:
+
+#{@rinet_data_config.to_yaml} 
+HEREDOC
+  unless agree("Accept defaults? (y/n) ")
+    create_new_rinet_data_yml unless @new_rinet_data_yml_created
+
+    @rinet_data_config['host'] =     ask("     RINET username: ") { |q| q.default = @rinet_data_sample_config['host'] }
+    @rinet_data_config['username'] =     ask("     RINET username: ") { |q| q.default = @rinet_data_sample_config['username'] }
+    @rinet_data_config['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_sample_config['password'] }
+
+    puts <<HEREDOC
+
+    Here is the updated rinet_data configuration:
+    #{@rinet_data_config.to_yaml} 
+HEREDOC
+
+    if agree("OK to save to config/rinet_data.yml? (y/n): ")
+      File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    end
+  end
+end
+
+
+def get_include_otrunk_examples_settings(env)
+  include_otrunk_examples = @settings_config[env]['include_otrunk_examples']
+  puts <<HEREDOC
+
+Processing and importing of otrunk-examples can be enabled or disabled.
+It is currently #{include_otrunk_examples ? 'disabled' : 'enabled' }.
+
+HEREDOC
+  @settings_config[env]['include_otrunk_examples'] = agree("Include otrunk-examples? (y/n) ") { |q| q.default = (include_otrunk_examples ? 'y' : 'n') }
+end
 
 def get_states_and_provinces_settings(env)
   puts <<HEREDOC
@@ -354,6 +491,23 @@ HEREDOC
   states_and_provinces =  ask("   states_and_provinces: ") { |q| q.default = states_and_provinces }
   @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
 end
+
+def get_active_grades_settings(env)
+  active_grades = @settings_config[env]['active_grades']
+  active_grades .join(' ')
+  puts <<HEREDOC
+
+
+Detailed data are imported for US schools and district. 
+List state or province abbreviations for the locations you want imported. 
+Use capital letters and delimit multiple items with spaces.
+
+HEREDOC
+  states_and_provinces = @settings_config[env]['states_and_provinces'].join(' ')
+  states_and_provinces =  ask("   states_and_provinces: ") { |q| q.default = states_and_provinces }
+  @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
+end
+
 
 def get_valid_sakai_instances(env)
   puts <<HEREDOC
@@ -390,7 +544,7 @@ def update_config_settings_yml
   puts <<HEREDOC
 ----------------------------------------
 
-Updating the Rails database configuration file: config/settings.yml
+Updating the application settings configuration file: config/settings.yml
 
 Specify general application settings values: site url, site name, and admin name, email, login
 for the development staging and production environments.
@@ -399,8 +553,6 @@ If you are doing development locally you may want to use one database for develo
 Some of the importing scripts run much faster in production mode.
 
 HEREDOC
-
-  @settings_config = YAML::load(IO.read(@settings_config_path))
 
   puts <<HEREDOC
 
@@ -435,6 +587,16 @@ HEREDOC
       # ---- states_and_provinces ----
       #
       get_states_and_provinces_settings(env)
+
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_valid_sakai_instances(env)
+
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_valid_sakai_instances(env)
       
       # 
       # ---- valid_sakai_instances ----
@@ -586,17 +748,18 @@ HEREDOC
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
+check_for_config_rinet_data_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
+update_config_rinet_data_yml
 update_config_mailer_yml
 
 puts <<HEREDOC
 
-To complete setup of the RITES Investigations Rails application setup first
-install a few more gems that require compilation when they are installed:
+To complete setup of the RITES Investigations Rails application setup: 
 
   MRI Ruby:
     rake gems:install
@@ -608,7 +771,7 @@ install a few more gems that require compilation when they are installed:
     RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
     RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
-These scripts will take about 30 minutes to run and are much faster (10m) if you are both running
+These scripts will take about 5-30 minutes to run and are much faster if you are both running
 Rails in production mode and using JRuby. If you are using separate databases for development and 
 production and want to run these tasks to populate a development database I recommend temporarily 
 identifying the development database as production for the purpose of generating these data.
