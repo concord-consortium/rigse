@@ -40,15 +40,15 @@ HEREDOC
     # Create default users, roles, district, school, course, and class, and greade_levels
     #
     #######################################################################   
-    desc "Create default users and roles and portal resources"
-    task :default_users_roles_and_portal_resources => :environment do
+    desc "Create default users and roles"
+    task :default_users_roles => :environment do
 
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
       puts <<HEREDOC
 
-This task creates six roles (if they dont already exist):
+This task creates six roles (if they don't already exist):
 
   admin
   manager
@@ -203,6 +203,23 @@ HEREDOC
       researcher_user.add_role('researcher')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
+    end
+    
+    
+    #######################################################################
+    #
+    # Create default portal resources: district, school, course, and class, investigation and grades
+    #
+    #######################################################################   
+    desc "Create default portal resources"
+    task :default_portal_resources => :environment do
+
+      # some constants that should probably be moved to settings.yml
+      DEFAULT_CLASS_NAME = 'Fun with Investigations'
+
+      author_user = User.find_by_login('author')
+      teacher_user = User.find_by_login('teacher')
+      student_user = User.find_by_login('student')
       
       default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
 
@@ -250,6 +267,9 @@ HEREDOC
         default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grades << grade_9
+
+      debugger
+      
       site_school.members << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
@@ -260,11 +280,15 @@ HEREDOC
         :course_id => site_school_default_course.id,
         :semester_id => site_school_fall_semester.id,
         :teacher_id => default_school_teacher.id,
-        :class_word => 'abc123456',
+        :class_word => 'abc123',
         :description => 'This is a default class created for the default school ... etc'
       }
-      unless default_course_class = Portal::Clazz.find(:first, :conditions => attributes)
+      unless default_course_class = 
+        Portal::Clazz.find_by_class_word(attributes[:class_word]) ||
+        Portal::Clazz.find_by_name_and_teacher_id(attributes[:name], attributes[:teacher_id])
         default_course_class = Portal::Clazz.create!(attributes)
+      else
+        default_course_class.update_attributes!(attributes)
       end
       default_course_class.status = 'open'
       default_course_class.save
