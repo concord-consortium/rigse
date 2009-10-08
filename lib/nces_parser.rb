@@ -6,12 +6,11 @@ class NcesParser
   def initialize(district_layout_file, school_layout_file, year, states_and_provinces=nil)
     ## @year_str gets inserted to the db table names
     @year_str = year.to_s[-2..-1]
-    puts
     puts 'Parsing layout files:'
     @district_layout = _get_district_layout(district_layout_file)
-    puts "#{@district_layout.size} variables retrieved from #{district_layout_file}"
+    puts "  #{@district_layout.size} variables retrieved from #{district_layout_file}"
     @school_layout = _get_school_layout(school_layout_file)
-    puts "#{@school_layout.size} variables retrieved from #{school_layout_file}"
+    puts "  #{@school_layout.size} variables retrieved from #{school_layout_file}"
     
     @district_model = "Portal::Nces#{@year_str}District".constantize
     @school_model = "Portal::Nces#{@year_str}School".constantize
@@ -38,10 +37,11 @@ class NcesParser
     ## Delete all the entries first
     ## Use the TRUNCATE cammand -- works in mysql to effectively empty the database and reset 
     ## the autogenerating primary key index ... not certain about other databases
+    print "\nImporting School data "
     if @states_and_provinces
-      puts "\nImporting data from: #{@states_and_provinces.join(', ')}."
+      puts "for the following states and provinces: #{@states_and_provinces.join(', ')}."
     else
-      puts "\nImporting all data."
+      puts "for all states and provinces."
     end
     ActiveRecord::Base.connection.delete("TRUNCATE `#{@district_model.table_name}`")
     ActiveRecord::Base.connection.delete("TRUNCATE `#{@school_model.table_name}`")
@@ -52,7 +52,7 @@ class NcesParser
         _parse_file_using_import(file, @district_layout, @district_model)
       end
     end
-    puts "#{@district_model.count} #{@district_model.name} records created"
+    puts "\n#{@district_model.count} #{@district_model.name} records created"
     puts
     puts "Loading school data:"
     school_data_files.each do |fpath|
@@ -60,7 +60,7 @@ class NcesParser
         _parse_file_using_import(file, @school_layout, @school_model)
       end
     end
-    puts "#{@school_model.count} #{@school_model.name} records created"
+    puts "\n#{@school_model.count} #{@school_model.name} records created"
     puts
     puts "Generating #{@school_model.count} #{@school_model.name} 'belongs_to :nces_district' associations:"
     # _parseDistrictSchoolAssociations
@@ -190,8 +190,7 @@ private
     not_nces_fields = column_names.select { |name| name[/id/] }
     field_names = column_names - not_nces_fields
     options = { :validate => false }
-    mstate_index = nil
-    field_names.each_with_index { |name, i| if name == 'MSTATE' then mstate_index = i end }
+    mstate_index = field_names.index("MSTATE")
     while (line = file.gets) do
       next if line.strip == ''
       values = []
