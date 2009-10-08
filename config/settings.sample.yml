@@ -74,6 +74,8 @@ staging:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  valid_sakai_instances:
+    - http://localhost:3000/
   
 production:
   site_url: http://rites.dev.concord.org
@@ -110,4 +112,6 @@ production:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  valid_sakai_instances:
+    - http://localhost:3000/
   
