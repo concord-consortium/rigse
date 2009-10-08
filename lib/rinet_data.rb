@@ -7,7 +7,7 @@ class RinetData
   @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
 
   def initialize
-    @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data_config.yml")[RAILS_ENV].symbolize_keys
+    @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
   end
 
   def get_csv_files
