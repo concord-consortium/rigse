@@ -128,6 +128,7 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/rinet_data_config.yml #{release_path}/config/rinet_data_config.yml"
     run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
@@ -213,7 +214,7 @@ namespace :import do
   desc "Import nces data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states"
   task :nces_data_from_files, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_file --trace" 
+      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_files --trace" 
   end
 
   desc"reload the default probe and vendor_interface configurations."
@@ -321,12 +322,6 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:generate_date_str_for_versioned_jnlp_urls --trace"
   end
 
-  desc "Create default users and roles and portal resources"
-  task :default_users_roles_and_portal_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles_and_portal_resources --trace"
-  end
-
   desc "Create bundle and console loggers for learners"
   task :create_bundle_and_console_loggers_for_learners, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -351,6 +346,26 @@ namespace :convert do
   task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects --trace"
+  end
+
+  # Thursday October 8, 2009
+
+  desc "Create default users, roles, district, school, course, and class, and greade_levels"
+  task :default_users_roles, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles --trace"
+  end
+
+  desc "Create default portal resources: district, school, course, and class, investigation and grades"
+  task :default_portal_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:default_portal_resources --trace"
+  end
+
+  desc "Create districts and schools from NCES records for States listed in settings.yml"
+  task :create_districts_and_schools_from_nces_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:create_districts_and_schools_from_nces_data --trace"
   end
 
 end
