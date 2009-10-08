@@ -164,7 +164,7 @@ HEREDOC
 end
 
 def create_new_rinet_data_yml
-  @rinet_data_config = @rinet_data_config_sample
+  @rinet_data_config = @rinet_data_sample_config
   puts <<HEREDOC
 
        creating: #{@rinet_data_config_path}
@@ -480,11 +480,15 @@ HEREDOC
 end
 
 def get_states_and_provinces_settings(env)
+  states_and_provinces = (@settings_config[env]['states_and_provinces'] || []).join(' ')
   puts <<HEREDOC
 
-Detailed data are imported for US schools and district. 
+Detailed data are imported for the following US schools and district:
+
+  #{states_and_provinces}
+ 
 List state or province abbreviations for the locations you want imported. 
-Use capital letters and delimit multiple items with spaces.
+Use two-character capital letter abreviations and delimit multiple items with spaces.
 
 HEREDOC
   states_and_provinces = @settings_config[env]['states_and_provinces'].join(' ')
@@ -493,21 +497,53 @@ HEREDOC
 end
 
 def get_active_grades_settings(env)
-  active_grades = @settings_config[env]['active_grades']
-  active_grades .join(' ')
+  active_grades = (@settings_config[env]['active_grades'] || []).join(' ')
   puts <<HEREDOC
 
+The following is a list of the active grade:
 
-Detailed data are imported for US schools and district. 
-List state or province abbreviations for the locations you want imported. 
-Use capital letters and delimit multiple items with spaces.
+  #{active_grades}
+
+List active grades for this application instance. 
+
+Use any of the following: 
+
+  K 1 2 3 4 5 6 7 8 9 10 11 12
+  
+and delimit multiple active grades with a space character.
 
 HEREDOC
-  states_and_provinces = @settings_config[env]['states_and_provinces'].join(' ')
-  states_and_provinces =  ask("   states_and_provinces: ") { |q| q.default = states_and_provinces }
-  @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
+  active_grades =  ask("      active_grades: ") { |q| q.default = active_grades }
+  @settings_config[env]['active_grades'] =  active_grades.split  
 end
 
+def get_active_school_levels
+  active_school_levels = (@settings_config[env]['active_school_levels'] || []).join(' ')
+  puts <<HEREDOC
+
+The following is a list of the active school levels:
+
+  #{active_school_levels}
+
+List active school levels for this application instance. 
+
+Use any of the following: 
+
+  1 2 3 4
+
+and delimit multiple active school levels with a space character.
+
+School level.  The following codes are used for active school levels:
+ 
+  1 = Primary (low grade = PK through 03; high grade = PK through 08)
+  2 = Middle (low grade = 04 through 07; high grade = 04 through 09)
+  3 = High (low grade = 07 through 12; high grade = 12 only
+  4 = Other (any other configuration not falling within the above three categories, including ungraded)
+
+HEREDOC
+  active_school_levels =  ask("   active_school_levels: ") { |q| q.default = active_school_levels }
+  @settings_config[env]['active_school_levels'] =  active_school_levels.split  
+end
 
 def get_valid_sakai_instances(env)
   puts <<HEREDOC
@@ -589,14 +625,14 @@ HEREDOC
       get_states_and_provinces_settings(env)
 
       # 
-      # ---- valid_sakai_instances ----
+      # ---- active_grades ----
       #
-      get_valid_sakai_instances(env)
+      get_active_grades_settings(env)
 
       # 
       # ---- valid_sakai_instances ----
       #
-      get_valid_sakai_instances(env)
+      get_active_school_levels(env)
       
       # 
       # ---- valid_sakai_instances ----
