@@ -113,35 +113,38 @@ HEREDOC
 
 This task will:
 
-1. drop the existing database: '#{db_config['database']}' and rebuild it from scratch
-2. load default probe, interface, and calibration reesources
-3. generate a set of the RI Grade Span Expectation
-4. generate the maven_jnlp resources
-5. download and generate nces district and school resource
-6. create default roles, users, district, school, teacher, student, class, and offering
-7. download, introspect, and create models represented otrunk-examples 
-8. download and import NCES school and district data
-9. create a default project and associate it with the maven_jnlp resources
+ 1. create default users and roles
+ 2. optionally create additional users
+ 3. load default probe, interface, and calibration reesources
+ 4. generate a set of the RI Grade Span Expectation
+ 5. assign teh Vernier Go!Link interface as a default to the existing users
+ 6. generate the maven_jnlp resources
+ 7. optionally download, introspect, and create models representing otrunk-examples 
+ 8. create a default project and associate it with the maven_jnlp resources
+ 9. download and generate nces district and school resources
+10. Generate District and School model instances from the NCES data for selected States and Active School Levels.
+11. create default portal resources: district, school, class, investigation and offering
   
 HEREDOC
       if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
-        begin
-          Rake::Task['db:drop'].invoke
-        rescue StandardError
-        end
-        Rake::Task['db:create'].invoke
-        Rake::Task['db:migrate'].invoke
-        Rake::Task['gems:install'].invoke
+        # Rake::Task['gems:install'].invoke
+        Rake::Task['rigse:setup:default_users_roles'].invoke
+        Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
-        Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
-        Rake::Task['portal:setup:download_nces_data'].invoke
-        Rake::Task['portal:setup:import_nces_from_file'].invoke
+        if APP_CONFIG[:include_otrunk_examples]
+          Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
+        else
+          puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n"
+        end
         Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
-        Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
+        Rake::Task['portal:setup:download_nces_data'].invoke
+        Rake::Task['portal:setup:import_nces_from_files'].invoke
+        Rake::Task['portal:setup:create_districts_and_schools_from_nces_data'].invoke
+        Rake::Task['rigse:setup:default_portal_resources'].invoke
+
   
         puts <<HEREDOC
 
