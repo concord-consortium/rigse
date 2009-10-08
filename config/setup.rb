@@ -600,10 +600,12 @@ install a few more gems that require compilation when they are installed:
 
   MRI Ruby:
     rake gems:install
+    RAILS_ENV=production rake db:migrate:reset
     RAILS_ENV=production rake rigse:setup:new_rites_app
     
   JRuby:
-    jruby -S rake gems:install
+    #{jruby_system_command} rake gems:install
+    RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
     RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 These scripts will take about 30 minutes to run and are much faster (10m) if you are both running

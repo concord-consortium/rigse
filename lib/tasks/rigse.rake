@@ -159,9 +159,10 @@ setup script again:
   #{jruby_run_command}config/setup.rb
 
 Re-create the database from scratch and setup default users 
-again by running this rake task again:
+again by running these rake tasks in sequence again:
 
-  #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+  RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
+  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 If you have access to an ITSI database you can also import ITSI activities 
 into RITES by running this rake task:

@@ -29,8 +29,8 @@ database you intend to use with RITES.
     # finish installing necessary gems for rails application
     jruby -S rake gems:install
 
-    # setup database and application settings
-    jruby -S rake rigse:setup:new_rigse_from_scratch
+    # setup database
+    RAILS_ENV=production jruby -S rake db:migrate:reset
 
     # start server
     jruby -J-server script/server -e production
