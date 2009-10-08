@@ -26,13 +26,18 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
   end
   
   def create_versioned_jnlp_urls(mjf_object)
+    count = 0; print '.'; STDOUT.flush
     mjf_object.versions.each do |version_object|
       vju = self.versioned_jnlp_urls.build(
         :path        => version_object.path,
         :url         => version_object.url,
         :version_str => version_object.version)
       vju.save!
-      print '.'; STDOUT.flush
+      count += 1
+      if count % 20 == 0
+        print '.'
+        STDOUT.flush
+      end
     end
   end
   

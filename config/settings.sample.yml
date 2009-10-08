@@ -22,6 +22,8 @@ development: &non_production_settings
     - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_families:
+    - "all-otrunk-snapshot"
   default_jnlp_version: snapshot
   valid_sakai_instances:
   - http://localhost:3000/
@@ -58,6 +60,8 @@ staging:
   - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_families:
+    - "all-otrunk-snapshot"
   default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
     - 
@@ -89,6 +93,8 @@ production:
   - 12
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
+  maven_jnlp_families:
+    - "all-otrunk-snapshot"
   default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
     - 
