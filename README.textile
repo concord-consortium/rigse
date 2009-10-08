@@ -268,32 +268,19 @@ Push your copy of the staging branch to the gihub repository:
   git push origin staging
 </code>
 
-Dump the production database to this file <code>db/production_data.sql</code> on the production server.
-
+Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
+download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
 <code>
-  cap production db:remote_db_dump
+  cap production db:remote_db_fetch
 </code>
 
-Copy the production database to this file <code>db/production_data.sql</code> in your local working directory.
-
+Push the production database from the local <code>db/production_data.sql</code> to the staging server, the import
+the data into the database on staging, then cleanup.
 <code>
-  cap production db:remote_db_download
+  cap staging db:remote_db_push
 </code>
 
-Copy <code>db/production_data.sql</code> in your local directory to the staging server
-
-<code>
-  cap staging db:remote_db_upload
-</code>
-
-Replace the tables in the production database on the staging server with data here: <code>db/production_data.sql</code>.
-
-<code>
-  cap staging db:remote_db_load
-</code>
-
-If there are migrations that need to be run
-
+Run any migrations on the staging server:
 <code>
   cap staging deploy:migrate
 </code>

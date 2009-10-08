@@ -56,7 +56,7 @@ namespace :db do
       "rake RAILS_ENV=#{rails_env} db:load --trace" 
   end
 
-  desc 'Downloads db/production_data.sql from the remote production environment to your local machine'
+  desc '[NOTE: use "fetch_remote_db" instead!] Downloads db/production_data.sql from the remote production environment to your local machine'
   task :remote_db_download, :roles => :db, :only => { :primary => true } do
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
@@ -64,7 +64,7 @@ namespace :db do
     ssh_options[:compression] = ssh_compression
   end
   
-  desc 'Uploads db/production_data.sql to the remote production environment from your local machine'
+  desc '[NOTE: use "push_remote_db" instead!] Uploads db/production_data.sql to the remote production environment from your local machine'
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
