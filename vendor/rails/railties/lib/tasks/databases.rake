@@ -411,7 +411,7 @@ end
 
 def drop_database(config)
   case config['adapter']
-  when 'mysql'
+  when /mysql/
     ActiveRecord::Base.establish_connection(config)
     ActiveRecord::Base.connection.drop_database config['database']
   when /^sqlite/
