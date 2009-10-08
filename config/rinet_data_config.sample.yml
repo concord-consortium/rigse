@@ -1,0 +1,17 @@
+--- 
+development: 
+  host: portfolio.ri.net
+  username: concord
+  password: *****
+test: 
+  host: portfolio.ri.net
+  username: concord
+  password: *****
+production: 
+  host: portfolio.ri.net
+  username: concord
+  password: *****
+staging: 
+  host: portfolio.ri.net
+  username: concord
+  password: *****
