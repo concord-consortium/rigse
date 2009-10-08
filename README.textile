@@ -32,6 +32,9 @@ database you intend to use with RITES.
     # setup database
     RAILS_ENV=production jruby -S rake db:migrate:reset
 
+    # setup application resources
+    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+
     # start server
     jruby -J-server script/server -e production
   </code>
@@ -46,9 +49,20 @@ your local development instance with the following steps:
   <code>
     cap production db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
-    RAILS_ENV=production jruby -S rake db:migrate
   </code>
 </pre>
+
+If the codebase on your development system has moved forward you may need to run additional tasks such as:
+<pre>
+  <code>
+    RAILS_ENV=production jruby -S rake db:migrate
+    RAILS_ENV=production jruby -S rake rigse:setup:default_portal_resources
+    RAILS_ENV=production jruby -S rake portal:setup:create_districts_and_schools_from_nces_data
+  </code>
+</pre>
+
+The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional 
+and necessary default model initialization
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on 
 the server you copied the production data from.
