@@ -9,29 +9,32 @@ development: &non_production_settings
   admin_first_name: Stephen
   admin_last_name: Bannasch
   enable_default_users: true
+  include_otrunk_examples: false
   states_and_provinces:
     - RI
-    - MA
   active_grades:
-    - 6
-    - 7
-    - 8
-    - 9
-    - 10
-    - 11
-    - 12
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  active_school_levels:
+    - "2"
+    - "3"
+    - "4"
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   maven_jnlp_families:
     - "all-otrunk-snapshot"
   default_jnlp_version: snapshot
-  valid_sakai_instances:
-  - http://localhost:3000/
   maven_jnlp_servers:
-    - 
-      :name: concord
+    - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  valid_sakai_instances:
+    - http://localhost:3000/
   
 test:
   <<: *non_production_settings
@@ -47,25 +50,28 @@ staging:
   admin_first_name: Stephen
   admin_last_name: Bannasch
   enable_default_users: true
+  include_otrunk_examples: false
   states_and_provinces:
   - RI
-  - MA
   active_grades:
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  active_school_levels:
+    - "2"
+    - "3"
+    - "4"
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   maven_jnlp_families:
     - "all-otrunk-snapshot"
   default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
-    - 
-      :name: concord
+    - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
   
@@ -80,25 +86,28 @@ production:
   admin_first_name: Stephen
   admin_last_name: Bannasch
   enable_default_users: false
+  include_otrunk_examples: false
   states_and_provinces:
   - RI
-  - MA
   active_grades:
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  active_school_levels:
+    - "2"
+    - "3"
+    - "4"
   default_maven_jnlp_server: concord
   default_maven_jnlp_family: all-otrunk-snapshot
   maven_jnlp_families:
     - "all-otrunk-snapshot"
   default_jnlp_version: 0.1.0-20090724.190238
   maven_jnlp_servers:
-    - 
-      :name: concord
+    - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
   
