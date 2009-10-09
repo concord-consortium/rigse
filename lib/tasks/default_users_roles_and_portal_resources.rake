@@ -267,8 +267,6 @@ HEREDOC
         default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grades << grade_9
-
-      debugger
       
       site_school.members << default_school_teacher
       
