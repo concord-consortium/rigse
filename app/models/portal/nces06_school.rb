@@ -71,8 +71,9 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def grade_match(grades)
-    active_grades.min >= grades.min && 
-    active_grades.min <= grades.max
+    # active_grades.min >= grades.min && 
+    # active_grades.min <= grades.max
+    (active_grades & grades).size > 0
   end
   
 end
