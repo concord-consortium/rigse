@@ -254,6 +254,7 @@ HEREDOC
 HEREDOC
         @settings_config[env]['active_grades'] = @settings_sample_config[env]['active_grades']
       end
+
       unless @settings_config[env]['active_school_levels']
         puts <<HEREDOC
 
@@ -264,17 +265,17 @@ HEREDOC
 HEREDOC
         @settings_config[env]['active_school_levels'] = @settings_sample_config[env]['active_school_levels']
       end
-    end
 
-    unless @settings_config[env]['valid_sakai_instances']
-      puts <<HEREDOC
+      unless @settings_config[env]['valid_sakai_instances']
+        puts <<HEREDOC
 
-The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
+  The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
 
-Copying the values in the sample: #{@settings_sample_config[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+  Copying the values in the sample: #{@settings_sample_config[env]['valid_sakai_instances'].join(', ')} into settings.yml.
 
 HEREDOC
-      @settings_config[env]['valid_sakai_instances'] = @settings_sample_config[env]['valid_sakai_instances']
+        @settings_config[env]['valid_sakai_instances'] = @settings_sample_config[env]['valid_sakai_instances']
+      end
     end
   end
 end
