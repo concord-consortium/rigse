@@ -96,10 +96,14 @@ namespace :db do
   end
 
   desc 'Copies config/initializers/site_keys.rb from the remote environment to your local machine'
-  task :copy_remote_site_keys, :roles => :app do
+  task :fetch_remote_site_keys, :roles => :app do
     download("#{deploy_to}/shared/config/initializers/site_keys.rb", "config/initializers/site_keys.rb", :via => :sftp)
   end
   
+  desc 'Copies config/initializers/site_keys.rb from the remote environment to your local machine'
+  task :push_local_site_keys, :roles => :app do
+    upload("config/initializers/site_keys.rb", "#{deploy_to}/shared/config/initializers/site_keys.rb", :via => :sftp)
+  end
 
 end
 
