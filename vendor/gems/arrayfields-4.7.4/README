@@ -2,7 +2,6 @@ NAME
   arrayfields.rb
 
 URIS
-  http://www.codeforpeople.com/lib/ruby/
   http://rubyforge.org/projects/codeforpeople/
 
 SYNOPSIS
@@ -86,7 +85,7 @@ LIST OF ADDED Array CLASS METHODS
   Array.fields/Array.struct
 
 SAMPLES
-
+  
   <========< sample/a.rb >========>
 
   ~ > cat sample/a.rb
@@ -268,12 +267,13 @@ SAMPLES
     "bar"
 
 
+
 AUTHOR
   ara.t.howard@gmail.com
 
 HISTORY
-  4.7.0
-    - fix warnings under ruby strict - thx james gray
+  4.7.4
+    - fixes for clone/dup methods
 
   4.6.0
     - Array#fields getter acts as setter if arg given, eg

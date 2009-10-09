@@ -5,8 +5,8 @@
 # Array#fields= is called
 #
   module ArrayFields 
-    self::VERSION = '4.7.2' unless defined? self::VERSION
-    def self.version() VERSION end
+    self::VERSION = '4.7.4' unless defined? self::VERSION
+    def self.version() Arrayfields::VERSION end
   #
   # multiton cache of fields - wraps fields and fieldpos map to save memory
   #
@@ -252,14 +252,17 @@
     end
     alias_method 'pairs', 'to_pairs'
 
-    def copy 
-      cp = clone
-      cp.fields = fields.clone
-      cp 
+    def clone
+      clone = super
+    ensure
+      clone.fields = fields.clone
     end
 
-    alias_method 'dup', 'copy'
-    alias_method 'clone', 'copy'
+    def dup
+      dup = super
+    ensure
+      dup.fields = fields.dup
+    end
 
     def deepcopy 
       cp = Marshal.load(Marshal.dump(self))
@@ -435,6 +438,6 @@
           each_pair{|f,v| map.add f,v}
         end
       end
-   end 
+    end 
   end
   Pseudohash = PseudoHash
