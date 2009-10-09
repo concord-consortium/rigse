@@ -51,8 +51,8 @@ end
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
-@rinet_data_yml = false
-@new_mailer_yml = false
+@new_rinet_data_yml_created = false
+@new_mailer_yml_created = false
 
 def copy_file(source, destination)
 
@@ -225,22 +225,18 @@ HEREDOC
     create_new_settings_yml
   else
     @settings_config = YAML::load(IO.read(@settings_config_path))
-    %w{development staging production}.each do |env|
-      unless @settings_config[env]['valid_sakai_instances']
-        puts <<HEREDOC
+      puts <<HEREDOC
 
-  The valid_sakai_instances parameter does not yet exist in the y#{env} section of settings.yml
-
-  Copying the values in the sample: #{@settings_sample_config[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+  The Rails application settings file exists, lookking for possible updates ...
 
 HEREDOC
-        @settings_config[env]['valid_sakai_instances'] = @settings_sample_config[env]['valid_sakai_instances']
-      end
-
+    
+    %w{development staging production}.each do |env|
+      puts "\nchecking environment: #{env}\n"
       unless @settings_config[env]['states_and_provinces']
         puts <<HEREDOC
 
-  The states_and_provinces parameter does not yet exist in settings.yml
+  The states_and_provinces parameter does not yet exist in the #{env} section of settings.yml
 
   Copying the values in the sample: #{@settings_sample_config[env]['states_and_provinces'].join(', ')} into settings.yml.
 
@@ -251,7 +247,7 @@ HEREDOC
       unless @settings_config[env]['active_grades']
         puts <<HEREDOC
 
-  The active_grades parameter does not yet exist in settings.yml
+  The active_grades parameter does not yet exist in the #{env} section of settings.yml
 
   Copying the values in the sample: #{@settings_sample_config[env]['active_grades'].join(', ')} into settings.yml.
 
@@ -261,13 +257,24 @@ HEREDOC
       unless @settings_config[env]['active_school_levels']
         puts <<HEREDOC
 
-  The active_school_levels parameter does not yet exist in settings.yml
+  The active_school_levels parameter does not yet exist in the #{env} section of settings.yml
 
   Copying the values in the sample: #{@settings_sample_config[env]['active_school_levels'].join(', ')} into settings.yml.
 
 HEREDOC
         @settings_config[env]['active_school_levels'] = @settings_sample_config[env]['active_school_levels']
       end
+    end
+
+    unless @settings_config[env]['valid_sakai_instances']
+      puts <<HEREDOC
+
+The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
+
+Copying the values in the sample: #{@settings_sample_config[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+
+HEREDOC
+      @settings_config[env]['valid_sakai_instances'] = @settings_sample_config[env]['valid_sakai_instances']
     end
   end
 end
@@ -450,10 +457,12 @@ Here are the current settings in config/rinet_data.yml:
 HEREDOC
   unless agree("Accept defaults? (y/n) ")
     create_new_rinet_data_yml unless @new_rinet_data_yml_created
-
-    @rinet_data_config['host'] =     ask("     RINET username: ") { |q| q.default = @rinet_data_sample_config['host'] }
-    @rinet_data_config['username'] =     ask("     RINET username: ") { |q| q.default = @rinet_data_sample_config['username'] }
-    @rinet_data_config['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_sample_config['password'] }
+    
+    %w{development test production}.each do |env|
+      @rinet_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @rinet_data_config[env]['host'] }
+      @rinet_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @rinet_data_config[env]['username'] }
+      @rinet_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_config[env]['password'] }
+    end
 
     puts <<HEREDOC
 
