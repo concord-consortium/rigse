@@ -51,3 +51,4 @@ public/investigations
 public/page_cache
 config/settings-backup.yml
 doc/guides
+config/rinet_data.yml
