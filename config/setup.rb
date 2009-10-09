@@ -47,7 +47,7 @@ end
 @db_sample_config              = YAML::load(IO.read(@db_config_sample_path))
 @settings_sample_config        = YAML::load(IO.read(@settings_config_sample_path))
 @rinet_data_sample_config      = YAML::load(IO.read(@rinet_data_config_sample_path))
-@mailer_sample_config          = YAML::load(IO.read(@mailer_config_sample_path))
+@mailer_config_sample          = YAML::load(IO.read(@mailer_config_sample_path))
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
@@ -689,17 +689,17 @@ HEREDOC
       #
       get_maven_jnlp_settings(env)
 
-    end
+    end # each env
 
+  end
     puts <<HEREDOC
 
 Here are the updated application settings:
 #{@settings_config.to_yaml} 
 HEREDOC
   
-    if agree("OK to save to config/settings.yml? (y/n): ")
-      File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
-    end
+  if agree("OK to save to config/settings.yml? (y/n): ")
+    File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
   end
 end
 
@@ -714,7 +714,7 @@ def update_config_mailer_yml
 
   authentication_types = [:plain, :login, :cram_md5]
   auth_types = authentication_types.collect { |auth| auth.to_s }.join(' | ')
-
+  puts @mailer_config_sample_config
   puts <<HEREDOC
 
 ----------------------------------------
@@ -731,7 +731,7 @@ body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{APPLICATION} without the protocol: (example: #{@mailer_config[:host]})
+  the hostname of the #{APPLICATION} without the protocol: (example: #{@mailer_config_sample[:host]})
 
 If you do not have a working SMTP server select the test deliver method instead of the 
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can 
@@ -741,11 +741,11 @@ easily see then as the are generated with this command:
 
 You will also need to specify:
 
-  the hostname of the #{APPLICATION} application without the protocol: (example: #{@mailer_config[:host]})
+  the hostname of the #{APPLICATION} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
-  host name of the remote mail server: (example: #{@mailer_config[:smtp][:address]}))
+  host name of the remote mail server: (example: #{@mailer_config_sample[:smtp][:address]}))
   port the SMTP server runs on (most run on port 25)
   SMTP helo domain
   authentication method for sending mail: (#{auth_types})
@@ -792,7 +792,7 @@ HEREDOC
     @mailer_config[:smtp][:password] =          ask("    SMTP password: ") { |q| 
       q.default = @mailer_config[:smtp][:password]
     }
-
+    end
     puts <<HEREDOC
 
 Here is the new mailer configuration:
@@ -802,7 +802,7 @@ HEREDOC
     if agree("OK to save to config/mailer.yml? (y/n): ")
       File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
     end
-  end
+
 end
 
 # *****************************************************
