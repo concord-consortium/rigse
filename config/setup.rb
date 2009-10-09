@@ -459,10 +459,12 @@ HEREDOC
   unless agree("Accept defaults? (y/n) ")
     create_new_rinet_data_yml unless @new_rinet_data_yml_created
     
-    %w{development test production}.each do |env|
+    %w{development test staging production}.each do |env|
+      puts "\nSetting parameters for the #{env} rinet_data:\n"
       @rinet_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @rinet_data_config[env]['host'] }
       @rinet_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @rinet_data_config[env]['username'] }
       @rinet_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_config[env]['password'] }
+      puts
     end
 
     puts <<HEREDOC
@@ -570,8 +572,7 @@ end
 def get_maven_jnlp_settings(env)
   puts <<HEREDOC
 
-Specify the maven_jnlp server and the default maven_jnlp family to use
-use when running Java OTrunk applications.
+  Specify the maven_jnlp server used for providing jnlps and jars dor running Java OTrunk applications.
 
 HEREDOC
   maven_jnlp_server = @settings_config[env]['maven_jnlp_servers'][0]
@@ -581,6 +582,26 @@ HEREDOC
   @settings_config[env]['maven_jnlp_servers'][0] = maven_jnlp_server
   @settings_config[env]['default_maven_jnlp_server'] = maven_jnlp_server[:name]
   @settings_config[env]['default_maven_jnlp_family'] =  ask("   default_maven_jnlp_family: ") { |q| q.default = @settings_config[env]['default_maven_jnlp_family'] }  
+
+  maven_jnlp_families = (@settings_config[env]['maven_jnlp_families'] || []).join(' ')
+  puts <<HEREDOC
+
+  The following is a list of the active maven_jnlp_families:
+
+    #{maven_jnlp_families}
+
+  Specify which maven_jnlp_families to include. Enter nothing to include all 
+  the maven_jnlp_families. Delimit multiple items with spaces.
+
+HEREDOC
+  maven_jnlp_families =  ask("   active_school_levels: ") { |q| q.default = maven_jnlp_families }
+  @settings_config[env]['maven_jnlp_families'] =  maven_jnlp_families.split
+  puts <<HEREDOC
+  
+  Specify the default_jnlp_version to use:
+
+HEREDOC
+  @settings_config[env]['default_jnlp_version'] =  ask("   default_jnlp_version: ") { |q| q.default = @settings_config[env]['default_jnlp_version'] }  
 end
 
 #
