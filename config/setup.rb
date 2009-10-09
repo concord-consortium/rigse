@@ -529,7 +529,7 @@ HEREDOC
   @settings_config[env]['active_grades'] =  active_grades.split  
 end
 
-def get_active_school_levels
+def get_active_school_levels(env)
   active_school_levels = (@settings_config[env]['active_school_levels'] || []).join(' ')
   puts <<HEREDOC
 
@@ -834,9 +834,9 @@ To complete setup of the RITES Investigations Rails application setup:
     RAILS_ENV=production rake rigse:setup:new_rites_app
     
   JRuby:
-    #{jruby_system_command} rake gems:install
-    RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
-    RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
+    jruby -S rake gems:install
+    RAILS_ENV=production jruby -S rake db:migrate:reset
+    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 
 These scripts will take about 5-30 minutes to run and are much faster if you are both running
 Rails in production mode and using JRuby. If you are using separate databases for development and 
