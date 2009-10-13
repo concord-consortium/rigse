@@ -329,12 +329,8 @@ class InvestigationsController < AuthoringController
   ##
   def duplicate
     @original = Investigation.find(params['id'])
-    @investigation = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
-    @investigation.name = "copy of #{@investigation.name}"
-    @investigation.publication_status = "draft"
-    @investigation.deep_set_user current_user
+    @investigation = @original.duplicate(current_user)
     @investigation.save
-    
     redirect_to edit_investigation_url(@investigation)
   end
   
