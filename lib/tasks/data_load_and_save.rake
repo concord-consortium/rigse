@@ -147,5 +147,86 @@ namespace :db do
         end
       end
     end
+    
+    desc "Dump just the Factory Girl factory definitions from the current db"
+    task :dump_defs_to_factory_girl => :environment do
+      @just_factories = true
+      Rake::Task['db:backup:dump_to_factory_girl'].invoke
+    end
+    
+    desc "Dump the db to a rough Factory Girl format"
+    task :dump_to_factory_girl => :environment do
+      @skip_attrs = ["id", "created_at", "updated_at", "uuid"]
+      @namespaced = {"maven_jnlp_" => "MavenJnlp::", "admin_" => "Admin::", "dataservice_" => "Dataservice::", "otrunk_example_" => "OtrunkExample::", "portal_" => "Portal::"}
+      # @non_rich_joins = ["jars_versioned_jnlps","portal_courses_grade_levels","portal_grade_levels_teachers"]
+      ActiveRecord::Base.connection.tables.each do |table|
+        print "Dumping #{table}... "
+        tablename = table.singularize
+        classname = ""
+        @namespaced.each do |k,v|
+          if table =~ /^#{k}/
+            classname = ", :class => #{v}#{tablename.sub(/^#{k}/,'').classify}"
+          end
+        end
+
+        cols = []
+        ActiveRecord::Base.connection.columns(table).each do |col|
+          cols << col.name
+        end
+        f = nil
+        if cols.include?("id")
+          f = File.open("#{RAILS_ROOT}/features/factories/#{table}.rb", "w")
+          f.write "Factory.define :#{tablename}#{classname} do |f|\n"
+          f.write "end\n\n"
+        else
+          if @just_factories
+            # no op
+          else
+            f = File.open("#{RAILS_ROOT}/features/factories/#{table}.rb", "w")
+            f.write "# #{table}: This is a non-rich join table\n\n"
+          end
+        end
+        objs = ActiveRecord::Base.connection.execute "SELECT * from #{table}"
+
+        
+        objs.each do |o|
+          if ! @just_factories
+            if cols.include?("id")
+              write_factory(f,tablename,cols,o)
+            else
+              write_joins(f,table,cols,o)
+            end
+          end
+        end
+        if f
+          f.flush
+          f.close
+        end
+        print " done.\n"
+      end
+    end
+    
+    def write_factory(file, table, cols, vals)
+      tvals = [cols,vals].transpose
+      out_vals = []
+      tvals.each do |val|
+        next if @skip_attrs.include?(val[0])
+        out_vals << ":#{val[0]} => '#{val[1].to_s.sub(/'/,'\\\'')}'"
+      end
+      file.write("Factory.create(:#{table},{\n  " + out_vals.join(",\n  ") + "\n})\n")
+    end
+    
+    def write_joins(file, table, cols, vals)
+      return if @just_factories
+      tvals = [cols,vals].transpose
+      colArr = []
+      valArr = []
+      tvals.each do |val|
+        next if @skip_attrs.include?(val[0])
+        colArr << val[0]
+        valArr << val[1].to_s.sub(/'/,'\\\'')
+      end
+      file.write("ActiveRecord::Base.connection.execute 'INSERT INTO #{table} (#{colArr.join(",")}) VALUES (#{valArr.join(",")})'\n")
+    end
   end
 end
