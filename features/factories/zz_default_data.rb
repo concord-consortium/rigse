@@ -10,6 +10,12 @@ vendor_interface = Factory.create(:vendor_interface,
   :device_id => 10, 
   :description => 'The Vernier Go!Link is a USB interface with one sensor port. It works with Vernier analog sensors. The Go!Temp and Go!Motion sensors have Go!Link interfaces integrated into the sensor.'
 })
+device_config = Factory.create(:device_config,
+{
+  :user_id => 2,
+  :vendor_interface_id => vendor_interface.id,
+  :config_string => 'none'
+})
 
 anon_role = Factory.create(:role, :title => 'guest', :position => 0)
 member_role = Factory.create(:role, :title => 'member', :position => 1)
