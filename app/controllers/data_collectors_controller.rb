@@ -42,6 +42,7 @@ class DataCollectorsController < ApplicationController
         format.otml { render :layout => "layouts/data_collector" } # data_collector.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_collector }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @data_collector } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_collector, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @data_collector }
       end
     end

@@ -3,7 +3,7 @@
 %otrunk{ :id => @investigation.uuid }
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles({:left_nav_panel_width => @investigation.left_nav_panel_width, :title => h(@investigation.name)})
       %root
         =yield :investigation

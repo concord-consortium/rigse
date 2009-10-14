@@ -22,6 +22,7 @@ class BiologicaMultipleOrganismsController < ApplicationController
         format.otml { render :layout => "layouts/biologica_multiple_organism" } # biologica_multiple_organism.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_multiple_organism }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_multiple_organism } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_multiple_organism, :teacher_mode => @teacher_mode} }
         format.xml  { render :biologica_multiple_organism => @biologica_multiple_organism }
       end
     end

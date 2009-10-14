@@ -92,6 +92,7 @@ class InnerPagesController < ApplicationController
         format.otml { render :layout => "layouts/inner_page"} # inner_page.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @inner_page }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @inner_page } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @inner_page, :teacher_mode => @teacher_mode} }
         format.xml  { render :inner_page => @inner_page }
       end
     end

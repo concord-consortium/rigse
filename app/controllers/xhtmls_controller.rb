@@ -22,6 +22,7 @@ class XhtmlsController < ApplicationController
         format.otml { render :layout => "layouts/xhtml" } # xhtml.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @xhtml }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @xhtml } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @xhtml, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @xhtml }
       end
     end

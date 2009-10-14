@@ -3,7 +3,7 @@
 %otrunk{ :id => @n_logo_model.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@n_logo_model.name))
       %root
         %OTCompoundDoc
