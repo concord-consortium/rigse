@@ -6,6 +6,8 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         xml.void("method" => "setProperty") {
           xml.string(session_options[:key])
           xml.string(session_options[:id])
+        }
+        xml.void("method" => "setProperty") {
           xml.string("path")
           xml.string(session_options[:path])
         }
