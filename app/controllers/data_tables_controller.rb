@@ -22,6 +22,7 @@ class DataTablesController < ApplicationController
         format.otml { render :layout => "layouts/data_table" } # data_table.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_table }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @data_table } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_table, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @data_table }
       end
     end

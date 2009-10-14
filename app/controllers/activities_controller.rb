@@ -93,6 +93,7 @@ class ActivitiesController < ApplicationController
       }
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode } }            
+      format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @activity, :teacher_mode => @teacher_mode} }
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.xml  { render :xml => @activity }
       format.pdf {render :layout => false }

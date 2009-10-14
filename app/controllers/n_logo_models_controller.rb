@@ -22,6 +22,7 @@ class NLogoModelsController < ApplicationController
         format.otml { render :layout => "layouts/n_logo_model" } # n_logo_model.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @n_logo_model, :teacher_mode => @teacher_mode} }
         format.xml  { render :n_logo_model => @n_logo_model }
       end
     end

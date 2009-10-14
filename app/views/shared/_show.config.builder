@@ -48,9 +48,9 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.otmlurl"
           if teacher_mode && runnable.class == Investigation 
-            xml.string investigation_teacher_otml_url(runnable)
+            xml.string investigation_teacher_dynamic_otml_url(runnable)
           else
-            xml.string polymorphic_url(runnable, :format => :otml, :teacher_mode => teacher_mode)
+            xml.string polymorphic_url(runnable, :format => :dynamic_otml, :teacher_mode => teacher_mode)
           end
         }
       }

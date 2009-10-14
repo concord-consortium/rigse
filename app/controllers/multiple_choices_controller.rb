@@ -22,6 +22,7 @@ class MultipleChoicesController < ApplicationController
         format.otml { render :layout => "layouts/multiple_choice" } # multiple_choice.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @multiple_choice, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @multiple_choice }
       end
     end
