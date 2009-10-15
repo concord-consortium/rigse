@@ -24,12 +24,14 @@ config.action_mailer.delivery_method = :test
 # current customizations below this line ...
 
 # See: http://wiki.github.com/dchelimsky/rspec/configgem-for-rails
-config.gem "rspec", :lib => false, :version => ">= 1.2.7" 
-config.gem "rspec-rails", :lib => false, :version => ">= 1.2.7"
-config.gem "webrat", :lib => false, :version => ">= 0.4.4"
-config.gem "cucumber", :lib => false, :version => ">= 0.3.11"
+config.gem "rspec-rails", :lib => false, :version => ">= 1.2.9"
+config.gem "rspec", :lib => false, :version => ">= 1.2.9" 
+config.gem "cucumber", :version => ">= 0.4.2"
+config.gem "webrat", :version => ">= 0.5.3"
+
+# http://github.com/thoughtbot/factory_girl
 config.gem "thoughtbot-factory_girl", :lib => "factory_girl", :source => "http://gems.github.com"
 
 # See: http://remarkable.rubyforge.org/
 # and: http://github.com/carlosbrando/remarkable/tree/master
-config.gem "remarkable_rails", :lib => false, :version => ">= 3.1.6"
+config.gem "remarkable_rails", :lib => false, :version => ">= 3.1.10"
