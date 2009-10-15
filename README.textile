@@ -262,6 +262,13 @@ bq.
 <code>cp db/production_data.sql db/development_data.sql</code>
 <code>rake db:load</code>
 
+*Download the production database to use locally*
+<code>
+cap production db:fetch_remote_db
+cp db/production_data.sql db/development_data.sql
+rake db:load
+</code>
+
 *Reset the Staging or Development database with Production's version*
 * <code>cap production db:fetch_remote_db</code>
 * <code>cap staging db:push_remote_db</code>   or   <code>cap development db:push_remote_db</code>
