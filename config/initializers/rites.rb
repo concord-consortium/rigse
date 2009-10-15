@@ -1,5 +1,5 @@
-# Don't create initial settings if we are building the app for the first time because the
-# tables haven't been created yet. 
+# Don't create initial settings if we are building the app for the first time or
+# the RAILS_ENV is test ... because the tables haven't been created yet. 
 #
 # This is one way to test to see if we got here running rake db:migrate:
 #
