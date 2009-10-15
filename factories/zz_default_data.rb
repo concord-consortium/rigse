@@ -8,14 +8,12 @@ member_role = Factory.create(:role, :title => 'member', :position => 1)
 admin_role = Factory.create(:role, :title => 'admin', :position => 2)
 
 anon =  Factory.create(:user, {
-  :login => 'anonymous', 
-  :vendor_interface => vendor_interface
+  :login => 'anonymous'
 })
 
 admin = Factory.create(:user, { 
   :login => 'admin', 
-  :site_admin => 1, 
-  :vendor_interface => vendor_interface
+  :site_admin => 1
 })
 
 [anon,admin].each do |u|
