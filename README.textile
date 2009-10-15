@@ -11,6 +11,7 @@ h3. Install
 The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need a running mysql
 server and a mysql username/password with enough permissions to create and drop the 
 database you intend to use with RITES.
+
 <pre><code>
   # If you are a committer in this repo:
 
@@ -120,7 +121,8 @@ When Nokogiri runs in JRuby it uses "Ruby FFI":http://kenai.com/projects/ruby-ff
 
 The version of libxml2 (2.6.16) included with MacOS X is old and the FFI version of Nokogiri prints this warning when it is run with this version of libxml installed:
 
-bq. You're using libxml2 version 2.6.16 which is over 4 years old and has plenty of bugs. We suggest that for maximum HTML/XML parsing pleasure, you upgrade your version of libxml2 and re-install nokogiri. If you like using libxml2 version 2.6.16, but don't like this warning, please define the constant I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 before requring nokogiri.
+bq. You're using libxml2 version 2.6.16 which is over 4 years old and has plenty of bugs. We suggest that for maximum HTML/XML parsing pleasure, you upgrade your version of libxml2 and re-install nokogiri. 
+If you like using libxml2 version 2.6.16, but don't like this warning, please define the constant I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 before requring nokogiri.
 
 If you have  a newer version of the libxml2 library installed with macports you can set this environmental variable:
 <pre><code>  LD_LIBRARY_PATH=/opt/local/lib</code></pre> to have nokogiri check there for shared libraries first.
@@ -138,10 +140,10 @@ bq. <code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
 *Running all the rspec tests:*
 <pre><code>  rake spec</code></pre>
 
-h4. Running a single file of rspec tests:
+*Running a single file of rspec tests:*
 <pre><code>  rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb</code></pre>  
 
-h4. Running a single directory of rspec tests:
+*Running a single directory of rspec tests:*
 <pre><code>  rake spec SPEC=spec/routing/dataservice</code></pre>  
 
 h3. Running the feature tests with cucumber
@@ -149,7 +151,7 @@ h3. Running the feature tests with cucumber
 *JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
 <pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
 
-h4. Running all the feature tests:
+*Running all the feature tests:*
 <pre><code>  rake:features</code></pre>  
 
 h2. Understanding the Codebase
