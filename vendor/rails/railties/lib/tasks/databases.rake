@@ -278,7 +278,7 @@ namespace :db do
     task :dump => :environment do
       abcs = ActiveRecord::Base.configurations
       case abcs[RAILS_ENV]["adapter"]
-      when "mysql", "oci", "oracle"
+      when /mysql/, "oci", "oracle"
         ActiveRecord::Base.establish_connection(abcs[RAILS_ENV])
         File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql", "w+") { |f| f << ActiveRecord::Base.connection.structure_dump }
       when "postgresql"
@@ -361,6 +361,11 @@ namespace :db do
       when "mysql"
         ActiveRecord::Base.establish_connection(:test)
         ActiveRecord::Base.connection.recreate_database(abcs["test"]["database"], abcs["test"])
+        ActiveRecord::Base.connection.recreate_database(abcs["test"]["database"])
+      when "jdbcmysql"
+        ActiveRecord::Base.establish_connection(:test)
+        ActiveRecord::Base.connection.recreate_database(abcs["test"]["database"])
+        ActiveRecord::Base.connection.recreate_database(abcs["test"]["database"])
       when "postgresql"
         ActiveRecord::Base.clear_active_connections!
         drop_database(abcs['test'])
