@@ -22,6 +22,7 @@ class BiologicaChromosomesController < ApplicationController
         format.otml { render :layout => "layouts/biologica_chromosome" } # biologica_chromosome.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_chromosome, :teacher_mode => @teacher_mode} }
         format.xml  { render :biologica_chromosome => @biologica_chromosome }
       end
     end

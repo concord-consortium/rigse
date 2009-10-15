@@ -3,7 +3,7 @@
 %otrunk{ :id => @data_collector.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@data_collector.name), :authoring => @authoring)
       %root
         %OTCompoundDoc

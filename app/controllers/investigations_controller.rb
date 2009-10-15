@@ -139,6 +139,7 @@ class InvestigationsController < AuthoringController
       }
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
+      format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode} }
       format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
       format.xml    { render :xml => @investigation }
       format.pdf    { render :layout => false }

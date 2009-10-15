@@ -3,7 +3,7 @@
 %otrunk{ :id => @inner_page.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@inner_page.name))
       %root
         %OTCompoundDoc

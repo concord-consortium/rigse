@@ -2,6 +2,12 @@
 print "Loading default data set... "
 ### Set up some default users and roles
 vendor_interface = Factory(:vendor_interface)
+device_config = Factory.create(:device_config,
+{
+  :user_id => 2,
+  :vendor_interface_id => vendor_interface.id,
+  :config_string => 'none'
+})
 
 anon_role = Factory.create(:role, :title => 'guest', :position => 0)
 member_role = Factory.create(:role, :title => 'member', :position => 1)
