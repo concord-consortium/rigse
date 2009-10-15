@@ -31,9 +31,9 @@
 #   => [Mysql::Error, StandardError, ...
 #
 
-# if ENV['RAILS_ENV']== 'test'
-#   puts "Test environmnent detected, using factory girl resources"
-# else
+if RAILS_ENV == 'test' || $PROGRAM_NAME =~ /rake/
+  puts "Running rake task or RAILS running in test environment, skipping Admin::Project.create_or_update_default_project_from_settings_yml"
+else
   begin
     ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
     puts "running Admin::Project.create_or_update_default_project_from_settings_yml"
@@ -44,4 +44,4 @@
     puts "not running Admin::Project.create_or_update_default_project_from_settings_yml"
     puts "(In a test environment factory girl should create these resources for you)"
   end
-# end
+end
