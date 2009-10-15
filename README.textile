@@ -256,14 +256,7 @@ There are 4 basic commands:
 ** Same as db:load, except the remote database is overwritten
 
 *Download the production database to use locally*
-
-bq. 
-<code>cap production db:fetch_remote_db</code>
-<code>cp db/production_data.sql db/development_data.sql</code>
-<code>rake db:load</code>
-
-*Download the production database to use locally*
-<code>
+<code style="white-space: pre">
 cap production db:fetch_remote_db
 cp db/production_data.sql db/development_data.sql
 rake db:load
