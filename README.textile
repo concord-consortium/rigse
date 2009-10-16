@@ -363,7 +363,7 @@ h3. Open ID Authentication
 
 Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
 
-_However I've (stepheneb) removed this to make debugging the authentication simnpler and it 
+_However I've (stepheneb) removed this to make debugging the authentication simpler and it 
 seems as though open-id is not becoming widespread._
 
 h3. Will Paginate
