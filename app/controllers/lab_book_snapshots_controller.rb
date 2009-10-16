@@ -21,7 +21,7 @@ class LabBookSnapshotsController < ApplicationController
         format.html # show.html.haml
         format.otml { render :layout => "layouts/lab_book_snapshot" } # lab_book_snapshot.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @lab_book_snapshot }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @lab_book_snapshot } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @lab_book_snapshot, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @lab_book_snapshot, :teacher_mode => @teacher_mode} }
         format.xml  { render :lab_book_snapshot => @lab_book_snapshot }
       end

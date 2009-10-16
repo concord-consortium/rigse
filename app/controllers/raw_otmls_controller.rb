@@ -34,7 +34,7 @@ class RawOtmlsController < ApplicationController
         format.html # show.html.haml
         format.otml { render :layout => "layouts/raw_otml" } # raw_otml.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @raw_otml }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @raw_otml } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @raw_otml, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @raw_otml, :teacher_mode => @teacher_mode} }
         format.xml  { render :raw_otml => @raw_otml }
       end
