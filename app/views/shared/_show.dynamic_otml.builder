@@ -3,7 +3,8 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
     xml.import :class => "org.concord.otrunk.OTIncludeRootObject"
     xml.import :class => "org.concord.otrunk.OTSystem"
     xml.import :class => "org.concord.otrunk.OTInclude"
-    xml.import :class => "org.concord.otrunk.user.OTUserObject"
+    xml.import :class => "org.concord.sensor.state.OTDeviceConfig"
+    xml.import :class => "org.concord.sensor.state.OTInterfaceManager"
   }
 
   xml.objects { 
