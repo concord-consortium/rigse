@@ -19,7 +19,9 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
         # FIXME This should probably get figured out in a more dynamic way, since if anyone ever changes ot_bundles() in otml_helper.rb
         # this will need to be updated correspondingly.
         xml.object :refid => "#{runnable.uuid}!/system/bundles[0]"
-        xml.object :refid => "#{runnable.uuid}!/system/bundles[1]"
+        # unless it changes, the second bundle is the interface manager
+        # xml.object :refid => "#{runnable.uuid}!/system/bundles[1]"
+        xml << ot_interface_manager(true)
         xml.object :refid => "#{runnable.uuid}!/system/bundles[2]"
       }
       xml.overlays { 
