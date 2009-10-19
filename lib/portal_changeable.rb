@@ -2,8 +2,7 @@
 # in a portal Context.
 # TODO: this should be built with more thorough policies
 # if the entity is a 'virtual' entity, we implement normal changable rules.
-# (see Changeable.rb) -- otherwise we 
-# otherwise return false
+# (see Changeable.rb) -- otherwise return false for non-admins
 module DistrictChangeable
   include Changeable
   
