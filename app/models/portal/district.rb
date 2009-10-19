@@ -23,5 +23,15 @@ class Portal::District < ActiveRecord::Base
       "District"
     end
   end
+  
+  def virtual?
+    nces_district_id.nil?
+  end
+  
+  def real?
+    ! virtual?
+  end
+  
 
+    
 end

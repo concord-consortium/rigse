@@ -32,6 +32,10 @@ class Portal::School < ActiveRecord::Base
   named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
   named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
 
+  # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
+  [:virtual?, :real?].each {|method| delegate method, :to=> :district }
+
+
   include Changeable
 
   self.extend SearchableModel
