@@ -86,10 +86,14 @@ class SakaiLinkController < ApplicationController
         wsdl = url.clone
         wsdl << 'sakai-axis/SakaiSigning.jws?wsdl'
         driver = SOAP::WSDLDriverFactory.new(wsdl).create_rpc_driver
-        # logger.warn("wsdl for #{url}: #{driver.methods.join(',')}")
+         # logger.warn("wsdl for #{url}: #{driver.methods.join(',')}")
         DRIVERS[url] = driver
+        logger.info("INFO: Registered sakai host: #{url}")
       rescue WSDL::XMLSchema::Parser::UnknownElementError
         DRIVERS.delete(url)
+        logger.warn("WARN: Could not register sakai Host: #{url}: WSDL Parse error")
+      rescue Errno::ECONNREFUSED
+        logger.warn("WARN: Could not connect to sakai host: #{url}")
       end
     end
   end
