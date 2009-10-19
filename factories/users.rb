@@ -3,23 +3,24 @@
 ##
 
 ##
-## Emails and Logins will be derived from the sequence of 
-## first names.
+## Emails and Logins will be derived from the login sequence
 ##
-Factory.sequence(:first_name) {|n| "person_#{n}@" }
+
+Factory.sequence(:login) do |n| 
+  "login_#{n}"
+end
 
 ##
 ## Factory for user
 ##
 Factory.define :user do |f|
-  f.login   { |u| "u.first_name"}
-  f.first_name  { Factory.next(:first_name) }
+  f.login    { Factory.next(:login) }
+  f.first_name  'joe'
   f.last_name  'user' 
   f.email  { |u| "#{u.login}@concord.org"}
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
-  f.vendor_interface {|u| VendorInterface.find(:first) || Factory(:vendor_interface) }
-  f.roles  { [Factory.next(:member_role)] }
+  f.roles  { [ Factory.next :member_role] }
 end
 
 
