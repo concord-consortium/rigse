@@ -1,7 +1,8 @@
 require 'fileutils'
 
 class RinetData
-
+  include RinetCsvFields  # definitions for the fields we use when parsing.
+    
   @@districts = %w{07 16}
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
   @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
@@ -54,4 +55,6 @@ class RinetData
     puts
     @parsed_data
   end
+  
+  
 end
