@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'arrayfields'
 
 class RinetData
   include RinetCsvFields  # definitions for the fields we use when parsing.
@@ -36,23 +37,29 @@ class RinetData
     if @parsed_data
       @parsed_data
     else
-      @parsed_data = []
+      @parsed_data = {}
       @@districts.each do |district|
         puts
         local_dir_path = "#{@@local_dir}/#{district}/#{date_time_key}"
         if File.exists?(local_dir_path)
+          parsed_csvs = {}
           @@csv_files.each do |csv_file|
             local_path = "#{local_dir_path}/#{csv_file}.csv"
-            data = FasterCSV.read(local_path)
-            puts "parsing: #{data.length} rows from:\n  #{local_path}"
-            @parsed_data << [ "#{district}_#{csv_file}", data ]
+            fields = FIELD_DEFINITIONS["#{csv_file}_fields".to_sym]
+            parsed_csvs[csv_file] = []
+            FasterCSV.foreach(local_path) do |row|
+              row.fields = fields
+              parsed_csvs[csv_file] << row
+            end
           end
+          @parsed_data[district] = parsed_csvs
         else
           puts "no data folder found: #{local_dir_path}"
         end
       end
     end
-    puts
+    # Data is now available in this format
+    # @data['07']['staff'][0][:EmailAddress]
     @parsed_data
   end
   
