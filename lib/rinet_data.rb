@@ -4,7 +4,7 @@ require 'arrayfields'
 class RinetData
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
-
+  
   # @@districts = %w{07 16}
   @@districts = %w{07}
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
@@ -187,6 +187,9 @@ class RinetData
           school.members << teacher
         end
       end
+      row[:rites_teacher_id] = teacher.id
+    else
+      Rails.logger.info("teacher already defined in rites system")
     end
   end
   
@@ -215,17 +218,51 @@ class RinetData
           school.members << student
         end
       end
+      row[:rites_student_id] = student.id
+    else
+      Rails.logger.info("student already defined in rites system")
     end
   end
   
-  def create_portal_courses(row)
   
+  def update_courses
+    new_courses = @parsed_data[:courses]
+    unless defined? @course_hash
+      @course_hash = {}
+    end
+    new_courses.each do |nc| 
+      create_or_update_course(nc)
+      # cache that results in fast hash
+      @course_hash[nc[:CourseNumber]] = nc[:course]
+    end
   end
   
-  def create_portal_class(row)
-    
+  def create_or_update_course(row)
+    unless row[:rites_course_id]
+      school = school_for(row);
+      courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
+      unless courses
+        course = Portal::Course.create!( {:name => row[:Title], :school_id => school_for(row).id })
+      else
+        # TODO: what if we have multiple matches?
+        if courses.size > 1
+          Rails.logger.error("Too many identical courses")
+        end
+        course = courses[0]
+      end
+      row[:rites_course] = course
+    else
+      Rails.logger.info("course already defined in rites system")
+    end
   end
   
+  
+  def update_classes
+  end
+  
+  def create_or_update_class(row)
+
+  end
   
   
 end

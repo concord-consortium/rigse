@@ -95,7 +95,17 @@ describe RinetData do
     end
   end
   
-  it "should create new courses" 
+  it "should create new courses" do
+    @rd.update_courses
+    Portal::Course.find(:all).should be_more_than @initial_courses
+    courses = Portal::Course.find(:all) - @initial_courses
+    puts "\nlisting courses:\n"
+    courses.each do |course|
+      course.should be_real
+      puts "#{course.id}-- #{course.name}: #{course.description}"
+    end
+  end
+  
   it "should create new classes" 
   
   
