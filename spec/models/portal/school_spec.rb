@@ -25,4 +25,11 @@ describe Portal::School do
     @school.real?
   end
   
+  it "can create schools from NCES school data " do
+    nces_school = Factory(:portal_nces06_school)
+    new_school = Portal::School.find_or_create_by_nces_school(nces_school)
+    new_school.should_not be nil
+    new_school.should be_real # meaning has a real nces school
+  end
+  
 end
