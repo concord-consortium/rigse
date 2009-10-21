@@ -3,12 +3,12 @@ require 'arrayfields'
 
 class RinetData
   include RinetCsvFields  # definitions for the fields we use when parsing.
-    
+  attr_reader :parsed_data
+
   # @@districts = %w{07 16}
   @@districts = %w{07}
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
   @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
-
 
   @@csv_files.each do |csv_file|
     if csv_file =~/_sakai/
@@ -42,28 +42,26 @@ class RinetData
       @@districts.each do |district|
         local_district_path = "#{@@local_dir}/#{district}/#{@new_date_time_key}"
         FileUtils.mkdir_p(local_district_path)
-        puts
         @@csv_files.each do |csv_file|
           # download a file or directory from the remote host
           remote_path = "#{district}/#{csv_file}.csv"
           local_path = "#{local_district_path}/#{csv_file}.csv"
-          puts "downloading: #{remote_path} and saving to: \n  #{local_path}"
+          Rails.logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
           sftp.download!(remote_path, local_path)
         end
         current_path = "#{@@local_dir}/#{district}/current"
         FileUtils.ln_s(local_district_path, current_path, :force => true)
       end
     end
-    puts
   end
 
-  def parse_csv_files(date_time_key='test')
+  def parse_csv_files(date_time_key='current')
     if @parsed_data
       @parsed_data # cached data.
     else
       @parsed_data = {}
       @@districts.each do |district|
-        _parse_csv_files("#{@@local_dir}/#{district}/#{date_time_key}",@parsed_data)
+        parse_csv_files_in_dir("#{@@local_dir}/#{district}/#{date_time_key}",@parsed_data)
       end
     end
     # Data is now available in this format
@@ -74,9 +72,9 @@ class RinetData
     @parsed_data
   end
 
-  def _parse_csv_files(local_dir_path,existing_data={})
+  def parse_csv_files_in_dir(local_dir_path,existing_data={})
     @parsed_data = existing_data
-    puts "working on #{local_dir_path}"
+    Rails.logger.info "working on #{local_dir_path}"
     if File.exists?(local_dir_path)
       
       @@csv_files.each do |csv_file|
@@ -89,7 +87,7 @@ class RinetData
         end
       end
     else
-      puts "no data folder found: #{local_dir_path}"
+      Rails.logger.error "no data folder found: #{local_dir_path}"
     end
   end
   
@@ -98,7 +96,8 @@ class RinetData
       begin
         student[:login] = student_sakai_map[student[:SASID]]
       rescue
-        puts "couldn't map student #{student[:Firstname]} #{student[:Lastname]}"
+        Rails.logger.warn "couldn't map student #{student[:Firstname]} #{student[:Lastname]} (is staff_sakai.csv missing or out of date?)"
+        Rails.logger.info "ERROR WAS: #{$!}"
       end
     end
   end
@@ -108,36 +107,45 @@ class RinetData
       begin
         staff_member[:login] = staff_sakai_map[staff_member[:TeacherCertNum]]
       rescue 
-        puts "couldn't map staff #{staff_member[:Firstname]} #{staff_member[:Lastname]}"
-        puts "ERROR WAS: #{$!}"
+        Rails.logger.warn "couldn't map staff #{staff_member[:Firstname]} #{staff_member[:Lastname]} (is staff_sakai.csv missing or out of date?)"
+        Rails.logger.info "ERROR WAS: #{$!}"
       end
     end
   end
   
   def school_for(row)
-    school = Portal::Nces06School.find(:conditions => {:SEASCH => row[:SchoolNumber]});
-    unless school
-      puts "could not find school for: #{row[:SchoolNumber]}"
+    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]});
+    school = nil
+    unless nces_school
+      Rails.logger.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
+      Rails.logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
       # TODO, create one with a special name? Throw exception?
+    else
+      school = Portal::School.find_or_create_by_nces_school(nces_school)
     end
     school
   end
   
   def district_for(row)
-    district = Portal::Nces06District.find(:conditions => {:STID => row[:District]});
-    unless district
-      puts "could not find distrcit for: #{row[:District]}"
+    nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
+    district = nil
+    unless nces_district
+      Rails.logger.warn "could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)"
+      Rails.logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
       # TODO, create one with a special name? Throw exception?
+    else
+      district = Portal::District.find_or_create_by_nces_district(nces_district)
     end
     district
   end
   
+
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
       email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
       params = {
-        :login  => row[:login],
+        :login  => row[:login] || 'bugusXXXXX',
         :password => row[:Password] || row[:Birthdate],
         :password_confirmation => row[:Password] || row[:Birthdate],
         :first_name => row[:Firstname],
@@ -157,11 +165,16 @@ class RinetData
     user
   end
   
-  def create_portal_teachers(row)
+  def update_teachers
+    new_teachers = @parsed_data[:staff]
+    new_teachers.each { |nt| create_or_update_teacher(nt) }
+  end
+  
+  def create_or_update_teacher(row)
     # try and cache our data
     unless row[:rites_teacher_id]
       user = create_or_update_user(row)
-      teacher = Portal::Teacher.create_or_find_by_user(user)
+      teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
       teacher.save!
       row[:rites_user_id]=teacher.id
       # how do we find out the teacher grades?
@@ -170,14 +183,19 @@ class RinetData
       # add the teacher to the school
       school = school_for(row)
       if (school)
-        school.members << teacher
-        # do we need to worry about dupes?
-        # school.members.unique!
+        unless school.members.detect { |member| member.login == teacher.login }
+          school.members << teacher
+        end
       end
     end
   end
   
-  def create_portal_student(row)
+  def update_students
+    new_teachers = @parsed_data[:students]
+    new_teachers.each { |nt| create_or_update_student(nt) }
+  end
+  
+  def create_or_update_student(row)
     unless row[:rites_student_id]
       user = create_or_update_user(row)
       student = user.portal_student
@@ -193,9 +211,9 @@ class RinetData
       # add the student to the school
       school = school_for(row)
       if (school)
-        school.members << student
-        # do we need to worry about dupes?
-        # school.members.unique!
+        unless school.members.detect { |member| member.login == student.login }
+          school.members << student
+        end
       end
     end
   end
