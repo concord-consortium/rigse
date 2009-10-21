@@ -7,6 +7,11 @@ describe AssessmentTargetsController do
     @mock_assessment_target ||= mock_model(AssessmentTarget, stubs)
   end
   
+  before(:each) do
+    @mock_project ||= mock_model(Admin::Project, stubs)
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
   describe "responding to GET index" do
 
     it "should expose an array of all the @assessment_targets" do
