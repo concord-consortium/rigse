@@ -53,6 +53,24 @@ class Portal::School < ActiveRecord::Base
   end
   
   ##
+  ## given a NCES school, find or create a portal school for it
+  ##
+  def self.find_or_create_by_nces_school(nces_school)
+    found_instance = self.find(:first, :conditions=> {:nces_school_id => nces_school.id})
+    unless found_instance
+      attributes = {
+        :name => nces_school.SCHNAM,
+        :description => "imported from nces data",
+        :nces_school_id => nces_school.id,
+        :district => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
+      }
+      found_instance = self.create(attributes)
+      found_instance.save!
+    end
+    found_instance
+  end
+  
+  ##
   ## Strange approach to alter the behavior of Clazz.children()
   ## to reflect a student-centric world view.
   ## ... (possibly a bad idea?)
