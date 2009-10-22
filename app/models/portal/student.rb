@@ -15,7 +15,7 @@ class Portal::Student < ActiveRecord::Base
   
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
   
-  [:name, :first_name, :last_name, :email, :login, :vendor_interface].each { |m| delegate m, :to => :user }
+  [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   include Changeable
   

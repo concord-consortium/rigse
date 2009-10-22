@@ -3,7 +3,8 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
     xml.import :class => "org.concord.otrunk.OTIncludeRootObject"
     xml.import :class => "org.concord.otrunk.OTSystem"
     xml.import :class => "org.concord.otrunk.OTInclude"
-    xml.import :class => "org.concord.otrunk.user.OTUserObject"
+    xml.import :class => "org.concord.sensor.state.OTDeviceConfig"
+    xml.import :class => "org.concord.sensor.state.OTInterfaceManager"
   }
 
   xml.objects { 
@@ -18,11 +19,11 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
       xml.bundles {
         # FIXME This should probably get figured out in a more dynamic way, since if anyone ever changes ot_bundles() in otml_helper.rb
         # this will need to be updated correspondingly.
-        xml.object :refid => "#{runnable.uuid}!/system/bundles[0]"
+        xml.object :refid => "#{runnable.uuid}!/view_bundle"
         # unless it changes, the second bundle is the interface manager
-        # xml.object :refid => "#{runnable.uuid}!/system/bundles[1]"
+        # xml.object :refid => "#{runnable.uuid}!/interface_manager"
         xml << ot_interface_manager(true)
-        xml.object :refid => "#{runnable.uuid}!/system/bundles[2]"
+        xml.object :refid => "#{runnable.uuid}!/lab_book_bundle"
       }
       xml.overlays { 
         # FIXME This should probably get figured out in a more dynamic way, since if we ever start adding overlays,

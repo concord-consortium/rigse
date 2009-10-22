@@ -1,4 +1,19 @@
-xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") { 
+session_options = request.env["rack.session.options"]
+xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
+  xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {
+    xml.void("property" => "cookieProperties") {
+      xml.object("class" => "java.util.Properties") {
+        xml.void("method" => "setProperty") {
+          xml.string("*.concord.org")
+          xml.string("#{session_options[:key]}=#{session_id}; path=#{session_options[:path]}")
+        }
+        xml.void("method" => "setProperty") {
+          xml.string("*")
+          xml.string("another_fake_session_key")
+        }
+      }
+    }
+  }
   xml.object(:class => "net.sf.sail.emf.launch.ConsoleLogServiceImpl") { 
     xml.void(:property => "bundlePoster") { 
       xml.object(:class => "net.sf.sail.emf.launch.BundlePoster") { 

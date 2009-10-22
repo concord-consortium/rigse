@@ -15,6 +15,8 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
+  [:district, :virtual?, :real?].each {|method| delegate method, :to=> :course } 
+
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
   

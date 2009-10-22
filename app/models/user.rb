@@ -1,6 +1,7 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+  NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :activities
   has_many :sections
@@ -16,8 +17,8 @@ class User < ActiveRecord::Base
   has_many :n_logo_models
 
   named_scope :active, { :conditions => { :state => 'active' } }  
-  named_scope :no_email, { :conditions => "email LIKE 'no-email-%'" }
-  named_scope :email, { :conditions => "email NOT LIKE 'no-email-%'" }
+  named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
+  named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
   
   # has_many :assessment_targets

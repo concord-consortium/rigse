@@ -248,7 +248,7 @@
       haml_tag :bundles do
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
-        haml_tag :OTLabbookBundle
+        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
       end
     end
   end

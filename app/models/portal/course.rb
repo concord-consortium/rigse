@@ -11,6 +11,9 @@ class Portal::Course < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
+  [:district, :virtual?, :real?].each {|method| delegate method, :to=> :school } 
+  
+  
   self.extend SearchableModel
 
   @@searchable_attributes = %w{name description}

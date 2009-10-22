@@ -21,7 +21,7 @@ class MwModelerPagesController < ApplicationController
         format.html # show.html.haml
         format.otml { render :layout => "layouts/mw_modeler_page" } # mw_modeler_page.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @mw_modeler_page, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @mw_modeler_page, :teacher_mode => @teacher_mode} }
         format.xml  { render :mw_modeler_page => @mw_modeler_page }
       end

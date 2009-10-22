@@ -21,7 +21,7 @@ class BiologicaBreedOffspringsController < ApplicationController
         format.html # show.html.haml
         format.otml { render :layout => "layouts/biologica_breed_offspring" } # biologica_breed_offspring.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_breed_offspring }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_breed_offspring } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_breed_offspring, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_breed_offspring, :teacher_mode => @teacher_mode} }
         format.xml  { render :biologica_breed_offspring => @biologica_breed_offspring }
       end
