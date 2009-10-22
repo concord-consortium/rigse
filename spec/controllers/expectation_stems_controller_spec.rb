@@ -1,10 +1,17 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe ExpectationStemsController do
 
   def mock_expectation_stem(stubs={})
     @mock_expectation_stem ||= mock_model(ExpectationStem, stubs)
   end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
   
   describe "responding to GET index" do
 
