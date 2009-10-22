@@ -1,41 +1,41 @@
 h1. RITES Investigations Portal and Authoring System
 
-h2. prerequisites
+h2. Setup
 
-Working git, ruby or jruby, rubgems.
+h3. Prerequisites
 
-h2. Initial install:
+Working git, ruby or jruby, and rubgems.
 
-The latest setup scripts have been tested with 1.4.0.RC0 of JRuby, you will need a running mysql
+h3. Install
+
+The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need a running mysql
 server and a mysql username/password with enough permissions to create and drop the 
 database you intend to use with RITES.
 
 <pre><code>
-    # If you are a committer in this repo:
+  # If you are a committer in this repo:
+  git clone git@github.com:stepheneb/rigse.git rites
 
-    git clone git@github.com:stepheneb/rigse.git rites
+  # else
+  git clone git://github.com/stepheneb/rigse.git rites
 
-    # otherwise:
+  cd rites
 
-    git clone git://github.com/stepheneb/rigse.git rites
+  # follow instructions for installing necessary gem prerequisites
+  # until config/setup.rb completes successfully
+  jruby config/setup.rb
 
-    cd rites
+  # finish installing necessary gems for rails application
+  jruby -S rake gems:install
 
-    # follow instructions for installing necessary gem prerequisites
-    # until config/setup.rb completes successfully
-    jruby config/setup.rb
+  # setup database
+  RAILS_ENV=production jruby -S rake db:migrate:reset
 
-    # finish installing necessary gems for rails application
-    jruby -S rake gems:install
+  # setup application resources
+  RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 
-    # setup database
-    RAILS_ENV=production jruby -S rake db:migrate:reset
-
-    # setup application resources
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
-
-    # start server
-    jruby -J-server script/server -e production
+  # start server
+  jruby -J-server script/server -e production
 </code></pre>
 
 h2. Copying the production database to a development environment
@@ -57,11 +57,7 @@ If the codebase on your development system has moved forward you may need to run
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>
-    cap production db:copy_remote_site_keys
-</code></pre>
-
-h2. Recreating a new application from scratch
+<pre><code>  cap production db:copy_remote_site_keys</code></pre>
 
 Recreating a new RITES application from scratch from an existing application.
 <pre><code>
@@ -82,13 +78,80 @@ h3. Setting up a local JNLP Web Start servlet
 
 You can also setup a local jnlp web start server for a development environment with less dependence on outside services.
 
-*"Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5*
-
-has several sections with useful information:
+*"Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
 
 # "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
 
-h2. Some video walk-throughs
+h2. Testing
+
+h3. Testing Frameworks
+
+h4. Rspec, Rspec-rails
+
+* "rspec and rspec-rails":http://rspec.info/
+** "rspec repo":http://github.com/dchelimsky/rspec
+** "rspec-rails repo":http://github.com/dchelimsky/rspec-rails
+
+h4. Cucumber
+
+h4. Webrat
+
+h4. Factory Girl
+
+bq. factory_girl allows you to quickly define prototypes for each of your models and ask for instances with properties that are important to the test at hand.
+
+* "Factory Girl":http://thoughtbot.com/projects/factory_girl
+** "Factory Girl repo":http://github.com/thoughtbot/factory_girl
+** "Factory Girl introduction":http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-girl
+** "Factory Girl rdoc":http://rdoc.info/projects/thoughtbot/factory_girl
+
+h3. Using Nokogiri with JRuby on Mac OS X
+
+Some of the testing frameworks depend on Nokogiri which is a Ruby html and xml parsing gem that uses the C-based libxml2 library.
+
+When Nokogiri runs in JRuby it uses "Ruby FFI":http://kenai.com/projects/ruby-ffi to dynamically load the libxml2 shared library.
+
+The version of libxml2 (2.6.16) included with MacOS X is old and the FFI version of Nokogiri prints this warning when it is run with this version of libxml installed:
+
+bq. You're using libxml2 version 2.6.16 which is over 4 years old and has plenty of bugs. We suggest that for maximum HTML/XML parsing pleasure, you upgrade your version of libxml2 and re-install nokogiri. 
+If you like using libxml2 version 2.6.16, but don't like this warning, please define the constant I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 before requring nokogiri.
+
+If you have  a newer version of the libxml2 library installed with macports you can set this environmental variable:
+<pre><code>  LD_LIBRARY_PATH=/opt/local/lib</code></pre> to have nokogiri check there for shared libraries first.
+
+See: "libxml2 for Nokogiri in JRuby":http://www.practicalguile.com/2009/06/07/libxml2-for-nokogiri-in-jruby/
+
+bq. Nokogiri uses Ruby FFI to dynamically load native C code and FFI makes use of dlopen to do the actual loading of dynamic libraries. On OSX, dlopen searches for files specified by a couple of environment variables (LD_LIBRARY_PATH, DYLD_LIBRARY_PATH, DYLD_FALLBACK_LIBRARY_PATH), and the current working directory. Setting LD_LIBRARY_PATH to /opt/local/lib worked for me. There may be differences in the environment variables used for dlopen on different platforms, so a look at the MAN pages would be a good idea if things don't seem to work.
+
+h3. Running the rspec tests
+
+*JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
+
+bq. <code>LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
+
+*Running all the rspec tests:*
+<pre><code>  rake spec</code></pre>
+
+*Running a single file:*
+<pre><code>  rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb</code></pre>  
+
+*Running a single directory:*
+<pre><code>  rake spec SPEC=spec/routing/dataservice</code></pre>  
+
+*Running all the controller tests:*
+<pre><code>  rake spec SPEC=spec/controllers</code></pre> 
+
+h3. Running the feature tests with cucumber
+
+*JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
+<pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
+
+*Running all the feature tests:*
+<pre><code>  rake:features</code></pre>  
+
+h2. Understanding the Codebase
+
+h3. Some video walk-throughs
 
 * "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
 * "Page Elements Model Part II":http://screencast.com/t/YyqOHfItL
@@ -96,7 +159,6 @@ h2. Some video walk-throughs
 * "PageElement View partials":http://screencast.com/t/800TVxOC
 * "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
 * "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
-
 
 ---
 
@@ -107,11 +169,11 @@ screencast: "The Page Elements Model Part I":http://screencast.com/t/8M2ISjcM
 Install github version of railroad with aasm patches from "ddolar's repo":http://github.com/ddollar/railroad/tree/master
 
 Generate a graph of the projects models using railroad:
-
-<code> railroad -o models.dot -M </code> 
+<pre><code>
+  railroad -o models.dot -M
+</code></pre>
 
 Open that file (models.dot) with omnigraffle, or traslate to some other image format using the dot tool.
-
 
 ---
 
@@ -123,8 +185,9 @@ Using mysql query browser (part of the osx mysql binary distrobution) to view sc
 "Mysql gui-tools":http://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-gui-tools-5.0-r12-osx10.4-universal.dmg/from/pick
 
 Use the generator to generate page elements eg:
-
-<code> ./script/generate element xhtml content:text </code> 
+<pre><code>
+  ./script/generate element xhtml content:text
+</code></pre>
 
 ---
 
@@ -156,7 +219,7 @@ h3. Javascript use in Rites
 
 screencast: "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
 
-What javascript librararies we are using, and what things we have written by ourselves;
+Javascript librararies we are using, and what things we have written by ourselves;
 Stuff we did:
 * accordion view
 * drop-downs
@@ -166,13 +229,14 @@ Other libraries
 * "tinymce":http://tinymce.moxiecode.com/
 * "flotr":http://solutoire.com/flotr/
 
-
-gured server is the 'staging' server (in config/deploy/staging.rb )
-
 h2. Capistrano Recipies (and problems)
 
 +warning+: sometimes the permissions on the shared/cache/.git directory get changed to be read-only for the group. So what i do to fix this is:
-<code> sudo chmod -R g+w ./cached-copy/ </code>
+<pre><code>
+  sudo chmod -R g+w ./cached-copy/
+</code></pre>
+
+More info on capistrano-ext/multistage deployments can be found here: http://weblog.jamisbuck.org/2007/7/23/capistrano-multistage
 
 h3. Database recipes
 
@@ -189,9 +253,11 @@ There are 4 basic commands:
 ** Same as db:load, except the remote database is overwritten
 
 *Download the production database to use locally*
-* <code>cap production db:fetch_remote_db</code>
-* <code>cp db/production_data.sql db/development_data.sql</code>
-* <code>rake db:load</code>
+<pre><code>
+  cap production db:fetch_remote_db
+  cp db/production_data.sql db/development_data.sql
+  rake db:load
+</code></pre>
 
 *Reset the Staging or Development database with Production's version*
 * <code>cap production db:fetch_remote_db</code>
@@ -214,13 +280,12 @@ There are three custom deployment-oriented cap tasks defined in config/deploy.rb
 
 Workarounds for cap deploy:from_scratch:  I usually just end up logging in to otto, dropping all the tables, 
 and then running the various rake tasks by hand:
-
-<code><pre>
-rake db:migrate
-rake rigse:setup:default_users_roles
-rake rigse:setup:create_additional_users
-rake rigse:setup:import_gses_from_file
-</pre></code>
+<pre><code>
+  rake db:migrate
+  rake rigse:setup:default_users_roles
+  rake rigse:setup:create_additional_users
+  rake rigse:setup:import_gses_from_file
+</code></pre>
 
 We should solve this one sooner rather than later.
 
@@ -235,47 +300,36 @@ Once the master branch has been deployed to the dev site, tested
 and found reliable enough to deploy to staging here's how to do it.
 
 If you don't already have a local branch of staging
-
-<code>
+<pre><code>
   git branch --track staging origin/staging
-</code>
+</code></pre>
+
 
 Switch to the staging branch and merge from master
-
-<code><pre>
+<pre><code>    
   git co staging
   git merge master
-</pre></code>
+</code></pre>
 
 Push your copy of the staging branch to the gihub repository:
-
-<code>
-  git push origin staging
-</code>
+<pre><code>  git push origin staging</code></pre>
 
 Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
 download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
-<code>
-  cap production db:remote_db_fetch
-</code>
+<pre><code>  cap production db:remote_db_fetch</code></pre>
 
 Push the production database from the local <code>db/production_data.sql</code> to the staging server, the import
 the data into the database on staging, then cleanup.
-<code>
-  cap staging db:remote_db_push
-</code>
+<pre><code>  cap staging db:remote_db_push</code></pre>
 
 Run any migrations on the staging server:
-<code>
-  cap staging deploy:migrate
-</code>
+<pre><code>  cap staging deploy:migrate</code></pre>
 
 If the ITSI importers have been updated and you want to run them again:
-
-<code><pre>
+<pre><code>    
   cap staging import:erase_and_import_itsi_activities
   cap staging import:erase_and_import_ccp_itsi_units
-</pre></code>
+</code></pre>
 
 Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
 
@@ -295,7 +349,7 @@ To install this plugin we followed this procedure:
 # <code>gem install --no-ri haml</code> 
 # <code>haml --rails path/to/rigse_app</code>
 
-h2. Creating the sakai integration demo user accounts.
+h3. Creating the sakai integration demo user accounts.
 
 *OCT 7 2009 This documentation should go away* as soon as we no longer need to import sakai users by hand.
 <pre><code>
@@ -303,8 +357,17 @@ h2. Creating the sakai integration demo user accounts.
   require 'lib/sakaidemo'
 </code></pre>
 
+h2. Rendering
 
-h1. Rendering OTML
+h3. haml
+
+We use haml for some templates, see: http://haml.hamptoncatlin.com/
+
+to install this plugin we followed this procedure:
+# <code>gem install --no-ri haml</code> 
+# <code>haml --rails path/to/rigse_app</code>
+
+h3. Rendering OTML
 
 The sass template rites.otml.sass generates the css file: rites.otml.css which is used for styling the xhtml content in
 OTCompoundDoc elements.
@@ -312,15 +375,7 @@ OTCompoundDoc elements.
 The Java OTrunk system uses Java html editor kit for rendering xhtml and implements a very limited version of CSS that is somewhere
 between CSS1 and CSS2. You can find out more about this implementations limitations here: "Java 1.5: Class CSS":http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/html/CSS.html
 
-h2. TODO Items:
-
-# make models for
-## activities (done)
-## xhtml text areas [Xhtml]
-## Open Responses [OpenResponse]
-## Multiple Choice Questions [MultipleChoiceQuestion]
-## Datacollectors: sensors and prediction [DataCollector]
-## Models [InteractiveModel]
+h2. Authentication, Sessions, and Cookies
 
 h3. RESTful Authentication
 
@@ -329,12 +384,11 @@ Forgotten password comes setup, so you don't have to mess around setting it up w
 
 The AASM plugin comes pre-installed. RESTful Authentication is also setup to use user activation.
 
+h2. Uses the Database for Sessions
+
+Bort is setup to use the database to store sessions by default. 
+
 h3. User Roles
-
-Bort now comes with "Role Requirement":http://code.google.com/p/rolerequirement/ by Tim Harper. A default 
-admin role is predefined along with a default admin user. See the migrations for the admin login details.
-
-h3. Open ID Authentication
 
 Bort, as of 0.3, has Open ID integrated with RESTful Authentication. Rejoice!
 
@@ -345,53 +399,37 @@ h3. Will Paginate
 
 We use will_paginate in pretty much every project we use.
 
-h3. Rspec & Rspec-rails
-
-You should be testing your code, so Bort comes with Rspec and Rspec-rails already installed so you're
-ready to roll.
-
 h3. Exception Notifier
 
 You don't want your applications to crash and burn so Exception Notifier is already installed to let 
 you know when everything goes to shit.
 
+h2. CSS
+
 h3. Asset Packager
 
-*RITES Authoring and portal site use this now* 
-see "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
+RITES Authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
 
 cap deploy will trigger the asset_packager to run.
 you can also run locally by hand: rake asset:packager:build_all
 
 Assets are configured in config/asset_packages.yml
+
 Packages up your css/javascript so you're not sending 143 files down to the user at the same time. Reduces
 load times and saves you bandwidth.
 
+h2. Routing
 
-h2. Routes
 
+h2. Application Settings
 
-h2. Settings YAML
+h3. Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site name, url and admin email are all used
 in the RESTful Auth mailers, so you don't need to worry about editing them.
 
-h2. Database YAML
+h3. Database YAML
 
-The database.yml defaults to sqlite3 but also contains the settings for MySQL in comments so you can switch
-over easily.
-
-h2. Capistrano Recipe
-
-Bort comes ready to rock capistrano. The recipe that is setup is based on using git and passenger. It's ready
-to go with multistage deployments. It deploys to the production config by default, so if you don't need it
-you can ignore it. Just update config/deploy/production.rb with your deployment settings.
-
-More info on capistrano-ext/multistage deployments can be found here: http://weblog.jamisbuck.org/2007/7/23/capistrano-multistage
-
-h2. Uses the Database for Sessions
-
-Bort is setup to use the database to store sessions by default. 
 
 h2. Misc 
 
@@ -406,3 +444,5 @@ h2. Misc
 h2. Credits
 
 Bort put together by people at "Fudge":http://www.fudgestudios.com/ 
+
+!http://clients.fudgestudios.com/chester.jpg!
