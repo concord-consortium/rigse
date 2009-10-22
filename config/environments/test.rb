@@ -23,13 +23,20 @@ config.action_mailer.delivery_method = :test
 
 # current customizations below this line ...
 
+# Install the gems required for development:
+#
+#   sudo env RAILS_ENV=test rake gems:install
+#
+
 # See: http://wiki.github.com/dchelimsky/rspec/configgem-for-rails
-config.gem "rspec", :lib => false, :version => ">= 1.2.7" 
-config.gem "rspec-rails", :lib => false, :version => ">= 1.2.7"
-config.gem "webrat", :lib => false, :version => ">= 0.4.4"
-config.gem "cucumber", :lib => false, :version => ">= 0.3.11"
-config.gem "thoughtbot-factory_girl", :lib => "factory_girl", :source => "http://gems.github.com"
+config.gem "rspec",        :lib => false,          :version => "= 1.2.9" 
+config.gem "rspec-rails",  :lib => false,          :version => "= 1.2.9"
+config.gem "webrat",       :lib => false,          :version => "= 0.4.4"
+config.gem "cucumber",     :lib => false,          :version => "= 0.4.2"
+config.gem "factory_girl", :lib => "factory_girl", :version => "= 1.2.3", :source => "http://gemcutter.org"
 
 # See: http://remarkable.rubyforge.org/
 # and: http://github.com/carlosbrando/remarkable/tree/master
-config.gem "remarkable_rails", :lib => false, :version => ">= 3.1.6"
+# Adds new rspec matchers for models and controllers
+# as well as better support for I18n, collections, creating custom matchers 
+config.gem "remarkable_rails", :lib => false, :version => ">= 3.1.11"
