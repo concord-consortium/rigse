@@ -132,11 +132,14 @@ bq. <code>LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
 *Running all the rspec tests:*
 <pre><code>  rake spec</code></pre>
 
-*Running a single file of rspec tests:*
+*Running a single file:*
 <pre><code>  rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb</code></pre>  
 
-*Running a single directory of rspec tests:*
+*Running a single directory:*
 <pre><code>  rake spec SPEC=spec/routing/dataservice</code></pre>  
+
+*Running all the controller tests:*
+<pre><code>  rake spec SPEC=spec/controllers</code></pre> 
 
 h3. Running the feature tests with cucumber
 
