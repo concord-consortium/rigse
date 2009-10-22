@@ -13,29 +13,29 @@ server and a mysql username/password with enough permissions to create and drop 
 database you intend to use with RITES.
 
 <pre><code>
-    # If you are a committer in this repo:
-	git clone git@github.com:stepheneb/rigse.git rites
+  # If you are a committer in this repo:
+  git clone git@github.com:stepheneb/rigse.git rites
 
-	# else
-    git clone git://github.com/stepheneb/rigse.git rites
+  # else
+  git clone git://github.com/stepheneb/rigse.git rites
 
-    cd rites
+  cd rites
 
-    # follow instructions for installing necessary gem prerequisites
-    # until config/setup.rb completes successfully
-    jruby config/setup.rb
+  # follow instructions for installing necessary gem prerequisites
+  # until config/setup.rb completes successfully
+  jruby config/setup.rb
 
-    # finish installing necessary gems for rails application
-    jruby -S rake gems:install
+  # finish installing necessary gems for rails application
+  jruby -S rake gems:install
 
-    # setup database
-    RAILS_ENV=production jruby -S rake db:migrate:reset
+  # setup database
+  RAILS_ENV=production jruby -S rake db:migrate:reset
 
-    # setup application resources
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+  # setup application resources
+  RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 
-    # start server
-    jruby -J-server script/server -e production
+  # start server
+  jruby -J-server script/server -e production
 </code></pre>
 
 h2. Copying the production database to a development environment
@@ -127,7 +127,7 @@ h3. Running the rspec tests
 
 *JRuby invocation note*: use this command prefix to run the rake spec tests from JRuby if you have a more recent version of libxml2 installed with macports:
 
-bq. <code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
+bq. <code>LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec </code> _options_
 
 *Running all the rspec tests:*
 <pre><code>  rake spec</code></pre>
