@@ -1,10 +1,17 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe DomainsController do
 
   def mock_domain(stubs={})
     @mock_domain ||= mock_model(Domain, stubs)
   end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
   
   describe "responding to GET index" do
 
