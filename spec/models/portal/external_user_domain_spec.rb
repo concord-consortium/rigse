@@ -8,7 +8,6 @@ describe Portal::ExternalUserDomain do
       :name => "test sakai",
       :description => "a test domain representing an external; sakai instance",
       :server_url => "http://sakai-server.edu",
-      :uuid => generate_uuid
     }    
   end
 
