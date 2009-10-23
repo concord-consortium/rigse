@@ -36,6 +36,32 @@ class Portal::Clazz < ActiveRecord::Base
     end
   end
   
+  def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
+    found = nil
+    if portal_course && portal_course.id
+      clazzes = portal_course.clazzes.select { |clazz| clazz.section == section && clazz.start_time == start_date }
+      if clazzes.size > 0
+        found = clazzes[0]
+        if clazzes.size > 1
+          Rails.logger.error("too many clazzes with the same section and start date for #{portal_course.name} (#{clazzes.size})")
+        end
+      else
+        params = {:section => section, :start_time => start_date, :class_word => random_class_word}
+        found = Portal::Clazz.create(params)
+        found.save!
+        portal_course.clazzes << found
+      end
+    else
+      Rails.logger.error("Bad or null portal course supplied: #{_portal_course}")
+    end
+    found
+  end
+  
+  def self.random_class_word(course)
+    string = (0..5).map{ ('a'..'z').to_a[rand(26)] }.join
+    "#{course.id}_#{string}"
+  end
+  
   def title
     semester_name = semester ? semester.name : 'unknown'
     "Class: #{name}, Semester: #{semester_name}"
