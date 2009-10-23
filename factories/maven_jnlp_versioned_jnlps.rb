@@ -1,5 +1,5 @@
 Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do |f|
-  f.association :versioned_jnlp_url_id, :factory => :maven_jnlp_versioned_jnlp_url
+  f.association :versioned_jnlp_url, :factory => :maven_jnlp_versioned_jnlp_url
   f.name  'all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
   f.main_class  'net.sf.sail.emf.launch.EMFLauncher3'
   f.argument  'dummy'
