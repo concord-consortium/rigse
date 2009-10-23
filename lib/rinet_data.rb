@@ -36,7 +36,7 @@ class RinetData
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
 
     @students_hash = {}
-    # SASSID => Portal::Student
+    # SASID => Portal::Student
     
     @teachers_hash = {}
     # CertID => Portal::Teacher
@@ -275,27 +275,21 @@ class RinetData
   
   
   def update_classes
-    #combine data from both the student enrollments, and the staff assignments
-    new_classes = @parsed_data[:enrollments] + @parsed_data[:staff_assignments]
-    
-    # create a working list:
-    new_classes.each do |nc| 
+    # from staff assignments:
+    @parsed_data[:staff_assignments].each do |nc| 
       create_or_update_class(nc)
     end
     
-    # then do a batch update of the clazz memberships
-    @clazz_hash.keys.each do |clazz|
-      students = @clazz_hash[clazz][:students].uniq
-      teachers = @clazz_hash[clazz][:teachers]
-      Rails.logger.error("Strainge number of teachers for clazz #{clazz.name}: #{teachers.size}") unless teachers.size == 1
-      teacher = teachers.first
-      # TODO: only one teacher? zero teachers?
-      if (students.size > 0)
-        clazz.students = students
-      end
-      clazz.teacher = teacher
-      clazz.save
+    # clear students schedules:
+    @students_hash.each_value do |student|
+      student.clazzes.delete_all
     end
+    
+    # and re-enroll
+    @parsed_data[:enrollments] .each do |nc| 
+      create_or_update_class(nc)
+    end
+
   end
   
   def create_or_update_class(row)
@@ -308,16 +302,16 @@ class RinetData
     section = row[:CourseSection]
     start_date = DateTime.parse(row[:StartDate]) 
     clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
-    unless @clazz_hash[clazz]
-      @clazz_hash[clazz] = {
-        :students => [],
-        :teachers => []
-      }
-    end
-    if row[:SASID] && @students_hash[row[:SASSID]]
-      @clazz_hash[clazz][:students] << @students_hash[row[:SASSID]]
+    
+    if row[:SASID] && @students_hash[row[:SASID]]
+      student =  @students_hash[row[:SASID]]
+      student.clazzes << clazz
+      student.save
     elsif row[:TeacherCertNum] && @teachers_hash[row[:TeacherCertNum]]
-      @clazz_hash[clazz][:teachers] << @teachers_hash[row[:TeacherCertNum]]
+      clazz.teacher = @teachers_hash[row[:TeacherCertNum]]
+      clazz.save
+    else
+      Rails.logger.warning("couldn't find that teacher or student :SASID: #{row[:SASID]} cert: #{row[:TeacherCertNum]}")
     end
     row
   end

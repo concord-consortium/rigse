@@ -119,6 +119,7 @@ describe RinetData do
       current_clazzes = current_clazzes - @initial_clazzes
       current_clazzes.each do |clazz|
         clazz.students.should_not be_nil
+        clazz.students.size.should be > 0
         clazz.teacher.should_not be_nil
         clazz.name.should_not be_nil
         clazz.class_word.should_not be_nil
@@ -128,7 +129,6 @@ describe RinetData do
   end
 
   describe "Looking to prevent duplicate data" do
-
     it "when the same import is rerun, there should be no new students" do
       current_students = Portal::Student.find(:all)
       run_importer # run the import again.
@@ -152,13 +152,60 @@ describe RinetData do
       run_importer # run the import again.
       Portal::Course.find(:all).should eql current_courses
     end
-  end
-  
-  describe "when csv files change enrollments (student -> class mapping)" do
     
-  
+    it "when the same import is rerun, there should be no new users" do
+      current_courses = Portal::Course.find(:all)
+      run_importer # run the import again.
+      Portal::Course.find(:all).should eql current_courses
+    end
   end
   
+  
+  describe "when csv files add entities, the new added enties *ARE ADDED* to rites" do
+    it "when new lines is added to the student.csv file, there be one more student in the rites site" do
+      current_students = Portal::Student.find(:all)
+      # import new data which adds LPaessel
+      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b") 
+      Portal::Student.find(:all).size.should eql current_students.size + 1
+    end
+    
+    it "when a PHYSICS is added to courses.csv, the class and its courses be created" do
+     # import new data which adds physics
+      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      Portal::Clazz.find_by_name('PHYSICS').should_not be_nil
+      Portal::Course.find_by_name('PHYSICS').should_not be_nil
+    end
+  end
+  
+  describe "when csv files remove entities, they are *NOT REMOVED* from rites" do
+    it "when a teacher is removed from the staff.csv file, the teacher should not actually be deleted from rites" do
+      current_teachers = Portal::Teacher.find(:all)
+      # import new data, which removes a teacher
+      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      Portal::Teacher.find(:all).should eql current_teachers
+    end
+  
+    it "when a GYM is removed from courses.csv, the class and its courses should not actually be deleted" do
 
+      # import new data which removes a GYM class
+       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+       Portal::Clazz.find_by_name('GYM').should_not be_nil
+       Portal::Course.find_by_name('GYM').should_not be_nil
+    end
+  end
+  
+  describe "when staff assignments or student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
+    it "when students are added to the the art class in the CSV file, they should be added on the rites site too" do
+      # import new data which adds one user to the art class
+      # and one user to a new physics class
+      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      art_class = Portal::Clazz.find_by_name("ART");
+      puts art_class.inspect
+      puts art_class.students.inspect
+      Portal::Clazz.find_by_name("ART").students.size.should be 2
+      Portal::Clazz.find_by_name("PHYSICS").students.size.should be 1
+    end  
+  end
+  
   
 end
