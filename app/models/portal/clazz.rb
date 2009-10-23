@@ -19,7 +19,7 @@ class Portal::Clazz < ActiveRecord::Base
 
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
-  
+
   include Changeable
 
   self.extend SearchableModel
@@ -37,22 +37,30 @@ class Portal::Clazz < ActiveRecord::Base
   end
   
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
+    unless portal_course && portal_course.id
+      throw new ArgumentException("argument portal_course was null or empty", "portal_course");
+    end
+    if start_date.class != DateTime
+      Rails.logger.warn("Found non-dateTime object in find_or_create_by_course_and_section_and_start_date")
+      start_date = start_date.to_datetime
+    end
     found = nil
-    if portal_course && portal_course.id
-      clazzes = portal_course.clazzes.select { |clazz| clazz.section == section && clazz.start_time == start_date }
-      if clazzes.size > 0
-        found = clazzes[0]
-        if clazzes.size > 1
-          Rails.logger.error("too many clazzes with the same section and start date for #{portal_course.name} (#{clazzes.size})")
-        end
-      else
-        params = {:section => section, :start_time => start_date, :class_word => random_class_word}
-        found = Portal::Clazz.create(params)
-        found.save!
-        portal_course.clazzes << found
+    clazzes = portal_course.clazzes.select { |clazz| clazz.section == section && clazz.start_time == start_date }
+    if clazzes.size > 0
+      found = clazzes[0]
+      if clazzes.size > 1
+        Rails.logger.error("too many clazzes with the same section and start date for #{portal_course.name} (#{clazzes.size})")
       end
     else
-      Rails.logger.error("Bad or null portal course supplied: #{_portal_course}")
+      params = {
+        :section => section, 
+        :start_time => start_date, 
+        :class_word => random_class_word(portal_course),
+        :name => portal_course.name
+      }
+      found = Portal::Clazz.create(params)
+      found.save!
+      portal_course.clazzes << found
     end
     found
   end
@@ -80,4 +88,5 @@ class Portal::Clazz < ActiveRecord::Base
     return teacher
   end
   
+
 end
