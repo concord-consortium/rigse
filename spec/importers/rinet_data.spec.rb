@@ -98,7 +98,6 @@ describe RinetData do
     it "new teachers should be teaching at a valid NCES school" do
       teachers = Portal::Teacher.find(:all) - @initial_teachers
       teachers.each do |teacher|
-        puts "\nteacher: #{teacher.login}: #{teacher.clazzes.size}"
         teacher.should be_in_nces_school
       end
     end
@@ -113,10 +112,8 @@ describe RinetData do
     it "should create new courses" do
       Portal::Course.find(:all).should be_more_than @initial_courses
       courses = Portal::Course.find(:all) - @initial_courses
-      puts "\nlisting courses:\n"
       courses.each do |course|
         course.should be_real
-        puts "#{course.id}-- #{course.name}: #{course.description}"
       end
     end
   
@@ -207,8 +204,6 @@ describe RinetData do
       # and one user to a new physics class
       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
       art_class = Portal::Clazz.find_by_name("ART");
-      puts art_class.inspect
-      puts art_class.students.inspect
       Portal::Clazz.find_by_name("ART").students.size.should be 2
       Portal::Clazz.find_by_name("PHYSICS").students.size.should be 1
     end  
