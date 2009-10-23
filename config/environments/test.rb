@@ -4,7 +4,7 @@ puts "loading test environment"
 # test suite.  You never need to work with it otherwise.  Remember that
 # your test database is "scratch space" for the test suite and is wiped
 # and recreated between test runs.  Don't rely on the data there!
-config.cache_classes = true
+config.cache_classes = false
 
 # Log error messages when you accidentally call methods on nil.
 config.whiny_nils = true
@@ -29,7 +29,7 @@ config.gem "rspec-rails", :lib => false, :version => ">= 1.2.7"
 config.gem "webrat", :lib => false, :version => ">= 0.4.4"
 config.gem "cucumber", :lib => false, :version => ">= 0.3.11"
 config.gem "thoughtbot-factory_girl", :lib => "factory_girl", :source => "http://gems.github.com"
-
+config.gem "spork", :lib => false
 # See: http://remarkable.rubyforge.org/
 # and: http://github.com/carlosbrando/remarkable/tree/master
 config.gem "remarkable_rails", :lib => false, :version => ">= 3.1.6"
