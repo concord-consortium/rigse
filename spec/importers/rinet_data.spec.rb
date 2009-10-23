@@ -67,12 +67,19 @@ describe RinetData do
   end
 
   describe "basic csv file parsing" do
+    
     it "should have parsed data" do
       @rd.parsed_data.should_not be nil
       %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}.each do |data_file|
         @rd.parsed_data[data_file.to_sym].should_not be nil
       end
     end
+    
+    describe "parsing should tolerate broken input to a certain extent" do
+      it "should tolerate csv input with blank lines"
+      it "should tolerate csv input with missing fields"
+    end
+    
   end
   
   describe "verifying that the appropriate entities get created from CSV files" do
