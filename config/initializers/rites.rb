@@ -1,5 +1,5 @@
-# Don't create initial settings if we are building the app for the first time because the
-# tables haven't been created yet. 
+# Don't create initial settings if we are building the app for the first time or
+# the RAILS_ENV is test ... because the tables haven't been created yet. 
 #
 # This is one way to test to see if we got here running rake db:migrate:
 #
@@ -31,9 +31,9 @@
 #   => [Mysql::Error, StandardError, ...
 #
 
-# if ENV['RAILS_ENV']== 'test'
-#   puts "Test environmnent detected, using factory girl resources"
-# else
+if RAILS_ENV == 'test' || $PROGRAM_NAME =~ /rake/
+  puts "RAILS running in test environment or executing rake task -- skipping Admin::Project.create_or_update_default_project_from_settings_yml"
+else
   begin
     ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
     puts "running Admin::Project.create_or_update_default_project_from_settings_yml"
@@ -44,4 +44,4 @@
     puts "not running Admin::Project.create_or_update_default_project_from_settings_yml"
     puts "(In a test environment factory girl should create these resources for you)"
   end
-# end
+end

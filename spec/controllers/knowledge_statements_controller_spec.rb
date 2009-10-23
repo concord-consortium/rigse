@@ -1,9 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe KnowledgeStatementsController do
 
   def mock_knowledge_statement(stubs={})
     @mock_knowledge_statement ||= mock_model(KnowledgeStatement, stubs)
+  end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
   
   describe "responding to GET index" do

@@ -9,7 +9,8 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
     end
-      
+    portal.resources :external_users
+    portal.resources :external_user_domains
     portal.resources :courses
     portal.resources :districts
     portal.resources :grades

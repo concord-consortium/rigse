@@ -1,5 +1,5 @@
 Factory.sequence :class_word do |n|
-  "classword_#{n}"
+  "classword_#{UUIDTools::UUID.timestamp_create.to_s}"
 end
 
 Factory.define :portal_clazz, :class => Portal::Clazz do |f|

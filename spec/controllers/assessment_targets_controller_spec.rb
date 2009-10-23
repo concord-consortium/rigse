@@ -6,6 +6,11 @@ describe AssessmentTargetsController do
   def mock_assessment_target(stubs={})
     @mock_assessment_target ||= mock_model(AssessmentTarget, stubs)
   end
+
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
   
   describe "responding to GET index" do
 

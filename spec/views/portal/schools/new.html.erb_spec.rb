@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
 describe "/portal_schools/new.html.erb" do
-  include Portal::SchoolsHelper
+  # include Portal::SchoolsHelper
 
   before(:each) do
     assigns[:school] = stub_model(Portal::School,

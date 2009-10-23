@@ -1,0 +1,85 @@
+class Portal::ExternalUserDomainsController < ApplicationController
+  # GET /portal_external_user_domains
+  # GET /portal_external_user_domains.xml
+  def index
+    @portal_external_user_domains = Portal::ExternalUserDomain.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @portal_external_user_domains }
+    end
+  end
+
+  # GET /portal_external_user_domains/1
+  # GET /portal_external_user_domains/1.xml
+  def show
+    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @external_user_domain }
+    end
+  end
+
+  # GET /portal_external_user_domains/new
+  # GET /portal_external_user_domains/new.xml
+  def new
+    @external_user_domain = Portal::ExternalUserDomain.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @external_user_domain }
+    end
+  end
+
+  # GET /portal_external_user_domains/1/edit
+  def edit
+    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+  end
+
+  # POST /portal_external_user_domains
+  # POST /portal_external_user_domains.xml
+  def create
+    @external_user_domain = Portal::ExternalUserDomain.new(params[:external_user_domain])
+
+    respond_to do |format|
+      if @external_user_domain.save
+        flash[:notice] = 'Portal::ExternalUserDomain was successfully created.'
+        format.html { redirect_to(@external_user_domain) }
+        format.xml  { render :xml => @external_user_domain, :status => :created, :location => @external_user_domain }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @external_user_domain.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /portal_external_user_domains/1
+  # PUT /portal_external_user_domains/1.xml
+  def update
+    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+
+    respond_to do |format|
+      if @external_user_domain.update_attributes(params[:external_user_domain])
+        flash[:notice] = 'Portal::ExternalUserDomain was successfully updated.'
+        format.html { redirect_to(@external_user_domain) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @external_user_domain.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /portal_external_user_domains/1
+  # DELETE /portal_external_user_domains/1.xml
+  def destroy
+    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    @external_user_domain.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(portal_external_user_domains_url) }
+      format.xml  { head :ok }
+    end
+  end
+end
