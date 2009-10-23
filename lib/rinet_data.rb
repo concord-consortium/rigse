@@ -238,7 +238,7 @@ class RinetData
   end
   
   def create_or_update_course(row)
-    unless row[:rites_course_id]
+    unless row[:rites_course]
       school = school_for(row);
       courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
       unless courses
@@ -254,6 +254,7 @@ class RinetData
     else
       Rails.logger.info("course already defined in rites system")
     end
+    row
   end
   
   
@@ -261,7 +262,13 @@ class RinetData
   end
   
   def create_or_update_class(row)
-
+    portal_course = row(:rites_course)
+    if portal_course
+      
+    else
+      Rails.logger.warn("Couldn't find rites_course for row #{row}")
+      Rails.logger.info ("update_courses first ??")
+    end
   end
   
   
