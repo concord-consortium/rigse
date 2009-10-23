@@ -2,18 +2,18 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 def be_more_than(expected)
   simple_matcher do |given, matcher|
-    matcher.description = "more than #{expected.inspect}"
-    matcher.failure_message = "expected #{given.inspect} to be more than #{expected.inspect}"
-    matcher.negative_failure_message = "expected #{given.inspect} not to be more than #{expected.inspect}"
+    matcher.description = "more than #{expected.size}"
+    matcher.failure_message = "expected #{given.size} to be more than #{expected.size}"
+    matcher.negative_failure_message = "expected #{given.size} not to be more than #{expected.size}"
     (given.size > expected.size)
   end
 end
 
 def be_less_than(expected)
   simple_matcher do |given, matcher|
-    matcher.description = "less than #{expected.inspect}"
-    matcher.failure_message = "expected #{given.inspect} to be less than #{expected.inspect}"
-    matcher.negative_failure_message = "expected #{given.inspect} not to be less than #{expected.inspect}"
+    matcher.description = "less than #{expected.size}"
+    matcher.failure_message = "expected #{given.size} to be less than #{expected.size}"
+    matcher.negative_failure_message = "expected #{given.size} not to be less than #{expected.size}"
     (given.size < expected.size)
   end
 end
@@ -78,6 +78,8 @@ describe RinetData do
   end
   
   it "should create new users" do
+    @rd.update_teachers
+    @rd.update_students    
     User.find(:all).should be_more_than @initial_users
   end
   
