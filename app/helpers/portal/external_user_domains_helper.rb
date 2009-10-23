@@ -1,0 +1,2 @@
+module Portal::ExternalUserDomainsHelper
+end
