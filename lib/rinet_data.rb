@@ -154,14 +154,16 @@ class RinetData
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
+      if row[:EmailAddress]
+        email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
+      end
       params = {
         :login  => row[:login] || 'bugusXXXXX',
         :password => row[:Password] || row[:Birthdate],
         :password_confirmation => row[:Password] || row[:Birthdate],
         :first_name => row[:Firstname],
         :last_name  => row[:Lastname],
-        :email => email
+        :email => email || "no-email@broken.borked" # (otherwise we fail validation)
       }
       user = User.find_or_create_by_login(params)
       user.save!
