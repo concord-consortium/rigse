@@ -1,4 +1,5 @@
 
+REST_AUTH_SITE_KEY = 'sitekeyforrunningtests'
 def mock_admin_project
   @mock_project ||= mock_model(Admin::Project,
     :maven_jnlp_server => mock_model( MavenJnlp::MavenJnlpServer),
