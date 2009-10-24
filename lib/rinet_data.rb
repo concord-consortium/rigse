@@ -34,6 +34,17 @@ class RinetData
   
   def initialize
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
+
+    @students_hash = {}
+    # SASID => Portal::Student
+    
+    @teachers_hash = {}
+    # CertID => Portal::Teacher
+    
+    @course_hash = {}
+    # CourseNumber => course
+    @clazz_hash = {}
+    # Portal::Clazz.id => {:teachers => [], :students => []}
   end
   
   def get_csv_files
@@ -143,14 +154,16 @@ class RinetData
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
+      if row[:EmailAddress]
+        email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
+      end
       params = {
         :login  => row[:login] || 'bugusXXXXX',
         :password => row[:Password] || row[:Birthdate],
         :password_confirmation => row[:Password] || row[:Birthdate],
         :first_name => row[:Firstname],
         :last_name  => row[:Lastname],
-        :email => email
+        :email => email || "no-email@broken.borked" # (otherwise we fail validation)
       }
       user = User.find_or_create_by_login(params)
       user.save!
@@ -172,6 +185,7 @@ class RinetData
   
   def create_or_update_teacher(row)
     # try and cache our data
+    teacher = nil
     unless row[:rites_teacher_id]
       user = create_or_update_user(row)
       teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
@@ -188,9 +202,13 @@ class RinetData
         end
       end
       row[:rites_teacher_id] = teacher.id
+      if teacher
+        @teachers_hash[row[:TeacherCertNum]] = teacher
+      end
     else
       Rails.logger.info("teacher already defined in rites system")
     end
+    teacher
   end
   
   def update_students
@@ -199,6 +217,7 @@ class RinetData
   end
   
   def create_or_update_student(row)
+    student = nil
     unless row[:rites_student_id]
       user = create_or_update_user(row)
       student = user.portal_student
@@ -207,10 +226,7 @@ class RinetData
         student.save!
         user.portal_student=student;
       end
-      row[:rites_student_id] = student.id
-      # how do we find out the students grade?
-      # student.grade = ??
-    
+
       # add the student to the school
       school = school_for(row)
       if (school)
@@ -219,49 +235,87 @@ class RinetData
         end
       end
       row[:rites_student_id] = student.id
+      # cache that results in hashtable
+      @students_hash[row[:SASID]] = student
     else
       Rails.logger.info("student already defined in rites system")
     end
+    row
   end
   
   
   def update_courses
     new_courses = @parsed_data[:courses]
-    unless defined? @course_hash
-      @course_hash = {}
-    end
     new_courses.each do |nc| 
       create_or_update_course(nc)
-      # cache that results in fast hash
-      @course_hash[nc[:CourseNumber]] = nc[:course]
     end
   end
   
   def create_or_update_course(row)
-    unless row[:rites_course_id]
+    unless row[:rites_course]
       school = school_for(row);
       courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
       unless courses
         course = Portal::Course.create!( {:name => row[:Title], :school_id => school_for(row).id })
       else
         # TODO: what if we have multiple matches?
-        if courses.size > 1
-          Rails.logger.error("Too many identical courses")
+        if courses.class == Array
+          Rails.logger.error("Too many matching courses")
+          course = courses[0]
+        else
+          course = courses
         end
-        course = courses[0]
       end
       row[:rites_course] = course
+      # cache that results in hashtable
+      @course_hash[row[:CourseNumber]] = row[:rites_course]
     else
       Rails.logger.info("course already defined in rites system")
     end
+    row
   end
   
   
   def update_classes
+    # from staff assignments:
+    @parsed_data[:staff_assignments].each do |nc| 
+      create_or_update_class(nc)
+    end
+    
+    # clear students schedules:
+    @students_hash.each_value do |student|
+      student.clazzes.delete_all
+    end
+    
+    # and re-enroll
+    @parsed_data[:enrollments] .each do |nc| 
+      create_or_update_class(nc)
+    end
+
   end
   
   def create_or_update_class(row)
-
+    # use course hashmap to find our course
+    portal_course = @course_hash[row[:CourseNumber]]
+    raise "cant find Portal::course for course_id #{row[:CourseNumber]} #{portal_course.nil?}" unless portal_course && portal_course.class == Portal::Course
+  
+    # TODO: Better way to catch bad start time strings.
+    raise "bad start time for clazz: '#{row[:StartDate]}'" unless row[:StartDate].size > 8
+    section = row[:CourseSection]
+    start_date = DateTime.parse(row[:StartDate]) 
+    clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
+    
+    if row[:SASID] && @students_hash[row[:SASID]]
+      student =  @students_hash[row[:SASID]]
+      student.clazzes << clazz
+      student.save
+    elsif row[:TeacherCertNum] && @teachers_hash[row[:TeacherCertNum]]
+      clazz.teacher = @teachers_hash[row[:TeacherCertNum]]
+      clazz.save
+    else
+      Rails.logger.warning("couldn't find that teacher or student :SASID: #{row[:SASID]} cert: #{row[:TeacherCertNum]}")
+    end
+    row
   end
   
   
