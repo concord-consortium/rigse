@@ -19,7 +19,7 @@ describe Portal::District do
   it "can create schools from NCES school data " do
     nces_district = Factory(:portal_nces06_district)
     new_district = Portal::District.find_or_create_by_nces_district(nces_district)
-    new_district.should_not be nil
+    new_district.should_not be_nil
     new_district.should be_real # meaning has a real nces school
   end
   
