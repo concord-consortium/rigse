@@ -17,17 +17,17 @@ class InnerPage
     end
     true
   end
-
+  
   def shuffle
     self.inner_page_pages.size.downto(1) { |n| self.inner_page_pages.push self.inner_page_pages.delete_at(rand(n)) }
     self.inner_page_pages.each_with_index { |ip,i| ip.position = i; ip.save }
   end
-
+  
   def sort_by_name
     self.inner_page_pages.sort! {|a,b| a.page.name <=> b.page.name} 
     self.inner_page_pages.each_with_index {|ip,i| ip.position = i; ip.save}
   end
-
+  
   @verbose = false
   
   def inspect
@@ -41,7 +41,7 @@ end
 
 describe InnerPage do
   before(:each) do
-    @page = Page.create!
+    @page = Factory(:page)
     @sub_page = Page.create!
     @valid_attributes = {
       :name => "test innner page",
@@ -94,7 +94,5 @@ describe InnerPage do
     @inner_page.inspect
     assert @inner_page.sub_pages.last == last_page
   end
-  
-
 
 end
