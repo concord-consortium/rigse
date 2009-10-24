@@ -174,4 +174,5 @@ class Page < ActiveRecord::Base
     # maybe what is the child we wonder?
     return page_elements.map { |e| e.embeddable }
   end
+  
 end
