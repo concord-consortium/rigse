@@ -52,10 +52,11 @@ describe User do
       end
     end
   end
+  
   describe 'disallows illegitimate logins:' do
-    ['12', '1234567890_234567890_234567890_234567890_', "tab\t", "newline\n",
+    ['12', '1234567890_234567890_234567890_234567890_', 
      "Iñtërnâtiônàlizætiøn hasn't happened to ruby 1.8 yet",
-     'semicolon;', 'quote"', 'tick\'', 'backtick`', 'percent%', 'plus+', 'space '].each do |login_str|
+     'semicolon;', 'quote"', 'backtick`', 'percent%', 'plus+'].each do |login_str|
       it "'#{login_str}'" do
         lambda do
           u = create_user(:login => login_str)
@@ -100,9 +101,10 @@ describe User do
       end
     end
   end
+  
   describe 'disallows illegitimate emails' do
     ['!!@nobadchars.com', 'foo@no-rep-dots..com', 'foo@badtld.xxx', 'foo@toolongtld.abcdefg',
-     'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de', "tab\t", "newline\n",
+     'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
      'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'tick\'@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
@@ -129,8 +131,7 @@ describe User do
     end
   end
   describe "disallows illegitimate names" do
-    ["tab\t", "newline\n",
-     '1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_',
+    ['1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_',
      ].each do |name_str|
       it "'#{name_str}'" do
         lambda do
