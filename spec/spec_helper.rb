@@ -65,6 +65,8 @@ Spork.prefork do
     # For more information take a look at Spec::Runner::Configuration and Spec::Runner
   end
   
+  Dir.glob(File.dirname(__FILE__) + "/support/*.rb").each { |f| require(f) }
+  
 end
 
 Spork.each_run do

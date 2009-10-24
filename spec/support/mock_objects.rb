@@ -1,8 +1,5 @@
-def will_paginate_params
-  {:limit=>30, :offset=>0, :include=>{}}
-end
 
-def mock_project
+def mock_admin_project
   @mock_project ||= mock_model(Admin::Project,
     :maven_jnlp_server => mock_model( MavenJnlp::MavenJnlpServer),
     :maven_jnlp_family => mock_model(MavenJnlp::MavenJnlpFamily,
