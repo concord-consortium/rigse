@@ -40,13 +40,9 @@ describe RinetData do
   
   def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
     @rd = RinetData.new
-    @rd.parse_csv_files_in_dir(district_directory)
-    @rd.join_students_sakai
-    @rd.join_staff_sakai
-    @rd.update_teachers
-    @rd.update_students
-    @rd.update_courses
-    @rd.update_classes
+    @logger = @rd.logger
+    @logger.stub!(:error).and_return(:default_value)
+    @rd.run_importer(district_directory)
   end
 
   ##
@@ -75,9 +71,53 @@ describe RinetData do
       end
     end
     
-    describe "parsing should tolerate broken input to a certain extent" do
-      it "should tolerate csv input with blank lines"
-      it "should tolerate csv input with missing fields"
+    describe "parsing should tolerate broken input" do
+      it "should tolerate csv input with blank lines" do
+        @rd.add_csv_row(:students,"")
+      end
+      it "should tolerate csv input with blank fields" do
+        data = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
+        @rd.add_csv_row(:students,data)
+      end
+      it "should tolerate csv input with missing fields" do
+        data = "Garcia,,,,1000139715,"
+        @rd.add_csv_row(:students,data)
+      end
+    end
+
+    describe "should log errors on missing associations in input data, yet be resilient" do
+      
+      it "should log an error if an enrollment is missing a valid student" do
+        @logger.should_receive(:error).with(/student not found/)
+        # 007 is not a real student:
+        new_enrollment = "007,GYM,1,FY,07,2009-09-01,07113,0"
+        @rd.add_csv_row(:enrollments,new_enrollment)
+        @rd.update_models
+      end
+      
+      it "should log an error if an enrollment is for a non existing course" do 
+        @logger.should_receive(:error).with(/course not found/)
+        # SPYING_101 is not a real course:
+        new_enrollment = "1000139715,SPYING_101,1,FY,07,2009-09-01,07113,0"
+        @rd.add_csv_row(:enrollments,new_enrollment)
+        @rd.update_models
+      end
+      
+      it "should log an error if a staff assignment is missing a teacher" do
+        @logger.should_receive(:error).with(/teacher .* not found/)
+        # 007 is not a real teacher:
+        new_assignment = "007,GYM,1,FY,07,2009-09-01,07113"
+        @rd.add_csv_row(:staff_assignments,new_assignment)
+        @rd.update_models
+      end
+      
+      it "should log an error if a staff ssignment is missing course information" do
+        @logger.should_receive(:error).with(/course not found/)
+        # SPYING_101 is not a real course:
+        new_assignment = "48404,SPYING_101,1,FY,07,2009-09-01,07113"
+        @rd.add_csv_row(:staff_assignments,new_assignment)
+        @rd.update_models
+      end
     end
     
   end
