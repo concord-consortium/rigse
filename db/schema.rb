@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091022134900) do
+ActiveRecord::Schema.define(:version => 20091022162902) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -394,6 +394,15 @@ ActiveRecord::Schema.define(:version => 20091022134900) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "grade_span_expectation_id"
+  end
+
+  create_table "external_user_domains", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "server_url"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "grade_span_expectations", :force => true do |t|
@@ -795,24 +804,6 @@ ActiveRecord::Schema.define(:version => 20091022134900) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_district_id"
-  end
-
-  create_table "portal_external_user_domains", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.string   "server_url"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "portal_external_users", :force => true do |t|
-    t.integer  "external_user_domain_id"
-    t.integer  "user_id"
-    t.string   "external_user_key"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "portal_grade_levels", :force => true do |t|
