@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
-describe "/portal_external_user_domains/new.html.erb" do
-  include Portal::ExternalUserDomainsHelper
+describe "/external_user_domains/new.html.erb" do
+  include ExternalUserDomainsHelper
 
   before(:each) do
-    assigns[:external_user_domain] = stub_model(Portal::ExternalUserDomain,
+    assigns[:external_user_domain] = stub_model(ExternalUserDomain,
       :new_record? => true,
       :name => "value for name",
       :description => "value for description",
@@ -16,7 +16,7 @@ describe "/portal_external_user_domains/new.html.erb" do
   it "renders new external_user_domain form" do
     render
 
-    response.should have_tag("form[action=?][method=post]", portal_external_user_domains_path) do
+    response.should have_tag("form[action=?][method=post]", external_user_domains_path) do
       with_tag("input#external_user_domain_name[name=?]", "external_user_domain[name]")
       with_tag("textarea#external_user_domain_description[name=?]", "external_user_domain[description]")
       with_tag("input#external_user_domain_server_url[name=?]", "external_user_domain[server_url]")

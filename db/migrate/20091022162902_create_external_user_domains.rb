@@ -1,6 +1,6 @@
-class CreatePortalExternalUserDomains < ActiveRecord::Migration
+class CreateExternalUserDomains < ActiveRecord::Migration
   def self.up
-    create_table :portal_external_user_domains do |t|
+    create_table :external_user_domains do |t|
       t.string :name
       t.text :description
       t.string :server_url
@@ -11,6 +11,6 @@ class CreatePortalExternalUserDomains < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :portal_external_user_domains
+    drop_table :external_user_domains
   end
 end
