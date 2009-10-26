@@ -1,5 +1,4 @@
-class Portal::ExternalUserDomain < ActiveRecord::Base
-  set_table_name :portal_external_user_domains
+class ExternalUserDomain < ActiveRecord::Base
   
   has_many :external_users
   

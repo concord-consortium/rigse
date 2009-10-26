@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Portal::ExternalUserDomain do
+describe ExternalUserDomain do
   
   before(:each) do
-    @portal_external_user_domain = Factory(:portal_external_user_domain)
+    @external_user_domain = Factory(:external_user_domain)
     @valid_attributes = {
       :name => "test sakai",
       :description => "a test domain representing an external; sakai instance",

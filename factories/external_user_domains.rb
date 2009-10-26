@@ -9,7 +9,7 @@ Factory.sequence(:server_url)  { |n| "http://sakai-server#{n}.edu" }
 ##
 ## Factory for external_user_domain
 ##
-Factory.define :portal_external_user_domain, :class => Portal::ExternalUserDomain do |eud|
+Factory.define :external_user_domain, :class => ExternalUserDomain do |eud|
   eud.name        { Factory.next(:name) }
   eud.description { Factory.next(:description) }
   eud.server_url  { Factory.next(:server_url) }

@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
-describe "/portal_external_user_domains/show.html.erb" do
-  include Portal::ExternalUserDomainsHelper
+describe "/external_user_domains/show.html.erb" do
+  include ExternalUserDomainsHelper
   before(:each) do
-    assigns[:external_user_domain] = @external_user_domain = stub_model(Portal::ExternalUserDomain,
+    assigns[:external_user_domain] = @external_user_domain = stub_model(ExternalUserDomain,
       :name => "value for name",
       :description => "value for description",
       :server_url => "value for server_url",
