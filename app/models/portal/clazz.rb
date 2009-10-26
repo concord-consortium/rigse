@@ -37,9 +37,8 @@ class Portal::Clazz < ActiveRecord::Base
   end
   
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
-    unless portal_course && portal_course.id
-      throw new ArgumentException("argument portal_course was null or empty", "portal_course");
-    end
+    raise "argument portal_course was null or empty" unless portal_course && portal_course.id
+    
     if start_date.class != DateTime
       Rails.logger.warn("Found non-dateTime object in find_or_create_by_course_and_section_and_start_date")
       start_date = start_date.to_datetime
