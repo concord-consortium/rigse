@@ -4,7 +4,7 @@ require 'arrayfields'
 class RinetData
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
-  
+  attr_accessor :logger
   # @@districts = %w{07 16}
   @@districts = %w{07}
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
@@ -45,7 +45,11 @@ class RinetData
     # CourseNumber => course
     @clazz_hash = {}
     # Portal::Clazz.id => {:teachers => [], :students => []}
+
+    # we probably want to override this later
+    @logger = Rails.logger
   end
+  
   
   def get_csv_files
     @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
@@ -57,7 +61,7 @@ class RinetData
           # download a file or directory from the remote host
           remote_path = "#{district}/#{csv_file}.csv"
           local_path = "#{local_district_path}/#{csv_file}.csv"
-          Rails.logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
+          logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
           sftp.download!(remote_path, local_path)
         end
         current_path = "#{@@local_dir}/#{district}/current"
@@ -85,30 +89,44 @@ class RinetData
 
   def parse_csv_files_in_dir(local_dir_path,existing_data={})
     @parsed_data = existing_data
-    Rails.logger.info "working on #{local_dir_path}"
+    logger.info "working on #{local_dir_path}"
     if File.exists?(local_dir_path)
       
       @@csv_files.each do |csv_file|
         local_path = "#{local_dir_path}/#{csv_file}.csv"
-        fields = FIELD_DEFINITIONS["#{csv_file}_fields".to_sym]
-        @parsed_data[csv_file.to_sym] = []
-        FasterCSV.foreach(local_path) do |row|
-          row.fields = fields
-          @parsed_data[csv_file.to_sym] << row
+        key = csv_file.to_sym
+        @parsed_data[key] = []
+        File.open(local_path).each do |line|
+          add_csv_row(key,line)
         end
       end
     else
-      Rails.logger.error "no data folder found: #{local_dir_path}"
+      logger.error "no data folder found: #{local_dir_path}"
     end
   end
+  
+  def add_csv_row(key,line)
+    # if row.respond_to? fields
+    FasterCSV.parse(line) do |row|
+      if row.class == Array
+        row.fields = FIELD_DEFINITIONS[key]
+        @parsed_data[key] << row
+      else
+        logger.warn("couldn't add row data for #{key}: #{line}")
+        raise "couldn't add row data for #{key}: #{line}"
+      end
+    end
+  end
+  
+  
   
   def join_students_sakai 
     @parsed_data[:students].each do |student|
       begin
         student[:login] = student_sakai_map[student[:SASID]]
       rescue
-        Rails.logger.warn "couldn't map student #{student[:Firstname]} #{student[:Lastname]} (is staff_sakai.csv missing or out of date?)"
-        Rails.logger.info "ERROR WAS: #{$!}"
+        logger.warn "couldn't map student #{student[:Firstname]} #{student[:Lastname]} (is staff_sakai.csv missing or out of date?)"
+        logger.info "ERROR WAS: #{$!}"
       end
     end
   end
@@ -118,8 +136,8 @@ class RinetData
       begin
         staff_member[:login] = staff_sakai_map[staff_member[:TeacherCertNum]]
       rescue 
-        Rails.logger.warn "couldn't map staff #{staff_member[:Firstname]} #{staff_member[:Lastname]} (is staff_sakai.csv missing or out of date?)"
-        Rails.logger.info "ERROR WAS: #{$!}"
+        logger.warn "couldn't map staff #{staff_member[:Firstname]} #{staff_member[:Lastname]} (is staff_sakai.csv missing or out of date?)"
+        logger.info "ERROR WAS: #{$!}"
       end
     end
   end
@@ -128,8 +146,8 @@ class RinetData
     nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]});
     school = nil
     unless nces_school
-      Rails.logger.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
-      Rails.logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
+      logger.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
+      logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
       # TODO, create one with a special name? Throw exception?
     else
       school = Portal::School.find_or_create_by_nces_school(nces_school)
@@ -141,8 +159,8 @@ class RinetData
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
-      Rails.logger.warn "could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)"
-      Rails.logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
+      logger.warn "could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)"
+      logger.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
@@ -206,7 +224,7 @@ class RinetData
         @teachers_hash[row[:TeacherCertNum]] = teacher
       end
     else
-      Rails.logger.info("teacher already defined in rites system")
+      logger.info("teacher already defined in rites system")
     end
     teacher
   end
@@ -238,7 +256,7 @@ class RinetData
       # cache that results in hashtable
       @students_hash[row[:SASID]] = student
     else
-      Rails.logger.info("student already defined in rites system")
+      logger.info("student already defined in rites system")
     end
     row
   end
@@ -260,7 +278,7 @@ class RinetData
       else
         # TODO: what if we have multiple matches?
         if courses.class == Array
-          Rails.logger.error("Too many matching courses")
+          logger.error("Too many matching courses")
           course = courses[0]
         else
           course = courses
@@ -270,7 +288,7 @@ class RinetData
       # cache that results in hashtable
       @course_hash[row[:CourseNumber]] = row[:rites_course]
     else
-      Rails.logger.info("course already defined in rites system")
+      logger.info("course already defined in rites system")
     end
     row
   end
@@ -297,10 +315,16 @@ class RinetData
   def create_or_update_class(row)
     # use course hashmap to find our course
     portal_course = @course_hash[row[:CourseNumber]]
-    raise "cant find Portal::course for course_id #{row[:CourseNumber]} #{portal_course.nil?}" unless portal_course && portal_course.class == Portal::Course
-  
-    # TODO: Better way to catch bad start time strings.
-    raise "bad start time for clazz: '#{row[:StartDate]}'" unless row[:StartDate].size > 8
+    unless portal_course && portal_course.class == Portal::Course
+      logger.error "course not found #{row[:CourseNumber]} nil: #{portal_course.nil?}"
+      return
+    end
+    
+    unless row[:StartDate] && row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
+      logger.error "bad start time for class: '#{row[:StartDate]}'" unless row =~/\d{4}-\d{2}-\d{2}/
+      return
+    end
+    
     section = row[:CourseSection]
     start_date = DateTime.parse(row[:StartDate]) 
     clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
@@ -313,10 +337,27 @@ class RinetData
       clazz.teacher = @teachers_hash[row[:TeacherCertNum]]
       clazz.save
     else
-      Rails.logger.warning("couldn't find that teacher or student :SASID: #{row[:SASID]} cert: #{row[:TeacherCertNum]}")
+      logger.error("teacher or student not found: SASID: #{row[:SASID]} cert: #{row[:TeacherCertNum]}")
     end
     row
   end
   
+  def join_data
+    join_students_sakai
+    join_staff_sakai
+  end
+  
+  def update_models
+    update_teachers
+    update_students
+    update_courses
+    update_classes
+  end
+  
+  def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
+    parse_csv_files_in_dir(district_directory)
+    join_data
+    update_models
+  end
   
 end
