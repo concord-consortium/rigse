@@ -63,6 +63,16 @@ describe RinetData do
     run_importer
   end
 
+  describe "getting data from rinet" do
+    it "should be resilient in the event that it can not connect to the sftp server"
+    it "should report a reasonable error message in the event that it can not connect to the sftp server"
+    it "should be resilient in the event that directory does not exist"
+    it "should report an error in the event that a remote directory does not exist"
+    it "should be resilient in the event thata remote file does note exist"
+    it "should report an error in the event that a remote file does not exist"
+  end
+
+
   describe "basic csv file parsing" do
     
     #  require 'ruby-prof'
