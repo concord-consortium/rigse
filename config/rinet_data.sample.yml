@@ -15,3 +15,5 @@ staging:
   host: portfolio.ri.net
   username: concord
   password: *****
+cucumber:
+  <<: *TEST
