@@ -193,12 +193,12 @@ class RinetData
         email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
       end
       params = {
-        :login  => row[:login] || 'bugusXXXXX',
+        :login  => row[:login],
         :password => row[:Password] || row[:Birthdate],
         :password_confirmation => row[:Password] || row[:Birthdate],
         :first_name => row[:Firstname],
         :last_name  => row[:Lastname],
-        :email => email || "no-email@broken.borked" # (otherwise we fail validation)
+        :email => email || "sakai_import_#{row[:login]}@mailinator.com" # (temporary unique email address to pass valiadations)
       }
       user = User.find_or_create_by_login(params)
       user.save!
@@ -241,7 +241,7 @@ class RinetData
         @teachers_hash[row[:TeacherCertNum]] = teacher
       end
     else
-      @import_logger.info("teacher already defined in rites system")
+      @import_logger.debug("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
     end
     teacher
   end
@@ -273,7 +273,7 @@ class RinetData
       # cache that results in hashtable
       @students_hash[row[:SASID]] = student
     else
-      @import_logger.info("student already defined in rites system")
+      @import_logger.info("student with SASID# #{row[:SASID]} already defined in this import with RITES student.id #{row[:rites_student_id]}")
     end
     row
   end
@@ -295,7 +295,8 @@ class RinetData
       else
         # TODO: what if we have multiple matches?
         if courses.class == Array
-          @import_logger.error("Too many matching courses")
+          @import_logger.warn("Course not unique! #{row[:Title]}, #{school_for(row).id}, found #{courses.size} entries")
+          @import_logger.info("returning first found: (#{courses[0]})")
           course = courses[0]
         else
           course = courses
@@ -305,7 +306,7 @@ class RinetData
       # cache that results in hashtable
       @course_hash[row[:CourseNumber]] = row[:rites_course]
     else
-      @import_logger.info("course already defined in rites system")
+      @import_logger.info("course #{row[:Title]} already defined in this import for school #{school_for(row).name}")
     end
     row
   end
