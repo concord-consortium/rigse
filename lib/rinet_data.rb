@@ -207,8 +207,12 @@ class RinetData
           :email => email || "sakai_import_#{row[:login]}@mailinator.com" # (temporary unique email address to pass valiadations)
         }
         begin
-          user = User.find_or_create_by_login(params)
-          user.save!
+          user = User.find_by_login(params[:login])
+          if user
+            user.update_attributes!(params)
+          else
+            user = User.create!(params)
+          end
         rescue
           @import_logger.error("Could not create user because of field-validation errors.")
           return nil
@@ -260,10 +264,8 @@ class RinetData
         # add the teacher to the school
         school = school_for(row)
         if (school)
-          # unless school.members.detect { |member| member.login == teacher.login }
             school.members << teacher
             school.members.uniq!
-          # end
         end
         row[:rites_teacher_id] = teacher.id
         if teacher
@@ -299,10 +301,8 @@ class RinetData
         # add the student to the school
         school = school_for(row)
         if (school)
-          #unless school.members.detect { |member| member.login == student.login }
             school.members << student
             school.members.uniq!
-          #end
         end
         row[:rites_student_id] = student.id
         # cache that results in hashtable
