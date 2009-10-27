@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+
 def be_more_than(expected)
   simple_matcher do |given, matcher|
     matcher.description = "more than #{expected.size}"
@@ -52,6 +53,7 @@ describe RinetData do
   ## only run ONCE! .... you have been warned.
   ###
   before(:each) do
+
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
     @initial_users = User.find(:all)
     @initial_teachers = Portal::Teacher.find(:all)
@@ -59,10 +61,20 @@ describe RinetData do
     @initial_courses = Portal::Course.find(:all)
     @initial_clazzes = Portal::Clazz.find(:all)
     run_importer
-    # lets create the NCES school in our test data
   end
 
   describe "basic csv file parsing" do
+    
+    #  require 'ruby-prof'
+    # it "should have performanec metrics" do
+    #   RubyProf.start
+    #   10.times  do
+    #     run_importer
+    #   end
+    #   result = RubyProf.stop
+    #   printer = RubyProf::GraphHtmlPrinter.new(result)
+    #   printer.print(File.open('/tmp/report.html','w+'))  
+    # end
     
     it "should have parsed data" do
       @rd.parsed_data.should_not be_nil
@@ -79,10 +91,25 @@ describe RinetData do
         csv_student_with_blank_fields = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
         @rd.add_csv_row(:students,csv_student_with_blank_fields)
       end
+      
       it "should tolerate csv input with missing fields" do
         csv_student_with_missing_commas = "Garcia,,,,1000139715,"
         @rd.add_csv_row(:students,csv_student_with_missing_commas)
       end
+      
+      # try creating a student with a bad login
+      it "should tollerate failing validations for users" do
+        student_row = {
+          :FirstName => "bad",
+          :LastName => "student",
+          :Email => "",
+          :login => "",
+          :SASID => '0078',
+          :SchoolNumber => '07113' # real school
+        } 
+        @rd.create_or_update_student(student_row)
+      end
+      
     end
 
     describe "should log errors on missing associations in input data, yet be resilient" do
@@ -103,7 +130,7 @@ describe RinetData do
         @rd.update_models
       end
       
-      it "should log an error if a staff assignment is missing a teacher" do
+      it "should log an errors if a staff assignment is missing a teacher" do
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,07113"
@@ -186,7 +213,7 @@ describe RinetData do
     end
   end
 
-  describe "Looking to prevent duplicate data" do
+  describe "Import process should not produce duplicate data" do
     it "when the same import is rerun, there should be no new students" do
       current_students = Portal::Student.find(:all)
       run_importer # run the import again.

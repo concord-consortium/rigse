@@ -55,7 +55,6 @@ class RinetData
 
   end
   
-  
   def get_csv_files
     @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
@@ -141,22 +140,24 @@ class RinetData
   
   def join_students_sakai 
     @parsed_data[:students].each do |student|
+      @import_logger.debug("working with student  #{student[:Lastname]}")
       found = student_sakai_map(student[:SASID])
       if (found)
         student[:login] = found
       else
-        @import_logger.error "student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (is student_sakai.csv missing or out of date?)"
+        @import_logger.error "student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]} student_sakai.csv )"
       end
     end
   end
   
   def join_staff_sakai
     @parsed_data[:staff].each do |staff_member|
+      @import_logger.debug("working with staff_member  #{staff_member[:Lastname]}")
       found = staff_sakai_map(staff_member[:TeacherCertNum])
       if (found)
         staff_member[:login] = found
       else
-        @import_logger.error "teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (is staff_sakai.csv missing or out of date?)"
+        @import_logger.error "teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in staff_sakai.csv)"
       end
     end
   end
@@ -191,33 +192,55 @@ class RinetData
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      if row[:EmailAddress]
-        email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : "#{User::NO_EMAIL_STRING}#{row[:login]}@fakehost.com"
+      if row[:login]
+        if row[:EmailAddress]
+          email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
+        end
+        params = {
+          :login  => row[:login],
+          :password => row[:Password] || row[:Birthdate],
+          :password_confirmation => row[:Password] || row[:Birthdate],
+          :first_name => row[:Firstname],
+          :last_name  => row[:Lastname],
+          :email => email || "sakai_import_#{row[:login]}@mailinator.com" # (temporary unique email address to pass valiadations)
+        }
+        begin
+          user = User.find_or_create_by_login(params)
+          user.save!
+        rescue
+          @import_logger.error("Could not create user because of field-validation errors.")
+          return nil
+        end
+        row[:rites_user_id]=user.id
+        user.unsuspend! if user.state == 'suspended'
+        unless user.state == 'active'
+          user.register!
+          user.activate!
+        end
+        user.roles.clear
+      else
+        begin
+          if(row[:SASID])
+            @import_logger.warn("No login found for #{row[:Firstname]} #{row[:Lastname]}, check student_sakai.csv for #{row[:SASID]}")
+          elsif(row[:TeacherCertNum])
+            @import_logger.warn("No login found for #{row[:Firstname]} #{row[:Lastname]}, check staff_sakai.csv for #{row[:SASID]}")
+          else
+            throw "no SASID and NO TeacherCertNum for #{row}"
+          end
+        rescue
+          @import_logger.error("could not find user data in #{row}")
+        end
       end
-      params = {
-        :login  => row[:login],
-        :password => row[:Password] || row[:Birthdate],
-        :password_confirmation => row[:Password] || row[:Birthdate],
-        :first_name => row[:Firstname],
-        :last_name  => row[:Lastname],
-        :email => email || "sakai_import_#{row[:login]}@mailinator.com" # (temporary unique email address to pass valiadations)
-      }
-      user = User.find_or_create_by_login(params)
-      user.save!
-      row[:rites_user_id]=user.id
-      user.unsuspend! if user.state == 'suspended'
-      unless user.state == 'active'
-        user.register!
-        user.activate!
-      end
-      user.roles.clear
     end
     user
   end
   
   def update_teachers
     new_teachers = @parsed_data[:staff]
-    new_teachers.each { |nt| create_or_update_teacher(nt) }
+    new_teachers.each do |teacher| 
+      @import_logger.debug("working with teacher #{teacher[:Lastname]}")
+      create_or_update_teacher(teacher) 
+    end  
   end
   
   def create_or_update_teacher(row)
@@ -225,22 +248,25 @@ class RinetData
     teacher = nil
     unless row[:rites_teacher_id]
       user = create_or_update_user(row)
-      teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
-      teacher.save!
-      row[:rites_user_id]=teacher.id
-      # how do we find out the teacher grades?
-      # teacher.grades << grade_9
+      if (user)
+        teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
+        teacher.save!
+        row[:rites_user_id]=teacher.id
+        # how do we find out the teacher grades?
+        # teacher.grades << grade_9
     
-      # add the teacher to the school
-      school = school_for(row)
-      if (school)
-        unless school.members.detect { |member| member.login == teacher.login }
-          school.members << teacher
+        # add the teacher to the school
+        school = school_for(row)
+        if (school)
+          # unless school.members.detect { |member| member.login == teacher.login }
+            school.members << teacher
+            school.members.uniq!
+          # end
         end
-      end
-      row[:rites_teacher_id] = teacher.id
-      if teacher
-        @teachers_hash[row[:TeacherCertNum]] = teacher
+        row[:rites_teacher_id] = teacher.id
+        if teacher
+          @teachers_hash[row[:TeacherCertNum]] = teacher
+        end
       end
     else
       @import_logger.debug("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
@@ -249,31 +275,37 @@ class RinetData
   end
   
   def update_students
-    new_teachers = @parsed_data[:students]
-    new_teachers.each { |nt| create_or_update_student(nt) }
+    new_students = @parsed_data[:students]
+    new_students.each do |student| 
+      @import_logger.debug("working with student #{student[:Lastname]}")
+      create_or_update_student(student)
+    end
   end
   
   def create_or_update_student(row)
     student = nil
     unless row[:rites_student_id]
       user = create_or_update_user(row)
-      student = user.portal_student
-      unless student
-        student = Portal::Student.create(:user => user)
-        student.save!
-        user.portal_student=student;
-      end
-
-      # add the student to the school
-      school = school_for(row)
-      if (school)
-        unless school.members.detect { |member| member.login == student.login }
-          school.members << student
+      if (user)
+        student = user.portal_student
+        unless student
+          student = Portal::Student.create(:user => user)
+          student.save!
+          user.portal_student=student;
         end
+
+        # add the student to the school
+        school = school_for(row)
+        if (school)
+          #unless school.members.detect { |member| member.login == student.login }
+            school.members << student
+            school.members.uniq!
+          #end
+        end
+        row[:rites_student_id] = student.id
+        # cache that results in hashtable
+        @students_hash[row[:SASID]] = student
       end
-      row[:rites_student_id] = student.id
-      # cache that results in hashtable
-      @students_hash[row[:SASID]] = student
     else
       @import_logger.info("student with SASID# #{row[:SASID]} already defined in this import with RITES student.id #{row[:rites_student_id]}")
     end
@@ -374,8 +406,15 @@ class RinetData
     update_classes
   end
   
-  def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
+  def run_importer(district_directory)
     parse_csv_files_in_dir(district_directory)
+    join_data
+    update_models
+  end
+  
+  def run_scheduled_job
+    get_csv_files
+    parse_csv_files
     join_data
     update_models
   end
