@@ -40,9 +40,9 @@ describe RinetData do
   
   def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
     @rd = RinetData.new
-    @logger = @rd.logger
-    @logger.stub!(:error).and_return(:default_value)
     @rd.run_importer(district_directory)
+    @logger = @rd.import_logger
+    @logger.stub!(:error).and_return(:default_value)
   end
 
   ##
@@ -76,12 +76,12 @@ describe RinetData do
         @rd.add_csv_row(:students,"")
       end
       it "should tolerate csv input with blank fields" do
-        data = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
-        @rd.add_csv_row(:students,data)
+        csv_student_with_blank_fields = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
+        @rd.add_csv_row(:students,csv_student_with_blank_fields)
       end
       it "should tolerate csv input with missing fields" do
-        data = "Garcia,,,,1000139715,"
-        @rd.add_csv_row(:students,data)
+        csv_student_with_missing_commas = "Garcia,,,,1000139715,"
+        @rd.add_csv_row(:students,csv_student_with_missing_commas)
       end
     end
 
@@ -89,35 +89,49 @@ describe RinetData do
       
       it "should log an error if an enrollment is missing a valid student" do
         @logger.should_receive(:error).with(/student not found/)
-        # 007 is not a real student:
-        new_enrollment = "007,GYM,1,FY,07,2009-09-01,07113,0"
-        @rd.add_csv_row(:enrollments,new_enrollment)
+        # 007 is not a real student SASID
+        csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,07113,0"
+        @rd.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
         @rd.update_models
       end
       
       it "should log an error if an enrollment is for a non existing course" do 
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
-        new_enrollment = "1000139715,SPYING_101,1,FY,07,2009-09-01,07113,0"
-        @rd.add_csv_row(:enrollments,new_enrollment)
+        csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,07113,0"
+        @rd.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
         @rd.update_models
       end
       
       it "should log an error if a staff assignment is missing a teacher" do
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
-        new_assignment = "007,GYM,1,FY,07,2009-09-01,07113"
-        @rd.add_csv_row(:staff_assignments,new_assignment)
+        csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,07113"
+        @rd.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
         @rd.update_models
       end
       
       it "should log an error if a staff ssignment is missing course information" do
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
-        new_assignment = "48404,SPYING_101,1,FY,07,2009-09-01,07113"
-        @rd.add_csv_row(:staff_assignments,new_assignment)
+        csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,07113"
+        @rd.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
         @rd.update_models
       end
+      
+      it "should log an error if a student can not be found for a record in students_sakai.csv" do
+        @logger.should_receive(:error).with(/student .* mapping/)
+        # remove all student from the mapping data, and re-run the mapping task
+        @rd.stub!(:student_sakai_map).and_return(nil)
+        @rd.join_data
+      end
+      
+      it "should log an error if a teacher can not be found for a record in staff_sakai.csv" do
+        @logger.should_receive(:error).with(/teacher .* mapping/)
+        @rd.stub!(:staff_sakai_map).and_return(nil)
+         @rd.join_data
+      end
+      
     end
     
   end
