@@ -65,9 +65,9 @@ describe RinetData do
   describe "basic csv file parsing" do
     
     it "should have parsed data" do
-      @rd.parsed_data.should_not be nil
+      @rd.parsed_data.should_not be_nil
       %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}.each do |data_file|
-        @rd.parsed_data[data_file.to_sym].should_not be nil
+        @rd.parsed_data[data_file.to_sym].should_not be_nil
       end
     end
     
