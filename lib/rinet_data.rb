@@ -95,12 +95,14 @@ class RinetData
 
   def set_working_directory(path)
     unless @working_directory && @working_directory == path
-      @working_directory = path
       if (@import_logger)
+        @import_logger.debug("Ended in #{@working_directory} at #{Time.now}")
+        @import_logger.debug("..... Next directory is #{path}")
         @import_logger.close
       end
+      @working_directory = path
       @import_logger = Logger.new("#{@working_directory}/import_log.txt")
-      @import_logger.debug("@import_logger #{@import_logger.class} started in #{@working_directory}")
+      @import_logger.debug("Started in #{@working_directory} at #{Time.now}")
     end
   end
 
