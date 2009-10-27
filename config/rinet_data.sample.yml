@@ -16,4 +16,6 @@ staging:
   username: concord
   password: *****
 cucumber:
-  <<: *TEST
+  host: portfolio.ri.net
+  username: concord
+  password: *****
