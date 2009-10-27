@@ -44,8 +44,8 @@ end
 @mailer_config_path            = rails_file_path(%w{config mailer.yml})
 @mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
 
-@db_sample_config              = YAML::load(IO.read(@db_config_sample_path))
-@settings_sample_config        = YAML::load(IO.read(@settings_config_sample_path))
+@db_config_sample              = YAML::load(IO.read(@db_config_sample_path))
+@settings_config_sample        = YAML::load(IO.read(@settings_config_sample_path))
 @rinet_data_sample_config      = YAML::load(IO.read(@rinet_data_config_sample_path))
 @mailer_config_sample          = YAML::load(IO.read(@mailer_config_sample_path))
 
@@ -122,11 +122,11 @@ def create_new_database_yml
   @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
     @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
-    @db_config[env]['user'] = @db_user
+    @db_config[env]['username'] = @db_user
     @db_config[env]['password'] = @db_password
   end
   %w{itsi ccportal}.each do |external_db|
-    @db_config[external_db]['user'] = @db_user
+    @db_config[external_db]['username'] = @db_user
     @db_config[external_db]['password'] = @db_password
   end
 
@@ -230,7 +230,7 @@ HEREDOC
   The Rails application settings file exists, lookking for possible updates ...
 
 HEREDOC
-    
+
     %w{development staging production}.each do |env|
       puts "\nchecking environment: #{env}\n"
       unless @settings_config[env]['states_and_provinces']

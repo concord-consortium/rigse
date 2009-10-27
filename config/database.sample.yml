@@ -37,7 +37,7 @@ itsi:
   pool: 5
   asset_url: http://itsidiy.concord.org
   
-rites_portal:
+ccportal:
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
