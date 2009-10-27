@@ -65,9 +65,9 @@ describe RinetData do
   describe "basic csv file parsing" do
     
     it "should have parsed data" do
-      @rd.parsed_data.should_not be nil
+      @rd.parsed_data.should_not be_nil
       %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}.each do |data_file|
-        @rd.parsed_data[data_file.to_sym].should_not be nil
+        @rd.parsed_data[data_file.to_sym].should_not be_nil
       end
     end
     
@@ -124,15 +124,15 @@ describe RinetData do
   
   describe "verifying that the appropriate entities get created from CSV files" do
     it "should create new teachers" do
-      Portal::Teacher.find(:all).should be_more_than @initial_teachers
+      Portal::Teacher.find(:all).should be_more_than(@initial_teachers)
     end
   
     it "should create new students" do
-      Portal::Student.find(:all).should be_more_than @initial_students
+      Portal::Student.find(:all).should be_more_than(@initial_students)
     end
   
     it "should create new users" do
-      User.find(:all).should be_more_than @initial_users
+      User.find(:all).should be_more_than(@initial_users)
     end
   
     it "new teachers should be teaching at a valid NCES school" do
@@ -150,7 +150,7 @@ describe RinetData do
     end
   
     it "should create new courses" do
-      Portal::Course.find(:all).should be_more_than @initial_courses
+      Portal::Course.find(:all).should be_more_than(@initial_courses)
       courses = Portal::Course.find(:all) - @initial_courses
       courses.each do |course|
         course.should be_real
@@ -159,7 +159,7 @@ describe RinetData do
   
     it "should create classes with students,teachers,names, and start_times" do
       current_clazzes = Portal::Clazz.find(:all)
-      current_clazzes.should be_more_than @initial_clazzes
+      current_clazzes.should be_more_than(@initial_clazzes)
       current_clazzes = current_clazzes - @initial_clazzes
       current_clazzes.each do |clazz|
         clazz.students.should_not be_nil
@@ -176,31 +176,31 @@ describe RinetData do
     it "when the same import is rerun, there should be no new students" do
       current_students = Portal::Student.find(:all)
       run_importer # run the import again.
-      Portal::Student.find(:all).should eql current_students
+      Portal::Student.find(:all).should eql(current_students)
     end
   
     it "when the same import is rerun, there should be no new teachers" do
       current_teachers = Portal::Teacher.find(:all)
       run_importer # run the import again.
-      Portal::Teacher.find(:all).should eql current_teachers
+      Portal::Teacher.find(:all).should eql(current_teachers)
     end
   
     it "when the same import is rerun, there should be no new classes" do
       current_clazzes = Portal::Clazz.find(:all)
       run_importer # run the import again.
-      Portal::Clazz.find(:all).should eql current_clazzes
+      Portal::Clazz.find(:all).should eql(current_clazzes)
     end
   
     it "when the same import is rerun, there should be no new courses" do
       current_courses = Portal::Course.find(:all)
       run_importer # run the import again.
-      Portal::Course.find(:all).should eql current_courses
+      Portal::Course.find(:all).should eql(current_courses)
     end
     
     it "when the same import is rerun, there should be no new users" do
       current_courses = Portal::Course.find(:all)
       run_importer # run the import again.
-      Portal::Course.find(:all).should eql current_courses
+      Portal::Course.find(:all).should eql(current_courses)
     end
   end
   
@@ -210,7 +210,7 @@ describe RinetData do
       current_students = Portal::Student.find(:all)
       # import new data which adds LPaessel
       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b") 
-      Portal::Student.find(:all).size.should eql current_students.size + 1
+      Portal::Student.find(:all).size.should eql(current_students.size + 1)
     end
     
     it "when a PHYSICS is added to courses.csv, the class and its courses be created" do
@@ -226,7 +226,7 @@ describe RinetData do
       current_teachers = Portal::Teacher.find(:all)
       # import new data, which removes a teacher
       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
-      Portal::Teacher.find(:all).should eql current_teachers
+      Portal::Teacher.find(:all).should eql(current_teachers)
     end
   
     it "when a GYM is removed from courses.csv, the class and its courses should not actually be deleted" do
@@ -244,8 +244,8 @@ describe RinetData do
       # and one user to a new physics class
       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
       art_class = Portal::Clazz.find_by_name("ART");
-      Portal::Clazz.find_by_name("ART").students.size.should be 2
-      Portal::Clazz.find_by_name("PHYSICS").students.size.should be 1
+      Portal::Clazz.find_by_name("ART").students.size.should be(2)
+      Portal::Clazz.find_by_name("PHYSICS").students.size.should be(1)
     end  
   end
   
