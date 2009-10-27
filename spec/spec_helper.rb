@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'spork'
+require 'rake'
 
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However, 
@@ -10,6 +11,10 @@ Spork.prefork do
   # from the project root directory.
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
+  
+  unless ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+    Rake::Task["db:test:prepare"].invoke
+  end
   require 'spec/autorun'
   require 'spec/rails'
 
