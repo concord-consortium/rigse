@@ -1,12 +1,14 @@
 require 'fileutils'
 require 'arrayfields'
 
+# use: RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
+# to run the import of all the RITES districts.
 class RinetData
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :import_logger
-  # @@districts = %w{07 16}
-  @@districts = %w{07}
+  # @@districts = %w{07}
+  @@districts = %w{06 07 16 17 39}
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
   @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
 
