@@ -297,7 +297,7 @@ HEREDOC
 HEREDOC
         
           default_maven_jnlp = {}
-          original_keys = %w{default_maven_jnlp_server default_maven_jnlp_family default_maven_jnlp_version}
+          original_keys = %w{default_maven_jnlp_server default_maven_jnlp_family default_jnlp_version}
           new_keys = %w{server family version}
           original_keys.zip(new_keys).each do |key_pair|
             default_maven_jnlp[key_pair[1]] = @settings_config[env].delete(key_pair[0])
