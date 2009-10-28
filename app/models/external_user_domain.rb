@@ -33,7 +33,9 @@ class ExternalUserDomain < ActiveRecord::Base
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
       params[:login] += ('_' + @@external_domain_selection)
       user = User.create!(params)
+      user.register!
       user.activate!
+      user
     end
     
     def external_domain_suffix

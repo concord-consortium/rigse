@@ -27,4 +27,33 @@ describe ExternalUserDomain do
     ExternalUserDomain.new(invalid_attributes).should_not be_valid
   end
 
+  it "should create valid users" do
+   params = {
+      :login  => "boo",
+      :password => "password",
+      :password_confirmation => "password",
+      :first_name => "boo",
+      :last_name  => "boo",
+      :email => "knowuh@gmail.com"
+    }
+    user = ExternalUserDomain.create_user_with_external_login(params)
+    user.should be_kind_of User
+    user.id.should_not be_nil
+    user.should be_valid
+  end
+  
+  it "should find valid users" do
+    params = {
+       :login  => "boo",
+       :password => "password",
+       :password_confirmation => "password",
+       :first_name => "boo",
+       :last_name  => "boo",
+       :email => "knowuh@gmail.com"
+     }
+     user = ExternalUserDomain.create_user_with_external_login(params)
+     found_user = ExternalUserDomain.find_user_by_external_login("boo")
+     found_user.should eql user
+  end
+  
 end
