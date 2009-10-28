@@ -215,15 +215,15 @@ class RinetData
           :email => email || "#{row[:login]}#{ExternalUserDomain.external_domain_suffix}@mailinator.com" # (temporary unique email address to pass valiadations)
         }
         begin
-          user = ExternalUserDomain.find_user_by_external_login(params[:login])
+          user = ExternalUserDomain.find_user_by_external_login(row[:login])
           if user
             params.delete(:login)
             user.update_attributes!(params)
           else
-            user = ExternalUserDomain.create_user_with_external_login!(params)
+            user = ExternalUserDomain.create_user_with_external_login(params)
           end
         rescue
-          @import_logger.error("Could not create user because of field-validation errors.")
+          @import_logger.error("Could not create user because of field-validation errors. #{$!}")
           return nil
         end
         row[:rites_user_id]=user.id
