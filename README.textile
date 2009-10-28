@@ -34,6 +34,11 @@ database you intend to use with RITES.
   # setup application resources
   RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 
+  # save a copy of the development database to make subsequent clean starts much quicker
+  # Saves database to: db/development_data.sql
+  # can be reloaded with: rake db:load
+  jruby -S rake db:dump
+  
   # start server
   jruby -J-server script/server -e production
 </code></pre>
@@ -73,6 +78,7 @@ The '-fxd' parameters to to git clean:
 # d: Remove untracked directories in addition to untracked files.
 # X: Remove only files ignored by git.
 # f: force removal
+
 
 h3. Setting up a local JNLP Web Start servlet
 
