@@ -3,19 +3,21 @@ development:
   host: portfolio.ri.net
   username: concord
   password: *****
-test: 
+
+test: &test_settings
   host: portfolio.ri.net
   username: concord
   password: *****
-production: 
-  host: portfolio.ri.net
-  username: concord
-  password: *****
+
+cucumber:
+  <<: *test_settings
+
 staging: 
   host: portfolio.ri.net
   username: concord
   password: *****
-cucumber:
+
+production: 
   host: portfolio.ri.net
   username: concord
   password: *****
