@@ -108,10 +108,13 @@ HEREDOC
         role.insert_at(i)
       end
 
+      default_admin_user_settings = APP_CONFIG[:default_admin_user]
+
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => APP_CONFIG[:admin_login], 
-          :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name],
-          :email => APP_CONFIG[:admin_email], 
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings['login'], 
+          :first_name => default_admin_user_settings['first_name'], 
+          :last_name =>  default_admin_user_settings['last_name'],
+          :email =>      default_admin_user_settings['email'], 
           :password => "password", :password_confirmation => "password"),
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 

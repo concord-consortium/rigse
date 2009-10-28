@@ -265,6 +265,38 @@ HEREDOC
 HEREDOC
         @settings_config[env]['active_school_levels'] = @settings_sample_config[env]['active_school_levels']
       end
+      
+      unless @settings_config[env]['default_admin_user']
+        puts <<HEREDOC
+
+  Collecting default_admin settings into one hash, :default_admin_user in the #{env} section of settings.yml
+
+HEREDOC
+        default_admin_user = {}
+        original_keys = %w{admin_email admin_login admin_first_name admin_last_name}
+        new_keys = %w{email login first_name last_name}
+        original_keys.zip(new_keys).each do |key_pair|
+          default_admin_user[key_pair[1]] = @settings_config[env].delete(key_pair[0])
+        end
+        @settings_config[env]['default_admin_user'] = default_admin_user
+      end
+
+      unless @settings_config[env]['default_maven_jnlp']
+        puts <<HEREDOC
+
+  Collecting default_maven_jnlp settings into one hash, :default_maven_jnlp in the #{env} section of settings.yml
+
+HEREDOC
+        
+        default_maven_jnlp = {}
+        original_keys = %w{default_maven_jnlp_server default_maven_jnlp_family default_maven_jnlp_version}
+        new_keys = %w{server family version}
+        original_keys.zip(new_keys).each do |key_pair|
+          default_maven_jnlp[key_pair[1]] = @settings_config[env].delete(key_pair[0])
+        end
+        @settings_config[env]['default_maven_jnlp'] = default_maven_jnlp        
+      end
+
 
       unless @settings_config[env]['valid_sakai_instances']
         puts <<HEREDOC
@@ -826,7 +858,13 @@ update_config_mailer_yml
 
 puts <<HEREDOC
 
-To complete setup of the RITES Investigations Rails application setup: 
+Finished configuring application settings.
+
+********************************************************************
+***  If you are also setting up an application from scratch and  ***
+***  need to create or recreate the resources in the database    ***
+***  follow the steps below:                                     ***
+********************************************************************
 
   MRI Ruby:
     rake gems:install
