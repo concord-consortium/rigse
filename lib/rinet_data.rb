@@ -8,14 +8,14 @@ class RinetData
   attr_reader :parsed_data
   attr_accessor :import_logger
   # @@districts = %w{07}
-  @@districts = %w{06 07 16 17 39}
+  # @@districts = %w{06 07 16 17 39}
+  # @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
-  @@local_dir = "#{RAILS_ROOT}/rinet_data/districts/csv"
 
   @@csv_files.each do |csv_file|
     if csv_file =~/_sakai/
       ## 
-      ## Create a Chaching Hash Map for sakai login info
+      ## Create a Caching Hash Map for sakai login info
       ## for the *_sakai csv files  eg student_sakai_map staff_sakai_map
       ##
       eval <<-END_EVAL
@@ -43,7 +43,11 @@ class RinetData
     set_working_directory("/tmp")
     
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
+    @districts = @rinet_data_config[:districts]
 
+    ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
+    @external_domain_suffix = ExternalUserDomain.external_domain_suffix
+    
     @students_hash = {}
     # SASID => Portal::Student
     
@@ -57,11 +61,15 @@ class RinetData
 
   end
   
+  def local_dir
+    "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+  end
+  
   def get_csv_files
     @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
-      @@districts.each do |district|
-        local_district_path = "#{@@local_dir}/#{district}/#{@new_date_time_key}"
+      @districts.each do |district|
+        local_district_path = "#{local_dir}/#{district}/#{@new_date_time_key}"
         FileUtils.mkdir_p(local_district_path)
         @@csv_files.each do |csv_file|
           # download a file or directory from the remote host
@@ -70,7 +78,7 @@ class RinetData
           @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
           sftp.download!(remote_path, local_path)
         end
-        current_path = "#{@@local_dir}/#{district}/current"
+        current_path = "#{local_dir}/#{district}/current"
         FileUtils.ln_s(local_district_path, current_path, :force => true)
       end
     end
@@ -81,8 +89,8 @@ class RinetData
       @parsed_data # cached data.
     else
       @parsed_data = {}
-      @@districts.each do |district|
-        parse_csv_files_in_dir("#{@@local_dir}/#{district}/#{date_time_key}",@parsed_data)
+      @districts.each do |district|
+        parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
       end
     end
     # Data is now available in this format
@@ -204,14 +212,15 @@ class RinetData
           :password_confirmation => row[:Password] || row[:Birthdate],
           :first_name => row[:Firstname],
           :last_name  => row[:Lastname],
-          :email => email || "sakai_import_#{row[:login]}@mailinator.com" # (temporary unique email address to pass valiadations)
+          :email => email || "#{row[:login]}#{ExternalUserDomain.external_domain_suffix}@mailinator.com" # (temporary unique email address to pass valiadations)
         }
         begin
-          user = User.find_by_login(params[:login])
+          user = ExternalUserDomain.find_by_external_login(params[:login])
           if user
+            params.delete(:login)
             user.update_attributes!(params)
           else
-            user = User.create!(params)
+            user = ExternalUserDomain.create_user_with_external_login!(params)
           end
         rescue
           @import_logger.error("Could not create user because of field-validation errors.")

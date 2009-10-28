@@ -3,11 +3,25 @@ development:
   host: portfolio.ri.net
   username: concord
   password: *****
+  external_domain_url: http://mooseman.concord.org
+  districts:
+    - "06"
+    - "07"
+    - "16"
+    - "17"
+    - "39"
 
 test: &test_settings
   host: portfolio.ri.net
   username: concord
   password: *****
+  external_domain_url: http://mooseman.concord.org
+  districts:
+    - "06"
+    - "07"
+    - "16"
+    - "17"
+    - "39"
 
 cucumber:
   <<: *test_settings
@@ -16,8 +30,22 @@ staging:
   host: portfolio.ri.net
   username: concord
   password: *****
+  external_domain_url: http://test.sakai.rinet.org
+  districts:
+    - "06"
+    - "07"
+    - "16"
+    - "17"
+    - "39"
 
 production: 
   host: portfolio.ri.net
   username: concord
   password: *****
+  external_url: http://sakai.rinet.org
+  districts:
+    - "06"
+    - "07"
+    - "16"
+    - "17"
+    - "39"
