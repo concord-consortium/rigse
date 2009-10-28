@@ -34,7 +34,8 @@ class RinetData
     end
   end
   
-  def initialize
+  def initialize(verbose=false)
+    @verbose = verbose
     # we probably want to override this later
     @log_filename = "import_log.txt"
     
@@ -76,6 +77,7 @@ class RinetData
           remote_path = "#{district}/#{csv_file}.csv"
           local_path = "#{local_district_path}/#{csv_file}.csv"
           @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
+          puts "downloading: #{remote_path} and saving to: \n  #{local_path}" if @verbose
           sftp.download!(remote_path, local_path)
         end
         current_path = "#{local_dir}/#{district}/current"
@@ -90,6 +92,7 @@ class RinetData
     else
       @parsed_data = {}
       @districts.each do |district|
+        puts "\nparsing csv data: #{local_dir}/#{district}/#{date_time_key}" if @verbose
         parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
       end
     end
@@ -119,12 +122,21 @@ class RinetData
   def parse_csv_files_in_dir(local_dir_path,existing_data={})
     @parsed_data = existing_data    
     if File.exists?(local_dir_path)
+      count = 0
       set_working_directory(local_dir_path)      
       @@csv_files.each do |csv_file|
         local_path = "#{local_dir_path}/#{csv_file}.csv"
+        puts "\nparsing: #{local_dir_path}/#{csv_file}.csv" if @verbose
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path).each do |line|
+          if @verbose
+            count += 1
+            if count % 50 == 0
+              print '.'
+              STDOUT.flush
+            end
+          end
           add_csv_row(key,line)
         end
       end
@@ -173,7 +185,7 @@ class RinetData
   end
   
   def school_for(row)
-    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]});
+    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
     school = nil
     unless nces_school
       @import_logger.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
@@ -194,6 +206,7 @@ class RinetData
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
+      puts "Portal::District: #{district.name}" if @verbose
     end
     district
   end
@@ -202,7 +215,7 @@ class RinetData
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      if row[:login]
+      if row[:login] && 
         if row[:EmailAddress]
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
@@ -215,15 +228,18 @@ class RinetData
           :email => email || "#{row[:login]}#{ExternalUserDomain.external_domain_suffix}@mailinator.com" # (temporary unique email address to pass valiadations)
         }
         begin
-          user = ExternalUserDomain.find_user_by_external_login(row[:login])
-          if user
+          if ExternalUserDomain.login_exists?(row[:login])
+            user = ExternalUserDomain.find_user_by_external_login(row[:login])
             params.delete(:login)
             user.update_attributes!(params)
           else
             user = ExternalUserDomain.create_user_with_external_login(params)
           end
-        rescue
-          @import_logger.error("Could not create user because of field-validation errors. #{$!}")
+        rescue ExternalUserDomain::ExternalUserDomainError => e
+        rescue ActiveRecord::ActiveRecordError => e
+          error_message = "Could not create user: #{params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{params.inspect}"
+          @import_logger.error(error_message)
+          puts error_message if @verbose
           return nil
         end
         row[:rites_user_id]=user.id
@@ -252,9 +268,12 @@ class RinetData
   
   def update_teachers
     new_teachers = @parsed_data[:staff]
+    puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
     new_teachers.each do |teacher| 
       @import_logger.debug("working with teacher #{teacher[:Lastname]}")
-      create_or_update_teacher(teacher) 
+      print "processing teacher: #{teacher[:Lastname]}: " if @verbose
+      create_or_update_teacher(teacher)
+      puts if @verbose
     end  
   end
   
@@ -264,8 +283,14 @@ class RinetData
     unless row[:rites_teacher_id]
       user = create_or_update_user(row)
       if (user)
+        if @verbose
+          print '.' ; STDOUT.flush
+        end
         teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
         teacher.save!
+        if @verbose
+          print '.' ; STDOUT.flush
+        end
         row[:rites_user_id]=teacher.id
         # how do we find out the teacher grades?
         # teacher.grades << grade_9
@@ -276,9 +301,15 @@ class RinetData
             school.members << teacher
             school.members.uniq!
         end
+        if @verbose
+          print '.' ; STDOUT.flush
+        end
         row[:rites_teacher_id] = teacher.id
         if teacher
           @teachers_hash[row[:TeacherCertNum]] = teacher
+        end
+        if @verbose
+          print '.' ; STDOUT.flush
         end
       end
     else
@@ -289,8 +320,10 @@ class RinetData
   
   def update_students
     new_students = @parsed_data[:students]
+    puts "\n\nprocessing: #{new_students.length} students " if @verbose
     new_students.each do |student| 
       @import_logger.debug("working with student #{student[:Lastname]}")
+      puts "processing student: #{student[:Lastname]}" if @verbose
       create_or_update_student(student)
     end
   end
@@ -326,7 +359,9 @@ class RinetData
   
   def update_courses
     new_courses = @parsed_data[:courses]
+    puts "\n\nprocessing: #{new_courses.length} courses:\n" if @verbose
     new_courses.each do |nc| 
+      puts "creating course: #{nc[:CourseNumber]}, #{nc[:CourseSection]}, #{nc[:Term]}, #{nc[:Title]}" if @verbose
       create_or_update_course(nc)
     end
   end
@@ -334,9 +369,10 @@ class RinetData
   def create_or_update_course(row)
     unless row[:rites_course]
       school = school_for(row);
-      courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
-      unless courses
-        course = Portal::Course.create!( {:name => row[:Title], :school_id => school_for(row).id })
+      # courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
+      courses = Portal::Course.find_all_by_name_and_school_id(row[:Title], school.id)
+      if courses.empty?
+        course = Portal::Course.create!( {:name => row[:Title], :school_id => school.id })
       else
         # TODO: what if we have multiple matches?
         if courses.class == Array
@@ -424,9 +460,14 @@ class RinetData
   end
   
   def run_scheduled_job
+    # debugger
+    puts "\ngetting csv files ...\n" if @verbose
     get_csv_files
+    puts "\nparsing csv files ...\n" if @verbose
     parse_csv_files
+    puts "\njoining data ...\n" if @verbose
     join_data
+    puts "\nupdating models ...\n" if @verbose
     update_models
   end
   

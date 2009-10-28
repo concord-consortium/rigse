@@ -91,6 +91,10 @@ class User < ActiveRecord::Base
       @@searchable_attributes
     end
     
+    def login_exists?(login)
+      self.count_by_sql("SELECT COUNT(*) FROM `users` WHERE (`users`.`login` = '#{login}')") >= 1
+    end
+    
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
