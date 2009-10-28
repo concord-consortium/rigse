@@ -3,31 +3,38 @@ development:
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
-  database: rites_template_git_development
+  database: rites_development
   password: *****
   pool: 5
-test: 
+
+test: &test_settings
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
-  database: rites_template_git_test
+  database: rites_test
   password: *****
   pool: 5
-production: 
-  encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: root
-  database: rites_template_git_development
-  password: *****
-  pool: 5
+
+cucumber:
+  <<: *test_settings
+
 staging: 
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
-  database: risge_staging
+  database: rites_staging
   password: 
   pool: 5
 
+production: 
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: root
+  database: rites_production
+  password: *****
+  pool: 5
+
+# Optionally used for importing of ITSI activities
 itsi: 
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
@@ -36,11 +43,12 @@ itsi:
   password: *****
   pool: 5
   asset_url: http://itsidiy.concord.org
-  
+
+# Optionally used with the itsi database for importing ITSI units
 ccportal:
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
-  database: rites_portal
+  database: ccportal
   password: *****
   pool: 5
