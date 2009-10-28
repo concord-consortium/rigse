@@ -392,6 +392,15 @@ ActiveRecord::Schema.define(:version => 20091022162921) do
     t.integer  "grade_span_expectation_id"
   end
 
+  create_table "external_user_domains", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "server_url"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "grade_span_expectations", :force => true do |t|
     t.integer  "assessment_target_id"
     t.string   "grade_span"
