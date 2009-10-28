@@ -215,7 +215,7 @@ class RinetData
           :email => email || "#{row[:login]}#{ExternalUserDomain.external_domain_suffix}@mailinator.com" # (temporary unique email address to pass valiadations)
         }
         begin
-          user = ExternalUserDomain.find_by_external_login(params[:login])
+          user = ExternalUserDomain.find_user_by_external_login(params[:login])
           if user
             params.delete(:login)
             user.update_attributes!(params)
