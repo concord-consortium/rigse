@@ -28,7 +28,8 @@ describe ExternalUserDomain do
   end
 
   it "should create valid users" do
-   params = {
+    existing_users = User.find(:all)
+    params = {
       :login  => "boo",
       :password => "password",
       :password_confirmation => "password",
@@ -40,6 +41,7 @@ describe ExternalUserDomain do
     user.should be_kind_of User
     user.id.should_not be_nil
     user.should be_valid
+    existing_users.size.should be < User.find(:all).size
   end
   
   it "should find valid users" do
@@ -52,7 +54,7 @@ describe ExternalUserDomain do
        :email => "knowuh@gmail.com"
      }
      user = ExternalUserDomain.create_user_with_external_login(params)
-     found_user = ExternalUserDomain.find_user_by_external_login("boo")
+     found_user = ExternalUserDomain.find_user_by_external_login('boo')
      found_user.should eql user
   end
   
