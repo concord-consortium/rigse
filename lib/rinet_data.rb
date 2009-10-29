@@ -81,6 +81,23 @@ class RinetData
     join_data
     puts "\nupdating models ...\n" if @verbose
     update_models
+    if @verbose
+      puts <<HEREDOC
+
+Import Summary:
+
+  Teachers: #{@parsed_data[:staff].length}
+  Students: #{@parsed_data[:students].length}
+  Courses:  #{@parsed_data[:courses].length}
+  Classes:  #{@parsed_data[:staff_assignments].length}
+
+HEREDOC
+    end
+  end
+
+  def join_data
+    join_students_sakai
+    join_staff_sakai
   end
 
   def update_models
@@ -90,39 +107,37 @@ class RinetData
     update_classes
   end
 
-  def join_data
-    join_students_sakai
-    join_staff_sakai
-  end
-
   def get_csv_files
-    @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
       @districts.each do |district|
-        local_district_path = "#{local_dir}/#{district}/#{@new_date_time_key}"
-        FileUtils.mkdir_p(local_district_path)
-        @@csv_files.each do |csv_file|
-          # download a file or directory from the remote host
-          remote_path = "#{district}/#{csv_file}.csv"
-          local_path = "#{local_district_path}/#{csv_file}.csv"
-          @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
-          puts "downloading: #{remote_path} and saving to: \n  #{local_path}" if @verbose
-          sftp.download!(remote_path, local_path)
-        end
-        current_path = "#{local_dir}/#{district}/current"
-        FileUtils.ln_s(local_district_path, current_path, :force => true)
+        get_csv_files_for_district(district)
       end
     end
   end
 
-  def parse_csv_files(date_time_key='current')
+  def get_csv_files_for_district(district)
+    new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
+    local_district_path = "#{local_dir}/#{district}/#{new_date_time_key}"
+    FileUtils.mkdir_p(local_district_path)
+    @@csv_files.each do |csv_file|
+      # download a file or directory from the remote host
+      remote_path = "#{district}/#{csv_file}.csv"
+      local_path = "#{local_district_path}/#{csv_file}.csv"
+      @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
+      puts "downloading: #{remote_path} and saving to: \n  #{local_path}" if @verbose
+      sftp.download!(remote_path, local_path)
+    end
+    current_path = "#{local_dir}/#{district}/current"
+    FileUtils.ln_s(local_district_path, current_path, :force => true)
+  end
+
+  def parse_csv_files
     if @parsed_data
       @parsed_data # cached data.
     else
       @parsed_data = {}
       @districts.each do |district|
-        puts "\nparsing csv data: #{local_dir}/#{district}/#{date_time_key}" if @verbose
-        parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
+        parse_csv_files_for_district(district)
       end
     end
     # Data is now available in this format
@@ -133,20 +148,12 @@ class RinetData
     @parsed_data
   end
 
-
-  def set_working_directory(path)
-    unless @working_directory && @working_directory == path
-      if (@import_logger)
-        @import_logger.debug("Ended in #{@working_directory} at #{Time.now}")
-        @import_logger.debug("..... Next directory is #{path}")
-        @import_logger.close
-      end
-      @working_directory = path
-      @import_logger = Logger.new("#{@working_directory}/import_log.txt")
-      @import_logger.debug("Started in #{@working_directory} at #{Time.now}")
+  def parse_csv_files_for_district(district, date_time_key='current')
+    @districts.each do |district|
+      puts "\nparsing csv data: #{local_dir}/#{district}/#{date_time_key}" if @verbose
+      parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
     end
   end
-
 
   def parse_csv_files_in_dir(local_dir_path,existing_data={})
     @parsed_data = existing_data    
@@ -173,6 +180,19 @@ class RinetData
       @import_logger.error "no data folder found: #{local_dir_path}"
     end
   end
+
+  def set_working_directory(path)
+    unless @working_directory && @working_directory == path
+      if (@import_logger)
+        @import_logger.debug("Ended in #{@working_directory} at #{Time.now}")
+        @import_logger.debug("..... Next directory is #{path}")
+        @import_logger.close
+      end
+      @working_directory = path
+      @import_logger = Logger.new("#{@working_directory}/import_log.txt")
+      @import_logger.debug("Started in #{@working_directory} at #{Time.now}")
+    end
+  end
   
   
   def add_csv_row(key,line)
@@ -186,9 +206,7 @@ class RinetData
       end
     end
   end
-  
-  
-  
+
   def join_students_sakai
     @parsed_data[:students].each do |student|
       @import_logger.debug("working with student  #{student[:Lastname]}")
@@ -293,6 +311,28 @@ class RinetData
       end
     end
     user
+  end
+  
+  def block_update_teachers
+    @new_teachers = @existing_teachers = []
+    @parsed_data[:staff].each do |row|
+      if ExternalUserDomain.login_does_not_exist?(row[:login])
+        @new_teachers << row
+      else
+        @existing_teachers << row
+      end
+    end
+
+    @new_teachers = @parsed_data[:staff].select      {|row| ExternalUserDomain.login_does_not_exist?(row[:login])}
+    @existing_teachers = @parsed_data[:staff].select {|row| ExternalUserDomain.login_exists?(row[:login])}
+
+    puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
+    new_teachers.each do |teacher| 
+      @import_logger.debug("working with teacher #{teacher[:Lastname]}")
+      print "processing teacher: #{teacher[:Lastname]}: " if @verbose
+      create_or_update_teacher(teacher)
+      puts if @verbose
+    end  
   end
   
   def update_teachers
