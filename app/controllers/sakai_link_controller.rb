@@ -40,7 +40,7 @@ class SakaiLinkController < ApplicationController
         # FIXME We may or may not be mapping the sakai internal unique id to the login field...
         begin
           external_domain = ExternalUserDomain.select_external_domain_by_server_url(@serverurl)
-          user = ExternalUserDomain.find_by_external_login(@internaluser)
+          user = ExternalUserDomain.find_user_by_external_login(@internaluser)
         rescue ExternalUserDomain::ExternalUserDomainError
           external_domain = user = nil
         end
