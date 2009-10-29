@@ -4,6 +4,7 @@
 Given "a valid sakai user" do 
   @user = User.find(:first, :conditions => "login != 'anonymous'")
   @user_login = @user.login
+  @project = Factory.create(:admin_project)
 end
 
 Given "an unknown sakai user" do
