@@ -34,8 +34,9 @@
     #centered
       %img{:src=>"http://www.blackbrowngreen.com/images/logos/shovel.gif"}
       %h1
-        ="The Rites Investigation application is currently down for #{reason ? reason : "maintenance" }"
-        = "as of #{Time.now.strftime("%H:%M %Z")}"
+        ="As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")} "
+        = "The Rites Investigation application is down #{reason ? reason : "for maintenance" }"
+
       %p
         =" Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}"
         = "Please email us if you need to get in touch."
