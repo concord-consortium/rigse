@@ -65,7 +65,36 @@ class RinetData
   def local_dir
     "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
   end
+
+  def run_importer(district_directory)
+    parse_csv_files_in_dir(district_directory)
+    join_data
+    update_models
+  end
   
+  def run_scheduled_job
+    puts "\ngetting csv files ...\n" if @verbose
+    get_csv_files
+    puts "\nparsing csv files ...\n" if @verbose
+    parse_csv_files
+    puts "\njoining data ...\n" if @verbose
+    join_data
+    puts "\nupdating models ...\n" if @verbose
+    update_models
+  end
+
+  def update_models
+    update_teachers
+    update_students
+    update_courses
+    update_classes
+  end
+
+  def join_data
+    join_students_sakai
+    join_staff_sakai
+  end
+
   def get_csv_files
     @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
@@ -160,7 +189,7 @@ class RinetData
   
   
   
-  def join_students_sakai 
+  def join_students_sakai
     @parsed_data[:students].each do |student|
       @import_logger.debug("working with student  #{student[:Lastname]}")
       found = student_sakai_map(student[:SASID])
@@ -215,7 +244,7 @@ class RinetData
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      if row[:login] && 
+      if row[:login] 
         if row[:EmailAddress]
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
@@ -287,7 +316,6 @@ class RinetData
           print '.' ; STDOUT.flush
         end
         teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
-        teacher.save!
         if @verbose
           print '.' ; STDOUT.flush
         end
@@ -440,35 +468,5 @@ class RinetData
     end
     row
   end
-  
-  def join_data
-    join_students_sakai
-    join_staff_sakai
-  end
-  
-  def update_models
-    update_teachers
-    update_students
-    update_courses
-    update_classes
-  end
-  
-  def run_importer(district_directory)
-    parse_csv_files_in_dir(district_directory)
-    join_data
-    update_models
-  end
-  
-  def run_scheduled_job
-    # debugger
-    puts "\ngetting csv files ...\n" if @verbose
-    get_csv_files
-    puts "\nparsing csv files ...\n" if @verbose
-    parse_csv_files
-    puts "\njoining data ...\n" if @verbose
-    join_data
-    puts "\nupdating models ...\n" if @verbose
-    update_models
-  end
-  
+
 end
