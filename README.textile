@@ -322,11 +322,11 @@ Push your copy of the staging branch to the gihub repository:
 
 Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
 download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
-<pre><code>  cap production db:remote_db_fetch</code></pre>
+<pre><code>  cap production db:fetch_remote_db</code></pre>
 
 Push the production database from the local <code>db/production_data.sql</code> to the staging server, the import
 the data into the database on staging, then cleanup.
-<pre><code>  cap staging db:remote_db_push</code></pre>
+<pre><code>  cap staging db:push_remote_db</code></pre>
 
 Run any migrations on the staging server:
 <pre><code>  cap staging deploy:migrate</code></pre>
@@ -362,6 +362,15 @@ h3. Creating the sakai integration demo user accounts.
   RAILS_ENV=production script/console
   require 'lib/sakaidemo'
 </code></pre>
+
+h3. Importing Sakai usrers from RINET / RIEPS.
+
+
+<pre><code>
+  RAILS_ENV=production script/runner "(RinetData.new).run_scheduled_job"
+</code></pre>
+
+
 
 h2. Rendering
 
