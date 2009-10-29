@@ -114,12 +114,12 @@ HEREDOC
   def get_csv_files
     Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
       @districts.each do |district|
-        get_csv_files_for_district(district)
+        get_csv_files_for_district(district, sftp)
       end
     end
   end
 
-  def get_csv_files_for_district(district)
+  def get_csv_files_for_district(district, sftp)
     new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     local_district_path = "#{local_dir}/#{district}/#{new_date_time_key}"
     FileUtils.mkdir_p(local_district_path)
@@ -127,7 +127,7 @@ HEREDOC
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
+      @log.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
       debug "downloading: #{remote_path} and saving to: \n  #{local_path}"
       sftp.download!(remote_path, local_path)
     end
@@ -153,10 +153,8 @@ HEREDOC
   end
 
   def parse_csv_files_for_district(district, date_time_key='current')
-    @districts.each do |district|
-      debug "(\nparsing csv data: #{local_dir}/#{district}/#{date_time_key})"
-      parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
-    end
+    debug "(\nparsing csv data: #{local_dir}/#{district}/#{date_time_key})"
+    parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
   end
 
   def parse_csv_files_in_dir(local_dir_path,existing_data={})
@@ -178,20 +176,6 @@ HEREDOC
     end
   end
 
-  def set_working_directory(path)
-    unless @working_directory && @working_directory == path
-      if (@import_logger)
-        @import_logger.debug("Ended in #{@working_directory} at #{Time.now}")
-        @import_logger.debug("..... Next directory is #{path}")
-        @import_logger.close
-      end
-      @working_directory = path
-      @import_logger = Logger.new("#{@working_directory}/import_log.txt")
-      @import_logger.debug("Started in #{@working_directory} at #{Time.now}")
-    end
-  end
-  
-  
   def add_csv_row(key,line)
     # if row.respond_to? fields
     FasterCSV.parse(line) do |row|
@@ -325,8 +309,7 @@ HEREDOC
 
     puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
     new_teachers.each do |teacher| 
-      debug("working with teacher #{teacher[:Lastname]}")
-      print "processing teacher: #{teacher[:Lastname]}: " if @verbose
+      debug("processing teacher #{teacher[:Lastname]}", '')
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
@@ -496,8 +479,8 @@ HEREDOC
     row
   end
   
-  def debug(message)
-    puts message if @verbose
+  def debug(message, new_line="\n")
+    print message+new_line if @verbose
     @log.debug(message)
   end
   
@@ -506,7 +489,8 @@ HEREDOC
       unless defined? @step_counter
         @step_counter = 0
       end
-      if @step_counter % 1
+      @step_counter += 1
+      if (@step_counter % step_size) == 0
         print '.' ; STDOUT.flush
       end
     end
