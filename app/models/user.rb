@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
     end
     
     def login_exists?(login)
-      self.count_by_sql("SELECT COUNT(*) FROM `users` WHERE (`users`.`login` = '#{login}')") >= 1
+      User.count(:conditions => "`login` = '#{login}'") >= 1
     end
     
     def default_users
