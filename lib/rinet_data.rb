@@ -180,7 +180,7 @@ class RinetData
       if (found)
         student[:login] = found
       else
-        @log.error "student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]} student_sakai.csv )"
+        @log.error "student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )"
       end
     end
   end
@@ -192,7 +192,7 @@ class RinetData
       if (found)
         staff_member[:login] = found
       else
-        @log.error "teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in staff_sakai.csv)"
+        @log.error "teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)"
       end
     end
   end
