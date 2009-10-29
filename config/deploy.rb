@@ -20,7 +20,8 @@ task :disable_web, :roles => :web do
   maintenance = render("./app/views/layouts/maintenance.haml", 
                        {
                          :back_up => ENV['BACKUP'],
-                         :reason => ENV['REASON']
+                         :reason => ENV['REASON'],
+                         :message => ENV['MESSAGE']
                        })
 
   run "mkdir -p #{shared_path}/system/"

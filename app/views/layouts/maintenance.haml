@@ -36,7 +36,8 @@
       %h1
         ="As of #{Time.now.strftime("%b %d,  %I:%M%p (%Z)")} "
         = "The Rites Investigation application is down #{reason ? reason : "for maintenance" }"
-
+        
+      %p= "#{message ? message : "" }"
       %p
         =" Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}"
         = "Please email us if you need to get in touch."
