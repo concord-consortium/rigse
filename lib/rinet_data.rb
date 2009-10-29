@@ -67,20 +67,29 @@ class RinetData
   
   def get_csv_files
     @new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
-    Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
-      @districts.each do |district|
-        local_district_path = "#{local_dir}/#{district}/#{@new_date_time_key}"
-        FileUtils.mkdir_p(local_district_path)
-        @@csv_files.each do |csv_file|
-          # download a file or directory from the remote host
-          remote_path = "#{district}/#{csv_file}.csv"
-          local_path = "#{local_district_path}/#{csv_file}.csv"
-          @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
-          sftp.download!(remote_path, local_path)
-        end
-        current_path = "#{local_dir}/#{district}/current"
-        FileUtils.ln_s(local_district_path, current_path, :force => true)
+    begin
+      Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
+        download_csv_files(sftp)
       end
+    rescue Exception => e
+      @import_logger.error("get_csv_files failed: #{e.message}")
+    end
+  end
+  
+  ## sftp: a Net::SFTP::Session object
+  def download_csv_files(sftp)
+    @districts.each do |district|
+      local_district_path = "#{local_dir}/#{district}/#{@new_date_time_key}"
+      FileUtils.mkdir_p(local_district_path)
+      @@csv_files.each do |csv_file|
+        # download a file or directory from the remote host
+        remote_path = "#{district}/#{csv_file}.csv"
+        local_path = "#{local_district_path}/#{csv_file}.csv"
+        @import_logger.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
+        sftp.download!(remote_path, local_path)
+      end
+      current_path = "#{local_dir}/#{district}/current"
+      FileUtils.ln_s(local_district_path, current_path, :force => true)
     end
   end
 
