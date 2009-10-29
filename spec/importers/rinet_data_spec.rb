@@ -42,7 +42,7 @@ describe RinetData do
   def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
     @rd = RinetData.new
     @rd.run_importer(district_directory)
-    @logger = @rd.import_logger
+    @logger = @rd.log
     @logger.stub!(:error).and_return(:default_value)
   end
 
