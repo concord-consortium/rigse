@@ -34,10 +34,10 @@ class RinetData
   
   def initialize(options= {})
     defaults = {
-      :verbose => true,
+      :verbose => false,
       :log_directory => nil,
     }
-    @verbose = defaults[:verbose] || options[:verbose]
+    @verbose = options[:verbose] || defaults[:verbose] 
     
     # we probably want to override this later
         
@@ -85,7 +85,7 @@ class RinetData
     join_data
     debug "\n (updating models ...)\n"
     update_models
-    debug <<HEREDOC
+    summary = <<HEREDOC
 
 Import Summary:
 
@@ -94,8 +94,9 @@ Import Summary:
   Courses:  #{@parsed_data[:courses].length}
   Classes:  #{@parsed_data[:staff_assignments].length}
 
+
 HEREDOC
-    end
+    debug(summary)
   end
 
   def join_data
@@ -335,7 +336,7 @@ HEREDOC
     new_teachers = @parsed_data[:staff]
     debug "\n\n(processing: #{new_teachers.length} teachers )"
     new_teachers.each do |teacher| 
-      debug ("processing teacher: #{teacher[:Lastname]}: ")
+      debug("processing teacher: #{teacher[:Lastname]}: ")
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
