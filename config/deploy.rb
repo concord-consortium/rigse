@@ -2,6 +2,34 @@ set :stages, %w(development staging production bumblebeeman)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
+require 'haml'
+
+def render(file,opts={})
+  template = File.read(file)
+  haml_engine = Haml::Engine.new(template)
+  output = haml_engine.render(nil,opts)
+  output
+end
+
+#############################################################
+#  Miantance mode
+#############################################################
+task :disable_web, :roles => :web do
+  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+
+  maintenance = render("./app/views/layouts/maintenance.haml", 
+                       {
+                         :back_up => ENV['BACKUP'],
+                         :reason => ENV['REASON']
+                       })
+
+  run "mkdir -p #{shared_path}/system/"
+  put maintenance, "#{shared_path}/system/maintenance.html", 
+                   :mode => 0644
+end
+task :enable_web, :roles => :web do
+  run "rm #{shared_path}/system/maintenance.html"
+end
 
 #############################################################
 #  Application

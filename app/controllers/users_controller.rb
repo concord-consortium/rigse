@@ -90,7 +90,7 @@ class UsersController < ApplicationController
                        { :name => 'regular', :users => users[:email] }, 
                        { :name => 'students' , :users => users[:no_email] } 
                      ]
-        unless users[:default_users].empty?
+        if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
         end
       elsif request.put?

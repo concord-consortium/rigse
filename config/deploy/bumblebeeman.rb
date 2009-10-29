@@ -2,7 +2,7 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/rites"
+set :deploy_to, "/web/production/rites"
 set :branch, "master"
 
 #############################################################

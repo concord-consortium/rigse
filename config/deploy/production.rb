@@ -9,7 +9,7 @@ set :branch, "production"
 #  Servers
 #############################################################
 
-set :domain, "rites-investigations.concord.org"
+set :domain, "seymour.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 
