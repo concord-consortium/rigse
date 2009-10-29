@@ -112,13 +112,18 @@ HEREDOC
   end
 
   def get_csv_files
-    Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
-      @districts.each do |district|
-        get_csv_files_for_district(district, sftp)
+    begin
+      Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
+        @districts.each do |district|
+          get_csv_files_for_district(district, sftp)
+        end
       end
+    rescue Exception => e
+      @log.error("get_csv_files failed: #{e.message}")
     end
   end
-
+  
+  ## sftp: a Net::SFTP::Session object
   def get_csv_files_for_district(district, sftp)
     new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
     local_district_path = "#{local_dir}/#{district}/#{new_date_time_key}"

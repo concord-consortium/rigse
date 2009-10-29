@@ -63,16 +63,26 @@ describe RinetData do
     run_importer
   end
 
+  require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+  
   describe "getting data from rinet" do
-    it "should be resilient in the event that it can not connect to the sftp server"
+    before(:each) do
+      @rinet_data = RinetData.new
+      
+    end
+    
+    it "should be resilient in the event that it can not connect to the sftp server" do
+      Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'ConnectFailure'))
+      lambda { @rinet_data.get_csv_files }.should_not raise_error
+    end
+    
     it "should report a reasonable error message in the event that it can not connect to the sftp server"
     it "should be resilient in the event that directory does not exist"
     it "should report an error in the event that a remote directory does not exist"
-    it "should be resilient in the event thata remote file does note exist"
+    it "should be resilient in the event that a remote file does note exist"
     it "should report an error in the event that a remote file does not exist"
   end
-
-
+  
   describe "basic csv file parsing" do
     
     #  require 'ruby-prof'
