@@ -95,6 +95,10 @@ class User < ActiveRecord::Base
       User.count(:conditions => "`login` = '#{login}'") >= 1
     end
     
+    def login_does_not_exist?(login)
+      User.count(:conditions => "`login` = '#{login}'") == 0
+    end
+    
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end

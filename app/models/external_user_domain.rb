@@ -28,6 +28,10 @@ class ExternalUserDomain < ActiveRecord::Base
       User.login_exists?("#{external_login}_#{@@external_domain_selection}")
     end
 
+    def login_does_not_exist?(external_login)
+      User.login_does_not_exist?("#{external_login}_#{@@external_domain_selection}")
+    end
+
     def find_user_by_external_login(external_login)
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
       User.find_by_login(external_login + '_' + @@external_domain_selection)
