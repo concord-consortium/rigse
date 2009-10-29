@@ -1,0 +1,42 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title Maintenance
+    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
+    %meta{ :name => "distribution", :content => "all" }
+    %meta{ :name => "robots", :content => "all" }
+    %meta{ :name => "resource-type", :content => "document" }
+    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
+  %style{:type => "text/css", :media => "screen"}
+    :sass
+      body
+        :padding 0px
+        :background
+          :image url(/images/rites-bg.jpg) 
+          :repeat repeat
+        :margin 10px 
+          :bottom 0px
+      #centered
+        :margin-left auto
+        :margin-right auto
+        :padding 1em
+        :width 800px
+        :height 400px
+        :display block
+        :background-color white
+        :font-family helvetica, arial, sans-serif
+        :color brown
+      img
+        :float left
+        :border none
+  %body
+    #centered
+      %img{:src=>"http://www.blackbrowngreen.com/images/logos/shovel.gif"}
+      %h1
+        ="The Rites Investigation application is currently down for #{reason ? reason : "maintenance" }"
+        = "as of #{Time.now.strftime("%H:%M %Z")}"
+      %p
+        =" Sorry for the inconvenience. We'll be back  #{back_up ? "by #{back_up}" : "shortly"}"
+        = "Please email us if you need to get in touch."
+
