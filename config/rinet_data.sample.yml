@@ -3,7 +3,7 @@ development:
   host: portfolio.ri.net
   username: concord
   password: *****
-  external_domain_url: http://mooseman.concord.org
+  external_domain_url: http://moleman.concord.org
   districts:
     - "06"
     - "07"
@@ -15,7 +15,7 @@ test: &test_settings
   host: portfolio.ri.net
   username: concord
   password: *****
-  external_domain_url: http://mooseman.concord.org
+  external_domain_url: http://moleman.concord.org
   districts:
     - "06"
     - "07"
