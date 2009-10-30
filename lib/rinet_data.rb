@@ -40,7 +40,7 @@ class RinetData
     @verbose = options[:verbose] || defaults[:verbose] 
     
     # we probably want to override this later
-        
+    
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     @districts = @rinet_data_config[:districts]
 
@@ -63,7 +63,8 @@ class RinetData
     log_directory = defaults[:log_directory] || self.local_dir
     FileUtils.mkdir_p log_directory
     @log = Logger.new("#{log_directory}/import_log.txt",'daily')
-    debug("Started in #{self.local_dir} at #{Time.now}")    
+    debug('-' * 72)
+    debug("Started in #{self.local_dir} at #{Time.now}")
   end
   
   def local_dir
@@ -119,7 +120,8 @@ HEREDOC
         end
       end
     rescue Exception => e
-      @log.error("get_csv_files failed: #{e.message}")
+      @log.error("get_csv_files failed: #{e.class}: #{e.message}")
+      raise
     end
   end
   
@@ -132,9 +134,12 @@ HEREDOC
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      @log.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
-      debug "downloading: #{remote_path} and saving to: \n  #{local_path}"
-      sftp.download!(remote_path, local_path)
+      @log.info "Downloading: #{remote_path} and saving to: \n  #{local_path}"
+      begin
+        sftp.download!(remote_path, local_path)
+      rescue RuntimeError => e
+        @log.error("#{e.class}: #{e.message}: Download failed")
+      end
     end
     current_path = "#{local_dir}/#{district}/current"
     FileUtils.ln_s(local_district_path, current_path, :force => true)
@@ -499,6 +504,9 @@ HEREDOC
         print '.' ; STDOUT.flush
       end
     end
+  end
+  
+  class RinetDataError < StandardError
   end
   
 end
