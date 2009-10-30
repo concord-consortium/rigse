@@ -97,4 +97,14 @@ class Portal::School < ActiveRecord::Base
   def parent
     nil
   end
+  
+  def has_member?(student_or_teacher)
+    members.detect {|m| m.class == student_or_teacher.class && m.id == student_or_teacher.id}
+  end
+  
+  def add_member(student_or_teacher)
+    return members if self.has_member?(student_or_teacher)
+    members << student_or_teacher
+  end
+    
 end

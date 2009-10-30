@@ -32,4 +32,18 @@ describe Portal::School do
     new_school.should be_real # meaning has a real nces school
   end
   
+  it "should not allow a teacher to be added more than once" do
+    school = Factory(:portal_school)
+    school.members.should be_empty
+    teacher = Factory(:portal_teacher)
+    school.add_member(teacher)
+    school.reload
+    school.members.size.should eql 1
+    school.add_member(teacher)
+    
+    school.members.size.should eql 1
+    school.reload
+    school.members.size.should eql 1
+  end
+  
 end
