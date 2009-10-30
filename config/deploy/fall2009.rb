@@ -9,7 +9,7 @@ set :branch, "itsi-master"
 #  Servers
 #############################################################
 
-set :domain, "itsisu.investigations.concord.org"
+set :domain, "itsisu-fall2009.investigations.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
 
