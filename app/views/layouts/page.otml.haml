@@ -3,7 +3,7 @@
 %otrunk{ :id => @page.uuid }
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles({:title => h(@page.name), :use_scroll_pane => true})
       %root
         =yield "page_#{dom_id_for(@page)}".to_sym

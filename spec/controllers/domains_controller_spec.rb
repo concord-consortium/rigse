@@ -6,6 +6,12 @@ describe DomainsController do
     @mock_domain ||= mock_model(Domain, stubs)
   end
   
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
+  
   describe "responding to GET index" do
 
     it "should expose an array of all the @domains" do

@@ -1,10 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/spec_controller_helper')
 
 describe GradeSpanExpectationsController do
 
   def mock_grade_span_expectation(stubs={})
     @mock_grade_span_expectation ||= mock_model(GradeSpanExpectation, stubs)
+  end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "responding to GET index" do

@@ -37,6 +37,7 @@ class Investigation < ActiveRecord::Base
   include AASM 
   aasm_initial_state :draft
   aasm_column :publication_status
+  @@protected_publication_states=[:published]
   @@publication_states = [:draft,:published,:private]
   @@publication_states.each { |s| aasm_state s}
 
@@ -213,4 +214,20 @@ class Investigation < ActiveRecord::Base
     )
   end
 
+  def available_states(who_wants_to_know)
+    if(who_wants_to_know.has_role?('manager','admin'))
+      return @@publication_states
+    end
+    return (@@publication_states - @@protected_publication_states + [self.publication_status.to_sym]).uniq
+  end
+  
+  
+  def duplicate(new_owner)
+    @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
+    @return_investigation.user = new_owner
+    @return_investigation.name = "copy of #{self.name}"
+    @return_investigation.publication_status = :draft
+    return @return_investigation
+  end
+  
 end

@@ -9,63 +9,21 @@ namespace :rigse do
   def jruby_run_command
     JRUBY ? "jruby " : "ruby "
   end
-  
-  def agree_check_in_development_mode
-    if RAILS_ENV == 'development'
-      agree("Accept defaults? (y/n) ", true)
-    else
-      true
-    end
+
+  def jruby_run_server_command
+    jruby_run_command + (JRUBY ? "-J-server " : "")
   end
-  
-  PLUGIN_LIST = {
-    :acts_as_taggable_on_steroids => 'http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids',
-    :attachment_fu => 'git://github.com/technoweenie/attachment_fu.git',
-    :bundle_fu => 'git://github.com/timcharper/bundle-fu.git',
-    :fudge_form => 'git://github.com/JimNeath/fudge_form.git',
-    :haml => 'git://github.com/nex3/haml.git',
-    :jrails => 'git://github.com/aaronchi/jrails.git',
-    :paperclip => 'git://github.com/thoughtbot/paperclip.git',
-    :salty_slugs => 'git://github.com/norbauer/salty_slugs.git',
-    :shoulda => 'git://github.com/thoughtbot/shoulda.git',
-    :spawn => 'git://github.com/tra/spawn.git',
-    :workling => 'git://github.com/purzelrakete/workling.git'
-  }
-  
-  
+
   desc "display info about the site admin user"
   task :display_site_admin => :environment do
     puts User.site_admin.to_yaml
   end
-  
-  
-  #######################################################################
-  #
-  # List all plugins available to quick install
-  #
-  #######################################################################  
-  desc 'List all plugins available to quick install'
-  task :install do
-    puts "\nAvailable Plugins\n=================\n\n"
-    plugins = PLUGIN_LIST.keys.sort_by { |k| k.to_s }.map { |key| [key, PLUGIN_LIST[key]] }
-    
-    plugins.each do |plugin|
-      puts "#{plugin.first.to_s.gsub('_', ' ').capitalize.ljust(30)} rake rigse:install:#{plugin.first.to_s}\n"
-    end
-    puts "\n"
-  end
-  
-  namespace :install do
-    PLUGIN_LIST.each_pair do |key, value|
-      task key do
-        system('script/plugin', 'install', value, '--force')
-      end
-    end
-  end
 
   namespace :setup do
     
-    require 'highline/import'
+    # require 'highline/import'
+    autoload :Highline, 'highline'
+
     require 'fileutils'
     
     def rails_file_path(*args)
@@ -94,7 +52,7 @@ namespace :rigse do
       unless RAILS_ENV == 'development'
         puts "\nNormally you will only be running this task in development mode.\n"
         puts "You are running in #{RAILS_ENV} mode.\n"
-        unless agree("Are you sure you want to do this?  (y/n) ", true)
+        unless HighLine.new.agree("Are you sure you want to do this?  (y/n) ")
           raise "task stopped by user"
         end
       end
@@ -125,7 +83,7 @@ this change to take effect.
 
 HEREDOC
       
-      if agree("Do you want to do this?  (y/n) ", true)
+      if HighLine.new.agree("Do you want to do this?  (y/n) ")
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
         site_key = UUIDTools::UUID.timestamp_create.to_s
 
@@ -155,49 +113,59 @@ HEREDOC
 
 This task will:
 
-1. drop the existing database: #{db_config['database']} and rebuild it from scratch
-2. install any addition gems that are needed
-3. generate a set of the RI Grade Span Expectation
-4. generate the maven_jnlp resources
-5. download and generate nces district and school resource
-6. create default roles, users, district, school, teacher, student, class, and offering
-7. create a default project and associate it with the maven_jnlp resources
+ 1. create default users and roles
+ 2. optionally create additional users
+ 3. load default probe, interface, and calibration reesources
+ 4. generate a set of the RI Grade Span Expectation
+ 5. assign teh Vernier Go!Link interface as a default to the existing users
+ 6. generate the maven_jnlp resources
+ 7. optionally download, introspect, and create models representing otrunk-examples 
+ 8. create a default project and associate it with the maven_jnlp resources
+ 9. download and generate nces district and school resources
+10. Generate District and School model instances from the NCES data for selected States and Active School Levels.
+11. create default portal resources: district, school, class, investigation and offering
   
 HEREDOC
-      if agree("Do you want to do this?  (y/n) ", true)
-        begin
-          Rake::Task['db:drop'].invoke
-        rescue StandardException
-        end
-        Rake::Task['db:create'].invoke
-        Rake::Task['db:migrate'].invoke
-        Rake::Task['gems:install'].invoke
+      if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
+        # Rake::Task['gems:install'].invoke
+        Rake::Task['rigse:setup:default_users_roles'].invoke
+        Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
-        # Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
-        Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
-        Rake::Task['portal:setup:download_nces_data'].invoke
-        Rake::Task['portal:setup:import_nces_from_file'].invoke
-        Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
+        if APP_CONFIG[:include_otrunk_examples]
+          Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
+        else
+          puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n"
+        end
         Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
+        Rake::Task['portal:setup:download_nces_data'].invoke
+        Rake::Task['portal:setup:import_nces_from_files'].invoke
+        Rake::Task['portal:setup:create_districts_and_schools_from_nces_data'].invoke
+        Rake::Task['rigse:setup:default_portal_resources'].invoke
+
   
         puts <<HEREDOC
 
-You can now start the application in develelopment mode by running this command:
+Start the application in development mode by running this command:
 
-  #{jruby_run_command}script/server
+  #{jruby_run_server_command}script/server
 
-You can re-edit the initial configuration parameters by running the
+Start the application in production mode by running this command:
+
+  #{jruby_run_server_command}script/server -e production
+
+Re-edit the initial configuration parameters by running the
 setup script again:
 
   #{jruby_run_command}config/setup.rb
 
-You can re-create the database from scratch and setup default users 
-again by running this rake task again:
+Re-create the database from scratch and setup default users 
+again by running these rake tasks in sequence again:
 
-  #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+  RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
+  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 If you have access to an ITSI database you can also import ITSI activities 
 into RITES by running this rake task:
@@ -245,7 +213,7 @@ HEREDOC
         Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
-        # Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
+        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
     end
   end
 end

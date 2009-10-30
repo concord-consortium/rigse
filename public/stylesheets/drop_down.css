@@ -48,7 +48,7 @@
       color: #f2f8fc;
       background-color: #6a0e04; }
   .dropdown a {
-    margin: 0px;
+    margin-left: 5px;
     padding: 0px;
     display: block; }
   .dropdown a.rollover {

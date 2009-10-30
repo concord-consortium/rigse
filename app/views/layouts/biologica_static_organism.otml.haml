@@ -3,7 +3,7 @@
 %otrunk{ :id => @biologica_static_organism.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@biologica_static_organism.name))
       %root
         %OTCompoundDoc

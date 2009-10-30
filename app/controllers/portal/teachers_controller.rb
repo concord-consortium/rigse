@@ -24,7 +24,8 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/new.xml
   def new
     @portal_teacher = Portal::Teacher.new
-    @portal_districts = Portal::District.find(:all, :include => :schools)
+    # order @portal_districts so the virtual districts appear first in the list of Districts and Schools
+    @portal_districts = Portal::District.virtual + Portal::District.real
     @portal_grades = Portal::Grade.active
     @default_grade_id = @portal_grades.detect { |g| g.name == '9' }.id
     @domains = Domain.all

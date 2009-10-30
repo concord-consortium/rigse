@@ -1,0 +1,2 @@
+module ExternalUsersHelper
+end

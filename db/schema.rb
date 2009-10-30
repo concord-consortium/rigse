@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090819034711) do
+ActiveRecord::Schema.define(:version => 20091028175638) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -392,6 +392,15 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.integer  "grade_span_expectation_id"
   end
 
+  create_table "external_user_domains", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "server_url"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "grade_span_expectations", :force => true do |t|
     t.integer  "assessment_target_id"
     t.string   "grade_span"
@@ -762,7 +771,10 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.integer  "teacher_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "section"
   end
+
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",        :limit => 36
@@ -773,6 +785,9 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "portal_courses", ["name"], :name => "index_portal_courses_on_name"
+  add_index "portal_courses", ["school_id"], :name => "index_portal_courses_on_school_id"
 
   create_table "portal_courses_grade_levels", :id => false, :force => true do |t|
     t.integer  "grade_level_id"
@@ -1512,6 +1527,7 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
 
   add_index "portal_nces06_schools", ["NCESSCH"], :name => "index_portal_nces06_schools_on_NCESSCH"
   add_index "portal_nces06_schools", ["SCHNAM"], :name => "index_portal_nces06_schools_on_SCHNAM"
+  add_index "portal_nces06_schools", ["SEASCH"], :name => "index_portal_nces06_schools_on_SEASCH"
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
 
   create_table "portal_offerings", :force => true do |t|
@@ -1578,6 +1594,8 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.datetime "updated_at"
   end
 
+  add_index "portal_students", ["user_id"], :name => "index_portal_students_on_user_id"
+
   create_table "portal_subjects", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
@@ -1594,6 +1612,8 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.datetime "updated_at"
     t.integer  "domain_id"
   end
+
+  add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_types", :force => true do |t|
     t.integer "user_id"
@@ -1697,6 +1717,8 @@ ActiveRecord::Schema.define(:version => 20090819034711) do
     t.integer  "vendor_interface_id"
     t.boolean  "default_user",                             :default => false
     t.boolean  "site_admin",                               :default => false
+    t.string   "type"
+    t.integer  "external_user_domain_id"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

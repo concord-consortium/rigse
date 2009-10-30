@@ -1,9 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec_controller_helper')
 
 describe Portal::SchoolsController do
 
   def mock_school(stubs={})
     @mock_school ||= mock_model(Portal::School, stubs)
+    # @mock_school.stub!(:update_attributes => true)
+  end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "GET index" do
@@ -75,8 +82,8 @@ describe Portal::SchoolsController do
     describe "with valid params" do
       it "updates the requested school" do
         Portal::School.should_receive(:find).with("37").and_return(mock_school)
-        mock_school.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :school => {:these => 'params'}
+        mock_school.should_receive(:update_attributes).with({'portal_school' => 'params'})
+        put :update, :id => "37", :school => {:portal_school => 'params'}
       end
 
       it "assigns the requested school as @school" do
@@ -95,8 +102,8 @@ describe Portal::SchoolsController do
     describe "with invalid params" do
       it "updates the requested school" do
         Portal::School.should_receive(:find).with("37").and_return(mock_school)
-        mock_school.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :school => {:these => 'params'}
+        mock_school.should_receive(:update_attributes).with({'portal_school' => 'params'})
+        put :update, :id => "37", :school => {:portal_school => 'params'}
       end
 
       it "assigns the school as @school" do

@@ -7,6 +7,8 @@
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
+JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
+
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -63,7 +65,9 @@ Rails::Initializer.run do |config|
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
   config.gem "jnlp", :version => '>= 0.0.5.1'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
-  config.gem "ar-extensions", ">= 0.9.1"
+  config.gem "ar-extensions", :version => ">= 0.9.1"
+  config.gem "fastercsv", :version => "= 1.5.0"
+  config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -109,7 +113,8 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
-  config.active_record.observers = :user_observer, :investigation_observer
+
+  # ... observers are now started in config/initializers/observers.rb
 
   config.action_controller.session_store = :active_record_store
 

@@ -21,7 +21,8 @@ class BiologicaStaticOrganismsController < ApplicationController
         format.html # show.html.haml
         format.otml { render :layout => "layouts/biologica_static_organism" } # biologica_static_organism.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_static_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_static_organism, :teacher_mode => @teacher_mode} }
         format.xml  { render :biologica_static_organism => @biologica_static_organism }
       end
     end

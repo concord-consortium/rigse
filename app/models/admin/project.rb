@@ -18,6 +18,23 @@ class Admin::Project < ActiveRecord::Base
   
   @@searchable_attributes = %w{name description}
 
+  validates_format_of :url, :with => URI::regexp(%w(http https))
+  validates_length_of :name, :minimum => 1
+  validate :states_and_provinces_array_members_must_match_list
+  validates_associated :maven_jnlp_server
+  validates_associated :maven_jnlp_family
+
+  def states_and_provinces_array_members_must_match_list
+    if states_and_provinces && states_and_provinces.is_a?(Array)
+      unknown_provinces = states_and_provinces.select { |i| StatesAndProvinces::STATES_AND_PROVINCES[i] ? false : i }
+      unless unknown_provinces.empty?
+        errors.add(:states_and_provinces, "array members: #{unknown_provinces.join(', ')} must match list of known state and province two-character abreviations")
+      end
+    else
+      errors.add(:states_and_provinces, "must be an array")
+    end
+  end
+
   def before_save
     if snapshot_enabled
       self.jnlp_version_str = maven_jnlp_family.snapshot_version
@@ -50,15 +67,22 @@ class Admin::Project < ActiveRecord::Base
     app_config[RAILS_ENV]['enable_default_users'] = self.enable_default_users
     app_config[RAILS_ENV]['description'] = self.description
     app_config[RAILS_ENV]['states_and_provinces'] = self.states_and_provinces
-    app_config[RAILS_ENV]['default_maven_jnlp_server'] = self.maven_jnlp_server.name
-    app_config[RAILS_ENV]['default_maven_jnlp_family'] = self.maven_jnlp_family.name
-    if self.snapshot_enabled
-      app_config[RAILS_ENV]['default_jnlp_version'] = 'snapshot'
-    else
-      app_config[RAILS_ENV]['default_jnlp_version'] = self.jnlp_version_str
-    end
+    app_config[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
     app_config.to_yaml
   end
+
+  def generate_default_maven_jnlp
+    default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+    default_maven_jnlp['server'] = self.maven_jnlp_server.name
+    default_maven_jnlp['family'] = self.maven_jnlp_family.name
+    if self.snapshot_enabled
+      default_maven_jnlp['version'] = 'snapshot'
+    else
+      default_maven_jnlp['version'] = self.jnlp_version_str
+    end
+    default_maven_jnlp
+  end
+  
   
   def display_type
     self.default_project? ? 'Default ' : ''
@@ -72,7 +96,11 @@ class Admin::Project < ActiveRecord::Base
     # Admin::Project.default_project
     def default_project
       name, url = default_project_name_url
-      find_by_name_and_url(name, url)
+      proj = find_by_name_and_url(name, url)
+      if ! proj
+        logger.warn("No default project found for: #{name}, #{url}")
+      end
+      proj
     end
     
     def default_project_name_url
@@ -86,13 +114,16 @@ class Admin::Project < ActiveRecord::Base
     def summary_info
       default_project.summary_info
     end
-    
-    def create_or_update__default_project_from_settings_yml
+
+    def create_or_update_default_project_from_settings_yml
       name, url = default_project_name_url
       states_and_provinces = APP_CONFIG[:states_and_provinces]
-      maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(APP_CONFIG[:default_maven_jnlp_server])
-      jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(APP_CONFIG[:default_maven_jnlp_family])
-      jnlp_version_str = APP_CONFIG[:default_jnlp_version]
+
+      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+      maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(default_maven_jnlp['server'])
+      jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(default_maven_jnlp['family'])
+      jnlp_version_str = default_maven_jnlp['version']
+      
       enable_default_users = APP_CONFIG[:enable_default_users]
 
       if jnlp_version_str == 'snapshot'
@@ -128,7 +159,7 @@ class Admin::Project < ActiveRecord::Base
       active_grades = APP_CONFIG[:active_grades]
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
         Portal::Grade.find(:all).each do |grade|
-          if (active_grades & [grade.name.to_i]).empty?
+          if (active_grades & [grade.name]).empty?
             grade.active = false
           else
             grade.active = true

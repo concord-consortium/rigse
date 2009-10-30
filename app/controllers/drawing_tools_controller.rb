@@ -21,7 +21,8 @@ class DrawingToolsController < ApplicationController
         format.html # show.html.erb
         format.otml { render :layout => "layouts/drawing_tool" } # drawing_tool.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @drawing_tool }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @drawing_tool } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @drawing_tool, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @drawing_tool, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @drawing_tool }
       end
     end

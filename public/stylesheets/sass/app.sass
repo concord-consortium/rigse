@@ -3,11 +3,6 @@
 @import app_colors.sass
 @import app_fonts.sass
 @import app_metrics.sass
-@import action_menu_tab.sass
-@import notes.sass
-@import drop_down.sass
-@import data_table.sass
-
 
 p
   :margin 1em 0em
@@ -23,7 +18,6 @@ em
 body
   +reset
   :padding 0px
-  
   +main_font
   :background
     :color = !itsi_brown
@@ -81,8 +75,7 @@ pre
   :line-height 1.1em
   
 .wrapper
-  :border 2px solid
-  :background-color white
+  +page_white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
 
@@ -265,7 +258,6 @@ ul.menu
 .dev_note
   :font-size 0.6em
   :color= !dev_note_color
-  a a:visited a:active a:hover
 
 .teacher_only
   :background-color= !teacher_only_color !important

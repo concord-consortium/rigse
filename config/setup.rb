@@ -12,19 +12,21 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
+# Add the unpacked gems in vendor/gems to the $LOAD_PATH
+Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
+  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
+end
+
+require 'uuidtools'
+require 'highline/import'
+
 def jruby_system_command
   JRUBY ? "jruby -S" : ""
 end
 
 def gem_install_command_strings(missing_gems)
-  # jruby -S gem install uuidtools -v1.0.5 uuidtools -v1.0.6
-  missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.collect do |gem_name_and_version|
-    if JRUBY
-      "  jruby -S gem install #{gem_name_and_version}\n"
-    else
-      "  sudo gem install #{gem_name_and_version}\n"
-    end
-  end
+  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
+  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
 def rails_file_path(*args)
@@ -35,14 +37,27 @@ def rails_file_exists?(*args)
   File.exists?(rails_file_path(args))
 end
 
-@db_config_path = rails_file_path(%w{config database.yml})
-@settings_config_path = rails_file_path(%w{config settings.yml})
-@sds_config_path = rails_file_path(%w{config sds.yml})
-@mailer_config_path = rails_file_path(%w{config mailer.yml})
+@db_config_path                = rails_file_path(%w{config database.yml})
+@db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
+@settings_config_path          = rails_file_path(%w{config settings.yml})
+@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
+@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
+@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
+@mailer_config_path            = rails_file_path(%w{config mailer.yml})
+@mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
+@sds_config_path               = rails_file_path(%w{config sds.yml})
+@sds_config_sample_path        = rails_file_path(%w{config sds.sample.yml})
+
+@db_config_sample              = YAML::load_file(@db_config_sample_path)
+@settings_config_sample        = YAML::load_file(@settings_config_sample_path)
+@rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
+@mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
+@sds_config_sample             = YAML::load_file(@sds_config_sample_path)
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
-@new_mailer_yml = false
+@new_rinet_data_yml_created = false
+@new_mailer_yml_created = false
 @new_sds_yml_created = false
 
 def copy_file(source, destination)
@@ -56,20 +71,18 @@ HEREDOC
 end
 
 @missing_gems = []
-@gems_needed_at_start = [
-  ['uuidtools', '>= 2.0.0'],
-  ['highline', '>= 1.5.0'],
-  ['haml', '>= 2.1.8'],
-  ['mime-types', '>=1.16'],
-  ['diff-lcs', '>= 1.1.2'],
-  ['prawn', '>= 0.4.1'],
-  ['prawn-format', '>= 0.1.1']
-]
 
+# These gems need to be installed with the Ruby VM for the web application
 if JRUBY 
-  @gems_needed_at_start << ['activerecord-jdbcmysql-adapter', '>= 0.9.1']
-  @gems_needed_at_start << ['jruby-openssl', '>=0.5']
+  @gems_needed_at_start = [
+    ['rake', '>=0.8.7'],
+    ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
+    ['jruby-openssl', '>=0.5.2']
+  ]
+else
+  @gems_needed_at_start = [['mysql', '>= 2.7']]
 end
+
 @gems_needed_at_start.each do |gem_name_and_version|
   begin
     gem gem_name_and_version[0], gem_name_and_version[1]
@@ -88,13 +101,9 @@ if @missing_gems.length > 0
   raise message
 end
 
-# Continuing after sucessfully requiring the necessary gems ..
-
-require 'highline/import'
-
 # returns true if @db_name_prefix on entry == @db_name_prefix on exit
 # false otherwise
-def confirm_database_name_prefix
+def confirm_database_name_prefix_user_password
   original_db_name_prefix = @db_name_prefix
   puts <<HEREDOC
 
@@ -104,21 +113,33 @@ You can specify a different prefix for the database names:
 
 HEREDOC
   @db_name_prefix = ask("  database name prefix: ") { |q| q.default = @db_name_prefix }
-  @db_name_prefix == original_db_name_prefix
+  if @db_name_prefix == original_db_name_prefix
+    @db_user = ask("  database username: ") { |q| q.default = 'root' }
+    @db_password = ask("  database password: ") { |q| q.default = 'password' }
+    true
+  else
+    false
+  end
 end
 
 def create_new_database_yml
   raise "the instance variable @db_name_prefix must be set before calling create_new_database_yml" unless @db_name_prefix
-  
-  sample_path = rails_file_path(%w{config database.mysql.sample.yml})
-  @db_config = YAML::load(IO.read(sample_path))
+
+  @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
     @db_config[env]['database'] = "#{@db_name_prefix}_#{env}"
+    @db_config[env]['username'] = @db_user
+    @db_config[env]['password'] = @db_password
   end
+  %w{itsi ccportal}.each do |external_db|
+    @db_config[external_db]['username'] = @db_user
+    @db_config[external_db]['password'] = @db_password
+  end
+
   puts <<HEREDOC
 
        creating: #{@db_config_path}
-  from template: #{sample_path}
+  from template: #{@db_config_sample_path}
 
   using database name prefix: #{@db_name_prefix}
 
@@ -127,12 +148,11 @@ HEREDOC
 end
 
 def create_new_settings_yml
-  sample_path = rails_file_path(%w{config settings.sample.yml})
-  @settings_config = YAML::load(IO.read(sample_path))
+  @settings_config = @settings_config_sample
   puts <<HEREDOC
 
        creating: #{@settings_config_path}
-  from template: #{sample_path}
+  from template: #{@settings_config_sample_path}
 
 HEREDOC
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
@@ -156,15 +176,25 @@ end
 
 
 def create_new_mailer_yml
-  sample_path = rails_file_path(%w{config mailer.sample.yml})
-  @mailer_config = YAML::load(IO.read(sample_path))
+  @mailer_config = @mailer_config_sample
   puts <<HEREDOC
 
        creating: #{@mailer_config_path}
-  from template: #{sample_path}
+  from template: #{@mailer_config_sample_path}
 
 HEREDOC
   File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
+end
+
+def create_new_rinet_data_yml
+  @rinet_data_config = @rinet_data_config_sample
+  puts <<HEREDOC
+
+       creating: #{@rinet_data_config_path}
+  from template: #{@rinet_data_config_sample_path}
+
+HEREDOC
+  File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
 end
 
 # 
@@ -201,7 +231,7 @@ def check_for_config_database_yml
 
 HEREDOC
     @db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
-    confirm_database_name_prefix
+    confirm_database_name_prefix_user_password
     create_new_database_yml
     @new_database_yml_created = true
   end
@@ -218,11 +248,103 @@ def check_for_config_settings_yml
 
 HEREDOC
     create_new_settings_yml
-    @new_settings_yml_created = true
+  else
+    @settings_config = YAML::load_file(@settings_config_path)
+      puts <<HEREDOC
+
+  The Rails application settings file exists, looking for possible updates ...
+
+HEREDOC
+
+    %w{development test cucumber staging production}.each do |env|
+      puts "\nchecking environment: #{env}\n"
+      unless @settings_config[env]
+        puts <<HEREDOC
+
+  The '#{env}' section of settings.yml does not yet exist, copying all of: #{env} from settings.sample.yml
+
+HEREDOC
+        @settings_config[env] = @settings_config_sample[env]
+      else
+        unless @settings_config[env]['states_and_provinces']
+        puts <<HEREDOC
+
+  The states_and_provinces parameter does not yet exist in the #{env} section of settings.yml
+
+  Copying the values in the sample: #{@settings_config_sample[env]['states_and_provinces'].join(', ')} into settings.yml.
+
+HEREDOC
+          @settings_config[env]['states_and_provinces'] = @settings_config_sample[env]['states_and_provinces']
+        end
+
+        unless @settings_config[env]['active_grades']
+        puts <<HEREDOC
+
+  The active_grades parameter does not yet exist in the #{env} section of settings.yml
+
+  Copying the values in the sample: #{@settings_config_sample[env]['active_grades'].join(', ')} into settings.yml.
+
+HEREDOC
+          @settings_config[env]['active_grades'] = @settings_config_sample[env]['active_grades']
+        end
+
+        unless @settings_config[env]['active_school_levels']
+        puts <<HEREDOC
+
+  The active_school_levels parameter does not yet exist in the #{env} section of settings.yml
+
+  Copying the values in the sample: #{@settings_config_sample[env]['active_school_levels'].join(', ')} into settings.yml.
+
+HEREDOC
+          @settings_config[env]['active_school_levels'] = @settings_config_sample[env]['active_school_levels']
+        end
+      
+        unless @settings_config[env]['default_admin_user']
+        puts <<HEREDOC
+
+  Collecting default_admin settings into one hash, :default_admin_user in the #{env} section of settings.yml
+
+HEREDOC
+          default_admin_user = {}
+          original_keys = %w{admin_email admin_login admin_first_name admin_last_name}
+          new_keys = %w{email login first_name last_name}
+          original_keys.zip(new_keys).each do |key_pair|
+            default_admin_user[key_pair[1]] = @settings_config[env].delete(key_pair[0])
+          end
+          @settings_config[env]['default_admin_user'] = default_admin_user
+        end
+
+        unless @settings_config[env]['default_maven_jnlp']
+        puts <<HEREDOC
+
+  Collecting default_maven_jnlp settings into one hash, :default_maven_jnlp in the #{env} section of settings.yml
+
+HEREDOC
+        
+          default_maven_jnlp = {}
+          original_keys = %w{default_maven_jnlp_server default_maven_jnlp_family default_jnlp_version}
+          new_keys = %w{server family version}
+          original_keys.zip(new_keys).each do |key_pair|
+            default_maven_jnlp[key_pair[1]] = @settings_config[env].delete(key_pair[0])
+          end
+          @settings_config[env]['default_maven_jnlp'] = default_maven_jnlp        
+        end
+
+
+        unless @settings_config[env]['valid_sakai_instances']
+        puts <<HEREDOC
+
+  The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
+
+  Copying the values in the sample: #{@settings_config_sample[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+
+HEREDOC
+          @settings_config[env]['valid_sakai_instances'] = @settings_config_sample[env]['valid_sakai_instances']
+        end
+      end
+    end
   end
 end
-
-
 
 #
 # check for config/sds.yml
@@ -240,7 +362,6 @@ HEREDOC
 end
 
 
-
 #
 # check for config/mailer.yml
 #
@@ -252,6 +373,21 @@ def check_for_config_mailer_yml
 
 HEREDOC
     create_new_mailer_yml
+  end
+end
+
+#
+# check for config/rinet_data.yml
+#
+def check_for_config_rinet_data_yml
+  unless File.exists?(@rinet_data_config_path)
+    puts <<HEREDOC
+
+  The RITES RINET CSV import configuration file does not yet exist.
+
+HEREDOC
+    create_new_rinet_data_yml
+    @new_rinet_data_yml_created = true
   end
 end
 
@@ -289,7 +425,16 @@ def check_for_config_initializers_site_keys_rb
 
   The Rails site keys authentication tokens file does not yet exist: 
 
-    #{site_keys_path} created.
+    new #{site_keys_path} created.
+
+    If you have copied a production database from another app instance you will
+    need to have the same site keys authentication tokens in order for the existing
+    User passwords to work.
+    
+    If you have ssh access to the production deploy site you can install a copy 
+    with this capistrano task:
+
+      cap production db:copy_remote_site_keys
 
 HEREDOC
 
@@ -308,8 +453,14 @@ end
 # update config/database.yml
 #
 def update_config_database_yml
-  @db_config = YAML::load(IO.read(@db_config_path))
+  @db_config = YAML::load_file(@db_config_path)
   @db_name_prefix = @db_config['development']['database'][/(.*)_development/, 1]
+
+  unless @db_config['cucumber']
+    puts "\ndding cucumber env (copy of test) to default database ...\n"
+    @db_config['cucumber'] = @db_config['test'] 
+    File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
+  end
 
   puts <<HEREDOC
 ----------------------------------------
@@ -321,17 +472,22 @@ development staging and production environments.
 
 Here are the current settings in config/database.yml:
 
-#{@db_config.to_yaml} 
+#{@db_config.to_yaml}
+
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
-    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix 
+
+  unless agree("Accept defaults? (y/n) ")
+    create_new_database_yml unless @new_database_yml_created || confirm_database_name_prefix_user_password 
 
     %w{development test production}.each do |env|
       puts "\nSetting parameters for the #{env} database:\n\n"
       @db_config[env]['database'] = ask("  database name: ") { |q| q.default = @db_config[env]['database'] }
       @db_config[env]['username'] = ask("       username: ") { |q| q.default = @db_config[env]['username'] }
       @db_config[env]['password'] = ask("       password: ") { |q| q.default = @db_config[env]['password'] }
+      @db_config[env]['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
     end
+    
+    @db_config['cucumber'] = @db_config['test'] 
 
     puts <<HEREDOC
 
@@ -346,6 +502,7 @@ HEREDOC
     @db_config['itsi']['username']  = ask("       username: ") { |q| q.default = @db_config['itsi']['username'] }
     @db_config['itsi']['password']  = ask("       password: ") { |q| q.default = @db_config['itsi']['password'] }
     @db_config['itsi']['asset_url'] = ask("      asset url: ") { |q| q.default = @db_config['itsi']['asset_url'] }
+    @db_config['itsi']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
@@ -359,26 +516,83 @@ HEREDOC
     @db_config['ccportal']['host']      = ask("           host: ") { |q| q.default = @db_config['ccportal']['host']  }
     @db_config['ccportal']['username']  = ask("       username: ") { |q| q.default = @db_config['ccportal']['username'] }
     @db_config['ccportal']['password']  = ask("       password: ") { |q| q.default = @db_config['ccportal']['password'] }
+    @db_config['ccportal']['adaptor'] = "<% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>"
 
     puts <<HEREDOC
 
     Here is the updated database configuration:
     #{@db_config.to_yaml} 
 HEREDOC
-  
+
     if agree("OK to save to config/database.yml? (y/n): ")
       File.open(@db_config_path, 'w') {|f| f.write @db_config.to_yaml }
     end
   end
 end
 
+#
+# update config/rinet_data.yml
+#
+def update_config_rinet_data_yml
+  @rinet_data_config = YAML::load_file(@rinet_data_config_path)
 
-def get_states_and_provinces_settings(env)
+  puts <<HEREDOC
+----------------------------------------
+
+Updating the RINET CSV Account import configuration file: config/rinet_data.yml
+
+Specify values for the host, username and password for the RINET SFTP
+site to download Sakai account data in CSV format.
+
+Here are the current settings in config/rinet_data.yml:
+
+#{@rinet_data_config.to_yaml} 
+HEREDOC
+  unless agree("Accept defaults? (y/n) ")
+    create_new_rinet_data_yml unless @new_rinet_data_yml_created
+    
+    %w{development test staging production}.each do |env|
+      puts "\nSetting parameters for the #{env} rinet_data:\n"
+      @rinet_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @rinet_data_config[env]['host'] }
+      @rinet_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @rinet_data_config[env]['username'] }
+      @rinet_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_config[env]['password'] }
+      puts
+    end
+
+    puts <<HEREDOC
+
+    Here is the updated rinet_data configuration:
+    #{@rinet_data_config.to_yaml} 
+HEREDOC
+
+    if agree("OK to save to config/rinet_data.yml? (y/n): ")
+      File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    end
+  end
+end
+
+
+def get_include_otrunk_examples_settings(env)
+  include_otrunk_examples = @settings_config[env]['include_otrunk_examples']
   puts <<HEREDOC
 
-Detailed data are imported for US schools and district. 
+Processing and importing of otrunk-examples can be enabled or disabled.
+It is currently #{include_otrunk_examples ? 'disabled' : 'enabled' }.
+
+HEREDOC
+  @settings_config[env]['include_otrunk_examples'] = agree("Include otrunk-examples? (y/n) ") { |q| q.default = (include_otrunk_examples ? 'y' : 'n') }
+end
+
+def get_states_and_provinces_settings(env)
+  states_and_provinces = (@settings_config[env]['states_and_provinces'] || []).join(' ')
+  puts <<HEREDOC
+
+Detailed data are imported for the following US schools and district:
+
+  #{states_and_provinces}
+ 
 List state or province abbreviations for the locations you want imported. 
-Use capital letters and delimit multiple items with spaces.
+Use two-character capital letter abreviations and delimit multiple items with spaces.
 
 HEREDOC
   states_and_provinces = @settings_config[env]['states_and_provinces'].join(' ')
@@ -386,11 +600,71 @@ HEREDOC
   @settings_config[env]['states_and_provinces'] =  states_and_provinces.split  
 end
 
+def get_active_grades_settings(env)
+  active_grades = (@settings_config[env]['active_grades'] || []).join(' ')
+  puts <<HEREDOC
+
+The following is a list of the active grade:
+
+  #{active_grades}
+
+List active grades for this application instance. 
+
+Use any of the following: 
+
+  K 1 2 3 4 5 6 7 8 9 10 11 12
+  
+and delimit multiple active grades with a space character.
+
+HEREDOC
+  active_grades =  ask("      active_grades: ") { |q| q.default = active_grades }
+  @settings_config[env]['active_grades'] =  active_grades.split  
+end
+
+def get_active_school_levels(env)
+  active_school_levels = (@settings_config[env]['active_school_levels'] || []).join(' ')
+  puts <<HEREDOC
+
+The following is a list of the active school levels:
+
+  #{active_school_levels}
+
+List active school levels for this application instance. 
+
+Use any of the following: 
+
+  1 2 3 4
+
+and delimit multiple active school levels with a space character.
+
+School level.  The following codes are used for active school levels:
+ 
+  1 = Primary (low grade = PK through 03; high grade = PK through 08)
+  2 = Middle (low grade = 04 through 07; high grade = 04 through 09)
+  3 = High (low grade = 07 through 12; high grade = 12 only
+  4 = Other (any other configuration not falling within the above three categories, including ungraded)
+
+HEREDOC
+  active_school_levels =  ask("   active_school_levels: ") { |q| q.default = active_school_levels }
+  @settings_config[env]['active_school_levels'] =  active_school_levels.split  
+end
+
+def get_valid_sakai_instances(env)
+  puts <<HEREDOC
+
+Specify the sakai server urls from which it is ok to receive linktool requests.
+Delimit multiple items with spaces.
+
+HEREDOC
+  sakai_instances = @settings_config[env]['valid_sakai_instances'].join(' ')
+  sakai_instances =  ask("   valid_sakai_instances: ") { |q| q.default = sakai_instances }
+  @settings_config[env]['valid_sakai_instances'] = sakai_instances.split
+end
+
 def get_maven_jnlp_settings(env)
   puts <<HEREDOC
 
-Specify the maven_jnlp server and the default maven_jnlp family to use
-use when running Java OTrunk applications.
+  Specify the maven_jnlp server used for providing jnlps and jars dor running Java OTrunk applications.
 
 HEREDOC
   maven_jnlp_server = @settings_config[env]['maven_jnlp_servers'][0]
@@ -400,6 +674,26 @@ HEREDOC
   @settings_config[env]['maven_jnlp_servers'][0] = maven_jnlp_server
   @settings_config[env]['default_maven_jnlp_server'] = maven_jnlp_server[:name]
   @settings_config[env]['default_maven_jnlp_family'] =  ask("   default_maven_jnlp_family: ") { |q| q.default = @settings_config[env]['default_maven_jnlp_family'] }  
+
+  maven_jnlp_families = (@settings_config[env]['maven_jnlp_families'] || []).join(' ')
+  puts <<HEREDOC
+
+  The following is a list of the active maven_jnlp_families:
+
+    #{maven_jnlp_families}
+
+  Specify which maven_jnlp_families to include. Enter nothing to include all 
+  the maven_jnlp_families. Delimit multiple items with spaces.
+
+HEREDOC
+  maven_jnlp_families =  ask("   active_school_levels: ") { |q| q.default = maven_jnlp_families }
+  @settings_config[env]['maven_jnlp_families'] =  maven_jnlp_families.split
+  puts <<HEREDOC
+  
+  Specify the default_jnlp_version to use:
+
+HEREDOC
+  @settings_config[env]['default_jnlp_version'] =  ask("   default_jnlp_version: ") { |q| q.default = @settings_config[env]['default_jnlp_version'] }  
 end
 
 #
@@ -409,7 +703,7 @@ def update_config_settings_yml
   puts <<HEREDOC
 ----------------------------------------
 
-Updating the Rails database configuration file: config/settings.yml
+Updating the application settings configuration file: config/settings.yml
 
 Specify general application settings values: site url, site name, and admin name, email, login
 for the development staging and production environments.
@@ -419,15 +713,13 @@ Some of the importing scripts run much faster in production mode.
 
 HEREDOC
 
-  @settings_config = YAML::load(IO.read(@settings_config_path))
-
   puts <<HEREDOC
 
 Here are the current settings in config/settings.yml:
 
 #{@settings_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     %w{development staging production}.each do |env|
       puts "\n#{env}:\n"
@@ -456,6 +748,21 @@ HEREDOC
       get_states_and_provinces_settings(env)
 
       # 
+      # ---- active_grades ----
+      #
+      get_active_grades_settings(env)
+
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_active_school_levels(env)
+      
+      # 
+      # ---- valid_sakai_instances ----
+      #
+      get_valid_sakai_instances(env)
+
+      # 
       # ---- enable_default_users ----
       #
       puts <<HEREDOC
@@ -474,17 +781,17 @@ HEREDOC
       #
       get_maven_jnlp_settings(env)
 
-    end
+    end # each env
 
+  end
     puts <<HEREDOC
 
 Here are the updated application settings:
 #{@settings_config.to_yaml} 
 HEREDOC
   
-    if agree("OK to save to config/settings.yml? (y/n): ")
-      File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
-    end
+  if agree("OK to save to config/settings.yml? (y/n): ")
+    File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
   end
 end
 
@@ -492,14 +799,14 @@ end
 # update config/mailer.yml
 #
 def update_config_mailer_yml
-  @mailer_config = YAML::load(IO.read(@mailer_config_path))
+  @mailer_config = YAML::load_file(@mailer_config_path)
 
   delivery_types = [:test, :smtp, :sendmail]
   deliv_types = delivery_types.collect { |deliv| deliv.to_s }.join(' | ')
 
   authentication_types = [:plain, :login, :cram_md5]
   auth_types = authentication_types.collect { |auth| auth.to_s }.join(' | ')
-
+  puts @mailer_config_sample_config
   puts <<HEREDOC
 
 ----------------------------------------
@@ -516,7 +823,7 @@ body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{APPLICATION} without the protocol: (example: #{@mailer_config[:host]})
+  the hostname of the #{APPLICATION} without the protocol: (example: #{@mailer_config_sample[:host]})
 
 If you do not have a working SMTP server select the test deliver method instead of the 
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can 
@@ -526,11 +833,11 @@ easily see then as the are generated with this command:
 
 You will also need to specify:
 
-  the hostname of the #{APPLICATION} application without the protocol: (example: #{@mailer_config[:host]})
+  the hostname of the #{APPLICATION} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
-  host name of the remote mail server: (example: #{@mailer_config[:smtp][:address]}))
+  host name of the remote mail server: (example: #{@mailer_config_sample[:smtp][:address]}))
   port the SMTP server runs on (most run on port 25)
   SMTP helo domain
   authentication method for sending mail: (#{auth_types})
@@ -541,7 +848,7 @@ Here are the current settings in config/mailer.yml:
 
 #{@mailer_config.to_yaml} 
 HEREDOC
-  unless agree("Accept defaults? (y/n) ", true)
+  unless agree("Accept defaults? (y/n) ")
 
     say("\nChoose mail delivery type: #{deliv_types}:\n\n")
 
@@ -577,7 +884,7 @@ HEREDOC
     @mailer_config[:smtp][:password] =          ask("    SMTP password: ") { |q| 
       q.default = @mailer_config[:smtp][:password]
     }
-
+    end
     puts <<HEREDOC
 
 Here is the new mailer configuration:
@@ -587,7 +894,7 @@ HEREDOC
     if agree("OK to save to config/mailer.yml? (y/n): ")
       File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
     end
-  end
+
 end
 
 # *****************************************************
@@ -600,24 +907,38 @@ HEREDOC
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
-check_for_config_sds_yml
+check_for_config_rinet_data_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-# update_config_sds_yml
+update_config_rinet_data_yml
 update_config_mailer_yml
 
 puts <<HEREDOC
 
-To complete setup of the RITES Investigations Rails application setup run:
+Finished configuring application settings.
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rigse_from_scratch
+********************************************************************
+***  If you are also setting up an application from scratch and  ***
+***  need to create or recreate the resources in the database    ***
+***  follow the steps below:                                     ***
+********************************************************************
 
-These scripts will take about 30 minutes to run and are much faster if you are running
-Rails in production mode. If you are using separate databases for development and production
-and want to run these tasks to populate a development database I recommend temporarily 
+  MRI Ruby:
+    rake gems:install
+    RAILS_ENV=production rake db:migrate:reset
+    RAILS_ENV=production rake rigse:setup:new_rites_app
+    
+  JRuby:
+    jruby -S rake gems:install
+    RAILS_ENV=production jruby -S rake db:migrate:reset
+    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+
+These scripts will take about 5-30 minutes to run and are much faster if you are both running
+Rails in production mode and using JRuby. If you are using separate databases for development and 
+production and want to run these tasks to populate a development database I recommend temporarily 
 identifying the development database as production for the purpose of generating these data.
 
 HEREDOC

@@ -1,6 +1,7 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+  NO_EMAIL_STRING='no-email-'
   has_many :investigations
   has_many :activities
   has_many :sections
@@ -16,8 +17,8 @@ class User < ActiveRecord::Base
   has_many :n_logo_models
 
   named_scope :active, { :conditions => { :state => 'active' } }  
-  named_scope :no_email, { :conditions => "email LIKE 'no-email-%'" }
-  named_scope :email, { :conditions => "email NOT LIKE 'no-email-%'" }
+  named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
+  named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
   
   # has_many :assessment_targets
@@ -90,6 +91,14 @@ class User < ActiveRecord::Base
       @@searchable_attributes
     end
     
+    def login_exists?(login)
+      User.count(:conditions => "`login` = '#{login}'") >= 1
+    end
+    
+    def login_does_not_exist?(login)
+      User.count(:conditions => "`login` = '#{login}'") == 0
+    end
+    
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
@@ -104,7 +113,7 @@ class User < ActiveRecord::Base
 
     # return the user who is the site administrator
     def site_admin
-      User.find_by_email(APP_CONFIG[:admin_email])
+      User.find_by_email(APP_CONFIG[:default_admin_user]['email'])
     end
   end
 
@@ -130,7 +139,7 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :identity_url
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)

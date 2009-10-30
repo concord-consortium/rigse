@@ -1,8 +1,18 @@
 namespace :rigse do
   namespace :setup do
-    
-    require 'highline/import'
+
     require 'fileutils'
+    
+    # require 'highline/import'
+    autoload :Highline, 'highline'
+    
+    def agree_check_in_development_mode
+      if RAILS_ENV == 'development'
+        HighLine.new.agree("Accept defaults? (y/n) ")
+      else
+        true
+      end
+    end
     
     def display_user(user)
       puts <<HEREDOC
@@ -16,13 +26,12 @@ HEREDOC
     end
   
     def edit_user(user)
-      require 'highline/import'
-      user.login =                 ask("            login: ") {|q| q.default = user.login}
-      user.email =                 ask("            email: ") {|q| q.default = user.email}
-      user.first_name =            ask("       first name: ") {|q| q.default = user.first_name}
-      user.last_name =             ask("        last name: ") {|q| q.default = user.last_name}
-      user.password =              ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
-      user.password_confirmation = ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
+      user.login =                 HighLine.new.ask("            login: ") {|q| q.default = user.login}
+      user.email =                 HighLine.new.ask("            email: ") {|q| q.default = user.email}
+      user.first_name =            HighLine.new.ask("       first name: ") {|q| q.default = user.first_name}
+      user.last_name =             HighLine.new.ask("        last name: ") {|q| q.default = user.last_name}
+      user.password =              HighLine.new.ask("         password: ") {|q| q.default = user.password; q.echo = "*"}
+      user.password_confirmation = HighLine.new.ask(" confirm password: ") {|q| q.default = user.password_confirmation; q.echo = "*"}
       user
     end
 
@@ -31,15 +40,15 @@ HEREDOC
     # Create default users, roles, district, school, course, and class, and greade_levels
     #
     #######################################################################   
-    desc "Create default users and roles and portal resources"
-    task :default_users_roles_and_portal_resources => :environment do
+    desc "Create default users and roles"
+    task :default_users_roles => :environment do
 
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
       puts <<HEREDOC
 
-This task creates six roles (if they dont already exist):
+This task creates six roles (if they don't already exist):
 
   admin
   manager
@@ -99,10 +108,13 @@ HEREDOC
         role.insert_at(i)
       end
 
+      default_admin_user_settings = APP_CONFIG[:default_admin_user]
+
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => APP_CONFIG[:admin_login], 
-          :first_name => APP_CONFIG[:admin_first_name], :last_name => APP_CONFIG[:admin_last_name],
-          :email => APP_CONFIG[:admin_email], 
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings['login'], 
+          :first_name => default_admin_user_settings['first_name'], 
+          :last_name =>  default_admin_user_settings['last_name'],
+          :email =>      default_admin_user_settings['email'], 
           :password => "password", :password_confirmation => "password"),
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 
@@ -147,7 +159,7 @@ HEREDOC
       
       unless agree_check_in_development_mode
         edit_user_list.each do |user|
-          user = edit_user(user)  if agree("Edit #{user.login}?  (y/n) ", true)
+          user = edit_user(user)  if HighLine.new.agree("Edit #{user.login}?  (y/n) ")
         end
       end
 
@@ -194,6 +206,23 @@ HEREDOC
       researcher_user.add_role('researcher')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
+    end
+    
+    
+    #######################################################################
+    #
+    # Create default portal resources: district, school, course, and class, investigation and grades
+    #
+    #######################################################################   
+    desc "Create default portal resources"
+    task :default_portal_resources => :environment do
+
+      # some constants that should probably be moved to settings.yml
+      DEFAULT_CLASS_NAME = 'Fun with Investigations'
+
+      author_user = User.find_by_login('author')
+      teacher_user = User.find_by_login('teacher')
+      student_user = User.find_by_login('student')
       
       default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
 
@@ -241,6 +270,7 @@ HEREDOC
         default_school_teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
       end
       default_school_teacher.grades << grade_9
+      
       site_school.members << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
@@ -251,11 +281,15 @@ HEREDOC
         :course_id => site_school_default_course.id,
         :semester_id => site_school_fall_semester.id,
         :teacher_id => default_school_teacher.id,
-        :class_word => 'abc123456',
+        :class_word => 'abc123',
         :description => 'This is a default class created for the default school ... etc'
       }
-      unless default_course_class = Portal::Clazz.find(:first, :conditions => attributes)
+      unless default_course_class = 
+        Portal::Clazz.find_by_class_word(attributes[:class_word]) ||
+        Portal::Clazz.find_by_name_and_teacher_id(attributes[:name], attributes[:teacher_id])
         default_course_class = Portal::Clazz.create!(attributes)
+      else
+        default_course_class.update_attributes!(attributes)
       end
       default_course_class.status = 'open'
       default_course_class.save

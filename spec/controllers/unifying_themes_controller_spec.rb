@@ -6,6 +6,11 @@ describe UnifyingThemesController do
     @mock_unifying_theme ||= mock_model(UnifyingTheme, stubs)
   end
   
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
   describe "responding to GET index" do
 
     it "should expose an array of all the @unifying_themes" do

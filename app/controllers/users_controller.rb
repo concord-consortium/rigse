@@ -90,7 +90,7 @@ class UsersController < ApplicationController
                        { :name => 'regular', :users => users[:email] }, 
                        { :name => 'students' , :users => users[:no_email] } 
                      ]
-        unless users[:default_users].empty?
+        if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
         end
       elsif request.put?
@@ -128,7 +128,7 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
-          @user.set_role_ids(params[:user][:role_ids])
+          @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do 
             if request.env["HTTP_REFERER"] =~ /preferences/

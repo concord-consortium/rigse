@@ -7,9 +7,16 @@ describe SessionsController do
     @login_params = { :login => 'quentin', :password => 'test' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
   end
+  
   def do_create
     post :create, @login_params
   end
+  
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
   describe "on successful login," do
     [ [:nil,       nil,            nil],
       [:expired,   'valid_token',  15.minutes.ago],

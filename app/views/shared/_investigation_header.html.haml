@@ -1,13 +1,16 @@
 #actions_menu.dropdown
   %ul
-    %li= preview_link_for(@investigation)
+    /%li#copy_link copy (disabled)
+    %li= run_link_for(@investigation)
     /%li= run_link_for(@investigation,'teacher',{:teacher_mode=>true})
     /%li= print_link_for(@investigation)
+    /%li= toggle_all('activities')
     - unless(current_user.anonymous?)
       %li= duplicate_link_for(@investigation)
-    / - if (investigation.changeable?(current_user))
-    /   %li= link_to 'rename', edit_investigation_url(investigation)
-     
+    - if (investigation.changeable?(current_user))
+      /%li= edit_link_for(@investigation)
+    
+      /%li#paste_link= paste_link_for(['activity'],{:container_id => @container_id}) # see pages_helper.rb
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
     .action_menu_header_left

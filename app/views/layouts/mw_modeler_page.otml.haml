@@ -3,7 +3,7 @@
 %otrunk{ :id => @mw_modeler_page.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@mw_modeler_page.name))
       %root
         %OTCompoundDoc
