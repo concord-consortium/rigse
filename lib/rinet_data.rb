@@ -33,70 +33,111 @@ class RinetData
   end
   
   def initialize(options= {})
-    defaults = {
-      :verbose => false,
-      :log_directory => nil,
-    }
-    @verbose = options[:verbose] || defaults[:verbose] 
-    
-    # we probably want to override this later
-        
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
-    @districts = @rinet_data_config[:districts]
-
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
     
-    @students_hash = {}
-    # SASID => Portal::Student
+    defaults = {
+      :verbose => false,
+      :log_directory => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
+      :districts => @rinet_data_config[:districts],
+      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+    }
+    options.merge!(defaults)
     
-    @teachers_hash = {}
-    # CertID => Portal::Teacher
+    @verbose = options[:verbose] 
+    @districts = options[:districts]
+    @district_data_root_dir = options[:district_data_root_dir]
+    @log_directory = options[:log_directory]
+      
+    clear_ar_maps
     
-    @course_hash = {}
-    # example: CourseNumber => Portal::course
-    @clazz_hash = {}
-    # Portal::Clazz.id => {:teachers => [], :students => []}
-
-    # where we startup -- changed when we set district folder
-    # log files show up here.
-    log_directory = defaults[:log_directory] || self.local_dir
-    FileUtils.mkdir_p log_directory
-    @log = Logger.new("#{log_directory}/import_log.txt",'daily')
-    import_logger("Started in #{self.local_dir} at #{Time.now}")    
+    FileUtils.mkdir_p @log_directory
+    @log = Logger.new("#{@log_directory}/import_log.txt",'daily')
+    log_message("Started in #{@district_data_root_dir} at #{Time.now}")    
   end
   
-  def local_dir
-    "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+  
+  # We keep intermediate hash maps around in memory
+  # for faster fetching of entities. Cleared between 
+  # each district.
+  def clear_ar_maps
+    @parsed_data = {}
+    # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
+    # See rinet_csv_fields for a complete list..
+    
+    @students_active_record_map = {}
+    # Example map entry:  SASID => Portal::Student
+    
+    @teachers_active_record_map = {}
+    # Example map entry: CertID => Portal::Teacher
+    
+    @course_active_record_map = {}
+    # Example map entry:  CourseNumber => Portal::course
+    
+    @clazz_active_record_map = {}
+    # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}  
   end
-
+  
   def run_importer(district_directory)
     parse_csv_files_in_dir(district_directory)
     join_data
     update_models
   end
   
-  def run_scheduled_job
-    import_logger "\n (getting csv files ...)\n"
+  def run_scheduled_job(opts = {})
+    
+    log_message "\n (getting csv files ...)\n"
     get_csv_files
-    import_logger "\n (parsing csv files ...)\n"
-    parse_csv_files
-    import_logger "\n (joining data ...)\n"
-    join_data
-    import_logger "\n (updating models ...)\n"
-    update_models
-    summary = <<HEREDOC
+    
+    num_districts = num_teachers = num_students = num_courses = num_classes = 0
+    
+    @districts.each do |district|    
+      clear_ar_maps
+      
+      log_message "\n (parsing csv files for district #{district}...)\n"
+      parse_csv_files_for_district(district)
+      
+      log_message "\n (joining data for district #{district}...)\n"
+      join_data
+    
+      log_message "\n (updating models for district #{district}...)\n"
+      update_models
+      
+      district_summary = <<-HEREDOC 
+        Import Summary for district #{district}:
+          Teachers: #{@parsed_data[:staff].length}
+          Students: #{@parsed_data[:students].length}
+          Courses:  #{@parsed_data[:courses].length}
+          Classes:  #{@parsed_data[:staff_assignments].length}
 
-Import Summary:
+        HEREDOC
+      log_message_message(district_summary)
+      
+      num_districts += 1
+      num_teachers += @parsed_data[:staff].length
+      num_students += @parsed_data[:students].length
+      num_courses += @parsed_data[:courses].length
+      num_classes += @parsed_data[:staff_assignments].length
+    end
+    end_time = Time.now
+    grand_total = <<-HEREDOC 
+      ============================
+      Import Summary: 
+      ============================
+      Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
+        End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}}
+         Minutes: = #{((end_time - start_time)/60).to_i}
+         
+       Districts: #{num_districts}
+        Teachers: #{num_teachers}
+        Students: #{num_students}
+         Courses: #{num_courses}
+         Classes: #{num_classes}
+      ============================
+      HEREDOC
+    log_message(grand_total)
 
-  Teachers: #{@parsed_data[:staff].length}
-  Students: #{@parsed_data[:students].length}
-  Courses:  #{@parsed_data[:courses].length}
-  Classes:  #{@parsed_data[:staff_assignments].length}
-
-
-HEREDOC
-    import_logger(summary)
   end
 
   def join_data
@@ -119,56 +160,39 @@ HEREDOC
         end
       end
     rescue Exception => e
-      @log.error("get_csv_files failed: #{e.message}")
+      log_message("get_csv_files failed: #{e.message}", :error)
     end
   end
   
   ## sftp: a Net::SFTP::Session object
   def get_csv_files_for_district(district, sftp)
     new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
-    local_district_path = "#{local_dir}/#{district}/#{new_date_time_key}"
+    local_district_path = "#{@district_data_root_dir}/#{district}/#{new_date_time_key}"
     FileUtils.mkdir_p(local_district_path)
     @@csv_files.each do |csv_file|
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      @log.info "downloading: #{remote_path} and saving to: \n  #{local_path}"
-      import_logger "downloading: #{remote_path} and saving to: \n  #{local_path}"
+      log_message("downloading: #{remote_path} and saving to: \n  #{local_path}", :info)
       sftp.download!(remote_path, local_path)
     end
-    current_path = "#{local_dir}/#{district}/current"
+    current_path = "#{@district_data_root_dir}/#{district}/current"
     FileUtils.ln_s(local_district_path, current_path, :force => true)
   end
 
-  def parse_csv_files
-    if @parsed_data
-      @parsed_data # cached data.
-    else
-      @parsed_data = {}
-      @districts.each do |district|
-        parse_csv_files_for_district(district)
-      end
-    end
-    # Data is now available in this format
-    # @data['07']['staff'][0][:EmailAddress]
-    # lets add login info
-    # join_students_sakai
-    #  join_staff_sakai
-    @parsed_data
-  end
 
   def parse_csv_files_for_district(district, date_time_key='current')
-    import_logger "(\nparsing csv data: #{local_dir}/#{district}/#{date_time_key})"
-    parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
+    log_message "(\nparsing csv data: #{@district_data_root_dir}/#{district}/#{date_time_key})"
+    parse_csv_files_in_dir("#{@district_data_root_dir}/#{district}/#{date_time_key}",@parsed_data)
   end
 
-  def parse_csv_files_in_dir(local_dir_path,existing_data={})
+  def parse_csv_files_in_dir(csv_data_directory,existing_data={})
     @parsed_data = existing_data    
-    if File.exists?(local_dir_path)
+    if File.exists?(csv_data_directory)
       count = 0
       @@csv_files.each do |csv_file|
-        local_path = "#{local_dir_path}/#{csv_file}.csv"
-        import_logger "(\nparsing: #{local_dir_path}/#{csv_file}.csv)"
+        local_path = "#{csv_data_directory}/#{csv_file}.csv"
+        log_message "(\nparsing: #{csv_data_directory}/#{csv_file}.csv)"
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path).each do |line|
@@ -177,7 +201,7 @@ HEREDOC
         end
       end
     else
-      @log.error "no data folder found: #{local_dir_path}"
+      log_message("no data folder found: #{csv_data_directory}", :error)
     end
   end
 
@@ -188,31 +212,31 @@ HEREDOC
         row.fields = FIELD_DEFINITIONS[key]
         @parsed_data[key] << row
       else
-        @log.error("couldn't add row data for #{key}: #{line}")
+        log_message("couldn't add row data for #{key}: #{line}", :error)
       end
     end
   end
 
   def join_students_sakai
     @parsed_data[:students].each do |student|
-      import_logger("working with student  #{student[:Lastname]}")
+      log_message("working with student  #{student[:Lastname]}")
       found = student_sakai_map(student[:SASID])
       if (found)
         student[:login] = found
       else
-        @log.error "student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )"
+        log_message("student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )", :error)
       end
     end
   end
   
   def join_staff_sakai
     @parsed_data[:staff].each do |staff_member|
-      import_logger("working with staff_member  #{staff_member[:Lastname]}")
+      log_message("working with staff_member  #{staff_member[:Lastname]}")
       found = staff_sakai_map(staff_member[:TeacherCertNum])
       if (found)
         staff_member[:login] = found
       else
-        @log.error "teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)"
+        log_message("teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)", :error)
       end
     end
   end
@@ -228,8 +252,8 @@ HEREDOC
       # doesn't already exist.
       school = Portal::School.find_or_create_by_nces_school(nces_school)
     else
-      @log.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
-      @log.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
+      log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)",:error)
+      log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files",:info)
       # TODO, create one with a special name? Throw exception?
       school = nil
     end
@@ -240,12 +264,12 @@ HEREDOC
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
-      @log.warn "could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)"
-      @log.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
+      log_message("could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)",:warn)
+      log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files",:info)
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
-      import_logger "(Portal::District: #{district.name})"
+      log_message "(Portal::District: #{district.name})"
     end
     district
   end
@@ -320,7 +344,7 @@ HEREDOC
 
     puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
     new_teachers.each do |teacher| 
-      import_logger("processing teacher #{teacher[:Lastname]}", '')
+      log_message("processing teacher #{teacher[:Lastname]}", '')
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
@@ -328,9 +352,9 @@ HEREDOC
   
   def update_teachers
     new_teachers = @parsed_data[:staff]
-    import_logger "\n\n(processing: #{new_teachers.length} teachers )"
+    log_message "\n\n(processing: #{new_teachers.length} teachers )"
     new_teachers.each do |teacher| 
-      import_logger("processing teacher: #{teacher[:Lastname]}: ")
+      log_message("processing teacher: #{teacher[:Lastname]}: ")
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
@@ -352,30 +376,30 @@ HEREDOC
         # add the teacher to the school
         school = school_for(row)
         if school
-          school.members << teacher
-          school.members.uniq!
+          school.add_member(teacher)
         end
         status_update
         row[:rites_teacher_id] = teacher.id
         if teacher
-          @teachers_hash[row[:TeacherCertNum]] = teacher
+          @teachers_active_record_map[row[:TeacherCertNum]] = teacher
         end
         status_update
       end
     else
-      import_logger("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
+      log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
     end
     teacher
   end
   
   def update_students
     new_students = @parsed_data[:students]
-    import_logger "\n\n(processing: #{new_students.length} students )"
+    "\n\n(processing: #{new_students.length} students )"
     new_students.each do |student| 
-      import_logger "(processing student: #{student[:Lastname]})"
+      "(processing student: #{student[:Lastname]})"
       create_or_update_student(student)
     end
   end
+  
   
   def create_or_update_student(row)
     student = nil
@@ -392,12 +416,11 @@ HEREDOC
         # add the student to the school
         school = school_for(row)
         if school
-            school.members << student
-            school.members.uniq!
+            school.add_member(student)
         end
         row[:rites_student_id] = student.id
         # cache that results in hashtable
-        @students_hash[row[:SASID]] = student
+        @students_active_record_map[row[:SASID]] = student
       end
     else
       @log.info("student with SASID# #{row[:SASID]} already defined in this import with RITES student.id #{row[:rites_student_id]}")
@@ -408,9 +431,9 @@ HEREDOC
   
   def update_courses
     new_courses = @parsed_data[:courses]
-    import_logger "\n\n(processing: #{new_courses.length} courses:)\n"
+    "\n\n(processing: #{new_courses.length} courses:)\n"
     new_courses.each do |course_csv_row| 
-      import_logger "(creating course: #{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
+      "(creating course: #{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
       create_or_update_course(course_csv_row)
     end
   end
@@ -439,12 +462,12 @@ HEREDOC
         end
         course_csv_row[:rites_course] = course
         # cache that results in hashtable
-        @course_hash[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
+        @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
       else
         Raise ArgumentError "no school exists when creating a course"
       end
     else
-      import_logger("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", :log_leve => :info)
+      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", :info)
     end
     course_csv_row
   end
@@ -456,30 +479,23 @@ HEREDOC
       create_or_update_class(nc)
     end
     
-    # clear students schedules:
-    # {'some id' => arStudent}
-    @students_hash.each_value do |student|
-      # student.clazzes.delete_all
-    end
-    
-    # and re-enroll
+    # enroll students
     @parsed_data[:enrollments] .each do |nc| 
       create_or_update_class(nc)
     end
-
   end
 
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
-    # course_hash example: { CourseNumber => Portal::course }
-    portal_course = @course_hash[member_relation_row[:CourseNumber]]
+    # course_active_record_map example: { CourseNumber => Portal::course }
+    portal_course = @course_active_record_map[member_relation_row[:CourseNumber]]
     unless portal_course && portal_course.class == Portal::Course
-      @log.error "course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}"
+      log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}",:error)
       return
     end
     
     unless member_relation_row[:StartDate] && member_relation_row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
-      @log.error "bad start time for class: '#{member_relation_row[:StartDate]}'" unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
+      log_message("bad start time for class: '#{member_relation_row[:StartDate]}'",:error) unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
       return
     end
     
@@ -487,12 +503,11 @@ HEREDOC
     start_date = DateTime.parse(member_relation_row[:StartDate]) 
     clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
     
-    if member_relation_row[:SASID] && @students_hash[member_relation_row[:SASID]]
-      student =  @students_hash[member_relation_row[:SASID]]
-      student.clazzes << clazz
-      student.save
-    elsif member_relation_row[:TeacherCertNum] && @teachers_hash[member_relation_row[:TeacherCertNum]]
-      clazz.teacher = @teachers_hash[member_relation_row[:TeacherCertNum]]
+    if member_relation_row[:SASID] && @students_active_record_map[member_relation_row[:SASID]]
+      student =  @students_active_record_map[member_relation_row[:SASID]]
+      student.add_clazz(clazz)
+    elsif member_relation_row[:TeacherCertNum] && @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
+      clazz.teacher = @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
       clazz.save
     else
       @log.error("teacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}")
@@ -500,9 +515,8 @@ HEREDOC
     member_relation_row
   end
   
-  def import_logger(message, options={})
-    new_line = options[:new_line] || "\n"
-    log_level = options[:log_level] || :debug
+  def log_message(message, log_level=:debug)
+    new_line="\n"
     print message+new_line if @verbose
     @log.send(log_level, message)
   end

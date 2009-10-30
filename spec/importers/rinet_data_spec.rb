@@ -39,11 +39,14 @@ end
 
 describe RinetData do
   
-  def run_importer(district_directory="#{RAILS_ROOT}/resources/rinet_test_data")
-    @rd = RinetData.new(:verbose => false)
-    @rd.run_importer(district_directory)
-    @logger = @rd.log
-    @logger.stub!(:error).and_return(:default_value)
+  def run_importer(districts=["01"])
+    districts.each do |district|
+      district_directory = "#{RAILS_ROOT}/resources/rinet_test_data/#{district}"
+      @rd = RinetData.new(:verbose => false)
+      @rd.run_importer(district_directory)
+      @logger = @rd.log
+      @logger.stub!(:error).and_return(:default_value)
+    end
   end
 
   ##
@@ -53,7 +56,6 @@ describe RinetData do
   ## only run ONCE! .... you have been warned.
   ###
   before(:each) do
-
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
     @initial_users = User.find(:all)
     @initial_teachers = Portal::Teacher.find(:all)
@@ -230,15 +232,30 @@ describe RinetData do
         clazz.start_time.should_not be_nil
       end
     end
+
+    it "should not create courses without clazzes" do
+      courses = Portal::Course.find(:all)
+      courses.each do |course| 
+        course.clazzes.should_not be_empty
+      end
+    end
+    
+    it "should not create courses without schools" do
+      courses = Portal::Course.find(:all)
+      courses.each do |course| 
+        course.school.should_not be_nil
+      end
+    end
+    
   end
 
   describe "Import process should not produce duplicate data" do
     
-    it "should not create clazzes without teachers"
-    it "should not create clazzes without names"
-    it "should not create duplicate courses"
-    it "should not create courses without clazzes"
-    it "should not create courses without schools"
+    it "should not create duplicate courses" do
+      courses = Portal::Course.find(:all)
+      courses.map! { |course| "#{course.school_id}-#{course.name}" }
+      courses.size.should eql courses.uniq.size
+    end
     
     it "when the same import is rerun, there should be no new students" do
       current_students = Portal::Student.find(:all)
@@ -276,13 +293,13 @@ describe RinetData do
     it "when new lines is added to the student.csv file, there be one more student in the rites site" do
       current_students = Portal::Student.find(:all)
       # import new data which adds LPaessel
-      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b") 
+      run_importer(['02']) 
       Portal::Student.find(:all).size.should eql(current_students.size + 1)
     end
     
     it "when a PHYSICS is added to courses.csv, the class and its courses be created" do
      # import new data which adds physics
-      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      run_importer(['02']) 
       Portal::Clazz.find_by_name('PHYSICS').should_not be_nil
       Portal::Course.find_by_name('PHYSICS').should_not be_nil
     end
@@ -292,14 +309,13 @@ describe RinetData do
     it "when a teacher is removed from the staff.csv file, the teacher should not actually be deleted from rites" do
       current_teachers = Portal::Teacher.find(:all)
       # import new data, which removes a teacher
-      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      run_importer(['02']) 
       Portal::Teacher.find(:all).should eql(current_teachers)
     end
   
     it "when a GYM is removed from courses.csv, the class and its courses should not actually be deleted" do
-
       # import new data which removes a GYM class
-       run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+       run_importer(['02']) 
        Portal::Clazz.find_by_name('GYM').should_not be_nil
        Portal::Course.find_by_name('GYM').should_not be_nil
     end
@@ -309,7 +325,7 @@ describe RinetData do
     it "when students are added to the the art class in the CSV file, they should be added on the rites site too" do
       # import new data which adds one user to the art class
       # and one user to a new physics class
-      run_importer("#{RAILS_ROOT}/resources/rinet_test_data_b")
+      run_importer(['02']) 
       art_class = Portal::Clazz.find_by_name("ART");
       Portal::Clazz.find_by_name("ART").students.size.should be(2)
       Portal::Clazz.find_by_name("PHYSICS").students.size.should be(1)
