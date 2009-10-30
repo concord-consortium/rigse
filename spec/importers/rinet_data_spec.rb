@@ -135,7 +135,6 @@ describe RinetData do
         } 
         @rd.create_or_update_student(student_row)
       end
-      
     end
 
     describe "should log errors on missing associations in input data, yet be resilient" do
@@ -240,6 +239,13 @@ describe RinetData do
   end
 
   describe "Import process should not produce duplicate data" do
+    
+    it "should not create clazzes without teachers"
+    it "should not create clazzes without names"
+    it "should not create duplicate courses"
+    it "should not create courses without clazzes"
+    it "should not create courses without schools"
+    
     it "when the same import is rerun, there should be no new students" do
       current_students = Portal::Student.find(:all)
       run_importer # run the import again.

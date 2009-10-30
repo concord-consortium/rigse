@@ -54,7 +54,7 @@ class RinetData
     # CertID => Portal::Teacher
     
     @course_hash = {}
-    # CourseNumber => course
+    # example: CourseNumber => Portal::course
     @clazz_hash = {}
     # Portal::Clazz.id => {:teachers => [], :students => []}
 
@@ -63,8 +63,8 @@ class RinetData
     log_directory = defaults[:log_directory] || self.local_dir
     FileUtils.mkdir_p log_directory
     @log = Logger.new("#{log_directory}/import_log.txt",'daily')
-    debug('-' * 72)
-    debug("Started in #{self.local_dir} at #{Time.now}")
+    import_logger('-' * 72)
+    import_logger("Started in #{self.local_dir} at #{Time.now}")
   end
   
   def local_dir
@@ -78,13 +78,13 @@ class RinetData
   end
   
   def run_scheduled_job
-    debug "\n (getting csv files ...)\n"
+    import_logger "\n (getting csv files ...)\n"
     get_csv_files
-    debug "\n (parsing csv files ...)\n"
+    import_logger "\n (parsing csv files ...)\n"
     parse_csv_files
-    debug "\n (joining data ...)\n"
+    import_logger "\n (joining data ...)\n"
     join_data
-    debug "\n (updating models ...)\n"
+    import_logger "\n (updating models ...)\n"
     update_models
     summary = <<HEREDOC
 
@@ -97,7 +97,7 @@ Import Summary:
 
 
 HEREDOC
-    debug(summary)
+    import_logger(summary)
   end
 
   def join_data
@@ -163,7 +163,7 @@ HEREDOC
   end
 
   def parse_csv_files_for_district(district, date_time_key='current')
-    debug "(\nparsing csv data: #{local_dir}/#{district}/#{date_time_key})"
+    import_logger "(\nparsing csv data: #{local_dir}/#{district}/#{date_time_key})"
     parse_csv_files_in_dir("#{local_dir}/#{district}/#{date_time_key}",@parsed_data)
   end
 
@@ -173,7 +173,7 @@ HEREDOC
       count = 0
       @@csv_files.each do |csv_file|
         local_path = "#{local_dir_path}/#{csv_file}.csv"
-        debug "(\nparsing: #{local_dir_path}/#{csv_file}.csv)"
+        import_logger "(\nparsing: #{local_dir_path}/#{csv_file}.csv)"
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path).each do |line|
@@ -200,7 +200,7 @@ HEREDOC
 
   def join_students_sakai
     @parsed_data[:students].each do |student|
-      debug("working with student  #{student[:Lastname]}")
+      import_logger("working with student  #{student[:Lastname]}")
       found = student_sakai_map(student[:SASID])
       if (found)
         student[:login] = found
@@ -212,7 +212,7 @@ HEREDOC
   
   def join_staff_sakai
     @parsed_data[:staff].each do |staff_member|
-      debug("working with staff_member  #{staff_member[:Lastname]}")
+      import_logger("working with staff_member  #{staff_member[:Lastname]}")
       found = staff_sakai_map(staff_member[:TeacherCertNum])
       if (found)
         staff_member[:login] = found
@@ -223,14 +223,20 @@ HEREDOC
   end
   
   def school_for(row)
+    # pass in a row that has a :SchoolNumber
+    # These are raw or processed csv rows from: 
+    #   students, staff, courses, enrollments, staff_assignments
     nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
-    school = nil
-    unless nces_school
+    if nces_school
+      # TODO, check to see if the  Portal::School.find_or_create_by_nces_school
+      # method will automatically create the containing district if it
+      # doesn't already exist.
+      school = Portal::School.find_or_create_by_nces_school(nces_school)
+    else
       @log.warn "could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)"
       @log.info "you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files"
       # TODO, create one with a special name? Throw exception?
-    else
-      school = Portal::School.find_or_create_by_nces_school(nces_school)
+      school = nil
     end
     school
   end
@@ -244,7 +250,7 @@ HEREDOC
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
-      debug "(Portal::District: #{district.name})"
+      import_logger "(Portal::District: #{district.name})"
     end
     district
   end
@@ -319,7 +325,7 @@ HEREDOC
 
     puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
     new_teachers.each do |teacher| 
-      debug("processing teacher #{teacher[:Lastname]}", '')
+      import_logger("processing teacher #{teacher[:Lastname]}", '')
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
@@ -327,9 +333,9 @@ HEREDOC
   
   def update_teachers
     new_teachers = @parsed_data[:staff]
-    debug "\n\n(processing: #{new_teachers.length} teachers )"
+    import_logger "\n\n(processing: #{new_teachers.length} teachers )"
     new_teachers.each do |teacher| 
-      debug("processing teacher: #{teacher[:Lastname]}: ")
+      import_logger("processing teacher: #{teacher[:Lastname]}: ")
       create_or_update_teacher(teacher)
       puts if @verbose
     end  
@@ -350,9 +356,9 @@ HEREDOC
     
         # add the teacher to the school
         school = school_for(row)
-        if (school)
-            school.members << teacher
-            school.members.uniq!
+        if school
+          school.members << teacher
+          school.members.uniq!
         end
         status_update
         row[:rites_teacher_id] = teacher.id
@@ -362,16 +368,16 @@ HEREDOC
         status_update
       end
     else
-      debug("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
+      import_logger("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
     end
     teacher
   end
   
   def update_students
     new_students = @parsed_data[:students]
-    debug "\n\n(processing: #{new_students.length} students )"
+    import_logger "\n\n(processing: #{new_students.length} students )"
     new_students.each do |student| 
-      debug "(processing student: #{student[:Lastname]})"
+      import_logger "(processing student: #{student[:Lastname]})"
       create_or_update_student(student)
     end
   end
@@ -390,7 +396,7 @@ HEREDOC
 
         # add the student to the school
         school = school_for(row)
-        if (school)
+        if school
             school.members << student
             school.members.uniq!
         end
@@ -407,49 +413,58 @@ HEREDOC
   
   def update_courses
     new_courses = @parsed_data[:courses]
-    debug "\n\n(processing: #{new_courses.length} courses:)\n"
-    new_courses.each do |nc| 
-      debug "(creating course: #{nc[:CourseNumber]}, #{nc[:CourseSection]}, #{nc[:Term]}, #{nc[:Title]})"
-      create_or_update_course(nc)
+    import_logger "\n\n(processing: #{new_courses.length} courses:)\n"
+    new_courses.each do |course_csv_row| 
+      import_logger "(creating course: #{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
+      create_or_update_course(course_csv_row)
     end
   end
   
-  def create_or_update_course(row)
-    unless row[:rites_course]
-      school = school_for(row);
-      # courses = Portal::Course.find(:all, :conditions => {:name => row[:Title]}).detect { |course| course.school.id == school.id }
-      courses = Portal::Course.find_all_by_name_and_school_id(row[:Title], school.id)
-      if courses.empty?
-        course = Portal::Course.create!( {:name => row[:Title], :school_id => school.id })
-      else
-        # TODO: what if we have multiple matches?
-        if courses.class == Array
-          @log.warn("Course not unique! #{row[:Title]}, #{school_for(row).id}, found #{courses.size} entries")
-          @log.info("returning first found: (#{courses[0]})")
-          course = courses[0]
+  
+  def create_or_update_course(course_csv_row)
+    # course_csv_row contains:
+    #   :CourseNumber, :CourseSection, :Term, :Title, :Description, :StartDate,
+    #   :EndDate, :SchoolNumber, :District, :Status, :CourseAbbreviation, :Department,
+    unless course_csv_row[:rites_course]
+      school = school_for(course_csv_row)
+      if school
+        # courses = Portal::Course.find(:all, :conditions => {:name => course_csv_row[:Title]}).detect { |course| course.school.id == school.id }
+        courses = Portal::Course.find_all_by_name_and_school_id(course_csv_row[:Title], school.id)
+        if courses.empty?
+          course = Portal::Course.create!( {:name => course_csv_row[:Title], :school_id => school.id })
         else
-          course = courses
+          # TODO: what if we have multiple matches?
+          if courses.class == Array
+            @log.warn("Course not unique! #{course_csv_row[:Title]}, #{school.id}, found #{courses.size} entries")
+            @log.info("returning first found: (#{courses[0]})")
+            course = courses[0]
+          else
+            course = courses
+          end
         end
+        course_csv_row[:rites_course] = course
+        # cache that results in hashtable
+        @course_hash[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
+      else
+        Raise ArgumentError "no school exists when creating a course"
       end
-      row[:rites_course] = course
-      # cache that results in hashtable
-      @course_hash[row[:CourseNumber]] = row[:rites_course]
     else
-      @log.info("course #{row[:Title]} already defined in this import for school #{school_for(row).name}")
+      import_logger("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", :log_leve => :info)
     end
-    row
+    course_csv_row
   end
-  
   
   def update_classes
+    # passes class member-relationship rows to create_or_update_class
     # from staff assignments:
     @parsed_data[:staff_assignments].each do |nc| 
       create_or_update_class(nc)
     end
     
     # clear students schedules:
+    # {'some id' => arStudent}
     @students_hash.each_value do |student|
-      student.clazzes.delete_all
+      # student.clazzes.delete_all
     end
     
     # and re-enroll
@@ -458,40 +473,43 @@ HEREDOC
     end
 
   end
-  
-  def create_or_update_class(row)
+
+  def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
-    portal_course = @course_hash[row[:CourseNumber]]
+    # course_hash example: { CourseNumber => Portal::course }
+    portal_course = @course_hash[member_relation_row[:CourseNumber]]
     unless portal_course && portal_course.class == Portal::Course
-      @log.error "course not found #{row[:CourseNumber]} nil: #{portal_course.nil?}"
+      @log.error "course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}"
       return
     end
     
-    unless row[:StartDate] && row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
-      @log.error "bad start time for class: '#{row[:StartDate]}'" unless row =~/\d{4}-\d{2}-\d{2}/
+    unless member_relation_row[:StartDate] && member_relation_row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
+      @log.error "bad start time for class: '#{member_relation_row[:StartDate]}'" unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
       return
     end
     
-    section = row[:CourseSection]
-    start_date = DateTime.parse(row[:StartDate]) 
+    section = member_relation_row[:CourseSection]
+    start_date = DateTime.parse(member_relation_row[:StartDate]) 
     clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
     
-    if row[:SASID] && @students_hash[row[:SASID]]
-      student =  @students_hash[row[:SASID]]
+    if member_relation_row[:SASID] && @students_hash[member_relation_row[:SASID]]
+      student =  @students_hash[member_relation_row[:SASID]]
       student.clazzes << clazz
       student.save
-    elsif row[:TeacherCertNum] && @teachers_hash[row[:TeacherCertNum]]
-      clazz.teacher = @teachers_hash[row[:TeacherCertNum]]
+    elsif member_relation_row[:TeacherCertNum] && @teachers_hash[member_relation_row[:TeacherCertNum]]
+      clazz.teacher = @teachers_hash[member_relation_row[:TeacherCertNum]]
       clazz.save
     else
-      @log.error("teacher or student not found: SASID: #{row[:SASID]} cert: #{row[:TeacherCertNum]}")
+      @log.error("teacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}")
     end
-    row
+    member_relation_row
   end
   
-  def debug(message, new_line="\n")
+  def import_logger(message, options={})
+    new_line = options[:new_line] || "\n"
+    log_level = options[:log_level] || :debug
     print message+new_line if @verbose
-    @log.debug(message)
+    @log.send(log_level, message)
   end
   
   def status_update(step_size=1)
@@ -504,9 +522,6 @@ HEREDOC
         print '.' ; STDOUT.flush
       end
     end
-  end
-  
-  class RinetDataError < StandardError
   end
   
 end
