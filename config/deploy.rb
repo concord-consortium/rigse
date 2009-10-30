@@ -167,6 +167,8 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
+    run "mkdir -p #{shared_path}/rinet_data"
+    run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
     
   desc "install required gems for application"
