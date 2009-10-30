@@ -160,7 +160,8 @@ class RinetData
         end
       end
     rescue Exception => e
-      log_message("get_csv_files failed: #{e.message}", :error)
+      @log.error("get_csv_files failed: #{e.class}: #{e.message}")
+      raise
     end
   end
   
@@ -173,8 +174,12 @@ class RinetData
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      log_message("downloading: #{remote_path} and saving to: \n  #{local_path}", :info)
-      sftp.download!(remote_path, local_path)
+      @log.info "Downloading: #{remote_path} and saving to: \n  #{local_path}"
+      begin
+        sftp.download!(remote_path, local_path)
+      rescue RuntimeError => e
+        @log.error("#{e.class}: #{e.message}: Download failed")
+      end
     end
     current_path = "#{@district_data_root_dir}/#{district}/current"
     FileUtils.ln_s(local_district_path, current_path, :force => true)
