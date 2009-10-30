@@ -25,6 +25,8 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
   
+  theme (APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
+  
   protected
   
   def setup_container
