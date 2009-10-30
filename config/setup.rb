@@ -52,7 +52,7 @@ end
 @settings_config_sample        = YAML::load_file(@settings_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
-@sds_config_sample             = YAML::load_file(@sds_config_sample_path)
+# @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
