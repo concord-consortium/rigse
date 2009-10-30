@@ -457,25 +457,25 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           if is_page_element
-            restrict_to 'admin' do
-              haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
-                haml_tag :ul do
-                  haml_tag(:li) { haml_concat run_link_for(component) }
-                  haml_tag(:li) { haml_concat print_link_for(component) }
-                  haml_tag(:li) { haml_concat otml_link_for(component) }
-                end
-              end
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
-            end
+            # restrict_to 'admin' do
+            #   haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
+            #     haml_tag :ul do
+            #       haml_tag(:li) { haml_concat run_link_for(component) }
+            #       haml_tag(:li) { haml_concat print_link_for(component) }
+            #       haml_tag(:li) { haml_concat otml_link_for(component) }
+            #     end
+            #   end
+            #   haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
+            # end
           end              
           if (component.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            begin
-              if component.authorable_in_java?
-                haml_concat otrunk_edit_button_for(component, options)
-              end
-            rescue NoMethodError
-            end
+            # begin
+            #   if component.authorable_in_java?
+            #     haml_concat otrunk_edit_button_for(component, options)
+            #   end
+            # rescue NoMethodError
+            # end
             haml_concat edit_button_for(component, options)
             haml_concat delete_button_for(deletable_element)  unless options[:omit_delete]
           end

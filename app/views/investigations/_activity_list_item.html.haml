@@ -5,9 +5,9 @@
         = link_to_container(activity)
       %div.action_menu_header_right   
         %ul.menu
-          %li= run_link_for(activity)
+          /%li= run_link_for(activity)
           - if (activity.changeable?(current_user))
-            %li= link_to 'duplicate', duplicate_activity_url(activity)
+            /%li= link_to 'duplicate', duplicate_activity_url(activity)
             / %li= link_to 'edit', activity
             / %li.menu=toggle_more activity
             %li.menu=link_to_remote 'delete', :confirm => "delete activity #{activity.name}?", :url => { :controller => 'investigations', :action => 'delete_activity', :params => {:id=>activity.investigation.id, :activity_id => activity.id}}, :html => {:class=>"delete"}

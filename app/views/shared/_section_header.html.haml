@@ -1,13 +1,13 @@
 #actions_menu.dropdown
   %ul
-    %li= run_link_for(@section)
-    %li= print_link_for(@section)
-    %li#copy_link copy (disabled)
-    %li= toggle_all('pages')
+    /%li= run_link_for(@section)
+    /%li= print_link_for(@section)
+    /%li#copy_link copy (disabled)
+    /%li= toggle_all('pages')
     - if (section.changeable?(current_user))
-      %li= link_to 'duplicate', duplicate_section_url(section)
+      /%li= link_to 'duplicate', duplicate_section_url(section)
       %li= link_to 'edit section details', edit_section_url(section)
-      %li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
+      /%li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
 
 - if (teacher_only? section)
   - view_class = "action_menu teacher_only"

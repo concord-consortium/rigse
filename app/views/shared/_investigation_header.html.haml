@@ -1,8 +1,8 @@
 #actions_menu.dropdown
   %ul
     %li= preview_link_for(@investigation)
-    %li= run_link_for(@investigation,'teacher',{:teacher_mode=>true})
-    %li= print_link_for(@investigation)
+    /%li= run_link_for(@investigation,'teacher',{:teacher_mode=>true})
+    /%li= print_link_for(@investigation)
     - unless(current_user.anonymous?)
       %li= duplicate_link_for(@investigation)
     / - if (investigation.changeable?(current_user))
