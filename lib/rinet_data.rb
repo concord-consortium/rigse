@@ -409,8 +409,8 @@ HEREDOC
   def update_courses
     new_courses = @parsed_data[:courses]
     import_logger "\n\n(processing: #{new_courses.length} courses:)\n"
-    new_courses.each do |nc| 
-      import_logger "(creating course: #{nc[:CourseNumber]}, #{nc[:CourseSection]}, #{nc[:Term]}, #{nc[:Title]})"
+    new_courses.each do |course_csv_row| 
+      import_logger "(creating course: #{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
       create_or_update_course(course_csv_row)
     end
   end
@@ -504,7 +504,7 @@ HEREDOC
     new_line = options[:new_line] || "\n"
     log_level = options[:log_level] || :debug
     print message+new_line if @verbose
-    @log.send(:log_level, message)
+    @log.send(log_level, message)
   end
   
   def status_update(step_size=1)
