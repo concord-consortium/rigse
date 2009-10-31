@@ -1,4 +1,4 @@
-set :stages, %w(development staging production bumblebeeman)
+set :stages, %w(development staging production seymour)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
