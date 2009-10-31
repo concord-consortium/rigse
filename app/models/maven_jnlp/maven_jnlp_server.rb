@@ -17,6 +17,21 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def generate_names_for_maven_jnlp_servers
+      maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
+      maven_jnlp_servers.each do |server|
+        attrs = { :host => server[:host], :path => server[:path] }
+        if mj_server = MavenJnlp::MavenJnlpServer.find(:first, :conditions => attrs)
+          unless mj_server.name
+            puts "MavenJnlpServer: name: #{server[:name]} => #{attrs.inspect}"
+            mj_server.name = server[:name]
+            mj_server.save!
+          end
+        end
+      end
+    end
+    
   end
 
   def maven_jnlp_object
@@ -48,19 +63,24 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   end
   
   def create_maven_jnlp_families
+    maven_jnlp_families = APP_CONFIG[:maven_jnlp_families]
     maven_jnlp_object.maven_jnlp_families.each do |mjf_object|
       if self.maven_jnlp_families.find_by_url(mjf_object.url)
         puts "\nmaven_jnlp_family: #{mjf_object.url} "
         puts "already exists "
-      else
+      elsif !maven_jnlp_families || maven_jnlp_families.include?(mjf_object.name)
         mjf = self.maven_jnlp_families.build(
           :name             => mjf_object.name,
           :url              => mjf_object.url,
           :snapshot_version => mjf_object.snapshot_version)
         mjf.save!
-        puts "\n\nmaven_jnlp_family: #{mjf_object.url} "
-        puts "generating versioned_jnlp resources:"
+        puts "\nmaven_jnlp_family: #{mjf_object.url} "
+        puts "current snapshot version: #{mjf_object.snapshot_version} "
+        puts "generating #{mjf_object.versions.length} versioned_jnlp resources:"
         mjf.create_versioned_jnlp_urls(mjf_object)
+        puts "\n\n"
+      else
+        puts "skipping maven_jnlp_family: #{mjf_object.url} "
       end
     end
   end

@@ -34,7 +34,7 @@ HEREDOC
       # (the primary key and even the gse_key of the new gses might have been updated)
       # and then update the investigation to reference the new gse
       if investigations_with_gses
-        puts "Restoring gse relationship for #{investigations_with_gses.length} Investigations ..."
+        puts "\nRestoring gse relationship for #{investigations_with_gses.length} Investigations ..."
         inv_gse_cache.each do |inv_spec|
           assessment_target = AssessmentTarget.find_by_description(inv_spec[1])
           if assessment_target

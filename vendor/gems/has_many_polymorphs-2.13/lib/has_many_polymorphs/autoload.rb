@@ -17,8 +17,10 @@ Note that you can override DEFAULT_OPTIONS via Rails::Configuration#has_many_pol
   
 =end
 
+  MODELS_ROOT = "#{RAILS_ROOT}/app/models/"
+  
   DEFAULT_OPTIONS = {
-    :file_pattern => "#{RAILS_ROOT}/app/models/**/*.rb",
+    :file_pattern => "#{MODELS_ROOT}**/*.rb",
     :file_exclusions => ['svn', 'CVS', 'bzr'],
     :methods => ['has_many_polymorphs', 'acts_as_double_polymorphic_join'],
     :requirements => []}
@@ -41,7 +43,9 @@ Note that you can override DEFAULT_OPTIONS via Rails::Configuration#has_many_pol
       open filename do |file|
         if file.grep(/#{options[:methods].join("|")}/).any?
           begin
-            model = File.basename(filename)[0..-4].camelize
+            modelname = filename[0..-4]
+            modelname.slice!(MODELS_ROOT)
+            model = modelname.camelize
             _logger_warn "preloading parent model #{model}"
             model.constantize
           rescue Object => e

@@ -38,6 +38,11 @@ class Activity < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def display_name
+      "Activity"
+    end
+    
   end
   
   def parent

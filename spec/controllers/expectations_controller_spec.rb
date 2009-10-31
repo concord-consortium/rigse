@@ -6,6 +6,12 @@ describe ExpectationsController do
     @mock_expectation ||= mock_model(Expectation, stubs)
   end
   
+  before(:each) do
+    mock_project
+    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+  end
+  
+  
   describe "responding to GET index" do
 
     it "should expose an array of all the @expectations" do

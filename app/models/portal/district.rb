@@ -6,6 +6,9 @@ class Portal::District < ActiveRecord::Base
   has_many :schools, :class_name => "Portal::School", :foreign_key => "district_id"
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
   
+  named_scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools }  
+  named_scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools }  
+  
   include Changeable
 
   self.extend SearchableModel
@@ -20,5 +23,30 @@ class Portal::District < ActiveRecord::Base
       "District"
     end
   end
-
+  
+  def virtual?
+    nces_district_id.nil?
+  end
+  
+  def real?
+    ! virtual?
+  end
+  
+  ##
+  ## given a NCES district, either find or create a portal_distrcit for it.
+  ##
+  def self.find_or_create_by_nces_district(nces_district)
+    found_instance = self.find(:first, :conditions=> {:nces_district_id => nces_district.id})
+    unless found_instance
+      attributes = {
+        :name => nces_district.NAME,
+        :description => "imported from nces data",
+        :nces_district_id => nces_district.id
+      }
+      found_instance = self.create(attributes)
+      found_instance.save!
+    end
+    found_instance
+  end
+    
 end

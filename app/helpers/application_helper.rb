@@ -51,8 +51,10 @@ module ApplicationHelper
   end
 
   def git_repo_info
-    if repo = Grit::Repo.new(".")
-      branch = repo.head.name
+    # using && doesn't work here, in the second assignment 
+    # lvar: repo is nil -- not sure why yet
+    if repo = Grit::Repo.new(".") and head = repo.head
+      branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
       link = "<a title='#{message}' href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
@@ -219,6 +221,21 @@ module ApplicationHelper
     end
   end
   
+  def accordion_for(model, title, dom_prefix='')
+    capture_haml do
+      haml_tag :div, :id => dom_id_for(model, dom_prefix), :class => 'accordion_container' do
+        haml_tag :div, :class => 'accordion_name' do
+          haml_concat title
+        end
+        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle}"), :class => 'accordion_toggle'
+        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content}"), :class => 'accordion_content', :style=>'display: none;' do
+          if block_given?
+            yield
+          end
+        end
+      end
+    end
+  end
 
   def otrunk_edit_button_for(component, options={})
     controller = component.class.name.pluralize.underscore
@@ -290,20 +307,84 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  def run_link_for(component, as_name=nil,params={})
+  
+  def run_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("run.png",  url, 
+      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);") 
+  end
+
+  def preview_button_for(component)
+    name = component.name
+    url = polymorphic_url(component, :format => :jnlp)
+    link_button("preview.png",  url, 
+      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_alert($('launch_warning'),false);")      
+  end
+
+  def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = "preview #{component_display_name}"
+    link_text = params.delete(:link_text) || "preview "
     if as_name
-      link_text << "as #{as_name}"
+      link_text << " as #{as_name}"
     end
     
     url = polymorphic_url(component, :format => :jnlp, :params => params)
+    preview_button_for(component) +
     link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
+  def run_link_for(component, as_name=nil, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "run "
+    if as_name
+      link_text << " as #{as_name}"
+    end
+    
+    url = polymorphic_url(component, :format => :jnlp, :params => params)
+    run_button_for(component) +
+    link_to(link_text, url, 
+        :onclick => "show_alert($('launch_warning'),false);",
+        :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
+  def edit_link_for(component, params={}) 
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "edit "
+    url = polymorphic_url(component, :action => :edit, :params => params)
+    edit_button_for(component) +
+    link_to(link_text, url, 
+        :title => "edit the #{component_display_name}: '#{name}'")
+  end
+  
+  def duplicate_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    #url = duplicate_investigation_url(component)
+    url = polymorphic_url(component, :action => :duplicate, :params => params)
+    link_button("copy.png", url, 
+      :title => "duplicate the #{component_display_name}: '#{name}'") +
+    link_to('duplicate', url)
+  end
+  
+  def print_link_for(component, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    link_text = params.delete(:link_text) || "print #{component_display_name}"
+    params.merge!({:print => true})
+    url = polymorphic_url(component,:params => params)
+    link_button("print.png", url, 
+      :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to(link_text,url)
+  end
+  
   def otml_link_for(component, params={})
     link_to('otml', 
       :controller => component.class.name.pluralize.underscore, 
@@ -325,12 +406,12 @@ module ApplicationHelper
     remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
-  def link_to_container(container)
-    link_to name_for_component(container), container, :class => 'container_link'
+  def link_to_container(container, options={})
+    link_to name_for_component(container, options), container, :class => 'container_link'
   end
   
-  def title_for_component(component)
-    title = name_for_component(component)
+  def title_for_component(component, options={})
+    title = name_for_component(component, options)
     if RAILS_ENV == "development" || current_user.has_role?('admin')
       "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>" 
     else
@@ -338,16 +419,19 @@ module ApplicationHelper
     end
   end
     
-  def name_for_component(component)
-    if component.class.respond_to? :display_name
-      name = component.class.display_name
-    else
-      name = component.class.name.humanize
+  def name_for_component(component, options={})
+    name = ''
+    unless options[:hide_componenent_name]
+      if component.class.respond_to? :display_name
+        name << component.class.display_name
+      else
+        name << component.class.name.humanize
+      end
+      if component.respond_to? :display_type
+        name = "#{component.display_type} #{name}"
+      end
+      name << ': '
     end
-    if component.respond_to? :display_type
-      name = "#{component.display_type} #{name}"
-    end
-    name << ': '
     default_name = ''
     if component.class.respond_to?(:default_value)
       default_name = component.class.default_value('name')
@@ -380,7 +464,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(component)
+          haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           if is_page_element
@@ -467,7 +551,7 @@ module ApplicationHelper
       :class      => 'rollover'
     }
     options = defaults.merge(options)
-    link_to image_tag(image, :alt=>options[:title]),url,options
+    link_to image_tag(image, :alt=>options[:title]) , url, options
   end
   
   def remote_link_button(image,options={})
@@ -616,12 +700,11 @@ module ApplicationHelper
   end
   
   def runnable_list(options)
-    # for now, just find all published ones...
-    investigations = Investigation.published
-    if options[:clazz]
-      investigations = investigations - options[:clazz].offerings.map { |o| o.runnable }
-    end
-    investigations
+    Investigation.search_list(options)
   end
   
+  def students_in_class(all_students)
+    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+  end
+
 end

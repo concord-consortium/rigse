@@ -58,20 +58,45 @@ class UsersController < ApplicationController
   
   # /users/1/switch
   def switch
+    # @original_user is setup in app/controllers/application_controller.rb
     unless @original_user.has_role?('admin', 'manager')
       redirect_to('/home')
     else
       if request.get?
         @user = User.find(params[:id])
-        all_users = User.find_all_by_state('active')
-        all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+        all_users = User.active.find(:all)
         all_users.delete(current_user)
+        all_users.delete(User.anonymous)
+        all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
+
         recent_users = []
         (session[:recently_switched_from_users]  || []).each do |user_id|
           recent_user = all_users.find { |u| u.id == user_id }
           recent_users << all_users.delete(recent_user) if recent_user
         end
-        @user_list = [ { :name => 'recent' , :users => recent_users }, { :name => 'all', :users => all_users } ]
+        
+        users = all_users.group_by do |u|
+          case
+          when u.default_user then :default_users
+          when u.email[/no-email/] then :no_email
+          else :email
+          end
+        end
+        # to avoid nil values, initialize everything to an empty array if it's non-existent
+        users[:no_email] ||= []
+        users[:email] ||= []
+        users[:default_users] ||= []
+        users[:no_email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        users[:email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+
+        @user_list = [ { :name => 'recent' , :users => recent_users },
+                       { :name => 'guest', :users => [User.anonymous] },
+                       { :name => 'regular', :users => users[:email] }, 
+                       { :name => 'students' , :users => users[:no_email] } 
+                     ]
+        if users[:default_users] && users[:default_users].size > 0
+          @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
+        end
       elsif request.put?
         if params[:commit] == "Switch"
           if switch_to_user = User.find(params[:user][:id])
@@ -107,7 +132,7 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       respond_to do |format|
         if @user.update_attributes(params[:user])
-          @user.set_role_ids(params[:user][:role_ids])
+          @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do 
             if request.env["HTTP_REFERER"] =~ /preferences/
@@ -202,19 +227,15 @@ class UsersController < ApplicationController
       @user.register!
     end
     if @user.errors.empty?
-      # will redirect:
-      successful_creation(@user)
+      self.current_user = User.anonymous
+      render :action => :thanks
     else
       # will redirect:
       failed_creation
     end
   end
   
-  def successful_creation(user)
-    flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation code."
-    redirect_back_or_default(root_path)
-  end
+
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
     # force the current_user to anonymous, because we have not successfully created an account yet.

@@ -3,7 +3,7 @@
 %otrunk{ :id => @section.uuid }
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@section.name))
       %root
         =yield "section_#{dom_id_for(@section)}".to_sym

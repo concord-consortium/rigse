@@ -34,6 +34,7 @@ public/stylesheets/otrunk-56-color.css
 public/stylesheets/rites_otml.css
 public/stylesheets/notes.css
 public/stylesheets/screen.css
+public/stylesheets/readme.css
 public/jnlp/*/*
 config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
@@ -51,3 +52,7 @@ public/investigations
 public/page_cache
 config/settings-backup.yml
 doc/guides
+config/rinet_data.yml
+rinet_data
+resources/rinet_test_data/import_log.txt
+resources/rinet_test_data_b/import_log.txt

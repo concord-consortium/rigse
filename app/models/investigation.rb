@@ -7,6 +7,8 @@ class Investigation < ActiveRecord::Base
   has_many :activities, :order => :position, :dependent => :destroy
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
+  
+  has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
 
   [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
     eval "has_many :#{klass.table_name},
@@ -35,6 +37,7 @@ class Investigation < ActiveRecord::Base
   include AASM 
   aasm_initial_state :draft
   aasm_column :publication_status
+  @@protected_publication_states=[:published]
   @@publication_states = [:draft,:published,:private]
   @@publication_states.each { |s| aasm_state s}
 
@@ -50,17 +53,38 @@ class Investigation < ActiveRecord::Base
   # for convinience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
   
-  # brittle;,because we must know too much about table names ...
-  named_scope :grade_and_domain, lambda { |gs,domain_id|
+  #
+  # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
+  # Investigation.with_gse.grade('9-11') == good
+  # Investigation.grade('9-11') == bad
+  #
+  named_scope :with_gse, {
+    :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+  }
+  
+  named_scope :domain, lambda { |domain_id| 
     {
-      :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)",
-      :conditions =>[ 'knowledge_statements.domain_id = ? and grade_span_expectations.grade_span LIKE ?', domain_id, gs ]
+      :conditions =>[ 'knowledge_statements.domain_id = ?', domain_id]
+    }
+  }
+  
+  named_scope :grade, lambda { |gs|
+    gs = gs.size > 0 ? gs : "%"
+    {
+      :conditions =>[ 'grade_span_expectations.grade_span LIKE ?', gs ]
     }
   }
   
   named_scope :published, 
   {
     :conditions =>{:publication_status => "published"}
+  }
+
+  named_scope :like, lambda { |name|
+    name = "%#{name}%"
+    {
+     :conditions =>[ "investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
+    }
   }
 
   include Changeable
@@ -73,6 +97,45 @@ class Investigation < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def display_name
+      "Investigation"
+    end
+    
+    def find_by_grade_span_and_domain_id(grade_span,domain_id)
+      @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
+      @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
+      # @investigations.flatten!.compact!
+    end
+
+    def search_list(options)
+      grade_span = options[:grade_span] || ""
+      domain_id = options[:domain_id].to_i
+      name = options[:name]
+      if domain_id > 0
+        if (options[:include_drafts])
+          investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+        else
+          investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+        end
+      else
+        if (options[:include_drafts])
+          investigations = Investigation.like(name).with_gse.grade(grade_span)
+        else
+          investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+        end
+      end
+      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+      if portal_clazz
+        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
+      end
+      if options[:paginate]
+        investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+      else
+        investigations
+      end
+    end  
+    
   end
   
   # Enables a teacher note to call the investigation method of an
@@ -81,21 +144,10 @@ class Investigation < ActiveRecord::Base
     self
   end
   
-  def self.find_by_grade_span_and_domain_id(grade_span,domain_id)
-    @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
-    @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
-    # @investigations.flatten!.compact!
-  end
-  
-  
   def after_save
     if self.user
       self.user.add_role('author') 
     end
-  end
-  
-  def self.display_name
-    'Investigation'
   end
   
   def left_nav_panel_width
@@ -151,6 +203,21 @@ class Investigation < ActiveRecord::Base
       }
     )
   end
+
+  def available_states(who_wants_to_know)
+    if(who_wants_to_know.has_role?('manager','admin'))
+      return @@publication_states
+    end
+    return (@@publication_states - @@protected_publication_states + [self.publication_status.to_sym]).uniq
+  end
   
+  
+  def duplicate(new_owner)
+    @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
+    @return_investigation.user = new_owner
+    @return_investigation.name = "copy of #{self.name}"
+    @return_investigation.publication_status = :draft
+    return @return_investigation
+  end
   
 end

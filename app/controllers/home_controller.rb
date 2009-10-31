@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   
   def readme
     @readme = ReadMe.new
-    render :layout => false
+    render :action => "readme", :layout => "readme"
   end
   
   def pick_signup    

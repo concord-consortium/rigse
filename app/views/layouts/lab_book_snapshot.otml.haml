@@ -3,7 +3,7 @@
 %otrunk{ :id => @lab_book_snapshot.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@lab_book_snapshot.name))
       %root
         %OTCompoundDoc

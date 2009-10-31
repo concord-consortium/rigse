@@ -1,7 +1,36 @@
-set :stages, %w(development staging production)
+set :stages, %w(development staging production seymour)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
+require 'haml'
+
+def render(file,opts={})
+  template = File.read(file)
+  haml_engine = Haml::Engine.new(template)
+  output = haml_engine.render(nil,opts)
+  output
+end
+
+#############################################################
+#  Miantance mode
+#############################################################
+task :disable_web, :roles => :web do
+  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+
+  maintenance = render("./app/views/layouts/maintenance.haml", 
+                       {
+                         :back_up => ENV['BACKUP'],
+                         :reason => ENV['REASON'],
+                         :message => ENV['MESSAGE']
+                       })
+
+  run "mkdir -p #{shared_path}/system/"
+  put maintenance, "#{shared_path}/system/maintenance.html", 
+                   :mode => 0644
+end
+task :enable_web, :roles => :web do
+  run "rm #{shared_path}/system/maintenance.html"
+end
 
 #############################################################
 #  Application
@@ -16,6 +45,7 @@ set :deploy_to, "/web/rites.concord.org"
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
+ssh_options[:compression] = false
 set :use_sudo, true
 set :scm_verbose, true
 set :rails_env, "production" 
@@ -42,7 +72,6 @@ set :deploy_via, :remote_cache
 #  DB
 #############################################################
 
-
 namespace :db do
   desc 'Dumps the production database to db/production_data.sql on the remote server'
   task :remote_db_dump, :roles => :db, :only => { :primary => true } do
@@ -56,14 +85,20 @@ namespace :db do
       "rake RAILS_ENV=#{rails_env} db:load --trace" 
   end
 
-  desc 'Downloads db/production_data.sql from the remote production environment to your local machine'
-  task :remote_db_download, :roles => :db, :only => { :primary => true } do  
+  desc '[NOTE: use "fetch_remote_db" instead!] Downloads db/production_data.sql from the remote production environment to your local machine'
+  task :remote_db_download, :roles => :db, :only => { :primary => true } do
+    ssh_compression = ssh_options[:compression] 
+    ssh_options[:compression] = true
     download("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql", :via => :sftp)
+    ssh_options[:compression] = ssh_compression
   end
   
-  desc 'Uploads db/production_data.sql to the remote production environment from your local machine'
+  desc '[NOTE: use "push_remote_db" instead!] Uploads db/production_data.sql to the remote production environment from your local machine'
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
+    ssh_compression = ssh_options[:compression] 
+    ssh_options[:compression] = true
     upload("db/production_data.sql", "#{deploy_to}/#{current_dir}/db/production_data.sql", :via => :sftp)
+    ssh_options[:compression] = ssh_compression
   end
 
   desc 'Cleans up data dump file'
@@ -88,7 +123,16 @@ namespace :db do
     remote_db_load
     remote_db_cleanup
   end
+
+  desc 'Copies config/initializers/site_keys.rb from the remote environment to your local machine'
+  task :fetch_remote_site_keys, :roles => :app do
+    download("#{deploy_to}/shared/config/initializers/site_keys.rb", "config/initializers/site_keys.rb", :via => :sftp)
+  end
   
+  desc 'Copies config/initializers/site_keys.rb from the remote environment to your local machine'
+  task :push_local_site_keys, :roles => :app do
+    upload("config/initializers/site_keys.rb", "#{deploy_to}/shared/config/initializers/site_keys.rb", :via => :sftp)
+  end
 
 end
 
@@ -117,11 +161,14 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
+    run "mkdir -p #{shared_path}/rinet_data"
+    run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
     
   desc "install required gems for application"
@@ -202,7 +249,7 @@ namespace :import do
   desc "Import nces data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states"
   task :nces_data_from_files, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_file --trace" 
+      "rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_files --trace" 
   end
 
   desc"reload the default probe and vendor_interface configurations."
@@ -310,12 +357,6 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:generate_date_str_for_versioned_jnlp_urls --trace"
   end
 
-  desc "Create default users and roles and portal resources"
-  task :default_users_roles_and_portal_resources, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles_and_portal_resources --trace"
-  end
-
   desc "Create bundle and console loggers for learners"
   task :create_bundle_and_console_loggers_for_learners, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -340,6 +381,26 @@ namespace :convert do
   task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects --trace"
+  end
+
+  # Thursday October 8, 2009
+
+  desc "Create default users, roles, district, school, course, and class, and greade_levels"
+  task :default_users_roles, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles --trace"
+  end
+
+  desc "Create default portal resources: district, school, course, and class, investigation and grades"
+  task :default_portal_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:setup:default_portal_resources --trace"
+  end
+
+  desc "Create districts and schools from NCES records for States listed in settings.yml"
+  task :create_districts_and_schools_from_nces_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} portal:setup:create_districts_and_schools_from_nces_data --trace"
   end
 
 end

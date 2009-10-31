@@ -9,9 +9,9 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
     end
-      
     portal.resources :courses
     portal.resources :districts
+    portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners
     portal.resources :offerings
@@ -32,6 +32,8 @@ ActionController::Routing::Routes.draw do |map|
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
+  map.linktool '/linktool', :controller => 'sakai_link', :action => 'index'
+  map.fake_verification '/sakai-axis/SakaiSigning.jws', :controller => 'sakai_link', :action => 'fake_verification'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
@@ -52,14 +54,21 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :passwords
   map.resource :session
 
+  map.resources :external_user_domains do |external_user_domain|
+    external_user_domain.resources :external_users    
+    external_user_domain.resources :external_sessions
+  end
+
 # ----------------------------------------------
 
   map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :bundle_contents
     dataservice.resources :bundle_loggers do |bundle_logger|
       bundle_logger.resources :bundle_contents
     end
-    dataservice.resources :console_loggers do |bundle_logger|
-      bundle_logger.resources :console_contents
+    dataservice.resources :console_contents
+    dataservice.resources :console_loggers do |console_logger|
+      console_logger.resources :console_contents
     end
     
   end
@@ -203,11 +212,11 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post,
-    :list_filter => :post
+    :destroy => :post
   }
-
+  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
   
   
   map.resources :activities, :member => {

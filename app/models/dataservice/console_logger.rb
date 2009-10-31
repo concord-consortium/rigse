@@ -4,4 +4,10 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
   has_one  :learner, :class_name => "Portal::Learner"
   has_many :console_contents, :class_name => "Dataservice::ConsoleContent", :order => :position, :dependent => :destroy
 
+  class <<self
+    def display_name
+      "Dataservice::ConsoleLogger"
+    end
+  end
+
 end

@@ -7,4 +7,10 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
   
   include SailBundleContent
   
+  class <<self
+    def display_name
+      "Dataservice::ConsoleContent"
+    end
+  end
+  
 end

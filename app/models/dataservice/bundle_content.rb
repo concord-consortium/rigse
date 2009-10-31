@@ -7,6 +7,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   acts_as_replicatable
 
+  include Changeable
+
   include SailBundleContent
   
   def before_create
@@ -15,6 +17,41 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   def before_save
     process_bundle unless processed
+  end
+  
+  # pagination default
+  cattr_reader :per_page
+  @@per_page = 5
+
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{body otml uuid}
+  
+  class <<self
+
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Dataservice::BundleContent"
+    end
+  end
+
+  def user
+    nil
+  end
+  
+  def otml
+    self[:otml] || ''
+  end
+  
+  def name
+    learner = self.bundle_logger.learner
+    user = learner.student.user
+    name = user.name
+    login = user.login
+    "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
   
   def process_bundle

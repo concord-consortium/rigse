@@ -8,7 +8,7 @@ module JnlpHelper
   def render_jnlp(runnable)
     # FIXME can't figure out why otml_url_for, doesn't work here
     # otml_url_for(runnable)
-    url = polymorphic_url(runnable, :format =>  :otml, :teacher_mode => params[:teacher_mode])
+    url = polymorphic_url(runnable, :format =>  :dynamic_otml, :teacher_mode => params[:teacher_mode])
     escaped_otml_url = URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
 
     sds_connection = Portal::SdsConnect::Connect    

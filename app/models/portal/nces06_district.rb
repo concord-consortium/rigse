@@ -3,6 +3,8 @@ class Portal::Nces06District < ActiveRecord::Base
   
   has_many :nces_schools, :class_name => "Portal::Nces06School", :foreign_key => "nces_district_id"
 
+  has_one :district, :class_name => "Portal::District", :foreign_key => "nces_district_id"
+
   self.extend SearchableModel
 
   @@searchable_attributes = %w{LEAID NAME PHONE MSTREE MCITY MSTATE MZIP}
@@ -16,4 +18,9 @@ class Portal::Nces06District < ActiveRecord::Base
       "NCES District"
     end
   end
+  
+  def capitalized_name
+    self.NAME.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+  end
+  
 end

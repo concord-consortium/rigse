@@ -7,12 +7,7 @@ class Xhtml < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
-
   include TruncatableXhtml
-  def before_save
-    truncated_xhtml = truncate_from_xhtml(content)
-    self.name = truncated_xhtml unless truncated_xhtml.empty?
-  end
   
   self.extend SearchableModel
   

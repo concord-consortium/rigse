@@ -22,7 +22,9 @@
       = yield :layout
 
   :javascript
-    var canvs = $$('canvas');  
-    canvs.each ( function(_canvas) {
-      _canvas.replace(Canvas2Image.saveAsPNG(_canvas, true));
+    document.observe("dom:loaded", function() {  
+      var canvs = $$('canvas');  
+      canvs.each ( function(_canvas) {
+        _canvas.replace(Canvas2Image.saveAsPNG(_canvas, true));
+      });
     });

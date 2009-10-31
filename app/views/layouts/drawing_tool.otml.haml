@@ -3,7 +3,7 @@
 %otrunk{ :id => @drawing_tool.uuid}
   =ot_imports
   %objects
-    %OTSystem
+    %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@drawing_tool.name))
       %root
         %OTCompoundDoc

@@ -11,4 +11,42 @@ class Dataservice::BundleLogger < ActiveRecord::Base
 
   OPEN_ELEMENT_EPORTFOLIO = "<sailuserdata:EPortfolio xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:sailuserdata=\"sailuserdata\">\n"
   CLOSE_ELEMENT_EPORTFOLIO = "\n</sailuserdata:EPortfolio>"
+  
+  
+  include Changeable
+
+  # pagination default
+  cattr_reader :per_page
+  @@per_page = 5
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{updated_at}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Dataservice::BundleLogger"
+    end
+  end
+  
+  def user
+    nil
+  end
+  
+  def name
+    if learner = self.learner
+      user = learner.student.user
+      name = user.name
+      login = user.login
+      runnable_name = (learner.offering.runnable ? learner.offering.runnable.name : "invalid offering runnable")
+      "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_contents.count} sessions"
+    else
+      "no associated learner"
+    end
+  end
+  
 end

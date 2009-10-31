@@ -15,7 +15,7 @@
           Select another user to switch to:
         %ul.menu_h
           %li
-            = select_tag('user[id]', option_groups_from_collection_for_select(@user_list, 'send(:fetch, :users)' ,'send(:fetch, :name)', :id, :name  ))
+            = select_tag('user[id]', option_groups_from_collection_for_select(@user_list, 'send(:fetch, :users)' ,'send(:fetch, :name)', :id, :name_and_login  ))
           %li
             = submit_tag 'Switch'
         %ul.menu_h.right_content

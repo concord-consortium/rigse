@@ -23,7 +23,8 @@ class Portal::LearnersController < ApplicationController
       format.config { render :partial => 'shared/learn', 
         :locals => { :runnable => @learner.offering.runnable, 
                      :console_logger => @learner.console_logger, 
-                     :bundle_logger => @learner.bundle_logger } }            
+                     :bundle_logger => @learner.bundle_logger,
+                     :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }            
       
       format.xml  { render :xml => @learner }
     end

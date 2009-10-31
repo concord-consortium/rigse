@@ -1,4 +1,19 @@
-xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") { 
+session_options = request.env["rack.session.options"]
+xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
+  xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {
+    xml.void("property" => "cookieProperties") {
+      xml.object("class" => "java.util.Properties") {
+        xml.void("method" => "setProperty") {
+          xml.string("*.concord.org")
+          xml.string("#{session_options[:key]}=#{session_id}; path=#{session_options[:path]}")
+        }
+        xml.void("method" => "setProperty") {
+          xml.string("*")
+          xml.string("another_fake_session_key")
+        }
+      }
+    }
+  }
   xml.object(:class => "net.sf.sail.emf.launch.ConsoleLogServiceImpl") { 
   }
   xml.object(:class => "org.telscenter.sailotrunk.OtmlUrlCurnitProvider") { 
@@ -29,9 +44,9 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.otmlurl"
           if teacher_mode && runnable.class == Investigation 
-            xml.string investigation_teacher_otml_url(runnable)
+            xml.string investigation_teacher_dynamic_otml_url(runnable)
           else
-            xml.string polymorphic_url(runnable, :format => :otml, :teacher_mode => teacher_mode)
+            xml.string polymorphic_url(runnable, :format => :dynamic_otml, :teacher_mode => teacher_mode)
           end
         }
       }

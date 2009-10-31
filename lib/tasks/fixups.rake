@@ -44,6 +44,23 @@ namespace :rigse do
       end
     end
 
+    #######################################################################
+    #
+    # Assign Vernier go!Link as default vendor_interface for users
+    # without a vendor_interface.
+    #
+    #######################################################################
+    desc "Assign Vernier go!Link as default vendor_interface for users without a vendor_interface."
+    task :assign_vernier_golink_to_users => :environment do
+      interface = VendorInterface.find_by_short_name('vernier_goio')
+      User.find(:all).each do |u|
+        unless u.vendor_interface
+          u.vendor_interface = interface
+          u.save
+        end
+      end
+    end
+
     desc 'ensure investigations have publication_status'
     task :pub_status => :environment do
       Investigation.find(:all).each do |i|
@@ -102,7 +119,7 @@ HEREDOC
     
     desc 'create default Project from config/settings.yml'
     task :create_default_project_from_config_settings_yml => :environment do
-      Admin::Project.create_or_update__default_project_from_settings_yml
+      Admin::Project.create_or_update_default_project_from_settings_yml
     end
 
     desc 'generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls'

@@ -227,13 +227,20 @@
     render :partial => "otml/ot_sharing_bundle"
   end
 
-  def ot_interface_manager
-    # FIXME
-    # hard-coded to be'vernier_goio' because we don't have access to
-    # the real current_user when this request comes from a Java client.
-    # see: http://jira.concord.org/browse/RITES-211
-    vendor_interface = VendorInterface.find(6)  
-    render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
+  def ot_interface_manager(use_current_user = false)
+    old_format = @template_format
+    @template_format = :otml
+    # Now that we're using the HttpCookieService, current_user.vendor_interface should be correct, even when requesting from the java client
+    vendor_interface = nil
+    # allow switching between using the current user and not. This way the cached otml can always have Go!Link, but the dynamic otml can use the current user's device.
+    if use_current_user
+      vendor_interface = current_user.vendor_interface
+    else
+      vendor_interface = VendorInterface.find(6)
+    end
+    result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
+    @template_format = old_format
+    return result
   end
 
   def ot_bundles(options={})
@@ -241,7 +248,7 @@
       haml_tag :bundles do
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
-        haml_tag :OTLabbookBundle
+        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
       end
     end
   end

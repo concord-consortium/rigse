@@ -13,33 +13,31 @@
     :weight bold
 
 
+.activity
+  :page-break-after always
+  
 .page
   :display block
-  :page-break-after always
   :float left
   :margin 0px
   :padding 0px
   :width 100%
-  :min-height 500px
-  :height auto
-  
+
   .page_content
     :display block
     :width 70%
     :float left
-    :height auto
     :margin 1em
-    
+
     .item
-      :page-break-inside avoid
       :display block
       :float left
       :width 100%
       :clear both
       :margin 2em
-
-    .data_collector
       :page-break-inside avoid
+    
+    .data_collector
       :display block
       :float left
       :clear both
@@ -53,15 +51,16 @@
     :width 20%
     :border
       :left 1px dotted
-    :height auto
     
     .teacher_notes
       .teacher_note
         :font
           :size .9em
   
+img
+  :float left
+  :margin 1em
   
-
 input
   :border dotted  
   :border-width 1px
@@ -70,5 +69,6 @@ input[type=text]
   :padding-left 10px
   :padding-right 10px
   :margin-left 2em
+  :min-height 150px
   
 

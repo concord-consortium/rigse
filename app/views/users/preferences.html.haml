@@ -10,4 +10,5 @@
     .content
       = form.error_messages
       = render :partial => 'form', :locals => { :f => form }
+      = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
 
