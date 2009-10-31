@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/rites"
-set :branch, "master"
+set :branch, "production"
 
 #############################################################
 #  Servers
