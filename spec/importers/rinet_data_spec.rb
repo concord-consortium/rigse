@@ -126,11 +126,11 @@ describe RinetData do
       end
       
       # try creating a student with a bad login
-      it "should tollerate failing validations for users" do
+      it "should not throw an error failing validations for users" do
         student_row = {
-          :FirstName => "bad",
-          :LastName => "student",
-          :Email => "",
+          :Firstname => "bad",
+          :Lastname => "student",
+          :EmailAddress => "",
           :login => "",
           :SASID => '0078',
           :SchoolNumber => '07113' # real school
@@ -260,7 +260,7 @@ describe RinetData do
     it "should not create duplicate courses" do
       courses = Portal::Course.find(:all)
       courses.map! { |course| "#{course.school_id}-#{course.name}" }
-      courses.size.should eql courses.uniq.size
+      courses.size.should eql(courses.uniq.size)
     end
     
     it "when the same import is rerun, there should be no new students" do
