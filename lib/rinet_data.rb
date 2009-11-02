@@ -1,8 +1,41 @@
+# To run the import of the RITES districts:
+#
+#   RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
+#
+# Here's an equivalent invocation in jruby:
+#
+#   RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner "RinetData.new().run_scheduled_job"
+#
+# If you are doing development you will want to create a dump of the state of
+# your working database before any imports have been made:
+# 
+#    rake db:dump
+#
+# After testing the importer you can restore the database to it's previous state
+# in order to run the importer again.
+#
+#    rake db:load
+#
+# Here are the default options:
+#
+#   :verbose => false
+#   :skip_get_csv_files => false
+#   :log_level => Logger::DEBUG
+#
+# You can customize the operation, here's an example: 
+#
+#   If you want to:
+#
+#   - skip reloading the csv files from the external SFTP server
+#   - display a complete log on the console as you run the task
+#   - create a log file that consists of ONLY the items recorded as :errors 
+#
+#   RinetData.new({:skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
+#
+
 require 'fileutils'
 require 'arrayfields'
 
-# use: RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
-# to run the import of all the RITES districts.
 class RinetData
   
   class RinetDataError < ArgumentError
@@ -48,26 +81,34 @@ class RinetData
       :verbose => false,
       :log_directory => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :districts => @rinet_data_config[:districts],
-      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
+      :log_level => Logger::DEBUG
     }
-    @options = defaults.merge(options)
+    @rinet_data_options = defaults.merge(options)
     
-    @verbose = @options[:verbose] 
-    @districts = @options[:districts]
-    @district_data_root_dir = @options[:district_data_root_dir]
-    @log_directory = @options[:log_directory]
-    
+    @verbose = @rinet_data_options[:verbose] 
+    @districts = @rinet_data_options[:districts]
+    @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
+    @log_directory = @rinet_data_options[:log_directory]
+    log_path = "#{@log_directory}/import_log.txt"
+
     @errors = {:districts => {}}
-    
     @last_log_level = nil
     @last_log_column = 0
     
-      
-    clear_ar_maps
-    
     FileUtils.mkdir_p @log_directory
-    @log = Logger.new("#{@log_directory}/import_log.txt",'daily')
-    log_message("Started in #{@district_data_root_dir} at #{Time.now}")    
+    @log = Logger.new(log_path,'daily')
+    @log.level = @rinet_data_options[:log_level]
+    
+    message = <<-HEREDOC
+
+Started in #{@district_data_root_dir} at #{Time.now}
+Logging to: #{File.expand_path(log_path)}
+    
+    HEREDOC
+    log_message(message)    
+
+    clear_ar_maps
   end
   
   
@@ -100,7 +141,7 @@ class RinetData
   
   def run_scheduled_job(opts = {})
     start_time = Time.now
-    if @options[:skip_get_csv_files]
+    if @rinet_data_options[:skip_get_csv_files]
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
     else
       log_message "\n (getting csv files ...)\n"
@@ -302,7 +343,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         rake portal:setup:download_nces_data
         rake portal:setup:import_nces_from_files
       HEREDOC
-      log_message(message, {:log_level => :info})
+      log_message(message, {:log_level => :warn})
       # 
       # 
       # log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)", {:log_level => :error})
@@ -337,7 +378,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     # try to cache the data here in memory:
     unless row[:rites_user_id]
       if row[:login] 
-        if row[:EmailAddress]
+        if row[:EmailAddress] && row[:EmailAddress].length > 0
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
         begin
@@ -361,8 +402,11 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
             user = User.create!(rites_user_params)
           end
         rescue ExternalUserDomain::ExternalUserDomainError => e
+          message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
+          log_message(message, options={:log_level => :error})
+          return nil
         rescue ActiveRecord::ActiveRecordError => e
-          message = "\nCould not create user: #{params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{params.inspect}\n"
+          message = "\nCould not create user: #{rites_user_params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{rites_user_params.inspect}\n"
           log_message(message, options={:log_level => :error})
           return nil
         end
@@ -453,7 +497,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         end
       end
     else
-      log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
+      log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}", {:log_level => :warn})
     end
     teacher
   end
@@ -541,7 +585,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         Raise ArgumentError("no school exists when creating a course")
       end
     else
-      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :info})
+      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :warn})
     end
     course_csv_row
   end
@@ -569,21 +613,29 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     end
   end
 
+  def check_start_date(start_date)
+    # example start date: 2008-08-15
+    # alternate examples from RINET CSV data: 9/1/2009
+    begin
+      start_date = Date.parse(start_date)
+    rescue ArgumentError, TypeError
+      log_message("bad start date for class: '#{start_date}'", {:log_level => :error})
+      nil
+    end
+  end
+    
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
     # course_active_record_map example: { CourseNumber => Portal::Course }
     # debugger
     portal_course = @course_active_record_map[member_relation_row[:CourseNumber]]
-    # unless portal_course && portal_course.class == Portal::Clazz
-    unless portal_course
+    # unless portal_course is a Portal::Course
+    unless portal_course.class == Portal::Course
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
     
-    unless member_relation_row[:StartDate] && member_relation_row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
-      log_message("bad start time for class: '#{member_relation_row[:StartDate]}'", {:log_level => :error}) unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
-      return
-    end
+    return unless check_start_date(member_relation_row[:StartDate])
     
     section = member_relation_row[:CourseSection]
     start_date = DateTime.parse(member_relation_row[:StartDate]) 
@@ -650,5 +702,4 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
       end
     end
   end
-  
 end
