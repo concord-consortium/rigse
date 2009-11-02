@@ -27,28 +27,40 @@ class ExternalUserDomain < ActiveRecord::Base
   
   class <<self
 
-    def login_exists?(external_login)
-      User.login_exists?("#{external_login}_#{@@external_domain_selection}")
+    # def login_exists?(external_login)
+    #   User.login_exists?("#{external_login}_#{@@external_domain_selection}")
+    # end
+    # 
+    # def login_does_not_exist?(external_login)
+    #   User.login_does_not_exist?("#{external_login}_#{@@external_domain_selection}")
+    # end
+
+    def external_login_exists?(external_login)
+      User.login_exists?(ExternalUserDomain.external_login_to_login(external_login))
     end
 
-    def login_does_not_exist?(external_login)
-      User.login_does_not_exist?("#{external_login}_#{@@external_domain_selection}")
+    def external_login_does_not_exist?(external_login)
+      User.login_exists?(ExternalUserDomain.external_login_to_login(external_login))
     end
 
     def find_user_by_external_login(external_login)
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
-      User.find_by_login(external_login + '_' + @@external_domain_selection)
+      User.find_by_login(ExternalUserDomain.external_login_to_login(external_login))
     end
     
     def create_user_with_external_login(params)
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
-      params[:login] = "#{params[:login]}_#{@@external_domain_selection}"
+      params[:login] = ExternalUserDomain.external_login_to_login(params[:login])
       user = User.create!(params)
       user.register!
       user.activate!
       user
     end
-    
+
+    def external_login_to_login(external_login)
+      "#{external_login}_#{@@external_domain_selection}".gsub(/\s+|'/, '_')
+    end
+
     def external_domain_suffix
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
       @@external_domain_selection

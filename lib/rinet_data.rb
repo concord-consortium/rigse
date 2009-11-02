@@ -4,6 +4,13 @@ require 'arrayfields'
 # use: RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
 # to run the import of all the RITES districts.
 class RinetData
+  
+  class RinetDataError < ArgumentError
+  end
+
+  class RinetGetFileError < RuntimeError
+  end
+
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :log
@@ -43,12 +50,18 @@ class RinetData
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
     }
-    options.merge!(defaults)
+    @options = defaults.merge(options)
     
-    @verbose = options[:verbose] 
-    @districts = options[:districts]
-    @district_data_root_dir = options[:district_data_root_dir]
-    @log_directory = options[:log_directory]
+    @verbose = @options[:verbose] 
+    @districts = @options[:districts]
+    @district_data_root_dir = @options[:district_data_root_dir]
+    @log_directory = @options[:log_directory]
+    
+    @errors = {:districts => {}}
+    
+    @last_log_level = nil
+    @last_log_column = 0
+    
       
     clear_ar_maps
     
@@ -86,56 +99,67 @@ class RinetData
   end
   
   def run_scheduled_job(opts = {})
-    
-    log_message "\n (getting csv files ...)\n"
-    get_csv_files
+    start_time = Time.now
+    if @options[:skip_get_csv_files]
+      log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
+    else
+      log_message "\n (getting csv files ...)\n"
+      get_csv_files
+    end
     
     num_districts = num_teachers = num_students = num_courses = num_classes = 0
     
-    @districts.each do |district|    
-      clear_ar_maps
+    @districts.each do |district|
+      if @errors[:districts][district]
+        log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
+      else
       
-      log_message "\n (parsing csv files for district #{district}...)\n"
-      parse_csv_files_for_district(district)
+        clear_ar_maps
       
-      log_message "\n (joining data for district #{district}...)\n"
-      join_data
+        log_message "\n (parsing csv files for district #{district}...)\n"
+        parse_csv_files_for_district(district)
+      
+        log_message "\n (joining data for district #{district}...)\n"
+        join_data
     
-      log_message "\n (updating models for district #{district}...)\n"
-      update_models
+        log_message "\n (updating models for district #{district}...)\n"
+        update_models
       
-      district_summary = <<-HEREDOC 
-        Import Summary for district #{district}:
-          Teachers: #{@parsed_data[:staff].length}
-          Students: #{@parsed_data[:students].length}
-          Courses:  #{@parsed_data[:courses].length}
-          Classes:  #{@parsed_data[:staff_assignments].length}
+        district_summary = <<-HEREDOC
+
+  Import Summary for district #{district}:
+    Teachers: #{@parsed_data[:staff].length}
+    Students: #{@parsed_data[:students].length}
+    Courses:  #{@parsed_data[:courses].length}
+    Classes:  #{@parsed_data[:staff_assignments].length}
 
         HEREDOC
-      log_message_message(district_summary)
+        log_message(district_summary)
       
-      num_districts += 1
-      num_teachers += @parsed_data[:staff].length
-      num_students += @parsed_data[:students].length
-      num_courses += @parsed_data[:courses].length
-      num_classes += @parsed_data[:staff_assignments].length
+        num_districts += 1
+        num_teachers += @parsed_data[:staff].length
+        num_students += @parsed_data[:students].length
+        num_courses += @parsed_data[:courses].length
+        num_classes += @parsed_data[:staff_assignments].length
+      end
     end
     end_time = Time.now
     grand_total = <<-HEREDOC 
-      ============================
-      Import Summary: 
-      ============================
-      Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
-        End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}}
-         Minutes: = #{((end_time - start_time)/60).to_i}
-         
-       Districts: #{num_districts}
-        Teachers: #{num_teachers}
-        Students: #{num_students}
-         Courses: #{num_courses}
-         Classes: #{num_classes}
-      ============================
-      HEREDOC
+
+============================
+Import Summary: 
+============================
+Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
+  End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}
+   Minutes: #{((end_time - start_time)/60).to_i}
+ 
+ Districts: #{num_districts}
+  Teachers: #{num_teachers}
+  Students: #{num_students}
+   Courses: #{num_courses}
+   Classes: #{num_classes}
+============================
+    HEREDOC
     log_message(grand_total)
 
   end
@@ -174,20 +198,25 @@ class RinetData
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      @log.info "Downloading: #{remote_path} and saving to: \n  #{local_path}"
+      log_message("Downloading: #{remote_path} and saving to: \n  #{local_path}", {:log_level => :info})
       begin
         sftp.download!(remote_path, local_path)
       rescue RuntimeError => e
-        @log.error("#{e.class}: #{e.message}: Download failed")
+        message = "\nDownload: #{remote_path} failed: \n#{e.class}: #{e.message}\n"
+        log_message(message, {:log_level => :error})
+        @errors[:districts][district] = message
+        # raise RinetGetFileError
       end
     end
+    # debugger
     current_path = "#{@district_data_root_dir}/#{district}/current"
+    FileUtils.rm(current_path)
     FileUtils.ln_s(local_district_path, current_path, :force => true)
   end
 
 
   def parse_csv_files_for_district(district, date_time_key='current')
-    log_message "(\nparsing csv data: #{@district_data_root_dir}/#{district}/#{date_time_key})"
+    log_message "\n(parsing csv data: #{@district_data_root_dir}/#{district}/#{date_time_key})"
     parse_csv_files_in_dir("#{@district_data_root_dir}/#{district}/#{date_time_key}",@parsed_data)
   end
 
@@ -197,7 +226,7 @@ class RinetData
       count = 0
       @@csv_files.each do |csv_file|
         local_path = "#{csv_data_directory}/#{csv_file}.csv"
-        log_message "(\nparsing: #{csv_data_directory}/#{csv_file}.csv)"
+        log_message "\n(parsing: #{csv_data_directory}/#{csv_file}.csv)"
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path).each do |line|
@@ -206,7 +235,7 @@ class RinetData
         end
       end
     else
-      log_message("no data folder found: #{csv_data_directory}", :error)
+      log_message("no data folder found: #{csv_data_directory}", {:log_level => :error})
     end
   end
 
@@ -217,32 +246,42 @@ class RinetData
         row.fields = FIELD_DEFINITIONS[key]
         @parsed_data[key] << row
       else
-        log_message("couldn't add row data for #{key}: #{line}", :error)
+        log_message("couldn't add row data for #{key}: #{line}", {:log_level => :error})
       end
     end
   end
 
   def join_students_sakai
-    @parsed_data[:students].each do |student|
-      log_message("working with student  #{student[:Lastname]}")
+    new_students = @parsed_data[:students]
+    @collection_length = new_students.length
+    @collection_index = 0
+    log_message("\n\nnprocessing: #{ @collection_length} student sakai associations: ")
+    new_students.each do |student|
+      log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['student-sakai associations', 6, 24]})
       found = student_sakai_map(student[:SASID])
       if (found)
         student[:login] = found
       else
-        log_message("student not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )", :error)
+        log_message("\nstudent not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )\n", {:log_level => :error})
       end
+      @collection_index += 1
     end
   end
-  
+
   def join_staff_sakai
-    @parsed_data[:staff].each do |staff_member|
-      log_message("working with staff_member  #{staff_member[:Lastname]}")
+    new_teachers = @parsed_data[:staff]
+    @collection_length = new_teachers.length
+    @collection_index = 0
+    log_message("\n\nprocessing: #{ @collection_length} staff_member sakai associations: ")
+    new_teachers.each do |staff_member|
+      log_message("#{staff_member[:Lastname]}", {:log_level => :info, :info_in_columns => ['staff-sakai associations', 6, 24]})
       found = staff_sakai_map(staff_member[:TeacherCertNum])
-      if (found)
+      if found
         staff_member[:login] = found
       else
-        log_message("teacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)", :error)
+        log_message("\nteacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)\n", {:log_level => :error})
       end
+      @collection_index += 1
     end
   end
   
@@ -257,8 +296,17 @@ class RinetData
       # doesn't already exist.
       school = Portal::School.find_or_create_by_nces_school(nces_school)
     else
-      log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)",:error)
-      log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files",:info)
+      message = <<-HEREDOC
+      could not find school for: #{row[:SchoolNumber]}
+      Have the NCES schools been imported? Yyou might need to run the rake tasks: 
+        rake portal:setup:download_nces_data
+        rake portal:setup:import_nces_from_files
+      HEREDOC
+      log_message(message, {:log_level => :info})
+      # 
+      # 
+      # log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)", {:log_level => :error})
+      # log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files", {:log_level => :info)
       # TODO, create one with a special name? Throw exception?
       school = nil
     end
@@ -269,8 +317,13 @@ class RinetData
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
-      log_message("could not find distrcit for: #{row[:District]} (have the NCES schools been imported?)",:warn)
-      log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files",:info)
+      message = <<-HEREDOC
+      could not find district for: #{row[:District]}
+      Have the NCES schools been imported? You might need to run the rake tasks: 
+        rake portal:setup:download_nces_data
+        rake portal:setup:import_nces_from_files
+      HEREDOC
+      log_message(message, {:log_level => :warn})
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
@@ -287,30 +340,33 @@ class RinetData
         if row[:EmailAddress]
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
-        params = {
-          :login  => row[:login],
-          :password => row[:Password] || row[:Birthdate],
-          :password_confirmation => row[:Password] || row[:Birthdate],
-          :first_name => row[:Firstname],
-          :last_name  => row[:Lastname],
-          :email => email || "#{row[:login]}#{ExternalUserDomain.external_domain_suffix}@mailinator.com" # (temporary unique email address to pass valiadations)
-        }
         begin
-          if ExternalUserDomain.login_exists?(row[:login])
-            user = ExternalUserDomain.find_user_by_external_login(row[:login])
-            params.delete(:login)
-            user.update_attributes!(params)
+          sakai_login = row[:login]
+          rites_login = ExternalUserDomain.external_login_to_login(sakai_login)
+          email = row[:email] ||
+            "#{rites_login}@mailinator.com" # (temporary unique email address to pass valiadations)
+            
+          rites_user_params = {
+            :login  => rites_login,
+            :password => row[:Password] || row[:Birthdate],
+            :password_confirmation => row[:Password] || row[:Birthdate],
+            :first_name => row[:Firstname].gsub(/\s+/, ' '),
+            :last_name  => row[:Lastname],
+            :email => email
+          }
+          if User.login_exists?(rites_login)
+            user = User.find_by_login(rites_login)
+            user.update_attributes!(rites_user_params)
           else
-            user = ExternalUserDomain.create_user_with_external_login(params)
+            user = User.create!(rites_user_params)
           end
         rescue ExternalUserDomain::ExternalUserDomainError => e
         rescue ActiveRecord::ActiveRecordError => e
-          error_message = "Could not create user: #{params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{params.inspect}"
-          @log.error(error_message)
-          puts error_message if @verbose
+          message = "\nCould not create user: #{params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{params.inspect}\n"
+          log_message(message, options={:log_level => :error})
           return nil
         end
-        row[:rites_user_id]=user.id
+        row[:rites_user_id] = user.id
         user.unsuspend! if user.state == 'suspended'
         unless user.state == 'active'
           user.register!
@@ -319,21 +375,30 @@ class RinetData
         user.roles.clear
       else
         begin
-          if(row[:SASID])
-            @log.warn("No login found for #{row[:Firstname]} #{row[:Lastname]}, check student_sakai.csv for #{row[:SASID]}")
-          elsif(row[:TeacherCertNum])
-            @log.warn("No login found for #{row[:Firstname]} #{row[:Lastname]}, check staff_sakai.csv for #{row[:SASID]}")
-          else
-            throw "no SASID and NO TeacherCertNum for #{row}"
+          user = nil
+          message = "\n"
+          beforeline = ""
+          if row[:SASID]
+            message << "No login found for #{row[:Firstname]} #{row[:Lastname]}, check student_sakai.csv for missing SASID: #{row[:SASID]}"
+            beforeline = "\n"
           end
-        rescue
-          @log.error("could not find user data in #{row}")
+          if row[:TeacherCertNum]
+            message << "#{beforeline}No login found for #{row[:Firstname]} #{row[:Lastname]}, check staff_sakai.csv for missing TeacherCertNum: #{row[:TeacherCertNum]}"
+          end
+          message << "\n"
+          if message.strip.empty?
+            raise(RinetData::RinetDataError, "no SASID and NO TeacherCertNum for row: #{row.join(', ')}\n")
+          else
+            log_message(message, options={:log_level => :warn})
+          end
+        rescue RinetData::RinetDataError => e
+          log_message("\n#{e.message}\b", {:log_level => :error})
         end
       end
     end
     user
   end
-  
+
   def block_update_teachers
     @new_teachers = @existing_teachers = []
     @parsed_data[:staff].each do |row|
@@ -351,17 +416,18 @@ class RinetData
     new_teachers.each do |teacher| 
       log_message("processing teacher #{teacher[:Lastname]}", '')
       create_or_update_teacher(teacher)
-      puts if @verbose
     end  
   end
   
   def update_teachers
     new_teachers = @parsed_data[:staff]
-    log_message "\n\n(processing: #{new_teachers.length} teachers )"
-    new_teachers.each do |teacher| 
-      log_message("processing teacher: #{teacher[:Lastname]}: ")
+    @collection_length = new_teachers.length
+    @collection_index = 0
+    log_message "\n\nprocessing: #{ @collection_length} teachers:"
+    new_teachers.each do |teacher|
+      log_message("#{teacher[:Lastname]}", {:log_level => :info, :info_in_columns => ['teachers', 6, 24]})
       create_or_update_teacher(teacher)
-      puts if @verbose
+      @collection_index += 1
     end  
   end
   
@@ -370,10 +436,8 @@ class RinetData
     teacher = nil
     unless row[:rites_teacher_id]
       user = create_or_update_user(row)
-      if (user)
-        status_update
+      if user
         teacher = Portal::Teacher.find_or_create_by_user_id(user.id)
-        status_update
         row[:rites_user_id]=teacher.id
         # how do we find out the teacher grades?
         # teacher.grades << grade_9
@@ -383,12 +447,10 @@ class RinetData
         if school
           school.add_member(teacher)
         end
-        status_update
         row[:rites_teacher_id] = teacher.id
         if teacher
           @teachers_active_record_map[row[:TeacherCertNum]] = teacher
         end
-        status_update
       end
     else
       log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
@@ -398,10 +460,13 @@ class RinetData
   
   def update_students
     new_students = @parsed_data[:students]
-    "\n\n(processing: #{new_students.length} students )"
+    @collection_length = new_students.length
+    @collection_index = 0
+    log_message("\n\n(processing: #{@collection_length} students: )")
     new_students.each do |student| 
-      "(processing student: #{student[:Lastname]})"
+      log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['students', 6, 24]})
       create_or_update_student(student)
+      @collection_index += 1
     end
   end
   
@@ -410,7 +475,7 @@ class RinetData
     student = nil
     unless row[:rites_student_id]
       user = create_or_update_user(row)
-      if (user)
+      if user
         student = user.portal_student
         unless student
           student = Portal::Student.create(:user => user)
@@ -436,10 +501,14 @@ class RinetData
   
   def update_courses
     new_courses = @parsed_data[:courses]
-    "\n\n(processing: #{new_courses.length} courses:)\n"
+    @collection_length = new_courses.length
+    @collection_index = 0
+    log_message("\n\n(processing: #{@collection_length} courses:)\n")
     new_courses.each do |course_csv_row| 
-      "(creating course: #{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
+      log_message("#{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})",
+        {:log_level => :info, :info_in_columns => ['courses', 3, 40]})
       create_or_update_course(course_csv_row)
+      @collection_index += 1
     end
   end
   
@@ -469,10 +538,10 @@ class RinetData
         # cache that results in hashtable
         @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
       else
-        Raise ArgumentError "no school exists when creating a course"
+        Raise ArgumentError("no school exists when creating a course")
       end
     else
-      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", :info)
+      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :info})
     end
     course_csv_row
   end
@@ -480,27 +549,39 @@ class RinetData
   def update_classes
     # passes class member-relationship rows to create_or_update_class
     # from staff assignments:
-    @parsed_data[:staff_assignments].each do |nc| 
+    new_staff_assignments = @parsed_data[:staff_assignments]
+    @collection_length = new_staff_assignments.length
+    @collection_index = 0
+    log_message("\n\n(processing: #{@collection_length} staff assignments:)\n")
+    new_staff_assignments.each do |nc| 
       create_or_update_class(nc)
+      @collection_index += 1
     end
     
     # enroll students
-    @parsed_data[:enrollments] .each do |nc| 
+    enrollments = @parsed_data[:enrollments]
+    @collection_length = enrollments.length
+    @collection_index = 0
+    log_message("\n\n(processing: #{@collection_length} enrollments:)\n")
+    enrollments.each do |nc| 
       create_or_update_class(nc)
+      @collection_index += 1
     end
   end
 
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
-    # course_active_record_map example: { CourseNumber => Portal::course }
+    # course_active_record_map example: { CourseNumber => Portal::Course }
+    # debugger
     portal_course = @course_active_record_map[member_relation_row[:CourseNumber]]
-    unless portal_course && portal_course.class == Portal::Course
-      log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}",:error)
+    # unless portal_course && portal_course.class == Portal::Clazz
+    unless portal_course
+      log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
     
     unless member_relation_row[:StartDate] && member_relation_row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
-      log_message("bad start time for class: '#{member_relation_row[:StartDate]}'",:error) unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
+      log_message("bad start time for class: '#{member_relation_row[:StartDate]}'", {:log_level => :error}) unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
       return
     end
     
@@ -511,21 +592,53 @@ class RinetData
     if member_relation_row[:SASID] && @students_active_record_map[member_relation_row[:SASID]]
       student =  @students_active_record_map[member_relation_row[:SASID]]
       student.add_clazz(clazz)
+      log_message("#{student.last_name}", {:log_level => :info, :info_in_columns => ['student-enrollments', 6, 24]})
     elsif member_relation_row[:TeacherCertNum] && @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
       clazz.teacher = @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
       clazz.save
+      log_message("#{clazz.teacher.last_name}", {:log_level => :info, :info_in_columns => ['teacher-assigments', 6, 24]})      
     else
-      @log.error("teacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}")
+      log_message("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n", {:log_level => :error})
     end
     member_relation_row
   end
   
-  def log_message(message, log_level=:debug)
-    new_line="\n"
-    print message+new_line if @verbose
-    @log.send(log_level, message)
+  def log_message(message, options={})
+    # optional formmating for short :log_level => :info messages
+    #   print a continuing sequence of :info messages in 3 columns of 30 characters each
+    #   :info_in_columns => ['teachers', 4, 30]
+    #
+    defaults = {:log_level => :debug, :newline => "\n", :info_in_columns => false}
+    options = defaults.merge(options)
+    newline = options[:newline]
+    column_format = options[:info_in_columns]
+    if column_format && (options[:log_level] == :info)
+      message = sprintf("%-#{column_format[2]}s", message)
+      @last_log_column += 1
+      if @last_log_column == 1
+        index = sprintf('%6d', @collection_index)
+        length = sprintf('%-6s', "#{@collection_length}:")
+        line_prefix = "#{column_format[0]} #{index}/#{length}"
+        message = "#{line_prefix}  #{message}"
+      end
+      @last_log_column %= column_format[1]
+      if @last_log_column == 0
+        newline = "\n"
+      else
+        newline = ''
+      end
+    else
+      if @last_log_column != 0
+        message = "\n" + message 
+        @last_log_column = 0
+      end
+    end
+    message = message + newline
+    print message if @verbose
+    @log.send(options[:log_level], message)
+    @last_log_level = options[:log_level]
   end
-  
+
   def status_update(step_size=1)
     if @verbose
       unless defined? @step_counter
