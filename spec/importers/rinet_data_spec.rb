@@ -66,29 +66,51 @@ describe RinetData do
   end
 
   require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-  
+
+  ## This example group assumes that Net::SFTP is used to download RINET data.
   ## The expected behaviour of the mock objects depends highly on
   ## that of Net::SFTP, so the changes to the module should be tracked
   ## over time to keep this test relevant.
   describe "Get data from rinet" do
-    before(:each) do
-      @rinet_data = RinetData.new
+    before(:all) do
+      @failed_connection_log = /.*get_csv_files failed.*/i
+      @no_file_message = /.*no such file.*/i
+      @no_file_log = /.*download.*failed.*/i
+      @district_data_root_dir = "#{RAILS_ROOT}/rinet_data/test/districts/csv"
     end
     
-    it "should be resilient in the event that it can not connect to the sftp server" do
-      #Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'ConnectFailure'))
-      #lambda { @rinet_data.get_csv_files }.should_not raise_error
+    before(:each) do
+      @rinet_data = RinetData.new(:district_data_root_dir => @district_data_root_dir)
     end
+    
+    it "should be resilient in the event that it can not connect to the sftp server"
     
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
-      #Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'ConnectFailure'))
-      #logger = double('Logger')
+      Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'random message'))
+      @rinet_data.should_receive('log_message') do |a, b|
+        a.should =~ @failed_connection_log
+      end
+      begin
+        @rinet_data.get_csv_files
+      rescue
+      end
     end
     
-    it "should be resilient in the event that directory does not exist"
-    it "should report an error in the event that a remote directory does not exist"
-    it "should be resilient in the event that a remote file does note exist"
-    it "should report an error in the event that a remote file does not exist"
+    it "should be resilient in the event that a local/remote directory/file does not exist" do
+      sftp = double('mock_sftp')
+      sftp.stub(:download!).and_raise(RuntimeError.new('open the test file to download: no such file'))
+      proc = lambda { @rinet_data.get_csv_files_for_district('test07', sftp) }
+      proc.should_not raise_error(RuntimeError, @no_file_message)
+    end
+    
+    it "should report an error in the event that a remote directory/file does not exist" do
+      sftp = double('mock_sftp')
+      sftp.stub(:download!).and_raise(RuntimeError.new('open the test file to download: no such file'))
+      @rinet_data.should_receive('log_message').at_least(:once) do |a, b |
+        a.should =~ @no_file_log
+      end
+      @rinet_data.get_csv_files_for_district('test07', sftp)
+    end
   end
   
   describe "basic csv file parsing" do
