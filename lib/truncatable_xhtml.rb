@@ -130,7 +130,7 @@ module TruncatableXhtml
     html_tables.each do |tablename|
       if self.respond_to? tablename
         html_replacements.each do |replace_me|
-          self.send("#{tablename}=",(self.send tablename).gsub(replace_me,""))
+          self.send("#{tablename}=",(self.send tablename).gsub(replace_me," "))
         end
       end
     end
