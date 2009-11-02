@@ -184,7 +184,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         end
       end
     rescue Exception => e
-      @log.error("get_csv_files failed: #{e.class}: #{e.message}")
+      log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
       raise
     end
   end
@@ -210,7 +210,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     end
     # debugger
     current_path = "#{@district_data_root_dir}/#{district}/current"
-    FileUtils.rm(current_path)
+    FileUtils.rm_f(current_path)
     FileUtils.ln_s(local_district_path, current_path, :force => true)
   end
 
