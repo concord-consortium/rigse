@@ -148,11 +148,11 @@ describe RinetData do
       end
       
       # try creating a student with a bad login
-      it "should tollerate failing validations for users" do
+      it "should not throw an error failing validations for users" do
         student_row = {
-          :FirstName => "bad",
-          :LastName => "student",
-          :Email => "",
+          :Firstname => "bad",
+          :Lastname => "student",
+          :EmailAddress => "",
           :login => "",
           :SASID => '0078',
           :SchoolNumber => '07113' # real school
@@ -282,7 +282,7 @@ describe RinetData do
     it "should not create duplicate courses" do
       courses = Portal::Course.find(:all)
       courses.map! { |course| "#{course.school_id}-#{course.name}" }
-      courses.size.should eql courses.uniq.size
+      courses.size.should eql(courses.uniq.size)
     end
     
     it "when the same import is rerun, there should be no new students" do
@@ -360,5 +360,27 @@ describe RinetData do
     end  
   end
   
+  describe "check_start_date validation method works" do
+    
+    it "should not return nil when parsing a start_date like: '2008-08-15'" do
+      @rd.check_start_date("2008-08-15").should_not be_nil
+    end
+
+    it "should not return nil when parsing a start_date like: '9/1/2009'" do
+      @rd.check_start_date("9/1/2009").should_not be_nil
+    end
+
+    it "should return nil when parsing a start_date like: 'abc'" do
+      @rd.check_start_date("abc").should be_nil
+    end
+    
+    it "should return nil when parsing a start_date like: ''" do
+      @rd.check_start_date("").should be_nil
+    end
+
+    it "should return nil when parsing a start_date like: nil" do
+      @rd.check_start_date(nil).should be_nil
+    end
+  end
   
 end

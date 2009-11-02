@@ -58,7 +58,9 @@ class ExternalUserDomain < ActiveRecord::Base
     end
 
     def external_login_to_login(external_login)
-      "#{external_login}_#{@@external_domain_selection}".gsub(/\s+|'/, '_')
+      raise ExternalUserDomainError unless (external_login && external_login.length > 0)
+      new_login = external_login.gsub(/'|`|\(|\)/, ' ').strip.gsub(/\s+/, '_')
+      "#{new_login}_#{@@external_domain_selection}"
     end
 
     def external_domain_suffix
