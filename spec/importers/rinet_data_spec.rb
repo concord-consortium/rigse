@@ -53,12 +53,6 @@ end
 describe RinetData do
   include RinetDataExampleHelpers
   
-  ##
-  ## Note: This is concidered bad form: ideally we should
-  ## reset all our models each time we run.
-  ## in this case, we initialize and SHARE STATE because this is
-  ## only run ONCE! .... you have been warned.
-  ###
   before(:each) do
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
     @initial_users = User.find(:all)
