@@ -1,6 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module RinetDataExampleHelpers
+  
   def be_more_than(expected)
     simple_matcher do |given, matcher|
       matcher.description = "more than #{expected.size}"
@@ -50,7 +51,6 @@ module RinetDataExampleHelpers
 end
 
 describe RinetData do
-  require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
   include RinetDataExampleHelpers
   
   ##
