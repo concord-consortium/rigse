@@ -1,43 +1,42 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-
-def be_more_than(expected)
-  simple_matcher do |given, matcher|
-    matcher.description = "more than #{expected.size}"
-    matcher.failure_message = "expected #{given.size} to be more than #{expected.size}"
-    matcher.negative_failure_message = "expected #{given.size} not to be more than #{expected.size}"
-    (given.size > expected.size)
+module RinetDataExampleHelpers
+  
+  def be_more_than(expected)
+    simple_matcher do |given, matcher|
+      matcher.description = "more than #{expected.size}"
+      matcher.failure_message = "expected #{given.size} to be more than #{expected.size}"
+      matcher.negative_failure_message = "expected #{given.size} not to be more than #{expected.size}"
+      (given.size > expected.size)
+    end
   end
-end
-
-def be_less_than(expected)
-  simple_matcher do |given, matcher|
-    matcher.description = "less than #{expected.size}"
-    matcher.failure_message = "expected #{given.size} to be less than #{expected.size}"
-    matcher.negative_failure_message = "expected #{given.size} not to be less than #{expected.size}"
-    (given.size < expected.size)
+  
+  def be_less_than(expected)
+    simple_matcher do |given, matcher|
+      matcher.description = "less than #{expected.size}"
+      matcher.failure_message = "expected #{given.size} to be less than #{expected.size}"
+      matcher.negative_failure_message = "expected #{given.size} not to be less than #{expected.size}"
+      (given.size < expected.size)
+    end
   end
-end
-
-def have_nces_class
-  simple_matcher do |given, matcher|
-    matcher.description = "#{given.inspect} should be in 'real'(nces) school"
-    matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
-    matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
-    given.clazzes.detect { |c| c.real? }
+  
+  def have_nces_class
+    simple_matcher do |given, matcher|
+      matcher.description = "#{given.inspect} should be in 'real'(nces) school"
+      matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
+      matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
+      given.clazzes.detect { |c| c.real? }
+    end
   end
-end
-
-def be_in_nces_school
-  simple_matcher do |given, matcher|
-    matcher.description = "#{given.inspect} should be in 'real'(nces) school"
-    matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
-    matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
-    given.schools.detect { |s| s.real? }
+  
+  def be_in_nces_school
+    simple_matcher do |given, matcher|
+      matcher.description = "#{given.inspect} should be in 'real'(nces) school"
+      matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
+      matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
+      given.schools.detect { |s| s.real? }
+    end
   end
-end
-
-describe RinetData do
   
   def run_importer(districts=["01"])
     districts.each do |district|
@@ -48,13 +47,12 @@ describe RinetData do
       @logger.stub!(:error).and_return(:default_value)
     end
   end
+  
+end
 
-  ##
-  ## Note: This is concidered bad form: ideally we should
-  ## reset all our models each time we run.
-  ## in this case, we initialize and SHARE STATE because this is
-  ## only run ONCE! .... you have been warned.
-  ###
+describe RinetData do
+  include RinetDataExampleHelpers
+  
   before(:each) do
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
     @initial_users = User.find(:all)
@@ -64,8 +62,6 @@ describe RinetData do
     @initial_clazzes = Portal::Clazz.find(:all)
     run_importer
   end
-
-  require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
   ## This example group assumes that Net::SFTP is used to download RINET data.
   ## The expected behaviour of the mock objects depends highly on
@@ -213,6 +209,7 @@ describe RinetData do
   end
   
   describe "verifying that the appropriate entities get created from CSV files" do
+    
     it "should create new teachers" do
       Portal::Teacher.find(:all).should be_more_than(@initial_teachers)
     end
