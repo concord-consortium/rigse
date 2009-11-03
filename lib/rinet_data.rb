@@ -20,7 +20,7 @@
 #
 #   :verbose => false
 #   :skip_get_csv_files => false
-#   :log_level => Logger::DEBUG
+#   :log_level => Logger::WARN
 #
 # You can customize the operation, here's an example: 
 #
@@ -82,7 +82,7 @@ class RinetData
       :log_directory => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
-      :log_level => Logger::DEBUG
+      :log_level => Logger::WARN
     }
     @rinet_data_options = defaults.merge(options)
     
