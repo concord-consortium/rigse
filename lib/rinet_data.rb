@@ -90,20 +90,21 @@ class RinetData
     @districts = @rinet_data_options[:districts]
     @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
     @log_directory = @rinet_data_options[:log_directory]
-    log_path = "#{@log_directory}/import_log.txt"
+    @log_path = "#{@log_directory}/import_log.txt"
 
     @errors = {:districts => {}}
     @last_log_level = nil
     @last_log_column = 0
     
     FileUtils.mkdir_p @log_directory
-    @log = Logger.new(log_path,'daily')
+    @log = Logger.new(@log_path,'daily')
     @log.level = @rinet_data_options[:log_level]
     
     message = <<-HEREDOC
 
-Started in #{@district_data_root_dir} at #{Time.now}
-Logging to: #{File.expand_path(log_path)}
+Started in: #{@district_data_root_dir} at #{Time.now}
+
+Logging to: #{File.expand_path(@log_path)}
     
     HEREDOC
     log_message(message)    
@@ -199,6 +200,9 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   Students: #{num_students}
    Courses: #{num_courses}
    Classes: #{num_classes}
+
+Logged to: #{File.expand_path(@log_path)}
+
 ============================
     HEREDOC
     log_message(grand_total)
@@ -569,13 +573,13 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         if courses.empty?
           course = Portal::Course.create!( {:name => course_csv_row[:Title], :school_id => school.id })
         else
-          # TODO: what if we have multiple matches?
-          if courses.class == Array
+          if courses.length == 1
+            course = courses[0]
+          else
+            # TODO: what if we have multiple matches?
             @log.warn("Course not unique! #{course_csv_row[:Title]}, #{school.id}, found #{courses.size} entries")
             @log.info("returning first found: (#{courses[0]})")
             course = courses[0]
-          else
-            course = courses
           end
         end
         course_csv_row[:rites_course] = course
