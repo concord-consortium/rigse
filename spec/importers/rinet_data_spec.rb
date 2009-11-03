@@ -175,7 +175,7 @@ describe RinetData do
         @rd.update_models
       end
       
-      it "should log an errors if a staff assignment is missing a teacher" do
+      it "should log an error if a staff assignment is missing a teacher" do
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,07113"

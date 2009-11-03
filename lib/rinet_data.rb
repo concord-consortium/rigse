@@ -706,4 +706,30 @@ Logged to: #{File.expand_path(@log_path)}
       end
     end
   end
+  
+  ##
+  ## Used to print out student login info
+  ##
+  def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
+    students_file_name = "#{@district_data_root_dir}/#{district}/current/students.csv"
+    student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
+    student_rows = FasterCSV.read(students_file_name)
+    login = ""
+    while login == ""
+      student_row = student_rows[(rand * student_rows.length-1).round]
+      student_row.fields = FIELD_DEFINITIONS[:students]
+      sassid = student_row[:SASID]
+      password = student_row[:Birthdate]
+      open(student_sakai_file_name) do |fd| 
+        fd.each do |line|
+           if line =~ /#{student_row[:SASID]}\s*,\s*(\S+)/
+             login = $1
+             puts student_row.join(",") + " : " + line
+             break
+           end
+        end   
+      end
+    end
+    "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
+  end
 end
