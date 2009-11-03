@@ -35,7 +35,9 @@ class Portal::District < ActiveRecord::Base
     def find_by_state_and_nces_local_id(state, local_id)
       nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => local_id, :LSTATE => state}, 
         :select => "id, LEAID, STID, NAME, LSTATE")
-      find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      if nces_district 
+        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      end
     end
 
     ##
@@ -50,7 +52,9 @@ class Portal::District < ActiveRecord::Base
     def find_by_state_and_district_name(state, district_name)
       nces_district = Portal::Nces06District.find(:first, :conditions => {:NAME => district_name.upcase, :LSTATE => state}, 
         :select => "id, LEAID, STID, NAME, LSTATE")
-      find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      if nces_district
+        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      end
     end
 
     ##

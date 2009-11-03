@@ -63,7 +63,9 @@ class Portal::School < ActiveRecord::Base
     def find_by_state_and_nces_local_id(state, local_id)
       nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => local_id, :MSTATE => state}, 
         :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM")
-      find(:first, :conditions=> {:nces_school_id => nces_school.id})
+      if nces_school
+        find(:first, :conditions=> {:nces_school_id => nces_school.id})
+      end
     end
 
     ##
@@ -78,7 +80,9 @@ class Portal::School < ActiveRecord::Base
     def find_by_state_and_school_name(state, school_name)
       nces_school = Portal::Nces06School.find(:first, :conditions => {:SCHNAM => school_name.upcase, :MSTATE => state}, 
         :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM")
-      find(:first, :conditions=> {:nces_school_id => nces_school.id})
+      if nces_school
+        find(:first, :conditions=> {:nces_school_id => nces_school.id})
+      end
     end
 
     ##
