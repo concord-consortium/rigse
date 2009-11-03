@@ -22,6 +22,54 @@ class Portal::District < ActiveRecord::Base
     def display_name
       "District"
     end
+    
+    ##
+    ## Given an NCES local district id that matches the STID field in an NCES district
+    ## find and return the first district that is associated with the NCES district or nil.
+    ##
+    ## example: 
+    ##
+    ##   Portal::District.find_by_state_and_nces_local_id('RI', 39).name
+    ##   => "Woonsocket"
+    ##
+    def find_by_state_and_nces_local_id(state, local_id)
+      nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => local_id, :LSTATE => state}, 
+        :select => "id, LEAID, STID, NAME, LSTATE")
+      find(:first, :conditions=> {:nces_district_id => nces_district.id})
+    end
+
+    ##
+    ## Given a district name that matches the NAME field in an NCES district find
+    ## and return the first district that is associated with the NCES district or nil.
+    ##
+    ## example: 
+    ##
+    ##   Portal::District.find_by_state_and_district_name('RI', "Woonsocket").nces_local_id
+    ##   => "39"
+    ##
+    def find_by_state_and_district_name(state, district_name)
+      nces_district = Portal::Nces06District.find(:first, :conditions => {:NAME => district_name.upcase, :LSTATE => state}, 
+        :select => "id, LEAID, STID, NAME, LSTATE")
+      find(:first, :conditions=> {:nces_district_id => nces_district.id})
+    end
+
+    ##
+    ## given a NCES district, either find or create a portal_distrcit for it.
+    ##
+    def find_or_create_by_nces_district(nces_district)
+      found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      unless found_instance
+        attributes = {
+          :name => nces_district.NAME,
+          :description => "imported from nces data",
+          :nces_district_id => nces_district.id
+        }
+        found_instance = self.create(attributes)
+        found_instance.save!
+      end
+      found_instance
+    end
+    
   end
   
   def virtual?
@@ -32,21 +80,8 @@ class Portal::District < ActiveRecord::Base
     ! virtual?
   end
   
-  ##
-  ## given a NCES district, either find or create a portal_distrcit for it.
-  ##
-  def self.find_or_create_by_nces_district(nces_district)
-    found_instance = self.find(:first, :conditions=> {:nces_district_id => nces_district.id})
-    unless found_instance
-      attributes = {
-        :name => nces_district.NAME,
-        :description => "imported from nces data",
-        :nces_district_id => nces_district.id
-      }
-      found_instance = self.create(attributes)
-      found_instance.save!
-    end
-    found_instance
+  # if the district is a 'real' district return the NCES local district id
+  def nces_local_id
+    real? ? nces_district.STID : nil
   end
-    
 end
