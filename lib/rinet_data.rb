@@ -219,7 +219,6 @@ Logged to: #{File.expand_path(@log_path)}
       end
     rescue Exception => e
       log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
-      log_message("#{@rinet_data_config[:host]}, #{@rinet_data_config[:username]} , #{ @rinet_data_config[:password]}", {:log_level => 'error'})
       raise
     end
   end
@@ -739,6 +738,7 @@ Logged to: #{File.expand_path(@log_path)}
   #
   def report(message)
     puts message
+    log_message(message, {:log_level => :error})
   end
   
   #
