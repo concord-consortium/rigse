@@ -71,13 +71,13 @@ class RinetData
     
     defaults = {
       :verbose => false,
-      :log_directory => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :log_level => Logger::WARN
     }
-    @rinet_data_options = defaults.merge(options)
     
+    @rinet_data_options = defaults.merge(options)
+    @rinet_data_options[:log_directory] ||= @rinet_data_options[:district_data_root_dir]
     @verbose = @rinet_data_options[:verbose]
     # debugger
     @districts = @rinet_data_options[:districts]
