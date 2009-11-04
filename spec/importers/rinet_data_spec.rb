@@ -38,14 +38,17 @@ module RinetDataExampleHelpers
     end
   end
   
-  def run_importer(districts=["01"])
-    districts.each do |district|
-      district_directory = "#{RAILS_ROOT}/resources/rinet_test_data/#{district}"
-      @rd = RinetData.new(:verbose => false)
-      @rd.run_importer(district_directory)
-      @logger = @rd.log
-      @logger.stub!(:error).and_return(:default_value)
-    end
+  def run_importer(opts = {})
+    defaults = {
+      :districts => ["01"],
+      :verbose => false,
+      :district_data_root_dir => "#{RAILS_ROOT}/resources/rinet_test_data/",
+      :skip_get_csv_files => true
+    }
+    rinet_data_options = defaults.merge(opts)
+    @rinet_data_importer = RinetData.new(rinet_data_options) 
+    @logger = @rinet_data_importer.log
+    @rinet_data_importer.run_scheduled_job
   end
   
 end
@@ -53,16 +56,13 @@ end
 describe RinetData do
   include RinetDataExampleHelpers
   
-  before(:each) do
+  # make test schools
+  before (:all) do
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
-    @initial_users = User.find(:all)
-    @initial_teachers = Portal::Teacher.find(:all)
-    @initial_students = Portal::Student.find(:all)
-    @initial_courses = Portal::Course.find(:all)
-    @initial_clazzes = Portal::Clazz.find(:all)
-    run_importer
+    @nces_school_01 = Factory(:portal_nces06_school, {:SEASCH => '01'})
+    @nces_school_02 = Factory(:portal_nces06_school, {:SEASCH => '02'})
   end
-
+  
   ## This example group assumes that Net::SFTP is used to download RINET data.
   ## The expected behaviour of the mock objects depends highly on
   ## that of Net::SFTP, so the changes to the module should be tracked
@@ -110,6 +110,14 @@ describe RinetData do
   end
   
   describe "basic csv file parsing" do
+    before(:each) do
+      @initial_users = User.find(:all)
+      @initial_teachers = Portal::Teacher.find(:all)
+      @initial_students = Portal::Student.find(:all)
+      @initial_courses = Portal::Course.find(:all)
+      @initial_clazzes = Portal::Clazz.find(:all)
+      run_importer
+    end
     
     #  require 'ruby-prof'
     # it "should have performanec metrics" do
@@ -123,24 +131,24 @@ describe RinetData do
     # end
     
     it "should have parsed data" do
-      @rd.parsed_data.should_not be_nil
+      @rinet_data_importer.parsed_data.should_not be_nil
       %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}.each do |data_file|
-        @rd.parsed_data[data_file.to_sym].should_not be_nil
+        @rinet_data_importer.parsed_data[data_file.to_sym].should_not be_nil
       end
     end
     
     describe "parsing should tolerate broken input" do
       it "should tolerate csv input with blank lines" do
-        @rd.add_csv_row(:students,"")
+        @rinet_data_importer.add_csv_row(:students,"")
       end
       it "should tolerate csv input with blank fields" do
         csv_student_with_blank_fields = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
-        @rd.add_csv_row(:students,csv_student_with_blank_fields)
+        @rinet_data_importer.add_csv_row(:students,csv_student_with_blank_fields)
       end
       
       it "should tolerate csv input with missing fields" do
         csv_student_with_missing_commas = "Garcia,,,,1000139715,"
-        @rd.add_csv_row(:students,csv_student_with_missing_commas)
+        @rinet_data_importer.add_csv_row(:students,csv_student_with_missing_commas)
       end
       
       # try creating a student with a bad login
@@ -153,63 +161,64 @@ describe RinetData do
           :SASID => '0078',
           :SchoolNumber => '07113' # real school
         } 
-        @rd.create_or_update_student(student_row)
+        @rinet_data_importer.create_or_update_student(student_row)
       end
     end
 
     describe "should log errors on missing associations in input data, yet be resilient" do
-      
+      before(:each) do
+        @initial_users = User.find(:all)
+        @initial_teachers = Portal::Teacher.find(:all)
+        @initial_students = Portal::Student.find(:all)
+        @initial_courses = Portal::Course.find(:all)
+        @initial_clazzes = Portal::Clazz.find(:all)
+        run_importer
+      end
       it "should log an error if an enrollment is missing a valid student" do
         @logger.should_receive(:error).with(/student not found/)
         # 007 is not a real student SASID
         csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,07113,0"
-        @rd.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
-        @rd.update_models
+        @rinet_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
+        @rinet_data_importer.update_models
       end
       
       it "should log an error if an enrollment is for a non existing course" do 
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,07113,0"
-        @rd.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
-        @rd.update_models
+        @rinet_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
+        @rinet_data_importer.update_models
       end
       
       it "should log an error if a staff assignment is missing a teacher" do
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,07113"
-        @rd.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
-        @rd.update_models
+        @rinet_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
+        @rinet_data_importer.update_models
       end
       
       it "should log an error if a staff ssignment is missing course information" do
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,07113"
-        @rd.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
-        @rd.update_models
+        @rinet_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
+        @rinet_data_importer.update_models
       end
-      
-      it "should log an error if a student can not be found for a record in students_sakai.csv" do
-        @logger.should_receive(:error).with(/student .* mapping/)
-        # remove all student from the mapping data, and re-run the mapping task
-        @rd.stub!(:student_sakai_map).and_return(nil)
-        @rd.join_data
-      end
-      
-      it "should log an error if a teacher can not be found for a record in staff_sakai.csv" do
-        @logger.should_receive(:error).with(/teacher .* mapping/)
-        @rd.stub!(:staff_sakai_map).and_return(nil)
-         @rd.join_data
-      end
-      
+            
     end
     
   end
   
   describe "verifying that the appropriate entities get created from CSV files" do
-    
+    before(:each) do
+      @initial_users = User.find(:all)
+      @initial_teachers = Portal::Teacher.find(:all)
+      @initial_students = Portal::Student.find(:all)
+      @initial_courses = Portal::Course.find(:all)
+      @initial_clazzes = Portal::Clazz.find(:all)
+      run_importer
+    end
     it "should create new teachers" do
       Portal::Teacher.find(:all).should be_more_than(@initial_teachers)
     end
@@ -275,7 +284,14 @@ describe RinetData do
   end
 
   describe "Import process should not produce duplicate data" do
-    
+    before(:each) do
+      @initial_users = User.find(:all)
+      @initial_teachers = Portal::Teacher.find(:all)
+      @initial_students = Portal::Student.find(:all)
+      @initial_courses = Portal::Course.find(:all)
+      @initial_clazzes = Portal::Clazz.find(:all)
+      run_importer
+    end
     it "should not create duplicate courses" do
       courses = Portal::Course.find(:all)
       courses.map! { |course| "#{course.school_id}-#{course.name}" }
@@ -314,69 +330,83 @@ describe RinetData do
   end
   
   
-  describe "when csv files add entities, the new added enties *ARE ADDED* to rites" do
-    it "when new lines is added to the student.csv file, there be one more student in the rites site" do
-      current_students = Portal::Student.find(:all)
-      # import new data which adds LPaessel
-      run_importer(['02']) 
-      Portal::Student.find(:all).size.should eql(current_students.size + 1)
+  describe "when multiple districts are imported new added enties are added from each district" do
+    before(:each) do
+      @initial_users = User.find(:all)
+      @initial_teachers = Portal::Teacher.find(:all)
+      @initial_students = Portal::Student.find(:all)
+      @initial_courses = Portal::Course.find(:all)
+      @initial_clazzes = Portal::Clazz.find(:all)
+      @students
+    end
+    describe "district 01, and 02 contain 3 and 4 students each, with one duplicate, for a total of 6 unique students" do
+      it "when students are added from the first district 3 new students are created, then 3 more are created for district 02" do
+        run_importer(:districts => ['01'])
+        Portal::Student.find(:all).size.should eql(@initial_students.size + 3)
+        run_importer(:districts => ['02'])
+        Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
+      end
+      it "when students are imported from districts [02,01] in one batch, all six new students get created at once" do
+        run_importer(:districts => ['02','01'])
+        Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
+      end
+      it "when students are imported from districts [01,02] in one batch, all six new students get created at once" do
+        run_importer(:districts => ['01','02'])
+        Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
+      end
     end
     
-    it "when a PHYSICS is added to courses.csv, the class and its courses be created" do
-     # import new data which adds physics
-      run_importer(['02']) 
-      Portal::Clazz.find_by_name('PHYSICS').should_not be_nil
-      Portal::Course.find_by_name('PHYSICS').should_not be_nil
+    it "GYM is imported from district 01, and PHYSICS is imported from district 02. Both should be in Active Record tables." do
+      run_importer(:districts => ['01','02'])
+      ["GYM","PHYSICS"].each do | name |
+        Portal::Clazz.count(:conditions=>{:name => name}).should be 1
+        Portal::Course.count(:conditions=>{:name => name}).should be 1
+      end
+    end
+    
+    it "ART and MATH exist in both distrcits, but are unique courses" do
+      run_importer(:districts => ['01','02'])
+      ["ART","MATH"].each do | name |
+        Portal::Clazz.count(:conditions=>{:name => name}).should be 2
+        Portal::Course.count(:conditions=>{:name => name}).should be 2
+      end 
     end
   end
   
-  describe "when csv files remove entities, they are *NOT REMOVED* from rites" do
-    it "when a teacher is removed from the staff.csv file, the teacher should not actually be deleted from rites" do
-      current_teachers = Portal::Teacher.find(:all)
-      # import new data, which removes a teacher
-      run_importer(['02']) 
-      Portal::Teacher.find(:all).should eql(current_teachers)
-    end
-  
-    it "when a GYM is removed from courses.csv, the class and its courses should not actually be deleted" do
-      # import new data which removes a GYM class
-       run_importer(['02']) 
-       Portal::Clazz.find_by_name('GYM').should_not be_nil
-       Portal::Course.find_by_name('GYM').should_not be_nil
-    end
-  end
-  
-  describe "when staff assignments or student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
-    it "when students are added to the the art class in the CSV file, they should be added on the rites site too" do
-      # import new data which adds one user to the art class
-      # and one user to a new physics class
-      run_importer(['02']) 
-      art_class = Portal::Clazz.find_by_name("ART");
+  describe "when student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
+    it "when students are added to the the ART class in csv for day two of district 1, they should be added on the rites site too" do
+      run_importer(:districts => ['01'])
+      Portal::Clazz.find_by_name("ART").students.size.should be(1)
+      run_importer(:districts => ['01_day_two'])
       Portal::Clazz.find_by_name("ART").students.size.should be(2)
-      Portal::Clazz.find_by_name("PHYSICS").students.size.should be(1)
     end  
+    
+    it "when students are removed from the MATH class in the CSV file, what should happen ??" 
+    
   end
   
   describe "check_start_date validation method works" do
-    
+    before(:each) do
+      @rinet_data_importer = RinetData.new
+    end
     it "should not return nil when parsing a start_date like: '2008-08-15'" do
-      @rd.check_start_date("2008-08-15").should_not be_nil
+      @rinet_data_importer.check_start_date("2008-08-15").should_not be_nil
     end
 
     it "should not return nil when parsing a start_date like: '9/1/2009'" do
-      @rd.check_start_date("9/1/2009").should_not be_nil
+      @rinet_data_importer.check_start_date("9/1/2009").should_not be_nil
     end
 
     it "should return nil when parsing a start_date like: 'abc'" do
-      @rd.check_start_date("abc").should be_nil
+      @rinet_data_importer.check_start_date("abc").should be_nil
     end
     
     it "should return nil when parsing a start_date like: ''" do
-      @rd.check_start_date("").should be_nil
+      @rinet_data_importer.check_start_date("").should be_nil
     end
 
     it "should return nil when parsing a start_date like: nil" do
-      @rd.check_start_date(nil).should be_nil
+      @rinet_data_importer.check_start_date(nil).should be_nil
     end
   end
   
