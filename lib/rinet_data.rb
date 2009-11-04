@@ -206,7 +206,7 @@ Logged to: #{File.expand_path(@log_path)}
 ============================
     HEREDOC
     log_message(grand_total)
-
+    check_all_students
   end
 
   def join_data
@@ -230,6 +230,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     rescue Exception => e
       log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
+      log_message("#{@rinet_data_config[:host]}, #{@rinet_data_config[:username]} , #{ @rinet_data_config[:password]}", {:log_level => 'error'})
       raise
     end
   end
@@ -732,4 +733,36 @@ Logged to: #{File.expand_path(@log_path)}
     end
     "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
   end
+  
+  #
+  # try to find what ratio of students were actually transfered
+  #
+  def check_students(district=@districts.first)
+    student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
+    missing = 0; found = 0; total = 0;
+    open(student_sakai_file_name) do |fd| 
+      fd.each do |line|
+         if line =~ /\d+\s*,\s*(\S+)/
+           login = $1
+           rites_login = ExternalUserDomain.external_login_to_login(login)
+           log_message "#{rites_login} #{line}"
+           if ExternalUserDomain.external_login_exists?(login)
+             found += 1
+           else
+             missing += 1
+           end
+           total += 1
+         end
+      end   
+    end
+    "total import records: #{total}, imported to AR: #{found}, missing: #{missing}"
+  end
+  
+  def check_all_students
+    @districts.each do |district|
+      log_message ("#{district}: #{check_students(district)}", :log_level => :error)
+    end
+  end
+    
+  
 end
