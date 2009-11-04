@@ -21,17 +21,31 @@
 #   :verbose => false
 #   :skip_get_csv_files => false
 #   :log_level => Logger::WARN
+#   :districts => @rinet_data_config[:districts]
+#   :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
 #
 # You can customize the operation, here's an example: 
 #
 #   If you want to:
 #
+#   - import data from just district "17", Lincoln
 #   - skip reloading the csv files from the external SFTP server
 #   - display a complete log on the console as you run the task
 #   - create a log file that consists of ONLY the items recorded as :errors 
 #
-#   RinetData.new({:skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
+#   RinetData.new({:districts => ["17"], :skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
 #
+# Here is the command I use to reload the production and development databases
+# (on my development setup they are the same database) to the condition just after 
+# initial app creation and then test the importer in JRuby with data from Cranston.
+#
+#   rake db:load; RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner \
+#   'RinetData.new({:districts => ['07'], :verbose => true, :skip_get_csv_files => false}).run_scheduled_job'
+#
+# Note: In order to avoid issues with shell interpretation of characters in the command
+# string passed to script/runner I use single-quotes around the command -- this then requires
+# the use of an alternate string delimeter around: the district string: 07. I use double-quotes 
+# here but Ruby has additional string delimters if needed.
 
 require 'fileutils'
 require 'arrayfields'
@@ -86,7 +100,8 @@ class RinetData
     }
     @rinet_data_options = defaults.merge(options)
     
-    @verbose = @rinet_data_options[:verbose] 
+    @verbose = @rinet_data_options[:verbose]
+    # debugger
     @districts = @rinet_data_options[:districts]
     @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
     @log_directory = @rinet_data_options[:log_directory]
