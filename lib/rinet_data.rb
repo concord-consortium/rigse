@@ -195,7 +195,7 @@ Logged to: #{File.expand_path(@log_path)}
 ============================
     HEREDOC
     log_message(grand_total)
-    check_all_students
+    verify_all_students
   end
 
   def join_data
