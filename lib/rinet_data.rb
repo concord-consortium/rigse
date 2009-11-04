@@ -125,14 +125,10 @@ Logging to: #{File.expand_path(@log_path)}
     
     @clazz_active_record_map = {}
     # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}  
+    
   end
   
-  def run_importer(district_directory)
-    parse_csv_files_in_dir(district_directory)
-    join_data
-    update_models
-  end
-  
+
   def run_scheduled_job(opts = {})
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
