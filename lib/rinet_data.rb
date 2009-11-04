@@ -64,28 +64,6 @@ class RinetData
 
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
 
-  @@csv_files.each do |csv_file|
-    if csv_file =~/_sakai/
-      ## 
-      ## Create a Caching Hash Map for sakai login info
-      ## for the *_sakai csv files  eg student_sakai_map staff_sakai_map
-      ##
-      eval <<-END_EVAL
-        def #{csv_file}_map(key)
-          if @#{csv_file}_map
-            return @#{csv_file}_map[key]
-          end
-          @#{csv_file}_map = {}
-          # hash_it
-          @parsed_data[:#{csv_file}].each do |auth_tokens|
-            @#{csv_file}_map[auth_tokens[0]] = auth_tokens[1]
-          end
-          return @#{csv_file}_map[key]
-        end
-      END_EVAL
-    end
-  end
-  
   def initialize(options= {})
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
@@ -313,13 +291,18 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def join_students_sakai
+    student_sakai_map = {}
+    @parsed_data[:student_sakai].each do |auth_tokens|
+      student_sakai_map[auth_tokens[0]] = auth_tokens[1]
+    end
+    
     new_students = @parsed_data[:students]
     @collection_length = new_students.length
     @collection_index = 0
     log_message("\n\nnprocessing: #{ @collection_length} student sakai associations: ")
     new_students.each do |student|
       log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['student-sakai associations', 6, 24]})
-      found = student_sakai_map(student[:SASID])
+      found = student_sakai_map[student[:SASID]]
       if (found)
         student[:login] = found
       else
@@ -330,13 +313,18 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def join_staff_sakai
+    staff_sakai_map = {}
+    @parsed_data[:staff_sakai].each do |auth_tokens|
+      staff_sakai_map[auth_tokens[0]] = auth_tokens[1]
+    end
+    
     new_teachers = @parsed_data[:staff]
     @collection_length = new_teachers.length
     @collection_index = 0
     log_message("\n\nprocessing: #{ @collection_length} staff_member sakai associations: ")
     new_teachers.each do |staff_member|
       log_message("#{staff_member[:Lastname]}", {:log_level => :info, :info_in_columns => ['staff-sakai associations', 6, 24]})
-      found = staff_sakai_map(staff_member[:TeacherCertNum])
+      found = staff_sakai_map[staff_member[:TeacherCertNum]]
       if found
         staff_member[:login] = found
       else
