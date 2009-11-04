@@ -1,3 +1,13 @@
+# local ids for RI school districts that should be active in 
+# RITES in Fall 2009:
+#
+#    Coventry    "06"
+#    Cranston    "07"
+#    Johnston    "16"
+#    Lincoln     "17"
+#    Scituate    "30"
+#    Woonsocket  "39"
+#
 --- 
 development: 
   host: portfolio.ri.net
