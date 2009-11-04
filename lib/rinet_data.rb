@@ -749,10 +749,37 @@ Logged to: #{File.expand_path(@log_path)}
     "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
   end
   
+  
   #
-  # try to find what ratio of students were actually transfered
+  # TODO: What? email send to log?
   #
-  def check_students(district=@districts.first)
+  def report(message)
+    puts message
+  end
+  
+  #
+  # report the number of students successfully imported to ActiveRecord
+  # for each district:
+  # @rd.verify_all_students
+  #
+  # district 07: total import records: 8533, imported to AR: 5094, missing: 3439
+  # district 16: total import records: 2631, imported to AR: 6, missing: 2625
+  # district 17: total import records: 1740, imported to AR: 0, missing: 1740
+  # district 39: total import records: 3551, imported to AR: 1, missing: 3550
+  # TODO: Some report method
+  def verify_all_students
+    report "Imported ActiveRecord entities for students by district:"
+    @districts.each do |district|
+      report "district #{district}: #{verify_students_imported(district)}"
+    end
+  end
+  
+  #
+  # report the number of students successfully imported to ActiveRecord
+  # for a given district:
+  # @rd.verify_students_imported('16')
+  # => district 16: total import records: 2631, imported to AR: 1706, missing: 925
+  def verify_students_imported(district=@districts.first)
     student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
     missing = 0; found = 0; total = 0;
     open(student_sakai_file_name) do |fd| 
@@ -773,11 +800,5 @@ Logged to: #{File.expand_path(@log_path)}
     "total import records: #{total}, imported to AR: #{found}, missing: #{missing}"
   end
   
-  def check_all_students
-    @districts.each do |district|
-      log_message ("#{district}: #{check_students(district)}", :log_level => :error)
-    end
-  end
-    
   
 end
