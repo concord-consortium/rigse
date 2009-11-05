@@ -126,6 +126,8 @@ Logging to: #{File.expand_path(@log_path)}
     @clazz_active_record_map = {}
     # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}  
     
+    @nces_districts = {}
+    @nces_schools = {}
   end
   
 
@@ -165,7 +167,7 @@ Logging to: #{File.expand_path(@log_path)}
     Classes:  #{@parsed_data[:staff_assignments].length}
 
         HEREDOC
-        log_message(district_summary)
+        report(district_summary)
       
         num_districts += 1
         num_teachers += @parsed_data[:staff].length
@@ -194,8 +196,8 @@ Logged to: #{File.expand_path(@log_path)}
 
 ============================
     HEREDOC
-    log_message(grand_total)
-    verify_all_students
+    report(grand_total)
+    verify_users
   end
 
   def join_data
@@ -330,6 +332,9 @@ Logged to: #{File.expand_path(@log_path)}
   end
   
   def school_for(row)
+    ## try to find a cached AR entity for this school:
+    found_school = @nces_schools[row[:SchoolNumber]]
+    return found_school unless found_school.nil?
     # pass in a row that has a :SchoolNumber
     # These are raw or processed csv rows from: 
     #   students, staff, courses, enrollments, staff_assignments
@@ -339,6 +344,8 @@ Logged to: #{File.expand_path(@log_path)}
       # method will automatically create the containing district if it
       # doesn't already exist.
       school = Portal::School.find_or_create_by_nces_school(nces_school)
+      # cache the result
+      @nces_schools[row[:SchoolNumber]] = school
     else
       message = <<-HEREDOC
       could not find school for: #{row[:SchoolNumber]}
@@ -358,6 +365,10 @@ Logged to: #{File.expand_path(@log_path)}
   end
   
   def district_for(row)
+    ## try to find a cached AR entity for this district
+    found_district = @nces_districts[row[:District]]
+    return found_district unless found_district.nil?
+    
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
@@ -371,6 +382,8 @@ Logged to: #{File.expand_path(@log_path)}
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
+      # cache the result:
+      @nces_districts[row[:District]] = district
       log_message "(Portal::District: #{district.name})"
     end
     district
@@ -723,7 +736,6 @@ Logged to: #{File.expand_path(@log_path)}
         fd.each do |line|
            if line =~ /#{student_row[:SASID]}\s*,\s*(\S+)/
              login = $1
-             puts student_row.join(",") + " : " + line
              break
            end
         end   
@@ -733,55 +745,90 @@ Logged to: #{File.expand_path(@log_path)}
   end
   
   
+  ##
+  ## Used to print out staff login info
+  ##
+  def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
+    staff_file_name = "#{@district_data_root_dir}/#{district}/current/staff.csv"
+    staf_rows = FasterCSV.read(staff_file_name)
+    login = nil
+    while login.nil?
+      staff_row = staf_rows[(rand * staf_rows.length-1).round]
+      staff_row.fields = FIELD_DEFINITIONS[:staff]
+      cert_no = staff_row[:TeacherCertNum]
+      password = staff_row[:Password]
+      login = find_staff_login(district,cert_no)
+    end
+    "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
+  end
+  
+  def find_staff_login(district,certification_number)
+    staff_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/staff_sakai.csv"
+    open(staff_sakai_file_name) do |fd| 
+      fd.each do |line|
+         if line =~ /#{certification_number}\s*,\s*(\S+)/
+           return $1
+         end
+      end   
+    end
+    nil
+  end
+  
   #
   # TODO: What? email send to log?
   #
   def report(message)
-    puts message
     log_message(message, {:log_level => :error})
   end
   
   #
   # report the number of students successfully imported to ActiveRecord
   # for each district:
-  # @rd.verify_all_students
+  # @rd.verify_users
   #
   # district 07: total import records: 8533, imported to AR: 5094, missing: 3439
   # district 16: total import records: 2631, imported to AR: 6, missing: 2625
   # district 17: total import records: 1740, imported to AR: 0, missing: 1740
   # district 39: total import records: 3551, imported to AR: 1, missing: 3550
   # TODO: Some report method
-  def verify_all_students
-    report "Imported ActiveRecord entities for students by district:"
+  def verify_users
+    report "Imported ActiveRecord entities by district:"
     @districts.each do |district|
-      report "district #{district}: #{verify_students_imported(district)}"
+      begin
+        report "district: #{district}"
+        verify_user_imported(district)
+      rescue
+        puts "error: #{$!}"
+      end
     end
   end
   
   #
   # report the number of students successfully imported to ActiveRecord
   # for a given district:
-  # @rd.verify_students_imported('16')
+  # @rd.verify_user_imported('16')
   # => district 16: total import records: 2631, imported to AR: 1706, missing: 925
-  def verify_students_imported(district=@districts.first)
-    student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
-    missing = 0; found = 0; total = 0;
-    open(student_sakai_file_name) do |fd| 
-      fd.each do |line|
-         if line =~ /\d+\s*,\s*(\S+)/
-           login = $1
-           rites_login = ExternalUserDomain.external_login_to_login(login)
-           log_message "#{rites_login} #{line}"
-           if ExternalUserDomain.external_login_exists?(login)
-             found += 1
-           else
-             missing += 1
+  def verify_user_imported(district=@districts.first)
+    ["student","staff"].each do |type|
+      file_name = "#{@district_data_root_dir}/#{district}/current/#{type}_sakai.csv"
+      missing = 0; found = 0; total = 0;
+      open(file_name) do |fd| 
+        fd.each do |line|
+           if line =~ /\d+\s*,\s*(\S+)/
+             login = $1
+             rites_login = ExternalUserDomain.external_login_to_login(login)
+             log_message "#{rites_login} #{line}"
+             if ExternalUserDomain.external_login_exists?(login)
+               found += 1
+             else
+               missing += 1
+             end
+             total += 1
            end
-           total += 1
-         end
-      end   
+        end
+      end  
+      report "district: #{district}, #{type} records found in #{file_name}: #{total}, imported to AR: #{found}, missing: #{missing}"
     end
-    "total import records: #{total}, imported to AR: #{found}, missing: #{missing}"
   end
   
   
