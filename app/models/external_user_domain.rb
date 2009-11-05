@@ -14,12 +14,12 @@ class ExternalUserDomain < ActiveRecord::Base
   @@external_domain_selection = CC_SAKAI_TEST
 
   URL_MAP = {
-    'http://portfolio.ri.net'       => RINET_SAKAI,
-    'https://portfolio.ri.net'      => RINET_SAKAI,
-    'http://test.portfolio.ri.net'  => RINET_SAKAI_TEST,
-    'https://test.portfolio.ri.net' => RINET_SAKAI_TEST,
-    'http://moleman.concord.org'    => CC_SAKAI_TEST,
-    'https://moleman.concord.org'   => CC_SAKAI_TEST
+    'http://portfolio.ri.net/'       => RINET_SAKAI,
+    'https://portfolio.ri.net/'      => RINET_SAKAI,
+    'http://test.portfolio.ri.net/'  => RINET_SAKAI_TEST,
+    'https://test.portfolio.ri.net/' => RINET_SAKAI_TEST,
+    'http://moleman.concord.org/'    => CC_SAKAI_TEST,
+    'https://moleman.concord.org/'   => CC_SAKAI_TEST
   }
   
   class ExternalUserDomainError < StandardError
