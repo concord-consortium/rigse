@@ -1,8 +1,55 @@
+# To run the import of the RITES districts:
+#
+#   RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
+#
+# Here's an equivalent invocation in jruby:
+#
+#   RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner "RinetData.new().run_scheduled_job"
+#
+# If you are doing development you will want to create a dump of the state of
+# your working database before any imports have been made:
+# 
+#    rake db:dump
+#
+# After testing the importer you can restore the database to it's previous state
+# in order to run the importer again.
+#
+#    rake db:load
+#
+# Here are the default options:
+#
+#   :verbose => false
+#   :skip_get_csv_files => false
+#   :log_level => Logger::WARN
+#   :districts => @rinet_data_config[:districts]
+#   :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+#
+# You can customize the operation, here's an example: 
+#
+#   If you want to:
+#
+#   - import data from just district "17", Lincoln
+#   - skip reloading the csv files from the external SFTP server
+#   - display a complete log on the console as you run the task
+#   - create a log file that consists of ONLY the items recorded as :errors 
+#
+#   RinetData.new({:districts => ["17"], :skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
+#
+# Here is the command I use to reload the production and development databases
+# (on my development setup they are the same database) to the condition just after 
+# initial app creation and then test the importer in JRuby with data from Cranston.
+#
+#   rake db:load; RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner \
+#   'RinetData.new({:districts => ['07'], :verbose => true, :skip_get_csv_files => false}).run_scheduled_job'
+#
+# Note: In order to avoid issues with shell interpretation of characters in the command
+# string passed to script/runner I use single-quotes around the command -- this then requires
+# the use of an alternate string delimeter around: the district string: 07. I use double-quotes 
+# here but Ruby has additional string delimters if needed.
+
 require 'fileutils'
 require 'arrayfields'
 
-# use: RAILS_ENV=production ./script/runner "(RinetData.new).run_scheduled_job"
-# to run the import of all the RITES districts.
 class RinetData
   
   class RinetDataError < ArgumentError
@@ -17,28 +64,6 @@ class RinetData
 
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
 
-  @@csv_files.each do |csv_file|
-    if csv_file =~/_sakai/
-      ## 
-      ## Create a Caching Hash Map for sakai login info
-      ## for the *_sakai csv files  eg student_sakai_map staff_sakai_map
-      ##
-      eval <<-END_EVAL
-        def #{csv_file}_map(key)
-          if @#{csv_file}_map
-            return @#{csv_file}_map[key]
-          end
-          @#{csv_file}_map = {}
-          # hash_it
-          @parsed_data[:#{csv_file}].each do |auth_tokens|
-            @#{csv_file}_map[auth_tokens[0]] = auth_tokens[1]
-          end
-          return @#{csv_file}_map[key]
-        end
-      END_EVAL
-    end
-  end
-  
   def initialize(options= {})
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
@@ -46,28 +71,38 @@ class RinetData
     
     defaults = {
       :verbose => false,
-      :log_directory => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :districts => @rinet_data_config[:districts],
-      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
+      :log_level => Logger::WARN
     }
-    @options = defaults.merge(options)
     
-    @verbose = @options[:verbose] 
-    @districts = @options[:districts]
-    @district_data_root_dir = @options[:district_data_root_dir]
-    @log_directory = @options[:log_directory]
-    
+    @rinet_data_options = defaults.merge(options)
+    @rinet_data_options[:log_directory] ||= @rinet_data_options[:district_data_root_dir]
+    @verbose = @rinet_data_options[:verbose]
+    # debugger
+    @districts = @rinet_data_options[:districts]
+    @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
+    @log_directory = @rinet_data_options[:log_directory]
+    @log_path = "#{@log_directory}/import_log.txt"
+
     @errors = {:districts => {}}
-    
     @last_log_level = nil
     @last_log_column = 0
     
-      
-    clear_ar_maps
-    
     FileUtils.mkdir_p @log_directory
-    @log = Logger.new("#{@log_directory}/import_log.txt",'daily')
-    log_message("Started in #{@district_data_root_dir} at #{Time.now}")    
+    @log = Logger.new(@log_path,'daily')
+    @log.level = @rinet_data_options[:log_level]
+    
+    message = <<-HEREDOC
+
+Started in: #{@district_data_root_dir} at #{Time.now}
+
+Logging to: #{File.expand_path(@log_path)}
+    
+    HEREDOC
+    log_message(message)    
+
+    clear_ar_maps
   end
   
   
@@ -90,17 +125,15 @@ class RinetData
     
     @clazz_active_record_map = {}
     # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}  
+    
+    @nces_districts = {}
+    @nces_schools = {}
   end
   
-  def run_importer(district_directory)
-    parse_csv_files_in_dir(district_directory)
-    join_data
-    update_models
-  end
-  
+
   def run_scheduled_job(opts = {})
     start_time = Time.now
-    if @options[:skip_get_csv_files]
+    if @rinet_data_options[:skip_get_csv_files]
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
     else
       log_message "\n (getting csv files ...)\n"
@@ -134,7 +167,7 @@ class RinetData
     Classes:  #{@parsed_data[:staff_assignments].length}
 
         HEREDOC
-        log_message(district_summary)
+        report(district_summary)
       
         num_districts += 1
         num_teachers += @parsed_data[:staff].length
@@ -158,10 +191,13 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   Students: #{num_students}
    Courses: #{num_courses}
    Classes: #{num_classes}
+
+Logged to: #{File.expand_path(@log_path)}
+
 ============================
     HEREDOC
-    log_message(grand_total)
-
+    report(grand_total)
+    verify_users
   end
 
   def join_data
@@ -184,7 +220,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         end
       end
     rescue Exception => e
-      @log.error("get_csv_files failed: #{e.class}: #{e.message}")
+      log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
       raise
     end
   end
@@ -210,7 +246,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     end
     # debugger
     current_path = "#{@district_data_root_dir}/#{district}/current"
-    FileUtils.rm(current_path)
+    FileUtils.rm_f(current_path)
     FileUtils.ln_s(local_district_path, current_path, :force => true)
   end
 
@@ -252,13 +288,18 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   end
 
   def join_students_sakai
+    student_sakai_map = {}
+    @parsed_data[:student_sakai].each do |auth_tokens|
+      student_sakai_map[auth_tokens[0]] = auth_tokens[1]
+    end
+    
     new_students = @parsed_data[:students]
     @collection_length = new_students.length
     @collection_index = 0
     log_message("\n\nnprocessing: #{ @collection_length} student sakai associations: ")
     new_students.each do |student|
       log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['student-sakai associations', 6, 24]})
-      found = student_sakai_map(student[:SASID])
+      found = student_sakai_map[student[:SASID]]
       if (found)
         student[:login] = found
       else
@@ -269,13 +310,18 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   end
 
   def join_staff_sakai
+    staff_sakai_map = {}
+    @parsed_data[:staff_sakai].each do |auth_tokens|
+      staff_sakai_map[auth_tokens[0]] = auth_tokens[1]
+    end
+    
     new_teachers = @parsed_data[:staff]
     @collection_length = new_teachers.length
     @collection_index = 0
     log_message("\n\nprocessing: #{ @collection_length} staff_member sakai associations: ")
     new_teachers.each do |staff_member|
       log_message("#{staff_member[:Lastname]}", {:log_level => :info, :info_in_columns => ['staff-sakai associations', 6, 24]})
-      found = staff_sakai_map(staff_member[:TeacherCertNum])
+      found = staff_sakai_map[staff_member[:TeacherCertNum]]
       if found
         staff_member[:login] = found
       else
@@ -286,6 +332,9 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   end
   
   def school_for(row)
+    ## try to find a cached AR entity for this school:
+    found_school = @nces_schools[row[:SchoolNumber]]
+    return found_school unless found_school.nil?
     # pass in a row that has a :SchoolNumber
     # These are raw or processed csv rows from: 
     #   students, staff, courses, enrollments, staff_assignments
@@ -295,6 +344,8 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
       # method will automatically create the containing district if it
       # doesn't already exist.
       school = Portal::School.find_or_create_by_nces_school(nces_school)
+      # cache the result
+      @nces_schools[row[:SchoolNumber]] = school
     else
       message = <<-HEREDOC
       could not find school for: #{row[:SchoolNumber]}
@@ -302,7 +353,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         rake portal:setup:download_nces_data
         rake portal:setup:import_nces_from_files
       HEREDOC
-      log_message(message, {:log_level => :info})
+      log_message(message, {:log_level => :warn})
       # 
       # 
       # log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)", {:log_level => :error})
@@ -314,6 +365,10 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   end
   
   def district_for(row)
+    ## try to find a cached AR entity for this district
+    found_district = @nces_districts[row[:District]]
+    return found_district unless found_district.nil?
+    
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
@@ -327,6 +382,8 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
       # TODO, create one with a special name? Throw exception?
     else
       district = Portal::District.find_or_create_by_nces_district(nces_district)
+      # cache the result:
+      @nces_districts[row[:District]] = district
       log_message "(Portal::District: #{district.name})"
     end
     district
@@ -337,7 +394,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     # try to cache the data here in memory:
     unless row[:rites_user_id]
       if row[:login] 
-        if row[:EmailAddress]
+        if row[:EmailAddress] && row[:EmailAddress].length > 0
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
         begin
@@ -361,8 +418,11 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
             user = User.create!(rites_user_params)
           end
         rescue ExternalUserDomain::ExternalUserDomainError => e
+          message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
+          log_message(message, options={:log_level => :error})
+          return nil
         rescue ActiveRecord::ActiveRecordError => e
-          message = "\nCould not create user: #{params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{params.inspect}\n"
+          message = "\nCould not create user: #{rites_user_params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{rites_user_params.inspect}\n"
           log_message(message, options={:log_level => :error})
           return nil
         end
@@ -453,7 +513,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         end
       end
     else
-      log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}")
+      log_message("teacher with cert: #{row[:TeacherCertNum]} previously created in this import with RITES teacher.id=#{row[:rites_teacher_id]}", {:log_level => :warn})
     end
     teacher
   end
@@ -525,13 +585,13 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         if courses.empty?
           course = Portal::Course.create!( {:name => course_csv_row[:Title], :school_id => school.id })
         else
-          # TODO: what if we have multiple matches?
-          if courses.class == Array
+          if courses.length == 1
+            course = courses[0]
+          else
+            # TODO: what if we have multiple matches?
             @log.warn("Course not unique! #{course_csv_row[:Title]}, #{school.id}, found #{courses.size} entries")
             @log.info("returning first found: (#{courses[0]})")
             course = courses[0]
-          else
-            course = courses
           end
         end
         course_csv_row[:rites_course] = course
@@ -541,7 +601,7 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
         Raise ArgumentError("no school exists when creating a course")
       end
     else
-      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :info})
+      log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :warn})
     end
     course_csv_row
   end
@@ -569,21 +629,29 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
     end
   end
 
+  def check_start_date(start_date)
+    # example start date: 2008-08-15
+    # alternate examples from RINET CSV data: 9/1/2009
+    begin
+      start_date = Date.parse(start_date)
+    rescue ArgumentError, TypeError
+      log_message("bad start date for class: '#{start_date}'", {:log_level => :error})
+      nil
+    end
+  end
+    
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
     # course_active_record_map example: { CourseNumber => Portal::Course }
     # debugger
     portal_course = @course_active_record_map[member_relation_row[:CourseNumber]]
-    # unless portal_course && portal_course.class == Portal::Clazz
-    unless portal_course
+    # unless portal_course is a Portal::Course
+    unless portal_course.class == Portal::Course
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
     
-    unless member_relation_row[:StartDate] && member_relation_row[:StartDate] =~/\d{4}-\d{2}-\d{2}/
-      log_message("bad start time for class: '#{member_relation_row[:StartDate]}'", {:log_level => :error}) unless member_relation_row =~/\d{4}-\d{2}-\d{2}/
-      return
-    end
+    return unless check_start_date(member_relation_row[:StartDate])
     
     section = member_relation_row[:CourseSection]
     start_date = DateTime.parse(member_relation_row[:StartDate]) 
@@ -650,5 +718,112 @@ Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
       end
     end
   end
+  
+  ##
+  ## Used to print out student login info
+  ##
+  def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
+    students_file_name = "#{@district_data_root_dir}/#{district}/current/students.csv"
+    student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
+    student_rows = FasterCSV.read(students_file_name)
+    login = ""
+    while login == ""
+      student_row = student_rows[(rand * student_rows.length-1).round]
+      student_row.fields = FIELD_DEFINITIONS[:students]
+      sassid = student_row[:SASID]
+      password = student_row[:Birthdate]
+      open(student_sakai_file_name) do |fd| 
+        fd.each do |line|
+           if line =~ /#{student_row[:SASID]}\s*,\s*(\S+)/
+             login = $1
+             break
+           end
+        end   
+      end
+    end
+    "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
+  end
+  
+  
+  ##
+  ## Used to print out staff login info
+  ##
+  def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
+    staff_file_name = "#{@district_data_root_dir}/#{district}/current/staff.csv"
+    staf_rows = FasterCSV.read(staff_file_name)
+    login = nil
+    while login.nil?
+      staff_row = staf_rows[(rand * staf_rows.length-1).round]
+      staff_row.fields = FIELD_DEFINITIONS[:staff]
+      cert_no = staff_row[:TeacherCertNum]
+      password = staff_row[:Password]
+      login = find_staff_login(district,cert_no)
+    end
+    "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
+  end
+  
+  def find_staff_login(district,certification_number)
+    staff_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/staff_sakai.csv"
+    open(staff_sakai_file_name) do |fd| 
+      fd.each do |line|
+         if line =~ /#{certification_number}\s*,\s*(\S+)/
+           return $1
+         end
+      end   
+    end
+    nil
+  end
+  
+  #
+  # TODO: What? email send to log?
+  #
+  def report(message)
+    log_message(message, {:log_level => :error})
+  end
+  
+  #
+  # report the number of students successfully imported to ActiveRecord
+  # for each district:
+  # @rd.verify_users
+  #
+  # district 07: total import records: 8533, imported to AR: 5094, missing: 3439
+  # district 16: total import records: 2631, imported to AR: 6, missing: 2625
+  # district 17: total import records: 1740, imported to AR: 0, missing: 1740
+  # district 39: total import records: 3551, imported to AR: 1, missing: 3550
+  # TODO: Some report method
+  def verify_users
+    report "Imported ActiveRecord entities by district:"
+    @districts.each do |district|
+      verify_user_imported(district)
+    end
+  end
+  
+  #
+  # report the number of students successfully imported to ActiveRecord
+  # for a given district:
+  # @rd.verify_user_imported('16')
+  # => district 16: total import records: 2631, imported to AR: 1706, missing: 925
+  def verify_user_imported(district=@districts.first)
+    ["student","staff"].each do |type|
+      file_name = "#{@district_data_root_dir}/#{district}/current/#{type}_sakai.csv"
+      missing = 0; found = 0; total = 0;
+      open(file_name) do |fd| 
+        fd.each do |line|
+           if line =~ /\d+\s*,\s*(\S+)/
+             login = $1
+             rites_login = ExternalUserDomain.external_login_to_login(login)
+             if ExternalUserDomain.external_login_exists?(login)
+               found += 1
+             else
+               missing += 1
+             end
+             total += 1
+           end
+        end
+      end  
+      report "district: #{district}, #{type} records found in #{File.basename(file_name)}: #{total}, imported to AR: #{found}, missing: #{missing}"
+    end
+  end
+  
   
 end
