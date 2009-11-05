@@ -794,12 +794,7 @@ Logged to: #{File.expand_path(@log_path)}
   def verify_users
     report "Imported ActiveRecord entities by district:"
     @districts.each do |district|
-      begin
-        report "district: #{district}"
-        verify_user_imported(district)
-      rescue
-        puts "error: #{$!}"
-      end
+      verify_user_imported(district)
     end
   end
   
@@ -817,7 +812,6 @@ Logged to: #{File.expand_path(@log_path)}
            if line =~ /\d+\s*,\s*(\S+)/
              login = $1
              rites_login = ExternalUserDomain.external_login_to_login(login)
-             log_message "#{rites_login} #{line}"
              if ExternalUserDomain.external_login_exists?(login)
                found += 1
              else
@@ -827,7 +821,7 @@ Logged to: #{File.expand_path(@log_path)}
            end
         end
       end  
-      report "district: #{district}, #{type} records found in #{file_name}: #{total}, imported to AR: #{found}, missing: #{missing}"
+      report "district: #{district}, #{type} records found in #{File.basename(file_name)}: #{total}, imported to AR: #{found}, missing: #{missing}"
     end
   end
   
