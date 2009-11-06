@@ -10,6 +10,11 @@ module NavigationHelpers
     
     when /the home\s?page/
       '/'
+    when /my home\s?page/
+      '/home'
+      
+    when /to the link tool/
+      '/linktool'
     
     # Add more mappings here.
     # Here is a more fancy example:
