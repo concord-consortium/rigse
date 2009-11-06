@@ -63,6 +63,11 @@ class ExternalUserDomain < ActiveRecord::Base
       "#{new_login}_#{@@external_domain_selection}"
     end
 
+    def login_to_external_login(login)
+      raise ExternalUserDomainError unless (login && login.length > 0)
+      login.gsub(/_#{external_domain_suffix}/,"")
+    end
+    
     def external_domain_suffix
       raise ExternalUserDomain::ExternalUserDomainError, "no external domain selected" unless @@external_domain_selection
       @@external_domain_selection

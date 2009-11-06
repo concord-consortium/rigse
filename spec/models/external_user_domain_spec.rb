@@ -12,6 +12,14 @@ describe ExternalUserDomain do
       eql("le_Chat_Mc_Donald_not_the_dog_#{ExternalUserDomain.external_domain_suffix}")
   end
   
+  it "should map to external forms and from internal forms consistently" do
+    external_logins = ["bubba","b_u_bba","bubba","_bubba","bubba_"]
+    external_logins.each do |external_login|
+      internal_login = ExternalUserDomain.external_login_to_login(external_login)
+      internal_login.should_not eql external_login
+      ExternalUserDomain.login_to_external_login(internal_login).should eql external_login
+    end
+  end
   # possibly useful tests later if the code is refactored to use instance models ...
   #
   # before(:each) do
