@@ -1,15 +1,14 @@
- #
+#
 # Setup
 #
 Given "a valid sakai user" do
-  @sakai_login = "bowb_dobs"
-  @rites_login = ExternalUserDomain.external_login_to_login(@sakai_login)
+  @rinet_login = "bowb_dobs"
+  @rites_login = ExternalUserDomain.external_login_to_login(@rinet_login)
   @user = Factory(:user, {
     :login => @rites_login
   });
   @user.register
   @user.activate
-  @user.login
 end
 
 Given "an unknown sakai user" do
@@ -24,7 +23,7 @@ end
 # Actions
 #
 When "$actor goes to the link tool url" do |_|
-  visit('/linktool', :get, {:serverurl => "http://moleman.concord.org/", :internaluser => @sakai_login})
+  visit('/linktool', :get, {:serverurl => "http://moleman.concord.org/", :internaluser => @rinet_login})
 end
 
 #
