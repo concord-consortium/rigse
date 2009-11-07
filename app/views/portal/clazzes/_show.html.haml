@@ -1,25 +1,24 @@
-- options = { :complete => mce_init_string }
-= accordion_for(portal_clazz, link_to("#{portal_clazz.name}", portal_clazz_path(portal_clazz), :class => :action), options) do
+- options = {}
+= accordion_for(portal_clazz, link_to("#{portal_clazz.name}", portal_clazz_path(portal_clazz), :class => :action)) do
   = show_menu_for(portal_clazz, options)
 
   %div{:id => dom_id_for(portal_clazz, :details), :class => 'content'}
-    = wrap_edit_link_around_content(portal_clazz, options={:complete => mce_init_string}) do
-      %p
-        %ul.menu_v
+    %p
+      %ul.menu_v
+        %li
+          Teacher:
+          - if portal_clazz.teacher && (portal_clazz.teacher.respond_to? :name)
+            =h(portal_clazz.teacher.name)
+        - if (portal_clazz.teacher.respond_to? :schools) && portal_clazz.teacher.schools.size > 0
           %li
-            Teacher:
-            - if portal_clazz.teacher && (portal_clazz.teacher.respond_to? :name)
-              =h(portal_clazz.teacher.name)
-          - if (portal_clazz.teacher.respond_to? :schools) && portal_clazz.teacher.schools.size > 0
-            %li
-              School:
-              =h(portal_clazz.teacher.schools.first.name)
-      
-            - else
-              'no teacher'
-          %li
-            Description:
-            = portal_clazz.description
+            School:
+            =h(portal_clazz.teacher.schools.first.name)
+    
+          - else
+            'no teacher'
+        %li
+          Description:
+          = portal_clazz.description
     %p
     = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
     = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
