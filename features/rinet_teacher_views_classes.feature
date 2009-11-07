@@ -18,3 +18,11 @@ Feature: Rites Teachers see their classes and students
     When I login with the link tool
     And I look at my first classes page
     Then I should see a list of my students
+
+  Scenario: Rinet Teachers can not modify their classes
+    Given I am a Rinet teacher
+    When I login with the link tool
+    And I look at my first classes page
+    Then I should not be able to edit my classes
+    
+    

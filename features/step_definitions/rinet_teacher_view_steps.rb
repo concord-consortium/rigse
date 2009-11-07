@@ -82,32 +82,8 @@ Then /^I should see a list of my students$/ do
   end
 end
 
-# Actions
-#
-# When "$actor goes to the link tool url" do |_|
-#   visit('/linktool', :get, {:serverurl => "http://moleman.concord.org/", :internaluser => @rinet_login})
-# end
-# 
-# #
-# # Result
-# #
-# Then "$actor should not be logged in" do |_|
-#   controller.logged_in?.should be_true
-#   controller.current_user.login.should == "anonymous"
-# end
-#   
-# Then "$actor should be logged in" do |_|
-#   controller.logged_in?.should be_true
-#   controller.current_user.login.should == @rites_login
-# end
-# 
-# Then "$actor should be forwarded to their home page" do |_|
-#   response.status.should == "200 OK"
-#   response.body.should include("Welcome to RITES Investigations")
-#   response.body.should match(/Welcome\n\s*#{@user.name}/)
-# end
-# 
-# Then "$actor should be shown a helpful error message" do |_|
-#   response.status.should == "200 OK"
-#   response.body.should include("Login failed")
-# end
+Then /I should not be able to edit my classes/ do
+  @clazzes.first.should_not be_changeable(@teacher)
+  response.body.should_not match('edit.png')
+  response.body.should_not match('delete.png')
+end
