@@ -20,7 +20,7 @@ class Portal::Clazz < ActiveRecord::Base
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
-  include Changeable
+  include PortalChangeable
 
   self.extend SearchableModel
 
@@ -76,7 +76,8 @@ class Portal::Clazz < ActiveRecord::Base
   
   # for the accordion display
   def children
-    return students
+    # return students
+    return []
   end
   
   def user
