@@ -1,24 +1,12 @@
 - options = {}
-= accordion_for(portal_clazz, link_to("#{portal_clazz.name}", portal_clazz_path(portal_clazz), :class => :action)) do
-  = show_menu_for(portal_clazz, options)
 
-  %div{:id => dom_id_for(portal_clazz, :details), :class => 'content'}
-    %p
-      %ul.menu_v
-        %li
-          Teacher:
-          - if portal_clazz.teacher && (portal_clazz.teacher.respond_to? :name)
-            =h(portal_clazz.teacher.name)
-        - if (portal_clazz.teacher.respond_to? :schools) && portal_clazz.teacher.schools.size > 0
-          %li
-            School:
-            =h(portal_clazz.teacher.schools.first.name)
-    
-          - else
-            'no teacher'
-        %li
-          Description:
-          = portal_clazz.description
-    %p
+
+
+.clazz_details{:id => dom_id_for(portal_clazz, :details)}
+  .action_menu
+    .action_menu_left= "#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
+
+  %p
+  = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
+  - if portal_clazz.teacher && portal_clazz.teacher.user == current_user
     = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
-    = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}

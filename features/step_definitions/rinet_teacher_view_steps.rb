@@ -28,6 +28,7 @@ Given /a rinet teacher/i do
     })
     @clazzes << clazz
   end
+  @offering = Factory(:portal_offering, {:clazz => @clazzes.first})
   @student_rinet_logins = ["lpaessel", "adda_p", "npaessel", "knowuh", "hannah"]
   @student_rinet_logins.each do | login |
     rites_login = ExternalUserDomain.external_login_to_login(login)
@@ -84,6 +85,14 @@ end
 
 Then /I should not be able to edit my classes/ do
   @clazzes.first.should_not be_changeable(@teacher)
-  response.body.should_not match('edit.png')
-  response.body.should_not match('delete.png')
+  within('.clazz_details') do |content|
+    content.should_not contain('edit.png')
+    content.should_not contain('delete.png')
+  end
 end
+
+Then /^I should see a list of investigations$/ do
+  response.body.should contain("find investigations")
+  response.body.should contain(@offering.name)
+end
+

@@ -1,8 +1,21 @@
-= accordion_for(portal_clazz, "Investigations: #{portal_clazz.offerings.length}", 'offering_container') do
-  .action_menu
-    .action_menu_header_right
-      - if portal_clazz.changeable?(current_user)
-        .action= link_to 'assign investigations', edit_offerings_portal_clazz_path(portal_clazz)
-  - portal_clazz.offerings.each do |offering|
-    = render :partial =>'portal/offerings/show', :locals => {:offering => offering}
+
+
+- if portal_clazz.teacher && portal_clazz.teacher.user == current_user
+  %table{:width => "95%",:style=>"vertical-align:top;"}
+    %tr
+      %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
+        = render :partial => "shared/runnable_list", :locals => {:portal_clazz_id => portal_clazz.id, :is_teacher => true, :domain_id => @domain_id, :grade_span => @grade_span}
+
+      %td{:width => "50%",:style=>"vertical-align:top; padding: 5px;"}
+        .action_menu
+          %h4= "Offerings for #{portal_clazz.name}"
+          .tiny (drag items from the left into your class)
+        #clazz_offerings.drop_target
+          - portal_clazz.offerings.each do |offering|
+            = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
+
+  = drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'}, :before => "element.hide();", :with => "{runnable_id: decode_model(element).id, runnable_type: decode_model(element).type, dragged_dom_id: element.id, dropped_dom_id: 'clazz_offerings'}"
+  = drop_receiving_element 'offering_list',  :hoverclass=> 'drop_target_selected', :accept => 'offering', :url=> {:action=>'remove_offering'}, :before => "element.hide();", :with => "{offering_id: decode_model(element).id, dragged_dom_id: element.id, dropped_dom_id: 'offering_list'}"
+- portal_clazz.offerings.each do |offering|
+  = render :partial =>'portal/offerings/show', :locals => {:offering => offering}
 

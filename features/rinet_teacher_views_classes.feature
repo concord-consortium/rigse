@@ -5,7 +5,7 @@ their imported classes. (because it comes from SIS)
 Feature: Rites Teachers see their classes and students
   As a Rinet Teacher with imported classes
   I want to see my classes and students
-  So that so that I can assign investigations to them
+  So that I can assign investigations to them
   
   Scenario: Rinet Teachers can view their classes
     Given I am a Rinet teacher
@@ -24,5 +24,4 @@ Feature: Rites Teachers see their classes and students
     When I login with the link tool
     And I look at my first classes page
     Then I should not be able to edit my classes
-    
-    
+
