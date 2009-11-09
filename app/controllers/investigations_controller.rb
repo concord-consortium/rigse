@@ -124,10 +124,11 @@ class InvestigationsController < AuthoringController
     end
   end
 
-
-
-  # GET /pages/1
-  # GET /pages/1.xml
+  # GET /investigations/1
+  # GET /investigations/1.jnlp
+  # GET /investigations/1.config
+  # GET /investigations/1.dynamic_otml
+  # GET /investigations/1.otml
   def show
     # display for teachers? Later we can determin via roles?    
     @teacher_mode = params[:teacher_mode]
@@ -146,13 +147,17 @@ class InvestigationsController < AuthoringController
     end
   end
 
-
-  # GET /investigations/1.otml/teacher_otml
-  # GET /pages/1.xml
+  # GET /investigations/teacher/1.otml
+  # GET /investigations/teacher/1.dynamic_otml
   def teacher
     # display for teachers? Later we can determin via roles?
     @teacher_mode = true
-    render :layout => 'layouts/investigation', :action => :show
+    # whay doesn't this work with: respond_to do |format| ??
+    if request.format == :otml
+      render :layout => 'layouts/investigation', :action => :show
+    elsif request.format == :dynamic_otml
+      render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode}
+    end
   end
 
   # GET /pages/new
