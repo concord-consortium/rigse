@@ -6,5 +6,5 @@
       .action_menu_header_left
         = portal_clazz.name
       .action_menu_header_right
-        = portal_clazz.teacher.name
+        = portal_clazz.teacher ? portal_clazz.teacher.name : "(no teacher)"
     = render :partial => 'shared/offering_for_student', :collection => portal_clazz.offerings, :as => :offering
