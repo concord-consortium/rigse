@@ -44,11 +44,15 @@
 =color_mixer(!fg,!bg)
   :color = !fg
   :background-color = !bg
+  .selected
+    :color = !bg !important
+    :background-color = !fg !important
   a
     :font-weight bold
     :padding 0px
     :text-decoration none
     :background-color transparent
+
   a:link
     :color = !fg
   a:visited
@@ -64,7 +68,7 @@
   +delete_links
 
 =left_nav_colors
-  +color_mixer(!rieps_brown,!rieps_content_text_color)
+  +color_mixer(!very_dark_blue,!rieps_content_text_color)
   +delete_links
 
 =content_area_colors

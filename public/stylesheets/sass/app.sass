@@ -121,13 +121,16 @@ pre
     :left 0px
   :margin
     :right 0px
-  :line-height 1.5em
+    :left 0px
+    :bottom 1em
+  ul
+    :padding-top 1em
   li
     :list-style-type none
 
+    :padding-top 0.5em
     a
       :display block
-      
 #waiter
   :z-index 20
   :font-size 9pt
@@ -163,7 +166,8 @@ pre
   +column(!left_nav_columns)
   +left_nav_colors
   :min-height 600px
-  :height auto !important
+//  :height auto !important
+  
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)

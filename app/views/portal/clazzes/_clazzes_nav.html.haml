@@ -1,0 +1,17 @@
+/ TODO: possible refactoring to make more clazzes specific.
+#clazzes_nav
+  - top_container_id = dom_id_for(top_node, :nav_list)
+  - top_controller ||= top_node.class.name.tableize
+  - sub_controller ||= top_node.children[0] ? top_node.children[0].class.name.tableize : nil
+
+  %ul{:id=>top_container_id}
+
+    - top_node.children.each do |child|
+      %li{:id=>dom_id_for(child,:nav_item)}
+        - link_text = "#{child.name} (#{child.section})"
+        -if (selects.include? child)
+          = link_to link_text,child, :class=> 'selected'
+        -else
+          = link_to link_text, child
+
+
