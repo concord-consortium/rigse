@@ -80,7 +80,6 @@
           %li.trail= link_to 'About', about_path
           - unless current_user.anonymous? || current_user.portal_student
             %li.trail= link_to 'Investigations', investigations_path
-            %li.trail= link_to 'My Investigations', investigations_path(:mine_only => 'y')
           
         - if current_user.has_role?('admin')
           %ul.menu_h_right
