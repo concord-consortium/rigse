@@ -6,7 +6,7 @@
       %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
         = render_show_partial_for(element.embeddable)
 
-  - if should_show_teacher_notes? page
+  - if teacher_mode && (should_show_teacher_notes? page)
     .teacher_content
       .teacher_notes
         %h3 Teacher notes

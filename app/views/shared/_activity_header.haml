@@ -3,6 +3,7 @@
     %li= run_link_for(@activity)
     %li= run_link_for(@activity,'teacher',{:teacher_mode=>true})
     %li= print_link_for(@activity)
+    %li= print_link_for(@activity, {:teacher_mode => true}) 
     %li#copy_link copy (disabled)
     %li= toggle_all('sections')
     - if (activity.changeable?(current_user))
