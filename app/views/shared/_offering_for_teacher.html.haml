@@ -1,7 +1,28 @@
+.dropdown{:id => dom_id_for(offering.runnable,"print_dropdown"),:style => 'border: 2px solid;' }
+  .container
+    .big
+      %ul
+        %li=link_to ("print investigation", investigation_url(offering.runnable))
+        %li=link_to ("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true))
+    %hr
+    %ul
+      - offering.runnable.page_listing.each do |listing|
+        - listing.each_key do |key|
+          %li= link_to ("print #{key}", page_url(listing[key],:print=>true))
+      
+.dropdown{:id => dom_id_for(offering.runnable,"run_dropdown"),:style => 'border: 2px solid;' }
+  .container
+    %ul
+      %li= preview_link_for(offering.runnable, nil, :link_text => "preview #{offering.runnable.name} as a student...")
+      %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run #{offering.runnable.name} in teacher mode")
+      
 %div{ :id => dom_id_for(offering), :class => 'offering' }
-  = accordion_for(offering, preview_link_for(offering.runnable, nil, :link_text => offering.runnable.name)) do  
+  = accordion_for(offering, offering.runnable.name) do  
     %div{:id => dom_id_for(offering, :details), :class => 'tiny'}
       %span.author= offering.runnable.user.name
       %p= offering.runnable.description
       %p= updated_time_text(offering.runnable)
+      %ul.menu_h_right
+        %li= dropdown_link_for :text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this investigation"
+        %li= dropdown_link_for :text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this investigation"        
 = draggable_element dom_id_for(offering), :revert => true          
