@@ -14,8 +14,16 @@
 # connection in the connection_pool is working:
 #
 #   ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-#
-if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
+#  
+# Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
+# if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
+begin
   ActiveRecord::Base.observers = :user_observer, :investigation_observer
   ActiveRecord::Base.instantiate_observers
+  puts "Started observers"
+rescue
+  # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+  puts "Couldn't start observers #{$!}"
+  puts "This might be because you have not setup the appropriate database tables yet... "
+  puts "see config/initializers/observers.rb for more information."
 end
