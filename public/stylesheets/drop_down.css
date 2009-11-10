@@ -32,7 +32,8 @@
     width: 100%;
     white-space: nowrap;
     margin-right: 1em;
-    padding-right: 2em; }
+    padding-right: 2em;
+    padding-top: 6px; }
     .dropdown li .selected {
       color: #f2f8fc !important;
       background-color: #00233a !important; }
