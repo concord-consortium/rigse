@@ -1,12 +1,9 @@
 - options = {}
 
-
-
 .clazz_details{:id => dom_id_for(portal_clazz, :details)}
-  .action_menu
-    .action_menu_left= "#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
-
+  %h3="#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
   %p
   = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
   - if portal_clazz.teacher && portal_clazz.teacher.user == current_user
+    %br
     = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}

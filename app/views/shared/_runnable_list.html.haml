@@ -1,7 +1,7 @@
 - locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => ""}
-.action_menu
-  = render :partial => 'investigations/search_form', :locals => locals
-  .tiny (drag to your class offering list on the right)
+
+= render :partial => 'investigations/search_form', :locals => locals
+.tiny (drag to your class assignments list on the top)
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 2, :before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render :partial => 'investigations/runnable_list.html.haml', :locals => {:investigations => Investigation.search_list(locals)}
