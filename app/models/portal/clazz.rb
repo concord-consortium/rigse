@@ -80,7 +80,10 @@ class Portal::Clazz < ActiveRecord::Base
   end
   
   def user
-    return teacher.user
+    if teacher
+      return teacher.user
+    end
+    nil
   end
     
   def parent
