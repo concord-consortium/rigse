@@ -12,6 +12,8 @@
   max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
+  margin: 0px;
+  padding: 0.5em;
   -moz-border-radius-bottomright: .5em;
   -webkit-border-bottom-right-radius: .5em;
   -moz-border-radius-bottomleft: .5em;
