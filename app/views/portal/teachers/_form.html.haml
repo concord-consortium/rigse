@@ -19,9 +19,9 @@
   - field_set_tag 'school' do
     .aligned
       %ul
-        %li
-          = label_tag :school, 'School: ', :class=>"right"
-          = select_tag('school[id]', option_groups_from_collection_for_select(@portal_districts, :schools , :name, :id, :name  ))
+        / %li
+        /   = label_tag :school, 'School: ', :class=>"right"
+        /   = select_tag('school[id]', option_groups_from_collection_for_select(@portal_districts, :schools , :name, :id, :name  ),:disabled=>true)
         %li
           = label_tag :grade, 'Grade: ', :class=>"right"
           = select_tag('grade[id]', options_for_select(@portal_grades.map { |g| [g.name, g.id] }, @default_grade_id ) )
