@@ -278,22 +278,7 @@ module ApplicationHelper
     end
   end
 
-  def print_link_for(component,teacher_mode=false)
-     component_display_name = component.class.display_name.downcase
-      name = component.name
-      link_to("print #{component_display_name}", {
-          :controller => component.class.name.pluralize.underscore, 
-          :id  => component.id,
-          :action => :show,
-          :print => true,
-          :teacher_mode => teacher_mode
-        },
-        {
-          :target => "#{component.name} printout",
-          :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
-        })
-  end
-  
+
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
@@ -375,6 +360,25 @@ module ApplicationHelper
     link_to('duplicate', url)
   end
   
+  # this seems to have been a duplicate?
+  # def print_link_for(component,teacher_mode=false)
+  #    component_display_name = component.class.display_name.downcase
+  #     name = component.name
+  #     link_to("print #{component_display_name}", {
+  #         :controller => component.class.name.pluralize.underscore, 
+  #         :id  => component.id,
+  #         :action => :show,
+  #         :print => true,
+  #         :teacher_mode => teacher_mode,
+  #         :popup => true 
+  #       },
+  #       {
+  #         :target => "#{component.name} printout",
+  #         :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
+  #       })
+  # end
+  
+  
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -384,9 +388,8 @@ module ApplicationHelper
     end
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("print.png", url, 
-      :title => "print the #{component_display_name}: '#{name}'") + 
-    link_to(link_text,url)
+    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to(link_text,url,:popup => true)
   end
   
   def otml_link_for(component, params={})

@@ -2,13 +2,13 @@
   .container
     .big
       %ul
-        %li=link_to ("print investigation", investigation_url(offering.runnable))
-        %li=link_to ("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true))
+        %li=link_to ("print investigation", investigation_url(offering.runnable), :popup => true )
+        %li=link_to ("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:popup => true )
     %hr
     %ul
       - offering.runnable.page_listing.each do |listing|
         - listing.each_key do |key|
-          %li= link_to ("print #{key}", page_url(listing[key],:print=>true))
+          %li= link_to ("print #{key}", page_url(listing[key],:print=>true),:popup => true )
       
 .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown"),:style => 'border: 2px solid;' }
   .container
