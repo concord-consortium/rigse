@@ -17,5 +17,5 @@
   = drop_receiving_element 'offering_list',  :hoverclass=> 'drop_target_selected', :accept => 'offering', :url=> {:action=>'remove_offering'}, :before => "element.hide();", :with => "{offering_id: decode_model(element).id, dragged_dom_id: element.id, dropped_dom_id: 'offering_list'}"
 - else
   - portal_clazz.offerings.each do |offering|
-    = render :partial =>'portal/offerings/show', :locals => {:offering => offering}
+    = render :partial => 'shared/offering_for_student', :locals => {:offering => offering}
 
