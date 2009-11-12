@@ -13,8 +13,8 @@
 .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown"),:style => 'border: 2px solid;' }
   .container
     %ul
-      %li= preview_link_for(offering.runnable, nil, :link_text => "preview #{offering.runnable.name} as a student...")
-      %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run #{offering.runnable.name} in teacher mode")
+      %li= preview_link_for(offering.runnable, nil, :link_text => "preview as a student...")
+      %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
       
 %div{ :id => dom_id_for(offering), :class => 'offering' }
   = accordion_for(offering, offering.runnable.name) do  
