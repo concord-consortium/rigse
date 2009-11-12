@@ -290,10 +290,16 @@ class InvestigationsController < AuthoringController
   # DELETE /pages/1.xml
   def destroy
     @investigation = Investigation.find(params[:id])
-    @investigation.destroy
-
+    if @investigation.changeable?(current_user)
+      if @investigation.offerings && @investigation.offerings.size > 0
+        flash[:error] = "This investigation can't be destoyed, its in use by classes..."
+        @failed = true
+      else
+        @investigation.destroy
+      end
+    end
     respond_to do |format|
-      format.html { redirect_back_or(activities_url) }
+      format.html { redirect_back_or investigation_path(@investigation)}
       format.js
       format.xml  { head :ok }
     end
