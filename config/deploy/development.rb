@@ -1,14 +1,6 @@
-#############################################################
-#  Application
-#############################################################
-
-set :deploy_to, "/web/production/itsisu_investigations"
-set :branch, "itsi-master"
-
-#############################################################
-#  Servers
-#############################################################
-
-set :domain, "itsisu.investigations.concord.org"
+# development branch
+set :domain, "rites.dev.concord.org"
+set :deploy_to, "/web/rites.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
+set :branch, "master"
