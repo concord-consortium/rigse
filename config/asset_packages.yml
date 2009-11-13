@@ -46,7 +46,7 @@ stylesheets:
   - themes/itsisu/itsisu
   - themes/itsisu/action_menu_tab
   - themes/itsisu/drop_down
-  - accordion
+  - themes/itsisu/accordion
   - window
   - rites-dialog
   - live_validation
