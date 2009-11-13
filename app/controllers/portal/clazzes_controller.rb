@@ -28,6 +28,8 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
+    elsif current_user.portal_teacher
+      @portal_clazz.teacher = current_user.portal_teacher
     end
     respond_to do |format|
       format.html # new.html.erb

@@ -9,8 +9,6 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
     end
-    portal.resources :external_users
-    portal.resources :external_user_domains
     portal.resources :courses
     portal.resources :districts
     portal.resources :grades
@@ -55,6 +53,11 @@ ActionController::Routing::Routes.draw do |map|
     
   map.resources :passwords
   map.resource :session
+
+  map.resources :external_user_domains do |external_user_domain|
+    external_user_domain.resources :external_users    
+    external_user_domain.resources :external_sessions
+  end
 
 # ----------------------------------------------
 

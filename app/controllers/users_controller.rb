@@ -81,7 +81,11 @@ class UsersController < ApplicationController
           when u.email[/no-email/] then :no_email
           else :email
           end
-        end        
+        end
+        # to avoid nil values, initialize everything to an empty array if it's non-existent
+        users[:no_email] ||= []
+        users[:email] ||= []
+        users[:default_users] ||= []
         users[:no_email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
         users[:email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
 
@@ -90,7 +94,7 @@ class UsersController < ApplicationController
                        { :name => 'regular', :users => users[:email] }, 
                        { :name => 'students' , :users => users[:no_email] } 
                      ]
-        unless users[:default_users].empty?
+        if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
         end
       elsif request.put?

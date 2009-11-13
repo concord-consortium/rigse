@@ -4,6 +4,7 @@
     %li= run_link_for(@investigation)
     %li= run_link_for(@investigation,'teacher',{:teacher_mode=>true})
     %li= print_link_for(@investigation)
+    %li= print_link_for(@investigation, {:teacher_mode => true}) 
     %li= toggle_all('activities')
     - unless(current_user.anonymous?)
       %li= duplicate_link_for(@investigation)

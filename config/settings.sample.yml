@@ -1,117 +1,104 @@
+default_admin_user: &default_admin_user
+  login: stephen
+  email: stephen.bannasch@gmail.com
+  first_name: Stephen
+  last_name: Bannasch
+
+states_and_provinces: &states_and_provinces
+  - RI
+
+active_school_levels: &active_school_levels 
+  - "2"
+  - "3"
+  - "4"
+
+active_grades: &active_grades 
+  - "6"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
+
 development: &non_production_settings
-  site_url: http://localhost:3000
   site_name: RITES Investigations (development)
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
+  site_url: http://localhost:3000
   description: ""
-  admin_email: stephen.bannasch@gmail.com
-  admin_login: stephen
-  admin_first_name: Stephen
-  admin_last_name: Bannasch
+  default_admin_user: *default_admin_user
   enable_default_users: true
   include_otrunk_examples: false
-  states_and_provinces:
-    - RI
-  active_grades:
-    - "6"
-    - "7"
-    - "8"
-    - "9"
-    - "10"
-    - "11"
-    - "12"
-  active_school_levels:
-    - "2"
-    - "3"
-    - "4"
-  default_maven_jnlp_server: concord
-  default_maven_jnlp_family: all-otrunk-snapshot
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
+  states_and_provinces: *states_and_provinces
+  active_school_levels: *active_school_levels 
+  active_grades: *active_grades 
   maven_jnlp_families:
     - "all-otrunk-snapshot"
-  default_jnlp_version: snapshot
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  default_maven_jnlp:
+    server: concord
+    family: all-otrunk-snapshot
+    version: snapshot
   valid_sakai_instances:
     - http://localhost:3000/
   
 test:
   <<: *non_production_settings
 
+cucumber:
+  <<: *non_production_settings
+
 staging:
-  site_url: http://rites.dev.concord.org
   site_name: RITES Investigations (staging)
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
+  site_url: http://rites.dev.concord.org
   description: ""
-  admin_email: stephen.bannasch@gmail.com
-  admin_login: stephen
-  admin_first_name: Stephen
-  admin_last_name: Bannasch
+  default_admin_user: *default_admin_user
   enable_default_users: true
   include_otrunk_examples: false
-  states_and_provinces:
-  - RI
-  active_grades:
-    - "6"
-    - "7"
-    - "8"
-    - "9"
-    - "10"
-    - "11"
-    - "12"
-  active_school_levels:
-    - "2"
-    - "3"
-    - "4"
-  default_maven_jnlp_server: concord
-  default_maven_jnlp_family: all-otrunk-snapshot
-  maven_jnlp_families:
-    - "all-otrunk-snapshot"
-  default_jnlp_version: 0.1.0-20090724.190238
+  states_and_provinces: *states_and_provinces
+  active_school_levels: *active_school_levels 
+  active_grades: *active_grades 
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  maven_jnlp_families:
+    - "all-otrunk-snapshot"
+  default_maven_jnlp:
+    server: concord
+    family: all-otrunk-snapshot
+    version: snapshot
   valid_sakai_instances:
     - http://localhost:3000/
   
 production:
-  site_url: http://rites.dev.concord.org
   site_name: RITES Investigations
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
+  site_url: http://rites.dev.concord.org
   description: ""
-  admin_email: stephen.bannasch@gmail.com
-  admin_login: stephen
-  admin_first_name: Stephen
-  admin_last_name: Bannasch
+  default_admin_user: *default_admin_user
   enable_default_users: false
   include_otrunk_examples: false
-  states_and_provinces:
-  - RI
-  active_grades:
-    - "6"
-    - "7"
-    - "8"
-    - "9"
-    - "10"
-    - "11"
-    - "12"
-  active_school_levels:
-    - "2"
-    - "3"
-    - "4"
-  default_maven_jnlp_server: concord
-  default_maven_jnlp_family: all-otrunk-snapshot
-  maven_jnlp_families:
-    - "all-otrunk-snapshot"
-  default_jnlp_version: 0.1.0-20090724.190238
+  states_and_provinces: *states_and_provinces
+  active_school_levels: *active_school_levels 
+  active_grades: *active_grades 
+  site_district: RITES Investigations-district
+  site_school: RITES Investigations-school
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
+  maven_jnlp_families:
+    - "all-otrunk-snapshot"
+  default_maven_jnlp:
+    server: concord
+    family: all-otrunk-snapshot
+    version: 0.1.0-20090724.190238
   valid_sakai_instances:
     - http://localhost:3000/
   

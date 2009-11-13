@@ -1,7 +1,36 @@
-set :stages, %w(development staging production bumblebeeman)
+set :stages, %w(development staging production seymour)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
+require 'haml'
+
+def render(file,opts={})
+  template = File.read(file)
+  haml_engine = Haml::Engine.new(template)
+  output = haml_engine.render(nil,opts)
+  output
+end
+
+#############################################################
+#  Miantance mode
+#############################################################
+task :disable_web, :roles => :web do
+  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+
+  maintenance = render("./app/views/layouts/maintenance.haml", 
+                       {
+                         :back_up => ENV['BACKUP'],
+                         :reason => ENV['REASON'],
+                         :message => ENV['MESSAGE']
+                       })
+
+  run "mkdir -p #{shared_path}/system/"
+  put maintenance, "#{shared_path}/system/maintenance.html", 
+                   :mode => 0644
+end
+task :enable_web, :roles => :web do
+  run "rm #{shared_path}/system/maintenance.html"
+end
 
 #############################################################
 #  Application
@@ -138,6 +167,8 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
+    run "mkdir -p #{shared_path}/rinet_data"
+    run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
     
   desc "install required gems for application"

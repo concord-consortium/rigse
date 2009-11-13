@@ -10,6 +10,10 @@ Spork.prefork do
   # from the project root directory.
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
+  
+  unless ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+    puts "migrations need to be run: rake db:test:prepare"
+  end
   require 'spec/autorun'
   require 'spec/rails'
 
