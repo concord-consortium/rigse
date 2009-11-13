@@ -19,9 +19,6 @@ javascripts:
   - item_selectable
   - live_validation
   
-  # doesn't seem to work
-  # - tiny_mce/tiny_mce
-
 stylesheets: 
 - base: 
   - app
@@ -34,11 +31,7 @@ stylesheets:
   - drop_down
   - data_table
   - action_menu_tab
-  # - rites_otml
-  # no longer used:
-  # - scaffold
-  # - sliding_doors_tabs
-  # - teacher_overlay
+
 - default:
   - app
   - accordion
@@ -50,9 +43,9 @@ stylesheets:
   - drop_down
   - data_table
   - action_menu_tab
+  
 - itsisu:
-  - app
-  - ../themes/itsisu/stylesheets/app
+  - itsisu
   - accordion
   - window
   - rites-dialog
@@ -62,5 +55,4 @@ stylesheets:
   - drop_down
   - data_table
   - action_menu_tab
-  
 
