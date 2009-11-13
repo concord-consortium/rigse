@@ -177,7 +177,7 @@ class PagesController < ApplicationController
     @container = params['container'] || 'elements_container'
 
     # dynamically instantiate the component based on its type.
-    component_class = Kernel.const_get(params['class_name'])
+    component_class = params['class_name'].constantize
     if component_class == DataCollector
       if probe_type_id = session[:last_saved_probe_type_id]
         probe_type = ProbeType.find(probe_type_id)

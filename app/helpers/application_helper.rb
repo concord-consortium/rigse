@@ -143,12 +143,14 @@ module ApplicationHelper
 
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/show", :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
   end
 
   def wrap_edit_link_around_content(component, options={})

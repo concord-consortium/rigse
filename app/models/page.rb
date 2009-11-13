@@ -40,7 +40,7 @@ class Page < ActiveRecord::Base
 
   @@element_types.each do |type|
     unless defined? type.dont_make_associations
-      eval "has_many :#{type.to_s.tableize}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
+      eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
     end
   end
 
