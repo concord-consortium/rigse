@@ -1,0 +1,5 @@
+Instead of making style sheets, make sass files.
+Put them in public/stylesheets/sass/themes/<theme-name>.sass
+They will be compiled and moved into public/stylesheets/themes/<theme-name>.css
+/ theme sass files should live in public/stylesheets/sass/themes/
+/ they will be compiled and moved into public/stylesheets/themes/
