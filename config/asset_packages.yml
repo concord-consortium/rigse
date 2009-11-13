@@ -45,7 +45,7 @@ stylesheets:
   - action_menu_tab
   
 - itsisu:
-  - themes/itsisu
+  - themes/itsisu/itsisu
   - accordion
   - window
   - rites-dialog
