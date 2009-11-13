@@ -1,1 +1,5 @@
-page.redirect_to(investigations_url)
+if (@failed)
+  page.insert_html :after, 'flash', "<div class='flash flash_error'> #{flash[:error]} </div>"
+else
+  page.redirect_to(investigations_url)
+end

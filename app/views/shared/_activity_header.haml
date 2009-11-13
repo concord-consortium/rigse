@@ -1,14 +1,15 @@
 #actions_menu.dropdown
   %ul
-    /%li= run_link_for(@activity)
-    /%li= run_link_for(@activity,'teacher',{:teacher_mode=>true})
-    /%li= print_link_for(@activity)
-    /%li#copy_link copy (disabled)
-    /%li= toggle_all('sections')
+    %li= run_link_for(@activity)
+    %li= run_link_for(@activity,'teacher',{:teacher_mode=>true})
+    %li= print_link_for(@activity)
+    %li= print_link_for(@activity, {:teacher_mode => true}) 
+    %li#copy_link copy (disabled)
+    %li= toggle_all('sections')
     - if (activity.changeable?(current_user))
-      /%li=duplicate_link_for(@activity)
+      %li=duplicate_link_for(@activity)
       %li=edit_link_for(@activity)
-      /%li#paste_link= paste_link_for(['section'],{:container_id => @container_id}) # see pages_helper.rb
+      %li#paste_link= paste_link_for(['section'],{:container_id => @container_id}) # see pages_helper.rb
       
 - if (teacher_only? activity)
   - view_class = "action_menu teacher_only"

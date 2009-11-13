@@ -181,7 +181,7 @@ class User < ActiveRecord::Base
 
   def add_role(role)
     unless has_role?(role)
-      roles << Role.find_by_title(role)
+      roles << Role.find_or_create_by_title(role)
     end
   end
 
@@ -203,7 +203,7 @@ class User < ActiveRecord::Base
   end
 
   def make_user_a_member
-    roles << Role.find_by_title('member')
+    self.add_role('member')
   end
   
   # is this user the anonymous user?

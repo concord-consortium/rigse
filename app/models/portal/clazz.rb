@@ -15,12 +15,11 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
-  [:district, :virtual?, :real?].each {|method| delegate method, :to=> :course } 
 
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
-  include Changeable
+  include PortalChangeable
 
   self.extend SearchableModel
 
@@ -76,15 +75,40 @@ class Portal::Clazz < ActiveRecord::Base
   
   # for the accordion display
   def children
-    return students
+    # return students
+    return offerings
   end
   
   def user
-    return teacher.user
+    if teacher
+      return teacher.user
+    end
+    nil
   end
     
   def parent
     return teacher
+  end
+  
+  # 
+  # [:district, :virtual?, :real?].each {|method| delegate method, :to=> :course } 
+  
+  def district
+    if course
+      return course.district
+    end
+    return nil
+  end
+  
+  def virtual?
+    if course
+      return course.virtual?
+    end
+    return true
+  end
+  
+  def real?
+    return (! virtual?)
   end
   
 

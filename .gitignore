@@ -54,8 +54,5 @@ config/settings-backup.yml
 doc/guides
 config/rinet_data.yml
 rinet_data
-resources/rinet_test_data/import_log.txt
-resources/rinet_test_data_b/import_log.txtdoc/guides
-public/stylesheets/itsi.css
-public/stylesheets/itsi_colors.css
-public/stylesheets/itsi_fonts.css
+import_log.txt*
+public/stylesheets/themes/

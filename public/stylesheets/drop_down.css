@@ -7,49 +7,52 @@
   clear: left;
   float: none;
   background-color: white;
-  margin: 0px;
-  margin-left: 3px;
-  padding: 0.5em;
   font-size: 10px;
   line-height: 1.5em;
-  overflow: hidden;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0px;
+  padding: 0.5em;
   -moz-border-radius-bottomright: .5em;
   -webkit-border-bottom-right-radius: .5em;
   -moz-border-radius-bottomleft: .5em;
   -webkit-border-bottom-left-radius: .5em; }
+  .dropdown .big {
+    font-size: 1.2em; }
   .dropdown ul {
-    padding: 0px;
-    margin: 0px;
+    margin: inherit;
     list-style-type: none;
     width: 100%;
     font-weight: normal; }
   .dropdown li {
-    color: #6a0e04;
+    color: #00233a;
     background-color: #f2f8fc;
     list-style-type: none;
-    padding: 0px;
-    padding-top: 6px;
-    padding-right: 20px;
-    margin: 0px;
     width: 100%;
-    white-space: nowrap; }
+    white-space: nowrap;
+    margin-right: 1em;
+    padding-right: 2em;
+    padding-top: 6px; }
+    .dropdown li .selected {
+      color: #f2f8fc !important;
+      background-color: #00233a !important; }
     .dropdown li a {
       font-weight: bold;
       padding: 0px;
       text-decoration: none;
       background-color: transparent; }
     .dropdown li a:link {
-      color: #6a0e04; }
+      color: #00233a; }
     .dropdown li a:visited {
-      color: #6a0e04; }
+      color: #00233a; }
     .dropdown li a:active {
-      color: #6a0e04; }
+      color: #00233a; }
     .dropdown li a:hover {
       color: #f2f8fc;
-      background-color: #6a0e04; }
+      background-color: #00233a; }
   .dropdown a {
     margin-left: 5px;
-    padding: 0px;
     display: block; }
   .dropdown a.rollover {
     clear: left !important; }

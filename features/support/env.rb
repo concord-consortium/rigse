@@ -4,7 +4,13 @@
 # Consider adding your own code to a new file instead of editing this one.
 
 # edited to integrate with spork
-
+# 
+# use 'spork cuc' in one terminal
+# then 'cucumber ./features -drb' to run tests.
+# See: 
+#  http://github.com/bmabey/cucumber-tmbundle/
+#  for info about how to set TM ENV variables to use spork.
+#
 # Sets up the Rails environment for Cucumber
 ENV["RAILS_ENV"] ||= "cucumber"
 
@@ -15,7 +21,8 @@ Spork.prefork do
 
   require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
   require 'cucumber/rails/world'
-
+  
+  
   # If you set this to true, each scenario will run in a database transaction.
   # You can still turn off transactions on a per-scenario basis, simply tagging 
   # a feature or scenario with the @no-txn tag. 
@@ -53,6 +60,21 @@ Spork.prefork do
     config.open_error_files = false # Set to true if you want error pages to pop up in the browser
   end
 
+  # use factory girl:
+  require 'factory_girl'
+  Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
+  
+  # This code used to live in factories/zz_default_data.rb.
+  # It boots the cucmber environement with a default project.
+  # required by application_controller.rb
+  puts "Loading default data set required for application_controller.rb to run ...."
+  anon =  Factory.next :anonymous_user
+  admin = Factory.next :admin_user 
+  device_config = Factory.create(:device_config)
+  versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
+  Admin::Project.create_or_update_default_project_from_settings_yml
+  puts "done."
+  
   # Make visible for testing
   include AuthenticatedSystem
   ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)

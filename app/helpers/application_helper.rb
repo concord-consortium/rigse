@@ -278,21 +278,7 @@ module ApplicationHelper
     end
   end
 
-  def print_link_for(component)
-     component_display_name = component.class.display_name.downcase
-      name = component.name
-      link_to("print #{component_display_name}", {
-          :controller => component.class.name.pluralize.underscore, 
-          :id  => component.id,
-          :action => :show,
-          :print => true
-        },
-        {
-          :target => "#{component.name} printout",
-          :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
-        })
-  end
-  
+
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
@@ -311,7 +297,7 @@ module ApplicationHelper
   def run_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("itsi_run.png",  url, 
+    link_button("run.png",  url, 
       :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);") 
   end
@@ -319,7 +305,7 @@ module ApplicationHelper
   def preview_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp)
-    link_button("itsi_preview.png",  url, 
+    link_button("preview.png",  url, 
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);")      
   end
@@ -374,15 +360,18 @@ module ApplicationHelper
     link_to('copy', url)
   end
   
+
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "print #{component_display_name}"
+    if params[:teacher_mode]
+      link_text = "#{link_text} (with notes) "
+    end
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("itsi_print.png", url, 
-      :title => "print the #{component_display_name}: '#{name}'") + 
-    link_to(link_text,url)
+    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to(link_text,url,:popup => true)
   end
   
   def otml_link_for(component, params={})

@@ -73,13 +73,18 @@ module TruncatableXhtml
     "content",
     "prompt"
   ]
+
   # DEFAULT_REPLACEABLES=  [
   #   /\s+style\s?=\s?"(.*?)"/,
   #   /&nbsp;/
   # ]
-  
-  # carlolyn wants full control I think:
-  DEFAULT_REPLACEABLES=  [ ]
+  # 
+  REPLACEMENT_MAP={
+    /\s+style\s?=\s?"(.*?)"/ => "",
+    /(&nbsp;)+/ => " "}
+    
+  ## for ITSI carolyn might want everything 
+  # REPLACEMENT_MAP = {}
   
   ##
   ## These methods are added to the class when 
@@ -89,7 +94,7 @@ module TruncatableXhtml
     ## has_html_tables (you can specify table names that have html content)
     ##  @param table_anames = names of attributes that might have html content.
     ##  @ param replaceables = patterns we want to exlude from the sanitized output.
-    def has_html_tables(table_names = DEFAULT_TABLES,replaceables = DEFAULT_REPLACEABLES)
+    def has_html_tables(table_names = DEFAULT_TABLES,replaceables = REPLACEMENT_MAP)
       define_method("html_tables") do
         table_names
       end
@@ -132,8 +137,8 @@ module TruncatableXhtml
     logger.debug "calling replace_offensive_html"
     html_tables.each do |tablename|
       if self.respond_to? tablename
-        html_replacements.each do |replace_me|
-          self.send("#{tablename}=",(self.send tablename).gsub(replace_me,""))
+        html_replacements.each_pair do |replacable,replacement|
+          self.send("#{tablename}=",(self.send tablename).gsub(replacable,replacement))
         end
       end
     end

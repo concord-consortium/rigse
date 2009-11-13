@@ -41,7 +41,9 @@ class SakaiLinkController < ApplicationController
         begin
           external_domain = ExternalUserDomain.select_external_domain_by_server_url(@serverurl)
           user = ExternalUserDomain.find_user_by_external_login(@internaluser)
+          logger.error("#{external_domain} == #{user}")
         rescue ExternalUserDomain::ExternalUserDomainError
+          logger.error("couldnt find external doain and user for #{@serverurl} == #{@internaluser}")          
           external_domain = user = nil
         end
         # logger.warn("Login (#{@internaluser}) found user: #{user}")

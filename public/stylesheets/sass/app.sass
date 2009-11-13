@@ -19,38 +19,40 @@ body
   :padding 0px
   +main_font
   :background
-    :color = !itsi_brown
+    :image url(/images/rites-bg.jpg) 
+    :repeat repeat
   :margin 10px 
     :bottom 0px
-  :background-position right top
-  :background-image url("/images/cc_corner_logo_white.png")
-  :background-repeat no-repeat
-  
+
 h1,h2,h3,h4,h5
   :padding-top 0.5em
-  :font-weight bold
+
 h2,h3,h4,h5
   :padding-bottom 0.25em
 
 h1 
-  :letter-spacing 110%
+  :letter-spacing .15em
   :font 
-    :size 5.5em
+    :size 2.5em
+    :weight normal
 
 h2
   :letter-spacing .15em
   :font
     :size 1.5em
+    :weight normal
 
 h3
   :letter-spacing .15em
   :font
     :size 1.3em
+    :weight normal
 
 h4
   :padding-left 10px
   :font
     :size 1.3em
+    :weight normal
 
 fieldset
   :background-color white
@@ -74,11 +76,9 @@ pre
   :line-height 1.1em
   
 .wrapper
-  :border 2px solid
-  :background-color white
+  +page_white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
-
   
 #wrapper
   +container
@@ -89,32 +89,30 @@ pre
   +column(24,true)
   :padding 0px
   :margin 0px
-  :height auto
-  :background-color white
+  :background-color = !rieps_brown
+  :background
+    :image url(/images/header-bg2.jpg) 
+    :repeat repeat-x
+  :color = !very_dark_blue
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
-  :color = !itsi_brown
-
   a
-    :color = !itsi_green
+    :color = !very_dark_blue
     :background-color transparent
     :font-weight bold
   a:hover
-    :color = !itsi_brown
+    :color = !rieps_brown
     :background-color white
   .left_content
     +column(24,true)
+    :float left
     :text-align left
-    :float none
-    :clear none
-    img
-      :float left
-      :clear none
 
   .right_content
     +column(24,true)
+    :float right
     :text-align right
     
 .nav_menu
@@ -123,13 +121,16 @@ pre
     :left 0px
   :margin
     :right 0px
-  :line-height 1.5em
+    :left 0px
+    :bottom 1em
+  ul
+    :padding-top 1em
   li
     :list-style-type none
 
+    :padding-top 0.5em
     a
       :display block
-      
 #waiter
   :z-index 20
   :font-size 9pt
@@ -165,7 +166,8 @@ pre
   +column(!left_nav_columns)
   +left_nav_colors
   :min-height 600px
-  :height auto !important
+//  :height auto !important
+  
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
@@ -217,7 +219,8 @@ ul.menu_h_right
     :display inline
     :list-style-type none
     :white-space nowrap
-
+    a
+      :font-weight bold !important
 ul.menu_h
   :display inline
   :list-style-type none
@@ -579,17 +582,21 @@ input[type=password]
       :margin-top 4px
       
 .drop_target
-  :min-height 400px !important
   :height 100%
   :min-width 50px
   :background-color #ead9c7
   :padding 5px
+  :padding-bottom 30px
 .drop_target_selected
   :background-color= !yellowish_color
+#search_title
+  :display block
+  :width %40
+  :float left
+  :font-weight bold
 .progress_container
-  :background-color= !itsi_content_text_color
   :display block
   :overflow hidden
-  :height 2.5em
-  :width 100%
+  :text-align right
+  :height 20px
 

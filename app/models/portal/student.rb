@@ -13,7 +13,7 @@ class Portal::Student < ActiveRecord::Base
   has_many :learners, :class_name => "Portal::Learner", :foreign_key => "student_id"
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
   
-  has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz, :uniq => true
+  has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
   
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
@@ -65,4 +65,15 @@ class Portal::Student < ActiveRecord::Base
       nil
     end
   end
+  
+  def has_clazz?(clazz)
+    self.clazzes.detect { |cl| cl.id == clazz.id }
+  end
+  
+  def add_clazz(clazz)
+    unless self.has_clazz?(clazz)
+      self.clazzes << clazz
+    end
+  end
+  
 end
