@@ -53,3 +53,14 @@ stylesheets:
   - notes
   - data_table
 
+- smartgraphs:
+  - themes/smartgraphs/smartgraphs
+  - themes/smartgraphs/action_menu_tab
+  - themes/smartgraphs/drop_down
+  - themes/smartgraphs/accordion
+  - window
+  - rites-dialog
+  - live_validation
+  - notes
+  - data_table
+
