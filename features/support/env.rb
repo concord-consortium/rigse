@@ -21,7 +21,7 @@ Spork.prefork do
 
   require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
   require 'cucumber/rails/world'
-  
+  require 'email_spec/cucumber'
   
   # If you set this to true, each scenario will run in a database transaction.
   # You can still turn off transactions on a per-scenario basis, simply tagging 
@@ -60,6 +60,8 @@ Spork.prefork do
     config.open_error_files = false # Set to true if you want error pages to pop up in the browser
   end
 
+  APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
+  
   # use factory girl:
   require 'factory_girl'
   Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
@@ -72,6 +74,9 @@ Spork.prefork do
   admin = Factory.next :admin_user 
   device_config = Factory.create(:device_config)
   versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
+  school = Factory(:portal_school)
+  domain = Factory(:domain)
+  grade = Factory(:portal_grade)
   Admin::Project.create_or_update_default_project_from_settings_yml
   puts "done."
   
