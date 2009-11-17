@@ -1,4 +1,4 @@
-set :stages, %w(development staging production seymour itsisu_pro fall2009)
+set :stages, %w(development staging production seymour itsisu_pro fall2009 smartgraphs-production)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -154,7 +154,7 @@ namespace :deploy do
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
   task :from_scratch do
-    run "cd #{deploy_to}/current; rake rigse:setup:force_new_rigse_from_scratch"
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
   end
   
   desc "link in some shared resources, such as database.yml"

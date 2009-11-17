@@ -207,7 +207,7 @@ HEREDOC
       and install default users.
       HEREDOC
         # save the old data?
-        Rake::Task['rigse:setup:development_environment_only'].invoke
+        # Rake::Task['rigse:setup:development_environment_only'].invoke
         Rake::Task['db:reset'].invoke
         Rake::Task['rigse:setup:force_default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
