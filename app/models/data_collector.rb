@@ -58,6 +58,14 @@ class DataCollector < ActiveRecord::Base
     end
   end
   
+  def self.by_scope(scope)
+    if scope && scope.class != DataCollector
+      scope.activity.investigation.data_collectors
+    else
+      []
+    end
+  end
+  
   def self.prediction_graphs
     DataCollector.find_all_by_graph_type_id(2)
   end

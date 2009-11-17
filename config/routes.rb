@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  map.namespace(:smartgraph) do |smartgraph|
+    smartgraph.resources :range_questions
+  end
 
   map.namespace(:portal) do |portal|
     portal.resources :clazzes, :as => 'classes', :member => {

@@ -1,5 +1,5 @@
 - content_for("page_#{dom_id_for(page)}".to_sym) do
-  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :content), :name => page.name }
+  %OTCompoundDoc{ :name => page.name }
     %bodyText 
       - if teacher_mode && should_show_teacher_notes?(page)
         %object{ :refid => ot_refid_for(page, :tab_container) }/
