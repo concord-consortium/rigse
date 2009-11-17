@@ -24,6 +24,7 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
         # xml.object :refid => "#{runnable.uuid}!/interface_manager"
         xml << ot_interface_manager(true)
         xml.object :refid => "#{runnable.uuid}!/lab_book_bundle"
+        xml.object :refid => "#{runnable.uuid}!/script_engine_bundle"
       }
       xml.overlays { 
         # FIXME This should probably get figured out in a more dynamic way, since if we ever start adding overlays,

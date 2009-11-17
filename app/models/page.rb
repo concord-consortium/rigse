@@ -34,8 +34,9 @@ class Page < ActiveRecord::Base
     BiologicaBreedOffspring,
     BiologicaPedigree,
     BiologicaMultipleOrganism,
-    BiologicaMeiosisView
+    BiologicaMeiosisView,
     # BiologicaDna,
+    Smartgraph::RangeQuestion,
   ]
 
   @@element_types.each do |type|
