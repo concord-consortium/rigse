@@ -19,7 +19,7 @@ config.action_controller.allow_forgery_protection    = false
 # The :test delivery method accumulates sent emails in the
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
-
+config.action_mailer.perform_deliveries = true
 # current customizations below this line ...
 
 # Install the gems required for testing:
@@ -33,7 +33,7 @@ config.gem "rspec-rails",    :lib => false,          :version => "= 1.2.9"
 config.gem "webrat",         :lib => false,          :version => "= 0.5.3"
 config.gem "cucumber",       :lib => false,          :version => "= 0.4.2"
 config.gem "factory_girl",                           :version => "= 1.2.3", :source => "http://gemcutter.org"
-
+config.gem 'email_spec',                             :version => "= 0.3.5"
 # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
 # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
 config.gem "ZenTest",        :lib => false,          :version => "= 4.1.4"
