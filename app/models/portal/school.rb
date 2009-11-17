@@ -13,6 +13,7 @@ class Portal::School < ActiveRecord::Base
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
+  has_many :clazzes, :through => :courses
   
   has_many :school_memberships, :class_name => "Portal::SchoolMembership", :foreign_key => "school_id"
 
