@@ -25,11 +25,7 @@ class Portal::TeachersController < ApplicationController
   def new
     @portal_teacher = Portal::Teacher.new
     # order @portal_districts so the virtual districts appear first in the list of Districts and Schools
-    @portal_districts = Portal::District.virtual + Portal::District.real
-    @portal_grades = Portal::Grade.active
-    @default_grade_id = @portal_grades.detect { |g| g.name == '9' }.id
-    @domains = Domain.all
-    
+    domains_and_grades
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_teacher }
@@ -46,10 +42,10 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers.xml
   def create
     # @portal_school = Portal::School.find(params[:school][:id])
-    @portal_school = Portal::School.find_by_name("RITES Investigations-school")
+    @portal_school = Portal::School.find(params[:school][:id])
     @portal_grade = Portal::Grade.find(params[:grade][:id])
     @domain = Domain.find(params[:domain][:id])
-
+    domains_and_grades
     @user = User.new(params[:user])
     if @user && @user.valid?
       @user.register!
@@ -115,6 +111,18 @@ class Portal::TeachersController < ApplicationController
     flash[:error] = message
     render :action => :new
   end
+  
+  
+  private 
+  def domains_and_grades
+    @portal_districts = Portal::District.virtual + Portal::District.real
+    @portal_grades = Portal::Grade.active
+    if (@portal_grades && @portal_grades.size > 1)
+      @default_grade_id = @portal_grades.last.id
+    end
+    @domains = Domain.all
+  end
+  
   
   
 end
