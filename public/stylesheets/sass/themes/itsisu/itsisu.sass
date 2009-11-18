@@ -53,10 +53,9 @@ h4
     :size 1.3em
 
 fieldset
-  :background-color white
   :border 1px solid
-  :margin 0.5em 0.5em 1em 0.5em
-  :padding 0.5em 1em 1em 1em
+  :margin 1em 0px
+  :padding 1em
   ul
     :style horizontal
 
@@ -119,20 +118,24 @@ pre
     
 .nav_menu
   :display block
-  :padding
-    :left 0px
+  :padding 0px
   :margin
     :right 0px
     :left 0px
     :bottom 1em
   ul
-    :padding-top 1em
+    :padding-bottom 1em
+    :margin-left 0px
+    :padding 0px
   li
     :list-style-type none
-
-    :padding-top 0.5em
+    :background-color = !light_green
+    :margin-top 0.5em
+    :padding 2px
     a
       :display block
+      :text-decoration none
+      :padding 2px
 #waiter
   :z-index 20
   :font-size 9pt
@@ -165,9 +168,11 @@ pre
   :font-size 12px
 #left_nav
   :display block
-  +column(!left_nav_columns)
+  +column(!left_nav_columns - 1)
   +left_nav_colors
   :min-height 600px
+  :padding 0px
+
 //  :height auto !important
   
 #content_header
@@ -565,24 +570,24 @@ input[type=password]
   ul
     :margin 0px
     :padding 0px
+
   li
     :list-style none
     :padding 5px
     :margin 0px
-
+    :vertical-align text-top
     label
       :width 30%
       :display inline-block
       :clear none
       :font-weight bold
       :line-height 1.8em
-      
     label.right
       :text-align right
     input
       :margin 0px
       :margin-top 4px
-      
+
 .drop_target
   :height 100%
   :min-width 50px
