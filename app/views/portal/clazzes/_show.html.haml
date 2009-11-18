@@ -1,9 +1,24 @@
 - options = {}
+%br
+.clazz_info{:id => dom_id_for(portal_clazz,:item)}
+  .clazz_details{:id => dom_id_for(portal_clazz, :details)}
+    .action_menu
+      .action_menu_left
+        %h3="#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
+      .action_menu_right
+        -if portal_clazz.changeable? current_user
+          / = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
+          / = edit_button_for(portal_clazz)
+          = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
+    .action_menu
+      %ul
+        %li
+          %strong Class Word:
+          = portal_clazz.class_word
+        %li
+          %strong Semester:
+          = portal_clazz.semester.name
+        %li
+          %strong Description:
+          = portal_clazz.description
 
-.clazz_details{:id => dom_id_for(portal_clazz, :details)}
-  %h3="#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
-  %p
-  = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
-  - if portal_clazz.teacher && portal_clazz.teacher.user == current_user
-    %br
-    = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
