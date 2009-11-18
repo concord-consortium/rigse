@@ -22,7 +22,7 @@ class Portal::Teacher < ActiveRecord::Base
   
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
   has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
-  
+
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   validates_presence_of :user,  :message => "user association not specified"
@@ -64,4 +64,8 @@ class Portal::Teacher < ActiveRecord::Base
     nil
   end
   
+  def students
+    students = clazzes.map { |c| c.students }
+    students.flatten.compact
+  end
 end
