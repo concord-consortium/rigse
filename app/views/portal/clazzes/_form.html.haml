@@ -1,22 +1,21 @@
 .item
   = edit_menu_for(portal_clazz, f, { :omit_cancel => true })
   .content
-    - field_set_tag 'details' do
-      .aligned
-        %ul
-          %li
-            = label_tag :name, 'Name: ', :class=>"right"
-            = f.text_field :name, :size => 60
-          %li
-            = label_tag :class_word, 'Class Word: ', :class=>"right"
-            = f.text_field :class_word, :size => 24
-          %li
-            = label_tag :semester, 'Semester: ', :class=>"right"
-            = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
-    
-    %p
-      Description
-      = f.text_area :description, :id => dom_id_for(portal_clazz, :item, :textarea), :class => 'tinymce_textarea'
-    = f.hidden_field :teacher_id
     .aligned
-      = f.submit 'Submit'
+      %ul
+        %li
+          = label_tag :name, 'Name: ', :class=>"right"
+          = f.text_field :name, :size => 50
+        %li
+          = label_tag :class_word, 'Class Word: ', :class=>"right"
+          = f.text_field :class_word, :size => 24
+        %li
+          = label_tag :semester, 'Semester: ', :class=>"right"
+          = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
+        %li
+          = label_tag :description, 'Description: ', :class=>"right"
+          = f.text_area :description, :rows => 10, :cols => 50, :class => 'mceNoEditor'
+
+    = f.hidden_field :teacher_id
+    / .aligned
+    /   = f.submit 'Submit'
