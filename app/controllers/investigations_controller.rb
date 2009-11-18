@@ -167,14 +167,16 @@ class InvestigationsController < AuthoringController
   def new
     @investigation = Investigation.new
     @investigation.user = current_user
-    @gse = GradeSpanExpectation.find_by_grade_span('9-11')
-    @investigation.grade_span_expectation = @gse
-    session[:original_gse_id] = session[:gse_id] = @gse.id
-    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
-    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-    domain = Domain.find(@gse.domain.id)
-    gses = domain.grade_span_expectations 
-    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    if APP_CONFIG[:use_gse]
+      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @investigation.grade_span_expectation = @gse
+      session[:original_gse_id] = session[:gse_id] = @gse.id
+      session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+      session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+      domain = Domain.find(@gse.domain.id)
+      gses = domain.grade_span_expectations 
+      @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    end
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation, :related_gses => @related_gses, :selected_gse =>@gse}
     end
