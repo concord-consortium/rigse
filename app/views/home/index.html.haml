@@ -9,10 +9,3 @@
 
 = yield :authored_investigations
 
-/ once somebody is logged in,they should open outside the iframe.
-- unless current_user.anonymous?
-  :javascript 
-    document.observe("dom:loaded", function() {
-      // if we are in an iframe, pop-out.
-      if (top!=self) top.location.replace(location.href); 
-    });  
