@@ -134,11 +134,12 @@
           document.observe("dom:loaded", function() {
             // if we are in an iframe, pop-out.
             if (top!=self) {
-              top.location.replace(location.href);
+              // top.location.replace(location.href);
+              // Ken asked to take this out, because its too brutal to leave sakai
             }
           });
-      - else
-        :javascript
-          if (top!=self) {
-            $('pop_out_link').show();
-          }
+
+      :javascript
+        if (top!=self) {
+          $('pop_out_link').show();
+        }
