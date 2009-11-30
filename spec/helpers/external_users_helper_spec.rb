@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Portal::ExternalUsersHelper do
+describe ExternalUsersHelper do
 
   #Delete this example and add some real ones or delete this file
   it "is included in the helper object" do
