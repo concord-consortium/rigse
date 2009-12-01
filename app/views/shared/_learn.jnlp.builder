@@ -20,11 +20,16 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
   xml.resources(:os => "Mac OS X") {
     xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
   }
-  jnlp_resources(xml, { :learner => learner, :runnable => runnable, :data_test => data_test} )
+  if defined? data_test && data_test
+    jnlp_resources(xml, { :learner => learner, :runnable => runnable, :data_test => data_test})
+  else
+    jnlp_resources(xml, { :learner => learner, :runnable => runnable})
+  end
+    
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)
-  if data_test
+  if defined? data_test && data_test
     xml << "  <application-desc main-class='org.concord.testing.gui.AutomatedDataEditor'>"
   else
     xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n"
