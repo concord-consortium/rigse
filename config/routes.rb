@@ -17,7 +17,9 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners
-    portal.resources :offerings
+    portal.resources :offerings, :collection => {
+      :data_test => [:get,:post]
+    }
     portal.resources :schools
     portal.resources :school_memberships
     portal.resources :semesters
@@ -29,8 +31,10 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :teachers
     
     portal.home 'readme', :controller => 'home', :action => 'readme'
-    
   end
+  
+  
+
   
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
