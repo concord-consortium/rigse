@@ -103,7 +103,7 @@ h3. Setting up a local JNLP Web Start servlet
 
 You can also setup a local jnlp web start server for a development environment with less dependence on outside services.
 
-*"Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
+* "Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
 
 # "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
 
