@@ -109,7 +109,7 @@ class Portal::OfferingsController < ApplicationController
     respond_to do |format|
       format.html # views/portal/offerings/test.html.haml
       format.jnlp {    
-        render :partial => 'shared/data_test', :locals => { :runnable => @offering.runnable, :learner => @learner }
+        render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => @learner, :data_test => true }
       }
     end
   end
