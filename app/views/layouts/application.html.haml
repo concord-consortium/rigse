@@ -70,7 +70,7 @@
             - if @original_user.has_role?('admin', 'manager')
               \/
               = link_to 'Switch', switch_user_path(current_user)
-            
+
       #nav_top
         %span.hidden.doNotPrint
           Navigation:
@@ -78,16 +78,21 @@
         %ul.menu_h
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          - unless current_user.anonymous? || current_user.portal_student
-            %li.trail= link_to 'Investigations', investigations_path
-          
-        - if current_user.has_role?('admin')
+          %li.trail=link_to('Investigations', investigations_path)
+          - if current_user.has_role?('researcher')
+            %li.trail=link_to('GSEs', grade_span_expectations_path)
+          - if current_user.has_role?('admin')
+            %li.trail= link_to('Users', users_path)
+            
           %ul.menu_h_right
-            %li.trail= link_to 'Districts', portal_districts_path
-            %li.trail= link_to 'Schools', portal_schools_path
-            %li.trail= link_to 'GSEs', grade_span_expectations_path
-            %li.trail= link_to 'Users', users_path
-            %li.trail= link_to 'Projects', admin_projects_path
+            / offer people a way to pop-out of iframe:
+            %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
+            - if current_user.has_role?('admin')
+              %li.trail= link_to 'Districts', portal_districts_path
+              %li.trail= link_to 'Schools', portal_schools_path
+              %li.trail= link_to 'GSEs', grade_span_expectations_path
+              %li.trail= link_to 'Users', users_path
+              %li.trail= link_to 'Projects', admin_projects_path
 
       #content_container      
         #left_nav.nav_menu
@@ -125,3 +130,18 @@
         - if current_user.has_role?('admin')
           = display_system_info
           
+      / once somebody is logged in,they should open outside the iframe.
+      - unless current_user.anonymous?
+        :javascript 
+          document.observe("dom:loaded", function() {
+            // if we are in an iframe, pop-out.
+            if (top!=self) {
+              // top.location.replace(location.href);
+              // Ken asked to take this out, because its too brutal to leave sakai
+            }
+          });
+
+      :javascript
+        if (top!=self) {
+          $('pop_out_link').show();
+        }

@@ -69,6 +69,7 @@ class RinetData
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
     
+    
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
@@ -132,6 +133,9 @@ Logging to: #{File.expand_path(@log_path)}
   
 
   def run_scheduled_job(opts = {})
+    # disable observable behavior on useres for import task
+    User.delete_observers
+    
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
