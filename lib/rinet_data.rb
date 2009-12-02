@@ -607,7 +607,7 @@ Logged to: #{File.expand_path(@log_path)}
         # cache that results in hashtable
         @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
       else
-        Raise ArgumentError("no school exists when creating a course")
+        log_message("no school exists when creating a course", {:log_level => :warn})
       end
     else
       log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :warn})
