@@ -404,6 +404,11 @@ Logged to: #{File.expand_path(@log_path)}
         begin
           sakai_login = row[:login]
           rites_login = ExternalUserDomain.external_login_to_login(sakai_login)
+          password = row[:Password] || row[:Birthdate]
+          # crazy hack for password validation checks. (some teachers had small < 6 char passwords)
+          while password.length < 6
+            password = password << "x"
+          end
           email = row[:email] ||
             "#{rites_login}@mailinator.com" # (temporary unique email address to pass valiadations)
             
