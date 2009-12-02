@@ -59,7 +59,7 @@ class Investigation < ActiveRecord::Base
   # Investigation.grade('9-11') == bad
   #
   named_scope :with_gse, {
-    :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+    :joins => "left outer JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
   }
   
   named_scope :domain, lambda { |domain_id| 
@@ -112,17 +112,27 @@ class Investigation < ActiveRecord::Base
       grade_span = options[:grade_span] || ""
       domain_id = options[:domain_id].to_i
       name = options[:name]
-      if domain_id > 0
+      # TODO: This is a bit of a hack, in general sites MIGHT have GSES
+      # maybe this could be a site-wide configuration param?
+      if options[:ignore_gse]
         if (options[:include_drafts])
-          investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+          investigations = Investigation.like(name)
         else
-          investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+          investigations = Investigation.published.like(name)
         end
       else
-        if (options[:include_drafts])
-          investigations = Investigation.like(name).with_gse.grade(grade_span)
+        if domain_id > 0
+          if (options[:include_drafts])
+            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+          else
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+          end
         else
-          investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          if (options[:include_drafts])
+            investigations = Investigation.like(name).with_gse.grade(grade_span)
+          else
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          end
         end
       end
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

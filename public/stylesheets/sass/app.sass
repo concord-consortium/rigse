@@ -273,6 +273,16 @@ ul.menu
 .component_title
   :font-size 1em
 
+.important
+  :font-size 1.2em
+  :color = !dark_red
+  :margin 1em
+  a
+    :color = !dark_red !important
+    :text-decoration underline !important
+.discouraged
+  :opacity 0.5
+  
 .in_place_editor_field
   :display inline
   :min-width 5em
@@ -312,7 +322,7 @@ ul.menu
     :border
       :width 2px
       :style solid
-      :color= !light_brown
+      :color= !light_blue
       :opacity 0.7
   &.item_selectable
     :border
@@ -324,7 +334,7 @@ ul.menu
       :border
         :width 2px
         :style dotted
-        :color= !light_brown
+        :color= !light_blue
   
 .mceContentBody
   :font-size 0.8em
@@ -355,6 +365,22 @@ ul.menu
     :color inherit
     :background-color transparent
 
+.legal
+  :font-size 0.5em
+  :line-height 0.5em
+  :white-space normal
+  :text-align center
+  :color = !rieps_brown
+  :border
+    :width 0px
+    :style solid
+  :background-color white
+  a
+    :background-color transparent
+  a:hover
+    :color inherit
+    :background-color transparent
+  
 .padded_content
   :margin 0px 5px
   :float left
@@ -451,7 +477,7 @@ li.tiny
   :font-size 24pt
   :opacity 0.9
   :color= !almost_white
-  :background-color= !very_dark_blue
+  :background-color= !very_dark
   :z-index 400
     
 .flash
@@ -509,32 +535,32 @@ dd
 
 input
   +main_font
-  :color= !very_dark_blue
+  :color= !very_dark
   :padding 0.2em
 
   
 input[type=text]
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !text_input_color
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
 textarea
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !text_input_color
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
 
 input[type=password]
   :border solid
   :border-width 2px
-  :border-color= !very_dark_blue
-  :background-color= !blue_gray
+  :border-color= !input_border_color
+  :background-color= !input_color
   &:focus
-    :background-color= !light_brown
+    :background-color= !input_focus_color
     
 .fieldWithErrors
   input
@@ -563,6 +589,7 @@ input[type=password]
       :text-align right
     input
       :margin 0px
+      :margin-top 4px
       
 .drop_target
   :height 100%
@@ -571,7 +598,7 @@ input[type=password]
   :padding 5px
   :padding-bottom 30px
 .drop_target_selected
-  :background-color= !yellowish_color
+  :background-color= !selected_color
 #search_title
   :display block
   :width %40

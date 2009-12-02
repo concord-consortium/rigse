@@ -198,6 +198,11 @@ HEREDOC
         print '.'; STDOUT.flush
       end
     end
+    
+    desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
+    task :convert_clazzes_to_multi_teacher => :environment do
+      MultiteacherClazzes.make_all_multi_teacher
+    end
 
   end
 end

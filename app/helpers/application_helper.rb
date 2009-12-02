@@ -143,12 +143,14 @@ module ApplicationHelper
 
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/show", :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
   end
 
   def wrap_edit_link_around_content(component, options={})
@@ -355,30 +357,12 @@ module ApplicationHelper
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
-    link_button("copy.png", url, 
-      :title => "duplicate the #{component_display_name}: '#{name}'") +
-    link_to('duplicate', url)
+    link_button("itsi_copy.png", url, 
+      :title => "copy the #{component_display_name}: '#{name}'") +
+    link_to('copy', url)
   end
   
-  # this seems to have been a duplicate?
-  # def print_link_for(component,teacher_mode=false)
-  #    component_display_name = component.class.display_name.downcase
-  #     name = component.name
-  #     link_to("print #{component_display_name}", {
-  #         :controller => component.class.name.pluralize.underscore, 
-  #         :id  => component.id,
-  #         :action => :show,
-  #         :print => true,
-  #         :teacher_mode => teacher_mode,
-  #         :popup => true 
-  #       },
-  #       {
-  #         :target => "#{component.name} printout",
-  #         :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
-  #       })
-  # end
-  
-  
+
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -475,26 +459,25 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           if is_page_element
-            restrict_to 'admin' do
-              haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
-                haml_tag :ul do
-                  haml_tag(:li) { haml_concat run_link_for(component) }
-                  haml_tag(:li) { haml_concat print_link_for(component) }
-                  haml_tag(:li) { haml_concat print_link_for(component, {:teacher_mode => true}) }
-                  haml_tag(:li) { haml_concat otml_link_for(component) }
-                end
-              end
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
-            end
+            # restrict_to 'admin' do
+            #   haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
+            #     haml_tag :ul do
+            #       haml_tag(:li) { haml_concat run_link_for(component) }
+            #       haml_tag(:li) { haml_concat print_link_for(component) }
+            #       haml_tag(:li) { haml_concat otml_link_for(component) }
+            #     end
+            #   end
+            #   haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
+            # end
           end              
           if (component.changeable?(current_user))
             # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            begin
-              if component.authorable_in_java?
-                haml_concat otrunk_edit_button_for(component, options)
-              end
-            rescue NoMethodError
-            end
+            # begin
+            #   if component.authorable_in_java?
+            #     haml_concat otrunk_edit_button_for(component, options)
+            #   end
+            # rescue NoMethodError
+            # end
             haml_concat edit_button_for(component, options)
             haml_concat delete_button_for(deletable_element)  unless options[:omit_delete]
           end

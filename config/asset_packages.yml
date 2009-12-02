@@ -19,9 +19,6 @@ javascripts:
   - item_selectable
   - live_validation
   
-  # doesn't seem to work
-  # - tiny_mce/tiny_mce
-
 stylesheets: 
 - base: 
   - app
@@ -33,10 +30,37 @@ stylesheets:
   - notes
   - drop_down
   - data_table
+
+- default:
+  - app
+  - accordion
+  - window
+  - rites-dialog
+  - live_validation
   - action_menu_tab
-  # - rites_otml
-  # no longer used:
-  # - scaffold
-  # - sliding_doors_tabs
-  # - teacher_overlay
+  - notes
+  - drop_down
+  - data_table
+  
+- itsisu:
+  - themes/itsisu/itsisu
+  - themes/itsisu/action_menu_tab
+  - themes/itsisu/drop_down
+  - themes/itsisu/accordion
+  - window
+  - rites-dialog
+  - live_validation
+  - notes
+  - data_table
+
+- smartgraphs:
+  - themes/smartgraphs/smartgraphs
+  - themes/smartgraphs/action_menu_tab
+  - themes/smartgraphs/drop_down
+  - themes/smartgraphs/accordion
+  - window
+  - rites-dialog
+  - live_validation
+  - notes
+  - data_table
 

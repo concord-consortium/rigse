@@ -43,6 +43,25 @@ database you intend to use with RITES.
   jruby -J-server script/server -e production
 </code></pre>
 
+h3. when deploying to a new server
+
+# create required directories on your server eg:
+## /web/production/APP_NAME/shared/log 
+## /web/production/APP_NAME/shared/config
+## /web/production/APP_NAME/shared/initializers
+## /web/production/APP_NAME/releases
+# put configuration files in /web/production/APP_NAME/shared/config
+## at a minimum you need database.yml and initializers/site_key.rb
+# modify the deploy recipies (in your local config/deploy.rb and config/deploy)
+# deploy cap deploy ( it will fail, but it will get far enough to make some of the other things below possible)
+# run ruby config/setup.rb on the server
+# comment out the one line in config/initializers/rites.rb
+# make sure config/nces_data isn't there
+# run RAILS_ENV=production rake rigse:setup:new_rites_app
+
+
+_there's a bunch more that needs to go here_
+
 h2. Copying the production database to a development environment
 
 If you have ssh access to the RITES production server you can get a copy of the production database on
@@ -84,7 +103,7 @@ h3. Setting up a local JNLP Web Start servlet
 
 You can also setup a local jnlp web start server for a development environment with less dependence on outside services.
 
-*"Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
+* "Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
 
 # "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
 
@@ -156,6 +175,33 @@ h3. Running the feature tests with cucumber
 <pre><code>  rake:features</code></pre>  
 
 h2. Understanding the Codebase
+
+
+h3. Themes
+
+We are using theme_support plugin -- except it doesn't play very well with compass and asset_packager.  So, we handle sass/stylesheets free-hand.
+Here is a short description of how to setup a new theme:
+
+# Copy an existing theme from RAILS_ROOT/themes/
+# modify settings.yml to and add a theme: theme_name entry
+# Put sass files in public/stylesheets/sass/themes/<theme-name>/*.sass
+# These sass files will be compiled and moved into public/stylesheets/themes/<theme-name>/*.css
+# Configure your themes assets in asset_packages.yml under the stylesheets section with the format:
+
+<pre><code> 
+  - <themename>:
+    - themes/<themename>/style_name
+      - (others)
+</code></pre>  
+
+  eg:
+
+<pre><code> 
+  - itsisu
+    - themes/itsisu/itsisu
+    - accordion
+</code></pre>  
+
 
 h3. Some video walk-throughs
 
@@ -246,7 +292,8 @@ More info on capistrano-ext/multistage deployments can be found here: http://web
 
 h3. Database recipes
 
-There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
+There are a few database oriented recipes which should cover the basic db-oriented tasks you might want to do. 
+Here are some scenarios and how to do them. Remember, all commands are entered on your local machine, in the application root directory.
 
 There are 4 basic commands:
 * <code>rake db:dump</code>

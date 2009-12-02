@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
+  theme (APP_CONFIG[:theme]||'default')
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
@@ -24,6 +25,8 @@ class ApplicationController < ActionController::Base
   before_filter :portal_resources
 
   # Portal::School.find(:first).members.count
+  
+  theme (APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
   
   protected
   

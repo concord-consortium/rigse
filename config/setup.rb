@@ -3,6 +3,8 @@ require 'fileutils'
 require 'yaml'
 require 'erb'
 
+# should be run from the projects rails root.
+# Update: this doesn't seem to be working anymore..
 APPLICATION = "'RITES Investigations'"
 puts "\nInitial setup of #{APPLICATION} Rails application ...\n"
 
@@ -43,16 +45,20 @@ end
 @rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
 @mailer_config_path            = rails_file_path(%w{config mailer.yml})
 @mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
+@sds_config_path               = rails_file_path(%w{config sds.yml})
+@sds_config_sample_path        = rails_file_path(%w{config sds.sample.yml})
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
 @settings_config_sample        = YAML::load_file(@settings_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
+# @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
 @new_rinet_data_yml_created = false
 @new_mailer_yml_created = false
+@new_sds_yml_created = false
 
 def copy_file(source, destination)
 
@@ -152,6 +158,23 @@ HEREDOC
   File.open(@settings_config_path, 'w') {|f| f.write @settings_config.to_yaml }
 end
 
+
+
+
+def create_new_sds_yml
+  sample_path = rails_file_path(%w{config sds.sample.yml})
+  @sds_config = YAML::load(IO.read(sample_path))
+  puts <<HEREDOC
+
+       creating: #{@sds_config_path}
+  from template: #{sample_path}
+
+HEREDOC
+  File.open(@sds_config_path, 'w') {|f| f.write @sds_config.to_yaml }
+end
+
+
+
 def create_new_mailer_yml
   @mailer_config = @mailer_config_sample
   puts <<HEREDOC
@@ -193,6 +216,8 @@ HEREDOC
     end
   end
 end
+
+
 
 #
 # check for config/database.yml
@@ -316,10 +341,50 @@ HEREDOC
 HEREDOC
           @settings_config[env]['valid_sakai_instances'] = @settings_config_sample[env]['valid_sakai_instances']
         end
+        
+        
+        unless @settings_config[env]['theme']
+        puts <<HEREDOC
+
+  The theme parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to 'default'.
+
+HEREDOC
+          @settings_config[env]['theme'] = 'default'
+        end
+        
+        
+        unless @settings_config[env]['use_gse']
+        puts <<HEREDOC
+
+  The use_gse parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to 'true'.
+
+HEREDOC
+          @settings_config[env]['use_gse'] = true
+        end
       end
     end
   end
 end
+
+#
+# check for config/sds.yml
+#
+def check_for_config_sds_yml
+  unless File.exists?(@sds_config_path)
+    puts <<HEREDOC
+
+  The SDS settings file #{@sds_config_path} does not yet exist.
+
+HEREDOC
+    create_new_sds_yml
+    @new_sds_yml_created = true
+  end
+end
+
 
 #
 # check for config/mailer.yml
@@ -688,6 +753,8 @@ HEREDOC
       @settings_config[env]['admin_login'] =      ask("         admin_login: ") { |q| q.default = @settings_config[env]['admin_login'] }
       @settings_config[env]['admin_first_name'] = ask("    admin_first_name: ") { |q| q.default = @settings_config[env]['admin_first_name'] }
       @settings_config[env]['admin_last_name'] =  ask("     admin_last_name: ") { |q| q.default = @settings_config[env]['admin_last_name'] }
+      @settings_config[env]['theme'] =            ask("               theme: ") { |q| q.default = @settings_config[env]['theme'] }
+      @settings_config[env]['use_gse'] =          ask("             use_gse: ") { |q| q.default = @settings_config[env]['use_gse'] }
 
       # 
       # site_district and site_school

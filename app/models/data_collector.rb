@@ -58,6 +58,14 @@ class DataCollector < ActiveRecord::Base
     end
   end
   
+  def self.by_scope(scope)
+    if scope && scope.class != DataCollector
+      scope.activity.investigation.data_collectors
+    else
+      []
+    end
+  end
+  
   def self.prediction_graphs
     DataCollector.find_all_by_graph_type_id(2)
   end
@@ -70,7 +78,11 @@ class DataCollector < ActiveRecord::Base
   end
   
   def valid_calibrations
-    probe_type.calibrations
+    if probe_type
+      probe_type.calibrations
+    else
+      []
+    end
   end
 
   # move to helper
@@ -125,7 +137,7 @@ class DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
-  DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
+  # DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
   
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
@@ -145,7 +157,7 @@ class DataCollector < ActiveRecord::Base
                  :single_value                =>  false
 
 
-  default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  # default_value_for :probe_type, DISTANCE_PROBE_TYPE
   
   send_update_events_to :investigations
 

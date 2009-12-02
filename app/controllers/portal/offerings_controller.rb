@@ -93,4 +93,25 @@ class Portal::OfferingsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  
+  
+  # GET /portal/offerings/data_test(.format)
+  def data_test
+    clazz = Portal::Clazz::data_test_clazz
+    @offering = clazz.offerings.first
+    @user = current_user
+    @student = @user.portal_student
+    unless @student
+      @student=Portal::Student.create(:user => @user)
+    end
+    @learner = @offering.find_or_create_learner(@student) 
+    respond_to do |format|
+      format.html # views/portal/offerings/test.html.haml
+      format.jnlp {    
+        render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => @learner, :data_test => true }
+      }
+    end
+  end
+  
 end

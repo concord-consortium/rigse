@@ -102,14 +102,16 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts,true)
     end
     @investigations = Investigation.search_list({
-      :domain_id => @domain_id, 
-      :grade_span => @grade_span, 
+      :ignore_gse => true,
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id, 
       :include_drafts => @include_drafts, 
       :paginate => true, 
       :page => pagenation
     })
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
     @paginated_objects = @investigations
     
     if request.xhr?
@@ -165,14 +167,16 @@ class InvestigationsController < AuthoringController
   def new
     @investigation = Investigation.new
     @investigation.user = current_user
-    @gse = GradeSpanExpectation.find_by_grade_span('9-11')
-    @investigation.grade_span_expectation = @gse
-    session[:original_gse_id] = session[:gse_id] = @gse.id
-    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
-    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-    domain = Domain.find(@gse.domain.id)
-    gses = domain.grade_span_expectations 
-    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    if APP_CONFIG[:use_gse]
+      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @investigation.grade_span_expectation = @gse
+      session[:original_gse_id] = session[:gse_id] = @gse.id
+      session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+      session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+      domain = Domain.find(@gse.domain.id)
+      gses = domain.grade_span_expectations 
+      @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    end
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation, :related_gses => @related_gses, :selected_gse =>@gse}
     end
@@ -185,19 +189,21 @@ class InvestigationsController < AuthoringController
   # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
-    # if there is no gse assign a default one:
-    unless @gse = @investigation.grade_span_expectation
-      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
-      @investigation.grade_span_expectation = @gse
-      @investigation.save!
-    end
+    if APP_CONFIG[:use_gse]
+      # if there is no gse assign a default one:
+      unless @gse = @investigation.grade_span_expectation
+        @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+        @investigation.grade_span_expectation = @gse
+        @investigation.save!
+      end
     
-    session[:original_gse_id] = session[:gse_id] = @gse.id
-    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
-    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-    domain = Domain.find(@gse.domain.id)
-    gses = domain.grade_span_expectations 
-    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+      session[:original_gse_id] = session[:gse_id] = @gse.id
+      session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+      session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+      domain = Domain.find(@gse.domain.id)
+      gses = domain.grade_span_expectations 
+      @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    end
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation,:related_gses => @related_gses, :selected_gse => @gse}
     end
@@ -343,6 +349,7 @@ class InvestigationsController < AuthoringController
     @original = Investigation.find(params['id'])
     @investigation = @original.duplicate(current_user)
     @investigation.save
+    
     redirect_to edit_investigation_url(@investigation)
   end
   

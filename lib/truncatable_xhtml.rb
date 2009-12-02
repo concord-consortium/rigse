@@ -73,6 +73,7 @@ module TruncatableXhtml
     "content",
     "prompt"
   ]
+
   # DEFAULT_REPLACEABLES=  [
   #   /\s+style\s?=\s?"(.*?)"/,
   #   /&nbsp;/
@@ -80,8 +81,11 @@ module TruncatableXhtml
   # 
   REPLACEMENT_MAP={
     /\s+style\s?=\s?"(.*?)"/ => "",
-    /(&nbsp;)+/ => " "};
+    /(&nbsp;)+/ => " "}
     
+  ## for ITSI carolyn might want everything 
+  # REPLACEMENT_MAP = {}
+  
   ##
   ## These methods are added to the class when 
   ## this module is included:

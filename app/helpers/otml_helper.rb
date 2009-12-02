@@ -50,6 +50,8 @@
       org.concord.datagraph.state.OTMultiDataGraph
       org.concord.datagraph.state.OTPluginView
       org.concord.framework.otrunk.view.OTFrame
+      org.concord.framework.otrunk.wrapper.OTInt
+      org.concord.framework.otrunk.wrapper.OTBoolean
       org.concord.framework.otrunk.wrapper.OTBlob
       org.concord.graph.util.state.OTDrawingTool2
       org.concord.otrunk.OTSystem
@@ -76,7 +78,7 @@
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig
       org.concord.otrunkmw.OTModelerPage
-      org.concord.otrunknl4.OTNLogoModel
+      org.concord.otrunknl41.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
@@ -99,6 +101,17 @@
       org.concord.otrunk.labbook.OTLabbookEntryChooser
       org.concord.otrunk.util.OTLabbookBundle
       org.concord.otrunk.util.OTLabbookEntry
+      org.concord.otrunk.script.OTScriptEngineBundle
+      org.concord.otrunk.script.OTScriptEngineEntry
+      org.concord.otrunk.script.ui.OTScriptButton
+      org.concord.otrunk.script.jruby.OTJRuby
+      org.concord.otrunk.script.js.OTJavascript
+      org.concord.otrunk.script.ui.OTScriptVariable
+      org.concord.otrunk.script.ui.OTScriptVariableComponent
+      org.concord.otrunk.script.ui.OTScriptVariableRealObject
+      org.concord.otrunk.script.ui.OTScriptObject
+      org.concord.otrunk.script.ui.OTScriptVariableView
+      org.concord.smartgraph.OTSmartGraphTool
     } + data_filter_inports + (@otrunk_imports || []).uniq
   end
   
@@ -137,7 +150,7 @@
       ['tab_container_view','org.concord.otrunk.ui.OTTabContainer', 'org.concord.otrunk.ui.swing.OTTabContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView'],
+      ['n_logo_model', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelView'],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismView'],
@@ -150,7 +163,10 @@
       ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonView'],
       ['lab_book_view' ,'org.concord.otrunk.labbook.OTLabbook', 'org.concord.otrunk.labbook.ui.OTLabbookView'],
-      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView']
+      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView'],
+      ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolHiddenView'],
+      ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
+      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView']
     ] + (@otrunk_view_entries || []).uniq
   end
   
@@ -179,7 +195,7 @@
 #      ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
 #      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_edit_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageEditView'],
-      ['n_logo_model_edit_view', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelEditView'],
+      ['n_logo_model_edit_view', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelEditView'],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.biologica.OTWorldEditView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.biologica.OTOrganismEditView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismEditView'],
@@ -189,7 +205,9 @@
       ['biologica_pedigree','org.concord.otrunk.biologica.OTPedigree','org.concord.otrunk.biologica.ui.OTPedigreeEditView'],
       ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismEditView'],
       ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
-      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexEditView']
+      ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexEditView'],
+      ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolEditView'],
+      ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonEditView']
     ] + (@otrunk_edit_view_entries || []).uniq
   end
 
@@ -217,8 +235,8 @@
 
   def ot_script_engine_bundle
     engines = [
-      'org.concord.otrunk.script.js.OTJavascript', 'org.concord.otrunk.script.js.OTJavascriptEngine',
-      'org.concord.otrunk.script.jruby.OTJRuby', 'org.concord.otrunk.script.jruby.OTJRubyEngine'
+      ['org.concord.otrunk.script.js.OTJavascript', 'org.concord.otrunk.script.js.OTJavascriptEngine'],
+      ['org.concord.otrunk.script.jruby.OTJRuby', 'org.concord.otrunk.script.jruby.OTJRubyEngine']
     ]
     render :partial => "otml/ot_script_engine_bundle", :locals => { :engines => engines }
   end
@@ -248,6 +266,7 @@
       haml_tag :bundles do
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
+        haml_concat ot_script_engine_bundle
         haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
       end
     end

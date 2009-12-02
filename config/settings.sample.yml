@@ -32,7 +32,8 @@ development: &non_production_settings
   site_school: RITES Investigations-school
   states_and_provinces: *states_and_provinces
   active_school_levels: *active_school_levels 
-  active_grades: *active_grades 
+  active_grades: *active_grades
+  theme: default
   maven_jnlp_families:
     - "all-otrunk-snapshot"
   maven_jnlp_servers:

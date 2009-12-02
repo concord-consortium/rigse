@@ -37,6 +37,58 @@ class Portal::Clazz < ActiveRecord::Base
     def display_name
       "Class"
     end
+    
+    # TODO: Should this go here?
+    # We want to crate a clazz to test data saving and loading
+    #
+    def data_test_clazz
+      class_word = '__XyZZy__'
+      clazz = Portal::Clazz.find_by_class_word(class_word)
+      unless clazz
+        clazz = Portal::Clazz.create(
+          :name => 'Data test class',
+          :class_word => class_word
+        )
+        investigation = Investigation.create( {
+          :name => 'Data test'
+        })
+
+
+        activity = Activity.create(:name => 'Data testing Activity')
+        activity.investigation = investigation
+        activity.save
+
+        section = Section.create(:name => "data testing section")
+        section.activity = activity
+        section.save
+
+        page = Page.create(:name => 'data testing page')
+        page.section = section
+        page.save
+
+        xhtml = Xhtml.create(:name => 'data testing xhtml')
+        xhtml.save
+        page.xhtmls << xhtml
+        
+        open_response = OpenResponse.create(:prompt => "enter some test data");
+        open_response.save
+        page.open_responses << open_response
+        page.save
+
+        investigation.user = User::site_admin
+        investigation.save
+
+        offering = Portal::Offering.create()
+        offering.runnable = investigation;
+        offering.clazz = clazz
+        offering.save
+        clazz.save
+        clazz.reload
+      end
+      clazz 
+    end
+    
+    
   end
   
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
