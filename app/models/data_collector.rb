@@ -78,7 +78,11 @@ class DataCollector < ActiveRecord::Base
   end
   
   def valid_calibrations
-    probe_type.calibrations
+    if probe_type
+      probe_type.calibrations
+    else
+      []
+    end
   end
 
   # move to helper
