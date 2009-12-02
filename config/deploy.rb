@@ -403,6 +403,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} portal:setup:create_districts_and_schools_from_nces_data --trace"
   end
 
+  # Wed Dec 2nd
+  desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
+  task :convert_clazzes_to_multi_teacher, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
+  end
 end
 
 before 'deploy:restart', 'deploy:set_permissions'
