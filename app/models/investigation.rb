@@ -5,10 +5,10 @@ class Investigation < ActiveRecord::Base
   belongs_to :user
   belongs_to :grade_span_expectation
   has_many :activities, :order => :position, :dependent => :destroy
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   
-  has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
     eval "has_many :#{klass.table_name},
