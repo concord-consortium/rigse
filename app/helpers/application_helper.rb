@@ -471,13 +471,13 @@ module ApplicationHelper
             # end
           end              
           if (component.changeable?(current_user))
-            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
-            # begin
-            #   if component.authorable_in_java?
-            #     haml_concat otrunk_edit_button_for(component, options)
-            #   end
-            # rescue NoMethodError
-            # end
+            haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
+            begin
+              if component.authorable_in_java?
+                haml_concat otrunk_edit_button_for(component, options)
+              end
+            rescue NoMethodError
+            end
             haml_concat edit_button_for(component, options)
             haml_concat delete_button_for(deletable_element)  unless options[:omit_delete]
           end
