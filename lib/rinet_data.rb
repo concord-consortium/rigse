@@ -822,7 +822,12 @@ Logged to: #{File.expand_path(@log_path)}
   def verify_users
     report "Imported ActiveRecord entities by district:"
     @districts.each do |district|
-      verify_user_imported(district)
+      begin
+        verify_user_imported(district)
+      rescue Exception => e
+        log_message("missing district data for: #{district}",{:log_level => 'error'})
+        log_message("#{e.message}",{:log_level => 'error'})
+      end
     end
   end
   
