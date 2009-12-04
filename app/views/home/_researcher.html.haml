@@ -1,3 +1,8 @@
-%p
-  - field_set_tag 'Researcher' do
-    Hello Researcher
+- content_for(:side_bar) do
+  %p
+    - field_set_tag 'Researcher' do
+      Hello Researcher
+
+.padded_content
+  - render_project_info
+  = yield :project_info
