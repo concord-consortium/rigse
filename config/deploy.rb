@@ -1,4 +1,4 @@
-set :stages, %w(development staging production seymour itsisu_pro fall2009 smartgraphs-production)
+set :stages, %w(development staging production seymour itsisu_pro fall2009 smartgraphs-production smartgraphs-staging)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'

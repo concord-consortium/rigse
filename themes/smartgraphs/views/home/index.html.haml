@@ -8,4 +8,7 @@
   = render :partial => "student"
 
 = yield :authored_investigations
-  
+
+.padded_content
+  - render_project_info
+  = yield :project_info
