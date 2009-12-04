@@ -102,10 +102,11 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts,true)
     end
     @investigations = Investigation.search_list({
-      :ignore_gse => true,
       :name => @name, 
-      :portal_clazz_id => @portal_clazz_id, 
+      :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
+      :grade_span => @grade_span,
+      :domain_id => @domain_id,
       :paginate => true, 
       :page => pagenation
     })

@@ -112,15 +112,7 @@ class Investigation < ActiveRecord::Base
       grade_span = options[:grade_span] || ""
       domain_id = options[:domain_id].to_i
       name = options[:name]
-      # TODO: This is a bit of a hack, in general sites MIGHT have GSES
-      # maybe this could be a site-wide configuration param?
-      if options[:ignore_gse]
-        if (options[:include_drafts])
-          investigations = Investigation.like(name)
-        else
-          investigations = Investigation.published.like(name)
-        end
-      else
+      if APP_CONFIG[:use_gse]
         if domain_id > 0
           if (options[:include_drafts])
             investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
@@ -133,6 +125,12 @@ class Investigation < ActiveRecord::Base
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span)
           end
+        end
+      else
+        if (options[:include_drafts])
+          investigations = Investigation.like(name)
+        else
+          investigations = Investigation.published.like(name)
         end
       end
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
