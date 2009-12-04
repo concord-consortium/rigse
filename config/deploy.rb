@@ -258,6 +258,11 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace" 
   end
 
+  desc "Import RINET data"
+  task :import_rinet_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace" 
+  end
 end
 
 #############################################################
