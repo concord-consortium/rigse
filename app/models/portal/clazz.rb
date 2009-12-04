@@ -149,6 +149,7 @@ class Portal::Clazz < ActiveRecord::Base
     teacher = _user.class == User ? _user.portal_teacher : _user
     teachers.include? teacher
   end
+  alias is_teacher? is_user?
   
   def changeable?(_user)
     return true if virtual? && is_user?(_user)
