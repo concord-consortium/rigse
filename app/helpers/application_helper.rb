@@ -473,9 +473,9 @@ module ApplicationHelper
           if (component.changeable?(current_user))
             haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             begin
-             if component.authorable_in_java?
-               haml_concat otrunk_edit_button_for(component, options)
-             end
+              if component.authorable_in_java?
+                haml_concat otrunk_edit_button_for(component, options)
+              end
             rescue NoMethodError
             end
             haml_concat edit_button_for(component, options)

@@ -34,6 +34,7 @@ development: &non_production_settings
   active_school_levels: *active_school_levels 
   active_grades: *active_grades
   theme: default
+  help_email: rites-investigations@concord.org
   maven_jnlp_families:
     - "all-otrunk-snapshot"
   maven_jnlp_servers:
@@ -55,7 +56,7 @@ cucumber:
 
 staging:
   site_name: RITES Investigations (staging)
-  site_url: http://rites.dev.concord.org
+  site_url: http://rites-investigations.staging.concord.org
   description: ""
   default_admin_user: *default_admin_user
   enable_default_users: true
@@ -65,6 +66,7 @@ staging:
   active_grades: *active_grades 
   site_district: RITES Investigations-district
   site_school: RITES Investigations-school
+  help_email: rites-investigations@concord.org
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
@@ -80,7 +82,7 @@ staging:
   
 production:
   site_name: RITES Investigations
-  site_url: http://rites.dev.concord.org
+  site_url: http://rites-investigations.concord.org
   description: ""
   default_admin_user: *default_admin_user
   enable_default_users: false
@@ -90,6 +92,7 @@ production:
   active_grades: *active_grades 
   site_district: RITES Investigations-district
   site_school: RITES Investigations-school
+  help_email: rites-investigations@concord.org
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org

@@ -1,9 +1,10 @@
 - options = {}
 
 .clazz_details{:id => dom_id_for(portal_clazz, :details)}
-  %h3="#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
+  %h3="#{portal_clazz.name} (#{portal_clazz.section})"
+  .tiny="#{portal_clazz.teachers.size > 0 ? portal_clazz.teachers.map{ |t| t.name}.join(', ') : 'no teachers'}"
   %p
   = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
-  - if portal_clazz.teacher && portal_clazz.teacher.user == current_user
+  - if portal_clazz.is_teacher?(current_user)
     %br
     = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
