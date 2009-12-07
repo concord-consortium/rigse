@@ -35,7 +35,7 @@
     :color white
     :background-color = !dark_red
     
-=color_mixer(!fg,!bg)
+=color_mixer(!fg,!bg,!link)
   :color = !fg
   :background-color = !bg
   .selected
@@ -46,28 +46,23 @@
     :padding 0px
     :text-decoration none
     :background-color transparent
+    :color = !link
 
-  a:link
-    :color = !fg
-  a:visited
-    :color = !fg
-  a:active
-    :color = !fg
   a:hover
     :color= !bg
-    :background-color = !fg
+    :background-color = !link
         
 
 
 =left_nav_colors
-  +color_mixer(!black,white)
+  +color_mixer(!itsi_dark_brown,white,!itsi_dark_brown)
   +delete_links
 
 =content_area_colors
-  +color_mixer(!black,white)
+  +color_mixer(!black,white,!itsi_dark_brown)
   +delete_links
 
 =top_and_bottom_nav_colors
-  +color_mixer(!itsi_brown,!itsi_light_green)
+  +color_mixer(!itsi_light_green,!itsi_dark_brown,!itsi_dark_brown)
   +delete_links
 
