@@ -119,7 +119,7 @@
         .padded_content
           #footer_left
             Questions/Feedback:
-            = mail_to("cstaudt@concord.org", "Send us an email", :subject => "SmartGraphs Question", :encode => "javascript")
+            = mail_to(APP_CONFIG[:admin_email], "Send us an email", :subject => "SmartGraphs Question", :encode => "javascript")
           #footer_right
       #under_footer
         = render :partial=>'project/legal'
