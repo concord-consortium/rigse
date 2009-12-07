@@ -45,8 +45,11 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers
   # POST /portal_teachers.xml
   def create
-    # @portal_school = Portal::School.find(params[:school][:id])
-    @portal_school = Portal::School.find_by_name("RITES Investigations-school")
+    if params[:school][:id]
+      @portal_school = Portal::School.find(params[:school][:id])
+    else
+      @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
+    end
     @portal_grade = Portal::Grade.find(params[:grade][:id])
     @domain = Domain.find(params[:domain][:id])
 
