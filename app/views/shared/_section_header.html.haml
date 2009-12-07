@@ -21,9 +21,11 @@
       = render :partial=>'shared/in_place_fields', :locals => {:item=>section}
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => section}
-    = dropdown_button "actions.png", :title => "actions for this page"
+    = dropdown_button "actions.png", :title => "actions for this section"
     - if (section.changeable?(current_user))
       = remote_link_button "add.png", :url => add_page_section_path(section), :title => "add new page"
+    - else
+      = link_button "add_disabled.png", "#", :title => "can't add pages"
     = render :partial => "shared/dot_pager", :locals => {:node => section}    
     - if (section.changeable?(current_user))      
       - if (section.activity)
