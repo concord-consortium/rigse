@@ -1,14 +1,7 @@
-#actions_menu.dropdown
-  %ul
-    /%li= run_link_for(@activity)
-    /%li= run_link_for(@activity,'teacher',{:teacher_mode=>true})
-    /%li= print_link_for(@activity)
-    /%li#copy_link copy (disabled)
-    /%li= toggle_all('sections')
-    - if (activity.changeable?(current_user))
-      /%li=duplicate_link_for(@activity)
+- if (activity.changeable?(current_user))
+  #actions_menu.dropdown
+    %ul
       %li=edit_link_for(@activity)
-      /%li#paste_link= paste_link_for(['section'],{:container_id => @container_id}) # see pages_helper.rb
       
 - if (teacher_only? activity)
   - view_class = "action_menu teacher_only"
@@ -21,15 +14,16 @@
       = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
-    = dropdown_button "actions.png", :title => "actions for this page"
     - if (activity.changeable?(current_user))
+      = dropdown_button "actions.png", :title => "actions for this activity"
       = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
       - if (activity.investigation)
         = delete_button_for(activity, :redirect => url_for(activity.investigation))
       - else
         = delete_button_for(activity)
     - else
-      = link_button "add_disabled.png", "#", :title => "can't add activities"
+      = link_button "actions_disabled.png", "#", :title => "no actions for this activity"
+      = link_button "add_disabled.png", "#", :title => "can't add sections"
     - if (activity.investigation)
       = link_button "up.png", activity.investigation, :title => 'go to investigation'
 
