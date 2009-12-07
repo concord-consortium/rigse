@@ -98,9 +98,15 @@
               = render :partial => 'shared/accordian_nav'
             - elsif @portal_school
               = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
-            - elsif @portal_teacher
+            - unless current_user.anonymous?
+              %ul
+                %li.trail= link_to 'Teach a class', new_portal_clazz_path
+            - if @portal_teacher
               = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
-            - elsif @portal_student && @portal_student.user
+            - unless current_user.anonymous?
+              %ul
+                %li.trail= link_to 'Join a class', register_portal_students_path
+            - if @portal_student && @portal_student.user
               = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
             = yield :side_bar
 
