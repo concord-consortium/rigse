@@ -24,7 +24,8 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :school_memberships
     portal.resources :semesters
     portal.resources :students, :collection => {
-      :signup => [:get]
+      :signup => [:get],
+      :register => [:get, :post]
     }
     portal.resources :student_clazzes, :as => 'student_classes'
     portal.resources :subjects
