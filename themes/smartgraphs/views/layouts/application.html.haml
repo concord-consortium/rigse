@@ -73,10 +73,7 @@
               \/
               = link_to 'Switch', switch_user_path(current_user)
 
-      #nav_top
-        %span.hidden.doNotPrint
-          Navigation:
-        != "&nbsp;"
+      #nav_top{:style => "height: 3px;"}
 
       #content_container      
         #left_nav.nav_menu
