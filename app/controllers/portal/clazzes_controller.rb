@@ -50,8 +50,19 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes.xml
   def create
     @portal_clazz = Portal::Clazz.new(params[:portal_clazz])
+    okToCreate = true
+    if (! @portal_clazz.teacher)
+      if current_user.anonymous?
+        flash[:error] = "Anonymous can't create classes. Please log in and try again."
+        okToCreate = false
+      elsif current_user.portal_teacher
+        @portal_clazz.teacher = current_user.portal_teacher
+      else
+        @portal_clazz.teacher = Portal::Teacher.create(:user_id => current_user.id)
+      end
+    end
     respond_to do |format|
-      if @portal_clazz.save
+      if okToCreate && @portal_clazz.save
         flash[:notice] = 'Portal::Clazz was successfully created.'
         format.html { redirect_to(@portal_clazz) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
