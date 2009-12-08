@@ -186,7 +186,7 @@ class PagesController < ApplicationController
         @component.name = "Data Collector"
         @component.save
       else
-        @component = DataCollector.create{:name => "Data Collector"}
+        @component = DataCollector.create(:name => "Data Collector")
       end
       session[:last_saved_probe_type_id] = @component.probe_type_id
     else
