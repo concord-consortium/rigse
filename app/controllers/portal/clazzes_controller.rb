@@ -59,6 +59,7 @@ class Portal::ClazzesController < ApplicationController
         @portal_clazz.teacher = current_user.portal_teacher
       else
         @portal_clazz.teacher = Portal::Teacher.create(:user_id => current_user.id)
+        @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG['site_school'])
       end
     end
     respond_to do |format|
