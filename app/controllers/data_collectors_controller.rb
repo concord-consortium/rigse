@@ -100,9 +100,6 @@ class DataCollectorsController < ApplicationController
   # POST /data_collectors.xml
   def create
     @data_collector = DataCollector.new(params[:data_collector])
-    if ! @data_collector.probe_type_id
-      @data_collector.probe_type_id = ProbeType.find_by_name("Temperature").id
-    end
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     cancel = params[:commit] == "Cancel"
     if request.xhr?
