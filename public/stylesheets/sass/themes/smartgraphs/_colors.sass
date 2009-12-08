@@ -44,7 +44,6 @@
   a
     :font-weight bold
     :padding 0px
-    :text-decoration none
     :background-color transparent
     :color = !link
 
@@ -56,13 +55,18 @@
 
 =left_nav_colors
   +color_mixer(!itsi_dark_brown,white,!itsi_dark_brown)
+  a
+    :text-decoration none
   +delete_links
 
 =content_area_colors
   +color_mixer(!black,white,!itsi_dark_brown)
   +delete_links
 
-=top_and_bottom_nav_colors
+=top_nav_colors
   +color_mixer(!itsi_light_green,!itsi_dark_brown,!itsi_dark_brown)
   +delete_links
-
+  
+=bottom_nav_colors
+  +color_mixer(!black,!itsi_dark_brown,!almost_black)
+  +delete_links
