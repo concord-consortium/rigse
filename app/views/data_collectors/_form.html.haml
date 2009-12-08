@@ -10,7 +10,7 @@
         %ul.menu_h
           %li
             Probe type: 
-            = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => true}, { :id => dom_id_for(data_collector, :select_probe_type)})
+            = f.select(:probe_type_id, ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
          
           %li
             Graph type: 
