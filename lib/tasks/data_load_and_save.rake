@@ -4,18 +4,21 @@
 # NOTE: 09-26-2009 knowuh: these migrations do not seem  to work with models which have our scoped name-spaces.
 #
 
-@dbconfig = YAML::load(File.open('config/database.yml')) 
+ 
 
 def username(enviro)
-  @dbconfig[enviro]["username"]
+  dbconfig = YAML::load(File.open('config/database.yml'))
+  dbconfig[enviro]["username"]
 end
 
 def password(enviro)
-  @dbconfig[enviro]["password"]
+  dbconfig = YAML::load(File.open('config/database.yml'))
+  dbconfig[enviro]["password"]
 end
 
 def database(enviro)
-  @dbconfig[enviro]["database"]
+  dbconfig = YAML::load(File.open('config/database.yml'))
+  dbconfig[enviro]["database"]
 end
 
 # something like this will ONLY WORKO ON MYSQL!
