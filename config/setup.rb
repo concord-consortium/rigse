@@ -9,7 +9,7 @@ APPLICATION = "'RITES Investigations'"
 puts "\nInitial setup of #{APPLICATION} Rails application ...\n"
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
-RAILS_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
+RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
 # Add the unpacked gems in vendor/gems to the $LOAD_PATH
