@@ -3,6 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace(:portal) do |portal|
     portal.resources :clazzes, :as => 'classes', :member => {
         :add_offering => [:get,:post],
+        :add_student => [:get, :post],
         :remove_offering => [:get, :post],
         :edit_offerings => [:get,:post]
     }

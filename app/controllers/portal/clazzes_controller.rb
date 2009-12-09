@@ -125,6 +125,7 @@ class Portal::ClazzesController < ApplicationController
     end
   end
   
+  
   # HACK:
   # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids 
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
@@ -145,6 +146,29 @@ class Portal::ClazzesController < ApplicationController
       page << "element.remove();"
       page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
     end  
+  end
+  
+  # HACK: Add a student to a clazz
+  # TODO: test this method
+  def add_student
+    @student = nil
+    @portal_clazz = Portal::Clazz.find(params[:id])
+
+    if params[:student_id] && (!params[:student_id].empty?)
+      @student = Portal::Student.find(params[:student_id])
+    end
+    if @student
+      @student.add_clazz(@portal_clazz)
+      @portal_clazz.reload
+      render :update do |page|
+        page.replace_html  'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page.visual_effect :highlight, 'students_listing'
+      end
+    else
+      render :update do |page|
+        page << "$('flash').update('that was a total failure')"
+      end
+    end
   end
     
 end
