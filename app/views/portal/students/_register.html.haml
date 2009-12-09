@@ -1,4 +1,4 @@
-- form_for(portal_student, :url => { :action => (defined?(form_action) ? form_action : "create") }) do |f|
+- form_for(:portal_student, portal_student, :url => { :controller => 'portal/students', :action => 'register' }) do |f|
   - field_set_tag 'Class Word' do
     %ul.menu_h
       %li
