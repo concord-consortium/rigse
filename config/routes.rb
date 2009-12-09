@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  map.namespace(:smartgraph) do |smartgraph|
+    smartgraph.resources :range_questions
+  end
 
   map.namespace(:portal) do |portal|
     portal.resources :clazzes, :as => 'classes', :member => {
@@ -15,20 +18,25 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners
-    portal.resources :offerings
+    portal.resources :offerings, :collection => {
+      :data_test => [:get,:post]
+    }
     portal.resources :schools
     portal.resources :school_memberships
     portal.resources :semesters
     portal.resources :students, :collection => {
-      :signup => [:get]
+      :signup => [:get],
+      :register => [:get, :post]
     }
     portal.resources :student_clazzes, :as => 'student_classes'
     portal.resources :subjects
     portal.resources :teachers
     
     portal.home 'readme', :controller => 'home', :action => 'readme'
-    
   end
+  
+  
+
   
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'

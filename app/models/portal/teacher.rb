@@ -21,8 +21,13 @@ class Portal::Teacher < ActiveRecord::Base
   # has_many :schools, :through => :school_memberships, :class_name => "Portal::School", :uniq => true
   
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
-  has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
-
+  
+  # Used to be that clazzes has a teacher_id field, now we use a mapping table like students
+  # to support common case of multiple teachers per class
+  # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
+  has_many :teacher_clazzes, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
+  has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz", :source => :clazz
+  
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   validates_presence_of :user,  :message => "user association not specified"
@@ -68,4 +73,14 @@ class Portal::Teacher < ActiveRecord::Base
     students = clazzes.map { |c| c.students }
     students.flatten.compact
   end
+  def has_clazz?(clazz)
+    self.clazzes.detect { |cl| cl.id == clazz.id }
+  end
+  
+  def add_clazz(clazz)
+    unless self.has_clazz?(clazz)
+      self.clazzes << clazz
+    end
+  end
+  
 end

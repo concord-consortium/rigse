@@ -77,7 +77,7 @@ if JRUBY
   @gems_needed_at_start = [
     ['rake', '>=0.8.7'],
     ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
-    ['jruby-openssl', '>=0.5.2']
+    ['jruby-openssl', '>=0.6']
   ]
 else
   @gems_needed_at_start = [['mysql', '>= 2.7']]
@@ -340,6 +340,30 @@ HEREDOC
 
 HEREDOC
           @settings_config[env]['valid_sakai_instances'] = @settings_config_sample[env]['valid_sakai_instances']
+        end
+        
+        
+        unless @settings_config[env]['theme']
+        puts <<HEREDOC
+
+  The theme parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to 'default'.
+
+HEREDOC
+          @settings_config[env]['theme'] = 'default'
+        end
+        
+        
+        unless @settings_config[env]['use_gse']
+        puts <<HEREDOC
+
+  The use_gse parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to 'true'.
+
+HEREDOC
+          @settings_config[env]['use_gse'] = true
         end
       end
     end
@@ -729,6 +753,8 @@ HEREDOC
       @settings_config[env]['admin_login'] =      ask("         admin_login: ") { |q| q.default = @settings_config[env]['admin_login'] }
       @settings_config[env]['admin_first_name'] = ask("    admin_first_name: ") { |q| q.default = @settings_config[env]['admin_first_name'] }
       @settings_config[env]['admin_last_name'] =  ask("     admin_last_name: ") { |q| q.default = @settings_config[env]['admin_last_name'] }
+      @settings_config[env]['theme'] =            ask("               theme: ") { |q| q.default = @settings_config[env]['theme'] }
+      @settings_config[env]['use_gse'] =          ask("             use_gse: ") { |q| q.default = @settings_config[env]['use_gse'] }
 
       # 
       # site_district and site_school

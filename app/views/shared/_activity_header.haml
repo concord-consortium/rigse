@@ -22,7 +22,7 @@
       = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
-    = dropdown_button "actions.png", :title => "actions for this page"
+    = dropdown_button "actions.png", :title => "actions for this activity"
     - if (activity.changeable?(current_user))
       = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
       - if (activity.investigation)
@@ -30,7 +30,7 @@
       - else
         = delete_button_for(activity)
     - else
-      = link_button "add_disabled.png", "#", :title => "can't add activities"
+      = link_button "add_disabled.png", "#", :title => "can't add sections"
     - if (activity.investigation)
       = link_button "up.png", activity.investigation, :title => 'go to investigation'
 

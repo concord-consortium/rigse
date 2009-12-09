@@ -5,12 +5,15 @@ class Portal::Clazz < ActiveRecord::Base
   
   belongs_to :course, :class_name => "Portal::Course", :foreign_key => "course_id"
   belongs_to :semester, :class_name => "Portal::Semester", :foreign_key => "semester_id"
-  belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
+  # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
   
   has_many :offerings, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
-  has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   
+  has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
+  
+  has_many :teacher_clazzes, :class_name => "Portal::TeacherClazz", :foreign_key => "clazz_id"
+  has_many :teachers, :through => :teacher_clazzes, :class_name => "Portal::Teacher"
   
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
@@ -19,6 +22,7 @@ class Portal::Clazz < ActiveRecord::Base
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
+  #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
   include PortalChangeable
 
   self.extend SearchableModel
@@ -33,6 +37,58 @@ class Portal::Clazz < ActiveRecord::Base
     def display_name
       "Class"
     end
+    
+    # TODO: Should this go here?
+    # We want to crate a clazz to test data saving and loading
+    #
+    def data_test_clazz
+      class_word = '__XyZZy__'
+      clazz = Portal::Clazz.find_by_class_word(class_word)
+      unless clazz
+        clazz = Portal::Clazz.create(
+          :name => 'Data test class',
+          :class_word => class_word
+        )
+        investigation = Investigation.create( {
+          :name => 'Data test'
+        })
+
+
+        activity = Activity.create(:name => 'Data testing Activity')
+        activity.investigation = investigation
+        activity.save
+
+        section = Section.create(:name => "data testing section")
+        section.activity = activity
+        section.save
+
+        page = Page.create(:name => 'data testing page')
+        page.section = section
+        page.save
+
+        xhtml = Xhtml.create(:name => 'data testing xhtml')
+        xhtml.save
+        page.xhtmls << xhtml
+        
+        open_response = OpenResponse.create(:prompt => "enter some test data");
+        open_response.save
+        page.open_responses << open_response
+        page.save
+
+        investigation.user = User::site_admin
+        investigation.save
+
+        offering = Portal::Offering.create()
+        offering.runnable = investigation;
+        offering.clazz = clazz
+        offering.save
+        clazz.save
+        clazz.reload
+      end
+      clazz 
+    end
+    
+    
   end
   
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
@@ -80,11 +136,29 @@ class Portal::Clazz < ActiveRecord::Base
   end
   
   def user
-    if teacher
-      return teacher.user
+    if self.teacher
+      return self.teacher.user
     end
     nil
   end
+  
+  # this is for changeable?
+  # changeable_mod for multiple teachers
+  alias _changeable? changeable?
+  def is_user?(_user)
+    teacher = _user.class == User ? _user.portal_teacher : _user
+    teachers.include? teacher
+  end
+  alias is_teacher? is_user?
+  
+  def changeable?(_user)
+    return true if virtual? && is_user?(_user)
+    if _user.has_role?('manager','admin','district_admin')
+      return true
+    end
+    return false
+  end
+    
     
   def parent
     return teacher
@@ -111,5 +185,24 @@ class Portal::Clazz < ActiveRecord::Base
     return (! virtual?)
   end
   
+  # HACK: to support transitioning to multiple teachers.
+  def teacher
+    self.teachers.first
+  end
+  
+  # HACK: to support transitioning to multiple teachers.  
+  def teacher=(_teacher)
+    add_teacher(_teacher)
+  end
+  
+  def has_teacher?(_teacher)
+    self.teachers.detect { |t| t.id == _teacher.id }
+  end
+  
+  def add_teacher(_teacher)
+    unless self.has_teacher?(_teacher)
+      self.teachers << _teacher
+    end
+  end
 
 end

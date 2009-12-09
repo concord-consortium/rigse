@@ -11,6 +11,7 @@ describe "/dataservice_console_contents/new.html.erb" do
   end
 
   it "renders new console_content form" do
+    pending "Broken example"
     render
 
     response.should have_tag("form[action=?][method=post]", dataservice_console_contents_path) do

@@ -58,6 +58,13 @@ class RinetData
   class RinetGetFileError < RuntimeError
   end
 
+  class MissingDistrictFolderError < Exception
+    attr_accessor :folder
+    def initialize(district_folder)
+      self.folder = district_folder
+    end
+  end
+  
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :log
@@ -68,6 +75,7 @@ class RinetData
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
+    
     
     defaults = {
       :verbose => false,
@@ -132,6 +140,9 @@ Logging to: #{File.expand_path(@log_path)}
   
 
   def run_scheduled_job(opts = {})
+    # disable observable behavior on useres for import task
+    User.delete_observers
+    
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
@@ -143,39 +154,50 @@ Logging to: #{File.expand_path(@log_path)}
     num_districts = num_teachers = num_students = num_courses = num_classes = 0
     
     @districts.each do |district|
-      if @errors[:districts][district]
-        log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
-      else
+      begin
+        if @errors[:districts][district]
+          log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
+        else
       
-        clear_ar_maps
+          clear_ar_maps
       
-        log_message "\n (parsing csv files for district #{district}...)\n"
-        parse_csv_files_for_district(district)
+          log_message "\n (parsing csv files for district #{district}...)\n"
+          parse_csv_files_for_district(district)
       
-        log_message "\n (joining data for district #{district}...)\n"
-        join_data
+          log_message "\n (joining data for district #{district}...)\n"
+          join_data
     
-        log_message "\n (updating models for district #{district}...)\n"
-        update_models
+          log_message "\n (updating models for district #{district}...)\n"
+          update_models
       
-        district_summary = <<-HEREDOC
+          district_summary = <<-HEREDOC
 
-  Import Summary for district #{district}:
-    Teachers: #{@parsed_data[:staff].length}
-    Students: #{@parsed_data[:students].length}
-    Courses:  #{@parsed_data[:courses].length}
-    Classes:  #{@parsed_data[:staff_assignments].length}
+    Import Summary for district #{district}:
+      Teachers: #{@parsed_data[:staff].length}
+      Students: #{@parsed_data[:students].length}
+      Courses:  #{@parsed_data[:courses].length}
+      Classes:  #{@parsed_data[:staff_assignments].length}
 
-        HEREDOC
-        report(district_summary)
+          HEREDOC
+          report(district_summary)
       
-        num_districts += 1
-        num_teachers += @parsed_data[:staff].length
-        num_students += @parsed_data[:students].length
-        num_courses += @parsed_data[:courses].length
-        num_classes += @parsed_data[:staff_assignments].length
+          num_districts += 1
+          num_teachers += @parsed_data[:staff].length
+          num_students += @parsed_data[:students].length
+          num_courses += @parsed_data[:courses].length
+          num_classes += @parsed_data[:staff_assignments].length
+        end
+      rescue MissingDistrictFolderError => e
+        log_message "Could not find district folder for district #{district} in #{e.folder}", {:log_level => 'error'}
+      rescue RuntimeError => e
+        log_message "Runtime exception for district #{district}", {:log_level => 'error'}
+        log_message e.message, {:log_level => 'error'}
+        log_message e.backtrace, {:log_level => 'debug'}
       end
+      
+        
     end
+    
     end_time = Time.now
     grand_total = <<-HEREDOC 
 
@@ -272,6 +294,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     else
       log_message("no data folder found: #{csv_data_directory}", {:log_level => :error})
+      raise MissingDistrictFolderError.new(csv_data_directory)
     end
   end
 
@@ -400,6 +423,11 @@ Logged to: #{File.expand_path(@log_path)}
         begin
           sakai_login = row[:login]
           rites_login = ExternalUserDomain.external_login_to_login(sakai_login)
+          password = row[:Password] || row[:Birthdate]
+          # crazy hack for password validation checks. (some teachers had small < 6 char passwords)
+          while password.length < 6
+            password = password << "x"
+          end
           email = row[:email] ||
             "#{rites_login}@mailinator.com" # (temporary unique email address to pass valiadations)
             
@@ -449,7 +477,7 @@ Logged to: #{File.expand_path(@log_path)}
           if message.strip.empty?
             raise(RinetData::RinetDataError, "no SASID and NO TeacherCertNum for row: #{row.join(', ')}\n")
           else
-            log_message(message, options={:log_level => :warn})
+            log_message(message, {:log_level => :warn})
           end
         rescue RinetData::RinetDataError => e
           log_message("\n#{e.message}\b", {:log_level => :error})
@@ -598,7 +626,7 @@ Logged to: #{File.expand_path(@log_path)}
         # cache that results in hashtable
         @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
       else
-        Raise ArgumentError("no school exists when creating a course")
+        log_message("no school exists when creating a course", {:log_level => :warn})
       end
     else
       log_message("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :warn})
@@ -794,7 +822,12 @@ Logged to: #{File.expand_path(@log_path)}
   def verify_users
     report "Imported ActiveRecord entities by district:"
     @districts.each do |district|
-      verify_user_imported(district)
+      begin
+        verify_user_imported(district)
+      rescue Exception => e
+        log_message("missing district data for: #{district}",{:log_level => 'error'})
+        log_message("#{e.message}",{:log_level => 'error'})
+      end
     end
   end
   

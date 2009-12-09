@@ -31,6 +31,8 @@
     = dropdown_button "actions.png", :title => "actions for this page"
     - if (page.changeable?(current_user))
       = dropdown_button "add.png", :title => 'add content to this page'
+    - else
+      = link_button "add_disabled.png", "#", :title => "can't add content"
     = render :partial => "shared/dot_pager", :locals => {:node => page}
     - if (page.changeable?(current_user))
       - if (page.section)

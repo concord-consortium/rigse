@@ -11,7 +11,7 @@ set :branch, "itsi-master"
 
 set :domain, "itsisu.investigations.concord.org"
 server domain, :app, :web
-# role :db, domain, :primary => true
+role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS
 namespace :db do
 #  desc 'Loads the production database in db/production_data.sql on the remote server'

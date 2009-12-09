@@ -1,4 +1,4 @@
-set :stages, %w(development staging production seymour itsisu_pro fall2009)
+set :stages, %w(development staging production seymour itsisu_pro fall2009 smartgraphs-production smartgraphs-staging)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -154,7 +154,7 @@ namespace :deploy do
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
   task :from_scratch do
-    run "cd #{deploy_to}/current; rake rigse:setup:force_new_rigse_from_scratch"
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
   end
   
   desc "link in some shared resources, such as database.yml"
@@ -258,6 +258,11 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace" 
   end
 
+  desc "Import RINET data"
+  task :import_rinet_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace" 
+  end
 end
 
 #############################################################
@@ -403,6 +408,12 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} portal:setup:create_districts_and_schools_from_nces_data --trace"
   end
 
+  # Wed Dec 2nd
+  desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
+  task :convert_clazzes_to_multi_teacher, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
+  end
 end
 
 before 'deploy:restart', 'deploy:set_permissions'
