@@ -35,15 +35,7 @@ def create_db(hash)
   %x[ mysqladmin -f -u #{@db_admin_username} -p#{@db_admin_pass}  create #{database} ]
   
   @hosts.each do |h|
-    
-    # puts %Q[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "drop user '#{username}'@'#{h}';" ]
-    # %x[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "drop user '#{username}'@'#{h}';" ]
-    
-    puts %Q[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "create user '#{username}'@'#{h}' identified by '#{password}';" ]
-    %x[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "create user '#{username}'@'#{h}' identified by '#{password}';" ]
-    
-    puts %Q[mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "grant all privileges on #{database}.* to '#{username}'@'#{h}' with grant option;" ]
-    %x[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "grant all privileges on #{database}.* to '#{username}'@'#{h}' with grant option;" ]
+    %x[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "grant all on #{database}.* to '#{username}'@'#{h}'  identified by '#{password}';" ]
   end
 end
 
