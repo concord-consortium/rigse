@@ -35,6 +35,7 @@ public/stylesheets/rites_otml.css
 public/stylesheets/notes.css
 public/stylesheets/screen.css
 public/stylesheets/readme.css
+public/stylesheets/teacher_overlay.css
 public/jnlp/*/*
 config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
