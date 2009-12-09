@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/itsisu_investigations"
-set :branch, "itsi-master"
+set :branch, "itsisu-production"
 
 #############################################################
 #  Servers
