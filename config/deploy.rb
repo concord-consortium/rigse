@@ -1,4 +1,7 @@
-set :stages, %w(development staging production seymour itsisu_pro fall2009 smartgraphs-production smartgraphs-staging)
+set :stages, %w(
+  development staging production seymour 
+  itsisu-dev itsisu-staging itsisu-production fall2009 
+  smartgraphs-production smartgraphs-staging)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -185,7 +188,7 @@ namespace :deploy do
   desc "Create asset packages for production" 
   task :create_asset_packages, :roles => :app do
     run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
-    run "cd #{deploy_to}/current && rake asset:packager:build_all"
+    run "cd #{deploy_to}/current && rake asset:packager:build_all --trace"
   end
   
 end
