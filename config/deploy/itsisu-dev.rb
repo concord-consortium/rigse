@@ -2,7 +2,7 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/itisisu.dev.concord.org"
+set :deploy_to, "/web/itsisu.dev.concord.org"
 set :branch, "itsisu-dev"
 
 #############################################################
