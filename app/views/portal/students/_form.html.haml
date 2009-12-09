@@ -15,7 +15,7 @@
             = label_tag :portal_student, 'grade level: ', :class=>"right" 
             = f.collection_select(:grade_level_id, (current_user.portal_teacher ? current_user.portal_teacher.schools.collect{|s| s.grade_levels}.flatten.uniq : []), :id, :name, options ={:prompt => "-Select a grade level"}, :class =>"string")
             - if portal_clazz
-              = hidden_field :clazz, :id, {}
+              = hidden_field :clazz, :id, {:value => portal_clazz.id}
   - field_set_tag 'password' do
     .aligned
       %ul
