@@ -9,7 +9,10 @@
   %ul{:id=>top_container_id}
     - top_node.clazzes.each do |clazz|
       %li{:id=>dom_id_for(clazz,:nav_item)}
-        - link_text = "#{clazz.name} (#{clazz.section})"
+        -if clazz.section
+          - link_text = "#{clazz.name}(#{clazz.section})"
+        -else 
+          - link_text = clazz.name
         -if (selects.include? clazz)
           = link_to link_text,clazz, :class=> 'selected'
         -else
