@@ -54,9 +54,13 @@
       = render :partial => 'shared/activity_trail'
       #header
         .left_content
-          =image_tag("itsi-logo-150.gif")
+          =image_tag("itsi_su.png")
           / %h1=APP_CONFIG[:site_name]
-          %h1 Scale Up
+          %h1 
+            Innovative
+            Technology in
+            Science Inquiry
+            Scale Up
         .right_content
           .padded_content_right
             Welcome
@@ -77,9 +81,6 @@
 
       #content_container      
         #left_nav.nav_menu
-          %span.hidden.doNotPrint
-            Navigation:
-          != "&nbsp;"
           %ul
             %li= link_to 'Home', home_path
             %li= link_to 'About', about_path
