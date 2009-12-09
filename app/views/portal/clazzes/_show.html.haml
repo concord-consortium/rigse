@@ -4,7 +4,7 @@
   .clazz_details{:id => dom_id_for(portal_clazz, :details)}
     .action_menu
       .action_menu_left
-        %h3="#{portal_clazz.name} (#{portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'})"
+        %h3="#{portal_clazz.name}"
       .action_menu_right
         -if portal_clazz.changeable? current_user
           / = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
@@ -12,6 +12,9 @@
           = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
     .action_menu
       %ul
+        %li
+          %strong Teacher:
+          =portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'
         %li
           %strong Class Word:
           = portal_clazz.class_word
