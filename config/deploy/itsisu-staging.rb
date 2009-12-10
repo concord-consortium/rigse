@@ -2,7 +2,7 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/staging/itsisu_investigations"
+set :deploy_to, "/web/staging/itsisu"
 set :branch, "itsisu-staging"
 
 #############################################################
