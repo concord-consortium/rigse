@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091028175638) do
+ActiveRecord::Schema.define(:version => 20091120152532) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1611,6 +1611,21 @@ ActiveRecord::Schema.define(:version => 20091028175638) do
     t.datetime "updated_at"
   end
 
+  create_table "portal_teacher_clazzes", :force => true do |t|
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "clazz_id"
+    t.integer  "teacher_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "portal_teacher_clazzes", ["clazz_id"], :name => "index_portal_teacher_clazzes_on_clazz_id"
+  add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
+
   create_table "portal_teachers", :force => true do |t|
     t.string   "uuid",       :limit => 36
     t.integer  "user_id"
@@ -1686,6 +1701,34 @@ ActiveRecord::Schema.define(:version => 20091028175638) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "smartgraph_range_questions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                                 :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "data_collector_id"
+    t.integer  "correct_range_min"
+    t.integer  "correct_range_max"
+    t.string   "correct_range_axis"
+    t.integer  "highlight_range_min"
+    t.integer  "highlight_range_max"
+    t.string   "highlight_range_axis"
+    t.text     "prompt"
+    t.string   "answer_style"
+    t.text     "no_answer_response_text"
+    t.boolean  "no_answer_highlight"
+    t.text     "correct_response_text"
+    t.boolean  "correct_highlight"
+    t.text     "first_wrong_answer_response_text"
+    t.boolean  "first_wrong_highlight"
+    t.text     "second_wrong_answer_response_text"
+    t.boolean  "second_wrong_highlight"
+    t.text     "multiple_wrong_answers_response_text"
+    t.boolean  "multiple_wrong_highlight"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
