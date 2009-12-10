@@ -451,6 +451,13 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
+    haml_tag :div, :class => 'dropdown', :id => "actions_#{component.id}_menu" do
+      haml_tag :ul do
+        haml_tag(:li) { haml_concat run_link_for(component) }
+        haml_tag(:li) { haml_concat print_link_for(component) }
+        haml_tag(:li) { haml_concat otml_link_for(component) }
+      end
+    end
     view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
@@ -458,20 +465,13 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
           if is_page_element
             restrict_to 'admin' do
-             haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
-               haml_tag :ul do
-                 haml_tag(:li) { haml_concat run_link_for(component) }
-                 haml_tag(:li) { haml_concat print_link_for(component) }
-                 haml_tag(:li) { haml_concat otml_link_for(component) }
-               end
-             end
-             haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
+              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
             end
           end              
           if (component.changeable?(current_user))
-            haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             begin
               if component.authorable_in_java?
                 haml_concat otrunk_edit_button_for(component, options)
