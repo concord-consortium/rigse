@@ -31,7 +31,8 @@ class Smartgraph::RangeQuestion < ActiveRecord::Base
   validates_numericality_of :highlight_range_max
   
   # Have to do on => update so that a default one can be created when editing at the page level
-  validates_presence_of :data_collector, :on => :update
+  # Actually, we can't do this at all, or the user won't get saved to the question, causing editing problems.
+  # validates_presence_of :data_collector, :on => :update
 
   default_value_for :name, "Smartgraph Range Question"
   default_value_for :description, "description ..."
