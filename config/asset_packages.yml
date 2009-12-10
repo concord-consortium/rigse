@@ -23,8 +23,8 @@ stylesheets:
 - base: 
   - app
   - accordion
-  - window
-  - rites-dialog
+  - window/window
+  - window/rites
   - live_validation
   - action_menu_tab
   - notes
