@@ -160,6 +160,25 @@ namespace :deploy do
     run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
   end
   
+  desc "setup directory remote directory structure"
+  task :make_directory_structure do
+    run "mkdir -p #{deploy_to}/releases"
+    run "mkdir -p #{shared_path}"
+    run "mkdir -p #{shared_path}/config"
+    run "mkdir -p #{shared_path}/log"
+    run "mkdir -p #{shared_path}/rinet_data"
+    run "mkdir -p #{shared_path}/config/nces_data"
+    run "mkdir -p #{shared_path}/public/otrunk-examples"
+    run "mkdir -p #{shared_path}/config/initializers"
+    run "touch #{shared_path}/config/database.yml"
+    run "touch #{shared_path}/config/settings.yml"
+    run "touch #{shared_path}/config/rinet_data.yml"
+    run "touch #{shared_path}/config/sds.yml"
+    run "touch #{shared_path}/config/mailer.yml"
+    run "touch #{shared_path}/config/initializers/site_keys.rb"
+    run "touch #{shared_path}/config/database.yml"
+  end
+
   desc "link in some shared resources, such as database.yml"
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
@@ -170,7 +189,6 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
-    run "mkdir -p #{shared_path}/rinet_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
     
@@ -419,8 +437,9 @@ namespace :convert do
   end
 end
 
-before 'deploy:restart', 'deploy:set_permissions'
 
+before 'deploy:restart', 'deploy:set_permissions'
+before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:set_permissions'
