@@ -4,7 +4,7 @@ module DialogHelper
   def modal_dialog_for(js_page, component, options={})
     defaults = {
       :name       => "new #{component.class.name.humanize}",
-      :theme      => APP_CONFIG['theme'] || 'rites',
+      :theme      => APP_CONFIG[:theme] || 'rites',
       :width      => 800,
       :height     => 400,
       :modal      => true,
