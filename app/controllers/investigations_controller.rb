@@ -350,8 +350,8 @@ class InvestigationsController < AuthoringController
     @original = Investigation.find(params['id'])
     @investigation = @original.duplicate(current_user)
     @investigation.save
-    
-    redirect_to edit_investigation_url(@investigation)
+    flash[:notice] ="Copied #{@original.name}"
+    redirect_to url_for @investigation
   end
   
   def export

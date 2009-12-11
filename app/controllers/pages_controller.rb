@@ -226,10 +226,10 @@ class PagesController < ApplicationController
   ##
   def duplicate
     @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
-    @copy.name = "copy of #{@page.name}"
+    @copy.name = "" #force numbering by default
     @copy.save
-    @section = @copy.section
-    redirect_to :action => 'edit', :id => @copy.id
+    flash[:notice] ="Copied #{@page.name}"
+    redirect_to url_for @copy
   end
 
 
