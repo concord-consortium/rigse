@@ -4,7 +4,7 @@ module DialogHelper
   def modal_dialog_for(js_page, component, options={})
     defaults = {
       :name       => "new #{component.class.name.humanize}",
-      :theme      => 'itsisu',
+      :theme      => APP_CONFIG['theme'] || 'rites',
       :width      => 800,
       :height     => 400,
       :modal      => true,
@@ -26,6 +26,5 @@ module DialogHelper
       JAVASCRIPT
     js_page['_dynamic_content_'].update(render(:layout => false, :partial => options[:partial], :locals => options))
   end
-
 
 end
