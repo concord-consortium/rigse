@@ -201,8 +201,10 @@ class SectionsController < ApplicationController
     @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
+    @copy.deep_set_user current_user
     @activity = @copy.activity
-    redirect_to :action => 'edit', :id => @copy.id
+    flash[:notice] ="Copied #{@section.name}"
+    redirect_to url_for @copy
   end
   
   #

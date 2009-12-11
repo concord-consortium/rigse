@@ -215,7 +215,8 @@ class ActivitiesController < ApplicationController
     @activity.name = "copy of #{@activity.name}"
     @activity.deep_set_user current_user
     @activity.save
-    redirect_to edit_activity_url(@activity)
+    flash[:notice] ="Copied #{@original.name}"
+    redirect_to url_for(@activity)
   end
   
   #
