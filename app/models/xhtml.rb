@@ -26,7 +26,7 @@ class Xhtml < ActiveRecord::Base
   send_update_events_to :investigations
   
   def self.display_name
-    "Text Content"
+    "Text"
   end
   
   def investigations
