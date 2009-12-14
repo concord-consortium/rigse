@@ -98,8 +98,8 @@ class Page < ActiveRecord::Base
         return parent
       when InnerPage
         # kind of hackish:
-        if(parent.pages[0])
-          return parent.pages[0].section
+        if(parent.parent)
+          return parent.parent.section
         end
     end
     return nil
@@ -152,7 +152,7 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return (section || inner_pages[0] || nil)
+    return self.inner_page_pages.size > 0 ? self.inner_page_pages[0].inner_page : section
   end
   
   include TreeNode
