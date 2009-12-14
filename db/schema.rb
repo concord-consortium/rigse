@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091120152532) do
+ActiveRecord::Schema.define(:version => 20091214174423) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -444,11 +444,12 @@ ActiveRecord::Schema.define(:version => 20091120152532) do
 
   create_table "inner_pages", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "static_page_id"
   end
 
   create_table "investigations", :force => true do |t|
