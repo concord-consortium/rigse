@@ -44,25 +44,25 @@ class InnerPage < ActiveRecord::Base
     pages[0]
   end
   
-  
   def section
     if parent
-      return parent.activity
+      return parent.section
     end
-    return nil
+    nil
   end
 
   def activity
     if section
       return section.activity
     end
-    return nil
+    nil
   end
   
   def investigation
     if activity
       return activity.investigation
     end
+    nil
   end
   
   
