@@ -1,4 +1,4 @@
-%div{id=>dom_id_for(page, :add_menu), :class=>"dropdown"}
+%div{:id=>dom_id_for(page, :add_menu), :class=>"dropdown"}
   %ul
     - hide_types = [InnerPage, BiologicaWorld, BiologicaOrganism, BiologicaStaticOrganism, BiologicaChromosome, BiologicaChromosomeZoom, BiologicaBreedOffspring, BiologicaPedigree, BiologicaMultipleOrganism, BiologicaMeiosisView]
     - Page::element_types.each do |type|
@@ -32,7 +32,7 @@
     / see above; these actions are disabled for now..
     / = dropdown_button "actions.png", :name=> 'inner_page_actions', :title => 'add content to this page'
     - if (page.changeable?(current_user))
-      = dropdown_button "add.png", :name=> dom_id_for(page, :add_menu), :title => 'add content to this page'
+      = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'add content to this page'
     - if (page.previous)
       = remote_link_button "previous_node.png", :url => set_page_inner_page_path(:page_id =>page.previous, :id=>inner_page.id), :title => "go to previous page", :update => dom_id_for(inner_page, :inner_page_area)
     - else
@@ -51,3 +51,4 @@
       = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_inner_page_path(:page_id =>page, :id=>inner_page.id), :title => "delete page", :update => dom_id_for(inner_page, :inner_page_area)
     - if (page.section)
       = link_button "up.png", page.section, :title => 'go to section'
+

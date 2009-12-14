@@ -3,7 +3,7 @@
     - hide_types = [InnerPage, BiologicaWorld, BiologicaOrganism, BiologicaStaticOrganism, BiologicaChromosome, BiologicaChromosomeZoom, BiologicaBreedOffspring, BiologicaPedigree, BiologicaMultipleOrganism, BiologicaMeiosisView]
     - Page::element_types.each do |type|
       - next if hide_types.include? type
-      %li= link_to_remote "#{type.display_name}", :update =>dom_id_for(inner_page, :inner_page_area), :url => url_for(:controller =>'inner_pages', :action => 'add_element', :class_name => type.name, :id=>inner_page.id, :page_id => page.id), :html => {:class=>'action'}, :complete => mce_init_string
+      %li= link_to_remote "#{type.display_name}", :update =>dom_id_for(inner_page, :static_page_area), :url => url_for(:controller =>'inner_pages', :action => 'add_element', :class_name => type.name, :id=>inner_page.id, :page_id => page.id, :static => true), :html => {:class=>'action'}, :complete => mce_init_string
 
 - if (teacher_only? page)
   - view_class = "action_menu teacher_only"
@@ -12,9 +12,8 @@
 
       
 %div{:id => dom_id_for(page,:item), :class =>view_class}
-  .action_menu_header
-    .action_menu_header_left
-      Static section (use + to add more content to the left)
-    .action_menu_header_right
-      - if (page.changeable?(current_user))
-        = dropdown_button "add.png", :name=> dom_id_for(page, :add_menu), :title => 'Add content for the static page'
+  .action_menu_header_left
+    Static section (use + to add more content to the left)
+  .action_menu_header_right
+    - if (page.changeable?(current_user))
+      = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'Add content for the static page'
