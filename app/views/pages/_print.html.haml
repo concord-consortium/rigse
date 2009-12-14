@@ -12,7 +12,7 @@
         %h3 Teacher notes
         %hr
         - if should_show_teacher_note? page, :investigation
-          %h4= "Investigation notes:"
+          %h4= "#{top_level_container_name.pluralize.humanize} notes:"
           .teacher_note= page.section.investigation.teacher_note_otml
 
         - if should_show_teacher_note? page, :activity

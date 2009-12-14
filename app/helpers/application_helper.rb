@@ -3,6 +3,10 @@ include JnlpHelper
 
 module ApplicationHelper
 
+  def top_level_container_name(options = {:upercase => false, :plural => false})
+    name = (APP_CONFIG[:top_level_container_name] || "investigation")
+  end
+  
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #

@@ -10,8 +10,8 @@
     .action_menu_header_right
       %ul.menu
         -unless current_user.anonymous?
-          %li= link_to 'create investigation', new_investigation_path
-        %li= toggle_all 'investigation descriptions'
+          %li= link_to "create #{top_level_container_name}", new_investigation_path
+        %li= toggle_all "#{top_level_container_name} descriptions"
         
 %ul.quiet_list
   - for investigation in investigations
@@ -28,7 +28,7 @@
               %li.menu=link_to 'copy', duplicate_investigation_url(investigation)
             %li.menu=link_to 'export (xml)', export_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
-              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete investigation #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
         - if params[:mine_only]

@@ -99,7 +99,7 @@ class Investigation < ActiveRecord::Base
     end
     
     def display_name
-      "Investigation"
+      APP_CONFIG[:top_level_container_name].humanize || "Investigation"
     end
     
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
