@@ -440,11 +440,12 @@ ActiveRecord::Schema.define(:version => 20091216210321) do
 
   create_table "inner_pages", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "static_page_id"
   end
 
   create_table "investigations", :force => true do |t|
