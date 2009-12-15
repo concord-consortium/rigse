@@ -223,16 +223,20 @@ class SectionsController < ApplicationController
       clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
-      if (@original) 
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
-        if (@component)
-          # @component.original = @original
-          @container = params[:container] || 'section_pages_list'
-          @component.name = "copy of #{@component.name}"
-          @component.deep_set_user current_user
-          @component.section = @section
-          @component.save
+      if @original
+        @container = params[:container] || 'section_pages_list'
+        if @original.class == Page
+          @component = @original.duplicate
+        else
+          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
+          if (@component)
+            # @component.original = @original
+            @component.name = "copy of #{@component.name}"
+            @component.section = @section
+            @component.save
+          end
         end
+        @component.deep_set_user current_user
       end
     end
     render :update do |page|
