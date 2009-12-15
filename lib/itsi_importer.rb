@@ -418,13 +418,15 @@ class ItsiImporter
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?
         page = Page.create do |p|
-          p.name = "#{name}"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....
+          # p.name = "#{name}"
           p.description = page_description
         end
         page_embeddable = nil
       else
         page_embeddable = Xhtml.create do |x|
-          x.name = name + ": Body Content (html)"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names or descriptions being added to text content
+          # x.name = name + ": Body Content (html)"
           x.description = ""
           # look for weird entity that should actually be an endash -- what causes this??
           # cant figure out right now the relations between textile / html and escape entities.
@@ -434,7 +436,8 @@ class ItsiImporter
           x.content = html_content
         end
         page = Page.create do |p|
-          p.name = "#{name}"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....          
+          # p.name = "#{name}"
           p.description = page_description
           page_embeddable.pages << p
         end
