@@ -85,7 +85,7 @@
             %li= link_to 'Home', home_path
             %li= link_to 'About', about_path
             - unless current_user.anonymous? || current_user.portal_student
-              %li= link_to 'Units', investigations_path        
+              %li= link_to top_level_container_name.humanize.pluralize, investigations_path        
               - if @investigation 
                 %li
                   = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
