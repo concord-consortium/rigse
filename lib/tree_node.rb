@@ -33,6 +33,13 @@ module TreeNode
     return nil
   end
 
+  def number
+    if parent
+      return parent.children.index(self) + 1
+    end
+    return 1
+  end
+  
   def each(&block)
     block[self]
     self.children.each do |leaf| 

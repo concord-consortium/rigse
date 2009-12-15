@@ -43,11 +43,11 @@
                     =link_to "#{i+1}: #{s.name}",s, :class=> 'accordion_section_title'
                   - if s.respond_to? 'children'
                     -s.children.each_with_index do |p,i|
-                      - style = teacher_only?(p) ? "rollover teacher_only" : "rollover"
+                      - style = teacher_only?(p) ? "teacher_only numbered" : "numbered"
                       - if selects.include? p
-                        = link_button "this_node.png", "#", :title => "you are here", :class => style
+                        = link_to p.number, "#", :title => "you are here", :class => "#{style} selected"
                       - else
-                        = link_button "other_node.png", p, :title => "go to #{p.name}", :class => style
+                        = link_to p.number, p, :title => "go to #{p.name}", :class => style
         - if sub_action
           =sortable_element sub_container_id.to_sym, :url=> {:controller => sub_controller, :action => sub_action, :params => {:list_name=>sub_container_id,:id => child.id }}
     - if top_action
