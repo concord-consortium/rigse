@@ -22,11 +22,32 @@ class PageElement < ActiveRecord::Base
     def dom_id
       "page_element_#{self.id}"
     end
+    
     def teacher_only?
       false
     end
+    
     def parent
       return page
+    end
+    
+    def duplicate
+      @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+      @em = self.embeddable
+      
+      # let embeddables define their own means to save
+      if @em.respond_to? :duplicate
+        @copy.embeddable = @em.duplicate
+      else
+        @copy.embeddable = @em.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+      end
+      
+      if @copy.embeddable
+        @copy.embeddable.save
+      end
+      
+      @copy.save
+      @copy
     end
     
 end

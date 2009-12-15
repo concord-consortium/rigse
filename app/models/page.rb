@@ -176,4 +176,24 @@ class Page < ActiveRecord::Base
     return page_elements.map { |e| e.embeddable }
   end
   
+  
+  #
+  # Duplicate: try and create a deep clone of this page and its page_elements....
+  # Esoteric question for the future: Would we ever want to clone the elements shallow?
+  # maybe, but it will confuse authors
+  #
+  def duplicate
+    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy.name = "" # allow for auto-numbering of pages
+    @copy.section = self.section
+    @copy.save
+    self.page_elements.each do |e| 
+      ecopy = e.duplicate
+      ecopy.page = @copy
+      ecopy.save
+    end
+    @copy.save
+    @copy
+  end
+  
 end
