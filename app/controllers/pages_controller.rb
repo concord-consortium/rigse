@@ -240,7 +240,7 @@ class PagesController < ApplicationController
   end
   
   #
-  # Must be  js method, so don't even worry about it.
+  # Paste a page component
   #
   def paste
     if @page.changeable?(current_user)
