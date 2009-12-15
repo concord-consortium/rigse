@@ -42,6 +42,9 @@
                   -else
                     =link_to "#{i+1}: #{s.name}",s, :class=> 'accordion_section_title'
                   - if s.respond_to? 'children'
+                    - if s.children.first
+                      - heading = s.children.first.class.name.humanize
+                      = s.children.size > 1 ? "#{heading.pluralize}: " : "#{heading}: "
                     -s.children.each_with_index do |p,i|
                       - style = teacher_only?(p) ? "teacher_only numbered" : "numbered"
                       - if selects.include? p
