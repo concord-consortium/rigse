@@ -21,6 +21,7 @@ Spork.prefork do
 
   require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
   require 'cucumber/rails/world'
+  require 'email_spec'
   require 'email_spec/cucumber'
   
   # If you set this to true, each scenario will run in a database transaction.
