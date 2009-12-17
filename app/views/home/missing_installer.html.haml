@@ -1,0 +1,7 @@
+#main
+  %h3= "#{APP_CONFIG[:site_name]}: Technical Help"
+  .padded_content
+    %p
+      %strong= "You need to run the RITES installer for #{@os} before running an investigations"
+      %p (TODO: link to the installer dynamically)
+      %p=link_to('download the osx installer', '/public/installers/RITES-200912.1-osx-installer.dmg')

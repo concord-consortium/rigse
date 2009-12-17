@@ -11,4 +11,8 @@ class HomeController < ApplicationController
   def about
   end
   
+  def missing_installer
+    @os = params['os'] || "no operating system specified"
+  end
+  
 end
