@@ -1,0 +1,31 @@
+response.headers["Content-Type"] = "application/x-java-jnlp-file"
+response.headers["Cache-Control"] = "max-age=1"
+response.headers["Last-Modified"] = runnable.updated_at.httpdate
+response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+session_options = request.env["rack.session.options"]
+
+xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) { 
+  xml.information { 
+    xml.title "#{jnlp_installer_project} #{jnlp_installer_version}"
+    xml.vendor jnlp_installer_vendor
+    xml.homepage :href => "http://confluence.concord.org/display/TMS/OTrunk+Examples"
+    xml.description "CC OTrunk Application built on SAIL using installer"
+    xml.icon :href => full_url_for_image("sail_orangecirc_64.gif"), :height => "64", :width => "64"
+  }
+  xml.security {
+    xml << "    <all-permissions />"
+  }
+  # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
+  xml.resources(:os => "Mac OS X") {
+    xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
+  }
+  jnlp_installer_resources(xml, { :authoring => @authoring, :runnable => runnable, :wrapped_jnlp_url => wrapped_jnlp_url } )
+
+#   <application-desc main-class="org.concord.LaunchJnlp">
+#    <argument>dummy</argument>
+#   </application-desc>
+  xml << "  <application-desc main-class='org.concord.LaunchJnlp'><argument>dummy</argument>"
+  # xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => teacher_mode, :session => session_options[:id])
+  xml << "  </application-desc>\n"
+}
