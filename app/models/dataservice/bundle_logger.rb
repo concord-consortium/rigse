@@ -33,6 +33,7 @@ class Dataservice::BundleLogger < ActiveRecord::Base
     end
   end
   
+  # for the view system ...
   def user
     nil
   end
