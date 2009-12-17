@@ -169,6 +169,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/rinet_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
+    run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
@@ -188,6 +189,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
+    run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
