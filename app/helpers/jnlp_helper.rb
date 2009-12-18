@@ -89,16 +89,29 @@ module JnlpHelper
     "Concord Consortium".gsub(/\s+/,"")
   end
   
+  #
+  # convinient
+  #
+  def load_yaml(filename) 
+    file_txt = ""
+    File.open(filename, "r") do |f|
+      file_txt = f.read
+    end
+    return YAML::load(file_txt)
+  end
+  
   # IMPORTANT: should match <project><name>XXXX</name></project> value
   # from bitrock installer
   def jnlp_installer_project
-    "RITES"
+    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config['shortname'] || "RITES"
   end
   
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
-    "200912.2"
+    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config['version'] || "200912.2"
   end
   
   def jnlp_installer_not_found_url(os)
