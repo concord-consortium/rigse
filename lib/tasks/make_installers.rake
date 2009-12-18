@@ -18,6 +18,31 @@ namespace :build do
       "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app/Contents/MacOS/installbuilder.sh"
     end
   
+    def default_jnlp_url
+      "#{APP_CONFIG[:site_url]}/investigations/#{Investigation.first.id}.jnlp"
+    end
+  
+    def write_file_with_template_replacements(filename,template,replacements)
+      File.open(template, "r") do |f|
+        file_txt = f.read
+        replacements.each_pair do |k,v|
+          file_txt.gsub!(/\#{#{k}}/,v)
+        end
+        File.open(filename, "w") do |f|
+           f.write(file_txt)
+        end
+      end
+    end
+    
+    def load_yaml(filename) 
+      file_txt = ""
+      File.open(filename, "r") do |f|
+        file_txt = f.read
+      end
+      return YAML::load(file_txt)
+    end
+ 
+      
     # return a hash with the current config values
     # from the xml file
     def current_config_settings
@@ -39,8 +64,9 @@ namespace :build do
       return matches
     end
     
-    desc 'bump version number, check JNLP'
-    task :bump_version => ["#{RAILS_ROOT}/config/installer.yml", :clean_jar_folder] do
+    desc 'create a new release'
+    task :new_release => ["#{RAILS_ROOT}/config/installer.yml", :clean_jar_folder] do
+      config = {}
       puts <<-HERE_DOC
         bumping the version... (TODO: create some helper )
         for now: modify the following files by hand:
@@ -48,6 +74,18 @@ namespace :build do
             #{bitrocket_installer_dir}/#{installer_config_xml}
             #{bitrocket_installer_dir}/jnlps.conf"
       HERE_DOC
+      config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+      %w[shortname version jnlp_config].each do |k|
+        config[k] = ask("value for #{k}") { |q| q.default = config[k] }
+      end
+      File.open("#{RAILS_ROOT}/config/installer.yml", "w") { |f|
+        f.write(YAML::dump(config))
+      }
+      cp "#{RAILS_ROOT}/config/installer.yml", "#{RAILS_ROOT}/config/installer.yml.backup"
+      cp "#{bitrocket_installer_dir}/rites.xml", "#{bitrocket_installer_dir}/rites.xml.backup"
+      cp "#{bitrocket_installer_dir}/jnlps.conf", "#{bitrocket_installer_dir}/jnlps.conf.backup"
+      write_file_with_template_replacements("#{bitrocket_installer_dir}/rites.xml","#{bitrocket_installer_dir}/template.xml",config)
+      write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
     end
     
     desc 'clean jar folder'
@@ -77,11 +115,16 @@ namespace :build do
       puts "building osx installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
     end
-    
+
     desc 'build the windows installer'
     task :build_win => "#{bitrocket_installer_dir}/jars" do
       puts "building win installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} windows]
     end
+    
+    desc 'build all installers'
+    task :build_win => [:build_win, :build_osx]
+
+    task :buid_mac => :build_osx
   end
 end
