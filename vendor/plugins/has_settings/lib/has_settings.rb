@@ -2,6 +2,12 @@ module CC
   module HAS
     module Settings
   
+      
+      def to_hash(first,other)
+          Hash[ *(0...first.size()).inject([]) { |arr, ix| arr.push(first[ix], other[ix]) } ]
+      end
+      
+      
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -15,6 +21,12 @@ module CC
       
       
       module InstanceMethods
+        def settings_hash
+          keys = settings.map {|s| s.name}
+          values = settings.map {|s| s.value}
+          return to_hash(keys,values)
+        end
+        
         def print_settings
           settings.each { |s| puts "#{s.name}: #{s.value}"}
         end
