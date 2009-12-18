@@ -145,7 +145,8 @@ class InvestigationsController < AuthoringController
       format.jnlp   { 
         if params.delete(:use_installer)
           wrapped_jnlp_url = polymorphic_url(@investigation, :format => :jnlp, :params => params)
-          render :partial => 'shared/show_installer', :locals => { :runnable => @investigation, :wrapped_jnlp_url=>wrapped_jnlp_url} 
+          render :partial => 'shared/show_installer', :locals => 
+            { :runnable => @investigation, :teacher_mode => @teacher_mode , :wrapped_jnlp_url => wrapped_jnlp_url } 
         else
           render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } 
         end
