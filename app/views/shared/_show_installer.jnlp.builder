@@ -7,6 +7,7 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
     xml << "    <all-permissions />"
   }
   # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
+  # TODO: test if this works on MacOS 10.6 which *only* has Java 1.6
   xml.resources(:os => "Mac OS X") {
     xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
   }
