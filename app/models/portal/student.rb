@@ -76,4 +76,8 @@ class Portal::Student < ActiveRecord::Base
     end
   end
   
+  def school
+    return schools.first
+  end
+  
 end
