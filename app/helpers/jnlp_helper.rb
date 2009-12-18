@@ -101,8 +101,8 @@ module JnlpHelper
     "200912.1"
   end
   
-  def jnlp_installer_not_found_url
-    "#{APP_CONFIG[:site_url]}/missing_installer"
+  def jnlp_installer_not_found_url(os)
+    "#{APP_CONFIG[:site_url]}/missing_installer/#{os}"
   end
 
   def jnlp_installer_resources(xml, options = {})
@@ -121,13 +121,21 @@ module JnlpHelper
       xml.property :name=> "vendor", :value => jnlp_installer_vendor
       xml.property :name=> "product_name", :value => jnlp_installer_project
       xml.property :name=> "product_version", :value => jnlp_installer_version
-      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url
       xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
       xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
       xml.property :name=> "resource_loc", :value => "resources" # do we do this? Not sure
       xml.property :name=> "cache_loc", :value => "jars"
       xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
       xml.property :name=> "jnlp2shell.read_only", :value => "true"
+    }
+    xml.resources(:os => "Linux") { 
+      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("linux")
+    }
+    xml.resources(:os => "Mac OS X") { 
+      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("osx")
+    }
+    xml.resources(:os => "Windows") { 
+      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("windows")
     }
   end
   
