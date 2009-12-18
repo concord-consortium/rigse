@@ -295,10 +295,10 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  
   def run_button_for(component)
     name = component.name
-    url = polymorphic_url(component, :format => :jnlp)
+    users_params = current_user.extra_params
+    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("run.png",  url, 
       :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);") 
@@ -306,7 +306,7 @@ module ApplicationHelper
 
   def preview_button_for(component)
     name = component.name
-    url = polymorphic_url(component, :format => :jnlp)
+    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("preview.png",  url, 
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);")      
@@ -315,6 +315,7 @@ module ApplicationHelper
   def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
+    params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || "preview "
     if as_name
       link_text << " as #{as_name}"
