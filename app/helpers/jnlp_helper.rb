@@ -5,25 +5,6 @@ module JnlpHelper
     host + path_to_image(path)
   end
   
-  def render_jnlp(runnable)
-    # FIXME can't figure out why otml_url_for, doesn't work here
-    # otml_url_for(runnable)
-    url = polymorphic_url(runnable, :format =>  :dynamic_otml, :teacher_mode => params[:teacher_mode])
-    escaped_otml_url = URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-
-    sds_connection = Portal::SdsConnect::Connect    
-    config_url = sds_connection.offering_url(sds_connection.config['default_offering_id']) + 
-      "/config/#{sds_connection.config['default_workgroup_id']}" + 
-      "/0/view?sailotrunk.hidetree=false&amp;sailotrunk.otmlurl=#{escaped_otml_url}"
-    render( :layout => false, :partial => "shared/jnlp", 
-      :locals => { 
-        :teacher_mode => params[:teacher_mode], 
-        :runnable => runnable, 
-        :config_url => config_url
-      } 
-    )
-  end
-
   def resource_jars
     @jnlp_adaptor.resource_jars
   end
