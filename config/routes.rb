@@ -259,9 +259,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :images
   
-  # Home Page
+  # Home Controller
+  map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.home '/readme', :controller => 'home', :action => 'readme'
-  map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer'
   map.home '/home', :controller => 'home', :action => 'index'
   map.about '/about', :controller => 'home', :action => 'about'
   map.root :controller => 'home', :action => 'index'
