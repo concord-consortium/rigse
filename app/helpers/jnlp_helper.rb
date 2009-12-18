@@ -98,7 +98,7 @@ module JnlpHelper
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
-    "200912.1"
+    "200912.2"
   end
   
   def jnlp_installer_not_found_url(os)
