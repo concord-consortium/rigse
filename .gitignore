@@ -61,4 +61,4 @@ resources/bitrock_installer/jars/*
 resources/bitrock_installer/installers/*
 public/installers/*.dmg
 resources/bitrock_installer/*.backup
-config/*.backuup
+config/*.backup
