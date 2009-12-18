@@ -16,7 +16,7 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
 #   <application-desc main-class="org.concord.LaunchJnlp">
 #    <argument>dummy</argument>
 #   </application-desc>
-  xml << "  <application-desc main-class='org.concord.LaunchJnlp'><argument>dummy</argument>"
-  # xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => teacher_mode, :session => session_options[:id])
+  xml << "  <application-desc main-class='org.concord.LaunchJnlp'>"
+    xml.argument polymorphic_url(runnable, :format =>  :config, :teacher_mode => teacher_mode, :session => session_options[:id])
   xml << "  </application-desc>\n"
 }
