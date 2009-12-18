@@ -57,3 +57,6 @@ config/rinet_data.yml
 rinet_data
 import_log.txt*
 public/stylesheets/themes/
+resources/bitrock_installer/jars/*
+resources/bitrock_installer/installers/*
+public/installers/*.dmg
