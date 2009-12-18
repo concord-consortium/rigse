@@ -63,6 +63,23 @@ module JnlpHelper
     }
   end
   
+  def jnlp_headers(runnable)
+    response.headers["Content-Type"] = "application/x-java-jnlp-file"
+    response.headers["Cache-Control"] = "max-age=1"
+    response.headers["Last-Modified"] = runnable.updated_at.httpdate
+    response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+  end
+  
+  def jnlp_information(xml)
+    xml.information { 
+      xml.title APP_CONFIG[:site_name]
+      xml.vendor "Concord Consortium"
+      xml.homepage :href => APP_CONFIG[:site_url]
+      xml.description APP_CONFIG[:description]
+      xml.icon :href => full_url_for_image("sail_orangecirc_64.gif"), :height => "64", :width => "64"
+    }
+  end
+  
   ########################################
   ## TODO: These jnlp_installer_* methods
   ## should be encapsulated in some class
