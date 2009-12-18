@@ -331,6 +331,7 @@ module ApplicationHelper
   def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
+    params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || "run "
     if as_name
       link_text << " as #{as_name}"
