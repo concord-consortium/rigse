@@ -173,6 +173,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/config/initializers"
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
+    run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
     run "touch #{shared_path}/config/sds.yml"
     run "touch #{shared_path}/config/mailer.yml"
@@ -184,6 +185,7 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/installer.yml"    
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
