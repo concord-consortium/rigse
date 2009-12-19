@@ -1,4 +1,4 @@
 --- 
 shortname: RITES
-version: "200912.2"
-jnlp_config: http://localhost:3000/investigations/380.jnlp
+version: "200912.3"
+jnlp_config: http://rites-investigations.staging.concord.org/investigations/409.jnlp
