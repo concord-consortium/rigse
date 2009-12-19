@@ -123,7 +123,7 @@ namespace :build do
     end
     
     desc 'build all installers'
-    task :build_win => [:build_win, :build_osx]
+    task :build_all => [:build_win, :build_osx]
 
     task :buid_mac => :build_osx
   end
