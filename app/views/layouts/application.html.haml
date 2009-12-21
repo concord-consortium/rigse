@@ -136,12 +136,13 @@
           document.observe("dom:loaded", function() {
             // if we are in an iframe, pop-out.
             if (top!=self) {
+              
+              // Option #1: Redirect the browser to a new location, taking
+              // the user away from whatever site (EG RIEPS) is containing us.
               // top.location.replace(location.href);
-              // Ken asked to take this out, because its too brutal to leave sakai
-              window.open("location.href");
-              window.history.go(-1); 
-              // go back once in history?  
-              // There is a potential problem of infinite regress here...
+              // Option #2: Open a new window. Requires user education.
+              // Pop-Up blockers on all major browsers will prevent this:
+              // window.open(location.href);
             }
           });
 
