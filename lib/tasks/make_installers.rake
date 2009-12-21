@@ -15,7 +15,8 @@ namespace :build do
     end
     
     def bitrocket_builder_path
-      "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app/Contents/MacOS/installbuilder.sh"
+      app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app"
+      app_path + "/Contents/MacOS/installbuilder.sh"
     end
   
     def default_jnlp_url
