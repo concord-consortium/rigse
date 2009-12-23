@@ -3,6 +3,20 @@ module TruncatableXhtml
   # Extracts and soft truncates text from an xhtml document stored
   # in the an attribute for models this module is included in.
   #
+  # Including TruncatableXhtml adds a before_save hook which will automatically
+  # generate a name attribute for the model instance if there is any content on 
+  # the main xhtml attribute (examples: content or prompt) that can plausibly be 
+  # turned into a name. Otherwise the default_value_for :name specified below is used.
+  # 
+  # At this time (2009-12) this is used in the following models:
+  # 
+  #   app/models/multiple_choice.rb
+  #   app/models/open_response.rb
+  #   app/models/xhtml.rb
+  #
+  # FIXME: refactor code to use names like 'DEFAULT_ATTRIBUTES' instead of 'DEFAULT_TABLES'
+  # Using the word 'table' to refer to the attributes of a table is confusing.
+  
   def truncate_from_xhtml(xhtml, limit=24, soft_limit=8, logging=false)
     return '' unless xhtml && !xhtml.empty?
     print "#{self.id}: " if logging
