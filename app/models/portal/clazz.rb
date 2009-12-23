@@ -70,7 +70,9 @@ class Portal::Clazz < ActiveRecord::Base
         xhtml.save
         page.xhtmls << xhtml
         
-        open_response = OpenResponse.create(:prompt => "enter some test data");
+        # The prompt gets used as the "name" for the open response, and the OTText's name gets set to #{prompt}_field
+        # The Java test looks for a text box named "test_text_field"
+        open_response = OpenResponse.create(:prompt => "test_text");
         open_response.save
         page.open_responses << open_response
         page.save
