@@ -11,18 +11,18 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
     xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
   }
   if defined? data_test && data_test
-    jnlp_resources(xml, { :learner => learner, :runnable => runnable, :data_test => data_test})
+    jnlp_testing_resources(xml, { :learner => learner, :runnable => runnable })
   else
-    jnlp_resources(xml, { :learner => learner, :runnable => runnable})
+    jnlp_resources(xml, { :learner => learner, :runnable => runnable })
   end
     
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)
   if defined? data_test && data_test
-    xml << "  <application-desc main-class='org.concord.testing.gui.AutomatedDataEditor'>"
+    xml << "  <application-desc main-class='org.concord.testing.gui.AutomatedDataEditor'>\n  "
   else
-    xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n"
+    xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n  "
   end
   xml.argument polymorphic_url(learner, :format =>  :config, :session => session_options[:id])
   xml << "  </application-desc>\n"

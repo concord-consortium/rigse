@@ -43,23 +43,74 @@ module JnlpHelper
     @jnlp_adaptor.system_properties + additional_properties
   end
   
+  def jnlp_jar(xml, resource, check_for_main=true)
+    if resource[2] && check_for_main
+      # TODO: refactor how jar versions (or lack therof) are dealt with
+      if resource[1]    # is there a version attribute?
+        xml.jar :href => resource[0], :main => true, :version => resource[1]
+      else
+        xml.jar :href => resource[0], :main => true
+      end
+    else
+      if resource[1]    # is there a version attribute?
+        xml.jar :href => resource[0], :version => resource[1]
+      else
+        xml.jar :href => resource[0]
+      end
+    end
+  end
+  
+  def jnlp_j2se(xml, jnlp)
+    xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
+  end
+  
+  def jnlp_os_specific_j2ses(xml, jnlp)
+    if jnlp.j2se_version == 'mac_os_x'
+      xml.resources {
+        xml.j2se :version => jnlp.j2se_version('mac_os_x'), 'max-heap-size' => "#{jnlp.max_heap_size('mac_os_x')}m", 'initial-heap-size' => "#{jnlp.initial_heap_size('mac_os_x')}m"
+      }
+    end
+    if jnlp.j2se_version == 'windows'
+      xml.resources {
+        xml.j2se :version => jnlp.j2se_version('windows'), 'max-heap-size' => "#{jnlp.max_heap_size('windows')}m", 'initial-heap-size' => "#{jnlp.initial_heap_size('windows')}m"
+      }
+    end
+    if jnlp.j2se_version == 'linux'
+      xml.resources {
+        xml.j2se :version => jnlp.j2se_version('linux'), 'max-heap-size' => "#{jnlp.max_heap_size('linux')}m", 'initial-heap-size' => "#{jnlp.initial_heap_size('linux')}m"
+      }
+    end
+  end
+  
   def jnlp_resources(xml, options = {})
     jnlp = @jnlp_adaptor.jnlp
     xml.resources {
-      xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
+      jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
-        if resource[2] && (!options[:data_test])
-          xml.jar :href => resource[0], :main => true, :version => resource[1]
-        else
-          xml.jar :href => resource[0], :version => resource[1]
-        end
-      end
-      if options[:data_test]
-        jnlp_test_resources(xml)
+        jnlp_jar(xml, resource)
       end
       system_properties(options).each do |property|
         xml.property(:name => property[0], :value => property[1])
       end
+      jnlp_os_specific_j2ses(xml, jnlp)
+    }
+  end
+  
+  def jnlp_testing_resources(xml, options = {})
+    jnlp = @jnlp_adaptor.jnlp
+    jnlp_for_testing = @jnlp_testing_adaptor.jnlp
+    xml.resources {
+      jnlp_j2se(xml, jnlp)
+      resource_jars.each do |resource|
+        jnlp_jar(xml, resource, false)
+      end
+      @jnlp_testing_adaptor.resource_jars.each do |resource|
+        jnlp_jar(xml, resource)
+      end
+      system_properties(options).each do |property|
+        xml.property(:name => property[0], :value => property[1])
+      end
+      jnlp_os_specific_j2ses(xml, jnlp)
     }
   end
   
@@ -160,7 +211,7 @@ module JnlpHelper
   
   
 
-  def jnlp_test_resources(xml)  
+  def jnlp_test_resources(xml)
     # TODO: Dynamically configure this:
     xml.jar :href=> "org/concord/testing/gui/gui-0.1.0-20091201.182019-8.jar",  :main => "true"
     xml.jar :href=> "org/easytesting/fest-swing-junit-4.3.1/fest-swing-junit-4.3.1-1.2a3.jar"
