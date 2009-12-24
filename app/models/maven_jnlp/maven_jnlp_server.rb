@@ -84,6 +84,8 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
 
   def create_maven_jnlp_families
     maven_jnlp_families = APP_CONFIG[:maven_jnlp_families] << "gui-testing"
+    # remove duplicated 'gui-testing' in case settings.yml already specified importing all jnlp fmailies
+    maven_jnlp_families.uniq!  
     maven_jnlp_object.maven_jnlp_families.each do |mjf_object|
       if self.maven_jnlp_families.find_by_url(mjf_object.url)
         puts "\nmaven_jnlp_family: #{mjf_object.url} "
