@@ -245,10 +245,10 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
   end
 
-  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+  desc "generate MavenJnlp resources from jnlp servers in settings.yml"
+  task :generate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_resources --trace" 
   end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
