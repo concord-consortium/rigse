@@ -10,7 +10,7 @@ class Investigation < ActiveRecord::Base
   
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
+  [DataCollector, BiologicaOrganism, BiologicaWorld, OpenResponse].each do |klass|
     eval "has_many :#{klass.table_name},
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
