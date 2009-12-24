@@ -439,6 +439,14 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
   end
+
+  # Wed Dec 23nd, 2009
+  desc "Delete_and_regenerate_maven_jnlp_resources"
+  task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
+  end
+
 end
 
 
