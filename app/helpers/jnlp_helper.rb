@@ -203,35 +203,6 @@ module JnlpHelper
     }
   end
   
-  
-  ##
-  ##
-  ## /TODO
-  #########################################
-  
-  
-
-  def jnlp_test_resources(xml)
-    # TODO: Dynamically configure this:
-    xml.jar :href=> "org/concord/testing/gui/gui-0.1.0-20091201.182019-8.jar",  :main => "true"
-    xml.jar :href=> "org/easytesting/fest-swing-junit-4.3.1/fest-swing-junit-4.3.1-1.2a3.jar"
-    xml.jar :href=> "org/easytesting/fest-swing/fest-swing-1.2a3.jar"
-    xml.jar :href=> "org/easytesting/fest-util/fest-util-1.1.jar"
-    xml.jar :href=> "org/easytesting/fest-assert/fest-assert-1.1.jar"
-    xml.jar :href=> "org/easytesting/fest-reflect/fest-reflect-1.1.jar"
-    xml.jar :href=> "net/jcip/jcip-annotations/jcip-annotations-1.0.jar"
-    xml.jar :href=> "swinghelper/debug/debug-1.0.jar"
-    xml.jar :href=> "org/easytesting/fest-swing-junit/fest-swing-junit-1.2a3.jar"
-    xml.jar :href=> "commons-codec/commons-codec/commons-codec-1.3.jar"
-    xml.jar :href=> "org/easytesting/fest-test/fest-test-1.2.jar"
-    xml.jar :href=> "org/easytesting/fest-mocks/fest-mocks-1.1.jar"
-    xml.jar :href=> "org/easymock/easymockclassextension/easymockclassextension-2.4.jar"
-    xml.jar :href=> "org/easymock/easymock/easymock-2.4.jar"
-    xml.jar :href=> "cglib/cglib-nodep/cglib-nodep-2.1_3.jar"
-    xml.jar :href=> "org/easytesting/fest-assembly/fest-assembly-1.0.jar"
-  end
-  
-  
   def jnlp_resources_linux(xml)
     xml.resources(:os => "Linux") { 
       linux_native_jars.each do |resource|
