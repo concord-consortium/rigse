@@ -121,7 +121,7 @@ HEREDOC
         deleted_jars_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `jars_versioned_jnlps`")
         puts "deleted: #{deleted_jars_versioned_jnlps} from habtm join table: jars_versioned_jnlps"
         deleted_properties_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `properties_versioned_jnlps`")
-        puts "deleted: #{deleted_properties_versioned_jnlps} from habtm join table: otml_files_otrunk_imports"
+        puts "deleted: #{deleted_properties_versioned_jnlps} from habtm join table: properties_versioned_jnlps"
         deleted_native_libraries_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `native_libraries_versioned_jnlps`")
         puts "deleted: #{deleted_native_libraries_versioned_jnlps} from habtm join table: native_libraries_versioned_jnlps"
         
