@@ -1,7 +1,7 @@
 <project>
   <shortName>RITES</shortName>
   <fullName>RITES Runtime</fullName>
-  <version>200912.4</version>
+  <version>200912.5</version>
   <installerFilename></installerFilename>
   <preBuildActionList>
     <!--         <runProgram>
