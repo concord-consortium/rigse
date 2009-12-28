@@ -19,9 +19,25 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   @@searchable_attributes = %w{uuid name codebase href title vendor homepage description}
   
   class <<self
+
     def searchable_attributes
       @@searchable_attributes
     end
+
+    def jnlp_cache_dir
+      File.join(RAILS_ROOT, 'public', 'jnlp')
+    end
+    
+    def jnlp_object_path_prefix
+      File.join(RAILS_ROOT, 'config', 'jnlp_objects', 'jnlp_object')
+    end
+
+    def delete_all_cached_jnlp_objects
+      jnlp_object_prefix = MavenJnlp::VersionedJnlp.jnlp_object_path_prefix
+      files  = Dir["#{jnlp_object_prefix}*"]
+      FileUtils.rm(files, :force => true)
+    end
+
   end
   
   validates_presence_of :versioned_jnlp_url, :message => "association not specified" 
@@ -29,14 +45,10 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   after_create :parse_jnlp_object
 
   def cache_external_resources
-    jnlp_object.cache_resources(jnlp_cache_dir)
+    jnlp_object.cache_resources(MavenJnlp::VersionedJnlp.jnlp_cache_dir)
     update_jnlp_object
   end
 
-  def jnlp_cache_dir
-    File.join(RAILS_ROOT, 'public', 'jnlp')
-  end
-  
   def require_resources
     @required_resources = jnlp_object.require_resources unless @required_resources
   end
@@ -122,7 +134,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
 
   def update_jnlp_object
     @jnlp_object = Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
-    @jnlp_object.local_cache_dir = jnlp_cache_dir
+    @jnlp_object.local_cache_dir = MavenJnlp::VersionedJnlp.jnlp_cache_dir
     save_jnlp_object
   end
 
@@ -134,7 +146,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
   
   def jnlp_object_path
-    File.join(RAILS_ROOT, 'config', 'jnlp_objects', "jnlp_object_#{id}.yaml")
+    "#{MavenJnlp::VersionedJnlp.jnlp_object_path_prefix}_#{id}.yaml"
   end
 
   def parse_jnlp_object

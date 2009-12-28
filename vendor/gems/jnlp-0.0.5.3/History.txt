@@ -1,3 +1,18 @@
+== 0.0.5.3 2009-12-23
+
+remove older files, specs for jnlp with jars without explicit version attributes
+
+== 0.0.5.2 2009-12-23
+
+* add support for os-specific j2se elements
+
+For example a jnlp might include this j2se specification to limit
+the JVM to *only* 1.5 on Mac OS X.
+
+  <resources os="Mac OS X">
+    <j2se version="1.5" max-heap-size="128m" initial-heap-size="32m" />
+  </resources>
+
 == 0.0.5.1 2009-06-24
 
 * add certificate_version attribute to Jnlp::Resource

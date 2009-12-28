@@ -4,7 +4,7 @@ version: !ruby/object:Gem::Version
   version: 1.5.2
 platform: ruby
 authors: 
-  - James Edward Gray II
+- James Edward Gray II
 autorequire: 
 bindir: bin
 cert_chain: []
@@ -25,65 +25,64 @@ executables: []
 extensions: []
 
 extra_rdoc_files: 
-  - README
-  - INSTALL
-  - TODO
-  - CHANGELOG
-  - LICENSE
+- README
+- INSTALL
+- TODO
+- CHANGELOG
+- LICENSE
 files: 
-  - examples/ansi_colors.rb
-  - examples/asking_for_arrays.rb
-  - examples/basic_usage.rb
-  - examples/color_scheme.rb
-  - examples/limit.rb
-  - examples/menus.rb
-  - examples/overwrite.rb
-  - examples/page_and_wrap.rb
-  - examples/password.rb
-  - examples/trapping_eof.rb
-  - examples/using_readline.rb
-  - lib/highline.rb
-  - lib/highline/color_scheme.rb
-  - lib/highline/compatibility.rb
-  - lib/highline/import.rb
-  - lib/highline/menu.rb
-  - lib/highline/question.rb
-  - lib/highline/system_extensions.rb
-  - test/tc_color_scheme.rb
-  - test/tc_highline.rb
-  - test/tc_import.rb
-  - test/tc_menu.rb
-  - test/ts_all.rb
-  - Rakefile
-  - setup.rb
-  - README
-  - INSTALL
-  - TODO
-  - CHANGELOG
-  - LICENSE
+- examples/ansi_colors.rb
+- examples/asking_for_arrays.rb
+- examples/basic_usage.rb
+- examples/color_scheme.rb
+- examples/limit.rb
+- examples/menus.rb
+- examples/overwrite.rb
+- examples/page_and_wrap.rb
+- examples/password.rb
+- examples/trapping_eof.rb
+- examples/using_readline.rb
+- lib/highline/color_scheme.rb
+- lib/highline/import.rb
+- lib/highline/menu.rb
+- lib/highline/question.rb
+- lib/highline/system_extensions.rb
+- lib/highline.rb
+- test/tc_color_scheme.rb
+- test/tc_highline.rb
+- test/tc_import.rb
+- test/tc_menu.rb
+- test/ts_all.rb
+- Rakefile
+- setup.rb
+- README
+- INSTALL
+- TODO
+- CHANGELOG
+- LICENSE
 has_rdoc: true
 homepage: http://highline.rubyforge.org
 licenses: []
 
 post_install_message: 
 rdoc_options: 
-  - --title
-  - HighLine Documentation
-  - --main
-  - README
+- --title
+- HighLine Documentation
+- --main
+- README
 require_paths: 
-  - lib
+- lib
 required_ruby_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: "0"
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
   version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: "0"
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
   version: 
 requirements: []
 
@@ -93,4 +92,4 @@ signing_key:
 specification_version: 3
 summary: HighLine is a high-level command-line IO library.
 test_files: 
-  - test/ts_all.rb
+- test/ts_all.rb

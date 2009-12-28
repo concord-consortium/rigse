@@ -93,6 +93,60 @@ module Jnlp #:nodoc:
       @os = os
     end
   end
+
+  class J2se
+    #
+    # Contains the Hpricot element parsed from the orginal Jnlp
+    # that was used to create the Property
+    #
+    attr_reader :j2se
+    #
+    # Contains the version of the J2SE element:
+    #
+    # Example:
+    #
+    #   "1.5+"
+    #
+    attr_reader :version
+    #
+    # Contains the max-heap-size specified in the J2SE element:
+    #
+    # Example:
+    #
+    #   "128m"
+    #
+    attr_reader :max_heap_size
+    #
+    # Contains the initial-heap-size specified in the J2SE element:
+    #
+    # Example:
+    #
+    #   "32m"
+    #
+    attr_reader :initial_heap_size
+    #
+    # Contains the value of the os attribute in the 
+    # parent <resources> element that contains this property 
+    # if the attribute was set in the parent.
+    # Example: 
+    #
+    #   "Mac OS X"
+    #
+    attr_reader :os
+    #
+    # Creates a new Jnlp::Property object.
+    # * _prop_: the Hpricot parsing of the specific jnlp/resources/property element
+    # * _os_: optional: include it if the resources parent element that contains the property has this attribute set
+    #
+    def initialize(j2se, os=nil)
+      @j2se = j2se
+      @version = j2se['version']
+      @max_heap_size = j2se['max-heap-size']
+      @initial_heap_size = j2se['initial-heap-size']
+      @os = os
+    end
+  end
+
   #
   # Icon objects encapsulate the <icon> element optionally present in
   # the Java Web Start jnlp <information> element.
@@ -745,31 +799,6 @@ module Jnlp #:nodoc:
     #
     attr_reader :href
     #
-    # Contains the Hpricot parsing of the <j2se> element in the Jnlp <resources> element.
-    #
-    attr_reader :j2se
-    #
-    # Contains the version attribute in the jnlp/resources/j2se element 
-    # Example: 
-    #
-    #   "1.5+"
-    #
-    attr_reader :j2se_version
-    #
-    # Contains the max-heap-size attribute in the jnlp/resources/j2se element
-    # Example: 
-    #
-    #   "128m"
-    #
-    attr_reader :max_heap_size
-    #
-    # Contains the initial-heap-size attribute in the jnlp/resources/j2se element
-    # Example: 
-    #
-    #   "32m"
-    #
-    attr_reader :initial_heap_size
-    #
     # Contains the value of the jnlp/information/title element
     # Example: 
     #
@@ -809,6 +838,11 @@ module Jnlp #:nodoc:
     #
     attr_reader :offline_allowed
     #
+    # Contains an array of Jnlp::J2se objects encapsulating 
+    # jnlp/resources/j2se elements
+    #
+    attr_reader :j2ses
+    #
     # Contains an array of Jnlp::Property objects encapsulating 
     # jnlp/resources/property elements
     #
@@ -847,6 +881,23 @@ module Jnlp #:nodoc:
       @verbose = options[:verbose]
       import_jnlp(path) unless path.empty?
     end
+    
+    def j2se_version(os=nil)
+      j2se = j2ses.detect {|j2se| j2se.os == os }
+      j2se ? j2se.version : nil
+    end
+    
+    def max_heap_size(os=nil)
+      j2se = j2ses.detect {|j2se| j2se.os == os }
+      j2se ? j2se.max_heap_size : nil      
+    end
+    
+    def initial_heap_size(os=nil)
+      j2se = j2ses.detect {|j2se| j2se.os == os }
+      j2se ? j2se.initial_heap_size : nil            
+    end
+    
+    
     #
     # Saves a YAML version of the jnlp object.
     #
@@ -889,30 +940,24 @@ module Jnlp #:nodoc:
       @spec = (@jnlp/"jnlp").attr('spec')
       @codebase = (@jnlp/"jnlp").attr('codebase')
       @href = (@jnlp/"jnlp").attr('href')
-      @j2se_version, @max_heap_size, @initial_heap_size = nil, nil, nil
       @title, @vendor, @homepage, @description, @icon = nil, nil, nil, nil, nil
       unless (info = (@jnlp/"information")).empty?
-        @title = (info/"title").inner_html
-        @vendor = (info/"vendor").inner_html
+        @title = (info/"title").inner_html.strip
+        @vendor = (info/"vendor").inner_html.strip
         @homepage = (info/"homepage").empty? ? '' : (info/"homepage").attr('href')
-        @description = (info/"description").empty? ? '' : (info/"description").inner_html
+        @description = (info/"description").empty? ? '' : (info/"description").inner_html.strip
         icon = (info/"icon")
         @icon = Icon.new(icon) unless icon.empty?
         @offline_allowed = (info/"offline-allowed") ? true : false
       end
       @main_class = (@jnlp/"application-desc").attr('main-class')
-      @argument = (@jnlp/"argument").inner_html
-      @properties, @jars, @nativelibs = [], [], []
+      @argument = (@jnlp/"argument").inner_html.strip
+      @j2ses, @properties, @jars, @nativelibs = [], [], [], []
       (@jnlp/"resources").each do |resources|
         if os = resources[:os]
           os = os.strip.downcase.gsub(/\W+/, '_').gsub(/^_+|_+$/, '')
         end
-        unless (j = (resources/"j2se")).empty?
-          @j2se = j
-          @j2se_version = j.attr('version')
-          @max_heap_size = j.attr('max-heap-size')
-          @initial_heap_size = j.attr('initial-heap-size')
-        end
+        (resources/"j2se").each { |j2se| @j2ses << J2se.new(j2se, os) }
         (resources/"property").each { |prop| @properties << Property.new(prop, os) }
         (resources/"jar").each { |res| @jars << Resource.new(res, @codebase, os) }
         (resources/"nativelib").each { |res| @nativelibs << Resource.new(res, @codebase, os) }

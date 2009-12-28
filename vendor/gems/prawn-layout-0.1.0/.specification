@@ -4,7 +4,7 @@ version: !ruby/object:Gem::Version
   version: 0.1.0
 platform: ruby
 authors: 
-  - Gregory Brown
+- Gregory Brown
 autorequire: 
 bindir: bin
 cert_chain: []
@@ -22,47 +22,47 @@ extensions: []
 extra_rdoc_files: []
 
 files: 
-  - examples/table
-  - examples/table/addressbook.csv
-  - examples/table/cell.rb
-  - examples/table/currency.csv
-  - examples/table/fancy_table.rb
-  - examples/table/table.rb
-  - examples/table/table_alignment.rb
-  - examples/table/table_border_color.rb
-  - examples/table/table_colspan.rb
-  - examples/table/table_header_color.rb
-  - examples/table/table_header_underline.rb
-  - examples/table/table_widths.rb
-  - lib/prawn
-  - lib/prawn/layout.rb
-  - lib/prawn/table
-  - lib/prawn/table/cell.rb
-  - lib/prawn/table.rb
-  - spec/spec_helper.rb
-  - spec/table_spec.rb
-  - Rakefile
+- examples/table
+- examples/table/addressbook.csv
+- examples/table/cell.rb
+- examples/table/currency.csv
+- examples/table/fancy_table.rb
+- examples/table/table.rb
+- examples/table/table_alignment.rb
+- examples/table/table_border_color.rb
+- examples/table/table_colspan.rb
+- examples/table/table_header_color.rb
+- examples/table/table_header_underline.rb
+- examples/table/table_widths.rb
+- lib/prawn
+- lib/prawn/layout.rb
+- lib/prawn/table
+- lib/prawn/table/cell.rb
+- lib/prawn/table.rb
+- spec/spec_helper.rb
+- spec/table_spec.rb
+- Rakefile
 has_rdoc: true
 homepage: http://prawn.majesticseacreature.com
 licenses: []
 
 post_install_message: 
 rdoc_options: 
-  - --title
-  - Prawn Documentation
+- --title
+- Prawn Documentation
 require_paths: 
-  - lib
+- lib
 required_ruby_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: "0"
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
   version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: "0"
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
   version: 
 requirements: []
 

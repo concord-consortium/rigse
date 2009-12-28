@@ -245,10 +245,10 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
   end
 
-  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+  desc "generate MavenJnlp resources from jnlp servers in settings.yml"
+  task :generate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_resources --trace" 
   end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
@@ -439,6 +439,14 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
   end
+
+  # Wed Dec 23nd, 2009
+  desc "Delete_and_regenerate_maven_jnlp_resources"
+  task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
+  end
+
 end
 
 

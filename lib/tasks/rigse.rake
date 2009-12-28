@@ -133,7 +133,7 @@ HEREDOC
         Rake::Task['db:backup:load_probe_configurations'].invoke
         Rake::Task['rigse:setup:import_gses_from_file'].invoke
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
-        Rake::Task['rigse:jnlp:generate_maven_jnlp_family_of_resources'].invoke
+        Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         else
