@@ -6,6 +6,10 @@ namespace :build do
       "#{RAILS_ROOT}/resources/bitrock_installer"
     end
 
+    def installer_dest
+      "#{RAILS_ROOT}/public/installers/"
+    end
+
     def installer_config_xml
       "rites.xml"
     end
@@ -66,7 +70,7 @@ namespace :build do
     end
     
     desc 'create a new release'
-    task :new_release => ["#{RAILS_ROOT}/config/installer.yml", :clean_jar_folder] do
+    task :new_release => ["#{RAILS_ROOT}/config/installer.yml"] do
       config = {}
       puts <<-HERE_DOC
         bumping the version... (TODO: create some helper )
@@ -89,10 +93,11 @@ namespace :build do
       write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
     end
     
-    desc 'clean jar folder'
-    task :clean_jar_folder do
+    desc 'clean jar and installers folder'
+    task :clean do
       puts "cleaning the jar folder"
       %x[rm -rf #{bitrocket_installer_dir}/jars]
+      %x[rm -rf #{bitrocket_installer_dir}/installers]
     end
     
     file "#{RAILS_ROOT}/config/installer.yml" do
@@ -105,22 +110,38 @@ namespace :build do
       }
     end
     
-    file "#{bitrocket_installer_dir}/jars" do
+    
+    desc 'cache jars'
+    task :cache_jars => :clean do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
     end
+      
   
     desc 'build the osx installer'
-    task :build_osx => "#{bitrocket_installer_dir}/jars" do
+    task :build_osx => :cache_jars do
       puts "building osx installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
+      %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
+      %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
+      puts "Now you might want to scp the installers to their home directory on the server. try something like this:"
+      config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+      jnlp_url = config['jnlp_config'] || "http://rites-investigations.concord.org/investigations/409.jnlp"
+      if jnlp_url =~ /^.*?:\/\/(.*)?(\/.*)/
+        hostname = $1
+      else
+        hostname = 'rites-investigations.concord.org'
+      end
+      puts "scp #{bitrocket_installer_dir}/installers/*.dmg #{hostname}:/web/staging/rites/current/public/installers/"
+      %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
     end
 
     desc 'build the windows installer'
-    task :build_win => "#{bitrocket_installer_dir}/jars" do
+    task :build_win => :cache_jars do
       puts "building win installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} windows]
+      %x[cp #{bitrocket_installer_dir}/installers/*.exe #{installer_dest}]
     end
     
     desc 'build all installers'
