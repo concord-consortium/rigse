@@ -1,4 +1,4 @@
 --- 
 shortname: RITES
 version: "200912.4"
-jnlp_config: http://localhost:3000/investigations/409
+jnlp_config: http://localhost:3000/investigations/409.jnlp
