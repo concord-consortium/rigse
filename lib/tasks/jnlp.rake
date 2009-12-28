@@ -1,14 +1,14 @@
 namespace :rigse do
   namespace :jnlp do
     
-    # require 'highline/import'
-    autoload :Highline, 'highline'
-    
+
+    autoload :HighLine, 'highline'
+
     def wrapped_agree(prompt)
       if ENV['ANSWER_YES']
         true
       else
-        Highline.new.agree(prompt)
+        HighLine.new.agree(prompt)
       end
     end
     
