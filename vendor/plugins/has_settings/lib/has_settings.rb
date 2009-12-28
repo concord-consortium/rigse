@@ -14,7 +14,7 @@ module CC
   
       module ClassMethods
         def has_settings
-          has_many :settings, :as => :scope
+          has_many :settings, :as => :scope, :dependent => :destroy
           send :include, CC::HAS::Settings::InstanceMethods
         end
       end
@@ -64,5 +64,3 @@ module CC
     end # Module Settings
   end # Module HAS
 end # Module CC
-
-ActiveRecord::Base.send :include, CC::HAS::Settings
