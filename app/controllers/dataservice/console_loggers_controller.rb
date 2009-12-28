@@ -103,7 +103,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
         format.xml  { head :ok }
       end
     end
-  end
+
 
   
   # GET /dataservice_console_loggers
