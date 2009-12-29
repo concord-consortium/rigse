@@ -51,9 +51,7 @@ namespace :build do
       File.open(config_file, "w") { |f|
         f.write(YAML::dump(config))
       }
-      cp "#{RAILS_ROOT}/config/installer.yml", "#{RAILS_ROOT}/config/installer.yml.backup"
-      cp "#{bitrocket_installer_dir}/rites.xml", "#{bitrocket_installer_dir}/rites.xml.backup"
-      cp "#{bitrocket_installer_dir}/jnlps.conf", "#{bitrocket_installer_dir}/jnlps.conf.backup"
+
       write_file_with_template_replacements("#{bitrocket_installer_dir}/rites.xml","#{bitrocket_installer_dir}/template.xml",config)
       write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
     end
