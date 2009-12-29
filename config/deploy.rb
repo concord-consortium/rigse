@@ -450,6 +450,38 @@ namespace :convert do
 end
 
 
+#############################################################
+#  INSTALLER:  Help to create installers on various hosts
+#############################################################
+
+namespace :installer do
+  
+  desc 'copy config -- copy the local installer.yml to the server. For bootstraping a fresh instance.'
+  task :copy_config do
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)    
+  end
+  
+  desc 'create: downloads remote config, caches remote jars, builds installer, uploads new config and installer images'
+  task :create, :roles => :app do
+    # download the current config file to local config
+    %x[cp config/installer.yml config/installer.yml.mine]
+    download("#{deploy_to}/#{current_dir}/config/installer.yml", "config/installer.yml", :via => :scp)
+    # build the installers
+    %x[rake build:installer:build_all ]
+    
+    # post the config back up to remote server
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)
+    # copy the installers themselves up to the remote server
+    Dir.glob("resources/bitrock_installer/installers/*") do |filename|
+      basename = File.basename(filename)
+      puts "copying #{filename}"
+      upload(filename, "#{deploy_to}/#{current_dir}/public/installers/#{basename}", :via => :scp)
+    end
+    %x[cp config/installer.yml.mine config/installer.yml]
+  end
+  
+end
+
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
