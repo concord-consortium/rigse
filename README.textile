@@ -445,6 +445,14 @@ Building installers requires that you are running on a mac with a local installa
 The rake tasks assume that bitrock is in the standard /Applications/ folder.  You can override this by setting an 
 environment variable in your shell which points to the correct path, eg: export BITROCK_INSTALLER=/path/to/bitrock.app
 
+h3. config/installer.yml
+
+Every host should have its own config/installer.yml file.  There is a config/installer.sample.yml file which can help get you started.
+The shortname field should be specific to that host. Because of limitations in bitrock, the shortname can not use spaces,dashes,underscore, &etc.
+The jnlp_url should point to a jnlp url on the target host.  When you run the <code>rake build:installer:build_all</code> or 
+<code>cap installer:create</code> tasks, the jnlp_url must be available.
+
+
 h3. Installer Rake Tasks:
 
 Most of the installer building happens via rake tasks defined in lib/tasks/make_installers.rake. a complete list of tasks can
