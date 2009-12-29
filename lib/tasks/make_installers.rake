@@ -47,7 +47,17 @@ namespace :build do
       return YAML::load(file_txt)
     end
  
-      
+    def write_config(config, config_file="#{RAILS_ROOT}/config/installer.yml")
+      File.open(config_file, "w") { |f|
+        f.write(YAML::dump(config))
+      }
+      cp "#{RAILS_ROOT}/config/installer.yml", "#{RAILS_ROOT}/config/installer.yml.backup"
+      cp "#{bitrocket_installer_dir}/rites.xml", "#{bitrocket_installer_dir}/rites.xml.backup"
+      cp "#{bitrocket_installer_dir}/jnlps.conf", "#{bitrocket_installer_dir}/jnlps.conf.backup"
+      write_file_with_template_replacements("#{bitrocket_installer_dir}/rites.xml","#{bitrocket_installer_dir}/template.xml",config)
+      write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
+    end
+    
     # return a hash with the current config values
     # from the xml file
     def current_config_settings
@@ -69,7 +79,7 @@ namespace :build do
       return matches
     end
     
-    desc 'create a new release'
+    desc 'create a new release interactively'
     task :new_release => ["#{RAILS_ROOT}/config/installer.yml"] do
       config = {}
       puts <<-HERE_DOC
@@ -83,14 +93,26 @@ namespace :build do
       %w[shortname version jnlp_config].each do |k|
         config[k] = ask("value for #{k}") { |q| q.default = config[k] }
       end
-      File.open("#{RAILS_ROOT}/config/installer.yml", "w") { |f|
-        f.write(YAML::dump(config))
-      }
-      cp "#{RAILS_ROOT}/config/installer.yml", "#{RAILS_ROOT}/config/installer.yml.backup"
-      cp "#{bitrocket_installer_dir}/rites.xml", "#{bitrocket_installer_dir}/rites.xml.backup"
-      cp "#{bitrocket_installer_dir}/jnlps.conf", "#{bitrocket_installer_dir}/jnlps.conf.backup"
-      write_file_with_template_replacements("#{bitrocket_installer_dir}/rites.xml","#{bitrocket_installer_dir}/template.xml",config)
-      write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
+      write_config(config)
+    end
+    
+    desc 'automagically create a new release'
+    task :bump_release => ["#{RAILS_ROOT}/config/installer.yml"]  do
+       filename = "#{RAILS_ROOT}/config/installer.yml"
+       config = load_yaml(filename)
+       date,version = config['version'].split(".")
+       version = version.to_i
+       today = Date.today.strftime("%Y%m")
+       if date != today
+         date = today
+         version = 0
+       end
+       version = version + 1
+       version_string = "#{date}.#{"%02d" % version}"
+       puts "old: #{config['version']}"
+       puts "new: #{version_string}"
+       config['version'] = version_string
+       write_config(config)
     end
     
     desc 'clean jar and installers folder'
@@ -112,7 +134,7 @@ namespace :build do
     
     
     desc 'cache jars'
-    task :cache_jars => :clean do
+    task :cache_jars => [:clean,:bump_release] do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
@@ -123,17 +145,6 @@ namespace :build do
     task :build_osx => :cache_jars do
       puts "building osx installer"
       %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
-      %x[cd #{bitrocket_installer_dir}; '#{bitrocket_builder_path}' build #{installer_config_xml} osx]
-      %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
-      puts "Now you might want to scp the installers to their home directory on the server. try something like this:"
-      config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
-      jnlp_url = config['jnlp_config'] || "http://rites-investigations.concord.org/investigations/409.jnlp"
-      if jnlp_url =~ /^.*?:\/\/(.*)?(\/.*)/
-        hostname = $1
-      else
-        hostname = 'rites-investigations.concord.org'
-      end
-      puts "scp #{bitrocket_installer_dir}/installers/*.dmg #{hostname}:/web/staging/rites/current/public/installers/"
       %x[cp #{bitrocket_installer_dir}/installers/*.dmg #{installer_dest}]
     end
 
@@ -146,7 +157,6 @@ namespace :build do
     
     desc 'build all installers'
     task :build_all => [:build_win, :build_osx]
-
     task :buid_mac => :build_osx
   end
 end
