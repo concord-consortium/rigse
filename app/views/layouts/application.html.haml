@@ -76,6 +76,8 @@
           Navigation:
         != "&nbsp;"
         %ul.menu_h
+          / offer people a way to pop-out of iframe:
+          %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           %li.trail=link_to('Investigations', investigations_path)
@@ -85,8 +87,7 @@
             %li.trail= link_to('Users', users_path)
             
           %ul.menu_h_right
-            / offer people a way to pop-out of iframe:
-            %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
+
             - if current_user.has_role?('admin')
               %li.trail= link_to 'Districts', portal_districts_path
               %li.trail= link_to 'Schools', portal_schools_path
