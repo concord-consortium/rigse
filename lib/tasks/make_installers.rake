@@ -79,7 +79,7 @@ namespace :build do
       return matches
     end
     
-    desc 'create a new release interactively'
+    desc 'create a new release specification interactively'
     task :new_release => ["#{RAILS_ROOT}/config/installer.yml"] do
       config = {}
       puts <<-HERE_DOC
@@ -155,7 +155,7 @@ namespace :build do
       %x[cp #{bitrocket_installer_dir}/installers/*.exe #{installer_dest}]
     end
     
-    desc 'build all installers'
+    desc 'build all installers: will automatically clean up, recache jars, and bump version numbers.'
     task :build_all => [:build_win, :build_osx]
     task :buid_mac => :build_osx
   end
