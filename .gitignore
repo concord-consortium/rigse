@@ -62,6 +62,8 @@ resources/bitrock_installer/installers/*
 public/installers/*.dmg
 resources/bitrock_installer/*.backup
 config/*.backup
-config/installer.yml
-resources/bitrock_installer/properties/jnlp_url.properties
-resources/bitrock_installer/rites.xml
+config/installer*
+jnlp_url.properties
+rites.xml
+resources/bitrock_installer/jnlps.conf
+public/installers/*
