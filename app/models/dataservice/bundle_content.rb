@@ -59,7 +59,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     self.valid_xml = valid_xml?
     if valid_xml
       self.otml = extract_otml
-      self.empty = true unless self.otml
+      self.empty = true unless self.otml && self.otml.length > 0
     end
   end
     

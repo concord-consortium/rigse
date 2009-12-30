@@ -83,4 +83,8 @@ class Portal::Teacher < ActiveRecord::Base
     end
   end
   
+  def school
+    return schools.first
+  end
+  
 end

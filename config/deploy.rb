@@ -169,9 +169,11 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/rinet_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
+    run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
+    run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
     run "touch #{shared_path}/config/sds.yml"
     run "touch #{shared_path}/config/mailer.yml"
@@ -183,11 +185,13 @@ namespace :deploy do
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"    
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
+    run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
@@ -241,10 +245,10 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
   end
 
-  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+  desc "generate MavenJnlp resources from jnlp servers in settings.yml"
+  task :generate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_resources --trace" 
   end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
@@ -435,8 +439,48 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
   end
+
+  # Wed Dec 23nd, 2009
+  desc "Delete_and_regenerate_maven_jnlp_resources"
+  task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
+  end
+
 end
 
+
+#############################################################
+#  INSTALLER:  Help to create installers on various hosts
+#############################################################
+
+namespace :installer do
+  
+  desc 'copy config -- copy the local installer.yml to the server. For bootstraping a fresh instance.'
+  task :copy_config do
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)    
+  end
+  
+  desc 'create: downloads remote config, caches remote jars, builds installer, uploads new config and installer images'
+  task :create, :roles => :app do
+    # download the current config file to local config
+    %x[cp config/installer.yml config/installer.yml.mine]
+    download("#{deploy_to}/#{current_dir}/config/installer.yml", "config/installer.yml", :via => :scp)
+    # build the installers
+    %x[rake build:installer:build_all ]
+    
+    # post the config back up to remote server
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)
+    # copy the installers themselves up to the remote server
+    Dir.glob("resources/bitrock_installer/installers/*") do |filename|
+      basename = File.basename(filename)
+      puts "copying #{filename}"
+      upload(filename, "#{deploy_to}/#{current_dir}/public/installers/#{basename}", :via => :scp)
+    end
+    %x[cp config/installer.yml.mine config/installer.yml]
+  end
+  
+end
 
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'

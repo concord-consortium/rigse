@@ -76,6 +76,8 @@
           Navigation:
         != "&nbsp;"
         %ul.menu_h
+          / offer people a way to pop-out of iframe:
+          %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
@@ -85,8 +87,7 @@
             %li.trail= link_to('Users', users_path)
             
           %ul.menu_h_right
-            / offer people a way to pop-out of iframe:
-            %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
+
             - if current_user.has_role?('admin')
               %li.trail= link_to 'Districts', portal_districts_path
               %li.trail= link_to 'Schools', portal_schools_path
@@ -136,8 +137,13 @@
           document.observe("dom:loaded", function() {
             // if we are in an iframe, pop-out.
             if (top!=self) {
+              
+              // Option #1: Redirect the browser to a new location, taking
+              // the user away from whatever site (EG RIEPS) is containing us.
               // top.location.replace(location.href);
-              // Ken asked to take this out, because its too brutal to leave sakai
+              // Option #2: Open a new window. Requires user education.
+              // Pop-Up blockers on all major browsers will prevent this:
+              // window.open(location.href);
             }
           });
 

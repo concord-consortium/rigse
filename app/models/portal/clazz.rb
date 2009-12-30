@@ -44,7 +44,16 @@ class Portal::Clazz < ActiveRecord::Base
     def data_test_clazz
       class_word = '__XyZZy__'
       clazz = Portal::Clazz.find_by_class_word(class_word)
-      unless clazz
+      if clazz
+        # TODO: clean this up!
+        # Just in case the existing investigation created for testing needs
+        # to be updated -- make sure we have the right text in the xhtml
+        # because the test relies on the object having the right name and
+        # the name is generated from text in the xhtml prompt.
+        open_response = clazz.offerings[0].runnable.open_responses.first
+        open_response.prompt = "test_text"
+        open_response.save!
+      else
         clazz = Portal::Clazz.create(
           :name => 'Data test class',
           :class_word => class_word
@@ -70,7 +79,9 @@ class Portal::Clazz < ActiveRecord::Base
         xhtml.save
         page.xhtmls << xhtml
         
-        open_response = OpenResponse.create(:prompt => "enter some test data");
+        # The prompt gets used as the "name" for the open response, and the OTText's name gets set to #{prompt}_field
+        # The Java test looks for a text box named "test_text_field"
+        open_response = OpenResponse.create(:prompt => "test_text");
         open_response.save
         page.open_responses << open_response
         page.save

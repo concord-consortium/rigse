@@ -22,11 +22,23 @@ class Portal::OfferingsController < ApplicationController
         # check if the user is a student in this offering's class
         if portal_student = current_user.portal_student
           # create a learner for the user if one doesnt' exist
-          learner = @offering.find_or_create_learner(portal_student)        
-          render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+          learner = @offering.find_or_create_learner(portal_student)
+          if params.delete(:use_installer)
+            wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params)
+            render :partial => 'shared/learn_installer', :locals => 
+              { :runnable => @offering.runnable, :learner => learner, :wrapped_jnlp_url => wrapped_jnlp_url } 
+          else        
+            render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
+          end
         else 
           # The current_user is a teacher (or another user acting like a teacher)
-          render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+          if params.delete(:use_installer)
+            wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params, :teacher_mode => true )
+            render :partial => 'shared/show_installer', :locals => 
+              { :runnable => @offering.runnable, :wrapped_jnlp_url => wrapped_jnlp_url, :teacher_mode => true } 
+          else
+            render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
+          end
         end
       }
     end

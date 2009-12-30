@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
+
+  has_settings
   
   # has_many :assessment_targets
   # has_many :big_ideas
@@ -222,10 +224,28 @@ class User < ActiveRecord::Base
     self
   end
 
+  def school
+    school_person = self.portal_teacher || self.portal_student
+    if (school_person)
+      return school_person.school
+    end
+  end
+  
+  def extra_params
+    if self.school
+      params = school.settings_hash
+    end
+    if params 
+      return params.merge(self.settings_hash)
+    end
+    return self.settings_hash
+  end
+
   protected
-    
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
+  
+
 end

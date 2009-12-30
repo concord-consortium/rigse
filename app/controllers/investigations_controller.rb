@@ -141,7 +141,17 @@ class InvestigationsController < AuthoringController
           render :print, :layout => "layouts/print"
         end
       }
-      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
+
+      format.jnlp   { 
+        if params.delete(:use_installer)
+          wrapped_jnlp_url = polymorphic_url(@investigation, :format => :jnlp, :params => params)
+          render :partial => 'shared/show_installer', :locals => 
+            { :runnable => @investigation, :teacher_mode => @teacher_mode , :wrapped_jnlp_url => wrapped_jnlp_url } 
+        else
+          render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } 
+        end
+      }
+
       format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode} }
       format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml

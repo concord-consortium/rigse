@@ -1,16 +1,28 @@
 namespace :rigse do
   namespace :jnlp do
     
-    # require 'highline/import'
-    autoload :Highline, 'highline'
+
+    autoload :HighLine, 'highline'
+
+    def wrapped_agree(prompt)
+      if ENV['ANSWER_YES']
+        true
+      else
+        HighLine.new.agree(prompt)
+      end
+    end
+    
+    desc "delete and re-generate MavenJnlp resources from jnlp servers in settings.yml"
+    task :delete_and_regenerate_maven_jnlp_resources => [:delete_maven_jnlp_resources, :generate_maven_jnlp_resources] do
+    end
     
     desc "generate names for existing MavenJnlpServers that don't have them"
     task :generate_names_for_maven_jnlp_servers => :environment do
        MavenJnlp::MavenJnlpServer.generate_names_for_maven_jnlp_servers
     end
     
-    desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-    task :generate_maven_jnlp_family_of_resources => :generate_names_for_maven_jnlp_servers do
+    desc "generate MavenJnlp resources from jnlp servers in settings.yml"
+    task :generate_maven_jnlp_resources => :generate_names_for_maven_jnlp_servers do
       puts <<HEREDOC
 
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
@@ -60,7 +72,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
 
 HEREDOC
 
-        if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this? (y/n) ")  
+        if RAILS_ENV != 'development' || wrapped_agree("Do you want to do this? (y/n) ")  
           mj_server.create_maven_jnlp_families
         end
         puts
@@ -82,14 +94,38 @@ This will delete all the data in the following tables:
   MavenJnlp::Icon: #{MavenJnlp::Icon.count} records
 
 HEREDOC
-      if HighLine.new.agree("Do you want to do this?  (y/n)")
-        MavenJnlp::MavenJnlpServer.delete_all
-        MavenJnlp::MavenJnlpFamily.delete_all
-        MavenJnlp::VersionedJnlpUrl.delete_all
-        MavenJnlp::VersionedJnlp.delete_all
-        MavenJnlp::Property.delete_all
-        MavenJnlp::Jar.delete_all
-        MavenJnlp::Icon.delete_all
+      if wrapped_agree("Do you want to do this?  (y/n)" )
+        
+        MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_resources
+                
+        # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
+        # the autogenerating primary key index ... not certain about other databases
+        puts
+
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::MavenJnlpServer.table_name}`")} from MavenJnlp::MavenJnlpServer"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::MavenJnlpFamily.table_name}`")} from MavenJnlp::MavenJnlpFamily"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::VersionedJnlpUrl.table_name}`")} from MavenJnlp::VersionedJnlpUrl"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::VersionedJnlp.table_name}`")} from MavenJnlp::VersionedJnlp"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::Property.table_name}`")} from MavenJnlp::Property"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::Jar.table_name}`")} from MavenJnlp::Jar"
+        puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{MavenJnlp::Icon.table_name}`")} from MavenJnlp::Icon"
+
+        MavenJnlp::MavenJnlpServer.reset_column_information
+        MavenJnlp::MavenJnlpFamily.reset_column_information
+        MavenJnlp::VersionedJnlpUrl.reset_column_information
+        MavenJnlp::VersionedJnlp.reset_column_information
+        MavenJnlp::Property.reset_column_information
+        MavenJnlp::Jar.reset_column_information
+        MavenJnlp::Icon.reset_column_information
+
+        deleted_jars_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `jars_versioned_jnlps`")
+        puts "deleted: #{deleted_jars_versioned_jnlps} from habtm join table: jars_versioned_jnlps"
+        deleted_properties_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `properties_versioned_jnlps`")
+        puts "deleted: #{deleted_properties_versioned_jnlps} from habtm join table: properties_versioned_jnlps"
+        deleted_native_libraries_versioned_jnlps = ActiveRecord::Base.connection.delete("DELETE FROM `native_libraries_versioned_jnlps`")
+        puts "deleted: #{deleted_native_libraries_versioned_jnlps} from habtm join table: native_libraries_versioned_jnlps"
+        
+        puts
       end
     end
   end

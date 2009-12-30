@@ -20,6 +20,14 @@ end
 require 'uuidtools'
 require 'highline/import'
 
+def wrapped_agree(prompt)
+  if ENV['ANSWER_YES']
+    true
+  else
+    agree(prompt)
+  end
+end
+
 def jruby_system_command
   JRUBY ? "jruby -S" : ""
 end

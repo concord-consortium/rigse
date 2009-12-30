@@ -13,8 +13,8 @@ class Dataservice::BundleLoggersController < ApplicationController
   
   public
   
-  # GET /dataservice_dataservice_bundle_loggers
-  # GET /dataservice_dataservice_bundle_loggers.xml
+  # GET /dataservice/bundle_loggers
+  # GET /dataservice/bundle_loggers.xml
   def index
     @dataservice_bundle_loggers = Dataservice::BundleLogger.search(params[:search], params[:page], nil)
 
@@ -24,8 +24,8 @@ class Dataservice::BundleLoggersController < ApplicationController
     end
   end
 
-  # GET /dataservice_dataservice_bundle_loggers/1
-  # GET /dataservice_dataservice_bundle_loggers/1.xml
+  # GET /dataservice/bundle_loggers/1
+  # GET /dataservice/bundle_loggers/1.xml
   def show
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
     if bundle_content = @dataservice_bundle_logger.last_non_empty_bundle_content
@@ -40,8 +40,8 @@ class Dataservice::BundleLoggersController < ApplicationController
     end
   end
 
-  # GET /dataservice_dataservice_bundle_loggers/new
-  # GET /dataservice_dataservice_bundle_loggers/new.xml
+  # GET /dataservice/bundle_loggers/new
+  # GET /dataservice/bundle_loggers/new.xml
   def new
     @dataservice_bundle_logger = Dataservice::BundleLogger.new
 
@@ -51,13 +51,13 @@ class Dataservice::BundleLoggersController < ApplicationController
     end
   end
 
-  # GET /dataservice_dataservice_bundle_loggers/1/edit
+  # GET /dataservice/bundle_loggers/1/edit
   def edit
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
   end
 
-  # POST /dataservice_dataservice_bundle_loggers
-  # POST /dataservice_dataservice_bundle_loggers.xml
+  # POST /dataservice/bundle_loggers
+  # POST /dataservice/bundle_loggers.xml
   def create
     @dataservice_bundle_logger = Dataservice::BundleLogger.new(params[:dataservice_bundle_logger])
 
@@ -73,8 +73,8 @@ class Dataservice::BundleLoggersController < ApplicationController
     end
   end
 
-  # PUT /dataservice_dataservice_bundle_loggers/1
-  # PUT /dataservice_dataservice_bundle_loggers/1.xml
+  # PUT /dataservice/bundle_loggers/1
+  # PUT /dataservice/bundle_loggers/1.xml
   def update
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
 
@@ -90,8 +90,8 @@ class Dataservice::BundleLoggersController < ApplicationController
     end
   end
 
-  # DELETE /dataservice_dataservice_bundle_loggers/1
-  # DELETE /dataservice_dataservice_bundle_loggers/1.xml
+  # DELETE /dataservice/bundle_loggers/1
+  # DELETE /dataservice/bundle_loggers/1.xml
   def destroy
     @dataservice_bundle_logger = Dataservice::BundleLogger.find(params[:id])
     @dataservice_bundle_logger.destroy

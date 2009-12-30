@@ -1,0 +1,4 @@
+--- 
+shortname: localRites
+version: "200912.01"
+jnlp_config: http://localhost:3000/investigations/409.jnlp

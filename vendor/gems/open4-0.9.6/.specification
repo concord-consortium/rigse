@@ -4,7 +4,7 @@ version: !ruby/object:Gem::Version
   version: 0.9.6
 platform: ruby
 authors: 
-  - Ara T. Howard
+- Ara T. Howard
 autorequire: open4
 bindir: bin
 cert_chain: 
@@ -21,21 +21,21 @@ extensions: []
 extra_rdoc_files: []
 
 files: 
-  - gemspec.rb
-  - install.rb
-  - lib
-  - lib/open4.rb
-  - README
-  - sample
-  - sample/bg.rb
-  - sample/block.rb
-  - sample/exception.rb
-  - sample/simple.rb
-  - sample/spawn.rb
-  - sample/stdin_timeout.rb
-  - sample/timeout.rb
-  - white_box
-  - white_box/leak.rb
+- gemspec.rb
+- install.rb
+- lib
+- lib/open4.rb
+- README
+- sample
+- sample/bg.rb
+- sample/block.rb
+- sample/exception.rb
+- sample/simple.rb
+- sample/spawn.rb
+- sample/stdin_timeout.rb
+- sample/timeout.rb
+- white_box
+- white_box/leak.rb
 has_rdoc: true
 homepage: http://codeforpeople.com/lib/ruby/open4/
 licenses: []
@@ -44,18 +44,18 @@ post_install_message:
 rdoc_options: []
 
 require_paths: 
-  - lib
+- lib
 required_ruby_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">"
-      - !ruby/object:Gem::Version 
-        version: 0.0.0
+  - - ">"
+    - !ruby/object:Gem::Version 
+      version: 0.0.0
   version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: "0"
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
   version: 
 requirements: []
 
