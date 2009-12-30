@@ -3,9 +3,8 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
   
   has_one  :learner, :class_name => "Portal::Learner"
   has_many :console_contents, :class_name => "Dataservice::ConsoleContent", :order => :position, :dependent => :destroy
-  has_one :last_non_empty_console_content, 
+  has_one :last_console_content, 
     :class_name => "Dataservice::ConsoleContent",
-    :conditions => "empty is null and valid_xml is not null",
     :order => 'position DESC' 
 
   include Changeable
@@ -39,7 +38,7 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
       name = user.name
       login = user.login
       runnable_name = (learner.offering.runnable ? learner.offering.runnable.name : "invalid offering runnable")
-      "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_contents.count} sessions"
+      "#{user.login}: (#{user.name}), #{runnable_name}, #{self.console_contents.count} sessions"
     else
       "no associated learner"
     end
