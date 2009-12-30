@@ -87,8 +87,11 @@ module TreeNode
     set_user.call(self)    
     self.each &set_user
     
-    unless original_user == new_user
-      original_user.removed_investigation
+    
+    if original_user
+      unless original_user == new_user
+        original_user.removed_investigation
+      end
     end
   end
   
