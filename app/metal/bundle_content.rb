@@ -5,17 +5,17 @@ require(File.dirname(__FILE__) + "/../../config/environment") unless defined?(Ra
 
 class BundleContent
   
+  REQUEST_METHOD = 'REQUEST_METHOD'.freeze unless defined?(REQUEST_METHOD)
+  POST = 'POST'.freeze unless defined?(POST)
+  PATH_INFO = 'PATH_INFO'.freeze unless defined?(PATH_INFO)
+  
   POST_BODY = 'rack.input'.freeze unless defined?(POST_BODY)
   
   def self.call(env)
-    if bundle_logger_id = env["PATH_INFO"][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
-      if bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
-        if bundle_content = bundle_logger.bundle_contents.create(:body => env[POST_BODY].read)
-          digest = Digest::MD5.hexdigest(bundle_content.body)
-        end
-      end
-    end
-    if bundle_content
+    bundle_logger_id = env[PATH_INFO][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
+    if env[REQUEST_METHOD] == POST && bundle_logger_id && bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
+      bundle_content = bundle_logger.bundle_contents.create(:body => env[POST_BODY].read)
+      digest = Digest::MD5.hexdigest(bundle_content.body)
       [201, 
         { 'Content-Type' => 'text/xml', 
           'Last-Modified' => bundle_content.created_at.httpdate, 
