@@ -39,6 +39,17 @@ namespace :build do
       end
     end
     
+    def remove_emf_launcher_args
+      jardir = "#{bitrocket_installer_dir}/jars"
+      jnlp_file_name = %x[find #{jardir} -name \*.jnlp].chomp
+      jnlp_data = File.open(jnlp_file_name).read
+      regex = /<application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>(.*)<\/application-desc>/m
+      jnlp_data.gsub!(regex,"<application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'><argument></argument></application-desc>")
+      File.open(jnlp_file_name, "w") do |f|
+        f.write(jnlp_data)
+      end
+    end
+    
     def load_yaml(filename) 
       file_txt = ""
       File.open(filename, "r") do |f|
@@ -136,6 +147,7 @@ namespace :build do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
+      remove_emf_launcher_args
     end
       
   
