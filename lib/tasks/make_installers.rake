@@ -1,13 +1,20 @@
 require 'highline/import'
+require 'fileutils'
 
 namespace :build do
   namespace :installer do
-    def bitrocket_installer_dir
-      "#{RAILS_ROOT}/resources/bitrock_installer"
+    
+    def check_dir_exists(dir)
+      FileUtils::mkdir(dir) unless File.exists?(dir)
+      dir
     end
+    
+    def bitrocket_installer_dir
+      check_dir_exists("#{RAILS_ROOT}/resources/bitrock_installer")
+     end
 
     def installer_dest
-      "#{RAILS_ROOT}/public/installers/"
+      check_dir_exists("#{RAILS_ROOT}/public/installers/")
     end
 
     def installer_config_xml
@@ -143,7 +150,7 @@ namespace :build do
     
     
     desc 'cache jars'
-    task :cache_jars => [:clean,:bump_release] do
+    task :cache_jars => [:clean, :bump_release] do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
