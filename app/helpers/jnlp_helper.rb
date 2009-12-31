@@ -121,6 +121,12 @@ module JnlpHelper
     response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
   end
   
+  def config_headers(runnable)
+    response.headers["Content-Type"] = "application/xml"
+    response.headers["Cache-Control"] = "max-age=1"
+  end
+  
+  
   def jnlp_information(xml)
     xml.information { 
       xml.title APP_CONFIG[:site_name]
