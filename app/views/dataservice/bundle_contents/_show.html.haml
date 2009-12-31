@@ -7,6 +7,6 @@
         = link_to(dataservice_bundle_content.bundle_logger.id, dataservice_bundle_content.bundle_logger)
     = accordion_for(dataservice_bundle_content, "Session bundle:#{dataservice_bundle_content.id} (#{dataservice_bundle_content.position})",'body') do
       %pre= h(dataservice_bundle_content.body)
-    = accordion_for(dataservice_bundle_content, "Otml: #{dataservice_bundle_content.otml.length / 1024}k", 'otml') do
+    = accordion_for(dataservice_bundle_content, "Otml: #{dataservice_bundle_content.otml.length / 1024}k, Empty: #{dataservice_bundle_content.empty ? 'true' : 'false'}", 'otml') do
       %pre= h(dataservice_bundle_content.otml)
     
