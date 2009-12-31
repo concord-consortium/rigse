@@ -184,16 +184,20 @@ module JnlpHelper
     xml.resources {
       xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
       xml.jar :href=> "org/concord/utilities/response-cache/response-cache.jar", :version=> "0.1.0-20090728.205151-9"
-      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20090729.161746-166", :main =>"true"
+      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20091102.180724-197", :main =>"true"
       system_properties(options).each do |property|
         xml.property(:name => property[0], :value => property[1])
       end
       xml.property :name=> "vendor", :value => jnlp_installer_vendor
       xml.property :name=> "product_name", :value => jnlp_installer_project
       xml.property :name=> "product_version", :value => jnlp_installer_version
-      xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
-      xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
-      xml.property :name=> "resource_loc", :value => "resources" # do we do this? Not sure
+      # after conversation w/ scott & stephen, dont think we need this.
+      # xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
+      # xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
+      
+      # Someday we might want to cache some resources, but right now, we don't
+      # xml.property :name=> "resource_loc", :value => "resources"
+
       xml.property :name=> "cache_loc", :value => "jars"
       xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
       xml.property :name=> "jnlp2shell.read_only", :value => "true"
