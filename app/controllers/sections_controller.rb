@@ -169,9 +169,11 @@ class SectionsController < ApplicationController
   ##
   ##
   def add_page
-    @page= Page.new
-    @page.section = Section.find(params['id'])
+    @page= Page.create
+    @page.section = @section
     @page.user = current_user
+    @page.save
+    redirect_to @page
   end
   
   ##

@@ -23,7 +23,7 @@
     = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
     = dropdown_button "actions.png", :title => "actions for this page"
     - if (activity.changeable?(current_user))
-      = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
+      = link_button "add.png", add_section_activity_path(activity)
     - else
       = link_button "add_disabled.png", "#", :title => "can't add activities"
     = render :partial => "shared/dot_pager", :locals => {:node => activity}

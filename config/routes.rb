@@ -181,7 +181,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :sections, :member => {
     :destroy => :post,
-    :add_page => :post,
+    :add_page => [:post, :get],
     :sort_pages => :post, 
     :delete_page => :post,
     :print => :get,
@@ -229,7 +229,7 @@ ActionController::Routing::Routes.draw do |map|
   
   
   map.resources :activities, :member => {
-    :add_section => :post,
+    :add_section => [:post,:get],
     :sort_sections => :post,
     :delete_section => :post,
     :print => :get,

@@ -17,12 +17,16 @@
 %div{:id => dom_id_for(section,:item), :class => view_class }
   .action_menu_header_left
     .padded_content
-      = render :partial=>'shared/in_place_fields', :locals => {:item=>section}
+      - if (section.changeable?(current_user))
+        - name =  (defined? section.class.display_name) ? section.class.display_name : section.class.name.humanize
+        %h3= "#{name}: #{in_place_editor_field section.class.name.underscore.to_sym, 'name'}"
+      - else
+        %h3= section.name
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => section}
     = dropdown_button "actions.png", :title => "actions for this page"
     - if (section.changeable?(current_user))
-      = remote_link_button "add.png", :url => add_page_section_path(section), :title => "add new page"
+      = link_button "add.png", add_page_section_path(section)
     = render :partial => "shared/dot_pager", :locals => {:node => section}
     = delete_button_for section 
     

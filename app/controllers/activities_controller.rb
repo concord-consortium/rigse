@@ -176,13 +176,16 @@ class ActivitiesController < ApplicationController
     end
   end
   
+  
   ##
   ##
   ##
   def add_section
-    @section = Section.new
-    @section.activity = Activity.find(params['id'])
+    @section = Section.create
+    @section.activity = @activity
     @section.user = current_user
+    @section.save
+    redirect_to @section
   end
   
   ##
