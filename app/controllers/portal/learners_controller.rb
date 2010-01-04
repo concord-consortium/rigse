@@ -5,7 +5,7 @@ class Portal::LearnersController < ApplicationController
   protected  
 
   def admin_only
-    unless current_user.has_role?('admin') || request.format == :bundle
+    unless current_user.has_role?('admin') || request.format == :config
       flash[:notice] = "Please log in as an administrator" 
       redirect_to(:home)
     end
