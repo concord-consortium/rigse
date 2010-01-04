@@ -1,6 +1,8 @@
 class Portal::Learner < ActiveRecord::Base
   set_table_name :portal_learners
   
+  default_scope :order => 'student_id ASC'
+  
   acts_as_replicatable
   
   belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
@@ -37,9 +39,36 @@ class Portal::Learner < ActiveRecord::Base
   #   learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
   # end
 
+  include Changeable
+
+  # pagination default
+  cattr_reader :per_page
+  @@per_page = 10
+  
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{updated_at}
+  
   class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
     def display_name
       "Learner"
     end
+  end
+  
+  # for the view system ...
+  def user
+    student.user
+  end
+
+  def name
+    user = student.user
+    name = user.name
+    login = user.login
+    runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
+    "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
 end
