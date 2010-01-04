@@ -77,14 +77,54 @@ pre
     :weight normal
   :background-color #ffffe
   :line-height 1.1em
-  
-.wrapper
-  :border 2px solid
-  :background-color white
-  :-moz-border-radius .5em
-  :-webkit-border-radius .5em
 
-  
+
+ul
+  :padding-left 10px
+  :list-style-type circle
+  :list-style-position inside
+  :margin 0 0 5px
+
+//work related to getting tiny mce numbered lists to work better.
+ol
+  li
+    :margin-top 0.7em
+      
+dt
+  :margin-top 1.2em
+  :text-decoration underline
+dd
+  :margin-left 1.2em
+
+input
+  +main_font
+  :color= !very_dark
+  :padding 0.2em
+
+
+input[type=text]
+  :border solid
+  :border-width 2px
+  :border-color= !input_border_color
+  :background-color= !input_color
+  &:focus
+    :background-color= !input_focus_color
+textarea
+  :border solid
+  :border-width 2px
+  :border-color= !input_border_color
+  :background-color= !input_color
+  &:focus
+    :background-color= !input_focus_color
+
+input[type=password]
+  :border solid
+  :border-width 2px
+  :border-color= !input_border_color
+  :background-color= !input_color
+  &:focus
+    :background-color= !input_focus_color
+
 #wrapper
   +container
   :padding 10px 
@@ -122,29 +162,6 @@ pre
     +column(24,true)
     :text-align right
     
-.nav_menu
-  :display block
-  :padding 0px
-  :margin
-    :right 0px
-    :left 0px
-    :bottom 1em
-  ul
-    :padding-bottom 1em
-    :margin-left 0px
-    :padding 0px
-  li
-    :list-style-type none
-    :background-color = !light_green
-    :margin-top 0.5em
-    :padding 4px
-    a
-      :display block
-      :text-decoration none
-      :padding 4px
-    a.numbered
-      :display inline
-        
 #waiter
   :z-index 20
   :font-size 9pt
@@ -158,15 +175,12 @@ pre
   :z-index 20
   :height auto
   :border 2px solid
-    
+
 #nav_top
   +column(24,true)
   +top_and_bottom_nav_colors
   :overflow hidden
   :padding 0.5em 0px
-
-.main_content_colors
-  +content_area_colors
 
 #content_container
   :display block
@@ -182,8 +196,6 @@ pre
   :padding 0px
   :margin-bottom 0px
 
-//  :height auto !important
-  
 #content_header
   +content_area_colors
   +column(!main_content_columns,true)
@@ -216,59 +228,105 @@ pre
   :text-align center
   :padding 2px 0px
 
-//work related to getting tiny mce numbered lists to work better.
-ol
+
+#js_flash
+  :position fixed
+  :left 0
+  :top 0
+  :width 100%
+  :height 100%
+  :text-align center
+  :vertical-align center
+  :font-size 24pt
+  :opacity 0.9
+  :color= !almost_white
+  :background-color= !very_dark
+  :z-index 400
+
+#search_title
+  :display block
+  :width %40
+  :float left
+  :font-weight bold
+
+// PageElement Styles:
+.data_table_title
+  :font-size 1.2em
+  :font-style bold
+  :padding 5px 10px 10px 10px
+  :text-align center
+
+.data_table
+  :width 100%
+  .title
+    :font-size 18pt
+    :font-style bold    
+  th
+    :font-size 12pt
+    :text-decoration underline
+    :border-style solid
+    :border-bottom-width 2px
+    :border-right-width 1px
+    :padding 5px
+  td
+    :padding 5px
+    :padding-left 10px
+    :border-style dotted
+    :border-right-width 1px
+
+.data_collector
+  :display block
+  :width 100%
+  :height 400px
+
+.tinymce_textarea
+  :width 100%
+  :height 700px  
+  :word-break break-all
+
+.tinymce_textarea_short
+  :width 100%
+  :height 100px  
+  :word-break break-all
+
+
+
+
+.wrapper
+  :border 2px solid
+  :background-color white
+  :-moz-border-radius .5em
+  :-webkit-border-radius .5em
+
+.nav_menu
+  :display block
+  :padding 0px
+  :margin
+    :right 0px
+    :left 0px
+    :bottom 1em
+  ul
+    :padding-bottom 1em
+    :margin-left 0px
+    :padding 0px
   li
-    :margin-top 0.7em
-    
-ul.menu_h_right
-  :display inline
-  :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  :float right
-  :text-align right
-  li
-    :margin 0em
-    :padding 0em
-      :left 0.5em
-      :right 0.5em
-    :display inline
     :list-style-type none
-    :white-space nowrap
+    :background-color = !light_green
+    :margin-top 0.5em
+    :padding 4px
     a
-      :font-weight bold !important
-ul.menu_h
-  :display inline
-  :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  .rt
-    :float right
-    :text-align right
-  .lt
-    :float left
-    :text-align left
-  li
-    :margin 0em
-    :padding 0em
-      :left 0.5em
-      :right 0.5em
-    :display inline
-    :list-style-type none
-    :white-space nowrap
-
-ul.menu
-  :display inline
-  :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  :font-weight 100
+      :display block
+      :text-decoration none
+      :padding 4px
+    a.numbered
+      :display inline
 
 
+
+.main_content_colors
+  +content_area_colors
+  
+  
 .toggle
   .future_state
     :font-size 1em
@@ -303,11 +361,6 @@ ul.menu
 .item_collection
   :background-color white
   :padding 0.5em 0em 
-//  :height 600px
-//  :overflow auto
-//  :overflow-y auto
-//  :overflow-x hidden
-//  :overflow auto
 
 .container_element
   :background-color= !light_green
@@ -422,6 +475,56 @@ ul.menu
 .hidden
   :display none
   
+  
+
+ul.menu_h_right
+  :display inline
+  :list-style-type none
+  :list-style-position inside
+  :margin 0em
+  :padding 0em
+  :float right
+  :text-align right
+  li
+    :margin 0em
+    :padding 0em
+      :left 0.5em
+      :right 0.5em
+    :display inline
+    :list-style-type none
+    :white-space nowrap
+    a
+      :font-weight bold !important
+ul.menu_h
+  :display inline
+  :list-style-type none
+  :list-style-position inside
+  :margin 0em
+  :padding 0em
+  .rt
+    :float right
+    :text-align right
+  .lt
+    :float left
+    :text-align left
+  li
+    :margin 0em
+    :padding 0em
+      :left 0.5em
+      :right 0.5em
+    :display inline
+    :list-style-type none
+    :white-space nowrap
+
+ul.menu
+  :display inline
+  :list-style-type none
+  :list-style-position inside
+  :margin 0em
+  :padding 0em
+  :font-weight 100
+
+
 ul.quiet_list
   :list-style-type none
   :white-space nowrap
@@ -461,41 +564,14 @@ li.tiny
 .item_list
   :cursor move
   
-.data_collector
-  :display block
-  :width 600px
-  :height 400px
-    
-.tinymce_textarea
-  :width 700px
-  :height 700px  
-  :word-break break-all
 
-.tinymce_textarea_short
-  :width 700px
-  :height 100px  
-  :word-break break-all
-
-#js_flash
-  :position fixed
-  :left 0
-  :top 0
-  :width 100%
-  :height 100%
-  :text-align center
-  :vertical-align center
-  :font-size 24pt
-  :opacity 0.9
-  :color= !almost_white
-  :background-color= !very_dark
-  :z-index 400
-    
 .flash
   +left_nav_colors
   :font-weight bold
   :text-align center
   :display block
   :clear both
+  
 .flash_error
   :color= !dark_red
 
@@ -506,72 +582,6 @@ li.tiny
     :letter-spacing normal
     :font-size 12pt
 
-.data_table_title
-  :font-size 1.2em
-  :font-style bold
-  :padding 5px 10px 10px 10px
-  :text-align center
-
-.data_table
-  :width 100%
-  .title
-    :font-size 18pt
-    :font-style bold    
-  th
-    :font-size 12pt
-    :text-decoration underline
-    :border-style solid
-    :border-bottom-width 2px
-    :border-right-width 1px
-    :padding 5px
-  td
-    :padding 5px
-    :padding-left 10px
-    :border-style dotted
-    :border-right-width 1px
-    
-
-ul
-  :padding-left 10px
-  :list-style-type circle
-  :list-style-position inside
-  :margin 0 0 5px
-
-dt
-  :margin-top 1.2em
-  :text-decoration underline
-dd
-  :margin-left 1.2em
-
-input
-  +main_font
-  :color= !very_dark
-  :padding 0.2em
-
-  
-input[type=text]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-textarea
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-
-input[type=password]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-    
 .fieldWithErrors
   input
     :border-color= !dark_red
@@ -609,17 +619,13 @@ input[type=password]
   :padding-bottom 30px
 .drop_target_selected
   :background-color= !selected_color
-#search_title
-  :display block
-  :width %40
-  :float left
-  :font-weight bold
+
 .progress_container
   :display block
   :overflow hidden
   :text-align right
   :height 20px
-
+  
 .text_button
   :display inline-block
   :float left
