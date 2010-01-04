@@ -20,9 +20,9 @@ var item_select = function(event) {
   // deselect everyone first:
   item_deselect();
 
-  element = event.element();
-  element = $(element); // extend
-  selected = get_selectable(element)
+  var element = event.element();
+  var element = $(element); // extend
+  var selected = get_selectable(element)
 
   if (selected) {
     var type = '';
@@ -52,13 +52,16 @@ var item_deselect = function() {
 var update_links = function() {
   if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !=null) {
-      var template = new Template('<a>copy #{type}:#{id}</a>');
-      $('copy_link').addClassName('copy_enabled');
+      var template = new Template('<a>copy #{type}</a>');
+      // var template = new Template('<a>copy #{type}:#{id}</a>');
+      $('copy_link').addClassName('copy_paste_enabled');
+      $('copy_link').removeClassName('copy_paste_disabled');
       $('copy_link').observe('click',copy);
       $('copy_link').update(template.evaluate({type:rites_document.selected_type, id:rites_document.selected_id}));    
     }
     else {
-      $('copy_link').addClassName('copy_disabled');
+      $('copy_link').addClassName('copy_paste_disabled');
+      $('copy_link').removeClassName('copy_paste_enabled');      
       $('copy_link').stopObserving();  
       $('copy_link').update('copy (nothing selected)');
     }
