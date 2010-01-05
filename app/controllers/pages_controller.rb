@@ -246,7 +246,7 @@ class PagesController < ApplicationController
     if @page.changeable?(current_user)
       clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
       clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize
+      klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
       @original = klass.find(clipboard_data_id)
       if (@original) 
         @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
