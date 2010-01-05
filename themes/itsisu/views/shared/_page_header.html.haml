@@ -6,15 +6,17 @@
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #actions_menu.dropdown
   %ul
-    %li#copy_link.hidden copy (disabled)
-    %li#paste_link= paste_link_for(Page::paste_acceptable_types,{:container_id => @container_id})
+    - if (page.changeable?(current_user))
+      / %li= link_to 'edit page details', edit_page_url(page)
+      %li= duplicate_link_for(page,:text=> "copy page #{page.name}")
+    %li#copy_link.copy_paste_disabled copy (disabled)
+    - if (page.changeable?(current_user))
+      %li#paste_link= paste_link_for(Page::paste_acceptable_types,{:container_id => @container_id})
     /%li= run_link_for(page)
     /%li= print_link_for(page)
     /%li= toggle_all('elements')
     /%li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
-    - if (page.changeable?(current_user))
-      / %li= link_to 'edit page details', edit_page_url(page)
-      %li= duplicate_link_for(page,:text=> "copy #{page.name}")
+
 
 - if (teacher_only? page)
   - view_class = "action_menu teacher_only"
