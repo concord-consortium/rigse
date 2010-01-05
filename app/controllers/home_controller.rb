@@ -11,6 +11,10 @@ class HomeController < ApplicationController
   def about
   end
   
+  def name_for_clipboard_data
+    render :text=> @template.clipboard_object_name(params)
+  end
+  
   def missing_installer
     @os = params['os']
   end
