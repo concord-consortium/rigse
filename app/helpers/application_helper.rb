@@ -298,7 +298,7 @@ module ApplicationHelper
     
     if acceptable_types.include?(clipboard_data_type) 
       url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return link_to_remote("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
+      return remote_link_button ("paste-out.png", :url => url, :title => "paste #{clipboard_data_type}") + link_to_remote("paste #{clipboard_data_type}", :url=>url)
     end
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
