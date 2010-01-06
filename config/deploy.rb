@@ -492,5 +492,5 @@ before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
-after 'deploy:create_asset_packages', 'deploy:clean_up'
+after 'deploy:create_asset_packages', 'deploy:cleanup'
 
