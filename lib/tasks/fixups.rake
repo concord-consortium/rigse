@@ -211,7 +211,7 @@ HEREDOC
       innerPages.each do |ip|
         if ip.static_page.nil?
           ip.static_page = Page.new
-          ip.static_page.user = ip.user_id
+          ip.static_page.user = ip.user
           ip.save
         end
       end
