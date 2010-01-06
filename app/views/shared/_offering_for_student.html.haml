@@ -1,7 +1,7 @@
-.item
-  %ul.quiet_list
-    %li
-      = run_button_for(offering)
-      = link_to offering.runnable.name, portal_offering_url(offering, :format => :jnlp)
-    %li
-      .tiny= offering.description
+-if (offering.runnable)
+  .item
+    %ul.quiet_list
+      %li
+        = run_link_for(offering,nil,{:link_text=>"run #{offering.name}"})
+      %li
+        .tiny= offering.description

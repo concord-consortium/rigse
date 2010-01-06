@@ -27,10 +27,9 @@ module Rack
 
     def call(env)
       if env[HTTP_CONTENT_ENCODING] == B64_GZIP_ENCODED
-        post_body = ::Zlib::GzipReader.new(StringIO.new(B64.decode(env[POST_BODY].read)))
-        env[CONTENT_LENGTH] = post_body.read.length
-        post_body.rewind if post_body.respond_to?(:rewind)
-        env[POST_BODY] = post_body
+        post_body = ::Zlib::GzipReader.new(StringIO.new(B64.decode(env[POST_BODY].read))).read
+        env[CONTENT_LENGTH] = post_body.length
+        env[POST_BODY] = StringIO.new(post_body)
         # headers.delete(Const::CONTENT_ENCODING)
       end
       @app.call(env)

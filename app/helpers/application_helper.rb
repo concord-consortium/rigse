@@ -143,12 +143,14 @@ module ApplicationHelper
 
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { class_name.to_sym => component, :teacher_mode => teacher_mode}
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/show", :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)
     class_name = component.class.name.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { class_name.to_sym => component }
+    demodulized_class_name = component.class.name.demodulize.underscore
+    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
   end
 
   def wrap_edit_link_around_content(component, options={})
@@ -278,21 +280,7 @@ module ApplicationHelper
     end
   end
 
-  def print_link_for(component)
-     component_display_name = component.class.display_name.downcase
-      name = component.name
-      link_to("print #{component_display_name}", {
-          :controller => component.class.name.pluralize.underscore, 
-          :id  => component.id,
-          :action => :show,
-          :print => true
-        },
-        {
-          :target => "#{component.name} printout",
-          :title => "Open a new browser window with a a printable version of the #{component_display_name}: '#{name}'"
-        })
-  end
-  
+
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
@@ -307,10 +295,10 @@ module ApplicationHelper
     return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
   end
 
-  
   def run_button_for(component)
     name = component.name
-    url = polymorphic_url(component, :format => :jnlp)
+    users_params = current_user.extra_params
+    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("run.png",  url, 
       :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);") 
@@ -318,7 +306,7 @@ module ApplicationHelper
 
   def preview_button_for(component)
     name = component.name
-    url = polymorphic_url(component, :format => :jnlp)
+    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("preview.png",  url, 
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
       :onclick => "show_alert($('launch_warning'),false);")      
@@ -327,6 +315,7 @@ module ApplicationHelper
   def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
+    params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || "preview "
     if as_name
       link_text << " as #{as_name}"
@@ -342,6 +331,7 @@ module ApplicationHelper
   def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
+    params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || "run "
     if as_name
       link_text << " as #{as_name}"
@@ -369,20 +359,23 @@ module ApplicationHelper
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
-    link_button("copy.png", url, 
-      :title => "duplicate the #{component_display_name}: '#{name}'") +
-    link_to('duplicate', url)
+    link_button("itsi_copy.png", url, 
+      :title => "copy the #{component_display_name}: '#{name}'") +
+    link_to('copy', url)
   end
   
+
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "print #{component_display_name}"
+    if params[:teacher_mode]
+      link_text = "#{link_text} (with notes) "
+    end
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("print.png", url, 
-      :title => "print the #{component_display_name}: '#{name}'") + 
-    link_to(link_text,url)
+    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") + 
+    link_to(link_text,url,:popup => true)
   end
   
   def otml_link_for(component, params={})
@@ -460,6 +453,13 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
+    haml_tag :div, :class => 'dropdown', :id => "actions_#{component.id}_menu" do
+      haml_tag :ul do
+        haml_tag(:li) { haml_concat run_link_for(component) }
+        haml_tag(:li) { haml_concat print_link_for(component) }
+        haml_tag(:li) { haml_concat otml_link_for(component) }
+      end
+    end
     view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
@@ -467,20 +467,13 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
+          haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
           if is_page_element
             restrict_to 'admin' do
-              haml_tag :div, :class => 'dropdown', :id => "actions_#{component.name}_menu" do
-                haml_tag :ul do
-                  haml_tag(:li) { haml_concat run_link_for(component) }
-                  haml_tag(:li) { haml_concat print_link_for(component) }
-                  haml_tag(:li) { haml_concat otml_link_for(component) }
-                end
-              end
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.name, :title => "actions for this page"))
+              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
             end
           end              
           if (component.changeable?(current_user))
-            # haml_tag(:li, {:class => 'menu'}) { haml_concat toggle_more(component) }
             begin
               if component.authorable_in_java?
                 haml_concat otrunk_edit_button_for(component, options)

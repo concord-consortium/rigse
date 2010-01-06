@@ -63,7 +63,7 @@ Rails::Initializer.run do |config|
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
-  config.gem "jnlp", :version => '>= 0.0.5.1'
+  config.gem "jnlp", :version => '>= 0.0.5.3'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
@@ -115,6 +115,21 @@ Rails::Initializer.run do |config|
   # Please note that observers generated using script/generate observer need to have an _observer suffix
 
   # ... observers are now started in config/initializers/observers.rb
+  # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
+  # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
+  config.after_initialize do
+    begin
+      ActiveRecord::Base.observers = :user_observer, :investigation_observer
+      ActiveRecord::Base.instantiate_observers
+      puts "Started observers"
+    rescue
+      # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+      puts "Couldn't start observers #{$!}"
+      puts "This might be because you have not setup the appropriate database tables yet... "
+      puts "see config/initializers/observers.rb for more information."
+    end
+  end
+
 
   config.action_controller.session_store = :active_record_store
 

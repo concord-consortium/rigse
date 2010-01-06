@@ -1,2 +1,7 @@
 = render :partial =>'portal/clazzes/show', :locals => {:portal_clazz => @portal_clazz}
-    
+
+%p
+  = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+  - if @portal_clazz.teacher && @portal_clazz.teacher.user == current_user
+    %br
+    = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => @portal_clazz,:existing_students => @portal_clazz.teacher.students - @portal_clazz.students}

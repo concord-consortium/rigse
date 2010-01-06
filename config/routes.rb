@@ -1,34 +1,42 @@
 ActionController::Routing::Routes.draw do |map|
+  map.namespace(:smartgraph) do |smartgraph|
+    smartgraph.resources :range_questions
+  end
 
   map.namespace(:portal) do |portal|
     portal.resources :clazzes, :as => 'classes', :member => {
         :add_offering => [:get,:post],
+        :add_student => [:get, :post],
         :remove_offering => [:get, :post],
         :edit_offerings => [:get,:post]
     }
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
     end
-      
     portal.resources :courses
     portal.resources :districts
     portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners
-    portal.resources :offerings
+    portal.resources :offerings, :collection => {
+      :data_test => [:get,:post]
+    }
     portal.resources :schools
     portal.resources :school_memberships
     portal.resources :semesters
     portal.resources :students, :collection => {
-      :signup => [:get]
+      :signup => [:get],
+      :register => [:get, :post]
     }
     portal.resources :student_clazzes, :as => 'student_classes'
     portal.resources :subjects
     portal.resources :teachers
     
     portal.home 'readme', :controller => 'home', :action => 'readme'
-    
   end
+  
+  
+
   
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
@@ -54,6 +62,11 @@ ActionController::Routing::Routes.draw do |map|
     
   map.resources :passwords
   map.resource :session
+
+  map.resources :external_user_domains do |external_user_domain|
+    external_user_domain.resources :external_users    
+    external_user_domain.resources :external_sessions
+  end
 
 # ----------------------------------------------
 
@@ -246,7 +259,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :images
   
-  # Home Page
+  # Home Controller
+  map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.home '/readme', :controller => 'home', :action => 'readme'
   map.home '/home', :controller => 'home', :action => 'index'
   map.about '/about', :controller => 'home', :action => 'about'

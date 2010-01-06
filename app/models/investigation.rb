@@ -5,12 +5,12 @@ class Investigation < ActiveRecord::Base
   belongs_to :user
   belongs_to :grade_span_expectation
   has_many :activities, :order => :position, :dependent => :destroy
-  has_many :teacher_notes, :as => :authored_entity
-  has_many :author_notes, :as => :authored_entity
+  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
+  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   
-  has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
+  [DataCollector, BiologicaOrganism, BiologicaWorld, OpenResponse].each do |klass|
     eval "has_many :#{klass.table_name},
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
@@ -59,7 +59,7 @@ class Investigation < ActiveRecord::Base
   # Investigation.grade('9-11') == bad
   #
   named_scope :with_gse, {
-    :joins => "JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+    :joins => "left outer JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
   }
   
   named_scope :domain, lambda { |domain_id| 
@@ -112,17 +112,25 @@ class Investigation < ActiveRecord::Base
       grade_span = options[:grade_span] || ""
       domain_id = options[:domain_id].to_i
       name = options[:name]
-      if domain_id > 0
-        if (options[:include_drafts])
-          investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+      if APP_CONFIG[:use_gse]
+        if domain_id > 0
+          if (options[:include_drafts])
+            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+          else
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+          end
         else
-          investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+          if (options[:include_drafts])
+            investigations = Investigation.like(name).with_gse.grade(grade_span)
+          else
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          end
         end
       else
         if (options[:include_drafts])
-          investigations = Investigation.like(name).with_gse.grade(grade_span)
+          investigations = Investigation.like(name)
         else
-          investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          investigations = Investigation.published.like(name)
         end
       end
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
@@ -220,4 +228,16 @@ class Investigation < ActiveRecord::Base
     return @return_investigation
   end
   
+  def page_listing
+    listing = []
+    self.activities.each do |a|
+      a.sections.each do |s|
+        s.pages.each do |p|
+          listing << {"#{a.name} #{s.name} #{p.page_number}" => p}
+        end
+      end
+    end
+    listing
+  end
+
 end

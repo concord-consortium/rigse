@@ -3,6 +3,20 @@ module TruncatableXhtml
   # Extracts and soft truncates text from an xhtml document stored
   # in the an attribute for models this module is included in.
   #
+  # Including TruncatableXhtml adds a before_save hook which will automatically
+  # generate a name attribute for the model instance if there is any content on 
+  # the main xhtml attribute (examples: content or prompt) that can plausibly be 
+  # turned into a name. Otherwise the default_value_for :name specified below is used.
+  # 
+  # At this time (2009-12) this is used in the following models:
+  # 
+  #   app/models/multiple_choice.rb
+  #   app/models/open_response.rb
+  #   app/models/xhtml.rb
+  #
+  # FIXME: refactor code to use names like 'DEFAULT_ATTRIBUTES' instead of 'DEFAULT_TABLES'
+  # Using the word 'table' to refer to the attributes of a table is confusing.
+  
   def truncate_from_xhtml(xhtml, limit=24, soft_limit=8, logging=false)
     return '' unless xhtml && !xhtml.empty?
     print "#{self.id}: " if logging
@@ -73,10 +87,18 @@ module TruncatableXhtml
     "content",
     "prompt"
   ]
-  DEFAULT_REPLACEABLES=  [
-    /\s+style\s?=\s?"(.*?)"/,
-    /&nbsp;/
-  ]
+
+  # DEFAULT_REPLACEABLES=  [
+  #   /\s+style\s?=\s?"(.*?)"/,
+  #   /&nbsp;/
+  # ]
+  # 
+  REPLACEMENT_MAP={
+    /\s+style\s?=\s?"(.*?)"/ => "",
+    /(&nbsp;)+/ => " "}
+    
+  ## for ITSI carolyn might want everything 
+  # REPLACEMENT_MAP = {}
   
   ##
   ## These methods are added to the class when 
@@ -86,7 +108,7 @@ module TruncatableXhtml
     ## has_html_tables (you can specify table names that have html content)
     ##  @param table_anames = names of attributes that might have html content.
     ##  @ param replaceables = patterns we want to exlude from the sanitized output.
-    def has_html_tables(table_names = DEFAULT_TABLES,replaceables = DEFAULT_REPLACEABLES)
+    def has_html_tables(table_names = DEFAULT_TABLES,replaceables = REPLACEMENT_MAP)
       define_method("html_tables") do
         table_names
       end
@@ -129,8 +151,8 @@ module TruncatableXhtml
     logger.debug "calling replace_offensive_html"
     html_tables.each do |tablename|
       if self.respond_to? tablename
-        html_replacements.each do |replace_me|
-          self.send("#{tablename}=",(self.send tablename).gsub(replace_me,""))
+        html_replacements.each_pair do |replacable,replacement|
+          self.send("#{tablename}=",(self.send tablename).gsub(replacable,replacement))
         end
       end
     end

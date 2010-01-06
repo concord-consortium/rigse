@@ -5,9 +5,9 @@
         = link_to_container(page)
       %div.action_menu_header_right   
         %ul.menu
-          %li= run_link_for(page)
+          /%li= run_link_for(page)
           - if (page.changeable?(current_user))
-            %li= link_to 'duplicate', duplicate_page_url(page)
+            /%li= link_to 'duplicate', duplicate_page_url(page)
             / %li= link_to 'edit', page
             / %li.menu=toggle_more page
             %li.menu=link_to_remote 'delete', :confirm => "delete page #{page.name}?", :url => { :controller => 'sections', :action => 'delete_page', :params => {:id=>page.section.id, :page_id => page.id}}, :html => {:class=>"delete"}

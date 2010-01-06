@@ -1,25 +1,29 @@
-- options = { :complete => mce_init_string }
-= accordion_for(portal_clazz, link_to("#{portal_clazz.name}", portal_clazz_path(portal_clazz), :class => :action), options) do
-  = show_menu_for(portal_clazz, options)
-
-  %div{:id => dom_id_for(portal_clazz, :details), :class => 'content'}
-    = wrap_edit_link_around_content(portal_clazz, options={:complete => mce_init_string}) do
-      %p
-        %ul.menu_v
+- options = {}
+%br
+.clazz_info{:id => dom_id_for(portal_clazz,:item)}
+  .clazz_details{:id => dom_id_for(portal_clazz, :details)}
+    .action_menu
+      .action_menu_left
+        %h3="#{portal_clazz.name}"
+      .action_menu_right
+        -if portal_clazz.changeable? current_user
+          / = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
+          / = edit_button_for(portal_clazz)
+          = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
+    .action_menu
+      %ul
+        %li
+          %strong Teacher:
+          =portal_clazz.teacher ? portal_clazz.teacher.name : 'no teacher'
+        %li
+          %strong Class Word:
+          = portal_clazz.class_word
+        - if portal_clazz.semester
           %li
-            Teacher:
-            - if portal_clazz.teacher && (portal_clazz.teacher.respond_to? :name)
-              =h(portal_clazz.teacher.name)
-          - if (portal_clazz.teacher.respond_to? :schools) && portal_clazz.teacher.schools.size > 0
-            %li
-              School:
-              =h(portal_clazz.teacher.schools.first.name)
-      
-            - else
-              'no teacher'
+            %strong Semester:
+            = portal_clazz.semester.name
+        - if portal_clazz.description
           %li
-            Description:
+            %strong Description:
             = portal_clazz.description
-    %p
-    = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
-    = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
+

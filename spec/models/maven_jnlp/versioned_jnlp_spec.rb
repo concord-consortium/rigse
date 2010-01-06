@@ -2,38 +2,32 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe MavenJnlp::VersionedJnlp do
   before(:each) do
-    @versioned_jnlp_url_attributes = {
-      :maven_jnlp_family_id => 1,
-      :path => "value for path",
-      :url => "value for url",
-      :version_str => "value for version_str"
-    }
-    MavenJnlp::VersionedJnlpUrl.create!(@versioned_jnlp_url_attributes)
-    
-    @valid_attributes = {
-      :versioned_jnlp_url_id => 1,
-      :jnlp_icon_id => 1,
-      :uuid => "value for uuid",
-      :name => "value for name",
-      :main_class => "value for main_class",
-      :argument => "value for argument",
-      :offline_allowed => false,
-      :local_resource_signatures_verified => false,
-      :include_pack_gzip => false,
-      :spec => "value for spec",
-      :codebase => "value for codebase",
-      :href => "value for href",
-      :j2se_version => "value for j2se",
-      :max_heap_size => 1,
-      :initial_heap_size => 1,
-      :title => "value for title",
-      :vendor => "value for vendor",
-      :homepage => "value for homepage",
-      :description => "value for description"
-    }
+    @versioned_jnlp_url = mock_maven_jnlp_versioned_jnlp_url
+    @icon = mock_maven_jnlp_icon
+    @new_valid_versioned_jnlp = MavenJnlp::VersionedJnlp.new(
+      :name => "all-otrunk-snapshot-0.1.0-20090724.190238.jnlp",
+      :main_class => "net.sf.sail.emf.launch.EMFLauncher3",
+      :href =>  "http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20090724.190238.jnlp",
+      :offline_allowed => true,
+      :j2se_version => "1.5+",
+      :title => "All OTrunk snapshot",
+      :max_heap_size => 128,
+      :local_resource_signatures_verified => nil,
+      :uuid => "09ae2cc0-b3d1-11de-b2b3-001ff3caa767",
+      :spec => "1.0+",
+      :description => "Preview Basic Pas",
+      :initial_heap_size => 32,
+      :homepage => "index.html",
+      :argument => "dummy",
+      :vendor => "Concord Consortium",
+      :codebase => "http://jnlp.concord.org/dev",
+      :include_pack_gzip => nil
+    )
+    @new_valid_versioned_jnlp.versioned_jnlp_url = @versioned_jnlp_url
+    @new_valid_versioned_jnlp.icon = @icon
   end
 
   it "should create a new instance given valid attributes" do
-    MavenJnlp::VersionedJnlp.create!(@valid_attributes)
+    @new_valid_versioned_jnlp.should be_valid
   end
 end

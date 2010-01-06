@@ -14,6 +14,9 @@
   font-size: 8pt;
   opacity: 0.9;
   moz-opacity: 0.9; }
+  #teacher_bottom .selected {
+    color: #00233a !important;
+    background-color: #bcd6ea !important; }
   #teacher_bottom a {
     font-weight: bold;
     padding: 0px;
@@ -55,6 +58,9 @@
   -webkit-border-radius: .5em;
   opacity: 1;
   moz-opacity: 1; }
+  #some_data .selected {
+    color: #f2f8fc !important;
+    background-color: #00233a !important; }
   #some_data a {
     font-weight: bold;
     padding: 0px;

@@ -58,6 +58,14 @@ class DataCollector < ActiveRecord::Base
     end
   end
   
+  def self.by_scope(scope)
+    if scope && scope.class != DataCollector
+      scope.activity.investigation.data_collectors
+    else
+      []
+    end
+  end
+  
   def self.prediction_graphs
     DataCollector.find_all_by_graph_type_id(2)
   end
@@ -70,7 +78,11 @@ class DataCollector < ActiveRecord::Base
   end
   
   def valid_calibrations
-    probe_type.calibrations
+    if probe_type
+      probe_type.calibrations
+    else
+      []
+    end
   end
 
   # move to helper
@@ -125,7 +137,7 @@ class DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
-  DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
+  # DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
   
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
@@ -145,7 +157,7 @@ class DataCollector < ActiveRecord::Base
                  :single_value                =>  false
 
 
-  default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  # default_value_for :probe_type, DISTANCE_PROBE_TYPE
   
   send_update_events_to :investigations
 
@@ -167,29 +179,26 @@ class DataCollector < ActiveRecord::Base
   
   def update_from_otml_library_content
     olc = Hash.from_xml(otml_library_content)
-    if ot_data_collector = olc['ot_data_collector']
+    if ot_data_collector = olc['OTDataCollector']
       self.name = ot_data_collector['name']
       self.title = ot_data_collector['title']
-      self.autoscale_enabled = ot_data_collector['auto_scale_enabled'] == 'true'
-      if ot_data_axis = ot_data_collector['x_data_axis']['ot_data_axis']
+      self.autoscale_enabled = ot_data_collector['autoScaleEnabled'] == 'true'
+      if ot_data_axis = ot_data_collector['xDataAxis']['OTDataAxis']
         self.x_axis_label = ot_data_axis['label']
         self.x_axis_units = ot_data_axis['units']
         self.x_axis_min   = ot_data_axis['min'].to_f
         self.x_axis_max   = ot_data_axis['max'].to_f
       end
-      if ot_data_axis = ot_data_collector['y_data_axis']['ot_data_axis']
+      if ot_data_axis = ot_data_collector['yDataAxis']['OTDataAxis']
         self.y_axis_label = ot_data_axis['label']
         self.y_axis_units = ot_data_axis['units']
         self.y_axis_min   = ot_data_axis['min'].to_f
         self.y_axis_max   = ot_data_axis['max'].to_f
       end
-      if ot_data_graphable = ot_data_collector['source']['ot_data_graphable']
-         self.connect_points = ot_data_graphable['connect_points']
-         self.draw_marks = ot_data_graphable['draw_marks'] == 'true'
-         self.connect_points = ot_data_graphable['connect_points']
-         self.connect_points = ot_data_graphable['connect_points']
-         self.connect_points = ot_data_graphable['connect_points']
-         if ot_data_store = ot_data_graphable['data_store']['ot_data_store']
+      if ot_data_graphable = ot_data_collector['source']['OTDataGraphable']
+         self.connect_points = ot_data_graphable['connectPoints']
+         self.draw_marks = ot_data_graphable['drawParks'] == 'true'
+         if ot_data_store = ot_data_graphable['dataStore']['OTDataStore']
            if values = ot_data_store['values']
              if delta_time = ot_data_store['dt']
                delta_time = delta_time.to_f

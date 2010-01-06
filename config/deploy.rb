@@ -1,7 +1,39 @@
-set :stages, %w(development staging production bumblebeeman)
+set :stages, %w(
+  development staging production seymour 
+  itsisu-dev itsisu-staging itsisu-production fall2009 
+  smartgraphs-production smartgraphs-staging)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
+require 'haml'
+
+def render(file,opts={})
+  template = File.read(file)
+  haml_engine = Haml::Engine.new(template)
+  output = haml_engine.render(nil,opts)
+  output
+end
+
+#############################################################
+#  Miantance mode
+#############################################################
+task :disable_web, :roles => :web do
+  on_rollback { delete "#{shared_path}/system/maintenance.html" }
+
+  maintenance = render("./app/views/layouts/maintenance.haml", 
+                       {
+                         :back_up => ENV['BACKUP'],
+                         :reason => ENV['REASON'],
+                         :message => ENV['MESSAGE']
+                       })
+
+  run "mkdir -p #{shared_path}/system/"
+  put maintenance, "#{shared_path}/system/maintenance.html", 
+                   :mode => 0644
+end
+task :enable_web, :roles => :web do
+  run "rm #{shared_path}/system/maintenance.html"
+end
 
 #############################################################
 #  Application
@@ -125,19 +157,43 @@ namespace :deploy do
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
   task :from_scratch do
-    run "cd #{deploy_to}/current; rake rigse:setup:force_new_rigse_from_scratch"
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
   end
   
+  desc "setup directory remote directory structure"
+  task :make_directory_structure do
+    run "mkdir -p #{deploy_to}/releases"
+    run "mkdir -p #{shared_path}"
+    run "mkdir -p #{shared_path}/config"
+    run "mkdir -p #{shared_path}/log"
+    run "mkdir -p #{shared_path}/rinet_data"
+    run "mkdir -p #{shared_path}/config/nces_data"
+    run "mkdir -p #{shared_path}/public/otrunk-examples"
+    run "mkdir -p #{shared_path}/public/installers"  
+    run "mkdir -p #{shared_path}/config/initializers"
+    run "touch #{shared_path}/config/database.yml"
+    run "touch #{shared_path}/config/settings.yml"
+    run "touch #{shared_path}/config/installer.yml"
+    run "touch #{shared_path}/config/rinet_data.yml"
+    run "touch #{shared_path}/config/sds.yml"
+    run "touch #{shared_path}/config/mailer.yml"
+    run "touch #{shared_path}/config/initializers/site_keys.rb"
+    run "touch #{shared_path}/config/database.yml"
+  end
+
   desc "link in some shared resources, such as database.yml"
   task :shared_symlinks do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
+    run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"    
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
+    run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
+    run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
   end
     
   desc "install required gems for application"
@@ -154,7 +210,7 @@ namespace :deploy do
   desc "Create asset packages for production" 
   task :create_asset_packages, :roles => :app do
     run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
-    run "cd #{deploy_to}/current && rake asset:packager:build_all"
+    run "cd #{deploy_to}/current && rake asset:packager:build_all --trace"
   end
   
 end
@@ -189,10 +245,10 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace" 
   end
 
-  desc "generate MavenJnlp family of resources from jnlp servers in settings.yml"
-  task :generate_maven_jnlp_family_of_resources, :roles => :app do
+  desc "generate MavenJnlp resources from jnlp servers in settings.yml"
+  task :generate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_family_of_resources --trace" 
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_resources --trace" 
   end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
@@ -227,6 +283,11 @@ namespace :import do
       "rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace" 
   end
 
+  desc "Import RINET data"
+  task :import_rinet_data, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace" 
+  end
 end
 
 #############################################################
@@ -372,10 +433,57 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} portal:setup:create_districts_and_schools_from_nces_data --trace"
   end
 
+  # Wed Dec 2nd
+  desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
+  task :convert_clazzes_to_multi_teacher, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
+  end
+
+  # Wed Dec 23nd, 2009
+  desc "Delete_and_regenerate_maven_jnlp_resources"
+  task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
+  end
+
+end
+
+
+#############################################################
+#  INSTALLER:  Help to create installers on various hosts
+#############################################################
+
+namespace :installer do
+  
+  desc 'copy config -- copy the local installer.yml to the server. For bootstraping a fresh instance.'
+  task :copy_config do
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)    
+  end
+  
+  desc 'create: downloads remote config, caches remote jars, builds installer, uploads new config and installer images'
+  task :create, :roles => :app do
+    # download the current config file to local config
+    %x[cp config/installer.yml config/installer.yml.mine]
+    download("#{deploy_to}/#{current_dir}/config/installer.yml", "config/installer.yml", :via => :scp)
+    # build the installers
+    %x[rake build:installer:build_all ]
+    
+    # post the config back up to remote server
+    upload("config/installer.yml", "#{deploy_to}/#{current_dir}/config/installer.yml", :via => :scp)
+    # copy the installers themselves up to the remote server
+    Dir.glob("resources/bitrock_installer/installers/*") do |filename|
+      basename = File.basename(filename)
+      puts "copying #{filename}"
+      upload(filename, "#{deploy_to}/#{current_dir}/public/installers/#{basename}", :via => :scp)
+    end
+    %x[cp config/installer.yml.mine config/installer.yml]
+  end
+  
 end
 
 before 'deploy:restart', 'deploy:set_permissions'
-
+before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:set_permissions'

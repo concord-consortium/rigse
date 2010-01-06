@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   set_table_name "maven_jnlp_maven_jnlp_servers"
   
@@ -31,6 +33,20 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
         end
       end
     end
+  
+    def maven_jnlp_object_path_prefix
+      File.join(RAILS_ROOT, 'config', 'maven_jnlp_object')
+    end
+
+    def delete_all_cached_maven_jnlp_resources
+      MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_objects
+      MavenJnlp::VersionedJnlp.delete_all_cached_jnlp_objects
+    end
+    
+    def delete_all_cached_maven_jnlp_objects
+      files = Dir["#{MavenJnlp::MavenJnlpServer.maven_jnlp_object_path_prefix}*"]
+      FileUtils.rm(files, :force => true)
+    end
     
   end
 
@@ -59,11 +75,17 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   end
   
   def maven_jnlp_object_path
-    File.join(RAILS_ROOT, 'config', "maven_jnlp_object_#{id}.yaml")
+    "#{MavenJnlp::MavenJnlpServer.maven_jnlp_object_path_prefix}_#{id}.yaml"
   end
   
+  def delete_maven_jnlp_object
+    FileUtils.rm(maven_jnlp_object_path, :force => true)
+  end
+
   def create_maven_jnlp_families
-    maven_jnlp_families = APP_CONFIG[:maven_jnlp_families]
+    maven_jnlp_families = APP_CONFIG[:maven_jnlp_families] << "gui-testing"
+    # remove duplicated 'gui-testing' in case settings.yml already specified importing all jnlp fmailies
+    maven_jnlp_families.uniq!  
     maven_jnlp_object.maven_jnlp_families.each do |mjf_object|
       if self.maven_jnlp_families.find_by_url(mjf_object.url)
         puts "\nmaven_jnlp_family: #{mjf_object.url} "
@@ -78,6 +100,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
         puts "current snapshot version: #{mjf_object.snapshot_version} "
         puts "generating #{mjf_object.versions.length} versioned_jnlp resources:"
         mjf.create_versioned_jnlp_urls(mjf_object)
+        mjf.snapshot_jnlp_url.versioned_jnlp
         puts "\n\n"
       else
         puts "skipping maven_jnlp_family: #{mjf_object.url} "

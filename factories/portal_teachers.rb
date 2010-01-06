@@ -19,5 +19,5 @@ end
 
 # a teacher with one class in a real school
 Factory.define :nces_portal_teacher, :parent => :portal_teacher do |teacher|
-  teacher.clazzes [Factory(:nces_portal_clazz)]
+  teacher.clazzes {[Factory(:nces_portal_clazz)]}
 end

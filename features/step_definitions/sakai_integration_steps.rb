@@ -1,15 +1,20 @@
- #
+#
 # Setup
 #
-Given "a valid sakai user" do 
-  @user = User.find(:first, :conditions => "login != 'anonymous'")
-  @user_login = @user.login
+Given "a valid sakai user" do
+  @rinet_login = "bowb_dobs"
+  @rites_login = ExternalUserDomain.external_login_to_login(@rinet_login)
+  @user = Factory(:user, {
+    :login => @rites_login
+  });
+  @user.register
+  @user.activate
 end
 
 Given "an unknown sakai user" do
   @user_login = "someunknownuser"
   while User.find_by_login(@user_login)
-    @user_login << (rand * 10).to_i
+    @user_login << (rand * 100).to_i
   end
   @user = nil
 end
@@ -18,7 +23,7 @@ end
 # Actions
 #
 When "$actor goes to the link tool url" do |_|
-  visit('/linktool', :get, {:serverurl => "http://localhost:3000/", :internaluser => @user_login})
+  visit('/linktool', :get, {:serverurl => "http://moleman.concord.org/", :internaluser => @rinet_login})
 end
 
 #
@@ -31,7 +36,7 @@ end
   
 Then "$actor should be logged in" do |_|
   controller.logged_in?.should be_true
-  controller.current_user.login.should == @user_login
+  controller.current_user.login.should == @rites_login
 end
 
 Then "$actor should be forwarded to their home page" do |_|

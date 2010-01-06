@@ -20,7 +20,7 @@ Factory.define :user do |f|
   f.email  { |u| "#{u.login}@concord.org"}
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
-  f.roles  { [ Factory.next :member_role] }
+  f.roles  { [ Factory.next(:member_role)] }
 end
 
 

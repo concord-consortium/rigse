@@ -9,6 +9,6 @@ set :branch, "staging"
 #  Servers
 #############################################################
 
-set :domain, "rites-investigations.staging.concord.org"
+set :domain, "seymour.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true

@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
+  theme (APP_CONFIG[:theme]||'default')
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
@@ -25,6 +26,8 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
   
+  theme (APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
+  
   protected
   
   def setup_container
@@ -35,6 +38,7 @@ class ApplicationController < ActionController::Base
   def setup_project
     @project = Admin::Project.default_project
     @jnlp_adaptor = JnlpAdaptor.new(@project)
+    @jnlp_testing_adaptor = JnlpTestingAdaptor.new
   end
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound

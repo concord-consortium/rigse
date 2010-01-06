@@ -65,4 +65,19 @@ class Portal::Student < ActiveRecord::Base
       nil
     end
   end
+  
+  def has_clazz?(clazz)
+    self.clazzes.detect { |cl| cl.id == clazz.id }
+  end
+  
+  def add_clazz(clazz)
+    unless self.has_clazz?(clazz)
+      self.clazzes << clazz
+    end
+  end
+  
+  def school
+    return schools.first
+  end
+  
 end

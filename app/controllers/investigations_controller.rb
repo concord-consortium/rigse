@@ -102,14 +102,17 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts,true)
     end
     @investigations = Investigation.search_list({
-      :domain_id => @domain_id, 
-      :grade_span => @grade_span, 
       :name => @name, 
-      :portal_clazz_id => @portal_clazz_id, 
+      :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
+      :grade_span => @grade_span,
+      :domain_id => @domain_id,
       :paginate => true, 
       :page => pagenation
     })
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
     @paginated_objects = @investigations
     
     if request.xhr?
@@ -124,10 +127,11 @@ class InvestigationsController < AuthoringController
     end
   end
 
-
-
-  # GET /pages/1
-  # GET /pages/1.xml
+  # GET /investigations/1
+  # GET /investigations/1.jnlp
+  # GET /investigations/1.config
+  # GET /investigations/1.dynamic_otml
+  # GET /investigations/1.otml
   def show
     # display for teachers? Later we can determin via roles?    
     @teacher_mode = params[:teacher_mode]
@@ -137,7 +141,17 @@ class InvestigationsController < AuthoringController
           render :print, :layout => "layouts/print"
         end
       }
-      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } }
+
+      format.jnlp   { 
+        if params.delete(:use_installer)
+          wrapped_jnlp_url = polymorphic_url(@investigation, :format => :jnlp, :params => params)
+          render :partial => 'shared/show_installer', :locals => 
+            { :runnable => @investigation, :teacher_mode => @teacher_mode , :wrapped_jnlp_url => wrapped_jnlp_url } 
+        else
+          render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode } 
+        end
+      }
+
       format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode} }
       format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
@@ -146,13 +160,17 @@ class InvestigationsController < AuthoringController
     end
   end
 
-
-  # GET /investigations/1.otml/teacher_otml
-  # GET /pages/1.xml
+  # GET /investigations/teacher/1.otml
+  # GET /investigations/teacher/1.dynamic_otml
   def teacher
     # display for teachers? Later we can determin via roles?
     @teacher_mode = true
-    render :layout => 'layouts/investigation', :action => :show
+    # whay doesn't this work with: respond_to do |format| ??
+    if request.format == :otml
+      render :layout => 'layouts/investigation', :action => :show
+    elsif request.format == :dynamic_otml
+      render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode}
+    end
   end
 
   # GET /pages/new
@@ -160,14 +178,16 @@ class InvestigationsController < AuthoringController
   def new
     @investigation = Investigation.new
     @investigation.user = current_user
-    @gse = GradeSpanExpectation.find_by_grade_span('9-11')
-    @investigation.grade_span_expectation = @gse
-    session[:original_gse_id] = session[:gse_id] = @gse.id
-    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
-    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-    domain = Domain.find(@gse.domain.id)
-    gses = domain.grade_span_expectations 
-    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    if APP_CONFIG[:use_gse]
+      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @investigation.grade_span_expectation = @gse
+      session[:original_gse_id] = session[:gse_id] = @gse.id
+      session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+      session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+      domain = Domain.find(@gse.domain.id)
+      gses = domain.grade_span_expectations 
+      @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    end
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation, :related_gses => @related_gses, :selected_gse =>@gse}
     end
@@ -180,19 +200,21 @@ class InvestigationsController < AuthoringController
   # GET /pages/1/edit
   def edit
     @investigation = Investigation.find(params[:id])
-    # if there is no gse assign a default one:
-    unless @gse = @investigation.grade_span_expectation
-      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
-      @investigation.grade_span_expectation = @gse
-      @investigation.save!
-    end
+    if APP_CONFIG[:use_gse]
+      # if there is no gse assign a default one:
+      unless @gse = @investigation.grade_span_expectation
+        @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+        @investigation.grade_span_expectation = @gse
+        @investigation.save!
+      end
     
-    session[:original_gse_id] = session[:gse_id] = @gse.id
-    session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
-    session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-    domain = Domain.find(@gse.domain.id)
-    gses = domain.grade_span_expectations 
-    @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+      session[:original_gse_id] = session[:gse_id] = @gse.id
+      session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
+      session[:original_domain_id] = session[:domain_id] = @gse.domain.id
+      domain = Domain.find(@gse.domain.id)
+      gses = domain.grade_span_expectations 
+      @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
+    end
     if request.xhr?
       render :partial => 'remote_form', :locals => { :investigation => @investigation,:related_gses => @related_gses, :selected_gse => @gse}
     end
@@ -285,10 +307,16 @@ class InvestigationsController < AuthoringController
   # DELETE /pages/1.xml
   def destroy
     @investigation = Investigation.find(params[:id])
-    @investigation.destroy
-
+    if @investigation.changeable?(current_user)
+      if @investigation.offerings && @investigation.offerings.size > 0
+        flash[:error] = "This investigation can't be destoyed, its in use by classes..."
+        @failed = true
+      else
+        @investigation.destroy
+      end
+    end
     respond_to do |format|
-      format.html { redirect_back_or(activities_url) }
+      format.html { redirect_back_or investigation_path(@investigation)}
       format.js
       format.xml  { head :ok }
     end
@@ -332,6 +360,7 @@ class InvestigationsController < AuthoringController
     @original = Investigation.find(params['id'])
     @investigation = @original.duplicate(current_user)
     @investigation.save
+    
     redirect_to edit_investigation_url(@investigation)
   end
   

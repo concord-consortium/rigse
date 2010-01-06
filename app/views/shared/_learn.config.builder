@@ -1,3 +1,4 @@
+config_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
   xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {

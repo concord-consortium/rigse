@@ -1,25 +1,28 @@
 / requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
 - portal_clazz_id ||= nil 
 
-.progress_container
-  #search_spinner.tiny{:style=>'display: none;'}
-    = image_tag "ajax-loader.gif"
-    searching ...
+.action_menu
   #search_title
-    %h4 find investigations
+    Search Investigations
+  .progress_container
+    #search_spinner.tiny{:style=>'display: none;'}
+      searching ...
+      = image_tag "ajax-loader.gif"
+
+
 %form{ :id => 'investigation_search_form'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
-  .aligned
-    %ul
-      %li
+  %table{:width => "100%"}
+    %tr
+      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'grade: ', :class=>"right"
         = select(nil,  :grade_span, GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
-      %li
+      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'domain: ', :class=>"right"          
         = select(nil,  :domain_id, Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
-      %li
+      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name
-      %li
+      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'drafts too: ', :class=>"right"
         = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]

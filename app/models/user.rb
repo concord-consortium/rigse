@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
+
+  has_settings
   
   # has_many :assessment_targets
   # has_many :big_ideas
@@ -91,6 +93,14 @@ class User < ActiveRecord::Base
       @@searchable_attributes
     end
     
+    def login_exists?(login)
+      User.count(:conditions => "`login` = '#{login}'") >= 1
+    end
+    
+    def login_does_not_exist?(login)
+      User.count(:conditions => "`login` = '#{login}'") == 0
+    end
+    
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
@@ -105,7 +115,7 @@ class User < ActiveRecord::Base
 
     # return the user who is the site administrator
     def site_admin
-      User.find_by_email(APP_CONFIG[:admin_email])
+      User.find_by_email(APP_CONFIG[:default_admin_user]['email'])
     end
   end
 
@@ -173,7 +183,7 @@ class User < ActiveRecord::Base
 
   def add_role(role)
     unless has_role?(role)
-      roles << Role.find_by_title(role)
+      roles << Role.find_or_create_by_title(role)
     end
   end
 
@@ -195,7 +205,7 @@ class User < ActiveRecord::Base
   end
 
   def make_user_a_member
-    roles << Role.find_by_title('member')
+    self.add_role('member')
   end
   
   # is this user the anonymous user?
@@ -214,10 +224,28 @@ class User < ActiveRecord::Base
     self
   end
 
+  def school
+    school_person = self.portal_teacher || self.portal_student
+    if (school_person)
+      return school_person.school
+    end
+  end
+  
+  def extra_params
+    if self.school
+      params = school.settings_hash
+    end
+    if params 
+      return params.merge(self.settings_hash)
+    end
+    return self.settings_hash
+  end
+
   protected
-    
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
+  
+
 end

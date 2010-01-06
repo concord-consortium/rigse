@@ -8,6 +8,7 @@
     %li#paste_link= paste_link_for(Page::paste_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
     %li= run_link_for(page)
     %li= print_link_for(page)
+    %li= print_link_for(page,{:teacher_mode => true})
     %li= toggle_all('elements')
     %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
     - if (page.changeable?(current_user))
@@ -30,6 +31,8 @@
     = dropdown_button "actions.png", :title => "actions for this page"
     - if (page.changeable?(current_user))
       = dropdown_button "add.png", :title => 'add content to this page'
+    - else
+      = link_button "add_disabled.png", "#", :title => "can't add content"
     = render :partial => "shared/dot_pager", :locals => {:node => page}
     - if (page.changeable?(current_user))
       - if (page.section)

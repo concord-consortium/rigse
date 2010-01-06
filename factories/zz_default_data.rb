@@ -6,14 +6,15 @@
 # couldn' get that to work for admin_projects though! 
 # ( Factory(:admin_projects) throws an error. )
 
-print "Loading default data set... "
 
-anon =  Factory.next :anonymous_user
-admin = Factory.next :admin_user
-
-device_config = Factory.create(:device_config)
-versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
-
-Admin::Project.create_or_update_default_project_from_settings_yml
-
-puts "done."
+# The following lines were needed to get cucumber started,
+# they have now been moved to features/support/env.rb.
+# (Left here for legacy documentation??)
+#
+# puts "Loading default data set... "
+# anon =  Factory.next :anonymous_user
+# admin = Factory.next :admin_user 
+# device_config = Factory.create(:device_config)
+# versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
+# Admin::Project.create_or_update_default_project_from_settings_yml
+# puts "done."

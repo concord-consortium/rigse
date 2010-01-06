@@ -1,0 +1,11 @@
+.item
+  = edit_menu_for(portal_learner, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Body:
+
+          =f.text_area :body 
+    
+    

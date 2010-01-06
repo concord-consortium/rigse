@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>untitled</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Noah Paessel">
+	<!-- Date: 2009-12-10 -->
+  <link href="stylesheets/themes/itsisu/itsisu.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/themes/itsisu/action_menu_tab.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/themes/itsisu/drop_down.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/themes/itsisu/accordion.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/window/window.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/window/itsisu.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <link href="stylesheets/live_validation.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/notes.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/data_table.css" media="screen" rel="stylesheet" type="text/css" />
+  <script src="javascripts/prototype.js" type="text/javascript"></script>
+  <script src="javascripts/prototype-ui/prototype-ui.js" type="text/javascript"></script>
+  <script src="javascripts/effects.js" type="text/javascript"></script>
+  <script src="javascripts/dragdrop.js" type="text/javascript"></script>
+
+  <script src="javascripts/controls.js" type="text/javascript"></script>
+  <script src="javascripts/scriptaculous.js" type="text/javascript"></script>
+  <script src="javascripts/misc/resizable.js" type="text/javascript"></script>
+
+
+  <script src="javascripts/flotr/excanvas.js" type="text/javascript"></script>
+
+  <script src="javascripts/flotr/flotr.js" type="text/javascript"></script>
+  <script src="javascripts/canvas2image.js" type="text/javascript"></script>
+  <script src="javascripts/application.js" type="text/javascript"></script>
+  <script src="javascripts/cookie.js" type="text/javascript"></script>
+  <script src="javascripts/accordion.js" type="text/javascript"></script>
+  <script src="javascripts/item_selectable.js" type="text/javascript"></script>
+
+  <script src="javascripts/live_validation.js" type="text/javascript"></script>
+  <!-- tiny_mce didn't play nice with the asset_packager.. -->
+  <script src="javascripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+
+
+</head>
+<body>
+Testing.
+<script type="text/javascript" charset="utf-8">
+  var props = { 
+    name: "new window",
+    theme: "itsisu",
+    width: 800,
+    height: 400,
+    modal: true,
+    resizable: true,
+    draggable: true,
+    shadow: true,
+    id: 'modal_dialog'
+  };
+  document.whenReady(function() {
+    UI.defaultWM = new UI.WindowManager();
+    document.dialog = new UI.Window(props);
+    document.dialog.setContent("<div id='_dynamic_content_'>empty</div>");
+    document.dialog.show(true);
+    document.dialog.focus(true);
+  });
+
+</script>
+
+</body>
+</html>

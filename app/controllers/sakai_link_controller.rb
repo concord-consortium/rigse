@@ -38,7 +38,14 @@ class SakaiLinkController < ApplicationController
       # the linktool doc says testsign should return "success", but in reality it returns "true"
       if @response == "true"
         # FIXME We may or may not be mapping the sakai internal unique id to the login field...
-        user = User.find_by_login(@internaluser)
+        begin
+          external_domain = ExternalUserDomain.select_external_domain_by_server_url(@serverurl)
+          user = ExternalUserDomain.find_user_by_external_login(@internaluser)
+          logger.error("#{external_domain} == #{user}")
+        rescue ExternalUserDomain::ExternalUserDomainError
+          logger.error("couldnt find external doain and user for #{@serverurl} == #{@internaluser}")          
+          external_domain = user = nil
+        end
         # logger.warn("Login (#{@internaluser}) found user: #{user}")
         if user
           self.current_user = user
