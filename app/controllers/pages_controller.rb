@@ -226,10 +226,10 @@ class PagesController < ApplicationController
   ##
   def duplicate
     @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
-    @copy.name = "copy of #{@page.name}"
+    @copy.name = "" #force numbering by default
     @copy.save
-    @section = @copy.section
-    redirect_to :action => 'edit', :id => @copy.id
+    flash[:notice] ="Copied #{@page.name}"
+    redirect_to url_for @copy
   end
 
 
@@ -240,13 +240,13 @@ class PagesController < ApplicationController
   end
   
   #
-  # Must be  js method, so don't even worry about it.
+  # Paste a page component
   #
   def paste
     if @page.changeable?(current_user)
       clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
       clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize
+      klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
       @original = klass.find(clipboard_data_id)
       if (@original) 
         @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]

@@ -1,13 +1,13 @@
 / locals: 
-/ * top_node, must be a include Module TreeNode
+/ * top_node, must include module TreeNode
 / * should also be an active record object which has a controller (for links)
 / * should also have a method called.id
 / * should also have a name method and possibly (?) a description method.
 / selects an array of ruby objects, which are somehow 'selected' (in navigation-sense, this means where you are...)
 / everything in the collection must have a name method... (for now), should change that up.
-/ TODO: it would be good to provide a means for passing for styling blocks.
+/ TODO: it would be good to provide a means for passing styling blocks.
 / TODO: it would be good to make the nesting recursive instead of fixed in this way.
-/ TODO: some way to dynmically specify the sorting methods?
+/ TODO: means to specify sorting method.
 #accordion_nav
   - top_container_id = dom_id_for(top_node, :accordion_container_list)
   - top_controller ||= top_node.class.name.tableize
@@ -19,6 +19,8 @@
 
   %ul{:id=>top_container_id, :class=>"accordion_header"}
     = link_to top_node.name, top_node
+    - if top_node.class == Investigation
+      =link_to preview_link_for top_node
     - top_node.children.each do |child|
       - style = teacher_only?(child) ? "accordion_container teacher_only" : "accordion_container"
       %li{:id=>dom_id_for(child,:accordion_item), :class=>style}
@@ -40,12 +42,15 @@
                   -else
                     =link_to "#{i+1}: #{s.name}",s, :class=> 'accordion_section_title'
                   - if s.respond_to? 'children'
+                    - if s.children.first
+                      - heading = s.children.first.class.name.humanize
+                      = s.children.size > 1 ? "#{heading.pluralize}: " : "#{heading}: "
                     -s.children.each_with_index do |p,i|
-                      - style = teacher_only?(p) ? "rollover teacher_only" : "rollover"
+                      - style = teacher_only?(p) ? "teacher_only numbered" : "numbered"
                       - if selects.include? p
-                        = link_button "this_node.png", "#", :title => "you are here", :class => style
+                        = link_to p.number, "#", :title => "you are here", :class => "#{style} selected"
                       - else
-                        = link_button "other_node.png", p, :title => "go to #{p.name}", :class => style
+                        = link_to p.number, p, :title => "go to #{p.name}", :class => style
         - if sub_action
           =sortable_element sub_container_id.to_sym, :url=> {:controller => sub_controller, :action => sub_action, :params => {:list_name=>sub_container_id,:id => child.id }}
     - if top_action
