@@ -1,14 +1,16 @@
 - if (node.previous)
-  = link_button "previous_node.png", node.previous, :title => "go to previous #{node.class.name.downcase}"
+  = link_button "previous_node.png", node.previous, :title => "go to #{node.previous.name}"
 - else
   .rollover= image_tag("previous_node_disabled.png")
 - if node.parent
   - node.parent.children.each do |sibling|
     - if (sibling.id == node.id)
-      = link_button "this_node.png", "#", :title => "you are here"
+      = link_button "this_node.png", "#", :title => "you are here (#{node.name})"
     - else
       = link_button "other_node.png", sibling, :title => "go to \"#{sibling.name}\""
 - if (node.next)
   = link_button "next_node.png", node.next, :title => "go to next #{node.class.name.downcase}"
 - else
   .rollover= image_tag("next_node_disabled.png")
+- if (node.parent)
+  = link_button "up.png", node.parent, :title => "up to #{node.parent.name}"

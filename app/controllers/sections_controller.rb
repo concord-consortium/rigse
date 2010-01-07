@@ -169,9 +169,11 @@ class SectionsController < ApplicationController
   ##
   ##
   def add_page
-    @page= Page.new
-    @page.section = Section.find(params['id'])
+    @page= Page.create
+    @page.section = @section
     @page.user = current_user
+    @page.save
+    redirect_to @page
   end
   
   ##
@@ -201,8 +203,10 @@ class SectionsController < ApplicationController
     @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
+    @copy.deep_set_user current_user
     @activity = @copy.activity
-    redirect_to :action => 'edit', :id => @copy.id
+    flash[:notice] ="Copied #{@section.name}"
+    redirect_to url_for @copy
   end
   
   #
@@ -221,16 +225,20 @@ class SectionsController < ApplicationController
       clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
       klass = clipboard_data_type.pluralize.classify.constantize
       @original = klass.find(clipboard_data_id)
-      if (@original) 
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
-        if (@component)
-          # @component.original = @original
-          @container = params[:container] || 'section_pages_list'
-          @component.name = "copy of #{@component.name}"
-          @component.deep_set_user current_user
-          @component.section = @section
-          @component.save
+      if @original
+        @container = params[:container] || 'section_pages_list'
+        if @original.class == Page
+          @component = @original.duplicate
+        else
+          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
+          if (@component)
+            # @component.original = @original
+            @component.name = "copy of #{@component.name}"
+            @component.section = @section
+            @component.save
+          end
         end
+        @component.deep_set_user current_user
       end
     end
     render :update do |page|

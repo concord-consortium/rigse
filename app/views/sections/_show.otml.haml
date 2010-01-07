@@ -4,17 +4,6 @@
   %OTSection{ :name => ot_menu_display_name(section)   }
     %header
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
-        %bodyText
-          - if teacher_mode
-            - if teacher_only?(section)
-              #content.teacher_mode
-                %h1= h(section.name)
-            - else
-              #content
-                %h1= h(section.name)
-          - else
-            #content
-              %h1= h(section.name)
 
     %content
       %object{ :refid => ot_refid_for(section, :page_card_container)}/

@@ -447,6 +447,12 @@ namespace :convert do
       "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
   end
 
+  # Wed Jan 6 2010
+  desc "Fixup inner pages: add static_page associations (run deploy:migrate first!)"
+  task :add_static_pages_to_inner_pages, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:add_static_page_to_inner_pages --trace"
+  end
 end
 
 
@@ -486,4 +492,5 @@ before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
-after 'deploy:create_asset_packages', 'deploy:set_permissions'
+after 'deploy:create_asset_packages', 'deploy:cleanup'
+

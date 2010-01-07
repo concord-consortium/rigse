@@ -204,6 +204,18 @@ HEREDOC
       MultiteacherClazzes.make_all_multi_teacher
     end
 
+    desc "Fixup inner pages so they have a satic area (run migrations first)"
+    task :add_static_page_to_inner_pages => :environment do
+      innerPageElements = PageElement.all.select { |pe| pe.embeddable_type == "InnerPage" }
+      innerPages = innerPageElements.map { |pe| pe.embeddable }
+      innerPages.each do |ip|
+        if ip.static_page.nil?
+          ip.static_page = Page.new
+          ip.static_page.user = ip.user
+          ip.save
+        end
+      end
+    end
   end
 end
 

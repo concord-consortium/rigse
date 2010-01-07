@@ -181,7 +181,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :sections, :member => {
     :destroy => :post,
-    :add_page => :post,
+    :add_page => [:post, :get],
     :sort_pages => :post, 
     :delete_page => :post,
     :print => :get,
@@ -229,7 +229,7 @@ ActionController::Routing::Routes.draw do |map|
   
   
   map.resources :activities, :member => {
-    :add_section => :post,
+    :add_section => [:post,:get],
     :sort_sections => :post,
     :delete_section => :post,
     :print => :get,
@@ -267,7 +267,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
-
+  map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   # map. ':controller/:action/:id.:format'
   
   # Install the default routes as the lowest priority.
