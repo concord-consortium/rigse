@@ -78,7 +78,7 @@
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig
       org.concord.otrunkmw.OTModelerPage
-      org.concord.otrunknl41.OTNLogoModel
+      org.concord.otrunknl4.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
@@ -150,7 +150,7 @@
       ['tab_container_view','org.concord.otrunk.ui.OTTabContainer', 'org.concord.otrunk.ui.swing.OTTabContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelView'],
+      ['n_logo_model', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelView'],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismView'],
@@ -195,7 +195,7 @@
 #      ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
 #      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_edit_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageEditView'],
-      ['n_logo_model_edit_view', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelEditView'],
+      ['n_logo_model_edit_view', 'org.concord.otrunknl4.OTNLogoModel', 'org.concord.otrunknl4.OTNLogoModelEditView'],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.biologica.OTWorldEditView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.biologica.OTOrganismEditView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismEditView'],
