@@ -47,6 +47,7 @@ development: &non_production_settings
     version: snapshot
   valid_sakai_instances:
     - http://localhost:3000/
+  net_logo_package_name: otrunknl4
   
 test:
   <<: *non_production_settings
@@ -79,6 +80,7 @@ staging:
     version: snapshot
   valid_sakai_instances:
     - http://localhost:3000/
+  net_logo_package_name: otrunknl4
   
 production:
   site_name: RITES Investigations
@@ -105,4 +107,4 @@ production:
     version: 0.1.0-20090724.190238
   valid_sakai_instances:
     - http://localhost:3000/
-  
+  net_logo_package_name: otrunknl4
