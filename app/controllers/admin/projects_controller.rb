@@ -2,7 +2,7 @@ class Admin::ProjectsController < ApplicationController
   
   before_filter :admin_only
   # before_filter :setup_object, :except => [:index]
-  before_filter :render_scope, :only => [:show]
+  # before_filter :render_scope, :only => [:show]
 
   # editing / modifying / deleting require editable-ness
   # before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
@@ -76,7 +76,6 @@ class Admin::ProjectsController < ApplicationController
   # POST /admin/projects.xml
   def create
     @admin_project = Admin::Project.new(params[:admin_project])
-
     respond_to do |format|
       if @admin_project.save
         flash[:notice] = 'Admin::Project was successfully created.'
@@ -117,7 +116,7 @@ class Admin::ProjectsController < ApplicationController
     @project.destroy
 
     respond_to do |format|
-      format.html { redirect_to(projects_url) }
+      format.html { redirect_to(admin_projects_url) }
       format.xml  { head :ok }
     end
   end
