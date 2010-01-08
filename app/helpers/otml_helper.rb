@@ -82,7 +82,6 @@
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig
       org.concord.otrunkmw.OTModelerPage
-      org.concord.#{net_logo_package_name}.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
@@ -117,6 +116,7 @@
       org.concord.otrunk.script.ui.OTScriptVariableView
       org.concord.smartgraph.OTSmartGraphTool
     } + data_filter_inports + (@otrunk_imports || []).uniq
+    imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
   end
   
   def ot_imports
