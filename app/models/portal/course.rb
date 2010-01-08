@@ -26,5 +26,16 @@ class Portal::Course < ActiveRecord::Base
     def display_name
       "Course"
     end
+    
+    # Try to find by course_number and title,
+    def find_all_by_course_number_name_and_school_id(number,name,schoold_id)
+      results = self.find_all_by_name_and_school_id(name,school_id)
+      adequate = results.reject do |course|
+        
+      end
+    end
   end
+  
+
+  
 end

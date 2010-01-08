@@ -609,9 +609,9 @@ Logged to: #{File.expand_path(@log_path)}
       school = school_for(course_csv_row)
       if school
         # courses = Portal::Course.find(:all, :conditions => {:name => course_csv_row[:Title]}).detect { |course| course.school.id == school.id }
-        courses = Portal::Course.find_all_by_name_and_school_id(course_csv_row[:Title], school.id)
+        courses = Portal::Course.find_all_by_course_number_name_and_school_id(:course_number => course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
         if courses.empty?
-          course = Portal::Course.create!( {:name => course_csv_row[:Title], :school_id => school.id })
+          course = Portal::Course.create!( {:course_number => course_csv_row[:CourseNumber],:name => course_csv_row[:Title], :school_id => school.id })
         else
           if courses.length == 1
             course = courses[0]
