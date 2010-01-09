@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 
@@ -49,6 +49,10 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
+  # FIXME: see comment about this hack in config/environments/development.rb
+  $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
+
+  # config.gem "ffi-ncurses ", :version => "= 0.3.3"
   config.gem "arrayfields"
   config.gem "hpricot", :version => '0.6.164'
   config.gem "capistrano-ext", :lib => "capistrano"
