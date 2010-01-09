@@ -18,6 +18,10 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+config.gem "highline", :version => "= 1.5.2"
+config.gem "ffi-ncurses ", :version => "= 0.3.2.1"
+
+
 # see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
 # ActiveSupport::Dependencies.explicitly_unloadable_constants << 'Portal'
 # ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'
