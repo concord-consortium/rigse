@@ -182,10 +182,25 @@ you can also import these ITSI activities into RITES Investigations by running t
 
   #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
 
-* if you are developing locally and are using the same database for both development and production
-  environments the ITSI import will run much faster in production mode:
+If you have ssh access to the RITES production server you can get a copy of the production database on
+your local development instance with the following steps:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
+  cap production db:fetch_remote_db
+  RAILS_ENV=production #{jruby_system_command}  rake db:load
+
+If the codebase on your development system has moved ahead of production you may need to run additional tasks such as:
+
+  RAILS_ENV=production #{jruby_system_command}  rake db:migrate
+  RAILS_ENV=production #{jruby_system_command}  rake rigse:setup:default_portal_resources
+  RAILS_ENV=production #{jruby_system_command}  rake portal:setup:create_districts_and_schools_from_nces_data
+
+The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional 
+and necessary default model initialization.
+
+In order for the same passwords to work you will also need to have the same keys in your local 
+config/initializers/site_keys.rb as on the server you copied the production data from.
+
+  cap production db:copy_remote_site_keys</code></pre>
 
 
 HEREDOC
