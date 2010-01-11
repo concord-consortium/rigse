@@ -76,12 +76,12 @@ class RinetData
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
     
-    
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
-      :log_level => Logger::WARN
+      :log_level => Logger::WARN,
+      :drop_enrollments => false
     }
     
     @rinet_data_options = defaults.merge(options)
@@ -530,6 +530,11 @@ Logged to: #{File.expand_path(@log_path)}
         # how do we find out the teacher grades?
         # teacher.grades << grade_9
     
+        # optionally remove assignments from teacher:
+        if @rinet_data_options[:drop_enrollments]
+          teacher.clazzes = []
+        end
+    
         # add the teacher to the school
         school = school_for(row)
         if school
@@ -570,7 +575,11 @@ Logged to: #{File.expand_path(@log_path)}
           student.save!
           user.portal_student=student;
         end
-
+        # optionally remove enrollments from student:
+        if @rinet_data_options[:drop_enrollments]
+          student.clazzes = []
+        end
+        
         # add the student to the school
         school = school_for(row)
         if school
