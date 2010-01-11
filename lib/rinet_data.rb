@@ -92,6 +92,7 @@ class RinetData
     @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
     @log_directory = @rinet_data_options[:log_directory]
     @log_path = "#{@log_directory}/import_log.txt"
+    @report_path = "#{@log_directory}/report.txt"
 
     @errors = {:districts => {}}
     @last_log_level = nil
@@ -100,6 +101,8 @@ class RinetData
     FileUtils.mkdir_p @log_directory
     @log = Logger.new(@log_path,'daily')
     @log.level = @rinet_data_options[:log_level]
+    @report = Logger.new(@report_path,'daily')
+    @report.level = Logger::INFO
     
     message = <<-HEREDOC
 
@@ -816,6 +819,7 @@ Logged to: #{File.expand_path(@log_path)}
   #
   def report(message)
     log_message(message, {:log_level => :error})
+    @report.info(message)
   end
   
   #
