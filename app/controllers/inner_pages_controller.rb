@@ -71,7 +71,11 @@ class InnerPagesController < ApplicationController
     @element.save
     # @element.update_investigation_timestamp
     @page.reload
-    render :partial => "page", :locals => {:sub_page => @page, :inner_page => @inner_page}
+    if params['static']
+      render :partial => "static_page", :locals => {:page => @page, :inner_page => @inner_page}
+    else
+      render :partial => "page", :locals => {:sub_page => @page, :inner_page => @inner_page}
+    end
   end
 
 

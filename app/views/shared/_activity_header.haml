@@ -24,7 +24,7 @@
     = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
     = dropdown_button "actions.png", :title => "actions for this activity"
     - if (activity.changeable?(current_user))
-      = remote_link_button "add.png", :url => add_section_activity_path(activity), :title => "add new section"
+      = link_button "add.png", add_section_activity_path(activity)
       - if (activity.investigation)
         = delete_button_for(activity, :redirect => url_for(activity.investigation))
       - else
@@ -32,5 +32,5 @@
     - else
       = link_button "add_disabled.png", "#", :title => "can't add sections"
     - if (activity.investigation)
-      = link_button "up.png", activity.investigation, :title => 'go to investigation'
+      = link_button "up.png", activity.investigation, :title => "got to #{top_level_container_name}"
 

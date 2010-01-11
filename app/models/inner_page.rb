@@ -2,6 +2,7 @@ class InnerPage < ActiveRecord::Base
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
+  belongs_to  :static_page, :class_name => "Page"
   has_many :inner_page_pages, :order => :position, :dependent => :destroy
   has_many :sub_pages, :class_name => "Page", :through => :inner_page_pages, :source => "page"
   
@@ -22,6 +23,7 @@ class InnerPage < ActiveRecord::Base
 
   default_value_for :name, "InnerPage element"
   default_value_for :description, "description ..."
+  default_value_for :static_page, Page.create(:name => 'static content', :description => "Static content for inner page")
 
   def self.dont_make_associations
     true
@@ -44,25 +46,25 @@ class InnerPage < ActiveRecord::Base
     pages[0]
   end
   
-  
   def section
     if parent
-      return parent.activity
+      return parent.section
     end
-    return nil
+    nil
   end
 
   def activity
     if section
       return section.activity
     end
-    return nil
+    nil
   end
   
   def investigation
     if activity
       return activity.investigation
     end
+    nil
   end
   
   
@@ -82,7 +84,7 @@ class InnerPage < ActiveRecord::Base
       # end
       # page.destroy? or is that being to harsh?
     else
-      throw "cant deal" 
+      throw "Unknwown inner_page #{page.id} #{page.name}" 
     end
     self.reload
   end
@@ -98,5 +100,28 @@ class InnerPage < ActiveRecord::Base
     end
   end
   
+  
+  #
+  # Duplicate: try and create a deep clone of this innerpage with all of its sub_pages
+  #
+  def duplicate
+    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy.static_page = self.static_page.duplicate
+    self.sub_pages.each do |page| 
+      copy_of_page = page.duplicate
+      @copy.sub_pages  << copy_of_page
+      copy_of_page.save
+    end
+    @copy.save
+    @copy
+  end
+  
+  #
+  # used to choose a different partial for printing.
+  # see application_helper.rb#render_show_partial_for
+  #
+  def print_partial_name
+    return "print"
+  end
   
 end

@@ -14,11 +14,12 @@ class ItsiImporter
       user
     end
     
-    def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, logging=false)
-      itsi_prefix = "ITSI Unit: #{ccp_itsi_unit.unit_name}"
-      puts "creating: #{itsi_prefix}: "
+    def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, prefix="")
+      # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
+      name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
+      puts "creating: #{name}: "
       investigation = Investigation.create do |i|
-        i.name = itsi_prefix
+        i.name = name
         i.user = user
         i.description = "An ITSI unit is a collection of ITSI Activities"
       end
@@ -27,7 +28,7 @@ class ItsiImporter
         begin
           unless foreign_key.empty?
             itsi_activity = Itsi::Activity.find(foreign_key)
-            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user)
+            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user,prefix)
             puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
           else
             puts "  -- foreign key empty for ITSI Activity --"
@@ -39,18 +40,19 @@ class ItsiImporter
       puts
     end
 
-    def create_investigation_from_itsi_activity(itsi_activity, user, logging=false)
-      itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-      puts "creating: #{itsi_prefix}"
+    def create_investigation_from_itsi_activity(itsi_activity, user,  prefix="")
+      # itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
+      puts "creating: #{name}: "
       investigation = Investigation.create do |i|
-        i.name = itsi_prefix
+        i.name = name
         i.user = user
         i.description = itsi_activity.description
       end
-      ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user)
+      ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix)
     end
 
-    def add_itsi_activity_to_investigation(investigation, itsi_activity, user)
+    def add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix="")
       @@prediction_graph = nil
       if itsi_activity.collectdata_probe_active
         @@first_probe_type = ProbeType.find(itsi_activity.probe_type_id)
@@ -58,9 +60,10 @@ class ItsiImporter
         @@first_probe_type = ProbeType.find_by_name('Temperature')
         @@first_probe_type.name = "Temperature as default for missing probe_type_id: #{itsi_activity.probe_type_id}"
       end
-      itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+      # itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
       activity = Activity.create do |i|
-        i.name = itsi_prefix
+        i.name = name
         i.user = user
         i.description = itsi_activity.description
       end
@@ -415,18 +418,26 @@ class ItsiImporter
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?
         page = Page.create do |p|
-          p.name = "#{name}"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....
+          # p.name = "#{name}"
           p.description = page_description
         end
         page_embeddable = nil
       else
         page_embeddable = Xhtml.create do |x|
-          x.name = name + ": Body Content (html)"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names or descriptions being added to text content
+          # x.name = name + ": Body Content (html)"
           x.description = ""
+          # look for weird entity that should actually be an endash -- what causes this??
+          # cant figure out right now the relations between textile / html and escape entities.
+          html_content.gsub!(/â€“/,"—")
+          # we are also seeing things like this: &#8217;  =- &amp;#8217; -- double encoded?
+          html_content.gsub!(/&amp;#(\d+);/, '&#\1;')
           x.content = html_content
         end
         page = Page.create do |p|
-          p.name = "#{name}"
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....          
+          # p.name = "#{name}"
           p.description = page_description
           page_embeddable.pages << p
         end

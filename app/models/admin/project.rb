@@ -60,6 +60,9 @@ class Admin::Project < ActiveRecord::Base
     end
   end
 
+  # When writing to config/settings.yml ONLY use strings for hash keys -- do not use symbols.
+  # On app startup config/initializers/load_config.rb reads in the settings and creates
+  # the APP_CONFIG hash with symbolized keys ... so read access in the app uses symbols.
   def generate_settings_yml
     app_config = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")
     app_config[RAILS_ENV]['site_name'] = self.name
@@ -67,7 +70,7 @@ class Admin::Project < ActiveRecord::Base
     app_config[RAILS_ENV]['enable_default_users'] = self.enable_default_users
     app_config[RAILS_ENV]['description'] = self.description
     app_config[RAILS_ENV]['states_and_provinces'] = self.states_and_provinces
-    app_config[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
+    app_config[RAILS_ENV]['default_maven_jnlp'] = generate_default_maven_jnlp
     app_config.to_yaml
   end
 

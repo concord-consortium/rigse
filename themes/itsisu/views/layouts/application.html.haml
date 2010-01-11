@@ -56,11 +56,8 @@
         .left_content
           =image_tag("itsi_su.png")
           / %h1=APP_CONFIG[:site_name]
-          %h1 
-            Innovative
-            Technology in
-            Science Inquiry
-            Scale Up
+          %h1=APP_CONFIG[:site_name]|| "ITSI-SU"
+          %h3 Innovative Technology in Science Inquiry (scale up)
         .right_content
           .padded_content_right
             Welcome
@@ -85,7 +82,7 @@
             %li= link_to 'Home', home_path
             %li= link_to 'About', about_path
             - unless current_user.anonymous? || current_user.portal_student
-              %li= link_to 'Units', investigations_path        
+              %li= link_to top_level_container_name.humanize.pluralize, investigations_path        
               - if @investigation 
                 %li
                   = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}

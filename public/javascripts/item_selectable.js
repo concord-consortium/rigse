@@ -20,9 +20,9 @@ var item_select = function(event) {
   // deselect everyone first:
   item_deselect();
 
-  element = event.element();
-  element = $(element); // extend
-  selected = get_selectable(element)
+  var element = event.element();
+  var element = $(element); // extend
+  var selected = get_selectable(element)
 
   if (selected) {
     var type = '';
@@ -46,19 +46,30 @@ var item_deselect = function() {
     element.addClassName(unselected_class);
     rites_document.selected_type=null;
     rites_document.selected_id=null;
+    rites_document.selected_name="unknown"
   });
 }
 
 var update_links = function() {
   if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !=null) {
-      var template = new Template('<a>copy #{type}:#{id}</a>');
-      $('copy_link').addClassName('copy_enabled');
+      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">copy #{type} #{name}</a>');
+      // var template = new Template('<a>copy #{type}:#{id}</a>');
+      $('copy_link').addClassName('copy_paste_enabled');
+      $('copy_link').removeClassName('copy_paste_disabled');
       $('copy_link').observe('click',copy);
-      $('copy_link').update(template.evaluate({type:rites_document.selected_type, id:rites_document.selected_id}));    
+      new Ajax.Request('/name_for_clipboard_data?clipboard_data_type='+rites_document.selected_type+'&clipboard_data_id='+rites_document.selected_id, {
+        method: 'get',
+        onSuccess: function(transport) {
+          rites_document.selected_name = transport.responseText
+          $('copy_link').update(template.evaluate({type:rites_document.selected_type, name:rites_document.selected_name}));
+        }
+      });
+          
     }
     else {
-      $('copy_link').addClassName('copy_disabled');
+      $('copy_link').addClassName('copy_paste_disabled');
+      $('copy_link').removeClassName('copy_paste_enabled');      
       $('copy_link').stopObserving();  
       $('copy_link').update('copy (nothing selected)');
     }
@@ -66,10 +77,10 @@ var update_links = function() {
 }
 
 var copy = function() {
-  var template = new Template('#{type}:#{id} is now in your clipboard.');
+  var template = new Template('#{type}:#{name} is now in your clipboard.');
   createCookie('clipboard_data_type',rites_document.selected_type); 
   createCookie('clipboard_data_id',rites_document.selected_id);
-  alert(template.evaluate({type:rites_document.selected_type, id:rites_document.selected_id}));
+  alert(template.evaluate({type:rites_document.selected_type, name:rites_document.selected_name}));
   // replace the paste button, much harder?
   var params = {
     container_id: container_id,

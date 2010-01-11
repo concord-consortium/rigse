@@ -33,6 +33,13 @@ module TreeNode
     return nil
   end
 
+  def number
+    if parent
+      return parent.children.index(self) + 1
+    end
+    return 1
+  end
+  
   def each(&block)
     block[self]
     self.children.each do |leaf| 
@@ -80,8 +87,11 @@ module TreeNode
     set_user.call(self)    
     self.each &set_user
     
-    unless original_user == new_user
-      original_user.removed_investigation
+    
+    if original_user
+      unless original_user == new_user
+        original_user.removed_investigation
+      end
     end
   end
   

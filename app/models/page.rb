@@ -98,8 +98,8 @@ class Page < ActiveRecord::Base
         return parent
       when InnerPage
         # kind of hackish:
-        if(parent.pages[0])
-          return parent.pages[0].section
+        if(parent.parent)
+          return parent.parent.section
         end
     end
     return nil
@@ -152,7 +152,7 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return (section || inner_pages[0] || nil)
+    return self.inner_page_pages.size > 0 ? self.inner_page_pages[0].inner_page : section
   end
   
   include TreeNode
@@ -174,6 +174,26 @@ class Page < ActiveRecord::Base
   def children
     # maybe what is the child we wonder?
     return page_elements.map { |e| e.embeddable }
+  end
+  
+  
+  #
+  # Duplicate: try and create a deep clone of this page and its page_elements....
+  # Esoteric question for the future: Would we ever want to clone the elements shallow?
+  # maybe, but it will confuse authors
+  #
+  def duplicate
+    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy.name = "" # allow for auto-numbering of pages
+    @copy.section = self.section
+    @copy.save
+    self.page_elements.each do |e| 
+      ecopy = e.duplicate
+      ecopy.page = @copy
+      ecopy.save
+    end
+    @copy.save
+    @copy
   end
   
 end

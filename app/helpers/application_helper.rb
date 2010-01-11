@@ -3,6 +3,10 @@ include JnlpHelper
 
 module ApplicationHelper
 
+  def top_level_container_name(options = {:upercase => false, :plural => false})
+    name = (APP_CONFIG[:top_level_container_name] || "investigation")
+  end
+  
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #
@@ -144,7 +148,11 @@ module ApplicationHelper
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.demodulize.underscore
-    render :partial => "#{class_name.pluralize}/show", :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+    partial = "#{class_name.pluralize}/show"
+    # if component.respond_to? :print_partial_name
+    #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
+    # end
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)
@@ -280,19 +288,47 @@ module ApplicationHelper
     end
   end
 
+  def clipboard_object(options={})
+    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
+    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
+    container_id         = options[:container_id] || params[:container_id]
+    if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id 
+      clazz = clipboard_data_type.classify.constantize
+      if clazz
+        id = clipboard_data_id.to_i
+        if id
+          return clazz.find(id)
+        end
+      end
+    end
+    return nil
+  end
 
+  def clipboard_object_name(options={})
+    obj = clipboard_object(options)
+    if obj
+      if obj.respond_to? :name
+        return obj.name
+      else
+        return obj.class.name.humanize
+      end
+    end
+    return "(unknown object)"
+  end
+  
+  
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
     container_id         = options[:container_id] || params[:container_id]
     
-    return "paste (nothing in clipboard)" unless clipboard_data_type
-    
+    return "<span class='copy_paste_disabled'>paste (nothing in clipboard)</span>" unless clipboard_data_type
+    name = clipboard_object_name
     if acceptable_types.include?(clipboard_data_type) 
       url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return link_to_remote("paste #{clipboard_data_type}:#{clipboard_data_id}", :url => url)
+      return remote_link_button ("paste-out.png", :url => url, :title => "paste #{clipboard_data_type} #{name}") + link_to_remote("paste #{clipboard_data_type} #{name}", :url=>url)
     end
-    return "cant paste (#{clipboard_data_type}:#{clipboard_data_id}) here"
+    return "<span class='copy_paste_disabled'>cant paste #{clipboard_data_type} #{name} here</span>"
   end
 
   def run_button_for(component)
@@ -356,12 +392,13 @@ module ApplicationHelper
   
   def duplicate_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
+    text = params[:text] || 'duplicate'
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
     link_button("itsi_copy.png", url, 
       :title => "copy the #{component_display_name}: '#{name}'") +
-    link_to('copy', url)
+    link_to(text, url)
   end
   
 
@@ -388,15 +425,20 @@ module ApplicationHelper
   end
 
   def delete_button_for(model, options={})
-    # find the page_element for the embeddable
-    embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
-    controller = "#{model.class.name.pluralize.underscore}"
-    if options[:redirect]
-      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
-    else
-      url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+    if model.changeable? current_user
+      # find the page_element for the embeddable
+      embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
+      controller = "#{model.class.name.pluralize.underscore}"
+      if defined? model.parent
+        options[:redirect] ||= url_for model.parent
+      end
+      if options[:redirect]
+        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
+      else
+        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+      end
+      remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
     end
-    remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
   end
 
   def link_to_container(container, options={})

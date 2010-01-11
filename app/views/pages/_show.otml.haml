@@ -15,13 +15,26 @@
       - if teacher_only?(page)
         - if teacher_mode
           #content.teacher_mode
-            %h2= h(page.name)
+            - if page.section
+              %table{:width=>"100%"}
+                %tr
+                  %td{:align => "left"}
+                    %h1= h(page.section.name)
+                  %td{:align => "right"}
+                    %h2=h(page.name)
             - page.page_elements.each do |element|
               .element
                 %object{ :refid => ot_refid_for(element.embeddable) }/
       - else
         #content
-          %h2= h(page.name)
+          - if page.section
+            %table{:width=>"100%"}
+              %tr
+                %td{:align => "left"}
+                  %h1= h(page.section.name)
+                %td{:align => "right"}
+                  %h2=h(page.name)
+                  
           - page.page_elements.each do |element|
             .element
               = yield "element_#{dom_id_for(element.embeddable)}".to_sym
@@ -34,7 +47,7 @@
         - if should_show_teacher_note? page, :investigation
           %tr{:valign=>"top"}
             %td{:width=>"25%"}
-              %h3= "Investigation notes:"
+              %h3= "#{top_level_container_name.humanize.pluralize} notes:"
             %td
               .activity_teacher_note= page.section.investigation.teacher_note_otml
 
