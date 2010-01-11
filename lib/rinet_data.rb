@@ -621,19 +621,7 @@ Logged to: #{File.expand_path(@log_path)}
       school = school_for(course_csv_row)
       if school
         # courses = Portal::Course.find(:all, :conditions => {:name => course_csv_row[:Title]}).detect { |course| course.school.id == school.id }
-        courses = Portal::Course.find_all_by_course_number_name_and_school_id(:course_number => course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
-        if courses.empty?
-          course = Portal::Course.create!( {:course_number => course_csv_row[:CourseNumber],:name => course_csv_row[:Title], :school_id => school.id })
-        else
-          if courses.length == 1
-            course = courses[0]
-          else
-            # TODO: what if we have multiple matches?
-            @log.warn("Course not unique! #{course_csv_row[:Title]}, #{school.id}, found #{courses.size} entries")
-            @log.info("returning first found: (#{courses[0]})")
-            course = courses[0]
-          end
-        end
+        course = Portal::Course.find_or_create_by_course_number_name_and_school_id(course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
         course_csv_row[:rites_course] = course
         # cache that results in hashtable
         @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
