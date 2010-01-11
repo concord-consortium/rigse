@@ -653,8 +653,8 @@ Logged to: #{File.expand_path(@log_path)}
     @collection_length = new_staff_assignments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} staff assignments:)\n")
-    new_staff_assignments.each do |nc| 
-      create_or_update_class(nc)
+    new_staff_assignments.each do |assignment| 
+      create_or_update_class(assignment)
       @collection_index += 1
     end
     
@@ -663,8 +663,8 @@ Logged to: #{File.expand_path(@log_path)}
     @collection_length = enrollments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} enrollments:)\n")
-    enrollments.each do |nc| 
-      create_or_update_class(nc)
+    enrollments.each do |enrollment| 
+      create_or_update_class(enrollment)
       @collection_index += 1
     end
   end
