@@ -57,7 +57,7 @@ Rails::Initializer.run do |config|
   config.gem "hpricot", :version => '0.6.164'
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
-  config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate'
   config.gem "haml", :version => '>= 2.2.0'  
   config.gem "RedCloth", :version => '>= 4.1.1'
   config.gem "uuidtools", :version => '>= 2.0.0'
@@ -65,8 +65,8 @@ Rails::Initializer.run do |config|
   config.gem "prawn", :version => '>= 0.4.1'
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   config.gem 'open4', :version => '>= 0.9.6'
-  config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
-  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
+  config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1'
+  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
   config.gem "jnlp", :version => '>= 0.0.5.3'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
   config.gem "ar-extensions", :version => ">= 0.9.1"
