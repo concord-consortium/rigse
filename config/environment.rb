@@ -56,7 +56,7 @@ Rails::Initializer.run do |config|
   config.gem "arrayfields"
   config.gem "hpricot", :version => '0.6.164'
   config.gem "capistrano-ext", :lib => "capistrano"
-  config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
+  config.gem 'rubyist-aasm', :lib => 'aasm', :version => '>=2.0.2'
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate'
   config.gem "haml", :version => '>= 2.2.0'  
   config.gem "RedCloth", :version => '>= 4.1.1'
