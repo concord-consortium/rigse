@@ -33,8 +33,8 @@ describe TruncatableXhtml do
          :name =>"testing",
          :content => original
         })
-        xhtml.replace_offensive_html.content.should_not eql original
-        xhtml.replace_offensive_html.content.should eql expected
+        xhtml.replace_offensive_html.content.should_not eql(original)
+        xhtml.replace_offensive_html.content.should eql(expected)
       end
     end
     it "should leave non offending xhtml alone" do
@@ -43,7 +43,7 @@ describe TruncatableXhtml do
          :name => "testing",
          :content => content
         })
-        xhtml.replace_offensive_html.content.should eql content
+        xhtml.replace_offensive_html.content.should eql(content)
       end
     end
   end

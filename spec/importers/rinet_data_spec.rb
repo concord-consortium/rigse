@@ -115,7 +115,7 @@ describe RinetData do
   describe "exceptions that should be thrown" do
     it "should throw MissingDistrictFolderError when trying to load non-existant district data" do
       rd = RinetData.new
-      lambda {rd.parse_csv_files_for_district('fake')}.should raise_error RinetData::MissingDistrictFolderError
+      lambda {rd.parse_csv_files_for_district('fake')}.should raise_error(RinetData::MissingDistrictFolderError)
     end
   end
   
@@ -392,8 +392,8 @@ describe RinetData do
       #pending "Broken example"
       run_importer(:districts => ['01','02'])
       ["GYM","PHYSICS"].each do | name |
-        Portal::Clazz.count(:conditions=>{:name => name}).should be 1
-        Portal::Course.count(:conditions=>{:name => name}).should be 1
+        Portal::Clazz.count(:conditions=>{:name => name}).should be(1)
+        Portal::Course.count(:conditions=>{:name => name}).should be(1)
       end
     end
     
@@ -401,8 +401,8 @@ describe RinetData do
       #pending "Broken example"
       run_importer(:districts => ['01','02'])
       ["ART","MATH"].each do | name |
-        Portal::Clazz.count(:conditions=>{:name => name}).should be 2
-        Portal::Course.count(:conditions=>{:name => name}).should be 2
+        Portal::Clazz.count(:conditions=>{:name => name}).should be(2)
+        Portal::Course.count(:conditions=>{:name => name}).should be(2)
       end 
     end
   end
