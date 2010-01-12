@@ -49,18 +49,18 @@ describe Portal::Course do
     it "We should be able to find a course with the same number,name and school_id" do
       found = Portal::Course.find_by_course_number_name_and_school_id(@course_number,"with number",@school.id)
       found.should_not be_nil
-      found.id.should be @course_with_number.id
+      found.id.should be(@course_with_number.id)
     end
     it "We should be able to find a course with the same number,a new (differing) name and school_id" do
       found = Portal::Course.find_by_course_number_name_and_school_id(@course_number,"new name for the course",@school.id)
       found.should_not be_nil
-      found.id.should be @course_with_number.id
+      found.id.should be(@course_with_number.id)
     end
     
     it "We should be able to find a course with no course number, but with the same name and school_id" do
       found = Portal::Course.find_by_course_number_name_and_school_id("NEW_COURSE_NUMBER","without number",@school.id)
       found.should_not be_nil
-      found.id.should be @course_without_number.id
+      found.id.should be(@course_without_number.id)
       found.course_number.should be_nil
     end
     
@@ -74,22 +74,22 @@ describe Portal::Course do
     it "We should be able to find a course with the same number,name and school_id" do
       found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_number,"with number",@school.id)
       found.should_not be_nil
-      found.id.should be @course_with_number.id
+      found.id.should be(@course_with_number.id)
     end
     it "We should be able to find a course with the same number,and give it a new name" do
       new_name = "new name for the course"
       found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_number,new_name,@school.id)
       found.should_not be_nil
-      found.id.should be @course_with_number.id
-      found.name.should be new_name
+      found.id.should be(@course_with_number.id)
+      found.name.should be(new_name)
     end
     
     it "We should be able to find a course with no previous course number, but with the same name, and assign the new number" do
       new_course_number="NEW_COURSE_NUMBER"
       found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,"without number",@school.id)
       found.should_not be_nil
-      found.id.should be @course_without_number.id
-      found.course_number.should be new_course_number
+      found.id.should be(@course_without_number.id)
+      found.course_number.should be(new_course_number)
     end
     
     it "We should create a new course with a new name and number schoold_id but differing course_number" do
@@ -97,10 +97,10 @@ describe Portal::Course do
       new_course_name = "new course name"
       found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,new_course_name,@school.id)
       found.should_not be_nil
-      found.id.should_not be @course_without_number.id
-      found.id.should_not be @course_with_number.id
-      found.name.should be new_course_name
-      found.course_number.should be new_course_number
+      found.id.should_not be(@course_without_number.id)
+      found.id.should_not be(@course_with_number.id)
+      found.name.should be(new_course_name)
+      found.course_number.should be(new_course_number)
     end
     
     it "We should create a new course with a new name and number, even if the name matches an existing name" do
@@ -108,10 +108,10 @@ describe Portal::Course do
       existing_name = "with number"
       found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,existing_name,@school.id)
       found.should_not be_nil
-      found.id.should_not be @course_without_number.id
-      found.id.should_not be @course_with_number.id
-      found.name.should be existing_name
-      found.course_number.should be new_course_number
+      found.id.should_not be(@course_without_number.id)
+      found.id.should_not be(@course_with_number.id)
+      found.name.should be(existing_name)
+      found.course_number.should be(new_course_number)
     end
   end
   
