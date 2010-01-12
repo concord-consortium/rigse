@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 
@@ -49,11 +49,15 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
+  # FIXME: see comment about this hack in config/environments/development.rb
+  $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
+
+  # config.gem "ffi-ncurses ", :version => "= 0.3.3"
   config.gem "arrayfields"
   config.gem "hpricot", :version => '0.6.164'
   config.gem "capistrano-ext", :lib => "capistrano"
-  config.gem 'rubyist-aasm', :lib => 'aasm', :source => 'http://gems.github.com', :version => '>=2.0.2'
-  config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'rubyist-aasm', :lib => 'aasm', :version => '>=2.0.2'
+  config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate'
   config.gem "haml", :version => '>= 2.2.0'  
   config.gem "RedCloth", :version => '>= 4.1.1'
   config.gem "uuidtools", :version => '>= 2.0.0'
@@ -61,8 +65,8 @@ Rails::Initializer.run do |config|
   config.gem "prawn", :version => '>= 0.4.1'
   config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
   config.gem 'open4', :version => '>= 0.9.6'
-  config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1', :source => 'http://gems.github.com'
-  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3', :source => 'http://gems.github.com'
+  config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1'
+  config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
   config.gem "jnlp", :version => '>= 0.0.5.3'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
   config.gem "ar-extensions", :version => ">= 0.9.1"

@@ -7,7 +7,7 @@ describe UnifyingThemesController do
   end
   
   before(:each) do
-    #mock_project #FIXME: mock_project undefined!
+    mock_project
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
   

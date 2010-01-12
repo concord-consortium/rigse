@@ -76,12 +76,12 @@ class RinetData
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
     
-    
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
-      :log_level => Logger::WARN
+      :log_level => Logger::WARN,
+      :drop_enrollments => false
     }
     
     @rinet_data_options = defaults.merge(options)
@@ -92,6 +92,7 @@ class RinetData
     @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
     @log_directory = @rinet_data_options[:log_directory]
     @log_path = "#{@log_directory}/import_log.txt"
+    @report_path = "#{@log_directory}/report.txt"
 
     @errors = {:districts => {}}
     @last_log_level = nil
@@ -100,6 +101,8 @@ class RinetData
     FileUtils.mkdir_p @log_directory
     @log = Logger.new(@log_path,'daily')
     @log.level = @rinet_data_options[:log_level]
+    @report = Logger.new(@report_path,'daily')
+    @report.level = Logger::INFO
     
     message = <<-HEREDOC
 
@@ -530,6 +533,11 @@ Logged to: #{File.expand_path(@log_path)}
         # how do we find out the teacher grades?
         # teacher.grades << grade_9
     
+        # optionally remove assignments from teacher:
+        if @rinet_data_options[:drop_enrollments]
+          teacher.clazzes = []
+        end
+    
         # add the teacher to the school
         school = school_for(row)
         if school
@@ -570,7 +578,11 @@ Logged to: #{File.expand_path(@log_path)}
           student.save!
           user.portal_student=student;
         end
-
+        # optionally remove enrollments from student:
+        if @rinet_data_options[:drop_enrollments]
+          student.clazzes = []
+        end
+        
         # add the student to the school
         school = school_for(row)
         if school
@@ -609,19 +621,7 @@ Logged to: #{File.expand_path(@log_path)}
       school = school_for(course_csv_row)
       if school
         # courses = Portal::Course.find(:all, :conditions => {:name => course_csv_row[:Title]}).detect { |course| course.school.id == school.id }
-        courses = Portal::Course.find_all_by_name_and_school_id(course_csv_row[:Title], school.id)
-        if courses.empty?
-          course = Portal::Course.create!( {:name => course_csv_row[:Title], :school_id => school.id })
-        else
-          if courses.length == 1
-            course = courses[0]
-          else
-            # TODO: what if we have multiple matches?
-            @log.warn("Course not unique! #{course_csv_row[:Title]}, #{school.id}, found #{courses.size} entries")
-            @log.info("returning first found: (#{courses[0]})")
-            course = courses[0]
-          end
-        end
+        course = Portal::Course.find_or_create_by_course_number_name_and_school_id(course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
         course_csv_row[:rites_course] = course
         # cache that results in hashtable
         @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
@@ -641,8 +641,8 @@ Logged to: #{File.expand_path(@log_path)}
     @collection_length = new_staff_assignments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} staff assignments:)\n")
-    new_staff_assignments.each do |nc| 
-      create_or_update_class(nc)
+    new_staff_assignments.each do |assignment| 
+      create_or_update_class(assignment)
       @collection_index += 1
     end
     
@@ -651,8 +651,8 @@ Logged to: #{File.expand_path(@log_path)}
     @collection_length = enrollments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} enrollments:)\n")
-    enrollments.each do |nc| 
-      create_or_update_class(nc)
+    enrollments.each do |enrollment| 
+      create_or_update_class(enrollment)
       @collection_index += 1
     end
   end
@@ -807,6 +807,7 @@ Logged to: #{File.expand_path(@log_path)}
   #
   def report(message)
     log_message(message, {:log_level => :error})
+    @report.info(message)
   end
   
   #
