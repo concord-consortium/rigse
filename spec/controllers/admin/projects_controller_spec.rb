@@ -63,6 +63,7 @@ describe Admin::ProjectsController do
       
       it "redirects to the created project" do
         Admin::Project.stub!(:new).and_return(mock_project(:save => true))
+        mock_project.stub!(:save).and_return(mock_project(:save => true))
         login_admin
         post :create, :admin_project => {}
         response.should redirect_to(admin_project_url(mock_project))
@@ -70,19 +71,21 @@ describe Admin::ProjectsController do
     end
 
     describe "with invalid params" do
-      # it "assigns a newly created but unsaved project as @project" do
-      #   Admin::Project.stub!(:new).with({'these' => 'params'}).and_return(mock_project(:save => false))
-      #   login_admin
-      #   post :create, :admin_project => {:these => 'params'}
-      #   assigns[:admin_project].should equal(mock_project)
-      # end
-      # 
-      # it "re-renders the 'new' template" do
-      #   Admin::Project.stub!(:new).and_return(mock_project(:save => false))
-      #   login_admin
-      #   post :create, :admin_project => {}
-      #   response.should render_template('new')
-      # end
+      it "assigns a newly created but unsaved project as @project" do
+        Admin::Project.stub!(:new).with({'these' => 'params'}).and_return(mock_project(:save => false))
+        mock_project.stub!(:save).and_return(mock_project(:save => false))
+        login_admin
+        post :create, :admin_project => {:these => 'params'}
+        assigns[:admin_project].should equal(mock_project)
+      end
+      
+      it "re-renders the 'new' template" do
+        Admin::Project.stub!(:new).and_return(mock_project(:save => false))
+        mock_project.stub!(:save).and_return(false)
+        login_admin
+        post :create, :admin_project => {}
+        response.should redirect_to(new_admin_project_url)
+      end
     end
 
   end
@@ -97,19 +100,21 @@ describe Admin::ProjectsController do
         put :update, :id => "37", :admin_project => {:these => 'params'}
       end
 
-      # it "assigns the requested project as @project" do
-      #   Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => true))
-      #   login_admin
-      #   put :update, :id => "1"
-      #   assigns[:admin_project].should equal(mock_project)
-      # end
-      # 
-      # it "redirects to the project" do
-      #   Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => true))
-      #   login_admin
-      #   put :update, :id => "1"
-      #   response.should redirect_to(admin_project_url(mock_project))
-      # end
+      it "assigns the requested project as @project" do
+        Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => true))
+        mock_project.stub!(:update_attributes).and_return(mock_project(:save => true))
+        login_admin
+        put :update, :id => "1"
+        assigns[:admin_project].should equal(mock_project)
+      end
+      
+      it "redirects to the project" do
+        Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => true))
+        mock_project.stub!(:update_attributes).and_return(mock_project(:save => true))
+        login_admin
+        put :update, :id => "1"
+        response.should redirect_to(admin_project_url(mock_project))
+      end
     end
 
     describe "with invalid params" do
@@ -120,19 +125,21 @@ describe Admin::ProjectsController do
         put :update, :id => "37", :admin_project => {:these => 'params'}
       end
 
-      # it "assigns the project as @project" do
-      #   Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => false))
-      #   login_admin
-      #   put :update, :id => "1"
-      #   assigns[:admin_project].should equal(mock_project)
-      # end
-      # 
-      # it "re-renders the 'edit' template" do
-      #   Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => false))
-      #   login_admin
-      #   put :update, :id => "1"
-      #   response.should render_template('edit')
-      # end
+      it "assigns the project as @project" do
+        Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => false))
+        mock_project.stub!(:update_attributes).and_return(mock_project(:update_attributes => false))
+        login_admin
+        put :update, :id => "1"
+        assigns[:admin_project].should equal(mock_project)
+      end
+      
+      it "re-renders the 'edit' template" do
+        Admin::Project.stub!(:find).and_return(mock_project(:update_attributes => false))
+        mock_project.stub!(:update_attributes).and_return(mock_project(:update_attributes => false))
+        login_admin
+        put :update, :id => "1"
+        response.should redirect_to(admin_project_url(mock_project))
+      end
     end
 
   end

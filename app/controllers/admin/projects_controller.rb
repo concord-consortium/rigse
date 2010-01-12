@@ -82,7 +82,7 @@ class Admin::ProjectsController < ApplicationController
         format.html { redirect_to(@admin_project) }
         format.xml  { render :xml => @admin_project, :status => :created, :location => @admin_project }
       else
-        format.html { render :action => "new" }
+        format.html { redirect_to(new_admin_project_url) }
         format.xml  { render :xml => @admin_project.errors, :status => :unprocessable_entity }
       end
     end
