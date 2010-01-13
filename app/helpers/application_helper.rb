@@ -106,6 +106,10 @@ module ApplicationHelper
     end
   end
   
+  def short_format_gse_summary(gse)
+    gse.print_summary_data("<div><strong>%s</strong><ul>%s</ul></div>","<li>%s</li>")
+  end
+  
   # Sets the page title and outputs title if container is passed in.
   # eg. <%= title('Hello World', :h2) %> will return the following:
   # <h2>Hello World</h2> as well as setting the page title.
