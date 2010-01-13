@@ -301,7 +301,13 @@ module ApplicationHelper
       if clazz
         id = clipboard_data_id.to_i
         if id
-          return clazz.find(id)
+          # clazz.find(id) throws an exception if no record is found...
+          begin 
+            object = clazz.find(id)
+          rescue
+            object = nil
+          end
+          return object
         end
       end
     end
