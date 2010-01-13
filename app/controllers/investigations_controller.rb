@@ -87,6 +87,12 @@ class InvestigationsController < AuthoringController
     eval eval_string
   end
   
+  def update_gse
+    if params[:grade_span_expectation_id] && params[:investigation]
+      params[:investigation][:grade_span_expectation_id] = params[:grade_span_expectation_id]
+    end
+  end
+  
   public
 
   # POST /grade_span_expectations/select_js
@@ -282,7 +288,7 @@ class InvestigationsController < AuthoringController
   # PUT /pages/1.xml
   def update
     @investigation = Investigation.find(params[:id])
-
+    update_gse
     if request.xhr?
       if cancel || @investigation.update_attributes(params[:investigation])
         render :partial => 'shared/investigation_header', :locals => { :investigation => @investigation }

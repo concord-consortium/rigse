@@ -64,13 +64,12 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   var drop_down = $(drop_down_dom_id);
   var menu_width = menu.getDimensions().width
   var drop_down_width = drop_down.getDimensions().width
-
+  var padding = 18;
   drop_down.hide();
   drop_down.show();
-  drop_down.setStyle({
-    'z-index': 2000
-  });
-  
+  drop_down.setStyle({'z-index': 2000});
+  drop_down.setStyle({'padding' : padding + "px"})
+    
   if (drop_down_width < menu_width) {
     drop_down.setStyle({
       width: menu_width+"px"
@@ -79,23 +78,22 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   }
   
   var left_offset = (drop_down_width - menu_width) / -2
-  //var left_offset = 0;
-  var top_offset = menu.getDimensions().height
+  var top_offset = menu.getDimensions().height - padding
   var options = { setWidth: false, setHeight: false, offsetLeft:left_offset, offsetTop: top_offset};
 
   drop_down.clonePosition(menu,options);
   
-  menu.observe('mouseout',function(event) {
-    var mouse_over_element = event.relatedTarget;
-    if(mouse_over_element && mouse_over_element != drop_down) {
-      hide();
-    }
-  });
-  
+
   drop_down.observe('mouseout', function(event) {
     var mouse_over_element = event.relatedTarget;
-    if(mouse_over_element && (!mouse_over_element.descendantOf(drop_down) || event.toElement == menu)) {
-      hide()
+    if(mouse_over_element) {
+     if (!mouse_over_element.descendantOf(drop_down)) {
+       if (event.toElement != drop_down) {
+         if (event.toElement != menu) {
+           hide();
+         }
+       }
+     }
     }
   });
 
@@ -104,7 +102,7 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   });
   
   function hide() {
-    drop_down.setStyle({left: "-1000px"});
+    drop_down.fade({ duration: 0.3});
     drop_down.stopObserving();
   };
 };

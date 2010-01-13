@@ -249,7 +249,12 @@ class PagesController < ApplicationController
       klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
       @original = klass.find(clipboard_data_id)
       if (@original) 
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+        # let some embeddables define their own means to save
+        if @original.respond_to? :duplicate
+          @component = @original.duplicate
+        else
+          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+        end
         if (@component)
           @container = params['container'] || 'elements_container'
           @component.name = "copy of #{@component.name}"

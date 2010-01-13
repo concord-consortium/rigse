@@ -42,6 +42,17 @@ stylesheets:
   - drop_down
   - data_table
   
+- rites:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+    
 - itsisu:
   - themes/itsisu/itsisu
   - themes/itsisu/action_menu_tab
