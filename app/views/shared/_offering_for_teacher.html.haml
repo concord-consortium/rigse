@@ -1,17 +1,17 @@
 -if offering.runnable
-  .dropdown{:id => dom_id_for(offering.runnable,"print_dropdown"),:style => 'border: 2px solid;' }
+  .dropdown{:id => dom_id_for(offering.runnable,"print_dropdown")}
     .container
-      .big
-        %ul
-          %li=link_to ("print investigation", investigation_url(offering.runnable,:print=>true), :popup => true )
-          %li=link_to ("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:popup => true )
-      %hr
-      %ul
-        - offering.runnable.page_listing.each do |listing|
-          - listing.each_key do |key|
-            %li= link_to ("print #{key}", page_url(listing[key],:print=>true),:popup => true )
+      %ul{:style=>"overflow-y: auto; max-height: 300px;"}
+        %li=link_to ("print investigation", investigation_url(offering.runnable,:print=>true), :popup => true )
+        %li=link_to ("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:popup => true )
+        %hr
+        %li
+          .tiny
+            - offering.runnable.print_listing.each do |listing|
+              - listing.each_key do |key|
+                = link_to ("print #{key}", section_url(listing[key],:print=>true),:popup => true )
       
-  .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown"),:style => 'border: 2px solid;' }
+  .dropdown{:id => dom_id_for(offering.runnable,"run_dropdown")}
     .container
       %ul
         %li= preview_link_for(offering.runnable, nil, :link_text => "preview as a student...")
