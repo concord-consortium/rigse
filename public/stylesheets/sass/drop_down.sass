@@ -7,37 +7,24 @@
   :top 0px
   :clear left
   :float none
-  :background-color white
+  :background transparent
   :font-size 10px
-  :line-height 1.5em
-  :max-height 400px
   :overflow-y auto
   :overflow-x hidden
-  :margin 0px
-  :padding 0.5em
-  :-moz-border-radius-bottomright .5em
-  :-webkit-border-bottom-right-radius .5em
-  :-moz-border-radius-bottomleft .5em
-  :-webkit-border-bottom-left-radius .5em
+
   .big
     :font-size 1.2em
   ul
-    :margin inherit
+    :background-color white
     :list-style-type none
-    :width 100%
     :font-weight normal
+    :border 1px black solid
   li
     +color_mixer(!very_dark_blue,!almost_white)
     :list-style-type none
-    :width 100%
-    :white-space nowrap
-    :margin-right 1em
-    :padding-right 2em
-    :padding-top 6px
+    :padding 0.5em
   a
-    :margin-left 5px
     :display block
 
   a.rollover
     :clear left !important
-    
