@@ -102,7 +102,7 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   });
   
   function hide() {
-    drop_down.setStyle({left: "-1000px"});
+    drop_down.fade({ duration: 0.3});
     drop_down.stopObserving();
   };
 };
