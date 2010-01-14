@@ -125,10 +125,10 @@ class InvestigationsController < AuthoringController
       render :partial => 'investigations/runnable_list', :locals => {:investigations => @investigations, :paginated_objects =>@investigations}
     else
       respond_to do |format|
-        format.js
         format.html do
           render 'index'
         end
+        format.js
       end
     end
   end
