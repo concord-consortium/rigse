@@ -122,6 +122,27 @@ class GradeSpanExpectation < ActiveRecord::Base
   def description
     "#{assessment_target.description}"
   end
+
+  def summary_data
+    expectations.map do |expectation|
+      {
+        :stem => expectation.expectation_stem.description,
+        :indicators => expectation.expectation_indicators.map { |indicator| indicator.description }
+      }
+    end
+  end
+  
+  def print_summary_data(stem_format="%s\n%s",indicators_format="\t * %s\n")
+    expectations_string = ""
+    summary_data.each do |expectation|
+      indicators_string = ""
+      expectation[:indicators].each do |indicator|
+        indicators_string << indicators_format % indicator
+      end
+      expectations_string << stem_format % [expectation[:stem],indicators_string]
+    end
+    expectations_string
+  end
   
   def theme_keys
     assessment_target.unifying_themes.map{ |t| t.key}.join("+")

@@ -229,13 +229,11 @@ class Investigation < ActiveRecord::Base
     return @return_investigation
   end
   
-  def page_listing
+  def print_listing
     listing = []
     self.activities.each do |a|
       a.sections.each do |s|
-        s.pages.each do |p|
-          listing << {"#{a.name} #{s.name} #{p.page_number}" => p}
-        end
+        listing << {"#{a.name} #{s.name}" => s}
       end
     end
     listing
