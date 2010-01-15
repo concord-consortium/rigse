@@ -512,8 +512,8 @@ class ModelCollection
     @migration_filename ||= "#{timestamp}_embeddable_refactoring.rb"
     @migration_path = File.join('db', 'migrate', @migration_filename)
 
-    table_pairs = @all_table_name_pairs.collect { |p| sprintf("    %-36s%-0s", p[0], p[1]) }.join("\n")
-    model_pairs = @all_model_pairs.collect      { |p| sprintf("    %-36s%-0s", p[0], p[1]) }.join("\n")
+    table_pairs = @all_table_name_pairs.collect { |p| sprintf("    [%-52s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
+    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-52s%-52s]", "'#{p[1]}',", "'#{p[0]}'") }.join(",\n")
     
     table_rename_up   = @all_table_name_pairs.collect { |p| "    rename_table :#{p[0]}, :#{p[1]}" }.join("\n")
     table_rename_down = @all_table_name_pairs.collect { |p| "    rename_table :#{p[1]}, :#{p[0]}" }.join("\n")
@@ -523,12 +523,12 @@ class ModelCollection
     
     migration = <<-HEREDOC
 class EmbeddableRefactoring < ActiveRecord::Migration
-  @@all_table_pairs = %w{
+  @@all_table_pairs = [
 #{table_pairs}
-  }
-  @@all_model_pairs = %w{
+  ]
+  @@all_model_pairs = [
 #{model_pairs}
-  }
+  ]
 
   def self.up
     @@all_table_pairs.each do |table_pair|
