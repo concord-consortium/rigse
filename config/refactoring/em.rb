@@ -6,15 +6,22 @@
 #
 # Example (use irb, NOT script/console):
 #
+# Copy em.rb to the top-level directory if you are developing with it.
+# Running ModelCollection#undo will erase changes you make in config/refactoring/em.rb
+# When it is working right copy the new working version back to: config/refactoring/em.rb
+#
+#   $ cp config/refactoring/em.rb em.rb
 #   $ irb
 #   >>  mc= nil;  load 'config/refactoring/em.rb'
-#   >>  mc = ModelCollection.new
-#   >>  mc.process
+#   >>  mc = ModelCollection.new; mc.process; nil
 #
-# leave irb open while testing the result ...
-# to reverse the operation:
+# You'll need to edit config/routes.rb by hand.
 #
-#   >>  mc.undo
+# Test the app, if it isn't working right yet revserse the changes:
+#
+#   >> mc.undo
+#
+# leave irb open while you might want tu run mc.undo.
 #
 require 'fileutils'
 require 'active_record'
@@ -328,7 +335,7 @@ class ModelCollection
   end
   
   def generate_new_routing_scopes
-    routes = ModelCollection::SourceFile.new(config/routes.rb)
+    routes = ModelCollection::SourceFile.new('config/routes.rb')
     new_routing_scopes = <<-HEREDOC
 a
 #
@@ -408,7 +415,7 @@ a
 # ********* end of scoped routing for page-embeddables  *********
 
     HEREDOC
-    routes.source.gsub!(['ActionController::Routing::Routes.draw do |map|', 'ActionController::Routing::Routes.draw do |map|' + new_routing_scopes])
+    routes.gsub!(['ActionController::Routing::Routes.draw do |map|', 'ActionController::Routing::Routes.draw do |map|' + new_routing_scopes])
     routes.write
   end
   
@@ -472,7 +479,52 @@ a
     restore_original_database_table_names
     restore_embeddable_type_attributes_in_page_elements_table
     delete_new_scoped_dirs
-    `git co app/ lib/ config/`
+    `git co app/ lib/ config/ db/migrate/`
+  end
+  
+  def generate_migration
+    timestamp = Time.now.gmtime.strftime('%Y%m%d%H%M%S')
+    @migration_filename ||= "#{timestamp}_embeddable_refactoring.rb"
+    @migration_path = File.join('db', 'migrate', @migration_filename)
+
+    table_pairs = @all_table_name_pairs.collect { |p| sprintf("    %-36s%-0s", p[0], p[1]) }.join("\n")
+    model_pairs = @all_model_pairs.collect      { |p| sprintf("    %-36s%-0s", p[0], p[1]) }.join("\n")
+    
+    table_rename_up   = @all_table_name_pairs.collect { |p| "    rename_table :#{p[0]}, :#{p[1]}" }.join("\n")
+    table_rename_down = @all_table_name_pairs.collect { |p| "    rename_table :#{p[1]}, :#{p[0]}" }.join("\n")
+    
+    embeddable_type_up   = %q/"UPDATE `page_elements` SET `embeddable_type`='#{model_pair[1]}' WHERE `embeddable_type` = '#{model_pair[0]}';"/
+    embeddable_type_down = %q/"UPDATE `page_elements` SET `embeddable_type`='#{model_pair[0]}' WHERE `embeddable_type` = '#{model_pair[1]}';"/
+    
+    migration = <<-HEREDOC
+class EmbeddableRefactoring < ActiveRecord::Migration
+  @@all_table_pairs = %w{
+#{table_pairs}
+  }
+  @@all_model_pairs = %w{
+#{model_pairs}
+  }
+
+  def self.up
+    @@all_table_pairs.each do |table_pair|
+      rename_table table_pair[0], table_pair[1]
+    end
+    @@all_model_pairs.each do |model_pair|
+      ActiveRecord::Base.connection.update(#{embeddable_type_up})
+    end
+  end
+
+  def self.down
+    @@all_table_pairs.each do |table_pair|
+      rename_table table_pair[1], table_pair[0]
+    end
+    @@all_model_pairs.each do |model_pair|
+      ActiveRecord::Base.connection.update(#{embeddable_type_down})
+    end
+  end
+end
+    HEREDOC
+    File.open(@migration_path, 'w') { |f| f.write migration }
   end
   
   def process
@@ -514,6 +566,10 @@ end
 
 ActiveRecord::Base.establish_connection(YAML::load(ERB.new(File.read("config/database.yml")).result)['development'])
 
-# mc = ModelCollection.new
-# mc.process
+# mc = nil; load 'em.rb'
+# mc = ModelCollection.new; mc.process; nil
+# fix config/routes.rb and test
+# problems ...?
 # mc.undo
+# when it works ...
+# mc.generate_migration
