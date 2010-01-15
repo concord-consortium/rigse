@@ -65,6 +65,10 @@ class ModelCollection
       end
     end
     
+    def insert_after_first_line(new_content)
+      source.insert(source.index("\n"), new_content)
+    end
+    
     def convert_model_associations(model_pairs)
       @source.gsub!(/(belongs_to|has_and_belongs_to_many|has_many|has_one)\s+(:\w+)(.*?)(,*)/) do |line|
         assoc = $1
@@ -337,12 +341,34 @@ class ModelCollection
   def generate_new_routing_scopes
     routes = ModelCollection::SourceFile.new('config/routes.rb')
     new_routing_scopes = <<-HEREDOC
-a
+
 #
-# ********* New scoped routing for page-embeddables  *********
+# ********* New scoped routing for page-embeddables, probes, and RI GSEs  *********
 #
 #            delete the older routes by hand!
 #
+
+
+  map.namespace(:probe) do |probe|
+    probe.resources :vendor_interfaces
+    probe.resources :probe_types
+    probe.resources :physical_units
+    probe.resources :device_configs
+    probe.resources :data_filters
+    probe.resources :calibrations
+  end
+
+  map.namespace(:ri_gse) do |ri_gse|
+    ri_gse.resources :assessment_targets, :knowledge_statements, :domains
+    ri_gse.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
+    ri_gse.resources :grade_span_expectations, 
+      :collection => { 
+        :select_js => :post,
+        :summary => :post,
+        :reparse_gses => :put,
+        :select => :get }, 
+      :member => { :print => :get }
+  end
 
   map.namespace(:embeddable) do |embeddable|
 
@@ -399,7 +425,7 @@ a
       :print => :get,
       :destroy => :post
     }
-  
+
     embeddable.resources :open_responses, :member  => {
       :print => :get,
       :destroy => :post
@@ -412,10 +438,9 @@ a
     }
   end
 
-# ********* end of scoped routing for page-embeddables  *********
-
+# ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********
     HEREDOC
-    routes.gsub!(['ActionController::Routing::Routes.draw do |map|', 'ActionController::Routing::Routes.draw do |map|' + new_routing_scopes])
+    routes.insert_after_first_line(new_routing_scopes)
     routes.write
   end
   
