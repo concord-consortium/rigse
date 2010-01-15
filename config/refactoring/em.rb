@@ -513,7 +513,7 @@ class ModelCollection
     @migration_path = File.join('db', 'migrate', @migration_filename)
 
     table_pairs = @all_table_name_pairs.collect { |p| sprintf("    [%-52s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
-    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-52s%-52s]", "'#{p[1]}',", "'#{p[0]}'") }.join(",\n")
+    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-52s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
     
     table_rename_up   = @all_table_name_pairs.collect { |p| "    rename_table :#{p[0]}, :#{p[1]}" }.join("\n")
     table_rename_down = @all_table_name_pairs.collect { |p| "    rename_table :#{p[1]}, :#{p[0]}" }.join("\n")
