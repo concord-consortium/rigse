@@ -130,9 +130,10 @@ class ModelCollection
   end
 
   class View
-    def initialize(path, underscore_model_name, new_scope)
+    def initialize(path, underscore_model_name, new_underscore_model_name, new_scope)
       @src = SourceFile.new(path)
       @underscore_model_name = underscore_model_name
+      @new_underscore_model_name = new_underscore_model_name
       @new_scope = new_scope
       @view_basename = File.basename(path)
       @view_path = path[/views\/(.*)/, 1]
@@ -143,7 +144,7 @@ class ModelCollection
     end
 
     def new_partial_view_path
-      "#{@new_scope}/#{@underscore_model_name}s"
+      "#{@new_scope}/#{@new_underscore_model_name}s"
     end
 
     def original_views_path
@@ -181,17 +182,25 @@ class ModelCollection
       @original_model_path = "app/models/#{@underscore_model_name}.rb"
       @original_model_symbol = ":#{@underscore_model_name}"
       
-      @new_model_path = "app/models/#{@new_scope}/#{@underscore_model_name}.rb"
       @model_source = SourceFile.new(@original_model_path)
       @original_model_class = @model_source.source[/class\s(\S*)\s?<\s?ActiveRecord::Base/, 1]
-      @new_model_class = "#{camelize(@new_scope)}::#{@original_model_class}"
       @original_table_name = parse_table_name || ActiveSupport::Inflector.pluralize(@underscore_model_name)
-      @new_table_name = "#{underscore_path(@new_scope)}_#{@original_table_name}"
       @already_scoped = @underscore_model_name[/\//]
+
+      if @new_scope =~ /biologica/
+        @new_model_class = "#{camelize(@new_scope)}::#{@original_model_class[/Biologica(.*)/, 1]}"
+        @new_table_name = "#{underscore_path(@new_scope)}_#{@original_table_name[/biologica_(.*)/, 1]}"
+        @new_underscore_model_name = @underscore_model_name[/biologica_(.*)/, 1]
+      else
+        @new_model_class = "#{camelize(@new_scope)}::#{@original_model_class}"
+        @new_table_name = "#{underscore_path(@new_scope)}_#{@original_table_name}"
+        @new_underscore_model_name = @underscore_model_name
+      end
+      @new_model_path = "app/models/#{@new_scope}/#{@new_underscore_model_name}.rb"
 
       @original_controller_path = "app/controllers/#{@underscore_model_name}s_controller.rb"
       if File.exists?(@original_controller_path)
-        @new_controller_path = "app/controllers/#{@new_scope}/#{@underscore_model_name}s_controller.rb"
+        @new_controller_path = "app/controllers/#{@new_scope}/#{@new_underscore_model_name}s_controller.rb"
         @controller_source = SourceFile.new(@original_controller_path)
         @original_controller_class = @controller_source.source[/class\s(\S*)\s?<\s?ApplicationController/, 1]
         @new_controller_class = "#{camelize(@new_scope)}::#{@original_controller_class}"
@@ -199,7 +208,7 @@ class ModelCollection
 
       @original_helper_path = "app/helpers/#{@underscore_model_name}_helper.rb"
       if File.exists?(@original_helper_path)
-        @new_helper_path = "app/helpers/#{@new_scope}/#{@underscore_model_name}_helper.rb"
+        @new_helper_path = "app/helpers/#{@new_scope}/#{@new_underscore_model_name}_helper.rb"
         @helper_source = SourceFile.new(@original_helper_path)
         @original_helper_module = @helper_source.source[/module\s+(\S*)/, 1]
         @new_helper_module = "#{camelize(@new_scope)}::#{@original_helper_module}"
@@ -207,11 +216,11 @@ class ModelCollection
 
       @original_layout_path = "app/views/layouts/#{@underscore_model_name}.otml.haml"
       if File.exists?(@original_layout_path)
-        @new_layout_path = "app/views/layouts/#{@new_scope}/#{@underscore_model_name}.otml.haml"
+        @new_layout_path = "app/views/layouts/#{@new_scope}/#{@new_underscore_model_name}.otml.haml"
         @layout_source = SourceFile.new(@original_layout_path) 
       end
 
-      @views = Dir["app/views/#{@underscore_model_name}s/**/*"].collect { |path| View.new(path, @underscore_model_name, @new_scope) }
+      @views = Dir["app/views/#{@underscore_model_name}s/**/*"].collect { |path| View.new(path, @underscore_model_name, @new_underscore_model_name, @new_scope) }
     end
 
     def parse_table_name
@@ -382,15 +391,15 @@ class ModelCollection
     end
 
     embeddable.namespace(:biologica) do |biologica|
-      biologica.resources :biologica_chromosome_zooms, :member => { :destroy => :post }
-      biologica.resources :biologica_multiple_organisms, :member => { :destroy => :post }
-      biologica.resources :biologica_breed_offsprings, :member => { :destroy => :post }
-      biologica.resources :biologica_meiosis_views, :member => { :destroy => :post }
-      biologica.resources :biologica_chromosomes, :member => { :destroy => :post }
-      biologica.resources :biologica_pedigrees, :member => { :destroy => :post }
-      biologica.resources :biologica_static_organisms, :member => { :destroy => :post }
-      biologica.resources :biologica_organisms, :member => { :destroy => :post }
-      biologica.resources :biologica_worlds, :member => { :destroy => :post }
+      biologica.resources :chromosome_zooms, :member => { :destroy => :post }
+      biologica.resources :multiple_organisms, :member => { :destroy => :post }
+      biologica.resources :breed_offsprings, :member => { :destroy => :post }
+      biologica.resources :meiosis_views, :member => { :destroy => :post }
+      biologica.resources :chromosomes, :member => { :destroy => :post }
+      biologica.resources :pedigrees, :member => { :destroy => :post }
+      biologica.resources :static_organisms, :member => { :destroy => :post }
+      biologica.resources :organisms, :member => { :destroy => :post }
+      biologica.resources :worlds, :member => { :destroy => :post }
     end
 
     embeddable.resources :inner_pages, :member => {
