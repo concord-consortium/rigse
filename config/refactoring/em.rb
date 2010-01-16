@@ -69,20 +69,42 @@ class ModelCollection
       source.insert(source.index("\n"), new_content)
     end
     
+    # Examples:
+    #
+    # belongs_to :probe_type
+    #
+    # belongs_to :probe_type, :class_name => 'ProbeType'
+    # 
+    # has_many :page_elements,
+    #   :finder_sql => 'SELECT page_elements.* FROM page_elements
+    #   INNER JOIN pages ON page_elements.page_id = pages.id 
+    #   INNER JOIN sections ON pages.section_id = sections.id
+    #   INNER JOIN activities ON sections.activity_id = activities.id
+    #   WHERE activities.investigation_id = #{id}'
+    
     def convert_model_associations(model_pairs)
-      @source.gsub!(/(belongs_to|has_and_belongs_to_many|has_many|has_one)\s+(:\w+)(.*?)(,*)/) do |line|
+      @source.gsub!(/(belongs_to|has_and_belongs_to_many|has_many|has_one)\s+(:\w+)(.*)/) do |match|
         assoc = $1
         model = $2[1..-1]
-        camel_model = model[-1..-1] == 's' ? camelize($2[1..-2]) : camelize($2[1..-1])
         options = $3
-        comma_suffix = $4
+        # comma_suffix = options[-1..-1] == ','
+        comma_suffix = ''
+        options_classname = options[/:class_name\s*\=>\s*['"](.*)['"]/, 1]
+        camel_model = options_classname || (model[-1..-1] == 's' ? camelize(model[0..-2]) : camelize(model[0..-1]))
         clazz = ''
         if model_pair = model_pairs.detect { |mp| mp[0].split('::').last == camel_model }
-          clazz = ", :class_name => '#{model_pair[1]}'"
-        elsif model_pair = model_pairs.detect { |mp| mp[0].split('::').last == options[/:class_name\s+=>\s+\"(\w+)/, 1] }
-          options.gsub!(model_pair[0], model_pair[1])
+          if options_classname
+            options.gsub!(model_pair[0], model_pair[1])
+            result = "#{assoc} :#{model}#{options}"
+          else
+            clazz = ", :class_name => '#{model_pair[1]}'"
+            result = "#{assoc} :#{model}#{clazz}#{options}"
+          end
+        else
+          result = match
         end
-        "#{assoc} :#{model}#{options}#{clazz}#{comma_suffix}"
+        puts sprintf("%-40s%-80s%-40s%-40s", "model: #{model}", "options_classname: #{options_classname}", "camel_model: #{camel_model}", result)
+        result
       end
     end
     
@@ -355,6 +377,7 @@ class ModelCollection
   def generate_new_routing_scopes
     routes = ModelCollection::SourceFile.new('config/routes.rb')
     new_routing_scopes = <<-HEREDOC
+
 
 #
 # ********* New scoped routing for page-embeddables, probes, and RI GSEs  *********
