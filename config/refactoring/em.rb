@@ -98,11 +98,15 @@ class ModelCollection
       end
     end
     
-    def convert_render_partial_paths(table_name_pairs)
+    def convert_partial_paths_and_routes(table_name_pairs)
       replacement_pairs = table_name_pairs.dup
       replacement_pairs.flatten!
       0.step(replacement_pairs.length-1, 2) do |index|
-        @source.gsub!(/\=\s*render\s+:partial\s*=>\s*(['"])#{replacement_pairs[index]}/, '= render :partial => ' + '\1' + replacement_pairs[index+1])
+        current_name = replacement_pairs[index]
+        new_name = replacement_pairs[index+1]
+        prefix = new_name[/(.*?)#{current_name}/, 1]
+        @source.gsub!(/\=\s*render\s+:partial\s*=>\s*(['"])#{current_name}/, '= render :partial => ' + '\1' + new_name)
+        @source.gsub!(/,\s*(#{current_name}?)_(path|_url)/) { |match| ", #{prefix}#{$1}_#{$2}" }
       end
     end
     
@@ -152,7 +156,7 @@ class ModelCollection
     
     def convert(all_model_pairs, all_table_name_pairs)
       @src.gsub!(all_model_pairs, '.')
-      @src.convert_render_partial_paths(all_table_name_pairs)
+      @src.convert_partial_paths_and_routes(all_table_name_pairs)
       @src.write_new("#{new_views_path}/#{File.basename(@view_path)}")
     end
     
@@ -304,6 +308,7 @@ class ModelCollection
   attr_reader :models
   
   def initialize
+    ActiveRecord::Base.establish_connection(YAML::load(ERB.new(File.read("config/database.yml")).result)['development'])
     @connection = ActiveRecord::Base.connection
     
     @new_scope_names = %w{embeddable ri_gse probe}
@@ -469,7 +474,7 @@ class ModelCollection
   end
 
   def delete_originals
-    @models.each { |embeddable| embeddable.delete_originals }
+    @models.each { |model| model.delete_originals }
   end
   
   def restore_original_database_table_names
@@ -512,8 +517,8 @@ class ModelCollection
     @migration_filename ||= "#{timestamp}_embeddable_refactoring.rb"
     @migration_path = File.join('db', 'migrate', @migration_filename)
 
-    table_pairs = @all_table_name_pairs.collect { |p| sprintf("    [%-52s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
-    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-52s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
+    table_pairs = @all_table_name_pairs.collect { |p| sprintf("    [%-42s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
+    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-42s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
     
     table_rename_up   = @all_table_name_pairs.collect { |p| "    rename_table :#{p[0]}, :#{p[1]}" }.join("\n")
     table_rename_down = @all_table_name_pairs.collect { |p| "    rename_table :#{p[1]}, :#{p[0]}" }.join("\n")
@@ -561,6 +566,7 @@ end
       model.convert_layout(@all_model_pairs)
       model.convert_views(@all_model_pairs)
     end
+    delete_originals
     Dir["config/**/*.{rb,rake}"].each do |path|
       source = ModelCollection::SourceFile.new(path)
       source.gsub!(@all_model_pairs)
@@ -583,13 +589,23 @@ end
       source.convert_tables_names_in_finder_sql(@all_table_name_pairs)
       source.write
     end
+    (Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/layouts/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
+      view = ModelCollection::SourceFile.new(path)
+      view.convert_partial_paths_and_routes(@all_table_name_pairs)
+      view.write
+    end
+    views = Dir["app/views/**/*{haml,erb}"] - Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/{#{@new_scope_names.join(',')}}/**/*{haml,erb}"]
+    views.each do |path|
+      view = ModelCollection::SourceFile.new(path)
+      view.convert_partial_paths_and_routes(@all_table_name_pairs)
+      view.write
+    end
     convert_embeddable_type_attributes_in_page_elements_table
-    delete_originals
     generate_new_routing_scopes  # existing routes will need to be moved to the new name-scoped route blocks
   end
 end
 
-ActiveRecord::Base.establish_connection(YAML::load(ERB.new(File.read("config/database.yml")).result)['development'])
+
 
 # mc = nil; load 'em.rb'
 # mc = ModelCollection.new; mc.process; nil
