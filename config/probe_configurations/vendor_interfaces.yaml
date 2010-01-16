@@ -106,7 +106,7 @@
   description: The Pasco USBLink in a simple USB interface that can measure data from one PASPORT sensor at a time.
   short_name: pasco_usblink
   user_id: 5
-  image: SensorImages/PascoUSBLink
+  image: SensorImages/PascoUSBLink.png
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
 - name: Pasco PowerLink
@@ -117,7 +117,7 @@
   description: The Pasco PowerLink is a USB interface that includes two ports for collecting data from PASPORT sensors.
   short_name: pasco_powerlink
   user_id: 5
-  image: SensorImages/PascoPowerLink
+  image: SensorImages/PascoPowerLink.png
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
 - name: Pasco Xplorer GLX
@@ -128,7 +128,7 @@
   description: The Pasco Xplorer GLX is a USB interface with four ports for collecting data from PASPORT sensors as well as four built-in ports for collecting data from simpler voltage, sound-level and temperature sensors.
   short_name: pasco_xplorer_glx
   user_id: 5
-  image: SensorImages/PascoXplorerGLX
+  image: SensorImages/PascoXplorerGLX.png
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
 - name: Pasco Spark
@@ -139,6 +139,6 @@
   description: The Pasco Spark is a USB interface that has two ports for PASPORT sensors as well as built-in ports for collecting data from simpler voltage and temperature sensors.
   short_name: pasco_spark
   user_id: 5
-  image: SensorImages/PascoSpark
+  image: SensorImages/PascoSpark.png
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
