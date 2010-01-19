@@ -213,7 +213,7 @@ class SectionsController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:params => params}
   end
 
   #

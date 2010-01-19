@@ -226,7 +226,7 @@ class ActivitiesController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'shared/paste_link', :locals =>{:types => ['section'],:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['section'],:params => params}
   end
 
   #

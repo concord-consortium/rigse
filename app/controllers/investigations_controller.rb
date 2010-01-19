@@ -383,7 +383,7 @@ class InvestigationsController < AuthoringController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'shared/paste_link', :locals =>{:types => ['activity'],:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['activity'],:params => params}
   end
   
   #
