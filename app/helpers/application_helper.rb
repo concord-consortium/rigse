@@ -1,5 +1,6 @@
 include OtmlHelper
 include JnlpHelper
+include Clipboard
 
 module ApplicationHelper
 
@@ -22,7 +23,7 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
-    class_name.gsub!('/', '_')
+    class_name.gsub!('/', '-')
     id = component.id.nil? ? Time.now.to_i : component.id
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
@@ -291,41 +292,6 @@ module ApplicationHelper
       url
     end
   end
-
-  def clipboard_object(options={})
-    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
-    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
-    container_id         = options[:container_id] || params[:container_id]
-    if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id 
-      clazz = clipboard_data_type.classify.constantize
-      if clazz
-        id = clipboard_data_id.to_i
-        if id
-          # clazz.find(id) throws an exception if no record is found...
-          begin 
-            object = clazz.find(id)
-          rescue
-            object = nil
-          end
-          return object
-        end
-      end
-    end
-    return nil
-  end
-
-  def clipboard_object_name(options={})
-    obj = clipboard_object(options)
-    if obj
-      if obj.respond_to? :name
-        return obj.name
-      else
-        return obj.class.name.humanize
-      end
-    end
-    return "(unknown object)"
-  end
-  
   
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]

@@ -14,11 +14,12 @@ class VendorInterface < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+    
+    def deviceid(shortname)
+      self.find_by_short_name(shortname).device_id
+    end
   end
 
-  def VendorInterface.deviceid(shortname)
-    VendorInterface.find_by_short_name(shortname).device_id
-  end
  
 end
 

@@ -213,7 +213,7 @@ class SectionsController < ApplicationController
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:params => params}
   end
 
   #
@@ -221,10 +221,7 @@ class SectionsController < ApplicationController
   # 
   def paste
     if @section.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)
       if @original
         @container = params[:container] || 'section_pages_list'
         if @original.class == Page
