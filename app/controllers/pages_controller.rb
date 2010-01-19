@@ -244,10 +244,7 @@ class PagesController < ApplicationController
   #
   def paste
     if @page.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)      
       if (@original) 
         # let some embeddables define their own means to save
         if @original.respond_to? :duplicate

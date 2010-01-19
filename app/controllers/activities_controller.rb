@@ -234,10 +234,7 @@ class ActivitiesController < ApplicationController
   # 
   def paste
     if @activity.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)      
       if (@original) 
         @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:pages => {:page_elements => :embeddable}}
         if (@component)
