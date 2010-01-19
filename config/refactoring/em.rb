@@ -114,7 +114,7 @@ class ModelCollection
       @source.gsub!(/:finder_sql\s*\=>\s*'(.*?)'/m) do |match|
         finder_sql = $1
         0.step(replacement_table_name_pairs.length-1, 2) do |index|
-          finder_sql.gsub!(replacement_table_name_pairs[index+0], replacement_table_name_pairs[index+1])
+          finder_sql.gsub!(/\s+#{replacement_table_name_pairs[index+0]}/, " #{replacement_table_name_pairs[index+1]}")
         end
         ":finder_sql => '#{finder_sql}'"
       end
@@ -177,8 +177,8 @@ class ModelCollection
       "app/views/#{new_partial_view_path}"
     end
     
-    def convert(all_model_pairs, all_table_name_pairs)
-      @src.gsub!(all_model_pairs, '.')
+    def convert(all_model_classname_pairs, all_table_name_pairs)
+      @src.gsub!(all_model_classname_pairs, '.')
       @src.convert_partial_paths_and_routes(all_table_name_pairs)
       @src.write_new("#{new_views_path}/#{File.basename(@view_path)}")
     end
@@ -249,11 +249,11 @@ class ModelCollection
       @model_source.source[/set_table_name\s*\"(\w+)/, 1]
     end
 
-    def convert_model(all_model_pairs)
+    def convert_model(all_model_classname_pairs)
       @model_source.gsub!([@original_model_class, @new_model_class])
       @model_source.gsub!([/^\s*set_table_name\s+.*/, ''])
       @model_source.gsub!(['< ActiveRecord::Base', "< ActiveRecord::Base\n  set_table_name \"#{@new_table_name}\"\n"])
-      @model_source.convert_model_associations(all_model_pairs)
+      @model_source.convert_model_associations(all_model_classname_pairs)
       @model_source.write_new(@new_model_path)
     end
 
@@ -272,33 +272,33 @@ class ModelCollection
       @controller_source.source.gsub!(original_comments) { |m| "# #{$1} /#{camelize(@new_scope)}/#{$2}" }
     end
   
-    def convert_controller(all_model_pairs)
+    def convert_controller(all_model_classname_pairs)
       if @controller_source
         @controller_source.gsub!([@original_controller_class, @new_controller_class])
-        @controller_source.gsub!(all_model_pairs, '.')
+        @controller_source.gsub!(all_model_classname_pairs, '.')
         update_controller_comments
         @controller_source.write_new(@new_controller_path)
       end
     end
 
-    def convert_helper(all_model_pairs)
+    def convert_helper(all_model_classname_pairs)
       if @helper_source
         @helper_source.gsub!([@original_helper_module, @new_helper_module])
-        @helper_source.gsub!(all_model_pairs, '.')
+        @helper_source.gsub!(all_model_classname_pairs, '.')
         @helper_source.write_new(@new_helper_path)
       end
     end
 
-    def convert_layout(all_model_pairs)
+    def convert_layout(all_model_classname_pairs)
       if @layout_source
-        @layout_source.gsub!(all_model_pairs, '.')
+        @layout_source.gsub!(all_model_classname_pairs, '.')
         @layout_source.write_new(@new_layout_path)
       end
     end
     
-    def convert_views(all_model_pairs)
+    def convert_views(all_model_classname_pairs)
       partial_path_pairs = @views.collect { |v| [v.original_partial_view_path, v.new_partial_view_path] }
-      @views.each { |v| v.convert(all_model_pairs, partial_path_pairs) }
+      @views.each { |v| v.convert(all_model_classname_pairs, partial_path_pairs) }
     end
     
     def delete_original_model
@@ -336,8 +336,7 @@ class ModelCollection
     end
   end
   
-  attr_reader :models
-  
+  attr_reader :models, :all_model_classname_pairs, :all_table_name_pairs
   def initialize
     ActiveRecord::Base.establish_connection(YAML::load(ERB.new(File.read("config/database.yml")).result)['development'])
     @connection = ActiveRecord::Base.connection
@@ -367,7 +366,7 @@ class ModelCollection
       grade_span_expectation knowledge_statement unifying_theme}
     @models += @gse_models.collect { |m| ModelProcessor.new("app/models/#{m}.rb", 'ri_gse') }
 
-    @all_model_pairs = @models.collect { |m| [m.original_model_class, m.new_model_class] }
+    @all_model_classname_pairs = @models.collect { |m| [m.original_model_class, m.new_model_class] }
     @all_table_name_pairs = @models.collect { |m| [m.original_table_name, m.new_table_name] }
     
     # table names that back models that belong_to :embeddable, :polymorphic => true
@@ -522,7 +521,7 @@ class ModelCollection
   end
   
   def convert_embeddable_type_attributes_in_page_elements_table
-    replacement_pairs = @all_model_pairs.dup
+    replacement_pairs = @all_model_classname_pairs.dup
     replacement_pairs.flatten!
     0.step(replacement_pairs.length-1, 2) do |index|
       updated_rows = update_table_column_attributes('page_elements', 'embeddable_type', replacement_pairs[index], replacement_pairs[index+1])
@@ -530,7 +529,7 @@ class ModelCollection
   end
 
   def restore_embeddable_type_attributes_in_page_elements_table
-    replacement_pairs = @all_model_pairs.dup
+    replacement_pairs = @all_model_classname_pairs.dup
     replacement_pairs.flatten!
     0.step(replacement_pairs.length-1, 2) do |index|
       update_table_column_attributes('page_elements', 'embeddable_type', replacement_pairs[index+1], replacement_pairs[index])
@@ -550,7 +549,7 @@ class ModelCollection
     @migration_path = File.join('db', 'migrate', @migration_filename)
 
     table_pairs = @all_table_name_pairs.collect { |p| sprintf("    [%-42s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
-    model_pairs = @all_model_pairs.collect      { |p| sprintf("    [%-42s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
+    model_pairs = @all_model_classname_pairs.collect      { |p| sprintf("    [%-42s%-52s]", "'#{p[0]}',", "'#{p[1]}'") }.join(",\n")
     
     table_rename_up   = @all_table_name_pairs.collect { |p| "    rename_table :#{p[0]}, :#{p[1]}" }.join("\n")
     table_rename_down = @all_table_name_pairs.collect { |p| "    rename_table :#{p[1]}, :#{p[0]}" }.join("\n")
@@ -563,7 +562,7 @@ class EmbeddableRefactoring < ActiveRecord::Migration
   @@all_table_pairs = [
 #{table_pairs}
   ]
-  @@all_model_pairs = [
+  @@all_model_classname_pairs = [
 #{model_pairs}
   ]
 
@@ -571,7 +570,7 @@ class EmbeddableRefactoring < ActiveRecord::Migration
     @@all_table_pairs.each do |table_pair|
       rename_table table_pair[0], table_pair[1]
     end
-    @@all_model_pairs.each do |model_pair|
+    @@all_model_classname_pairs.each do |model_pair|
       ActiveRecord::Base.connection.update(#{embeddable_type_up})
     end
   end
@@ -580,7 +579,7 @@ class EmbeddableRefactoring < ActiveRecord::Migration
     @@all_table_pairs.each do |table_pair|
       rename_table table_pair[1], table_pair[0]
     end
-    @@all_model_pairs.each do |model_pair|
+    @@all_model_classname_pairs.each do |model_pair|
       ActiveRecord::Base.connection.update(#{embeddable_type_down})
     end
   end
@@ -591,33 +590,38 @@ end
   
   def process
     @models.each do |model|
-      model.convert_model(@all_model_pairs)
+      model.convert_model(@all_model_classname_pairs)
       model.convert_database_table_name
-      model.convert_controller(@all_model_pairs)
-      model.convert_helper(@all_model_pairs)
-      model.convert_layout(@all_model_pairs)
-      model.convert_views(@all_model_pairs)
+      model.convert_controller(@all_model_classname_pairs)
+      model.convert_helper(@all_model_classname_pairs)
+      model.convert_layout(@all_model_classname_pairs)
+      model.convert_views(@all_model_classname_pairs)
     end
     delete_originals
     Dir["config/**/*.{rb,rake}"].each do |path|
       source = ModelCollection::SourceFile.new(path)
-      source.gsub!(@all_model_pairs)
+      source.gsub!(@all_model_classname_pairs)
       source.write
     end
     Dir["lib/**/*.{rb,rake}"].each do |path|
       source = ModelCollection::SourceFile.new(path)
-      source.gsub!(@all_model_pairs)
+      source.gsub!(@all_model_classname_pairs)
       source.write
     end
     (Dir["app/controllers/**/*.rb"] - Dir["app/controllers/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
       source = ModelCollection::SourceFile.new(path)
-      source.gsub!(@all_model_pairs)
+      source.gsub!(@all_model_classname_pairs)
       source.write
     end
     (Dir["app/models/**/*.rb"] - Dir["app/models/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
       source = ModelCollection::SourceFile.new(path)
-      source.gsub!(@all_model_pairs)
-      source.convert_model_associations(@all_model_pairs)
+      source.gsub!(@all_model_classname_pairs)
+      source.convert_model_associations(@all_model_classname_pairs)
+      source.convert_tables_names_in_finder_sql(@all_table_name_pairs)
+      source.write
+    end
+    Dir["app/models/{#{@new_scope_names.join(',')}}/**/*.rb"].each do |path|
+      source = ModelCollection::SourceFile.new(path)
       source.convert_tables_names_in_finder_sql(@all_table_name_pairs)
       source.write
     end
