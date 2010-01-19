@@ -1,7 +1,7 @@
 %div{:id=>dom_id_for(page, :add_menu), :class=>'dropdown'}
   %ul
     - hide_types = [InnerPage, BiologicaWorld, BiologicaOrganism, BiologicaStaticOrganism, BiologicaChromosome, BiologicaChromosomeZoom, BiologicaBreedOffspring, BiologicaPedigree, BiologicaMultipleOrganism, BiologicaMeiosisView]
-    - Page::element_types.each do |type|
+    - Page.element_types.each do |type|
       - next if hide_types.include? type
       %li= link_to_remote "#{type.display_name}", :update =>dom_id_for(inner_page, :static_page_area), :url => url_for(:controller =>'inner_pages', :action => 'add_element', :class_name => type.name, :id=>inner_page.id, :page_id => page.id, :static => true), :html => {:class=>'action'}, :complete => mce_init_string
 
