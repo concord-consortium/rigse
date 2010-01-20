@@ -61,14 +61,6 @@ class Page < ActiveRecord::Base
   default_value_for :description, ""
 
   send_update_events_to :investigation
-  
-  def Page::element_types
-    @@element_types
-  end
-
-  def Page::paste_acceptable_types
-    Page::element_types.map {|t| t.name.underscore}
-  end
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
@@ -76,6 +68,16 @@ class Page < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+
+    # returns an array of class names transmogrified into the form
+    # we use for dom-ids
+    def paste_acceptable_types
+      element_types.map {|t| t.name.underscore.gsub('/', '-')}
+    end
+    
+    def element_types
+      @@element_types
     end
     
     def display_name

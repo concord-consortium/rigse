@@ -11,6 +11,7 @@ class HomeController < ApplicationController
   def about
   end
   
+  # @template is a reference to the View template object
   def name_for_clipboard_data
     render :text=> @template.clipboard_object_name(params)
   end

@@ -236,7 +236,7 @@ class PagesController < ApplicationController
   def paste_link
     # render :partial => 'pages/paste_link', :locals => {:params => params}
     # render :text => paste_link_for(page_paste_acceptable_types,params)
-    render :partial => 'shared/paste_link', :locals =>{:types => Page::paste_acceptable_types,:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => Page.paste_acceptable_types,:params => params}
   end
   
   #
@@ -244,12 +244,14 @@ class PagesController < ApplicationController
   #
   def paste
     if @page.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)      
       if (@original) 
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+        # let some embeddables define their own means to save
+        if @original.respond_to? :duplicate
+          @component = @original.duplicate
+        else
+          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+        end
         if (@component)
           @container = params['container'] || 'elements_container'
           @component.name = "copy of #{@component.name}"

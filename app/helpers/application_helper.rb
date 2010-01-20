@@ -1,5 +1,6 @@
 include OtmlHelper
 include JnlpHelper
+include Clipboard
 
 module ApplicationHelper
 
@@ -22,7 +23,7 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
-    class_name.gsub!('/', '_')
+    class_name.gsub!('/', '__')
     id = component.id.nil? ? Time.now.to_i : component.id
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
@@ -104,6 +105,10 @@ module ApplicationHelper
         list << content_tag('li') { truncate(message, :length => 70) }
       end
     end
+  end
+  
+  def short_format_gse_summary(gse)
+    gse.print_summary_data("<div><strong>%s</strong><ul>%s</ul></div>","<li>%s</li>")
   end
   
   # Sets the page title and outputs title if container is passed in.
@@ -287,35 +292,6 @@ module ApplicationHelper
       url
     end
   end
-
-  def clipboard_object(options={})
-    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
-    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
-    container_id         = options[:container_id] || params[:container_id]
-    if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id 
-      clazz = clipboard_data_type.classify.constantize
-      if clazz
-        id = clipboard_data_id.to_i
-        if id
-          return clazz.find(id)
-        end
-      end
-    end
-    return nil
-  end
-
-  def clipboard_object_name(options={})
-    obj = clipboard_object(options)
-    if obj
-      if obj.respond_to? :name
-        return obj.name
-      else
-        return obj.class.name.humanize
-      end
-    end
-    return "(unknown object)"
-  end
-  
   
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
@@ -326,7 +302,7 @@ module ApplicationHelper
     name = clipboard_object_name
     if acceptable_types.include?(clipboard_data_type) 
       url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return remote_link_button ("paste-out.png", :url => url, :title => "paste #{clipboard_data_type} #{name}") + link_to_remote("paste #{clipboard_data_type} #{name}", :url=>url)
+      return remote_link_button("paste-out.png", :url => url, :title => "paste #{clipboard_data_type} #{name}") + link_to_remote("paste #{clipboard_data_type} #{name}", :url=>url)
     end
     return "<span class='copy_paste_disabled'>cant paste #{clipboard_data_type} #{name} here</span>"
   end

@@ -40,7 +40,7 @@ describe Portal::District do
       it "finds and returns the first district that is associated with the NCES district if one exists" do
         found = Portal::District.find_by_state_and_nces_local_id('RI', 39)
         found.should_not be_nil
-        found.should eql @district
+        found.should eql(@district)
       end
       
       it "returns nil if there is no match" do
@@ -53,7 +53,7 @@ describe Portal::District do
       it "finds and return the first district that is associated with the NCES district or nil." do
         found = Portal::District.find_by_state_and_district_name('RI', "Woonsocket")
         found.should_not be_nil
-        found.should eql @district
+        found.should eql(@district)
       end
 
       it "If the district is a 'real' district return the NCES local district id" do
