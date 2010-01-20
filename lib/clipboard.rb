@@ -19,14 +19,18 @@ module Clipboard
 
   def clipboard_object_name(options={})
     obj = clipboard_object(options)
+    name = "(unknown object)"
     if obj
-      if obj.respond_to? :name
-        return obj.name
+      if (obj.class.respond_to? :display_name) && obj.class.display_name
+        name = obj.class.display_name
       else
-        return obj.class.name.humanize
+        name = obj.class.name.humanize
+      end
+      if (obj.respond_to? :name) && obj.name
+        name += ": " + obj.name
       end
     end
-    return "(unknown object)"
+    return name
   end
   
 end
