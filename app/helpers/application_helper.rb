@@ -23,7 +23,7 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore
-    class_name.gsub!('/', '-')
+    class_name.gsub!('/', '__')
     id = component.id.nil? ? Time.now.to_i : component.id
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
