@@ -188,7 +188,7 @@ class ModelCollection
       0.step(replacement_pairs.length-1, 2) do |index|
         current_name = replacement_pairs[index]
         new_name = replacement_pairs[index+1]
-        @source.gsub!(/(,|\s+)#{current_name}\./) { |m| "#{$1}#{new_name}." }
+        @source.gsub!(/(\(|\[|,|\s+)#{current_name}(,|\s+|\.|\])/) { |m| "#{$1}#{new_name}#{$2}" }
       end
     end
 
@@ -239,7 +239,7 @@ class ModelCollection
     end
     
     def convert(all_model_classname_pairs, all_table_name_pairs)
-      @src.gsub!(all_model_classname_pairs, '.')
+      @src.convert_model_classnames(all_model_classname_pairs)
       @src.convert_partial_paths_and_routes(all_table_name_pairs)
       @src.write_new("#{new_views_path}/#{File.basename(@view_path)}")
     end
