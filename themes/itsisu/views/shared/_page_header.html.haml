@@ -8,7 +8,7 @@
   %ul
     - if (page.changeable?(current_user))
       / %li= link_to 'edit page details', edit_page_url(page)
-      %li= duplicate_link_for(page,:text=> "copy page #{page.name}")
+      %li= duplicate_link_for(page,:text=> "duplicate page #{page.name}")
     %li#copy_link.copy_paste_disabled copy (disabled)
     - if (page.changeable?(current_user))
       %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id})
