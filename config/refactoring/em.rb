@@ -699,6 +699,12 @@ end
       view.convert_model_classnames(@all_model_classname_pairs)
       view.write
     end
+    helpers = Dir["app/helpers/**/*.rb"] - Dir["app/helpers/{#{@new_scope_names.join(',')}}/**/*.rb"]
+    helpers.each do |path|
+      helper = ModelCollection::SourceFile.new(path)
+      helper.convert_model_classnames(@all_model_classname_pairs)
+      helper.write
+    end
     convert_embeddable_type_attributes_in_page_elements_table
     generate_new_routing_scopes  # existing routes will need to be moved to the new name-scoped route blocks
   end
