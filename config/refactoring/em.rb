@@ -69,7 +69,7 @@ class ModelCollection
       source.insert(source.index("\n"), new_content)
     end
     
-    # Examples:
+    # Examples of model associations that need processing
     #
     # belongs_to :probe_type
     #
@@ -81,6 +81,20 @@ class ModelCollection
     #   INNER JOIN sections ON pages.section_id = sections.id
     #   INNER JOIN activities ON sections.activity_id = activities.id
     #   WHERE activities.investigation_id = #{id}'
+    # 
+    # [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
+    # 
+    # named_scope :with_gse, {
+    #   :joins => "left outer JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) 
+    #      JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) 
+    #      JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+    # }
+    # 
+    # named_scope :domain, lambda { |domain_id| 
+    #   {
+    #     :conditions =>[ 'knowledge_statements.domain_id = ?', domain_id]
+    #   }
+    # }
     
     def convert_model_associations(model_pairs)
       @source.gsub!(/(belongs_to|has_and_belongs_to_many|has_many|has_one)\s+(:\w+)(.*)/) do |match|
@@ -103,12 +117,12 @@ class ModelCollection
         else
           result = match
         end
-        puts sprintf("%-40s%-80s%-40s%-40s", "model: #{model}", "options_classname: #{options_classname}", "camel_model: #{camel_model}", result)
+        # puts sprintf("%-40s%-80s%-40s%-40s", "model: #{model}", "options_classname: #{options_classname}", "camel_model: #{camel_model}", result)
         result
       end
     end
     
-    def convert_tables_names_in_finder_sql(table_name_pairs)
+    def convert_table_names_in_finder_sql(table_name_pairs)
       replacement_table_name_pairs = table_name_pairs.dup
       replacement_table_name_pairs.flatten!
       @source.gsub!(/:finder_sql\s*\=>\s*'(.*?)'/m) do |match|
@@ -118,6 +132,42 @@ class ModelCollection
         end
         ":finder_sql => '#{finder_sql}'"
       end
+    end
+    
+    def convert_table_names_in_joins(table_name_pairs)
+      replacement_table_name_pairs = table_name_pairs.dup
+      replacement_table_name_pairs.flatten!
+      @source.gsub!(/:joins\s*\=>\s*('|")(.*?)\1/m) do |match|
+        joins_delimiter = $1.dup
+        joins_sql = $2.dup
+        0.step(replacement_table_name_pairs.length-1, 2) do |index|
+          joins_sql.gsub!(/(\s+|\(|\.)(#{replacement_table_name_pairs[index+0]})(\s+|\.)/) do |match|
+            "#{$1}#{replacement_table_name_pairs[index+1]}#{$3}"
+          end
+        end
+        ":joins => #{joins_delimiter}#{joins_sql}#{joins_delimiter}"
+      end
+    end
+
+    def convert_table_names_in_conditions(table_name_pairs)
+      replacement_table_name_pairs = table_name_pairs.dup
+      replacement_table_name_pairs.flatten!
+      @source.gsub!(/:conditions\s*\=>\s*\[\s*('|")(.*?)\1/m) do |match|
+        conditions_delimiter = $1.dup
+        conditions_sql = $2.dup
+        0.step(replacement_table_name_pairs.length-1, 2) do |index|
+          conditions_sql.gsub!(/(^|\s+)(#{replacement_table_name_pairs[index+0]})\./) do |match|
+            "#{$1}#{replacement_table_name_pairs[index+1]}."
+          end
+        end
+        ":conditions => [#{conditions_delimiter}#{conditions_sql}#{conditions_delimiter}"
+      end
+    end
+    
+    def convert_table_names(table_name_pairs)
+      convert_table_names_in_finder_sql(table_name_pairs)
+      convert_table_names_in_joins(table_name_pairs)
+      convert_table_names_in_conditions(table_name_pairs)
     end
     
     def convert_partial_paths_and_routes(table_name_pairs)
