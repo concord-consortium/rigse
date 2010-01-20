@@ -181,6 +181,17 @@ class ModelCollection
         @source.gsub!(/,\s*(#{current_name}?)_(path|_url)/) { |match| ", #{prefix}#{$1}_#{$2}" }
       end
     end
+
+    def convert_model_classnames(model_classname_pairs)
+      replacement_pairs = model_classname_pairs.dup
+      replacement_pairs.flatten!
+      0.step(replacement_pairs.length-1, 2) do |index|
+        current_name = replacement_pairs[index]
+        new_name = replacement_pairs[index+1]
+        @source.gsub!(/(,|\s+)#{current_name}\./) { |m| "#{$1}#{new_name}." }
+      end
+    end
+
     
     def write
       File.open(@original_path, 'w') { |f| f.write @source }
@@ -667,23 +678,25 @@ end
       source = ModelCollection::SourceFile.new(path)
       source.gsub!(@all_model_classname_pairs)
       source.convert_model_associations(@all_model_classname_pairs)
-      source.convert_tables_names_in_finder_sql(@all_table_name_pairs)
+      source.convert_table_names(@all_table_name_pairs)
       source.write
     end
     Dir["app/models/{#{@new_scope_names.join(',')}}/**/*.rb"].each do |path|
       source = ModelCollection::SourceFile.new(path)
-      source.convert_tables_names_in_finder_sql(@all_table_name_pairs)
+      source.convert_table_names(@all_table_name_pairs)
       source.write
     end
     (Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/layouts/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
       view = ModelCollection::SourceFile.new(path)
       view.convert_partial_paths_and_routes(@all_table_name_pairs)
+      view.convert_model_classnames(@all_model_classname_pairs)
       view.write
     end
     views = Dir["app/views/**/*{haml,erb}"] - Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/{#{@new_scope_names.join(',')}}/**/*{haml,erb}"]
     views.each do |path|
       view = ModelCollection::SourceFile.new(path)
       view.convert_partial_paths_and_routes(@all_table_name_pairs)
+      view.convert_model_classnames(@all_model_classname_pairs)
       view.write
     end
     convert_embeddable_type_attributes_in_page_elements_table
