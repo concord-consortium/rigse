@@ -178,7 +178,7 @@ class ModelCollection
         new_name = replacement_pairs[index+1]
         prefix = new_name[/(.*?)#{current_name}/, 1]
         @source.gsub!(/\=\s*render\s+:partial\s*=>\s*(['"])#{current_name}/, '= render :partial => ' + '\1' + new_name)
-        @source.gsub!(/,\s*(#{current_name}?)_(path|_url)/) { |match| ", #{prefix}#{$1}_#{$2}" }
+        @source.gsub!(/(,|=>)\s*(#{current_name}?)_(path|_url)/) { |match| "#{$1} #{prefix}#{$2}_#{$3}" }
       end
     end
 
