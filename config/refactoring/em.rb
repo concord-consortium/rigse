@@ -693,6 +693,7 @@ end
       view.write
     end
     views = Dir["app/views/**/*{haml,erb}"] - Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/{#{@new_scope_names.join(',')}}/**/*{haml,erb}"]
+    views = views + Dir["themes/*/views/**/*.haml"]
     views.each do |path|
       view = ModelCollection::SourceFile.new(path)
       view.convert_partial_paths_and_routes(@all_table_name_pairs)
