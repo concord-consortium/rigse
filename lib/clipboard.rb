@@ -2,7 +2,7 @@ module Clipboard
   
   def get_clipboard_object(clipboard_data_type, clipboard_data_id)
     if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id
-      clipboard_data_type.gsub!('-', '/')
+      clipboard_data_type.gsub!('__', '/')
       clazz = clipboard_data_type.classify.constantize
       obj_array = clazz.find(:all, :conditions => {:id => clipboard_data_id})
       obj_array.empty? ? nil : obj_array.first
