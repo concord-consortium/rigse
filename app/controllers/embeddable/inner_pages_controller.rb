@@ -50,7 +50,7 @@ class Embeddable::InnerPagesController < ApplicationController
 
     # dynamically instantiate the component based on its type.
     component_class = params['class_name'].constantize
-    if component_class == DataCollector
+    if component_class == Embeddable::DataCollector
       if probe_type_id = session[:last_saved_probe_type_id]
         probe_type = Probe::ProbeType.find(probe_type_id)
         @component = Embeddable::DataCollector.new
