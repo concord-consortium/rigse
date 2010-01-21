@@ -22,8 +22,7 @@ module ApplicationHelper
     optional_prefixes.flatten!
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
-    class_name = component.class.name.underscore
-    class_name.gsub!('/', '__')
+    class_name = component.class.name.underscore.clipboardify
     id = component.id.nil? ? Time.now.to_i : component.id
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"

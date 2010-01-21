@@ -1,4 +1,5 @@
 class Page < ActiveRecord::Base
+  include Clipboard
   belongs_to :user
   belongs_to :section
 
@@ -75,7 +76,7 @@ class Page < ActiveRecord::Base
     # returns an array of class names transmogrified into the form
     # we use for dom-ids
     def paste_acceptable_types
-      element_types.map {|t| t.name.underscore.gsub('/', '-')}
+      element_types.map {|t| t.name.underscore.clipboardify}
     end
     
     def element_types

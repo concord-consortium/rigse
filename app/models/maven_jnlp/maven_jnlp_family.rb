@@ -63,8 +63,11 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
 
   def newest_snapshot_version
     begin
-      open("#{url}/#{name}-CURRENT_VERSION.txt").read
-    rescue OpenURI::HTTPError, SocketError
+      Timeout::timeout(10) do
+        open("#{url}/#{name}-CURRENT_VERSION.txt").read
+      end
+    rescue OpenURI::HTTPError, SocketError, Timeout::Error
+      puts "couldn't read from #{url}/#{name}-CURRENT_VERSION.txt"
       snapshot_version
     end
   end

@@ -1,9 +1,34 @@
 module Clipboard
   
+  module StringExtensions
+      def clipboard_scope_char
+        '__'
+      end
+      def class_scope_char
+        '/'
+      end
+    
+      def clipboardify
+        self.gsub(class_scope_char, clipboard_scope_char)
+      end
+
+      def de_clipboardify
+        self.gsub(clipboard_scope_char, class_scope_char)
+      end
+
+      def clipboardify!
+        self.gsub!(class_scope_char, clipboard_scope_char)
+      end
+
+      def de_clipboardify!
+        self.gsub!(clipboard_scope_char, class_scope_char)
+      end
+  end
+  
   def get_clipboard_object(clipboard_data_type, clipboard_data_id)
     results = nil
     if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id
-      clipboard_data_type.gsub!('__', '/')
+      clipboard_data_type.de_clipboardify!
       begin
         clazz = clipboard_data_type.classify.constantize
         obj_array = clazz.find(:all, :conditions => {:id => clipboard_data_id})
@@ -39,6 +64,7 @@ module Clipboard
     return name
   end
   
+  
   def paste_link_for(acceptable_types,options={})
     clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
     clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
@@ -47,10 +73,21 @@ module Clipboard
     return "<span class='copy_paste_disabled'>paste (nothing in clipboard)</span>" unless clipboard_data_type
     name = clipboard_object_name
     if acceptable_types.include?(clipboard_data_type) 
-      url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return remote_link_button("paste-out.png", :url => url, :title => "paste #{clipboard_data_type} #{name}") + link_to_remote("paste #{clipboard_data_type} #{name}", :url=>url)
+      url = url_for(
+        :action => 'paste', 
+        :method=> 'post', 
+        :clipboard_data_type => clipboard_data_type, 
+        :clipboard_data_id => clipboard_data_id, 
+        :id =>container_id)
+      return remote_link_button("paste-out.png", 
+        :url => url, 
+        :title => "paste #{name}") + link_to_remote("paste #{name}", 
+        :url=>url)
     end
     return "<span class='copy_paste_disabled'>cant paste #{clipboard_data_type} #{name} here</span>"
   end
-  
+end
+
+class String
+  include Clipboard::StringExtensions
 end
