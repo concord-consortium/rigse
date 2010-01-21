@@ -1,30 +1,29 @@
-def clipboard_scope_char
-  '__'
-end
-def class_scope_char
-  '/'
-end
-
-class String
-
-  def clipboardify
-    self.gsub(class_scope_char, clipboard_scope_char)
-  end
-
-  def de_clipboardify
-    self.gsub(clipboard_scope_char, class_scope_char)
-  end
-
-  def clipboardify!
-    self.gsub!(class_scope_char, clipboard_scope_char)
-  end
-  
-  def de_clipboardify!
-    self.gsub!(clipboard_scope_char, class_scope_char)
-  end
-end
-
 module Clipboard
+  
+  module StringExtensions
+      def clipboard_scope_char
+        '__'
+      end
+      def class_scope_char
+        '/'
+      end
+    
+      def clipboardify
+        self.gsub(class_scope_char, clipboard_scope_char)
+      end
+
+      def de_clipboardify
+        self.gsub(clipboard_scope_char, class_scope_char)
+      end
+
+      def clipboardify!
+        self.gsub!(class_scope_char, clipboard_scope_char)
+      end
+
+      def de_clipboardify!
+        self.gsub!(clipboard_scope_char, class_scope_char)
+      end
+  end
   
   def get_clipboard_object(clipboard_data_type, clipboard_data_id)
     results = nil
@@ -83,5 +82,8 @@ module Clipboard
     end
     return "<span class='copy_paste_disabled'>cant paste #{clipboard_data_type} #{name} here</span>"
   end
-  
+end
+
+class String
+  include Clipboard::StringExtensions
 end
