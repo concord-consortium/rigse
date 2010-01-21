@@ -28,7 +28,7 @@ var item_select = function(event) {
     var type = '';
     var id = '';
     
-    selected.identify().gsub(/item_([\w|_|-]+)_(\d+)/, function(match){
+    selected.identify().gsub(/item_([\w|_]+)_(\d+)/, function(match){
       type = match[1];
       id = match[2];
     });
