@@ -105,7 +105,7 @@ class SectionsController < ApplicationController
       format.js {
         @page = Page.create
         @page.user = current_user
-        @xhtml = Xhtml.create
+        @xhtml = Embeddable::Xhtml.create
         @xhtml.user = current_user
         @xhtml.save!
         @xhtml.pages << @page

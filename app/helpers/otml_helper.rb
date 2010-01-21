@@ -36,7 +36,7 @@
   end
   
   def data_filter_inports
-    DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+    Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
   end
   
   def imports
@@ -258,7 +258,7 @@
     if use_current_user
       vendor_interface = current_user.vendor_interface
     else
-      vendor_interface = VendorInterface.find(6)
+      vendor_interface = Probe::VendorInterface.find(6)
     end
     result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
     @template_format = old_format

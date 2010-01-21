@@ -6,37 +6,37 @@ class Page < ActiveRecord::Base
 
   # this could work if the finder sql was redone
   # has_one :investigation,
-  #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
-  #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
+  #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}'
 
   has_many :page_elements, :order => :position, :dependent => :destroy
-  has_many :inner_page_pages 
-  has_many :inner_pages, :through => :inner_page_pages
+  has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage' 
+  has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
   
   @@element_types = [
-    Xhtml,
-    OpenResponse,
-    MultipleChoice,
-    DataTable,
-    DrawingTool,
-    DataCollector,
-    LabBookSnapshot,
-    InnerPage,
-    MwModelerPage,
-    NLogoModel,
-    BiologicaWorld,
-    BiologicaOrganism,
-    BiologicaStaticOrganism,
-    BiologicaChromosome,
-    BiologicaChromosomeZoom,
-    BiologicaBreedOffspring,
-    BiologicaPedigree,
-    BiologicaMultipleOrganism,
-    BiologicaMeiosisView,
+    Embeddable::Xhtml,
+    Embeddable::OpenResponse,
+    Embeddable::MultipleChoice,
+    Embeddable::DataTable,
+    Embeddable::DrawingTool,
+    Embeddable::DataCollector,
+    Embeddable::LabBookSnapshot,
+    Embeddable::InnerPage,
+    Embeddable::MwModelerPage,
+    Embeddable::NLogoModel,
+    Embeddable::Biologica::World,
+    Embeddable::Biologica::Organism,
+    Embeddable::Biologica::StaticOrganism,
+    Embeddable::Biologica::Chromosome,
+    Embeddable::Biologica::ChromosomeZoom,
+    Embeddable::Biologica::BreedOffspring,
+    Embeddable::Biologica::Pedigree,
+    Embeddable::Biologica::MultipleOrganism,
+    Embeddable::Biologica::MeiosisView,
     # BiologicaDna,
-    Smartgraph::RangeQuestion,
+    Embeddable::Smartgraph::RangeQuestion,
   ]
 
   @@element_types.each do |type|
@@ -44,6 +44,8 @@ class Page < ActiveRecord::Base
       eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
     end
   end
+  
+  has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
@@ -98,7 +100,7 @@ class Page < ActiveRecord::Base
     case parent
       when Section 
         return parent
-      when InnerPage
+      when Embeddable::InnerPage
         # kind of hackish:
         if(parent.parent)
           return parent.parent.section
@@ -135,7 +137,7 @@ class Page < ActiveRecord::Base
   # 
   # def add_xhtml
   #   if(self.page_elements.size < 1)
-  #     xhtml = Xhtml.create
+  #     xhtml = Embeddable::Xhtml.create
   #     xhtml.pages << self
   #     xhtml.save
   #   end
@@ -166,7 +168,7 @@ class Page < ActiveRecord::Base
   end
   
   def has_inner_page?
-    i_pages = page_elements.collect {|e| e.embeddable_type == InnerPage.name}
+    i_pages = page_elements.collect {|e| e.embeddable_type == Embeddable::InnerPage.name}
     if (i_pages.size > 0) 
       return true
     end

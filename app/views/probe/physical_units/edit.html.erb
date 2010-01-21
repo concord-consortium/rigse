@@ -1,0 +1,12 @@
+<h1>Editing physical_unit</h1>
+
+<% form_for(@physical_unit) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @physical_unit %> |
+<%= link_to 'Back', probe_physical_units_path %>

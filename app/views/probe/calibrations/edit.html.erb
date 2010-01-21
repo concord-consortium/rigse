@@ -1,0 +1,12 @@
+<h1>Editing calibration</h1>
+
+<% form_for(@calibration) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @calibration %> |
+<%= link_to 'Back', probe_calibrations_path %>

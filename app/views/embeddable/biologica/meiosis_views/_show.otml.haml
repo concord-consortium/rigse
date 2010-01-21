@@ -1,0 +1,5 @@
+%OTSex{ :local_id => ot_local_id_for( meiosis_view), :width => meiosis_view.width, :height => meiosis_view.height, :replay_button_enabled => meiosis_view.replay_button_enabled.to_s, :controlled_crossover_enabled => meiosis_view.controlled_crossover_enabled.to_s, :crossover_control_visible => meiosis_view.crossover_control_visible.to_s, :controlled_alignment_enabled => meiosis_view.controlled_alignment_enabled.to_s, :alignment_control_visible => meiosis_view.alignment_control_visible.to_s }
+  %fatherOrganism
+    = render_scoped_reference(meiosis_view.father_organism)
+  %motherOrganism
+    = render_scoped_reference(meiosis_view.mother_organism)

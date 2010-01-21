@@ -36,7 +36,7 @@ class GseParser
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
     parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
-    GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
+    RiGse::GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
   end
 
   #
@@ -59,16 +59,16 @@ class GseParser
   def remove_old_data
     # The TRUNCATE cammand works in mysql to effectively empty the database and reset 
     # the autogenerating primary key index ... not certain about other databases
-    [ Domain,
-      KnowledgeStatement,
-      AssessmentTarget,
-      AssessmentTargetUnifyingTheme,
-      GradeSpanExpectation,
-      ExpectationIndicator,
-      ExpectationStem,
-      Expectation,
-      UnifyingTheme, 
-      BigIdea].each do |klass|
+    [ RiGse::Domain,
+      RiGse::KnowledgeStatement,
+      RiGse::AssessmentTarget,
+      RiGse::AssessmentTargetUnifyingTheme,
+      RiGse::GradeSpanExpectation,
+      RiGse::ExpectationIndicator,
+      RiGse::ExpectationStem,
+      RiGse::Expectation,
+      RiGse::UnifyingTheme, 
+      RiGse::BigIdea].each do |klass|
         ActiveRecord::Base.connection.delete("TRUNCATE `#{klass.table_name}`")
     end
   end
@@ -81,7 +81,7 @@ class GseParser
     data = YAML::load(File.open(domain_yaml))
     data.keys.each do |key| 
       logger.info(key)
-      d = Domain.find_or_create_by_key(:key => key, :name => data[key])
+      d = RiGse::Domain.find_or_create_by_key(:key => key, :name => data[key])
       d.save
       logger.info(d.inspect)
       domains[key] = d
@@ -95,7 +95,7 @@ class GseParser
   def make_themes(theme_yaml)
     data = YAML::load(File.open(theme_yaml))
     data.keys.each do |key|
-      theme = UnifyingTheme.find_or_create_by_key(:key => key, :name => data[key])
+      theme = RiGse::UnifyingTheme.find_or_create_by_key(:key => key, :name => data[key])
       theme.save
       @themes[key] = theme
     end
@@ -118,7 +118,7 @@ class GseParser
             (domain_key,someNumber,grade_span,target_number,expectaton_ordinal,description) = matches.captures
             if (domain_key)
               if (domain_key !="PS") # we already have all of these
-                expectation  = Expectation.new(:description => description, :ordinal => expectaton_ordinal)
+                expectation  = RiGse::Expectation.new(:description => description, :ordinal => expectaton_ordinal)
                 expectation.save
               end
             end
@@ -155,7 +155,7 @@ class GseParser
   #
   #
   def import_enduring_knowledge (table)
-    domain_keys = Domain.find(:all).map { |domain| domain.key }
+    domain_keys = RiGse::Domain.find(:all).map { |domain| domain.key }
     regex = /^#{domain_keys.join("|")}/
     (table/:tr/:td).each do | td |  
       data = td.inner_text.strip
@@ -175,14 +175,14 @@ class GseParser
 
     if (matches)
       (domain_key,number,statement) = matches.captures
-      domain = Domain.find_by_key(domain_key)
+      domain = RiGse::Domain.find_by_key(domain_key)
       if (domain)
-        knowledge_statement = KnowledgeStatement.find(
+        knowledge_statement = RiGse::KnowledgeStatement.find(
         :first, 
         :conditions => { :domain_id => domain.id, :number => number }
         )
         unless (knowledge_statement)
-          knowledge_statement=KnowledgeStatement.new
+          knowledge_statement=RiGse::KnowledgeStatement.new
         end
         knowledge_statement.domain = domain
         knowledge_statement.number = number
@@ -201,10 +201,10 @@ class GseParser
   def import_unifying_themes(table)
     relevent_columns = ((table/:tr)[2]/:td).each do |td| 
       themeName = ((td/:p)[0]).inner_text.strip 
-      theme = UnifyingTheme.find_by_name(themeName)
+      theme = RiGse::UnifyingTheme.find_by_name(themeName)
       if (theme)
         (td/:li).each do  |li|
-          big_idea = BigIdea.new
+          big_idea = RiGse::BigIdea.new
           big_idea.description = (clean_text(li.inner_text)).gsub(/^\./,"")
           big_idea.unifying_theme = theme 
           big_idea.save
@@ -268,14 +268,14 @@ class GseParser
       domain = @domains[domain_key.strip]
 
       if (domain)
-        knowledge_statement = KnowledgeStatement.find(
+        knowledge_statement = RiGse::KnowledgeStatement.find(
         :first, 
         :conditions => { :domain_id => domain.id, :number => ek_key })
       else
         logger.warn "could not find domain for #{domain_key}"
       end
 
-      assessment_target = AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
+      assessment_target = RiGse::AssessmentTarget.new(:knowledge_statement => knowledge_statement, :number => number)
       #unifying_theme = @themes[unifying_theme_key.strip]
       #if (unifying_theme)
       #  assessment_target.unifying_theme = unifying_theme
@@ -310,18 +310,18 @@ class GseParser
         statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
         statement_strings.each { |s| clean_text(s) }
         statement_strings.reject! { |s| s == "" || s == nil || s == " " }
-        gse = GradeSpanExpectation.new
+        gse = RiGse::GradeSpanExpectation.new
         gse.grade_span = grade_span
         gse.assessment_target = assessment_target
         gse.save
-        stem = ExpectationStem.find_or_create_by_description(stem_string)
+        stem = RiGse::ExpectationStem.find_or_create_by_description(stem_string)
         stem.save # force an id
-        expectation = Expectation.find(:first, :conditions =>   { :expectation_stem_id => stem, :grade_span_expectation_id => gse })
-        expectation ||= Expectation.new(:expectation_stem => stem, :grade_span_expectation => gse)
+        expectation = RiGse::Expectation.find(:first, :conditions =>   { :expectation_stem_id => stem, :grade_span_expectation_id => gse })
+        expectation ||= RiGse::Expectation.new(:expectation_stem => stem, :grade_span_expectation => gse)
         expectation.save
         ordinal = 'a'
         expectations = statement_strings.map { | ss | 
-          expectation_indicator  = ExpectationIndicator.new(:description => ss, :ordinal => ordinal)
+          expectation_indicator  = RiGse::ExpectationIndicator.new(:description => ss, :ordinal => ordinal)
           expectation_indicator.expectation = expectation
           expectation_indicator.save
           ordinal = ordinal.next

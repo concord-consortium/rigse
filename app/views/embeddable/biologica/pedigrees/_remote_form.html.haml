@@ -1,0 +1,2 @@
+- remote_form_for(pedigree, :update => dom_id_for(pedigree, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "form", :locals => { :pedigree => pedigree, :f => f  }

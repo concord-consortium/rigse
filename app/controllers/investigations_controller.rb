@@ -185,12 +185,12 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.new
     @investigation.user = current_user
     if APP_CONFIG[:use_gse]
-      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
       @investigation.grade_span_expectation = @gse
       session[:original_gse_id] = session[:gse_id] = @gse.id
       session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
       session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-      domain = Domain.find(@gse.domain.id)
+      domain = RiGse::Domain.find(@gse.domain.id)
       gses = domain.grade_span_expectations 
       @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     end
@@ -209,7 +209,7 @@ class InvestigationsController < AuthoringController
     if APP_CONFIG[:use_gse]
       # if there is no gse assign a default one:
       unless @gse = @investigation.grade_span_expectation
-        @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+        @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
         @investigation.grade_span_expectation = @gse
         @investigation.save!
       end
@@ -217,7 +217,7 @@ class InvestigationsController < AuthoringController
       session[:original_gse_id] = session[:gse_id] = @gse.id
       session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
       session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-      domain = Domain.find(@gse.domain.id)
+      domain = RiGse::Domain.find(@gse.domain.id)
       gses = domain.grade_span_expectations 
       @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     end
@@ -230,7 +230,7 @@ class InvestigationsController < AuthoringController
   # POST /pages.xml
   def create
     begin
-      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      gse = RiGse::GradeSpanExpectation.find(params[:grade_span_expectation])
       params[:investigation][:grade_span_expectation] = gse
     rescue
       logger.error('could not find gse')
@@ -251,10 +251,10 @@ class InvestigationsController < AuthoringController
 
   def gse_select
     if params[:grade_span_expectation]
-      @selected_gse = GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
+      @selected_gse = RiGse::GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
       session[:gse_id] = @selected_gse.id
     else
-      @selected_gse = GradeSpanExpectation.find_by_id(session[:gse_id])
+      @selected_gse = RiGse::GradeSpanExpectation.find_by_id(session[:gse_id])
     end
     # remember the chosen domain and grade_span, it will probably continue.
     if grade_span = params[:grade_span]
@@ -271,7 +271,7 @@ class InvestigationsController < AuthoringController
     # FIXME 
     # domains (as an associated model) are way too far away from a gse
     # I added some finder_sql to the domain model to make this faster
-    domain = Domain.find(domain_id)
+    domain = RiGse::Domain.find(domain_id)
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?

@@ -1,0 +1,18 @@
+<h1>Listing vendor_interfaces</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% @vendor_interfaces.each do |vendor_interface| %>
+  <tr>
+    <td><%= link_to 'Show', vendor_interface %></td>
+    <td><%= link_to 'Edit', edit_probe_vendor_interface_path(vendor_interface) %></td>
+    <td><%= link_to 'Destroy', vendor_interface, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New vendor_interface', new_probe_vendor_interface_path %>

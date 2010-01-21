@@ -81,7 +81,7 @@ module TruncatableXhtml
   end
   
   ##
-  ## Two good places to look for XhtmlContent
+  ## Two good places to look for Embeddable::XhtmlContent
   ##
   DEFAULT_TABLES = [
     "content",

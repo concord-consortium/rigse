@@ -11,14 +11,14 @@ class Itsi::Activity < Itsi::Itsi
   end
 
   belongs_to :user, :class_name => "Itsi::User"
-  belongs_to :probe_type, :class_name => "ProbeType"
+  belongs_to :probe_type, :class_name => "Probe::ProbeType"
   belongs_to :model, :class_name => "Itsi::Model"
   
-  belongs_to :second_probe_type, :class_name => "ProbeType", :foreign_key => :collectdata2_probetype_id
+  belongs_to :second_probe_type, :class_name => "Probe::ProbeType", :foreign_key => :collectdata2_probetype_id
   belongs_to :second_model, :class_name => "Itsi::Model", :foreign_key => :collectdata2_model_id
-  belongs_to :third_probe_type, :class_name => "ProbeType", :foreign_key => :collectdata3_probetype_id
+  belongs_to :third_probe_type, :class_name => "Probe::ProbeType", :foreign_key => :collectdata3_probetype_id
   belongs_to :third_model, :class_name => "Itsi::Model", :foreign_key => :collectdata3_model_id
-  belongs_to :fourth_probe_type, :class_name => "ProbeType", :foreign_key => :further_probetype_id
+  belongs_to :fourth_probe_type, :class_name => "Probe::ProbeType", :foreign_key => :further_probetype_id
   belongs_to :fourth_model, :class_name => "Itsi::Model", :foreign_key => :further_model_id
   
   # This method allows an easy production of an array of strings

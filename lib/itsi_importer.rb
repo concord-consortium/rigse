@@ -55,9 +55,9 @@ class ItsiImporter
     def add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix="")
       @@prediction_graph = nil
       if itsi_activity.collectdata_probe_active
-        @@first_probe_type = ProbeType.find(itsi_activity.probe_type_id)
+        @@first_probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
       else
-        @@first_probe_type = ProbeType.find_by_name('Temperature')
+        @@first_probe_type = Probe::ProbeType.find_by_name('Temperature')
         @@first_probe_type.name = "Temperature as default for missing probe_type_id: #{itsi_activity.probe_type_id}"
       end
       # itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
@@ -209,7 +209,7 @@ class ItsiImporter
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
         if itsi_activity.collectdata_probe_active
-          probe_type = ProbeType.find(itsi_activity.probe_type_id)
+          probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
         end
         if itsi_activity.collectdata_model_active
@@ -247,7 +247,7 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         ItsiImporter.add_xhtml_to_page(page, body)
         if itsi_activity.collectdata2_probe_active
-          probe_type = ProbeType.find(itsi_activity.probe_type_id)
+          probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata2_probe_multi)
         end
         if itsi_activity.collectdata2_model_active
@@ -284,7 +284,7 @@ class ItsiImporter
       unless body.empty? && question_prompt.empty?
         ItsiImporter.add_xhtml_to_page(page, body)
         if itsi_activity.collectdata3_probe_active
-          probe_type = ProbeType.find(itsi_activity.probe_type_id)
+          probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata3_probe_multi)
         end
         if itsi_activity.collectdata3_model_active
@@ -358,7 +358,7 @@ class ItsiImporter
         section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
         page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
         if itsi_activity.further_probe_active
-          probe_type = ProbeType.find(itsi_activity.further_probetype_id)
+          probe_type = Probe::ProbeType.find(itsi_activity.further_probetype_id)
           ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.further_probe_multi)
         end
         if itsi_activity.further_model_active
@@ -401,7 +401,7 @@ class ItsiImporter
         p.name = "#{name}s"
         p.description = page_description
       end
-      embeddable = Xhtml.create do |x|
+      embeddable = Embeddable::Xhtml.create do |x|
         x.name = name + ": Body Content (html)"
         x.description = ""
         x.content = html_content
@@ -424,7 +424,7 @@ class ItsiImporter
         end
         page_embeddable = nil
       else
-        page_embeddable = Xhtml.create do |x|
+        page_embeddable = Embeddable::Xhtml.create do |x|
           # For ITSI_SU Ed Hazzard says he doesn't want page names or descriptions being added to text content
           # x.name = name + ": Body Content (html)"
           x.description = ""
@@ -458,7 +458,7 @@ class ItsiImporter
     end
 
     def add_mw_model_to_page(page, model)
-      page_embeddable = MwModelerPage.create do |mw|
+      page_embeddable = Embeddable::MwModelerPage.create do |mw|
         mw.name = model.name
         mw.description = model.description
         mw.authored_data_url = model.url
@@ -467,7 +467,7 @@ class ItsiImporter
     end
 
     def add_nl_model_to_page(page, model)
-      page_embeddable = NLogoModel.create do |mw|
+      page_embeddable = Embeddable::NLogoModel.create do |mw|
         mw.name = model.name
         mw.description = model.description
         mw.authored_data_url = model.url
@@ -476,7 +476,7 @@ class ItsiImporter
     end
 
     def add_open_response_to_page(page, question_prompt)
-      page_embeddable = OpenResponse.create do |o|
+      page_embeddable = Embeddable::OpenResponse.create do |o|
         o.name = page.name + ": Open Response Question"
         o.description = ""
         o.prompt = question_prompt
@@ -486,7 +486,7 @@ class ItsiImporter
 
     def add_drawing_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = DrawingTool.create do |dt|
+      page_embeddable = Embeddable::DrawingTool.create do |dt|
         dt.name = page.name + ": Drawing Tool"
         dt.description = "Drawing tool."
       end
@@ -495,7 +495,7 @@ class ItsiImporter
 
     def add_prediction_graph_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = DataCollector.create do |d|
+      page_embeddable = Embeddable::DataCollector.create do |d|
         d.name = page.name + ": Prediction graph for #{@@first_probe_type.name}."
         d.title = d.name
         d.graph_type_id = 2
@@ -507,7 +507,7 @@ class ItsiImporter
     end
 
     def add_data_collector_to_page(page, probe_type, multiple_graphs)
-      page_embeddable = DataCollector.create do |d|
+      page_embeddable = Embeddable::DataCollector.create do |d|
         d.name = page.name + ": #{probe_type.name} Data Collector"
         d.title = d.name
         d.probe_type = probe_type
@@ -522,7 +522,7 @@ class ItsiImporter
     end
 
     def add_xhtml_to_page(page, html_content)
-      page_embeddable = Xhtml.create do |x|
+      page_embeddable = Embeddable::Xhtml.create do |x|
         x.name = page.name + ": Body Content (html)"
         x.description = ""
         x.content = html_content

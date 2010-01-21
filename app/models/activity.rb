@@ -6,9 +6,29 @@ class Activity < ActiveRecord::Base
   has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-  
-  [DataCollector, BiologicaOrganism, BiologicaWorld].each do |klass|
-    eval "has_many :#{klass.table_name},
+
+  [ Embeddable::Xhtml,
+    Embeddable::OpenResponse,
+    Embeddable::MultipleChoice,
+    Embeddable::DataTable,
+    Embeddable::DrawingTool,
+    Embeddable::DataCollector,
+    Embeddable::LabBookSnapshot,
+    Embeddable::InnerPage,
+    Embeddable::MwModelerPage,
+    Embeddable::NLogoModel,
+    Embeddable::RawOtml,
+    Embeddable::Biologica::World,
+    Embeddable::Biologica::Organism,
+    Embeddable::Biologica::StaticOrganism,
+    Embeddable::Biologica::Chromosome,
+    Embeddable::Biologica::ChromosomeZoom,
+    Embeddable::Biologica::BreedOffspring,
+    Embeddable::Biologica::Pedigree,
+    Embeddable::Biologica::MultipleOrganism,
+    Embeddable::Biologica::MeiosisView,
+    Embeddable::Smartgraph::RangeQuestion].each do |klass|
+      eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       INNER JOIN pages ON page_elements.page_id = pages.id 
@@ -198,7 +218,7 @@ HEREDOC
   #       :name => "Page 1",
   #       :description => "First Page"
   #     )
-  #     xhtml = Xhtml.create(
+  #     xhtml = Embeddable::Xhtml.create(
   #       :name => "Summary",
   #       :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #       :content => <<-HERE
@@ -227,7 +247,7 @@ HEREDOC
   #      :name => "Page 1",
   #      :description => "First Page"
   #    )
-  #    xhtml = Xhtml.create(
+  #    xhtml = Embeddable::Xhtml.create(
   #      :name => "Engage",
   #      :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #      :content => <<-HERE
@@ -250,7 +270,7 @@ HEREDOC
   #      'How common are mutations? Do I have one?',
   #      'What causes a mutation to occur?'
   #    ].each do |question_text|
-  #      open_response = OpenResponse.create(
+  #      open_response = Embeddable::OpenResponse.create(
   #       :name => 'open reponse', 
   #       :description =>'open response question',
   #       :prompt => "<p>#{question_text}</p>",
@@ -275,7 +295,7 @@ HEREDOC
   #      :name => "Page 1",
   #      :description => "First Page"
   #    )
-  #    open_response = OpenResponse.create(
+  #    open_response = Embeddable::OpenResponse.create(
   #     :name => 'open reponse', 
   #     :description =>'open response question',
   #     :prompt => "<p>Give an example of a mutation to the following DNA sequence:</p><p><code>ATTGCA</code></p>",
@@ -283,7 +303,7 @@ HEREDOC
   #    open_response.pages << page_one
   #    open_response.save
   #    
-  #    xhtml = Xhtml.create(
+  #    xhtml = Embeddable::Xhtml.create(
   #      :name => "Explore",
   #      :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #      :content => <<-HERE
@@ -317,7 +337,7 @@ HEREDOC
   #    xhtml.pages << page_one
   #    xhtml.save
   #    
-  #    xhtml2 = Xhtml.create(
+  #    xhtml2 = Embeddable::Xhtml.create(
   #       :name => "Explore",
   #       :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #       :content => <<-HERE
@@ -335,7 +355,7 @@ HEREDOC
   #      'What is a mutation?',
   #      'What effect does a mutation have?',
   #    ].each do |question_text|
-  #      open_response = OpenResponse.create(
+  #      open_response = Embeddable::OpenResponse.create(
   #       :name => 'open reponse', 
   #       :description =>'open response question',
   #       :prompt => "<p>#{question_text}</p>",
@@ -360,7 +380,7 @@ HEREDOC
   #      :name => "Page 1",
   #      :description => "First Page"
   #    )
-  #    xhtml = Xhtml.create(
+  #    xhtml = Embeddable::Xhtml.create(
   #      :name => "Engage (second section)",
   #      :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #      :content => <<-HERE
@@ -380,7 +400,7 @@ HEREDOC
   #      'Predict the sequence of the RNA.',
   #      'What will happen to the protein?'
   #    ].each do |question_text|
-  #      open_response = OpenResponse.create(
+  #      open_response = Embeddable::OpenResponse.create(
   #       :name => 'open reponse', 
   #       :description =>'open response question',
   #       :prompt => "<p>#{question_text}</p>",
@@ -407,7 +427,7 @@ HEREDOC
   #      :description => "First Page"
   #    )
   #   
-  #    xhtml = Xhtml.create(
+  #    xhtml = Embeddable::Xhtml.create(
   #      :name => "Explore (second section)",
   #      :description => "In this activity you will get a chance to make different types of mutations in a computer model.",
   #      :content => <<-HERE
@@ -437,7 +457,7 @@ HEREDOC
   #      'Predict the sequence of the RNA.',
   #      'What will happen to the protein?'
   #    ].each do |question_text|
-  #      open_response = OpenResponse.create(
+  #      open_response = Embeddable::OpenResponse.create(
   #       :name => 'open reponse', 
   #       :description =>'open response question',
   #       :prompt => "
@@ -473,7 +493,7 @@ HEREDOC
   #     :description => "What activities will you and your students do and how are they connected to the objectives?"
   #   )
   #   
-  #   xhtml = Xhtml.create(
+  #   xhtml = Embeddable::Xhtml.create(
   #     :name => "Opening Proceedure",
   #     :description => "What activities will you and your students do and how are they connected to the objectives?",
   #     :content => <<-DONE

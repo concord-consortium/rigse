@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@biologica_multiple_organism.uuid
+- content_for(:multiple_organism_object_id) do
+  =dom_id_for(@biologica_multiple_organism)
+= render :partial => "show", :locals => { :multiple_organism => @biologica_multiple_organism }
