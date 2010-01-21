@@ -6,7 +6,7 @@ class RiGse::AssessmentTarget < ActiveRecord::Base
   belongs_to :knowledge_statement, :class_name => 'RiGse::KnowledgeStatement'
   has_many :grade_span_expectations, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :assessment_target_unifying_themes, :class_name => 'RiGse::AssessmentTargetUnifyingTheme'
-  has_and_belongs_to_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme', :join_table => :assessment_target_unifying_themes
+  has_and_belongs_to_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme', :join_table => :ri_gse_assessment_target_unifying_themes
 
   acts_as_replicatable
 
