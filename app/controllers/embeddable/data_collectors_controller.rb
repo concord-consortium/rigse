@@ -1,6 +1,5 @@
 class Embeddable::DataCollectorsController < ApplicationController
 
-
   protected
   def changed_calibration?(calibration_id)
     if session[:calibration_id] == calibration_id
@@ -99,7 +98,7 @@ class Embeddable::DataCollectorsController < ApplicationController
   # POST /Embeddable/data_collectors
   # POST /Embeddable/data_collectors.xml
   def create
-    @data_collector = Embeddable::DataCollector.new(params[:data_collector])
+    @data_collector = Embeddable::DataCollector.new(params[:embeddable_data_collector])
     session[:last_saved_probe_type_id] = @data_collector.probe_type_id
     cancel = params[:commit] == "Cancel"
     if request.xhr?
@@ -146,21 +145,21 @@ class Embeddable::DataCollectorsController < ApplicationController
       @data_collector.update_from_otml_library_content
       render :nothing => true
     else    
-      if @data_collector.probe_type_id != params[:data_collector][:probe_type_id]
-        params['data_collector']['name'] = params['data_collector']['title']
+      if @data_collector.probe_type_id != params[:embeddable_data_collector][:probe_type_id]
+        params[:embeddable_data_collector]['name'] = params[:embeddable_data_collector]['title']
       end
       if request.xhr?
-        if cancel || @data_collector.update_attributes(params[:data_collector])
-          session[:last_saved_probe_type_id] = params[:data_collector][:probe_type_id]
+        if cancel || @data_collector.update_attributes(params[:embeddable_data_collector])
+          session[:last_saved_probe_type_id] = params[:embeddable_data_collector][:probe_type_id]
           render :partial => 'show', :locals => { :data_collector => @data_collector }
         else
           render :xml => @data_collector.errors, :status => :unprocessable_entity
         end
       else
         respond_to do |format|
-          if cancel || @data_collector.update_attributes(params[:data_collector])
+          if cancel || @data_collector.update_attributes(params[:embeddable_data_collector])
             flash[:notice] = 'Embeddable::DataCollector.was successfully updated.'
-            session[:last_saved_probe_type_id] = params[:data_collector][:probe_type_id]
+            session[:last_saved_probe_type_id] = params[:embeddable_data_collector][:probe_type_id]
           
             format.html { redirect_to(@data_collector) }
             format.xml  { head :ok }
@@ -194,8 +193,8 @@ class Embeddable::DataCollectorsController < ApplicationController
   end
   
   def change_probe_type
-    probe_type_id = params[:data_collector][:probe_type_id]
-    calibration_id = params[:data_collector][:calibration_id]
+    probe_type_id = params[:embeddable_data_collector][:probe_type_id]
+    calibration_id = params[:embeddable_data_collector][:calibration_id]
     # If probe_type or calibrations change, we change some other values.
     if changed_probe_info?(probe_type_id,calibration_id)
       @data_collector = Embeddable::DataCollector.find(params[:id])

@@ -1,4 +1,4 @@
-class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationController
+class Embeddable::Biologica::MultipleOrganismsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_multiple_organisms
   # GET /Embeddable::Biologica/biologica_multiple_organisms.xml
   def index    
@@ -15,15 +15,15 @@ class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationC
   def show
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
     if request.xhr?
-      render :partial => 'biologica_multiple_organism', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
+      render :partial => 'embeddable/biologica/multiple_organism', :locals => { :multiple_organism => @biologica_multiple_organism }
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/biologica_multiple_organism" } # biologica_multiple_organism.otml.haml
+        format.otml { render :layout => "layouts/embeddable/biologica/multiple_organism" } # biologica_multiple_organism.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_multiple_organism }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_multiple_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_multiple_organism, :teacher_mode => @teacher_mode} }
-        format.xml  { render :biologica_multiple_organism => @biologica_multiple_organism }
+        format.xml  { render :multiple_organism => @biologica_multiple_organism }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationC
   def new
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
+      render :partial => 'remote_form', :locals => { :multiple_organism => @biologica_multiple_organism }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationC
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
     @scope = get_scope(@biologica_multiple_organism)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
+      render :partial => 'remote_form', :locals => { :multiple_organism => @biologica_multiple_organism }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationC
       if cancel 
         redirect_to :index
       elsif @biologica_multiple_organism.save
-        render :partial => 'new', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
+        render :partial => 'new', :locals => { :multiple_organism => @biologica_multiple_organism }
       else
         render :xml => @biologica_multiple_organism.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::BiologicaMultipleOrganismsController < ApplicationC
     @biologica_multiple_organism = Embeddable::Biologica::MultipleOrganism.find(params[:id])
     if request.xhr?
       if cancel || @biologica_multiple_organism.update_attributes(params[:biologica_multiple_organism])
-        render :partial => 'show', :locals => { :biologica_multiple_organism => @biologica_multiple_organism }
+        render :partial => 'show', :locals => { :multiple_organism => @biologica_multiple_organism }
       else
         render :xml => @biologica_multiple_organism.errors, :status => :unprocessable_entity
       end

@@ -85,7 +85,7 @@ end
   
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::Biologica::Organism
-      scope.activity.investigation.biologica_organisms
+      scope.activity.investigation.organisms
     else
       []
     end

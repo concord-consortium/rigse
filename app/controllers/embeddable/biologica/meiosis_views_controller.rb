@@ -1,4 +1,4 @@
-class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationController
+class Embeddable::Biologica::MeiosisViewsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_meiosis_views
   # GET /Embeddable::Biologica/biologica_meiosis_views.xml
   def index    
@@ -15,15 +15,15 @@ class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationContro
   def show
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     if request.xhr?
-      render :partial => 'biologica_meiosis_view', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
+      render :partial => 'embeddable/biologica/meiosis_view', :locals => { :meiosis_view => @biologica_meiosis_view }
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/biologica_meiosis_view" } # biologica_meiosis_view.otml.haml
+        format.otml { render :layout => "layouts/embeddable/biologica/meiosis_view" } # biologica_meiosis_view.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_meiosis_view }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_meiosis_view, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_meiosis_view, :teacher_mode => @teacher_mode} }
-        format.xml  { render :biologica_meiosis_view => @biologica_meiosis_view }
+        format.xml  { render :meiosis_view => @biologica_meiosis_view }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationContro
   def new
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
+      render :partial => 'remote_form', :locals => { :meiosis_view => @biologica_meiosis_view }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationContro
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     @scope = get_scope(@biologica_meiosis_view)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
+      render :partial => 'remote_form', :locals => { :meiosis_view => @biologica_meiosis_view }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationContro
       if cancel 
         redirect_to :index
       elsif @biologica_meiosis_view.save
-        render :partial => 'new', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
+        render :partial => 'new', :locals => { :meiosis_view => @biologica_meiosis_view }
       else
         render :xml => @biologica_meiosis_view.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::BiologicaMeiosisViewsController < ApplicationContro
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     if request.xhr?
       if cancel || @biologica_meiosis_view.update_attributes(params[:biologica_meiosis_view])
-        render :partial => 'show', :locals => { :biologica_meiosis_view => @biologica_meiosis_view }
+        render :partial => 'show', :locals => { :meiosis_view => @biologica_meiosis_view }
       else
         render :xml => @biologica_meiosis_view.errors, :status => :unprocessable_entity
       end

@@ -1,2 +1,2 @@
-- remote_form_for(biologica_meiosis_view, :update => dom_id_for(biologica_meiosis_view, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = render :partial => "embeddable/biologica/meiosis_views/form", :locals => { :biologica_meiosis_view => biologica_meiosis_view, :f => f  }
+- remote_form_for(meiosis_view, :update => dom_id_for(meiosis_view, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "form", :locals => { :meiosis_view => meiosis_view, :f => f  }

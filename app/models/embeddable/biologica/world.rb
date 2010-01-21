@@ -51,7 +51,7 @@ class Embeddable::Biologica::World < ActiveRecord::Base
   
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::Biologica::World
-      scope.activity.investigation.biologica_worlds
+      scope.activity.investigation.worlds
     else
       []
     end

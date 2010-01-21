@@ -1,4 +1,4 @@
-class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationController
+class Embeddable::Biologica::BreedOffspringsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_breed_offsprings
   # GET /Embeddable::Biologica/biologica_breed_offsprings.xml
   def index    
@@ -15,7 +15,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
   def show
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     if request.xhr?
-      render :partial => 'biologica_breed_offspring', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
+      render :partial => 'embeddable/biologica/breed_offspring', :locals => { :breed_offspring => @biologica_breed_offspring }
     else
       respond_to do |format|
         format.html # show.html.haml
@@ -23,7 +23,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_breed_offspring }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_breed_offspring, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_breed_offspring, :teacher_mode => @teacher_mode} }
-        format.xml  { render :biologica_breed_offspring => @biologica_breed_offspring }
+        format.xml  { render :breed_offspring => @biologica_breed_offspring }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
   def new
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
+      render :partial => 'remote_form', :locals => { :breed_offspring => @biologica_breed_offspring }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     @scope = get_scope(@biologica_breed_offspring)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
+      render :partial => 'remote_form', :locals => { :breed_offspring => @biologica_breed_offspring }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
       if cancel 
         redirect_to :index
       elsif @biologica_breed_offspring.save
-        render :partial => 'new', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
+        render :partial => 'new', :locals => { :breed_offspring => @biologica_breed_offspring }
       else
         render :xml => @biologica_breed_offspring.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::BiologicaBreedOffspringsController < ApplicationCon
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     if request.xhr?
       if cancel || @biologica_breed_offspring.update_attributes(params[:biologica_breed_offspring])
-        render :partial => 'show', :locals => { :biologica_breed_offspring => @biologica_breed_offspring }
+        render :partial => 'show', :locals => { :breed_offspring => @biologica_breed_offspring }
       else
         render :xml => @biologica_breed_offspring.errors, :status => :unprocessable_entity
       end

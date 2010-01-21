@@ -1,4 +1,4 @@
-class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationController
+class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
   # GET /Embeddable::Biologica/biologica_chromosome_zooms
   # GET /Embeddable::Biologica/biologica_chromosome_zooms.xml
   def index    
@@ -15,15 +15,15 @@ class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationCon
   def show
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
     if request.xhr?
-      render :partial => 'biologica_chromosome_zoom', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+      render :partial => 'embeddable/biologica/chromosome_zoom', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/biologica_chromosome_zoom" } # biologica_chromosome_zoom.otml.haml
+        format.otml { render :layout => "layouts/embeddable/biologica/chromosome_zoom" } # biologica_chromosome_zoom.otml.haml
         format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome_zoom }}
         format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome_zoom, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_chromosome_zoom, :teacher_mode => @teacher_mode} }
-        format.xml  { render :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+        format.xml  { render :chromosome_zoom => @biologica_chromosome_zoom }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationCon
   def new
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+      render :partial => 'remote_form', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationCon
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
     @scope = get_scope(@biologica_chromosome_zoom)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+      render :partial => 'remote_form', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationCon
       if cancel 
         redirect_to :index
       elsif @biologica_chromosome_zoom.save
-        render :partial => 'new', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+        render :partial => 'new', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
       else
         render :xml => @biologica_chromosome_zoom.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::BiologicaChromosomeZoomsController < ApplicationCon
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
     if request.xhr?
       if cancel || @biologica_chromosome_zoom.update_attributes(params[:biologica_chromosome_zoom])
-        render :partial => 'show', :locals => { :biologica_chromosome_zoom => @biologica_chromosome_zoom }
+        render :partial => 'show', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
       else
         render :xml => @biologica_chromosome_zoom.errors, :status => :unprocessable_entity
       end
