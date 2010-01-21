@@ -106,7 +106,7 @@ namespace :db do
         tables.each do |tbl|
           puts "writing #{dir}/#{tbl}.yaml"
           File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = tbl.classify.constantize.find(:all).collect { |m| m.attributes }
+            attributes = tbl.gsub(/^probe_/, "probe/").classify.constantize.find(:all).collect { |m| m.attributes }
             f.write YAML.dump(attributes)
           end
         end
@@ -124,7 +124,7 @@ namespace :db do
           ActiveRecord::Base.transaction do 
 
             begin 
-              klass = tbl.classify.constantize
+              klass = tbl.gsub(/^probe_/, "probe/").classify.constantize
               klass.destroy_all
               klass.reset_column_information
 
