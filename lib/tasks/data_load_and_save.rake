@@ -102,7 +102,7 @@ namespace :db do
     task :save_probe_configurations => :environment do 
       dir = RAILS_ROOT + '/config/probe_configurations'
       FileUtils.chdir(dir) do
-        tables = %w{device_configs data_filters vendor_interfaces physical_units calibrations probe_types}
+        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
         tables.each do |tbl|
           puts "writing #{dir}/#{tbl}.yaml"
           File.open("#{tbl}.yaml", 'w') do |f| 
@@ -118,7 +118,7 @@ namespace :db do
       dir = RAILS_ROOT + '/config/probe_configurations'
       user_id = User.site_admin.id
       FileUtils.chdir(dir) do
-        tables = %w{device_configs data_filters vendor_interfaces physical_units calibrations probe_types}
+        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
         tables.each do |tbl|
 
           ActiveRecord::Base.transaction do 
