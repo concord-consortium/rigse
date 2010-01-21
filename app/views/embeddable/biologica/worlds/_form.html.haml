@@ -1,0 +1,8 @@
+= edit_menu_for(biologica_world, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(biologica_world, :item, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(biologica_world, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
+  - field_set_tag 'species path' do
+    = f.select(:species_path, Embeddable::Biologica::World.available_species_paths, {:id => dom_id_for(biologica_world, :item, :species_path_field) })

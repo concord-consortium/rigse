@@ -363,13 +363,13 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
   end
 
-  desc "Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor"
+  desc "Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor"
   task :data_collectors_with_invalid_graph_types, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
-  desc "copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name"
+  desc "copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name"
   task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_xhtml_into_name --trace"

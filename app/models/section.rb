@@ -5,9 +5,9 @@ class Section < ActiveRecord::Base
   
   has_many :pages, :order => :position, :dependent => :destroy
 
-  has_many :data_collectors,
-     :finder_sql => 'SELECT data_collectors.* FROM data_collectors
-     INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+  has_many :data_collectors, :class_name => 'Embeddable::DataCollector',
+     :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
+     INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
      INNER JOIN pages ON page_elements.page_id = pages.id
      WHERE pages.section_id = #{id}'
      

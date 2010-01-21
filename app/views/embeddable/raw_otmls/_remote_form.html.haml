@@ -1,0 +1,2 @@
+- remote_form_for(raw_otml, :update => dom_id_for(raw_otml, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "embeddable/raw_otmls/form", :locals => { :raw_otml => raw_otml, :f => f  }

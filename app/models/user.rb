@@ -7,14 +7,14 @@ class User < ActiveRecord::Base
   has_many :sections
   has_many :pages
   
-  has_many :data_collectors
-  has_many :xhtmls
-  has_many :open_responses
-  has_many :multiple_choices
-  has_many :data_tables
-  has_many :drawing_tools
-  has_many :mw_modeler_pages
-  has_many :n_logo_models
+  has_many :data_collectors, :class_name => 'Embeddable::DataCollector'
+  has_many :xhtmls, :class_name => 'Embeddable::Xhtml'
+  has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
+  has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
+  has_many :data_tables, :class_name => 'Embeddable::DataTable'
+  has_many :drawing_tools, :class_name => 'Embeddable::DrawingTool'
+  has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
+  has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
   named_scope :active, { :conditions => { :state => 'active' } }  
   named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
@@ -23,14 +23,14 @@ class User < ActiveRecord::Base
 
   has_settings
   
-  # has_many :assessment_targets
-  # has_many :big_ideas
-  # has_many :domains
-  # has_many :expectations
-  # has_many :expectation_stems
-  # has_many :grade_span_expectations
-  # has_many :knowledge_statements
-  # has_many :unifying_themes
+  # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
+  # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
+  # has_many :domains, :class_name => 'RiGse::Domain'
+  # has_many :expectations, :class_name => 'RiGse::Expectation'
+  # has_many :expectation_stems, :class_name => 'RiGse::ExpectationStem'
+  # has_many :grade_span_expectations, :class_name => 'RiGse::GradeSpanExpectation'
+  # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
+  # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
   
   include Changeable
   
@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
   has_one :portal_teacher, :class_name => "Portal::Teacher"
   has_one :portal_student, :class_name => "Portal::Student"
   
-  belongs_to :vendor_interface
+  belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
   acts_as_replicatable
   
@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   # default users are a class of users that can be enable
   default_value_for :default_user, false
  
-  # we need a default VendorInterface, 6 = Vernier Go! IO
+  # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
   default_value_for :vendor_interface_id, 6
 
   # HACK HACK HACK -- how to do attr_accessible from here?

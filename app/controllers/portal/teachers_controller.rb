@@ -47,7 +47,7 @@ class Portal::TeachersController < ApplicationController
       @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
     end
     @portal_grade = Portal::Grade.find(params[:grade][:id])
-    @domain = Domain.find(params[:domain][:id])
+    @domain = RiGse::Domain.find(params[:domain][:id])
     domains_and_grades
     @user = User.new(params[:user])
     if @user && @user.valid?
@@ -123,7 +123,7 @@ class Portal::TeachersController < ApplicationController
     if (@portal_grades && @portal_grades.size > 1)
       @default_grade_id = @portal_grades.last.id
     end
-    @domains = Domain.all
+    @domains = RiGse::Domain.all
   end
   
   

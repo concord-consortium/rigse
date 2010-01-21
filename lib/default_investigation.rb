@@ -22,7 +22,7 @@ class DefaultInvestigation
         page1, xhtml = DefaultInvestigation.add_page_to_section(section1, "Find the hottest",
           '<p>Find the hottest thing in the room with the temperature probe.</p>', 
           "Student's explore their environment with a tempemerature probe.")
-        temperature_probe = ProbeType.find_by_name('temperature')
+        temperature_probe = Probe::ProbeType.find_by_name('temperature')
         DefaultInvestigation.add_data_collector_to_page(page1, temperature_probe, false)
         investigation.deep_set_user(user)
       end
@@ -37,7 +37,7 @@ class DefaultInvestigation
         end
         page_embeddable = nil
       else
-        page_embeddable = Xhtml.create do |x|
+        page_embeddable = Embeddable::Xhtml.create do |x|
           x.name = name + ": Body Content (html)"
           x.description = ""
           x.content = html_content
@@ -64,7 +64,7 @@ class DefaultInvestigation
     end
 
     def add_mw_model_to_page(page, model)
-      page_embeddable = MwModelerPage.create do |mw|
+      page_embeddable = Embeddable::MwModelerPage.create do |mw|
         mw.name = model.name
         mw.description = model.description
         mw.authored_data_url = model.url
@@ -73,7 +73,7 @@ class DefaultInvestigation
     end
 
     def add_nl_model_to_page(page, model)
-      page_embeddable = NLogoModel.create do |mw|
+      page_embeddable = Embeddable::NLogoModel.create do |mw|
         mw.name = model.name
         mw.description = model.description
         mw.authored_data_url = model.url
@@ -82,7 +82,7 @@ class DefaultInvestigation
     end
 
     def add_open_response_to_page(page, question_prompt)
-      page_embeddable = OpenResponse.create do |o|
+      page_embeddable = Embeddable::OpenResponse.create do |o|
         o.name = page.name + ": Open Response Question"
         o.description = ""
         o.prompt = question_prompt
@@ -92,7 +92,7 @@ class DefaultInvestigation
 
     def add_drawing_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = DrawingTool.create do |dt|
+      page_embeddable = Embeddable::DrawingTool.create do |dt|
         dt.name = page.name + ": Drawing Tool"
         dt.description = "Drawing tool."
       end
@@ -101,7 +101,7 @@ class DefaultInvestigation
 
     def add_prediction_graph_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = DataCollector.create do |d|
+      page_embeddable = Embeddable::DataCollector.create do |d|
         d.name = page.name + ": Prediction graph for #{@@first_probe_type.name}."
         d.title = d.name
         d.graph_type_id = 2
@@ -113,7 +113,7 @@ class DefaultInvestigation
     end
 
     def add_data_collector_to_page(page, probe_type, multiple_graphs)
-      page_embeddable = DataCollector.create do |d|
+      page_embeddable = Embeddable::DataCollector.create do |d|
         d.name = page.name + ": #{probe_type.name} Data Collector"
         d.title = d.name
         d.probe_type = probe_type
@@ -128,7 +128,7 @@ class DefaultInvestigation
     end
 
     def add_xhtml_to_page(page, html_content)
-      page_embeddable = Xhtml.create do |x|
+      page_embeddable = Embeddable::Xhtml.create do |x|
         x.name = page.name + ": Body Content (html)"
         x.description = ""
         x.content = html_content

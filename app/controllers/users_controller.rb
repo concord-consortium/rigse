@@ -200,7 +200,7 @@ class UsersController < ApplicationController
             end
           else
             # @vendor_interface = current_user.vendor_interface
-            # @vendor_interfaces = VendorInterface.find(:all).map { |v| [v.name, v.id] }
+            # @vendor_interfaces = Probe::VendorInterface.find(:all).map { |v| [v.name, v.id] }
             # session[:back_to] = request.env["HTTP_REFERER"]
             # render :action => "interface"
           end
@@ -212,7 +212,7 @@ class UsersController < ApplicationController
   def vendor_interface
     v_id = params[:vendor_interface]
     if v_id
-      @vendor_interface = VendorInterface.find(v_id)
+      @vendor_interface = Probe::VendorInterface.find(v_id)
       render :partial=>'vendor_interface', :layout=>false 
     else
       render(:nothing => true) 

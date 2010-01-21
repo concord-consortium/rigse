@@ -33,8 +33,8 @@ namespace :rigse do
 
     desc "setup initial probe_type for data_collectors that don't have one"
     task :set_probe_type_for_data_collectors => :environment do
-      DataCollector.find(:all).each do |dc| 
-        if pt = ProbeType.find_by_name(dc.y_axis_label)
+      Embeddable::DataCollector.find(:all).each do |dc| 
+        if pt = Probe::ProbeType.find_by_name(dc.y_axis_label)
           dc.probe_type = pt
           dc.save
         end
@@ -116,7 +116,7 @@ This task will:
  1. create default users and roles
  2. optionally create additional users
  3. load default probe, interface, and calibration reesources
- 4. generate a set of the RI Grade Span Expectation
+ 4. generate a set of the RI Grade Span RiGse::Expectation
  5. assign teh Vernier Go!Link interface as a default to the existing users
  6. generate the maven_jnlp resources
  7. optionally download, introspect, and create models representing otrunk-examples 

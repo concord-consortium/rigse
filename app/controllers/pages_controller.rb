@@ -178,15 +178,15 @@ class PagesController < ApplicationController
 
     # dynamically instantiate the component based on its type.
     component_class = params['class_name'].constantize
-    if component_class == DataCollector
+    if component_class == Embeddable::DataCollector
       if probe_type_id = session[:last_saved_probe_type_id]
-        probe_type = ProbeType.find(probe_type_id)
-        @component = DataCollector.new
+        probe_type = Probe::ProbeType.find(probe_type_id)
+        @component = Embeddable::DataCollector.new
         @component.probe_type = probe_type
         @component.name = "Data Collector"
         @component.save
       else
-        @component = DataCollector.create(:name => "Data Collector")
+        @component = Embeddable::DataCollector.create(:name => "Data Collector")
       end
       session[:last_saved_probe_type_id] = @component.probe_type_id
     else

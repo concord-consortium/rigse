@@ -6,8 +6,8 @@ class PageElement < ActiveRecord::Base
 
     # this could work if the finder sql was redone
     # has_one :investigation,
-    #   :finder_sql => 'SELECT data_collectors.* FROM data_collectors
-    #   INNER JOIN page_elements ON data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "DataCollector"
+    #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
+    #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
     #   INNER JOIN pages ON page_elements.page_id = pages.id
     #   WHERE pages.section_id = #{id}'
 
