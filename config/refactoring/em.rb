@@ -28,6 +28,7 @@ require 'active_record'
 require 'active_support'
 require 'yaml'
 require 'erb'
+# require 'oniguruma'
 
 class ModelCollection
 
@@ -44,7 +45,10 @@ class ModelCollection
     def underscore_path(path)
       path[/\/*(.*?)\/*$/, 1].gsub('/', '_')
     end
-
+    
+    def singularize(str)
+      str[/(.*?)(s?$)/, 1]
+    end
   end
   
   class SourceFile
@@ -173,12 +177,33 @@ class ModelCollection
     def convert_partial_paths_and_routes(table_name_pairs)
       replacement_pairs = table_name_pairs.dup
       replacement_pairs.flatten!
+      # puts @original_path
       0.step(replacement_pairs.length-1, 2) do |index|
-        current_name = replacement_pairs[index]
-        new_name = replacement_pairs[index+1]
-        prefix = new_name[/(.*?)#{current_name}/, 1]
-        @source.gsub!(/\=\s*render\s+:partial\s*=>\s*(['"])#{current_name}/, '= render :partial => ' + '\1' + new_name)
-        @source.gsub!(/(,|=>)\s*(#{current_name}?)_(path|_url)/) { |match| "#{$1} #{prefix}#{$2}_#{$3}" }
+        current_path = replacement_pairs[index]
+        new_path = replacement_pairs[index+1]
+        path_prefix = new_path[/(.*?)#{current_path}/, 1]
+        current_route = underscore_path(current_path).singularize
+        new_route = underscore_path(new_path).singularize
+        route_prefix = new_route[/(.*?)#{current_route}/, 1]
+        # puts "routes: #{current_route}, #{new_route} #{route_prefix}"
+        # grade_span_expectations_path
+        # ri_gse_grade_span_expectations_path
+        # expectations
+        # ri_gse_grade_span_ri_gse_expectations_path
+        
+        @source.gsub!(/\=\s*render\s+:partial\s*=>\s*(['"])#{current_path}/)      { |match| "= render :partial => #{$1}#{new_path}" }
+        @source.gsub!(/(=>|,)\s*(.*)#{current_route}(s?)(_path|_url)/) do |match|
+        # Oniguruma::ORegexp.new("(=>|,)\s*(.*)(?<!#{route_prefix})#{current_route}(s?)(_path|_url)").gsub!(@source) do |match|
+
+          result = "#{$1} #{$2}#{new_route}#{$3}#{$4}"
+          if match =~ /#{route_prefix}/
+            final = match
+          else
+            final = result
+          end
+          # puts "#{route_prefix}: #{match} <=> #{result} ==> #{final}"
+          final
+        end
       end
     end
 
@@ -188,7 +213,7 @@ class ModelCollection
       0.step(replacement_pairs.length-1, 2) do |index|
         current_name = replacement_pairs[index]
         new_name = replacement_pairs[index+1]
-        @source.gsub!(/(\(|\[|,|\s+)#{current_name}(,|\s+|\.|\])/) { |m| "#{$1}#{new_name}#{$2}" }
+        @source.gsub!(/(\(|\[|,|\s+)#{current_name}($|,|\s+|\.|\])/) { |m| "#{$1}#{new_name}#{$2}" }
       end
     end
 
@@ -243,8 +268,7 @@ class ModelCollection
       @src.convert_partial_paths_and_routes(all_table_name_pairs)
       @src.write_new("#{new_views_path}/#{File.basename(@view_path)}")
     end
-    
-    
+
     def delete_original
       @src.delete_original
     end
@@ -303,7 +327,9 @@ class ModelCollection
         @layout_source = SourceFile.new(@original_layout_path) 
       end
 
-      @views = Dir["app/views/#{@underscore_model_name}s/**/*"].collect { |path| View.new(path, @underscore_model_name, @new_underscore_model_name, @new_scope) }
+      @views = Dir["app/views/#{@underscore_model_name}s/**/*"].collect do |path| 
+        View.new(path, @underscore_model_name, @new_underscore_model_name, @new_scope)
+      end.sort { |v1, v2| v2.original_partial_view_path.length <=> v1.original_partial_view_path.length }
     end
 
     def parse_table_name
@@ -426,7 +452,8 @@ class ModelCollection
       big_idea domain expectation expectation_indicator expectation_stem 
       grade_span_expectation knowledge_statement unifying_theme}
     @models += @gse_models.collect { |m| ModelProcessor.new("app/models/#{m}.rb", 'ri_gse') }
-
+    
+    @models = @models.sort { |m1, m2| m2.original_table_name.length <=> m1.original_table_name.length }
     @all_model_classname_pairs = @models.collect { |m| [m.original_model_class, m.new_model_class] }
     @all_table_name_pairs = @models.collect { |m| [m.original_table_name, m.new_table_name] }
     
@@ -601,7 +628,7 @@ class ModelCollection
     restore_original_database_table_names
     restore_embeddable_type_attributes_in_page_elements_table
     delete_new_scoped_dirs
-    `git co app/ lib/ config/ db/migrate/`
+    `git co app/ lib/ config/ db/migrate/ themes/`
   end
   
   def generate_migration
@@ -686,20 +713,27 @@ end
       source.convert_table_names(@all_table_name_pairs)
       source.write
     end
-    (Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/layouts/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
-      view = ModelCollection::SourceFile.new(path)
-      view.convert_partial_paths_and_routes(@all_table_name_pairs)
-      view.convert_model_classnames(@all_model_classname_pairs)
-      view.write
-    end
-    views = Dir["app/views/**/*{haml,erb}"] - Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/{#{@new_scope_names.join(',')}}/**/*{haml,erb}"]
-    views = views + Dir["themes/*/views/**/*.haml"]
+    views = Dir["app/views/**/*{haml,erb}"] + Dir["themes/**/*.haml"]
     views.each do |path|
       view = ModelCollection::SourceFile.new(path)
       view.convert_partial_paths_and_routes(@all_table_name_pairs)
       view.convert_model_classnames(@all_model_classname_pairs)
       view.write
     end
+    # (Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/layouts/{#{@new_scope_names.join(',')}}/**/*"]).each do |path|
+    #   view = ModelCollection::SourceFile.new(path)
+    #   view.convert_partial_paths_and_routes(@all_table_name_pairs)
+    #   view.convert_model_classnames(@all_model_classname_pairs)
+    #   view.write
+    # end
+    # views = Dir["app/views/**/*{haml,erb}"] - Dir["app/views/layouts/**/*{haml,erb}"] - Dir["app/views/{#{@new_scope_names.join(',')}}/**/*{haml,erb}"]
+    # views = views + Dir["themes/*/views/**/*.haml"]
+    # views.each do |path|
+    #   view = ModelCollection::SourceFile.new(path)
+    #   view.convert_partial_paths_and_routes(@all_table_name_pairs)
+    #   view.convert_model_classnames(@all_model_classname_pairs)
+    #   view.write
+    # end
     helpers = Dir["app/helpers/**/*.rb"] - Dir["app/helpers/{#{@new_scope_names.join(',')}}/**/*.rb"]
     helpers.each do |path|
       helper = ModelCollection::SourceFile.new(path)
