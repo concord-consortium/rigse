@@ -1,13 +1,13 @@
-class Embeddable::DataCollector < ActiveRecord::Base
+class Embeddable::DataCollector < Embeddable::Embeddable
   set_table_name "embeddable_data_collectors"
 
-  belongs_to :user
+  # belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
   belongs_to :calibration, :class_name => 'Probe::Calibration'
   
-  has_many :page_elements, :as => :embeddable
-  has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
+  # has_many :page_elements, :as => :embeddable
+  # has_many :pages, :through =>:page_elements
+  # has_many :teacher_notes, :as => :authored_entity
   
   belongs_to :prediction_graph_source,
     :class_name => "Embeddable::DataCollector",
@@ -26,20 +26,20 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   serialize :data_store_values
   
-  def before_save
-    self.name = self.title
-  end
+  # def before_save
+  #   self.name = self.title
+  # end
   
-  acts_as_replicatable
+  # acts_as_replicatable
   
   # send_update_events_to :investigation
-  
-  include Changeable
-  
-  include Cloneable
+  # 
+  # include Changeable
+  # 
+  # include Cloneable
   @@cloneable_associations = [:prediction_graph_destinations]
   
-  self.extend SearchableModel
+  # self.extend SearchableModel
   
   @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
   
@@ -161,7 +161,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   # default_value_for :probe_type, DISTANCE_PROBE_TYPE
   
-  send_update_events_to :investigations
+  # send_update_events_to :investigations
 
   def display_type
     graph_type
@@ -220,14 +220,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
          end
       end
       self.save
-    end
-  end
-  
-  def investigations
-    invs = []
-    self.pages.each do |page|
-      inv = page.investigation
-      invs << inv if inv
     end
   end
 
