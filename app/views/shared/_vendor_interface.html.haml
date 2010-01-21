@@ -5,6 +5,6 @@
   = f.collection_select(:vendor_interface_id, Probe::VendorInterface.all, :id, :name, :html => { :id => "vendor_interface_id" })
 
   #vendor_interface
-    = render :partial => 'probe_vendor_interfaces/vendor_interface', :locals => { :vendor_interface => vendor_interface }
+    = render :partial => 'probe/vendor_interfaces/vendor_interface', :locals => { :vendor_interface => vendor_interface }
 
-= observe_field(:user_vendor_interface_id, :function => "new Ajax.Updater('vendor_interface', '/vendor_interfaces/'+value, {asynchronous:true, evalScripts:true, method:'get'})" )
+= observe_field(:user_vendor_interface_id, :function => "new Ajax.Updater('vendor_interface', '/probe/vendor_interfaces/'+value, {asynchronous:true, evalScripts:true, method:'get'})" )
