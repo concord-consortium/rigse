@@ -44,6 +44,8 @@ class Page < ActiveRecord::Base
       eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
     end
   end
+  
+  has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity

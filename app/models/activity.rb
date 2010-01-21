@@ -6,9 +6,29 @@ class Activity < ActiveRecord::Base
   has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-  
-  [Embeddable::DataCollector, Embeddable::Biologica::Organism, Embeddable::Biologica::World].each do |klass|
-    eval "has_many :#{klass.table_name},
+
+  [ Embeddable::Xhtml,
+    Embeddable::OpenResponse,
+    Embeddable::MultipleChoice,
+    Embeddable::DataTable,
+    Embeddable::DrawingTool,
+    Embeddable::DataCollector,
+    Embeddable::LabBookSnapshot,
+    Embeddable::InnerPage,
+    Embeddable::MwModelerPage,
+    Embeddable::NLogoModel,
+    Embeddable::RawOtml,
+    Embeddable::Biologica::World,
+    Embeddable::Biologica::Organism,
+    Embeddable::Biologica::StaticOrganism,
+    Embeddable::Biologica::Chromosome,
+    Embeddable::Biologica::ChromosomeZoom,
+    Embeddable::Biologica::BreedOffspring,
+    Embeddable::Biologica::Pedigree,
+    Embeddable::Biologica::MultipleOrganism,
+    Embeddable::Biologica::MeiosisView,
+    Embeddable::Smartgraph::RangeQuestion].each do |klass|
+      eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       INNER JOIN pages ON page_elements.page_id = pages.id 
