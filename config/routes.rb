@@ -204,13 +204,6 @@ ActionController::Routing::Routes.draw do |map|
     otrunk_example.resources :otrunk_view_entries
   end
 
-  map.resources :vendor_interfaces
-  map.resources :probe_types
-  map.resources :physical_units
-  map.resources :device_configs
-  map.resources :data_filters
-  map.resources :calibrations
-
   map.resources :teacher_notes
   map.resources :author_notes
   
