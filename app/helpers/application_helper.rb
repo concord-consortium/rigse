@@ -293,19 +293,7 @@ module ApplicationHelper
     end
   end
   
-  def paste_link_for(acceptable_types,options={})
-    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
-    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
-    container_id         = options[:container_id] || params[:container_id]
-    
-    return "<span class='copy_paste_disabled'>paste (nothing in clipboard)</span>" unless clipboard_data_type
-    name = clipboard_object_name
-    if acceptable_types.include?(clipboard_data_type) 
-      url = url_for :action => 'paste', :method=> 'post', :clipboard_data_type => clipboard_data_type, :clipboard_data_id => clipboard_data_id, :id =>container_id
-      return remote_link_button("paste-out.png", :url => url, :title => "paste #{clipboard_data_type} #{name}") + link_to_remote("paste #{clipboard_data_type} #{name}", :url=>url)
-    end
-    return "<span class='copy_paste_disabled'>cant paste #{clipboard_data_type} #{name} here</span>"
-  end
+
 
   def run_button_for(component)
     name = component.name
