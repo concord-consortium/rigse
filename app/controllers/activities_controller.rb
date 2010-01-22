@@ -66,21 +66,36 @@ class ActivitiesController < ApplicationController
   public
   
   def index
-    respond_to do |format|
-      format.html do
-        if params[:mine_only]
-          @activities = Activity.search(params[:search], params[:page], self.current_user)
-        else
-          @activities = Activity.search(params[:search], params[:page], nil)
+    @include_drafts = params[:include_drafts]
+    @name = param_find(:name)
+    pagenation = params[:page]
+    if (pagenation)
+      @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+    @activities = Activity.search_list({
+      :name => @name, 
+      :paginate => true, 
+      :page => pagenation
+    })
+    if params[:mine_only]
+      @activities = @activities.reject { |i| i.user.id != current_user.id }
+    end
+    @paginated_objects = @activities
+
+    if request.xhr?
+      render :partial => 'activities/runnable_list', :locals => {:activities => @activities, :paginated_objects =>@activities}
+    else
+      respond_to do |format|
+        format.html do
+          render 'index'
         end
-      end
-      format.xml do
-        @activities = Activity,find(:all)
-        render :xml => @activities
+        format.js
       end
     end
   end
-
+  
   # GET /pages/1
   # GET /pages/1.xml
   def show
