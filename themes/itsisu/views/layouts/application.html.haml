@@ -82,13 +82,11 @@
             %li= link_to 'Home', home_path
             %li= link_to 'About', about_path
             - unless current_user.anonymous? || current_user.portal_student
-              %li= link_to top_level_container_name.humanize.pluralize, investigations_path        
-              - if @investigation 
+              %li= link_to "activities", activities_path        
+              - if @activity 
                 %li
-                  = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
-              - elsif @activity
-                %li
-                  = render :partial => 'shared/accordian_nav'  
+                  = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@activity,@section,@page]}
+
             - if current_user.has_role?('admin')
               %li.trail= link_to 'Districts', portal_districts_path
               %li.trail= link_to 'Schools', portal_schools_path
