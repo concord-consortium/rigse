@@ -1,7 +1,7 @@
 set :stages, %w(
   development staging production seymour 
   itsisu-dev itsisu-staging itsisu-production fall2009 
-  smartgraphs-production smartgraphs-staging)
+  smartgraphs-production smartgraphs-staging sg-dev)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -175,7 +175,6 @@ namespace :deploy do
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
-    run "touch #{shared_path}/config/sds.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/database.yml"
@@ -187,7 +186,6 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"    
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
-    run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
