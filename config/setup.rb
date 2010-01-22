@@ -102,6 +102,10 @@ def rails_file_exists?(*args)
   File.exists?(rails_file_path(args))
 end
 
+def file_exists_and_is_not_empty?(path)
+   File.exists?(path) && File.stat(path).size
+end
+ 
 @db_config_path                = rails_file_path(%w{config database.yml})
 @db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
 @settings_config_path          = rails_file_path(%w{config settings.yml})
@@ -291,7 +295,7 @@ end
 #
 def check_for_config_database_yml
 
-  unless File.exists?(@db_config_path)
+  unless file_exists_and_is_not_empty?(@db_config_path)
     unless @options[:quiet] 
       puts <<-HEREDOC
 
@@ -309,7 +313,7 @@ end
 # check for config/settings.yml
 #
 def check_for_config_settings_yml
-  unless File.exists?(@settings_config_path)
+  unless file_exists_and_is_not_empty?(@settings_config_path)
     unless @options[:quiet] 
       puts <<-HEREDOC
 
@@ -464,7 +468,7 @@ end
 # check for config/mailer.yml
 #
 def check_for_config_mailer_yml
-  unless File.exists?(@mailer_config_path)
+  unless file_exists_and_is_not_empty?(@mailer_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -480,7 +484,7 @@ end
 # check for config/rinet_data.yml
 #
 def check_for_config_rinet_data_yml
-  unless File.exists?(@rinet_data_config_path)
+  unless file_exists_and_is_not_empty?(@rinet_data_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -524,7 +528,7 @@ end
 def check_for_config_initializers_site_keys_rb
   site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
 
-  unless File.exists?(site_keys_path)
+  unless file_exists_and_is_not_empty?(site_keys_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
