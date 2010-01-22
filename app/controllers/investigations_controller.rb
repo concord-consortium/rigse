@@ -73,19 +73,6 @@ class InvestigationsController < AuthoringController
     end
   end
   
-  def param_find(token_sym, force_nil=false)
-    token = token_sym.to_s
-     eval_string = <<-EOF
-      if params[:#{token}]
-        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
-      elsif force_nil
-         session[:#{token}] = cookies[:#{token}] = nil
-      else
-        #{token} = session[:#{token}] || cookies[:#{token}]
-      end
-    EOF
-    eval eval_string
-  end
   
   def update_gse
     if params[:grade_span_expectation_id] && params[:investigation]
@@ -95,7 +82,7 @@ class InvestigationsController < AuthoringController
   
   public
 
-  # POST /grade_span_expectations/select_js
+  # POST /investigations/select_js
   def index
     @grade_span = param_find(:grade_span)
     @domain_id = param_find(:domain_id)

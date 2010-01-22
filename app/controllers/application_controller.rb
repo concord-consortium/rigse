@@ -48,6 +48,22 @@ class ApplicationController < ActionController::Base
     render :file => File.join(RAILS_ROOT, 'public', '404.html'), :status => 404
   end
   
+  
+  def param_find(token_sym, force_nil=false)
+    token = token_sym.to_s
+     eval_string = <<-EOF
+      if params[:#{token}]
+        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
+      elsif force_nil
+         session[:#{token}] = cookies[:#{token}] = nil
+      else
+        #{token} = session[:#{token}] || cookies[:#{token}]
+      end
+    EOF
+    eval eval_string
+  end
+  
+  
   def get_scope(default)
     begin
       @scope = default
