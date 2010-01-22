@@ -103,7 +103,7 @@ def rails_file_exists?(*args)
 end
 
 def file_exists_and_is_not_empty?(path)
-   File.exists?(path) && File.stat(path).size
+   File.exists?(path) && File.stat(path).size > 0
 end
  
 @db_config_path                = rails_file_path(%w{config database.yml})
