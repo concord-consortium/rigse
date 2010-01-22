@@ -121,16 +121,20 @@ Rails::Initializer.run do |config|
   # ... observers are now started in config/initializers/observers.rb
   # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
   # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-  config.after_initialize do
-    begin
-      ActiveRecord::Base.observers = :user_observer, :investigation_observer
-      ActiveRecord::Base.instantiate_observers
-      puts "Started observers"
-    rescue
-      # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
-      puts "Couldn't start observers #{$!}"
-      puts "This might be because you have not setup the appropriate database tables yet... "
-      puts "see config/initializers/observers.rb for more information."
+  if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
+    puts "Didn't start observers because you are running: rake db:migrate"
+  else
+    config.after_initialize do
+      begin
+        ActiveRecord::Base.observers = :user_observer, :investigation_observer
+        ActiveRecord::Base.instantiate_observers
+        puts "Started observers"
+      rescue
+        # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+        puts "Couldn't start observers #{$!} ... but continuing process anyway"
+        puts "This might be because you have not setup the appropriate database tables yet... "
+        puts "see config/initializers/observers.rb for more information."
+      end
     end
   end
 
