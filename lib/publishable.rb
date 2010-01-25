@@ -1,8 +1,8 @@
 #
-#  Methods for Objects which have teacher and or author notes...
+#  Methods for containers that can be made public through some workflow
+#  (challenge will be defining this in a project agnostic way...)
 #
 module Publishable
-  
   ##
   ## Called when a class extends this module:
   ##
