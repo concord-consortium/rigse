@@ -10,7 +10,7 @@
     .action_menu_header_right
       %ul.menu
         / -if current_user.has_role? "author"
-        %li= link_to "create #{top_level_container_name}", new_activity_path
+        %li= link_to "create new activity", new_activity_path
 
 - for activity in activities
   %div{ :id => dom_id_for(activity), :class => 'runnable' }
@@ -26,7 +26,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'copy', duplicate_activity_url(activity)
             - if (activity.changeable?(current_user))
-              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{activity.id}", :method => :delete 
+              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete activity #{activity.id}", :method => :delete 
       %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
         %p=activity.description
         %p

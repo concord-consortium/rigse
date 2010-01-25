@@ -85,7 +85,7 @@
               %li= link_to "activities", activities_path        
               - if @activity 
                 %li
-                  = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@activity,@section,@page]}
+                  = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :depth => 2, :selects => [@activity,@section,@page]}
 
             - if current_user.has_role?('admin')
               %li.trail= link_to 'Districts', portal_districts_path
