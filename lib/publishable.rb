@@ -1,0 +1,50 @@
+#
+#  Methods for Objects which have teacher and or author notes...
+#
+module Publishable
+  
+  ##
+  ## Called when a class extends this module:
+  ##
+  def self.included(clazz)
+    ## add before_save hooks
+    clazz.class_eval {
+      # use rubyist-aasm gem (acts_as_state_machine) 
+      # for publication status:
+      # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem
+      # and http://www.ruby-forum.com/topic/179721
+      # for a discussion on how the new aasm gem differs from the old plugin...
+      include AASM
+      cattr_accessor :publication_states
+      aasm_initial_state :draft
+      aasm_column :publication_status
+      @@protected_publication_states=[:published]
+      @@publication_states = [:draft,:published,:private]
+      @@publication_states.each { |s| aasm_state s}
+
+      aasm_event :publish do
+        transitions :to => :published, :from => [:draft]
+      end
+
+      aasm_event :un_publish do
+        transitions :to => :draft, :from => [:published]
+      end  
+
+      named_scope :published, 
+      {
+        :conditions =>{:publication_status => "published"}
+      }
+      
+      def available_states(who_wants_to_know)
+        if(who_wants_to_know.has_role?('manager','admin'))
+          return @@publication_states
+        end
+        return (@@publication_states - @@protected_publication_states + [self.publication_status.to_sym]).uniq
+      end
+      
+      def public?
+        return publication_status == 'published'
+      end
+    }
+  end
+end
