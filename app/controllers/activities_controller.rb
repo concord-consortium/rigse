@@ -119,7 +119,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/new.xml
   def new
     @activity = Activity.new
-    @activty.user = current_user
+    @activity.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @activity }
