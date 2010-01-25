@@ -46,6 +46,7 @@ class Activity < ActiveRecord::Base
   acts_as_replicatable
   include Changeable
   include TreeNode
+  include Publishable
     
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
