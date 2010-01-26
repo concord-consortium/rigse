@@ -47,10 +47,8 @@ class Activity < ActiveRecord::Base
     WHERE sections.activity_id = #{id}'
   
   delegate :saveable_types, :reportable_types, :to => :investigation
-  
+  acts_as_taggable_on :grade_level, :subject_area, :unit, :tags
   include Noteable # convinience methods for notes...
-  acts_as_replicatable
-  acts_as_list :scope => :investigation
   include Changeable
   include TreeNode
   include Publishable
