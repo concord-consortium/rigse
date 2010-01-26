@@ -89,14 +89,14 @@ class Embeddable::NLogoModelsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
     if request.xhr?
-      if cancel || @n_logo_model.update_attributes(params[:n_logo_model])
+      if cancel || @n_logo_model.update_attributes(params[:embeddable_n_logo_model])
         render :partial => 'show', :locals => { :n_logo_model => @n_logo_model }
       else
         render :xml => @n_logo_model.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @n_logo_model.update_attributes(params[:n_logo_model])
+        if @n_logo_model.update_attributes(params[:embeddable_n_logo_model])
           flash[:notice] = 'Nlogomodel was successfully updated.'
           format.html { redirect_to(@n_logo_model) }
           format.xml  { head :ok }

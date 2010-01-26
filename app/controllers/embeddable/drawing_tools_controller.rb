@@ -93,14 +93,14 @@ class Embeddable::DrawingToolsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
     if request.xhr?
-      if cancel || @drawing_tool.update_attributes(params[:drawing_tool])
+      if cancel || @drawing_tool.update_attributes(params[:embeddable_drawing_tool])
         render :partial => 'show', :locals => { :drawing_tool => @drawing_tool }
       else
         render :xml => @drawing_tool.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @drawing_tool.update_attributes(params[:drawing_tool])
+        if @drawing_tool.update_attributes(params[:embeddable_drawing_tool])
           flash[:notice] = 'Drawingtool was successfully updated.'
           format.html { redirect_to(@drawing_tool) }
           format.xml  { head :ok }

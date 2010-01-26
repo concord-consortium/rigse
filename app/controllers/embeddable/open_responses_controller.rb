@@ -103,7 +103,7 @@ class Embeddable::OpenResponsesController < ApplicationController
       end
     else
       respond_to do |format|
-        if @open_response.update_attributes(params[:open_response])
+        if @open_response.update_attributes(params[:embeddable_open_response])
           flash[:notice] = 'Embeddable::OpenResponse.was successfully updated.'
           format.html { redirect_to(@open_response) }
           format.xml  { head :ok }

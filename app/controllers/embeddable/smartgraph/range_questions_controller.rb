@@ -90,14 +90,14 @@ class Embeddable::Smartgraph::RangeQuestionsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @range_question = Embeddable::Smartgraph::RangeQuestion.find(params[:id])
     if request.xhr?
-      if cancel || @range_question.update_attributes(params[:smartgraph_range_question])
+      if cancel || @range_question.update_attributes(params[:embeddable_smartgraph_range_question])
         render :partial => 'show', :locals => { :range_question => @range_question }
       else
         render :xml => @range_question.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @range_question.update_attributes(params[:smartgraph_range_question])
+        if @range_question.update_attributes(params[:embeddable_smartgraph_range_question])
           flash[:notice] = 'Smartgraph Range Question was successfully updated.'
           format.html { redirect_to(@range_question) }
           format.xml  { head :ok }

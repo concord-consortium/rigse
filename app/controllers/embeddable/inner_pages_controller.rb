@@ -164,14 +164,14 @@ class Embeddable::InnerPagesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @inner_page = Embeddable::InnerPage.find(params[:id])
     if request.xhr?
-      if cancel || @inner_page.update_attributes(params[:inner_page])
+      if cancel || @inner_page.update_attributes(params[:embeddable_inner_page])
         render :partial => 'show', :locals => { :inner_page => @inner_page }
       else
         render :xml => @inner_page.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @inner_page.update_attributes(params[:inner_page])
+        if @inner_page.update_attributes(params[:embeddable_inner_page])
           flash[:notice] = 'Innerpage was successfully updated.'
           format.html { redirect_to(@inner_page) }
           format.xml  { head :ok }

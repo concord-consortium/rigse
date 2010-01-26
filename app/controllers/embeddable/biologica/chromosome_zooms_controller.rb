@@ -90,14 +90,14 @@ class Embeddable::Biologica::ChromosomeZoomsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @biologica_chromosome_zoom = Embeddable::Biologica::ChromosomeZoom.find(params[:id])
     if request.xhr?
-      if cancel || @biologica_chromosome_zoom.update_attributes(params[:biologica_chromosome_zoom])
+      if cancel || @biologica_chromosome_zoom.update_attributes(params[:embeddable_biologica_chromosome_zoom])
         render :partial => 'show', :locals => { :chromosome_zoom => @biologica_chromosome_zoom }
       else
         render :xml => @biologica_chromosome_zoom.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @biologica_chromosome_zoom.update_attributes(params[:biologica_chromosome_zoom])
+        if @biologica_chromosome_zoom.update_attributes(params[:embeddable_biologica_chromosome_zoom])
           flash[:notice] = 'Biologicachromosomezoom was successfully updated.'
           format.html { redirect_to(@biologica_chromosome_zoom) }
           format.xml  { head :ok }

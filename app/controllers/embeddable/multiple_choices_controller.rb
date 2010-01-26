@@ -93,7 +93,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
     if request.xhr?
-      if cancel || @multiple_choice.update_attributes(params[:multiple_choice])
+      if cancel || @multiple_choice.update_attributes(params[:embeddable_multiple_choice])
         @multiple_choice.reload
         render :partial => 'show', :locals => { :multiple_choice => @multiple_choice }
       else
@@ -101,7 +101,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
       end
     else
       respond_to do |format|
-        if @multiple_choice.update_attributes(params[:multiple_choice])
+        if @multiple_choice.update_attributes(params[:embeddable_multiple_choice])
           flash[:notice] = 'Multiplechoice was successfully updated.'
           format.html { redirect_to(@multiple_choice) }
           format.xml  { head :ok }

@@ -90,14 +90,14 @@ class Embeddable::Biologica::MeiosisViewsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @biologica_meiosis_view = Embeddable::Biologica::MeiosisView.find(params[:id])
     if request.xhr?
-      if cancel || @biologica_meiosis_view.update_attributes(params[:biologica_meiosis_view])
+      if cancel || @biologica_meiosis_view.update_attributes(params[:embeddable_biologica_meiosis_view])
         render :partial => 'show', :locals => { :meiosis_view => @biologica_meiosis_view }
       else
         render :xml => @biologica_meiosis_view.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @biologica_meiosis_view.update_attributes(params[:biologica_meiosis_view])
+        if @biologica_meiosis_view.update_attributes(params[:embeddable_biologica_meiosis_view])
           flash[:notice] = 'Biologicameiosisview was successfully updated.'
           format.html { redirect_to(@biologica_meiosis_view) }
           format.xml  { head :ok }

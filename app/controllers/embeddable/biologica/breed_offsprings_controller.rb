@@ -90,14 +90,14 @@ class Embeddable::Biologica::BreedOffspringsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @biologica_breed_offspring = Embeddable::Biologica::BreedOffspring.find(params[:id])
     if request.xhr?
-      if cancel || @biologica_breed_offspring.update_attributes(params[:biologica_breed_offspring])
+      if cancel || @biologica_breed_offspring.update_attributes(params[:embeddable_biologica_breed_offspring])
         render :partial => 'show', :locals => { :breed_offspring => @biologica_breed_offspring }
       else
         render :xml => @biologica_breed_offspring.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @biologica_breed_offspring.update_attributes(params[:biologica_breed_offspring])
+        if @biologica_breed_offspring.update_attributes(params[:embeddable_biologica_breed_offspring])
           flash[:notice] = 'Biologicabreedoffspring was successfully updated.'
           format.html { redirect_to(@biologica_breed_offspring) }
           format.xml  { head :ok }

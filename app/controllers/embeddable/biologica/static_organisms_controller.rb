@@ -90,14 +90,14 @@ class Embeddable::Biologica::StaticOrganismsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @biologica_static_organism = Embeddable::Biologica::StaticOrganism.find(params[:id])
     if request.xhr?
-      if cancel || @biologica_static_organism.update_attributes(params[:biologica_static_organism])
+      if cancel || @biologica_static_organism.update_attributes(params[:embeddable_biologica_static_organism])
         render :partial => 'show', :locals => { :static_organism => @biologica_static_organism }
       else
         render :xml => @biologica_static_organism.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @biologica_static_organism.update_attributes(params[:biologica_static_organism])
+        if @biologica_static_organism.update_attributes(params[:embeddable_biologica_static_organism])
           flash[:notice] = 'Biologicastaticorganism was successfully updated.'
           format.html { redirect_to(@biologica_static_organism) }
           format.xml  { head :ok }
