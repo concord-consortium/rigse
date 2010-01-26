@@ -75,3 +75,14 @@ stylesheets:
   - notes
   - data_table
 
+- sglight:
+  - themes/sglight/sglight
+  - themes/sglight/action_menu_tab
+  - themes/sglight/drop_down
+  - themes/sglight/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
+
