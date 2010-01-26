@@ -73,6 +73,7 @@ Rails::Initializer.run do |config|
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
+  config.gem "acts-as-taggable-on", :source => "http://gemcutter.org"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
