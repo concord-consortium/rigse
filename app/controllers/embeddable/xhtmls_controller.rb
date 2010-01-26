@@ -97,14 +97,14 @@ class Embeddable::XhtmlsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @xhtml = Embeddable::Xhtml.find(params[:id])
     if request.xhr?
-      if cancel || @xhtml.update_attributes(params[:xhtml])
+      if cancel || @xhtml.update_attributes(params[:embeddable_xhtml])
         render :partial => 'show', :locals => { :xhtml => @xhtml }
       else
         render :xml => @xhtml.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @xhtml.update_attributes(params[:xhtml])
+        if @xhtml.update_attributes(params[:embeddable_xhtml])
           flash[:notice] = 'Embeddable::Xhtml.was successfully updated.'
           format.html { redirect_to(@xhtml) }
           format.xml  { head :ok }

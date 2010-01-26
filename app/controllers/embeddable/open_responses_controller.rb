@@ -96,7 +96,7 @@ class Embeddable::OpenResponsesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @open_response = Embeddable::OpenResponse.find(params[:id])
     if request.xhr?
-      if cancel || @open_response.update_attributes(params[:open_response])
+      if cancel || @open_response.update_attributes(params[:embeddable_open_response])
         render :partial => 'show', :locals => { :open_response => @open_response }
       else
         render :xml => @open_response.errors, :status => :unprocessable_entity
