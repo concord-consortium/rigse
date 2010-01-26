@@ -25,7 +25,7 @@ class Embeddable::InnerPage < ActiveRecord::Base
 
   default_value_for :name, "Embeddable::InnerPage element"
   default_value_for :description, "description ..."
-  default_value_for :static_page, Page.create(:name => 'static content', :description => "Static content for inner page")
+  # default_value_for :static_page, Page.create(:name => 'static content', :description => "Static content for inner page")
 
   def self.dont_make_associations
     true
