@@ -15,7 +15,7 @@ def render(file,opts={})
 end
 
 #############################################################
-#  Miantance mode
+#  Maintenance mode
 #############################################################
 task :disable_web, :roles => :web do
   on_rollback { delete "#{shared_path}/system/maintenance.html" }

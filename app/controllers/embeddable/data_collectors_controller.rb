@@ -149,7 +149,7 @@ class Embeddable::DataCollectorsController < ApplicationController
         params[:embeddable_data_collector]['name'] = params[:embeddable_data_collector]['title']
       end
       if request.xhr?
-        if cancel || @data_collector.update_attributes(params[:embeddable_data_collector])
+        if cancel || @data_collector.update_attributes(params[:embeddable_embeddable_data_collector])
           session[:last_saved_probe_type_id] = params[:embeddable_data_collector][:probe_type_id]
           render :partial => 'show', :locals => { :data_collector => @data_collector }
         else
@@ -157,7 +157,7 @@ class Embeddable::DataCollectorsController < ApplicationController
         end
       else
         respond_to do |format|
-          if cancel || @data_collector.update_attributes(params[:embeddable_data_collector])
+          if cancel || @data_collector.update_attributes(params[:embeddable_embeddable_data_collector])
             flash[:notice] = 'Embeddable::DataCollector.was successfully updated.'
             session[:last_saved_probe_type_id] = params[:embeddable_data_collector][:probe_type_id]
           

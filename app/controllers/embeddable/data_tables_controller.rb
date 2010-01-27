@@ -98,14 +98,14 @@ class Embeddable::DataTablesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @data_table = Embeddable::DataTable.find(params[:id])
     if request.xhr?
-      if cancel || @data_table.update_attributes(params[:data_table])
+      if cancel || @data_table.update_attributes(params[:embeddable_data_table])
         render :partial => 'show', :locals => { :data_table => @data_table }
       else
         render :xml => @data_table.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @data_table.update_attributes(params[:data_table])
+        if @data_table.update_attributes(params[:embeddable_data_table])
           flash[:notice] = 'Datatable was successfully updated.'
           format.html { redirect_to(@data_table) }
           format.xml  { head :ok }

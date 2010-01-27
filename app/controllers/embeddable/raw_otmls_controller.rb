@@ -91,7 +91,7 @@ class Embeddable::RawOtmlsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @raw_otml = Embeddable::RawOtml.find(params[:id])
     if request.xhr?
-      if cancel || @raw_otml.update_attributes(params[:raw_otml])
+      if cancel || @raw_otml.update_attributes(params[:embeddable_raw_otml])
         render :partial => 'show', :locals => { :raw_otml => @raw_otml }
       else
         render :xml => @raw_otml.errors, :status => :unprocessable_entity
@@ -102,7 +102,7 @@ class Embeddable::RawOtmlsController < ApplicationController
       render :nothing => true
     else
       respond_to do |format|
-        if @raw_otml.update_attributes(params[:raw_otml])
+        if @raw_otml.update_attributes(params[:embeddable_raw_otml])
           flash[:notice] = 'Raw otml was successfully updated.'
           format.html { redirect_to(@raw_otml) }
           format.xml  { head :ok }

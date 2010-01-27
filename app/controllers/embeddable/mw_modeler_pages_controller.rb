@@ -89,14 +89,14 @@ class Embeddable::MwModelerPagesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
     if request.xhr?
-      if cancel || @mw_modeler_page.update_attributes(params[:mw_modeler_page])
+      if cancel || @mw_modeler_page.update_attributes(params[:embeddable_mw_modeler_page])
         render :partial => 'show', :locals => { :mw_modeler_page => @mw_modeler_page }
       else
         render :xml => @mw_modeler_page.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @mw_modeler_page.update_attributes(params[:mw_modeler_page])
+        if @mw_modeler_page.update_attributes(params[:embeddable_mw_modeler_page])
           flash[:notice] = 'Mwmodelerpage was successfully updated.'
           format.html { redirect_to(@mw_modeler_page) }
           format.xml  { head :ok }

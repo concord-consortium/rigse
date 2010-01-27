@@ -335,8 +335,11 @@ module ApplicationHelper
     if as_name
       link_text << " as #{as_name}"
     end
-    
-    url = polymorphic_url(component, :format => :jnlp, :params => params)
+    if APP_CONFIG[:runnables_use] && APP_CONFIG[:runnables_use] == 'browser'
+      url = polymorphic_url(component, :format => :run_html, :params => params)      
+    else
+      url = polymorphic_url(component, :format => :jnlp, :params => params)
+    end
     run_button_for(component) +
     link_to(link_text, url, 
         :onclick => "show_alert($('launch_warning'),false);",

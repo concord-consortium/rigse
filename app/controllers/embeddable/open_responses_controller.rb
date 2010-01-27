@@ -96,14 +96,14 @@ class Embeddable::OpenResponsesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @open_response = Embeddable::OpenResponse.find(params[:id])
     if request.xhr?
-      if cancel || @open_response.update_attributes(params[:open_response])
+      if cancel || @open_response.update_attributes(params[:embeddable_open_response])
         render :partial => 'show', :locals => { :open_response => @open_response }
       else
         render :xml => @open_response.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @open_response.update_attributes(params[:open_response])
+        if @open_response.update_attributes(params[:embeddable_open_response])
           flash[:notice] = 'Embeddable::OpenResponse.was successfully updated.'
           format.html { redirect_to(@open_response) }
           format.xml  { head :ok }

@@ -90,14 +90,14 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     if request.xhr?
-      if cancel || @biologica_pedigree.update_attributes(params[:biologica_pedigree])
+      if cancel || @biologica_pedigree.update_attributes(params[:embeddable_biologica_pedigree])
         render :partial => 'show', :locals => { :pedigree => @biologica_pedigree }
       else
         render :xml => @biologica_pedigree.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @biologica_pedigree.update_attributes(params[:biologica_pedigree])
+        if @biologica_pedigree.update_attributes(params[:embeddable_biologica_pedigree])
           flash[:notice] = 'Biologicapedigree was successfully updated.'
           format.html { redirect_to(@biologica_pedigree) }
           format.xml  { head :ok }

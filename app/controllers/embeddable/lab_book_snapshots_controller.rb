@@ -89,7 +89,7 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
     if request.xhr?
-      if cancel || @lab_book_snapshot.update_attributes(params[:lab_book_snapshot])
+      if cancel || @lab_book_snapshot.update_attributes(params[:embeddable_lab_book_snapshot])
         @lab_book_snapshot.save
         render :partial => 'show', :locals => { :lab_book_snapshot => @lab_book_snapshot }
       else
@@ -97,7 +97,7 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
       end
     else
       respond_to do |format|
-        if @lab_book_snapshot.update_attributes(params[:lab_book_snapshot])
+        if @lab_book_snapshot.update_attributes(params[:embeddable_lab_book_snapshot])
           flash[:notice] = 'Labbooksnapshot was successfully updated.'
           format.html { redirect_to(@lab_book_snapshot) }
           format.xml  { head :ok }
