@@ -5,7 +5,7 @@
     /%li= print_link_for(@activity)
     /%li= toggle_all('sections')
     - if (activity.changeable?(current_user))
-      %li= duplicate_link_for(@activity,:text=> "duplicate activity #{@activity.name}")
+      %li= duplicate_link_for(@activity,:text=> "Duplicate: #{@activity.name}")
       %li=edit_link_for(@activity)      
     - if (activity.changeable?(current_user))
       %li#copy_link.copy_paste_disabled copy (disabled)
@@ -13,7 +13,7 @@
 
 #add_menu.dropdown
   %ul
-    %li= link_to "add new section", add_section_activity_path(activity)
+    %li= link_to "Add new section", add_section_activity_path(activity)
 
       
 - if (teacher_only? activity)
