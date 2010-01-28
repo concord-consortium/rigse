@@ -113,6 +113,20 @@ describe Portal::Course do
       found.name.should be(existing_name)
       found.course_number.should be(new_course_number)
     end
+    
+    it "We should create a new course witht the SAME name and SAME number, but with a differing school.id" do
+      new_course_number="NEW_C_NMBR"
+      existing_name = "with number"
+      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_with_number.course_number, @course_with_number.name, 777)
+      found.should_not be_nil
+      found.id.should_not equal(@course_without_number.id)
+      found.id.should_not equal(@course_with_number.id)
+      found.name.should equal(@course_with_number.name)
+      found.course_number.should equal(@course_with_number.course_number)
+      found.school_id.should equal(777)
+    end
+    
+    
   end
   
   

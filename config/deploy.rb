@@ -1,7 +1,7 @@
 set :stages, %w(
   development staging production seymour 
   itsisu-dev itsisu-staging itsisu-production fall2009 
-  smartgraphs-production smartgraphs-staging sg-dev)
+  smartgraphs-production smartgraphs-staging sg-dev sparks-dev)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -286,6 +286,14 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
     "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace" 
   end
+  
+  # 01/27/2010
+  desc "create or update a git svn clone of sparks-activities"
+  task :create_or_update_sparks_activities, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "rake RAILS_ENV=#{rails_env} rigse:import:create_or_update_sparks_activities --trace" 
+  end
+  
 end
 
 #############################################################

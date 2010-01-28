@@ -15,7 +15,7 @@
       
 %div{:id => dom_id_for(page,:item), :class =>view_class}
   .action_menu_header_left
-    Static section (use + to add more content to the left)
+    Static area
   .action_menu_header_right
     - if (page.changeable?(current_user))
       = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'Add content for the static page'
