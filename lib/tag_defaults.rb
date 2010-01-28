@@ -22,9 +22,9 @@ module TagDefaults
 
       def self.available_tags(scope)
         if scope
-          return @@default_tags[scope]
+          return @@default_tags[scope].map { |i| i.strip}
         end
-        return @@default_tags.values.flatten.uniq
+        return @@default_tags.values.flatten.uniq.map { |i| i.strip}
       end
     }
   end
