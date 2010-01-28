@@ -35,6 +35,8 @@ module Publishable
         :conditions =>{:publication_status => "published"}
       }
       
+      after_save :add_author_role_to_author
+      
       def available_states(who_wants_to_know)
         if(who_wants_to_know.has_role?('manager','admin'))
           return @@publication_states
@@ -44,6 +46,32 @@ module Publishable
       
       def public?
         return publication_status == 'published'
+      end
+      
+      
+      def add_author_role_to_author
+        if self.user
+          self.user.add_role('author') 
+        end
+      end
+      
+      def probes
+        results = self.data_collectors.map { |dc| dc.probe_type.name }
+        results.flatten.uniq
+      end
+      
+      def models
+        models =[]
+        if self.mw_modeler_pages.size > 0
+          models << "Molecular Workbench"
+        end
+        if self.organisms.size > 0
+          models << "Biologica"
+        end
+        if self.n_logo_models.size > 0
+          models << "Net Logo"
+        end
+        return models
       end
     }
   end
