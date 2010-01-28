@@ -61,6 +61,7 @@ describe RinetData do
     @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
     @nces_school_01 = Factory(:portal_nces06_school, {:SEASCH => '01'})
     @nces_school_02 = Factory(:portal_nces06_school, {:SEASCH => '02'})
+    @nces_school_03 = Factory(:portal_nces06_school, {:SEASCH => '03'})
   end
   
   ## This example group assumes that Net::SFTP is used to download RINET data.
@@ -188,7 +189,7 @@ describe RinetData do
         #pending "Broken example"
         @logger.should_receive(:error).with(/student not found/)
         # 007 is not a real student SASID
-        csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,07113,0"
+        csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,01,0"
         @rinet_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
         @rinet_data_importer.update_models
       end
@@ -197,7 +198,7 @@ describe RinetData do
         #pending "Broken example" 
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
-        csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,07113,0"
+        csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,01,0"
         @rinet_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
         @rinet_data_importer.update_models
       end
@@ -206,7 +207,7 @@ describe RinetData do
         #pending "Broken example"
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
-        csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,07113"
+        csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,01"
         @rinet_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
         @rinet_data_importer.update_models
       end
@@ -215,7 +216,7 @@ describe RinetData do
         #pending "Broken example"
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
-        csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,07113"
+        csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,01"
         @rinet_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
         @rinet_data_importer.update_models
       end
@@ -315,12 +316,33 @@ describe RinetData do
       @initial_clazzes = Portal::Clazz.find(:all)
       run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
-    it "should not create duplicate courses" do
-      #pending "Broken example"
-      courses = Portal::Course.find(:all)
-      courses.map! { |course| "#{course.school_id}-#{course.name}" }
-      courses.size.should eql(courses.uniq.size)
+    # it "should not create duplicate courses" do
+    #   #pending "Broken example"
+    #   courses = Portal::Course.find(:all)
+    #   courses.map! { |course| "#{course.school_id}-#{course.name}" }
+    #   courses.size.should eql(courses.uniq.size)
+    # end
+    
+    it "should work for classes with same course numbers in different schools" do
+      run_importer(:districts => ["02"])
+      # in the test import data, teacher e and teacher d both teach a course with course Number ART
+      # but they teach it in different schools
+      user_d = User.find(:first, :conditions => {:first_name => 'd'})
+      user_e = User.find(:first, :conditions => {:first_name => 'e'})
+      user_d.should_not be_nil
+      user_e.should_not be_nil
+      teacher_d = user_d.portal_teacher
+      teacher_e = user_e.portal_teacher
+      teacher_d.should_not be_nil
+      teacher_e.should_not be_nil
+      art_d = teacher_d.clazzes.detect { |c| c.name = "ART"}
+      art_e = teacher_e.clazzes.detect { |c| c.name = "ART"}
+
+      art_d.course.id.should_not == art_e.course.id
+      art_d.course.course_number.should == art_e.course.course_number
+      art_d.course.school.should_not == art_e.course.school
     end
+
     
     it "when the same import is rerun, there should be no new students" do
       #pending "Broken example"
@@ -328,21 +350,21 @@ describe RinetData do
       run_importer # run the import again.
       Portal::Student.find(:all).should eql(current_students)
     end
-  
+      
     it "when the same import is rerun, there should be no new teachers" do
       #pending "Broken example"
       current_teachers = Portal::Teacher.find(:all)
       run_importer # run the import again.
       Portal::Teacher.find(:all).should eql(current_teachers)
     end
-  
+      
     it "when the same import is rerun, there should be no new classes" do
       #pending "Broken example"
       current_clazzes = Portal::Clazz.find(:all)
       run_importer # run the import again.
       Portal::Clazz.find(:all).should eql(current_clazzes)
     end
-  
+      
     it "when the same import is rerun, there should be no new courses" do
       #pending "Broken example"
       current_courses = Portal::Course.find(:all)
@@ -397,12 +419,12 @@ describe RinetData do
       end
     end
     
-    it "ART and MATH exist in both distrcits, but are unique courses" do
+    it "ART and MATH exist in both distrcits, and ART exists in 3 schools, but all are unique courses" do
       #pending "Broken example"
       run_importer(:districts => ['01','02'])
-      ["ART","MATH"].each do | name |
-        Portal::Clazz.count(:conditions=>{:name => name}).should be(2)
-        Portal::Course.count(:conditions=>{:name => name}).should be(2)
+      {"ART" => 3,"MATH" => 2}.each_pair do | name, size |
+        Portal::Clazz.count(:conditions=>{:name => name}).should be(size)
+        Portal::Course.count(:conditions=>{:name => name}).should be(size)
       end 
     end
   end
@@ -450,4 +472,46 @@ describe RinetData do
     end
   end
   
+
+  describe "test the course_caching method called cache_course_ar_map" do
+      before(:each) do
+        @importer = RinetData.new #FIXME: ExternalUserDomain::ExternalUserDomainError
+      end
+      
+      it "should throw an exception if nill is passed in as course number of school id" do
+        lambda {@importer.cache_course_ar_map(nil,"school_id")}.should raise_error
+        lambda {@importer.cache_course_ar_map("course_number",nil)}.should raise_error
+      end
+      
+      it "should not throw an exception if a course number and a school_id are passed in" do
+        lambda {@importer.cache_course_ar_map("course_number","school_id")}.should_not raise_error
+      end
+      
+      describe "when data has not been set" do
+        it "should return null when we retrieve a  that has not been set" do
+          @importer.cache_course_ar_map("course_number","school_id").should be_nil
+        end
+        it "should let us set a value, and return that value" do
+          @importer.cache_course_ar_map("course_number","school_id","new_value").should == "new_value"
+        end
+      end
+      
+      describe "when data has been set" do
+        before(:each) do
+          @importer.cache_course_ar_map("course_number","school_id","new_value")
+        end
+        
+        it "should return the value that was set" do
+          @importer.cache_course_ar_map("course_number","school_id").should == "new_value"
+        end
+        
+        it "should let us set a new value, and return that value" do
+          @importer.cache_course_ar_map("course_number","school_id","new_new_value").should == "new_new_value"
+          @importer.cache_course_ar_map("course_number","school_id").should == "new_new_value"
+          @importer.cache_course_ar_map("course_number","school_id","new_new_new_value").should == "new_new_new_value"
+          @importer.cache_course_ar_map("course_number","school_id").should == "new_new_new_value"
+        end
+      end
+    end
+    
 end
