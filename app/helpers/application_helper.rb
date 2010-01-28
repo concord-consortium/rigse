@@ -214,20 +214,20 @@ module ApplicationHelper
     end
   end
   
-  def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
+  def edit_menu_for(component, form, options={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_tag(:h3,{:class => 'menu'}) do
-            haml_concat title_for_component(component)
+            haml_concat title_for_component(component,options)
           end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
             if (component.changeable?(current_user))
               haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
+              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless options[:omit_cancel]
             end
           end
         end
@@ -315,7 +315,7 @@ module ApplicationHelper
     component_display_name = component.class.display_name.downcase
     name = component.name
     params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "preview "
+    link_text = params.delete(:link_text) || "Preview "
     if as_name
       link_text << " as #{as_name}"
     end
@@ -331,7 +331,7 @@ module ApplicationHelper
     component_display_name = component.class.display_name.downcase
     name = component.name
     params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "run "
+    link_text = params.delete(:link_text) || "Run "
     if as_name
       link_text << " as #{as_name}"
     end
@@ -349,7 +349,7 @@ module ApplicationHelper
   def edit_link_for(component, params={}) 
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "edit "
+    link_text = params.delete(:link_text) || "Edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
     edit_button_for(component) +
     link_to(link_text, url, 
@@ -358,12 +358,12 @@ module ApplicationHelper
   
   def duplicate_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
-    text = params[:text] || 'duplicate'
+    text = params[:text] || 'Duplicate'
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
     link_button("itsi_copy.png", url, 
-      :title => "copy the #{component_display_name}: '#{name}'") +
+      :title => "Copy the #{component_display_name}: '#{name}'") +
     link_to(text, url)
   end
   
@@ -371,13 +371,13 @@ module ApplicationHelper
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "print #{component_display_name}"
+    link_text = params.delete(:link_text) || "Print #{component_display_name}"
     if params[:teacher_mode]
       link_text = "#{link_text} (with notes) "
     end
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") + 
+    link_button("print.png", url, :title => "Print the #{component_display_name}: '#{name}'") + 
     link_to(link_text,url,:popup => true)
   end
   
@@ -413,7 +413,12 @@ module ApplicationHelper
   
   def title_for_component(component, options={})
     title = name_for_component(component, options)
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
+    if options.has_key?(:show_index)
+      show_index = options[:show_index]
+    else
+      show_index = RAILS_ENV == "development" || current_user.has_role?('admin')
+    end
+    if show_index
       "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>" 
     else
       "<span class='component_title'>#{title}</span>"
