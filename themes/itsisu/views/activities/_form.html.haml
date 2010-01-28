@@ -10,21 +10,40 @@
     = f.text_field :name
   - field_set_tag 'Activity Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+
   - field_set_tag 'Tags' do
     %div.field_set
       %label Grade Levels
       %br
       = f.select :grade_level_list, Activity.available_tags(:grade_levels)
+
     %div.field_set
       %label Subject Areas
       %br
       = f.select :subject_area_list, Activity.available_tags(:subject_areas)
+
     %div.field_set
       %label Unit
       %br
       = f.select :unit_list, Activity.available_tags(:units)
+
     %div.field_set
       %label Publication status
       %br
-      = f.select :publication_status, @activity.available_states(current_user).map {|s| s.to_s}
+      = f.select :publication_status, @activity.available_states(current_user).map {|s| s.to_s} 
+      
+    %div.field_set
+      %label Probes
+      %br
+      %ul.quiet
+        - @activity.probes.each do |probe|
+          %li="#{probe}"
+
+    %div.field_set
+      %label Models
+      %br
+      %ul.quiet
+        - @activity.models.each do |model|
+          %li="#{model}"
+        
 = javascript_tag("focus_first_field();");
