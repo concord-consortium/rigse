@@ -83,7 +83,7 @@
             %li= link_to 'About', about_path
             - unless current_user.anonymous? || current_user.portal_student
               %li= link_to "Activities", activities_path        
-              - if @activity 
+              - if @activity && @activity.id
                 %li
                   = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :depth => 2, :selects => [@activity,@section,@page]}
 
