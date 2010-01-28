@@ -3,15 +3,15 @@
     /%li= run_link_for(@section)
     /%li= print_link_for(@section)
     - if (section.changeable?(current_user))
-      %li= duplicate_link_for(@section,:text=> "duplicate section #{section.name}")
-    %li#copy_link.copy_paste_disabled copy (disabled)
+      %li= duplicate_link_for(@section,:text=> "Duplicate: #{section.name}")
+    %li#copy_link.copy_paste_disabled Copy (disabled)
     /%li= toggle_all('pages')
     - if (section.changeable?(current_user))
       %li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
 
 #add_menu.dropdown
   %ul
-    %li= link_to "add new page", add_page_section_path(section)
+    %li= link_to "Add new page", add_page_section_path(section)
     
 - if (teacher_only? section)
   - view_class = "action_menu teacher_only"
