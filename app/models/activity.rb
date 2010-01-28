@@ -86,8 +86,7 @@ class Activity < ActiveRecord::Base
       if (options[:include_drafts])
         activities = Activity.like(name)
       else
-        # activities = Activity.published.like(name)
-        activities = Activity.like(name)
+        activities = Activity.published.like(name)
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

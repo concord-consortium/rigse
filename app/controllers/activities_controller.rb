@@ -77,7 +77,8 @@ class ActivitiesController < ApplicationController
     @activities = Activity.search_list({
       :name => @name, 
       :paginate => true, 
-      :page => pagenation
+      :page => pagenation,
+      :include_drafts => @include_drafts
     })
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
