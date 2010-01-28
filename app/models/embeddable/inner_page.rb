@@ -94,13 +94,14 @@ class Embeddable::InnerPage < ActiveRecord::Base
   end
   
   def menu_name
+    title =  "inner page area"
     case sub_pages.size
     when  0
-      return "inner page with no pages"
+      return title << " with no pages"
     when 1
-      return "inner page"
+      return title
     else
-      return "inner page with #{sub_pages.size} pages"
+      return title << " with #{sub_pages.size} pages"
     end
   end
   
