@@ -12,5 +12,6 @@
 
     %td{:valign=>"top"}
       %div{ :id => dom_id_for(inner_page, :static_page_area)}
-        = render :partial => 'embeddable/inner_pages/static_page', :locals=>{:page => inner_page.static_page, :inner_page => inner_page}
+        - if inner_page.static_page
+          = render :partial => 'embeddable/inner_pages/static_page', :locals=>{:page => inner_page.static_page, :inner_page => inner_page}
 
