@@ -354,7 +354,7 @@ class InvestigationsController < AuthoringController
     @investigation = @original.duplicate(current_user)
     @investigation.save
     flash[:notice] ="Copied #{@original.name}"
-    redirect_to url_for @investigation
+    redirect_to url_for(@investigation)
   end
   
   def export

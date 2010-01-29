@@ -206,7 +206,7 @@ class SectionsController < ApplicationController
     @copy.deep_set_user current_user
     @activity = @copy.activity
     flash[:notice] ="Copied #{@section.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
   
   #

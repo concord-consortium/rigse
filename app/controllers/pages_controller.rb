@@ -230,7 +230,7 @@ class PagesController < ApplicationController
     @copy.name = "" #force numbering by default
     @copy.save
     flash[:notice] ="Copied #{@page.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
 
 
