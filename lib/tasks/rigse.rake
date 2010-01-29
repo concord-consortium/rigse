@@ -25,7 +25,7 @@ namespace :rigse do
     autoload :Highline, 'highline'
 
     require 'fileutils'
-    
+
     def rails_file_path(*args)
       File.join([RAILS_ROOT] + args)
     end
@@ -105,6 +105,7 @@ HEREDOC
     #######################################################################
     desc "setup a new rites instance, run: ruby config/setup.rb first"
     task :new_rites_app => :environment do
+
       db_config = ActiveRecord::Base.configurations[RAILS_ENV]
 
       # Rake::Task['rigse:setup:development_environment_only'].invoke
@@ -131,9 +132,14 @@ HEREDOC
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
-        Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        # FIXME: when and if any other projetcs/hemes need RI GSE models
+        if USING_RITES
+          Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        end
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
-        Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
+        if USING_JNLPS
+          Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
+        end
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         else
