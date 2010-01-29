@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100126160244) do
+ActiveRecord::Schema.define(:version => 20100129223219) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -52,6 +52,19 @@ ActiveRecord::Schema.define(:version => 20100126160244) do
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
   end
+
+  create_table "ancestries", :force => true do |t|
+    t.integer  "ancestor_id"
+    t.string   "ancestor_type"
+    t.integer  "descendant_id"
+    t.string   "descendant_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ancestries", ["ancestor_id"], :name => "index_ancestries_on_ancestor_id"
+  add_index "ancestries", ["ancestor_type"], :name => "index_ancestries_on_ancestor_type"
+  add_index "ancestries", ["descendant_id"], :name => "index_ancestries_on_descendant_id"
 
   create_table "author_notes", :force => true do |t|
     t.text     "body"
@@ -758,7 +771,6 @@ ActiveRecord::Schema.define(:version => 20100126160244) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
@@ -1692,7 +1704,6 @@ ActiveRecord::Schema.define(:version => 20100126160244) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|
@@ -1856,96 +1867,6 @@ ActiveRecord::Schema.define(:version => 20100126160244) do
   create_table "roles_users", :id => false, :force => true do |t|
     t.integer "role_id"
     t.integer "user_id"
-  end
-
-  add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
-  add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
-
-  create_table "saveable_image_question_answers", :force => true do |t|
-    t.integer  "image_question_id"
-    t.integer  "bundle_content_id"
-    t.integer  "blob_id"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
-
-  create_table "saveable_image_questions", :force => true do |t|
-    t.integer  "learner_id"
-    t.integer  "offering_id"
-    t.integer  "image_question_id"
-    t.integer  "response_count",    :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
-  add_index "saveable_image_questions", ["offering_id"], :name => "index_saveable_image_questions_on_offering_id"
-
-  create_table "saveable_multiple_choice_answers", :force => true do |t|
-    t.integer  "multiple_choice_id"
-    t.integer  "bundle_content_id"
-    t.integer  "choice_id"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
-
-  create_table "saveable_multiple_choices", :force => true do |t|
-    t.integer  "learner_id"
-    t.integer  "multiple_choice_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "offering_id"
-    t.integer  "response_count",     :default => 0
-  end
-
-  add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
-  add_index "saveable_multiple_choices", ["offering_id"], :name => "index_saveable_multiple_choices_on_offering_id"
-
-  create_table "saveable_open_response_answers", :force => true do |t|
-    t.integer  "open_response_id"
-    t.integer  "bundle_content_id"
-    t.integer  "position"
-    t.text     "answer"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"
-
-  create_table "saveable_open_responses", :force => true do |t|
-    t.integer  "learner_id"
-    t.integer  "open_response_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "offering_id"
-    t.integer  "response_count",   :default => 0
-  end
-
-  add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"
-  add_index "saveable_open_responses", ["offering_id"], :name => "index_saveable_open_responses_on_offering_id"
-
-  create_table "saveable_sparks_measuring_resistance", :force => true do |t|
-    t.integer  "learner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "offering_id"
-  end
-
-  add_index "saveable_sparks_measuring_resistance", ["learner_id"], :name => "index_saveable_sparks_measuring_resistance_on_learner_id"
-  add_index "saveable_sparks_measuring_resistance", ["offering_id"], :name => "index_saveable_sparks_measuring_resistance_on_offering_id"
-
-  create_table "saveable_sparks_measuring_resistance_reports", :force => true do |t|
-    t.integer  "measuring_resistance_id"
-    t.integer  "position"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "sections", :force => true do |t|
