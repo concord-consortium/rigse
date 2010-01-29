@@ -21,8 +21,10 @@ class Admin::Project < ActiveRecord::Base
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
   validate :states_and_provinces_array_members_must_match_list
-  validates_associated :maven_jnlp_server
-  validates_associated :maven_jnlp_family
+  if USING_JNLPS
+    validates_associated :maven_jnlp_server
+    validates_associated :maven_jnlp_family
+  end
 
   def states_and_provinces_array_members_must_match_list
     if states_and_provinces && states_and_provinces.is_a?(Array)
@@ -75,15 +77,19 @@ class Admin::Project < ActiveRecord::Base
   end
 
   def generate_default_maven_jnlp
-    default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-    default_maven_jnlp['server'] = self.maven_jnlp_server.name
-    default_maven_jnlp['family'] = self.maven_jnlp_family.name
-    if self.snapshot_enabled
-      default_maven_jnlp['version'] = 'snapshot'
+    if USING_JNLPS
+      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+      default_maven_jnlp['server'] = self.maven_jnlp_server.name
+      default_maven_jnlp['family'] = self.maven_jnlp_family.name
+      if self.snapshot_enabled
+        default_maven_jnlp['version'] = 'snapshot'
+      else
+        default_maven_jnlp['version'] = self.jnlp_version_str
+      end
+      default_maven_jnlp
     else
-      default_maven_jnlp['version'] = self.jnlp_version_str
+      nil
     end
-    default_maven_jnlp
   end
   
   
@@ -122,21 +128,28 @@ class Admin::Project < ActiveRecord::Base
       name, url = default_project_name_url
       states_and_provinces = APP_CONFIG[:states_and_provinces]
 
-      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-      maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(default_maven_jnlp['server'])
-      jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(default_maven_jnlp['family'])
-      jnlp_version_str = default_maven_jnlp['version']
+      if USING_JNLPS
+        default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+        maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(default_maven_jnlp['server'])
+        jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(default_maven_jnlp['family'])
+        jnlp_version_str = default_maven_jnlp['version']
+        if jnlp_version_str == 'snapshot'
+          snapshot_enabled = true
+          jnlp_family.update_snapshot_jnlp_url
+          jnlp_url = jnlp_family.snapshot_jnlp_url
+          jnlp_version_str = jnlp_url.version_str
+        else
+          snapshot_enabled = false
+        end
+      else
+          maven_jnlp_server = nil
+          jnlp_family = nil
+          jnlp_version_str = nil
+          snapshot_enabled = nil
+      end
       
       enable_default_users = APP_CONFIG[:enable_default_users]
 
-      if jnlp_version_str == 'snapshot'
-        snapshot_enabled = true
-        jnlp_family.update_snapshot_jnlp_url
-        jnlp_url = jnlp_family.snapshot_jnlp_url
-        jnlp_version_str = jnlp_url.version_str
-      else
-        snapshot_enabled = false
-      end
       attributes = {
         :name => name,
         :url => url,

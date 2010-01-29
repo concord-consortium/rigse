@@ -39,8 +39,10 @@ class ApplicationController < ActionController::Base
   
   def setup_project
     @project = Admin::Project.default_project
-    @jnlp_adaptor = JnlpAdaptor.new(@project)
-    @jnlp_testing_adaptor = JnlpTestingAdaptor.new
+    if USING_JNLPS
+      @jnlp_adaptor = JnlpAdaptor.new(@project)
+      @jnlp_testing_adaptor = JnlpTestingAdaptor.new
+    end
   end
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound

@@ -41,8 +41,10 @@ module ApplicationHelper
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
         git_repo_info.collect { |info| list << content_tag('li') { info } }
-        list << content_tag('li') { '|' }
-        maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+        if USING_JNLPS
+          list << content_tag('li') { '|' }
+          maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+        end
         list
       end
     # list2 = 
