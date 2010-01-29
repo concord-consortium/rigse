@@ -1,0 +1,159 @@
+--- 
+active_school_levels: &id001 
+  - "2"
+  - "3"
+  - "4"
+active_grades: &id002 
+  - "6"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
+development: 
+  site_url: http://localhost:3000
+  active_school_levels: *id001
+  help_email: rites-investigations@concord.org
+  use_gse: true
+  runnables_use: browser
+  theme: sglight
+  maven_jnlp_servers: &id004 
+    - :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  active_grades: *id002
+  default_maven_jnlp: 
+    version: snapshot
+    server: concord
+    family: all-otrunk-snapshot
+  net_logo_package_name: otrunknl4
+  include_otrunk_examples: false
+  site_school: Lightweight Smart Graphs-school
+  maven_jnlp_families: &id005 
+    - all-otrunk-snapshot
+  valid_sakai_instances: &id006 
+    - http://localhost:3000/
+  description: 
+  site_district: Lightweight Smart Graphs-district
+  top_level_container_name: Page
+  site_name: Lightweight Smart Graphs
+  default_admin_user: &id003 
+    first_name: Stephen
+    login: stephen
+    last_name: Bannasch
+    email: stephen.bannasch@gmail.com
+  enable_default_users: true
+  states_and_provinces: 
+  - RI
+  - MA
+  - PA
+default_admin_user: *id003
+test: 
+  site_url: http://localhost:3000
+  active_school_levels: *id001
+  help_email: stephen@concord.org
+  use_gse: true
+  theme: default
+  maven_jnlp_servers: *id004
+  active_grades: *id002
+  default_maven_jnlp: &id008 
+    version: snapshot
+    server: concord
+    family: all-otrunk-snapshot
+  net_logo_package_name: otrunknl4
+  include_otrunk_examples: false
+  site_school: RITES Investigations-school
+  maven_jnlp_families: *id005
+  valid_sakai_instances: *id006
+  description: ""
+  site_district: RITES Investigations-district
+  site_name: RITES Investigations (development)
+  default_admin_user: *id003
+  enable_default_users: true
+  states_and_provinces: &id007 
+    - RI
+    - MA
+    - PA
+production: 
+  site_url: http://sg.dev.concord.org
+  active_school_levels: *id001
+  help_email: stephen@concord.org
+  use_gse: true
+  runnables_use: browser
+  maven_jnlp_servers: 
+  - :name: concord
+    :host: http://jnlp.concord.org
+    :path: /dev/org/concord/maven-jnlp/
+  theme: sglight
+  active_grades: *id002
+  default_maven_jnlp: 
+    version: 0.1.0-20090724.190238
+    server: concord
+    family: all-otrunk-snapshot
+  net_logo_package_name: otrunknl4
+  include_otrunk_examples: false
+  site_school: Lightweight Smart Graphs-school
+  maven_jnlp_families: 
+  - all-otrunk-snapshot
+  valid_sakai_instances: 
+  - http://localhost:3000/
+  description: 
+  site_district: Lightweight Smart Graphs-district
+  top_level_container_name: Page
+  site_name: Lightweight Smart Graphs
+  default_admin_user: *id003
+  enable_default_users: false
+  states_and_provinces: 
+  - RI
+  - MA
+  - PA
+states_and_provinces: *id007
+staging: 
+  site_url: http://rites-investigations.staging.concord.org
+  active_school_levels: *id001
+  help_email: rites-investigations@concord.org
+  use_gse: true
+  maven_jnlp_servers: 
+  - :name: concord
+    :host: http://jnlp.concord.org
+    :path: /dev/org/concord/maven-jnlp/
+  theme: default
+  active_grades: *id002
+  default_maven_jnlp: 
+    version: snapshot
+    server: concord
+    family: all-otrunk-snapshot
+  net_logo_package_name: otrunknl4
+  include_otrunk_examples: false
+  site_school: RITES Investigations-school
+  maven_jnlp_families: 
+  - all-otrunk-snapshot
+  valid_sakai_instances: 
+  - http://localhost:3000/
+  description: ""
+  site_district: RITES Investigations-district
+  site_name: RITES Investigations (staging)
+  default_admin_user: *id003
+  enable_default_users: true
+  states_and_provinces: *id007
+cucumber: 
+  site_url: http://localhost:3000
+  active_school_levels: *id001
+  help_email: rites-investigations@concord.org
+  use_gse: true
+  theme: default
+  maven_jnlp_servers: *id004
+  active_grades: *id002
+  default_maven_jnlp: *id008
+  net_logo_package_name: otrunknl4
+  include_otrunk_examples: false
+  site_school: RITES Investigations-school
+  maven_jnlp_families: *id005
+  valid_sakai_instances: *id006
+  description: ""
+  site_district: RITES Investigations-district
+  site_name: RITES Investigations (development)
+  default_admin_user: *id003
+  enable_default_users: true
+  states_and_provinces: *id007
