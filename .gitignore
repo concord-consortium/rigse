@@ -49,6 +49,7 @@ public/plugin_assets/portal
 .sass-cache
 public/javascripts/base_packaged.js
 public/stylesheets/base_packaged.css
+public/stylesheets/*packaged*
 public/investigations
 public/page_cache
 config/settings-backup.yml
