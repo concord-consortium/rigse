@@ -65,6 +65,8 @@ class RinetData
     end
   end
   
+  
+  
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :log
@@ -624,7 +626,7 @@ Logged to: #{File.expand_path(@log_path)}
         course = Portal::Course.find_or_create_by_course_number_name_and_school_id(course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
         course_csv_row[:rites_course] = course
         # cache that results in hashtable
-        @course_active_record_map[course_csv_row[:CourseNumber]] = course_csv_row[:rites_course]
+        cache_course_ar_map(course_csv_row[:CourseNumber],course_csv_row[:SchoolNumber],course)
       else
         log_message("no school exists when creating a course", {:log_level => :warn})
       end
@@ -670,9 +672,8 @@ Logged to: #{File.expand_path(@log_path)}
     
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
-    # course_active_record_map example: { CourseNumber => Portal::Course }
     # debugger
-    portal_course = @course_active_record_map[member_relation_row[:CourseNumber]]
+    portal_course = cache_course_ar_map(member_relation_row[:CourseNumber],member_relation_row[:SchoolNumber])
     # unless portal_course is a Portal::Course
     unless portal_course.class == Portal::Course
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
@@ -859,5 +860,17 @@ Logged to: #{File.expand_path(@log_path)}
     end
   end
   
-  
+  def cache_course_ar_map(course_number,school_id,value=nil)
+    unless (course_number && school_id) 
+      raise RinetDataError("must supply a course_number and a school")
+    end
+    unless @course_active_record_map[course_number]
+      @course_active_record_map[course_number]={}
+    end
+    if value
+      @course_active_record_map[course_number][school_id] = value
+    end
+    value = @course_active_record_map[course_number][school_id] 
+    return value
+  end
 end

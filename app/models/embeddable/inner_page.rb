@@ -25,8 +25,10 @@ class Embeddable::InnerPage < ActiveRecord::Base
 
   default_value_for :name, "Embeddable::InnerPage element"
   default_value_for :description, "description ..."
-  # default_value_for :static_page, Page.create(:name => 'static content', :description => "Static content for inner page")
-
+  default_value_for :static_page do 
+    Page.create(:name => 'static content', :description => "Static content for inner page") 
+  end
+  
   def self.dont_make_associations
     true
   end
@@ -92,13 +94,14 @@ class Embeddable::InnerPage < ActiveRecord::Base
   end
   
   def menu_name
+    title =  "inner page area"
     case sub_pages.size
     when  0
-      return "inner page with no pages"
+      return title << " with no pages"
     when 1
-      return "inner page"
+      return title
     else
-      return "inner page with #{sub_pages.size} pages"
+      return title << " with #{sub_pages.size} pages"
     end
   end
   
