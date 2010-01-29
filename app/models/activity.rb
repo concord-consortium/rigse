@@ -50,6 +50,7 @@ class Activity < ActiveRecord::Base
   include TreeNode
   include Publishable
   include TagDefaults
+  include HasPedigree
   
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}

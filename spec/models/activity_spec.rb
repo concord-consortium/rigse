@@ -101,6 +101,32 @@ describe Activity do
       found = Activity.tagged_with("model")
       found.should have(0).activities
     end
-    
   end
+  
+  #
+  # Kind of testing HasPedigree and 
+  # 
+  describe "A pedigree" do
+    before (:each) do
+      @a = Activity.create!(@valid_attributes)
+      @a_a = Activity.create!(@valid_attributes)
+      @a_b= Activity.create!(@valid_attributes)
+      @a.descendants << @a_a
+      @a.descendants << @a_b
+      @a.reload
+      @a_a.reload
+      @a_b.reload
+    end
+    
+    it "has ancestors" do
+      @a.ancestor.should be_nil
+      @a_a.ancestor.should be(@a)
+      @a_b.ancestor.should be(@b)
+    end
+    
+    end
+    it "has descendants" do
+      @a.descendants.should_have(2).items
+    end    
+    
 end
