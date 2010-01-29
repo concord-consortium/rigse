@@ -147,10 +147,10 @@ ActiveRecord::Schema.define(:version => 20100125203853) do
 
   create_table "embeddable_biologica_chromosomes", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                  :limit => 36
+    t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
-    t.integer  "biologica_organism_id"
+    t.integer  "organism_id"
     t.integer  "width"
     t.integer  "height"
     t.datetime "created_at"
@@ -197,7 +197,7 @@ ActiveRecord::Schema.define(:version => 20100125203853) do
     t.string   "strain"
     t.integer  "chromosomes_color"
     t.boolean  "fatal_characteristics"
-    t.integer  "biologica_world_id"
+    t.integer  "world_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -223,10 +223,10 @@ ActiveRecord::Schema.define(:version => 20100125203853) do
 
   create_table "embeddable_biologica_static_organisms", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                  :limit => 36
+    t.string   "uuid",        :limit => 36
     t.string   "name"
     t.text     "description"
-    t.integer  "biologica_organism_id"
+    t.integer  "organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
