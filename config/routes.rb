@@ -1,5 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
 
+
+  map.namespace(:saveable) do |saveable|
+    saveable.namespace(:sparks) do |sparks|
+      sparks.resources :measuring_resistances
+      sparks.resources :measuring_resistance_reports
+    end
+  end
+
+
 #
 # ********* New scoped routing for page-embeddables, probes, and RI GSEs  *********
 #
