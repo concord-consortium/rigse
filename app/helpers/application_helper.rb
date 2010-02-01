@@ -151,6 +151,17 @@ module ApplicationHelper
     end
   end
 
+  def render_top_level_container_list_partial(locals)
+    container = top_level_container_name.pluralize
+    container_sym = top_level_container_name.pluralize.to_sym
+    container_class = top_level_container_name.capitalize.constantize
+    if container_class.respond_to?(:search_list)
+      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.search_list(locals) }
+    else
+      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.find(:all) }
+    end
+  end
+
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.demodulize.underscore
@@ -338,7 +349,7 @@ module ApplicationHelper
       link_text << " as #{as_name}"
     end
     if APP_CONFIG[:runnables_use] && APP_CONFIG[:runnables_use] == 'browser'
-      url = polymorphic_url(component, :format => :run_html, :params => params)      
+      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)      
     else
       url = polymorphic_url(component, :format => :jnlp, :params => params)
     end
@@ -465,8 +476,8 @@ module ApplicationHelper
           haml_concat "#{offering.learners.length} learners/#{offering.sessions} sessions"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_concat dropdown_link_for :text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}"
-          haml_concat dropdown_link_for :text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}"
+          haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
         end
       end
     end
