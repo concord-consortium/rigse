@@ -255,6 +255,23 @@ module ApplicationHelper
     end
   end
   
+  def pedigree_info_for(component)
+    if (component.respond_to? :pedigree) && (component.respond_to? :user) && (component.pedigree.size > 0)
+      haml_tag(:div, :class =>'tiny') do
+        haml_concat "author history: "
+        haml_concat ((component.pedigree.map { |a| a.user.last_name }) << component.user.last_name).uniq.join(" &rarr; ")
+      end
+    end
+  end
+  
+  def descendant_info_for(component)
+    if (component.respond_to? :descendants) && (component.descendants.size > 0)
+      haml_tag(:div, :class =>'tiny') do
+        haml_concat "(copied #{component.descendants.size} times)"
+      end
+    end
+  end
+  
   def edit_menu_for(component, form, options={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
@@ -263,6 +280,8 @@ module ApplicationHelper
           haml_tag(:h3,{:class => 'menu'}) do
             haml_concat title_for_component(component,options)
           end
+          pedigree_info_for(component)
+          descendant_info_for(component)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
