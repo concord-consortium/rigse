@@ -17,6 +17,7 @@ development:
   help_email: rites-investigations@concord.org
   use_gse: true
   runnables_use: browser
+  runnable_mime_type: run_html
   theme: sglight
   maven_jnlp_servers: &id004 
     - :name: concord
@@ -81,6 +82,7 @@ production:
   help_email: stephen@concord.org
   use_gse: true
   runnables_use: browser
+  runnable_mime_type: run_html
   maven_jnlp_servers: 
   - :name: concord
     :host: http://jnlp.concord.org

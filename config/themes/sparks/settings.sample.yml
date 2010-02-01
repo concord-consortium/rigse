@@ -11,11 +11,13 @@ development: &id003
   help_email: skim@concord.org
   theme: sparks
   runnables_use: browser
+  runnable_mime_type: run_sparks_html
   site_school: SPARKS-school
   description: ""
+  top_level_container_name: page
   site_district: SPARKS-district
   site_name: SPARKS Assessments (development)
-  site_url: http://sparks.dev.concord.org
+  site_url: http://localhost:3000
   default_admin_user: 
     first_name: Seong
     login: skim
