@@ -18,11 +18,19 @@ class Portal::OfferingsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @offering }
+      
+      format.run_sparks_html   { 
+        if learner = setup_portal_student
+          session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
+        else
+          session[:put_path] = nil
+        end
+        render 'pages/show', :layout => "layouts/run" 
+      }
+      
       format.jnlp {
         # check if the user is a student in this offering's class
-        if portal_student = current_user.portal_student
-          # create a learner for the user if one doesnt' exist
-          learner = @offering.find_or_create_learner(portal_student)
+        if learner = setup_portal_student
           if params.delete(:use_installer)
             wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params)
             render :partial => 'shared/learn_installer', :locals => 
@@ -126,4 +134,13 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  
+  def setup_portal_student
+    learner = nil
+    if portal_student = current_user.portal_student
+      # create a learner for the user if one doesnt' exist
+      learner = @offering.find_or_create_learner(portal_student)
+    end
+    learner
+  end
 end
