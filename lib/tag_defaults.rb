@@ -8,16 +8,16 @@ module TagDefaults
     clazz.class_eval {
       @@default_tags = {
         :units => "Crystals, Global Warming, Earthquakes, Water Cycle, Solar System, Weather".split(","),
-        :grade_levels => "Elementary, Middle School, HighSchool".split(","),
+        :grade_levels => "Elementary, Middle School, High School".split(","),
         :subject_areas => "Earth Science, Space Science, Life Science, Physics, Biology, Chemestry".split(",")
       }
       
       # look through our records and update our defaults...
       self.tag_types.each do |type|
         if (@@default_tags[type])
-          @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name}
+          @@default_tags[type] = @@default_tags[type].map { |c| c.strip } | self.tag_counts_on(type).map { |c| c.name.strip}
         else
-          @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name}
+          @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name.strip}
         end
       end
       
@@ -26,7 +26,7 @@ module TagDefaults
         unless @@default_tags[scope]
           @@default_tags[scope] = []
         end
-        @@default_tags[scope] << tag
+        @@default_tags[scope] << tag.strip
         @@default_tags[scope].uniq!
       end
 
@@ -51,9 +51,9 @@ module TagDefaults
   def update_available_tags
     self.tag_types.each do |type|
       if (@@default_tags[type])
-        @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name}
+        @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name.strip}
       else
-        @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name}
+        @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name.strip}
       end
     end
   end
