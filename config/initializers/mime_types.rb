@@ -10,3 +10,4 @@ Mime::Type.register "text/bundle", :config
 Mime::Type.register "text/xml", :otml
 Mime::Type.register "text/xml", :dynamic_otml
 Mime::Type.register "", :run_html
+Mime::Type.register "", :run_sparks_html
