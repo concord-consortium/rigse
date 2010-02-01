@@ -1,3 +1,7 @@
+##
+## This modules supports ideas of heritage. Classes the extend this module
+## wil be blessed with an ancestor, and descendants.
+##
 module HasPedigree
 
   ##
@@ -38,14 +42,15 @@ module HasPedigree
     pedigree_list
   end
   
-  # def calculate pedigree
-  #   cache_old_pedigree
-  #   acestr = ancestor
-  #   pedigree=[]
-  #   while acestr
-  #     pedigree << acestr.name
-  #     acestr = acestr.ancestor
-  #   end
-  # end
+  # return everything to which this item is an ancestor
+  # kind of the inverse of pedigree
+  def all_descendants
+    results = []
+    results << descendants
+    results << descendants.map { |d| d.all_descendants.uniq}
+    results.flatten.uniq
+  end
+  
+  
 
 end
