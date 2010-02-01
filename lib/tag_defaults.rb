@@ -15,9 +15,9 @@ module TagDefaults
       # look through our records and update our defaults...
       self.tag_types.each do |type|
         if (@@default_tags[type])
-          @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name}
+          @@default_tags[type] = @@default_tags[type].map { |c| c.strip } | self.tag_counts_on(type).map { |c| c.name.strip}
         else
-          @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name}
+          @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name.strip}
         end
       end
       
@@ -51,9 +51,9 @@ module TagDefaults
   def update_available_tags
     self.tag_types.each do |type|
       if (@@default_tags[type])
-        @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name}
+        @@default_tags[type] = @@default_tags[type] | self.tag_counts_on(type).map { |c| c.name.strip}
       else
-        @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name}
+        @@default_tags[type] = self.tag_counts_on(type).map { |c| c.name.strip}
       end
     end
   end
