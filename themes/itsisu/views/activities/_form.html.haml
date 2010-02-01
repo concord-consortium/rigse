@@ -12,21 +12,10 @@
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
 
   - field_set_tag 'Tags' do
-    %div.field_set
-      %label Grade Levels
-      %br
-      = f.select :grade_level_list, Activity.available_tags(:grade_levels)
-
-    %div.field_set
-      %label Subject Areas
-      %br
-      = f.select :subject_area_list, Activity.available_tags(:subject_areas)
-
-    %div.field_set
-      %label Unit
-      %br
-      = f.select :unit_list, Activity.available_tags(:units)
-
+    = tag_selector(@activity,"activity",:grade_level)
+    = tag_selector(@activity,"activity",:subject_area)
+    = tag_selector(@activity,"activity",:unit)
+   
     %div.field_set
       %label Publication status
       %br
