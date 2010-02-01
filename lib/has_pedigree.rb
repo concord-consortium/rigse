@@ -14,14 +14,30 @@ module HasPedigree
   end
   
   def ancestor
-    return ancestors.first
+    if ancestors
+      return ancestors.first
+    end
+    return nil
   end
   
   def ancestor=(ancestor)
     ancestors.clear
-    ancestors << ancestor
+    if ancestor
+      ancestors << ancestor
+    end
   end
 
+  # return an array of ancestors, oldest first
+  def pedigree
+    pedigree_list = []
+    a = ancestor
+    while a && a != self
+        pedigree_list.unshift a
+      a = a.ancestor
+    end
+    pedigree_list
+  end
+  
   # def calculate pedigree
   #   cache_old_pedigree
   #   acestr = ancestor
