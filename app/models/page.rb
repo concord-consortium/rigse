@@ -2,6 +2,7 @@ class Page < ActiveRecord::Base
   include Clipboard
   belongs_to :user
   belongs_to :section
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   has_one :activity, :through => :section
 
