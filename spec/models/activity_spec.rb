@@ -128,7 +128,7 @@ describe Activity do
       @a_a_a.reload
     end
     
-    it "have ancestors" do
+    it "has ancestors" do
       @a.ancestor.should be_nil
       @a_a.ancestor.id.should equal(@a.id)
       @a_b.ancestor.id.should equal(@a.id)
@@ -136,7 +136,7 @@ describe Activity do
       @a_a_a.ancestor.id.should_not equal(@a.id)
     end
     
-    it "have descendants" do
+    it "has descendants" do
       @a.descendants.should have(2).items
       @a.descendants.should include(@a_b)
       @a.descendants.should include(@a_a)
@@ -145,12 +145,17 @@ describe Activity do
       @a_a.descendants.should_not include(@a_b)
     end
     
-    it "have a pedigree" do
+    it "has a pedigree" do
       @a_a.pedigree.should include(@a)
       @a_b.pedigree.should include(@a)
       @a_a_a.pedigree.should include(@a)
       @a_a_a.pedigree.should include(@a_a)
       @a_a_a.pedigree.should_not include(@a_b)
+    end
+    
+    it "has deep descendents" do
+      @a.all_descendants.should include(@a_a_a)
+      @a_b.all_descendants.should_not include(@a_a_a)
     end
   end
   
