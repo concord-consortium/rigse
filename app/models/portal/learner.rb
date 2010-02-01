@@ -10,6 +10,12 @@ class Portal::Learner < ActiveRecord::Base
   
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
+
+  has_many :open_responses, :class_name => "Saveable::OpenResponse"
+
+  def sessions
+    self.bundle_logger.bundle_contents.length
+  end
   
   [:name, :first_name, :last_name, :email, :vendor_interface].each { |m| delegate m, :to => :student }
 

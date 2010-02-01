@@ -12,7 +12,6 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   OPEN_ELEMENT_EPORTFOLIO = "<sailuserdata:EPortfolio xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:sailuserdata=\"sailuserdata\">\n"
   CLOSE_ELEMENT_EPORTFOLIO = "\n</sailuserdata:EPortfolio>"
   
-  
   include Changeable
 
   # pagination default
@@ -50,4 +49,7 @@ class Dataservice::BundleLogger < ActiveRecord::Base
     end
   end
   
+  def extract_open_responses
+    self.bundle_contents.each { |bc| bc.extract_open_responses }
+  end
 end
