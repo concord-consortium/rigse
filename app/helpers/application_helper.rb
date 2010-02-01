@@ -457,18 +457,37 @@ module ApplicationHelper
     end
   end
 
+  def menu_for_offering(offering, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+          haml_concat "#{offering.learners.length} learners/#{offering.sessions} sessions"
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_concat dropdown_link_for :text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}"
+          haml_concat dropdown_link_for :text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}"
+        end
+      end
+    end
+  end
+  
+  def menu_for_school(school, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(school, options)
+          haml_concat "active classes: #{school.clazzes.active.length}"
+        end
+      end
+    end
+  end
+  
   def show_menu_for(component, options={})
     is_page_element = (component.respond_to? :embeddable)
     deletable_element = component
     if is_page_element
       component = component.embeddable
-    end
-    haml_tag :div, :class => 'dropdown', :id => "actions_#{component.id}_menu" do
-      haml_tag :ul do
-        haml_tag(:li) { haml_concat run_link_for(component) }
-        haml_tag(:li) { haml_concat print_link_for(component) }
-        haml_tag(:li) { haml_concat otml_link_for(component) }
-      end
     end
     view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
@@ -477,7 +496,7 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
+          # haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
           if is_page_element
             restrict_to 'admin' do
               haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
@@ -490,8 +509,8 @@ module ApplicationHelper
               end
             rescue NoMethodError
             end
-            haml_concat edit_button_for(component, options)
-            haml_concat delete_button_for(deletable_element)  unless options[:omit_delete]
+            haml_concat edit_button_for(component, options)  unless options[:omit_edit]
+            haml_concat delete_button_for(deletable_element) unless options[:omit_delete]
           end
         end
       end

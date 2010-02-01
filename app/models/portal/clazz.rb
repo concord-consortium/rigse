@@ -18,7 +18,6 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
-
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -37,7 +36,11 @@ class Portal::Clazz < ActiveRecord::Base
     def display_name
       "Class"
     end
-    
+
+    def has_offering
+      Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}
+    end
+
     # TODO: Should this go here?
     # We want to crate a clazz to test data saving and loading
     #
