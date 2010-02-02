@@ -13,7 +13,7 @@ development: &id003
     - "11"
     - "12"
   use_gse: false
-  help_email: skim@concord.org
+  help_email: stephen.bannasch@gmail.com
   theme: sglight
   runnables_use: browser
   runnable_mime_type: run_html
@@ -29,7 +29,7 @@ development: &id003
     first_name: Stephen
     last_name: Bannasch
     login: stephen
-    email: stephen/bannasch@gmail.com
+    email: stephen.bannasch@gmail.com
   states_and_provinces: 
   - MA
 test: *id003
