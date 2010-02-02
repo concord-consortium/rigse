@@ -230,12 +230,11 @@ class ActivitiesController < ApplicationController
   ##
   def duplicate
     @original = Activity.find(params['id'])
-    @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
-    @activity.name = "copy of #{@activity.name}"
-    @activity.deep_set_user current_user
-    @activity.save
-    flash[:notice] ="Copied #{@original.name}"
-    redirect_to url_for(@activity)
+    if @original
+      @activity = @original.copy(current_user)
+      flash[:notice] ="Copied #{@original.name}"
+      redirect_to url_for(@activity)
+    end
   end
   
   #
