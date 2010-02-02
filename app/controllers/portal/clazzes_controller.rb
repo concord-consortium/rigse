@@ -30,6 +30,7 @@ class Portal::ClazzesController < ApplicationController
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
     elsif current_user.portal_teacher
       @portal_clazz.teacher = current_user.portal_teacher
+      @portal_clazz.teacher_id = current_user.portal_teacher.id
     end
     respond_to do |format|
       format.html # new.html.erb
@@ -57,9 +58,12 @@ class Portal::ClazzesController < ApplicationController
         flash[:error] = "Anonymous can't create classes. Please log in and try again."
         okToCreate = false
       elsif current_user.portal_teacher
+        @portal_clazz.teacher_id = current_user.portal_teacher.id
         @portal_clazz.teacher = current_user.portal_teacher
       else
-        @portal_clazz.teacher = Portal::Teacher.create(:user_id => current_user.id)
+        teacher = Portal::Teacher.create(:user_id => current_user.id).id
+        @portal_clazz.teacher_id = Portal::Teacher.create(:user_id => current_user.id).id
+        @portal_clazz.teacher = teacher
         @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
       end
     end
