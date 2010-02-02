@@ -49,6 +49,7 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes
   # POST /portal_clazzes.xml
   def create
+    @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.new(params[:portal_clazz])
     okToCreate = true
     if (! @portal_clazz.teacher)
@@ -77,6 +78,7 @@ class Portal::ClazzesController < ApplicationController
   # PUT /portal_clazzes/1
   # PUT /portal_clazzes/1.xml
   def update
+    @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.find(params[:id])
     if request.xhr?
       @portal_clazz.update_attributes(params[:portal_clazz])
