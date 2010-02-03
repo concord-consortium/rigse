@@ -126,7 +126,7 @@ Rails::Initializer.run do |config|
   else
     config.after_initialize do
       begin
-        ActiveRecord::Base.observers = :user_observer, :investigation_observer
+        ActiveRecord::Base.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer"
         ActiveRecord::Base.instantiate_observers
         puts "Started observers"
       rescue
