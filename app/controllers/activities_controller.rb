@@ -4,10 +4,10 @@ class ActivitiesController < ApplicationController
   prawnto :prawn=>{
     :page_layout=>:landscape,
   }
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index,:browse]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
+  before_filter :can_edit, :except => [:index,:browse  ,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create,:duplicate]
   
   in_place_edit_for :activity, :name
@@ -95,6 +95,30 @@ class ActivitiesController < ApplicationController
         format.js
       end
     end
+  end
+  
+  def browse
+    # @activities = Activity.find(:all)
+    subjects = Activity.tag_counts_on(:subject_areas).map { |tc| tc.name }
+    grade_levels = Activity.tag_counts_on(:grade_levels).map { |tc| tc.name }
+    @search_results = {}
+    @selection = params[:selection] || "High School : Space Science"
+    grade_levels.uniq.sort.each do |grade_level|
+      subjects.uniq.sort.each do |subject|
+        activities = Activity.tagged_with(grade_level, :on=>:grade_levels).tagged_with(subject, :on=> :subject_areas)
+        activities.sort { |a,b| a.name <=> b.name}.each do |activity|
+          activity.unit_list.sort.each do |unit|
+            unless @search_results["#{grade_level} : #{subject}"]
+              @search_results["#{grade_level} : #{subject}"] = {}
+            end
+            unless @search_results["#{grade_level} : #{subject}"][unit]
+              @search_results["#{grade_level} : #{subject}"][unit] = []
+            end
+            @search_results["#{grade_level} : #{subject}"][unit] << activity
+          end
+        end
+      end
+    end    
   end
   
   # GET /pages/1
