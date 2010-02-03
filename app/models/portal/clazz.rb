@@ -158,22 +158,22 @@ class Portal::Clazz < ActiveRecord::Base
   
   # this is for changeable?
   # changeable_mod for multiple teachers
-  alias _changeable? changeable?
+  # alias _changeable? changeable?
   def is_user?(_user)
     teacher = _user.class == User ? _user.portal_teacher : _user
     teachers.include? teacher
   end
   alias is_teacher? is_user?
   
-  def changeable?(_user)
-    return true if virtual? && is_user?(_user)
-    if _user.has_role?('manager','admin','district_admin')
-      return true
-    end
-    return false
-  end
-    
-    
+  # def changeable?(_user)
+  #   return true if virtual? && is_user?(_user)
+  #   if _user.has_role?('manager','admin','district_admin')
+  #     return true
+  #   end
+  #   return false
+  # end
+  #   
+  #   
   def parent
     return teacher
   end

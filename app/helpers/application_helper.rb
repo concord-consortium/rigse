@@ -348,15 +348,19 @@ module ApplicationHelper
     if as_name
       link_text << " as #{as_name}"
     end
-    if APP_CONFIG[:runnables_use] && APP_CONFIG[:runnables_use] == 'browser'
+    if NOT_USING_JNLPS
       url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)      
     else
       url = polymorphic_url(component, :format => :jnlp, :params => params)
     end
-    run_button_for(component) +
-    link_to(link_text, url, 
+    if NOT_USING_JNLPS
+      run_button_for(component) + link_to(link_text, url)
+    else
+      run_button_for(component) +
+      link_to(link_text, url, 
         :onclick => "show_alert($('launch_warning'),false);",
         :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+    end
   end
 
   def edit_link_for(component, params={}) 
