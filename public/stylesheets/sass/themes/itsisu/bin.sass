@@ -9,9 +9,17 @@
 !yellow = #D6C754
 !my = !yellow
 
-.itsi_su_bin
+#itsi_su_bin
+  h1,h2,h3,h4
+    :margin-top 1.5em
   :vertical-align top
-
+  :color black
+  a
+    :text-decoration none
+  a:hover
+    :background-color =!green
+    :font-weight bold
+    :color white
   table
     :width 100%
     :margin 0px
@@ -27,6 +35,7 @@
             :margin 0px
             :padding .7em
             :border 1px solid
+            :border-left none
             :border-bottom none
             :background-color = !green
           li.bin_name.selection
@@ -40,4 +49,4 @@
         :width 90%
         :background-color = !green
         :border-top 1px solid
-        :border-right 1px solid
+        :border-right none

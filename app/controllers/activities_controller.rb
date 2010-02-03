@@ -102,23 +102,35 @@ class ActivitiesController < ApplicationController
     subjects = Activity.tag_counts_on(:subject_areas).map { |tc| tc.name }
     grade_levels = Activity.tag_counts_on(:grade_levels).map { |tc| tc.name }
     @search_results = {}
-    @selection = params[:selection] || "High School : Space Science"
-    grade_levels.uniq.sort.each do |grade_level|
+    @key_strings = []
+    @units = []
+    @selection = params[:selection]
+    grade_levels.reject{|level| level =~ /probe|math/i}.uniq.sort.each do |grade_level|
       subjects.uniq.sort.each do |subject|
-        activities = Activity.tagged_with(grade_level, :on=>:grade_levels).tagged_with(subject, :on=> :subject_areas)
-        activities.sort { |a,b| a.name <=> b.name}.each do |activity|
+        key_string = "#{grade_level} : #{subject}"
+        unless @search_results[key_string]
+          @search_results[key_string] = {}
+        end
+        @activities = Activity.published.tagged_with(grade_level, :on=>:grade_levels).tagged_with(subject, :on=> :subject_areas)
+        if @activities.size > 0
+          @key_strings << key_string
+        end
+        @activities.sort!{ |a,b| a.name <=> b.name}
+        @activities.each do |activity|
           activity.unit_list.sort.each do |unit|
-            unless @search_results["#{grade_level} : #{subject}"]
-              @search_results["#{grade_level} : #{subject}"] = {}
+            @units << unit  
+            unless @search_results[key_string][unit]
+              @search_results[key_string][unit] = []
             end
-            unless @search_results["#{grade_level} : #{subject}"][unit]
-              @search_results["#{grade_level} : #{subject}"][unit] = []
-            end
-            @search_results["#{grade_level} : #{subject}"][unit] << activity
+            @search_results[key_string][unit] << activity
           end
         end
       end
-    end    
+    end
+    @key_strings.sort!
+    @selection ||= @key_strings.first
+    @units.sort!
+    @key_strings.sort!
   end
   
   # GET /pages/1
