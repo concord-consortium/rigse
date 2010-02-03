@@ -26,6 +26,9 @@ class ItsiImporter
             itsi_activity = Itsi::Activity.find(foreign_key)
             activity = create_activity_from_itsi_activity(itsi_activity, user,prefix)
             activity.unit_list = ccp_itsi_unit.unit_name
+            activity.grade_level_list = ccp_itsi_activity.level.level_name
+            activity.subject_area_list = ccp_itsi_activity.subject.subject_name
+            activity.publish!
             activity.save
             puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
           else
