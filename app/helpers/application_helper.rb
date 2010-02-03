@@ -354,7 +354,7 @@ module ApplicationHelper
       url = polymorphic_url(component, :format => :jnlp, :params => params)
     end
     if NOT_USING_JNLPS
-      run_button_for(component) + link_to(link_text, url)
+      run_button_for(component) + link_to(link_text, url, :popup => true)
     else
       run_button_for(component) +
       link_to(link_text, url, 
