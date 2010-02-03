@@ -1,18 +1,21 @@
-.itsi_su_bin
+#itsi_su_bin
   %table
     %tr
       %td{:width=>'25%',:align=>'left'}
         %ul
-          -@search_results.each_pair do |key,units|            
+          -@key_strings.each do |key|
+            - style = style_for_activity_key(key)
             -if key == @selection
-              %li.bin_name.selection= link_to(key,:action=>:browse,:selection=>key)
-            %li.bin_name= link_to(key,:action=>:browse,:selection=>key)
-      %td.bin_content{:align=>'left'}
-        -@search_results.each_pair do |key,units|
-          -if key == @selection            
-            -units.each_pair do |unit,activities|
+              %li.bin_name.selection{:style=>style}= link_to(key,:action=>:browse,:selection=>key)
+            -else
+              %li.bin_name{:style=>style}= link_to(key,:action=>:browse,:selection=>key)
+      %td.bin_content{:style => style_for_activity_key(@selection), :align=>'left'}
+        - if @selection and @search_results[@selection]
+          - @units.sort.uniq.each do |unit|
+            - if @search_results[@selection][unit]
               %h3=unit
               %br
-              - activities.each do |activity|
-                = activity.name
+              - @search_results[@selection][unit].each do |activity|
+                = link_to(activity.name,activity)
                 %span.tiny= activity.unit_list.split(", ")
+                %br
