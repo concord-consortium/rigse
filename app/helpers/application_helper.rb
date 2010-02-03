@@ -218,7 +218,7 @@ module ApplicationHelper
     if (component.respond_to? :pedigree) && (component.respond_to? :user) && (component.pedigree.size > 0)
       haml_tag(:div, :class =>'tiny') do
         haml_concat "author history: "
-        haml_concat ((component.pedigree.map { |a| a.user.last_name }) << component.user.last_name).uniq.join(" &rarr; ")
+        haml_concat ((component.pedigree.map { |a| a.user.last_name }) << component.user.last_name).join(" &rarr; ")
       end
     end
   end
