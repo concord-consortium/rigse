@@ -6,7 +6,8 @@ class Activity < ActiveRecord::Base
   has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+  
   [ Embeddable::Xhtml,
     Embeddable::OpenResponse,
     Embeddable::MultipleChoice,
@@ -98,14 +99,6 @@ class Activity < ActiveRecord::Base
     end
     
   end
-  
-  ##
-  ## Hackish stub: Noah Paessel
-  ##
-  def offerings
-    []
-  end
-  
   
   def parent
     return investigation
@@ -228,6 +221,16 @@ HEREDOC
   <p></p>
 HEREDOC
 
+
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
+  end
 
   
 end
