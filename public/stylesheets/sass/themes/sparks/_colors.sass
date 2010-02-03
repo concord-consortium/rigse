@@ -1,8 +1,11 @@
-!sglight_green = #AAF53D
-!sglight_light_green = #7AB02C
-!sglight_brown = #BEF56E
-!sglight_dark_brown = #5A9800
-!light_green = !sglight_light_green
+!light_blue = #ccffff
+!blue = #0066cc
+!dark_orange = #ff6600
+!green = #AAF53D
+!light_green = #7AB02C
+!dark_green = #5A9800
+!brown = #BEF56E
+!dark_brown = #5A9800
 !almost_white = #F2F8FC
 !container_box_color = #CBE1F2
 !container_box_hover_color = #BCD6EA
@@ -11,11 +14,11 @@
 !black = #000000
 !almost_black = #101010
 
-!sglight_content_text_color = !sglight_light_green
+!content_text_color = !light_green
 
-!dev_note_color =!sglight_brown
-!legend_color = !sglight_brown
-!dark_red = !sglight_brown
+!dev_note_color =!brown
+!legend_color = !brown
+!dark_red = !brown
 !very_dark = !black
 
 !text_input_color = !almost_white 
@@ -54,19 +57,19 @@
 
 
 =left_nav_colors
-  +color_mixer(!sglight_dark_brown,white,!sglight_dark_brown)
+  +color_mixer(!dark_brown,white,!dark_brown)
   a
     :text-decoration none
   +delete_links
 
 =content_area_colors
-  +color_mixer(!black,white,!sglight_dark_brown)
+  +color_mixer(!black,white,!dark_brown)
   +delete_links
 
 =top_nav_colors
-  +color_mixer(!sglight_light_green,!sglight_dark_brown,!almost_white)
+  +color_mixer(!light_green,!dark_brown,!almost_white)
   +delete_links
   
 =bottom_nav_colors
-  +color_mixer(!black,!sglight_dark_brown,!almost_black)
+  +color_mixer(!black,!dark_brown,!almost_black)
   +delete_links

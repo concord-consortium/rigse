@@ -1,8 +1,8 @@
 @import compass/reset.sass
 @import blueprint.sass
-@import themes/sglight/colors.sass
-@import themes/sglight/fonts.sass
-@import themes/sglight/metrics.sass
+@import themes/sparks/colors.sass
+@import themes/sparks/fonts.sass
+@import themes/sparks/metrics.sass
 
 p
   :margin 1em 0em
@@ -19,7 +19,7 @@ body
   :padding 0px
   +main_font
   :background
-    :color = !sglight_brown
+    :color = !light_blue
   :margin 10px 
     :bottom 0px
   :background-position right top
@@ -35,7 +35,7 @@ h2,h3,h4,h5
 h1 
   :letter-spacing 110%
   :font 
-    :size 4em
+    :size 22pt
 
 h2
   :letter-spacing .15em
@@ -95,14 +95,14 @@ pre
   :-webkit-border-top-right-radius .5em
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
-  :color = !sglight_dark_brown
+  :color = !blue
 
   a
-    :color = !sglight_green
+    :color = !dark_green
     :background-color transparent
-    :font-weight bold
+    :font-weight normal
   a:hover
-    :color = !sglight_brown
+    :color = !brown
     :background-color white
   .left_content
     +column(24,true)
