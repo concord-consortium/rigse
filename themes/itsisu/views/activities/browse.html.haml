@@ -14,8 +14,9 @@
           - @units.sort.uniq.each do |unit|
             - if @search_results[@selection][unit]
               %h3=unit
-              %br
               - @search_results[@selection][unit].each do |activity|
-                = link_to(activity.name,activity)
-                %span.tiny= activity.unit_list.split(", ")
-                %br
+                %div{:style => 'clear: left;'}
+                  = run_button_for(activity)
+                  = link_to(activity.name,activity)
+                  %span.tiny= pedigree_info_for(activity)
+                
