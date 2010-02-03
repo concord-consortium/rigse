@@ -75,7 +75,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
   end
   
-  OR_MATCHER = /open_response_(\d+).*?<OTText text="(.+?)" \/>/m
+  OR_MATCHER = /open_response_(\d+).*?<OTText text="(.*?)" \/>/m
   
   def extract_open_responses
     learner = self.bundle_logger.learner
