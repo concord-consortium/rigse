@@ -224,7 +224,7 @@ HEREDOC
       bc_count = Dataservice::BundleContent.count
       puts "Extracting learner responses from #{bc_count} existing OTrunk bundles belonging to #{bl_count} learners."
       Dataservice::BundleLogger.find_in_batches(:batch_size => 10) do |bundle_logger|
-        bundle_logger.each { |bl| bl.extract_open_responses }
+        bundle_logger.each { |bl| bl.extract_saveables }
         print '.'; STDOUT.flush
       end
       puts
