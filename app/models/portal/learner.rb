@@ -11,7 +11,11 @@ class Portal::Learner < ActiveRecord::Base
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
 
-  has_many :open_responses, :class_name => "Saveable::OpenResponse"
+  has_many :open_responses, :class_name => "Saveable::OpenResponse" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
 
   def sessions
     self.bundle_logger.bundle_contents.length
@@ -71,11 +75,11 @@ class Portal::Learner < ActiveRecord::Base
   end
 
   def name
-    user = student.user
-    name = user.name
-    login = user.login
-    runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
-    "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
+    user = student.user.name
+    # name = user.name
+    # login = user.login
+    # runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
+    # "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
   
   def refresh_saveable_response_objects
