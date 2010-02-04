@@ -10,10 +10,17 @@ class Saveable::OpenResponse < ActiveRecord::Base
   #   :class_name => "Saveable::OpenResponseAnswer",
   #   :order => 'position DESC' 
   
-  delegate :prompt, :to => :open_response, :class_name => 'Embeddable::OpenResponse'
+  [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
   
   def answer
-    answers = self.answers
-    answers.empty? ? '' : answers.last.answer
+    if answered?
+      answers.last.answer
+    else
+      "not answered"
+    end
+  end
+  
+  def answered?
+    answers.length > 0
   end
 end

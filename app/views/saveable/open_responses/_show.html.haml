@@ -1,6 +1,9 @@
-%div{:id => dom_id_for(open_response, :details), :class => 'content'}
-  %dt
-    = open_response.prompt
-  %dd
-    = open_response.answer
+%div{:id => dom_id_for(open_response, :item), :class => 'item'}
+  = "Investigation question: #{show_counter+1} in Activity: #{open_response.open_response.page_elements.first.page.activity.name}"
+  - css_style = open_response.answered? ? 'content' : 'content not_answered'
+  %div{ :id => dom_id_for(open_response, :details), :class => css_style }
+    %dt
+      = open_response.prompt
+    %dd
+      = open_response.answer
   
