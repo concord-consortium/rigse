@@ -494,6 +494,18 @@ module ApplicationHelper
     end
   end
 
+  def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(learner, options)
+        end
+      end
+      haml_tag(:p) { haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}") }
+      haml_tag(:p) { haml_concat("Answered: #{learner.open_responses.answered.length} out of #{learner.open_responses.length}") }
+    end
+  end
+
   def menu_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
