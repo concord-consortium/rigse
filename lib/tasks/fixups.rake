@@ -241,7 +241,7 @@ HEREDOC
       puts
     end
 
-    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
+    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/(?:embeddable__)?multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
     desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
     task :convert_choice_answers_to_local_ids => :environment do
       unchanged = {}
@@ -284,7 +284,7 @@ HEREDOC
       end # end find_in_batches
       puts "Finished fixing multiple choice references."
       puts "#{changed.size} bundles changed, #{unchanged.size} were unchanged."
-      puts "The following bundles had problems: "
+      puts "The following #{problems.size} bundles had problems: "
       problems.entries.sort.each do |entry|
         puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
         entry[1].each do |prob|
