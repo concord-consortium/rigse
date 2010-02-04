@@ -475,6 +475,13 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:erase_all_learner_responses_and_reset_the_tables --trace"
   end
   
+  #Feb 4, 2010
+  desc "Convert all index-based MultipleChoice references in existing OTrunk bundles to local_id-based references."
+  task :convert_choice_answers_to_local_ids, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_choice_answers_to_local_ids --trace"
+  end
+  
 end
 
 
