@@ -1,6 +1,8 @@
 class Portal::LearnersController < ApplicationController
 
-  before_filter :admin_only
+  layout 'report', :only => 'report'
+  
+  before_filter :admin_only, :except => [:report]
   
   protected  
 
@@ -21,6 +23,17 @@ class Portal::LearnersController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @portal_learners }
+    end
+  end
+
+  # GET /portal/learners/1
+  # GET /portal/learners/1.xml
+  def report
+    @portal_learner = Portal::Learner.find(params[:id])
+    @portal_learner.refresh_saveable_response_objects
+    
+    respond_to do |format|
+      format.html # report.html.haml
     end
   end
 
