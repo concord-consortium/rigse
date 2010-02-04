@@ -41,6 +41,7 @@ class Portal::LearnersController < ApplicationController
   def multiple_choice_report
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
+    @portal_learner.reload
     
     respond_to do |format|
       format.html # report.html.haml
