@@ -13,6 +13,7 @@ class Saveable::OpenResponse < ActiveRecord::Base
   delegate :prompt, :to => :open_response, :class_name => 'Embeddable::OpenResponse'
   
   def answer
-    self.answers.last.answer
+    answers = self.answers
+    answers.empty? ? '' : answers.last.answer
   end
 end
