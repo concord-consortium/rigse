@@ -17,6 +17,12 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
+  has_many :multiple_choices, :class_name => "Saveable::MultipleChoice" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
+
   def sessions
     self.bundle_logger.bundle_contents.length
   end

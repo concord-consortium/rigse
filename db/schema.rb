@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100201153305) do
+ActiveRecord::Schema.define(:version => 20100204142034) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1727,6 +1727,22 @@ ActiveRecord::Schema.define(:version => 20100201153305) do
   create_table "roles_users", :id => false, :force => true do |t|
     t.integer "role_id"
     t.integer "user_id"
+  end
+
+  create_table "saveable_multiple_choice_answers", :force => true do |t|
+    t.integer  "multiple_choice_id"
+    t.integer  "bundle_content_id"
+    t.integer  "choice_id"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "saveable_multiple_choices", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "multiple_choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "saveable_open_response_answers", :force => true do |t|
