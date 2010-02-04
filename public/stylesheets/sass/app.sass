@@ -374,8 +374,6 @@ ul.menu
   a:hover
     :color inherit
     :background-color transparent
-  .not_answered
-    :background-color= !not_answered_color !important
 
 .legal
   :font-size 0.5em
@@ -417,6 +415,11 @@ ul.menu
   :border
     :width 1px
     :style dotted
+  .answered
+    :background-color= !answered_color !important
+  .not_answered
+    :background-color= !not_answered_color !important
+  
 
 .draggable, .sortable, .movable
   :cursor move
