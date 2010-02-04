@@ -216,6 +216,31 @@ HEREDOC
         end
       end
     end
+    
+    # Feb 3, 2010
+    desc "Extract and process learner responses from existing OTrunk bundles"
+    task :extract_learner_responses_from_existing_bundles => :environment do
+      bl_count = Dataservice::BundleLogger.count
+      bc_count = Dataservice::BundleContent.count
+      puts "Extracting learner responses from #{bc_count} existing OTrunk bundles belonging to #{bl_count} learners."
+      Dataservice::BundleLogger.find_in_batches(:batch_size => 10) do |bundle_logger|
+        bundle_logger.each { |bl| bl.extract_open_responses }
+        print '.'; STDOUT.flush
+      end
+      puts
+    end
+
+    desc "Erase all learner responses and reset the tables"
+    task :erase_all_learner_responses_and_reset_the_tables => :environment do
+      puts "Erase all saveable learner responses and reset the tables"
+      saveable_models = Dir["app/models/saveable/**/*.rb"].collect { |m| m[/app\/models\/(.+?).rb/, 1] }.collect { |m| m.camelize.constantize }
+      saveable_models.each do |model|
+        ActiveRecord::Base.connection.delete("TRUNCATE `#{model.table_name}`")
+        puts "deleted: all from #{model}"
+      end
+      puts
+    end
+
   end
 end
 
