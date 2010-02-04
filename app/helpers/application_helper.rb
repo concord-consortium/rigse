@@ -340,6 +340,28 @@ module ApplicationHelper
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
+  def bundle_report_link_for(reportable, as_name=nil, params={})
+    reportable_display_name = reportable.class.display_name.downcase
+    name = reportable.name
+    params.update(current_user.extra_params)
+    link_text = params.delete(:link_text) || "Bundles "
+    link_text << " as #{as_name}" if as_name
+    url = home_path
+    link_to(link_text, url, :popup => true,
+      :title => "Display the raw OTrunk bundle and console logs for the #{reportable_display_name}: '#{name}' in a new browser window.")
+  end
+
+  def report_link_for(reportable, as_name=nil, params={})
+    reportable_display_name = reportable.class.display_name.downcase
+    name = reportable.name
+    params.update(current_user.extra_params)
+    link_text = params.delete(:link_text) || "Report "
+    link_text << " as #{as_name}" if as_name
+    url = polymorphic_url(reportable, :action => 'report')
+    link_to(link_text, url, :popup => true,
+      :title => "Display a report for the #{reportable_display_name}: '#{name}' in a new browser window.")
+  end
+
   def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -472,6 +494,22 @@ module ApplicationHelper
     end
   end
 
+  def menu_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(learner, options)
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_concat report_link_for(learner)
+          if USING_JNLPS && current_user.has_role?("admin")
+            haml_concat bundle_report_link_for(learner)
+          end
+        end
+      end
+    end
+  end
+
   def menu_for_offering(offering, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -482,6 +520,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          haml_concat report_link_for(offering)
         end
       end
     end
