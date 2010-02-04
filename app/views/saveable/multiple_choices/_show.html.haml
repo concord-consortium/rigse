@@ -4,6 +4,7 @@
   %div{ :id => dom_id_for(multiple_choice, :details), :class => css_style }
     %dt
       = multiple_choice.prompt
-    - css_style = (multiple_choice.answered? && multiple_choice.answered_correctly?) ? 'correct' : 'incorrect'
+    - css_style = ''
+    - css_style << (multiple_choice.answered_correctly? ? 'correct' : 'incorrect') if multiple_choice.answered?
     %dd{:class => css_style }
       = multiple_choice.answer
