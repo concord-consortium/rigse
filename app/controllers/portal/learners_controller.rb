@@ -1,8 +1,8 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => 'report'
+  layout 'report', :only => ['report','multiple_choice_report']
   
-  before_filter :admin_only, :except => [:report]
+  before_filter :admin_only, :except => [:report, :multiple_choice_report]
   
   protected  
 
@@ -32,6 +32,15 @@ class Portal::LearnersController < ApplicationController
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
     @portal_learner.reload
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  def multiple_choice_report
+    @portal_learner = Portal::Learner.find(params[:id])
+    @portal_learner.refresh_saveable_response_objects
     
     respond_to do |format|
       format.html # report.html.haml

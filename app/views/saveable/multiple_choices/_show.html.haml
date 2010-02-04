@@ -1,0 +1,9 @@
+%div{:id => dom_id_for(multiple_choice, :item), :class => 'item'}
+  = "Investigation question: #{show_counter+1} in Activity: #{multiple_choice.multiple_choice.page_elements.first.page.activity.name}"
+  - css_style = multiple_choice.answered? ? 'content' : 'content not_answered'
+  %div{ :id => dom_id_for(multiple_choice, :details), :class => css_style }
+    %dt
+      = multiple_choice.prompt
+    - css_style = (multiple_choice.answered? && multiple_choice.answered_correctly?) ? 'correct' : 'incorrect'
+    %dd{:class => css_style }
+      = multiple_choice.answer

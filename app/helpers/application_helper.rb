@@ -350,6 +350,17 @@ module ApplicationHelper
     link_to(link_text, url, :popup => true,
       :title => "Display the raw OTrunk bundle and console logs for the #{reportable_display_name}: '#{name}' in a new browser window.")
   end
+  
+  def multiple_choice_report_link_for(reportable, as_name=nil, params={})
+    reportable_display_name = reportable.class.display_name.downcase
+    name = reportable.name
+    params.update(current_user.extra_params)
+    link_text = params.delete(:link_text) || "MC Report "
+    link_text << " as #{as_name}" if as_name
+    url = polymorphic_url(reportable, :action => 'multiple_choice_report')
+    link_to(link_text, url, :popup => true,
+      :title => "Display a report for the #{reportable_display_name}: '#{name}' in a new browser window.")
+  end
 
   def report_link_for(reportable, as_name=nil, params={})
     reportable_display_name = reportable.class.display_name.downcase
@@ -494,7 +505,7 @@ module ApplicationHelper
     end
   end
 
-  def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+  def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -502,7 +513,7 @@ module ApplicationHelper
         end
       end
       haml_tag(:p) { haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}") }
-      haml_tag(:p) { haml_concat("Answered: #{learner.open_responses.answered.length} out of #{learner.open_responses.length}") }
+      haml_tag(:p) { haml_concat("Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}") }
     end
   end
 
@@ -514,6 +525,7 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat report_link_for(learner)
+          haml_concat multiple_choice_report_link_for(learner)
           if USING_JNLPS && current_user.has_role?("admin")
             haml_concat bundle_report_link_for(learner)
           end
