@@ -31,6 +31,7 @@ class Portal::LearnersController < ApplicationController
   def report
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
+    @portal_learner.reload
     
     respond_to do |format|
       format.html # report.html.haml
