@@ -366,7 +366,7 @@ module ApplicationHelper
     reportable_display_name = reportable.class.display_name.downcase
     name = reportable.name
     params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "Report "
+    link_text = params.delete(:link_text) || "OR Report "
     link_text << " as #{as_name}" if as_name
     url = polymorphic_url(reportable, :action => 'report')
     link_to(link_text, url, :popup => true,
