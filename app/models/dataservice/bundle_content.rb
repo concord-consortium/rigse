@@ -75,6 +75,16 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
   end
   
+  def convert_otml_to_body
+    gzip_string_io = StringIO.new()
+    gzip = Zlib::GzipWriter.new(gzip_string_io)
+    gzip.write(self.otml)
+    gzip.close
+    gzip_string_io.rewind
+    encoded_str = B64::B64.encode(gzip_string_io.string)
+    self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+  end
+  
   OR_MATCHER = /open_response_(\d+).*?<OTText text="(.*?)" \/>/m
   
   def extract_open_responses

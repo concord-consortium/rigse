@@ -241,6 +241,58 @@ HEREDOC
       puts
     end
 
+    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
+    desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
+    task :convert_choice_answers_to_local_ids => :environment do
+      unchanged = {}
+      changed = {}
+      problems = {}
+      Dataservice::BundleContent.find_in_batches do |batch|
+        batch.each do |bundle_content|
+          new_otml = bundle_content.otml.gsub(MULTI_CHOICE) {
+            retval = ""
+            begin
+              m_choice = Embeddable::MultipleChoice.find($2.to_i)
+              if m_choice
+                choice = m_choice.choices[$3.to_i]
+                if choice
+                  retval = "<object refid=\"#{$1}!/embeddable__multiple_choice_choice_#{choice.id}\"#{$4}>"
+                else
+                  raise "Couldn't find choice #{$3} in Multiple Choice #{$2}"
+                end
+              else
+                raise "Couldn't find Multiple Choice #{$2}"
+              end
+            rescue => e
+              problems[bundle_content.id] ||= []
+              problems[bundle_content.id] << "#{e} (#{$&})"
+              retval = $&  
+            end
+            retval
+          }
+          if new_otml != bundle_content.otml
+            changed[bundle_content.id] = true
+            bundle_content.otml = new_otml
+            # Now convert the otml into actual bundle content
+            bundle_content.body = bundle_content.convert_otml_to_body
+            bundle_content.save
+          else
+            unchanged[bundle_content.id] = true
+          end
+
+        end # end batch.each
+      end # end find_in_batches
+      puts "Finished fixing multiple choice references."
+      puts "#{changed.size} bundles changed, #{unchanged.size} were unchanged."
+      puts "The following bundles had problems: "
+      problems.entries.sort.each do |entry|
+        puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
+        entry[1].each do |prob|
+          puts "    #{prob}"
+        end
+      end
+    end # end task
+
   end
 end
 
