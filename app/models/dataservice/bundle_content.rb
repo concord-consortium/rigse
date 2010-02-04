@@ -85,6 +85,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
   
+  def extract_saveables
+    extract_open_responses
+    extract_multiple_choices
+  end
+  
   OR_MATCHER = /open_response_(\d+).*?<OTText text="(.*?)" \/>/m
   
   def extract_open_responses
@@ -103,6 +108,30 @@ class Dataservice::BundleContent < ActiveRecord::Base
       end
       content = md.post_match
       md = OR_MATCHER.match(content)
+    end
+  end
+  
+  MC_MATCHER = /currentChoices.*?refid=".*?(?:embeddable__)?multiple_choice_choice_(\d+)"/m
+  def extract_multiple_choices
+    learner = self.bundle_logger.learner
+    content = self.otml
+    while md = MC_MATCHER.match(content)
+      choice = Embeddable::MultipleChoiceChoice.find_by_id(md[1], :include => :multiple_choice)
+      multiple_choice = choice ? choice.multiple_choice : nil
+      answer = choice.choice
+      if multiple_choice && choice
+        saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_multiple_choice_id(learner.id, multiple_choice.id)
+        if saveable.answers.empty? || saveable.answers.last.answer != answer
+          Saveable::MultipleChoiceAnswer.create(:bundle_content_id => self.id, :multiple_choice_id => saveable.id, :choice_id => choice.id)
+        end
+      else
+        if ! choice
+          logger.error("Missing Embeddable::MultipleChoiceChoice id: #{md[1]}")
+        elsif ! multiple_choice
+          logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
+        end
+      end
+      content = md.post_match
     end
   end
   
