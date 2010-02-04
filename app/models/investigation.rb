@@ -124,7 +124,7 @@ class Investigation < ActiveRecord::Base
     end
     
     def saveable_types
-      [ Saveable::OpenResponse ]
+      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
     end
     
     def find_by_grade_span_and_domain_id(grade_span,domain_id)

@@ -118,7 +118,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     while md = MC_MATCHER.match(content)
       choice = Embeddable::MultipleChoiceChoice.find_by_id(md[1], :include => :multiple_choice)
       multiple_choice = choice ? choice.multiple_choice : nil
-      answer = choice.choice
+      answer = choice ? choice.choice : ""
       if multiple_choice && choice
         saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_multiple_choice_id(learner.id, multiple_choice.id)
         if saveable.answers.empty? || saveable.answers.last.answer != answer

@@ -15,4 +15,12 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
       "not answered"
     end
   end
+  
+  def answered_correctly?
+    if choice
+      choice.is_correct
+    else
+      false
+    end
+  end
 end

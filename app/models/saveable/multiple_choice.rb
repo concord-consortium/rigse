@@ -19,4 +19,12 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   def answered?
     answers.length > 0
   end
+  
+  def answered_correctly?
+    if answered?
+      answers.last.answered_correctly?
+    else
+      false
+    end
+  end
 end
