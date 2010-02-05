@@ -16,9 +16,9 @@
       '${' + object + '}'
     else
       if prefixes.empty?
-        '${' + dom_id_for(object) + '}'
+        '${' + ot_dom_id_for(object) + '}'
       else
-        '${' + dom_id_for(object, prefixes) + '}'
+        '${' + ot_dom_id_for(object, prefixes) + '}'
       end
     end
   end
@@ -28,11 +28,19 @@
       object
     else
       if prefixes.empty?
-        dom_id_for(object)
+        ot_dom_id_for(object)
       else
-        dom_id_for(object, prefixes)
+        ot_dom_id_for(object, prefixes)
       end
     end
+  end
+  
+  def ot_dom_id_for(component, *optional_prefixes)
+    optional_prefixes.flatten!
+    prefix = ''
+    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
+    class_name = component.class.name.split('::').last.underscore
+    "#{prefix}#{class_name}_#{component.id}"
   end
   
   def data_filter_inports
