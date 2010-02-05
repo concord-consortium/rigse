@@ -2,7 +2,7 @@ class Portal::LearnersController < ApplicationController
 
   layout 'report', :only => %w{open_response_report multiple_choice_report bundle_report}
   
-  before_filter :admin_only, :except => [:report, :multiple_choice_report]
+  before_filter :admin_only, :except => [:open_response_report, :multiple_choice_report]
   
   protected  
 
