@@ -49,7 +49,15 @@ class Dataservice::BundleLogger < ActiveRecord::Base
     end
   end
   
+  def extract_saveables
+    self.bundle_contents.each { |bc| bc.extract_saveables }
+  end
+  
   def extract_open_responses
     self.bundle_contents.each { |bc| bc.extract_open_responses }
+  end
+  
+  def extract_multiple_choices
+    self.bundle_contents.each { |bc| bc.extract_multiple_choices }
   end
 end

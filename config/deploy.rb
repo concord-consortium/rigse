@@ -461,6 +461,27 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:add_static_page_to_inner_pages --trace"
   end
+  
+  # Feb 3, 2010
+  desc "Extract and process learner responses from existing OTrunk bundles"
+  task :extract_learner_responses_from_existing_bundles, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:extract_learner_responses_from_existing_bundles --trace"
+  end
+
+  desc "Erase all learner responses and reset the tables"
+  task :erase_all_learner_responses_and_reset_the_tables, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:erase_all_learner_responses_and_reset_the_tables --trace"
+  end
+  
+  #Feb 4, 2010
+  desc "Convert all index-based MultipleChoice references in existing OTrunk bundles to local_id-based references."
+  task :convert_choice_answers_to_local_ids, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_choice_answers_to_local_ids --trace"
+  end
+  
 end
 
 

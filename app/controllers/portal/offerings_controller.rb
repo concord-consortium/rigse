@@ -114,6 +114,16 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def multiple_choice_report
+    @offering = Portal::Offering.find(params[:id])
+    @offering.learners.each{|l| l.refresh_saveable_response_objects }
+    @offering.reload
+    @learners = @offering.learners
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
   
   
   # GET /portal/offerings/data_test(.format)

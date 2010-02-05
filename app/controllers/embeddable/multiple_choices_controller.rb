@@ -132,8 +132,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   
   def add_choice
     @question = Embeddable::MultipleChoice.find(params[:id])
-    @choice = Embeddable::MultipleChoiceChoice.create
-    # @question.choices << @choice
+    @choice = Embeddable::MultipleChoiceChoice.create(:multiple_choice_id => @question.id)
     @html_fragment = render_to_string(:partial => "new_choice", :locals => {:choice => @choice,:question => @question})
     respond_to do |format|
       # will render add_choice.js.rjs

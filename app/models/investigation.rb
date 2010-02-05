@@ -123,6 +123,10 @@ class Investigation < ActiveRecord::Base
       name.humanize
     end
     
+    def saveable_types
+      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
+    end
+    
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
       @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
       @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
@@ -165,6 +169,10 @@ class Investigation < ActiveRecord::Base
       end
     end  
     
+  end
+  
+  def saveable_types
+    self.class.saveable_types
   end
   
   # Enables a teacher note to call the investigation method of an

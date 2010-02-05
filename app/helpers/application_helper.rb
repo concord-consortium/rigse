@@ -4,8 +4,8 @@ include Clipboard
 
 module ApplicationHelper
 
-  def top_level_container_name(options = {:upercase => false, :plural => false})
-    name = (APP_CONFIG[:top_level_container_name] || "investigation")
+  def top_level_container_name
+    APP_CONFIG[:top_level_container_name] || "investigation"
   end
   
   #
@@ -18,6 +18,9 @@ module ApplicationHelper
   #   dom_id_for(@model, :item)                 # => "item_model_3"
   #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
   #
+  #   @scoped_model = OuterScope::InnerScope::Model.find(3)
+  #   dom_id_for(@scoped_model)                 # => "outer_scope__inner_scope__model_3"
+  
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
     prefix = ''
@@ -304,8 +307,6 @@ module ApplicationHelper
       url
     end
   end
-  
-
 
   def run_button_for(component)
     name = component.name
@@ -338,6 +339,15 @@ module ApplicationHelper
     link_to(link_text, url, 
       :onclick => "show_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+  end
+
+  def report_link_for(reportable, action='report', link_text='Report ')
+    reportable_display_name = reportable.class.display_name.downcase
+    action_string = action.gsub('_', ' ')
+    name = reportable.name
+    url = polymorphic_url(reportable, :action => action)
+    link_to(link_text, url, :popup => true,
+      :title => "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window.")
   end
 
   def run_link_for(component, as_name=nil, params={})
@@ -439,7 +449,7 @@ module ApplicationHelper
     
   def name_for_component(component, options={})
     name = ''
-    unless options[:hide_componenent_name]
+    unless options[:hide_component_name]
       if component.class.respond_to? :display_name
         name << component.class.display_name
       else
@@ -472,16 +482,132 @@ module ApplicationHelper
     end
   end
 
-  def menu_for_offering(offering, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+  def open_response_learner_stat(learner)
+    " Open Response: #{learner.open_responses.answered.length}/#{learner.open_responses.length} "
+  end
+
+  def multiple_choice_learner_stat(learner)
+    " Multiple Choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length} "
+  end
+  
+  def sessions_learner_stat(learner)
+    sessions = learner.bundle_logger.bundle_contents.count
+    if sessions > 0
+      "(#{learner.bundle_logger.bundle_contents.count})"
+    else
+      ''
+    end
+  end
+  
+  def learner_specific_stats(learner)
+    "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{learner.open_responses.answered.length}/#{learner.open_responses.length}, multiple choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length}"
+  end
+
+  def learners_summary_stats(learner, options)
+    "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.saveable_answered} out of #{learner.saveable_count}"
+  end
+  
+  def report_details_for_learner(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses, :correctable => false }
+    options.update(opts)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(learner, options)
+          haml_concat learner_specific_stats(learner)
+        end
+      end
+    end
+  end
+  
+  def report_correct_count_for_learner(learner, opts = {} )
+    options = {:type => :multiple_choice}
+    options.update(opts)
+    learner.send(options[:type]).select{|item| item.answered_correctly? }.size
+  end
+  
+  def offering_details_multiple_choice(offering, multiple_choice, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    answer_counts = {}
+    offering.learners.each do |l|
+      answer = multiple_choice_saveable_for_learner(multiple_choice, l).answer
+      answer_counts[answer] ||= 0
+      answer_counts[answer] += 1
+    end
+    all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
-          haml_concat "#{offering.learners.length} learners/#{offering.sessions} sessions"
+        end
+      end
+      haml_tag(:div) {
+        haml_tag(:div) {
+          haml_concat(multiple_choice.prompt)
+        }
+        haml_tag(:div) {
+          all_choices.each_with_index do |choice,i|
+            haml_tag(:div) {
+              haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
+                haml_concat("#{i+1}. #{choice.choice}")
+              }
+              haml_tag(:div, :style => 'float: right;') {
+                haml_concat(answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0)
+              }
+            }
+          end
+          haml_tag(:div) {
+            haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
+              haml_concat("Not answered")
+            }
+            haml_tag(:div, :style => 'float: right;') {
+              haml_concat(answer_counts.has_key?("not answered") ? answer_counts["not answered"] : 0)
+            }
+          }
+        }
+      }
+    end
+  end
+  
+  def multiple_choice_saveable_for_learner(multiple_choice, learner)
+    Saveable::MultipleChoice.find_by_multiple_choice_id_and_learner_id(multiple_choice.id, learner.id)
+  end
+
+  def menu_for_learner(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(learner, options)
+          haml_concat sessions_learner_stat(learner)
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
+          haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
+          if USING_JNLPS && current_user.has_role?("admin")
+            haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+          end
+        end
+      end
+    end
+  end
+
+  def menu_for_offering(offering, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+          haml_concat "Responses: #{offering.learners.length}"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          haml_concat report_link_for(offering)
+          haml_concat report_link_for(offering, 'multiple_choice_report','MC Report')
         end
       end
     end
