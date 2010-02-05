@@ -21,6 +21,9 @@ class Portal::Learner < ActiveRecord::Base
     def answered
       find(:all).select { |question| question.answered? }
     end
+    def answered_correctly
+      find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
+    end
   end
 
   def sessions
