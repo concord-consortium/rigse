@@ -500,6 +500,54 @@ module ApplicationHelper
     options.update(opts)
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
+  
+  def offering_details_multiple_choice(offering, multiple_choice, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    answer_counts = {}
+    offering.learners.each do |l|
+      answer = multiple_choice_saveable_for_learner(multiple_choice, l).answer
+      answer_counts[answer] ||= 0
+      answer_counts[answer] += 1
+    end
+    all_choices = multiple_choice.choices
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+        end
+      end
+      haml_tag(:div) {
+        haml_tag(:div) {
+          haml_concat(multiple_choice.prompt)
+        }
+        haml_tag(:div) {
+          all_choices.each_with_index do |choice,i|
+            haml_tag(:div) {
+              haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
+                haml_concat("#{i+1}. #{choice.choice}")
+              }
+              haml_tag(:div, :style => 'float: right;') {
+                haml_concat(answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0)
+              }
+            }
+          end
+          haml_tag(:div) {
+            haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
+              haml_concat("Not answered")
+            }
+            haml_tag(:div, :style => 'float: right;') {
+              haml_concat(answer_counts.has_key?("not answered") ? answer_counts["not answered"] : 0)
+            }
+          }
+        }
+      }
+    end
+  end
+  
+  def multiple_choice_saveable_for_learner(multiple_choice, learner)
+    Saveable::MultipleChoice.find_by_multiple_choice_id_and_learner_id(multiple_choice.id, learner.id)
+  end
 
   def menu_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
     capture_haml do
@@ -529,6 +577,7 @@ module ApplicationHelper
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
           haml_concat report_link_for(offering)
+          haml_concat report_link_for(offering, 'multiple_choice_report','MC Report')
         end
       end
     end
