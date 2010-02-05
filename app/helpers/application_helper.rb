@@ -482,15 +482,31 @@ module ApplicationHelper
     end
   end
 
-  def learner_specific_stats(learner, options)
-    "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}"
+  def open_response_learner_stat(learner)
+    " Open Response: #{learner.open_responses.answered.length}/#{learner.open_responses.length} "
   end
 
-  def learner_summary_stats(learner, options)
+  def multiple_choice_learner_stat(learner)
+    " Multiple Choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length} "
+  end
+  
+  def sessions_learner_stat(learner)
+    sessions = learner.bundle_logger.bundle_contents.count
+    if sessions > 0
+      "(#{learner.bundle_logger.bundle_contents.count})"
+    else
+      ''
+    end
+  end
+  
+  def learner_specific_stats(learner)
+    "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{learner.open_responses.answered.length}/#{learner.open_responses.length}, multiple choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length}"
+  end
+
+  def learners_summary_stats(learner, options)
     "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.saveable_answered} out of #{learner.saveable_count}"
   end
   
-  def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses })
   def report_details_for_learner(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses, :correctable => false }
     options.update(opts)
@@ -498,13 +514,9 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
-          haml_concat learner_specific_stats(learner, options)
+          haml_concat learner_specific_stats(learner)
         end
       end
-      haml_tag(:p) {
-        haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}")
-        haml_concat(", #{report_correct_count_for_learner(learner, options)} correct") if options[:correctable]
-      }
     end
   end
   
@@ -514,16 +526,18 @@ module ApplicationHelper
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
 
-  def menu_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+  def menu_for_learner(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
-          haml_concat learner_summary_stats(learner, options)
+          haml_concat sessions_learner_stat(learner)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_concat report_link_for(learner, 'open_response_report', 'OR Report ')
-          haml_concat report_link_for(learner, 'multiple_choice_report', 'MC Report ')
+          haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
+          haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
           if USING_JNLPS && current_user.has_role?("admin")
             haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
           end
@@ -532,12 +546,14 @@ module ApplicationHelper
     end
   end
 
-  def menu_for_offering(offering, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
+  def menu_for_offering(offering, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
-          haml_concat "#{offering.learners.length} learners/#{offering.sessions} sessions"
+          haml_concat "Responses: #{offering.learners.length}"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
