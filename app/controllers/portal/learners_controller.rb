@@ -1,6 +1,6 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => ['report','multiple_choice_report']
+  layout 'report', :only => %w{open_response_report multiple_choice_report bundle_report}
   
   before_filter :admin_only, :except => [:report, :multiple_choice_report]
   
@@ -26,9 +26,9 @@ class Portal::LearnersController < ApplicationController
     end
   end
 
-  # GET /portal/learners/1
-  # GET /portal/learners/1.xml
-  def report
+  # GET /portal/learners/1/open_response_report
+  # GET /portal/learners/1/open_response_report.xml
+  def open_response_report
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
     @portal_learner.reload
@@ -38,10 +38,22 @@ class Portal::LearnersController < ApplicationController
     end
   end
   
+  # GET /portal/learners/1/multiple_choice_report
+  # GET /portal/learners/1/multiple_choice_report.xml
   def multiple_choice_report
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
     @portal_learner.reload
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+
+  # GET /portal/learners/1/bundle_report
+  # GET /portal/learners/1/bundle_report.xml
+  def bundle_report
+    @portal_learner = Portal::Learner.find(params[:id])
     
     respond_to do |format|
       format.html # report.html.haml
