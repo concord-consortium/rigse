@@ -446,7 +446,7 @@ module ApplicationHelper
     
   def name_for_component(component, options={})
     name = ''
-    unless options[:hide_componenent_name]
+    unless options[:hide_component_name]
       if component.class.respond_to? :display_name
         name << component.class.display_name
       else
