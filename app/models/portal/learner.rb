@@ -88,18 +88,35 @@ class Portal::Learner < ActiveRecord::Base
     # "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
   
+  def saveable_count
+    runnable = self.offering.runnable
+    runnable.saveable_types.inject(0) do |count, saveable_class|
+      saveable_association = saveable_class.to_s.demodulize.tableize
+      count + self.send(saveable_association).length
+    end
+  end
+  
+  def saveable_answered
+    runnable = self.offering.runnable
+    runnable.saveable_types.inject(0) do |count, saveable_class|
+      saveable_association = saveable_class.to_s.demodulize.tableize
+      count + self.send(saveable_association).send(:answered).length
+    end
+  end
+  
   def refresh_saveable_response_objects
     runnable = self.offering.runnable
-    runnable.saveable_types.each do |saveable_type|
-      saveable_association = saveable_type.to_s.demodulize.tableize
+    runnable.saveable_types.each do |saveable_class|
+      saveable_association = saveable_class.to_s.demodulize.tableize
       saveable_id_symbol = "#{saveable_association.singularize}_id".to_sym
       saveable_objects = runnable.send(saveable_association)
       saved_objects = self.send(saveable_association)
       existing_saveable_ids = saved_objects.collect { |o| o.send(saveable_id_symbol) }
       unsaved_objects = saveable_objects.find_all { |o| !existing_saveable_ids.include?(o.id) }
       unsaved_objects.each do |unsaved_object|
-        saveable_type.create(saveable_id_symbol => unsaved_object.id, :learner_id => self.id)
+        saveable_class.create(saveable_id_symbol => unsaved_object.id, :learner_id => self.id)
       end
     end
   end
+
 end
