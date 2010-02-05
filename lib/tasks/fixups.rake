@@ -244,6 +244,7 @@ HEREDOC
     MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/(?:embeddable__)?multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
     desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
     task :convert_choice_answers_to_local_ids => :environment do
+      include ApplicationHelper
       unchanged = {}
       changed = {}
       problems = {}
@@ -256,7 +257,7 @@ HEREDOC
               if m_choice
                 choice = m_choice.choices[$3.to_i]
                 if choice
-                  retval = "<object refid=\"#{$1}!/embeddable__multiple_choice_choice_#{choice.id}\"#{$4}>"
+                  retval = "<object refid=\"#{$1}!/#{ot_local_id_for(choice)}\"#{$4}>"
                 else
                   raise "Couldn't find choice #{$3} in Multiple Choice #{$2}"
                 end
