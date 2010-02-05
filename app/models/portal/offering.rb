@@ -31,4 +31,9 @@ class Portal::Offering < ActiveRecord::Base
       "Offering"
     end
   end
+  
+  def refresh_saveable_response_objects
+    self.learners.each { |l| l.refresh_saveable_response_objects }
+  end
+  
 end

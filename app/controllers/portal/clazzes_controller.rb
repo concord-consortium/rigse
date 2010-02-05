@@ -14,6 +14,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1.xml
   def show
     @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     respond_to do |format|
       format.html # show.html.erb
@@ -141,6 +142,7 @@ class Portal::ClazzesController < ApplicationController
         page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
       end
     end
+    @offering.refresh_saveable_response_objects
   end
   
   
