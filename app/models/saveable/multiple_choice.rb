@@ -6,7 +6,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   has_many :answers, :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
   
-  [:prompt, :name].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
+  [:prompt, :name, :choices].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
   
   def answer
     if answered?
