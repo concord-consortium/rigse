@@ -304,8 +304,6 @@ module ApplicationHelper
       url
     end
   end
-  
-
 
   def run_button_for(component)
     name = component.name
@@ -340,37 +338,13 @@ module ApplicationHelper
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def bundle_report_link_for(reportable, as_name=nil, params={})
+  def report_link_for(reportable, action='report', link_text='Report ')
     reportable_display_name = reportable.class.display_name.downcase
+    action_string = action.gsub('_', ' ')
     name = reportable.name
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "Bundles "
-    link_text << " as #{as_name}" if as_name
-    url = home_path
+    url = polymorphic_url(reportable, :action => action)
     link_to(link_text, url, :popup => true,
-      :title => "Display the raw OTrunk bundle and console logs for the #{reportable_display_name}: '#{name}' in a new browser window.")
-  end
-  
-  def multiple_choice_report_link_for(reportable, as_name=nil, params={})
-    reportable_display_name = reportable.class.display_name.downcase
-    name = reportable.name
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "MC Report "
-    link_text << " as #{as_name}" if as_name
-    url = polymorphic_url(reportable, :action => 'multiple_choice_report')
-    link_to(link_text, url, :popup => true,
-      :title => "Display a report for the #{reportable_display_name}: '#{name}' in a new browser window.")
-  end
-
-  def report_link_for(reportable, as_name=nil, params={})
-    reportable_display_name = reportable.class.display_name.downcase
-    name = reportable.name
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "OR Report "
-    link_text << " as #{as_name}" if as_name
-    url = polymorphic_url(reportable, :action => 'report')
-    link_to(link_text, url, :popup => true,
-      :title => "Display a report for the #{reportable_display_name}: '#{name}' in a new browser window.")
+      :title => "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window.")
   end
 
   def run_link_for(component, as_name=nil, params={})
@@ -512,8 +486,7 @@ module ApplicationHelper
           haml_concat title_for_component(learner, options)
         end
       end
-      haml_tag(:p) { haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}") }
-      haml_tag(:p) { haml_concat("Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}") }
+      haml_tag(:p) { haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}") }
     end
   end
 
@@ -524,10 +497,10 @@ module ApplicationHelper
           haml_concat title_for_component(learner, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_concat report_link_for(learner)
-          haml_concat multiple_choice_report_link_for(learner)
+          haml_concat report_link_for(learner, 'open_response_report', 'OR Report ')
+          haml_concat report_link_for(learner, 'multiple_choice_report', 'MC Report ')
           if USING_JNLPS && current_user.has_role?("admin")
-            haml_concat bundle_report_link_for(learner)
+            haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
           end
         end
       end
