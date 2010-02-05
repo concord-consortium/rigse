@@ -479,14 +479,22 @@ module ApplicationHelper
     end
   end
 
+  def learner_specific_stats(learner, options)
+    "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}"
+  end
+
+  def learner_summary_stats(learner, options)
+    "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.saveable_answered} out of #{learner.saveable_count}"
+  end
+  
   def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
+          haml_concat learner_specific_stats(learner, options)
         end
       end
-      haml_tag(:p) { haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}") }
     end
   end
 
@@ -495,6 +503,7 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
+          haml_concat learner_summary_stats(learner, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat report_link_for(learner, 'open_response_report', 'OR Report ')
