@@ -18,6 +18,9 @@ module ApplicationHelper
   #   dom_id_for(@model, :item)                 # => "item_model_3"
   #   dom_id_for(@model, :item, :textarea)      # => "item_textarea_model_3"
   #
+  #   @scoped_model = OuterScope::InnerScope::Model.find(3)
+  #   dom_id_for(@scoped_model)                 # => "outer_scope__inner_scope__model_3"
+  
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
     prefix = ''
