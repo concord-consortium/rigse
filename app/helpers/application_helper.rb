@@ -491,6 +491,9 @@ module ApplicationHelper
   end
   
   def report_details_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses })
+  def report_details_for_learner(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses, :correctable => false }
+    options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -498,7 +501,17 @@ module ApplicationHelper
           haml_concat learner_specific_stats(learner, options)
         end
       end
+      haml_tag(:p) {
+        haml_concat("Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.send(options[:type]).answered.length} out of #{learner.send(options[:type]).length}")
+        haml_concat(", #{report_correct_count_for_learner(learner, options)} correct") if options[:correctable]
+      }
     end
+  end
+  
+  def report_correct_count_for_learner(learner, opts = {} )
+    options = {:type => :multiple_choice}
+    options.update(opts)
+    learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
 
   def menu_for_learner(learner, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
