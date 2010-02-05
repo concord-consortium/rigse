@@ -4,8 +4,8 @@ include Clipboard
 
 module ApplicationHelper
 
-  def top_level_container_name(options = {:upercase => false, :plural => false})
-    name = (APP_CONFIG[:top_level_container_name] || "investigation")
+  def top_level_container_name
+    APP_CONFIG[:top_level_container_name] || "investigation"
   end
   
   #
