@@ -70,3 +70,4 @@ rites.xml
 resources/bitrock_installer/jnlps.conf
 public/installers/*
 resources/rinet_test_data/report*
+mkmf.log
