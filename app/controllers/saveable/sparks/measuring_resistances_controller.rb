@@ -85,4 +85,24 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
       format.json  { head :ok }
     end
   end
+  
+  def save_data
+    logger.debug('ENTER MeasuringResistancesController#save_data');
+    logger.debug("params=#{params.inspect}");
+    learner = Portal::Learner.find_by_id(params[:learner_id])
+    if learner
+      mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(learner.id)
+      unless mr
+        mr = Saveable::Sparks::MeasuringResistance.new(:learner_id => learner.id )
+      end
+      report = Saveable::Sparks::MeasuringResistanceReport.new(
+        :position => 1, :content => params[:content])
+      report.save!
+      mr.reports << report
+      mr.save!
+    else
+      logger.error("ERROR: Portal::Learner with id=#{params[:learner_id]} not found")
+    end
+  end
+  
 end

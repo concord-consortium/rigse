@@ -14,23 +14,29 @@ class Portal::OfferingsController < ApplicationController
   # GET /portal_offerings/1.xml
   def show
     @offering = Portal::Offering.find(params[:id])
+    @learner = setup_portal_student
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @offering }
       
-      format.run_sparks_html   { 
-        if learner = setup_portal_student
-          session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
+      format.run_sparks_html {
+        if @learner
+          #cookies[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
+          cookies[:put_path] = url_for(:controller => '/saveable/sparks/measuring_resistances',
+            :action => 'save_data', :only_path => true);
+          cookies[:learner_id] = @learner.id
         else
-          session[:put_path] = nil
+          cookies[:put_path] = nil
+          cookies[:learner_id] = nil
         end
+        logger.debug("learner_id=#{cookies[:learner_id]} put_path=#{cookies[:put_path]}")
         render 'pages/show', :layout => "layouts/run" 
       }
       
       format.jnlp {
         # check if the user is a student in this offering's class
-        if learner = setup_portal_student
+        if @learner
           if params.delete(:use_installer)
             wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params)
             render :partial => 'shared/learn_installer', :locals => 
@@ -153,4 +159,5 @@ class Portal::OfferingsController < ApplicationController
     end
     learner
   end
+  
 end

@@ -3,7 +3,7 @@ class Saveable::Sparks::MeasuringResistance < ActiveRecord::Base
 
   belongs_to :learner, :class_name => 'Portal::Learner'
 
-  has_many :reports, :order => :position, :class_name => "Saveable::Sparks::MeasuringResistanceReports"
+  has_many :reports, :order => :position, :class_name => "Saveable::Sparks::MeasuringResistanceReport"
 
   def answer
     self.reports.last.answer
