@@ -1,25 +1,26 @@
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
   %h3= "Multiple Choice Report for: #{@offering.name}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
-    - @offering.runnable.activities.each_with_index do |activity,activity_num|
-      %ul
-        %li= "Activity #{activity_num + 1}: #{activity.name}"
-        - activity.sections.each_with_index do |section,section_num|
-          %ul
-            %li= "Section #{section_num + 1}: #{section.name}"
-            - section.pages.each_with_index do |page,page_num|
-              - multiple_choices = page.multiple_choices
-              %ul
-                %li= "Page #{page_num + 1}: #{page.name}"
-                - multiple_choices.each do |multiple_choice|
-                  %ul
-                    = accordion_for(multiple_choice, offering_details_multiple_choice(@offering, multiple_choice)) do
-                      - @learners.each do |l|
-                        - saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
-                        - css_style = saveable.answered? ? 'answered' : 'not_answered'
-                        - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
-                        %div{:id => dom_id_for(saveable), :style => "clear: right;", :class => css_style}
-                          %item{:class => css_style}
-                            = l.name
-                          %item{:style => "float: right;", :class => css_style}
-                            = saveable.answer
+    = accordion_for(@offering, offering_mc_report_summary(@offering)) do
+      - @offering.runnable.activities.each_with_index do |activity,activity_num|
+        %ul
+          %li= "Activity #{activity_num + 1}: #{activity.name}"
+          - activity.sections.each_with_index do |section,section_num|
+            %ul
+              %li= "Section #{section_num + 1}: #{section.name}"
+              - section.pages.each_with_index do |page,page_num|
+                - multiple_choices = page.multiple_choices
+                %ul
+                  %li= "Page #{page_num + 1}: #{page.name}"
+                  - multiple_choices.each do |multiple_choice|
+                    %ul
+                      = accordion_for(multiple_choice, offering_details_multiple_choice(@offering, multiple_choice)) do
+                        - @learners.each do |l|
+                          - saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
+                          - css_style = saveable.answered? ? 'answered' : 'not_answered'
+                          - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
+                          %div{:id => dom_id_for(saveable), :style => "clear: right;", :class => css_style}
+                            %item{:class => css_style}
+                              = l.name
+                            %item{:style => "float: right;", :class => css_style}
+                              = saveable.answer

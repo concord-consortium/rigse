@@ -526,6 +526,25 @@ module ApplicationHelper
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
   
+  def offering_mc_report_summary(offering, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    choices = offering.runnable.multiple_choices
+    answered = choices.select{|c| c.saveables.by_offering(offering).detect{|s| s.answered? }}
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+        end
+      end
+      haml_tag :div do
+        haml_tag :p do
+          haml_concat("#{choices.size} questions, #{answered.size} have answers")
+        end
+      end
+    end
+  end
+  
   def offering_details_multiple_choice(offering, multiple_choice, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
