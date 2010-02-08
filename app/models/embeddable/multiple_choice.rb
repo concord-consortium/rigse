@@ -8,6 +8,13 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :choices, :class_name => "Embeddable::MultipleChoiceChoice", :dependent => :destroy
   
+  has_many :saveables, :class_name => "Saveable::MultipleChoice", :foreign_key => :multiple_choice_id do
+    def by_offering(offering)
+      learners = offering.learners.map{|l| l.id}
+      find(:all, :conditions => {:learner_id => learners})
+    end
+  end
+  
   accepts_nested_attributes_for :choices, :allow_destroy => true
   
   acts_as_replicatable
