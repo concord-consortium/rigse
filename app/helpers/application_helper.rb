@@ -530,11 +530,13 @@ module ApplicationHelper
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
     answer_counts = {}
-    offering.learners.each do |l|
+    learners = offering.learners
+    learners.each do |l|
       answer = multiple_choice_saveable_for_learner(multiple_choice, l).answer
       answer_counts[answer] ||= 0
       answer_counts[answer] += 1
     end
+    not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
     all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -547,27 +549,76 @@ module ApplicationHelper
           haml_concat(multiple_choice.prompt)
         }
         haml_tag(:div) {
-          all_choices.each_with_index do |choice,i|
-            haml_tag(:div) {
-              haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
-                haml_concat("#{i+1}. #{choice.choice}")
+          haml_tag(:div, :class => 'table') {
+            haml_tag(:div, :class => 'row', :style => 'display: none;') {
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Option")}
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Graph")}
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Percent")}
+              haml_tag(:div, :class => "cell cellheader") { haml_concat("Count")}
+            }
+            all_choices.each_with_index do |choice,i|
+              answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
+              haml_tag(:div, :class => 'row') {
+                haml_tag(:div, :class => 'cell optionlabel') {
+                  haml_concat("#{i+1}. #{choice.choice}")
+                }
+                haml_tag(:div, :class => 'cell optionbar') {
+                  haml_tag(:div, :class => 'optionbarbar', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "#{"visibility: hidden; " if percent(answer_count, learners.size) == 0}width: #{percent(answer_count, learners.size)}%; background-color: #{choice.is_correct ? "#DDFFDD" : "#FFDDDD"};") {
+                    haml_concat("&nbsp;")
+                  }
+                }
+                haml_tag(:div, :class => 'cell optionpercent') {
+                  haml_concat(percent_str(answer_count, learners.size))
+                }
+                haml_tag(:div, :class => 'cell optioncount') {
+                  haml_concat(answer_count)
+                }
               }
-              haml_tag(:div, :style => 'float: right;') {
-                haml_concat(answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0)
+            end
+            haml_tag(:div, :class => 'row') {
+              haml_tag(:div, :class => 'cell optionlabel') {
+                haml_concat("Not answered")
+              }
+              haml_tag(:div, :class => 'cell optionbar') {
+                haml_tag(:div, :class => 'optionbarbar', :id => "question_id_#{multiple_choice.id}_bar_graph_choice_no_answer", :style => "width: #{percent(not_answered_count, learners.size)}%; background-color: #FFEEEE;") {
+                  haml_concat("&nbsp;")
+                }
+              }
+              haml_tag(:div, :class => 'cell optionpercent') {
+                haml_concat(percent_str(not_answered_count, learners.size))
+              }
+              haml_tag(:div, :class => 'cell optioncount') {
+                haml_concat("#{not_answered_count}")
               }
             }
-          end
-          haml_tag(:div) {
-            haml_tag(:div, :style => 'padding-left: 15px; clear: both; display: inline;') {
-              haml_concat("Not answered")
-            }
-            haml_tag(:div, :style => 'float: right;') {
-              haml_concat(answer_counts.has_key?("not answered") ? answer_counts["not answered"] : 0)
+            haml_tag(:div, :class => 'row', :style => 'border-top: 2px solid black;') {
+              haml_tag(:div, :class => 'cell optionlabel') {
+                haml_concat("&nbsp;")
+              }
+              haml_tag(:div, :class => 'cell optionbar', :style => 'font-weight: bold; text-align: right; padding-right: 5px;') {
+                haml_concat("Totals:")
+              }
+              haml_tag(:div, :class => 'cell optionpercent') {
+                haml_concat(percent_str(1, 1))
+              }
+              haml_tag(:div, :class => 'cell optioncount') {
+                haml_concat("#{learners.size}")
+              }
             }
           }
         }
       }
     end
+  end
+  
+  def percent(count,max,precision = 0)
+    raw = (count/max.to_f)*100
+    result = (raw*(10**precision)).round/(10**precision)
+  end
+  
+  def percent_str(count, max, precision = 0)
+    return "undefined" if max < 1
+    number_to_percentage(percent(count,max,precision), :precision => precision)
   end
   
   def multiple_choice_saveable_for_learner(multiple_choice, learner)
