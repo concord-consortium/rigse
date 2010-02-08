@@ -611,12 +611,12 @@ module ApplicationHelper
     end
   end
   
-  def percent(count,max,precision = 0)
+  def percent(count,max,precision = 1)
     raw = (count/max.to_f)*100
-    result = (raw*(10**precision)).round/(10**precision)
+    result = (raw*(10**precision)).round/(10**precision).to_f
   end
   
-  def percent_str(count, max, precision = 0)
+  def percent_str(count, max, precision = 1)
     return "undefined" if max < 1
     number_to_percentage(percent(count,max,precision), :precision => precision)
   end
