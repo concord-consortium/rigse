@@ -529,6 +529,25 @@ module ApplicationHelper
     options.update(opts)
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
+  
+  def offering_report_summary(offering_report, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    questions = offering_report.respondables
+    answered  = offering_report.offering.saveables
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering_report.offering, options)
+        end
+      end
+      haml_tag :div do
+        haml_tag :p do
+          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+        end
+      end
+    end
+  end
 
   def offering_or_report_summary(offering_report, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
@@ -680,6 +699,10 @@ module ApplicationHelper
   def percent_str(count, max, precision = 1)
     return "undefined" if max < 1
     number_to_percentage(percent(count,max,precision), :precision => precision)
+  end
+  
+  def open_response_saveable_for_learner(open_response, learner)
+    Saveable::OpenResponse.find_by_open_response_id_and_learner_id(open_response.id, learner.id)
   end
   
   def multiple_choice_saveable_for_learner(multiple_choice, learner)

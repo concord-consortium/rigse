@@ -131,6 +131,7 @@ ActionController::Routing::Routes.draw do |map|
       :bundle_report => :get
     }
     portal.resources :offerings, :member => { 
+      :report => :get,
       :open_response_report => :get, 
       :multiple_choice_report => :get 
     }, :collection => { :data_test => [:get,:post] }

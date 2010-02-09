@@ -1,0 +1,10 @@
+= accordion_for(multiple_choice, offering_details_multiple_choice(offering, multiple_choice)) do
+  - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
+    - saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
+    - css_style = (saveable && saveable.answered?) ? 'answered' : 'not_answered'
+    - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if (saveable && saveable.answered?)
+    %div{:id => dom_id_for(multiple_choice, :saveable), :style => "clear: right;", :class => css_style}
+      %item{:class => css_style}
+        = l.name
+      %item{:style => "float: right;", :class => css_style}
+        = saveable ? saveable.answer : 'not answered'

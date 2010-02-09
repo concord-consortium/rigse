@@ -10,6 +10,22 @@ class PageElement < ActiveRecord::Base
   #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}'
+  
+  named_scope :by_investigation, lambda {|investigation|
+    { :select => 'page_elements.*, pages.position as page_position, sections.id as section_id, sections.position as section_position, activities.id as activity_id, activities.position as activity_position',
+      :joins => 'INNER JOIN pages ON page_elements.page_id = pages.id 
+      INNER JOIN sections ON pages.section_id = sections.id
+      INNER JOIN activities ON sections.activity_id = activities.id',
+      :conditions => {'activities.investigation_id' => investigation.id },
+      :order => 'activity_position asc, section_position asc, page_position asc, page_elements.position asc'
+    }
+  }
+  
+  named_scope :by_type, lambda {|types|
+    { :conditions => {'embeddable_type' => types},
+      :order => 'position asc'
+    }
+  }
 
   include Changeable
 

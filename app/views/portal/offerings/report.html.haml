@@ -1,0 +1,31 @@
+%div{:id => dom_id_for(@offering, :report), :class => 'item'}
+  %h3= "Report for: #{@offering.name}"
+  %div{:id => dom_id_for(@offering, :details), :class => 'content'}
+    %div{:style => 'font-weight: bold'}
+      = offering_report_summary(@offering_report)
+    %div
+      - @page_elements.keys.each do |activity|
+        - sections = @page_elements[activity]
+        %div
+          %span{:style => 'font-weight: bold;'}= "Activity"
+          = " &ndash; #{activity.name}"
+        %div{:style => 'padding-left: 10px;'}
+          - sections.keys.each do |section|
+            - pages = sections[section]
+            %div
+              %span{:style => 'font-weight: bold;'}= "Section"
+              = " &ndash; #{section.name}"
+            %div{:style => 'padding-left: 20px;'}
+              - pages.keys.each do |page|
+                - page_embeddables = pages[page]
+                %div
+                  %span{:style => 'font-weight: bold;'}= "Page"
+                  = " &ndash; #{page.name}"
+                %div{:style => 'padding-left: 30px;'}
+                  - page_embeddables.each do |page_embeddable|
+                    %div
+                      - embeddable = page_embeddable.embeddable
+                      - if embeddable.kind_of? Embeddable::MultipleChoice
+                        = render :partial => 'portal/offerings/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learners => @learners}
+                      - elsif embeddable.kind_of? Embeddable::OpenResponse
+                        = render :partial => 'portal/offerings/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learners => @learners}

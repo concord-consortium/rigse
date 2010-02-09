@@ -114,6 +114,22 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def report
+    @offering = Portal::Offering.find(params[:id])
+    @offering_report = Report::Offering::Investigation.new(@offering)
+    @learners = @offering_report.learners
+    
+    elements = PageElement.by_investigation(@offering.runnable).by_type([Embeddable::MultipleChoice.to_s,Embeddable::OpenResponse.to_s]).sort_by{|e| [e.activity_position, e.section_position, e.page_position, e.position]}
+    activity_lambda = lambda {|e| Activity.find(e.activity_id) }
+    section_lambda = lambda {|e| Activity.find(e.activity_id) }
+    page_lambda = lambda {|e| Activity.find(e.activity_id) }
+    @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
+  
   def multiple_choice_report
     @offering = Portal::Offering.find(params[:id], :include => :learners)
     @offering_report = Report::Offering::Investigation.new(@offering)
