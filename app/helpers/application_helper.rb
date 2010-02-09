@@ -490,6 +490,14 @@ module ApplicationHelper
     " Multiple Choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length} "
   end
   
+  def open_response_offering_stat(offering, open_response)
+    " Responses: #{offering.open_responses.find(:all, :conditions => { :open_response_id => open_response.id }).length} "
+  end
+
+  def multiple_choice_learner_stat(offering, multiple_choice)
+    " Responses: #{offering.multiple_choices.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id }).length}, correct: #{offering.multiple_choices.answered_correctly.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id } } "
+  end
+  
   def sessions_learner_stat(learner)
     sessions = learner.bundle_logger.bundle_contents.count
     if sessions > 0
@@ -525,16 +533,11 @@ module ApplicationHelper
   def offering_details_open_response(offering, open_response, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    answer_counts = {}
-    offering.learners.each do |l|
-      answer = open_response_saveable_for_learner(open_response, l).answer
-      answer_counts[answer] ||= 0
-      answer_counts[answer] += 1
-    end
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
+          haml_concat open_response_offering_stat(offering, open_response)
         end
       end
       haml_tag(:div, :class => 'item') {
@@ -542,6 +545,25 @@ module ApplicationHelper
           haml_concat(open_response.prompt)
         }
       }
+    end
+  end
+
+  def offering_or_report_summary(offering_report, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    questions = offering_report.investigation.open_responses
+    answered  = offering_report.offering.open_responses
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering_report.offering, options)
+        end
+      end
+      haml_tag :div do
+        haml_tag :p do
+          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+        end
+      end
     end
   end
   
