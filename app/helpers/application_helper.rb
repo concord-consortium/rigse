@@ -591,10 +591,12 @@ module ApplicationHelper
     options.update(opts)
     answer_counts = {}
     learners = offering.learners
-    learners.each do |l|
-      answer = multiple_choice_saveable_for_learner(multiple_choice, l).answer
-      answer_counts[answer] ||= 0
-      answer_counts[answer] += 1
+    learners.each do |learner|
+      learner.multiple_choices.each do |saveable_mc|
+        answer = saveable_mc.answer
+        answer_counts[answer] ||= 0
+        answer_counts[answer] += 1
+      end
     end
     not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
     all_choices = multiple_choice.choices
