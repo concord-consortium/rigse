@@ -533,8 +533,8 @@ module ApplicationHelper
   def offering_report_summary(offering_report, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    questions = offering_report.respondables
-    answered  = offering_report.offering.saveables
+    questions = offering_report.respondables.group_by{|r| r.embeddable }
+    answered  = questions.select{|r,v| v.detect{|re| re.answered }}
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
