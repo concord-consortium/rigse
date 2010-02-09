@@ -553,7 +553,7 @@ module ApplicationHelper
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
     questions = offering_report.investigation.multiple_choices
-    answered  = offering_report.offering.multiple_choices
+    answered  = offering_report.offering.multiple_choices.group_by{|m| m.multiple_choice}
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -562,7 +562,7 @@ module ApplicationHelper
       end
       haml_tag :div do
         haml_tag :p do
-          haml_concat("#{questions.size} questions, #{answered.size}} have been answered")
+          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
         end
       end
     end
