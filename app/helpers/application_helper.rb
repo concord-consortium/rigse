@@ -592,11 +592,10 @@ module ApplicationHelper
     answer_counts = {}
     learners = offering.learners
     learners.each do |learner|
-      learner.multiple_choices.each do |saveable_mc|
-        answer = saveable_mc.answer
-        answer_counts[answer] ||= 0
-        answer_counts[answer] += 1
-      end
+      saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
+      answer = saveable ? saveable.answer : 'not answered'
+      answer_counts[answer] ||= 0
+      answer_counts[answer] += 1
     end
     not_answered_count = answer_counts.has_key?("not answered") ? answer_counts["not answered"].to_i : 0
     all_choices = multiple_choice.choices
