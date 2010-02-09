@@ -493,7 +493,7 @@ module ApplicationHelper
   def sessions_learner_stat(learner)
     sessions = learner.bundle_logger.bundle_contents.count
     if sessions > 0
-      "(#{learner.bundle_logger.bundle_contents.count})"
+      pluralize(learner.bundle_logger.bundle_contents.count, 'session')
     else
       ''
     end
@@ -501,10 +501,6 @@ module ApplicationHelper
   
   def learner_specific_stats(learner)
     "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{learner.open_responses.answered.length}/#{learner.open_responses.length}, multiple choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length}"
-  end
-
-  def learners_summary_stats(learner, options)
-    "Sessions: #{learner.bundle_logger.bundle_contents.count}, Answered: #{learner.saveable_answered} out of #{learner.saveable_count}"
   end
   
   def report_details_for_learner(learner, opts = {})
@@ -604,7 +600,9 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
-          haml_concat sessions_learner_stat(learner)
+          haml_tag :span, :class => 'tiny' do
+            haml_concat sessions_learner_stat(learner)
+          end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
