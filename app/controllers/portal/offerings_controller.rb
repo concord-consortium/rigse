@@ -115,8 +115,8 @@ class Portal::OfferingsController < ApplicationController
   end
   
   def multiple_choice_report
-    @offering = Portal::Offering.find(params[:id])
-    @offering.learners.each{|l| l.refresh_saveable_response_objects }
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering.refresh_saveable_response_objects
     @offering.reload
     @learners = @offering.learners
     
