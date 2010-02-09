@@ -593,6 +593,10 @@ module ApplicationHelper
     Saveable::MultipleChoice.find_by_multiple_choice_id_and_learner_id(multiple_choice.id, learner.id)
   end
 
+  def open_response_saveable_for_learner(open_response, learner)
+    Saveable::OpenResponse.find_by_open_response_id_and_learner_id(open_response.id, learner.id)
+  end
+
   def menu_for_learner(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
