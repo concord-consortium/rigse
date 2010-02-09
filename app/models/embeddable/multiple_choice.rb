@@ -10,8 +10,7 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   
   has_many :saveables, :class_name => "Saveable::MultipleChoice", :foreign_key => :multiple_choice_id do
     def by_offering(offering)
-      learners = offering.learners.map{|l| l.id}
-      find(:all, :conditions => {:learner_id => learners})
+      find(:all, :conditions => { :offering_id => offering.id })
     end
   end
   
