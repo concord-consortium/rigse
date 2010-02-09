@@ -1,0 +1,25 @@
+%div{:id => dom_id_for(@offering, :report), :class => 'item'}
+  %h3= "Open Response Report for: #{@offering.name}"
+  %div{:id => dom_id_for(@offering, :details), :class => 'content'}
+    - @offering.runnable.activities.each do |activity|
+      - count = activity.open_responses.size
+      = accordion_for(activity, "#{activity.name}: #{count} questions") do
+        - if count > 0
+          - activity.sections.each do |section|
+            - count = section.open_responses.size
+            = accordion_for(section, "#{section.name}: #{count} questions") do
+              - if count > 0
+                - section.pages.each do |page|
+                  - open_responses = page.open_responses
+                  - count = open_responses.size
+                  = accordion_for(page, "#{page.name}: #{count} questions") do
+                    - open_responses.each do |open_response|
+                      = accordion_for(open_response, offering_details_open_response(@offering, open_response)) do
+                        - @learners.each do |l|
+                          - saveable = open_response_saveable_for_learner(open_response, l)
+                          - css_style = saveable.answered? ? 'answered' : 'not_answered'
+                          %div{:id => dom_id_for(saveable), :style => "clear: right;", :class => css_style}
+                            %item{:class => css_style}
+                              = l.name
+                            %item{:style => "float: right;", :class => css_style}
+                              = saveable.answer

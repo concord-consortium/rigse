@@ -124,6 +124,17 @@ class Portal::OfferingsController < ApplicationController
       format.html # multiple_choice_report.html.haml
     end
   end
+
+  def open_response_report
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering.refresh_saveable_response_objects
+    @offering.reload
+    @learners = @offering.learners
+    
+    respond_to do |format|
+      format.html # open_response_report.html.haml
+    end
+  end
   
   
   # GET /portal/offerings/data_test(.format)
