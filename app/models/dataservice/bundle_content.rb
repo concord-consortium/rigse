@@ -90,7 +90,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extract_multiple_choices
   end
   
-  OR_MATCHER = /open_response_(\d+).*?<OTText text="(.*?)" \/>/m
+  OR_MATCHER = /open_response_(\d+).*?<OTText.*?(?:(?:text="(.*?)")|(?:<text>(.*?)<\/text>))/m
   def extract_open_responses
     learner = self.bundle_logger.learner
     @offering_id = learner.offering.id
