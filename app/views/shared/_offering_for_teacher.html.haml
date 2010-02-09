@@ -18,8 +18,9 @@
   %div{ :id => dom_id_for(offering), :class => 'offering' }
     = accordion_for(offering, menu_for_offering(offering)) do  
       %div{:id => dom_id_for(offering, :details), :class => 'tiny'}
-        %span.author= offering.runnable.user.name
-        %p= offering.runnable.description
+        %span.author= "Author: #{offering.runnable.user.name}"
+        %p= "Description: #{offering.runnable.description}"
         %p= updated_time_text(offering.runnable)
+        %p= pluralize(offering.learners.length, "student response")
         = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
   = draggable_element dom_id_for(offering), :revert => true
