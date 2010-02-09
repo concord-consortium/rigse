@@ -10,13 +10,13 @@ class Portal::Offering < ActiveRecord::Base
   
   [:name, :description].each { |m| delegate m, :to => :runnable }
   
-  has_many :open_responses, :class_name => "Saveable::OpenResponse" do
+  has_many :open_responses, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
     def answered
       find(:all).select { |question| question.answered? }
     end
   end
 
-  has_many :multiple_choices, :class_name => "Saveable::MultipleChoice" do
+  has_many :multiple_choices, :class_name => "Saveable::MultipleChoice", :foreign_key => "offering_id" do
     def answered
       find(:all).select { |question| question.answered? }
     end
