@@ -525,6 +525,29 @@ module ApplicationHelper
     options.update(opts)
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
+
+  def offering_details_open_response(offering, open_response, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    answer_counts = {}
+    offering.learners.each do |l|
+      answer = open_response_saveable_for_learner(open_response, l).answer
+      answer_counts[answer] ||= 0
+      answer_counts[answer] += 1
+    end
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+        end
+      end
+      haml_tag(:div, :class => 'item') {
+        haml_tag(:div) {
+          haml_concat(open_response.prompt)
+        }
+      }
+    end
+  end
   
   def offering_details_multiple_choice(offering, multiple_choice, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
