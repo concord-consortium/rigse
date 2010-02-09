@@ -494,7 +494,7 @@ module ApplicationHelper
     " Responses: #{offering.open_responses.find(:all, :conditions => { :open_response_id => open_response.id }).length} "
   end
 
-  def multiple_choice_learner_stat(offering, multiple_choice)
+  def multiple_choice_offering_stat(offering, multiple_choice)
     " Responses: #{offering.multiple_choices.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id }).length}, correct: #{offering.multiple_choices.answered_correctly.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id })} "
   end
   
