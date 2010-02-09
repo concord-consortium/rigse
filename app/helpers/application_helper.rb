@@ -530,24 +530,6 @@ module ApplicationHelper
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
 
-  def offering_details_open_response(offering, open_response, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
-    options.update(opts)
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering, options)
-          haml_concat open_response_offering_stat(offering, open_response)
-        end
-      end
-      haml_tag(:div, :class => 'item') {
-        haml_tag(:div) {
-          haml_concat(open_response.prompt)
-        }
-      }
-    end
-  end
-
   def offering_or_report_summary(offering_report, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
@@ -567,25 +549,43 @@ module ApplicationHelper
     end
   end
   
-  def offering_mc_report_summary(offering, opts = {})
+  def offering_mc_report_summary(offering_report, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    choices = offering.runnable.multiple_choices
-    answered = choices.select{|c| c.saveables.by_offering(offering).detect{|s| s.answered? }}
+    questions = offering_report.investigation.multiple_choices
+    answered  = offering_report.offering.multiple_choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering, options)
+          haml_concat title_for_component(offering_report.offering, options)
         end
       end
       haml_tag :div do
         haml_tag :p do
-          haml_concat("#{choices.size} questions, #{answered.size} have answers")
+          haml_concat("#{questions.size} questions, #{answered.size}} have been answered")
         end
       end
     end
   end
-  
+
+  def offering_details_open_response(offering, open_response, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+          haml_concat open_response_offering_stat(offering, open_response)
+        end
+      end
+      haml_tag(:div, :class => 'item') {
+        haml_tag(:div) {
+          haml_concat(open_response.prompt)
+        }
+      }
+    end
+  end
+
   def offering_details_multiple_choice(offering, multiple_choice, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
