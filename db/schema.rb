@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100204142034) do
+ActiveRecord::Schema.define(:version => 20100208172613) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1743,7 +1743,12 @@ ActiveRecord::Schema.define(:version => 20100204142034) do
     t.integer  "multiple_choice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "offering_id"
+    t.integer  "response_count",     :default => 0
   end
+
+  add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
+  add_index "saveable_multiple_choices", ["offering_id"], :name => "index_saveable_multiple_choices_on_offering_id"
 
   create_table "saveable_open_response_answers", :force => true do |t|
     t.integer  "open_response_id"
@@ -1759,13 +1764,22 @@ ActiveRecord::Schema.define(:version => 20100204142034) do
     t.integer  "open_response_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "offering_id"
+    t.integer  "response_count",   :default => 0
   end
+
+  add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"
+  add_index "saveable_open_responses", ["offering_id"], :name => "index_saveable_open_responses_on_offering_id"
 
   create_table "saveable_sparks_measuring_resistance", :force => true do |t|
     t.integer  "learner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "offering_id"
   end
+
+  add_index "saveable_sparks_measuring_resistance", ["learner_id"], :name => "index_saveable_sparks_measuring_resistance_on_learner_id"
+  add_index "saveable_sparks_measuring_resistance", ["offering_id"], :name => "index_saveable_sparks_measuring_resistance_on_offering_id"
 
   create_table "saveable_sparks_measuring_resistance_reports", :force => true do |t|
     t.integer  "measuring_resistance_id"
