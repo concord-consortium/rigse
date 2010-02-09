@@ -42,6 +42,8 @@ class Activity < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
   
+  delegate :saveable_types, :to => :investigation
+  
   include Noteable # convinience methods for notes...
   acts_as_replicatable
   include Changeable

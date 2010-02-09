@@ -56,6 +56,8 @@ class Page < ActiveRecord::Base
     end
   end
   
+  delegate :saveable_types, :to => :investigation
+  
   has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
   has_many :teacher_notes, :as => :authored_entity
