@@ -13,7 +13,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1
   # GET /portal_clazzes/1.xml
   def show
-    @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     respond_to do |format|
