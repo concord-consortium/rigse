@@ -130,7 +130,10 @@ ActionController::Routing::Routes.draw do |map|
       :multiple_choice_report => :get,
       :bundle_report => :get
     }
-    portal.resources :offerings, :member => { :report => :get, :multiple_choice_report => :get }, :collection => { :data_test => [:get,:post] }
+    portal.resources :offerings, :member => { 
+      :open_response_report => :get, 
+      :multiple_choice_report => :get 
+    }, :collection => { :data_test => [:get,:post] }
     portal.resources :schools
     portal.resources :school_memberships
     portal.resources :semesters
