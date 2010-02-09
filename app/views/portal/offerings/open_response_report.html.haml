@@ -1,25 +1,26 @@
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
   %h3= "Open Response Report for: #{@offering.name}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
-    - @offering.runnable.activities.each do |activity|
-      - count = activity.open_responses.size
-      = accordion_for(activity, "#{activity.name}: #{count} questions") do
-        - if count > 0
-          - activity.sections.each do |section|
-            - count = section.open_responses.size
-            = accordion_for(section, "#{section.name}: #{count} questions") do
-              - if count > 0
-                - section.pages.each do |page|
-                  - open_responses = page.open_responses
-                  - count = open_responses.size
-                  = accordion_for(page, "#{page.name}: #{count} questions") do
-                    - open_responses.each do |open_response|
-                      = accordion_for(open_response, offering_details_open_response(@offering, open_response)) do
-                        - @learners.each do |l|
-                          - saveable = open_response_saveable_for_learner(open_response, l)
-                          - css_style = saveable.answered? ? 'answered' : 'not_answered'
-                          %div{:id => dom_id_for(saveable), :style => "clear: right;", :class => css_style}
-                            %item{:class => css_style}
-                              = l.name
-                            %item{:style => "float: right;", :class => css_style}
-                              = saveable.answer
+    = accordion_for(@offering, offering_or_report_summary(@offering_report)) do
+      - @offering_report.activities.each_with_index do |activity,activity_num|
+      - next unless activity.respondables.length > 0
+        %ul
+          %li= "Activity #{activity_num + 1}: #{activity.activity.name}"
+          - activity.sections.each_with_index do |section,section_num|
+            %ul
+              %li= "Section #{section_num + 1}: #{section.section.name}"
+              - section.pages.each_with_index do |page,page_num|
+                - respondables = page.respondables(Saveable::OpenResponse)
+                - if respondables.length > 0
+                  %ul
+                    %li= "Page #{page_num + 1}: #{page.page.name}"
+                    - page.page.open_responses.each do |open_response|
+                      %ul
+                        = accordion_for(open_response, offering_details_open_response(@offering, open_response)) do
+                          - responses = respondables.find_all { |respondable| respondable.embeddable_id == open_response.id && respondable.answered }
+                          - responses.each do |response|
+                            - answer = response.respondable.answer
+                            %div{:id => dom_id_for(response), :class => 'content' }
+                              %p= response.learner.name
+                              %p= answer
+                
