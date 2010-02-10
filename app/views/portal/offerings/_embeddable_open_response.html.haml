@@ -6,4 +6,4 @@
       %div{:class => css_style, :style => 'font-weight: bold; width: 200px; float: left;'}
         = h(l.name)
       %div{:class => css_style, :style => "width: 350px; float: left;"}
-        = (saveable && saveable.answer) ? h(saveable.answer).gsub('\n', '<br/>') : 'not answered'
+        = (saveable && saveable.answer) ? h(saveable.answer).gsub("\n", '<br/>') : 'not answered'
