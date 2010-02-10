@@ -105,8 +105,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def process_open_response(match_data)
     if Embeddable::OpenResponse.find_by_id(match_data[1])
       saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(@learner_id, @offering_id, match_data[1])
-      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != match_data[2]
-        saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => match_data[2])
+      answer = match_data[2] ? match_data[2] : match_data[3]
+      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
+        saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => answer)
       end
     else
       logger.error("Missing Embeddable::OpenResponse id: #{match_data[1]}")
