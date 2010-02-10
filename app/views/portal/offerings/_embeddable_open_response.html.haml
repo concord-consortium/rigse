@@ -2,8 +2,8 @@
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
     - saveable = open_response_saveable_for_learner(open_response, l)
     - css_style = (saveable && saveable.answered? && saveable.answer) ? 'answered' : 'not_answered'
-    %div{:id => dom_id_for(open_response, :saveable, :learner, l.id), :style => "margin-top: 2px; padding: 2px; border: 1px solid black; width: 570px;", :class => css_style}
-      %div{:class => css_style, :style => 'font-weight: bold;'}
+    %div{:id => dom_id_for(open_response, :saveable, :learner, l.id), :style => "clear: both; float: left; margin-top: 2px; padding: 2px; border: 1px solid black; width: 570px;", :class => css_style}
+      %div{:class => css_style, :style => 'font-weight: bold; width: 200px; float: left;'}
         = h(l.name)
-      %div{:class => css_style, :style => "padding-left: 15px;"}
+      %div{:class => css_style, :style => "width: 350px; float: left;"}
         = (saveable && saveable.answer) ? h(saveable.answer) : 'not answered'
