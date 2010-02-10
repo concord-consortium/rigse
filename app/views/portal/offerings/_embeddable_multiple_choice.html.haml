@@ -3,8 +3,8 @@
     - saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
     - css_style = (saveable && saveable.answered?) ? 'answered' : 'not_answered'
     - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if (saveable && saveable.answered?)
-    %div{:id => dom_id_for(multiple_choice, :saveable, :learner, l.id), :style =>  "clear: both; float: left; margin-top: 2px; padding: 2px; border: 1px solid black; width: 570px;", :class => css_style}
+    %div{:id => dom_id_for(multiple_choice, :saveable, :learner, l.id), :style =>  "clear: both; float: left; margin-top: 2px; padding: 2px; border: 1px solid black; width: 680px;", :class => css_style}
       %div{:class => css_style, :style => 'font-weight: bold; width: 200px; float: left;'}
         = l.name
-      %div{:class => css_style, :style => "width: 350px; float: left;"}
+      %div{:class => css_style, :style => "width: 460px; float: left;"}
         = saveable ? saveable.answer : 'not answered'

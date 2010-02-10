@@ -1,4 +1,7 @@
 class Portal::OfferingsController < ApplicationController
+  
+  layout 'report', :only => %w{report open_response_report multiple_choice_report}
+  
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index
