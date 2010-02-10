@@ -747,6 +747,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          haml_concat report_link_for(offering, 'report', 'Report')
           haml_concat report_link_for(offering, 'open_response_report','OR Report')
           haml_concat report_link_for(offering, 'multiple_choice_report','MC Report')
         end
