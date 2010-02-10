@@ -119,10 +119,10 @@ class Portal::OfferingsController < ApplicationController
     @offering_report = Report::Offering::Investigation.new(@offering)
     @learners = @offering_report.learners
     
-    elements = PageElement.by_investigation(@offering.runnable).by_type([Embeddable::MultipleChoice.to_s,Embeddable::OpenResponse.to_s]).sort_by{|e| [e.activity_position, e.section_position, e.page_position, e.position]}
+    elements = PageElement.by_investigation(@offering.runnable).by_type([Embeddable::MultipleChoice.to_s,Embeddable::OpenResponse.to_s]).to_a
     activity_lambda = lambda {|e| Activity.find(e.activity_id) }
-    section_lambda = lambda {|e| Activity.find(e.activity_id) }
-    page_lambda = lambda {|e| Activity.find(e.activity_id) }
+    section_lambda = lambda {|e| Section.find(e.section_id) }
+    page_lambda = lambda {|e| Page.find(e.page_id) }
     @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
     
     respond_to do |format|
