@@ -119,10 +119,10 @@ class Portal::OfferingsController < ApplicationController
   
   def report
     @offering = Portal::Offering.find(params[:id])
-    @offering_report = Report::Offering::Investigation.new(@offering)
-    @learners = @offering_report.learners
+    # @offering_report = Report::Offering::Investigation.new(@offering)
+    @learners = @offering.learners
     
-    elements = PageElement.by_investigation(@offering.runnable).by_type([Embeddable::MultipleChoice.to_s,Embeddable::OpenResponse.to_s]).to_a
+    elements = PageElement.by_investigation(@offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).to_a
     activity_lambda = lambda {|e| Activity.find(e.activity_id) }
     section_lambda = lambda {|e| Section.find(e.section_id) }
     page_lambda = lambda {|e| Page.find(e.page_id) }

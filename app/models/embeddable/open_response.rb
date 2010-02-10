@@ -10,6 +10,12 @@ class Embeddable::OpenResponse < ActiveRecord::Base
     def by_offering(offering)
       find(:all, :conditions => { :offering_id => offering.id })
     end
+    def by_learner(learner)
+      find(:all, :conditions => { :learner_id => learner.id })
+    end
+    def first_by_learner(learner)
+      find(:first, :conditions => { :learner_id => learner.id })
+    end
   end
 
   acts_as_replicatable

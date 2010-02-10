@@ -533,12 +533,31 @@ module ApplicationHelper
   def learner_report_summary(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    questions = PageElement.by_investigation(learner.offering.runnable).map{|pe| pe.embeddable}
-    answered  = questions.select{|e| s = saveable_for_learner(e,learner); s ? s.answered? : false }
+    questions = PageElement.by_investigation(learner.offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).map{|pe| pe.embeddable}.uniq
+    answered  = questions.select{|q| q.saveables.by_learner(learner).detect{|s| s.answered? }}
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
+        end
+      end
+      haml_tag :div do
+        haml_tag :p do
+          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+        end
+      end
+    end
+  end
+  
+  def offering_report_summary_by_offering(offering, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    questions = PageElement.by_investigation(offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).map{|pe| pe.embeddable}.uniq
+    answered = questions.select{|q| q.saveables.by_offering(offering).detect{|s| s.answered? }}
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
         end
       end
       haml_tag :div do

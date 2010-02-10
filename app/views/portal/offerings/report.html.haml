@@ -2,7 +2,7 @@
   %h3= "Report for: #{@offering.name}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
     %div{:style => 'font-weight: bold'}
-      = offering_report_summary(@offering_report)
+      = offering_report_summary_by_offering(@offering)
     %div
       - @page_elements.keys.sort_by{|a| a.position}.each do |activity|
         - sections = @page_elements[activity]

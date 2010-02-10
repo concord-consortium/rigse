@@ -56,7 +56,7 @@ class Page < ActiveRecord::Base
     end
   end
   
-  delegate :saveable_types, :to => :investigation
+  delegate :saveable_types, :reportable_types, :to => :investigation
   
   has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
