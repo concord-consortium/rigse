@@ -1,8 +1,8 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => %w{open_response_report multiple_choice_report bundle_report}
+  layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
   
-  before_filter :admin_only, :except => [:open_response_report, :multiple_choice_report]
+  before_filter :admin_only, :except => [:report, :open_response_report, :multiple_choice_report]
   
   protected  
 
@@ -44,6 +44,22 @@ class Portal::LearnersController < ApplicationController
     @portal_learner = Portal::Learner.find(params[:id])
     @portal_learner.refresh_saveable_response_objects
     @portal_learner.reload
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  def report
+    @portal_learner = Portal::Learner.find(params[:id])
+    @portal_learner.refresh_saveable_response_objects
+    @portal_learner.reload
+    
+    elements = PageElement.by_investigation(@portal_learner.offering.runnable).by_type([Embeddable::MultipleChoice.to_s,Embeddable::OpenResponse.to_s]).to_a
+    activity_lambda = lambda {|e| Activity.find(e.activity_id) }
+    section_lambda = lambda {|e| Section.find(e.section_id) }
+    page_lambda = lambda {|e| Page.find(e.page_id) }
+    @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
     
     respond_to do |format|
       format.html # report.html.haml

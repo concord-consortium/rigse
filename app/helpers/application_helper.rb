@@ -530,6 +530,25 @@ module ApplicationHelper
     learner.send(options[:type]).select{|item| item.answered_correctly? }.size
   end
   
+  def learner_report_summary(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    questions = PageElement.by_investigation(learner.offering.runnable).map{|pe| pe.embeddable}
+    answered  = questions.select{|e| s = saveable_for_learner(e,learner); s ? s.answered? : false }
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(learner, options)
+        end
+      end
+      haml_tag :div do
+        haml_tag :p do
+          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+        end
+      end
+    end
+  end
+  
   def offering_report_summary(offering_report, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
@@ -701,16 +720,22 @@ module ApplicationHelper
     number_to_percentage(percent(count,max,precision), :precision => precision)
   end
   
-  def open_response_saveable_for_learner(open_response, learner)
-    Saveable::OpenResponse.find_by_open_response_id_and_learner_id(open_response.id, learner.id)
-  end
-  
   def multiple_choice_saveable_for_learner(multiple_choice, learner)
     Saveable::MultipleChoice.find_by_multiple_choice_id_and_learner_id(multiple_choice.id, learner.id)
   end
 
   def open_response_saveable_for_learner(open_response, learner)
     Saveable::OpenResponse.find_by_open_response_id_and_learner_id(open_response.id, learner.id)
+  end
+  
+  def saveable_for_learner(question, learner)
+    if question.kind_of? Embeddable::OpenResponse
+      open_response_saveable_for_learner(question,learner)
+    elsif question.kind_of? Embeddable::MultipleChoice
+      multiple_choice_saveable_for_learner(question,learner)
+    else
+      nil
+    end
   end
 
   def menu_for_learner(learner, opts = {})
@@ -725,8 +750,9 @@ module ApplicationHelper
           end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
-          haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
+          haml_concat report_link_for(learner, 'report', 'Report')
+          # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
+          # haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
           if USING_JNLPS && current_user.has_role?("admin")
             haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
           end

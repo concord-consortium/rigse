@@ -126,6 +126,7 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners,  :member => { 
+      :report => :get,
       :open_response_report => :get, 
       :multiple_choice_report => :get,
       :bundle_report => :get
