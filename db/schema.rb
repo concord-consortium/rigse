@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100208172613) do
+ActiveRecord::Schema.define(:version => 20100210214257) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end
+
+  add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
@@ -345,6 +347,8 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.datetime "updated_at"
     t.boolean  "is_correct"
   end
+
+  add_index "embeddable_multiple_choice_choices", ["multiple_choice_id"], :name => "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
 
   create_table "embeddable_multiple_choices", :force => true do |t|
     t.integer  "user_id"
@@ -677,6 +681,7 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
+  add_index "pages", ["section_id", "position"], :name => "index_pages_on_section_id_and_position"
 
   create_table "passwords", :force => true do |t|
     t.integer  "user_id"
@@ -1483,6 +1488,8 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.datetime "updated_at"
   end
 
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
+
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
     t.string   "name"
@@ -1515,6 +1522,9 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "portal_student_clazzes", ["clazz_id"], :name => "index_portal_student_clazzes_on_clazz_id"
+  add_index "portal_student_clazzes", ["student_id", "clazz_id"], :name => "student_class_index"
 
   create_table "portal_students", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -1729,6 +1739,11 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.integer "user_id"
   end
 
+  add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
+  add_index "roles_users", ["role_id", "user_id"], :name => "role_user_index"
+  add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
+  add_index "roles_users", ["user_id", "role_id"], :name => "user_role_index"
+
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"
     t.integer  "bundle_content_id"
@@ -1737,6 +1752,8 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
 
   create_table "saveable_multiple_choices", :force => true do |t|
     t.integer  "learner_id"
@@ -1758,6 +1775,8 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"
 
   create_table "saveable_open_responses", :force => true do |t|
     t.integer  "learner_id"
@@ -1801,6 +1820,7 @@ ActiveRecord::Schema.define(:version => 20100208172613) do
     t.boolean  "teacher_only",               :default => false
   end
 
+  add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
   add_index "sections", ["position"], :name => "index_sections_on_position"
 
   create_table "sessions", :force => true do |t|
