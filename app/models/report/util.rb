@@ -1,4 +1,9 @@
 class Report::Util
+  ## FIXME Eventually this could use a service like memcached and then it wouldn't bloat the rails server processes
+  
+  ## 60 reports' details should be ok to hold in memory, for now
+  MAX_CACHED_REPORTS = 60
+  TRIM_BY = 10
   
   attr_accessor :offering, :learners
   attr_accessor :investigation, :activities, :sections, :pages, :page_elements
@@ -6,20 +11,39 @@ class Report::Util
   attr_accessor :saveables_by_embeddable
   # attr_accessor :saveables_by_type, :saveables_by_learner_id, :saveables_by_answered, :saveables_by_correct
   # attr_accessor :embeddables, :embeddables_by_type
+  attr_accessor :last_accessed
+  
+  cattr_accessor :cache
   
   @@cache = {}
   
   def self.factory(offering)
+    maintenance
+    ## TODO This class should probably be thread-safe eventually
     @@cache[offering] ||= Report::Util.new(offering)
     return @@cache[offering]
   end
   
   def self.reload(offering)
-    @@cache[offering] = Report::Util.new(offering)
-    return @@cache[offering]
+    invalidate(offering)
+    return factory(offering)
+  end
+  
+  def self.invalidate(offering)
+    @@cache.delete(offering)
+  end
+  
+  def self.maintenance
+    if @@cache.size > MAX_CACHED_REPORTS
+      puts "Cache size is #{@@cache.size}. Trimming down."
+      last_time = @@cache.values.sort_by{|v| v.last_accessed}[TRIM_BY].last_accessed
+      @@cache.delete_if{|k,v| v.last_accessed < last_time }
+      puts "Cache size is now #{@@cache.size}."
+    end
   end
   
   def saveable(learner, embeddable)
+    @last_accessed = Time.now
     results = Array(@saveables_by_embeddable[embeddable])
     results = results & Array(@saveables_by_learner_id[learner.id])
     results = [Saveable::SaveableStandin.new] if results.size < 1
@@ -28,6 +52,7 @@ class Report::Util
   end
   
   def saveables(options = {})
+    @last_accessed = Time.now
     results = @saveables
     results = Array(@saveables_by_learner_id[options[:learner].id]) if options[:learner]
     results = results & Array(@saveables_by_answered[true]) if options[:answered]
@@ -37,12 +62,14 @@ class Report::Util
   end
   
   def embeddables(options = {})
+    @last_accessed = Time.now
     results = @embeddables
     results = Array(@embeddables_by_type[options[:type].to_s]) if options[:type.to_s]
     return results
   end
   
   def initialize(offering)
+    @last_accessed = Time.now
     @offering = offering
     @learners = @offering.learners
     @investigation = offering.runnable
