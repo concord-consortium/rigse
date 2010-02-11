@@ -545,7 +545,7 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(learner, options)
+          haml_concat title_for_component(learner.offering, options)
         end
       end
       haml_tag :div do
