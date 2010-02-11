@@ -1,7 +1,7 @@
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
   %h3= "Open Response Report for: #{@offering.name}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
-    = accordion_for(@offering, offering_or_report_summary(@offering_report)) do
+    = accordion_for(@offering, offering_report_summary(@offering_report, :type => Embeddable::OpenResponse)) do
       - @offering_report.activities.each_with_index do |activity,activity_num|
         - next if activity.respondables(Saveable::OpenResponse).empty?
         %ul

@@ -119,14 +119,10 @@ class Portal::OfferingsController < ApplicationController
   
   def report
     @offering = Portal::Offering.find(params[:id])
-    # @offering_report = Report::Offering::Investigation.new(@offering)
-    @learners = @offering.learners
+    reportUtil = Report::Util.factory(@offering)
+    @learners = reportUtil.learners
     
-    elements = PageElement.by_investigation(@offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).to_a
-    activity_lambda = lambda {|e| Activity.find(e.activity_id) }
-    section_lambda = lambda {|e| Section.find(e.section_id) }
-    page_lambda = lambda {|e| Page.find(e.page_id) }
-    @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
+    @page_elements = reportUtil.page_elements
     
     respond_to do |format|
       format.html # multiple_choice_report.html.haml

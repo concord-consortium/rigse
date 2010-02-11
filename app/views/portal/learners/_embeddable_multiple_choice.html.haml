@@ -1,8 +1,8 @@
 %div{:id => dom_id_for(multiple_choice, :item), :class => 'item'}
   %div{ :id => dom_id_for(multiple_choice, :details), :class => 'content' }
-    - saveable = multiple_choice_saveable_for_learner(multiple_choice, learner)
-    - css_style = (saveable && saveable.answered?) ? 'answered' : 'not_answered'
-    - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if (saveable && saveable.answered?)
+    - saveable = saveable_for_learner(multiple_choice, learner)
+    - css_style = saveable.answered? ? 'answered' : 'not_answered'
+    - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
     %item{:style => 'display: block;'}
       = multiple_choice.prompt
     - multiple_choice.choices.each_with_index do |choice, i|
@@ -13,6 +13,6 @@
         - css = choice.is_correct ? 'correct' : ''
         %item{:class => css, :style => 'display: block;'}
           = "#{i+1}. #{choice.choice}"
-    - if ! saveable || saveable.answer == 'not answered'
+    - if saveable.answer == 'not answered'
       %item{:class => 'not_answered', :style => 'font-weight: bold;'}
         = 'not answered'

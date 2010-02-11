@@ -483,19 +483,18 @@ module ApplicationHelper
   end
 
   def open_response_learner_stat(learner)
-    " Open Response: #{learner.open_responses.answered.length}/#{learner.open_responses.length} "
+    reportUtil = Report::Util.factory(learner.offering)
+    answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
+    total = reportUtil.embeddables(:type => Embeddable::OpenRespose).size
+    " Open Response: #{answered}/#{total} "
   end
 
   def multiple_choice_learner_stat(learner)
-    " Multiple Choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length} "
-  end
-  
-  def open_response_offering_stat(offering, open_response)
-    " Responses: #{offering.open_responses.find(:all, :conditions => { :open_response_id => open_response.id }).length} "
-  end
-
-  def multiple_choice_offering_stat(offering, multiple_choice)
-    " Responses: #{offering.multiple_choices.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id }).length}, correct: #{offering.multiple_choices.answered_correctly.find(:all, :conditions => { :multiple_choice_id => multiple_choice.id })} "
+    reportUtil = Report::Util.factory(learner.offering)
+    answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
+    correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
+    total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
+    " Multiple Choice: #{answered}/#{correct}/#{total} "
   end
   
   def sessions_learner_stat(learner)
@@ -508,7 +507,13 @@ module ApplicationHelper
   end
   
   def learner_specific_stats(learner)
-    "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{learner.open_responses.answered.length}/#{learner.open_responses.length}, multiple choice:  #{learner.multiple_choices.answered.length}/#{learner.multiple_choices.answered_correctly.length}/#{learner.multiple_choices.length}"
+    reportUtil = Report::Util.factory(learner.offering)
+    or_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
+    or_total = reportUtil.embeddables(:type => Embeddable::OpenRespose).size
+    mc_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
+    mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
+    mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
+    "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{or_answered}/#{or_total}, multiple choice:  #{mc_answered}/#{mc_correct}/#{mc_total}"
   end
   
   def report_details_for_learner(learner, opts = {})
@@ -525,16 +530,18 @@ module ApplicationHelper
   end
   
   def report_correct_count_for_learner(learner, opts = {} )
-    options = {:type => :multiple_choice}
+    options = {:type => Embeddable::MultipleChoice}
     options.update(opts)
-    learner.send(options[:type]).select{|item| item.answered_correctly? }.size
+    reportUtil = Report::Util.factory(learner.offering)
+    mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => options[:type]).size
   end
   
   def learner_report_summary(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    questions = PageElement.by_investigation(learner.offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).map{|pe| pe.embeddable}.uniq
-    answered  = questions.select{|q| q.saveables.by_learner(learner).detect{|s| s.answered? }}
+    reportUtil = Report::Util.factory(learner.offering)
+    questions = reportUtil.embeddables
+    answered  = reportUtil.saveables(:learner => learner, :answered => true)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -549,72 +556,27 @@ module ApplicationHelper
     end
   end
   
-  def offering_report_summary_by_offering(offering, opts = {})
+  def offering_report_summary(offering, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
-    questions = PageElement.by_investigation(offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).map{|pe| pe.embeddable}.uniq
-    answered = questions.select{|q| q.saveables.by_offering(offering).detect{|s| s.answered? }}
+    reportUtil = Report::Util.factory(offering)
+    questions = reportUtil.embeddables(:type => options[:type])
+    type_id_lambda = lambda{|s|
+      types = Investigation.reportable_types.map{|t| t.to_s.demodulize.underscore }
+      type = types.detect{|t| s.respond_to?(t) }
+      if type
+        type_id = "#{type}_id"
+        embeddable_identifier = "#{type}-#{s.send(type_id)}"
+      else
+        nil
+      end
+    }
+    answered = reportUtil.saveables_by_embeddable
+    answered = answered.select{|s,v| s.kind_of? options[:type]} if options[:type]
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
-        end
-      end
-      haml_tag :div do
-        haml_tag :p do
-          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
-        end
-      end
-    end
-  end
-  
-  def offering_report_summary(offering_report, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
-    options.update(opts)
-    questions = offering_report.respondables.group_by{|r| r.embeddable }
-    answered  = questions.select{|r,v| v.detect{|re| re.answered }}
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering_report.offering, options)
-        end
-      end
-      haml_tag :div do
-        haml_tag :p do
-          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
-        end
-      end
-    end
-  end
-
-  def offering_or_report_summary(offering_report, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
-    options.update(opts)
-    questions = offering_report.investigation.open_responses
-    answered  = offering_report.offering.open_responses
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering_report.offering, options)
-        end
-      end
-      haml_tag :div do
-        haml_tag :p do
-          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
-        end
-      end
-    end
-  end
-  
-  def offering_mc_report_summary(offering_report, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
-    options.update(opts)
-    questions = offering_report.investigation.multiple_choices
-    answered  = offering_report.offering.multiple_choices.group_by{|m| m.multiple_choice}
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering_report.offering, options)
         end
       end
       haml_tag :div do
@@ -630,10 +592,7 @@ module ApplicationHelper
     options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering, options)
-          haml_concat open_response_offering_stat(offering, open_response)
-        end
+        haml_tag :div, :class => 'action_menu_header_left'
       end
       haml_tag(:div, :class => 'item') {
         haml_tag(:div) {
@@ -647,10 +606,11 @@ module ApplicationHelper
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
     answer_counts = {}
-    learners = offering.learners
+    reportUtil = Report::Util.factory(offering)
+    learners = reportUtil.learners
     learners.each do |learner|
-      saveable = multiple_choice_saveable_for_learner(multiple_choice, learner)
-      answer = saveable ? saveable.answer : 'not answered'
+      saveable = reportUtil.saveable(learner, multiple_choice)
+      answer = saveable.answer
       answer_counts[answer] ||= 0
       answer_counts[answer] += 1
     end
@@ -658,12 +618,10 @@ module ApplicationHelper
     all_choices = multiple_choice.choices
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(multiple_choice, options)
-        end
+        haml_tag :div, :class => 'action_menu_header_left'
       end
       haml_tag(:div) {
-        haml_tag(:div) {
+        haml_tag(:div, :style => 'background-color: white; border: 1px dotted black;') {
           haml_concat(multiple_choice.prompt)
         }
         haml_tag(:div) {
@@ -739,22 +697,9 @@ module ApplicationHelper
     number_to_percentage(percent(count,max,precision), :precision => precision)
   end
   
-  def multiple_choice_saveable_for_learner(multiple_choice, learner)
-    Saveable::MultipleChoice.find_by_multiple_choice_id_and_learner_id(multiple_choice.id, learner.id)
-  end
-
-  def open_response_saveable_for_learner(open_response, learner)
-    Saveable::OpenResponse.find_by_open_response_id_and_learner_id(open_response.id, learner.id)
-  end
-  
   def saveable_for_learner(question, learner)
-    if question.kind_of? Embeddable::OpenResponse
-      open_response_saveable_for_learner(question,learner)
-    elsif question.kind_of? Embeddable::MultipleChoice
-      multiple_choice_saveable_for_learner(question,learner)
-    else
-      nil
-    end
+    reportUtil = Report::Util.factory(learner.offering)
+    reportUtil.saveable(learner, question)
   end
 
   def menu_for_learner(learner, opts = {})
@@ -790,7 +735,7 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
-          haml_concat "Responses: #{offering.learners.length}"
+          # haml_concat "Active students: #{offering.learners.length}"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")

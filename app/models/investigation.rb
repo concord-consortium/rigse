@@ -46,6 +46,17 @@ class Investigation < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
+    
+  has_many :sections,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
+    
+  has_many :pages,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
   
   acts_as_replicatable
 

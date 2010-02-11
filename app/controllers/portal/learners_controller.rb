@@ -30,8 +30,6 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/open_response_report.xml
   def open_response_report
     @portal_learner = Portal::Learner.find(params[:id])
-    @portal_learner.refresh_saveable_response_objects
-    @portal_learner.reload
     
     respond_to do |format|
       format.html # report.html.haml
@@ -42,8 +40,6 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/multiple_choice_report.xml
   def multiple_choice_report
     @portal_learner = Portal::Learner.find(params[:id])
-    @portal_learner.refresh_saveable_response_objects
-    @portal_learner.reload
     
     respond_to do |format|
       format.html # report.html.haml
@@ -53,11 +49,9 @@ class Portal::LearnersController < ApplicationController
   def report
     @portal_learner = Portal::Learner.find(params[:id])
     
-    elements = PageElement.by_investigation(@portal_learner.offering.runnable).by_type(Investigation.reportable_types.map{|t| t.to_s}).to_a
-    activity_lambda = lambda {|e| Activity.find(e.activity_id) }
-    section_lambda = lambda {|e| Section.find(e.section_id) }
-    page_lambda = lambda {|e| Page.find(e.page_id) }
-    @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
+    reportUtil = Report::Util.factory(@portal_learner.offering)
+    
+    @page_elements = reportUtil.page_elements
     
     respond_to do |format|
       format.html # report.html.haml
