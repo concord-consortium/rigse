@@ -119,7 +119,7 @@ class Portal::OfferingsController < ApplicationController
   
   def report
     @offering = Portal::Offering.find(params[:id])
-    reportUtil = Report::Util.factory(@offering)
+    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
     @learners = reportUtil.learners
     
     @page_elements = reportUtil.page_elements
