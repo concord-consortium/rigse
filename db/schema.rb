@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100210214257) do
+ActiveRecord::Schema.define(:version => 20100212154213) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -73,6 +73,52 @@ ActiveRecord::Schema.define(:version => 20100210214257) do
     t.integer  "biologica_organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
+    t.text "hostname"
+    t.text "key"
+    t.text "value"
+    t.text "cast"
+  end
+
+  create_table "bj_job", :primary_key => "bj_job_id", :force => true do |t|
+    t.text     "command"
+    t.text     "state"
+    t.integer  "priority"
+    t.text     "tag"
+    t.integer  "is_restartable"
+    t.text     "submitter"
+    t.text     "runner"
+    t.integer  "pid"
+    t.datetime "submitted_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.text     "env"
+    t.text     "stdin"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.integer  "exit_status"
+  end
+
+  create_table "bj_job_archive", :primary_key => "bj_job_archive_id", :force => true do |t|
+    t.text     "command"
+    t.text     "state"
+    t.integer  "priority"
+    t.text     "tag"
+    t.integer  "is_restartable"
+    t.text     "submitter"
+    t.text     "runner"
+    t.integer  "pid"
+    t.datetime "submitted_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "archived_at"
+    t.text     "env"
+    t.text     "stdin"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.integer  "exit_status"
   end
 
   create_table "dataservice_bundle_contents", :force => true do |t|
