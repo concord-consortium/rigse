@@ -17,10 +17,10 @@ class Report::Util
   
   @@cache = {}
   
-  def self.factory(offering)
+  def self.factory(offering, show_only_active_learners = true)
     maintenance
     ## TODO This class should probably be thread-safe eventually
-    @@cache[offering] ||= Report::Util.new(offering)
+    @@cache[offering] ||= Report::Util.new(offering, show_only_active_learners)
     return @@cache[offering]
   end
   
@@ -68,10 +68,13 @@ class Report::Util
     return results
   end
   
-  def initialize(offering)
+  def initialize(offering, show_only_active_learners)
     @last_accessed = Time.now
     @offering = offering
+    
     @learners = @offering.learners
+    @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
+    
     @investigation = offering.runnable
     
     @saveables = []
