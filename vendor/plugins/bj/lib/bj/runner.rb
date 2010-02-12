@@ -94,7 +94,13 @@ class Bj
 
       def key ppid = 0
         ppid ||= 0
-        "#{ Bj.rails_env }.#{ ppid }.pid"
+        
+        ## If we include the ppid in the key, it will start one background processor *per server process*.
+        ## This will cause a lot of background processing jobs to start up.
+        ## TODO It could use the current hostname to run one per host...
+        ## TODO Figure out how to run several in parallel to speed up background processing
+        # "#{ Bj.rails_env }.#{ ppid }.pid"
+        "#{ Bj.rails_env }.pid"
       end
 
       def no_tickle_key 
