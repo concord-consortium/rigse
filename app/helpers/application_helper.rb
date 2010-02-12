@@ -700,6 +700,7 @@ module ApplicationHelper
   end
   
   def percent(count,max,precision = 1)
+    return 0 if max < 1
     raw = (count/max.to_f)*100
     result = (raw*(10**precision)).round/(10**precision).to_f
   end
