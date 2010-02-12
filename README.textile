@@ -536,6 +536,19 @@ h3. Exception Notifier
 You don't want your applications to crash and burn so Exception Notifier is already installed to let 
 you know when everything goes to shit.
 
+config/initializers/exception_notifier.rb does the setup. Currently it reads 
+"admin_email" from config/settings.yml and use it as the destination address.
+The setup can be modified to include multiple email addresses.
+See the homepage readme of exception notifier.
+
+h4. Bug
+
+It seems rails 2.3.3 and 2.3.4 fails to deliver emails when someone passes
+multiple destination addresses as an array, which exception notifier does.
+config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
+
+The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
+
 h2. CSS
 
 h3. Asset Packager
