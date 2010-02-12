@@ -33,7 +33,9 @@ class Bj
         q = Queue.new
         thread = Thread.new do
           Thread.current.abort_on_exception = true
-          systemu(*a){|pid| q << pid}
+          # systemu(*a){|pid| q << pid}
+          q << 0
+          eval(a[0])
         end
         pid = q.pop
         thread.singleton_class{ define_method(:pid){ pid } }

@@ -157,6 +157,7 @@ class Bj
       end
 
       def run
+        require File.join(RAILS_ROOT, 'config', 'environment.rb')
         wait = options[:wait] || 42
         limit = options[:limit]
         forever = options[:forever]
