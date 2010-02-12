@@ -590,14 +590,26 @@ module ApplicationHelper
   def offering_details_open_response(offering, open_response, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
+    reportUtil = Report::Util.factory(offering)
+    total = reportUtil.learners.size
+    answered = reportUtil.saveables(:embeddable => open_response, :answered => true).size
+    skipped = total - answered
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left'
       end
-      haml_tag(:div, :class => 'item') {
-        haml_tag(:div) {
-          haml_concat(open_response.prompt)
-        }
+      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+        haml_concat(open_response.prompt)
+      }
+      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; font-weight: bold;') {
+        haml_tag(:div) { haml_concat("Answered") }
+        haml_tag(:div) { haml_concat("Skipped") }
+        haml_tag(:div) { haml_concat("Total") }
+      }
+      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right;') {
+        haml_tag(:div) { haml_concat(answered) }
+        haml_tag(:div) { haml_concat(skipped) }
+        haml_tag(:div) { haml_concat(total) }
       }
     end
   end
