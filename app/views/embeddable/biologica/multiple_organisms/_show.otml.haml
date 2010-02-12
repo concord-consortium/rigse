@@ -1,0 +1,4 @@
+%OTMultipleOrganism{ :local_id => ot_local_id_for( multiple_organism ), :width => multiple_organism.width, :height => multiple_organism.height }
+  %organisms
+    - multiple_organism.organisms.each do |org|
+      = render_scoped_reference(org)

@@ -1,4 +1,0 @@
-%OTPedigree{ :local_id => ot_local_id_for(biologica_pedigree), :height => biologica_pedigree.height, :width => biologica_pedigree.width, :crossoverEnabled => biologica_pedigree.crossover_enabled.to_s, :sexTextVisible => biologica_pedigree.sex_text_visible.to_s, :organismImagesVisible => biologica_pedigree.organism_images_visible.to_s, :organismImageSize => biologica_pedigree.organism_image_size, :topControlsVisible => biologica_pedigree.top_controls_visible.to_s, :resetButtonVisible => biologica_pedigree.reset_button_visible.to_s, :minimumNumberChildren => biologica_pedigree.minimum_number_children, :maximumNumberChildren => biologica_pedigree.maximum_number_children}
-  %organisms
-    - biologica_pedigree.biologica_organisms.each do |org|
-      = render_scoped_reference(org)

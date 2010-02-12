@@ -39,14 +39,32 @@ class ApplicationController < ActionController::Base
   
   def setup_project
     @project = Admin::Project.default_project
-    @jnlp_adaptor = JnlpAdaptor.new(@project)
-    @jnlp_testing_adaptor = JnlpTestingAdaptor.new
+    if USING_JNLPS
+      @jnlp_adaptor = JnlpAdaptor.new(@project)
+      @jnlp_testing_adaptor = JnlpTestingAdaptor.new
+    end
   end
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
     render :file => File.join(RAILS_ROOT, 'public', '404.html'), :status => 404
   end
+  
+  
+  def param_find(token_sym, force_nil=false)
+    token = token_sym.to_s
+     eval_string = <<-EOF
+      if params[:#{token}]
+        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
+      elsif force_nil
+         session[:#{token}] = cookies[:#{token}] = nil
+      else
+        #{token} = session[:#{token}] || cookies[:#{token}]
+      end
+    EOF
+    eval eval_string
+  end
+  
   
   def get_scope(default)
     begin

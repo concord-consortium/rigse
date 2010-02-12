@@ -1,0 +1,5 @@
+%OTBreedOffspring{ :local_id => ot_local_id_for( breed_offspring), :width => breed_offspring.width, :height => breed_offspring.height }
+  %fatherOrganism
+    = render_scoped_reference(breed_offspring.father_organism)
+  %motherOrganism
+    = render_scoped_reference(breed_offspring.mother_organism)

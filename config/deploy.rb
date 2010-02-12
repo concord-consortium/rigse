@@ -1,7 +1,7 @@
 set :stages, %w(
-  development staging production seymour 
+  development staging production jnlp-staging seymour 
   itsisu-dev itsisu-staging itsisu-production fall2009 
-  smartgraphs-production smartgraphs-staging)
+  smartgraphs-production smartgraphs-staging sg-dev sparks-dev)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -15,7 +15,7 @@ def render(file,opts={})
 end
 
 #############################################################
-#  Miantance mode
+#  Maintenance mode
 #############################################################
 task :disable_web, :roles => :web do
   on_rollback { delete "#{shared_path}/system/maintenance.html" }
@@ -169,13 +169,13 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/rinet_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
+    run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
-    run "touch #{shared_path}/config/sds.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/database.yml"
@@ -187,10 +187,10 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"    
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
-    run "ln -nfs #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
+    run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
@@ -288,6 +288,14 @@ namespace :import do
     run "cd #{deploy_to}/#{current_dir} && " +
     "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace" 
   end
+  
+  # 01/27/2010
+  desc "create or update a git svn clone of sparks-content"
+  task :create_or_update_sparks_content, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+    "rake RAILS_ENV=#{rails_env} rigse:import:create_or_update_sparks_content --trace" 
+  end
+  
 end
 
 #############################################################
@@ -363,13 +371,13 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
   end
 
-  desc "Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor"
+  desc "Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor"
   task :data_collectors_with_invalid_graph_types, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
-  desc "copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name"
+  desc "copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name"
   task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_xhtml_into_name --trace"
@@ -453,6 +461,27 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:convert:add_static_page_to_inner_pages --trace"
   end
+  
+  # Feb 3, 2010
+  desc "Extract and process learner responses from existing OTrunk bundles"
+  task :extract_learner_responses_from_existing_bundles, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:extract_learner_responses_from_existing_bundles --trace"
+  end
+
+  desc "Erase all learner responses and reset the tables"
+  task :erase_all_learner_responses_and_reset_the_tables, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:erase_all_learner_responses_and_reset_the_tables --trace"
+  end
+  
+  #Feb 4, 2010
+  desc "Convert all index-based MultipleChoice references in existing OTrunk bundles to local_id-based references."
+  task :convert_choice_answers_to_local_ids, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:convert_choice_answers_to_local_ids --trace"
+  end
+  
 end
 
 

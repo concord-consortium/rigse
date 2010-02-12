@@ -1,0 +1,2 @@
+- remote_form_for(chromosome_zoom, :update => dom_id_for(chromosome_zoom, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "form", :locals => { :chromosome_zoom => chromosome_zoom, :f => f  }

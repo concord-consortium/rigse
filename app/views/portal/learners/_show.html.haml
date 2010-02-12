@@ -1,10 +1,12 @@
-- options = { :omit_delete => true, :hide_componenent_name => true }
-= accordion_for(portal_learner, show_menu_for(portal_learner, options)) do
-  %div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
-    %div{:id => dom_id_for(portal_learner, :details), :class => 'content'}
-      - dataservice_bundle_logger =  portal_learner.bundle_logger
-      = accordion_for(dataservice_bundle_logger, 'Bundles', options) do
-        = render :partial => 'dataservice/bundle_contents/show', :collection => dataservice_bundle_logger.bundle_contents, :as => :dataservice_bundle_content
-      - dataservice_console_logger =  portal_learner.console_logger
-      = accordion_for(dataservice_console_logger, 'Consoles', options) do
-        = render :partial => 'dataservice/console_contents/show', :collection => dataservice_console_logger.console_contents, :as => :dataservice_console_content
+%div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
+  = menu_for_learner(portal_learner)
+  / %div{ :id => dom_id_for(portal_learner, :details), :class => 'content' }
+  /   items to follow
+  /   %item
+  /     item 1
+  /   %item
+  /     item 2
+
+/ = accordion_for(portal_learner, menu_for_learner(portal_learner, options)) do
+/   %div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
+/     %div{:id => dom_id_for(portal_learner, :details), :class => 'content'}

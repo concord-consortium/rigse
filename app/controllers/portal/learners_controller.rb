@@ -1,6 +1,8 @@
 class Portal::LearnersController < ApplicationController
 
-  before_filter :admin_only
+  layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
+  
+  before_filter :admin_only, :except => [:report, :open_response_report, :multiple_choice_report]
   
   protected  
 
@@ -21,6 +23,48 @@ class Portal::LearnersController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @portal_learners }
+    end
+  end
+
+  # GET /portal/learners/1/open_response_report
+  # GET /portal/learners/1/open_response_report.xml
+  def open_response_report
+    @portal_learner = Portal::Learner.find(params[:id])
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  # GET /portal/learners/1/multiple_choice_report
+  # GET /portal/learners/1/multiple_choice_report.xml
+  def multiple_choice_report
+    @portal_learner = Portal::Learner.find(params[:id])
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  def report
+    @portal_learner = Portal::Learner.find(params[:id])
+    
+    reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
+    
+    @page_elements = reportUtil.page_elements
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+
+  # GET /portal/learners/1/bundle_report
+  # GET /portal/learners/1/bundle_report.xml
+  def bundle_report
+    @portal_learner = Portal::Learner.find(params[:id])
+    
+    respond_to do |format|
+      format.html # report.html.haml
     end
   end
 

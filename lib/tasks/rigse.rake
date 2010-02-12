@@ -25,7 +25,7 @@ namespace :rigse do
     autoload :Highline, 'highline'
 
     require 'fileutils'
-    
+
     def rails_file_path(*args)
       File.join([RAILS_ROOT] + args)
     end
@@ -33,8 +33,8 @@ namespace :rigse do
 
     desc "setup initial probe_type for data_collectors that don't have one"
     task :set_probe_type_for_data_collectors => :environment do
-      DataCollector.find(:all).each do |dc| 
-        if pt = ProbeType.find_by_name(dc.y_axis_label)
+      Embeddable::DataCollector.find(:all).each do |dc| 
+        if pt = Probe::ProbeType.find_by_name(dc.y_axis_label)
           dc.probe_type = pt
           dc.save
         end
@@ -105,6 +105,7 @@ HEREDOC
     #######################################################################
     desc "setup a new rites instance, run: ruby config/setup.rb first"
     task :new_rites_app => :environment do
+
       db_config = ActiveRecord::Base.configurations[RAILS_ENV]
 
       # Rake::Task['rigse:setup:development_environment_only'].invoke
@@ -116,7 +117,7 @@ This task will:
  1. create default users and roles
  2. optionally create additional users
  3. load default probe, interface, and calibration reesources
- 4. generate a set of the RI Grade Span Expectation
+ 4. generate a set of the RI Grade Span RiGse::Expectation
  5. assign teh Vernier Go!Link interface as a default to the existing users
  6. generate the maven_jnlp resources
  7. optionally download, introspect, and create models representing otrunk-examples 
@@ -131,9 +132,14 @@ HEREDOC
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
-        Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        # FIXME: when and if any other projetcs/hemes need RI GSE models
+        if USING_RITES
+          Rake::Task['rigse:setup:import_gses_from_file'].invoke
+        end
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
-        Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
+        if USING_JNLPS
+          Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
+        end
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         else

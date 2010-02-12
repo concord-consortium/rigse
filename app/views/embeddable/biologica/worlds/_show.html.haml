@@ -1,0 +1,4 @@
+%div{:id => dom_id_for(world, :details), :class => 'content'}
+  = wrap_edit_link_around_content(world, options={:complete => mce_init_string}) do
+    = world.description
+    = world.species_path

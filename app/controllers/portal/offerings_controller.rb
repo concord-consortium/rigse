@@ -1,4 +1,7 @@
 class Portal::OfferingsController < ApplicationController
+  
+  layout 'report', :only => %w{report open_response_report multiple_choice_report}
+  
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index
@@ -18,11 +21,19 @@ class Portal::OfferingsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @offering }
+      
+      format.run_sparks_html   { 
+        if learner = setup_portal_student
+          session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
+        else
+          session[:put_path] = nil
+        end
+        render 'pages/show', :layout => "layouts/run" 
+      }
+      
       format.jnlp {
         # check if the user is a student in this offering's class
-        if portal_student = current_user.portal_student
-          # create a learner for the user if one doesnt' exist
-          learner = @offering.find_or_create_learner(portal_student)
+        if learner = setup_portal_student
           if params.delete(:use_installer)
             wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params)
             render :partial => 'shared/learn_installer', :locals => 
@@ -106,6 +117,35 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def report
+    @offering = Portal::Offering.find(params[:id])
+    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+    @learners = reportUtil.learners
+    
+    @page_elements = reportUtil.page_elements
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
+  
+  def multiple_choice_report
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering_report = Report::Offering::Investigation.new(@offering)
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
+
+  def open_response_report
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering_report = Report::Offering::Investigation.new(@offering)
+
+    respond_to do |format|
+      format.html # open_response_report.html.haml
+    end
+  end
   
   
   # GET /portal/offerings/data_test(.format)
@@ -126,4 +166,13 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  
+  def setup_portal_student
+    learner = nil
+    if portal_student = current_user.portal_student
+      # create a learner for the user if one doesnt' exist
+      learner = @offering.find_or_create_learner(portal_student)
+    end
+    learner
+  end
 end

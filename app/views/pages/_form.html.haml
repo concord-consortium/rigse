@@ -1,6 +1,7 @@
 - form_for(@page) do |f|
   = f.error_messages
-  = f.hidden_field 'section_id', :value =>@page.section.id
+  - if @page.section
+    = f.hidden_field 'section_id', :value => @page.section.id
   = edit_menu_for(@page, f)
   - field_set_tag 'Page Name' do
     = f.text_field :name

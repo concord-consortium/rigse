@@ -4,6 +4,9 @@ module DrawToolHelper
     "/images/otrunk_objects/draw_tool.gif";
   end
   
+  def dt_padding
+    40
+  end
   def dt_pallet_image_width
     624
   end
@@ -21,23 +24,40 @@ module DrawToolHelper
   end
   
   def dt_pallet_style
-    return <<-DONE
-      background-image:   url('#{dt_pallet_image}');
-     display:             block; 
-     width:               #{dt_pallet_image_width}px;
-     height:              #{dt_pallet_image_height}px;}
+    style = <<-DONE
+     background-image:      url('#{dt_pallet_image}');
+     background-position:   bottom right;
+     background-repeat:     no-repeat;
+     display:               block; 
+     overflow:              hidden;
+     width:                 100% !important;
+     min-height:            #{dt_pallet_image_height}px;
      DONE
+    style.gsub(/\s+/, " ").gsub(/$/, " ")
   end
   
-  def dt_canvas_style(draw_tool)
-    return <<-DONE
-    background-image:      url('#{draw_tool.background_image_url}');
-    background-repeat:     no-repeat;
-    background-position:   top-left;
-    overflow:              hidden; 
-    display:               block; 
-    width:                 #{dt_canvas_width}px; 
-    height:                #{dt_canvas_height}px;}
-    DONE
+  def dt_mask_style
+    style = <<-DONE
+     display:               block; 
+     overflow:              hidden;
+     display:  block;
+     position: relative;
+     margin-bottom:         #{dt_padding}px;
+     margin-right:          #{dt_padding}px;
+     width:                 90%;
+     DONE
+    style.gsub(/\s+/, " ").gsub(/$/, " ")
   end
+  
+  def dt_image_style
+    style = <<-DONE
+     border:                2px grey solid;
+     display:               block;
+     position:              absolute;
+     left:                  0;
+     bottom: 0;
+     DONE
+    style.gsub(/\s+/, " ").gsub(/$/, " ")
+  end
+
 end

@@ -52,7 +52,7 @@ namespace :rigse do
     #######################################################################
     desc "Assign Vernier go!Link as default vendor_interface for users without a vendor_interface."
     task :assign_vernier_golink_to_users => :environment do
-      interface = VendorInterface.find_by_short_name('vernier_goio')
+      interface = Probe::VendorInterface.find_by_short_name('vernier_goio')
       User.find(:all).each do |u|
         unless u.vendor_interface
           u.vendor_interface = interface
@@ -70,7 +70,7 @@ namespace :rigse do
       end
     end
 
-    desc 'Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor'
+    desc 'Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor'
     task :data_collectors_with_invalid_graph_types => :environment do
       puts <<HEREDOC
 
@@ -79,13 +79,13 @@ which was used to indicate a static graph type, and set the graph_type_id to 1
 (Sensor) and set the new boolean attribute static to true.
 
 In addition it will set the graph_type_id to 1 if the existing graph_type_id is nil.
-These DataCollectors appeared to be created by the ITSI importer.
+These Embeddable::DataCollectors appeared to be created by the ITSI importer.
 
 There is no way for this transformation to tell whether the original graph was a 
 sensor or prediction graph_type so it sets the type to 1 (Sensor).
 
 HEREDOC
-      old_style_static_graphs = DataCollector.find_all_by_graph_type_id(3)
+      old_style_static_graphs = Embeddable::DataCollector.find_all_by_graph_type_id(3)
       puts "converting #{old_style_static_graphs.length} old style static graphs and changing type to Sensor"
       attributes = { :graph_type_id => 1, :static => true }
       old_style_static_graphs.each do |dc| 
@@ -93,8 +93,8 @@ HEREDOC
         print '.'; STDOUT.flush
       end
       puts
-      nil_graph_types = DataCollector.find_all_by_graph_type_id(nil)
-      puts "changing type of #{nil_graph_types.length} DataCollectors with nil graph_type_ids to Sensor"
+      nil_graph_types = Embeddable::DataCollector.find_all_by_graph_type_id(nil)
+      puts "changing type of #{nil_graph_types.length} Embeddable::DataCollectors with nil graph_type_ids to Sensor"
       attributes = { :graph_type_id => 1, :static => false }
       nil_graph_types.each do |dc| 
         dc.update_attributes(attributes)
@@ -103,11 +103,11 @@ HEREDOC
       puts
     end
 
-    desc 'copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name'
+    desc 'copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name'
     task :copy_truncated_xhtml_into_name => :environment do
-      models = [Xhtml, OpenResponse, MultipleChoice]
+      models = [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice]
       puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
-      [Xhtml, OpenResponse, MultipleChoice].each do |klass|
+      [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice].each do |klass|
         puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute\n"
         klass.find_in_batches(:batch_size => 100) do |group|
           group.each { |x| x.save! }
@@ -206,7 +206,7 @@ HEREDOC
 
     desc "Fixup inner pages so they have a satic area (run migrations first)"
     task :add_static_page_to_inner_pages => :environment do
-      innerPageElements = PageElement.all.select { |pe| pe.embeddable_type == "InnerPage" }
+      innerPageElements = PageElement.all.select { |pe| pe.embeddable_type == "Embeddable::InnerPage" }
       innerPages = innerPageElements.map { |pe| pe.embeddable }
       innerPages.each do |ip|
         if ip.static_page.nil?
@@ -216,6 +216,88 @@ HEREDOC
         end
       end
     end
+    
+    # Feb 3, 2010
+    desc "Extract and process learner responses from existing OTrunk bundles"
+    task :extract_learner_responses_from_existing_bundles => :environment do
+      bl_count = Dataservice::BundleLogger.count
+      bc_count = Dataservice::BundleContent.count
+      puts "Extracting learner responses from #{bc_count} existing OTrunk bundles belonging to #{bl_count} learners."
+      Dataservice::BundleLogger.find_in_batches(:batch_size => 10) do |bundle_logger|
+        bundle_logger.each { |bl| bl.extract_saveables }
+        print '.'; STDOUT.flush
+      end
+      puts
+    end
+
+    desc "Erase all learner responses and reset the tables"
+    task :erase_all_learner_responses_and_reset_the_tables => :environment do
+      puts "Erase all saveable learner responses and reset the tables"
+      saveable_models = Dir["app/models/saveable/**/*.rb"].collect { |m| m[/app\/models\/(.+?).rb/, 1] }.collect { |m| m.camelize.constantize }
+      saveable_models.each do |model|
+        if model.respond_to?(:table_name)
+          ActiveRecord::Base.connection.delete("TRUNCATE `#{model.table_name}`")
+          puts "deleted: all from #{model}"
+        end
+      end
+      puts
+    end
+
+    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/(?:embeddable__)?multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
+    desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
+    task :convert_choice_answers_to_local_ids => :environment do
+      include ApplicationHelper
+      unchanged = {}
+      changed = {}
+      problems = {}
+      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |batch|
+        print '.'; STDOUT.flush
+        batch.each do |bundle_content|
+          new_otml = bundle_content.otml.gsub(MULTI_CHOICE) {
+            retval = ""
+            begin
+              m_choice = Embeddable::MultipleChoice.find($2.to_i)
+              if m_choice
+                choice = m_choice.choices[$3.to_i]
+                if choice
+                  retval = "<object refid=\"#{$1}!/#{ot_local_id_for(choice)}\"#{$4}>"
+                else
+                  raise "Couldn't find choice #{$3} in Multiple Choice #{$2}"
+                end
+              else
+                raise "Couldn't find Multiple Choice #{$2}"
+              end
+            rescue => e
+              problems[bundle_content.id] ||= []
+              problems[bundle_content.id] << "#{e} (#{$&})"
+              retval = $&  
+            end
+            retval
+          }
+          if new_otml != bundle_content.otml
+            changed[bundle_content.id] = true
+            bundle_content.otml = new_otml
+            # Now convert the otml into actual bundle content
+            bundle_content.body = bundle_content.convert_otml_to_body
+            bundle_content.save
+          else
+            unchanged[bundle_content.id] = true
+          end
+
+        end # end batch.each
+      end # end find_in_batches
+      puts "Finished fixing multiple choice references."
+      puts "#{changed.size} bundles changed, #{unchanged.size} were unchanged."
+      puts "The following #{problems.size} bundles had problems: "
+      problems.entries.sort.each do |entry|
+        puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
+        puts Dataservice::BundleContent.find(entry[0], :select => 'bundle_logger_id, created_at').description
+        entry[1].each do |prob|
+          puts "    #{prob}"
+        end
+      end
+    end # end task
+
   end
 end
 

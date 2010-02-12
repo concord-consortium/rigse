@@ -24,6 +24,16 @@ optparse = OptionParser.new do|opts|
     @options[:quiet] = true
   end
 
+  @options[:theme] = 'default'
+  opts.on( '-t', '--theme THEME', 'the theme for this Investigations instance' ) do |theme|
+    @options[:theme] = theme
+  end
+
+  @options[:force] = 'false'
+  opts.on( '-f', '--force', 'force updates of settings.yml and database.yml' ) do |force|
+    @options[:force] = force
+  end
+
   @options[:app_name] = 'RITES Investigations'
   opts.on( '-n', '--name APP_NAME', 'the name for this Investigations instance' ) do |app_name|
     @options[:app_name] = app_name
@@ -59,11 +69,27 @@ optparse = OptionParser.new do|opts|
 end
 
 optparse.parse!
-  
+
 # should be run from the projects rails root.
 # Update: this doesn't seem to be working anymore..
 APPLICATION = @options[:app_name]
 print "\nInitial setup of #{APPLICATION} Rails application ... "
+
+def not_using_rites_theme?
+  @options[:theme] != 'default' || @options[:theme] != 'rites'
+end
+
+def using_rites_theme?
+  !not_using_rites_theme?
+end
+
+def env_does_not_use_jnlps?(env)
+  @settings_config[env][:runnables_use] && @settings_config[env][:runnables_use] == 'browser'
+end
+
+def env_uses_jnlps?(env)
+  !env_does_not_use_jnlps?(env)
+end
 
 # Add the unpacked gems in vendor/gems to the $LOAD_PATH
 Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
@@ -102,19 +128,35 @@ def rails_file_exists?(*args)
   File.exists?(rails_file_path(args))
 end
 
+def file_exists_and_is_not_empty?(path)
+   File.exists?(path) && File.stat(path).size > 0
+end
+ 
 @db_config_path                = rails_file_path(%w{config database.yml})
+
+if @options[:force] && File.exists?(@db_config_path)
+  FileUtils.rm(@db_config_path)
+end
 @db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
-@settings_config_path          = rails_file_path(%w{config settings.yml})
-@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
 @rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
 @rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
 @mailer_config_path            = rails_file_path(%w{config mailer.yml})
 @mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
-@sds_config_path               = rails_file_path(%w{config sds.yml})
-@sds_config_sample_path        = rails_file_path(%w{config sds.sample.yml})
+
+@settings_config_path          = rails_file_path(%w{config settings.yml})
+if @options[:force] && File.exists?(@settings_config_path)
+  FileUtils.rm(@settings_config_path)
+end
+@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
+@settings_config_sample        = YAML::load_file(@settings_config_sample_path)
+if @options[:theme]
+  @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
+  @theme_settings_config_sample        = YAML::load_file(@theme_settings_config_sample_path)
+  @settings_config_sample.merge!(@theme_settings_config_sample)
+  @options[:db_name_prefix] = @options[:theme]
+end
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
-@settings_config_sample        = YAML::load_file(@settings_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
 # @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
@@ -291,7 +333,7 @@ end
 #
 def check_for_config_database_yml
 
-  unless File.exists?(@db_config_path)
+  unless file_exists_and_is_not_empty?(@db_config_path)
     unless @options[:quiet] 
       puts <<-HEREDOC
 
@@ -309,7 +351,7 @@ end
 # check for config/settings.yml
 #
 def check_for_config_settings_yml
-  unless File.exists?(@settings_config_path)
+  unless file_exists_and_is_not_empty?(@settings_config_path)
     unless @options[:quiet] 
       puts <<-HEREDOC
 
@@ -396,7 +438,7 @@ def check_for_config_settings_yml
           @settings_config[env]['default_admin_user'] = default_admin_user
         end
 
-        unless @settings_config[env]['default_maven_jnlp']
+        unless @settings_config[env]['default_maven_jnlp'] || env_does_not_use_jnlps?(env)
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -414,8 +456,7 @@ def check_for_config_settings_yml
           @settings_config[env]['default_maven_jnlp'] = default_maven_jnlp        
         end
 
-
-        unless @settings_config[env]['valid_sakai_instances']
+        unless @settings_config[env]['valid_sakai_instances'] || not_using_rites_theme?
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -443,7 +484,7 @@ def check_for_config_settings_yml
         end
         
         
-        unless @settings_config[env]['use_gse']
+        unless @settings_config[env]['use_gse'] || not_using_rites_theme?
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -464,7 +505,7 @@ end
 # check for config/mailer.yml
 #
 def check_for_config_mailer_yml
-  unless File.exists?(@mailer_config_path)
+  unless file_exists_and_is_not_empty?(@mailer_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -480,7 +521,7 @@ end
 # check for config/rinet_data.yml
 #
 def check_for_config_rinet_data_yml
-  unless File.exists?(@rinet_data_config_path)
+  unless file_exists_and_is_not_empty?(@rinet_data_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -524,7 +565,7 @@ end
 def check_for_config_initializers_site_keys_rb
   site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
 
-  unless File.exists?(site_keys_path)
+  unless file_exists_and_is_not_empty?(site_keys_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 

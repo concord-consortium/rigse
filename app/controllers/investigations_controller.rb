@@ -73,19 +73,6 @@ class InvestigationsController < AuthoringController
     end
   end
   
-  def param_find(token_sym, force_nil=false)
-    token = token_sym.to_s
-     eval_string = <<-EOF
-      if params[:#{token}]
-        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
-      elsif force_nil
-         session[:#{token}] = cookies[:#{token}] = nil
-      else
-        #{token} = session[:#{token}] || cookies[:#{token}]
-      end
-    EOF
-    eval eval_string
-  end
   
   def update_gse
     if params[:grade_span_expectation_id] && params[:investigation]
@@ -95,7 +82,7 @@ class InvestigationsController < AuthoringController
   
   public
 
-  # POST /grade_span_expectations/select_js
+  # POST /investigations/select_js
   def index
     @grade_span = param_find(:grade_span)
     @domain_id = param_find(:domain_id)
@@ -185,12 +172,12 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.new
     @investigation.user = current_user
     if APP_CONFIG[:use_gse]
-      @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+      @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
       @investigation.grade_span_expectation = @gse
       session[:original_gse_id] = session[:gse_id] = @gse.id
       session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
       session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-      domain = Domain.find(@gse.domain.id)
+      domain = RiGse::Domain.find(@gse.domain.id)
       gses = domain.grade_span_expectations 
       @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     end
@@ -209,7 +196,7 @@ class InvestigationsController < AuthoringController
     if APP_CONFIG[:use_gse]
       # if there is no gse assign a default one:
       unless @gse = @investigation.grade_span_expectation
-        @gse = GradeSpanExpectation.find_by_grade_span('9-11')
+        @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
         @investigation.grade_span_expectation = @gse
         @investigation.save!
       end
@@ -217,7 +204,7 @@ class InvestigationsController < AuthoringController
       session[:original_gse_id] = session[:gse_id] = @gse.id
       session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
       session[:original_domain_id] = session[:domain_id] = @gse.domain.id
-      domain = Domain.find(@gse.domain.id)
+      domain = RiGse::Domain.find(@gse.domain.id)
       gses = domain.grade_span_expectations 
       @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     end
@@ -230,7 +217,7 @@ class InvestigationsController < AuthoringController
   # POST /pages.xml
   def create
     begin
-      gse = GradeSpanExpectation.find(params[:grade_span_expectation])
+      gse = RiGse::GradeSpanExpectation.find(params[:grade_span_expectation])
       params[:investigation][:grade_span_expectation] = gse
     rescue
       logger.error('could not find gse')
@@ -251,10 +238,10 @@ class InvestigationsController < AuthoringController
 
   def gse_select
     if params[:grade_span_expectation]
-      @selected_gse = GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
+      @selected_gse = RiGse::GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])
       session[:gse_id] = @selected_gse.id
     else
-      @selected_gse = GradeSpanExpectation.find_by_id(session[:gse_id])
+      @selected_gse = RiGse::GradeSpanExpectation.find_by_id(session[:gse_id])
     end
     # remember the chosen domain and grade_span, it will probably continue.
     if grade_span = params[:grade_span]
@@ -271,7 +258,7 @@ class InvestigationsController < AuthoringController
     # FIXME 
     # domains (as an associated model) are way too far away from a gse
     # I added some finder_sql to the domain model to make this faster
-    domain = Domain.find(domain_id)
+    domain = RiGse::Domain.find(domain_id)
     gses = domain.grade_span_expectations 
     @related_gses = gses.find_all { |gse| gse.grade_span == grade_span }
     if request.xhr?
@@ -367,7 +354,7 @@ class InvestigationsController < AuthoringController
     @investigation = @original.duplicate(current_user)
     @investigation.save
     flash[:notice] ="Copied #{@original.name}"
-    redirect_to url_for @investigation
+    redirect_to url_for(@investigation)
   end
   
   def export

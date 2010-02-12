@@ -1,6 +1,7 @@
 .item
   = edit_menu_for(portal_clazz, f, { :omit_cancel => true })
   .content
+    = f.error_messages
     .aligned
       %ul
         %li

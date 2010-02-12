@@ -18,7 +18,6 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
-
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -37,7 +36,11 @@ class Portal::Clazz < ActiveRecord::Base
     def display_name
       "Class"
     end
-    
+
+    def has_offering
+      Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}
+    end
+
     # TODO: Should this go here?
     # We want to crate a clazz to test data saving and loading
     #
@@ -75,13 +78,13 @@ class Portal::Clazz < ActiveRecord::Base
         page.section = section
         page.save
 
-        xhtml = Xhtml.create(:name => 'data testing xhtml')
+        xhtml = Embeddable::Xhtml.create(:name => 'data testing xhtml')
         xhtml.save
         page.xhtmls << xhtml
         
         # The prompt gets used as the "name" for the open response, and the OTText's name gets set to #{prompt}_field
         # The Java test looks for a text box named "test_text_field"
-        open_response = OpenResponse.create(:prompt => "test_text");
+        open_response = Embeddable::OpenResponse.create(:prompt => "test_text");
         open_response.save
         page.open_responses << open_response
         page.save
@@ -155,22 +158,22 @@ class Portal::Clazz < ActiveRecord::Base
   
   # this is for changeable?
   # changeable_mod for multiple teachers
-  alias _changeable? changeable?
+  # alias _changeable? changeable?
   def is_user?(_user)
     teacher = _user.class == User ? _user.portal_teacher : _user
     teachers.include? teacher
   end
   alias is_teacher? is_user?
   
-  def changeable?(_user)
-    return true if virtual? && is_user?(_user)
-    if _user.has_role?('manager','admin','district_admin')
-      return true
-    end
-    return false
-  end
-    
-    
+  # def changeable?(_user)
+  #   return true if virtual? && is_user?(_user)
+  #   if _user.has_role?('manager','admin','district_admin')
+  #     return true
+  #   end
+  #   return false
+  # end
+  #   
+  #   
   def parent
     return teacher
   end
@@ -216,4 +219,8 @@ class Portal::Clazz < ActiveRecord::Base
     end
   end
 
+  def refresh_saveable_response_objects
+    self.offerings.each { |o| o.refresh_saveable_response_objects }
+  end
+  
 end

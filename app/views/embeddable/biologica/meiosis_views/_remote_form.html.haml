@@ -1,0 +1,2 @@
+- remote_form_for(meiosis_view, :update => dom_id_for(meiosis_view, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "form", :locals => { :meiosis_view => meiosis_view, :f => f  }
