@@ -1,13 +1,14 @@
 dirname, basename = File.split(File.expand_path(__FILE__))
 libdir = File.join dirname, "lib"
 
-$LOAD_PATH.unshift libdir
-begin
-  require "bj"
-ensure
-  $LOAD_PATH.shift
+unless JRUBY  # don't initialize bj plugin if we are running in JRuby
+  $LOAD_PATH.unshift libdir
+  begin
+    require "bj"
+  ensure
+    $LOAD_PATH.shift
+  end
 end
-
 
 
 =begin
