@@ -2,6 +2,20 @@ class Portal::OfferingsController < ApplicationController
   
   layout 'report', :only => %w{report open_response_report multiple_choice_report}
   
+  before_filter :teacher_or_admin_only, :only => [:report, :open_response_report, :multiple_choice_report]
+  
+  protected
+  
+  def teacher_or_admin_only
+    @offering = Portal::Offering.find(params[:id])
+    unless current_user == @offering.clazz.teacher.user || current_user.has_role?('admin') || request.format == :config
+      flash[:notice] = "You don't have permission to view that report" 
+      redirect_to(:home)
+    end
+  end
+  
+  public
+  
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index

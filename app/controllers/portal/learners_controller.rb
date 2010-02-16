@@ -3,12 +3,21 @@ class Portal::LearnersController < ApplicationController
   layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
   
   before_filter :admin_only, :except => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :teacher_or_admin_only, :only => [:report, :open_response_report, :multiple_choice_report]
   
   protected  
 
   def admin_only
     unless current_user.has_role?('admin') || request.format == :config
       flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def teacher_or_admin_only
+    @portal_learner = Portal::Learner.find(params[:id])
+    unless current_user == @portal_learner.offering.clazz.teacher.user || current_user.has_role?('admin') || request.format == :config
+      flash[:notice] = "You don't have permission to view that report" 
       redirect_to(:home)
     end
   end
