@@ -4,7 +4,11 @@ class Investigation < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
-  has_many :activities, :order => :position, :dependent => :destroy
+  has_many :activities, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   
@@ -52,11 +56,22 @@ class Investigation < ActiveRecord::Base
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
     
+  has_many :student_sections, :class_name => Section.to_s,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0'
+    
   has_many :pages,
     :finder_sql => 'SELECT pages.* FROM pages
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
+    
+  has_many :student_pages, :class_name => Page.to_s,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
   
   acts_as_replicatable
 

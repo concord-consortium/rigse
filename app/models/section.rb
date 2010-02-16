@@ -3,7 +3,11 @@ class Section < ActiveRecord::Base
   belongs_to :user
   has_one :investigation, :through => :activity
   
-  has_many :pages, :order => :position, :dependent => :destroy
+  has_many :pages, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
 
   # has_many :data_collectors, :class_name => 'Embeddable::DataCollector',
   #    :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
