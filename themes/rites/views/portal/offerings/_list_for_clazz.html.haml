@@ -1,5 +1,9 @@
 
 - if portal_clazz.is_teacher? current_user
+  - if current_user.portal_teacher.school.virtual?
+    .action_menu
+      %p
+        %strong="Class word: #{portal_clazz.class_word}"
   %br
   .action_menu
     .action_menu_left
