@@ -160,4 +160,16 @@ class Portal::OfferingsController < ApplicationController
     learner
   end
   
+  def sparks_learner_report
+    @student = current_user.portal_student
+    @offering = Portal::Offering.find(params[:id])
+    @learner = setup_portal_student
+    mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(@learner.id);
+    if mr
+      @reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr.id)
+    else
+      @reports = []
+    end
+  end
+  
 end

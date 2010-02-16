@@ -1,0 +1,103 @@
+- content_for :more_javascript do
+  %script{:src => "/sparks-content/activities/resistor-colors/javascript/report/learner-session-report.js", :type => "text/javascript"}
+  %script{:src => "/sparks-content/activities/resistor-colors/javascript/report/session-reporter.js", :type => "text/javascript"}
+%h2
+  %img.no_border{:src => "/sparks-content/common/icons/rgirl.png"}/
+  Module 1: Measuring Resistance
+
+.popup_report
+  %h3 A. Reading resistor color bands
+  %p
+    Correct Resistance value:
+    %span#rated_r_correct
+    %br/
+    Your answer:
+    %span#rated_r_answer
+    %br/
+  %p
+    Correct tolerance value:
+    %span#rated_t_correct
+    %br/
+    Your answer:
+    %span#rated_t_answer
+  %p
+    Points:
+    %span#reading_pts
+    (out of 25)
+  %h3 B. Calculating tolerance range
+  %p
+    Correct tolerance range:
+    %span#t_range_correct
+    %br/
+    Your answer:
+    %span#t_range_answer
+  %p
+    Points:
+    %span#t_range_pts
+    (out of 15)
+  %h3 C. Measuring R-value with a DMM
+  %p
+    Correct measured resistance:
+    %span#measured_r_correct
+    %br/
+    Your answer:
+    %span#measured_r_answer
+    %br/
+  %p
+    Connections to DMM:
+    %span#plug_connection
+    %br/
+    Connections to R:
+    %span#probe_connection
+  %p
+    Correct DMM knob setting:
+    %span#correct_knob
+    %br/
+    Your initial setting:
+    %span#initial_knob
+    %br/
+    Your final setting:
+    %span#final_knob
+  %p
+    DMM power switch:
+    %span#power_switch
+    %br/
+    Order of tasks:
+    %span#task_order
+  %p
+    Points:
+    %span#measuring_pts
+    (out of
+    %span#measuring_max_pts
+    )
+  %h3 D. Discerning in/out of tolerance
+  %p
+    Correct answer:
+    %span#within_correct
+    %br/
+    Your answer:
+    %span#within_answer
+    %br/
+    Points:
+    %span#within_pts
+    (out of 5)
+    %br/
+  %h3 E. Time/efficiency
+  %p
+    Interpreting color bands:
+    %span#reading_time
+    %br/
+    Measuring resistance with the DMM:
+    %span#measuring_time
+  %p
+    Points:
+    %span#time_pts
+    (out of 10)
+  %p#rated_values_feedback
+  %h3
+    Total points:
+    %span#total_pts
+    (out of
+    %span#total_max_pts
+    )
+  #report_log

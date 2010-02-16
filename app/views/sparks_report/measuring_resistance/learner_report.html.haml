@@ -1,0 +1,5 @@
+%h3
+  = "#{@offering.name} - #{current_user.first_name} #{current_user.last_name}"
+- @reports.each do |report|
+  = link_to report.updated_at, :action => 'learner_session_report', :id => report.id
+  %br
