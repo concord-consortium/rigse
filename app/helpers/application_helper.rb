@@ -651,7 +651,7 @@ module ApplicationHelper
                   haml_concat("#{i+1}. #{choice.choice}")
                 }
                 haml_tag(:div, :class => 'cell optionbar') {
-                  haml_tag(:div, :class => "optionbarbar #{choice.is_correct ? "correct" : "incorrect"}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "#{"visibility: hidden; " if percent(answer_count, learners.size) == 0}width: #{percent(answer_count, learners.size)}%;") {
+                  haml_tag(:div, :class => "optionbarbar #{choice.is_correct ? "correct" : "incorrect"}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "width: #{percent(answer_count, learners.size)}%;") {
                     haml_concat("&nbsp;")
                   }
                 }
