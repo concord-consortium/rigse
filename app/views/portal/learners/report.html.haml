@@ -1,7 +1,7 @@
 %div{:id => dom_id_for(@portal_learner, :report), :class => 'item'}
   - section = (@portal_learner.offering.clazz.section && @portal_learner.offering.clazz.section.length > 0) ? @portal_learner.offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
-  %h3= "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section})"
+  %h3= "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
   %div{:id => dom_id_for(@portal_learner.offering, :details), :class => 'content'}
     %div{:style => 'font-weight: bold'}
       = learner_report_summary(@portal_learner)
