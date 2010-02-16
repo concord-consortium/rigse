@@ -509,7 +509,7 @@ module ApplicationHelper
   def learner_specific_stats(learner)
     reportUtil = Report::Util.factory(learner.offering)
     or_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
-    or_total = reportUtil.embeddables(:type => Embeddable::OpenRespose).size
+    or_total = reportUtil.embeddables(:type => Embeddable::OpenResponse).size
     mc_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
@@ -601,12 +601,12 @@ module ApplicationHelper
       haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
         haml_concat(open_response.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; font-weight: bold;') {
+      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right;') {
+      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
@@ -651,7 +651,7 @@ module ApplicationHelper
                   haml_concat("#{i+1}. #{choice.choice}")
                 }
                 haml_tag(:div, :class => 'cell optionbar') {
-                  haml_tag(:div, :class => "optionbarbar #{choice.is_correct ? "correct" : "incorrect"}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "#{"visibility: hidden; " if percent(answer_count, learners.size) == 0}width: #{percent(answer_count, learners.size)}%;") {
+                  haml_tag(:div, :class => "optionbarbar #{choice.is_correct ? "correct" : "incorrect"}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "width: #{percent(answer_count, learners.size)}%;") {
                     haml_concat("&nbsp;")
                   }
                 }
