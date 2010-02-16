@@ -1,12 +1,15 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-class InnerPagePage
+if defined? Embeddable::InnerPagePage
+class Embeddable::InnerPagePage < ActiveRecord::Base
   def <(other)
     return (self.page.name < other.page.name)
   end
 end
+end
 
-class InnerPage
+if defined? Embeddable::InnerPage
+class Embeddable::InnerPage < ActiveRecord::Base
   def is_contiguous
     last = nil
     self.inner_page_pages.each do |i| 
@@ -38,8 +41,9 @@ class InnerPage
     end
   end
 end
+end
 
-describe InnerPage do
+describe Embeddable::InnerPage do
   before(:each) do
     @page = Factory(:page)
     @sub_page = Page.create!
@@ -47,7 +51,7 @@ describe InnerPage do
       :name => "test innner page",
       :description => "this is the description for the inner page"
     }
-    @inner_page = InnerPage.create!(@valid_attributes)
+    @inner_page = Embeddable::InnerPage.create!(@valid_attributes)
   end
 
   it "should create a new instance given valid attributes" do
@@ -65,7 +69,7 @@ describe InnerPage do
     id = @inner_page.id
     
     # find it, and check:
-    another_inner_page = InnerPage.find(id)
+    another_inner_page = Embeddable::InnerPage.find(id)
     assert another_inner_page.sub_pages.include?(@page)
   end
   
@@ -78,19 +82,19 @@ describe InnerPage do
     
     @inner_page.shuffle
     @inner_page.save
-    @inner_page = InnerPage.find(@inner_page.id)
+    @inner_page = Embeddable::InnerPage.find(@inner_page.id)
     assert (!@inner_page.is_contiguous)
     
     @inner_page.sort_by_name
     assert (@inner_page.is_contiguous) 
     @inner_page.save
-    @inner_page = InnerPage.find(@inner_page.id)
+    @inner_page = Embeddable::InnerPage.find(@inner_page.id)
     assert (@inner_page.is_contiguous)
     
     last_page = Page.create!(:name =>"last page")
     @inner_page.sub_pages << last_page
     @inner_page.save
-    @inner_page = InnerPage.find(@inner_page.id)
+    @inner_page = Embeddable::InnerPage.find(@inner_page.id)
     @inner_page.inspect
     assert @inner_page.sub_pages.last == last_page
   end

@@ -1,24 +1,24 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Expectation do
+describe RiGse::Expectation do
   before(:each) do
-    @expectation = Expectation.new
+    @expectation = RiGse::Expectation.new
     @valid_attributes = {
     }
   end
 
   it "should create a new instance given valid attributes" do
-    Expectation.create!(@valid_attributes)
+    RiGse::Expectation.create!(@valid_attributes)
   end
   
   it "should have an grade_span_expectation" do
-    exp = Expectation.create!(@valid_attributes)
-    gse = GradeSpanExpectation.new
+    exp = RiGse::Expectation.create!(@valid_attributes)
+    gse = RiGse::GradeSpanExpectation.new
     exp.grade_span_expectation = gse
   end
   
   it "should have an grade_span_expectation" do
-    gse = GradeSpanExpectation.new
+    gse = RiGse::GradeSpanExpectation.new
     gse.save
     @expectation.grade_span_expectation = gse
     @expectation.grade_span_expectation.should_not be_nil
@@ -26,7 +26,7 @@ describe Expectation do
   end
   
   it "should have a a stem" do
-    stem = ExpectationStem.new
+    stem = RiGse::ExpectationStem.new
     stem.save
     @expectation.expectation_stem = stem
     @expectation.expectation_stem.should_not be_nil
@@ -34,9 +34,9 @@ describe Expectation do
   end
   
   it "should have many indicators" do
-    one = ExpectationIndicator.new();
+    one = RiGse::ExpectationIndicator.new();
     one.description = "first one"
-    two = ExpectationIndicator.new();
+    two = RiGse::ExpectationIndicator.new();
     two.description = "second one"
     one.save
     two.save

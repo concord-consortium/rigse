@@ -29,7 +29,7 @@ describe TruncatableXhtml do
   describe "replace xhtml entities" do 
     it "should replace unwanted entities when present" do
       @replacement_examples.each_pair do |original, expected|
-        xhtml = Xhtml.create({
+        xhtml = Embeddable::Xhtml.create({
          :name =>"testing",
          :content => original
         })
@@ -39,7 +39,7 @@ describe TruncatableXhtml do
     end
     it "should leave non offending xhtml alone" do
       @non_replacement_examples.each do |content|
-        xhtml = Xhtml.create({
+        xhtml = Embeddable::Xhtml.create({
          :name => "testing",
          :content => content
         })

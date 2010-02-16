@@ -2,10 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe DeepCloning do
   before(:each) do
-    @world = BiologicaWorld.create!(:name => "world", :description => "world description", :species_path => "org/concord/biologica/worlds/dragon.xml")
-    @org = BiologicaOrganism.create!(:name => "organism", :description => "organism description", :sex => 0, :fatal_characteristics => true, :biologica_world => @world)
-    @static_org = BiologicaStaticOrganism.create(:name => "static org", :description => "static org description", :biologica_organism => @org)
-    @static_org2 = BiologicaStaticOrganism.create(:name => "static org2", :description => "static org2 description", :biologica_organism => @org)
+    @world = Embeddable::Biologica::World.create!(:name => "world", :description => "world description", :species_path => "org/concord/biologica/worlds/dragon.xml")
+    @org = Embeddable::Biologica::Organism.create!(:name => "organism", :description => "organism description", :sex => 0, :fatal_characteristics => true, :biologica_world => @world)
+    @static_org = Embeddable::Biologica::StaticOrganism.create(:name => "static org", :description => "static org description", :biologica_organism => @org)
+    @static_org2 = Embeddable::Biologica::StaticOrganism.create(:name => "static org2", :description => "static org2 description", :biologica_organism => @org)
     @page = Page.create!(:name => "Page", :description => "Page description")
     @page2 = Page.create!(:name => "Page2", :description => "Page2 description")
     @section = Section.create!(:name => "Section", :description => "Section description")
@@ -42,13 +42,13 @@ describe DeepCloning do
     klone.save!
     compare_equal(klone, @page, [:name, :description])
     klone.page_elements.size.should == 1
-    klone.page_elements[0].embeddable.class.should == BiologicaStaticOrganism
+    klone.page_elements[0].embeddable.class.should == Embeddable::Biologica::StaticOrganism
     compare_equal(klone.page_elements[0].embeddable, @static_org, [:name, :description])
     klone.page_elements[0].embeddable.biologica_organism.should_not == nil
-    klone.page_elements[0].embeddable.biologica_organism.class.should == BiologicaOrganism
+    klone.page_elements[0].embeddable.biologica_organism.class.should == Embeddable::Biologica::Organism
     compare_equal(klone.page_elements[0].embeddable.biologica_organism, @org, [:name, :description, :sex])
     klone.page_elements[0].embeddable.biologica_organism.biologica_world.should_not == nil
-    klone.page_elements[0].embeddable.biologica_organism.biologica_world.class.should == BiologicaWorld
+    klone.page_elements[0].embeddable.biologica_organism.biologica_world.class.should == Embeddable::Biologica::World
     compare_equal(klone.page_elements[0].embeddable.biologica_organism.biologica_world, @world, [:name, :description, :species_path])
   end
   
