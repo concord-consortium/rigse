@@ -601,12 +601,12 @@ module ApplicationHelper
       haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
         haml_concat(open_response.prompt)
       }
-      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; font-weight: bold;') {
+      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
         haml_tag(:div) { haml_concat("Answered") }
         haml_tag(:div) { haml_concat("Skipped") }
         haml_tag(:div) { haml_concat("Total") }
       }
-      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right;') {
+      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
         haml_tag(:div) { haml_concat(answered) }
         haml_tag(:div) { haml_concat(skipped) }
         haml_tag(:div) { haml_concat(total) }
