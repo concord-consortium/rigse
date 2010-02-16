@@ -21,6 +21,12 @@ class PageElement < ActiveRecord::Base
     }
   }
   
+  # to be used with the by_investigation scope only
+  named_scope :student_only, lambda {
+    { :conditions => {'pages.teacher_only' => false, 'sections.teacher_only' => false, 'activities.teacher_only' => false }
+    }
+  }
+  
   named_scope :by_type, lambda {|types|
     { :conditions => {'embeddable_type' => types},
       :order => 'position asc'

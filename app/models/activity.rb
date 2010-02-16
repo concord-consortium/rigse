@@ -2,7 +2,11 @@ class Activity < ActiveRecord::Base
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
-  has_many :sections, :order => :position, :dependent => :destroy
+  has_many :sections, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
   has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
