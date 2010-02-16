@@ -18,10 +18,6 @@
             = portal_clazz.teachers.map { |t| t.name}.join(", ")
           - else
             = "no teacher"
-
-        %li
-          %strong Class Word:
-          = portal_clazz.class_word
         - if portal_clazz.semester
           %li
             %strong Semester:
