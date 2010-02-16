@@ -47,7 +47,8 @@ unless defined? Bj
   # rubyforge/remote or local/lib 
   #
     #%w[ attributes systemu orderedhash ].each do |lib|
-    %w[ systemu orderedhash ].each do |lib|
+    # %w[ systemu orderedhash ].each do |lib|
+    %w[ orderedhash ].each do |lib|
       begin
         require lib
       rescue

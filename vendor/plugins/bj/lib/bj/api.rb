@@ -118,43 +118,48 @@ class Bj
   #
     def generate_migration options = {}
       options.to_options!
-      chroot do
-        before = Dir.glob "./db/migrate/*"
-        n = Dir.glob("./db/migrate/*_bj_*").size
-        classname = "BjMigration#{ n }"
-        util.spawn "#{ Bj.ruby } ./script/generate migration #{ classname }", options rescue nil
-        after = Dir.glob "./db/migrate/*"
-        candidates = after - before
-        case candidates.size
-          when 0
-            false
-          when 1
-            generated = candidates.first
-            open(generated, "w"){|fd| fd.puts Bj.table.migration_code(classname)}
-            Bj.logger.info{ "generated <#{ generated }>" }
-            generated
-          else
-            raise "ambiguous migration <#{ candidates.inspect }>"
-        end
-      end
+      puts "This operation disabled. Cannot run manually."
+      # chroot do
+      #   before = Dir.glob "./db/migrate/*"
+      #   n = Dir.glob("./db/migrate/*_bj_*").size
+      #   classname = "BjMigration#{ n }"
+      #   util.spawn "#{ Bj.ruby } ./script/generate migration #{ classname }", options rescue nil
+      #   after = Dir.glob "./db/migrate/*"
+      #   candidates = after - before
+      #   case candidates.size
+      #     when 0
+      #       false
+      #     when 1
+      #       generated = candidates.first
+      #       open(generated, "w"){|fd| fd.puts Bj.table.migration_code(classname)}
+      #       Bj.logger.info{ "generated <#{ generated }>" }
+      #       generated
+      #     else
+      #       raise "ambiguous migration <#{ candidates.inspect }>"
+      #  end
+      # end
     end
   #
   # migrate a database (production|development|etc)
   #
     def migrate options = {}
       options.to_options!
-      chroot do
-        util.spawn "rake RAILS_ENV=#{ Bj.rails_env } db:migrate", options
-      end
+      puts "This operation disabled. To run manually:"
+      puts "rake RAILS_ENV=#{ Bj.rails_env } db:migrate"
+      # chroot do
+      #   util.spawn "rake RAILS_ENV=#{ Bj.rails_env } db:migrate", options
+      # end
     end
   #
   # install plugin into this rails app 
   #
     def plugin options = {}
       options.to_options!
-      chroot do
-        util.spawn "#{ Bj.ruby } ./script/plugin install http://codeforpeople.rubyforge.org/svn/rails/plugins/bj --force", options
-      end
+      puts "This operation disabled. To run manually:"
+      puts "#{ Bj.ruby } ./script/plugin install http://codeforpeople.rubyforge.org/svn/rails/plugins/bj --force"
+      # chroot do
+      #   util.spawn "#{ Bj.ruby } ./script/plugin install http://codeforpeople.rubyforge.org/svn/rails/plugins/bj --force", options
+      # end
     end
   end
   send :extend, API

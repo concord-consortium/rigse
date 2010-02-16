@@ -24,7 +24,8 @@ gem_path = [gem_home] #, *path]
 Gem.send :use_paths, gem_home, gem_path
 
 begin
-  %w[ attributes systemu orderedhash bj ].each do |lib|
+#   %w[ attributes systemu orderedhash bj ].each do |lib|
+  %w[ attributes orderedhash bj ].each do |lib|
     gem lib
     require lib
   end

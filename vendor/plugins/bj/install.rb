@@ -9,7 +9,8 @@ gem_home = 'gem_home'
 rails_root = File.expand_path File.join(dirname, '../../../')
 bj = File.join rails_root, 'script', 'bj'
 
-gems = %w[ attributes arrayfields main systemu orderedhash bj ]
+# gems = %w[ attributes arrayfields main systemu orderedhash bj ]
+gems = %w[ attributes arrayfields main orderedhash bj ]
 
 # in the plugin dir... 
 Dir.chdir dirname do

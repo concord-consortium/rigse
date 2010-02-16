@@ -21,6 +21,7 @@ class Bj
 
       def spawn cmd, options = {}
         options.to_options!
+        raise "disabled."
         logger = options.has_key?(:logger) ? options[:logger] : Bj.logger
         logger.info{ "cmd <#{ cmd }>" } if logger
         status = systemu cmd, 1=>(stdout=""), 2=>(stderr="")
