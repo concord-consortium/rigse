@@ -1,5 +1,7 @@
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
-  %h3= "Report for: #{@offering.clazz.name}"
+  - section = (@offering.clazz.section && @offering.clazz.section.length > 0) ? @offering.clazz.section : nil
+  - section = (section ? "(#{section})" : "")
+  %h3= "Report for: #{@offering.clazz.name} #{section}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
     %div{:style => 'font-weight: bold'}
       = offering_report_summary(@offering)
