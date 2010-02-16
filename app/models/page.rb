@@ -210,5 +210,12 @@ class Page < ActiveRecord::Base
     @copy.save
     @copy
   end
+
+  ## FIXME this method is put in because clazzes#show was getting
+  ## "undefined method 'saveable_types' for "#<Page:blah>".
+  ## Root cause hasn't been found
+  def saveable_types
+    [] 
+  end
   
 end
