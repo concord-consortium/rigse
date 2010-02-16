@@ -509,7 +509,7 @@ module ApplicationHelper
   def learner_specific_stats(learner)
     reportUtil = Report::Util.factory(learner.offering)
     or_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
-    or_total = reportUtil.embeddables(:type => Embeddable::OpenRespose).size
+    or_total = reportUtil.embeddables(:type => Embeddable::OpenResponse).size
     mc_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
