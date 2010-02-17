@@ -10,4 +10,4 @@
         - reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr)
         - reports.each do |report|
           %td
-            = link_to report.updated_at, :action => 'learner_session_report', :id => report.id 
+            = link_to report.updated_at, { :action => 'learner_session_report', :id => report.id }, :popup => true 
