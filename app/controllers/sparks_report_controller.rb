@@ -12,6 +12,7 @@ class SparksReportController < ApplicationController
   
   def learner_session_report
     @report = Saveable::Sparks::MeasuringResistanceReport.find_by_id(params[:id]);
+    cookies[:report_id] = @report.id
     render :template => 'sparks_report/measuring_resistance/learner_session_report'
   end
   
