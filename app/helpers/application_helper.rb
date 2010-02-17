@@ -613,6 +613,26 @@ module ApplicationHelper
     end
   end
   
+  def menu_for_sparks_offering(offering, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left' do
+          haml_concat title_for_component(offering, options)
+          #haml_concat "Responses: #{offering.learners.length}"
+        end
+        haml_tag :div, :class => 'action_menu_header_right' do
+          #haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+          #haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          #haml_concat report_link_for(offering)
+          #haml_concat report_link_for(offering, 'multiple_choice_report','Report')
+          haml_concat link_to('Report', { :controller => '/sparks_report', :action => 'class_report' , :offering_id => offering }, :popup => true)
+        end
+      end
+    end
+  end
+
   def menu_for_school(school, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do

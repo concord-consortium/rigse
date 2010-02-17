@@ -1,0 +1,13 @@
+%h3
+  = "#{@clazz.name} - #{@offering.name}"
+%table
+  - @students.each do |student|
+    %tr
+      %td
+        = "#{student.user.first_name} #{student.user.last_name}"
+        - learner = controller.getLearner(@offering.id, student.id)
+        - mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(learner)
+        - reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr)
+        - reports.each do |report|
+          %td
+            = link_to report.updated_at, :action => 'learner_session_report', :id => report.id 
