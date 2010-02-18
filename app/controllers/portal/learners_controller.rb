@@ -16,7 +16,7 @@ class Portal::LearnersController < ApplicationController
   
   def teacher_or_admin_only
     @portal_learner = Portal::Learner.find(params[:id])
-    unless current_user == @portal_learner.offering.clazz.teacher.user || current_user.has_role?('admin') || request.format == :config
+    unless @portal_learner.offering.clazz.is_teacher?(current_user) || current_user.has_role?('admin') || request.format == :config
       flash[:notice] = "You don't have permission to view that report" 
       redirect_to(:home)
     end
