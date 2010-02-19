@@ -1,0 +1,9 @@
+%div{:id => dom_id_for(open_response, :item), :class => 'item'}
+  %span{:class => 'tiny'}= "#{show_counter+1}: (Activity: #{open_response.open_response.page_elements.first.page.activity.name})"
+  %div{ :id => dom_id_for(open_response, :details), :class => 'content' }
+    - css_style = open_response.answered? ? 'answered' : 'not_answered'
+    %item{:class => css_style}
+      = open_response.prompt
+    %item{:class => css_style}
+      = open_response.answer
+  

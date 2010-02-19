@@ -82,11 +82,13 @@ class PagesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
-      format.config { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
-      format.otml { render :layout => "layouts/page" } # page.otml.haml
+      format.run_sparks_html   { render :show, :layout => "layouts/run" }
+      format.run_html   { render :show, :layout => "layouts/run" }
+      format.jnlp       { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
+      format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
+      format.otml       { render :layout => "layouts/page" } # page.otml.haml
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode} }
-      format.xml  { render :xml => @page }
+      format.xml        { render :xml => @page }
     end
   end
 
@@ -178,15 +180,15 @@ class PagesController < ApplicationController
 
     # dynamically instantiate the component based on its type.
     component_class = params['class_name'].constantize
-    if component_class == DataCollector
+    if component_class == Embeddable::DataCollector
       if probe_type_id = session[:last_saved_probe_type_id]
-        probe_type = ProbeType.find(probe_type_id)
-        @component = DataCollector.new
+        probe_type = Probe::ProbeType.find(probe_type_id)
+        @component = Embeddable::DataCollector.new
         @component.probe_type = probe_type
         @component.name = "Data Collector"
         @component.save
       else
-        @component = DataCollector.create(:name => "Data Collector")
+        @component = Embeddable::DataCollector.create(:name => "Data Collector")
       end
       session[:last_saved_probe_type_id] = @component.probe_type_id
     else
@@ -229,7 +231,7 @@ class PagesController < ApplicationController
     @copy.name = "" #force numbering by default
     @copy.save
     flash[:notice] ="Copied #{@page.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
 
 

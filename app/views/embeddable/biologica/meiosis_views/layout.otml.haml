@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @biologica_meiosis_view.uuid}
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles(:title => h(@biologica_meiosis_view.name))
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = h(Embeddable::Biologica::MeiosisView.display_name + ': ' + @biologica_meiosis_view.name)
+              %object{ :refid => ot_refid_for(@biologica_meiosis_view) }
+      %library
+        =yield :layout

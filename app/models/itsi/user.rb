@@ -10,7 +10,7 @@ class Itsi::User < Itsi::Itsi
     end
   end
 
-  belongs_to :vendor_interface, :class_name => 'VendorInterface'
+  belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
   has_many :activities, :class_name => "Itsi::Activity", :order => 'name'
   has_many :models, :class_name => "Itsi::Model"

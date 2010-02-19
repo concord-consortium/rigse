@@ -121,16 +121,20 @@ Rails::Initializer.run do |config|
   # ... observers are now started in config/initializers/observers.rb
   # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
   # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-  config.after_initialize do
-    begin
-      ActiveRecord::Base.observers = :user_observer, :investigation_observer
-      ActiveRecord::Base.instantiate_observers
-      puts "Started observers"
-    rescue
-      # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
-      puts "Couldn't start observers #{$!}"
-      puts "This might be because you have not setup the appropriate database tables yet... "
-      puts "see config/initializers/observers.rb for more information."
+  if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
+    puts "Didn't start observers because you are running: rake db:migrate"
+  else
+    config.after_initialize do
+      begin
+        ActiveRecord::Base.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer"
+        ActiveRecord::Base.instantiate_observers
+        puts "Started observers"
+      rescue
+        # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+        puts "Couldn't start observers #{$!} ... but continuing process anyway"
+        puts "This might be because you have not setup the appropriate database tables yet... "
+        puts "see config/initializers/observers.rb for more information."
+      end
     end
   end
 
@@ -168,4 +172,23 @@ require 'prawn/format'
 # # rescue Mysql::Error => e
 #   puts "e"
 # end
+
+module Enumerable
+  # An extended group_by which will group at multiple depths
+  # Ex:
+  # >> ["aab","abc","aba","abd","aac","ada"].extended_group_by([lambda {|e| e.first}, lambda {|e| e.first(2)}])
+  # => {"a"=>{"aa"=>["aab", "aac"], "ab"=>["abc", "aba", "abd"], "ad"=>["ada"]}}
+
+  def extended_group_by(lambdas)
+    lamb = lambdas.shift
+    result = lamb ? self.group_by{|e| lamb.call(e)} : self
+    if lambdas.size > 0
+      final = {}
+      temp = result.map{|k,v| {k => v.extended_group_by(lambdas.clone)}}
+      temp.each {|r| final.merge!(r) }
+      result = final
+    end
+    return result
+  end
+end
 

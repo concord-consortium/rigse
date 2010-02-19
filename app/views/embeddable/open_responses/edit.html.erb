@@ -1,0 +1,12 @@
+<h1>Editing open_response</h1>
+
+<% form_for(@open_response) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @open_response %> |
+<%= link_to 'Back', embeddable_open_responses_path %>

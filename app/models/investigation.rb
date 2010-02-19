@@ -3,15 +3,39 @@ class Investigation < ActiveRecord::Base
   cattr_accessor :publication_states
   
   belongs_to :user
-  belongs_to :grade_span_expectation
-  has_many :activities, :order => :position, :dependent => :destroy
+  belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
+  has_many :activities, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  [DataCollector, BiologicaOrganism, BiologicaWorld, OpenResponse].each do |klass|
-    eval "has_many :#{klass.table_name},
+  [ Embeddable::Xhtml,
+    Embeddable::OpenResponse,
+    Embeddable::MultipleChoice,
+    Embeddable::DataTable,
+    Embeddable::DrawingTool,
+    Embeddable::DataCollector,
+    Embeddable::LabBookSnapshot,
+    Embeddable::InnerPage,
+    Embeddable::MwModelerPage,
+    Embeddable::NLogoModel,
+    Embeddable::RawOtml,
+    Embeddable::Biologica::World,
+    Embeddable::Biologica::Organism,
+    Embeddable::Biologica::StaticOrganism,
+    Embeddable::Biologica::Chromosome,
+    Embeddable::Biologica::ChromosomeZoom,
+    Embeddable::Biologica::BreedOffspring,
+    Embeddable::Biologica::Pedigree,
+    Embeddable::Biologica::MultipleOrganism,
+    Embeddable::Biologica::MeiosisView,
+    Embeddable::Smartgraph::RangeQuestion].each do |klass|
+    eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       INNER JOIN pages ON page_elements.page_id = pages.id 
@@ -26,6 +50,28 @@ class Investigation < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
+    
+  has_many :sections,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
+    
+  has_many :student_sections, :class_name => Section.to_s,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0'
+    
+  has_many :pages,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
+    
+  has_many :student_pages, :class_name => Page.to_s,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
   
   acts_as_replicatable
 
@@ -59,19 +105,19 @@ class Investigation < ActiveRecord::Base
   # Investigation.grade('9-11') == bad
   #
   named_scope :with_gse, {
-    :joins => "left outer JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
+    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
   
   named_scope :domain, lambda { |domain_id| 
     {
-      :conditions =>[ 'knowledge_statements.domain_id = ?', domain_id]
+      :conditions => ['ri_gse_knowledge_statements.domain_id = ?', domain_id]
     }
   }
   
   named_scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
-      :conditions =>[ 'grade_span_expectations.grade_span LIKE ?', gs ]
+      :conditions => ['ri_gse_grade_span_expectations.grade_span LIKE ?', gs ]
     }
   }
   
@@ -83,7 +129,7 @@ class Investigation < ActiveRecord::Base
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
-     :conditions =>[ "investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
+     :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
 
@@ -103,8 +149,16 @@ class Investigation < ActiveRecord::Base
       name.humanize
     end
     
+    def saveable_types
+      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
+    end
+    
+    def reportable_types
+      [ Embeddable::OpenResponse, Embeddable::MultipleChoice ]
+    end
+    
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
-      @grade_span_expectations = GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
+      @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
       @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
       # @investigations.flatten!.compact!
     end
@@ -145,6 +199,14 @@ class Investigation < ActiveRecord::Base
       end
     end  
     
+  end
+  
+  def saveable_types
+    self.class.saveable_types
+  end
+  
+  def reportable_types
+    self.class.reportable_types
   end
   
   # Enables a teacher note to call the investigation method of an

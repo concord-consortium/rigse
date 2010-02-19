@@ -16,9 +16,9 @@
       '${' + object + '}'
     else
       if prefixes.empty?
-        '${' + dom_id_for(object) + '}'
+        '${' + ot_dom_id_for(object) + '}'
       else
-        '${' + dom_id_for(object, prefixes) + '}'
+        '${' + ot_dom_id_for(object, prefixes) + '}'
       end
     end
   end
@@ -28,15 +28,23 @@
       object
     else
       if prefixes.empty?
-        dom_id_for(object)
+        ot_dom_id_for(object)
       else
-        dom_id_for(object, prefixes)
+        ot_dom_id_for(object, prefixes)
       end
     end
   end
   
+  def ot_dom_id_for(component, *optional_prefixes)
+    optional_prefixes.flatten!
+    prefix = ''
+    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
+    class_name = component.class.name.split('::').last.underscore
+    "#{prefix}#{class_name}_#{component.id}"
+  end
+  
   def data_filter_inports
-    DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+    Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
   end
   
   def imports
@@ -258,7 +266,7 @@
     if use_current_user
       vendor_interface = current_user.vendor_interface
     else
-      vendor_interface = VendorInterface.find(6)
+      vendor_interface = Probe::VendorInterface.find(6)
     end
     result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
     @template_format = old_format

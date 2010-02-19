@@ -1,0 +1,3 @@
+%div{:id => dom_id_for(pedigree, :details), :class => 'content'}
+  = wrap_edit_link_around_content(pedigree, options={:complete => mce_init_string}) do
+    = pedigree.description

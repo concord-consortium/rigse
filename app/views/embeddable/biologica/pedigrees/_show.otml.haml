@@ -1,0 +1,4 @@
+%OTPedigree{ :local_id => ot_local_id_for(pedigree), :height => pedigree.height, :width => pedigree.width, :crossoverEnabled => pedigree.crossover_enabled.to_s, :sexTextVisible => pedigree.sex_text_visible.to_s, :organismImagesVisible => pedigree.organism_images_visible.to_s, :organismImageSize => pedigree.organism_image_size, :topControlsVisible => pedigree.top_controls_visible.to_s, :resetButtonVisible => pedigree.reset_button_visible.to_s, :minimumNumberChildren => pedigree.minimum_number_children, :maximumNumberChildren => pedigree.maximum_number_children}
+  %organisms
+    - pedigree.organisms.each do |org|
+      = render_scoped_reference(org)

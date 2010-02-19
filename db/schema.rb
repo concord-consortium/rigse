@@ -9,21 +9,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100108180913) do
+ActiveRecord::Schema.define(:version => 20100212154213) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
     t.string   "name"
-    t.text     "description"
+    t.string   "uuid",               :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
-    t.boolean  "teacher_only",                   :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
+
+  add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
@@ -41,21 +44,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "assessment_target_unifying_themes", :id => false, :force => true do |t|
-    t.integer "assessment_target_id"
-    t.integer "unifying_theme_id"
-  end
-
-  create_table "assessment_targets", :force => true do |t|
-    t.integer  "knowledge_statement_id"
-    t.integer  "number"
-    t.string   "description"
-    t.string   "grade_span"
-    t.string   "uuid",                   :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "author_notes", :force => true do |t|
     t.text     "body"
     t.string   "uuid",                 :limit => 36
@@ -66,98 +54,9 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.integer  "user_id"
   end
 
-  create_table "big_ideas", :force => true do |t|
-    t.integer  "unifying_theme_id"
-    t.string   "description"
-    t.string   "uuid",              :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_breed_offsprings", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "width"
-    t.integer  "height"
-    t.integer  "mother_organism_id"
-    t.integer  "father_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_chromosome_zooms", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                                     :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "chromosome_a_visible"
-    t.boolean  "chromosome_b_visible"
-    t.integer  "chromosome_position_in_base_pairs"
-    t.float    "chromosome_position_in_cm"
-    t.boolean  "draw_crossover"
-    t.boolean  "draw_genes"
-    t.boolean  "draw_markers"
-    t.boolean  "draw_tracks"
-    t.string   "g_browse_url_template"
-    t.boolean  "image_label_characteristics_text_visible"
-    t.boolean  "image_label_lock_symbol_visible"
-    t.boolean  "image_label_name_text_visible"
-    t.boolean  "image_label_sex_text_visible"
-    t.integer  "image_label_size"
-    t.boolean  "image_label_species_text_visible"
-    t.integer  "organism_label_type"
-    t.integer  "zoom_level"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "biologica_chromosome_zooms_biologica_organisms", :id => false, :force => true do |t|
     t.integer  "biologica_chromosome_zoom_id"
     t.integer  "biologica_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_chromosomes", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                  :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "biologica_organism_id"
-    t.integer  "width"
-    t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_meiosis_views", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                         :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "width"
-    t.integer  "height"
-    t.boolean  "replay_button_enabled"
-    t.boolean  "controlled_crossover_enabled"
-    t.boolean  "crossover_control_visible"
-    t.boolean  "controlled_alignment_enabled"
-    t.boolean  "alignment_control_visible"
-    t.integer  "father_organism_id"
-    t.integer  "mother_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_multiple_organisms", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "width"
-    t.integer  "height"
-    t.integer  "organism_image_size"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -169,21 +68,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "biologica_organisms", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                  :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "sex"
-    t.string   "alleles"
-    t.string   "strain"
-    t.integer  "chromosomes_color"
-    t.boolean  "fatal_characteristics"
-    t.integer  "biologica_world_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "biologica_organisms_biologica_pedigrees", :id => false, :force => true do |t|
     t.integer  "biologica_pedigree_id"
     t.integer  "biologica_organism_id"
@@ -191,121 +75,50 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "biologica_pedigrees", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                    :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "height"
-    t.integer  "width"
-    t.boolean  "crossover_enabled"
-    t.boolean  "sex_text_visible"
-    t.boolean  "organism_images_visible"
-    t.boolean  "top_controls_visible"
-    t.boolean  "reset_button_visible"
-    t.integer  "organism_image_size"
-    t.integer  "minimum_number_children"
-    t.integer  "maximum_number_children"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
+    t.text "hostname"
+    t.text "key"
+    t.text "value"
+    t.text "cast"
   end
 
-  create_table "biologica_static_organisms", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                  :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "biologica_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "bj_job", :primary_key => "bj_job_id", :force => true do |t|
+    t.text     "command"
+    t.text     "state"
+    t.integer  "priority"
+    t.text     "tag"
+    t.integer  "is_restartable"
+    t.text     "submitter"
+    t.text     "runner"
+    t.integer  "pid"
+    t.datetime "submitted_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.text     "env"
+    t.text     "stdin"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.integer  "exit_status"
   end
 
-  create_table "biologica_worlds", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "species_path"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description"
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "data_collectors", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "probe_type_id"
-    t.integer  "user_id"
-    t.string   "uuid",                       :limit => 36
-    t.string   "title"
-    t.float    "y_axis_min",                               :default => 0.0
-    t.float    "y_axis_max",                               :default => 5.0
-    t.float    "x_axis_min"
-    t.float    "x_axis_max"
-    t.string   "x_axis_label",                             :default => "Time"
-    t.string   "x_axis_units",                             :default => "s"
-    t.string   "y_axis_label"
-    t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "graph_type_id"
-    t.integer  "prediction_graph_id"
-    t.text     "otml_root_content"
-    t.text     "otml_library_content"
-    t.text     "data_store_values"
-    t.integer  "calibration_id"
-    t.boolean  "static"
-    t.boolean  "time_limit_status",                        :default => false
-    t.float    "time_limit_seconds"
-  end
-
-  create_table "data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "data_tables", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "column_count"
-    t.integer  "visible_rows"
-    t.text     "column_names"
-    t.text     "column_data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "bj_job_archive", :primary_key => "bj_job_archive_id", :force => true do |t|
+    t.text     "command"
+    t.text     "state"
+    t.integer  "priority"
+    t.text     "tag"
+    t.integer  "is_restartable"
+    t.text     "submitter"
+    t.text     "runner"
+    t.integer  "pid"
+    t.datetime "submitted_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "archived_at"
+    t.text     "env"
+    t.text     "stdin"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.integer  "exit_status"
   end
 
   create_table "dataservice_bundle_contents", :force => true do |t|
@@ -341,24 +154,190 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "device_configs", :force => true do |t|
+  create_table "embeddable_biologica_breed_offsprings", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "vendor_interface_id"
-    t.string   "config_string"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "domains", :force => true do |t|
+    t.string   "uuid",               :limit => 36
     t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "mother_organism_id"
+    t.integer  "father_organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "drawing_tools", :force => true do |t|
+  create_table "embeddable_biologica_chromosome_zooms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                                     :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "chromosome_a_visible"
+    t.boolean  "chromosome_b_visible"
+    t.integer  "chromosome_position_in_base_pairs"
+    t.float    "chromosome_position_in_cm"
+    t.boolean  "draw_crossover"
+    t.boolean  "draw_genes"
+    t.boolean  "draw_markers"
+    t.boolean  "draw_tracks"
+    t.string   "g_browse_url_template"
+    t.boolean  "image_label_characteristics_text_visible"
+    t.boolean  "image_label_lock_symbol_visible"
+    t.boolean  "image_label_name_text_visible"
+    t.boolean  "image_label_sex_text_visible"
+    t.integer  "image_label_size"
+    t.boolean  "image_label_species_text_visible"
+    t.integer  "organism_label_type"
+    t.integer  "zoom_level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_chromosomes", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organism_id"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_meiosis_views", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.boolean  "replay_button_enabled"
+    t.boolean  "controlled_crossover_enabled"
+    t.boolean  "crossover_control_visible"
+    t.boolean  "controlled_alignment_enabled"
+    t.boolean  "alignment_control_visible"
+    t.integer  "father_organism_id"
+    t.integer  "mother_organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_multiple_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "organism_image_size"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                  :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "sex"
+    t.string   "alleles"
+    t.string   "strain"
+    t.integer  "chromosomes_color"
+    t.boolean  "fatal_characteristics"
+    t.integer  "world_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_pedigrees", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                    :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "height"
+    t.integer  "width"
+    t.boolean  "crossover_enabled"
+    t.boolean  "sex_text_visible"
+    t.boolean  "organism_images_visible"
+    t.boolean  "top_controls_visible"
+    t.boolean  "reset_button_visible"
+    t.integer  "organism_image_size"
+    t.integer  "minimum_number_children"
+    t.integer  "maximum_number_children"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_static_organisms", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_worlds", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "species_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_data_collectors", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",                       :limit => 36
+    t.integer  "y_axis_min",                               :default => 0
+    t.integer  "y_axis_max",                               :default => 5
+    t.integer  "x_axis_min",                               :default => 0
+    t.integer  "x_axis_max",                               :default => 60
+    t.string   "title"
+    t.string   "x_axis_label"
+    t.string   "x_axis_units"
+    t.string   "y_axis_label"
+    t.string   "y_axis_units"
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "graph_type_id"
+    t.integer  "prediction_graph_id"
+    t.text     "otml_root_content"
+    t.text     "otml_library_content"
+    t.text     "data_store_values"
+    t.integer  "calibration_id"
+    t.boolean  "static"
+    t.boolean  "time_limit_status",                        :default => false
+    t.float    "time_limit_seconds"
+  end
+
+  create_table "embeddable_data_tables", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "column_count"
+    t.integer  "visible_rows"
+    t.text     "column_names"
+    t.text     "column_data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_drawing_tools", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                 :limit => 36
     t.string   "name"
@@ -372,28 +351,138 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "expectation_indicators", :force => true do |t|
-    t.integer  "expectation_id"
-    t.string   "description"
-    t.string   "ordinal"
+  create_table "embeddable_inner_page_pages", :force => true do |t|
+    t.integer  "inner_page_id"
+    t.integer  "page_id"
+    t.integer  "user_id"
+    t.string   "uuid",          :limit => 36
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
+  add_index "embeddable_inner_page_pages", ["page_id"], :name => "index_inner_page_pages_on_page_id"
+  add_index "embeddable_inner_page_pages", ["position"], :name => "index_inner_page_pages_on_position"
+
+  create_table "embeddable_inner_pages", :force => true do |t|
+    t.integer  "user_id"
     t.string   "uuid",           :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "static_page_id"
+  end
+
+  create_table "embeddable_lab_book_snapshots", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "target_element_type"
+    t.integer  "target_element_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "expectation_stems", :force => true do |t|
-    t.string   "description"
+  create_table "embeddable_multiple_choice_choices", :force => true do |t|
+    t.text     "choice"
+    t.integer  "multiple_choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_correct"
+  end
+
+  add_index "embeddable_multiple_choice_choices", ["multiple_choice_id"], :name => "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
+
+  create_table "embeddable_multiple_choices", :force => true do |t|
+    t.integer  "user_id"
     t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "prompt"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "expectations", :force => true do |t|
-    t.integer  "expectation_stem_id"
-    t.string   "uuid",                      :limit => 36
+  create_table "embeddable_mw_modeler_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "grade_span_expectation_id"
+  end
+
+  create_table "embeddable_n_logo_models", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",              :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "authored_data_url"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_open_responses", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.text     "prompt"
+    t.string   "default_response"
+  end
+
+  create_table "embeddable_raw_otmls", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",         :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "otml_content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_smartgraph_range_questions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",                                 :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "data_collector_id"
+    t.integer  "correct_range_min"
+    t.integer  "correct_range_max"
+    t.string   "correct_range_axis"
+    t.integer  "highlight_range_min"
+    t.integer  "highlight_range_max"
+    t.string   "highlight_range_axis"
+    t.text     "prompt"
+    t.string   "answer_style"
+    t.text     "no_answer_response_text"
+    t.boolean  "no_answer_highlight"
+    t.text     "correct_response_text"
+    t.boolean  "correct_highlight"
+    t.text     "first_wrong_answer_response_text"
+    t.boolean  "first_wrong_highlight"
+    t.text     "second_wrong_answer_response_text"
+    t.boolean  "second_wrong_highlight"
+    t.text     "multiple_wrong_answers_response_text"
+    t.boolean  "multiple_wrong_highlight"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_xhtmls", :force => true do |t|
+    t.string  "name"
+    t.text    "description"
+    t.integer "user_id"
+    t.string  "uuid",        :limit => 36
+    t.text    "content"
   end
 
   create_table "external_user_domains", :force => true do |t|
@@ -403,15 +492,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "grade_span_expectations", :force => true do |t|
-    t.integer  "assessment_target_id"
-    t.string   "grade_span"
-    t.string   "uuid",                 :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "gse_key"
   end
 
   create_table "images", :force => true do |t|
@@ -426,30 +506,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.string   "uuid",         :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "inner_page_pages", :force => true do |t|
-    t.integer  "inner_page_id"
-    t.integer  "page_id"
-    t.integer  "user_id"
-    t.string   "uuid",          :limit => 36
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
-  add_index "inner_page_pages", ["page_id"], :name => "index_inner_page_pages_on_page_id"
-  add_index "inner_page_pages", ["position"], :name => "index_inner_page_pages_on_position"
-
-  create_table "inner_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",           :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "static_page_id"
   end
 
   create_table "investigations", :force => true do |t|
@@ -467,26 +523,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
-  end
-
-  create_table "knowledge_statements", :force => true do |t|
-    t.integer  "domain_id"
-    t.integer  "number"
-    t.string   "description"
-    t.string   "uuid",        :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "lab_book_snapshots", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "target_element_type"
-    t.integer  "target_element_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "maven_jnlp_icons", :force => true do |t|
@@ -593,60 +629,9 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
-  create_table "multiple_choice_choices", :force => true do |t|
-    t.text     "choice"
-    t.integer  "multiple_choice_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "is_correct"
-  end
-
-  create_table "multiple_choices", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "mw_modeler_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "authored_data_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "n_logo_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "authored_data_url"
-    t.integer  "width"
-    t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "native_libraries_versioned_jnlps", :id => false, :force => true do |t|
     t.integer "native_library_id"
     t.integer "versioned_jnlp_id"
-  end
-
-  create_table "open_responses", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.string   "default_response"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
@@ -717,12 +702,12 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_id"
+    t.integer  "position"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
@@ -730,37 +715,24 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "section_id"
+    t.string   "uuid",         :limit => 36
     t.boolean  "teacher_only",               :default => false
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
+  add_index "pages", ["section_id", "position"], :name => "index_pages_on_section_id_and_position"
 
   create_table "passwords", :force => true do |t|
     t.integer  "user_id"
     t.string   "reset_code"
     t.datetime "expiration_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description"
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1562,6 +1534,8 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "updated_at"
   end
 
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
+
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
     t.string   "name"
@@ -1594,6 +1568,9 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "portal_student_clazzes", ["clazz_id"], :name => "index_portal_student_clazzes_on_clazz_id"
+  add_index "portal_student_clazzes", ["student_id", "clazz_id"], :name => "student_class_index"
 
   create_table "portal_students", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -1639,20 +1616,76 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "probe_types", :force => true do |t|
+  create_table "probe_calibrations", :force => true do |t|
+    t.integer "data_filter_id"
+    t.integer "probe_type_id"
+    t.boolean "default_calibration"
+    t.integer "physical_unit_id"
+    t.string  "name"
+    t.text    "description"
+    t.float   "k0"
+    t.float   "k1"
+    t.float   "k2"
+    t.float   "k3"
+    t.string  "uuid"
+  end
+
+  create_table "probe_data_filters", :force => true do |t|
+    t.integer "user_id"
+    t.string  "name"
+    t.text    "description"
+    t.string  "otrunk_object_class"
+    t.boolean "k0_active"
+    t.boolean "k1_active"
+    t.boolean "k2_active"
+    t.boolean "k3_active"
+    t.string  "uuid"
+  end
+
+  create_table "probe_device_configs", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
+    t.integer  "vendor_interface_id"
+    t.string   "config_string"
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "probe_physical_units", :force => true do |t|
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "quantity"
+    t.string  "unit_symbol"
+    t.string  "unit_symbol_text"
+    t.text    "description"
+    t.boolean "si"
+    t.boolean "base_unit"
+    t.string  "uuid"
+  end
+
+  create_table "probe_probe_types", :force => true do |t|
+    t.integer "user_id"
+    t.string  "name"
+    t.integer "ptype"
+    t.float   "step_size"
+    t.integer "display_precision"
+    t.integer "port"
+    t.string  "unit"
+    t.float   "min"
+    t.float   "max"
+    t.float   "period"
+    t.string  "uuid"
+  end
+
+  create_table "probe_vendor_interfaces", :force => true do |t|
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "short_name"
+    t.text    "description"
+    t.string  "communication_protocol"
+    t.string  "image"
+    t.string  "uuid"
+    t.integer "device_id"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -1660,12 +1693,83 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.integer "versioned_jnlp_id"
   end
 
-  create_table "raw_otmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
+  create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
+    t.integer "assessment_target_id"
+    t.integer "unifying_theme_id"
+  end
+
+  create_table "ri_gse_assessment_targets", :force => true do |t|
+    t.integer  "knowledge_statement_id"
+    t.integer  "number"
+    t.string   "description"
+    t.string   "grade_span"
+    t.string   "uuid",                   :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_big_ideas", :force => true do |t|
+    t.integer  "unifying_theme_id"
+    t.string   "description"
+    t.string   "uuid",              :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_domains", :force => true do |t|
     t.string   "name"
-    t.text     "description"
-    t.text     "otml_content"
+    t.string   "key"
+    t.string   "uuid",       :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_expectation_indicators", :force => true do |t|
+    t.integer  "expectation_id"
+    t.string   "description"
+    t.string   "ordinal"
+    t.string   "uuid",           :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_expectation_stems", :force => true do |t|
+    t.string   "description"
+    t.string   "uuid",        :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_expectations", :force => true do |t|
+    t.integer  "expectation_stem_id"
+    t.string   "uuid",                      :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "grade_span_expectation_id"
+  end
+
+  create_table "ri_gse_grade_span_expectations", :force => true do |t|
+    t.integer  "assessment_target_id"
+    t.string   "grade_span"
+    t.string   "uuid",                 :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "gse_key"
+  end
+
+  create_table "ri_gse_knowledge_statements", :force => true do |t|
+    t.integer  "domain_id"
+    t.integer  "number"
+    t.string   "description"
+    t.string   "uuid",        :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ri_gse_unifying_themes", :force => true do |t|
+    t.string   "name"
+    t.string   "key"
+    t.string   "uuid",       :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1681,18 +1785,88 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.integer "user_id"
   end
 
-  create_table "sections", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description"
+  add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
+  add_index "roles_users", ["role_id", "user_id"], :name => "role_user_index"
+  add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
+  add_index "roles_users", ["user_id", "role_id"], :name => "user_role_index"
+
+  create_table "saveable_multiple_choice_answers", :force => true do |t|
+    t.integer  "multiple_choice_id"
+    t.integer  "bundle_content_id"
+    t.integer  "choice_id"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  add_index "saveable_multiple_choice_answers", ["multiple_choice_id", "position"], :name => "m_c_id_and_position_index"
+
+  create_table "saveable_multiple_choices", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "multiple_choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offering_id"
+    t.integer  "response_count",     :default => 0
+  end
+
+  add_index "saveable_multiple_choices", ["learner_id"], :name => "index_saveable_multiple_choices_on_learner_id"
+  add_index "saveable_multiple_choices", ["offering_id"], :name => "index_saveable_multiple_choices_on_offering_id"
+
+  create_table "saveable_open_response_answers", :force => true do |t|
+    t.integer  "open_response_id"
+    t.integer  "bundle_content_id"
+    t.integer  "position"
+    t.text     "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "saveable_open_response_answers", ["open_response_id", "position"], :name => "o_r_id_and_position_index"
+
+  create_table "saveable_open_responses", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "open_response_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offering_id"
+    t.integer  "response_count",   :default => 0
+  end
+
+  add_index "saveable_open_responses", ["learner_id"], :name => "index_saveable_open_responses_on_learner_id"
+  add_index "saveable_open_responses", ["offering_id"], :name => "index_saveable_open_responses_on_offering_id"
+
+  create_table "saveable_sparks_measuring_resistance", :force => true do |t|
+    t.integer  "learner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offering_id"
+  end
+
+  add_index "saveable_sparks_measuring_resistance", ["learner_id"], :name => "index_saveable_sparks_measuring_resistance_on_learner_id"
+  add_index "saveable_sparks_measuring_resistance", ["offering_id"], :name => "index_saveable_sparks_measuring_resistance_on_offering_id"
+
+  create_table "saveable_sparks_measuring_resistance_reports", :force => true do |t|
+    t.integer  "measuring_resistance_id"
+    t.integer  "position"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sections", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "activity_id"
+    t.string   "uuid",         :limit => 36
     t.boolean  "teacher_only",               :default => false
   end
 
+  add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
   add_index "sections", ["position"], :name => "index_sections_on_position"
 
   create_table "sessions", :force => true do |t|
@@ -1719,34 +1893,6 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
-  create_table "smartgraph_range_questions", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                                 :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "data_collector_id"
-    t.integer  "correct_range_min"
-    t.integer  "correct_range_max"
-    t.string   "correct_range_axis"
-    t.integer  "highlight_range_min"
-    t.integer  "highlight_range_max"
-    t.string   "highlight_range_axis"
-    t.text     "prompt"
-    t.string   "answer_style"
-    t.text     "no_answer_response_text"
-    t.boolean  "no_answer_highlight"
-    t.text     "correct_response_text"
-    t.boolean  "correct_highlight"
-    t.text     "first_wrong_answer_response_text"
-    t.boolean  "first_wrong_highlight"
-    t.text     "second_wrong_answer_response_text"
-    t.boolean  "second_wrong_highlight"
-    t.text     "multiple_wrong_answers_response_text"
-    t.boolean  "multiple_wrong_highlight"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
     t.string   "uuid",                 :limit => 36
@@ -1757,16 +1903,9 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
     t.integer  "user_id"
   end
 
-  create_table "unifying_themes", :force => true do |t|
-    t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
+    t.string   "identity_url"
     t.string   "first_name",                :limit => 100, :default => ""
     t.string   "last_name",                 :limit => 100, :default => ""
     t.string   "email",                     :limit => 100
@@ -1789,28 +1928,5 @@ ActiveRecord::Schema.define(:version => 20100108180913) do
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
-
-  create_table "vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description"
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "xhtmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
 end

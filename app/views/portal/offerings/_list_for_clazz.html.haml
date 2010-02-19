@@ -10,8 +10,7 @@
         %strong="Assignments:" 
         (drag items from the search area below to add)
   #clazz_offerings.drop_target
-    - portal_clazz.offerings.each do |offering|
-      = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
+    = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering
   %br
   = render :partial => "shared/runnable_list", :locals => {:portal_clazz_id => portal_clazz.id, :is_teacher => true, :domain_id => @domain_id, :grade_span => @grade_span}
 

@@ -1,5 +1,0 @@
-%div{:id => dom_id_for(multiple_choice, :details), :class => 'content'}
-  = wrap_edit_link_around_content(multiple_choice, options={:complete => mce_init_string}) do
-    = multiple_choice.prompt
-    - multiple_choice.choices.each do |choice|
-      = render :partial => "multiple_choices/show_choice", :locals => {:multiple_choice => multiple_choice, :choice => choice}

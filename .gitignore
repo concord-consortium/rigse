@@ -49,6 +49,7 @@ public/plugin_assets/portal
 .sass-cache
 public/javascripts/base_packaged.js
 public/stylesheets/base_packaged.css
+public/stylesheets/*packaged*
 public/investigations
 public/page_cache
 config/settings-backup.yml
@@ -68,3 +69,5 @@ jnlp_url.properties
 rites.xml
 resources/bitrock_installer/jnlps.conf
 public/installers/*
+resources/rinet_test_data/report*
+mkmf.log

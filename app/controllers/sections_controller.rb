@@ -105,7 +105,7 @@ class SectionsController < ApplicationController
       format.js {
         @page = Page.create
         @page.user = current_user
-        @xhtml = Xhtml.create
+        @xhtml = Embeddable::Xhtml.create
         @xhtml.user = current_user
         @xhtml.save!
         @xhtml.pages << @page
@@ -206,7 +206,7 @@ class SectionsController < ApplicationController
     @copy.deep_set_user current_user
     @activity = @copy.activity
     flash[:notice] ="Copied #{@section.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
   
   #

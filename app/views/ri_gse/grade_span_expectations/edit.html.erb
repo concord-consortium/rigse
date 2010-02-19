@@ -1,0 +1,12 @@
+<h1>Editing grade_span_expectation</h1>
+
+<% form_for(@grade_span_expectation) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @grade_span_expectation %> |
+<%= link_to 'Back', ri_gse_grade_span_expectations_path %>

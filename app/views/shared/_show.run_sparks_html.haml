@@ -1,0 +1,126 @@
+-content_for :title do
+  SPARKS Module 1: Measuring Resistance
+%h2
+  %img.no_border{:src => "/sparks-content/common/icons/rgirl.png"}/
+  Module 1: Measuring Resistance
+#session_title
+%p#intro_area
+  Each trial has three sets of questions about a resistor,
+  which you can see under the circuit model below.
+  You'll get a feedback after each trial.
+  You can retry as many times as you want by clicking Next.
+  Click on Start to begin the assessment:
+  %button#start_button Start
+#rcc_model
+  %script{:language => "JavaScript", :type => "text/javascript"}
+    AC_FL_RunContent(
+    'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0',
+    'width', '1000',
+    'height', jQuery.sparks.modelHeight,
+    'src', '/sparks-content/activities/resistor-colors/resistor_colors',
+    'movie', '/sparks-content/activities/resistor-colors/resistor_colors',
+    'quality', 'high',
+    'pluginspage', 'http://www.adobe.com/go/getflashplayer',
+    'align', 'middle',
+    'play', 'true',
+    'loop', 'true',
+    'scale', 'showall',
+    'wmode', 'transparent',
+    'devicefont', 'false',
+    'id', 'resistor_colors',
+    'bgcolor', '#ffffff',
+    'name', 'resistor_colors',
+    'menu', 'true',
+    'allowFullScreen', 'false',
+    'allowScriptAccess','sameDomain',
+    'salign', ''
+    ); //end AC code
+  %noscript
+    %p
+    %h1 This page requires javascript enabled.
+%h3 Question 1
+%form#rated_resistance
+  %span#rated_r_feedback
+    %a.no_deco{:href => "/sparks-content/common/resources/hint1_colorcode.html", :target => "feedback", :title => "Click for SPARKS Help!"}
+      %img.no_border{:src => "/sparks-content/common/icons/sparkshelp.jpg"}/
+  %span.prompt What is the rated resistance:
+  %input{:name => "value"}/
+  %select{:name => "units"}
+    %option &#x00b5;V
+    %option mV
+    %option V
+    %option &#x2126;
+    %option k&#x2126;
+    %option M&#x2126;
+    %option &#x00b5;A
+    %option mA
+    %option A
+%form#rated_tolerance
+  %span#rated_t_feedback
+    %a.no_deco{:href => "/sparks-content/common/resources/hint1_colorcode.html", :target => "feedback", :title => "Click for SPARKS Help!"}
+      %img.no_border{:src => "/sparks-content/common/icons/sparkshelp.jpg"}/
+  %span.prompt What is the tolerance:
+  %input{:name => "value"}/
+  \%
+%h3 Question 2
+%form#measured_resistance
+  %span#measured_r_feedback
+    %a.no_deco{:href => "/sparks-content/common/resources/MeasureResMovie/index.html", :target => "feedback", :title => "Click for SPARKS Help!"}
+      %img.no_border{:src => "/sparks-content/common/icons/sparkshelp.jpg"}/
+  %span.prompt What is the measured resistance:
+  %input{:name => "value"}/
+  %select{:name => "units"}
+    %option &#x00b5;V
+    %option mV
+    %option V
+    %option &#x2126;
+    %option k&#x2126;
+    %option M&#x2126;
+    %option &#x00b5;A
+    %option mA
+    %option A
+%h3 Question 3
+%form#measured_tolerance
+  %span#t_range_feedback
+    %a.no_deco{:href => "/sparks-content/common/resources/hint1_calctolerance.html", :target => "feedback", :title => "Click for SPARKS Help!"}
+      %img.no_border{:src => "/sparks-content/common/icons/sparkshelp.jpg"}/
+  %span.prompt What is the tolerance range?
+  %input{:name => "min", :size => "12"}/
+  %select{:name => "min_unit"}
+    %option &#x00b5;V
+    %option mV
+    %option V
+    %option &#x2126;
+    %option k&#x2126;
+    %option M&#x2126;
+    %option &#x00b5;A
+    %option mA
+    %option A
+  to
+  %input{:name => "max", :size => "12"}/
+  %select{:name => "max_unit"}
+    %option &#x00b5;V
+    %option mV
+    %option V
+    %option &#x2126;
+    %option k&#x2126;
+    %option M&#x2126;
+    %option &#x00b5;A
+    %option mA
+    %option A
+%form#within_tolerance
+  %span.prompt Is the resistor within the tolerance?
+  %input{:name => "value", :type => "radio", :value => "yes"}/
+  Yes
+  %input{:name => "value", :type => "radio", :value => "no"}/
+  No
+#instruction_end_session
+%button.show_report_button Show Report
+%button.next_button Next
+%a{:name => "report"}
+#report{:title => "Report"}
+#result
+#json
+  %hr/
+  %button#json_button Current Log Content (JSON)
+  #json_current_log

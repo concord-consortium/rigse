@@ -1,4 +1,112 @@
 ActionController::Routing::Routes.draw do |map|
+
+
+  map.namespace(:saveable) do |saveable|
+    saveable.namespace(:sparks) do |sparks|
+      sparks.resources :measuring_resistances
+      sparks.resources :measuring_resistance_reports
+    end
+  end
+
+
+#
+# ********* New scoped routing for page-embeddables, probes, and RI GSEs  *********
+#
+#            delete the older routes by hand!
+#
+
+
+  map.namespace(:probe) do |probe|
+    probe.resources :vendor_interfaces
+    probe.resources :probe_types
+    probe.resources :physical_units
+    probe.resources :device_configs
+    probe.resources :data_filters
+    probe.resources :calibrations
+  end
+
+  map.namespace(:ri_gse) do |ri_gse|
+    ri_gse.resources :assessment_targets, :knowledge_statements, :domains
+    ri_gse.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
+    ri_gse.resources :grade_span_expectations, 
+      :collection => { 
+        :select_js => :post,
+        :summary => :post,
+        :reparse_gses => :put,
+        :select => :get }, 
+      :member => { :print => :get }
+  end
+
+  map.namespace(:embeddable) do |embeddable|
+
+    embeddable.namespace(:smartgraph) do |smartgraph|
+      smartgraph.resources :range_questions
+    end
+
+    embeddable.namespace(:biologica) do |biologica|
+      biologica.resources :chromosome_zooms, :member => { :destroy => :post }
+      biologica.resources :multiple_organisms, :member => { :destroy => :post }
+      biologica.resources :breed_offsprings, :member => { :destroy => :post }
+      biologica.resources :meiosis_views, :member => { :destroy => :post }
+      biologica.resources :chromosomes, :member => { :destroy => :post }
+      biologica.resources :pedigrees, :member => { :destroy => :post }
+      biologica.resources :static_organisms, :member => { :destroy => :post }
+      biologica.resources :organisms, :member => { :destroy => :post }
+      biologica.resources :worlds, :member => { :destroy => :post }
+    end
+
+    embeddable.resources :inner_pages, :member => {
+      :destroy => :post,
+      :add_page => :post,
+      :add_element => :post,
+      :set_page => :post,
+      :sort_pages => :post, 
+      :delete_page => :post
+    }
+
+    embeddable.resources :lab_book_snapshots, :member => { :destroy => :post }
+
+    embeddable.resources :raw_otmls, :member => { :destroy => :post }
+
+    embeddable.resources :n_logo_models, :member => { :destroy => :post }
+    embeddable.resources :mw_modeler_pages, :member => { :destroy => :post }
+
+    embeddable.resources :data_tables, :member => {
+      :print => :get,
+      :destroy => :post,
+      :update_cell_data => :post
+    }
+
+    embeddable.resources :multiple_choices, :member => {
+      :print => :get,
+      :destroy => :post,
+      :add_choice => :post
+    }
+
+    embeddable.resources :drawing_tools, :member => {
+      :print => :get,
+      :destroy => :post
+    }
+
+    embeddable.resources :xhtmls, :member => {
+      :print => :get,
+      :destroy => :post
+    }
+
+    embeddable.resources :open_responses, :member  => {
+      :print => :get,
+      :destroy => :post
+    }
+
+    embeddable.resources :data_collectors, :member => {
+      :print => :get,
+      :destroy => :post,
+      :change_probe_type => :put
+    }
+  end
+
+# ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********
+
   map.namespace(:smartgraph) do |smartgraph|
     smartgraph.resources :range_questions
   end
@@ -17,10 +125,17 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :districts
     portal.resources :grades
     portal.resources :grade_levels
-    portal.resources :learners
-    portal.resources :offerings, :collection => {
-      :data_test => [:get,:post]
+    portal.resources :learners,  :member => { 
+      :report => :get,
+      :open_response_report => :get, 
+      :multiple_choice_report => :get,
+      :bundle_report => :get
     }
+    portal.resources :offerings, :member => { 
+      :report => :get,
+      :open_response_report => :get, 
+      :multiple_choice_report => :get 
+    }, :collection => { :data_test => [:get,:post] }
     portal.resources :schools
     portal.resources :school_memberships
     portal.resources :semesters
@@ -104,13 +219,6 @@ ActionController::Routing::Routes.draw do |map|
     otrunk_example.resources :otml_files
     otrunk_example.resources :otrunk_view_entries
   end
-
-  map.resources :vendor_interfaces
-  map.resources :probe_types
-  map.resources :physical_units
-  map.resources :device_configs
-  map.resources :data_filters
-  map.resources :calibrations
 
   map.resources :teacher_notes
   map.resources :author_notes
@@ -237,6 +345,10 @@ ActionController::Routing::Routes.draw do |map|
     :export => :get,
     :destroy => :post
   }
+  map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
+  #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+  
 
   map.resources :activities do |activity|
     activity.resources :sections do |section|

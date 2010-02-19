@@ -28,7 +28,7 @@ var item_select = function(event) {
     var type = '';
     var id = '';
     
-    selected.identify().gsub(/item_([\w|_|-]+)_(\d+)/, function(match){
+    selected.identify().gsub(/item_([\w|_]+)_(\d+)/, function(match){
       type = match[1];
       id = match[2];
     });
@@ -53,7 +53,7 @@ var item_deselect = function() {
 var update_links = function() {
   if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !=null) {
-      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">copy #{type} #{name}</a>');
+      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">copy #{name}</a>');
       // var template = new Template('<a>copy #{type}:#{id}</a>');
       $('copy_link').addClassName('copy_paste_enabled');
       $('copy_link').removeClassName('copy_paste_disabled');

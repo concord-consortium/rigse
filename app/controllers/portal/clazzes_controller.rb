@@ -13,7 +13,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1
   # GET /portal_clazzes/1.xml
   def show
-    @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     respond_to do |format|
       format.html # show.html.erb
@@ -30,6 +31,7 @@ class Portal::ClazzesController < ApplicationController
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
     elsif current_user.portal_teacher
       @portal_clazz.teacher = current_user.portal_teacher
+      @portal_clazz.teacher_id = current_user.portal_teacher.id
     end
     respond_to do |format|
       format.html # new.html.erb
@@ -49,6 +51,7 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes
   # POST /portal_clazzes.xml
   def create
+    @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.new(params[:portal_clazz])
     okToCreate = true
     if (! @portal_clazz.teacher)
@@ -56,9 +59,12 @@ class Portal::ClazzesController < ApplicationController
         flash[:error] = "Anonymous can't create classes. Please log in and try again."
         okToCreate = false
       elsif current_user.portal_teacher
+        @portal_clazz.teacher_id = current_user.portal_teacher.id
         @portal_clazz.teacher = current_user.portal_teacher
       else
-        @portal_clazz.teacher = Portal::Teacher.create(:user_id => current_user.id)
+        teacher = Portal::Teacher.create(:user_id => current_user.id).id
+        @portal_clazz.teacher_id = Portal::Teacher.create(:user_id => current_user.id).id
+        @portal_clazz.teacher = teacher
         @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
       end
     end
@@ -77,6 +83,7 @@ class Portal::ClazzesController < ApplicationController
   # PUT /portal_clazzes/1
   # PUT /portal_clazzes/1.xml
   def update
+    @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.find(params[:id])
     if request.xhr?
       @portal_clazz.update_attributes(params[:portal_clazz])
@@ -135,6 +142,7 @@ class Portal::ClazzesController < ApplicationController
         page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
       end
     end
+    @offering.refresh_saveable_response_objects
   end
   
   
