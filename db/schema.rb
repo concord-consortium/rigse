@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100212154213) do
+ActiveRecord::Schema.define(:version => 20100224203846) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -52,27 +52,6 @@ ActiveRecord::Schema.define(:version => 20100212154213) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-  end
-
-  create_table "biologica_chromosome_zooms_biologica_organisms", :id => false, :force => true do |t|
-    t.integer  "biologica_chromosome_zoom_id"
-    t.integer  "biologica_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_multiple_organisms_biologica_organisms", :id => false, :force => true do |t|
-    t.integer  "biologica_multiple_organism_id"
-    t.integer  "biologica_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biologica_organisms_biologica_pedigrees", :id => false, :force => true do |t|
-    t.integer  "biologica_pedigree_id"
-    t.integer  "biologica_organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
@@ -193,6 +172,13 @@ ActiveRecord::Schema.define(:version => 20100212154213) do
     t.datetime "updated_at"
   end
 
+  create_table "embeddable_biologica_chromosome_zooms_organisms", :id => false, :force => true do |t|
+    t.integer  "chromosome_zoom_id"
+    t.integer  "organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "embeddable_biologica_chromosomes", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
@@ -235,6 +221,13 @@ ActiveRecord::Schema.define(:version => 20100212154213) do
     t.datetime "updated_at"
   end
 
+  create_table "embeddable_biologica_multiple_organisms_organisms", :id => false, :force => true do |t|
+    t.integer  "multiple_organism_id"
+    t.integer  "organism_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "embeddable_biologica_organisms", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                  :limit => 36
@@ -246,6 +239,13 @@ ActiveRecord::Schema.define(:version => 20100212154213) do
     t.integer  "chromosomes_color"
     t.boolean  "fatal_characteristics"
     t.integer  "world_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_biologica_organisms_pedigrees", :id => false, :force => true do |t|
+    t.integer  "pedigree_id"
+    t.integer  "organism_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
