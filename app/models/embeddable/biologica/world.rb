@@ -6,7 +6,7 @@ class Embeddable::Biologica::World < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-  has_many :biologica_organisms, :class_name => 'Embeddable::Biologica::Organism'
+  has_many :organisms, :class_name => 'Embeddable::Biologica::Organism'
   
   acts_as_replicatable
 
