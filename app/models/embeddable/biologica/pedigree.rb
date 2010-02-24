@@ -7,14 +7,14 @@ class Embeddable::Biologica::Pedigree < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
-  has_and_belongs_to_many :biologica_organisms, :class_name => 'Embeddable::Biologica::Organism'
+  has_and_belongs_to_many :organisms, :class_name => 'Embeddable::Biologica::Organism', :join_table => 'embeddable_biologica_organisms_pedigrees'
   
   acts_as_replicatable
 
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:biologica_organisms]
+  @@cloneable_associations = [:organisms]
 
   self.extend SearchableModel
   

@@ -7,14 +7,14 @@ class Embeddable::Biologica::Chromosome < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
-  belongs_to :biologica_organism, :class_name => 'Embeddable::Biologica::Organism'
+  belongs_to :organism, :class_name => 'Embeddable::Biologica::Organism'
   
   acts_as_replicatable
 
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:biologica_organism]
+  @@cloneable_associations = [:organism]
 
   self.extend SearchableModel
   
