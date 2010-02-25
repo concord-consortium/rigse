@@ -11,9 +11,9 @@ class Embeddable::Biologica::Organism < ActiveRecord::Base
   has_many :static_organisms, :class_name => 'Embeddable::Biologica::StaticOrganism'
   has_many :chromosomes, :class_name => 'Embeddable::Biologica::Chromosome'
   
-  has_and_belongs_to_many :chromosome_zooms, :class_name => 'Embeddable::Biologica::ChromosomeZoom'
-  has_and_belongs_to_many :multiple_organisms, :class_name => 'Embeddable::Biologica::MultipleOrganism'
-  has_and_belongs_to_many :pedigrees, :class_name => 'Embeddable::Biologica::Pedigree'
+  has_and_belongs_to_many :chromosome_zooms, :class_name => 'Embeddable::Biologica::ChromosomeZoom', :join_table => 'embeddable_biologica_chromosome_zooms_organisms'
+  has_and_belongs_to_many :multiple_organisms, :class_name => 'Embeddable::Biologica::MultipleOrganism', :join_table => 'embeddable_biologica_multiple_organisms_organisms'
+  has_and_belongs_to_many :pedigrees, :class_name => 'Embeddable::Biologica::Pedigree', :join_table => 'embeddable_biologica_organisms_pedigrees'
   
   send_update_events_to :investigations
 
