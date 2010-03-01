@@ -137,10 +137,9 @@
           document.observe("dom:loaded", function() {
             // if we are in an iframe, pop-out.
             if (top!=self) {
-              
               // Option #1: Redirect the browser to a new location, taking
               // the user away from whatever site (EG RIEPS) is containing us.
-              // top.location.replace(location.href);
+              top.location.href=location.href;
               // Option #2: Open a new window. Requires user education.
               // Pop-Up blockers on all major browsers will prevent this:
               // window.open(location.href);
@@ -148,6 +147,8 @@
           });
 
       :javascript
-        if (top!=self) {
-          $('pop_out_link').show();
-        }
+        document.observe("dom:loaded", function() {
+          if (top!=self) {
+            $('pop_out_link').show();
+          }
+        });
