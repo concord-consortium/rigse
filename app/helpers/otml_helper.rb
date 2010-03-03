@@ -74,7 +74,7 @@
       org.concord.otrunk.ui.swing.OTChoiceViewConfig
       org.concord.otrunk.ui.OTCurriculumUnit
       org.concord.otrunk.ui.OTText
-      org.concord.otrunk.ui.OTUDLContainer
+      org.concord.otrunk.ui.OTRITESContainer
       org.concord.otrunk.ui.OTSection
       org.concord.otrunk.ui.menu.OTMenu
       org.concord.otrunk.ui.menu.OTMenuRule
@@ -151,7 +151,7 @@
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
       ['data_table_view', 'org.concord.data.state.OTDataTable', 'org.concord.data.state.OTDataTableView'],
-      ['udl_container', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerView'],
+      ['rites_container', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerView'],
       ['curriculum_unit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitView'],
       ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
       ['menu_page_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageView'],
@@ -197,7 +197,7 @@
 #      ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
 #      ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
       ['data_table_edit_view', 'org.concord.data.state.OTDataTable', 'org.concord.otrunk.ui.swing.OTDataTableEditView'],
-      ['udl_container_edit_view', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerEditView'],
+      ['udl_container_edit_view', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerEditView'],
       ['curriculum_unit_edit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitEditView'],
 #      ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
       ['menu_page_edit_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageEditView'],
