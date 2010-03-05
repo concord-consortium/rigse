@@ -73,10 +73,10 @@ Spork.prefork do
   puts "Loading default data set required for application_controller.rb to run ...."
   anon =  Factory.next :anonymous_user
   admin = Factory.next :admin_user 
-  device_config = Factory.create(:device_config)
+  device_config = Factory.create(:probe_device_config)
   versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
   school = Factory(:portal_school)
-  domain = Factory(:domain)
+  domain = Factory(:rigse_domain)
   grade = Factory(:portal_grade)
   Admin::Project.create_or_update_default_project_from_settings_yml
   puts "done."
