@@ -1,4 +1,9 @@
 class Portal::ExternalUserDomainsController < ApplicationController
+  
+  include RestrictedPortalController
+  before_filter :admin
+  public
+  
   # GET /portal_external_user_domains
   # GET /portal_external_user_domains.xml
   def index

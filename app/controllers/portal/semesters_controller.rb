@@ -1,4 +1,8 @@
 class Portal::SemestersController < ApplicationController
+  
+  include RestrictedPortalController
+  public
+  
   # GET /portal_semesters
   # GET /portal_semesters.xml
   def index

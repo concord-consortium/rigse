@@ -1,4 +1,12 @@
 class Portal::ClazzesController < ApplicationController
+  
+  # TODO:  There need to be a lot more 
+  # controller filters here...
+  # this only protects management actions:
+  include RestrictedPortalController
+  
+  
+  public
   # GET /portal_clazzes
   # GET /portal_clazzes.xml
   def index
