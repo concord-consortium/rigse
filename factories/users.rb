@@ -33,6 +33,7 @@ Factory.sequence :admin_user do |n|
     admin = Factory(:user,
     {
       :login => 'admin',
+      # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'admin',
       :site_admin => 1,
       :roles => [Factory.next(:member_role),Factory.next(:admin_role)]

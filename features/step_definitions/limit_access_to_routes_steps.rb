@@ -6,7 +6,7 @@ end
 Given /^[Ii] am logged in as(\s*the\s*)?[aA]dmin(\s*user\s*)$/ do |x,y|
   visit 'login'
   fill_in('login', :with => 'admin')
-  fill_in('password', :with => 'admin123')
+  fill_in('password', :with => 'password')
   click_button('login')
 end
 
@@ -14,7 +14,7 @@ end
 Then /^There should be a valid admin user$/ do
   admin = User.find_by_login('admin')
   admin.should_not be_nil
-  admin.authenticated?("admin123").should be true
+  admin.authenticated?("password").should be true
 end
 
 # dont use webrat for these, because of sessions:
