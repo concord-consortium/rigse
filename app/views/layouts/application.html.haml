@@ -15,7 +15,7 @@
     = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
-    = javascript_include_tag("tiny_mce/tiny_mce")
+    = javascript_include_tag "tiny_mce/tiny_mce"
     
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
