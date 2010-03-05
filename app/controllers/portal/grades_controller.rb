@@ -1,17 +1,9 @@
 class Portal::GradesController < ApplicationController
 
+  include RestrictedPortalController
   before_filter :admin_only
-  
-  protected  
-
-  def admin_only
-    unless current_user.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
-    end
-  end
-  
   public
+  
 
   # GET /portal_grades
   # GET /portal_grades.xml
