@@ -1,10 +1,13 @@
 class Portal::OfferingsController < ApplicationController
   
   layout 'report', :only => %w{report open_response_report multiple_choice_report}
-  
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
   
+  def current_clazz
+    Portal::Offering.find(params[:id]).clazz
+  end
+   
   public
   
   # GET /portal_offerings
