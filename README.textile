@@ -53,9 +53,10 @@ h3. when deploying to a new server
 # put configuration files in /web/production/APP_NAME/shared/config
 ## at a minimum you need database.yml and initializers/site_key.rb
 # modify the deploy recipies (in your local config/deploy.rb and config/deploy)
-# deploy cap deploy ( it will fail, but it will get far enough to make some of the other things below possible)
+# deploy: cap <your-cap-recipe-name> deploy ( it will fail, but it will get far enough to make some of the other things below possible)
 # run ruby config/setup.rb on the server
 # comment out the one line in config/initializers/rites.rb
+# run rake db:migrate
 # make sure config/nces_data isn't there
 # run RAILS_ENV=production rake rigse:setup:new_rites_app
 
