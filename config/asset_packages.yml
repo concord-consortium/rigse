@@ -96,4 +96,15 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  
+- geniverse:
+  - themes/geniverse/sparks
+  - themes/geniverse/action_menu_tab
+  - themes/geniverse/drop_down
+  - themes/geniverse/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
 
