@@ -1,0 +1,7 @@
+- content_for :top_menu_items do
+  - content_for(:authored_pages) do
+    - field_set_tag "Pages you've authored" do
+      %ul
+        - current_user.pages.each do |page|
+          %li
+            = link_to_container(page)

@@ -1,0 +1,32 @@
+--- 
+development: &id003
+  active_school_levels:
+    - "4"
+  active_grades:
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  use_gse: false
+  help_email: aunger@concord.org
+  theme: geniverse
+  runnables_use: browser
+  runnable_mime_type: run_sparks_html
+  top_level_container_name: page
+  site_school: Geniverse-school
+  description: ""
+  site_district: Geniverse-district
+  site_name: Geniverse Demos
+  site_url: http://localhost:3000
+  admin_email: aunger@concord.org
+  default_admin_user: 
+    first_name: Aaron
+    login: aunger
+    last_name: Unger
+    email: aunger@concord.org
+  states_and_provinces: 
+  - MA
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003
