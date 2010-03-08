@@ -1,4 +1,4 @@
-Factory.define :vendor_interface do |f|
+Factory.define :probe_vendor_interface, :class => Probe::VendorInterface do |f|
   # f.association :user, :factory=>admin_user
   f.user_id 2 # uh sort of hackish
   f.name  'Vernier Go! Link' 

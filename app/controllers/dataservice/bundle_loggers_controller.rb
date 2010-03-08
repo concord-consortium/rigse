@@ -1,16 +1,8 @@
 class Dataservice::BundleLoggersController < ApplicationController
 
-  before_filter :admin_only
-  
-  protected  
+  # restrict access to admins or bundle formatted requests 
+  include RestrictedBundleController
 
-  def admin_only
-    unless current_user.has_role?('admin') || request.format == :bundle
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
-    end
-  end
-  
   public
   
   # GET /dataservice/bundle_loggers

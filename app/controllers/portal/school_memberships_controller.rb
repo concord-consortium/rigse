@@ -1,4 +1,9 @@
 class Portal::SchoolMembershipsController < ApplicationController
+  
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_school_memberships
   # GET /portal_school_memberships.xml
   def index
