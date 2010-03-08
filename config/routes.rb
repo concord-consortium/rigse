@@ -147,7 +147,10 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :subjects
     portal.resources :teachers
     
-    portal.home 'readme', :controller => 'home', :action => 'readme'
+    portal.resources :nces06_districts
+    portal.resources :nces06_schools
+    # portal.home 'readme', :controller => 'home', :action => 'readme'  
+    # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
   
   
