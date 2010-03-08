@@ -1,7 +1,8 @@
 class Portal::DistrictsController < ApplicationController
   
   include RestrictedPortalController
-  before_filter :admin
+  before_filter :admin_only
+  
   public
   
   # GET /portal_districts
