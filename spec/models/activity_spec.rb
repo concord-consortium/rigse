@@ -13,7 +13,7 @@ describe Activity do
   end
   
   describe "should be publishable" do
-    before (:each) do
+    before(:each) do
       @activity = Activity.create!(@valid_attributes)
     end
     

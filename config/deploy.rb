@@ -1,5 +1,5 @@
 set :stages, %w(
-  development staging production seymour 
+  development staging production jnlp-staging seymour 
   itsisu-dev itsisu-staging itsisu-production fall2009 
   smartgraphs-production smartgraphs-staging sg-dev 
   sparks-production sparks-staging sparks-dev)

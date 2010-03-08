@@ -56,4 +56,4 @@ def exec(command)
   return %x[#{command}]
 end
 
-rename ('Investigation','Activity')
+# rename ('Investigation','Activity')

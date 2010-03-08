@@ -30,11 +30,11 @@ config.action_mailer.perform_deliveries = true
 #
 
 # See: http://wiki.github.com/dchelimsky/rspec/configgem-for-rails
-config.gem "rspec",          :lib => false,          :version => "= 1.2.9" 
-config.gem "rspec-rails",    :lib => false,          :version => "= 1.2.9"
-config.gem "webrat",         :lib => false,          :version => "= 0.5.3"
-config.gem "cucumber",       :lib => false,          :version => "= 0.4.4"
-config.gem "factory_girl",                           :version => "= 1.2.3"
+config.gem "rspec",          :lib => false,          :version => ">= 1.2.9" 
+config.gem "rspec-rails",    :lib => false,          :version => ">= 1.2.9"
+config.gem "webrat",         :lib => false,          :version => ">= 0.5.3"
+config.gem "cucumber",       :lib => false,          :version => ">= 0.4.4"
+config.gem "factory_girl",                           :version => ">= 1.2.3"
 config.gem 'email_spec',                             :version => "= 0.3.5"
 
 # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy

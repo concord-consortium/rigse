@@ -1,9 +1,13 @@
 class Portal::ExternalUsersController < ApplicationController
+  
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_external_users
   # GET /portal_external_users.xml
   def index
     @portal_external_users = Portal::ExternalUser.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @portal_external_users }

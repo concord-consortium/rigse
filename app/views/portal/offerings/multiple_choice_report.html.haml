@@ -1,26 +1,37 @@
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
   %h3= "Multiple Choice Report for: #{@offering.name}"
   %div{:id => dom_id_for(@offering, :details), :class => 'content'}
-    - @offering.runnable.activities.each do |activity|
-      - count = activity.multiple_choices.size
-      = accordion_for(activity, "#{activity.name}: #{count} questions") do
-        - if count > 0
-          - activity.sections.each do |section|
-            - count = section.multiple_choices.size
-            = accordion_for(section, "#{section.name}: #{count} questions") do
-              - if count > 0
-                - section.pages.each do |page|
-                  - multiple_choices = page.multiple_choices
-                  - count = multiple_choices.size
-                  = accordion_for(page, "#{page.name}: #{count} questions") do
-                    - multiple_choices.each do |multiple_choice|
+    = accordion_for(@offering, offering_mc_report_summary(@offering, :type => Embeddable::MultipleChoice)) do
+      - @offering_report.activities.each_with_index do |activity,activity_num|
+      - next if activity.respondables(Saveable::MultipleChoice).empty?
+        %div
+          %span{:style => 'font-weight: bold;'}= "Activity #{activity_num + 1}"
+          = " &ndash; #{activity.activity.name}"
+        %div{:style => 'padding-left: 10px;'}
+          - activity.sections.each_with_index do |section,section_num|
+            - next if section.respondables(Saveable::MultipleChoice).empty?
+            %div
+              %span{:style => 'font-weight: bold;'}= "Section #{section_num + 1}"
+              = " &ndash; #{section.section.name}"
+            %div{:style => 'padding-left: 20px;'}
+              - section.pages.each_with_index do |page,page_num|
+                - respondables = page.respondables(Saveable::MultipleChoice)
+                - next if page.respondables(Saveable::MultipleChoice).empty?
+                %div
+                  %span{:style => 'font-weight: bold;'}= "Page #{page_num + 1}"
+                  = " &ndash; #{page.page.name}"
+                %div{:style => 'padding-left: 30px;'}
+                  - page.page.multiple_choices.each do |multiple_choice|
+                    %div
                       = accordion_for(multiple_choice, offering_details_multiple_choice(@offering, multiple_choice)) do
-                        - @learners.each do |l|
-                          - saveable = multiple_choice_saveable_for_learner(multiple_choice, l)
-                          - css_style = saveable.answered? ? 'answered' : 'not_answered'
-                          - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
-                          %div{:id => dom_id_for(saveable), :style => "clear: right;", :class => css_style}
+                        - responses = respondables.find_all { |respondable| respondable.embeddable_id == multiple_choice.id && respondable.answered }
+                        - responses.each do |response|
+                          - css_style = response.answered ? 'answered' : 'not_answered'
+                          - css_style << (response.respondable.answered_correctly? ? ' correct' : ' incorrect')
+                          - answer = response.respondable.answer
+                          %div{:id => dom_id_for(response), :style => "clear: right;", :class => css_style}
                             %item{:class => css_style}
-                              = l.name
+                              = response.learner.name
                             %item{:style => "float: right;", :class => css_style}
-                              = saveable.answer
+                              = response.respondable.answer
+                                    

@@ -108,18 +108,18 @@ class Portal::Learner < ActiveRecord::Base
   end
   
   def refresh_saveable_response_objects
-    runnable = self.offering.runnable
-    runnable.saveable_types.each do |saveable_class|
-      saveable_association = saveable_class.to_s.demodulize.tableize
-      saveable_id_symbol = "#{saveable_association.singularize}_id".to_sym
-      saveable_objects = runnable.send(saveable_association)
-      saved_objects = self.send(saveable_association)
-      existing_saveable_ids = saved_objects.collect { |o| o.send(saveable_id_symbol) }
-      unsaved_objects = saveable_objects.find_all { |o| !existing_saveable_ids.include?(o.id) }
-      unsaved_objects.each do |unsaved_object|
-        saveable_class.create(saveable_id_symbol => unsaved_object.id, :learner_id => self.id)
-      end
-    end
+    # runnable = self.offering.runnable
+    # runnable.saveable_types.each do |saveable_class|
+    #   saveable_association = saveable_class.to_s.demodulize.tableize
+    #   saveable_id_symbol = "#{saveable_association.singularize}_id".to_sym
+    #   saveable_objects = runnable.send(saveable_association)
+    #   saved_objects = self.send(saveable_association)
+    #   existing_saveable_ids = saved_objects.collect { |o| o.send(saveable_id_symbol) }
+    #   unsaved_objects = saveable_objects.find_all { |o| !existing_saveable_ids.include?(o.id) }
+    #   unsaved_objects.each do |unsaved_object|
+    #     saveable_class.create(saveable_id_symbol => unsaved_object.id, :learner_id => self.id)
+    #   end
+    # end
   end
 
 end

@@ -1,17 +1,11 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => %w{open_response_report multiple_choice_report bundle_report}
+  layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
   
-  before_filter :admin_only, :except => [:open_response_report, :multiple_choice_report]
+  include RestrictedPortalController
   
-  protected  
-
-  def admin_only
-    unless current_user.has_role?('admin') || request.format == :config
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
-    end
-  end
+  before_filter :admin_or_config, :except => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
   
   public
 
@@ -30,8 +24,6 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/open_response_report.xml
   def open_response_report
     @portal_learner = Portal::Learner.find(params[:id])
-    @portal_learner.refresh_saveable_response_objects
-    @portal_learner.reload
     
     respond_to do |format|
       format.html # report.html.haml
@@ -42,8 +34,18 @@ class Portal::LearnersController < ApplicationController
   # GET /portal/learners/1/multiple_choice_report.xml
   def multiple_choice_report
     @portal_learner = Portal::Learner.find(params[:id])
-    @portal_learner.refresh_saveable_response_objects
-    @portal_learner.reload
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  def report
+    @portal_learner = Portal::Learner.find(params[:id])
+    
+    reportUtil = Report::Util.reload(@portal_learner.offering)  # force a reload of this offering
+    
+    @page_elements = reportUtil.page_elements
     
     respond_to do |format|
       format.html # report.html.haml
