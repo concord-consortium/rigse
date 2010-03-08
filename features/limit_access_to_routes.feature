@@ -63,7 +63,6 @@ Feature: Limit access to restricted routes
       | /portal/external_user_domains              | be redirected home |
       | /portal/external_users                     | be redirected home |
       | /portal/grade_levels                       | be redirected home |
-      | /portal/home                               | be redirected home |
       | /portal/nces06_districts                   | be redirected home |
       | /portal/nces06_schools                     | be redirected home |
       | /portal/offerings                          | be redirected home |
@@ -76,7 +75,7 @@ Feature: Limit access to restricted routes
     Then I should <action>
 
     Examples:
-      | route                                      | action                 |
+      | route                                      | action              |
       | /portal/clazzes                            | not be redirected home |
       | /portal/courses                            | not be redirected home |
       | /portal/school_memberships                 | not be redirected home |
@@ -92,7 +91,6 @@ Feature: Limit access to restricted routes
       | /portal/external_user_domains              | not be redirected home |
       | /portal/external_users                     | not be redirected home |
       | /portal/grade_levels                       | not be redirected home |
-      | /portal/home                               | not be redirected home |
       | /portal/nces06_districts                   | not be redirected home |
       | /portal/nces06_schools                     | not be redirected home |
       | /portal/offerings                          | not be redirected home |
