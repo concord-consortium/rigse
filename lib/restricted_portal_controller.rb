@@ -22,9 +22,9 @@ module RestrictedPortalController
           redirect_home unless current_user.has_role?('admin') || request.format == :config
        end
 
+       # must define current_clazz in calling controller class
        def teacher_admin_or_config
-         @portal_learner = Portal::Learner.find(params[:id])
-         redirect_home unless @portal_learner.offering.clazz.is_teacher?(current_user) || current_user.has_role?('admin') || request.format == :config
+         redirect_home unless current_clazz.is_teacher?(current_user) || current_user.has_role?('admin') || request.format == :config
        end
        
        def require_roles(*roles)

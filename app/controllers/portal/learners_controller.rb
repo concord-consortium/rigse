@@ -7,6 +7,10 @@ class Portal::LearnersController < ApplicationController
   before_filter :admin_or_config, :except => [:report, :open_response_report, :multiple_choice_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
   
+  def current_clazz
+    Portal::Learner.find(params[:id]).offering.clazz
+  end
+  
   public
 
   # GET /portal/learners
