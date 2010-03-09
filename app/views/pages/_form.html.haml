@@ -10,4 +10,6 @@
     (check here if this page is for teachers only)
   - field_set_tag 'Page Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'External Page URL' do
+    = f.text_field :external_url
 = javascript_tag("focus_first_field();");

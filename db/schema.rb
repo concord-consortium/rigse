@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100224203846) do
+ActiveRecord::Schema.define(:version => 20100309161407) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -724,6 +724,7 @@ ActiveRecord::Schema.define(:version => 20100224203846) do
     t.integer  "section_id"
     t.string   "uuid",         :limit => 36
     t.boolean  "teacher_only",               :default => false
+    t.string   "external_url"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1786,7 +1787,9 @@ ActiveRecord::Schema.define(:version => 20100224203846) do
   end
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
+  add_index "roles_users", ["role_id", "user_id"], :name => "role_user_index"
   add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
+  add_index "roles_users", ["user_id", "role_id"], :name => "user_role_index"
 
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"

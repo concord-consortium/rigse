@@ -1,0 +1,11 @@
+-content_for :title do
+  = @page.name
+-content_for :more_javascript do
+  - if @page.external_url && @page.external_url.length > 0
+    %script{:language => "JavaScript"}
+      = "window.location = \"#{@page.external_url}\""
+%h2
+  = @page.name
+%p
+  Your browser is ignoring javascript. Click here to continue:
+  %a{:href => @page.external_url}= @page.external_url
