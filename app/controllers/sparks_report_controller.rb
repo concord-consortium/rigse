@@ -8,6 +8,7 @@ class SparksReportController < ApplicationController
     render :template => 'sparks_report/measuring_resistance/class_report'
   end
   
+  ## All historical data for a student
   def learner_report
     @offering = Portal::Offering.find(params[:offering_id])
     studentId = params[:student_id] || current_user.portal_student.id
@@ -17,6 +18,7 @@ class SparksReportController < ApplicationController
     render :template => 'sparks_report/measuring_resistance/learner_report'
   end
   
+  ## Data for a single session of a student
   def learner_session_report
     @report = Saveable::Sparks::MeasuringResistanceReport.find_by_id(params[:id]);
     cookies[:report_id] = @report.id
@@ -32,5 +34,5 @@ class SparksReportController < ApplicationController
   def getLearner(offeringId, studentId)
     Portal::Learner.first(:conditions => { :offering_id => offeringId, :student_id => studentId })
   end
-  
+
 end
