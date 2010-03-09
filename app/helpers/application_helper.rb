@@ -373,6 +373,16 @@ module ApplicationHelper
     end
   end
 
+  def sparks_run_link_for(component, as_name=nil, params={})
+    component_display_name = component.class.display_name.downcase
+    name = component.name
+    params.update(current_user.extra_params)
+    link_text = params.delete(:link_text) || "run "
+    url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)
+    link_button("run.png",  url, :title => "Run the #{component.class.display_name}: '#{name}'", :popup => true) + 
+    link_to(link_text, url, :popup => true)
+  end
+
   def edit_link_for(component, params={}) 
     component_display_name = component.class.display_name.downcase
     name = component.name
