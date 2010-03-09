@@ -30,6 +30,7 @@ class Portal::OfferingsController < ApplicationController
       
       format.run_static_html {
         if @learner
+          @page = @offering.runnable
           #cookies[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
           cookies[:put_path] = url_for(:controller => '/saveable/sparks/measuring_resistances',
             :action => 'save_data', :only_path => true);
