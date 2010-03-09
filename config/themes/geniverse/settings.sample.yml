@@ -11,7 +11,7 @@ development: &id003
   help_email: aunger@concord.org
   theme: geniverse
   runnables_use: browser
-  runnable_mime_type: run_sparks_html
+  runnable_mime_type: run_static_html
   top_level_container_name: page
   site_school: Geniverse-school
   description: ""

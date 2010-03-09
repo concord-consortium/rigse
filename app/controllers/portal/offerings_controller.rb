@@ -28,7 +28,7 @@ class Portal::OfferingsController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @offering }
       
-      format.run_sparks_html {
+      format.run_static_html {
         if @learner
           #cookies[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
           cookies[:put_path] = url_for(:controller => '/saveable/sparks/measuring_resistances',
