@@ -17,13 +17,16 @@ namespace :hudson do
   
   desc "Run the cucumber and RSpec tests, but don't fail until both suites have run."
   task :everything do
-    tasks = %w{ hudson:cucumber hudson:spec }
+    tasks = {"cucumber" => ["hudson:cucumber"], "test" => ["hudson:spec"] }
     exceptions = []
-    tasks.each do |t|
-      begin
-        Rake::Task[t].invoke
-      rescue => e
-        exceptions << e
+    tasks.each do |env,tasks|
+      ENV['RAILS_ENV'] = env
+      tasks.each do |t|
+        begin
+          Rake::Task[t].invoke
+        rescue => e
+          exceptions << e
+        end
       end
     end
     exceptions.each do |e|
