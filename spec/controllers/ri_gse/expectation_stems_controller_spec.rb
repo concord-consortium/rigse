@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe ExpectationStemsController do
+describe RiGse::ExpectationStemsController do
 
   def mock_expectation_stem(stubs={})
     @mock_expectation_stem ||= mock_model(ExpectationStem, stubs)

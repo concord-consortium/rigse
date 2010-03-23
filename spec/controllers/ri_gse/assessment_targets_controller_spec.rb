@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe AssessmentTargetsController do
+describe RiGse::AssessmentTargetsController do
 
   def mock_assessment_target(stubs={})
     @mock_assessment_target ||= mock_model(AssessmentTarget, stubs)

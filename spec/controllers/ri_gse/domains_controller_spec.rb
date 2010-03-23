@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe DomainsController do
+describe RiGse::DomainsController do
 
   def mock_domain(stubs={})
     @mock_domain ||= mock_model(Domain, stubs)
