@@ -19,8 +19,15 @@ ENV["RAILS_ENV"] ||= "cucumber"
   require 'cucumber/rails/active_record'
   require 'cucumber/web/tableish'
 
+  require 'email_spec'
+  require 'email_spec/cucumber'
+
+  # doesn't seem to exist in new version of cucumber?
+  # require 'cucumber/webrat/element_locator' # Lets you do table.diff!(element_at('#my_table_or_dl_or_ul_or_ol').to_table)
+
   require 'webrat'
   require 'webrat/core/matchers'
+
 
   Webrat.configure do |config|
     config.mode = :rails
@@ -64,15 +71,14 @@ ENV["RAILS_ENV"] ||= "cucumber"
   end
   
   APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
-  
+
   # use factory girl:
   require 'factory_girl'
   Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
-  
+
   # This code used to live in factories/zz_default_data.rb.
   # It boots the cucmber environement with a default project.
   # required by application_controller.rb
-  # debugger
   puts "Loading default data set required for application_controller.rb to run ...."
   anon =  Factory.next :anonymous_user
   admin = Factory.next :admin_user 
@@ -83,7 +89,7 @@ ENV["RAILS_ENV"] ||= "cucumber"
   grade = Factory(:portal_grade)
   Admin::Project.create_or_update_default_project_from_settings_yml
   puts "done."
-  
+
   # Make visible for testing
   include AuthenticatedSystem
   ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
