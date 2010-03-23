@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe RiGse::UnifyingThemesController do
 
+  def mock_project(stubs={})
+    @mock_project
+  end
+
   def mock_unifying_theme(stubs={})
     @mock_unifying_theme ||= mock_model(UnifyingTheme, stubs)
   end
