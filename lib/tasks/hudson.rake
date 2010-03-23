@@ -15,6 +15,24 @@ namespace :hudson do
     mkdir_p report_path
   end
   
+  desc "Run the cucumber and RSpec tests, but don't fail until both suites have run."
+  task :everything do
+    tasks = %w{ hudson:cucumber hudson:spec }
+    exceptions = []
+    tasks.each do |t|
+      begin
+        Rake::Task[t].invoke
+      rescue => e
+        exceptions << e
+      end
+    end
+    exceptions.each do |e|
+      puts "Exception encountered:"
+      puts "#{e}\n#{e.backtrace.join("\n")}"
+    end
+    raise "Test failures" if exceptions.size > 0
+  end
+  
   task :spec => ["hudson:setup:rspec", 'db:migrate', 'db:test:prepare', 'rake:spec']
 
   namespace :setup do
