@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
-describe ExpectationsController do
+describe RiGse::ExpectationsController do
 
   def mock_expectation(stubs={})
     @mock_expectation ||= mock_model(Expectation, stubs)

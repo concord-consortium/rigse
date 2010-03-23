@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
-describe KnowledgeStatementsController do
+describe RiGse::KnowledgeStatementsController do
 
   def mock_knowledge_statement(stubs={})
     @mock_knowledge_statement ||= mock_model(KnowledgeStatement, stubs)

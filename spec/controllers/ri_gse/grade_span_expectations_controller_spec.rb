@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
-describe GradeSpanExpectationsController do
+describe RiGse::GradeSpanExpectationsController do
 
   def mock_grade_span_expectation(stubs={})
     @mock_grade_span_expectation ||= mock_model(GradeSpanExpectation, stubs)

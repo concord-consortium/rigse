@@ -6,6 +6,7 @@ tmp/**/*
 doc/api
 doc/app
 coverage
+rinet/**/*
 db/*.sqlite3
 db/*.sql
 config/database.yml
