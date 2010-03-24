@@ -10,6 +10,7 @@ rinet/**/*
 db/*.sqlite3
 db/*.sql
 config/database.yml
+config/glassfish.yml
 config/sds.yml
 config/initializers/site_keys.rb
 config/mailer.yml
