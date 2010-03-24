@@ -30,11 +30,13 @@ config.action_mailer.perform_deliveries = true
 #
 
 # See: http://wiki.github.com/dchelimsky/rspec/configgem-for-rails
-config.gem "rspec",          :lib => false,          :version => "= 1.2.9" 
-config.gem "rspec-rails",    :lib => false,          :version => "= 1.2.9"
-config.gem "webrat",         :lib => false,          :version => "= 0.5.3"
-config.gem "cucumber",       :lib => false,          :version => "= 0.4.4"
-config.gem "factory_girl",                           :version => "= 1.2.3"
+
+config.gem 'cucumber',    :lib => false,        :version => '>=0.6.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'webrat',      :lib => false,        :version => '>=0.5.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
+config.gem 'rspec',       :lib => false,        :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
+config.gem 'rspec-rails', :lib => false,        :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+
+config.gem "factory_girl",                           :version => ">= 1.2.3"
 config.gem 'email_spec',                             :version => "= 0.3.5"
 
 # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
@@ -47,3 +49,5 @@ config.gem "autotest-rails", :lib => false,          :version => "= 4.1.0"
 # Adds new rspec matchers for models and controllers
 # as well as better support for I18n, collections, creating custom matchers 
 config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.11"
+
+config.gem "ci_reporter", :lib => false

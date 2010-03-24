@@ -1,4 +1,9 @@
 class Portal::Nces06DistrictsController < ApplicationController
+
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_nces06_districts
   # GET /portal_nces06_districts.xml
   def index

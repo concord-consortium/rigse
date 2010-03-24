@@ -10,12 +10,33 @@ class Portal::Offering < ActiveRecord::Base
   
   [:name, :description].each { |m| delegate m, :to => :runnable }
   
+  has_many :open_responses, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
+
+  has_many :multiple_choices, :class_name => "Saveable::MultipleChoice", :foreign_key => "offering_id" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+    def answered_correctly
+      find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
+    end
+  end
+  
+  attr_reader :saveable_objects
+  
   def sessions
     self.learners.inject(0) { |sum, l| sum + l.sessions }
   end
   
   def find_or_create_learner(student)
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
+  end
+  
+  def saveables
+    multiple_choices + open_responses
   end
   
   self.extend SearchableModel
@@ -31,4 +52,39 @@ class Portal::Offering < ActiveRecord::Base
       "Offering"
     end
   end
+  
+  def refresh_saveable_response_objects
+    self.learners.each { |l| l.refresh_saveable_response_objects }
+  end
+  
+  
+  # def saveable_count
+  #   @saveable_count ||= begin
+  #     runnable = self.runnable
+  #     @saveable_objects = {}
+  #     runnable.saveable_types.inject(0) do |count, @saveable_object|
+  #       saveable_association = saveable_class.to_s.demodulize.tableize
+  #       @saveable_objects[@saveable_object] = runnable.send(saveable_association)
+  #       count + @saveable_objects[@saveable_object].length
+  #     end
+  #   end
+  # end
+  # 
+  # def saveable_objects
+  #   @saveable_objects || begin
+  #     saveable_count
+  #     @saveable_objects
+  #   end
+  # end
+  # 
+  # def saveable_answered
+  #   @saveable_answered ||= begin
+  #     saveable_objects
+  #     runnable = self.offering.runnable
+  #     runnable.saveable_types.inject(0) do |count, saveable_class|
+  #       saveable_association = saveable_class.to_s.demodulize.tableize
+  #       count + self.send(saveable_association).send(:answered).length
+  #     end
+  # end
+
 end

@@ -3,7 +3,11 @@ class Section < ActiveRecord::Base
   belongs_to :user
   has_one :investigation, :through => :activity
   
-  has_many :pages, :order => :position, :dependent => :destroy
+  has_many :pages, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
 
   # has_many :data_collectors, :class_name => 'Embeddable::DataCollector',
   #    :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
@@ -43,6 +47,8 @@ class Section < ActiveRecord::Base
       INNER JOIN pages ON page_elements.page_id = pages.id 
       WHERE pages.section_id = \#\{id\}'"
   end
+  
+  delegate :saveable_types, :reportable_types, :to => :investigation
   
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 

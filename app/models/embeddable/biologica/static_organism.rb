@@ -6,14 +6,14 @@ class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-  belongs_to :biologica_organism, :class_name => 'Embeddable::Biologica::Organism'
+  belongs_to :organism, :class_name => 'Embeddable::Biologica::Organism'
   
   acts_as_replicatable
 
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:biologica_organism]
+  @@cloneable_associations = [:organism]
 
   self.extend SearchableModel
   
@@ -39,7 +39,7 @@ class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
   
   def organisms_in_activity_scope(scope)
     if scope && scope.class != Embeddable::Biologica::StaticOrganism
-      scope.activity.biologica_organisms - [self]
+      scope.activity.organisms - [self]
     else
       []
     end

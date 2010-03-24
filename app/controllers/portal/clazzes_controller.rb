@@ -1,4 +1,12 @@
 class Portal::ClazzesController < ApplicationController
+  
+  # TODO:  There need to be a lot more 
+  # controller filters here...
+  # this only protects management actions:
+  include RestrictedPortalController
+  
+  
+  public
   # GET /portal_clazzes
   # GET /portal_clazzes.xml
   def index
@@ -13,7 +21,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1
   # GET /portal_clazzes/1.xml
   def show
-    @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     respond_to do |format|
       format.html # show.html.erb
@@ -141,6 +150,7 @@ class Portal::ClazzesController < ApplicationController
         page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
       end
     end
+    @offering.refresh_saveable_response_objects
   end
   
   

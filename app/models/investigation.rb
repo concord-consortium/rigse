@@ -4,7 +4,11 @@ class Investigation < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
-  has_many :activities, :order => :position, :dependent => :destroy
+  has_many :activities, :order => :position, :dependent => :destroy do
+    def student_only
+      find(:all, :conditions => {'teacher_only' => false})
+    end
+  end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   
@@ -46,6 +50,28 @@ class Investigation < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
+    
+  has_many :sections,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
+    
+  has_many :student_sections, :class_name => Section.to_s,
+    :finder_sql => 'SELECT sections.* FROM sections
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0'
+    
+  has_many :pages,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id
+    INNER JOIN activities ON sections.activity_id = activities.id
+    WHERE activities.investigation_id = #{id}'
+    
+  has_many :student_pages, :class_name => Page.to_s,
+    :finder_sql => 'SELECT pages.* FROM pages
+    INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
+    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
+    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
   
   acts_as_replicatable
 
@@ -123,6 +149,14 @@ class Investigation < ActiveRecord::Base
       name.humanize
     end
     
+    def saveable_types
+      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
+    end
+    
+    def reportable_types
+      [ Embeddable::OpenResponse, Embeddable::MultipleChoice ]
+    end
+    
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
       @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
       @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
@@ -165,6 +199,14 @@ class Investigation < ActiveRecord::Base
       end
     end  
     
+  end
+  
+  def saveable_types
+    self.class.saveable_types
+  end
+  
+  def reportable_types
+    self.class.reportable_types
   end
   
   # Enables a teacher note to call the investigation method of an

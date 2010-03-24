@@ -21,27 +21,27 @@
     &:hover
       :color = !almost_white  !important
       :background-color= !very_dark  !important
+
+.accordion_show_hide_text
+  :margin-right 16px
   
 .accordion_toggle
-  :display block
-  :width 14px
-  :height 16px
-  :float right
-  :background-image url(/images/expand.png)
-  :background-repeat no-repeat
-  :background-position center
+  :display inline-block
+  :min-width 14px
+  :min-height 16px
+  :float right  
   :cursor pointer
+  :font-size 10px
+  :background-repeat no-repeat
+  :background-position right top
+
+.accordion_toggle_closed
+  :background-image url(/images/expand.png)
   &:hover
     :background-image url(/images/expand_hover.png)
-
-.accordion_toggle_active
-  :display block
-  :width 14px
-  :height 16px
-  :float right
+    
+.accordion_toggle_open
   :background-image url(/images/collapse.png)
-  :background-repeat no-repeat
-  :background-position center
   &:hover
     :background-image url(/images/collapse_hover.png)
 
@@ -62,6 +62,7 @@
     :display block
     :float left
     :width 90%
+
   .selected
     :font-weight bold !important
   a

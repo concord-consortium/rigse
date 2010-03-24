@@ -55,6 +55,7 @@ Rails::Initializer.run do |config|
   # config.gem "ffi-ncurses ", :version => "= 0.3.3"
   config.gem "arrayfields"
   config.gem "hpricot", :version => '0.6.164'
+  config.gem 'httpclient', :version => '>=2.1.5.2'
   config.gem "capistrano-ext", :lib => "capistrano"
   config.gem 'rubyist-aasm', :lib => 'aasm', :version => '>=2.0.2'
   config.gem 'mislav-will_paginate', :version => '2.3.6', :lib => 'will_paginate'
@@ -172,4 +173,23 @@ require 'prawn/format'
 # # rescue Mysql::Error => e
 #   puts "e"
 # end
+
+module Enumerable
+  # An extended group_by which will group at multiple depths
+  # Ex:
+  # >> ["aab","abc","aba","abd","aac","ada"].extended_group_by([lambda {|e| e.first}, lambda {|e| e.first(2)}])
+  # => {"a"=>{"aa"=>["aab", "aac"], "ab"=>["abc", "aba", "abd"], "ad"=>["ada"]}}
+
+  def extended_group_by(lambdas)
+    lamb = lambdas.shift
+    result = lamb ? self.group_by{|e| lamb.call(e)} : self
+    if lambdas.size > 0
+      final = {}
+      temp = result.map{|k,v| {k => v.extended_group_by(lambdas.clone)}}
+      temp.each {|r| final.merge!(r) }
+      result = final
+    end
+    return result
+  end
+end
 

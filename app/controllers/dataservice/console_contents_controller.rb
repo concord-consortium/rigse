@@ -1,9 +1,13 @@
 class Dataservice::ConsoleContentsController < ApplicationController
+  # restrict access to admins or bundle formatted requests 
+  include RestrictedBundleController
+  
   # GET /dataservice_console_contents
   # GET /dataservice_console_contents.xml
   def index
-    @dataservice_console_contents = Dataservice::ConsoleContent.all
-
+    # 
+    # @dataservice_console_contents = Dataservice::ConsoleContent.all
+    @dataservice_console_contents = Dataservice::ConsoleContent.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @dataservice_console_contents }

@@ -5,13 +5,14 @@ class Portal::GradeLevel < ActiveRecord::Base
 
   belongs_to :grade, :class_name => "Portal::Grade", :foreign_key => "grade_id"
   belongs_to :has_grade_levels, :polymorphic => true
-  
   # Schools, Teachers, Courses, Classes, and Students have_many grade_levels
   
+  
+  include Changeable
+  
+  ## suport for searching and pagination:
   self.extend SearchableModel
-
   @@searchable_attributes = %w{status}
-
   class <<self
     def searchable_attributes
       @@searchable_attributes

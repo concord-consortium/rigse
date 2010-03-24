@@ -1,4 +1,15 @@
 class Portal::OfferingsController < ApplicationController
+  
+  layout 'report', :only => %w{report open_response_report multiple_choice_report}
+  include RestrictedPortalController
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  
+  def current_clazz
+    Portal::Offering.find(params[:id]).clazz
+  end
+   
+  public
+  
   # GET /portal_offerings
   # GET /portal_offerings.xml
   def index
@@ -114,6 +125,35 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def report
+    @offering = Portal::Offering.find(params[:id])
+    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+    @learners = reportUtil.learners
+    
+    @page_elements = reportUtil.page_elements
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
+  
+  def multiple_choice_report
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering_report = Report::Offering::Investigation.new(@offering)
+    
+    respond_to do |format|
+      format.html # multiple_choice_report.html.haml
+    end
+  end
+
+  def open_response_report
+    @offering = Portal::Offering.find(params[:id], :include => :learners)
+    @offering_report = Report::Offering::Investigation.new(@offering)
+
+    respond_to do |format|
+      format.html # open_response_report.html.haml
+    end
+  end
   
   
   # GET /portal/offerings/data_test(.format)

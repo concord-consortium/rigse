@@ -178,6 +178,14 @@ pre
   +column(!main_content_columns,true)
   :padding 0px
   :margin 0px
+
+#report_content
+  :display block
+  +column(!report_content_columns,true)
+  +content_area_colors
+  :min-height 600px
+  :height auto !important
+
 #main_content
   :display block
   +column(!main_content_columns,true)
@@ -407,6 +415,15 @@ ul.menu
   :border
     :width 1px
     :style dotted
+  .answered
+    :background-color= !answered_color !important
+  .not_answered
+    :background-color= !not_answered_color !important
+  .correct
+    :background-color= !correct_color !important
+  .incorrect
+    :background-color= !incorrect_color !important
+  
 
 .draggable, .sortable, .movable
   :cursor move
@@ -624,3 +641,46 @@ input[type=password]
 .copy_paste_disabled
   :display none
   :visibility hidden
+  
+.table
+  :width 100%
+  :display table
+  :border-collapse collapse
+
+.row
+  :display table-row
+  :width 100%
+
+.cell
+  :display table-cell
+  
+.cellheader
+  :font-weight bold
+
+.optionlabel
+  :padding-left 10px
+  :width 310px
+
+.optionbar
+  :width 300px
+  :padding-right 10px
+  :padding-bottom 2px
+  :vertical-align middle
+  :border-left 1px solid black
+
+.optionbarbar
+  :display block
+  :height 100%
+  :border 1px solid black
+  :margin-left 1px
+  
+.optionpercent
+  :border-left 2px solid black
+  :padding-right 2px
+  :padding-left 2px
+  :text-align right
+
+.optioncount
+  :border-left 1px solid black
+  :padding-left 2px
+  :text-align right

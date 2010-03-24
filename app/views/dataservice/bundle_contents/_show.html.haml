@@ -1,4 +1,4 @@
-- options = { :omit_delete => true, :hide_componenent_name => true }
+- options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
 %div{:id => dom_id_for(dataservice_bundle_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_bundle_content, :details), :class => 'content'}
     = accordion_for(dataservice_bundle_content, "Session bundle:#{dataservice_bundle_content.id} (#{dataservice_bundle_content.position})",'body') do

@@ -219,4 +219,8 @@ class Portal::Clazz < ActiveRecord::Base
     end
   end
 
+  def refresh_saveable_response_objects
+    self.offerings.each { |o| o.refresh_saveable_response_objects }
+  end
+  
 end

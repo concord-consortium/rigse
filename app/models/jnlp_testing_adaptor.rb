@@ -4,7 +4,12 @@ class JnlpTestingAdaptor
   
   def initialize
     @jnlp_family = MavenJnlp::MavenJnlpFamily.find_by_name("gui-testing")
-    @jnlp = @jnlp_family.update_snapshot_jnlp_url.versioned_jnlp
+    if @jnlp_family
+      @jnlp = @jnlp_family.update_snapshot_jnlp_url.versioned_jnlp
+    else
+      Rails.logger.warn("unable to load gui-testing jnlp family... ")
+      Rails.logger.warn("try rake rigse:jnlp:generate_maven_jnlp_resources if you want to run gui-testing")
+    end
   end
   
   def resource_jars
