@@ -235,8 +235,10 @@ HEREDOC
       puts "Erase all saveable learner responses and reset the tables"
       saveable_models = Dir["app/models/saveable/**/*.rb"].collect { |m| m[/app\/models\/(.+?).rb/, 1] }.collect { |m| m.camelize.constantize }
       saveable_models.each do |model|
-        ActiveRecord::Base.connection.delete("TRUNCATE `#{model.table_name}`")
-        puts "deleted: all from #{model}"
+        if model.respond_to?(:table_name)
+          ActiveRecord::Base.connection.delete("TRUNCATE `#{model.table_name}`")
+          puts "deleted: all from #{model}"
+        end
       end
       puts
     end
@@ -248,7 +250,8 @@ HEREDOC
       unchanged = {}
       changed = {}
       problems = {}
-      Dataservice::BundleContent.find_in_batches do |batch|
+      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |batch|
+        print '.'; STDOUT.flush
         batch.each do |bundle_content|
           new_otml = bundle_content.otml.gsub(MULTI_CHOICE) {
             retval = ""
@@ -288,6 +291,7 @@ HEREDOC
       puts "The following #{problems.size} bundles had problems: "
       problems.entries.sort.each do |entry|
         puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
+        puts Dataservice::BundleContent.find(entry[0], :select => 'bundle_logger_id, created_at').description
         entry[1].each do |prob|
           puts "    #{prob}"
         end

@@ -1,6 +1,8 @@
 class Portal::StudentsController < ApplicationController
-  # GET /portal_students
-  # GET /portal_students.xml
+
+  include RestrictedPortalController
+  public
+  
   def index
     @portal_students = Portal::Student.all
 

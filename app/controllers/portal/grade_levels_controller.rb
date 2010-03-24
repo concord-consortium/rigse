@@ -1,9 +1,12 @@
 class Portal::GradeLevelsController < ApplicationController
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_grade_levels
   # GET /portal_grade_levels.xml
   def index
     @portal_grade_levels = Portal::GradeLevel.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @portal_grade_levels }

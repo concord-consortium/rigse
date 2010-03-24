@@ -48,13 +48,15 @@ class Page < ActiveRecord::Base
   # end
   
   @@element_types.each do |klass|
-    unless defined? type.dont_make_associations
+    unless defined? klass.dont_make_associations
       eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
       WHERE page_elements.page_id = \#\{id\}'"
     end
   end
+  
+  delegate :saveable_types, :reportable_types, :to => :investigation
   
   has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 

@@ -6,9 +6,11 @@ tmp/**/*
 doc/api
 doc/app
 coverage
+rinet/**/*
 db/*.sqlite3
 db/*.sql
 config/database.yml
+config/glassfish.yml
 config/sds.yml
 config/initializers/site_keys.rb
 config/mailer.yml
@@ -70,3 +72,5 @@ rites.xml
 resources/bitrock_installer/jnlps.conf
 public/installers/*
 resources/rinet_test_data/report*
+mkmf.log
+hudson/*
