@@ -7,10 +7,23 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
   
   include SailBundleContent
   
+  # pagination default
+  cattr_reader :per_page
+  @@per_page = 5
+
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{body console_logger_id}
   class <<self
+    
+    def searchable_attributes
+      @@searchable_attributes
+    end
+    
     def display_name
       "Dataservice::ConsoleContent"
     end
   end
+
   
 end

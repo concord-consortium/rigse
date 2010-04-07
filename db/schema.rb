@@ -1786,9 +1786,7 @@ ActiveRecord::Schema.define(:version => 20100224203846) do
   end
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
-  add_index "roles_users", ["role_id", "user_id"], :name => "role_user_index"
   add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
-  add_index "roles_users", ["user_id", "role_id"], :name => "user_role_index"
 
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"

@@ -251,18 +251,29 @@ module ApplicationHelper
     end
   end
   
-  def accordion_for(model, title, dom_prefix='')
+  def accordion_for(model, title, dom_prefix='', options={})
+    show_hide_text = options[:show_hide_text]
     capture_haml do
       haml_tag :div, :id => dom_id_for(model, dom_prefix), :class => 'accordion_container' do
         haml_tag :div, :class => 'accordion_name' do
           haml_concat title
         end
-        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle}"), :class => 'accordion_toggle'
-        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content}"), :class => 'accordion_content', :style=>'display: none;' do
+        
+        if show_hide_text
+          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
+            haml_tag :span, :class => "accordion_show_hide_text" do
+              haml_concat show_hide_text
+            end
+          end
+        else
+          haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle'
+        end
+        haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content"), :class => 'accordion_content', :style=>'display: none;' do
           if block_given?
             yield
           end
         end
+
       end
     end
   end

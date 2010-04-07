@@ -33,7 +33,7 @@
               = link_to child.name,child, :class=> 'selected'
             -else
               =link_to child.name, child
-          .accordion_toggle
+          %div{:class => "accordion_toggle_closed accordion_toggle"}
           -sub_container_id = dom_id_for(child, :sub_section_list)
           .accordion_content{:style=>'display: none;'}
             %ul{:id=>sub_container_id}
