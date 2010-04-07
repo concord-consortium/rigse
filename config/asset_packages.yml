@@ -98,7 +98,7 @@ stylesheets:
   - data_table
   
 - has:
-  - themes/has/sparks
+  - themes/has/has
   - themes/has/action_menu_tab
   - themes/has/drop_down
   - themes/has/accordion
