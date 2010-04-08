@@ -2,6 +2,7 @@
 # Setup a teacher with courses.
 #
 Given /a rinet teacher/i do
+  pending
   @rinet_login = "bowb_dobs"
   @rites_login = ExternalUserDomain.external_login_to_login(@rinet_login)
   @user = Factory(:user, {
