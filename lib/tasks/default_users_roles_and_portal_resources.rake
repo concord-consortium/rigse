@@ -115,42 +115,42 @@ HEREDOC
           :first_name => default_admin_user_settings['first_name'], 
           :last_name =>  default_admin_user_settings['last_name'],
           :email =>      default_admin_user_settings['email'], 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 
           :first_name => 'Manager', :last_name => 'User', 
           :email => 'manager@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         researcher_user = User.find_or_create_by_login(:login => 'researcher', 
           :first_name => 'Researcher', :last_name => 'User', 
           :email => 'researcher@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         author_user = User.find_or_create_by_login(:login => 'author', 
           :first_name => 'Author', :last_name => 'User', 
           :email => 'author@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         member_user = User.find_or_create_by_login(:login => 'member', 
           :first_name => 'Member', :last_name => 'User', 
           :email => 'member@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
           :first_name => "Anonymous", :last_name => "User",
           :email => "anonymous@concord.org", 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         teacher_user = User.find_or_create_by_login(:login => 'teacher', 
           :first_name => 'Valerie', :last_name => 'Frizzle', 
           :email => 'teacher@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         student_user = User.find_or_create_by_login(:login => 'student', 
           :first_name => 'Jackie', :last_name => 'Demeter', 
           :email => 'student@concord.org', 
-          :password => "password", :password_confirmation => "password")
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
       ]
 
       edit_user_list = default_user_list - [anonymous_user]
