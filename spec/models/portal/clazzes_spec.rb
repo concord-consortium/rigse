@@ -11,7 +11,6 @@ describe Portal::Clazz do
       :start_time => @start_date,
       :course => @course
     })
-    puts "curse: #{@course.inspect}"
     
   end
 
