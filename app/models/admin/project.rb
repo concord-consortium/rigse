@@ -7,7 +7,10 @@ class Admin::Project < ActiveRecord::Base
 
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
-
+  
+  has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
+  has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
+  
   serialize :states_and_provinces
  
   acts_as_replicatable
@@ -21,6 +24,11 @@ class Admin::Project < ActiveRecord::Base
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
   validate :states_and_provinces_array_members_must_match_list
+  
+  default_value_for :enabled_vendor_interfaces do
+    Probe::VendorInterface.find(:all)
+  end
+  
   if USING_JNLPS
     validates_associated :maven_jnlp_server
     validates_associated :maven_jnlp_family
