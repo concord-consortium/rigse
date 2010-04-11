@@ -42,7 +42,8 @@ class Portal::OfferingsController < ApplicationController
           cookies[:learner_id] = nil
         end
         logger.debug("learner_id=#{cookies[:learner_id]} put_path=#{cookies[:put_path]}")
-        render 'pages/show', :layout => "layouts/run" 
+        #render 'pages/show', :layout => "layouts/run" 
+        redirect_to '/sparks-content/activities/resistor-colors/index.html'
       }
       
       format.jnlp {
