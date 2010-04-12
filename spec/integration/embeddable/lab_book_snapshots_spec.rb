@@ -13,7 +13,7 @@ describe 'Lab Book Snapshots' do
   end
   
   before(:each) do
-    visit '/logout'
+    # visit '/logout'
   end
   
   it 'should render the complete target when rendering at the embeddable level' do
