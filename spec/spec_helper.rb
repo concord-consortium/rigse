@@ -40,10 +40,15 @@ Spork.prefork do
     config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   end
   
-  require "webrat"
-  Webrat.configure do |config|
-    config.mode = :rails
-  end
+  # FIXME Somehow using webrat kills calling .id on ActiveRecord objects...
+  # example, in a test:
+  #    model = Embeddable::MwModelerPage.find(:first)
+  #    my_id = model.id   <==== throws NoMethodError
+  #    my_id = model[:id] <==== works fine
+  # require "webrat"
+  # Webrat.configure do |config|
+  #   config.mode = :rails
+  # end
     
 end
 
