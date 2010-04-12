@@ -1,7 +1,6 @@
 *~
 log/*.log
-tmp/restart.txt
-tmp/**/*
+tmp/*
 .DS_Store
 doc/api
 doc/app
