@@ -7,7 +7,7 @@ Given /^[Ii] am logged in as(\s*the\s*)?[aA]dmin(\s*user\s*)$/ do |x,y|
   visit 'login'
   fill_in('login', :with => 'admin')
   fill_in('password', :with => 'password')
-  click_button('login')
+  click_button('Login')
 end
 
 
