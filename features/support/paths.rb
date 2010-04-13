@@ -17,7 +17,10 @@ module NavigationHelpers
       '/pick_signup'
     when /to the link tool/
       '/linktool'
-    
+    when /the current project edit page/
+      "/admin/projects/#{Admin::Project.default_project.id}/edit"
+    when /the current project show page/  
+      "/admin/projects/#{Admin::Project.default_project.id}/show"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

@@ -62,7 +62,7 @@ APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use
 
 # use factory girl:
 require 'factory_girl'
-require 'factory_girl/step_definitions'
+
 Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
 
 # This code used to live in factories/zz_default_data.rb.
