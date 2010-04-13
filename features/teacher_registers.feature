@@ -18,9 +18,7 @@ Feature: Teacher registers to use the portal
       | user_login     | login                              |
       | user_password  | password                           |
       | user_password_confirmation | password               |
-      | school_id      | 1                                  |
-      | domain_id      | 1                                  |
-      | grade_id       | 1                                  |
+ 
     And I press "Submit"
     Then I should see " Thanks for signing up!"
     And "example@example.com" should receive an email
