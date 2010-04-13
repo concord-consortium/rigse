@@ -1,63 +1,33 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
-describe OtrunkExample::OtmlFilesController do
-  describe "route generation" do
-    it "maps #index" do
-      route_for(:controller => "otrunk_example/otml_files", :action => "index").should == "/otrunk_example/otml_files"
-    end
-  
-    it "maps #new" do
-      route_for(:controller => "otrunk_example/otml_files", :action => "new").should == "/otrunk_example/otml_files/new"
-    end
-  
-    it "maps #show" do
-      route_for(:controller => "otrunk_example/otml_files", :action => "show", :id => "1").should == "/otrunk_example/otml_files/1"
-    end
-  
-    it "maps #edit" do
-      route_for(:controller => "otrunk_example/otml_files", :action => "edit", :id => "1").should == "/otrunk_example/otml_files/1/edit"
+describe  OtrunkExample::OtmlFilesController do
+  describe "routing" do
+    it "recognizes and generates #index" do
+      { :get => "otrunk_example/otml_files" }.should route_to(:controller => "otrunk_example/otml_files", :action => "index")
     end
 
-  it "maps #create" do
-    route_for(:controller => "otrunk_example/otml_files", :action => "create").should == {:path => "/otrunk_example/otml_files", :method => :post}
-  end
+    it "recognizes and generates #new" do
+      { :get => "otrunk_example/otml_files/new" }.should route_to(:controller => "otrunk_example/otml_files", :action => "new")
+    end
 
-  it "maps #update" do
-    route_for(:controller => "otrunk_example/otml_files", :action => "update", :id => "1").should == {:path =>"/otrunk_example/otml_files/1", :method => :put}
-  end
-  
-    it "maps #destroy" do
-      route_for(:controller => "otrunk_example/otml_files", :action => "destroy", :id => "1").should == {:path =>"/otrunk_example/otml_files/1", :method => :delete}
+    it "recognizes and generates #show" do
+      { :get => "otrunk_example/otml_files/1" }.should route_to(:controller => "otrunk_example/otml_files", :action => "show", :id => "1")
     end
-  end
 
-  describe "route recognition" do
-    it "generates params for #index" do
-      params_from(:get, "/otrunk_example/otml_files").should == {:controller => "otrunk_example/otml_files", :action => "index"}
+    it "recognizes and generates #edit" do
+      { :get => "otrunk_example/otml_files/1/edit" }.should route_to(:controller => "otrunk_example/otml_files", :action => "edit", :id => "1")
     end
-  
-    it "generates params for #new" do
-      params_from(:get, "/otrunk_example/otml_files/new").should == {:controller => "otrunk_example/otml_files", :action => "new"}
+
+    it "recognizes and generates #create" do
+      { :post => "otrunk_example/otml_files" }.should route_to(:controller => "otrunk_example/otml_files", :action => "create") 
     end
-  
-    it "generates params for #create" do
-      params_from(:post, "/otrunk_example/otml_files").should == {:controller => "otrunk_example/otml_files", :action => "create"}
+
+    it "recognizes and generates #update" do
+      { :put => "otrunk_example/otml_files/1" }.should route_to(:controller => "otrunk_example/otml_files", :action => "update", :id => "1") 
     end
-  
-    it "generates params for #show" do
-      params_from(:get, "/otrunk_example/otml_files/1").should == {:controller => "otrunk_example/otml_files", :action => "show", :id => "1"}
-    end
-  
-    it "generates params for #edit" do
-      params_from(:get, "/otrunk_example/otml_files/1/edit").should == {:controller => "otrunk_example/otml_files", :action => "edit", :id => "1"}
-    end
-  
-    it "generates params for #update" do
-      params_from(:put, "/otrunk_example/otml_files/1").should == {:controller => "otrunk_example/otml_files", :action => "update", :id => "1"}
-    end
-  
-    it "generates params for #destroy" do
-      params_from(:delete, "/otrunk_example/otml_files/1").should == {:controller => "otrunk_example/otml_files", :action => "destroy", :id => "1"}
+
+    it "recognizes and generates #destroy" do
+      { :delete => "otrunk_example/otml_files/1" }.should route_to(:controller => "otrunk_example/otml_files", :action => "destroy", :id => "1") 
     end
   end
 end

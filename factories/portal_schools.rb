@@ -20,5 +20,6 @@ Factory.define :portal_school, :class => Portal::School do |f|
 end
 
 Factory.define :nces_portal_school, :parent => :portal_school do |f|
-  f.nces_school { |school| Factory(:portal_nces06_school)}
+  f.association   :district, :factory => :portal_nces06_district_district
+  f.nces_school   { |school| Factory(:portal_nces06_school)}
 end
