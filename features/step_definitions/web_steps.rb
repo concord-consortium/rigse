@@ -158,20 +158,22 @@ Then /^the "([^\"]*)" field(?: within "([^\"]*)")? should not contain "([^\"]*)"
   end
 end
 
+# checkbox checking busted in cucumber? http://github.com/jnicklas/capybara/issues/issue/55
 Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should be checked$/ do |label, selector|
   with_scope(selector) do
     if defined?(Spec::Rails::Matchers)
-      find_field(label)['checked'].should == 'checked'
+      find_field(label)['checked'].should be_true
     else
       assert_equal 'checked', field_labeled(label)['checked']
     end
   end
 end
 
+# checkbox checking busted in cucumber? http://github.com/jnicklas/capybara/issues/issue/55
 Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should not be checked$/ do |label, selector|
   with_scope(selector) do
     if defined?(Spec::Rails::Matchers)
-      find_field(label)['checked'].should_not == 'checked'
+      find_field(label)['checked'].should_not be_true
     else
       assert_not_equal 'checked', field_labeled(label)['checked']
     end
