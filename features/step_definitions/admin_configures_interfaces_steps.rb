@@ -13,6 +13,18 @@ Given /the following users[(?exist):\s]*$/i do |users_tabe|
   end
 end
 
+Given /the current project is using the following interfaces:/ do |interfaces_table|
+  interfaces = interfaces_table.hashes.map { |interf| Probe::VendorInterface.find_by_name(interf[:name])}
+  Admin::Project.default_project.enabled_vendor_interfaces = interfaces
+  Admin::Project.default_project.save
+end
+
+Then /the current project should be using the following interfaces:/ do |interfaces_table|
+  interfaces_table.hashes.each do |hash|
+    Admin::Project.default_project.enabled_vendor_interfaces.should include Probe::VendorInterface.find_by_name(hash[:name])
+  end
+end
+
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   visit "/login"
   fill_in("login", :with => username)
@@ -28,24 +40,47 @@ Given /^the following vendor interfaces exist:$/ do |interfaces_table|
 end
 
 Then /^I should see the following form checkboxes:$/ do |checkbox_table|
-  pending "WIP:  noah can't get this test to pass!"
-  # table is a Cucumber::Ast::Table
   checkbox_table.hashes.each do |hash|
-    field = find_field(hash['name'].gsub(/\s+/,"_"))
-    field.should_not be nil
-    checked = field['checked']
-    if hash['checked'] =~ /true/
-      if defined?(Spec::Rails::Matchers)
-        checked.should == 'checked'
-      else
-        assert_equal 'checked', checked
-      end
+    if hash[:checked] =~ /true/
+      Then "the \"#{hash[:name]}\" checkbox should be checked"
     else
+      Then "the \"#{hash[:name]}\" checkbox should not be checked"
+    end
+  end
+end
+
+
+When /^I check in the following:$/ do |checkbox_table|
+  checkbox_table.hashes.each do |hash|
+    if hash[:checked] =~ /true/
+      check(hash[:name])
+    else
+      uncheck(hash[:name])
+    end
+  end
+end
+
+When /^(?:|I )should have the following selection options:$/ do |selection_table|
+  with_scope("select") do
+    selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
-        checked.should_not == 'checked'
+        page.should have_content(hash[:option])
       else
-        assert_not_equal 'checked', checked
+        assert page.has_content?(hash[:option])
       end
     end
   end
 end
+
+Then /^I should not see the following selection options:$/ do |selection_table|
+  with_scope("select") do
+    selection_table.hashes.each do |hash|
+      if defined?(Spec::Rails::Matchers)
+        page.should_not have_content(hash[:option])
+      else
+        assert (! page.has_content?(hash[:option]))
+      end
+    end
+  end
+end
+
