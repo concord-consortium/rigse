@@ -132,6 +132,7 @@ Rails::Initializer.run do |config|
         puts "Started observers"
       rescue
         # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+        # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
         puts "Couldn't start observers #{$!} ... but continuing process anyway"
         puts "This might be because you have not setup the appropriate database tables yet... "
         puts "see config/initializers/observers.rb for more information."

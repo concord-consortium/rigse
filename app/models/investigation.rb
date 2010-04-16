@@ -96,7 +96,7 @@ class Investigation < ActiveRecord::Base
   end  
   # end acts_as_state_machine stuff
   
-  # for convinience (will not work in find_by_* &etc.)
+  # for convenience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
   
   #
