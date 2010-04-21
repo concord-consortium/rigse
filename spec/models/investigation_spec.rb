@@ -101,7 +101,6 @@ describe Investigation do
       end
       
       it "should have a page_element which is changeable by the new author" do
-        debugger
         @dest_investigation.pages.first.page_elements.first.should_not be_nil
         @dest_investigation.pages.first.page_elements.first.should be_changeable(@new_author)
         @dest_investigation.pages.first.page_elements.first.should_not be_changeable(@original_author)
