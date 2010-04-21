@@ -189,7 +189,10 @@ class Page < ActiveRecord::Base
   end
   
   def children
-    # maybe what is the child we wonder?
+    # TODO: We should really return the elements
+    # not the embeddable.  But it will require 
+    # careful refactoring... Not sure all the places 
+    # in the code where we expect embeddables to be returned.
     return page_elements.map { |e| e.embeddable }
   end
   

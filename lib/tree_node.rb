@@ -62,6 +62,16 @@ module TreeNode
         puts "changing ownership of #{thing.name} from #{old_login} to #{new_user.login}" if logging
         thing.user = new_user
         thing.save
+        # TODO: See page.rb about returning page_elements intead of embeddables
+        # in the children method. Probably a better approach.
+        if thing.class == Page
+          thing.page_elements.each do |pe|
+            if pe.user != new_user
+              pe.user = new_user
+              pe.save
+            end
+          end
+        end
       end
       if thing.respond_to? 'teacher_notes'
         thing.teacher_notes.each do |note|
@@ -82,6 +92,7 @@ module TreeNode
           end
         end
       end
+
     }
     
     set_user.call(self)    
