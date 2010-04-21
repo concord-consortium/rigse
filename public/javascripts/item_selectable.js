@@ -1,6 +1,7 @@
 var selected_class = 'item_selected';
 var unselected_class = 'item_selectable';
 var rites_document = {};
+var last_rites_document = {}
 
 var is_selected = function(element) { return element.hasClassName(selected_class)}
 var selected = function(toggle_element)         { return (readCookie(id_for_toggle(toggle_element)) == "true");    }
@@ -36,8 +37,13 @@ var item_select = function(event) {
     selected.removeClassName(unselected_class);
     rites_document.selected_type=type;
     rites_document.selected_id=id;
+    if (rites_document.selected_type != last_rites_document.selected_type && 
+        rites_document.selected_id != last_rites_document.selected_id) {
+          update_links();
+          last_rites_document.selected_id = rites_document.selected_id;
+          last_rites_document.selected_type = rites_document.selected_type;
+    }
   }
-  update_links();
 }
 
 var item_deselect = function() {
