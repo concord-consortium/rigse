@@ -50,9 +50,9 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   default_value_for :description, "description ..."
   default_value_for :prompt, "Why do you think ..."
   default_value_for :choices, [
-    Embeddable::MultipleChoiceChoice.new(:choice => 'a'),
-    Embeddable::MultipleChoiceChoice.new(:choice => 'b'),
-    Embeddable::MultipleChoiceChoice.new(:choice => 'c')
+    Embeddable::MultipleChoiceChoice.create(:choice => 'a'),
+    Embeddable::MultipleChoiceChoice.create(:choice => 'b'),
+    Embeddable::MultipleChoiceChoice.create(:choice => 'c')
   ]
   send_update_events_to :investigations
 
@@ -73,4 +73,10 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     end
   end
 
+  def addChoice(choice_name = "new choice")
+    choice = Embeddable::MultipleChoiceChoice.new(:choice => choice_name)
+    self.choices << choice
+    self.save
+    choice
+  end
 end
