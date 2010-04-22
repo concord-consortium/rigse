@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100421160050) do
+ActiveRecord::Schema.define(:version => 20100416210108) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -715,7 +715,6 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
     t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
-    t.integer  "user_id"
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
@@ -1625,29 +1624,33 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_calibrations", :force => true do |t|
-    t.integer "data_filter_id"
-    t.integer "probe_type_id"
-    t.boolean "default_calibration"
-    t.integer "physical_unit_id"
-    t.string  "name"
-    t.text    "description"
-    t.float   "k0"
-    t.float   "k1"
-    t.float   "k2"
-    t.float   "k3"
-    t.string  "uuid"
+    t.integer  "data_filter_id"
+    t.integer  "probe_type_id"
+    t.boolean  "default_calibration"
+    t.integer  "physical_unit_id"
+    t.string   "name"
+    t.text     "description"
+    t.float    "k0"
+    t.float    "k1"
+    t.float    "k2"
+    t.float    "k3"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_data_filters", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.text    "description"
-    t.string  "otrunk_object_class"
-    t.boolean "k0_active"
-    t.boolean "k1_active"
-    t.boolean "k2_active"
-    t.boolean "k3_active"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "otrunk_object_class"
+    t.boolean  "k0_active"
+    t.boolean  "k1_active"
+    t.boolean  "k2_active"
+    t.boolean  "k3_active"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1660,40 +1663,46 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   end
 
   create_table "probe_physical_units", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "quantity"
-    t.string  "unit_symbol"
-    t.string  "unit_symbol_text"
-    t.text    "description"
-    t.boolean "si"
-    t.boolean "base_unit"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "quantity"
+    t.string   "unit_symbol"
+    t.string   "unit_symbol_text"
+    t.text     "description"
+    t.boolean  "si"
+    t.boolean  "base_unit"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_probe_types", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.integer "ptype"
-    t.float   "step_size"
-    t.integer "display_precision"
-    t.integer "port"
-    t.string  "unit"
-    t.float   "min"
-    t.float   "max"
-    t.float   "period"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "ptype"
+    t.float    "step_size"
+    t.integer  "display_precision"
+    t.integer  "port"
+    t.string   "unit"
+    t.float    "min"
+    t.float    "max"
+    t.float    "period"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "short_name"
-    t.text    "description"
-    t.string  "communication_protocol"
-    t.string  "image"
-    t.string  "uuid"
-    t.integer "device_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "short_name"
+    t.text     "description"
+    t.string   "communication_protocol"
+    t.string   "image"
+    t.string   "uuid"
+    t.integer  "device_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
