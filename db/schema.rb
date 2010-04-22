@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100416210108) do
+ActiveRecord::Schema.define(:version => 20100421160050) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -715,6 +715,7 @@ ActiveRecord::Schema.define(:version => 20100416210108) do
     t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
+    t.integer  "user_id"
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
