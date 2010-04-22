@@ -69,7 +69,7 @@ describe Admin::Project do
     it "should initially have all the existant vendor interfaces" do
       @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces).things
       @all_interfaces.each do |interface|
-        @new_valid_project.enabled_vendor_interfaces.should include interface
+        @new_valid_project.enabled_vendor_interfaces.should include(interface)
       end
     end
     
