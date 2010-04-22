@@ -15,6 +15,7 @@ Spork.prefork do
   
   require 'spec/autorun'
   require 'spec/rails'
+  require 'spec/mocks'
   
   # *** customizations ***
   
@@ -65,16 +66,26 @@ Spork.prefork do
 end
 
 Spork.each_run do
-  @factories.each { |f| load f }
+
+  if USING_JNLPS
+    @versioned_jnlp = Factory.create(:maven_jnlp_versioned_jnlp)
+    @versioned_jnlp_url = @versioned_jnlp.versioned_jnlp_url
+    @maven_jnlp_family = @versioned_jnlp_url.maven_jnlp_family
+    @maven_jnlp_server = @maven_jnlp_family.maven_jnlp_server
+    APP_CONFIG[:default_maven_jnlp][:version] = @maven_jnlp_family.snapshot_version
+    @maven_jnlp_family.stub!(:newest_snapshot_version).and_return(@maven_jnlp_family.snapshot_version)
+  end
+  
+  @admin_project = Factory.create(:admin_project)
+  Admin::Project.create_or_update_default_project_from_settings_yml
   
   puts "Loading default data set required for application_controller.rb to run ...."
   anon =  Factory.next :anonymous_user
   admin = Factory.next :admin_user 
-  device_config = Factory.create(:probe_device_config)
-  versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
+  # device_config = Factory.create(:probe_device_config)
   school = Factory(:portal_school)
   domain = Factory(:rigse_domain)
   grade = Factory(:portal_grade)
-  Admin::Project.create_or_update_default_project_from_settings_yml
+  
   puts "done."
 end
