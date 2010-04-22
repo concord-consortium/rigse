@@ -129,7 +129,7 @@ class Admin::Project < ActiveRecord::Base
     end
     
     def summary_info
-      default_project.summary_info
+      default_project ? default_project.summary_info : "no default project defined"
     end
 
     def create_or_update_default_project_from_settings_yml
