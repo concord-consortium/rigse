@@ -87,3 +87,22 @@ puts "done."
 include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
 
+# Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
+Before do
+  # Could we get away with using mocks for projects and jnlps in capybara?
+  # We shouldn't mock too many things in cucumber:
+  # http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
+  puts "============================================"
+  anon =  Factory.next :anonymous_user
+  admin = Factory.next :admin_user 
+  anon.skip_notifications = true
+  admin.skip_notifications = true
+  gse = Factory(:rigse_grade_span_expectation)
+  device_config = Factory(:probe_device_config)
+  versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
+  school = Factory(:portal_school)
+  domain = Factory(:rigse_domain)
+  grade = Factory(:portal_grade)
+  Admin::Project.create_or_update_default_project_from_settings_yml
+end
+
