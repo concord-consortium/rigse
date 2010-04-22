@@ -26,8 +26,20 @@ Spork.prefork do
   require 'factory_girl'
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb'))
   
-  unless ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
-    puts "migrations need to be run: rake db:test:prepare"
+  if ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+    if Probe::ProbeType.count == 0
+      puts
+      puts "*** Probe configuration models need to be loaded into the test database to run the tests"
+      puts "*** run: rake db:test:prepare"
+      puts
+      exit
+    end
+  else
+    puts
+    puts "*** pending migrations need to be applied to run the tests"
+    puts "*** run: rake db:test:prepare"
+    puts
+    exit
   end
 
   Dir.glob(File.dirname(__FILE__) + "/support/*.rb").each { |f| require(f) }
