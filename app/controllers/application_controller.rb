@@ -74,7 +74,9 @@ class ApplicationController < ActionController::Base
       elsif container_type = params[:container_type] 
         @scope = container_type.constantize.find(params[:container_id])
       end
+      @scope
     rescue ActiveRecord::RecordNotFound
+      nil
     end
   end
 
