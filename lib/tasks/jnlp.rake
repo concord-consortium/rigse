@@ -1,6 +1,5 @@
 namespace :rigse do
   namespace :jnlp do
-    
 
     autoload :HighLine, 'highline'
 
@@ -79,8 +78,13 @@ HEREDOC
       end
     end
 
+    desc "erase cached jnlp resources in jnlp object cache directory"
+    task :empty_jnlp_object_cache  => :environment do
+      MavenJnlp::VersionedJnlp.empty_jnlp_object_cache
+    end
+    
     desc "delete all the MavenJnlp resources"
-    task :delete_maven_jnlp_resources => :environment do
+    task :delete_maven_jnlp_resources => [:environment, :empty_jnlp_object_cache] do
       puts <<HEREDOC
 
 This will delete all the data in the following tables:
