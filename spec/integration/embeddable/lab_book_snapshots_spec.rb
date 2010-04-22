@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
 # NOTE: I'm not sure why calling .id on ActiveRecord models (@model, @page, etc) isn't working... calling page[:id] does work, however
 
