@@ -137,10 +137,11 @@ class Admin::Project < ActiveRecord::Base
       states_and_provinces = APP_CONFIG[:states_and_provinces]
 
       if USING_JNLPS
+        server, family, version = default_jnlp_info
         default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-        maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(default_maven_jnlp['server'])
-        jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(default_maven_jnlp['family'])
-        jnlp_version_str = default_maven_jnlp['version']
+        maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
+        jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(family)
+        jnlp_version_str = version
         if jnlp_version_str == 'snapshot'
           snapshot_enabled = true
           jnlp_family.update_snapshot_jnlp_url
@@ -201,6 +202,19 @@ class Admin::Project < ActiveRecord::Base
       end
       project
     end
+
+    def default_jnlp_info
+      default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
+      # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
+      server = APP_CONFIG[:maven_jnlp_servers].find { |s| s[:name] == default_maven_jnlp[:server] }
+      # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+      family = default_maven_jnlp[:family]
+      # => "all-otrunk-snapshot"
+      version = default_maven_jnlp[:version]
+      # => "snapshot"
+      [server, family, version]
+    end
+
   end
   
   def default_project?
