@@ -1,6 +1,3 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
-
 /*******************************
 Some global helper functions:
 *******************************/
@@ -60,13 +57,14 @@ focus_first_field = function() {
   }
 }
 
-
+// Place your application-specific JavaScript functions and classes here
+// This file is automatically included by javascript_include_tag :defaults
 dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   var menu = $(menu_dom_id);
   var drop_down = $(drop_down_dom_id);
   var menu_width = menu.getDimensions().width
   var drop_down_width = drop_down.getDimensions().width
-  var padding = 4;
+  var padding = 18;
   drop_down.hide();
   drop_down.show();
   drop_down.setStyle({'z-index': 2000});
@@ -85,20 +83,20 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
 
   drop_down.clonePosition(menu,options);
   
-  var lookForGoAway = function(event) {
-   var mouse_over_element = event.relatedTarget;
+
+  drop_down.observe('mouseout', function(event) {
+    var mouse_over_element = event.relatedTarget;
     if(mouse_over_element) {
      if (!mouse_over_element.descendantOf(drop_down)) {
-       if (mouse_over_element != drop_down) {
-         if (mouse_over_element != menu) {
+       if (event.toElement != drop_down) {
+         if (event.toElement != menu) {
            hide();
          }
        }
      }
     }
-  }
+  });
 
-  drop_down.observe('mouseout', lookForGoAway);
   drop_down.observe('click', function(event) {
     hide();
   });
