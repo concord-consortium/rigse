@@ -116,7 +116,7 @@ def jruby_system_command
 end
 
 def gem_install_command_strings(missing_gems)
-  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
+  command = JRUBY ? "  jruby -S gem install " : "  sudo gem install "
   command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
@@ -240,8 +240,11 @@ end
 def create_new_database_yml
   @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    if env == 'development'
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    else
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
+    end
     @db_config[env]['username'] = @options[:db_user]
     @db_config[env]['password'] = @options[:db_password]
   end
