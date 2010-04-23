@@ -10,7 +10,7 @@ Factory.define :maven_jnlp_maven_jnlp_family, :class => MavenJnlp::MavenJnlpFami
   server, family, version = Admin::Project.default_jnlp_info
   
   f.name family
-  f.snapshot_version '0.1.0-20091013.161730' 
+  f.snapshot_version version
   f.url 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/'
   f.association :maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
 end
