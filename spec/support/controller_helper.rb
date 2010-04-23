@@ -44,11 +44,14 @@ def generate_mock_project_and_jnlps
 
   @mock_versioned_jnlp_url = mock_model(MavenJnlp::VersionedJnlpUrl,
     :versioned_jnlp => @mock_versioned_jnlp,
-    :version_str => version)
+    :version_str => version,
+    :url => 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20070420.131610.jnlp')
 
   @versioned_jnlp_urls = ArrayOfVersionedJnlpUrls.new
   @versioned_jnlp_urls[0] = @mock_versioned_jnlp_url
-  
+
+  @mock_versioned_jnlp.stub!(:versioned_jnlp_url).and_return(@mock_versioned_jnlp_url)
+
   @mock_maven_jnlp_family = mock_model(MavenJnlp::MavenJnlpFamily,
     :name => family,
     :snapshot_version => version,
@@ -56,6 +59,8 @@ def generate_mock_project_and_jnlps
     :update_snapshot_jnlp_url => @mock_versioned_jnlp_url,
     :snapshot_jnlp_url => @mock_versioned_jnlp_url,
     :versioned_jnlp_urls => @versioned_jnlp_urls)
+
+  @mock_versioned_jnlp_url.stub!(:maven_jnlp_family).and_return(@mock_maven_jnlp_family)
 
   @mock_gui_testing_maven_jnlp_family = mock_model(MavenJnlp::MavenJnlpFamily,
     :name => 'gui-testing',
@@ -70,7 +75,9 @@ def generate_mock_project_and_jnlps
     :path => server[:path],
     :name => server[:name],
     :maven_jnlp_family => @mock_maven_jnlp_family)
-
+  
+  @mock_maven_jnlp_family.stub!(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
+  
   @mock_project = mock_model(Admin::Project,
     :name => project_name,
     :url =>  project_url,
@@ -104,7 +111,7 @@ def logout_user
   @logged_in_user
 end
 
-def will_paginate_params
-  {:limit=>30, :offset=>0, :include=>{}}
+def will_paginate_params(opts = {})
+  { :limit => opts[:limit] || 30, :offset => opts[:offset] || 0, :include=>opts[:include] || {} }
 end
 
