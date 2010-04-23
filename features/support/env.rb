@@ -18,8 +18,9 @@ require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
-
 require 'email_spec/cucumber'
+require 'spec/stubs/cucumber'
+
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -67,6 +68,7 @@ APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use
 # use factory girl:
 require 'factory_girl'
 
+
 Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
 
 # This code used to live in factories/zz_default_data.rb.
@@ -86,4 +88,20 @@ puts "done."
 # Make visible for testing
 include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
+
+# Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
+# Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
+# Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
+Before do
+  # To get RSpec stubs and mocks working.
+  $rspec_mocks ||= Spec::Mocks::Space.new
+end
+
+After do
+    begin
+      $rspec_mocks.verify_all
+    ensure
+      $rspec_mocks.reset_all
+    end
+end
 

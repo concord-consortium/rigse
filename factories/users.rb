@@ -20,6 +20,7 @@ Factory.define :user do |f|
   f.email  { |u| "#{u.login}@concord.org"}
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
+  f.skip_notifications true
   f.roles  { [ Factory.next(:member_role)] }
   f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end
