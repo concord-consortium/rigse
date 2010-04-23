@@ -18,8 +18,9 @@ require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
-
 require 'email_spec/cucumber'
+require 'spec/stubs/cucumber'
+
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -67,6 +68,7 @@ APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use
 # use factory girl:
 require 'factory_girl'
 
+
 Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
 
 # This code used to live in factories/zz_default_data.rb.
@@ -88,21 +90,18 @@ include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
 
 # Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
+# Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
+# Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
 Before do
-  # Could we get away with using mocks for projects and jnlps in capybara?
-  # We shouldn't mock too many things in cucumber:
-  # http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
-  puts "============================================"
-  anon =  Factory.next :anonymous_user
-  admin = Factory.next :admin_user 
-  anon.skip_notifications = true
-  admin.skip_notifications = true
-  gse = Factory(:rigse_grade_span_expectation)
-  device_config = Factory(:probe_device_config)
-  versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
-  school = Factory(:portal_school)
-  domain = Factory(:rigse_domain)
-  grade = Factory(:portal_grade)
-  Admin::Project.create_or_update_default_project_from_settings_yml
+  # To get RSpec stubs and mocks working.
+  $rspec_mocks ||= Spec::Mocks::Space.new
+end
+
+After do
+    begin
+      $rspec_mocks.verify_all
+    ensure
+      $rspec_mocks.reset_all
+    end
 end
 
