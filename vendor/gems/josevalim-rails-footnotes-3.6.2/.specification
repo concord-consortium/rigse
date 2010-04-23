@@ -1,6 +1,11 @@
 --- !ruby/object:Gem::Specification 
 name: josevalim-rails-footnotes
 version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 3
+  - 6
+  - 2
   version: 3.6.2
 platform: ruby
 authors: 
@@ -64,18 +69,20 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
-  version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
-  version: 
 requirements: []
 
 rubyforge_project: 
-rubygems_version: 1.3.5
+rubygems_version: 1.3.6
 signing_key: 
 specification_version: 2
 summary: Every Rails page has footnotes that gives information about your application and links back to your editor.
