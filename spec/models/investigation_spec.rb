@@ -33,7 +33,7 @@ describe Investigation do
     end
     
     it "should define a method for available_states" do
-      @investigation.should respond_to :available_states
+      @investigation.should respond_to(:available_states)
     end
   end
   
@@ -71,8 +71,8 @@ describe Investigation do
       end
     
       it "should have a similar name" do
-        @dest_investigation.name.should match @source_investigation.name
-        @dest_investigation.name.should match /copy/i
+        @dest_investigation.name.should match(@source_investigation.name)
+        @dest_investigation.name.should match(/copy/i)
       end
       
       it "should not have the same name" do
@@ -80,7 +80,7 @@ describe Investigation do
       end
       
       it "should have a unique id" do
-        @dest_investigation.id.should_not be @source_investigation.id
+        @dest_investigation.id.should_not be(@source_investigation.id)
       end
     
       it "should be changeable by the new author" do

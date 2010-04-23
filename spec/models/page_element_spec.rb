@@ -17,7 +17,7 @@ describe PageElement do
   
   it "should let an onwer be assinged to it" do
     @page_element.user = @user
-    @page_element.user.should be @user
+    @page_element.user.should be(@user)
   end
   
   it "should persist its owner information" do
