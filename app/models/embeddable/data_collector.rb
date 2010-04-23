@@ -17,6 +17,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  validates_associated :probe_type
+  
   # this could work if the finder sql was redone
   # has_many :investigations,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors

@@ -106,7 +106,7 @@
   description: The Pasco USBLink in a simple USB interface that can measure data from one PASPORT sensor at a time.
   short_name: pasco_usblink
   user_id: 5
-  image: SensorImages/PascoUSBLink.png
+  image: SensorImages/PascoUSBLink.jpg
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
 - name: Pasco PowerLink
@@ -117,7 +117,7 @@
   description: The Pasco PowerLink is a USB interface that includes two ports for collecting data from PASPORT sensors.
   short_name: pasco_powerlink
   user_id: 5
-  image: SensorImages/PascoPowerLink.png
+  image: SensorImages/PascoPowerLink.jpg
   created_at: 2009-08-28 19:11:44 Z
   updated_at: 2009-08-28 19:11:44 Z
 - name: Pasco Xplorer GLX

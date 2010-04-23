@@ -1,3 +1,3 @@
-Factory.define :data_table do |f|
+Factory.define :data_table, :class=> Embeddable::DataTable do |f|
 end
 

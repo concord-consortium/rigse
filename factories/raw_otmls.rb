@@ -1,3 +1,3 @@
-Factory.define :raw_otml do |f|
+Factory.define :raw_otml, :class=> Embeddable::RawOtml do |f|
 end
 

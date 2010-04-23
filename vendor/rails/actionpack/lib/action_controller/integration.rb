@@ -311,6 +311,7 @@ module ActionController
 
           app = Rack::Lint.new(@application)
           status, headers, body = app.call(env)
+          body.close if body.respond_to?(:close)
           @request_count += 1
 
           @html_document = nil

@@ -261,6 +261,8 @@ class PagesController < ApplicationController
           @component.pages << @page
           @component.save
           @element = @page.element_for(@component)
+          @element.user = @component.user
+          @element.save
         end
       end
       render :update do |page|

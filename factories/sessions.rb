@@ -1,3 +1,3 @@
-Factory.define :session do |f|
-end
-
+# Factory.define :session do |f|
+# end
+# 

@@ -39,7 +39,11 @@ module Publishable
         if(who_wants_to_know.has_role?('manager','admin'))
           return @@publication_states
         end
-        return (@@publication_states - @@protected_publication_states + [self.publication_status.to_sym]).uniq
+        publication_states = @@publication_states - @@protected_publication_states
+        if self.publication_status
+          publication_states << self.publication_status.to_sym
+        end
+        return publication_states.uniq
       end
       
       def public?

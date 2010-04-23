@@ -147,6 +147,9 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :subjects
     portal.resources :teachers
     
+    portal.resources :external_user_domains
+    portal.resources :external_users
+    
     portal.resources :nces06_districts
     portal.resources :nces06_schools
     # portal.home 'readme', :controller => 'home', :action => 'readme'  

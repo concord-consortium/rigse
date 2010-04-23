@@ -38,6 +38,9 @@ class Embeddable::LabBookSnapshot < ActiveRecord::Base
     results - [self]
   end
 
+  # TODO This targeted_id and self.encode/decode behavior is useful for allowing polymorphic relationships via the web authoring ui... perhaps it should be extracted elsewhere?
+  #  self.encode is pretty close to dom_id_for, except that it includes modules in the rendered string
+  #  Note: in the otml rendering, you should use render_scoped_reference(lab_book_snapshot.target_element) instead of encode/decode to maintain compatibility with dom_id_for
   def targeted_id
     if target_element
       return Embeddable::LabBookSnapshot.encode(target_element)

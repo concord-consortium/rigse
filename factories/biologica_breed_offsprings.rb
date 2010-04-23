@@ -1,3 +1,3 @@
-Factory.define :biologica_breed_offspring do |f|
+Factory.define :biologica_breed_offspring, :class => Embeddable::Biologica::BreedOffspring do |f|
 end
 

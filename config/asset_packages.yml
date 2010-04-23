@@ -96,4 +96,15 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  
+- has:
+  - themes/has/has
+  - themes/has/action_menu_tab
+  - themes/has/drop_down
+  - themes/has/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
 
