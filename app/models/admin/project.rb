@@ -203,6 +203,16 @@ class Admin::Project < ActiveRecord::Base
       project
     end
 
+    # Returns an array of the default maven_jnlp server,  family, and jnlp snampshot version info
+    # 
+    # Example:
+    # 
+    #   server, family, version = Admin::Project.default_jnlp_info
+    #
+    #   server  # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+    #   family  # => "all-otrunk-snapshot"
+    #   version # => "0.1.0-20091013.161730"
+    #    
     def default_jnlp_info
       default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
       # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
