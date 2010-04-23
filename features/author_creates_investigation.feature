@@ -2,12 +2,12 @@ Feature: An author creates an investigation
   As a Investigations author
   I want to create an investigation
   So that students can take it.
-  
+      
   Scenario: The author creates an investigation
+    Given a mock gse
     Given the following users exist:
       | login        | password            | roles                |
       | author       | author              | member, author       |
-    
     And I login with username: author password: author
     When I go to the create investigation page
     Then I should see "Investigation: (new)"
