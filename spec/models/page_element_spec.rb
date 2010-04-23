@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe PageElement do
-  
+
   before(:each) do
     @page_element = Factory :page_element
     @user = Factory :user
