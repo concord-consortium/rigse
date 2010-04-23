@@ -21,7 +21,8 @@ module NavigationHelpers
       "/admin/projects/#{Admin::Project.default_project.id}/edit"
     when /the current project show page/  
       "/admin/projects/#{Admin::Project.default_project.id}/show"
-
+    when /the create investigation page/
+      "/investigations/new"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
