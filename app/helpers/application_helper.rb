@@ -60,9 +60,28 @@ module ApplicationHelper
   end
 
   def git_repo_info
-    # using && doesn't work here, in the second assignment 
-    # lvar: repo is nil -- not sure why yet
-    if repo = Grit::Repo.new(".") and head = repo.head
+    # For some strange reason running repo.head during tests sometimes generates this
+    # error running the first time: Errno::ECHILD Exception: No child processes
+    # 
+    # The operation seems to work fine the second time ... ?
+    # Here's an example from the debugger:
+    #
+    #   (rdb:1) repo.head
+    #   Errno::ECHILD Exception: No child processes
+    #   (rdb:1) repo.head
+    #   #<Grit::Head "emb-test">
+    #
+    repo = Grit::Repo.new(".")
+    head = nil
+    begin
+      head = repo.head
+    rescue Errno::ECHILD
+      begin
+        head = repo.head
+      rescue Errno::ECHILD
+      end
+    end        
+    if head
       branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
