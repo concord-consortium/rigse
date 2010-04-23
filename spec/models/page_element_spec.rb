@@ -11,7 +11,7 @@ describe PageElement do
     @page_element.should_not be_nil
   end
   
-  it "not originall have an owner" do
+  it "not original have an owner" do
     @page_element.user.should be_nil
   end
   
