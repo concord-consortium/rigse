@@ -7,7 +7,7 @@ describe Admin::ProjectsController do
   end
   
   before(:each) do
-    generate_mock_project
+    generate_mock_project_and_jnlps
     logout_user
     # Admin::Project.should_receive(:default_project).and_return(mock_project)
     Admin::Project.stub!(:default_project).and_return(mock_project)
