@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
   
-  helper :all # include all helpers, all the time
+  # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
   before_filter :setup_container
