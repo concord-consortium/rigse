@@ -31,7 +31,7 @@
 #   => [Mysql::Error, StandardError, ...
 #
 
-if RAILS_ENV == 'test' || $PROGRAM_NAME =~ /rake/
+if RAILS_ENV == 'test' || RAILS_ENV == 'cucumber' || $PROGRAM_NAME =~ /rake/
   puts "RAILS running in test environment or executing rake task -- skipping Admin::Project.create_or_update_default_project_from_settings_yml"
 else
   begin
