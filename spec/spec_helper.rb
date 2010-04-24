@@ -67,13 +67,4 @@ end
 
 Spork.each_run do
 
-  puts "Loading default data set required for application_controller.rb to run ...."
-  anon =  Factory.next :anonymous_user
-  admin = Factory.next :admin_user 
-  # device_config = Factory.create(:probe_device_config)
-  school = Factory(:portal_school)
-  domain = Factory(:rigse_domain)
-  grade = Factory(:portal_grade)
-  
-  puts "done."
 end
