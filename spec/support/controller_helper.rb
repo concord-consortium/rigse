@@ -36,6 +36,10 @@ def generate_default_school_resources_with_factories
   grade = Factory(:portal_grade)  
 end
 
+#
+# Mock Generators
+#
+
 class ArrayOfVersionedJars < Array
   def find_all_by_os(os)
     find { |i| i.os == os } || []
@@ -48,11 +52,13 @@ class ArrayOfVersionedJnlpUrls < Array
   end
 end
 
-def generate_default_project_and_jnlps_with_mocks
+def generate_jnlps_with_mocks
   project_name, project_url = Admin::Project.default_project_name_url
   server, family, version = Admin::Project.default_jnlp_info
 
-  @mock_jar = mock_model(MavenJnlp::Jar,
+  @mock_maven_jnlp_icon ||= mock_model(MavenJnlp::Icon)
+  
+  @mock_maven_jnlp_jar = mock_model(MavenJnlp::Jar,
     :href => 'org/telscenter/sail-otrunk/sail-otrunk.jar',
     :name => 'sail-otrunk',
     :version_str => '0.1.0-20091009.031525-1075',
@@ -60,13 +66,13 @@ def generate_default_project_and_jnlps_with_mocks
     :os => nil)
 
   @versioned_jars = ArrayOfVersionedJars.new
-  @versioned_jars[0] = @mock_jar
+  @versioned_jars[0] = @mock_maven_jnlp_jar
 
-  @mock_property = mock_model(MavenJnlp::Property,
+  @mock_maven_jnlp_property = mock_model(MavenJnlp::Property,
     :name => "maven.jnlp.version",
     :value => "all-otrunk-snapshot-0.1.0-20091013.161730")
 
-  @mock_versioned_jnlp = mock_model(MavenJnlp::VersionedJnlp,
+  @mock_maven_jnlp_versioned_jnlp = mock_model(MavenJnlp::VersionedJnlp,
     :codebase => "http://jnlp.concord.org/dev",
     :j2se_version => '1.5+',
     :offline_allowed => true,
@@ -76,34 +82,34 @@ def generate_default_project_and_jnlps_with_mocks
     :initial_heap_size => "32",
     :jars => @versioned_jars,
     :native_libraries => @versioned_jars,
-    :properties => [@mock_property])
+    :properties => [@mock_maven_jnlp_property])
 
-  @mock_versioned_jnlp_url = mock_model(MavenJnlp::VersionedJnlpUrl,
-    :versioned_jnlp => @mock_versioned_jnlp,
+  @mock_maven_jnlp_versioned_jnlp_url = mock_model(MavenJnlp::VersionedJnlpUrl,
+    :versioned_jnlp => @mock_maven_jnlp_versioned_jnlp,
     :version_str => version,
     :url => 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20070420.131610.jnlp')
 
   @versioned_jnlp_urls = ArrayOfVersionedJnlpUrls.new
-  @versioned_jnlp_urls[0] = @mock_versioned_jnlp_url
+  @versioned_jnlp_urls[0] = @mock_maven_jnlp_versioned_jnlp_url
 
-  @mock_versioned_jnlp.stub!(:versioned_jnlp_url).and_return(@mock_versioned_jnlp_url)
+  @mock_maven_jnlp_versioned_jnlp.stub!(:versioned_jnlp_url).and_return(@mock_maven_jnlp_versioned_jnlp_url)
 
   @mock_maven_jnlp_family = mock_model(MavenJnlp::MavenJnlpFamily,
     :name => family,
     :snapshot_version => version,
     :url => 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/',
-    :update_snapshot_jnlp_url => @mock_versioned_jnlp_url,
-    :snapshot_jnlp_url => @mock_versioned_jnlp_url,
+    :update_snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url,
+    :snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url,
     :versioned_jnlp_urls => @versioned_jnlp_urls)
 
-  @mock_versioned_jnlp_url.stub!(:maven_jnlp_family).and_return(@mock_maven_jnlp_family)
+  @mock_maven_jnlp_versioned_jnlp_url.stub!(:maven_jnlp_family).and_return(@mock_maven_jnlp_family)
 
   @mock_gui_testing_maven_jnlp_family = mock_model(MavenJnlp::MavenJnlpFamily,
     :name => 'gui-testing',
     :snapshot_version => version,
     :url => 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/',
-    :update_snapshot_jnlp_url => @mock_versioned_jnlp_url, 
-    :snapshot_jnlp_url        => @mock_versioned_jnlp_url,
+    :update_snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url, 
+    :snapshot_jnlp_url        => @mock_maven_jnlp_versioned_jnlp_url,
     :versioned_jnlp_urls => @versioned_jnlp_urls)
 
   @mock_maven_jnlp_server = mock_model( MavenJnlp::MavenJnlpServer,
@@ -113,7 +119,12 @@ def generate_default_project_and_jnlps_with_mocks
     :maven_jnlp_family => @mock_maven_jnlp_family)
   
   @mock_maven_jnlp_family.stub!(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
-  
+end
+
+def generate_default_project_and_jnlps_with_mocks
+  project_name, project_url = Admin::Project.default_project_name_url
+  server, family, version = Admin::Project.default_jnlp_info
+  generate_jnlps_with_mocks
   @mock_project = mock_model(Admin::Project,
     :name => project_name,
     :url =>  project_url,
@@ -127,6 +138,8 @@ def generate_default_project_and_jnlps_with_mocks
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
   Admin::Project.stub!(:default_project).and_return(@mock_project)
+  @mock_project
+end
 
 def generate_otrunk_example_with_mocks
   @mock_otml_category ||= mock_model(OtrunkExample::OtmlCategory,
