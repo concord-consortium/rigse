@@ -9,6 +9,33 @@
 #
 suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
 
+#
+# Factory Generators
+#
+def generate_default_project_and_jnlps_with_factories
+  if USING_JNLPS
+    @versioned_jnlp = Factory.create(:maven_jnlp_versioned_jnlp)
+    @versioned_jnlp_url = @versioned_jnlp.versioned_jnlp_url
+    @maven_jnlp_family = @versioned_jnlp_url.maven_jnlp_family
+    @maven_jnlp_server = @maven_jnlp_family.maven_jnlp_server
+    APP_CONFIG[:default_maven_jnlp][:version] = @maven_jnlp_family.snapshot_version
+    @maven_jnlp_family.stub!(:newest_snapshot_version).and_return(@maven_jnlp_family.snapshot_version)
+  end
+  @admin_project = Factory.create(:admin_project)
+  Admin::Project.create_or_update_default_project_from_settings_yml
+end
+
+def generate_default_users_with_factories
+  anon =  Factory.next :anonymous_user
+  admin = Factory.next :admin_user 
+end
+
+def generate_default_school_resources_with_factories
+  school = Factory(:portal_school)
+  domain = Factory(:rigse_domain)
+  grade = Factory(:portal_grade)  
+end
+
 class ArrayOfVersionedJars < Array
   def find_all_by_os(os)
     find { |i| i.os == os } || []
