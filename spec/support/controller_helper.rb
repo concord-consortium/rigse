@@ -12,7 +12,7 @@ class ArrayOfVersionedJnlpUrls < Array
   end
 end
 
-def generate_mock_project_and_jnlps
+def generate_default_project_and_jnlps_with_mocks
   project_name, project_url = Admin::Project.default_project_name_url
   server, family, version = Admin::Project.default_jnlp_info
 

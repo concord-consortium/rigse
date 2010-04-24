@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Dataservice::BundleLoggersController do
 
   before(:each) do
-    generate_mock_project_and_jnlps
+    generate_default_project_and_jnlps_with_mocks
     logout_user
   end
 

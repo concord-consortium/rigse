@@ -4,7 +4,7 @@ describe Embeddable::DataCollectorsController do
   integrate_views
 
   before(:each) do
-    generate_mock_project_and_jnlps
+    generate_default_project_and_jnlps_with_mocks
     @data_collector ||= Factory.create(:data_collector)
     login_admin
     @session_options = {

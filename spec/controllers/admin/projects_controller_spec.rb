@@ -7,7 +7,7 @@ describe Admin::ProjectsController do
   end
   
   before(:each) do
-    generate_mock_project_and_jnlps
+    generate_default_project_and_jnlps_with_mocks
     logout_user
   end
   
