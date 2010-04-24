@@ -46,7 +46,6 @@ describe Dataservice::BundleLoggersController do
 
   describe "GET edit" do
     it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
-
       Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
       login_admin
       get :edit, :id => "37"
@@ -58,7 +57,6 @@ describe Dataservice::BundleLoggersController do
 
     describe "with valid params" do
       it "assigns a newly created bundle_logger as @dataservice_bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => true))
         login_admin
         post :create, :dataservice_bundle_logger => {:these => 'params'}
@@ -66,7 +64,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "redirects to the created bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:new).and_return(mock_bundle_logger(:save => true))
         login_admin
         post :create, :dataservice_bundle_logger => {}
@@ -76,7 +73,6 @@ describe Dataservice::BundleLoggersController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bundle_logger as @dataservice_bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => false))
         login_admin
         post :create, :dataservice_bundle_logger => {:these => 'params'}
@@ -84,7 +80,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "re-renders the 'new' template" do
-  
         Dataservice::BundleLogger.should_receive(:new).and_return(mock_bundle_logger(:save => false))
         login_admin
         post :create, :dataservice_bundle_logger => {}
@@ -98,7 +93,6 @@ describe Dataservice::BundleLoggersController do
 
     describe "with valid params" do
       it "updates the requested bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
         mock_bundle_logger.should_receive(:update_attributes).with({'these' => 'params'})
         login_admin
@@ -106,7 +100,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
         login_admin
         put :update, :id => "1"
@@ -114,7 +107,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "redirects to the bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
         login_admin
         put :update, :id => "1"
@@ -124,7 +116,6 @@ describe Dataservice::BundleLoggersController do
 
     describe "with invalid params" do
       it "updates the requested bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
         mock_bundle_logger.should_receive(:update_attributes).with({'these' => 'params'})
         login_admin
@@ -132,7 +123,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "assigns the bundle_logger as @dataservice_bundle_logger" do
-  
         Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
         login_admin
         put :update, :id => "1"
@@ -140,7 +130,6 @@ describe Dataservice::BundleLoggersController do
       end
 
       it "re-renders the 'edit' template" do
-  
         Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
         login_admin
         put :update, :id => "1"
@@ -152,7 +141,6 @@ describe Dataservice::BundleLoggersController do
 
   describe "DELETE destroy" do
     it "destroys the requested bundle_logger" do
-
       Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
       mock_bundle_logger.should_receive(:destroy)
       login_admin
@@ -160,7 +148,6 @@ describe Dataservice::BundleLoggersController do
     end
 
     it "redirects to the dataservice_bundle_loggers list" do
-
       Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:destroy => true))
       login_admin
       delete :destroy, :id => "1"

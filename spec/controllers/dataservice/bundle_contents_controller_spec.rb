@@ -58,7 +58,6 @@ describe Dataservice::BundleContentsController do
       end
 
       it "redirects to the created bundle_content" do
-  
         Dataservice::BundleContent.should_receive(:new).and_return(mock_bundle_content(:save => true))
         login_admin
         post :create, :dataservice_bundle_content => {}

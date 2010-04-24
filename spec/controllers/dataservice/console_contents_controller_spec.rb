@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Dataservice::ConsoleContentsController do
 
   before(:each) do
-    generate_mock_project_and_jnlps
+    generate_default_project_and_jnlps_with_mocks
     logout_user
   end
 
@@ -13,7 +13,6 @@ describe Dataservice::ConsoleContentsController do
 
   describe "GET index" do
     it "assigns all dataservice_console_contents as @dataservice_console_contents" do
-
       Dataservice::ConsoleContent.should_receive(:find).with(:all, hash_including(will_paginate_params(:limit=>5))).and_return([mock_console_content])
       login_admin
       get :index
@@ -23,7 +22,6 @@ describe Dataservice::ConsoleContentsController do
 
   describe "GET show" do
     it "assigns the requested console_content as @dataservice_console_content" do
-
       Dataservice::ConsoleContent.should_receive(:find).with("37").and_return(mock_console_content)
       login_admin
       get :show, :id => "37"
@@ -33,7 +31,6 @@ describe Dataservice::ConsoleContentsController do
 
   describe "GET new" do
     it "assigns a new console_content as @dataservice_console_content" do
-
       Dataservice::ConsoleContent.should_receive(:new).and_return(mock_console_content)
       login_admin
       get :new
@@ -43,7 +40,6 @@ describe Dataservice::ConsoleContentsController do
 
   describe "GET edit" do
     it "assigns the requested console_content as @dataservice_console_content" do
-
       Dataservice::ConsoleContent.should_receive(:find).with("37").and_return(mock_console_content)
       login_admin
       get :edit, :id => "37"
@@ -55,7 +51,6 @@ describe Dataservice::ConsoleContentsController do
 
     describe "with valid params" do
       it "assigns a newly created console_content as @dataservice_console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:new).with({'these' => 'params'}).and_return(mock_console_content(:save => true))
         login_admin
         post :create, :dataservice_console_content => {:these => 'params'}
@@ -63,7 +58,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "redirects to the created console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:new).and_return(mock_console_content(:save => true))
         login_admin
         post :create, :dataservice_console_content => {}
@@ -73,7 +67,6 @@ describe Dataservice::ConsoleContentsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved console_content as @dataservice_console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:new).with({'these' => 'params'}).and_return(mock_console_content(:save => false))
         login_admin
         post :create, :dataservice_console_content => {:these => 'params'}
@@ -81,7 +74,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "re-renders the 'new' template" do
-  
         Dataservice::ConsoleContent.should_receive(:new).and_return(mock_console_content(:save => false))
         login_admin
         post :create, :dataservice_console_content => {}
@@ -95,7 +87,6 @@ describe Dataservice::ConsoleContentsController do
 
     describe "with valid params" do
       it "updates the requested console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:find).with("37").and_return(mock_console_content)
         mock_console_content.should_receive(:update_attributes).with({'these' => 'params'})
         login_admin
@@ -103,7 +94,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "assigns the requested console_content as @dataservice_console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:find).and_return(mock_console_content(:update_attributes => true))
         login_admin
         put :update, :id => "1"
@@ -111,7 +101,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "redirects to the console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:find).and_return(mock_console_content(:update_attributes => true))
         login_admin
         put :update, :id => "1"
@@ -121,7 +110,6 @@ describe Dataservice::ConsoleContentsController do
 
     describe "with invalid params" do
       it "updates the requested console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:find).with("37").and_return(mock_console_content)
         mock_console_content.should_receive(:update_attributes).with({'these' => 'params'})
         login_admin
@@ -129,7 +117,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "assigns the console_content as @dataservice_console_content" do
-  
         Dataservice::ConsoleContent.should_receive(:find).and_return(mock_console_content(:update_attributes => false))
         login_admin
         put :update, :id => "1"
@@ -137,7 +124,6 @@ describe Dataservice::ConsoleContentsController do
       end
 
       it "re-renders the 'edit' template" do
-  
         Dataservice::ConsoleContent.should_receive(:find).and_return(mock_console_content(:update_attributes => false))
         login_admin
         put :update, :id => "1"
@@ -149,7 +135,6 @@ describe Dataservice::ConsoleContentsController do
 
   describe "DELETE destroy" do
     it "destroys the requested console_content" do
-
       Dataservice::ConsoleContent.should_receive(:find).with("37").and_return(mock_console_content)
       mock_console_content.should_receive(:destroy)
       login_admin
@@ -157,7 +142,6 @@ describe Dataservice::ConsoleContentsController do
     end
 
     it "redirects to the dataservice_console_contents list" do
-
       Dataservice::ConsoleContent.should_receive(:find).and_return(mock_console_content(:destroy => true))
       login_admin
       delete :destroy, :id => "1"

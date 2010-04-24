@@ -20,7 +20,6 @@ describe Embeddable::DataCollectorsController do
     }
     request.env['rack.session.options'] = @session_options    
   end
-  
 
   describe "GET index" do
     it "runs without error" do
@@ -28,7 +27,7 @@ describe Embeddable::DataCollectorsController do
       response.should be_success
     end
   end
-
+  
   describe "GET show" do
     it "assigns the requested data_collector as @data_collector" do
       Embeddable::DataCollector.stub!(:find).with("37").and_return(@data_collector)
@@ -79,6 +78,7 @@ describe Embeddable::DataCollectorsController do
   end
 
   describe "GET edit" do
+
     it "assigns the requested data_collector as @data_collector" do
       Embeddable::DataCollector.stub!(:find).with("37").and_return(@data_collector)
       get :edit, :id => "37"
@@ -86,7 +86,7 @@ describe Embeddable::DataCollectorsController do
     end
     
     describe "with mime type of otml" do
-
+    
       it "renders the requested data_collector as otml without error" do
         Embeddable::DataCollector.stub!(:find).with("37").and_return(@data_collector)
         get :edit, :id => "37", :format => 'otml'
@@ -108,7 +108,8 @@ describe Embeddable::DataCollectorsController do
             end
           end
         end
-      end    
+      end
+    
     end
     
     describe "with mime type of dynamic_otml" do
