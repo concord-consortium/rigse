@@ -59,6 +59,15 @@ if defined?(ActiveRecord::Base)
   begin
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation
+    probe_tables = %w{
+      probe_calibrations
+      probe_datafilters
+      probe_device_configs
+      probe_physical_units
+      probe_probe_types
+      probe_vendor_interfaces
+    }
+    DatabaseCleaner.strategy = :truncation, { :except => probe_tables }
   rescue LoadError => ignore_if_database_cleaner_not_present
   end
 end
