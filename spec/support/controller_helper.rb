@@ -1,5 +1,14 @@
 
 
+# In order to run the user specs the encrypted passwords
+# for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
+# need to be created with a REST_AUTH_SITE_KEY used for testing.
+#
+# suppress_warnings is a Kernel extension ...
+# See: config/initializers/00_core_extensions.rb
+#
+suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
+
 class ArrayOfVersionedJars < Array
   def find_all_by_os(os)
     find { |i| i.os == os } || []
@@ -12,16 +21,6 @@ class ArrayOfVersionedJnlpUrls < Array
   end
 end
 
-# In order to run the user specs the encrypted passwords
-# for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
-# need to be created with a REST_AUTH_SITE_KEY used for testing.
-#
-# suppress_warnings is a Kernel extension ...
-# See: config/initializers/00_core_extensions.rb
-#
-def redefine_rest_auth_site_key
-  suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
-end
 def generate_default_project_and_jnlps_with_mocks
   project_name, project_url = Admin::Project.default_project_name_url
   server, family, version = Admin::Project.default_jnlp_info
