@@ -32,7 +32,7 @@
 #
 
 if RAILS_ENV == 'test' || RAILS_ENV == 'cucumber' || $PROGRAM_NAME =~ /rake/
-  puts "RAILS running in test environment or executing rake task -- skipping Admin::Project.create_or_update_default_project_from_settings_yml"
+  puts "Executing rake task or running in test/cucumber env: skipping Admin::Project.create_or_update_default_project_from_settings_yml"
 else
   begin
     ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
