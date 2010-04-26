@@ -39,8 +39,8 @@ describe Investigation do
   
   describe "it should be duplicatable" do
     before(:each) do
-      @original_author = Factory :user, {:login => "first_author"}
-      @new_author = Factory :user, {:login => "second_author"}
+      @original_author = Factory :user
+      @new_author = Factory :user
       @source_investigation = Factory :investigation, {:name => "test investigation",:user => @original_author}
       @source_investigation.activities << (Factory :activity, {:user => @original_author})
       @source_investigation.activities[0].sections << (Factory :section, {:user => @original_author})
