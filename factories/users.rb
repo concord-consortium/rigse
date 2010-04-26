@@ -7,7 +7,7 @@
 ##
 
 Factory.sequence(:login) do |n| 
-  "login_#{n}"
+  "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
 end
 
 ##
