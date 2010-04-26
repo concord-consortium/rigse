@@ -1,6 +1,7 @@
 Authors should be able to add, edit and remove Smartgraph Range Questions to/from a page.
 
 Feature: Smartgraph Questions
+  Given The default project and jnlp resources exist using mocks
   As an author
   I want to add, edit or remove a Smartgraph Range Question to/from a page
   So that I can use Smartgraph Question tool.

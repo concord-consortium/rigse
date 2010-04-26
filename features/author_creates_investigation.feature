@@ -1,4 +1,5 @@
 Feature: An author creates an investigation
+  Given The default project and jnlp resources exist using mocks
   As a Investigations author
   I want to create an investigation
   So that students can take it.

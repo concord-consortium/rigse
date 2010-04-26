@@ -1,4 +1,5 @@
 Feature: Rites Teachers selects offerings to assign to their classes
+  Given The default project and jnlp resources exist using mocks
   As a Rinet Teacher with imported classes
   I want to assign investigations to my classes
   So that my students can have rich learning experiences

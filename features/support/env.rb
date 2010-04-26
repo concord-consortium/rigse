@@ -103,7 +103,7 @@ ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
 Before do
   # To get RSpec stubs and mocks working.
   $rspec_mocks ||= Spec::Mocks::Space.new
-  generate_default_project_and_jnlps_with_mocks
+  # generate_default_project_and_jnlps_with_mocks
 end
 
 After do

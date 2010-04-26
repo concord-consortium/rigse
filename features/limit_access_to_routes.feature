@@ -7,6 +7,7 @@ In NO case should the system allow:
 * unauthorized users to edit or delete resources they shouldn't
 
 Feature: Limit access to restricted routes
+  Given The default project and jnlp resources exist using mocks
   As a person concerned about security
   I want ensure that I can not access restricted routes
   So that we can protect our users data

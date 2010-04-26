@@ -1,4 +1,5 @@
 Feature: The Project administrator disables certain vendor interfaces
+  Given The default project and jnlp resources exist using factories
   As a Investigations project admin
   I want modify the list of supported vendor interfaces
   So that I can provide a smaller list of well tested interfaces

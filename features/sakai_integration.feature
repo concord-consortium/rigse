@@ -3,6 +3,7 @@ Investigations via the Sakai Linktool instance without needing to re-authenticat
 If the user has not been imported, they should get a friendly error message telling them so.
 
 Feature: Sakai Integration
+  Given The default project and jnlp resources exist using mocks
   As a valid Sakai user
   I want to access investigations without re-authenticating
   So that I can use the investigations tools.

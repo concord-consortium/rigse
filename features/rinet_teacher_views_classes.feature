@@ -3,6 +3,7 @@ Their classes, and their class students. However these teachers should not be ab
 their imported classes. (because it comes from SIS)
 
 Feature: Rites Teachers see their classes and students
+  Given The default project and jnlp resources exist using mocks
   As a Rinet Teacher with imported classes
   I want to see my classes and students
   So that I can assign investigations to them
