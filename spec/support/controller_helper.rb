@@ -121,6 +121,7 @@ def generate_jnlps_with_mocks
   @mock_maven_jnlp_family.stub!(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
 end
 
+# Generates a mock project and associated jnlp resources
 def generate_default_project_and_jnlps_with_mocks
   project_name, project_url = Admin::Project.default_project_name_url
   server, family, version = Admin::Project.default_jnlp_info
@@ -139,6 +140,15 @@ def generate_default_project_and_jnlps_with_mocks
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
   Admin::Project.stub!(:default_project).and_return(@mock_project)
   @mock_project
+end
+
+def generate_portal_resources_with_mocks
+  @mock_school = mock_model(Portal::School)
+  @mock_grade = mock_model(Portal::Grade)
+  @mock_grade_level = mock_model(Portal::GradeLevel)
+  @mock_external_user = mock_model(ExternalUser)
+  # @mock_grade ||= mock_model(Portal::Grade, stubs)
+  # @mock_grade_level ||= mock_model(Portal::GradeLevel, stubs)
 end
 
 def generate_otrunk_example_with_mocks

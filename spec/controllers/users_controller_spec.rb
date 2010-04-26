@@ -4,6 +4,11 @@ describe UsersController do
   fixtures :users
   fixtures :roles
 
+  before(:each) do
+    generate_default_project_and_jnlps_with_mocks
+    logout_user
+  end
+
   it 'allows signup' do
     pending "Broken example"
     lambda do
