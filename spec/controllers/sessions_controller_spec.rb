@@ -1,28 +1,28 @@
 require 'spec_helper'
 
 describe SessionsController do
+
   fixtures        :users
-  before do 
-    @user  = mock_user
-    @login_params = { :login => 'quentin', :password => 'test' }
-    User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
-  end
   
   def do_create
     post :create, @login_params
   end
   
   before(:each) do
-    #mock_project #FIXME: mock_project is undefined!
+    generate_default_project_and_jnlps_with_mocks
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    login_admin
+    @user  = mock_user
+    @login_params = { :login => 'quentin', :password => 'test' }
+    User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
   end
   
   describe "on successful login," do
     [ [:nil,       nil,            nil],
-      [:expired,   'valid_token',  15.minutes.ago],
-      [:different, 'i_haxxor_joo', 15.minutes.from_now], 
-      [:valid,     'valid_token',  15.minutes.from_now]
-        ].each do |has_request_token, token_value, token_expiry|
+    [:expired,   'valid_token',  15.minutes.ago],
+    [:different, 'i_haxxor_joo', 15.minutes.from_now], 
+    [:valid,     'valid_token',  15.minutes.from_now]
+    ].each do |has_request_token, token_value, token_expiry|
       [ true, false ].each do |want_remember_me|
         describe "my request cookie token is #{has_request_token.to_s}," do
           describe "and ask #{want_remember_me ? 'to' : 'not to'} be remembered" do 
@@ -44,27 +44,92 @@ describe SessionsController do
                 @login_params[:remember_me] = '0'
               end
             end
-            it "kills existing login"        do pending "Broken example";controller.should_receive(:logout_keeping_session!); do_create; end    
-            it "authorizes me"               do pending "Broken example"; do_create; controller.send(:authorized?).should be_true;   end    
-            it "logs me in"                  do pending "Broken example"; do_create; controller.send(:logged_in?).should  be_true  end    
-            it "greets me nicely"            do pending "Broken example"; do_create; response.flash[:notice].should =~ /success/i   end
-            it "sets/resets/expires cookie"  do pending "Broken example"; controller.should_receive(:handle_remember_cookie!).with(want_remember_me); do_create end
-            it "sends a cookie"              do pending "Broken example"; controller.should_receive(:send_remember_cookie!);  do_create end
-            it 'redirects to the home page'  do pending "Broken example"; do_create; response.should redirect_to('/')   end
-            it "does not reset my session"   do pending "Broken example"; controller.should_not_receive(:reset_session).and_return nil; do_create end # change if you uncomment the reset_session path
+
+            it "kills existing login"        do 
+              controller.should_receive(:logout_keeping_session!)
+              do_create
+            end    
+
+            it "authorizes me"               do 
+              do_create
+              controller.send(:authorized?).should be_true
+            end    
+
+            it "logs me in"                  do 
+              do_create
+              controller.send(:logged_in?).should  be_true
+            end    
+
+            it "greets me nicely"            do 
+              do_create
+              response.flash[:notice].should =~ /success/i   
+            end
+
+            it "sets/resets/expires cookie"  do 
+              controller.should_receive(:handle_remember_cookie!).with(want_remember_me)
+              do_create
+            end
+
+            it "sends a cookie"              do 
+              controller.should_receive(:send_remember_cookie!)
+              do_create
+            end
+
+            it 'redirects to the home page'  do 
+              do_create
+              response.should redirect_to('/')
+            end
+
+            it "does not reset my session"   do 
+              controller.should_not_receive(:reset_session).and_return nil
+              do_create
+            end # change if you uncomment the reset_session path
+
             if (has_request_token == :valid)
-              it 'does not make new token'   do pending "Broken example"; @user.should_not_receive(:remember_me);   do_create end
-              it 'does refresh token'        do pending "Broken example"; @user.should_receive(:refresh_token);     do_create end 
-              it "sets an auth cookie"       do pending "Broken example"; do_create;  end
+              it 'does not make new token'   do 
+                @user.should_not_receive(:remember_me)
+                do_create
+              end
+              it 'does refresh token'        do 
+                @user.should_receive(:refresh_token)
+                do_create
+              end 
+              it "sets an auth cookie"       do 
+                do_create
+              end
+
             else
+
               if want_remember_me
-                it 'makes a new token'       do pending "Broken example"; @user.should_receive(:remember_me);       do_create end 
-                it "does not refresh token"  do pending "Broken example"; @user.should_not_receive(:refresh_token); do_create end
-                it "sets an auth cookie"       do pending "Broken example"; do_create;  end
+
+                it 'makes a new token'       do 
+                  @user.should_receive(:remember_me)
+                  do_create
+                end 
+
+                it "does not refresh token"  do
+                  @user.should_not_receive(:refresh_token)
+                  do_create
+                end
+
+                it "sets an auth cookie"       do
+                  do_create
+                end
+
               else 
-                it 'does not make new token' do pending "Broken example"; @user.should_not_receive(:remember_me);   do_create end
-                it 'does not refresh token'  do pending "Broken example"; @user.should_not_receive(:refresh_token); do_create end 
-                it 'kills user token'        do pending "Broken example"; @user.should_receive(:forget_me);         do_create end 
+
+                it 'does not make new token' do @user.should_not_receive(:remember_me)
+                  do_create
+                end
+
+                it 'does not refresh token'  do @user.should_not_receive(:refresh_token)
+                  do_create
+                end 
+
+                it 'kills user token'        do
+                  @user.should_receive(:forget_me)
+                  do_create
+                end 
               end
             end
           end # inner describe
@@ -78,12 +143,28 @@ describe SessionsController do
       User.should_receive(:authenticate).with(anything(), anything()).and_return(nil)
       login_as :quentin
     end
-    it 'logs out keeping session'   do pending "Broken example"; controller.should_receive(:logout_keeping_session!); do_create end
-    it 'flashes an error'           do pending "Broken example"; do_create; flash[:error].should =~ /Couldn't log you in as 'quentin'/ end
-    it 'renders the log in page'    do pending "Broken example"; do_create; response.should render_template('new')  end
-    it "doesn't log me in"          do pending "Broken example"; do_create; controller.send(:logged_in?).should == false end
-    it "doesn't send password back" do
+    it 'logs out keeping session'   do 
+      controller.should_receive(:logout_keeping_session!)
+      do_create
+    end
+
+    it 'flashes an error'           do
+      do_create
+      flash[:error].should =~ /Couldn't log you in as 'quentin'/
+    end
+
+    it 'renders the log in page'    do
+      do_create
+      response.should render_template('new')
+    end
+
+    it "doesn't log me in"          do
       pending "Broken example"
+      do_create
+      controller.send(:logged_in?).should == false
+    end
+
+    it "doesn't send password back" do
       @login_params[:password] = 'FROBNOZZ'
       do_create
       response.should_not have_text(/FROBNOZZ/i)
@@ -97,8 +178,15 @@ describe SessionsController do
     before do 
       login_as :quentin
     end
-    it 'logs me out'                   do pending "Broken example"; controller.should_receive(:logout_killing_session!); do_destroy end
-    it 'redirects me to the home page' do pending "Broken example"; do_destroy; response.should be_redirect     end
+    it 'logs me out'                   do 
+      controller.should_receive(:logout_killing_session!)
+      do_destroy 
+    end
+
+    it 'redirects me to the home page' do 
+      do_destroy
+      response.should be_redirect
+    end
   end
   
 end
