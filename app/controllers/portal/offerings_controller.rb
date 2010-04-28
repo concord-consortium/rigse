@@ -37,6 +37,9 @@ class Portal::OfferingsController < ApplicationController
           cookies[:put_path] = url_for(:controller => '/saveable/sparks/measuring_resistances',
             :action => 'save_data', :only_path => true);
           cookies[:learner_id] = @learner.id
+          cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
+          cookies[:activity_name] = @offering.runnable.name;
+          cookies[:attempt_num] = Saveable::Sparks::MeasuringResistanceReport.count + 1;
         else
           cookies[:put_path] = nil
           cookies[:learner_id] = nil
