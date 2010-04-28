@@ -1,9 +1,11 @@
 Feature: The Project administrator disables certain vendor interfaces
-  Given The default project and jnlp resources exist using factories
   As a Investigations project admin
   I want modify the list of supported vendor interfaces
   So that I can provide a smaller list of well tested interfaces
-  
+
+  Background:
+    Given The default project and jnlp resources exist using factories
+
   Scenario: The project administrator removes some probe interfaces
     Given the following users exist:
       | login        | password            | roles                |
@@ -83,5 +85,3 @@ Feature: The Project administrator disables certain vendor interfaces
       | radios hack RS232|
       | Texas Instruments|
       | pasco bluetooth  |
-
-

@@ -1,9 +1,11 @@
 Feature: An author adds multiple choice_questions
-  Given The default project and jnlp resources exist using mocks
   As a Investigations author
   I want to add a multiple choice questions to my investigations
   So that I can understand what my students are learning.
   
+  Background:
+    Given The default project and jnlp resources exist using mocks
+
   Scenario: The author adds a multiple choice question to an investigation
     Given the following users exist:
       | login        | password            | roles                |

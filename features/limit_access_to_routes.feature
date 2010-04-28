@@ -1,3 +1,5 @@
+Feature: Limit access to restricted routes
+
 Only logged in users with appropriate roles should be able to see and change resources in the portal.
 
 If a user without the appropriate role or permissions attempts to access a resource the system should redirect the user with an appropriate warning message.
@@ -6,13 +8,13 @@ In NO case should the system allow:
 * access to private student data to unauthorized users
 * unauthorized users to edit or delete resources they shouldn't
 
-Feature: Limit access to restricted routes
-  Given The default project and jnlp resources exist using mocks
   As a person concerned about security
   I want ensure that I can not access restricted routes
   So that we can protect our users data
-  
-  
+
+  Background:
+    Given The default project and jnlp resources exist using mocks
+
   Scenario Outline: Anonymous user cant access dataservice routes
     Given I am not logged in
     When I visit the route <route>
