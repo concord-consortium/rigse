@@ -125,7 +125,7 @@
         .padded_content
           #footer_left
             Questions/Feedback:
-            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user]['email'], "Send us an email", :subject => "RITES question", :encode => "javascript")
+            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "RITES question", :encode => "javascript")
           #footer_right
       #under_footer
         - if current_user.has_role?('admin')
