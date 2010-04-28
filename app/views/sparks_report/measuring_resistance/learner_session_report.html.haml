@@ -1,6 +1,8 @@
-- content_for :more_javascript do
-  %script{:src => "/sparks-content/activities/resistor-colors/javascript/report/learner-session-report.js", :type => "text/javascript"}
-  %script{:src => "/sparks-content/activities/resistor-colors/javascript/report/session-reporter.js", :type => "text/javascript"}
+= render :partial => 'sparks_include'
+
+%script{:src => "/sparks-content/activities/measuring-resistance/javascript/report/learner-session-report.js", :type => "text/javascript"}
+%script{:src => "/sparks-content/activities/measuring-resistance/javascript/report/session-reporter.js", :type => "text/javascript"}
+
 %h2
   %img.no_border{:src => "/sparks-content/common/icons/rgirl.png"}/
   Module 1: Measuring Resistance

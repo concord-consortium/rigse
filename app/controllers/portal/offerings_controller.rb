@@ -43,7 +43,7 @@ class Portal::OfferingsController < ApplicationController
         end
         logger.debug("learner_id=#{cookies[:learner_id]} put_path=#{cookies[:put_path]}")
         #render 'pages/show', :layout => "layouts/run" 
-        redirect_to '/sparks-content/activities/resistor-colors/index.html'
+        redirect_to '/sparks-content/activities/measuring-resistance/index.html'
       }
       
       format.jnlp {
