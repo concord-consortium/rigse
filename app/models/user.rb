@@ -213,9 +213,21 @@ class User < ActiveRecord::Base
     self == User.anonymous
   end
   
-  # class method for returning the anonymous user
-  def self.anonymous
-    @@anonymous_user ||=  @@anonymous_user = User.find_by_login('anonymous')
+  # Class method for returning the anonymous user
+  #
+  # If you have deleted and recreated the Anonymous user
+  # then call User.anonymous(true) once to reload the memoized
+  # object. If you don't then calling User.anonymous will return
+  # the older deleted Anonymous user.
+  #
+  # FIXME: using class variables like this is not thread-safe
+  #
+  def self.anonymous(reload=false)
+    if reload
+      @@anonymous_user = User.find_by_login('anonymous')
+    else
+      @@anonymous_user ||=  @@anonymous_user = User.find_by_login('anonymous')
+    end
   end
 
   # a bit of a silly method to help the code in lib/changeable.rb so

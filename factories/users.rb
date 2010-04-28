@@ -61,6 +61,8 @@ Factory.sequence :anonymous_user do |n|
     })
     anon.register
     anon.activate
+    # clear any previous Anonymous user still cached as a class variable in the User class
+    User.anonymous(true)
     anon.save!
   end
   anon
