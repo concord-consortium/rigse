@@ -40,7 +40,12 @@ class Portal::OfferingsController < ApplicationController
           cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
           cookies[:activity_name] = @offering.runnable.name;
           mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(@learner.id)
-          cookies[:attempt_num] = mr.reports.size + 1
+          if mr
+            cookies[:attempt_num] = mr.reports.size + 1
+          else
+            cookies[:attempt_num] = 1
+          end
+          
         else
           cookies[:put_path] = nil
           cookies[:learner_id] = nil
