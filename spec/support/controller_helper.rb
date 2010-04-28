@@ -24,6 +24,7 @@ def generate_default_project_and_jnlps_with_factories
   @admin_project = Factory.create(:admin_project)
   Admin::Project.create_or_update_default_project_from_settings_yml
   generate_default_users_with_factories
+  generate_default_school_resources_with_factories
 end
 
 def generate_default_users_with_factories
@@ -32,9 +33,10 @@ def generate_default_users_with_factories
 end
 
 def generate_default_school_resources_with_factories
-  school = Factory(:portal_school)
-  domain = Factory(:rigse_domain)
-  grade = Factory(:portal_grade)  
+  @portal_school = Factory(:portal_school)
+  @portal_district = @portal_school.district
+  @portal_grade = Factory(:portal_grade)
+  @rigse_domain = Factory(:rigse_domain)
 end
 
 #
