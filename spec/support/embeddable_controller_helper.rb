@@ -4,21 +4,6 @@ shared_examples_for 'an embeddable controller' do
   controller_class_lambda = lambda { self.send(:described_class) }
   model_class_lambda      = lambda { controller_class_lambda.call.name[/(.*)Controller/, 1].singularize.constantize }
   model_ivar_name_lambda  = lambda { model_class_lambda.call.name.demodulize.underscore }
-  
-  # def setup_for_specific_controller
-  #   @controller_class = self.send(:described_class)
-  #   @model_class =  @controller_class.name[/(.*)Controller/, 1].singularize.constantize
-  #   @model_ivar_name = @model_class.name.demodulize.underscore
-  #   unless instance_variable_defined?("@#{model_ivar_name_lambda.call}".to_sym)
-  #     @model_ivar = instance_variable_set("@#{model_ivar_name_lambda.call}", Factory.create(@model_ivar_name))
-  #   end
-  # end
-  
-  # before(:all) do
-  #   @controller_class = self.send(:described_class)
-  #   @model_class =  @controller_class.name[/(.*)Controller/, 1].singularize.constantize
-  #   @model_ivar_name = @model_class.name.demodulize.underscore
-  # end
 
   def with_tags_like_a(model_name)
     self.send("with_tags_like_a_#{model_name}".to_sym)
@@ -26,7 +11,6 @@ shared_examples_for 'an embeddable controller' do
 
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
-    # setup_for_specific_controller
     @model_class = model_class_lambda.call
     @model_ivar_name = model_ivar_name_lambda.call
     unless instance_variable_defined?("@#{@model_ivar_name}".to_sym)
