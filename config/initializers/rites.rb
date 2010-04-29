@@ -30,8 +30,9 @@
 #   Mysql::Error.ancestors
 #   => [Mysql::Error, StandardError, ...
 #
+RUNNING_TESTS = RAILS_ENV == 'test' || RAILS_ENV == 'cucumber'
 
-if RAILS_ENV == 'test' || RAILS_ENV == 'cucumber' || $PROGRAM_NAME =~ /rake/
+if RUNNING_TESTS || $PROGRAM_NAME =~ /rake/
   puts "Executing rake task or running in test/cucumber env: skipping Admin::Project.create_or_update_default_project_from_settings_yml"
 else
   begin
