@@ -2,6 +2,7 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables
   # GET /Embeddable/data_tables.xml
   def index    
+    @teacher = false
     @data_tables = Embeddable::DataTable.search(params[:search], params[:page], nil)
 
     respond_to do |format|
@@ -19,10 +20,10 @@ class Embeddable::DataTablesController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.otml { render :layout => "layouts/data_table" } # data_table.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_table }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @data_table, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_table, :teacher_mode => @teacher_mode} }
+        format.otml { render :layout => "layouts/embeddable/data_table" } # data_table.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @data_table, :teacher_mode => false }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @data_table, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @data_table, :teacher_mode => false} }
         format.xml  { render :xml => @data_table }
       end
     end
@@ -32,7 +33,7 @@ class Embeddable::DataTablesController < ApplicationController
   def print
     @data_table = Embeddable::DataTable.find(params[:id])
     respond_to do |format|
-      format.html { render :layout => "layouts/print" }
+      format.html { render :layout => "layouts/embeddable/print" }
       format.xml  { render :xml => @data_table }
     end
   end
