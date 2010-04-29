@@ -43,10 +43,15 @@ module ApplicationHelper
     list1 = 
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
-        git_repo_info.collect { |info| list << content_tag('li') { info } }
-        if USING_JNLPS
-          list << content_tag('li') { '|' }
-          maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+        # grit (git gem) throws strange errors when running rspec tests
+        # using command-R in textmate, so here's the hack to fix
+        # that for now
+        unless RUNNING_TESTS
+          git_repo_info.collect { |info| list << content_tag('li') { info } }
+          if USING_JNLPS
+            list << content_tag('li') { '|' }
+            maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+          end
         end
         list
       end
