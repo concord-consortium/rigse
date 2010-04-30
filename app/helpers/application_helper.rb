@@ -38,7 +38,7 @@ module ApplicationHelper
   def short_name(name)
     name.strip.downcase.gsub(/\W+/, '_')
   end
-
+  
   def display_system_info
     list1 = 
       content_tag('ul', :class => 'tiny menu_h') do
@@ -191,7 +191,7 @@ module ApplicationHelper
 
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
+    demodulized_class_name = component.class.name.delete_module.underscore_module
     partial = "#{class_name.pluralize}/show"
     # if component.respond_to? :print_partial_name
     #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
