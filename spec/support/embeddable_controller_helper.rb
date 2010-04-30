@@ -46,6 +46,12 @@ shared_examples_for 'an embeddable controller' do
       get :show, :id => "37"
       assigns[@model_ivar_name].should equal(@model_ivar)
     end
+  
+    it "assigns the requested #{model_ivar_name_lambda.call} as @#{model_ivar_name_lambda.call} when called with Ajax" do
+      @model_class.stub!(:find).with("37").and_return(@model_ivar)
+      xhr :get, :show, :id => "37"
+      assigns[@model_ivar_name].should equal(@model_ivar)
+    end
     
     describe "with mime type of jnlp" do
     
