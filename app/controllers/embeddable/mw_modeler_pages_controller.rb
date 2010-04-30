@@ -15,7 +15,7 @@ class Embeddable::MwModelerPagesController < ApplicationController
   def show
     @mw_modeler_page = Embeddable::MwModelerPage.find(params[:id])
     if request.xhr?
-      render :partial => 'mw_modeler_page', :locals => { :mw_modeler_page => @mw_modeler_page }
+      render :partial => 'show', :locals => { :mw_modeler_page => @mw_modeler_page }
     else
       respond_to do |format|
         format.html # show.html.haml

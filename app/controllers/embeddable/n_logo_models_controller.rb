@@ -15,7 +15,7 @@ class Embeddable::NLogoModelsController < ApplicationController
   def show
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
     if request.xhr?
-      render :partial => 'n_logo_model', :locals => { :n_logo_model => @n_logo_model }
+      render :partial => 'show', :locals => { :n_logo_model => @n_logo_model }
     else
       respond_to do |format|
         format.html # show.html.haml

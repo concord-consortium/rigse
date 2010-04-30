@@ -15,7 +15,7 @@ class Embeddable::LabBookSnapshotsController < ApplicationController
   def show
     @lab_book_snapshot = Embeddable::LabBookSnapshot.find(params[:id])
     if request.xhr?
-      render :partial => 'lab_book_snapshot', :locals => { :lab_book_snapshot => @lab_book_snapshot }
+      render :partial => 'show', :locals => { :lab_book_snapshot => @lab_book_snapshot }
     else
       respond_to do |format|
         format.html # show.html.haml

@@ -15,7 +15,7 @@ class Embeddable::DrawingToolsController < ApplicationController
   def show
     @drawing_tool = Embeddable::DrawingTool.find(params[:id])
     if request.xhr?
-      render :partial => 'drawing_tool', :locals => { :drawing_tool => @drawing_tool }
+      render :partial => 'show', :locals => { :drawing_tool => @drawing_tool }
     else
       respond_to do |format|
         format.html # show.html.erb

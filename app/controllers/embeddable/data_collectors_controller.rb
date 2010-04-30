@@ -35,7 +35,7 @@ class Embeddable::DataCollectorsController < ApplicationController
     @authoring = false
     @data_collector = Embeddable::DataCollector.find(params[:id])
     if request.xhr?
-      render :partial => 'data_collector', :locals => { :data_collector => @data_collector }
+      render :partial => 'show', :locals => { :data_collector => @data_collector }
     else
       respond_to do |format|
         format.html # show.html.erb

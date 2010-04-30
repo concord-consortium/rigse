@@ -4,7 +4,7 @@ describe Embeddable::DataCollectorsController do
 
   it_should_behave_like 'an embeddable controller'
 
-  def with_tags_like_a_data_collector
+  def with_tags_like_an_otml_data_collector
     with_tag('OTDataCollector') do
       with_tag('source') do
         with_tag('OTDataGraphable') do

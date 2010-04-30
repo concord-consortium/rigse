@@ -18,7 +18,7 @@ class Embeddable::OpenResponsesController < ApplicationController
   def show
     @open_response = Embeddable::OpenResponse.find(params[:id])
     if request.xhr?
-      render :partial => 'open_response', :locals => { :open_response => @open_response }
+      render :partial => 'show', :locals => { :open_response => @open_response }
     else
       respond_to do |format|
         format.html # show.html.haml

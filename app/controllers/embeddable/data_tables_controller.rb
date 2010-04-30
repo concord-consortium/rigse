@@ -16,7 +16,7 @@ class Embeddable::DataTablesController < ApplicationController
   def show
     @data_table = Embeddable::DataTable.find(params[:id])
     if request.xhr?
-      render :partial => 'data_table', :locals => { :data_table => @data_table }
+      render :partial => 'show', :locals => { :data_table => @data_table }
     else
       respond_to do |format|
         format.html # show.html.erb

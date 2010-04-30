@@ -15,7 +15,7 @@ class Embeddable::XhtmlsController < ApplicationController
   def show
     @xhtml = Embeddable::Xhtml.find(params[:id])
     if request.xhr?
-      render :partial => 'xhtml', :locals => { :xhtml => @xhtml }
+      render :partial => 'show', :locals => { :xhtml => @xhtml }
     else
       respond_to do |format|
         format.html # show.html.erb

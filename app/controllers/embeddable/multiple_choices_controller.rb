@@ -15,7 +15,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   def show
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
     if request.xhr?
-      render :partial => 'multiple_choice', :locals => { :multiple_choice => @multiple_choice }
+      render :partial => 'show', :locals => { :multiple_choice => @multiple_choice }
     else
       respond_to do |format|
         format.html # show.html.erb
