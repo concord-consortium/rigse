@@ -37,3 +37,15 @@ module Kernel
     return result
   end
 end
+
+module StringExtensions
+  def underscore_module
+    gsub(/::|\//, '_').underscore
+  end
+
+  def delete_module(num=1)
+    sub(/(.*?(::|\/)){0,#{num}}/, '')
+  end
+end
+String.send(:include, StringExtensions)
+
