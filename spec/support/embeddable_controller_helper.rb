@@ -3,10 +3,10 @@ shared_examples_for 'an embeddable controller' do
   
   controller_class_lambda = lambda { self.send(:described_class) }
   model_class_lambda      = lambda { controller_class_lambda.call.name[/(.*)Controller/, 1].singularize.constantize }
-  model_ivar_name_lambda  = lambda { model_class_lambda.call.name.demodulize.underscore }
+  model_ivar_name_lambda  = lambda { model_class_lambda.call.name.delete_module.underscore_module }
 
-  def with_tags_like_a(model_name)
-    self.send("with_tags_like_a_#{model_name}".to_sym)
+  def with_tags_like_an_otml(model_name)
+    self.send("with_tags_like_an_otml_#{model_name}".to_sym)
   end
 
   before(:each) do
@@ -154,7 +154,7 @@ shared_examples_for 'an embeddable controller' do
                 end
               end
               with_tag('library') do
-                with_tags_like_a(@model_ivar_name)
+                with_tags_like_an_otml(@model_ivar_name)
                end
             end
           end
@@ -255,7 +255,7 @@ shared_examples_for 'an embeddable controller' do
                 with_tag('bundles')
                 with_tag('root')
                 with_tag('library') do
-                  with_tags_like_a(@model_ivar_name)
+                  with_tags_like_an_otml(@model_ivar_name)
                 end
               end
             end
