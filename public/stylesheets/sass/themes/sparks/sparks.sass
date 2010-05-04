@@ -19,7 +19,7 @@ body
   :padding 0px
   +main_font
   :background
-    :color = !light_blue
+    :color = !background_color
   :margin 10px 
     :bottom 0px
   :background-position right top
@@ -62,7 +62,7 @@ fieldset
 
 pre
   :overflow auto
-  :background-color #ffffe0
+  :background-color !pre_bgcolor
   :border 1px solid
   :margin 0.5em 0.5em 1em 0.5em
   :padding 0.5em 1em 1em 1em
@@ -70,7 +70,6 @@ pre
   :font
     :size 0.9em
     :weight normal
-  :background-color #ffffe
   :line-height 1.1em
   
 .wrapper
@@ -90,19 +89,20 @@ pre
   :padding 0px
   :margin 0px
   :height auto
-  :background-color white
+  :background
+    :color = !header_bgcolor
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
   :-moz-border-radius-topleft .5em
   :-webkit-border-top-left-radius .5em
-  :color = !blue
+  :color = !header_fgcolor
 
   a
-    :color = !dark_green
+    :color = !link_color
     :background-color transparent
     :font-weight normal
   a:hover
-    :color = !brown
+    :color = !light_blue
     :background-color white
   .left_content
     +column(24,true)
@@ -472,7 +472,7 @@ li.tiny
   :font-size 24pt
   :opacity 0.9
   :color= !almost_white
-  :background-color= !very_dark
+  :background-color= !js_flash_bgcolor
   :z-index 400
     
 .flash
@@ -530,7 +530,7 @@ dd
 
 input
   +main_font
-  :color= !very_dark
+  :color= !input_color
   :padding 0.2em
 
   

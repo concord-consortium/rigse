@@ -1,31 +1,54 @@
-!light_blue = #ccffff
-!blue = #0066cc
+!white = #ffffff
+!almost_white = #f2f8fc
+!brown = #f5be6e
+!dark_red = #b00000
 !dark_orange = #ff6600
-!green = #AAF53D
-!light_green = #7AB02C
-!dark_green = #5A9800
-!brown = #BEF56E
-!dark_brown = #5A9800
-!almost_white = #F2F8FC
-!container_box_color = #CBE1F2
-!container_box_hover_color = #BCD6EA
+!light_yellow = #fff0d0
+!green = #aaf53d
+!green = #ff0000
+!light_green = #7ab02c
+!light_green = #ff0000
+!dark_green = #5a9800
+!lighter_blue = #e0e0ff
+!light_blue = #8080f0
+!blue = #0066cc
+!dark_blue = #202090
+!dark_brown = #985a00
+!almost_black = #101010
+!black = #000000
+
+!link_color = !dark_blue
+!input_color = !almost_black
+!pre_bgcolor = #ffffe0
+
+!background_color = !dark_blue
+!header_bgcolor = !white
+!header_fgcolor = !dark_blue
+
+!action_menu_tab_color = #111
+!action_menu_tab_bgcolor = !lighter_blue
+!action_menu_tab_hover_color = !white
+!action_menu_tab_hover_bgcolor = !black
+
+!action_menu_bgcolor = !lighter_blue
+!action_menu_hover_color = !white
+
+!dropdown_bgcolor = !white
+
+!container_box_color = #cbe1f2
+!container_box_hover_color = #bcd6ea
 !teacher_only_color = #eedddd 
 !selected_color = #ffffa0
-!black = #000000
-!almost_black = #101010
-
-!content_text_color = !light_green
 
 !dev_note_color =!brown
 !legend_color = !brown
-!dark_red = !brown
-!very_dark = !black
 
 !text_input_color = !almost_white 
 !input_border_color = !black
 !input_color = !black
 !input_focus_color = !almost_white
 
+!js_flash_bgcolor = !almost_black
 
 =delete_links
   a.delete:link 
@@ -53,23 +76,21 @@
   a:hover
     :color= !bg
     :background-color = !link
-        
-
 
 =left_nav_colors
-  +color_mixer(!dark_brown,white,!dark_brown)
+  +color_mixer(!dark_blue, !light_yellow, !dark_blue)
   a
     :text-decoration none
   +delete_links
 
 =content_area_colors
-  +color_mixer(!black,white,!dark_brown)
+  +color_mixer(!dark_blue, !white, !dark_blue)
   +delete_links
 
 =top_nav_colors
-  +color_mixer(!light_green,!dark_brown,!almost_white)
+  +color_mixer(!white, !dark_blue, !white)
   +delete_links
   
 =bottom_nav_colors
-  +color_mixer(!black,!dark_brown,!almost_black)
+  +color_mixer(!light_yellow, !dark_blue, !light_yellow)
   +delete_links

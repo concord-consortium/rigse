@@ -54,7 +54,9 @@
       = render :partial => 'shared/activity_trail'
       #header
         .left_content
-          %h1= APP_CONFIG[:site_name]
+          %h1
+            %img{:src => '/images/sparks.png'}
+            /= APP_CONFIG[:site_name]
         .right_content
           .padded_content_right
             Welcome
