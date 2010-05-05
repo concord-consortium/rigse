@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/has"
-set :branch, "has"
+set :branch, "has-production"
 
 #############################################################
 #  Servers
