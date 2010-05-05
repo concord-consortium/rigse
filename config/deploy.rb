@@ -2,9 +2,9 @@ set :stages, %w(
   rites-dev rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production 
   sg-dev smartgraphs-staging smartgraphs-production
+  has-dev has-staging has-production
   fall2009 jnlp-staging seymour
-  sparks-dev
-  has has-staging)
+  sparks-dev)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
