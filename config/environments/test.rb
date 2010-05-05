@@ -31,13 +31,16 @@ config.action_mailer.perform_deliveries = true
 
 # See: http://wiki.github.com/dchelimsky/rspec/configgem-for-rails
 
-config.gem 'cucumber',    :lib => false,        :version => '>=0.6.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
-config.gem 'webrat',      :lib => false,        :version => '>=0.5.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
-config.gem 'rspec',       :lib => false,        :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
-config.gem 'rspec-rails', :lib => false,        :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+config.gem 'cucumber',         :lib => false, :version => '>=0.7.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'cucumber-rails',   :lib => false, :version => '>=0.3.1' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
+config.gem 'database_cleaner', :lib => false, :version => '>=0.5.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
+config.gem 'capybara',         :lib => false, :version => '>=0.3.7' unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
+config.gem 'rspec',            :lib => false, :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
+config.gem 'rspec-rails',      :lib => false, :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+config.gem "factory_girl",                    :version => "= 1.2.4"
+config.gem 'email_spec',                      :version => "= 0.3.5"
 
-config.gem "factory_girl",                           :version => ">= 1.2.3"
-config.gem 'email_spec',                             :version => "= 0.3.5"
+# config.gem 'webrat',      :lib => false,        :version => '>=0.5.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
 
 # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
 # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
@@ -48,9 +51,9 @@ config.gem "autotest-rails", :lib => false,          :version => "= 4.1.0"
 # and: http://github.com/carlosbrando/remarkable/tree/master
 # Adds new rspec matchers for models and controllers
 # as well as better support for I18n, collections, creating custom matchers 
-config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.11"
+config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.13"
 
-config.gem "ci_reporter", :lib => false
+config.gem "ci_reporter",      :lib => false
 
 unless RUBY_PLATFORM =~ /java/
   # See: http://www.datanoise.com/ruby-debug/
