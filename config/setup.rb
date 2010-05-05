@@ -72,8 +72,6 @@ optparse.parse!
 
 # should be run from the projects rails root.
 # Update: this doesn't seem to be working anymore..
-APPLICATION = @options[:app_name]
-print "\nInitial setup of #{APPLICATION} Rails application ... "
 
 def not_using_rites_theme?
   @options[:theme] != 'default' || @options[:theme] != 'rites'
@@ -154,7 +152,12 @@ if @options[:theme]
   @theme_settings_config_sample        = YAML::load_file(@theme_settings_config_sample_path)
   @settings_config_sample.merge!(@theme_settings_config_sample)
   @options[:db_name_prefix] = @options[:theme]
+  @options[:app_name] = @theme_settings_config_sample['development']['site_name']
 end
+
+APPLICATION = @options[:app_name]
+print "\nInitial setup of #{APPLICATION} Rails application ... "
+  
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
