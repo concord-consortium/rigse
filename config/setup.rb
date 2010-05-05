@@ -252,7 +252,8 @@ def create_new_database_yml
     @db_config[external_db]['username'] = @options[:db_user]
     @db_config[external_db]['password'] = @options[:db_password]
   end
-
+  @db_config['cucumber'] = @db_config['test']
+  
   unless @options[:quiet]
     puts <<-HEREDOC
 
