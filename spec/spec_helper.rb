@@ -15,6 +15,7 @@ Spork.prefork do
   
   require 'spec/autorun'
   require 'spec/rails'
+  require 'spec/mocks'
   
   # *** customizations ***
   
@@ -26,8 +27,20 @@ Spork.prefork do
   require 'factory_girl'
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb'))
   
-  unless ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
-    puts "migrations need to be run: rake db:test:prepare"
+  if ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+    if Probe::ProbeType.count == 0
+      puts
+      puts "*** Probe configuration models need to be loaded into the test database to run the tests"
+      puts "*** run: rake db:test:prepare"
+      puts
+      exit
+    end
+  else
+    puts
+    puts "*** pending migrations need to be applied to run the tests"
+    puts "*** run: rake db:test:prepare"
+    puts
+    exit
   end
 
   Dir.glob(File.dirname(__FILE__) + "/support/*.rb").each { |f| require(f) }
@@ -53,16 +66,5 @@ Spork.prefork do
 end
 
 Spork.each_run do
-  @factories.each { |f| load f }
-  
-  puts "Loading default data set required for application_controller.rb to run ...."
-  anon =  Factory.next :anonymous_user
-  admin = Factory.next :admin_user 
-  device_config = Factory.create(:probe_device_config)
-  versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
-  school = Factory(:portal_school)
-  domain = Factory(:rigse_domain)
-  grade = Factory(:portal_grade)
-  Admin::Project.create_or_update_default_project_from_settings_yml
-  puts "done."
+
 end

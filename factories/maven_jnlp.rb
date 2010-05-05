@@ -1,12 +1,16 @@
+
 Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServer do |f|
-  f.host 'http://jnlp.concord.org'
-  f.path '/dev/org/concord/maven-jnlp/'
-  f.name 'concord'
+  server, family, version = Admin::Project.default_jnlp_info
+  f.host server[:host]
+  f.path server[:path]
+  f.name server[:name]
 end
 
 Factory.define :maven_jnlp_maven_jnlp_family, :class => MavenJnlp::MavenJnlpFamily do |f|
-  f.name 'all-otrunk-snapshot'
-  f.snapshot_version '0.1.0-20091013.161730' 
+  server, family, version = Admin::Project.default_jnlp_info
+  
+  f.name family
+  f.snapshot_version version
   f.url 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/'
   f.association :maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
 end
@@ -20,7 +24,6 @@ Factory.define :maven_jnlp_versioned_jnlp_url, :class => MavenJnlp::VersionedJnl
 end
 
 Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do |f|
-  f.association :versioned_jnlp_url, :factory => :maven_jnlp_versioned_jnlp_url
   f.name  'all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
   f.main_class  'net.sf.sail.emf.launch.EMFLauncher3'
   f.argument  'dummy'
@@ -35,6 +38,7 @@ Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do
   f.vendor  'Concord Consortium'
   f.homepage  'index.html'
   f.description  'Preview Basic Pas'
+  f.association :versioned_jnlp_url, :factory => :maven_jnlp_versioned_jnlp_url
 end
 
 Factory.define :maven_jnlp_jar, :class => MavenJnlp::Jar do |f|

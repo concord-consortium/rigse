@@ -260,9 +260,13 @@
   def ot_interface_manager(use_current_user = false)
     old_format = @template_format
     @template_format = :otml
-    # Now that we're using the HttpCookieService, current_user.vendor_interface should be correct, even when requesting from the java client
+    # Now that we're using the HttpCookieService, current_user.vendor_interface 
+    # should be correct, even when requesting from the java client
     vendor_interface = nil
-    # allow switching between using the current user and not. This way the cached otml can always have Go!Link, but the dynamic otml can use the current user's device.
+    # allow switching between using the current user and not. This way 
+    # the cached otml can always have Go!Link, but the dynamic 
+    # otml can use the current user's device.
+    # debugger
     if use_current_user
       vendor_interface = current_user.vendor_interface
     else

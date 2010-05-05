@@ -7,7 +7,7 @@
 ##
 
 Factory.sequence(:login) do |n| 
-  "login_#{n}"
+  "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
 end
 
 ##
@@ -61,6 +61,8 @@ Factory.sequence :anonymous_user do |n|
     })
     anon.register
     anon.activate
+    # clear any previous Anonymous user still cached as a class variable in the User class
+    User.anonymous(true)
     anon.save!
   end
   anon

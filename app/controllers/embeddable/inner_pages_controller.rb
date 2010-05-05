@@ -89,13 +89,13 @@ class Embeddable::InnerPagesController < ApplicationController
     @teacher_mode = params['teacher_mode'] || false
     
     if request.xhr?
-      render :partial => 'inner_page', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first}
+      render :partial => 'show', :locals => { :inner_page => @inner_page, :sub_page => @inner_page.sub_pages.first}
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/inner_page"} # inner_page.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @inner_page }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @inner_page, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.otml { render :layout => "layouts/embeddable/inner_page"} # inner_page.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @inner_page , :teacher_mode => false } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @inner_page, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @inner_page, :teacher_mode => @teacher_mode} }
         format.xml  { render :inner_page => @inner_page }
       end

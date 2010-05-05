@@ -3,6 +3,9 @@ Feature: An author creates an investigation
   I want to create an investigation
   So that students can take it.
       
+  Background:
+    Given The default project and jnlp resources exist using mocks
+
   Scenario: The author creates an investigation
     Given a mock gse
     Given the following users exist:

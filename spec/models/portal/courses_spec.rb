@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 def inspect_course(c)
-  puts "curse: #{c.course_number} #{c.name} school: #{c.school.id} <br/>\n"
+  # puts "curse: #{c.course_number} #{c.name} school: #{c.school.id} <br/>\n"
 end
 
 describe Portal::Course do

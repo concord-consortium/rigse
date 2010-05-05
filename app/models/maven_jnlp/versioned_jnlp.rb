@@ -2,7 +2,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   set_table_name "maven_jnlp_versioned_jnlps"
   
   belongs_to :versioned_jnlp_url, :class_name => "MavenJnlp::VersionedJnlpUrl"
-  has_one :maven_jnlp_family, :through => :versioned_jnlp_url, :class_name => "MavenJnlp::VersionedJnlpUrl"
+  has_one :maven_jnlp_family, :through => :versioned_jnlp_url, :class_name => "MavenJnlp::MavenJnlpFamily"
 
   belongs_to :icon, :class_name => "MavenJnlp::Icon"
 
@@ -19,33 +19,42 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   @@searchable_attributes = %w{uuid name codebase href title vendor homepage description}
   
   class <<self
-
     def searchable_attributes
       @@searchable_attributes
+    end
+
+    def jnlp_object_cache_dir
+      File.join(RAILS_ROOT, 'config', 'jnlp_objects')
     end
 
     def jnlp_cache_dir
       File.join(RAILS_ROOT, 'public', 'jnlp')
     end
-    
-    def jnlp_object_path_prefix
-      File.join(RAILS_ROOT, 'config', 'jnlp_objects', 'jnlp_object')
-    end
 
-    def delete_all_cached_jnlp_objects
-      jnlp_object_prefix = MavenJnlp::VersionedJnlp.jnlp_object_path_prefix
-      files  = Dir["#{jnlp_object_prefix}*"]
+    def empty_jnlp_object_cache
+      files  = Dir["#{MavenJnlp::VersionedJnlp.jnlp_object_cache_dir}/**/*.yaml"]
       FileUtils.rm(files, :force => true)
     end
-
   end
   
   validates_presence_of :versioned_jnlp_url, :message => "association not specified" 
   
   after_create :parse_jnlp_object
 
+  def jnlp_object_cache_dir
+    File.join(MavenJnlp::VersionedJnlp.jnlp_object_cache_dir)
+  end
+
+  def jnlp_object_dir_path
+    File.join(jnlp_object_cache_dir, self.maven_jnlp_family.maven_jnlp_server.name, self.maven_jnlp_family.name)
+  end
+  
+  def jnlp_object_path_prefix
+    File.join(jnlp_object_dir_path, 'jnlp_object')
+  end
+
   def cache_external_resources
-    jnlp_object.cache_resources(MavenJnlp::VersionedJnlp.jnlp_cache_dir)
+    jnlp_object.cache_resources(jnlp_object_cache_dir)
     update_jnlp_object
   end
 
@@ -134,11 +143,12 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
 
   def update_jnlp_object
     @jnlp_object = Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
-    @jnlp_object.local_cache_dir = MavenJnlp::VersionedJnlp.jnlp_cache_dir
+    @jnlp_object.local_cache_dir = MavenJnlp::VersionedJnlp.jnlp_object_cache_dir
     save_jnlp_object
   end
 
   def save_jnlp_object
+    FileUtils.mkdir_p(jnlp_object_dir_path)
     File.open(jnlp_object_path, 'w') do |f|
       f.write YAML.dump(@jnlp_object)
     end
@@ -146,7 +156,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
   
   def jnlp_object_path
-    "#{MavenJnlp::VersionedJnlp.jnlp_object_path_prefix}_#{id}.yaml"
+    "#{self.jnlp_object_path_prefix}_#{id}.yaml"
   end
 
   def parse_jnlp_object

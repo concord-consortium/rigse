@@ -1,4 +1,5 @@
-APP_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")[RAILS_ENV].symbolize_keys
+APP_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")[RAILS_ENV].recursive_symbolize_keys
+
 APP_CONFIG[:use_gse] = true if APP_CONFIG[:use_gse] == nil
 
 USING_RITES = APP_CONFIG[:theme] && (APP_CONFIG[:theme] == 'default' || APP_CONFIG[:theme] == 'rites')

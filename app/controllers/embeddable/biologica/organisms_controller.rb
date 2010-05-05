@@ -15,15 +15,15 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   def show
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     if request.xhr?
-      render :partial => 'embeddable/biologica/organism', :locals => { :organism => @biologica_organism }
+      render :partial => 'show', :locals => { :biologica_organism=> @biologica_organism }
     else
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/organism" } # biologica_organism.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism, :teacher_mode => false  }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_organism, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_organism, :teacher_mode => @teacher_mode} }
-        format.xml  { render :organism => @biologica_organism }
+        format.xml  { render :biologica_organism=> @biologica_organism }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
   def new
     @biologica_organism = Embeddable::Biologica::Organism.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :organism => @biologica_organism }
+      render :partial => 'remote_form', :locals => { :biologica_organism=> @biologica_organism }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     @scope = get_scope(@biologica_organism)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :organism => @biologica_organism }
+      render :partial => 'remote_form', :locals => { :biologica_organism=> @biologica_organism }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
       if cancel 
         redirect_to :index
       elsif @biologica_organism.save
-        render :partial => 'new', :locals => { :organism => @biologica_organism }
+        render :partial => 'new', :locals => { :biologica_organism=> @biologica_organism }
       else
         render :xml => @biologica_organism.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::OrganismsController < ApplicationController
     @biologica_organism = Embeddable::Biologica::Organism.find(params[:id])
     if request.xhr?
       if cancel || @biologica_organism.update_attributes(params[:embeddable_biologica_organism])
-        render :partial => 'show', :locals => { :organism => @biologica_organism }
+        render :partial => 'show', :locals => { :biologica_organism=> @biologica_organism }
       else
         render :xml => @biologica_organism.errors, :status => :unprocessable_entity
       end

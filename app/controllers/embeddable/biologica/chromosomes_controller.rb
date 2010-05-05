@@ -15,15 +15,15 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   def show
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
     if request.xhr?
-      render :partial => 'embeddable/biologica/chromosome', :locals => { :chromosome => @biologica_chromosome }
+      render :partial => 'show', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/chromosome" } # biologica_chromosome.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome, :teacher_mode => false  }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_chromosome, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_chromosome, :teacher_mode => @teacher_mode} }
-        format.xml  { render :chromosome => @biologica_chromosome }
+        format.xml  { render :biologica_chromosome=> @biologica_chromosome }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
   def new
     @biologica_chromosome = Embeddable::Biologica::Chromosome.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :chromosome => @biologica_chromosome }
+      render :partial => 'remote_form', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
     @scope = get_scope(@biologica_chromosome)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :chromosome => @biologica_chromosome }
+      render :partial => 'remote_form', :locals => { :biologica_chromosome=> @biologica_chromosome }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
       if cancel 
         redirect_to :index
       elsif @biologica_chromosome.save
-        render :partial => 'new', :locals => { :chromosome => @biologica_chromosome }
+        render :partial => 'new', :locals => { :biologica_chromosome=> @biologica_chromosome }
       else
         render :xml => @biologica_chromosome.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::ChromosomesController < ApplicationController
     @biologica_chromosome = Embeddable::Biologica::Chromosome.find(params[:id])
     if request.xhr?
       if cancel || @biologica_chromosome.update_attributes(params[:embeddable_biologica_chromosome])
-        render :partial => 'show', :locals => { :chromosome => @biologica_chromosome }
+        render :partial => 'show', :locals => { :biologica_chromosome=> @biologica_chromosome }
       else
         render :xml => @biologica_chromosome.errors, :status => :unprocessable_entity
       end

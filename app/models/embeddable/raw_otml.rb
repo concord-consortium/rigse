@@ -43,7 +43,7 @@ class Embeddable::RawOtml < ActiveRecord::Base
       @imports
     else
       models = self.otml_content.scan(/OT\w+/)
-      @imports = models.collect { |m| OtrunkExample::OtrunkImport.find_by_classname(m) }
+      @imports = models.collect { |m| OtrunkExample::OtrunkImport.find_by_classname(m) }.compact
     end
   end
 

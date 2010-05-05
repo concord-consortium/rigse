@@ -38,15 +38,20 @@ module ApplicationHelper
   def short_name(name)
     name.strip.downcase.gsub(/\W+/, '_')
   end
-
+  
   def display_system_info
     list1 = 
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
-        git_repo_info.collect { |info| list << content_tag('li') { info } }
-        if USING_JNLPS
-          list << content_tag('li') { '|' }
-          maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+        # grit (git gem) throws strange errors when running rspec tests
+        # using command-R in textmate, so here's the hack to fix
+        # that for now
+        unless RUNNING_TESTS
+          git_repo_info.collect { |info| list << content_tag('li') { info } }
+          if USING_JNLPS
+            list << content_tag('li') { '|' }
+            maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
+          end
         end
         list
       end
@@ -60,9 +65,28 @@ module ApplicationHelper
   end
 
   def git_repo_info
-    # using && doesn't work here, in the second assignment 
-    # lvar: repo is nil -- not sure why yet
-    if repo = Grit::Repo.new(".") and head = repo.head
+    # For some strange reason running repo.head during tests sometimes generates this
+    # error running the first time: Errno::ECHILD Exception: No child processes
+    # 
+    # The operation seems to work fine the second time ... ?
+    # Here's an example from the debugger:
+    #
+    #   (rdb:1) repo.head
+    #   Errno::ECHILD Exception: No child processes
+    #   (rdb:1) repo.head
+    #   #<Grit::Head "emb-test">
+    #
+    repo = Grit::Repo.new(".")
+    head = nil
+    begin
+      head = repo.head
+    rescue Errno::ECHILD
+      begin
+        head = repo.head
+      rescue Errno::ECHILD
+      end
+    end        
+    if head
       branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
@@ -167,7 +191,7 @@ module ApplicationHelper
 
   def render_show_partial_for(component,teacher_mode=false)
     class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
+    demodulized_class_name = component.class.name.delete_module.underscore_module
     partial = "#{class_name.pluralize}/show"
     # if component.respond_to? :print_partial_name
     #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"

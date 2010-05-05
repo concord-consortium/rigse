@@ -72,8 +72,6 @@ optparse.parse!
 
 # should be run from the projects rails root.
 # Update: this doesn't seem to be working anymore..
-APPLICATION = @options[:app_name]
-print "\nInitial setup of #{APPLICATION} Rails application ... "
 
 def not_using_rites_theme?
   @options[:theme] != 'default' || @options[:theme] != 'rites'
@@ -116,7 +114,7 @@ def jruby_system_command
 end
 
 def gem_install_command_strings(missing_gems)
-  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
+  command = JRUBY ? "  jruby -S gem install " : "  sudo gem install "
   command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
@@ -154,7 +152,12 @@ if @options[:theme]
   @theme_settings_config_sample        = YAML::load_file(@theme_settings_config_sample_path)
   @settings_config_sample.merge!(@theme_settings_config_sample)
   @options[:db_name_prefix] = @options[:theme]
+  @options[:app_name] = @theme_settings_config_sample['development']['site_name']
 end
+
+APPLICATION = @options[:app_name]
+print "\nInitial setup of #{APPLICATION} Rails application ... "
+  
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
@@ -240,8 +243,11 @@ end
 def create_new_database_yml
   @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    if env == 'development'
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    else
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
+    end
     @db_config[env]['username'] = @options[:db_user]
     @db_config[env]['password'] = @options[:db_password]
   end
@@ -249,7 +255,8 @@ def create_new_database_yml
     @db_config[external_db]['username'] = @options[:db_user]
     @db_config[external_db]['password'] = @options[:db_password]
   end
-
+  @db_config['cucumber'] = @db_config['test']
+  
   unless @options[:quiet]
     puts <<-HEREDOC
 

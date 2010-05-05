@@ -116,13 +116,13 @@ namespace :db do
     desc "Load just the probe configurations from yaml fixtures in config/probe_configurations." 
     task :load_probe_configurations => :environment do 
       dir = RAILS_ROOT + '/config/probe_configurations'
-      user_id = User.site_admin.id
+      # Normally these models will be owned by the site_admin but if the site_admin doesn't
+      # exist or we are loading these into the test database set the user_id value to -1
+      user_id = User.site_admin ? User.site_admin.id : -1
       FileUtils.chdir(dir) do
         tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
         tables.each do |tbl|
-
           ActiveRecord::Base.transaction do 
-
             begin 
               klass = tbl.gsub(/^probe_/, "probe/").classify.constantize
               klass.destroy_all

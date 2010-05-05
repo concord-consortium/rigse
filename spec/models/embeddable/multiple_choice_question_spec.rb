@@ -25,7 +25,7 @@ describe Embeddable::MultipleChoice do
     
     it "should belong to a page" do
       @multichoice.pages.should_not be_nil
-      @multichoice.pages.should include @page
+      @multichoice.pages.should include(@page)
     end
     
     it "should have three initial default answers" do
@@ -40,7 +40,7 @@ describe Embeddable::MultipleChoice do
     end
     
     it "should have the new choice" do
-      @multichoice.choices.should include @choice
+      @multichoice.choices.should include(@choice)
     end
   
     it "should update its choices when saved" do

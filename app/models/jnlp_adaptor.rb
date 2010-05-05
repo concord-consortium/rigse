@@ -2,7 +2,7 @@ class JnlpAdaptor
   
   attr_reader :jnlp
   
-  def initialize(project)
+  def initialize(project=Admin::Project.default_project)
     @default_maven_jnlp_server = project.maven_jnlp_server
     @jnlp_family = project.maven_jnlp_family
     @jnlp_family.update_snapshot_jnlp_url
