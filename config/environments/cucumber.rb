@@ -31,11 +31,11 @@ config.action_mailer.delivery_method = :test
 # The following are just the gems needed when running cucumber
 #
 
-config.gem 'cucumber',         :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
-config.gem 'cucumber-rails',   :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
-config.gem 'database_cleaner', :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
-config.gem 'capybara',         :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
-config.gem 'rspec',            :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
-config.gem 'rspec-rails',      :lib => false, unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
-config.gem "factory_girl",                    
-config.gem 'email_spec',                      
+config.gem 'cucumber',         :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'cucumber-rails',   :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
+config.gem 'database_cleaner', :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
+config.gem 'capybara',         :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
+config.gem 'rspec',            :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
+config.gem 'rspec-rails',      :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+config.gem "factory_girl"
+config.gem 'email_spec'
