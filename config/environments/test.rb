@@ -37,7 +37,7 @@ config.gem 'database_cleaner', :lib => false, :version => '>=0.5.0' unless File.
 config.gem 'capybara',         :lib => false, :version => '>=0.3.7' unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
 config.gem 'rspec',            :lib => false, :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
 config.gem 'rspec-rails',      :lib => false, :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
-config.gem "factory_girl",                    :version => "= 1.2.4"
+config.gem "factory_girl",                    :version => "= 1.2.3"
 config.gem 'email_spec',                      :version => "= 0.3.5"
 
 # config.gem 'webrat',      :lib => false,        :version => '>=0.5.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
