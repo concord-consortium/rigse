@@ -21,8 +21,7 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-# All the gems required for testing (including the required versions)
-# are listed in: config/environments/test.rb
+# All the gems required for testing are listed in: config/environments/test.rb
 #
 # Install the gems required for testing:
 #
@@ -31,11 +30,11 @@ config.action_mailer.delivery_method = :test
 # The following are just the gems needed when running cucumber
 #
 
-config.gem 'cucumber',         :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
-config.gem 'cucumber-rails',   :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
-config.gem 'database_cleaner', :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
-config.gem 'capybara',         :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
-config.gem 'rspec',            :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
-config.gem 'rspec-rails',      :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
-config.gem "factory_girl"
-config.gem 'email_spec'
+config.gem 'cucumber',         :lib => false, :version => '>=0.7.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'cucumber-rails',   :lib => false, :version => '>=0.3.1' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
+config.gem 'database_cleaner', :lib => false, :version => '>=0.5.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
+config.gem 'capybara',         :lib => false, :version => '>=0.3.7' unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
+config.gem 'rspec',            :lib => false, :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
+config.gem 'rspec-rails',      :lib => false, :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+config.gem "factory_girl",                    :version => "= 1.2.3"
+config.gem 'email_spec',                      :version => "= 0.3.5"
