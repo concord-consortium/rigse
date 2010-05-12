@@ -49,7 +49,7 @@ optparse = OptionParser.new do|opts|
     @options[:db_password] = db_password
   end
 
-  @options[:db_name_prefix] = APP_DIR_NAME.gsub(/\W/, '_')
+  @options[:db_name_prefix] = nil
   opts.on( '-D', '--database DATABASE', 'the prefix names for the development, test, and production mysql databases to create' ) do |db_name_prefix|
     @options[:db_name_prefix] = db_name_prefix
   end
@@ -151,7 +151,7 @@ if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
   @theme_settings_config_sample        = YAML::load_file(@theme_settings_config_sample_path)
   @settings_config_sample.merge!(@theme_settings_config_sample)
-  @options[:db_name_prefix] = @options[:theme]
+  @options[:db_name_prefix] = @options[:db_name_prefix] || @options[:theme] ||  APP_DIR_NAME.gsub(/\W/, '_')
   @options[:app_name] = @theme_settings_config_sample['development']['site_name']
 end
 
