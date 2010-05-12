@@ -74,6 +74,9 @@ Rails::Initializer.run do |config|
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
   
+  # FIXME ideally hoptoad gem would only be required if the app is configured to use hoptoad...
+  config.gem 'hoptoad_notifier'
+  
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
   # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'
@@ -149,6 +152,14 @@ Rails::Initializer.run do |config|
   #   config.has_many_polymorphs_options = opts
   # end
 
+  # configure hoptoad
+  config.after_initialize do
+    if USING_HOPTOAD
+      HoptoadNotifier.configure do |config|
+        config.api_key = APP_CONFIG[:hoptoad_api_key]
+      end
+    end
+  end
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')

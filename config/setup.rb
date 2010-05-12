@@ -503,6 +503,20 @@ def check_for_config_settings_yml
           end
           @settings_config[env]['use_gse'] = true
         end
+        
+        unless @settings_config[env]['exception_notifier']
+          unless @options[:quiet]
+            puts <<-HEREDOC
+
+  The exception_notifier parameter does not yet exist in the #{env} section of settings.yml
+
+  Setting it to 'exception_notifier'.
+
+            HEREDOC
+          end
+          @settings_config[env]['exception_notifier'] = 'exception_notifier'
+        end
+        
       end
     end
   end
@@ -893,6 +907,18 @@ Here are the current settings in config/settings.yml:
       @settings_config[env]['theme'] =            ask("               theme: ") { |q| q.default = @settings_config[env]['theme'] }
       @settings_config[env]['use_gse'] =          ask("             use_gse: ") { |q| q.default = @settings_config[env]['use_gse'] }
 
+      puts <<-HEREDOC
+
+Which exception notification framework would you like to use?
+Currently supported frameworks are 'exception_notifier' and 'hoptoad'.
+
+      HEREDOC
+      @settings_config[env]['exception_notifier'] = ask(" exception_notifier: ") { |q| q.default = @settings_config[env]['exception_notifier'] }
+      
+      if @settings_config[env]['exception_notifier'] == 'hoptoad'
+        @settings_config[env]['hoptoad_api_key'] = ask(" Hoptoad API key: ") { |q| q.default = @settings_config[env]['hoptoad_api_key'] }
+      end
+      
       # 
       # site_district and site_school
       #

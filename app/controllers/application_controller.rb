@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
-  include ExceptionNotifiable
+  if NOT_USING_HOPTOAD
+    include ExceptionNotifiable
+  end
   include Clipboard
 
   self.allow_forgery_protection = false

@@ -48,6 +48,7 @@ development: &non_production_settings
   valid_sakai_instances:
     - http://localhost:3000/
   net_logo_package_name: otrunknl4
+  exception_notifier: exception_notifier
   
 test:
   <<: *non_production_settings
@@ -81,6 +82,7 @@ staging:
   valid_sakai_instances:
     - http://localhost:3000/
   net_logo_package_name: otrunknl4
+  exception_notifier: exception_notifier
   
 production:
   site_name: RITES Investigations
@@ -108,3 +110,4 @@ production:
   valid_sakai_instances:
     - http://localhost:3000/
   net_logo_package_name: otrunknl4
+  exception_notifier: exception_notifier

@@ -526,3 +526,9 @@ after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:cleanup'
 
+# FIXME ideally the hoptoad tasks would only be loaded if the app is configured to use hoptoad...
+Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
+  $: << File.join(vendored_notifier, 'lib')
+end
+
+require 'hoptoad_notifier/capistrano'
