@@ -12,6 +12,10 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+# Load APP_CONFIG
+require File.join(File.dirname(__FILE__), 'core_extensions')
+require File.join(File.dirname(__FILE__), 'load_config')
+
 Rails::Initializer.run do |config|
 
   # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
@@ -74,8 +78,9 @@ Rails::Initializer.run do |config|
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
   
-  # FIXME ideally hoptoad gem would only be required if the app is configured to use hoptoad...
-  config.gem 'hoptoad_notifier'
+  if USING_HOPTOAD
+    config.gem 'hoptoad_notifier'
+  end
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -152,14 +157,6 @@ Rails::Initializer.run do |config|
   #   config.has_many_polymorphs_options = opts
   # end
 
-  # configure hoptoad
-  config.after_initialize do
-    if USING_HOPTOAD
-      HoptoadNotifier.configure do |config|
-        config.api_key = APP_CONFIG[:hoptoad_api_key]
-      end
-    end
-  end
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
