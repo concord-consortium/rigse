@@ -118,7 +118,7 @@ This task will:
  2. optionally create additional users
  3. load default probe, interface, and calibration reesources
  4. generate a set of the RI Grade Span RiGse::Expectation
- 5. assign teh Vernier Go!Link interface as a default to the existing users
+ 5. assign the Vernier Go!Link interface as a default to the existing users
  6. generate the maven_jnlp resources
  7. optionally download, introspect, and create models representing otrunk-examples 
  8. create a default project and associate it with the maven_jnlp resources
