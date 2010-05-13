@@ -47,9 +47,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
   
   def before_validation
     default_pt = Embeddable::DataCollector.default_probe_type
-    probe_type_id = default_p.id unless probe_type_id
+    self.probe_type_id = default_pt.id unless self.probe_type_id
     self.name = title unless self.title.nil? || self.title.empty?
-    self.name = Embeddable::DataCollector.default_probe_type.name if self.name.nil? || self.name.empty?
+    self.name = default_pt.name if self.name.nil? || self.name.empty?
     self.title = self.name if self.title.nil? || self.title.empty?
     self.y_axis_label = default_pt.name unless self.y_axis_label
   end
