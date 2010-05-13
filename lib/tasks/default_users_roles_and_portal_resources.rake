@@ -63,7 +63,7 @@ It creates one user with an admin role.
   Edit the values in this file if you want to specify a different default admin user.
 
 In addition it creates seven more default users with these login names and the 
-default password: 'password'. You can change the dfault password if you wish.
+default password: 'password'. You can change the default password if you wish.
 
   manager
   researcher
@@ -111,10 +111,10 @@ HEREDOC
       default_admin_user_settings = APP_CONFIG[:default_admin_user]
 
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings['login'], 
-          :first_name => default_admin_user_settings['first_name'], 
-          :last_name =>  default_admin_user_settings['last_name'],
-          :email =>      default_admin_user_settings['email'], 
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login], 
+          :first_name => default_admin_user_settings[:first_name], 
+          :last_name =>  default_admin_user_settings[:last_name],
+          :email =>      default_admin_user_settings[:email], 
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 
