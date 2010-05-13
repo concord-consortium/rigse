@@ -1,5 +1,9 @@
 class SparksReportController < ApplicationController
   
+  def researcher_report
+    
+  end
+  
   def class_report
     #class, activity
     @offering = Portal::Offering.find_by_id(params[:offering_id])
