@@ -45,6 +45,15 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
   end
   
+  def before_validation
+    default_pt = Embeddable::DataCollector.default_probe_type
+    probe_type_id = default_p.id unless probe_type_id
+    self.name = title unless self.title.nil? || self.title.empty?
+    self.name = Embeddable::DataCollector.default_probe_type.name if self.name.nil? || self.name.empty?
+    self.title = self.name if self.title.nil? || self.title.empty?
+    self.y_axis_label = default_pt.name unless self.y_axis_label
+  end
+  
   acts_as_replicatable
   
   send_update_events_to :investigations
@@ -168,7 +177,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
 
-  default_value_for :y_axis_label, default_probe_type.name
+  # default_value_for :y_axis_label, default_probe_type.name
   # default_value_for :y_axis_label, 'Temperature'
   
   default_values :x_axis_min                  =>  0,
@@ -183,7 +192,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
                  :show_tare                   =>  false,
                  :single_value                =>  false
 
-  default_value_for :probe_type, default_probe_type
+  # default_value_for :probe_type, default_probe_type
   # default_value_for :probe_type_id, 1
   
   # send_update_events_to :investigations
