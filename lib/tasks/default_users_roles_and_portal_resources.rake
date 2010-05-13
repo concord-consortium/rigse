@@ -63,7 +63,7 @@ It creates one user with an admin role.
   Edit the values in this file if you want to specify a different default admin user.
 
 In addition it creates seven more default users with these login names and the 
-default password: 'password'. You can change the dfault password if you wish.
+default password: 'password'. You can change the default password if you wish.
 
   manager
   researcher
