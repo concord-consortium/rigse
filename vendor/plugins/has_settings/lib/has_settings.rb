@@ -3,7 +3,7 @@ module CC
     module Settings
   
       
-      def to_hash(first,other)
+      def make_hash(first,other)
           Hash[ *(0...first.size()).inject([]) { |arr, ix| arr.push(first[ix], other[ix]) } ]
       end
       
@@ -24,7 +24,7 @@ module CC
         def settings_hash
           keys = settings.map {|s| s.name}
           values = settings.map {|s| s.value}
-          return to_hash(keys,values)
+          return make_hash(keys,values)
         end
         
         def print_settings
