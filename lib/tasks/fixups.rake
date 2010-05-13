@@ -313,6 +313,19 @@ HEREDOC
         print '.'; STDOUT.flush
       end
 
+      puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
+      Portal::School.find_in_batches(:batch_size => 500) do |portal_schools|
+        portal_schools.each do |portal_school|
+          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, LEAID, MZIP, MSTATE")
+          portal_school.state           = nces_school.MSTATE
+          portal_school.leaid_schoolnum = nces_school.LEAID
+          portal_school.zipcode         = nces_school.MZIP
+          portal_school.save!
+        end
+        print '.'; STDOUT.flush
+      end
+    end
+
   end
 end
 
