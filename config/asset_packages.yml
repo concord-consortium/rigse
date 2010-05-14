@@ -59,7 +59,7 @@ stylesheets:
   - themes/investigations/drop_down
   - themes/investigations/accordion
   - window/window
-  - window/investigations
+  - window/rites
   - live_validation
   - notes
   - data_table
