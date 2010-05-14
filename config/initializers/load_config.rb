@@ -1,4 +1,5 @@
-APP_CONFIG = YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/settings.yml")).result)[RAILS_ENV].recursive_symbolize_keys
+include AppSettings
+APP_CONFIG = AppSettings.load_app_settings
 
 APP_CONFIG[:use_gse] = true if APP_CONFIG[:use_gse] == nil
 
