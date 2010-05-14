@@ -3,13 +3,17 @@ Given /the following users[(?exist):\s]*$/i do |users_tabe|
   users_tabe.hashes.each do |hash|
     roles = hash.delete('roles')
     roles = roles ? roles.split(/,\s*/) : nil
-    user = Factory(:user, hash)
-    roles.each do |role|
-      user.add_role(role)
+    begin
+      user = Factory(:user, hash)
+      roles.each do |role|
+        user.add_role(role)
+      end
+      user.register
+      user.activate
+      user.save!
+    rescue ActiveRecord::RecordInvalid
+      # assume this user is already created...
     end
-    user.register
-    user.activate
-    user.save!
   end
 end
 
