@@ -10,7 +10,10 @@
         %ul.menu_h
           %li
             Probe type: 
-            = f.select(:probe_type_id, Probe::ProbeType.all.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
+            - all_probe_types = Probe::ProbeType.all
+            - 
+            = f.select(:probe_type_id, all_probe_types.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
+            = observe_field dom_id_for(data_collector, :select_probe_type), :function => update_label_and_units_script(all_probe_types, 'embeddable_data_collector_y_axis_label', 'embeddable_data_collector_y_axis_units' )
          
           %li
             Graph type: 
