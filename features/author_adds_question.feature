@@ -6,6 +6,7 @@ Feature: An author adds multiple choice_questions
   Background:
     Given The default project and jnlp resources exist using mocks
 
+  @selenium
   Scenario: The author adds a multiple choice question to an investigation
     Given the following users exist:
       | login        | password            | roles                |
@@ -17,7 +18,7 @@ Feature: An author adds multiple choice_questions
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: 1"
-    When I follow "Multiple Choice Question" within
+    When I follow "Multiple Choice Question"
     Then I should see "Why do you think ..."
     When I follow "edit multiple choice question"
     Then I should see "choices"
