@@ -6,7 +6,7 @@ Given /^the following investigation exists:$/ do |investigation_table|
     investigation = Investigation.create(hash)
     activity =Activity.create(hash)
     section = Section.create(hash)
-    page = Page.create
+    page = Page.create(hash)
     section.pages << page
     activity.sections << section
     investigation.activities << activity
