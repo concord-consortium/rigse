@@ -235,7 +235,8 @@ module ApplicationHelper
     method   = options[:method]   || :get
     complete = options[:complete] || nil
     success  = options[:success]  || nil
-    remote_link_button "edit.png",  :url => url, :title => "edit #{component.class.display_name.downcase}", :update => update, :method => method, :complete => complete, :success => success
+    title    = options[:title]    || "edit #{component.class.display_name.downcase}"
+    remote_link_button "edit.png",  :url => url, :title => title, :update => update, :method => method, :complete => complete, :success => success
   end
 
   def edit_url_for(component, scope=false)
@@ -908,7 +909,8 @@ module ApplicationHelper
     defaults = {
       :html       => {
         :class => options[:class] || 'rollover',
-        :id    => options[:id]
+        :id    => options[:id],
+        :title => options[:title] || 'no note here'
         },
       :title => options[:title] || 'no note here'
     }
