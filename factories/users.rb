@@ -67,3 +67,5 @@ Factory.sequence :anonymous_user do |n|
   end
   anon
 end
+
+Factory.next(:anonymous_user)
