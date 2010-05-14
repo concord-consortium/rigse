@@ -485,6 +485,20 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:convert:convert_choice_answers_to_local_ids --trace"
   end
   
+  # seb: 20100513
+  desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
+  task :populate_new_district_and_school_attributes_with_data_from_nces_tables, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:convert:populate_new_district_and_school_attributes_with_data_from_nces_tables --trace"
+  end
+
+  # seb: 20100513
+  desc "Erase the marshalled jnlps stored in the jnlp object directory by the jnlp gem: config/jnlp_objects"
+  task :empty_jnlp_object_cache, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:jnlp:empty_jnlp_object_cache --trace"
+  end
+
 end
 
 

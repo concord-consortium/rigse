@@ -16,6 +16,7 @@ class Admin::Project < ActiveRecord::Base
   acts_as_replicatable
   
   include Changeable
+  include AppSettings
   
   self.extend SearchableModel
   
@@ -53,7 +54,7 @@ class Admin::Project < ActiveRecord::Base
   
   def after_save
     if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
-      write_to_settings_yml
+      update_app_settings
     end
     if self.enable_default_users
       User.unsuspend_default_users
@@ -62,37 +63,26 @@ class Admin::Project < ActiveRecord::Base
     end
   end
 
-  def write_to_settings_yml
-    new_settings = generate_settings_yml
-    # FileUtils.copy("#{RAILS_ROOT}/config/settings.yml", "#{RAILS_ROOT}/config/settings-backup.yml")
-    File.open("#{RAILS_ROOT}/config/settings.yml", 'w') do |f|
-      f.write new_settings
-    end
-  end
-
-  # When writing to config/settings.yml ONLY use strings for hash keys -- do not use symbols.
-  # On app startup config/initializers/load_config.rb reads in the settings and creates
-  # the APP_CONFIG hash with symbolized keys ... so read access in the app uses symbols.
-  def generate_settings_yml
-    app_config = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")
-    app_config[RAILS_ENV]['site_name'] = self.name
-    app_config[RAILS_ENV]['site_url'] = self.url
-    app_config[RAILS_ENV]['enable_default_users'] = self.enable_default_users
-    app_config[RAILS_ENV]['description'] = self.description
-    app_config[RAILS_ENV]['states_and_provinces'] = self.states_and_provinces
-    app_config[RAILS_ENV]['default_maven_jnlp'] = generate_default_maven_jnlp
-    app_config.to_yaml
+  def update_app_settings
+    new_app_settings = load_all_app_settings
+    new_app_settings[RAILS_ENV][:site_name] = self.name
+    new_app_settings[RAILS_ENV][:site_url] = self.url
+    new_app_settings[RAILS_ENV][:enable_default_users] = self.enable_default_users
+    new_app_settings[RAILS_ENV][:description] = self.description
+    new_app_settings[RAILS_ENV][:states_and_provinces] = self.states_and_provinces
+    new_app_settings[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
+    save_app_settings(new_app_settings)
   end
 
   def generate_default_maven_jnlp
     if USING_JNLPS
       default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-      default_maven_jnlp['server'] = self.maven_jnlp_server.name
-      default_maven_jnlp['family'] = self.maven_jnlp_family.name
+      default_maven_jnlp[:server] = self.maven_jnlp_server.name
+      default_maven_jnlp[:family] = self.maven_jnlp_family.name
       if self.snapshot_enabled
-        default_maven_jnlp['version'] = 'snapshot'
+        default_maven_jnlp[:version] = 'snapshot'
       else
-        default_maven_jnlp['version'] = self.jnlp_version_str
+        default_maven_jnlp[:version] = self.jnlp_version_str
       end
       default_maven_jnlp
     else

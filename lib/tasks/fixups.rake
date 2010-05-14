@@ -297,6 +297,34 @@ HEREDOC
         end
       end
     end # end task
+    
+    # seb: 20100513
+    desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
+    task :populate_new_district_and_school_attributes_with_data_from_nces_tables => :environment do
+      puts "\nUpdating #{Portal::District.count} Portal::District models with state, leaid, and zipcode data from the Portal::Nces06District models"
+      Portal::District.find_in_batches(:batch_size => 500) do |portal_districts|
+        portal_districts.each do |portal_district|
+          nces_district = Portal::Nces06District.find(:first, :conditions => { :id => portal_district.nces_district_id }, :select => "id, LEAID, LZIP, LSTATE")
+          portal_district.state   = nces_district.LSTATE
+          portal_district.leaid   = nces_district.LEAID
+          portal_district.zipcode = nces_district.LZIP
+          portal_district.save!
+        end
+        print '.'; STDOUT.flush
+      end
+
+      puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
+      Portal::School.find_in_batches(:batch_size => 500) do |portal_schools|
+        portal_schools.each do |portal_school|
+          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, LEAID, MZIP, MSTATE")
+          portal_school.state           = nces_school.MSTATE
+          portal_school.leaid_schoolnum = nces_school.LEAID
+          portal_school.zipcode         = nces_school.MZIP
+          portal_school.save!
+        end
+        print '.'; STDOUT.flush
+      end
+    end
 
   end
 end
