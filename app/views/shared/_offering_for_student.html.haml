@@ -4,6 +4,6 @@
       %li
         = run_link_for(offering,nil,{:link_text=>"run #{offering.name}"})
         /= link_to image_tag('chart_bar.png', :border => 0), :controller => 'portal/offerings', :action => 'sparks_learner_report', :id => offering.id
-        = link_to image_tag('chart_bar.png', :border => 0), { :controller => 'sparks_report', :action => 'learner_report', :offering_id => offering.id }, :popup => true
+        = link_to image_tag('chart_bar.png', :border => 0), { :controller => 'sparks/report', :action => 'learner_report', :offering_id => offering.id }, :popup => true
       %li
         .tiny= offering.description

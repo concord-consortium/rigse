@@ -800,7 +800,7 @@ module ApplicationHelper
           #haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
           #haml_concat report_link_for(offering)
           #haml_concat report_link_for(offering, 'multiple_choice_report','Report')
-          haml_concat link_to(image_tag('chart_bar.png'), { :controller => '/sparks_report', :action => 'class_report' , :offering_id => offering })
+          haml_concat link_to(image_tag('chart_bar.png'), { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering })
         end
       end
     end
