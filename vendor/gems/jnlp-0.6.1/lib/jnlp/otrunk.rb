@@ -1,9 +1,3 @@
-# :main: Jnlp::Jnlp
-# :title: Jnlp::Jnlp RDoc
-#
-# to regenerate and display this rdoc: 
-#   rdoc -U -SN jnlp.rb otrunk.rb ; open doc/index.html 
-#
 require 'open-uri'
 require 'hpricot'
 require 'fileutils'
@@ -84,8 +78,6 @@ end
 
 module Jnlp #:nodoc:
   # 
-  #
-  require "#{File.expand_path(File.dirname(__FILE__))}/jnlp.rb"
   #
   # Jnlp::Otrunk is a subclass of Jnlp::Jnlp that adds SAIL-Otrunk[https://confluence.concord.org/display/CSP/OTrunk]
   # specific methods for execution.of the jnlp locally without 

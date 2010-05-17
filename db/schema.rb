@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100513065820) do
+ActiveRecord::Schema.define(:version => 20100517145944) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1651,6 +1651,7 @@ ActiveRecord::Schema.define(:version => 20100513065820) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|

@@ -80,7 +80,7 @@ HEREDOC
 
     desc "erase cached jnlp resources in jnlp object cache directory"
     task :empty_jnlp_object_cache  => :environment do
-      MavenJnlp::VersionedJnlp.empty_jnlp_object_cache
+      MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_resources
     end
     
     desc "delete all the MavenJnlp resources"

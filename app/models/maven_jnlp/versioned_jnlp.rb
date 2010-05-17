@@ -31,10 +31,15 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
       File.join(RAILS_ROOT, 'public', 'jnlp')
     end
 
-    def empty_jnlp_object_cache
-      files  = Dir["#{MavenJnlp::VersionedJnlp.jnlp_object_cache_dir}/**/*.yaml"]
+    def delete_all_cached_jnlp_objects
+      files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yml"]
       FileUtils.rm(files, :force => true)
     end
+    
+    def jnlp_object_name
+      'jnlp_object'
+    end
+    
   end
   
   validates_presence_of :versioned_jnlp_url, :message => "association not specified" 
