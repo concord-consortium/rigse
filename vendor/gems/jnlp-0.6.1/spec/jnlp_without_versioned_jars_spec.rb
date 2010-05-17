@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe Jnlp do
+describe 'Jnlp without versioned jars' do
   before(:all) do
     @first_jnlp_path = File.join(File.dirname(__FILE__), 'fixtures', 'jnlp_without_versioned_jars.jnlp')
     @gem_dir = File.expand_path(File.dirname(__FILE__))

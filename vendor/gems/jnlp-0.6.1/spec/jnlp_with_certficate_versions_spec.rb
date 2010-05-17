@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe Jnlp do
+describe 'Jnlp with certificate versions' do
   before(:all) do
     @jnlp_with_certficate_versions_path = File.join(File.dirname(__FILE__), 'fixtures', 'all-otrunk-snapshot-0.1.0-20090624.030355.jnlp')
     @jnlp_with_certficate_versions = Jnlp::Jnlp.new(@jnlp_with_certficate_versions_path)

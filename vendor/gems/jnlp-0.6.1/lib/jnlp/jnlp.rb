@@ -1,9 +1,3 @@
-# :main: Jnlp::Jnlp
-# :title: Jnlp::Jnlp RDoc
-#
-# to regenerate and display this rdoc: 
-#   rdoc -U -SN jnlp.rb otrunk.rb maven_jnlp.rb; open doc/index.html
-#
 require 'rubygems'
 require 'open-uri'
 require 'hpricot'
@@ -125,25 +119,50 @@ module Jnlp #:nodoc:
     #
     attr_reader :initial_heap_size
     #
+    # Contains the value of the optional java-vm-args attribute in
+    # in the J2SE element, the value is nil if not present:
+    # 
+    # Example:
+    #
+    #   "-d32"
+    #
+    attr_reader :java_vm_args
+    #
     # Contains the value of the os attribute in the 
     # parent <resources> element that contains this property 
-    # if the attribute was set in the parent.
+    # if the attribute was set in the parent. The attribute is normalized
+    # by converting to lowercase and changing ' ' characters to '_'
+    #
     # Example: 
     #
-    #   "Mac OS X"
+    #   "Mac OS X" => "mac_os_x"
     #
     attr_reader :os
+    #
+    # Contains the value of the arch attribute in the 
+    # parent <resources> element that contains this property 
+    # if the attribute was set in the parent.The attribute is normalized
+    # by converting to lowercase and changing ' ' characters to '_'
+    #
+    # Examples: 
+    #
+    #   "ppc i386" => "ppc_i386"
+    #   "x86_64"   => "x86_64"
+    #
+    attr_reader :arch
     #
     # Creates a new Jnlp::Property object.
     # * _prop_: the Hpricot parsing of the specific jnlp/resources/property element
     # * _os_: optional: include it if the resources parent element that contains the property has this attribute set
     #
-    def initialize(j2se, os=nil)
+    def initialize(j2se, os=nil, arch=nil)
       @j2se = j2se
       @version = j2se['version']
       @max_heap_size = j2se['max-heap-size']
       @initial_heap_size = j2se['initial-heap-size']
+      @java_vm_args = j2se['java-vm-args']
       @os = os
+      @arch = arch
     end
   end
 
@@ -882,19 +901,24 @@ module Jnlp #:nodoc:
       import_jnlp(path) unless path.empty?
     end
     
-    def j2se_version(os=nil)
-      j2se = j2ses.detect {|j2se| j2se.os == os }
+    def j2se_version(os=nil, arch=nil)
+      j2se = j2ses.detect { |j2se| j2se.os == os && j2se.arch == arch}
       j2se ? j2se.version : nil
     end
     
-    def max_heap_size(os=nil)
-      j2se = j2ses.detect {|j2se| j2se.os == os }
+    def max_heap_size(os=nil, arch=nil)
+      j2se = j2ses.detect { |j2se| j2se.os == os && j2se.arch == arch }
       j2se ? j2se.max_heap_size : nil      
     end
     
-    def initial_heap_size(os=nil)
-      j2se = j2ses.detect {|j2se| j2se.os == os }
+    def initial_heap_size(os=nil, arch=nil)
+      j2se = j2ses.detect { |j2se| j2se.os == os && j2se.arch == arch }
       j2se ? j2se.initial_heap_size : nil            
+    end
+
+    def java_vm_args(os=nil, arch=nil)
+      j2se = j2ses.detect { |j2se| j2se.os == os && j2se.arch == arch }
+      j2se ? j2se.java_vm_args : nil            
     end
     
     
@@ -957,7 +981,10 @@ module Jnlp #:nodoc:
         if os = resources[:os]
           os = os.strip.downcase.gsub(/\W+/, '_').gsub(/^_+|_+$/, '')
         end
-        (resources/"j2se").each { |j2se| @j2ses << J2se.new(j2se, os) }
+        if arch = resources[:arch]
+          arch = arch.strip.downcase.gsub(/\W+/, '_').gsub(/^_+|_+$/, '')
+        end
+        (resources/"j2se").each { |j2se| @j2ses << J2se.new(j2se, os, arch) }
         (resources/"property").each { |prop| @properties << Property.new(prop, os) }
         (resources/"jar").each { |res| @jars << Resource.new(res, @codebase, os) }
         (resources/"nativelib").each { |res| @nativelibs << Resource.new(res, @codebase, os) }

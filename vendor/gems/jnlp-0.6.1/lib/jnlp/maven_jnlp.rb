@@ -1,9 +1,3 @@
-# :main: Jnlp::Jnlp
-# :title: Jnlp::Jnlp RDoc
-#
-# to regenerate and display this rdoc: 
-#   rdoc -U -SN jnlp.rb otrunk.rb ; open doc/index.html 
-#
 require 'open-uri'
 require 'hpricot'
 
@@ -15,6 +9,17 @@ module Jnlp #:nodoc:
   # == VersionedJnlpUrl
   #
   # Encapsulates a versioned jnlp in a Maven Jnlp Web Start server.
+  #
+  #   Jnlp::VersionedJnlpUrl.new(family_name, path, base_url)
+  #
+  # Example:
+  #
+  #   require 'jnlp'
+  #   vju = Jnlp::VersionedJnlpUrl("concord", "/dev/org/concord/maven-jnlp/", "http://jnlp.concord.org")
+  #
+  # Example:
+  #
+  #   vju = Jnlp::VersionedJnlpUrl("concord", "/dev/org/concord/maven-jnlp/", "http://jnlp.concord.org")
   #
   class VersionedJnlpUrl
     #
@@ -51,6 +56,25 @@ module Jnlp #:nodoc:
   # == MavenJnlpFamily
   #
   # Encapsulates a single MavenJnlp Family of versioned jnlps.
+  #
+  #   Jnlp::MavenJnlpFamily.new(base_url, family_path)
+  #
+  # Example:
+  #
+  #   require 'jnlp'
+  #   mjf = Jnlp::MavenJnlpFamily.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/all-otrunk-snapshot')
+  #
+  #   mjf = Jnlp::MavenJnlpFamily.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/all-otrunk-snapshot', 
+  #     { :versions => ['0.1.0-20100513.161426', '0.1.0-20100513.154925'] })
+  # You can pass in an options hash to limit the number of versioned jnlps parsed:
+  #
+  # Example
+  #
+  #   mjf = Jnlp::MavenJnlpFamily.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/all-otrunk-snapshot', 
+  #        { :versions => ['0.1.0-20100513.161426', '0.1.0-20100513.154925'] })
+  #
+  #   mjf.versions.length
+  #   => 2
   #
   class MavenJnlpFamily
     #
@@ -103,7 +127,7 @@ module Jnlp #:nodoc:
     #
     # Contains the VersionedJnlpUrl referencing the latest 
     # versioned jnlp. This jnlp is identical to the snapshot 
-    # jnlp at the of processing. 
+    # jnlp at the time of instantiation. 
     #
     attr_reader :snapshot
     #
@@ -111,7 +135,8 @@ module Jnlp #:nodoc:
     #
     #    base_url, family_path
     #
-    def initialize(base_url, family_path)
+    
+    def initialize(base_url, family_path, options={})
       @base_url = base_url
       @path = family_path
       @url = @base_url + @path
@@ -121,16 +146,23 @@ module Jnlp #:nodoc:
       anchor_tags = doc.search("//a")
       snapshot_version_path = anchor_tags.find {|a| a['href'][/CURRENT_VERSION\.txt$/] }['href']
       @snapshot_version = open(base_url + snapshot_version_path).read
-
       jnlp_paths = anchor_tags.find_all { |a| a['href'][/jnlp$/] }.collect { |a| a['href'] }
       jnlp_paths.each do |jnlp_path|
-        
+        version = jnlp_path[/#{name}\/#{name}-(.*)\.jnlp/, 1]
         # skip processing unless this jnlp has a version string
-        unless jnlp_path[/#{name}\.jnlp$/]  
-          versioned_jnlp_url = VersionedJnlpUrl.new(@name, jnlp_path, @base_url) 
-          @versions << versioned_jnlp_url
-          if versioned_jnlp_url.version == @snapshot_version
-            @snapshot = versioned_jnlp_url
+        if version
+          # only continue processing if:
+          #   no options[:version] was passed in OR
+          #   the current version matches one of the desired versions OR
+          #   one of the desired versions is 'snapshot' and this version IS the snapshot version
+          if  options[:versions] == nil || 
+              options[:versions].any? { |v| v == version } ||
+              options[:versions].any? { |v| v == 'snapshot' && version == @snapshot_version } 
+            versioned_jnlp_url = VersionedJnlpUrl.new(@name, jnlp_path, @base_url)
+            @versions << versioned_jnlp_url
+            if versioned_jnlp_url.version == @snapshot_version
+              @snapshot = versioned_jnlp_url
+            end
           end
         end
       end
@@ -179,6 +211,38 @@ module Jnlp #:nodoc:
   #
   #   # => "/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20070420.131610.jnlp"
   #
+  # You can pass in an options hash to limit the number of maven jnlp families parsed:
+  #
+  # Example: passing in an optional array of maven jnlp families
+  # This will get all versions of each family.
+  #
+  #   mj = Jnlp::MavenJnlp.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/', 
+  #        { :families => ['all-otrunk-snapshot', 'gui-testing'] })
+  #
+  #   mj.maven_jnlp_families.length
+  #   => 2
+  #
+  # Example: passing in an optional hash of maven jnlp families
+  # This will get all versions of each family.
+  #
+  #   mj = Jnlp::MavenJnlp.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/', 
+  #        { :families => { 'all-otrunk-snapshot' => nil, 'gui-testing' => nil } })
+  #
+  #   mj.maven_jnlp_families.length
+  #   => 2
+  #
+  # Example: passing in an optional hash of maven jnlp families and specifying
+  # the versions of the jnlp urls to get for one family.
+  #
+  #   mj = Jnlp::MavenJnlp.new('http://jnlp.concord.org', '/dev/org/concord/maven-jnlp/',
+  #        { :families => { 
+  #          'all-otrunk-snapshot' => { :versions => ['0.1.0-20100513.161426', '0.1.0-20100513.154925'] },
+  #          'gui-testing' => nil }
+  #        })
+  #   mjfs = mj.maven_jnlp_families
+  #   [mjfs.length, mjfs[0].versions.length, mjfs[1].versions.length]
+  #   => [2, 2, 50]
+  #
   class MavenJnlp
     #
     # Contains the base_url for this MavenJnlp server
@@ -215,17 +279,34 @@ module Jnlp #:nodoc:
     #
     #    base_url, maven_jnlp_path
     #
-    def initialize(base_url, jnlp_families_path)
+    def initialize(base_url, jnlp_families_path, options={})
       @base_url = base_url
       @jnlp_families_path = jnlp_families_path
       @jnlp_families_url = @base_url + @jnlp_families_path
       @maven_jnlp_families = []
       doc = Hpricot(open(@jnlp_families_url))
       family_paths = doc.search("//a").find_all { |a| 
-        a['href'][/#{@jnlp_families_path}/] }.collect { |a| a['href'] }
-      family_paths.each do |family_path|
-        maven_jnlp_family = MavenJnlpFamily.new(@base_url, family_path) 
-        @maven_jnlp_families << maven_jnlp_family
+        a['href'][/#{@jnlp_families_path}/] 
+      }.collect { |a| a['href'] }
+      if options[:families]
+        case options[:families]
+        when Hash
+          options[:families].each do |family, versions|
+            family_path = family_paths.detect { |fp| family == File.basename(fp) }
+            if family_path
+              maven_jnlp_family = MavenJnlpFamily.new(@base_url, family_path, versions || {}) 
+              @maven_jnlp_families << maven_jnlp_family
+            end
+          end
+        when Array
+          family_paths = family_paths.select { |path| 
+            options[:families].any? { |family| family == File.basename(path) }
+          }
+          family_paths.each do |family_path|
+            maven_jnlp_family = MavenJnlpFamily.new(@base_url, family_path) 
+            @maven_jnlp_families << maven_jnlp_family
+          end
+        end
       end
     end
     

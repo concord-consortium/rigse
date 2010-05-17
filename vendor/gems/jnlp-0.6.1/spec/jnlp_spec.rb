@@ -56,12 +56,16 @@ describe Jnlp do
     @first_jnlp.max_heap_size.should == '128m'
   end
 
-  it "should have an j2se_version attribute with the value '1.5+'" do
+  it "should have a j2se_version attribute with the value '1.5+'" do
     @first_jnlp.j2se_version.should == '1.5+'
   end
 
-  it "should have an j2se_version attribute with the value '1.5 if mac_os_x is specified'" do
+  it "should have a j2se_version attribute with the value '1.5' if the os: mac_os_x is specified" do
     @first_jnlp.j2se_version('mac_os_x').should == '1.5'
+  end
+
+  it "should return nil in response to the j2se_version method if the os: mac_os_x and arch: x86_64 are specified" do
+    @first_jnlp.j2se_version('mac_os_x', 'x86_64').should == nil
   end
 
   it "should have an vendor attribute with the value 'Concord Consortium'" do

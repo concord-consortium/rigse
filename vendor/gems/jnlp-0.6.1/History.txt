@@ -1,3 +1,45 @@
+== 0.6.1 2010-05-17
+
+Clear up new version numbering.
+
+== 0.6.0 2010-05-17
+
+Added ability to limit the number of families parsed when creating a Jnlp::MavenJnlp.
+
+Added ability to limit the number of versions parsed when creating a Jnlp::MavenJnlpFamily.
+
+Updates to the README
+
+== 0.0.5.5 2010-04-19
+
+Removed use of the development dependency on hoe. Much simpler to 
+just check-in and manage the gemspec file itself.
+See: http://yehudakatz.com/2010/04/02/using-gemspecs-as-intended/
+
+Updates to the README
+
+new specs for new behaviors
+
+== 0.0.5.4 2010-02-11
+
+addition optional parameter: arch for Jnlp::Jnlp instance methods:
+  j2se_version(os=nil, arch=nil)
+  max_heap_size(os=nil, arch=nil)
+  initial_heap_size(os=nil, arch=nil)
+
+new method Jnlp::Jnlp#java_vm_args(os=nil, arch=nil)
+
+works with additional specific j2se elements such as:
+
+  <resources os="Mac OS X" arch="ppc i386">
+    <j2se version="1.5" max-heap-size="128m" initial-heap-size="32m"/>
+  </resources>
+  <resources os="Mac OS X" arch="x86_64">
+    <j2se version="1.5" max-heap-size="128m" initial-heap-size="32m" java-vm-args="-d32"/>
+  </resources>
+
+new specs for new behaviors
+
 == 0.0.5.3 2009-12-23
 
 remove older files, specs for jnlp with jars without explicit version attributes
