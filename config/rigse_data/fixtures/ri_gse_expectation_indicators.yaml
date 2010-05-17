@@ -1,0 +1,2080 @@
+--- 
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31519c68-61fe-11df-a821-001ff3caa767
+  id: 1
+  description: identifying, comparing, and sorting objects by similar or different physical properties (e.g., size, shape, color, texture, smell, weight).
+  expectation_id: 1
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31521742-61fe-11df-a821-001ff3caa767
+  id: 2
+  description: recording observations/data about physical properties.
+  expectation_id: 1
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31528d08-61fe-11df-a821-001ff3caa767
+  id: 3
+  description: using attributes of properties to state why objects are grouped together (e.g., things that roll, things that are rough).
+  expectation_id: 1
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 3154aca0-61fe-11df-a821-001ff3caa767
+  id: 4
+  description: identifying, comparing, and sorting objects by similar or different physical properties (e.g., size, shape, color, texture, smell, weight, temperature, flexibility).
+  expectation_id: 2
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31552310-61fe-11df-a821-001ff3caa767
+  id: 5
+  description: citing evidence (e.g., prior knowledge, data) to support conclusions about why objects are grouped/not grouped together.Students demonstrate an understanding of physical changes by
+  expectation_id: 2
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31577426-61fe-11df-a821-001ff3caa767
+  id: 6
+  description: comparing the masses of objects of equal volume made of different substances.
+  expectation_id: 3
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 315a02a4-61fe-11df-a821-001ff3caa767
+  id: 7
+  description: measuring mass and volume of both regular and irregular objects and using those values as well as the relationship D=m/v to calculate density.
+  expectation_id: 4
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 315c16de-61fe-11df-a821-001ff3caa767
+  id: 8
+  description: utilizing appropriate data (related to chemical and physical properties), to distinguish one substance from another or identify an unknown substance.
+  expectation_id: 5
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 315c92b2-61fe-11df-a821-001ff3caa767
+  id: 9
+  description: determining the degree of change in pressure of a given volume of gas when the temperature changes incrementally (doubles, triples, etc.).
+  expectation_id: 5
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 315eb7cc-61fe-11df-a821-001ff3caa767
+  id: 10
+  description: explaining the states of a substance in terms of the particulate nature of matter and the forces of interaction between particles.
+  expectation_id: 6
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 315f34f4-61fe-11df-a821-001ff3caa767
+  id: 11
+  description: quantitatively determining how volume, pressure, temperature and amount of gas affect each other (PV=nRT) in a system.
+  expectation_id: 6
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31683dd8-61fe-11df-a821-001ff3caa767
+  id: 12
+  description: describing properties of solids and liquids.
+  expectation_id: 7
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 3168b402-61fe-11df-a821-001ff3caa767
+  id: 13
+  description: identifying and comparing solids and liquids.
+  expectation_id: 7
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316929aa-61fe-11df-a821-001ff3caa767
+  id: 14
+  description: making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water freezing).
+  expectation_id: 7
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316b3cb8-61fe-11df-a821-001ff3caa767
+  id: 15
+  description: describing properties of solids, liquids, and gases.
+  expectation_id: 8
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316bab76-61fe-11df-a821-001ff3caa767
+  id: 16
+  description: identifying and comparing solids, liquids, and gases.
+  expectation_id: 8
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316c21a0-61fe-11df-a821-001ff3caa767
+  id: 17
+  description: making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water boiling or freezing, condensation/evaporation).
+  expectation_id: 8
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316e2b6c-61fe-11df-a821-001ff3caa767
+  id: 18
+  description: recognizing that different substances have properties, which allow them to be identified regardless of the size of the sample.
+  expectation_id: 9
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 316ea2a4-61fe-11df-a821-001ff3caa767
+  id: 19
+  description: classifying and comparing substances using characteristic properties (e.g., solid, liquid, gas).
+  expectation_id: 9
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 3170bef4-61fe-11df-a821-001ff3caa767
+  id: 20
+  description: identifying an unknown substance given its characteristic properties.
+  expectation_id: 10
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31714162-61fe-11df-a821-001ff3caa767
+  id: 21
+  description: classifying and comparing substances using characteristic properties (e.g., solid, liquid, gas; metal, non-metal).
+  expectation_id: 10
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 3174768e-61fe-11df-a821-001ff3caa767
+  id: 22
+  description: using given data (diagrams, charts, narratives, etc.) and advances in technology to explain how the understanding of atomic structure has changed over time.
+  expectation_id: 11
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 317c8b4e-61fe-11df-a821-001ff3caa767
+  id: 23
+  description: using simple tools (e.g. balance scale, see-saw) to explore the property of weight.
+  expectation_id: 12
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 317e9d08-61fe-11df-a821-001ff3caa767
+  id: 24
+  description: measuring the weight of objects to prove that all matter has weight.
+  expectation_id: 13
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 317f14f4-61fe-11df-a821-001ff3caa767
+  id: 25
+  description: using measures of weight to prove that the whole equals the sum of its parts.
+  expectation_id: 13
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 317f8cae-61fe-11df-a821-001ff3caa767
+  id: 26
+  description: showing that the weight of an object remains the same despite a change in its shape.
+  expectation_id: 13
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31985eaa-61fe-11df-a821-001ff3caa767
+  id: 27
+  description: explaining that regardless of how parts of an object are arranged, the mass of the whole is always the same as the sum of the masses of its parts.
+  expectation_id: 14
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 319a7154-61fe-11df-a821-001ff3caa767
+  id: 28
+  description: citing evidence to conclude that the amount of matter before and after undergoing a physical or a chemical change in a closed system remains the same.
+  expectation_id: 15
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 319c7ca6-61fe-11df-a821-001ff3caa767
+  id: 29
+  description: identifying and explaining the basis for the arrangement of the elements within the periodic table (e.g. trends, valence electrons, reactivity, electronegativity, ionization).
+  expectation_id: 16
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 319cf870-61fe-11df-a821-001ff3caa767
+  id: 30
+  description: predicting the relative physical and chemical properties of an element based on its location within the Periodic Table.
+  expectation_id: 16
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a4f2be-61fe-11df-a821-001ff3caa767
+  id: 31
+  description: differentiating among the characteristics of solids, liquids, and gases.
+  expectation_id: 17
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a5704a-61fe-11df-a821-001ff3caa767
+  id: 32
+  description: predicting the effects of heating and cooling on the physical state, volume and mass of a substance.
+  expectation_id: 17
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a7bd46-61fe-11df-a821-001ff3caa767
+  id: 33
+  description: creating diagrams or models that represent the states of matter at the molecular level.
+  expectation_id: 18
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a837e4-61fe-11df-a821-001ff3caa767
+  id: 34
+  description: explaining the effect of increased and decreased heat energy on the motion and arrangement of molecules.
+  expectation_id: 18
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a8b034-61fe-11df-a821-001ff3caa767
+  id: 35
+  description: observing the physical processes of evaporation and condensation, or freezing and melting, and describe these changes in terms of molecular motion and conservation of mass.
+  expectation_id: 18
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31ab6b1c-61fe-11df-a821-001ff3caa767
+  id: 36
+  description: comparing the three subatomic particles of atoms (protons, electrons, neutrons) and their location within an atom, their relative mass, and their charge.
+  expectation_id: 19
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31abe966-61fe-11df-a821-001ff3caa767
+  id: 37
+  description: writing formulae for compounds and developing basic (excluding transition elements) models using electron structure.
+  expectation_id: 19
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31adfb02-61fe-11df-a821-001ff3caa767
+  id: 38
+  description: writing an electron configuration to include s, p, d, and f orbitals and relating to atomic interactions.
+  expectation_id: 20
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31ae706e-61fe-11df-a821-001ff3caa767
+  id: 39
+  description: given specific reactants (e.g. Ba + Cl2) write the balanced equation and determine the products, type of compound formed (ionic or molecular), and the properties of the compound (e.g. solubilities, electrolytic, etc).
+  expectation_id: 20
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b3050c-61fe-11df-a821-001ff3caa767
+  id: 40
+  description: distinguishing between solutions, mixtures, and pure substances, i.e. compounds and elements.
+  expectation_id: 21
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b5030c-61fe-11df-a821-001ff3caa767
+  id: 41
+  description: using models or diagrams toshow the difference between atoms and molecules.
+  expectation_id: 22
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b5795e-61fe-11df-a821-001ff3caa767
+  id: 42
+  description: classifying common elements and compounds using symbols and simple chemical formulas.
+  expectation_id: 22
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b5ee8e-61fe-11df-a821-001ff3caa767
+  id: 43
+  description: interpreting the symbols and formulas of simple chemical equations.
+  expectation_id: 22
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b6629c-61fe-11df-a821-001ff3caa767
+  id: 44
+  description: using symbols and chemical formulas to show simple chemical rearrangements that produce new substances (chemical change).
+  expectation_id: 22
+  ordinal: d
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b6d740-61fe-11df-a821-001ff3caa767
+  id: 45
+  description: explaining that when substances undergo physical changes, the appearance may change but the chemical makeup and chemical properties do not.
+  expectation_id: 22
+  ordinal: e
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31bf5ac8-61fe-11df-a821-001ff3caa767
+  id: 46
+  description: describing observable effects of light using a variety of light sources.
+  expectation_id: 23
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31bfd34a-61fe-11df-a821-001ff3caa767
+  id: 47
+  description: experimenting and describe how vibrating objects make sound (e.g., guitar strings, seeing salt bounce on a drum skin).
+  expectation_id: 23
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c04a14-61fe-11df-a821-001ff3caa767
+  id: 48
+  description: identifying the sun as a source of heat energy.
+  expectation_id: 23
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c25ad4-61fe-11df-a821-001ff3caa767
+  id: 49
+  description: experimenting to identify and classify different pitches and volumes of sounds produced by different objects.
+  expectation_id: 24
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c2d414-61fe-11df-a821-001ff3caa767
+  id: 50
+  description: using data to explain what causes sound to have different pitch or volume
+  expectation_id: 24
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c34c96-61fe-11df-a821-001ff3caa767
+  id: 51
+  description: describing or showing that heat can be produced in many ways (e.g. electricity, friction, burning).
+  expectation_id: 24
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c3c108-61fe-11df-a821-001ff3caa767
+  id: 52
+  description: drawing, diagramming, building, and explaining a complete electrical circuit.
+  expectation_id: 24
+  ordinal: d
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c43ed0-61fe-11df-a821-001ff3caa767
+  id: 53
+  description: using experimental data to classify a variety of materials as conductors or insulators
+  expectation_id: 24
+  ordinal: e
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c6ece8-61fe-11df-a821-001ff3caa767
+  id: 54
+  description: differentiating among the properties of various forms of energy.
+  expectation_id: 25
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c76452-61fe-11df-a821-001ff3caa767
+  id: 55
+  description: explaining how energy may be stored in various ways (e.g. batteries, springs, height in terms of potential energy).
+  expectation_id: 25
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c7e472-61fe-11df-a821-001ff3caa767
+  id: 56
+  description: describing sound as the transfer of energy through various materials (e.g. solids, liquids, gases).
+  expectation_id: 25
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31ca230e-61fe-11df-a821-001ff3caa767
+  id: 57
+  description: using a real world example to explain the transfer of potential energy to kinetic energy.
+  expectation_id: 26
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31caab26-61fe-11df-a821-001ff3caa767
+  id: 58
+  description: constructing a model to explain the transformation of energy from one form to another. (e.g. an electrical circuit changing electrical energy to light energy in a light bulb).
+  expectation_id: 26
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31cb30b4-61fe-11df-a821-001ff3caa767
+  id: 59
+  description: explaining that while energy may be stored, transferred, or transformed, the total amount of energy is conserved.
+  expectation_id: 26
+  ordinal: c
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31cbad64-61fe-11df-a821-001ff3caa767
+  id: 60
+  description: describing the effect of changing voltage in an electrical circuit.
+  expectation_id: 26
+  ordinal: d
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31ced836-61fe-11df-a821-001ff3caa767
+  id: 61
+  description: describing or diagraming the changes in energy (transformation) that occur in different systems (eg. chemical = exo and endo thermic reactions, biological = food webs, physical = phase changes).
+  expectation_id: 27
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31cf794e-61fe-11df-a821-001ff3caa767
+  id: 62
+  description: explaining the Law of Conservation of Energy as it relates to the efficiency (loss of heat) of a system.
+  expectation_id: 27
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31d243cc-61fe-11df-a821-001ff3caa767
+  id: 63
+  description: Identifying, measuring, calculating and analyzing qualitative and quantitative relationships associated with energy transfer or energy transformation.
+  expectation_id: 28
+  ordinal: a
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31d2d788-61fe-11df-a821-001ff3caa767
+  id: 64
+  description: quantitatively determining the efficiency of a given system.
+  expectation_id: 28
+  ordinal: b
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31dbc88e-61fe-11df-a821-001ff3caa767
+  id: 65
+  description: demonstrating when a shadow will be created using sunny versus cloudy days.
+  expectation_id: 29
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31de1602-61fe-11df-a821-001ff3caa767
+  id: 66
+  description: investigating observable effects of light using a variety of light sources (e.g., light travels in a straight line until it interacts with an object, blocked light rays produce shadows).
+  expectation_id: 30
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31deaa40-61fe-11df-a821-001ff3caa767
+  id: 67
+  description: predicting, describing, and investigating how light rays are reflected, refracted, or absorbed.
+  expectation_id: 30
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e16294-61fe-11df-a821-001ff3caa767
+  id: 68
+  description: identifying real world applications where heat energy is transferred and showing the direction that the heat energy flows.
+  expectation_id: 31
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e38560-61fe-11df-a821-001ff3caa767
+  id: 69
+  description: designing a diagram, model, or analogy to show or describe the motion of molecules for a material in a warmer and cooler state.
+  expectation_id: 32
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e40706-61fe-11df-a821-001ff3caa767
+  id: 70
+  description: explaining the difference among conduction, convection and radiation and creating a diagram to explain how heat energy travels in different directions and through different materials by each of these methods.
+  expectation_id: 32
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e691f6-61fe-11df-a821-001ff3caa767
+  id: 71
+  description: writing simple balanced chemical equations to represent chemical reactions and illustrate the conservation of matter.
+  expectation_id: 33
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e70906-61fe-11df-a821-001ff3caa767
+  id: 72
+  description: identifying whether a given chemical reaction or a biological process will release or consume energy (endothermic and exothermic) based on the information provided (e.g. given a table of energy values for reactants and products or an energy diagram).
+  expectation_id: 33
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e78138-61fe-11df-a821-001ff3caa767
+  id: 73
+  description: explaining and/or modeling how the nuclear make-up of atoms governs alpha and beta emissions creating changes in the nucleus of an atom results in the formation of new elements.
+  expectation_id: 33
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31ff7018-61fe-11df-a821-001ff3caa767
+  id: 74
+  description: explaining the concept of half-life and using the half-life principal to predict the approximate age of a material.
+  expectation_id: 33
+  ordinal: d
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31ffed04-61fe-11df-a821-001ff3caa767
+  id: 75
+  description: differentiating between fission and fusion in nuclear reactions and their relation to element changes and energy formation.
+  expectation_id: 33
+  ordinal: e
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32021764-61fe-11df-a821-001ff3caa767
+  id: 76
+  description: using chemical equations and information about molar masses to predict quantitatively the masses of reactants and products in chemical reactions.
+  expectation_id: 34
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3202950e-61fe-11df-a821-001ff3caa767
+  id: 77
+  description: using quantitative heat flow or calorimetric investigations to determine the energy released or consumed in the process.
+  expectation_id: 34
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32032186-61fe-11df-a821-001ff3caa767
+  id: 78
+  description: qualitatively and/or quantitatively predicting reactants and products in a prescribed investigation. (e.g. Acid-base. Redox).
+  expectation_id: 34
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32094480-61fe-11df-a821-001ff3caa767
+  id: 79
+  description: describing that the sun warms land and water.
+  expectation_id: 35
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3209bbcc-61fe-11df-a821-001ff3caa767
+  id: 80
+  description: describing that objects change in temperature By adding or subtracting heat.
+  expectation_id: 35
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 320bf18a-61fe-11df-a821-001ff3caa767
+  id: 81
+  description: describing how heat moves from warm objects to cold objects until both objects are the same temperature.
+  expectation_id: 36
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 320c6c14-61fe-11df-a821-001ff3caa767
+  id: 82
+  description: showing that heat moves from one object to another causing temperature change (e.g., when land heats up it warms the air).
+  expectation_id: 36
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 320f154a-61fe-11df-a821-001ff3caa767
+  id: 83
+  description: explaining through words, diagrams, models, or electrostatic demonstrations the principle that like charges repel and unlike charges attract.
+  expectation_id: 37
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 320fa0a0-61fe-11df-a821-001ff3caa767
+  id: 84
+  description: explaining through words, charts, diagrams, and models the effects of distance and the amount of charge on the strength of the electrical force present.
+  expectation_id: 37
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32102566-61fe-11df-a821-001ff3caa767
+  id: 85
+  description: describing the relationship between moving electric charges and magnetic fields.
+  expectation_id: 37
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3219f6a4-61fe-11df-a821-001ff3caa767
+  id: 86
+  description: showing how pushing/pulling moves or does not move an object.
+  expectation_id: 38
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 321a6b8e-61fe-11df-a821-001ff3caa767
+  id: 87
+  description: predicting the direction an object will or will not move if a force is applied to it.Students demonstrate an understanding of force by
+  expectation_id: 38
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 321c77b2-61fe-11df-a821-001ff3caa767
+  id: 88
+  description: predicting the direction and describing the motion of objects (of different weights, shapes, sizes, etc.) if a force is applied to it.
+  expectation_id: 39
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 321cef44-61fe-11df-a821-001ff3caa767
+  id: 89
+  description: describing change in position relative to other objects or background. Students demonstrate an understanding of force (e.g., push-pull, gravitational) by
+  expectation_id: 39
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 321f76ba-61fe-11df-a821-001ff3caa767
+  id: 90
+  description: using data or graphs to compare the relative speed of objects.Students demonstrate anunderstanding of force (e.g.,friction, gravitational, magnetic) by
+  expectation_id: 40
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32221172-61fe-11df-a821-001ff3caa767
+  id: 91
+  description: measuring distance and time for a moving object and using those values as well as the relationship s=d/t to calculate speed and graphically represent the data.
+  expectation_id: 41
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32233106-61fe-11df-a821-001ff3caa767
+  id: 92
+  description: solving for any unknown in the expression s=d/t given values for the other two variables.
+  expectation_id: 41
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3223e92a-61fe-11df-a821-001ff3caa767
+  id: 93
+  description: differentiating among speed, velocity and acceleration.Students demonstrate an understanding of force (e.g., friction, gravitational, magnetic) by
+  expectation_id: 41
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 322661b4-61fe-11df-a821-001ff3caa767
+  id: 94
+  description: predicting and/or graphing the path of an object in different reference planes and explain how and why (forces) it occurs.
+  expectation_id: 42
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3226e45e-61fe-11df-a821-001ff3caa767
+  id: 95
+  description: using modeling, illustrating, graphing explain how distance and velocity change over time for a free falling object.
+  expectation_id: 42
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32290f22-61fe-11df-a821-001ff3caa767
+  id: 96
+  description: using a quantitative representation of how distance and velocity change over time for a free falling object.
+  expectation_id: 43
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3229924e-61fe-11df-a821-001ff3caa767
+  id: 97
+  description: using a quantitative representation of the path of an object which has horizontal and free fall motion.
+  expectation_id: 43
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 322a167e-61fe-11df-a821-001ff3caa767
+  id: 98
+  description: . by modeling, illustrating, graphing, and quantitatively explaining the path of an object, which has horizontal and free fall motion. e.g. football, projectile.
+  expectation_id: 43
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323269dc-61fe-11df-a821-001ff3caa767
+  id: 99
+  description: observing and sorting objects that are and are not attracted to magnets.
+  expectation_id: 44
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32348294-61fe-11df-a821-001ff3caa767
+  id: 100
+  description: using prior knowledge and investigating to predict whether or not an object will be attracted to a magnet.
+  expectation_id: 45
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3234f954-61fe-11df-a821-001ff3caa767
+  id: 101
+  description: describing what happens when like and opposite poles of a magnet are placed near each other.
+  expectation_id: 45
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323570dc-61fe-11df-a821-001ff3caa767
+  id: 102
+  description: exploring relative strength of magnets (e.g., size of magnets, number of magnets, properties of materials).
+  expectation_id: 45
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3237718e-61fe-11df-a821-001ff3caa767
+  id: 103
+  description: explaining through words, charts, diagrams, and models the effects of distance and the amount of mass on the gravitational force between objects (e.g. Universal Gravitation Law).
+  expectation_id: 46
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3237e52e-61fe-11df-a821-001ff3caa767
+  id: 104
+  description: using Newtons Laws of Motion and the Law of Conservation of Momentum to predict the effect on the motion of objects.
+  expectation_id: 46
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323cada2-61fe-11df-a821-001ff3caa767
+  id: 105
+  description: . investigating examples of wave phenomena (e.g. ripples in water, sound waves, seismic waves).
+  expectation_id: 47
+  ordinal: a
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323d25a2-61fe-11df-a821-001ff3caa767
+  id: 106
+  description: comparing and contrasting electromagnetic waves to mechanical waves.
+  expectation_id: 47
+  ordinal: b
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323da02c-61fe-11df-a821-001ff3caa767
+  id: 107
+  description: qualifying the relationship between frequency and wavelength of any wave.
+  expectation_id: 47
+  ordinal: c
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3315f990-61fe-11df-a821-001ff3caa767
+  id: 108
+  description: describing, comparing, and sorting rocks and soils by similar or different physical properties (e.g., size, shape, color, texture, smell, weight).
+  expectation_id: 48
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33168dd8-61fe-11df-a821-001ff3caa767
+  id: 109
+  description: recording observations/data about physical properties.
+  expectation_id: 48
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3317220c-61fe-11df-a821-001ff3caa767
+  id: 110
+  description: using attributes of properties to state why objects are grouped together (e.g., rocks that are shiny or not shiny).
+  expectation_id: 48
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3319ae64-61fe-11df-a821-001ff3caa767
+  id: 111
+  description: describing, comparing, and sorting rocks, soils, and minerals by similar or different physical properties (e.g., size, shape, color, texture, smell, weight, temperature, hardness, composition).
+  expectation_id: 49
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331a4356-61fe-11df-a821-001ff3caa767
+  id: 112
+  description: recording and analyzing observations/data about physical properties (e.g., within a grouping, which characteristics are the same and which are different).
+  expectation_id: 49
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331ad58c-61fe-11df-a821-001ff3caa767
+  id: 113
+  description: citing evidence (e.g., prior knowledge, data) to support why rocks, soils, or minerals are classified/not classified together.
+  expectation_id: 49
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331b683a-61fe-11df-a821-001ff3caa767
+  id: 114
+  description: identifying the four basic materials of the earth (water, soil, rocks, air).
+  expectation_id: 49
+  ordinal: d
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331e6a76-61fe-11df-a821-001ff3caa767
+  id: 115
+  description: identifying and describing the layers of the earth.
+  expectation_id: 50
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331f1066-61fe-11df-a821-001ff3caa767
+  id: 116
+  description: plotting location of volcanoes and earthquakes and explaining the relationship between the location of these phenomena and faults.
+  expectation_id: 50
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33218954-61fe-11df-a821-001ff3caa767
+  id: 117
+  description: citing evidence and developing a logical argument for plate movement using fossil evidence, layers of sedimentary rock, location of mineral deposits, and shape of the continents.
+  expectation_id: 51
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3323ebea-61fe-11df-a821-001ff3caa767
+  id: 118
+  description: . plotting the location of mountain ranges and recent earthquakes and volcanic eruptions to identify any existing patterns.
+  expectation_id: 52
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 332c134c-61fe-11df-a821-001ff3caa767
+  id: 119
+  description: conducting tests on how different soils retain water (e.g., how fast does the water drain through).
+  expectation_id: 53
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 332e2632-61fe-11df-a821-001ff3caa767
+  id: 120
+  description: conducting investigations and using observational data to describe how water moves rocks and soils.
+  expectation_id: 54
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33303d3c-61fe-11df-a821-001ff3caa767
+  id: 121
+  description: diagramming, labeling and explaining the processes of the water cycle including evaporation, precipitation, and run-off, condensation, transpiration, and groundwater.
+  expectation_id: 55
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3330b488-61fe-11df-a821-001ff3caa767
+  id: 122
+  description: explaining how condensation of water vapor forms clouds which affects climate and weather.
+  expectation_id: 55
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33312954-61fe-11df-a821-001ff3caa767
+  id: 123
+  description: developing models to explain how humidity, temperature, and altitude affect air pressure and how this affects local weather.
+  expectation_id: 55
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33332236-61fe-11df-a821-001ff3caa767
+  id: 124
+  description: No GSEs for the ESS1 (5-8) SAE-2 Assessment Target
+  expectation_id: 56
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33353d1e-61fe-11df-a821-001ff3caa767
+  id: 125
+  description: using given data (diagrams, charts, narratives, etc.) and advances in technology to explain how scientific knowledge regarding plate tectonics has changed over time.
+  expectation_id: 57
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 333fde72-61fe-11df-a821-001ff3caa767
+  id: 126
+  description: "using scientific tools to extend senses and gather data about weather (e.g., weather/wind vane: direction; wind sock: wind intensity; anemometer: speed; thermometer: temperature; meter sticks/rulers: snow depth; rain gauges: rain amount in inches)."
+  expectation_id: 58
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335a1e86-61fe-11df-a821-001ff3caa767
+  id: 127
+  description: "explaining how the use of scientific tools helps to extend senses and gather data about weather (i.e., weather/wind vane: direction; wind sock: wind intensity; anemometer: speed; thermometer: temperature; meter sticks/rulers: snow depth; rain gauges: rain"
+  expectation_id: 59
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335aa8f6-61fe-11df-a821-001ff3caa767
+  id: 128
+  description: selecting appropriate tools for a given task and describing the information they will provide.
+  expectation_id: 59
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335cd50e-61fe-11df-a821-001ff3caa767
+  id: 129
+  description: describing events and the effect they may have on climate (e.g. El Nino, deforestation, glacial melting, and an increase in greenhouse gases).
+  expectation_id: 60
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335ef578-61fe-11df-a821-001ff3caa767
+  id: 130
+  description: evaluating slow processes (e.g. weathering, erosion, mountain building, sea floor spreading) to determine how the earth has changed and will continue to change over time.
+  expectation_id: 61
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335f6e36-61fe-11df-a821-001ff3caa767
+  id: 131
+  description: evaluating fast processes (e.g. erosion, volcanoes and earthquakes) to determine how the earth has changed and will continue to change over time.
+  expectation_id: 61
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 335fe942-61fe-11df-a821-001ff3caa767
+  id: 132
+  description: investigating the effect of flowing water on landforms (e.g. stream table, local environment).
+  expectation_id: 61
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3362025e-61fe-11df-a821-001ff3caa767
+  id: 133
+  description: explaining how heat (produced by friction, radioactive decay and pressure) affects the Rock Cycle.
+  expectation_id: 62
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33627dba-61fe-11df-a821-001ff3caa767
+  id: 134
+  description: explaining how convection circulations of the mantle initiate the movement of the crustal plates which then cause plate movement and seismic activity.
+  expectation_id: 62
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3362f7ea-61fe-11df-a821-001ff3caa767
+  id: 135
+  description: investigating and using evidence to explain that conservation in the amount of earth materials occurs during the Rock Cycle.
+  expectation_id: 62
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33636e46-61fe-11df-a821-001ff3caa767
+  id: 136
+  description: explaining how the physical and chemical processes of the Earth alter the crust (e.g. seafloor spreading, hydrologic cycle, weathering, element cycling).
+  expectation_id: 62
+  ordinal: d
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 336e46e0-61fe-11df-a821-001ff3caa767
+  id: 137
+  description: observing and recording seasonal and weather changes throughout the school year.
+  expectation_id: 63
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33704b3e-61fe-11df-a821-001ff3caa767
+  id: 138
+  description: investigating local landforms and how wind, water, or ice have shaped and reshaped them (e.g. severe weather).
+  expectation_id: 64
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3370c08c-61fe-11df-a821-001ff3caa767
+  id: 139
+  description: using or building models to simulate the effects of how wind and water shape and reshape the land (e.g., erosion, sedimentation, deposition, glaciation).
+  expectation_id: 64
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33713648-61fe-11df-a821-001ff3caa767
+  id: 140
+  description: identifying sudden and gradual changes that affect the Earth (e.g. sudden change = flood; gradual change = erosion caused by oceans).
+  expectation_id: 64
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33737872-61fe-11df-a821-001ff3caa767
+  id: 141
+  description: explaining how differential heating and convection affect Earths weather patterns.
+  expectation_id: 65
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3373f54a-61fe-11df-a821-001ff3caa767
+  id: 142
+  description: describing how differential heating of the oceans affects ocean currents which in turn influence weather and climate.
+  expectation_id: 65
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33746d72-61fe-11df-a821-001ff3caa767
+  id: 143
+  description: explaining the relationship between differential heating/convection and the production of winds.
+  expectation_id: 65
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3374ea40-61fe-11df-a821-001ff3caa767
+  id: 144
+  description: analyzing global patterns of atmospheric movements to explain effects on weather.
+  expectation_id: 65
+  ordinal: d
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3375648e-61fe-11df-a821-001ff3caa767
+  id: 145
+  description: predicting temperature and precipitation changes associated with the passing of various fronts.
+  expectation_id: 65
+  ordinal: e
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33778be2-61fe-11df-a821-001ff3caa767
+  id: 146
+  description: No GSEs for the ESS1 (5-8) SAE+POC=4 Assessment Target
+  expectation_id: 66
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33780a4a-61fe-11df-a821-001ff3caa767
+  id: 147
+  description: explaining cause and effect relationships between global climate and energy transfer.
+  expectation_id: 66
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33788b82-61fe-11df-a821-001ff3caa767
+  id: 148
+  description: using evidence to make inferences or predictions about global climate issues.
+  expectation_id: 66
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 337b101e-61fe-11df-a821-001ff3caa767
+  id: 149
+  description: describing various dating methods to determine the age of different rock structures.
+  expectation_id: 67
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 338275de-61fe-11df-a821-001ff3caa767
+  id: 150
+  description: observing, recording, and summarizing local weather data.
+  expectation_id: 68
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3382efdc-61fe-11df-a821-001ff3caa767
+  id: 151
+  description: observe how clouds are related to forms of precipitation (e.g., rain, sleet, snow).
+  expectation_id: 68
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3385119a-61fe-11df-a821-001ff3caa767
+  id: 152
+  description: observing, recording, comparing, and analyzing weather data to describe weather changes or weather patterns.
+  expectation_id: 69
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33858850-61fe-11df-a821-001ff3caa767
+  id: 153
+  description: describing water as it changes into vapor in the air and reappears as a liquid when its cooled.
+  expectation_id: 69
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3385fb78-61fe-11df-a821-001ff3caa767
+  id: 154
+  description: explaining how this cycle of water relates to weather and the formation of clouds.
+  expectation_id: 69
+  ordinal: c
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3387fafe-61fe-11df-a821-001ff3caa767
+  id: 155
+  description: representing the processes of the rock cycle in words, diagrams, or models.
+  expectation_id: 70
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33886c64-61fe-11df-a821-001ff3caa767
+  id: 156
+  description: citing evidence and developing a logical argument to explain the formation of a rock, given its characteristics and location. (e.g. classifying rock type using identification resources).
+  expectation_id: 70
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 338ab1cc-61fe-11df-a821-001ff3caa767
+  id: 157
+  description: No GSEs for the ESS1 (5-8) INQ+POC-5 Assessment Target
+  expectation_id: 71
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 338eb2e0-61fe-11df-a821-001ff3caa767
+  id: 158
+  description: identifying which materials are best for different uses (e.g., soils for growing plants, sand for the sand box).
+  expectation_id: 72
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3390b23e-61fe-11df-a821-001ff3caa767
+  id: 159
+  description: determining and supporting explanations of their uses (e.g., best soils to grow plants, best building material for a specific purpose, determining which rock size will best prevent erosion).
+  expectation_id: 73
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3395a654-61fe-11df-a821-001ff3caa767
+  id: 160
+  description: identifying and comparing the size, location, distances, and movement (e.g. orbit of planets, path of meteors) of the objects in our solar system.
+  expectation_id: 74
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33962cf0-61fe-11df-a821-001ff3caa767
+  id: 161
+  description: comparing the composition, atmosphere, and surface features of objects in our solar system.
+  expectation_id: 74
+  ordinal: b
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3399153c-61fe-11df-a821-001ff3caa767
+  id: 162
+  description: No GSEs for the ESS2 (7-8)-6 Assessment Target
+  expectation_id: 75
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 339dd068-61fe-11df-a821-001ff3caa767
+  id: 163
+  description: No GSEs for the ESS2 (5-8) NOS-7 Assessment Target
+  expectation_id: 76
+  ordinal: a
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 339fd480-61fe-11df-a821-001ff3caa767
+  id: 164
+  description: identifying major discoveries from different scientists and cultures and describing how these discoveries have contributed to our understanding of the solar system (e.g. timeline, research project, picture book).
+  expectation_id: 77
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33a50db0-61fe-11df-a821-001ff3caa767
+  id: 165
+  description: using models to describe the relative motion/position of the Earth, sun and moon.
+  expectation_id: 78
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33a58092-61fe-11df-a821-001ff3caa767
+  id: 166
+  description: explaining night/day, seasons, year, and tides as a result of the regular and predictable motion of the Earth, sun, and moon.
+  expectation_id: 78
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33a5f39c-61fe-11df-a821-001ff3caa767
+  id: 167
+  description: using a model of the Earth, sun and moon to recreate the phases of the moon. ESS2 (5-6) -8 Students demonstrate an understanding of gravitational relationships between or among objects of the solar system by
+  expectation_id: 78
+  ordinal: c
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33a820cc-61fe-11df-a821-001ff3caa767
+  id: 168
+  description: using or creating a model of the Earth, sun and moon system to show rotation and revolution.
+  expectation_id: 79
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33bef95a-61fe-11df-a821-001ff3caa767
+  id: 169
+  description: explaining night/day, seasons, year, and tides as a result of the regular and predictable motion of the Earth, sun, and moon. ESS2 (7-8) -8 Students demonstrate an understanding of gravitational relationships between or among objects of the solar system b
+  expectation_id: 79
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33c49b12-61fe-11df-a821-001ff3caa767
+  id: 170
+  description: using appropriate prompts (diagrams, charts, narratives, etc.) students will explain how scientific knowledge regarding the structure of the universe has changed over time due to advances in technology which accumulates new evidence to redefine scientific
+  expectation_id: 80
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340b6be6-61fe-11df-a821-001ff3caa767
+  id: 171
+  description: distinguishing between living and non-living things.
+  expectation_id: 81
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340be472-61fe-11df-a821-001ff3caa767
+  id: 172
+  description: identifying and sorting based on a similar or different external features. lc observing and recording the external features that make up living things (e.g. roots, stems, leaves, flowers, legs, antennae, tail, shell).
+  expectation_id: 81
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340e237c-61fe-11df-a821-001ff3caa767
+  id: 173
+  description: citing evidence to distinguish between living and non-living things.
+  expectation_id: 82
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340e9aa0-61fe-11df-a821-001ff3caa767
+  id: 174
+  description: identifying, sorting and comparing based on similar and/or different external features.
+  expectation_id: 82
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340f1336-61fe-11df-a821-001ff3caa767
+  id: 175
+  description: recording and analyzing observations/data about external features (e.g., within a grouping, which characteristics are the same and which are different).
+  expectation_id: 82
+  ordinal: c
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340f8e1a-61fe-11df-a821-001ff3caa767
+  id: 176
+  description: citing evidence (e.g., prior knowledge, data) to draw conclusions explaining why organisms are grouped/not grouped together (e.g. mammal, bird, and fish).
+  expectation_id: 82
+  ordinal: d
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342933a6-61fe-11df-a821-001ff3caa767
+  id: 177
+  description: recognizing that organisms have different features and behaviors for meeting their needs to survive (e.g., fish have gills for respiration, mammals have lungs, bears hibernate).
+  expectation_id: 83
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342b4d94-61fe-11df-a821-001ff3caa767
+  id: 178
+  description: giving examples of adaptations or behaviors that are specific to a niche (role) within an ecosystem.
+  expectation_id: 84
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342bc85a-61fe-11df-a821-001ff3caa767
+  id: 179
+  description: explaining how organisms with different structures and behaviors have roles that contribute to each others survival and the stability of the ecosystem.
+  expectation_id: 84
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342e7712-61fe-11df-a821-001ff3caa767
+  id: 180
+  description: explaining the relationships between and amongst the specialized structures of the cell and their functions (e.g. transport of materials, energy transfer, protein building, waste disposal, information feedback, and even movement).
+  expectation_id: 85
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342efc6e-61fe-11df-a821-001ff3caa767
+  id: 181
+  description: explaining that most multicellular organisms have specialized cells to survive, while unicellular organisms perform all survival functions. (e.g. nerve cells communicate with other cells, muscle cells contract, unicellular are not specialized). Students d
+  expectation_id: 85
+  ordinal: b
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 3431bd8c-61fe-11df-a821-001ff3caa767
+  id: 182
+  description: describing the origin and nature of stem cells and their potential for curing disease.
+  expectation_id: 86
+  ordinal: a
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 343a4fd8-61fe-11df-a821-001ff3caa767
+  id: 183
+  description: observing that plants need water, air, food, and light to grow; observing that animals need water, air, food and shelter to grow.
+  expectation_id: 87
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 343c745c-61fe-11df-a821-001ff3caa767
+  id: 184
+  description: observing that plants need water, air, food, light and space to grow and reproduce; observing that animals need water, air, food, and shelter/space to grow and reproduce.
+  expectation_id: 88
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 343e9976-61fe-11df-a821-001ff3caa767
+  id: 185
+  description: describing structures or behaviors that help organisms survive in their environment (e.g., defense, obtaining nutrients, reproduction, and eliminating waste).
+  expectation_id: 89
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3440ce8a-61fe-11df-a821-001ff3caa767
+  id: 186
+  description: explaining how the cell, as the basic unit of life, has the same survival needs as an organism (i.e., obtain energy, grow, eliminate waste, reproduce, provide for defense).
+  expectation_id: 90
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34414fd6-61fe-11df-a821-001ff3caa767
+  id: 187
+  description: observing and describing (e.g., drawing, labeling) individual cells as seen through a microscope targeting cell membrane, cell wall, nucleus, and chloroplasts.
+  expectation_id: 90
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3441d8ca-61fe-11df-a821-001ff3caa767
+  id: 188
+  description: observing, describing and charting the growth, motion, responses of living organisms
+  expectation_id: 90
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34449056-61fe-11df-a821-001ff3caa767
+  id: 189
+  description: describing the DNA structure and relating the DNA sequence to the genetic code.
+  expectation_id: 91
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34451878-61fe-11df-a821-001ff3caa767
+  id: 190
+  description: explaining how DNA may be altered and how this affects genes/heredity (e.g. substitution, insertion, or deletion).
+  expectation_id: 91
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34459f3c-61fe-11df-a821-001ff3caa767
+  id: 191
+  description: describing how DNA contains the code for the production of specific proteins.
+  expectation_id: 91
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3447d586-61fe-11df-a821-001ff3caa767
+  id: 192
+  description: diagramming or modeling the relationship between chromosomes, genes and DNA, including histones and nucleosomes.
+  expectation_id: 92
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3448536c-61fe-11df-a821-001ff3caa767
+  id: 193
+  description: describing the how foods are genetically modified and the potential health, environmental and economic advantages and disadvantages of doing so.
+  expectation_id: 92
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3448d044-61fe-11df-a821-001ff3caa767
+  id: 194
+  description: tracing in a diagram or model the information flow - DNA to RNA to Protein -through transcription and translation.
+  expectation_id: 92
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 344f3b0a-61fe-11df-a821-001ff3caa767
+  id: 195
+  description: observing and scientifically drawing (e.g. recording shapes, prominent features, relative proportions, organizes and differentiates significant parts observed) and labeling the stages in the life cycle of a familiar plant and animal.
+  expectation_id: 93
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 344fb8b4-61fe-11df-a821-001ff3caa767
+  id: 196
+  description: sequencing the life cycle of a plant or animal when given a set of pictures.
+  expectation_id: 93
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3451d630-61fe-11df-a821-001ff3caa767
+  id: 197
+  description: observing changes and recording data to scientifically draw and label the stages in the life cycle of a familiar plant and animal.
+  expectation_id: 94
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34525574-61fe-11df-a821-001ff3caa767
+  id: 198
+  description: sequencing the life cycle of a plant or animal when given a set of data/pictures.
+  expectation_id: 94
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3452d346-61fe-11df-a821-001ff3caa767
+  id: 199
+  description: comparing the life cycles of 2 plants or 2 animals when given a set of data/pictures.
+  expectation_id: 94
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 345509f4-61fe-11df-a821-001ff3caa767
+  id: 200
+  description: defining reproduction as a process through which organisms produce offspring.
+  expectation_id: 95
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3455904a-61fe-11df-a821-001ff3caa767
+  id: 201
+  description: describing reproduction in terms of being essential for the continuation of a species.
+  expectation_id: 95
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 345617e0-61fe-11df-a821-001ff3caa767
+  id: 202
+  description: investigating and comparing a variety of plant and animal life cycles.
+  expectation_id: 95
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34583d7c-61fe-11df-a821-001ff3caa767
+  id: 203
+  description: explaining reproduction as a fundamental process by which the new individual receives genetic information from parent(s).
+  expectation_id: 96
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3458b752-61fe-11df-a821-001ff3caa767
+  id: 204
+  description: describing forms of asexual reproduction that involve the genetic contribution of only one parent (e.g., binary fission, budding, vegetative propagation, regeneration).
+  expectation_id: 96
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 345931e6-61fe-11df-a821-001ff3caa767
+  id: 205
+  description: describing sexual reproduction as a process that combines genetic material of two parents to produce a new organism (e.g., sperm/egg, pollen/ova)
+  expectation_id: 96
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3460929c-61fe-11df-a821-001ff3caa767
+  id: 206
+  description: identifying the specific functions of the physical structures of a plant or an animal (e.g. roots for water; webbed feet for swimming).
+  expectation_id: 97
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3462c602-61fe-11df-a821-001ff3caa767
+  id: 207
+  description: identifying and explaining how the physical structure/characteristic of an organism allows it to survive and defend itself (e.g. of a characteristic the coloring of a fiddler crab allows it to camouflage itself in the sand and grasses of its environment s
+  expectation_id: 98
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3464ff08-61fe-11df-a821-001ff3caa767
+  id: 208
+  description: analyzing the structures needed for survival of populations of plants and animals in a particular habitat/environment (e.g. populations of desert plants and animals require structures that enable them to obtain/conserve/ retain water).
+  expectation_id: 98
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3467e27c-61fe-11df-a821-001ff3caa767
+  id: 209
+  description: identifying cells as the building blocks of organisms.
+  expectation_id: 99
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34686b16-61fe-11df-a821-001ff3caa767
+  id: 210
+  description: recognizing and illustrating (e.g. flow chart) the structural organization of an organism from a cell to tissue to organs to organ systems to organisms.
+  expectation_id: 99
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 346a9cd8-61fe-11df-a821-001ff3caa767
+  id: 211
+  description: explaining that specialized cells perform specialized functions. (e.g., muscle cells contract, nerve cells transmit impulses, skin cells provide protection).
+  expectation_id: 100
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 346b22d4-61fe-11df-a821-001ff3caa767
+  id: 212
+  description: comparing individual cells of tissues and recognizing the similarities of cells and how they work together to perform specific functions.
+  expectation_id: 100
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34746312-61fe-11df-a821-001ff3caa767
+  id: 213
+  description: caring for plants and/or animals by identifying and providing for their needs; experimenting with a plants growth under different conditions, including light and no light.
+  expectation_id: 101
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34769f7e-61fe-11df-a821-001ff3caa767
+  id: 214
+  description: identifying sources of energy for survival of organisms (i.e. light or food).
+  expectation_id: 102
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 347949fe-61fe-11df-a821-001ff3caa767
+  id: 215
+  description: identifying and defining an ecosystem and the variety of relationships within it (e.g., predator/prey, consumer/ producer/decomposer, host/parasite, catastrophic events).
+  expectation_id: 103
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 349448bc-61fe-11df-a821-001ff3caa767
+  id: 216
+  description: identifying which biotic (e.g., bacteria, fungi, plants, animals) and abiotic (e.g., weather, climate, light, water, temperature, soil composition, catastrophic events) factors affect a given ecosystem.
+  expectation_id: 104
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3494ce36-61fe-11df-a821-001ff3caa767
+  id: 217
+  description: analyzing how biotic and abiotic factors affect a given ecosystem.
+  expectation_id: 104
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3495569e-61fe-11df-a821-001ff3caa767
+  id: 218
+  description: predicting the outcome of a given change in biotic and abiotic factors in an ecosystem.
+  expectation_id: 104
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3495dcfe-61fe-11df-a821-001ff3caa767
+  id: 219
+  description: using a visual model (e.g., graph) to track population changes in an ecosystem.
+  expectation_id: 104
+  ordinal: d
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34980f88-61fe-11df-a821-001ff3caa767
+  id: 220
+  description: defining and giving an example of equilibrium in an ecosystem.
+  expectation_id: 105
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34988a3a-61fe-11df-a821-001ff3caa767
+  id: 221
+  description: describing ways in which humans can modify ecosystems and describe and predict the potential impact (e.g. human population growth; technology; destruction of habitats; agriculture; pollution; and atmospheric changes).
+  expectation_id: 105
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 349909ce-61fe-11df-a821-001ff3caa767
+  id: 222
+  description: describing ways in which natural events (e.g. floods and fires) can modify ecosystems and describe and predict the potential effects.
+  expectation_id: 105
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 349b5e40-61fe-11df-a821-001ff3caa767
+  id: 223
+  description: researching and citing evidence of global warming to describe the potential impact on both the living and physical systems on Earth.
+  expectation_id: 106
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 349be748-61fe-11df-a821-001ff3caa767
+  id: 224
+  description: investigating and reporting on a case study of ecosystem disruption caused by a natural event (e.g. Mississippi River delta region and hurricanes).
+  expectation_id: 106
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a4daf6-61fe-11df-a821-001ff3caa767
+  id: 225
+  description: acting out or constructing simple diagrams (pictures or words) that shows a simple food web.
+  expectation_id: 107
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a553fa-61fe-11df-a821-001ff3caa767
+  id: 226
+  description: using information about a simple food web to determine how basic needs (e.g. shelter and water) are met by the habitat/environment.
+  expectation_id: 107
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a7d2e2-61fe-11df-a821-001ff3caa767
+  id: 227
+  description: demonstrating in a food web that all animals food begins with the sun.
+  expectation_id: 108
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a852c6-61fe-11df-a821-001ff3caa767
+  id: 228
+  description: using information about organisms to design a habitat and explain how the habitat provides for the needs of the organisms that live there
+  expectation_id: 108
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a8cbd4-61fe-11df-a821-001ff3caa767
+  id: 229
+  description: explaining the way that plants and animals in that habitat depend on each other.
+  expectation_id: 108
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34ab118c-61fe-11df-a821-001ff3caa767
+  id: 230
+  description: identifying the sun as the major source of energy for life on earth and sequencing the energy flow in an ecosystem.
+  expectation_id: 109
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34aba0e8-61fe-11df-a821-001ff3caa767
+  id: 231
+  description: . describing the basic processes and recognizing the substances involved in photosynthesis and respiration.
+  expectation_id: 109
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34adf2c6-61fe-11df-a821-001ff3caa767
+  id: 232
+  description: explaining the transfer of the suns energy through living systems and its effect upon them.
+  expectation_id: 110
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34ae7f98-61fe-11df-a821-001ff3caa767
+  id: 233
+  description: describing the basic processes and recognizing the names and chemical formulas of the substances involved in photosynthesis and respiration.
+  expectation_id: 110
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34af07c4-61fe-11df-a821-001ff3caa767
+  id: 234
+  description: explaining the relationship between photosynthesis and respiration. Students demonstrate an understanding of food webs in an ecosystem by
+  expectation_id: 110
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34b19b74-61fe-11df-a821-001ff3caa767
+  id: 235
+  description: diagramming the energy flow in an ecosystem that compares the energy at different trophic levels. (e.g. What inferences can you make about energy loss& use).
+  expectation_id: 111
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34b218f6-61fe-11df-a821-001ff3caa767
+  id: 236
+  description: explaining how the chemical elements and compounds that make up living things pass through food webs and are combined and recombined in different ways (e.g. nitrogen, carbon cycles, O2, & H2O cycles).
+  expectation_id: 111
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34b46052-61fe-11df-a821-001ff3caa767
+  id: 237
+  description: explaining the energy transfer with cells in photosynthesis and cellular respiration, tracking ATP production and consumption.
+  expectation_id: 112
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34bad32e-61fe-11df-a821-001ff3caa767
+  id: 238
+  description: explaining the processes of precipitation, evaporation, condensation as parts of the water cycle.
+  expectation_id: 113
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34bb5a38-61fe-11df-a821-001ff3caa767
+  id: 239
+  description: completing a basic food web for a given ecosystem.
+  expectation_id: 113
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34bda7b6-61fe-11df-a821-001ff3caa767
+  id: 240
+  description: diagramming or sequencing a series of steps showing how matter cycles among and between organisms and the physical environment.
+  expectation_id: 114
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34be2e20-61fe-11df-a821-001ff3caa767
+  id: 241
+  description: developing a model for a food web of local aquatic and local terrestrial environments.
+  expectation_id: 114
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34beae72-61fe-11df-a821-001ff3caa767
+  id: 242
+  description: explaining the inverse nature or complementary aspects of photosynthesis/respiration in relation to carbon dioxide, water and oxygen exchange.
+  expectation_id: 114
+  ordinal: c
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34bf2686-61fe-11df-a821-001ff3caa767
+  id: 243
+  description: "conducting a controlled investigation that shows that the total amount of matter remains constant, even though its form and location change as matter is transferred among and between organisms and the physical environment (e.g., bottle biology, mass of a "
+  expectation_id: 114
+  ordinal: d
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34c1c936-61fe-11df-a821-001ff3caa767
+  id: 244
+  description: analyzing claims from evidence and sources and evaluate based upon relevance, and validity.
+  expectation_id: 115
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34c24ee2-61fe-11df-a821-001ff3caa767
+  id: 245
+  description: applying additional scientific data to develop logical arguments concerning environmental issues (e.g. tobacco company vs. cancer society articles on effects of smoking, government/big business vs. environmental perceptions of global climate change).
+  expectation_id: 115
+  ordinal: b
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34ccea1e-61fe-11df-a821-001ff3caa767
+  id: 246
+  description: Currently no GSEs for this target at K-2 Grade Span
+  expectation_id: 116
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34cf4fc0-61fe-11df-a821-001ff3caa767
+  id: 247
+  description: explaining what plants or animals might do if their environment changes (e.g., changing food supply or habitat due to fire, human impact, sudden weather-related changes).
+  expectation_id: 117
+  ordinal: a
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34cfdba2-61fe-11df-a821-001ff3caa767
+  id: 248
+  description: explaining how the balance of the ecosystem can be disturbed (e.g., how does overpopulation of a species affect the rest of the ecosystem).
+  expectation_id: 117
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d378a2-61fe-11df-a821-001ff3caa767
+  id: 249
+  description: stating the value of, or reasons for, classification systems.
+  expectation_id: 118
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d41816-61fe-11df-a821-001ff3caa767
+  id: 250
+  description: following a taxonomic key to identify a given organism (e.g. flowering and non-flowering plants).
+  expectation_id: 118
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d68696-61fe-11df-a821-001ff3caa767
+  id: 251
+  description: sorting organisms with similar characteristics into groups based on internal and external structures.
+  expectation_id: 119
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d70daa-61fe-11df-a821-001ff3caa767
+  id: 252
+  description: explaining how species with similar evolutionary histories/characteristics are classified more closely together with some organisms than others (e.g., a fish and human have more common with each other than a fish and jelly fish)
+  expectation_id: 119
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d79162-61fe-11df-a821-001ff3caa767
+  id: 253
+  description: recognizing the classification system used in modern biology.
+  expectation_id: 119
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34da500a-61fe-11df-a821-001ff3caa767
+  id: 254
+  description: using given data (diagrams, charts, narratives, etc.) and advances in technology to explain how our understanding of genetic variation has developed over time.
+  expectation_id: 120
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34dc894c-61fe-11df-a821-001ff3caa767
+  id: 255
+  description: describing how the Human Genome Project has contributed to our understanding of both human heredity and the commonality of DNA sequences among organisms.
+  expectation_id: 121
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e36244-61fe-11df-a821-001ff3caa767
+  id: 256
+  description: explaining how a populations or species traits affect their ability to survive over time.
+  expectation_id: 122
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e3ec96-61fe-11df-a821-001ff3caa767
+  id: 257
+  description: researching or reporting on possible causes for the extinction of an animal or plant.
+  expectation_id: 122
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e4729c-61fe-11df-a821-001ff3caa767
+  id: 258
+  description: explaining how fossil evidence can be used to understand the history of life on Earth.
+  expectation_id: 122
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e727da-61fe-11df-a821-001ff3caa767
+  id: 259
+  description: explaining that genetic variations/traits of organisms are passed on through reproduction and random genetic changes.
+  expectation_id: 123
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34ff66b0-61fe-11df-a821-001ff3caa767
+  id: 260
+  description: gathering evidence that demonstrates evolutionary relationships among organisms (e.g., similarities in body structure, early development, traits).
+  expectation_id: 123
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34fffd1e-61fe-11df-a821-001ff3caa767
+  id: 261
+  description: differentiating between acquired and inherited characteristics and giving examples of each.
+  expectation_id: 123
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35007f0a-61fe-11df-a821-001ff3caa767
+  id: 262
+  description: explaining how natural selection leads to evolution (e.g., survival of the fittest).
+  expectation_id: 123
+  ordinal: d
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35010614-61fe-11df-a821-001ff3caa767
+  id: 263
+  description: describing how scientists understanding of the way species originate or become extinct has changed over time.
+  expectation_id: 123
+  ordinal: e
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 350357ac-61fe-11df-a821-001ff3caa767
+  id: 264
+  description: investigating how information is passed from parents to offspring by encoded molecules (e.g. evidence from electrophoresis, DNA fingerprinting).
+  expectation_id: 124
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3503d952-61fe-11df-a821-001ff3caa767
+  id: 265
+  description: investigating how the sorting and recombination of genes in sexual reproduction results in a great variety of possible gene combinations in the offspring of any two parents. (e.g. manipulate models to represent and predict genotypes and phenotypes, Punnet
+  expectation_id: 124
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35045bfc-61fe-11df-a821-001ff3caa767
+  id: 266
+  description: citing evidence of how natural selection and its evolutionary consequences provide a scientific explanation for the diversity and unity of past and present life forms on Earth. (e.g. Galapagos Islands, Hawaiian Islands, Australia, geographic isolation, ad
+  expectation_id: 124
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35069b38-61fe-11df-a821-001ff3caa767
+  id: 267
+  description: distinguishing the stages of mitosis and meiosis and how each contributes to the production of offspring with varying traits
+  expectation_id: 125
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3507292c-61fe-11df-a821-001ff3caa767
+  id: 268
+  description: researching and reporting on the contributions of key scientist in understanding evolution and natural selection (e .g. Darwin, Wallace, Mendel).
+  expectation_id: 125
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3507b540-61fe-11df-a821-001ff3caa767
+  id: 269
+  description: trace the evolution and migration of Homo sapiens.
+  expectation_id: 125
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3511017c-61fe-11df-a821-001ff3caa767
+  id: 270
+  description: identifying the five senses and using senses to identify objects in the environment,
+  expectation_id: 126
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35118570-61fe-11df-a821-001ff3caa767
+  id: 271
+  description: observing, identifying, and recording external features of humans and other animals.
+  expectation_id: 126
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35120ae0-61fe-11df-a821-001ff3caa767
+  id: 272
+  description: identifying the senses needed to meet survival needs for a given situation.
+  expectation_id: 126
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3514618c-61fe-11df-a821-001ff3caa767
+  id: 273
+  description: showing connections between external and internal body structures (i.e., organs and systems) and how they help humans survive.
+  expectation_id: 127
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3514ebe8-61fe-11df-a821-001ff3caa767
+  id: 274
+  description: comparing and analyzing external features and characteristics of humans and other animals.
+  expectation_id: 127
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35172f3e-61fe-11df-a821-001ff3caa767
+  id: 275
+  description: identifying the biotic factors (e.g., microbes, parasites, food availability, aging process) that have an effect on human body systems.
+  expectation_id: 128
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3517af9a-61fe-11df-a821-001ff3caa767
+  id: 276
+  description: identifying the abiotic factors (e.g., drugs, altitude, weather, pollution) that have an effect on human body systems. Students demonstrate an understanding patterns of human health/disease by
+  expectation_id: 128
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3519f1b0-61fe-11df-a821-001ff3caa767
+  id: 277
+  description: predicting and explaining the effects of biotic factors (e.g., microbes, parasites, food availability, aging process) on human body systems.
+  expectation_id: 129
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 351a6e38-61fe-11df-a821-001ff3caa767
+  id: 278
+  description: predicting and explaining the effect of abiotic factors (e.g., drugs, environmental conditions) on human body systems. Students demonstrate an understanding of patterns of human health/disease by
+  expectation_id: 129
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 351d52ce-61fe-11df-a821-001ff3caa767
+  id: 279
+  description: researching scientific information to explain how such things as radiation, chemicals, and other factors can cause gene mutations or disease.
+  expectation_id: 130
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 351e325c-61fe-11df-a821-001ff3caa767
+  id: 280
+  description: providing an explanation of how the human species impacts the environment and other organisms (e.g. reducing the amount of the earths surface available to those other species, interfering with their food sources, changing the temperature and chemical comp
+  expectation_id: 130
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3520ab4a-61fe-11df-a821-001ff3caa767
+  id: 281
+  description: using a computer simulation to study the effects of human activities on a particular environment (actual or model).
+  expectation_id: 131
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3529930e-61fe-11df-a821-001ff3caa767
+  id: 282
+  description: observing and comparing their physical features with those of parents, classmates and other organisms.
+  expectation_id: 132
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 352a16e4-61fe-11df-a821-001ff3caa767
+  id: 283
+  description: identifying that some behaviors are learned.
+  expectation_id: 132
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 352c4946-61fe-11df-a821-001ff3caa767
+  id: 284
+  description: identifying similarities that are inherited from a biological parent.
+  expectation_id: 133
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 352ccbb4-61fe-11df-a821-001ff3caa767
+  id: 285
+  description: identifying that some behaviors are learned and some behaviors are instinctive.
+  expectation_id: 133
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 352efa06-61fe-11df-a821-001ff3caa767
+  id: 286
+  description: differentiating between inherited and acquired traits.
+  expectation_id: 134
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 352f8cfa-61fe-11df-a821-001ff3caa767
+  id: 287
+  description: observing, recording and comparing differences in inherited traits (e.g. connected earlobe, tongue rolling).
+  expectation_id: 134
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3531b2b4-61fe-11df-a821-001ff3caa767
+  id: 288
+  description: recognizing that characteristics of an organism result from inherited traits of one or more genes from the parents and others result from interactions with the environment.
+  expectation_id: 135
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 3532274e-61fe-11df-a821-001ff3caa767
+  id: 289
+  description: tracing a genetic characteristic through a given pedigree (e.g., genealogical chart, Queen Victoria hemophilia or hypothetical example) to demonstrate the passage of traits.
+  expectation_id: 135
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35329be8-61fe-11df-a821-001ff3caa767
+  id: 290
+  description: identifying that genetic material (i.e. chromosomes and genes) is located in the cells nucleus.
+  expectation_id: 135
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35349f24-61fe-11df-a821-001ff3caa767
+  id: 291
+  description: explaining how the roles of the immune, endocrine, and nervous systems work together to maintain homeostasis.
+  expectation_id: 136
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353519a4-61fe-11df-a821-001ff3caa767
+  id: 292
+  description: investigating the factors that affect homeostasis (e.g. positive and negative feedback).
+  expectation_id: 136
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35373536-61fe-11df-a821-001ff3caa767
+  id: 293
+  description: investigating and reporting on a human disease and its consequential disruption of homeostasis (e.g. diabetes, cancer, AIDS).
+  expectation_id: 137
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353d0060-61fe-11df-a821-001ff3caa767
+  id: 294
+  description: identifying and sequencing the stages of human embryonic development.
+  expectation_id: 138
+  ordinal: a
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353d7676-61fe-11df-a821-001ff3caa767
+  id: 295
+  description: describing the changes from one stage of embryonic development to the next.
+  expectation_id: 138
+  ordinal: b
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353ed9b2-61fe-11df-a821-001ff3caa767
+  id: 296
+  description: comparing and contrasting embryonic development in various life forms (e.g., humans, frogs, chickens, sea urchins).
+  expectation_id: 138
+  ordinal: c
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353f6d0a-61fe-11df-a821-001ff3caa767
+  id: 297
+  description: comparing the patterns of human development after birth to life stages of other species.
+  expectation_id: 138
+  ordinal: d
+  created_at: 2010-05-17 21:50:28 Z

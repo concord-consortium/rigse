@@ -134,7 +134,7 @@ HEREDOC
         Rake::Task['db:backup:load_probe_configurations'].invoke
         # FIXME: when and if any other projetcs/hemes need RI GSE models
         if USING_RITES
-          Rake::Task['rigse:setup:import_gses_from_file'].invoke
+          Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         if USING_JNLPS
