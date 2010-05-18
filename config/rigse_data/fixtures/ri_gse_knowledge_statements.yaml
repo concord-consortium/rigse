@@ -1,0 +1,71 @@
+--- 
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 1
+  domain_id: 3
+  uuid: 313debaa-61fe-11df-a821-001ff3caa767
+  id: 1
+  description: " All living organisms have identifiable structures and characteristics that allow for survival (organisms, populations, and species)."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 2
+  domain_id: 3
+  uuid: 313ebdc8-61fe-11df-a821-001ff3caa767
+  id: 2
+  description: " Matter cycles and energy flows through an ecosystem."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 3
+  domain_id: 3
+  uuid: 313fa6ac-61fe-11df-a821-001ff3caa767
+  id: 3
+  description: " Groups of organisms show evidence of change over time (structures, behaviors, and biochemistry)."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 4
+  domain_id: 3
+  uuid: 31407a28-61fe-11df-a821-001ff3caa767
+  id: 4
+  description: " Humans are similar to other species in many ways, and yet are unique among Earth\xE2\x80\x99s life forms."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 1
+  domain_id: 2
+  uuid: 314143f4-61fe-11df-a821-001ff3caa767
+  id: 5
+  description: " The Earth and earth materials as we know them today have developed over long periods of time, through continual change processes."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 2
+  domain_id: 2
+  uuid: 31420532-61fe-11df-a821-001ff3caa767
+  id: 6
+  description: " The earth is part of a solar system, made up of distinct parts that have temporal and spatial interrelationships."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 3
+  domain_id: 2
+  uuid: 3142c670-61fe-11df-a821-001ff3caa767
+  id: 7
+  description: " The origin and evolution of galaxies and the universe demonstrate fundamental principles of physical science across vast distances and time"
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 1
+  domain_id: 1
+  uuid: 31438bdc-61fe-11df-a821-001ff3caa767
+  id: 8
+  description: " All living and nonliving things are composed of matter having characteristic properties that distinguish one substance from another (independent of size or amount of substance)"
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 2
+  domain_id: 1
+  uuid: 31445300-61fe-11df-a821-001ff3caa767
+  id: 9
+  description: " Energy is necessary for change to occur in matter. Energy can be stored, transferred and transformed, but cannot be destroyed."
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  number: 3
+  domain_id: 1
+  uuid: 31451452-61fe-11df-a821-001ff3caa767
+  id: 10
+  description: " The motion of an object is affected by forces."
+  created_at: 2010-05-17 21:50:22 Z

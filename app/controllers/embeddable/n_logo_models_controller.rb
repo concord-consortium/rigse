@@ -15,13 +15,13 @@ class Embeddable::NLogoModelsController < ApplicationController
   def show
     @n_logo_model = Embeddable::NLogoModel.find(params[:id])
     if request.xhr?
-      render :partial => 'n_logo_model', :locals => { :n_logo_model => @n_logo_model }
+      render :partial => 'show', :locals => { :n_logo_model => @n_logo_model }
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml { render :layout => "layouts/n_logo_model" } # n_logo_model.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.otml { render :layout => "layouts/embeddable/n_logo_model" } # n_logo_model.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model , :teacher_mode => false } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @n_logo_model, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @n_logo_model, :teacher_mode => @teacher_mode} }
         format.xml  { render :n_logo_model => @n_logo_model }
       end

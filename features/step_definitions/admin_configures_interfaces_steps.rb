@@ -1,15 +1,20 @@
 
-Given /the following users[(?exist):\s]*$/i do |users_tabe|
-  users_tabe.hashes.each do |hash|
+Given /the following users[(?exist):\s]*$/i do |users_table|
+  User.anonymous(true)
+  users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     roles = roles ? roles.split(/,\s*/) : nil
-    user = Factory(:user, hash)
-    roles.each do |role|
-      user.add_role(role)
+    begin
+      user = Factory(:user, hash)
+      roles.each do |role|
+        user.add_role(role)
+      end
+      user.register
+      user.activate
+      user.save!
+    rescue ActiveRecord::RecordInvalid
+      # assume this user is already created...
     end
-    user.register
-    user.activate
-    user.save!
   end
 end
 
@@ -21,7 +26,7 @@ end
 
 Then /the current project should be using the following interfaces:/ do |interfaces_table|
   interfaces_table.hashes.each do |hash|
-    Admin::Project.default_project.enabled_vendor_interfaces.should include Probe::VendorInterface.find_by_name(hash[:name])
+    Admin::Project.default_project.enabled_vendor_interfaces.should include(Probe::VendorInterface.find_by_name(hash[:name]))
   end
 end
 
@@ -78,7 +83,7 @@ Then /^I should not see the following selection options:$/ do |selection_table|
       if defined?(Spec::Rails::Matchers)
         page.should_not have_content(hash[:option])
       else
-        assert (! page.has_content?(hash[:option]))
+        assert(! page.has_content?(hash[:option]))
       end
     end
   end

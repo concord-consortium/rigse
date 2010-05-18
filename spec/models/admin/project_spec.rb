@@ -1,22 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-# mock_admin_project
-# mock_maven_jnlp_maven_jnlp_server
-# mock_maven_jnlp_maven_jnlp_family
-# mock_maven_jnlp_versioned_jnlp_url
-# mock_maven_jnlp_versioned_jnlp
 
 describe Admin::Project do
   before(:each) do
-    @maven_jnlp_server = mock_maven_jnlp_maven_jnlp_server
-    @maven_jnlp_family = mock_maven_jnlp_maven_jnlp_family
+    generate_jnlps_with_mocks
     @new_valid_project = Admin::Project.new(
       :name => "Example Project",
       :url => "http://rites.org",
       :states_and_provinces => %w{RI MA},
-      :maven_jnlp_server_id => @maven_jnlp_server.id,
-      :maven_jnlp_family_id => @maven_jnlp_family.id,
-      :jnlp_version_str => mock_version_str,
+      :maven_jnlp_server_id => @mock_maven_jnlp_server.id,
+      :maven_jnlp_family_id => @mock_maven_jnlp_family.id,
+      :jnlp_version_str => @mock_maven_jnlp_family.snapshot_version,
       :snapshot_enabled => false
     )
   end
@@ -46,16 +40,17 @@ describe Admin::Project do
   end
   
   describe "a projects list of enabled vendor interfaces" do
-    # create some fake vendor interfaces in the DB
+
     before(:all) do
-      # remove old interfaces: (shouldn't this be rolled back anyway?)
-      Probe::VendorInterface.find(:all).each { |vi| vi.destroy }
-      @num_interfaces = 4
-      @num_interfaces.times do |counter|
-        interface_name = "fake-interface-#{counter}"
-        Factory(:probe_vendor_interface, :name => interface_name)
-      end
+      # Currently all the probe configuration models including vendor_interfaces are loaded
+      # into the test database from fixtures in config/probe_configurations by running:
+      #
+      #   rake db:test:prepare
+      #
+      # See: lib/tasks/db_test_prepare.rake
+      #
       @all_interfaces = Probe::VendorInterface.find(:all)
+      @num_interfaces = @all_interfaces.length
     end
     
     it "should have a sane testing environment" do
@@ -69,7 +64,7 @@ describe Admin::Project do
     it "should initially have all the existant vendor interfaces" do
       @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces).things
       @all_interfaces.each do |interface|
-        @new_valid_project.enabled_vendor_interfaces.should include interface
+        @new_valid_project.enabled_vendor_interfaces.should include(interface)
       end
     end
     

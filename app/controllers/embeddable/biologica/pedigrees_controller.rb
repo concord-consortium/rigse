@@ -15,15 +15,15 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   def show
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     if request.xhr?
-      render :partial => 'embeddable/biologica/pedigree', :locals => { :pedigree => @biologica_pedigree }
+      render :partial => 'show', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
       respond_to do |format|
         format.html # show.html.haml
         format.otml { render :layout => "layouts/embeddable/biologica/pedigree" } # biologica_pedigree.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_pedigree }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_pedigree, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @biologica_pedigree, :teacher_mode => false  }}
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @biologica_pedigree, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false  } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @biologica_pedigree, :teacher_mode => @teacher_mode} }
-        format.xml  { render :pedigree => @biologica_pedigree }
+        format.xml  { render :biologica_pedigree => @biologica_pedigree }
       end
     end
   end
@@ -33,7 +33,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   def new
     @biologica_pedigree = Embeddable::Biologica::Pedigree.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :pedigree => @biologica_pedigree }
+      render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
       respond_to do |format|
         format.html # renders new.html.haml
@@ -47,7 +47,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     @scope = get_scope(@biologica_pedigree)
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :pedigree => @biologica_pedigree }
+      render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
       respond_to do |format|
         format.html 
@@ -66,7 +66,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       if cancel 
         redirect_to :index
       elsif @biologica_pedigree.save
-        render :partial => 'new', :locals => { :pedigree => @biologica_pedigree }
+        render :partial => 'new', :locals => { :biologica_pedigree => @biologica_pedigree }
       else
         render :xml => @biologica_pedigree.errors, :status => :unprocessable_entity
       end
@@ -91,7 +91,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     if request.xhr?
       if cancel || @biologica_pedigree.update_attributes(params[:embeddable_biologica_pedigree])
-        render :partial => 'show', :locals => { :pedigree => @biologica_pedigree }
+        render :partial => 'show', :locals => { :biologica_pedigree => @biologica_pedigree }
       else
         render :xml => @biologica_pedigree.errors, :status => :unprocessable_entity
       end

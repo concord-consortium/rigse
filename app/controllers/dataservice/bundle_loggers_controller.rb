@@ -89,7 +89,7 @@ class Dataservice::BundleLoggersController < ApplicationController
     @dataservice_bundle_logger.destroy
 
     respond_to do |format|
-      format.html { redirect_to(dataservice_dataservice_bundle_loggers_url) }
+      format.html { redirect_to(dataservice_bundle_loggers_url) }
       format.xml  { head :ok }
     end
   end

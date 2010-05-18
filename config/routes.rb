@@ -1,6 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-
-
   map.namespace(:saveable) do |saveable|
     saveable.namespace(:sparks) do |sparks|
       sparks.resources :measuring_resistances
@@ -102,6 +100,10 @@ ActionController::Routing::Routes.draw do |map|
       :print => :get,
       :destroy => :post,
       :change_probe_type => :put
+    }
+    
+    embeddable.resources :sound_graphers, :member => {
+      :destroy => :post
     }
   end
 

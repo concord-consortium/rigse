@@ -64,11 +64,11 @@ Rails::Initializer.run do |config|
   config.gem "uuidtools", :version => '>= 2.0.0'
   config.gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   config.gem "prawn", :version => '>= 0.4.1'
-  config.gem 'mojombo-grit', :lib => 'grit', :source => 'http://gems.github.com', :version => '>=0.9.4'
+  config.gem "grit", :version => '>= 2.0.0'
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
-  config.gem "jnlp", :version => '>= 0.0.5.3'
+  config.gem "jnlp", :version => '>= 0.6.1'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
@@ -131,7 +131,7 @@ Rails::Initializer.run do |config|
         ActiveRecord::Base.instantiate_observers
         puts "Started observers"
       rescue
-        # intersetingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
+        # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
         puts "Couldn't start observers #{$!} ... but continuing process anyway"
         puts "This might be because you have not setup the appropriate database tables yet... "
         puts "see config/initializers/observers.rb for more information."

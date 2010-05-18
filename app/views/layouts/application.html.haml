@@ -12,10 +12,10 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
+    = stylesheet_link_merged(APP_CONFIG[:theme]||'default').to_sym
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
-    = javascript_include_tag "tiny_mce/tiny_mce"
+    = javascript_include_tag("tiny_mce/tiny_mce")
     
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
@@ -125,7 +125,7 @@
         .padded_content
           #footer_left
             Questions/Feedback:
-            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user]['email'], "Send us an email", :subject => "RITES question", :encode => "javascript")
+            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "RITES question", :encode => "javascript")
           #footer_right
       #under_footer
         - if current_user.has_role?('admin')

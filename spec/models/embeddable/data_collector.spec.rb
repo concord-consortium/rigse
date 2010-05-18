@@ -6,18 +6,21 @@ describe Embeddable::DataCollector do
   end
 
   it "should create a new instance given valid attributes" do
-    data_collector = Embeddable::DataCollector.create(
-      {:probe_type => Factory(:probe_type)}
-    )
+    data_collector = Embeddable::DataCollector.new
     data_collector.save 
     data_collector.probe_type.should_not be_nil
     data_collector.should be_valid
   end
   
-  it "it should not create a new instance with missing fields" do
-    data_collector = Embeddable::DataCollector.create()
+  it "it should not create a new instance without referencing an existing probe_type" do
+    data_collector = Embeddable::DataCollector.new
+    data_collector.probe_type = nil
     data_collector.save
     data_collector.probe_type.should be_nil
+    data_collector.should_not be_valid
+    data_collector = Embeddable::DataCollector.new
+    data_collector.probe_type_id = 9999
+    data_collector.save
     data_collector.should_not be_valid
   end
   

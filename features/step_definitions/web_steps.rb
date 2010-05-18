@@ -6,6 +6,7 @@
 
 
 require 'uri'
+require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
 
 module WithinHelpers
@@ -96,9 +97,16 @@ When /^(?:|I )attach the file "([^\"]*)" to "([^\"]*)"(?: within "([^\"]*)")?$/ 
   end
 end
 
+Then /^(?:|I )should see JSON:$/ do |expected_json|
+  require 'json'
+  expected = JSON.pretty_generate(JSON.parse(expected_json))
+  actual   = JSON.pretty_generate(JSON.parse(response.body))
+  expected.should == actual
+end
+
 Then /^(?:|I )should see "([^\"]*)"(?: within "([^\"]*)")?$/ do |text, selector|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
+    if page.respond_to? :should
       page.should have_content(text)
     else
       assert page.has_content?(text)
@@ -109,7 +117,7 @@ end
 Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^\"]*)")?$/ do |regexp, selector|
   regexp = Regexp.new(regexp)
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
+    if page.respond_to? :should
       page.should have_xpath('//*', :text => regexp)
     else
       assert page.has_xpath?('//*', :text => regexp)
@@ -119,7 +127,7 @@ end
 
 Then /^(?:|I )should not see "([^\"]*)"(?: within "([^\"]*)")?$/ do |text, selector|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
+    if page.respond_to? :should
       page.should have_no_content(text)
     else
       assert page.has_no_content?(text)
@@ -130,7 +138,7 @@ end
 Then /^(?:|I )should not see \/([^\/]*)\/(?: within "([^\"]*)")?$/ do |regexp, selector|
   regexp = Regexp.new(regexp)
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
+    if page.respond_to? :should
       page.should have_no_xpath('//*', :text => regexp)
     else
       assert page.has_no_xpath?('//*', :text => regexp)
@@ -140,59 +148,66 @@ end
 
 Then /^the "([^\"]*)" field(?: within "([^\"]*)")? should contain "([^\"]*)"$/ do |field, selector, value|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
-      find_field(field).value.should =~ /#{value}/
+    field = find_field(field)
+    field_value = (field.tag_name == 'textarea') ? field.text : field.value
+    if field_value.respond_to? :should
+      field_value.should =~ /#{value}/
     else
-      assert_match(/#{value}/, field_labeled(field).value)
+      assert_match(/#{value}/, field_value)
     end
   end
 end
 
 Then /^the "([^\"]*)" field(?: within "([^\"]*)")? should not contain "([^\"]*)"$/ do |field, selector, value|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
-      find_field(field).value.should_not =~ /#{value}/
+    field = find_field(field)
+    field_value = (field.tag_name == 'textarea') ? field.text : field.value
+    if field_value.respond_to? :should_not
+      field_value.should_not =~ /#{value}/
     else
-      assert_no_match(/#{value}/, find_field(field).value)
+      assert_no_match(/#{value}/, field_value)
     end
   end
 end
 
-# checkbox checking busted in cucumber? http://github.com/jnicklas/capybara/issues/issue/55
 Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should be checked$/ do |label, selector|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
-      find_field(label)['checked'].should be_true
+    field_checked = find_field(label)['checked']
+    if field_checked.respond_to? :should
+      field_checked.should == true
     else
-      assert_equal 'checked', field_labeled(label)['checked']
+      assert_equal true, field_checked
     end
   end
 end
 
-# checkbox checking busted in cucumber? http://github.com/jnicklas/capybara/issues/issue/55
 Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should not be checked$/ do |label, selector|
   with_scope(selector) do
-    if defined?(Spec::Rails::Matchers)
-      find_field(label)['checked'].should_not be_true
+    field_checked = find_field(label)['checked']
+    if field_checked.respond_to? :should_not
+      field_checked.should_not == 'checked'
     else
-      assert_not_equal 'checked', field_labeled(label)['checked']
+      assert_not_equal 'checked', field_checked
     end
   end
 end
  
 Then /^(?:|I )should be on (.+)$/ do |page_name|
-  if defined?(Spec::Rails::Matchers)
-    URI.parse(current_url).path.should == path_to(page_name)
+  current_path = URI.parse(current_url).path
+  if current_path.respond_to? :should
+    current_path.should == path_to(page_name)
   else
-    assert_equal path_to(page_name), URI.parse(current_url).path
+    assert_equal path_to(page_name), current_path
   end
 end
 
 Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
-  actual_params   = CGI.parse(URI.parse(current_url).query)
-  expected_params = Hash[expected_pairs.rows_hash.map{|k,v| [k,[v]]}]
- 
-  if defined?(Spec::Rails::Matchers)
+  query = URI.parse(current_url).query
+  actual_params = query ? CGI.parse(query) : {}
+  expected_params = {}
+  expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')} 
+  
+  if actual_params.respond_to? :should
     actual_params.should == expected_params
   else
     assert_equal expected_params, actual_params
@@ -201,4 +216,8 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+Then /^(?:|I )should wait ([0-9]+) seconds/ do |seconds|
+  sleep(seconds.to_i)
 end

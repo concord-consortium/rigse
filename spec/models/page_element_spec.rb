@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe PageElement do
-  
+
   before(:each) do
     @page_element = Factory :page_element
     @user = Factory :user
@@ -11,13 +11,13 @@ describe PageElement do
     @page_element.should_not be_nil
   end
   
-  it "not originall have an owner" do
+  it "not original have an owner" do
     @page_element.user.should be_nil
   end
   
   it "should let an onwer be assinged to it" do
     @page_element.user = @user
-    @page_element.user.should be @user
+    @page_element.user.should be(@user)
   end
   
   it "should persist its owner information" do

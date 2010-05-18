@@ -18,8 +18,10 @@ require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
-
+require 'email_spec'
 require 'email_spec/cucumber'
+require 'spec/stubs/cucumber'
+
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -57,8 +59,30 @@ Cucumber::Rails::World.use_transactional_fixtures = true
 if defined?(ActiveRecord::Base)
   begin
     require 'database_cleaner'
-    DatabaseCleaner.strategy = :truncation
+    # require 'database_cleaner/cucumber'
+    probe_tables = %w{
+      probe_calibrations
+      probe_datafilters
+      probe_device_configs
+      probe_physical_units
+      probe_probe_types
+      probe_vendor_interfaces
+    }
+    rigse_tables = %w{
+      ri_gse_assessment_targets
+      ri_gse_big_ideas
+      ri_gse_domains
+      ri_gse_expectations
+      ri_gse_expectation_indicators 
+      ri_gse_expectation_stems
+      ri_gse_grade_span_expectations
+      ri_gse_knowledge_statements
+      ri_gse_unifying_themes
+      ri_gse_assessment_target_unifying_themes
+    }
+    DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
   rescue LoadError => ignore_if_database_cleaner_not_present
+    puts "*** please install the gem database_cleaner"
   end
 end
 
@@ -66,24 +90,40 @@ APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use
 
 # use factory girl:
 require 'factory_girl'
-
 Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
+
+require 'spec/support/controller_helper'
 
 # This code used to live in factories/zz_default_data.rb.
 # It boots the cucmber environement with a default project.
 # required by application_controller.rb
-puts "Loading default data set required for application_controller.rb to run ...."
-anon =  Factory.next :anonymous_user
-admin = Factory.next :admin_user 
-device_config = Factory.create(:probe_device_config)
-versioned_jnlp = Factory(:maven_jnlp_versioned_jnlp)
-school = Factory(:portal_school)
-domain = Factory(:rigse_domain)
-grade = Factory(:portal_grade)
-Admin::Project.create_or_update_default_project_from_settings_yml
-puts "done."
+# puts "Loading default data set required for application_controller.rb to run ...."
+# anon =  Factory.next :anonymous_user
+# admin = Factory.next :admin_user 
+# device_config = Factory.create(:probe_device_config)
+# school = Factory(:portal_school)
+# domain = Factory(:rigse_domain)
+# grade = Factory(:portal_grade)
+# puts "done."
 
 # Make visible for testing
 include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
+
+# Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
+# Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
+# Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
+Before do
+  # To get RSpec stubs and mocks working.
+  $rspec_mocks ||= Spec::Mocks::Space.new
+  # generate_default_project_and_jnlps_with_mocks
+end
+
+After do
+  begin
+    $rspec_mocks.verify_all
+  ensure
+    $rspec_mocks.reset_all
+  end
+end
 

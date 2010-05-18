@@ -119,6 +119,14 @@ class RiGse::GradeSpanExpectation < ActiveRecord::Base
       find(:all).collect { |gse| gse.grade_span }.uniq - ["K-2", "3-4"]
     end
 
+    def default_grade_span
+      '9-11'
+    end
+    
+    def default
+      find_by_grade_span(default_grade_span)
+    end
+    
   end
 
   def description
