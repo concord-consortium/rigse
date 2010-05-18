@@ -6,6 +6,7 @@ Feature: An author edits a data collector
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @selenium
   Scenario: The author edits a graph and sees the Y-axis label and units change as the probe type changes
     Given the following users exist:
       | login        | password            | roles                |
