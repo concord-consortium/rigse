@@ -174,9 +174,9 @@ Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should be checked$/ do |la
   with_scope(selector) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
-      field_checked.should == 'checked'
+      field_checked.should == true
     else
-      assert_equal 'checked', field_checked
+      assert_equal true, field_checked
     end
   end
 end
