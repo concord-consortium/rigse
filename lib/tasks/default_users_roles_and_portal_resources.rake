@@ -137,10 +137,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
           :email => 'member@concord.org', 
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
-          :first_name => "Anonymous", :last_name => "User",
-          :email => "anonymous@concord.org", 
-          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
+        anonymous_user = User.anonymous,
 
         teacher_user = User.find_or_create_by_login(:login => 'teacher', 
           :first_name => 'Valerie', :last_name => 'Frizzle', 
