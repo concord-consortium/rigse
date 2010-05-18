@@ -72,7 +72,7 @@ namespace :rigse do
 
     desc 'Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor'
     task :data_collectors_with_invalid_graph_types => :environment do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task will search for all Data Collectors with a graph_type_id == 3 (Static)
 which was used to indicate a static graph type, and set the graph_type_id to 1 
@@ -84,7 +84,7 @@ These Embeddable::DataCollectors appeared to be created by the ITSI importer.
 There is no way for this transformation to tell whether the original graph was a 
 sensor or prediction graph_type so it sets the type to 1 (Sensor).
 
-HEREDOC
+      HEREDOC
       old_style_static_graphs = Embeddable::DataCollector.find_all_by_graph_type_id(3)
       puts "converting #{old_style_static_graphs.length} old style static graphs and changing type to Sensor"
       attributes = { :graph_type_id => 1, :static => true }

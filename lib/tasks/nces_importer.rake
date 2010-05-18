@@ -14,12 +14,12 @@ namespace :portal do
     # 
     desc 'Download NCES CCD data files from NCES website'
     task :download_nces_data do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 Download District and School NCES Common Core of Data files from the 
 NCES website: http://nces.ed.gov/ccd/data/zip/
 
-HEREDOC
+      HEREDOC
       FileUtils.mkdir_p(nces_dir) unless File.exists?(nces_dir)
       Dir.chdir(nces_dir) do
         files = [

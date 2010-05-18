@@ -22,7 +22,7 @@ namespace :rigse do
     
     desc "generate MavenJnlp resources from jnlp servers in settings.yml"
     task :generate_maven_jnlp_resources => :generate_names_for_maven_jnlp_servers do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
 
@@ -41,7 +41,7 @@ Generate MavenJnlp family of resources from jnlp servers in settings.yml.
 If you want to generate resources for all the MavenJnlp familes hosted on the MavenJnlp server
 delete all the family names assigned to: maven_jnlp_families.
 
-HEREDOC
+      HEREDOC
 
       maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
       if maven_jnlp_families = APP_CONFIG[:maven_jnlp_families]
@@ -61,7 +61,7 @@ HEREDOC
       servers = MavenJnlp::MavenJnlpServer.find(:all)
       servers.each do |mj_server|
 
-        puts <<HEREDOC
+        puts <<-HEREDOC
 
 Generating: #{families} MavenJnlp families from this jnlp server specification:
 
@@ -69,7 +69,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
   host: #{mj_server.host}
   path: #{mj_server.path}
 
-HEREDOC
+        HEREDOC
 
         if RAILS_ENV != 'development' || wrapped_agree("Do you want to do this? (y/n) ")  
           mj_server.create_maven_jnlp_families
@@ -85,7 +85,7 @@ HEREDOC
     
     desc "delete all the MavenJnlp resources"
     task :delete_maven_jnlp_resources => [:environment, :empty_jnlp_object_cache] do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This will delete all the data in the following tables:
 
@@ -97,7 +97,7 @@ This will delete all the data in the following tables:
   MavenJnlp::Jar: #{MavenJnlp::Jar.count} records
   MavenJnlp::Icon: #{MavenJnlp::Icon.count} records
 
-HEREDOC
+      HEREDOC
       if wrapped_agree("Do you want to do this?  (y/n)" )
         
         MavenJnlp::MavenJnlpServer.delete_all_cached_maven_jnlp_resources

@@ -15,14 +15,14 @@ namespace :rigse do
     end
     
     def display_user(user)
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
        login: #{user.login}
        email: #{user.email}
   first_name: #{user.first_name}
    last_name: #{user.last_name}
 
-HEREDOC
+      HEREDOC
     end
   
     def edit_user(user)
@@ -46,7 +46,7 @@ HEREDOC
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task creates six roles (if they don't already exist):
 
@@ -86,7 +86,7 @@ will be teaching a course named 'Fun with Investigations' and a class in that co
 A student named: 'Student User' will be created and will be a learner in the default class: '#{DEFAULT_CLASS_NAME}'.
 
 First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
-HEREDOC
+      HEREDOC
 
       roles_in_order = [
         admin_role = Role.find_or_create_by_title('admin'),
