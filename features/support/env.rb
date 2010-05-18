@@ -68,7 +68,19 @@ if defined?(ActiveRecord::Base)
       probe_probe_types
       probe_vendor_interfaces
     }
-    DatabaseCleaner.strategy = :truncation, { :except => probe_tables }
+    rigse_tables = %w{
+      ri_gse_assessment_targets
+      ri_gse_big_ideas
+      ri_gse_domains
+      ri_gse_expectations
+      ri_gse_expectation_indicators 
+      ri_gse_expectation_stems
+      ri_gse_grade_span_expectations
+      ri_gse_knowledge_statements
+      ri_gse_unifying_themes
+      ri_gse_assessment_target_unifying_themes
+    }
+    DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
   rescue LoadError => ignore_if_database_cleaner_not_present
     puts "*** please install the gem database_cleaner"
   end

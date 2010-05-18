@@ -1,6 +1,7 @@
 
-Given /the following users[(?exist):\s]*$/i do |users_tabe|
-  users_tabe.hashes.each do |hash|
+Given /the following users[(?exist):\s]*$/i do |users_table|
+  User.anonymous(true)
+  users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     roles = roles ? roles.split(/,\s*/) : nil
     begin

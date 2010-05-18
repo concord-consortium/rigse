@@ -123,6 +123,7 @@
       org.concord.otrunk.script.ui.OTScriptObject
       org.concord.otrunk.script.ui.OTScriptVariableView
       org.concord.smartgraph.OTSmartGraphTool
+      org.concord.multimedia.state.OTSoundGrapherModel
     } + data_filter_inports + (@otrunk_imports || []).uniq
     imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
   end
@@ -178,7 +179,8 @@
       ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView'],
       ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolHiddenView'],
       ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
-      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView']
+      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView'],
+      ['sound_grapher_view', 'org.concord.multimedia.state.OTSoundGrapherModel', 'org.concord.multimedia.state.ui.OTSoundGrapherModelView']
     ] + (@otrunk_view_entries || []).uniq
   end
   

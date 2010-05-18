@@ -1,0 +1,829 @@
+--- 
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 1
+  uuid: 3150b21c-61fe-11df-a821-001ff3caa767
+  id: 1
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 2
+  uuid: 31543590-61fe-11df-a821-001ff3caa767
+  id: 2
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 3
+  uuid: 3156bfb8-61fe-11df-a821-001ff3caa767
+  id: 3
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 4
+  uuid: 31598342-61fe-11df-a821-001ff3caa767
+  id: 4
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 5
+  uuid: 315ba064-61fe-11df-a821-001ff3caa767
+  id: 5
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 6
+  uuid: 315e3a36-61fe-11df-a821-001ff3caa767
+  id: 6
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 2
+  grade_span_expectation_id: 7
+  uuid: 3167c7a4-61fe-11df-a821-001ff3caa767
+  id: 7
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 2
+  grade_span_expectation_id: 8
+  uuid: 316ac670-61fe-11df-a821-001ff3caa767
+  id: 8
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 9
+  uuid: 316db63c-61fe-11df-a821-001ff3caa767
+  id: 9
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 10
+  uuid: 31703eca-61fe-11df-a821-001ff3caa767
+  id: 10
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 11
+  uuid: 3173fd12-61fe-11df-a821-001ff3caa767
+  id: 11
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 3
+  grade_span_expectation_id: 12
+  uuid: 317c1218-61fe-11df-a821-001ff3caa767
+  id: 12
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 3
+  grade_span_expectation_id: 13
+  uuid: 317e21d4-61fe-11df-a821-001ff3caa767
+  id: 13
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 3
+  grade_span_expectation_id: 14
+  uuid: 3197e164-61fe-11df-a821-001ff3caa767
+  id: 14
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 3
+  grade_span_expectation_id: 15
+  uuid: 3199fa30-61fe-11df-a821-001ff3caa767
+  id: 15
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 1
+  grade_span_expectation_id: 16
+  uuid: 319c03a2-61fe-11df-a821-001ff3caa767
+  id: 16
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 4
+  grade_span_expectation_id: 17
+  uuid: 31a4733e-61fe-11df-a821-001ff3caa767
+  id: 17
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 4
+  grade_span_expectation_id: 18
+  uuid: 31a739de-61fe-11df-a821-001ff3caa767
+  id: 18
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 5
+  grade_span_expectation_id: 19
+  uuid: 31aae12e-61fe-11df-a821-001ff3caa767
+  id: 19
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 5
+  grade_span_expectation_id: 20
+  uuid: 31ad85b4-61fe-11df-a821-001ff3caa767
+  id: 20
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 6
+  grade_span_expectation_id: 21
+  uuid: 31b29234-61fe-11df-a821-001ff3caa767
+  id: 21
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 6
+  grade_span_expectation_id: 22
+  uuid: 31b49a3e-61fe-11df-a821-001ff3caa767
+  id: 22
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 23
+  uuid: 31bee3fe-61fe-11df-a821-001ff3caa767
+  id: 23
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 24
+  uuid: 31c1e644-61fe-11df-a821-001ff3caa767
+  id: 24
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 8
+  grade_span_expectation_id: 25
+  uuid: 31c674f2-61fe-11df-a821-001ff3caa767
+  id: 25
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 8
+  grade_span_expectation_id: 26
+  uuid: 31c99c04-61fe-11df-a821-001ff3caa767
+  id: 26
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 27
+  uuid: 31cd5bbe-61fe-11df-a821-001ff3caa767
+  id: 27
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 28
+  uuid: 31d1ae08-61fe-11df-a821-001ff3caa767
+  id: 28
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 29
+  uuid: 31db48aa-61fe-11df-a821-001ff3caa767
+  id: 29
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 30
+  uuid: 31dd8700-61fe-11df-a821-001ff3caa767
+  id: 30
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 9
+  grade_span_expectation_id: 31
+  uuid: 31e0db62-61fe-11df-a821-001ff3caa767
+  id: 31
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 9
+  grade_span_expectation_id: 32
+  uuid: 31e30f86-61fe-11df-a821-001ff3caa767
+  id: 32
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 10
+  grade_span_expectation_id: 33
+  uuid: 31e61d16-61fe-11df-a821-001ff3caa767
+  id: 33
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 10
+  grade_span_expectation_id: 34
+  uuid: 32019af0-61fe-11df-a821-001ff3caa767
+  id: 34
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 35
+  uuid: 3208cc94-61fe-11df-a821-001ff3caa767
+  id: 35
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 7
+  grade_span_expectation_id: 36
+  uuid: 320b7732-61fe-11df-a821-001ff3caa767
+  id: 36
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 11
+  grade_span_expectation_id: 37
+  uuid: 320e9020-61fe-11df-a821-001ff3caa767
+  id: 37
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 12
+  grade_span_expectation_id: 38
+  uuid: 32198318-61fe-11df-a821-001ff3caa767
+  id: 38
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 12
+  grade_span_expectation_id: 39
+  uuid: 321c0322-61fe-11df-a821-001ff3caa767
+  id: 39
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 13
+  grade_span_expectation_id: 40
+  uuid: 321ef6ae-61fe-11df-a821-001ff3caa767
+  id: 40
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 12
+  grade_span_expectation_id: 41
+  uuid: 32213c2a-61fe-11df-a821-001ff3caa767
+  id: 41
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 14
+  grade_span_expectation_id: 42
+  uuid: 3225eda6-61fe-11df-a821-001ff3caa767
+  id: 42
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 14
+  grade_span_expectation_id: 43
+  uuid: 32288aca-61fe-11df-a821-001ff3caa767
+  id: 43
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 15
+  grade_span_expectation_id: 44
+  uuid: 3231efb6-61fe-11df-a821-001ff3caa767
+  id: 44
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 15
+  grade_span_expectation_id: 45
+  uuid: 32340abc-61fe-11df-a821-001ff3caa767
+  id: 45
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 14
+  grade_span_expectation_id: 46
+  uuid: 3236fdee-61fe-11df-a821-001ff3caa767
+  id: 46
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  expectation_stem_id: 16
+  grade_span_expectation_id: 47
+  uuid: 323c2fda-61fe-11df-a821-001ff3caa767
+  id: 47
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 17
+  grade_span_expectation_id: 48
+  uuid: 3315608e-61fe-11df-a821-001ff3caa767
+  id: 48
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 17
+  grade_span_expectation_id: 49
+  uuid: 33191ec2-61fe-11df-a821-001ff3caa767
+  id: 49
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 50
+  uuid: 331ddfa2-61fe-11df-a821-001ff3caa767
+  id: 50
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 51
+  uuid: 3320fc32-61fe-11df-a821-001ff3caa767
+  id: 51
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 52
+  uuid: 33236224-61fe-11df-a821-001ff3caa767
+  id: 52
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 53
+  uuid: 332b9278-61fe-11df-a821-001ff3caa767
+  id: 53
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 54
+  uuid: 332db0a8-61fe-11df-a821-001ff3caa767
+  id: 54
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 55
+  uuid: 332fc21c-61fe-11df-a821-001ff3caa767
+  id: 55
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 56
+  uuid: 3332add8-61fe-11df-a821-001ff3caa767
+  id: 56
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 57
+  uuid: 3334bc86-61fe-11df-a821-001ff3caa767
+  id: 57
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 19
+  grade_span_expectation_id: 58
+  uuid: 333f5a1a-61fe-11df-a821-001ff3caa767
+  id: 58
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 19
+  grade_span_expectation_id: 59
+  uuid: 3359990c-61fe-11df-a821-001ff3caa767
+  id: 59
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 60
+  uuid: 335c530e-61fe-11df-a821-001ff3caa767
+  id: 60
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 61
+  uuid: 335e7d78-61fe-11df-a821-001ff3caa767
+  id: 61
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 62
+  uuid: 33618946-61fe-11df-a821-001ff3caa767
+  id: 62
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 63
+  uuid: 336dd142-61fe-11df-a821-001ff3caa767
+  id: 63
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 64
+  uuid: 336fd80c-61fe-11df-a821-001ff3caa767
+  id: 64
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 65
+  uuid: 3372fb22-61fe-11df-a821-001ff3caa767
+  id: 65
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 66
+  uuid: 33770e2e-61fe-11df-a821-001ff3caa767
+  id: 66
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 20
+  grade_span_expectation_id: 67
+  uuid: 337a9b20-61fe-11df-a821-001ff3caa767
+  id: 67
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 68
+  uuid: 3381faf0-61fe-11df-a821-001ff3caa767
+  id: 68
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 18
+  grade_span_expectation_id: 69
+  uuid: 33849d78-61fe-11df-a821-001ff3caa767
+  id: 69
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 20
+  grade_span_expectation_id: 70
+  uuid: 33877f70-61fe-11df-a821-001ff3caa767
+  id: 70
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 20
+  grade_span_expectation_id: 71
+  uuid: 338a338c-61fe-11df-a821-001ff3caa767
+  id: 71
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 21
+  grade_span_expectation_id: 72
+  uuid: 338e3c84-61fe-11df-a821-001ff3caa767
+  id: 72
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 21
+  grade_span_expectation_id: 73
+  uuid: 33903b92-61fe-11df-a821-001ff3caa767
+  id: 73
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 22
+  grade_span_expectation_id: 74
+  uuid: 33952d5a-61fe-11df-a821-001ff3caa767
+  id: 74
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 22
+  grade_span_expectation_id: 75
+  uuid: 3397b3f4-61fe-11df-a821-001ff3caa767
+  id: 75
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  expectation_stem_id: 23
+  grade_span_expectation_id: 76
+  uuid: 339d5b38-61fe-11df-a821-001ff3caa767
+  id: 76
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 23
+  grade_span_expectation_id: 77
+  uuid: 339f5cda-61fe-11df-a821-001ff3caa767
+  id: 77
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 24
+  grade_span_expectation_id: 78
+  uuid: 33a49470-61fe-11df-a821-001ff3caa767
+  id: 78
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 24
+  grade_span_expectation_id: 79
+  uuid: 33a7aa5c-61fe-11df-a821-001ff3caa767
+  id: 79
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 25
+  grade_span_expectation_id: 80
+  uuid: 33c41b9c-61fe-11df-a821-001ff3caa767
+  id: 80
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 26
+  grade_span_expectation_id: 81
+  uuid: 340af8dc-61fe-11df-a821-001ff3caa767
+  id: 81
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 26
+  grade_span_expectation_id: 82
+  uuid: 340daa14-61fe-11df-a821-001ff3caa767
+  id: 82
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 27
+  grade_span_expectation_id: 83
+  uuid: 3428b55c-61fe-11df-a821-001ff3caa767
+  id: 83
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 27
+  grade_span_expectation_id: 84
+  uuid: 342ad526-61fe-11df-a821-001ff3caa767
+  id: 84
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 85
+  uuid: 342df648-61fe-11df-a821-001ff3caa767
+  id: 85
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  expectation_stem_id: 29
+  grade_span_expectation_id: 86
+  uuid: 34314514-61fe-11df-a821-001ff3caa767
+  id: 86
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 87
+  uuid: 3439d396-61fe-11df-a821-001ff3caa767
+  id: 87
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 88
+  uuid: 343bf932-61fe-11df-a821-001ff3caa767
+  id: 88
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 89
+  uuid: 343e1c4e-61fe-11df-a821-001ff3caa767
+  id: 89
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 90
+  uuid: 34404ee2-61fe-11df-a821-001ff3caa767
+  id: 90
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 30
+  grade_span_expectation_id: 91
+  uuid: 34440870-61fe-11df-a821-001ff3caa767
+  id: 91
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 30
+  grade_span_expectation_id: 92
+  uuid: 3447585e-61fe-11df-a821-001ff3caa767
+  id: 92
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 31
+  grade_span_expectation_id: 93
+  uuid: 344ebfea-61fe-11df-a821-001ff3caa767
+  id: 93
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 31
+  grade_span_expectation_id: 94
+  uuid: 34515cfa-61fe-11df-a821-001ff3caa767
+  id: 94
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 31
+  grade_span_expectation_id: 95
+  uuid: 3454822c-61fe-11df-a821-001ff3caa767
+  id: 95
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 31
+  grade_span_expectation_id: 96
+  uuid: 3457c1c6-61fe-11df-a821-001ff3caa767
+  id: 96
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 97
+  uuid: 34600d54-61fe-11df-a821-001ff3caa767
+  id: 97
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 28
+  grade_span_expectation_id: 98
+  uuid: 3462431c-61fe-11df-a821-001ff3caa767
+  id: 98
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 32
+  grade_span_expectation_id: 99
+  uuid: 34675c80-61fe-11df-a821-001ff3caa767
+  id: 99
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 32
+  grade_span_expectation_id: 100
+  uuid: 346a1ca4-61fe-11df-a821-001ff3caa767
+  id: 100
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 33
+  grade_span_expectation_id: 101
+  uuid: 3473da3c-61fe-11df-a821-001ff3caa767
+  id: 101
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 33
+  grade_span_expectation_id: 102
+  uuid: 34762134-61fe-11df-a821-001ff3caa767
+  id: 102
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 103
+  uuid: 3478c83a-61fe-11df-a821-001ff3caa767
+  id: 103
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 104
+  uuid: 3493bee2-61fe-11df-a821-001ff3caa767
+  id: 104
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 105
+  uuid: 3497953a-61fe-11df-a821-001ff3caa767
+  id: 105
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 106
+  uuid: 349ad5a6-61fe-11df-a821-001ff3caa767
+  id: 106
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 35
+  grade_span_expectation_id: 107
+  uuid: 34a45d60-61fe-11df-a821-001ff3caa767
+  id: 107
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 35
+  grade_span_expectation_id: 108
+  uuid: 34a74fb6-61fe-11df-a821-001ff3caa767
+  id: 108
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 33
+  grade_span_expectation_id: 109
+  uuid: 34aa7f92-61fe-11df-a821-001ff3caa767
+  id: 109
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 33
+  grade_span_expectation_id: 110
+  uuid: 34ad666c-61fe-11df-a821-001ff3caa767
+  id: 110
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 36
+  grade_span_expectation_id: 111
+  uuid: 34b12022-61fe-11df-a821-001ff3caa767
+  id: 111
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 36
+  grade_span_expectation_id: 112
+  uuid: 34b3d6aa-61fe-11df-a821-001ff3caa767
+  id: 112
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 37
+  grade_span_expectation_id: 113
+  uuid: 34ba4fe4-61fe-11df-a821-001ff3caa767
+  id: 113
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 37
+  grade_span_expectation_id: 114
+  uuid: 34bd226e-61fe-11df-a821-001ff3caa767
+  id: 114
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 38
+  grade_span_expectation_id: 115
+  uuid: 34c1440c-61fe-11df-a821-001ff3caa767
+  id: 115
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 116
+  uuid: 34cc69ea-61fe-11df-a821-001ff3caa767
+  id: 116
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  expectation_stem_id: 34
+  grade_span_expectation_id: 117
+  uuid: 34cec51e-61fe-11df-a821-001ff3caa767
+  id: 117
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 26
+  grade_span_expectation_id: 118
+  uuid: 34d1bf4e-61fe-11df-a821-001ff3caa767
+  id: 118
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 26
+  grade_span_expectation_id: 119
+  uuid: 34d5fb5e-61fe-11df-a821-001ff3caa767
+  id: 119
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 39
+  grade_span_expectation_id: 120
+  uuid: 34d9cb76-61fe-11df-a821-001ff3caa767
+  id: 120
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 39
+  grade_span_expectation_id: 121
+  uuid: 34dc03c8-61fe-11df-a821-001ff3caa767
+  id: 121
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 40
+  grade_span_expectation_id: 122
+  uuid: 34e2de8c-61fe-11df-a821-001ff3caa767
+  id: 122
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 41
+  grade_span_expectation_id: 123
+  uuid: 34e6a774-61fe-11df-a821-001ff3caa767
+  id: 123
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 41
+  grade_span_expectation_id: 124
+  uuid: 3502d4c6-61fe-11df-a821-001ff3caa767
+  id: 124
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 41
+  grade_span_expectation_id: 125
+  uuid: 35061668-61fe-11df-a821-001ff3caa767
+  id: 125
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 126
+  uuid: 35107bda-61fe-11df-a821-001ff3caa767
+  id: 126
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 127
+  uuid: 3513d230-61fe-11df-a821-001ff3caa767
+  id: 127
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 128
+  uuid: 3516afd2-61fe-11df-a821-001ff3caa767
+  id: 128
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 129
+  uuid: 3519723a-61fe-11df-a821-001ff3caa767
+  id: 129
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 43
+  grade_span_expectation_id: 130
+  uuid: 351cb7c4-61fe-11df-a821-001ff3caa767
+  id: 130
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 43
+  grade_span_expectation_id: 131
+  uuid: 35202422-61fe-11df-a821-001ff3caa767
+  id: 131
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 44
+  grade_span_expectation_id: 132
+  uuid: 352912b2-61fe-11df-a821-001ff3caa767
+  id: 132
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 44
+  grade_span_expectation_id: 133
+  uuid: 352bc2f0-61fe-11df-a821-001ff3caa767
+  id: 133
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 44
+  grade_span_expectation_id: 134
+  uuid: 352e76bc-61fe-11df-a821-001ff3caa767
+  id: 134
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 44
+  grade_span_expectation_id: 135
+  uuid: 35313ca8-61fe-11df-a821-001ff3caa767
+  id: 135
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 136
+  uuid: 35342b5c-61fe-11df-a821-001ff3caa767
+  id: 136
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 42
+  grade_span_expectation_id: 137
+  uuid: 3536b85e-61fe-11df-a821-001ff3caa767
+  id: 137
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  expectation_stem_id: 45
+  grade_span_expectation_id: 138
+  uuid: 353c8ae0-61fe-11df-a821-001ff3caa767
+  id: 138
+  created_at: 2010-05-17 21:50:28 Z

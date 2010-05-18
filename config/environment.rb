@@ -68,7 +68,7 @@ Rails::Initializer.run do |config|
   config.gem 'open4', :version => '>= 0.9.6'
   config.gem "prawn-format", :lib => 'prawn/format', :version => '>= 0.1.1'
   config.gem "chriseppstein-compass", :lib => 'compass', :version => '>= 0.6.3'
-  config.gem "jnlp", :version => '>= 0.0.5.3'
+  config.gem "jnlp", :version => '>= 0.6.1'
   config.gem "has_many_polymorphs", :version => ">= 2.13"
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"

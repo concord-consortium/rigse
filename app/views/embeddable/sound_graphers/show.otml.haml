@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@sound_grapher.uuid
+- content_for(:sound_grapher_object_id) do
+  =dom_id_for(@sound_grapher)
+= render :partial => "show", :locals => { :sound_grapher => @sound_grapher }
