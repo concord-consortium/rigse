@@ -4,9 +4,8 @@ Feature: An author edits a data collector
   So that I can provoke exploration by my students.
   
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
-  @javascript
   Scenario: The author edits a graph and sees the Y-axis label and units change as the probe type changes
     Given the following users exist:
       | login        | password            | roles                |
