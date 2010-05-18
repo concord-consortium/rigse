@@ -226,10 +226,16 @@ class User < ActiveRecord::Base
   #
   def self.anonymous(reload=false)
     @@anonymous_user = nil if reload
-    @@anonymous_user ||=  User.find_or_create_by_login(:login => "anonymous", 
-      :first_name => "Anonymous", :last_name => "User",
-      :email => "anonymous@concord.org", 
-      :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+    if @@anonymous_user
+      @@anonymous_user
+    else
+      anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
+        :first_name => "Anonymous", :last_name => "User",
+        :email => "anonymous@concord.org", 
+        :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+      anonymous_user.add_role('guest')
+      @@anonymous_user = anonymous_user
+    end
   end
 
   # a bit of a silly method to help the code in lib/changeable.rb so
