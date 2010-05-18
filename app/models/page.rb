@@ -30,6 +30,7 @@ class Page < ActiveRecord::Base
     Embeddable::NLogoModel,
     Embeddable::OpenResponse,
     Embeddable::Smartgraph::RangeQuestion,
+    Embeddable::SoundGrapher,
     Embeddable::LabBookSnapshot,
     Embeddable::Xhtml,
     Embeddable::Biologica::BreedOffspring,
