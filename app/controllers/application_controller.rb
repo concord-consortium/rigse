@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
   
-  helper :all # include all helpers, all the time
+  # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   
   before_filter :setup_container
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   protected
   
   def setup_container
-    @container_type = self.class.controller_name.classify
+    @container_type = self.class.name[/(.+)sController/,1]
     @container_id =  request.symbolized_path_parameters[:id]
   end
   
@@ -74,7 +74,9 @@ class ApplicationController < ActionController::Base
       elsif container_type = params[:container_type] 
         @scope = container_type.constantize.find(params[:container_id])
       end
+      @scope
     rescue ActiveRecord::RecordNotFound
+      nil
     end
   end
 

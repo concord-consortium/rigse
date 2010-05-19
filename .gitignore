@@ -39,6 +39,7 @@ public/stylesheets/screen.css
 public/stylesheets/readme.css
 public/stylesheets/teacher_overlay.css
 public/jnlp/*/*
+config/jnlp_objects/*/*
 config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
 public/otrunk-examples/
@@ -74,3 +75,4 @@ public/installers/*
 resources/rinet_test_data/report*
 mkmf.log
 hudson/*
+spec/reports

@@ -118,7 +118,7 @@ module JnlpHelper
     response.headers["Content-Type"] = "application/x-java-jnlp-file"
     response.headers["Cache-Control"] = "max-age=1"
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
-    response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+    response.headers["Content-Disposition"] = "inline; filename=#{APP_CONFIG[:theme]}_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
   end
   
   def config_headers(runnable)

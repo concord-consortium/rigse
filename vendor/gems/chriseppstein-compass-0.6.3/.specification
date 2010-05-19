@@ -1,6 +1,11 @@
 --- !ruby/object:Gem::Specification 
 name: chriseppstein-compass
 version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 0
+  - 6
+  - 3
   version: 0.6.3
 platform: ruby
 authors: 
@@ -14,24 +19,28 @@ default_executable: compass
 dependencies: 
 - !ruby/object:Gem::Dependency 
   name: haml
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 0
         version: "0"
-    version: 
+  type: :runtime
+  version_requirements: *id001
 - !ruby/object:Gem::Dependency 
   name: echoe
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 0
         version: "0"
-    version: 
+  type: :runtime
+  version_requirements: *id002
 description: Sass-Based CSS Meta-Framework. Semantic, Maintainable CSS.
 email: chris@eppsteins.net
 executables: 
@@ -326,18 +335,21 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
-  version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 1
+      - 2
       version: "1.2"
-  version: 
 requirements: []
 
 rubyforge_project: compass
-rubygems_version: 1.3.5
+rubygems_version: 1.3.6
 signing_key: 
 specification_version: 2
 summary: Sass-Based CSS Meta-Framework.

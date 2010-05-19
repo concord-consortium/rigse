@@ -1,12 +1,16 @@
+Feature: Rites Teachers see their classes and students
+
 Rinet teachers that have been imported into the RITES portal should be able to view
 Their classes, and their class students. However these teachers should not be able to edit
 their imported classes. (because it comes from SIS)
 
-Feature: Rites Teachers see their classes and students
   As a Rinet Teacher with imported classes
   I want to see my classes and students
   So that I can assign investigations to them
   
+  Background:
+    Given The default project and jnlp resources exist using mocks
+
   Scenario: Rinet Teachers can view their classes
     Given I am a Rinet teacher
     When I login with the link tool

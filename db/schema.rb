@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100421160050) do
+ActiveRecord::Schema.define(:version => 20100517145944) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -484,12 +484,22 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
     t.datetime "updated_at"
   end
 
+  create_table "embeddable_sound_graphers", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",       :limit => 36
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.string  "name"
-    t.text    "description"
-    t.integer "user_id"
-    t.string  "uuid",        :limit => 36
-    t.text    "content"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "external_user_domains", :force => true do |t|
@@ -792,7 +802,12 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_district_id"
+    t.string   "state",            :limit => 2
+    t.string   "leaid",            :limit => 7
+    t.string   "zipcode",          :limit => 5
   end
+
+  add_index "portal_districts", ["state"], :name => "index_portal_districts_on_state"
 
   create_table "portal_grade_levels", :force => true do |t|
     t.string   "uuid",                  :limit => 36
@@ -1518,6 +1533,7 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   add_index "portal_nces06_schools", ["SCHNAM"], :name => "index_portal_nces06_schools_on_SCHNAM"
   add_index "portal_nces06_schools", ["SEASCH"], :name => "index_portal_nces06_schools_on_SEASCH"
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
+  add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
   create_table "portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -1545,14 +1561,19 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
 
   create_table "portal_schools", :force => true do |t|
-    t.string   "uuid",           :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
+    t.string   "state",           :limit => 2
+    t.string   "leaid_schoolnum", :limit => 12
+    t.string   "zipcode",         :limit => 5
   end
+
+  add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
 
   create_table "portal_semesters", :force => true do |t|
     t.string   "uuid",        :limit => 36
@@ -1625,29 +1646,34 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_calibrations", :force => true do |t|
-    t.integer "data_filter_id"
-    t.integer "probe_type_id"
-    t.boolean "default_calibration"
-    t.integer "physical_unit_id"
-    t.string  "name"
-    t.text    "description"
-    t.float   "k0"
-    t.float   "k1"
-    t.float   "k2"
-    t.float   "k3"
-    t.string  "uuid"
+    t.integer  "data_filter_id"
+    t.integer  "probe_type_id"
+    t.boolean  "default_calibration"
+    t.integer  "physical_unit_id"
+    t.string   "name"
+    t.text     "description"
+    t.float    "k0"
+    t.float    "k1"
+    t.float    "k2"
+    t.float    "k3"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.text    "description"
-    t.string  "otrunk_object_class"
-    t.boolean "k0_active"
-    t.boolean "k1_active"
-    t.boolean "k2_active"
-    t.boolean "k3_active"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "otrunk_object_class"
+    t.boolean  "k0_active"
+    t.boolean  "k1_active"
+    t.boolean  "k2_active"
+    t.boolean  "k3_active"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1660,40 +1686,46 @@ ActiveRecord::Schema.define(:version => 20100421160050) do
   end
 
   create_table "probe_physical_units", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "quantity"
-    t.string  "unit_symbol"
-    t.string  "unit_symbol_text"
-    t.text    "description"
-    t.boolean "si"
-    t.boolean "base_unit"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "quantity"
+    t.string   "unit_symbol"
+    t.string   "unit_symbol_text"
+    t.text     "description"
+    t.boolean  "si"
+    t.boolean  "base_unit"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_probe_types", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.integer "ptype"
-    t.float   "step_size"
-    t.integer "display_precision"
-    t.integer "port"
-    t.string  "unit"
-    t.float   "min"
-    t.float   "max"
-    t.float   "period"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "ptype"
+    t.float    "step_size"
+    t.integer  "display_precision"
+    t.integer  "port"
+    t.string   "unit"
+    t.float    "min"
+    t.float    "max"
+    t.float    "period"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "short_name"
-    t.text    "description"
-    t.string  "communication_protocol"
-    t.string  "image"
-    t.string  "uuid"
-    t.integer "device_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "short_name"
+    t.text     "description"
+    t.string   "communication_protocol"
+    t.string   "image"
+    t.string   "uuid"
+    t.integer  "device_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|

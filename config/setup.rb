@@ -8,61 +8,84 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
-# This hash will hold all of the @options
-# parsed from the command-line by
-# OptionParser.
+# ==================================================================
+#
+#   Options parsing
+#
+# ==================================================================
+
+# This hash will hold all of the @options parsed from the 
+# command-line by OptionParser.
 @options = {}
 
-optparse = OptionParser.new do|opts|
+# default values for options
+
+default_theme = 'default'
+default_app_name = 'Investigations'
+default_db_user = 'root'
+default_db_password = 'password'
+default_db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
+default_quiet = false
+default_answer_yes = false
+default_force = false
+
+optparse = OptionParser.new do |opts|
   # Set a banner, displayed at the top
   # of the help screen.
   opts.banner = "Usage: config/setup.rb [@options]"
 
   # Define the @options, and what they do
-  @options[:quiet] = false
-  opts.on( '-q', '--quiet', 'print much less to the console' ) do
-    @options[:quiet] = true
-  end
-
-  @options[:theme] = 'default'
-  opts.on( '-t', '--theme THEME', 'the theme for this Investigations instance' ) do |theme|
+  @options[:theme] = default_theme
+  opts.on( '-t', '--theme THEME', 
+    "theme used to setup and run this Investigations instance, default: '#{default_theme}'" ) do |theme|
     @options[:theme] = theme
   end
 
-  @options[:force] = 'false'
-  opts.on( '-f', '--force', 'force updates of settings.yml and database.yml' ) do |force|
-    @options[:force] = force
-  end
-
-  @options[:app_name] = 'RITES Investigations'
-  opts.on( '-n', '--name APP_NAME', 'the name for this Investigations instance' ) do |app_name|
+  @options[:app_name] = default_app_name
+  opts.on( '-n', '--name APP_NAME', 
+    "app name for this Investigations instance, default: '#{default_app_name}'" ) do |app_name|
     @options[:app_name] = app_name
   end
 
-  @options[:db_user] = 'root'
-  opts.on( '-u', '--user USERNAME', 'the username for creating and accessing the mysql database' ) do |db_user|
+  @options[:db_user] = default_db_user
+  opts.on( '-u', '--user USERNAME', 
+    "database username, default: '#{default_db_user}'" ) do |db_user|
     @options[:db_user] = db_user
   end
 
-  @options[:db_password] = 'password'
-  opts.on( '-p', '--password PASSWORD', 'the password for creating and accessing the mysql database' ) do |db_password|
+  @options[:db_password] = default_db_password
+  opts.on( '-p', '--password PASSWORD', 
+    "database password, default: '#{default_db_password}'" ) do |db_password|
     @options[:db_password] = db_password
   end
 
-  @options[:db_name_prefix] = APP_DIR_NAME.gsub(/\W/, '_')
-  opts.on( '-D', '--database DATABASE', 'the prefix names for the development, test, and production mysql databases to create' ) do |db_name_prefix|
+  @options[:db_name_prefix] = default_db_name_prefix
+  opts.on( '-D', '--database DATABASE', 
+    "prefix to add to the names for the development, test, and production databases, default: '#{default_db_name_prefix}'" ) do |db_name_prefix|
     @options[:db_name_prefix] = db_name_prefix
   end
 
-  # Define the @options, and what they do
-  @options[:answer_yes] = false
-  opts.on( '-y', '--yes', 'answer yes to all the defaults' ) do
+  @options[:quiet] = default_quiet
+  opts.on( '-q', '--quiet', 
+    "display fewer console messages, default: #{default_quiet}" ) do
+    @options[:quiet] = true
+  end
+
+  @options[:answer_yes] = default_answer_yes
+  opts.on( '-y', '--yes', 
+    'automatically answer yes and accept defaults, default: #{default_answer_yes}' ) do
     @options[:answer_yes] = true
+  end
+
+  @options[:force] = default_force
+  opts.on( '-f', '--force', 
+    "force updates of settings.yml and database.yml, default: #{default_force}" ) do |force|
+    @options[:force] = force
   end
 
   # This displays the help screen, all programs are
   # assumed to have this option.
-  opts.on( '-h', '--help', 'Display this screen' ) do
+  opts.on( '-h', '--help', 'show this help' ) do
     puts opts
     exit
   end
@@ -70,54 +93,22 @@ end
 
 optparse.parse!
 
-# should be run from the projects rails root.
-# Update: this doesn't seem to be working anymore..
-APPLICATION = @options[:app_name]
-print "\nInitial setup of #{APPLICATION} Rails application ... "
+# ==================================================================
+#
+#   General utility methods
+#
+# ==================================================================
 
-def not_using_rites_theme?
-  @options[:theme] != 'default' || @options[:theme] != 'rites'
-end
+def copy_file(source, destination)
 
-def using_rites_theme?
-  !not_using_rites_theme?
-end
+  unless @options[:quiet] 
+    puts <<-HEREDOC
+  copying: #{source}
+       to: #{destination}
 
-def env_does_not_use_jnlps?(env)
-  @settings_config[env][:runnables_use] && @settings_config[env][:runnables_use] == 'browser'
-end
-
-def env_uses_jnlps?(env)
-  !env_does_not_use_jnlps?(env)
-end
-
-# Add the unpacked gems in vendor/gems to the $LOAD_PATH
-Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
-  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
-end
-
-require 'uuidtools'
-
-# FIXME: see comment about this hack in config/environments/development.rb
-$: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
-
-require 'highline/import'
-
-def wrapped_agree(prompt)
-  if @options[:answer_yes]
-    true
-  else
-    agree(prompt)
+    HEREDOC
   end
-end
-
-def jruby_system_command
-  JRUBY ? "jruby -S" : ""
-end
-
-def gem_install_command_strings(missing_gems)
-  command = JRUBY ? "  jruby -S gem install " : "  sudo ruby gem install "
-  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
+  FileUtils.cp(source, destination)
 end
 
 def rails_file_path(*args)
@@ -131,52 +122,20 @@ end
 def file_exists_and_is_not_empty?(path)
    File.exists?(path) && File.stat(path).size > 0
 end
- 
-@db_config_path                = rails_file_path(%w{config database.yml})
 
-if @options[:force] && File.exists?(@db_config_path)
-  FileUtils.rm(@db_config_path)
-end
-@db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
-@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
-@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
-@mailer_config_path            = rails_file_path(%w{config mailer.yml})
-@mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
-
-@settings_config_path          = rails_file_path(%w{config settings.yml})
-if @options[:force] && File.exists?(@settings_config_path)
-  FileUtils.rm(@settings_config_path)
-end
-@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
-@settings_config_sample        = YAML::load_file(@settings_config_sample_path)
-if @options[:theme]
-  @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
-  @theme_settings_config_sample        = YAML::load_file(@theme_settings_config_sample_path)
-  @settings_config_sample.merge!(@theme_settings_config_sample)
-  @options[:db_name_prefix] = @options[:theme]
+def jruby_system_command
+  JRUBY ? "jruby -S" : ""
 end
 
-@db_config_sample              = YAML::load_file(@db_config_sample_path)
-@rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
-@mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
-# @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
+# ==================================================================
+#
+#   Check for gems that need to be installed manually
+#
+# ==================================================================
 
-@new_database_yml_created = false
-@new_settings_yml_created = false
-@new_rinet_data_yml_created = false
-@new_mailer_yml_created = false
-@new_sds_yml_created = false
-
-def copy_file(source, destination)
-
-  unless @options[:quiet] 
-    puts <<-HEREDOC
-  copying: #{source}
-       to: #{destination}
-
-    HEREDOC
-  end
-  FileUtils.cp(source, destination)
+def gem_install_command_strings(missing_gems)
+  command = JRUBY ? "  jruby -S gem install " : "  sudo gem install "
+  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
 end
 
 @missing_gems = []
@@ -210,6 +169,119 @@ if @missing_gems.length > 0
   raise message
 end
 
+
+# ==================================================================
+#
+#   Load required gems, libraries, and modules
+#
+# ==================================================================
+
+
+# Add the unpacked gems in vendor/gems to the $LOAD_PATH
+Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir| 
+  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
+end
+
+require 'uuidtools'
+
+require rails_file_path(%w{ config initializers 00_core_extensions })
+require rails_file_path(%w{ lib app_settings })
+require rails_file_path(%w{ lib states_and_provinces })
+
+# Some of the AppSettings module methods need the constant RAILS_ENV defined
+RAILS_ENV = 'development'
+include AppSettings
+
+# FIXME: see comment about this hack in config/environments/development.rb
+$: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
+
+require 'highline/import'
+
+def wrapped_agree(prompt)
+  if @options[:answer_yes]
+    true
+  else
+    agree(prompt)
+  end
+end
+
+# ==================================================================
+#
+#   Setup resources we will be manipulating
+#
+# ==================================================================
+
+@db_config_path                = rails_file_path(%w{config database.yml})
+
+if @options[:force] && File.exists?(@db_config_path)
+  FileUtils.rm(@db_config_path)
+end
+@db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
+@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
+@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
+@mailer_config_path            = rails_file_path(%w{config mailer.yml})
+@mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
+
+@settings_config_path          = rails_file_path(%w{config settings.yml})
+if @options[:force] && File.exists?(@settings_config_path)
+  FileUtils.rm(@settings_config_path)
+end
+@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
+@settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
+if @options[:theme]
+  @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
+  @theme_settings_config_sample        = AppSettings.load_all_app_settings(@theme_settings_config_sample_path)
+  @settings_config_sample.merge!(@theme_settings_config_sample)
+  if @options[:db_name_prefix] == default_db_name_prefix
+    @options[:db_name_prefix] = @options[:theme]
+  end
+  if @options[:app_name] == default_app_name && @theme_settings_config_sample['development'][:site_name]
+    @options[:app_name] = @theme_settings_config_sample['development'][:site_name]
+  end
+end
+
+@options[:app_name]
+print "\nInitial setup of Investigations application named '#{@options[:app_name]}' ... "
+
+@db_config_sample              = YAML::load_file(@db_config_sample_path)
+@rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
+@mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
+# @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
+
+@new_database_yml_created = false
+@new_settings_yml_created = false
+@new_rinet_data_yml_created = false
+@new_mailer_yml_created = false
+@new_sds_yml_created = false
+
+# ==================================================================
+#
+#   Investigations-specific utility methods
+#
+# ==================================================================
+
+def not_using_rites_theme?
+  @options[:theme] != 'default' || @options[:theme] != 'rites'
+end
+
+def using_rites_theme?
+  !not_using_rites_theme?
+end
+
+def env_does_not_use_jnlps?(env)
+  @settings_config[env][:runnables_use] && @settings_config[env][:runnables_use] == 'browser'
+end
+
+def env_uses_jnlps?(env)
+  !env_does_not_use_jnlps?(env)
+end
+
+# ==================================================================
+#
+#   Create new settings helper methods
+#
+# ==================================================================
+
 # returns true if @options[:db_name_prefix] on entry == @options[:db_name_prefix] on exit
 # false otherwise
 def confirm_database_name_prefix_user_password
@@ -240,8 +312,11 @@ end
 def create_new_database_yml
   @db_config = @db_config_sample
   %w{development test staging production}.each do |env|
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
-    @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    if env == 'development'
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_production"
+    else
+      @db_config[env]['database'] = "#{@options[:db_name_prefix]}_#{env}"
+    end
     @db_config[env]['username'] = @options[:db_user]
     @db_config[env]['password'] = @options[:db_password]
   end
@@ -249,7 +324,8 @@ def create_new_database_yml
     @db_config[external_db]['username'] = @options[:db_user]
     @db_config[external_db]['password'] = @options[:db_password]
   end
-
+  @db_config['cucumber'] = @db_config['test']
+  
   unless @options[:quiet]
     puts <<-HEREDOC
 
@@ -304,6 +380,12 @@ def create_new_rinet_data_yml
   File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
 end
 
+# ==================================================================
+#
+#   "Check for existence of" settings helper methods
+#
+# ==================================================================
+
 # 
 # check for git submodules
 #
@@ -325,8 +407,6 @@ Initializing git submodules ...
     end
   end
 end
-
-
 
 #
 # check for config/database.yml
@@ -361,7 +441,7 @@ def check_for_config_settings_yml
     end
     create_new_settings_yml
   else
-    @settings_config = YAML::load_file(@settings_config_path)
+    @settings_config = AppSettings.load_all_app_settings(@settings_config_path)
       unless @options[:quiet]
         puts <<-HEREDOC
 
@@ -382,46 +462,46 @@ def check_for_config_settings_yml
         end
         @settings_config[env] = @settings_config_sample[env]
       else
-        unless @settings_config[env]['states_and_provinces']
+        unless @settings_config[env][:states_and_provinces]
           unless @options[:quiet]
             puts <<-HEREDOC
 
   The states_and_provinces parameter does not yet exist in the #{env} section of settings.yml
 
-  Copying the values in the sample: #{@settings_config_sample[env]['states_and_provinces'].join(', ')} into settings.yml.
+  Copying the values in the sample: #{@settings_config_sample[env][:states_and_provinces].join(', ')} into settings.yml.
 
             HEREDOC
           end
-          @settings_config[env]['states_and_provinces'] = @settings_config_sample[env]['states_and_provinces']
+          @settings_config[env][:states_and_provinces] = @settings_config_sample[env][:states_and_provinces]
         end
 
-        unless @settings_config[env]['active_grades']
+        unless @settings_config[env][:active_grades]
           unless @options[:quiet]
             puts <<-HEREDOC
 
   The active_grades parameter does not yet exist in the #{env} section of settings.yml
 
-  Copying the values in the sample: #{@settings_config_sample[env]['active_grades'].join(', ')} into settings.yml.
+  Copying the values in the sample: #{@settings_config_sample[env][:active_grades].join(', ')} into settings.yml.
 
             HEREDOC
           end
-          @settings_config[env]['active_grades'] = @settings_config_sample[env]['active_grades']
+          @settings_config[env][:active_grades] = @settings_config_sample[env][:active_grades]
         end
 
-        unless @settings_config[env]['active_school_levels']
+        unless @settings_config[env][:active_school_levels]
           unless @options[:quiet]
             puts <<-HEREDOC
 
   The active_school_levels parameter does not yet exist in the #{env} section of settings.yml
 
-  Copying the values in the sample: #{@settings_config_sample[env]['active_school_levels'].join(', ')} into settings.yml.
+  Copying the values in the sample: #{@settings_config_sample[env][:active_school_levels].join(', ')} into settings.yml.
 
             HEREDOC
           end
-          @settings_config[env]['active_school_levels'] = @settings_config_sample[env]['active_school_levels']
+          @settings_config[env][:active_school_levels] = @settings_config_sample[env][:active_school_levels]
         end
       
-        unless @settings_config[env]['default_admin_user']
+        unless @settings_config[env][:default_admin_user]
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -435,10 +515,10 @@ def check_for_config_settings_yml
           original_keys.zip(new_keys).each do |key_pair|
             default_admin_user[key_pair[1]] = @settings_config[env].delete(key_pair[0])
           end
-          @settings_config[env]['default_admin_user'] = default_admin_user
+          @settings_config[env][:default_admin_user] = default_admin_user
         end
 
-        unless @settings_config[env]['default_maven_jnlp'] || env_does_not_use_jnlps?(env)
+        unless @settings_config[env][:default_maven_jnlp] || env_does_not_use_jnlps?(env)
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -453,24 +533,24 @@ def check_for_config_settings_yml
           original_keys.zip(new_keys).each do |key_pair|
             default_maven_jnlp[key_pair[1]] = @settings_config[env].delete(key_pair[0])
           end
-          @settings_config[env]['default_maven_jnlp'] = default_maven_jnlp        
+          @settings_config[env][:default_maven_jnlp] = default_maven_jnlp        
         end
 
-        unless @settings_config[env]['valid_sakai_instances'] || not_using_rites_theme?
+        unless @settings_config[env][:valid_sakai_instances] || not_using_rites_theme?
           unless @options[:quiet]
             puts <<-HEREDOC
 
   The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
 
-  Copying the values in the sample: #{@settings_config_sample[env]['valid_sakai_instances'].join(', ')} into settings.yml.
+  Copying the values in the sample: #{@settings_config_sample[env][:valid_sakai_instances].join(', ')} into settings.yml.
 
             HEREDOC
           end
-          @settings_config[env]['valid_sakai_instances'] = @settings_config_sample[env]['valid_sakai_instances']
+          @settings_config[env][:valid_sakai_instances] = @settings_config_sample[env][:valid_sakai_instances]
         end
         
         
-        unless @settings_config[env]['theme']
+        unless @settings_config[env][:theme]
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -480,11 +560,11 @@ def check_for_config_settings_yml
 
             HEREDOC
           end
-          @settings_config[env]['theme'] = 'default'
+          @settings_config[env][:theme] = 'default'
         end
         
         
-        unless @settings_config[env]['use_gse'] || not_using_rites_theme?
+        unless @settings_config[env][:use_gse] || not_using_rites_theme?
           unless @options[:quiet]
             puts <<-HEREDOC
 
@@ -494,7 +574,7 @@ def check_for_config_settings_yml
 
             HEREDOC
           end
-          @settings_config[env]['use_gse'] = true
+          @settings_config[env][:use_gse] = true
         end
       end
     end
@@ -726,6 +806,12 @@ Here are the current settings in config/rinet_data.yml:
   end
 end
 
+# ==================================================================
+#
+#   "Get existing" settings helper methods
+#
+# ==================================================================
+
 
 def get_include_otrunk_examples_settings(env)
   include_otrunk_examples = @settings_config[env]['include_otrunk_examples']
@@ -851,6 +937,12 @@ def get_maven_jnlp_settings(env)
   @settings_config[env]['default_jnlp_version'] =  ask("   default_jnlp_version: ") { |q| q.default = @settings_config[env]['default_jnlp_version'] }  
 end
 
+# ==================================================================
+#
+#   "Update existing" settings helper methods
+#
+# ==================================================================
+
 #
 # update config/settings.yml
 #
@@ -970,17 +1062,17 @@ def update_config_mailer_yml
 
 Updating the Rails mailer configuration file: config/mailer.yml
 
-You will need to specify values for the SMTP mail server this #{APPLICATION} instance will
+You will need to specify values for the SMTP mail server this #{@options[:app_name]} instance will
 use to send outgoing mail. In addition you need to specify the hostname of this specific 
-#{APPLICATION} instance.
+#{@options[:app_name]} instance.
 
 The SMTP parameters are used to send user account activation emails to new users and the 
-hostname of the #{APPLICATION} is used as part of account activation url rendered into the 
+hostname of the #{@options[:app_name]} is used as part of account activation url rendered into the 
 body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{APPLICATION} without the protocol: (example: #{@mailer_config_sample[:host]})
+  the hostname of the #{@options[:app_name]} without the protocol: (example: #{@mailer_config_sample[:host]})
 
 If you do not have a working SMTP server select the test deliver method instead of the 
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can 
@@ -990,7 +1082,7 @@ easily see then as the are generated with this command:
 
 You will also need to specify:
 
-  the hostname of the #{APPLICATION} application without the protocol: (example: #{@mailer_config_sample[:host]})
+  the hostname of the #{@options[:app_name]} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
@@ -1015,7 +1107,7 @@ Here are the current settings in config/mailer.yml:
       q.default = "test"
     }
 
-    @mailer_config[:host] =                     ask("    #{APPLICATION} hostname: ") { |q| q.default = @mailer_config[:host] }
+    @mailer_config[:host] =                     ask("    #{@options[:app_name]} hostname: ") { |q| q.default = @mailer_config[:host] }
 
     @mailer_config[:smtp][:address] =           ask("    SMTP address: ") { |q| 
       q.default = @mailer_config[:smtp][:address]
@@ -1055,12 +1147,17 @@ Here is the new mailer configuration:
   end
 end
 
-# *****************************************************
+# ==================================================================
+#
+#   Main setup
+#
+# ==================================================================
+
 
 unless @options[:quiet]
   puts <<-HEREDOC
 
-This setup program will help you configure a new #{APPLICATION} instance.
+This setup program will help you configure a new Investigations instance named: #{@options[:app_name]}.
 
   HEREDOC
 end
@@ -1076,7 +1173,7 @@ update_config_settings_yml
 update_config_rinet_data_yml
 update_config_mailer_yml
 if @options[:quiet]
-  puts "done.\n\nTo finish:\n\n"
+  puts "done.\n\nTo finish (if you are building from scratch):\n\n"
 else
   puts <<-HEREDOC
 
@@ -1112,3 +1209,4 @@ identifying the development database as production for the purpose of generating
 
   HEREDOC
 end
+

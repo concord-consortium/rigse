@@ -176,7 +176,7 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.new
     @investigation.user = current_user
     if APP_CONFIG[:use_gse]
-      @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
+      @gse = RiGse::GradeSpanExpectation.default
       @investigation.grade_span_expectation = @gse
       session[:original_gse_id] = session[:gse_id] = @gse.id
       session[:original_grade_span] = session[:grade_span] = grade_span = @gse.grade_span
@@ -200,7 +200,7 @@ class InvestigationsController < AuthoringController
     if APP_CONFIG[:use_gse]
       # if there is no gse assign a default one:
       unless @gse = @investigation.grade_span_expectation
-        @gse = RiGse::GradeSpanExpectation.find_by_grade_span('9-11')
+        @gse = RiGse::GradeSpanExpectation.default
         @investigation.grade_span_expectation = @gse
         @investigation.save!
       end

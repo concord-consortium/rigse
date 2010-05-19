@@ -21,9 +21,19 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-config.gem 'cucumber-rails',   :lib => false, :version => '>=0.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
+# All the gems required for testing are listed in: config/environments/test.rb
+#
+# Install the gems required for testing:
+#
+#   sudo env RAILS_ENV=test rake gems:install
+#
+# The following are just the gems needed when running cucumber
+#
+
+config.gem 'cucumber',         :lib => false, :version => '>=0.7.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'cucumber-rails',   :lib => false, :version => '>=0.3.1' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber-rails'))
 config.gem 'database_cleaner', :lib => false, :version => '>=0.5.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/database_cleaner'))
-config.gem 'capybara',         :lib => false, :version => '>=0.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
+config.gem 'capybara',         :lib => false, :version => '>=0.3.8' unless File.directory?(File.join(Rails.root, 'vendor/plugins/capybara'))
 config.gem 'rspec',            :lib => false, :version => '>=1.3.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
 config.gem 'rspec-rails',      :lib => false, :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
 config.gem "factory_girl",                    :version => "= 1.2.3"

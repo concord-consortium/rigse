@@ -15,14 +15,14 @@ namespace :rigse do
     end
     
     def display_user(user)
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
        login: #{user.login}
        email: #{user.email}
   first_name: #{user.first_name}
    last_name: #{user.last_name}
 
-HEREDOC
+      HEREDOC
     end
   
     def edit_user(user)
@@ -46,7 +46,7 @@ HEREDOC
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task creates six roles (if they don't already exist):
 
@@ -63,7 +63,7 @@ It creates one user with an admin role.
   Edit the values in this file if you want to specify a different default admin user.
 
 In addition it creates seven more default users with these login names and the 
-default password: 'password'. You can change the dfault password if you wish.
+default password: 'password'. You can change the default password if you wish.
 
   manager
   researcher
@@ -86,7 +86,7 @@ will be teaching a course named 'Fun with Investigations' and a class in that co
 A student named: 'Student User' will be created and will be a learner in the default class: '#{DEFAULT_CLASS_NAME}'.
 
 First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
-HEREDOC
+      HEREDOC
 
       roles_in_order = [
         admin_role = Role.find_or_create_by_title('admin'),
@@ -111,10 +111,10 @@ HEREDOC
       default_admin_user_settings = APP_CONFIG[:default_admin_user]
 
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings['login'], 
-          :first_name => default_admin_user_settings['first_name'], 
-          :last_name =>  default_admin_user_settings['last_name'],
-          :email =>      default_admin_user_settings['email'], 
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login], 
+          :first_name => default_admin_user_settings[:first_name], 
+          :last_name =>  default_admin_user_settings[:last_name],
+          :email =>      default_admin_user_settings[:email], 
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 
@@ -137,10 +137,7 @@ HEREDOC
           :email => 'member@concord.org', 
           :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
-          :first_name => "Anonymous", :last_name => "User",
-          :email => "anonymous@concord.org", 
-          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
+        anonymous_user = User.anonymous,
 
         teacher_user = User.find_or_create_by_login(:login => 'teacher', 
           :first_name => 'Valerie', :last_name => 'Frizzle', 

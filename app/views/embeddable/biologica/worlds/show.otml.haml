@@ -1,5 +1,5 @@
 - content_for(:otrunk_doc_id) do
   =@biologica_world.uuid
-- content_for(:world_object_id) do
+- content_for(:biologica_world_object_id) do
   =dom_id_for(@biologica_world)
-= render :partial => "show", :locals => { :world => @biologica_world }
+= render :partial => "show", :locals => { :biologica_world => @biologica_world }

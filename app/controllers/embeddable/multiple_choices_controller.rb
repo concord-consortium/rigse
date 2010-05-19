@@ -15,13 +15,13 @@ class Embeddable::MultipleChoicesController < ApplicationController
   def show
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
     if request.xhr?
-      render :partial => 'multiple_choice', :locals => { :multiple_choice => @multiple_choice }
+      render :partial => 'show', :locals => { :multiple_choice => @multiple_choice }
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.otml { render :layout => "layouts/multiple_choice" } # multiple_choice.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice }}
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
+        format.otml { render :layout => "layouts/embeddable/multiple_choice" } # multiple_choice.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice , :teacher_mode => false } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @multiple_choice, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
         format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @multiple_choice, :teacher_mode => @teacher_mode} }
         format.xml  { render :xml => @multiple_choice }
       end
@@ -32,7 +32,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
   def print
     @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
     respond_to do |format|
-      format.html { render :layout => "layouts/print" }
+      format.html { render :layout => "layouts/embeddable/print" }
       format.xml  { render :xml => @multiple_choice }
     end
   end
