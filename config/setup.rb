@@ -722,7 +722,7 @@ Here are the current settings in config/database.yml:
 
     puts <<-HEREDOC
 
-If you have access to a ITSI database for importing ITSI Activities into RITES 
+If you have access to a ITSI database for importing ITSI Activities into #{APP_CONFIG[:theme].upcase} 
 specify the values for the mysql database name, host, username, password, and asset_url.
 
     HEREDOC

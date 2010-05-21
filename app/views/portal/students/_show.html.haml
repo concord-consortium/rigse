@@ -1,5 +1,5 @@
 - unless current_user.anonymous? 
-  Select a RITES Investigation to run from the list below:
+  Select a #{APP_CONFIG[:theme].upcase} #{APP_CONFIG[:top_level_container_name].capitalize} to run from the list below:
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
 
   %p

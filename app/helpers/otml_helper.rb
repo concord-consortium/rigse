@@ -227,7 +227,7 @@
 
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
-    title = options[:title] || 'RITES sample'
+    title = "#{APP_CONFIG[:theme].capitalize}: " + options[:title] ||  "sample"
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
     authoring = options[:authoring] || false
     if authoring
