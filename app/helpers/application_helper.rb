@@ -793,15 +793,15 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
-          #haml_concat "Responses: #{offering.learners.length}"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          #haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
-          #haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          #haml_concat report_link_for(offering)
-          #haml_concat report_link_for(offering, 'multiple_choice_report','Report')
-          haml_concat link_to(image_tag('chart_bar.png'), { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering })
-          haml_concat link_to('csv', { :controller => 'sparks/report', :action => 'class_report_big_table' , :offering_id => offering })
+          haml_concat '&nbsp;'
+          haml_concat link_to(image_tag('chart_bar.png', :title => 'Class Report'),
+            { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering })
+          haml_concat '&nbsp;'
+          haml_concat link_to('Download Text Report',
+            { :controller => 'sparks/report', :action => 'class_report_big_table' , :offering_id => offering },
+            { :title => 'A table of bar (|) separated values that can be imported into a spreadsheet' })
         end
       end
     end
