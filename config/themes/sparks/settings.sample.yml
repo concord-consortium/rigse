@@ -1,60 +1,59 @@
 --- 
 production: 
-  :default_admin_user: 
-    :login: skim
-    :last_name: Kim
-    :email: skim@concord.org
-    :first_name: Seong
-  :site_school: SPARKS-school
-  :top_level_container_name: page
-  :maven_jnlp_servers: 
-  - :path: /dev/org/concord/maven-jnlp/
-    :name: concord
-    :host: http://jnlp.concord.org
-  :include_otrunk_examples: false
-  :site_url: http://sparks.portal.concord.org
-  :site_district: SPARKS-district
-  :active_grades: 
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
-  :default_maven_jnlp: 
-  :enable_default_users: false
-  :runnables_use: browser
-  :active_school_levels: 
-  - "2"
-  - "3"
-  - "4"
-  :help_email: skim@concord.org
   :site_name: SPARKS Assessments
-  :description: ""
-  :net_logo_package_name: otrunknl4
-  :use_gse: false
   :runnable_mime_type: run_sparks_html
-  :maven_jnlp_families: 
-  - all-otrunk-snapshot
+  :site_url: http://sparks.portal.concord.org
+  :site_school: SPARKS-school
+  :maven_jnlp_servers: 
+  - :path: /dev/org/concord/maven-jnlp/
+    :host: http://jnlp.concord.org
+    :name: concord
+  :runnables_use: browser
+  :help_email: skim@concord.org
+  :active_grades: 
+  - "6"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
+  :enable_default_users: false
+  :use_gse: false
+  :net_logo_package_name: otrunknl4
   :states_and_provinces: 
   - VA
+  :default_admin_user: 
+    :first_name: Seong
+    :email: skim@concord.org
+    :last_name: Kim
+    :login: skim
+  :maven_jnlp_families: 
+  - all-otrunk-snapshot
+  :description: ""
+  :top_level_container_name: page
+  :include_otrunk_examples: false
+  :site_district: SPARKS-district
+  :default_maven_jnlp: 
+    :version: snapshot
+    :family: all-otrunk-snapshot
+    :server: concord
+  :active_school_levels: 
+  - "2"
+  - "3"
+  - "4"
 development: 
-  :default_admin_user: 
-    :login: skim
-    :last_name: Kim
-    :email: skim@concord.org
-    :first_name: Seong
+  :site_name: SPARKS Assessments (local development)
+  :runnable_mime_type: run_sparks_html
+  :theme: sparks
+  :site_url: http://localhost:3000
   :site_school: SPARKS-school
-  :top_level_container_name: page
   :maven_jnlp_servers: 
   - :path: /dev/org/concord/maven-jnlp/
-    :name: concord
     :host: http://jnlp.concord.org
-  :include_otrunk_examples: false
-  :site_url: http://localhost:3000
-  :site_district: SPARKS-district
-  :theme: sparks
+    :name: concord
+  :runnables_use: browser
+  :help_email: skim@concord.org
   :active_grades: 
   - "6"
   - "7"
@@ -63,39 +62,39 @@ development:
   - "10"
   - "11"
   - "12"
-  :default_maven_jnlp: 
   :enable_default_users: true
-  :runnables_use: browser
-  :active_school_levels: 
-  - "2"
-  - "3"
-  - "4"
-  :help_email: skim@concord.org
-  :site_name: SPARKS Assessments (local development)
+  :use_gse: false
+  :net_logo_package_name: otrunknl4
+  :states_and_provinces: 
+  - VA
+  :default_admin_user: 
+    :first_name: Seong
+    :email: skim@concord.org
+    :last_name: Kim
+    :login: skim
+  :maven_jnlp_families: 
+  - all-otrunk-snapshot
   :description: 
-  :net_logo_package_name: otrunknl4
-  :use_gse: false
-  :runnable_mime_type: run_sparks_html
-  :maven_jnlp_families: 
-  - all-otrunk-snapshot
-  :states_and_provinces: 
-  - VA
+  :top_level_container_name: page
+  :include_otrunk_examples: false
+  :site_district: SPARKS-district
+  :default_maven_jnlp: 
+  :active_school_levels: 
+  - "2"
+  - "3"
+  - "4"
 cucumber: 
-  :default_admin_user: 
-    :login: skim
-    :last_name: Kim
-    :email: skim@concord.org
-    :first_name: Seong
+  :site_name: SPARKS Assessments (local development)
+  :runnable_mime_type: run_sparks_html
+  :theme: sparks
+  :site_url: http://localhost:3000
   :site_school: SPARKS-school
-  :top_level_container_name: page
   :maven_jnlp_servers: 
   - :path: /dev/org/concord/maven-jnlp/
-    :name: concord
     :host: http://jnlp.concord.org
-  :include_otrunk_examples: false
-  :site_url: http://localhost:3000
-  :site_district: SPARKS-district
-  :theme: sparks
+    :name: concord
+  :runnables_use: browser
+  :help_email: skim@concord.org
   :active_grades: 
   - "6"
   - "7"
@@ -104,79 +103,42 @@ cucumber:
   - "10"
   - "11"
   - "12"
-  :default_maven_jnlp: 
   :enable_default_users: true
-  :runnables_use: browser
+  :use_gse: false
+  :net_logo_package_name: otrunknl4
+  :states_and_provinces: 
+  - VA
+  :default_admin_user: 
+    :first_name: Seong
+    :email: skim@concord.org
+    :last_name: Kim
+    :login: skim
+  :maven_jnlp_families: 
+  - all-otrunk-snapshot
+  :description: ""
+  :top_level_container_name: page
+  :include_otrunk_examples: false
+  :site_district: SPARKS-district
+  :default_maven_jnlp: 
+    :version: snapshot
+    :family: all-otrunk-snapshot
+    :server: concord
   :active_school_levels: 
   - "2"
   - "3"
   - "4"
-  :help_email: skim@concord.org
-  :site_name: SPARKS Assessments (local development)
-  :description: ""
-  :net_logo_package_name: otrunknl4
-  :use_gse: false
-  :runnable_mime_type: run_sparks_html
-  :maven_jnlp_families: 
-  - all-otrunk-snapshot
-  :states_and_provinces: 
-  - VA
 test: 
-  :default_admin_user: 
-    :login: skim
-    :last_name: Kim
-    :email: skim@concord.org
-    :first_name: Seong
-  :site_school: SPARKS-school
-  :top_level_container_name: page
-  :maven_jnlp_servers: 
-  - :path: /dev/org/concord/maven-jnlp/
-    :name: concord
-    :host: http://jnlp.concord.org
-  :include_otrunk_examples: false
-  :site_url: http://localhost:3000
-  :site_district: SPARKS-district
-  :theme: sparks
-  :active_grades: 
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
-  :default_maven_jnlp: 
-  :enable_default_users: true
-  :runnables_use: browser
-  :active_school_levels: 
-  - "2"
-  - "3"
-  - "4"
-  :help_email: skim@concord.org
   :site_name: SPARKS Assessments (local development)
-  :description: ""
-  :net_logo_package_name: otrunknl4
-  :use_gse: false
   :runnable_mime_type: run_sparks_html
-  :maven_jnlp_families: 
-  - all-otrunk-snapshot
-  :states_and_provinces: 
-  - VA
-staging: 
-  :default_admin_user: 
-    :login: skim
-    :last_name: Kim
-    :email: skim@concord.org
-    :first_name: Seong
+  :theme: sparks
+  :site_url: http://localhost:3000
   :site_school: SPARKS-school
-  :top_level_container_name: page
   :maven_jnlp_servers: 
   - :path: /dev/org/concord/maven-jnlp/
-    :name: concord
     :host: http://jnlp.concord.org
-  :include_otrunk_examples: false
-  :site_url: http:/sparks.staging.concord.org
-  :site_district: SPARKS-district
+    :name: concord
+  :runnables_use: browser
+  :help_email: skim@concord.org
   :active_grades: 
   - "6"
   - "7"
@@ -185,20 +147,67 @@ staging:
   - "10"
   - "11"
   - "12"
-  :default_maven_jnlp: 
   :enable_default_users: true
-  :runnables_use: browser
+  :use_gse: false
+  :net_logo_package_name: otrunknl4
+  :states_and_provinces: 
+  - VA
+  :default_admin_user: 
+    :first_name: Seong
+    :email: skim@concord.org
+    :last_name: Kim
+    :login: skim
+  :maven_jnlp_families: 
+  - all-otrunk-snapshot
+  :description: ""
+  :top_level_container_name: page
+  :include_otrunk_examples: false
+  :site_district: SPARKS-district
+  :default_maven_jnlp: 
+    :version: snapshot
+    :family: all-otrunk-snapshot
+    :server: concord
   :active_school_levels: 
   - "2"
   - "3"
   - "4"
-  :help_email: skim@concord.org
+staging: 
   :site_name: SPARKS Assessments (staging)
-  :description: ""
-  :net_logo_package_name: otrunknl4
-  :use_gse: false
   :runnable_mime_type: run_sparks_html
-  :maven_jnlp_families: 
-  - all-otrunk-snapshot
+  :site_url: http:/sparks.staging.concord.org
+  :site_school: SPARKS-school
+  :maven_jnlp_servers: 
+  - :path: /dev/org/concord/maven-jnlp/
+    :host: http://jnlp.concord.org
+    :name: concord
+  :runnables_use: browser
+  :help_email: skim@concord.org
+  :active_grades: 
+  - "6"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
+  :enable_default_users: true
+  :use_gse: false
+  :net_logo_package_name: otrunknl4
   :states_and_provinces: 
   - VA
+  :default_admin_user: 
+    :first_name: Seong
+    :email: skim@concord.org
+    :last_name: Kim
+    :login: skim
+  :maven_jnlp_families: 
+  - all-otrunk-snapshot
+  :description: ""
+  :top_level_container_name: page
+  :include_otrunk_examples: false
+  :site_district: SPARKS-district
+  :default_maven_jnlp: 
+  :active_school_levels: 
+  - "2"
+  - "3"
+  - "4"
