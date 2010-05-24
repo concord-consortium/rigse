@@ -96,7 +96,8 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
         mr = Saveable::Sparks::MeasuringResistance.new(:learner_id => learner.id )
       end
       report = Saveable::Sparks::MeasuringResistanceReport.new(
-        :position => 1, :content => params[:content])
+        :position => 1, :content => params[:content],
+        :graded_result => params[:graded_result])
       report.save!
       mr.reports << report
       mr.save!
