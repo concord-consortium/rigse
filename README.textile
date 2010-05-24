@@ -5,6 +5,8 @@ h2. Setup
 h3. Prerequisites
 
 Working git, ruby or jruby, and rubgems.
+Gems: capistrano, capistrano-ext (oddly, haml too, when deploying ...)
+TODO: understand why running capistrano requires haml...
 
 h3. Install
 
