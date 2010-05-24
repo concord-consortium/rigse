@@ -20,6 +20,7 @@ config/nces_data
 public/images/0*
 nbproject
 config/db_backup/
+public/sparks-content
 public/stylesheets/app.css
 public/stylesheets/app_colors.css
 public/stylesheets/app_fonts.css
