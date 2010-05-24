@@ -116,7 +116,7 @@ class Sparks::ReportController < ApplicationController
     csvFile = Tempfile.new('sparks-csv')
     csvFile.write(t)
     csvFile.close
-    send_file(csvFile.path, { :filename => "#{@offering.name}.#{@clazz.name}.csv" })
+    send_file(csvFile.path, { :filename => "#{@offering.name}.#{@clazz.name}.txt" })
   end
   
   def class_report
