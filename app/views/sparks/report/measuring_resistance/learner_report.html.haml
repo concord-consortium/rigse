@@ -1,5 +1,5 @@
 %h3
   = "#{@offering.name} - #{current_user.first_name} #{current_user.last_name}"
 - @reports.each do |report|
-  = link_to time_str(report.updated_at), { :action => 'learner_session_report', :id => report.id }, :popup => true
+  = link_to time_str(report.created_at), { :action => 'learner_session_report', :id => report.id }, :popup => true
   %br
