@@ -1,6 +1,5 @@
 @import themes/has/colors.sass
 @import compass/utilities/general/clearfix.sass
-
 =action_menu_tab(!_color = #111, !_bg_color = !has_content_text_color, !_color_hover = white,!_bg_color_hover = black)
   ul
     :margin 0
@@ -25,7 +24,7 @@
         :background-color= !_bg_color_hover
     li.selected 
       a, a:visited, a:active
-        :background-color blue
+        :background-color !has_dark_green
         :color = white
     li.label 
       :font-weight bold
@@ -61,10 +60,12 @@ a.rollover:hover
 
     
 .action_menu
+  :color !has_brown
+  +color_mixer(white,!has_dark_green,white)
   :font-size 11px
   :margin 0px
   :padding 3px 10px
-  :background-color = !has_content_text_color
+  :background-color = !has_dark_green
   ul
     li
       :list-style-type none 
@@ -73,6 +74,7 @@ a.rollover:hover
   +clearfix
   .action_menu_header_left
     :float left
+    +color_mixer(white,!has_dark_green,white)
     :text-align left
     :margin 0px
     .author
@@ -87,7 +89,7 @@ a.rollover:hover
     .author
       :font-size 9px
       :font-style italic
-    +action_menu_tab
+    +action_menu_tab(white,!has_dark_green)
     ul
       li
         a, a:visited, a:active
@@ -101,42 +103,12 @@ a.rollover:hover
   .action_menu_left
     :float left
     :display table-cell
-    +action_menu_tab
+    +action_menu_tab(white,!has_dark_green)
     :text-align left
   .action_menu_right
     :float right
     :display table-cell
     :text-align right
-    +action_menu_tab
+    +action_menu_tab(white,!has_dark_green)
   
-  ul.menu
-    :list-style-image none
-    :list-style-position outside
-    :list-style-type none
-    
-  ul.subsection_tabs
-    :list-style-image none
-    :list-style-position outside
-    :list-style-type none
-    :margin 0 10px 2px 0px
-    :padding 0px 10px
-    li
-      :margin-top 3px
-    li.tab
-      :float left
-      :background url("tabs/left.gif") no-repeat left top
-      :padding 0px 8px 0px 8px
-      :text-align center
-    li.active
-      :background url("tabs/left_on.gif") no-repeat left top !important
-    a
-      :float none
-      :display block
-      :background url("tabs/right.gif") no-repeat right top
-      :padding 0px 8px 0px 2px
-    a.active
-      :background url("tabs/right_on.gif") no-repeat right top !important
 
-    a:hover
-      :text-decoration underline !important
-      :color = !has_brown !important
