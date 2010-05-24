@@ -2,6 +2,7 @@
 #  Application
 #############################################################
 
+set :application, "sparks-portal"
 set :deploy_to, "/web/production/sparks"
 set :branch, "sparks"
 
