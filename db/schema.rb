@@ -103,10 +103,10 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body",             :limit => 2147483647
+    t.text     "body",             :limit => 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "otml",             :limit => 2147483647
+    t.text     "otml",             :limit => 16777215
     t.boolean  "processed"
     t.boolean  "valid_xml"
     t.boolean  "empty"
