@@ -801,6 +801,7 @@ module ApplicationHelper
           #haml_concat report_link_for(offering)
           #haml_concat report_link_for(offering, 'multiple_choice_report','Report')
           haml_concat link_to(image_tag('chart_bar.png'), { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering })
+          haml_concat link_to('csv', { :controller => 'sparks/report', :action => 'class_report_big_table' , :offering_id => offering })
         end
       end
     end
