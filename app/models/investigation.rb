@@ -14,7 +14,8 @@ class Investigation < ActiveRecord::Base
   
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  [ Embeddable::Xhtml,
+  @@embeddable_klasses = [ 
+    Embeddable::Xhtml,
     Embeddable::OpenResponse,
     Embeddable::MultipleChoice,
     Embeddable::DataTable,
@@ -34,7 +35,9 @@ class Investigation < ActiveRecord::Base
     Embeddable::Biologica::Pedigree,
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
-    Embeddable::Smartgraph::RangeQuestion].each do |klass|
+    Embeddable::Smartgraph::RangeQuestion ]
+    
+  @@embeddable_klasses.each do |klass|
     eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
@@ -75,27 +78,7 @@ class Investigation < ActiveRecord::Base
   
   acts_as_replicatable
 
-  # use rubyist-aasm gem (acts_as_state_machine) 
-  # for publication status:
-  # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem
-  # and http://www.ruby-forum.com/topic/179721
-  # for a discussion on how the new aasm gem differs from the old plugin...
-  include AASM 
-  aasm_initial_state :draft
-  aasm_column :publication_status
-  @@protected_publication_states=[:published]
-  @@publication_states = [:draft,:published,:private]
-  @@publication_states.each { |s| aasm_state s}
-
-  aasm_event :publish do
-    transitions :to => :published, :from => [:draft]
-  end
-  
-  aasm_event :un_publish do
-    transitions :to => :draft, :from => [:published]
-  end  
-  # end acts_as_state_machine stuff
-  
+  include Publishable
   # for convinience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
   
@@ -121,11 +104,6 @@ class Investigation < ActiveRecord::Base
     }
   }
   
-  named_scope :published, 
-  {
-    :conditions =>{:publication_status => "published"}
-  }
-
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
@@ -275,18 +253,13 @@ class Investigation < ActiveRecord::Base
     )
   end
 
-  def available_states(who_wants_to_know)
-    if(who_wants_to_know.has_role?('manager','admin'))
-      return @@publication_states
-    end
-    return (@@publication_states - @@protected_publication_states + [self.publication_status.to_sym]).uniq
-  end
   
   
   def duplicate(new_owner)
     @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
     @return_investigation.user = new_owner
     @return_investigation.name = "copy of #{self.name}"
+    @return_investigation.deep_set_user(new_owner)
     @return_investigation.publication_status = :draft
     return @return_investigation
   end

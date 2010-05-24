@@ -7,7 +7,7 @@
 ##
 
 Factory.sequence(:login) do |n| 
-  "login_#{n}"
+  "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
 end
 
 ##
@@ -20,7 +20,9 @@ Factory.define :user do |f|
   f.email  { |u| "#{u.login}@concord.org"}
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
+  f.skip_notifications true
   f.roles  { [ Factory.next(:member_role)] }
+  f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end
 
 
@@ -59,7 +61,11 @@ Factory.sequence :anonymous_user do |n|
     })
     anon.register
     anon.activate
+    # clear any previous Anonymous user still cached as a class variable in the User class
+    User.anonymous(true)
     anon.save!
   end
   anon
 end
+
+Factory.next(:anonymous_user)

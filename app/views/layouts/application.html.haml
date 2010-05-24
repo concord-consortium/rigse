@@ -12,10 +12,10 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
+    = stylesheet_link_merged(APP_CONFIG[:theme]||'default').to_sym
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
-    = javascript_include_tag "tiny_mce/tiny_mce"
+    = javascript_include_tag("tiny_mce/tiny_mce")
     
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
@@ -80,18 +80,16 @@
           %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
-          - if current_user.has_role?('researcher')
-            %li.trail=link_to('GSEs', ri_gse_grade_span_expectations_path)
-          - if current_user.has_role?('admin')
-            %li.trail= link_to('Users', users_path)
+          - if current_user.has_role?('admin', 'manager', 'teacher', 'researcher', 'author', 'member')
+            %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
             
           %ul.menu_h_right
 
-            - if current_user.has_role?('admin')
+            - if current_user.has_role?('admin', 'manager')
               %li.trail= link_to 'Districts', portal_districts_path
               %li.trail= link_to 'Schools', portal_schools_path
-              %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
+              - if APP_CONFIG[:use_gse]
+                %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
               %li.trail= link_to 'Users', users_path
               %li.trail= link_to 'Projects', admin_projects_path
 
@@ -125,7 +123,7 @@
         .padded_content
           #footer_left
             Questions/Feedback:
-            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user]['email'], "Send us an email", :subject => "RITES question", :encode => "javascript")
+            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
           #footer_right
       #under_footer
         - if current_user.has_role?('admin')

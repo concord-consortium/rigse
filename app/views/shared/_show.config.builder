@@ -36,7 +36,7 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
       xml.object(:class => "java.util.Properties") { 
         xml.void(:method => "setProperty") { 
           xml.string "sds_time"
-          xml.string ((Time.now.to_f * 1000).to_i)
+          xml.string((Time.now.to_f * 1000).to_i)
         }
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.hidetree"

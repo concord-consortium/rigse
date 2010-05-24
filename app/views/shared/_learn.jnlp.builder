@@ -7,8 +7,11 @@ xml.jnlp(:spec => "1.0+", :codebase => @jnlp_adaptor.jnlp.codebase) {
     xml << "    <all-permissions />"
   }
   # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
-  xml.resources(:os => "Mac OS X") {
+  xml.resources(:os => "Mac OS X", :arch => "ppc i386") {
     xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
+  }
+  xml.resources(:os => "Mac OS X", :arch => "x86_64") {
+    xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
   }
   if defined? data_test && data_test
     jnlp_testing_resources(xml, { :learner => learner, :runnable => runnable })

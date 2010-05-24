@@ -10,7 +10,6 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20100520173701) do
-
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",               :limit => 36
@@ -27,6 +26,13 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
+
+  create_table "admin_project_vendor_interfaces", :force => true do |t|
+    t.integer  "admin_project_id"
+    t.integer  "probe_vendor_interface_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "admin_projects", :force => true do |t|
     t.integer  "user_id"
@@ -477,6 +483,14 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
     t.datetime "updated_at"
   end
 
+  create_table "embeddable_sound_graphers", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",       :limit => 36
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "embeddable_xhtmls", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
@@ -710,6 +724,7 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
@@ -786,7 +801,12 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_district_id"
+    t.string   "state",            :limit => 2
+    t.string   "leaid",            :limit => 7
+    t.string   "zipcode",          :limit => 5
   end
+
+  add_index "portal_districts", ["state"], :name => "index_portal_districts_on_state"
 
   create_table "portal_grade_levels", :force => true do |t|
     t.string   "uuid",                  :limit => 36
@@ -1512,6 +1532,7 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
   add_index "portal_nces06_schools", ["SCHNAM"], :name => "index_portal_nces06_schools_on_SCHNAM"
   add_index "portal_nces06_schools", ["SEASCH"], :name => "index_portal_nces06_schools_on_SEASCH"
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
+  add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
   create_table "portal_offerings", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -1539,14 +1560,19 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
 
   create_table "portal_schools", :force => true do |t|
-    t.string   "uuid",           :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
+    t.string   "state",           :limit => 2
+    t.string   "leaid_schoolnum", :limit => 12
+    t.string   "zipcode",         :limit => 5
   end
+
+  add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
 
   create_table "portal_semesters", :force => true do |t|
     t.string   "uuid",        :limit => 36
@@ -1632,6 +1658,7 @@ ActiveRecord::Schema.define(:version => 20100520173701) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|

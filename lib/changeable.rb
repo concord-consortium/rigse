@@ -14,6 +14,17 @@ module Changeable
     elsif user.has_role?("admin", "manager") 
       true   
 
+    # Some things (eg: portal_clazes) might havemultiple owners (users)
+    # So provide alternate "is_user?" pattern for those cases.
+    # is_user? should take precedence, because "user" is more ambiguous
+    # in the case of models with multiple owners
+    elsif self.respond_to?(:is_user?)
+      if self.is_user?(user)
+        true
+      else
+        false
+      end
+      
     # is this object a User object?
     # if so a normal User can only change their own User object                                
     elsif self.respond_to?(:user)
@@ -22,7 +33,7 @@ module Changeable
       else
         false
       end
-      
+    
     # if this object is owned and the user is the owner return true
     elsif owned?
       self.user == user

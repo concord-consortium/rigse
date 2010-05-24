@@ -69,7 +69,7 @@ namespace :rigse do
       gem "uuidtools", '>= 2.0.0'
       require 'uuidtools'
       
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task will re-generate a REST_AUTH_SITE_KEY and update
 the file config/initializers/site_keys.rb.
@@ -81,16 +81,16 @@ their passwords even though their actual password hasn't changed.
 If the application is running it will need to be restarted for
 this change to take effect.
 
-HEREDOC
+      HEREDOC
       
       if HighLine.new.agree("Do you want to do this?  (y/n) ")
         site_keys_path = rails_file_path(%w{config initializers site_keys.rb})
         site_key = UUIDTools::UUID.timestamp_create.to_s
 
-        site_keys_rb = <<HEREDOC
+        site_keys_rb = <<-HEREDOC
 REST_AUTH_SITE_KEY = '#{site_key}'
 REST_AUTH_DIGEST_STRETCHES = 10
-HEREDOC
+        HEREDOC
 
         File.open(site_keys_path, 'w') {|f| f.write site_keys_rb }
         FileUtils.chmod 0660, site_keys_path
@@ -110,23 +110,23 @@ HEREDOC
 
       # Rake::Task['rigse:setup:development_environment_only'].invoke
       
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task will:
 
  1. create default users and roles
  2. optionally create additional users
  3. load default probe, interface, and calibration reesources
- 4. generate a set of the RI Grade Span RiGse::Expectation
- 5. assign teh Vernier Go!Link interface as a default to the existing users
- 6. generate the maven_jnlp resources
+ 4. generate a set of the RI Grade Span Expectation models (if using the 'rites' theme)
+ 5. assign the Vernier Go!Link interface as a default to the existing users
+ 6. generate the maven_jnlp resources (if :runnables_use: otrunk_jnlp in app settings)
  7. optionally download, introspect, and create models representing otrunk-examples 
  8. create a default project and associate it with the maven_jnlp resources
  9. download and generate nces district and school resources
 10. Generate District and School model instances from the NCES data for selected States and Active School Levels.
 11. create default portal resources: district, school, class, investigation and offering
   
-HEREDOC
+      HEREDOC
       if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
         # Rake::Task['gems:install'].invoke
         Rake::Task['rigse:setup:default_users_roles'].invoke
@@ -134,7 +134,7 @@ HEREDOC
         Rake::Task['db:backup:load_probe_configurations'].invoke
         # FIXME: when and if any other projetcs/hemes need RI GSE models
         if USING_RITES
-          Rake::Task['rigse:setup:import_gses_from_file'].invoke
+          Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
         Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
         if USING_JNLPS
@@ -152,7 +152,7 @@ HEREDOC
         Rake::Task['rigse:setup:default_portal_resources'].invoke
 
   
-        puts <<HEREDOC
+        puts <<-HEREDOC
 
 Start the application in development mode by running this command:
 
@@ -174,7 +174,7 @@ again by running these rake tasks in sequence again:
   RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 If you have access to an ITSI database you can also import ITSI activities 
-into RITES by running this rake task:
+into #{APP_CONFIG[:theme].upcase} by running this rake task:
 
   #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
 
@@ -184,11 +184,11 @@ into RITES by running this rake task:
   RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
 
 If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
-you can also import these ITSI activities into RITES Investigations by running this rake task:
+you can also import these ITSI activities into #{APP_CONFIG[:theme].upcase} Investigations by running this rake task:
 
   #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
 
-If you have ssh access to the RITES production server you can get a copy of the production database on
+If you have ssh access to the #{APP_CONFIG[:theme].upcase} production server you can get a copy of the production database on
 your local development instance with the following steps:
 
   cap production db:fetch_remote_db
@@ -209,7 +209,7 @@ config/initializers/site_keys.rb as on the server you copied the production data
   cap production db:copy_remote_site_keys</code></pre>
 
 
-HEREDOC
+        HEREDOC
       end
     end
 

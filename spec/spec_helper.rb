@@ -15,6 +15,7 @@ Spork.prefork do
   
   require 'spec/autorun'
   require 'spec/rails'
+  require 'spec/mocks'
   
   # *** customizations ***
   
@@ -26,8 +27,20 @@ Spork.prefork do
   require 'factory_girl'
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb'))
   
-  unless ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
-    puts "migrations need to be run: rake db:test:prepare"
+  if ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+    if Probe::ProbeType.count == 0
+      puts
+      puts "*** Probe configuration models need to be loaded into the test database to run the tests"
+      puts "*** run: rake db:test:prepare"
+      puts
+      exit
+    end
+  else
+    puts
+    puts "*** pending migrations need to be applied to run the tests"
+    puts "*** run: rake db:test:prepare"
+    puts
+    exit
   end
 
   Dir.glob(File.dirname(__FILE__) + "/support/*.rb").each { |f| require(f) }
@@ -39,9 +52,19 @@ Spork.prefork do
     config.use_instantiated_fixtures  = false
     config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   end
+  
+  # FIXME Somehow using webrat kills calling .id on ActiveRecord objects...
+  # example, in a test:
+  #    model = Embeddable::MwModelerPage.find(:first)
+  #    my_id = model.id   <==== throws NoMethodError
+  #    my_id = model[:id] <==== works fine
+  # require "webrat"
+  # Webrat.configure do |config|
+  #   config.mode = :rails
+  # end
     
 end
 
 Spork.each_run do
-  @factories.each { |f| load f }
+
 end

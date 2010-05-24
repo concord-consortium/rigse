@@ -12,13 +12,14 @@
 # has_many :school_memberships, :class_name => "Portal::SchoolMembership", :foreign_key => "school_id"
 
 Factory.define :portal_school, :class => Portal::School do |f|
+  f.name(APP_CONFIG[:site_school] || "Test School")
   f.association   :district, :factory => :portal_district
-  f.nces_school   nil
   # f.courses       { |school| [ Factory(:portal_course) ] }
   f.semesters     { |school| [ Factory(:portal_semester) ] }  
   f.grade_levels  { |school| [ Factory(:portal_grade_level) ] }  
 end
 
 Factory.define :nces_portal_school, :parent => :portal_school do |f|
-  f.nces_school { |school| Factory(:portal_nces06_school)}
+  f.association   :district, :factory => :portal_nces06_district_district
+  f.nces_school   { |school| Factory(:portal_nces06_school)}
 end

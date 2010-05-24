@@ -17,6 +17,19 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  # validates_associated :probe_type
+  
+  validates_presence_of :probe_type_id
+  validate :associated_probe_type_must_exist
+  
+  def associated_probe_type_must_exist
+    errors.add(:probe_type, "must exist") unless Probe::ProbeType.find_by_id(self.probe_type_id)
+  end
+  # validates_associated :probe_type, :message => "must exist"
+  
+  validates_presence_of :name, :message => "can't be blank"
+  
+  
   # this could work if the finder sql was redone
   # has_many :investigations,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
@@ -27,7 +40,18 @@ class Embeddable::DataCollector < ActiveRecord::Base
   serialize :data_store_values
   
   def before_save
-    self.name = self.title
+    if self.title
+      self.name = self.title
+    end
+  end
+  
+  def before_validation
+    default_pt = Embeddable::DataCollector.default_probe_type
+    self.probe_type_id = default_pt.id unless self.probe_type_id
+    self.name = title unless self.title.nil? || self.title.empty?
+    self.name = default_pt.name if self.name.nil? || self.name.empty?
+    self.title = self.name if self.title.nil? || self.title.empty?
+    self.y_axis_label = default_pt.name unless self.y_axis_label
   end
   
   acts_as_replicatable
@@ -57,6 +81,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
     def cloneable_associations
       @@cloneable_associations
+    end
+    def default_probe_type
+      @@default_probe_type ||= Probe::ProbeType.find_by_name('Temperature') 
     end
   end
   
@@ -146,13 +173,12 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def x_axis_title
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
-
-  # DISTANCE_PROBE_TYPE = ProbeType.find_by_name('Distance')
   
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
 
-  default_value_for :y_axis_label, "Distance"
+  # default_value_for :y_axis_label, default_probe_type.name
+  # default_value_for :y_axis_label, 'Temperature'
   
   default_values :x_axis_min                  =>  0,
                  :x_axis_max                  =>  30,
@@ -166,8 +192,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
                  :show_tare                   =>  false,
                  :single_value                =>  false
 
-
-  # default_value_for :probe_type, DISTANCE_PROBE_TYPE
+  # default_value_for :probe_type, default_probe_type
+  # default_value_for :probe_type_id, 1
   
   # send_update_events_to :investigations
 

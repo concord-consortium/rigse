@@ -1,11 +1,14 @@
+Feature: Teacher registers to use the portal
+
 ITSI-SU requires that teachers self-register.
 
-
-Feature: Teacher registers to use the portal
   As a potential teacher
   I want to create a teacher account
   So that I can use the investigations portal as a teacher
-  
+
+  Background:
+    Given The default project and jnlp resources exist using factories
+
   Scenario: Anonymous user signs up as teacher
     Given I am an anonymous user
     When I go to the pick signup page
@@ -18,9 +21,7 @@ Feature: Teacher registers to use the portal
       | user_login     | login                              |
       | user_password  | password                           |
       | user_password_confirmation | password               |
-      | school_id      | 1                                  |
-      | domain_id      | 1                                  |
-      | grade_id       | 1                                  |
+ 
     And I press "Submit"
     Then I should see " Thanks for signing up!"
     And "example@example.com" should receive an email

@@ -1,0 +1,13 @@
+Instead of making style sheets, make sass files.
+Put them in public/stylesheets/sass/themes/<theme-name>/*.sass
+They will be compiled and moved into public/stylesheets/themes/<theme-name>/*.css
+Configure them in asset_packages.yml under the stylesheets section with the format:
+- <themename>:
+  - themes/<themename>/style_name
+  - (others)
+eg:
+
+- itsisu
+  - themes/itsisu/itsisu
+  - accordion
+  

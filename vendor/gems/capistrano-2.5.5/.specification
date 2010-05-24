@@ -1,6 +1,10 @@
 --- !ruby/object:Gem::Specification 
 name: capistrano
 version: !ruby/object:Gem::Version 
+  segments: 
+  - 2
+  - 5
+  - 5
   version: 2.5.5
 platform: ruby
 authors: 
@@ -14,64 +18,90 @@ default_executable:
 dependencies: 
 - !ruby/object:Gem::Dependency 
   name: net-ssh
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  requirement: &id001 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 2
+        - 0
+        - 10
         version: 2.0.10
     version: 
+  type: :runtime
+  version_requirement: 
+  version_requirements: *id001
 - !ruby/object:Gem::Dependency 
   name: net-sftp
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  requirement: &id002 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 2
+        - 0
+        - 0
         version: 2.0.0
     version: 
+  type: :runtime
+  version_requirement: 
+  version_requirements: *id002
 - !ruby/object:Gem::Dependency 
   name: net-scp
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  requirement: &id003 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 1
+        - 0
+        - 0
         version: 1.0.0
     version: 
+  type: :runtime
+  version_requirement: 
+  version_requirements: *id003
 - !ruby/object:Gem::Dependency 
   name: net-ssh-gateway
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  requirement: &id004 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 1
+        - 0
+        - 0
         version: 1.0.0
     version: 
-- !ruby/object:Gem::Dependency 
-  name: highline
   type: :runtime
   version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  version_requirements: *id004
+- !ruby/object:Gem::Dependency 
+  name: highline
+  requirement: &id005 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 0
         version: "0"
     version: 
+  type: :runtime
+  version_requirement: 
+  version_requirements: *id005
 - !ruby/object:Gem::Dependency 
   name: echoe
-  type: :development
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  requirement: &id006 !ruby/object:Gem::Requirement 
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        segments: 
+        - 0
         version: "0"
     version: 
+  type: :development
+  version_requirement: 
+  version_requirements: *id006
 description: Capistrano is a utility and framework for executing commands in parallel on multiple remote machines, via SSH.
 email: jamis@jamisbuck.org
 executables: 
@@ -266,18 +296,23 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
   version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 1
+      - 2
       version: "1.2"
   version: 
 requirements: []
 
 rubyforge_project: capistrano
-rubygems_version: 1.3.5
+rubygems_version: 1.3.6
 signing_key: 
 specification_version: 2
 summary: Capistrano is a utility and framework for executing commands in parallel on multiple remote machines, via SSH.

@@ -17,11 +17,15 @@ describe Portal::Teacher do
   end
   
   it "nces teachers class should be 'real'" do 
-    @nces_teacher.clazzes[0].real?
+    @nces_teacher.clazzes[0].should be_real
+  end
+  
+  it "virtial teachers should have virtual classes" do
+    @virtual_teacher.clazzes[0].should be_virtual
   end
   
   it "teachers with real clazzes shouldn't be able to change them'" do
-    @nces_teacher.clazzes[0].changeable?(@nces_teacher).should_not be_true
+    @nces_teacher.clazzes[0].should_not be_changeable(@nces_teacher)
   end
   
   it "should support virtual teachers" do
@@ -38,8 +42,8 @@ describe Portal::Teacher do
     @virtual_teacher.clazzes[0].virtual?.should be_true
   end
   
-  it "Virtual teachers should be able to change their clazzes'" do
-    @nces_teacher.clazzes[0].changeable?(@nces_teacher).should_not be_true
+  it "Teachers in virtuals schools should be able to change their clazzes'" do
+    @virtual_teacher.clazzes[0].should be_changeable(@virtual_teacher)
   end
 
 end

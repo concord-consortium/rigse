@@ -1,3 +1,3 @@
-Factory.define :drawing_tool do |f|
+Factory.define :drawing_tool, :class=> Embeddable::DrawingTool do |f|
 end
 

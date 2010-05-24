@@ -17,28 +17,32 @@ class Page < ActiveRecord::Base
   has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage' 
   has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
   
+  # The order of this array determines the order they show up in the Add menu
+  # When adding new elements to the array, please place them alphebetically in the group.
+  # The Biologica embeddables should all be grouped at the end of the list
   @@element_types = [
-    Embeddable::Xhtml,
-    Embeddable::OpenResponse,
-    Embeddable::MultipleChoice,
     Embeddable::DataTable,
     Embeddable::DrawingTool,
     Embeddable::DataCollector,
-    Embeddable::LabBookSnapshot,
     Embeddable::InnerPage,
     Embeddable::MwModelerPage,
+    Embeddable::MultipleChoice,
     Embeddable::NLogoModel,
-    Embeddable::Biologica::World,
-    Embeddable::Biologica::Organism,
-    Embeddable::Biologica::StaticOrganism,
+    Embeddable::OpenResponse,
+    Embeddable::Smartgraph::RangeQuestion,
+    Embeddable::SoundGrapher,
+    Embeddable::LabBookSnapshot,
+    Embeddable::Xhtml,
+    Embeddable::Biologica::BreedOffspring,
     Embeddable::Biologica::Chromosome,
     Embeddable::Biologica::ChromosomeZoom,
-    Embeddable::Biologica::BreedOffspring,
-    Embeddable::Biologica::Pedigree,
-    Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
+    Embeddable::Biologica::MultipleOrganism,
+    Embeddable::Biologica::Organism,
+    Embeddable::Biologica::Pedigree,
+    Embeddable::Biologica::StaticOrganism,
+    Embeddable::Biologica::World,
     # BiologicaDna,
-    Embeddable::Smartgraph::RangeQuestion,
   ]
 
   # @@element_types.each do |type|
@@ -189,7 +193,10 @@ class Page < ActiveRecord::Base
   end
   
   def children
-    # maybe what is the child we wonder?
+    # TODO: We should really return the elements
+    # not the embeddable.  But it will require 
+    # careful refactoring... Not sure all the places 
+    # in the code where we expect embeddables to be returned.
     return page_elements.map { |e| e.embeddable }
   end
   

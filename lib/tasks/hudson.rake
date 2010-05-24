@@ -1,18 +1,33 @@
 namespace :hudson do
   
-  def report_path
+  def cucumber_report_path
     "hudson/reports/features/"
   end
 
-  if defined? Cucumber
-    Cucumber::Rake::Task.new({:cucumber  => [:report_setup, 'db:migrate', 'db:test:prepare']}) do |t|
-      t.cucumber_opts = %{--profile default  --format junit --out #{report_path} --format html --out #{report_path}/report.html}
+  def rspec_report_path
+    "hudson/reports/spec/"
+  end
+
+  if defined? Spec
+    Spec::Rake::SpecTask.new do |t|
+      t.spec_opts = %{--profile default  --format CI::Reporter::RSpec --format html:#{rspec_report_path}report.html}
     end
   end
 
-  task :report_setup do
-    rm_rf report_path
-    mkdir_p report_path
+  if defined? Cucumber
+    Cucumber::Rake::Task.new({:cucumber  => [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']}) do |t|
+      t.cucumber_opts = %{--profile default  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+    end
+  end
+
+  task :spec_report_setup do
+    rm_rf rspec_report_path
+    mkdir_p rspec_report_path
+  end
+
+  task :cucumber_report_setup do
+    rm_rf cucumber_report_path
+    mkdir_p cucumber_report_path
   end
   
   desc "Run the cucumber and RSpec tests, but don't fail until both suites have run."
@@ -36,11 +51,12 @@ namespace :hudson do
     raise "Test failures" if exceptions.size > 0
   end
   
-  task :spec => ["hudson:setup:rspec", 'db:migrate', 'db:test:prepare', 'rake:spec']
+  desc "run the RSpec tests"
+  task :spec => ["hudson:setup:rspec", :spec_report_setup, 'db:migrate', 'db:test:prepare', 'rake:spec']
 
   namespace :setup do
     task :pre_ci do
-      ENV["CI_REPORTS"] = 'hudson/reports/spec/'
+      ENV["CI_REPORTS"] = rspec_report_path
       gem 'ci_reporter'
       require 'ci/reporter/rake/rspec'
     end

@@ -3,12 +3,13 @@
   = name_for_gse(grade_span_expectation)  
   %div{:class =>"content", :id=>dom_id_for(grade_span_expectation,:details)}
     %dl
-      %dt RiGse::Domain
-      %dd
-        = h(assessment_target.knowledge_statement.domain.name)
-      %dt Knowledge Statement
-      %dd
-        = assessment_target.knowledge_statement ? h(assessment_target.knowledge_statement.description) : "null"
+      - if assessment_target.knowledge_statement
+        %dt RiGse::Domain
+        %dd
+          = h(assessment_target.knowledge_statement.domain.name)
+          %dt Knowledge Statement
+          %dd
+          = h(assessment_target.knowledge_statement.description)
       %dt Description
       %dd
         = h(assessment_target.description)

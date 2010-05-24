@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
 
     # return the user who is the site administrator
     def site_admin
-      User.find_by_email(APP_CONFIG[:default_admin_user]['email'])
+      User.find_by_email(APP_CONFIG[:default_admin_user][:email])
     end
   end
 
@@ -213,9 +213,29 @@ class User < ActiveRecord::Base
     self == User.anonymous
   end
   
-  # class method for returning the anonymous user
-  def self.anonymous
-    @@anonymous_user ||=  @@anonymous_user = User.find_by_login('anonymous')
+  # Class method for returning the memoized anonymous user
+  #
+  # If you have deleted and recreated the Anonymous user
+  # then call User.anonymous(true) once to reload the memoized
+  # object. If you don't then calling User.anonymous will return
+  # the older deleted Anonymous user.
+  #
+  # If the anonymous user can't be found it is created.
+  #
+  # FIXME: using class variables like this is not thread-safe
+  #
+  def self.anonymous(reload=false)
+    @@anonymous_user = nil if reload
+    if @@anonymous_user
+      @@anonymous_user
+    else
+      anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
+        :first_name => "Anonymous", :last_name => "User",
+        :email => "anonymous@concord.org", 
+        :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+      anonymous_user.add_role('guest')
+      @@anonymous_user = anonymous_user
+    end
   end
 
   # a bit of a silly method to help the code in lib/changeable.rb so

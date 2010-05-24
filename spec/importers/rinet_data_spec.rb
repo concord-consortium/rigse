@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 module RinetDataExampleHelpers
   
@@ -227,6 +227,7 @@ describe RinetData do
   
   describe "verifying that the appropriate entities get created from CSV files" do
     before(:each) do
+      Portal::Course.find(:all).each { |c| c.destroy() }
       @initial_users = User.find(:all)
       @initial_teachers = Portal::Teacher.find(:all)
       @initial_students = Portal::Student.find(:all)
@@ -240,17 +241,14 @@ describe RinetData do
     end
   
     it "should create new students" do
-      #pending "Broken example"
       Portal::Student.find(:all).should be_more_than(@initial_students)
     end
   
     it "should create new users" do
-      #pending "Broken example"
       User.find(:all).should be_more_than(@initial_users)
     end
   
     it "new teachers should be teaching at a valid NCES school" do
-      #pending "Broken example"
       teachers = Portal::Teacher.find(:all) - @initial_teachers
       teachers.each do |teacher|
         teacher.should be_in_nces_school
@@ -258,7 +256,6 @@ describe RinetData do
     end
   
     it "new students should be enrolled in valid NCES school" do
-      #pending "Broken example"
       students = Portal::Student.find(:all) - @initial_students
       students.each do |student|
         student.should be_in_nces_school
@@ -266,7 +263,6 @@ describe RinetData do
     end
   
     it "should create new courses" do
-      #pending "Broken example"
       Portal::Course.find(:all).should be_more_than(@initial_courses)
       courses = Portal::Course.find(:all) - @initial_courses
       courses.each do |course|
@@ -275,7 +271,6 @@ describe RinetData do
     end
   
     it "should create classes with students,teachers,names, and start_times" do
-      #pending "Broken example"
       current_clazzes = Portal::Clazz.find(:all)
       current_clazzes.should be_more_than(@initial_clazzes)
       current_clazzes = current_clazzes - @initial_clazzes
@@ -290,7 +285,6 @@ describe RinetData do
     end
 
     it "should not create courses without clazzes" do
-      #pending "Broken example"
       courses = Portal::Course.find(:all)
       courses.each do |course| 
         course.clazzes.should_not be_empty
@@ -298,7 +292,6 @@ describe RinetData do
     end
     
     it "should not create courses without schools" do
-      #pending "Broken example"
       courses = Portal::Course.find(:all)
       courses.each do |course| 
         course.school.should_not be_nil
@@ -316,12 +309,7 @@ describe RinetData do
       @initial_clazzes = Portal::Clazz.find(:all)
       run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
-    # it "should not create duplicate courses" do
-    #   #pending "Broken example"
-    #   courses = Portal::Course.find(:all)
-    #   courses.map! { |course| "#{course.school_id}-#{course.name}" }
-    #   courses.size.should eql(courses.uniq.size)
-    # end
+
     
     it "should work for classes with same course numbers in different schools" do
       run_importer(:districts => ["02"])

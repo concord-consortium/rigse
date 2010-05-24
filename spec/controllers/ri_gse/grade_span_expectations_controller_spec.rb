@@ -3,19 +3,20 @@ require 'spec_helper'
 describe RiGse::GradeSpanExpectationsController do
 
   def mock_grade_span_expectation(stubs={})
-    @mock_grade_span_expectation ||= mock_model(GradeSpanExpectation, stubs)
+    @mock_grade_span_expectation ||= mock_model(RiGse::GradeSpanExpectation, stubs)
   end
   
   before(:each) do
-    #mock_project #FIXME: mock_project is undefined!
+    generate_default_project_and_jnlps_with_mocks
+    # generate_portal_resources_with_mocks
+    login_admin
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "responding to GET index" do
 
     it "should expose a paginated array of @grade_span_expectations" do
-      pending "Broken example"
-      GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_grade_span_expectation])
+      RiGse::GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_grade_span_expectation])
       get :index
       assigns[:grade_span_expectations].should == [mock_grade_span_expectation]
     end
@@ -23,9 +24,8 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with mime type of xml" do
   
       it "should render all grade_span_expectations as xml" do
-        pending "Broken example"
         request.env["HTTP_ACCEPT"] = "application/xml"
-        GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
+        RiGse::GradeSpanExpectation.should_receive(:find).with(:all).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
         grade_span_expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"
@@ -38,8 +38,7 @@ describe RiGse::GradeSpanExpectationsController do
   describe "responding to GET show" do
 
     it "should expose the requested grade_span_expectation as @grade_span_expectation" do
-      pending "Broken example"
-      GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+      RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
       get :show, :id => "37"
       assigns[:grade_span_expectation].should equal(mock_grade_span_expectation)
     end
@@ -47,9 +46,8 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with mime type of xml" do
 
       it "should render the requested grade_span_expectation as xml" do
-        pending "Broken example"
         request.env["HTTP_ACCEPT"] = "application/xml"
-        GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+        RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
         mock_grade_span_expectation.should_receive(:to_xml).and_return("generated XML")
         get :show, :id => "37"
         response.body.should == "generated XML"
@@ -62,8 +60,7 @@ describe RiGse::GradeSpanExpectationsController do
   describe "responding to GET new" do
   
     it "should expose a new grade_span_expectation as @grade_span_expectation" do
-      pending "Broken example"
-      GradeSpanExpectation.should_receive(:new).and_return(mock_grade_span_expectation)
+      RiGse::GradeSpanExpectation.should_receive(:new).and_return(mock_grade_span_expectation)
       get :new
       assigns[:grade_span_expectation].should equal(mock_grade_span_expectation)
     end
@@ -73,8 +70,7 @@ describe RiGse::GradeSpanExpectationsController do
   describe "responding to GET edit" do
   
     it "should expose the requested grade_span_expectation as @grade_span_expectation" do
-      pending "Broken example"
-      GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+      RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
       get :edit, :id => "37"
       assigns[:grade_span_expectation].should equal(mock_grade_span_expectation)
     end
@@ -86,17 +82,15 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with valid params" do
       
       it "should expose a newly created grade_span_expectation as @grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.should_receive(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => true))
+        RiGse::GradeSpanExpectation.should_receive(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => true))
         post :create, :grade_span_expectation => {:these => 'params'}
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should redirect to the created grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => true))
+        RiGse::GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => true))
         post :create, :grade_span_expectation => {}
-        response.should redirect_to(grade_span_expectation_url(mock_grade_span_expectation))
+        response.should redirect_to(ri_gse_grade_span_expectation_url(mock_grade_span_expectation))
       end
       
     end
@@ -104,15 +98,13 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved grade_span_expectation as @grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => false))
+        RiGse::GradeSpanExpectation.stub!(:new).with({'these' => 'params'}).and_return(mock_grade_span_expectation(:save => false))
         post :create, :grade_span_expectation => {:these => 'params'}
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should re-render the 'new' template" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => false))
+        RiGse::GradeSpanExpectation.stub!(:new).and_return(mock_grade_span_expectation(:save => false))
         post :create, :grade_span_expectation => {}
         response.should render_template('new')
       end
@@ -126,24 +118,21 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with valid params" do
 
       it "should update the requested grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+        RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
         mock_grade_span_expectation.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :grade_span_expectation => {:these => 'params'}
       end
 
       it "should expose the requested grade_span_expectation as @grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
+        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
         put :update, :id => "1"
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should redirect to the grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
+        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(grade_span_expectation_url(mock_grade_span_expectation))
+        response.should redirect_to(ri_gse_grade_span_expectation_url(mock_grade_span_expectation))
       end
 
     end
@@ -151,22 +140,19 @@ describe RiGse::GradeSpanExpectationsController do
     describe "with invalid params" do
 
       it "should update the requested grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+        RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
         mock_grade_span_expectation.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :grade_span_expectation => {:these => 'params'}
       end
 
       it "should expose the grade_span_expectation as @grade_span_expectation" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
+        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
         put :update, :id => "1"
         assigns(:grade_span_expectation).should equal(mock_grade_span_expectation)
       end
 
       it "should re-render the 'edit' template" do
-        pending "Broken example"
-        GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
+        RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -178,15 +164,13 @@ describe RiGse::GradeSpanExpectationsController do
   describe "responding to DELETE destroy" do
 
     it "should destroy the requested grade_span_expectation" do
-      pending "Broken example"
-      GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
+      RiGse::GradeSpanExpectation.should_receive(:find).with("37").and_return(mock_grade_span_expectation)
       mock_grade_span_expectation.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
   
     it "should redirect to the grade_span_expectations list" do
-      pending "Broken example"
-      GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:destroy => true))
+      RiGse::GradeSpanExpectation.stub!(:find).and_return(mock_grade_span_expectation(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(grade_span_expectations_url)
     end

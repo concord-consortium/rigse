@@ -123,6 +123,7 @@
       org.concord.otrunk.script.ui.OTScriptObject
       org.concord.otrunk.script.ui.OTScriptVariableView
       org.concord.smartgraph.OTSmartGraphTool
+      org.concord.multimedia.state.OTSoundGrapherModel
     } + data_filter_inports + (@otrunk_imports || []).uniq
     imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
   end
@@ -178,7 +179,8 @@
       ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView'],
       ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolHiddenView'],
       ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
-      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView']
+      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView'],
+      ['sound_grapher_view', 'org.concord.multimedia.state.OTSoundGrapherModel', 'org.concord.multimedia.state.ui.OTSoundGrapherModelView']
     ] + (@otrunk_view_entries || []).uniq
   end
   
@@ -225,7 +227,7 @@
 
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
-    title = options[:title] || 'RITES sample'
+    title = "#{APP_CONFIG[:theme].capitalize}: " + options[:title] ||  "sample"
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
     authoring = options[:authoring] || false
     if authoring
@@ -260,13 +262,17 @@
   def ot_interface_manager(use_current_user = false)
     old_format = @template_format
     @template_format = :otml
-    # Now that we're using the HttpCookieService, current_user.vendor_interface should be correct, even when requesting from the java client
+    # Now that we're using the HttpCookieService, current_user.vendor_interface 
+    # should be correct, even when requesting from the java client
     vendor_interface = nil
-    # allow switching between using the current user and not. This way the cached otml can always have Go!Link, but the dynamic otml can use the current user's device.
+    # allow switching between using the current user and not. This way 
+    # the cached otml can always have Go!Link, but the dynamic 
+    # otml can use the current user's device.
+    # debugger
     if use_current_user
       vendor_interface = current_user.vendor_interface
     else
-      vendor_interface = Probe::VendorInterface.find(6)
+      vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
     result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
     @template_format = old_format
