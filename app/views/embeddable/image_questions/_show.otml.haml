@@ -1,0 +1,8 @@
+%OTQuestion{ :id => image_question.uuid, :name => image_question.name }
+  %prompt
+    %OTCompoundDoc
+      %bodyText
+        = image_question.prompt
+  %input
+    %OTLabbookEntryChooser{ :name => "labbook chooser", :allowMultipleSelections => "false", :stripEntryBeforeEmbedding => "true"}
+
