@@ -1,13 +1,36 @@
 %h3
   = "#{@clazz.name} - #{@offering.name}"
-%table
+%table(class="report_table")
   - @students.each do |student|
     %tr
       %td
         = "#{student.user.first_name} #{student.user.last_name}"
-        - learner = controller.getLearner(@offering.id, student.id)
-        - mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(learner)
-        - reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr)
-        - reports.each do |report|
-          %td
-            = link_to time_str(report.created_at), { :action => 'learner_session_report', :id => report.id }, :popup => true 
+      - learner = controller.getLearner(@offering.id, student.id)
+      - mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(learner)
+      - reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr)
+      - points = []
+      - maxPoints = []
+      - results = []
+      - reports.each do |r|
+        - result = JSON.parse(r.graded_result)
+        - points << result['root']['points']
+        - results << result
+      %td
+        - if points.size > 0
+          = chart(points)
+      - reports.each_with_index do |r, i|
+        %td
+          - t = ''
+          - fb = results[i]['root']
+          - t << "<nobr>Total: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
+          - fb = results[i]['root']['reading']
+          - t << "<nobr>Step 1: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
+          - fb = results[i]['root']['measuring']
+          - t << "<nobr>Step 2: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
+          - fb = results[i]['root']['t_range']
+          - t << "<nobr>Step 3: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
+          - fb = results[i]['root']['time']
+          - t << "<nobr>Time: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
+          - t << time_str_short(r.created_at)
+          %br
+          = link_to t, { :action => 'learner_session_report', :id => r.id }, :popup => true
