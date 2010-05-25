@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100517145944) do
+ActiveRecord::Schema.define(:version => 20100524185823) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -110,10 +110,10 @@ ActiveRecord::Schema.define(:version => 20100517145944) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body",             :limit => 2147483647
+    t.text     "body",             :limit => 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "otml",             :limit => 2147483647
+    t.text     "otml",             :limit => 16777215
     t.boolean  "processed"
     t.boolean  "valid_xml"
     t.boolean  "empty"
@@ -354,6 +354,15 @@ ActiveRecord::Schema.define(:version => 20100517145944) do
     t.boolean  "is_grid_visible"
     t.integer  "preferred_width"
     t.integer  "preferred_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_image_questions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",       :limit => 36
+    t.string   "name"
+    t.text     "prompt"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
