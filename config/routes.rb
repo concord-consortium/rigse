@@ -377,8 +377,8 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get
   }
 
-  # Not sure if this is used, but its messing with me:
-  # map.resources :images
+  # not being used, but being tested
+  map.resources :images
   
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
