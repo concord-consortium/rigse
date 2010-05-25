@@ -822,7 +822,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat '&nbsp;'
           haml_concat link_to(image_tag('chart_bar.png', :title => 'Class Report'),
-            { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering })
+            { :controller => 'sparks/report', :action => 'class_report' , :offering_id => offering }, :popup => true)
           haml_concat '&nbsp;'
           haml_concat link_to('Download Text Report',
             { :controller => 'sparks/report', :action => 'class_report_big_table' , :offering_id => offering },
