@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @video_players, :collection_class =>Embeddable::VideoPlayer}        
+- @video_players.each do |video_player|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => video_player}
