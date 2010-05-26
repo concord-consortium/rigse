@@ -90,14 +90,14 @@ class Embeddable::ImageQuestionsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @image_question = Embeddable::ImageQuestion.find(params[:id])
     if request.xhr?
-      if cancel || @image_question.update_attributes(params[:image_question])
+      if cancel || @image_question.update_attributes(params[:embeddable_image_question])
         render :partial => 'show', :locals => { :image_question => @image_question }
       else
         render :xml => @image_question.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @image_question.update_attributes(params[:image_question])
+        if @image_question.update_attributes(params[:embeddable_image_question])
           flash[:notice] = 'Embeddable::imagequestion was successfully updated.'
           format.html { redirect_to(@image_question) }
           format.xml  { head :ok }
