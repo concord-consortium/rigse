@@ -176,7 +176,7 @@
       ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonView'],
       ['lab_book_view' ,'org.concord.otrunk.labbook.OTLabbook', 'org.concord.otrunk.labbook.ui.OTLabbookView'],
-      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView'],
+      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserView'],
       ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolHiddenView'],
       ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
       ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView'],
