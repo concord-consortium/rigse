@@ -6,7 +6,6 @@ class Embeddable::VideoPlayer < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   validates_presence_of :name
-  validates_presence_of :video_url
   validate :validate_video_url
 
 
