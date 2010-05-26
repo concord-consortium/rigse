@@ -110,6 +110,9 @@ ActionController::Routing::Routes.draw do |map|
     embeddable.resources :image_questions, :member => {
       :destroy => :post
     }
+    embeddable.resources :video_players, :member => {
+      :destroy => :post
+    }
   end
 
 # ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********
