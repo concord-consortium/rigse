@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100524185823) do
+ActiveRecord::Schema.define(:version => 20100525180729) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -497,6 +497,17 @@ ActiveRecord::Schema.define(:version => 20100524185823) do
     t.integer  "user_id"
     t.string   "uuid",       :limit => 36
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_video_players", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.string   "image_url"
+    t.string   "video_url"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
