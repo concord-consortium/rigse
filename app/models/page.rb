@@ -31,9 +31,10 @@ class Page < ActiveRecord::Base
     Embeddable::NLogoModel,
     Embeddable::OpenResponse,
     Embeddable::Smartgraph::RangeQuestion,
+    Embeddable::LabBookSnapshot, #displays as "Snapshot"
     Embeddable::SoundGrapher,
-    Embeddable::LabBookSnapshot,
-    Embeddable::Xhtml,
+    Embeddable::Xhtml, #displays as "Text"
+    Embeddable::VideoPlayer,
     Embeddable::Biologica::BreedOffspring,
     Embeddable::Biologica::Chromosome,
     Embeddable::Biologica::ChromosomeZoom,
