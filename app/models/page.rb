@@ -24,6 +24,7 @@ class Page < ActiveRecord::Base
     Embeddable::DataTable,
     Embeddable::DrawingTool,
     Embeddable::DataCollector,
+    Embeddable::ImageQuestion,
     Embeddable::InnerPage,
     Embeddable::MwModelerPage,
     Embeddable::MultipleChoice,
