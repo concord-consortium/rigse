@@ -40,16 +40,16 @@ describe Embeddable::VideoPlayer do
       video_player.should be_valid
     end
     
-    it "it should not create a new instance with bad url" do
+    it "it should not create a new instance with bad image_url" do
       video_player = Embeddable::VideoPlayer.create(@bad_url_attributes)
       video_player.save
       video_player.should_not be_valid
     end
     
-    it "it should not create a new instance without a url" do
+    it "it should create a new instance without a image_url" do
       video_player = Embeddable::VideoPlayer.create(@missing_url_attributes)
       video_player.save
-      video_player.should_not be_valid
+      video_player.should be_valid
     end
 
     it "it should not create a new instance with a bad name" do
