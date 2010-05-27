@@ -78,7 +78,7 @@ h3. Roll your own theme:
 
 For now the best thing to do is to copy an existing set of themes. eg:
 <code><pre>
-  # if you are going to make your own theme, copy a sample first
+
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
   cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
@@ -86,8 +86,9 @@ For now the best thing to do is to copy an existing set of themes. eg:
   # edit the assets file to package your style sheets. copy an example.
   vim ./config/asset_packages.yml
   # then pass arguments to setup.
-  # ruby ./config/setup.rb -t <new_theme_name>
-</code></pre>
+  ruby ./config/setup.rb -t <new_theme_name>
+
+  </code></pre>
 
 h3. when deploying to a new server
 
