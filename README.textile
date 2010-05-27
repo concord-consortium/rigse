@@ -4,7 +4,7 @@ h2. Setup
 
 h3. Prerequisites
 
-Working git, ruby or jruby, and rubgems.
+Working git, ruby or jruby, and rubgems, wget
 Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
