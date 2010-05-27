@@ -1,8 +1,8 @@
 @import compass/reset.sass
 @import blueprint.sass
-@import themes/has/colors.sass
-@import themes/has/fonts.sass
-@import themes/has/metrics.sass
+@import themes/xproject/colors.sass
+@import themes/xproject/fonts.sass
+@import themes/xproject/metrics.sass
 
 p
   :margin 1em 0em
@@ -19,7 +19,7 @@ body
   :padding 0px
   +main_font
   :background
-    :color = !has_light_green
+    :color = !xproject_light_green
   :margin 10px 
     :bottom 0px
   :background-position right top
@@ -74,7 +74,7 @@ pre
   :line-height 1.1em
   
 .wrapper
-  :border 2px solid !has_dark_green
+  :border 2px solid !xproject_dark_green
   :background-color white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
@@ -92,18 +92,18 @@ pre
   :height auto
   :background-color white
 
-  :color = !has_brown
+  :color = !xproject_brown
 
   a
-    :color = !has_dark_green
+    :color = !xproject_dark_green
     :background-color transparent
     :font-weight bold
   a:hover
-    :color = !has_brown
+    :color = !xproject_brown
     :background-color white
   .left_content
     +column(24, true)
-    #has_nav
+    #xproject_nav
       :font-size 18px
       :font-weight bold
         
