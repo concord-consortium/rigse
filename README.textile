@@ -5,7 +5,7 @@ h2. Setup
 h3. Prerequisites
 
 Working git, ruby or jruby, and rubgems.
-Gems: capistrano, capistrano-ext (oddly, haml too, when deploying ...)
+Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
 h3. Install
@@ -27,9 +27,10 @@ rvm install 1.8.7         # install the latest 1.8.7 ruby
 rvm list                  # show locally installed Rubies
 rvm use 1.8.7             # use it
 rvm gemset create has     # make  a gemset
-gem install ...           # don't sudo gem install!
-gem install ...           
-
+gem install capistrano    # don't sudo gem install!
+gem install capistrano-ext
+gem install ruby-debug
+gem install haml
 </pre></code>
 
 Next time you work on (eg has) try:
@@ -49,26 +50,33 @@ h4. GIT
 
   cd rites
 
+  # if you are going to make your own theme, copy a sample first
+  # cp ./config/themes/has/settings.sample.yml ./config/themes/xproject
+  # cp -r ./themes/has ./themes/xproject
+  # cp -r ./public/stylesheets/themes/has ./public/stylesheets/themes/xproject
+  # cp -r ./public/stylesheets/sass/themes/has ./public/stylesheets/sass/themes/xproject
+  # then pass arguments to setup.
   # follow instructions for installing necessary gem prerequisites
   # until config/setup.rb completes successfully
-  jruby config/setup.rb
+  ruby config/setup.rb
 
   # finish installing necessary gems for rails application
-  jruby -S rake gems:install
+  ruby -S rake gems:install
+  RAILS_ENV=cucumber ruby -S rake gems:install
 
   # setup database
-  RAILS_ENV=production jruby -S rake db:migrate:reset
+  RAILS_ENV=production ruby rake db:migrate:reset
 
   # setup application resources
-  RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+  RAILS_ENV=production ruby rake rigse:setup:new_rites_app
 
   # save a copy of the development database to make subsequent clean starts much quicker
   # Saves database to: db/development_data.sql
   # can be reloaded with: rake db:load
-  jruby -S rake db:dump
+  ruby rake db:dump
   
   # start server
-  jruby -J-server script/server -e production
+  ruby script/server -e production
 </code></pre>
 
 h3. when deploying to a new server

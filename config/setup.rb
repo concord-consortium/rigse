@@ -1192,6 +1192,7 @@ end
 puts <<-HEREDOC
   MRI Ruby:
     rake gems:install
+    RAILS_ENV=cucumber rake gems:install
     RAILS_ENV=production rake db:migrate:reset
     RAILS_ENV=production rake rigse:setup:new_rites_app
     
