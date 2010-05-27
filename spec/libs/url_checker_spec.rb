@@ -22,7 +22,7 @@ describe UrlChecker do
   end
   
   it "should not validate good image urls that are too big" do
-    UrlChecker.valid?(@huge_image_url).should be false
+    UrlChecker.valid?(@huge_image_url,  :max_size => 99999999).should be false
     UrlChecker.valid?(@medium_image_url,:max_size =>100000).should be true
   end
   

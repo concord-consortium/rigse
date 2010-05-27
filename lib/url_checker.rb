@@ -5,7 +5,7 @@ class UrlChecker
   
   def self.valid?(url, opts={})
     options = {
-      :max_size => 512000,
+      :max_size => 0,
       :do_head => true
     }  
     options.merge!(opts)
@@ -18,7 +18,7 @@ class UrlChecker
           response =http.head(uri.path)
         end
         if (response && response.class == Net::HTTPOK &&
-            response.content_length < options[:max_size])
+           (options[:max_size] == 0 || response.content_length < options[:max_size]))
               valid = true
         end
       else
