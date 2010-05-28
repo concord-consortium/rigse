@@ -199,6 +199,13 @@ class Portal::Clazz < ActiveRecord::Base
     return (! virtual?)
   end
   
+  def school
+    if course
+      return course.school
+    end
+    return nil
+  end
+  
   # HACK: to support transitioning to multiple teachers.
   def teacher
     self.teachers.first
