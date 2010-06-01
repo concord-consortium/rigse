@@ -1,0 +1,22 @@
+%div(class="scroll")
+
+  %h3 Rubrics
+
+  %table
+    %tr
+      %td Rubric ID
+      %td Description
+    - @rubrics.each do |rubric|
+      %tr
+        %td
+          = rubric.rubric_id
+        %td
+          = rubric.description
+        %td   
+          = link_to 'Show', rubric
+        %td
+          = link_to 'Edit', edit_sparks_rubric_path(rubric)
+        %td
+          = link_to 'Destroy', rubric, :confirm => 'Are you sure?', :method => :delete
+
+  = link_to 'New Rubric', :action => 'new'

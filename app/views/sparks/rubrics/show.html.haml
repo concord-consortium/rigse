@@ -1,0 +1,15 @@
+%h3 Rubric
+%p 
+  ID:
+  = @rubric.rubric_id
+%p
+  Description:
+  = @rubric.description
+%p
+  Content:
+  %br
+  %pre
+    = @rubric.content
+    
+= link_to 'Edit', edit_sparks_rubric_path(@rubric)
+= link_to 'Back', sparks_rubrics_path

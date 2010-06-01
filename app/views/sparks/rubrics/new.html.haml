@@ -1,0 +1,19 @@
+%h3 New Rubric
+- form_for(@rubric) do |f|
+  = f.error_messages
+  %p
+    = f.label :rubric_id, 'Rubric ID'
+    = f.text_field :rubric_id, :size => 48
+  %p
+    = f.label :description
+    %br
+    = f.text_area :description, :rows => 4, :cols => 72, :class => 'mceNoEditor'
+  %p
+    = f.label :content
+    %br
+    = f.text_area :content, :rows => 40, :cols => 88, :class => 'mceNoEditor'
+  %p
+    = f.submit "Create"
+ 
+= link_to 'Back', sparks_rubrics_path
+ 

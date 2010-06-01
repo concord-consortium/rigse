@@ -1,0 +1,2 @@
+module Sparks::RubricsHelper
+end

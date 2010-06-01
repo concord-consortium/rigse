@@ -379,6 +379,13 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :images
   
+  # SPARKS
+  map.namespace :sparks do |sparks|
+    sparks.resources :rubrics
+  end
+  
+  map.connect '/sparks/rubrics/:id.:format', :controller => 'sparks/rubrics', :method => 'show'
+ 
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.home '/readme', :controller => 'home', :action => 'readme'
