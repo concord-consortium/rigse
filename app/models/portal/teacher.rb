@@ -35,6 +35,10 @@ class Portal::Teacher < ActiveRecord::Base
   def name
     user ? user.name : 'unnamed teacher'
   end
+  
+  def list_name
+    user ? "#{user.last_name}, #{user.first_name[0, 1].upcase}. (#{user.login})" : "unnamed teacher"
+  end
         
   include Changeable
 
@@ -81,6 +85,10 @@ class Portal::Teacher < ActiveRecord::Base
     unless self.has_clazz?(clazz)
       self.clazzes << clazz
     end
+  end
+  
+  def remove_clazz(clazz)
+    self.clazzes.delete clazz
   end
   
   def school

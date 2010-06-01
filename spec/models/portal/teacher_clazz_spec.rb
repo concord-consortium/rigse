@@ -55,6 +55,14 @@ describe Portal::TeacherClazz do
       clazz.should be_changeable(second_teacher)
     end
     
+    it "should remove this teacher from the specified class" do
+      clazz = Factory :portal_clazz
+      teacher = Factory :portal_teacher, {:clazzes => [clazz]}
+      teacher.clazzes.should include(clazz)
+      teacher.remove_clazz(clazz)
+      teacher.reload
+      teacher.clazzes.should_not include(clazz)
+    end
   end
   
   describe "preserving leagacy one to many mapping for teachers <= clazzes" do

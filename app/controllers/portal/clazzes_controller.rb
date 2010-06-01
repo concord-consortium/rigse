@@ -198,5 +198,41 @@ class Portal::ClazzesController < ApplicationController
       end
     end
   end
+  
+  def add_teacher
+    @portal_clazz = Portal::Clazz.find(params[:id])
+    @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
+        
+    if @portal_clazz && @teacher
+      @teacher.add_clazz(@portal_clazz)
+      @portal_clazz.reload
+      render :update do |page|
+        page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page.visual_effect :highlight, 'teachers_listing'
+      end
+    else
+      render :update do |page|
+        page << "$('flash').update('that was a total failure')"
+      end
+    end
+  end
+  
+  def remove_teacher
+    @portal_clazz = Portal::Clazz.find(params[:id])
+    @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
+        
+    if @portal_clazz && @teacher
+      @teacher.remove_clazz(@portal_clazz)
+      @portal_clazz.reload
+      
+      respond_to do |format|
+        format.js
+      end
+    else
+      render :update do |page|
+        page << "$('flash').update('that was a total failure')"
+      end
+    end
+  end
     
 end
