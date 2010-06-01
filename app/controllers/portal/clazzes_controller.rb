@@ -5,6 +5,7 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
   
+  CANNOT_REMOVE_LAST_TEACHER = "Sorry, you can't remove the last teacher from a class. Please add another teacher before attempting to remove any."
   
   public
   # GET /portal_clazzes
@@ -220,17 +221,21 @@ class Portal::ClazzesController < ApplicationController
   def remove_teacher
     @portal_clazz = Portal::Clazz.find(params[:id])
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
-        
-    if @portal_clazz && @teacher
+
+    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
+    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    (render(:update) { |page| page << "$('flash').update('#{CANNOT_REMOVE_LAST_TEACHER}')" } and return) unless @portal_clazz.teachers.length > 1
+
+    begin
       @teacher.remove_clazz(@portal_clazz)
       @portal_clazz.reload
       
       respond_to do |format|
         format.js
       end
-    else
+    rescue
       render :update do |page|
-        page << "$('flash').update('that was a total failure')"
+        page << "$('flash').update('There was an error while processing your request.')"
       end
     end
   end
