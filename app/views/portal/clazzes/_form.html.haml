@@ -16,6 +16,9 @@
         %li
           = label_tag :description, 'Description: ', :class=>"right"
           = f.text_area :description, :rows => 10, :cols => 50, :class => 'mceNoEditor'
+        %li
+          %div{:style => "width: 400px; margin: 0 0 0 30%;"}
+            = render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
 
     = f.hidden_field :teacher_id
     / .aligned

@@ -84,7 +84,24 @@ describe Portal::ClazzesController do
       end
     end
     
-    it "shows the list of all teachers assigned to the requested class, with removal link if current user is authorized" do
+    it "shows the list of all teachers assigned to the requested class" do
+      teachers = [@authorized_teacher, @random_teacher]
+      @mock_clazz.teachers = teachers
+    
+      get :show, :id => @mock_clazz.id
+      
+      with_tag("div.block_list") do
+        with_tag("ul") do
+          teachers.each do |teacher|
+            with_tag("li", :text => /#{teacher.name}/)
+          end
+        end
+      end
+    end
+  end # end describe GET show
+  
+  describe "XMLHttpRequest edit" do
+    it "shows the details of all teachers assigned to the requested class, with removal link if current user is authorized" do
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
         login_as user
@@ -92,7 +109,7 @@ describe Portal::ClazzesController do
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
       
-        get :show, :id => @mock_clazz.id
+        xml_http_request :post, :edit, :id => @mock_clazz.id
         
         # All users should see the list of current teachers
         with_tag("div#teachers_listing") do
@@ -120,7 +137,7 @@ describe Portal::ClazzesController do
           @mock_course.school.portal_teachers << teacher
         end
       
-        get :show, :id => @mock_clazz.id
+        xml_http_request :post, :edit, :id => @mock_clazz.id
         
         if user == :unauthorized_teacher_user
           # Unauthorized users should not see the "add teacher" dropdown
@@ -136,8 +153,7 @@ describe Portal::ClazzesController do
         end
       end
     end
-    
-  end # end describe GET show
+  end 
   
   describe "POST add_teacher" do
     it "will add the selected teacher to the given class if the current user is authorized" do
