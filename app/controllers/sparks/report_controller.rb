@@ -129,12 +129,13 @@ class Sparks::ReportController < ApplicationController
   
   ## All historical data for a student
   def learner_report
+    cookies[:rubric_path] = '/sparks/rubrics'
     @offering = Portal::Offering.find(params[:offering_id])
     studentId = params[:student_id] || current_user.portal_student.id
     learner = getLearner(@offering.id, studentId)
     mr = Saveable::Sparks::MeasuringResistance.find_by_learner_id(learner)
     @reports = Saveable::Sparks::MeasuringResistanceReport.find_all_by_measuring_resistance_id(mr)
-    render :template => 'sparks/report/measuring_resistance/learner_report'
+    render :template => 'sparks/report/measuring_resistance/learner_report', :layout => 'layouts/sparks/report'
   end
   
   ## Data for a single session of a student
