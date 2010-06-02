@@ -6,6 +6,7 @@ class Portal::ClazzesController < ApplicationController
   include RestrictedPortalController
   
   CANNOT_REMOVE_LAST_TEACHER = "Sorry, you can't remove the last teacher from a class. Please add another teacher before attempting to remove any."
+  ERROR_UNAUTHORIZED = "You are not authorized to perform the requested operation."
   
   public
   # GET /portal_clazzes
@@ -201,28 +202,37 @@ class Portal::ClazzesController < ApplicationController
   end
   
   def add_teacher
-    @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    
+    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
+    (render(:update) { |page| page << "$('flash').update('#{ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
+    
     @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
-        
-    if @portal_clazz && @teacher
+    
+    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    
+    begin
       @teacher.add_clazz(@portal_clazz)
       @portal_clazz.reload
       render :update do |page|
         page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page.visual_effect :highlight, 'teachers_listing'
       end
-    else
+    rescue
       render :update do |page|
-        page << "$('flash').update('that was a total failure')"
+        page << "$('flash').update('There was an error while processing your request.')"
       end
     end
   end
   
   def remove_teacher
-    @portal_clazz = Portal::Clazz.find(params[:id])
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    
+    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
+    (render(:update) { |page| page << "$('flash').update('#{ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
+    
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
 
-    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
     (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
     (render(:update) { |page| page << "$('flash').update('#{CANNOT_REMOVE_LAST_TEACHER}')" } and return) unless @portal_clazz.teachers.length > 1
 
