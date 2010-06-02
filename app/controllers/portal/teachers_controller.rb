@@ -50,7 +50,10 @@ class Portal::TeachersController < ApplicationController
       @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
     end
     @portal_grade = Portal::Grade.find(params[:grade][:id])
-    @domain = RiGse::Domain.find(params[:domain][:id])
+    @domain = nil
+    if params[:domain]
+      @domain = RiGse::Domain.find(params[:domain][:id])
+    end
     domains_and_grades
     @user = User.new(params[:user])
     if @user && @user.valid?
