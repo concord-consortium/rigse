@@ -129,7 +129,6 @@ class Sparks::ReportController < ApplicationController
   
   ## All historical data for a student
   def learner_report
-    cookies[:rubric_path] = '/sparks/rubrics'
     @offering = Portal::Offering.find(params[:offering_id])
     studentId = params[:student_id] || current_user.portal_student.id
     learner = getLearner(@offering.id, studentId)
@@ -145,10 +144,10 @@ class Sparks::ReportController < ApplicationController
     render :template => 'sparks/report/measuring_resistance/learner_session_report'
   end
   
-  ## Send back the report content in JSON format
+  ## Send back the report object in JSON format
   def get_report
     report = Saveable::Sparks::MeasuringResistanceReport.find_by_id(params[:id])
-    render :json => report.content
+    render :json => report
   end
 
   def getLearner(offeringId, studentId)
