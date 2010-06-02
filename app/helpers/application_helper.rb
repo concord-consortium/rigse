@@ -827,6 +827,10 @@ module ApplicationHelper
           haml_concat link_to('Download Text Report',
             { :controller => 'sparks/report', :action => 'class_report_big_table' , :offering_id => offering },
             { :title => 'A table of bar (|) separated values that can be imported into a spreadsheet' })
+          haml_concat '&nbsp;'
+          haml_concat link_to('Rubric',
+            { :controller => 'sparks/rubrics', :action => 'show', :id => 1 },
+          { :title => 'Show Rubric', :popup => true })
         end
       end
     end

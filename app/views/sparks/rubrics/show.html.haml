@@ -1,15 +1,51 @@
-%h3 Rubric
-%p 
-  ID:
-  = @rubric.rubric_id
-%p
-  Description:
-  = @rubric.description
-%p
-  Content:
-  %br
-  %pre
-    = @rubric.content
+%div.rubric
+  %h3 Rubric
+  %p 
+    ID:
+    = @rubric.rubric_id
+  %p
+    Description:
+    = @rubric.description
+  
+  - root = JSON.parse(@rubric.content)
+  %p
+    = "Name: #{root['name']}"
+  %p
+    = "Version: #{root['version']}"
+  %p 
+    = "Maximum Points: #{root['max_points']}"
+  - items = root['items'].sort_by { |k, v| v['order'] }
+  - if items.size > 0
+    %ul
+      - items.each do |k, v|
+        %li
+          = "<b>#{v['description']}</b> (#{v['max_points']} points)"
+          - items2 = v['items'].sort_by { |k, v| v['order'] }
+          - if items2.size > 0
+            %ul
+              - items2.each do |k2, v2|
+                %li
+                  = "<b>#{v2['description']}</b> (#{v2['max_points']} points)"
+                  %br
+                  Feedback:
+                  %br
+                  - msgs = v2['feedback']['messages']
+                  - if msgs.size > 0
+                    %table
+                      %tr
+                        %th Condition
+                        %th Short Message
+                        %th Long Message
+                      - msgs.each do |label, msg|
+                        %tr
+                          %td
+                            = msg['description']
+                          %td
+                            = msg['short_message']
+                          %td
+                            = msg['long_message']
+                      %br
+                    %p
     
-= link_to 'Edit', edit_sparks_rubric_path(@rubric)
-= link_to 'Back', sparks_rubrics_path
+  /= link_to 'Edit', edit_sparks_rubric_path(@rubric)
+  /= link_to 'Back', sparks_rubrics_path

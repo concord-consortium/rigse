@@ -1,6 +1,6 @@
 class Sparks::RubricsController < ApplicationController
   
-  before_filter :admin_only, :except => :show
+  before_filter :admin_only, :except => [:index, :show]
 
   def index
     @rubrics = Sparks::Rubric.all
@@ -9,7 +9,7 @@ class Sparks::RubricsController < ApplicationController
   def show
     @rubric = Sparks::Rubric.find(params[:id])
     respond_to do |format|
-      format.html
+      format.html { render :layout => 'layouts/sparks/report' }
       format.json { render :json => @rubric.content }
     end
   end
@@ -35,7 +35,7 @@ class Sparks::RubricsController < ApplicationController
   
   def update
     @rubric = Sparks::Rubric.find(params[:id])
-    if @rubric.update_attributes(params[:sparks_rubbric])
+    if @rubric.update_attributes(params[:sparks_rubric])
       flash[:notice] = 'Rubric was successfully updated.'
       redirect_to(@rubric)
     else
