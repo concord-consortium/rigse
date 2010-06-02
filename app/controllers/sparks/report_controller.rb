@@ -124,7 +124,7 @@ class Sparks::ReportController < ApplicationController
     @offering = Portal::Offering.find_by_id(params[:offering_id])
     @clazz = @offering.clazz
     @students = @clazz.students
-    render :template => 'sparks/report/measuring_resistance/class_report', :layout => 'layouts/report'
+    render :template => 'sparks/report/measuring_resistance/class_report', :layout => 'layouts/sparks/report'
   end
   
   ## All historical data for a student

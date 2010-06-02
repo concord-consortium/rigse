@@ -15,7 +15,7 @@ module Sparks::ReportHelper
   end
   
   def chart(xs)
-    html = '<img src="http://chart.apis.google.com/chart?cht=lc&chs=120x100'
+    html = '<img src="http://chart.apis.google.com/chart?cht=lc&chs=110x80&chma=8,8,4,4'
     html << "&chd=t:#{xs.join(',')}"
     html << '" />'
     html
