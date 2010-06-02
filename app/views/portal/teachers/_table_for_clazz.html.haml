@@ -14,5 +14,9 @@
       %td
         = portal_teacher.login
       %td
-        - if portal_clazz.changeable?(current_user)
+        - reason = portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, portal_teacher)
+        - if !reason
           = remote_link_button "delete.png", :url => {:action=>'remove_teacher', :id => portal_clazz, :teacher_id => portal_teacher.id}, :confirm => "This action will remove the teacher: '#{portal_teacher.name}' from the class: #{portal_clazz.name}. \nAre you sure you want to do this?", :method => :delete, :title => "remove #{portal_teacher.name} from #{portal_clazz.name}"
+        - else
+          %span{:class => "rollover"}
+            = image_tag "delete_grey.png", :title => reason

@@ -35,10 +35,10 @@ describe Portal::ClazzesController do
   end
   
   def login_as(user_sym)
-    user = instance_variable_get("@#{user_sym.to_s}")
+    @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
     
-    @controller.stub!(:current_user).and_return(user)
-    user
+    @controller.stub!(:current_user).and_return(@logged_in_user)
+    @logged_in_user
   end
 
   def mock_clazz(stubs={})
@@ -101,7 +101,7 @@ describe Portal::ClazzesController do
   end # end describe GET show
   
   describe "XMLHttpRequest edit" do
-    it "shows the details of all teachers assigned to the requested class, with removal link if current user is authorized" do
+    it "shows the details of all teachers assigned to the requested class with removal links" do
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
         login_as user
@@ -114,12 +114,83 @@ describe Portal::ClazzesController do
         # All users should see the list of current teachers
         with_tag("div#teachers_listing") do
           teachers.each do |teacher|
+            with_tag("tr#portal__teacher_#{teacher.id}") do |e|
+              with_tag("img[src*='delete']")
+            end
+          end
+        end
+      end
+    end
+    
+    describe "conditions for a user trying to remove a teacher from a class" do
+      it "the user is allowed to remove any teacher in the list" do
+        teachers = [@authorized_teacher, @random_teacher]
+        @mock_clazz.teachers = teachers
+        
+        xml_http_request :post, :edit, :id => @mock_clazz.id
+        
+        with_tag("div#teachers_listing") do
+          teachers.each do |teacher|
             with_tag("tr#portal__teacher_#{teacher.id}") do
-              # Unauthorized users should not see the link to remove a teacher from this class
-              if user == :unauthorized_teacher_user
-                without_tag("a.rollover")
+              with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
+                with_tag("img[src*='delete.png']")
+              end
+            end
+          end
+        end
+      end
+      
+      it "the user is not allowed to edit this class in the first place" do
+        login_as :unauthorized_teacher_user
+        
+        teachers = [@authorized_teacher, @random_teacher]
+        @mock_clazz.teachers = teachers
+        
+        xml_http_request :post, :edit, :id => @mock_clazz.id
+        
+        # Perhaps the entire page shouldn't display, but at the very least, none of the teachers should have removal links
+        with_tag("div#teachers_listing") do
+          teachers.each do |teacher|
+            with_tag("tr#portal__teacher_#{teacher.id}") do
+              with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_UNAUTHORIZED)
+            end
+          end
+        end
+      end
+      
+      it "this teacher is the last teacher assigned to this class" do
+        # @mock_clazz should only have one teacher, but let's make sure
+        teachers = [@authorized_teacher]
+        @mock_clazz.teachers = teachers
+        
+        xml_http_request :post, :edit, :id => @mock_clazz.id
+        
+        # There should be only one teacher listed, and it should not be enabled
+        with_tag("div#teachers_listing") do
+          with_tag("tr#portal__teacher_#{teachers.first.id}") do
+            with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
+          end
+        end
+      end
+      
+      it "this teacher is the current user" do
+        login_as :authorized_teacher_user
+        
+        teachers = [@authorized_teacher, @random_teacher]
+        @mock_clazz.teachers = teachers
+        
+        xml_http_request :post, :edit, :id => @mock_clazz.id
+        
+        # Only the current user's teacher should be disabled; all others should be enabled
+        with_tag("div#teachers_listing") do
+          teachers.each do |teacher|
+            with_tag("tr#portal__teacher_#{teacher.id}") do
+              if teacher.user == @logged_in_user
+                with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
               else
-                with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id))
+                with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
+                  with_tag("img[src*='delete.png']")
+                end
               end
             end
           end

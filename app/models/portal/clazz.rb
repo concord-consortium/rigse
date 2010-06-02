@@ -23,6 +23,14 @@ class Portal::Clazz < ActiveRecord::Base
 
   #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
   include PortalChangeable
+  
+  # String constants for error messages
+  ERROR_REMOVE_TEACHER_UNAUTHORIZED = "You are not allowed to modify this class."
+  ERROR_REMOVE_TEACHER_LAST_TEACHER = "You cannot remove the last teacher from this class."
+  ERROR_REMOVE_TEACHER_CURRENT_USER = "You cannot remove yourself from this class."
+  ERROR_REMOVE_TEACHER_NOT_FOUND    = "This teacher is not currently teaching this class."
+  
+  
 
   self.extend SearchableModel
 
@@ -224,6 +232,25 @@ class Portal::Clazz < ActiveRecord::Base
     unless self.has_teacher?(_teacher)
       self.teachers << _teacher
     end
+  end
+  
+  # This method is used to check whether a user is allowed to remove a specific teacher from this class
+  # @attempting_user : User object initiating the request
+  # @target_teacher  : Portal::Teacher object to be deleted
+  # return values:
+  #   nil    : User is allowed to remove this teacher
+  #   String : reason why user is not allowed to remove this teacher
+  def reason_user_cannot_remove_teacher_from_class(attempting_user, target_teacher)
+    # Possible reasons for illegality:
+    # - user is not allowed to edit this class at all
+    # - user is trying to remove the last teacher from this class
+    # - user is trying to remove themselves from this class
+    
+    return ERROR_REMOVE_TEACHER_UNAUTHORIZED if !changeable?(attempting_user)
+    return ERROR_REMOVE_TEACHER_LAST_TEACHER if teachers.size == 1
+    return ERROR_REMOVE_TEACHER_CURRENT_USER if target_teacher.user == attempting_user
+    
+    nil
   end
 
   def refresh_saveable_response_objects
