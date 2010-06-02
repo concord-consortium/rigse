@@ -24,13 +24,13 @@
             - t = ''
             - fb = results[i]['root']
             - t << "<nobr>Total: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
-            - fb = results[i]['root']['reading']
+            - fb = results[i]['root']['items']['reading']
             - t << "<nobr>Step 1: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
-            - fb = results[i]['root']['measuring']
+            - fb = results[i]['root']['items']['measuring']
             - t << "<nobr>Step 2: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
-            - fb = results[i]['root']['t_range']
+            - fb = results[i]['root']['items']['t_range']
             - t << "<nobr>Step 3: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
-            - fb = results[i]['root']['time']
+            - fb = results[i]['root']['items']['time']
             - t << "<nobr>Time: #{fb['points']}/#{fb['maxPoints']}</nobr><br/>"
             - t << time_str_short(r.created_at)
             %br
