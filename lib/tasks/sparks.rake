@@ -23,14 +23,20 @@ namespace :sparks do
   
   desc "Re-grade all saved Measuring Resistance instances"
   task :regrade_mr => :environment do
+    rubric = Sparks::Rubric.find(1)
     report_js = "#{RAILS_ROOT}/public/sparks-content/server-mr-report.js"
     rt  = Johnson::Runtime.new
     rt.load(report_js)
+    rt['rubric_string'] = (rubric.content)
+      
+    #rt['_xxlog'] = lambda { |s| puts(s) }
+    #rt.evaluate('console = {}; console.log = _xxlog;')
+    
     cnt=1
 
     script = <<HERE
 try {
-  grader = new sparks.activities.mr.Grader(logObj);
+  grader = new sparks.activities.mr.Grader(logObj, JSON.parse(rubric_string));
   feedback = grader.grade();
   result = JSON.stringify(feedback);
 }
