@@ -29,7 +29,7 @@
                   %br
                   Feedback:
                   %br
-                  - msgs = v2['feedback']['messages']
+                  - msgs = v2['feedback']['messages'].sort_by { |k, v| v['order'] }
                   - if msgs.size > 0
                     %table
                       %tr
