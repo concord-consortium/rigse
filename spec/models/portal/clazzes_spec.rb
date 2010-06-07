@@ -9,7 +9,7 @@ describe Portal::Clazz do
     @existing_clazz = Factory(:portal_clazz, {
       :section => @section_a,
       :start_time => @start_date,
-      :course => @course
+      :course => @course,
     })
     
   end
@@ -72,10 +72,33 @@ describe Portal::Clazz do
       @existing_clazz.teachers = [@teacher1]
       @existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1).should == Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER
     end
+  end
+  
+  describe "creating a new class" do
+    before(:each) do
+      User.destroy_all
+      Portal::Teacher.destroy_all
+      
+      @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "test_teacher"))
+    end
     
-    it "should say it is illegal for a user to remove themselves" do
-      @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(@teacher1.user, @teacher1).should == Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER
+    it "should require a school" do
+      # params = {
+      #   :name => "Test Class",
+      #   :class_word => "123456",
+      #   :teacher_id => @teacher.id
+      # }
+      # 
+      # new_clazz = Portal::Clazz.new(params)
+      # new_clazz.valid?.should == false
+      # 
+      # params[:semester_id] = @semester.id
+      # 
+      # new_clazz = Portal::Clazz.new(params)
+      # new_clazz.valid?.should == true
+    end
+    
+    it "should require at least one teacher" do
     end
   end
 end

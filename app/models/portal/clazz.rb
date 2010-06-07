@@ -24,11 +24,10 @@ class Portal::Clazz < ActiveRecord::Base
   #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
   include PortalChangeable
   
-  # String constants for error messages
+  # String constants for error messages -- Cantina-CMH 6/2/10
   ERROR_REMOVE_TEACHER_UNAUTHORIZED = "You are not allowed to modify this class."
   ERROR_REMOVE_TEACHER_LAST_TEACHER = "You cannot remove the last teacher from this class."
-  ERROR_REMOVE_TEACHER_CURRENT_USER = "You cannot remove yourself from this class."
-  ERROR_REMOVE_TEACHER_NOT_FOUND    = "This teacher is not currently teaching this class."
+  #ERROR_REMOVE_TEACHER_CURRENT_USER = "You cannot remove yourself from this class."
   
   
 
@@ -248,7 +247,7 @@ class Portal::Clazz < ActiveRecord::Base
     
     return ERROR_REMOVE_TEACHER_UNAUTHORIZED if !changeable?(attempting_user)
     return ERROR_REMOVE_TEACHER_LAST_TEACHER if teachers.size == 1
-    return ERROR_REMOVE_TEACHER_CURRENT_USER if target_teacher.user == attempting_user
+    #return ERROR_REMOVE_TEACHER_CURRENT_USER if target_teacher.user == attempting_user
     
     nil
   end

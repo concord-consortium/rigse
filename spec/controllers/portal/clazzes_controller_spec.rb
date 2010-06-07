@@ -13,25 +13,30 @@ describe Portal::ClazzesController do
     Portal::Course.destroy_all
     Portal::Clazz.destroy_all
     Portal::School.destroy_all
+    Portal::Semester.destroy_all
     User.destroy_all
     
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
     
+    @mock_semester = Factory.create(:portal_semester, :name => "Fall")
+    @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+    
     # set up our user types
     @normal_user = Factory.next(:anonymous_user)
     @admin_user = Factory.next(:admin_user)
-    @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"))
-    @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "unauthorized_teacher"))
+    @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @unauthorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "unauthorized_teacher"), :schools => [@mock_school])
     
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
     
     # another teacher, to act as an arbitrary third party
-    @random_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "random_teacher"))
+    @random_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "random_teacher"), :schools => [@mock_school])
     
-    @mock_course = Factory.create(:portal_course)
-    @mock_clazz = mock_clazz({ :teachers => [@authorized_teacher], :course => @mock_course })
+    @mock_clazz_name = "Random Test Class"
+    @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
+    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
   end
   
   def login_as(user_sym)
@@ -122,6 +127,12 @@ describe Portal::ClazzesController do
       end
     end
     
+    it "should not allow me to modify the requested class's school" do      
+      xml_http_request :post, :edit, :id => @mock_clazz.id
+      
+      without_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]")
+    end
+    
     describe "conditions for a user trying to remove a teacher from a class" do
       it "the user is allowed to remove any teacher in the list" do
         teachers = [@authorized_teacher, @random_teacher]
@@ -173,29 +184,29 @@ describe Portal::ClazzesController do
         end
       end
       
-      it "this teacher is the current user" do
-        login_as :authorized_teacher_user
-        
-        teachers = [@authorized_teacher, @random_teacher]
-        @mock_clazz.teachers = teachers
-        
-        xml_http_request :post, :edit, :id => @mock_clazz.id
-        
-        # Only the current user's teacher should be disabled; all others should be enabled
-        with_tag("div#teachers_listing") do
-          teachers.each do |teacher|
-            with_tag("tr#portal__teacher_#{teacher.id}") do
-              if teacher.user == @logged_in_user
-                with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
-              else
-                with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
-                  with_tag("img[src*='delete.png']")
-                end
-              end
-            end
-          end
-        end
-      end
+      # it "this teacher is the current user" do
+      #   login_as :authorized_teacher_user
+      #   
+      #   teachers = [@authorized_teacher, @random_teacher]
+      #   @mock_clazz.teachers = teachers
+      #   
+      #   xml_http_request :post, :edit, :id => @mock_clazz.id
+      #   
+      #   # Only the current user's teacher should be disabled; all others should be enabled
+      #   with_tag("div#teachers_listing") do
+      #     teachers.each do |teacher|
+      #       with_tag("tr#portal__teacher_#{teacher.id}") do
+      #         if teacher.user == @logged_in_user
+      #           with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
+      #         else
+      #           with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
+      #             with_tag("img[src*='delete.png']")
+      #           end
+      #         end
+      #       end
+      #     end
+      #   end
+      # end
     end
     
     it "populates the list of available teachers for ADD functionality if current user is authorized" do
@@ -205,7 +216,7 @@ describe Portal::ClazzesController do
         
         1.upto 10 do |i|
           teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
-          @mock_course.school.portal_teachers << teacher
+          @mock_clazz.school.portal_teachers << teacher
         end
       
         xml_http_request :post, :edit, :id => @mock_clazz.id
@@ -214,10 +225,10 @@ describe Portal::ClazzesController do
           # Unauthorized users should not see the "add teacher" dropdown
           without_tag("select#teacher_id_selector[name=teacher_id]")
         else
-          with_tag("select#teacher_id_selector[name=teacher_id]") do
+          with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
             without_tag("option[value=?]", @authorized_teacher.id) # cannot add teachers who are already assigned to this class
-        
-            @mock_course.school.portal_teachers.each do |t|
+            
+            @mock_clazz.school.portal_teachers.reject { |t| t.id == @authorized_teacher.id }.each do |t|
               with_tag("option[value=?]", t.id)
             end
           end
@@ -286,4 +297,145 @@ describe Portal::ClazzesController do
     end
   end
   
+  describe "GET new" do
+    it "should show a list of the current teacher's schools to which to assign this class" do
+      login_as :authorized_teacher_user
+      
+      get :new
+      
+      with_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
+        @logged_in_user.portal_teacher.schools.each do |school|
+          with_tag("option[value='#{school.id}']", :text => school.name)
+        end
+      end
+    end
+    
+    it "should populate the schools list with the project default school if the current user does not belong to any schools" do
+      [:admin_user, :authorized_teacher_user].each do |user|
+        setup_for_repeated_tests
+        login_as user
+        
+        get :new
+      
+        with_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
+          school = Portal::School.find_by_name(APP_CONFIG[:site_school])
+          with_tag("option[value='#{school.id}']", :text => school.name)
+          with_tag("option", :count => 1)
+        end
+      end
+    end
+    
+    it "populates the list of available teachers for ADD functionality" do
+      login_as :authorized_teacher_user
+      
+      1.upto 10 do |i|
+        teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
+        @logged_in_user.portal_teacher.school.portal_teachers << teacher
+      end
+    
+      get :new
+    
+      with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
+        without_tag("option[value=?]", @logged_in_user.portal_teacher.id) # cannot add teachers who are already assigned to this class
+        
+        @logged_in_user.portal_teacher.school.portal_teachers.reject { |t| t.id == @logged_in_user.portal_teacher.id }.each do |t|
+          with_tag("option[value=?]", t.id)
+        end
+      end
+    end
+  end # end describe "GET new"
+
+  describe "POST create" do
+    before(:each) do
+      @post_params = {
+        :portal_clazz => {
+          :name => "New Test Class",
+          :class_word => "1020304050",
+          :school => @mock_school.id,
+          :semester_id => @mock_semester.id,
+          :description => "Test!",
+          :teacher_id => @authorized_teacher.id
+        }
+      }
+    end
+    
+    it "should create a new class, assigned to the correct teacher, in the correct school" do
+      login_as :authorized_teacher_user
+      
+      post :create, @post_params
+      
+      @mock_school.reload
+      @authorized_teacher.reload
+      
+      @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
+      
+      assert @new_clazz
+      @new_clazz.school.should == @mock_school
+      @authorized_teacher.clazzes.should include(@new_clazz)
+      @mock_school.clazzes.should include(@new_clazz)
+    end
+    
+    it "should attach this class to the appropriate course in the specified school, if one exists" do
+      course = Factory.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
+      assert course
+      course.clazzes.size.should == 0
+      
+      login_as :authorized_teacher_user
+      
+      post :create, @post_params
+      
+      course.reload
+      
+      @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
+      
+      @new_clazz.course.should == course
+      course.clazzes.size.should == 1
+      course.clazzes.should include(@new_clazz)
+      course.school.clazzes.should include(@new_clazz)
+    end
+    
+    it "should create a new course in the specified school if this class has a unique name" do      
+      assert_nil Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
+      
+      login_as :authorized_teacher_user
+      
+      post :create, @post_params
+      
+      @mock_school.reload
+      course = Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
+      
+      assert course
+      @mock_school.courses.should include(course)
+    end
+    
+    it "should create exactly one teacher object for the current user if the current user does not already have one" do
+      @random_user = Factory.create(:user, :login => "random_user")
+      login_as :random_user
+      
+      assert_nil @logged_in_user.portal_teacher
+      current_count = Portal::Teacher.count(:all)
+      
+      @post_params[:portal_clazz][:teacher_id] = nil
+      
+      post :create, @post_params
+      
+      @logged_in_user.reload
+      
+      assert_not_nil @logged_in_user.portal_teacher
+      Portal::Teacher.count(:all).should == current_count + 1
+    end
+    
+    it "should not let me create a class with no school" do
+      login_as :authorized_teacher_user
+      
+      current_count = Portal::Clazz.count(:all)
+      
+      @post_params[:portal_clazz][:school] = nil
+      
+      post :create, @post_params
+      
+      assert flash[:error]
+      Portal::Clazz.count(:all).should == current_count
+    end
+  end
 end
