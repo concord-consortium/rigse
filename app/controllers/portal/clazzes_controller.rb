@@ -274,16 +274,15 @@ class Portal::ClazzesController < ApplicationController
       @teacher.remove_clazz(@portal_clazz)
       @portal_clazz.reload
       
-      if @portal_clazz.teachers.size < 2
-        # You aren't allowed to remove the last teacher. Redraw the entire table, to disable the last delete link. -- Cantina-CMH 06/09/10
-        render :update do |page|
-          page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        end
-      else
-        respond_to do |format|
-          format.js
-        end
+      # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 06/09/10
+      render :update do |page|
+        page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
       end
+      
+      # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 06/09/10
+      # respond_to do |format|
+      #   format.js
+      # end
     rescue
       render :update do |page|
         page << "$('flash').update('There was an error while processing your request.')"

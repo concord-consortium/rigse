@@ -297,7 +297,7 @@ describe Portal::ClazzesController do
       assert @response.body.include?(Portal::ClazzesController::CANNOT_REMOVE_LAST_TEACHER)
     end
     
-    it "will disable the remaining delete buttons by re-rendering the teacher table if there is only one remaining teacher after this operation" do
+    it "will disable the remaining delete button if there is only one remaining teacher after this operation" do
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
       
@@ -308,13 +308,25 @@ describe Portal::ClazzesController do
       end
     end
     
-    it "will remove a teacher listing with JavaScript if there is more than one remaining teacher after this operation" do
+    # REMOVED -- we now redraw the entire teacher listing each time a teacher is removed, in case the delete permissions change between operations.
+    # it "will remove a teacher listing with JavaScript if there is more than one remaining teacher after this operation" do
+    #   teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
+    #   @mock_clazz.teachers = teachers
+    #   
+    #   delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
+    #   
+    #   without_tag("tr") # All teacher listings are in table rows; we shouldn't be actually rendering any HTML content here.
+    # end
+    
+    it "will re-render the teacher listing when a teacher is removed" do
       teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
       
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
       
-      without_tag("tr") # All teacher listings are in table rows; we shouldn't be actually rendering any HTML content here.
+      with_tag("tr#portal__teacher_#{@unauthorized_teacher.id}")
+      with_tag("tr#portal__teacher_#{@random_teacher.id}")
+      without_tag("tr#portal__teacher_#{@authorized_teacher.id}")
     end
   end
   
