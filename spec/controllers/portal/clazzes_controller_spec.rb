@@ -184,6 +184,7 @@ describe Portal::ClazzesController do
         end
       end
       
+      # REMOVED -- teachers can remove themselves, but will be immediately redirected away from the edit page.
       # it "this teacher is the current user" do
       #   login_as :authorized_teacher_user
       #   
@@ -295,6 +296,26 @@ describe Portal::ClazzesController do
       assert @mock_clazz.teachers.include?(@authorized_teacher)
       assert @response.body.include?(Portal::ClazzesController::CANNOT_REMOVE_LAST_TEACHER)
     end
+    
+    it "will disable the remaining delete buttons by re-rendering the teacher table if there is only one remaining teacher after this operation" do
+      teachers = [@authorized_teacher, @random_teacher]
+      @mock_clazz.teachers = teachers
+      
+      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
+      
+      with_tag("tr#portal__teacher_#{@random_teacher.id}") do
+        with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
+      end
+    end
+    
+    it "will remove a teacher listing with JavaScript if there is more than one remaining teacher after this operation" do
+      teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
+      @mock_clazz.teachers = teachers
+      
+      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
+      
+      without_tag("tr") # All teacher listings are in table rows; we shouldn't be actually rendering any HTML content here.
+    end
   end
   
   describe "GET new" do
@@ -325,24 +346,25 @@ describe Portal::ClazzesController do
       end
     end
     
-    it "populates the list of available teachers for ADD functionality" do
-      login_as :authorized_teacher_user
-      
-      1.upto 10 do |i|
-        teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
-        @logged_in_user.portal_teacher.school.portal_teachers << teacher
-      end
-    
-      get :new
-    
-      with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
-        without_tag("option[value=?]", @logged_in_user.portal_teacher.id) # cannot add teachers who are already assigned to this class
-        
-        @logged_in_user.portal_teacher.school.portal_teachers.reject { |t| t.id == @logged_in_user.portal_teacher.id }.each do |t|
-          with_tag("option[value=?]", t.id)
-        end
-      end
-    end
+    # REMOVED -- teachers must create the class before being able to add teachers.
+    # it "populates the list of available teachers for ADD functionality" do
+    #   login_as :authorized_teacher_user
+    #   
+    #   1.upto 10 do |i|
+    #     teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
+    #     @logged_in_user.portal_teacher.school.portal_teachers << teacher
+    #   end
+    # 
+    #   get :new
+    # 
+    #   with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
+    #     without_tag("option[value=?]", @logged_in_user.portal_teacher.id) # cannot add teachers who are already assigned to this class
+    #     
+    #     @logged_in_user.portal_teacher.school.portal_teachers.reject { |t| t.id == @logged_in_user.portal_teacher.id }.each do |t|
+    #       with_tag("option[value=?]", t.id)
+    #     end
+    #   end
+    # end
   end # end describe "GET new"
 
   describe "POST create" do

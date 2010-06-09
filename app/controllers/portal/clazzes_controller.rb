@@ -274,8 +274,15 @@ class Portal::ClazzesController < ApplicationController
       @teacher.remove_clazz(@portal_clazz)
       @portal_clazz.reload
       
-      respond_to do |format|
-        format.js
+      if @portal_clazz.teachers.size < 2
+        # You aren't allowed to remove the last teacher. Redraw the entire table, to disable the last delete link. -- Cantina-CMH 06/09/10
+        render :update do |page|
+          page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        end
+      else
+        respond_to do |format|
+          format.js
+        end
       end
     rescue
       render :update do |page|
