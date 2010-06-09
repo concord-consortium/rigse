@@ -163,7 +163,7 @@ describe Portal::ClazzesController do
         with_tag("div#teachers_listing") do
           teachers.each do |teacher|
             with_tag("tr#portal__teacher_#{teacher.id}") do
-              with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_UNAUTHORIZED)
+              with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_UNAUTHORIZED)
             end
           end
         end
@@ -208,6 +208,42 @@ describe Portal::ClazzesController do
       #     end
       #   end
       # end
+      
+      it "this teacher is the current user" do
+        login_as :authorized_teacher_user
+        
+        teachers = [@authorized_teacher, @random_teacher]
+        @mock_clazz.teachers = teachers
+        
+        xml_http_request :post, :edit, :id => @mock_clazz.id
+        
+        # The current user's teacher should produce a different warning message on click; all
+        # others should use the default confirm text. All users' delete links should be enabled.
+        with_tag("div#teachers_listing") do
+          teachers.each do |teacher|
+            with_tag("tr#portal__teacher_#{teacher.id}") do
+              with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do |elem|
+                with_tag("img[src*='delete.png']")
+
+                warning_str = Portal::Clazz.WARNING_REMOVE_TEACHER_CURRENT_USER(@mock_clazz.name).gsub(/(\\|<\/|\r\n|[\n\r"'])/) do
+                  ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP[$1]
+                end
+                confirm_str = Portal::Clazz.CONFIRM_REMOVE_TEACHER(teacher.name, @mock_clazz.name).gsub(/(\\|<\/|\r\n|[\n\r"'])/) do
+                  ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP[$1]
+                end
+                
+                if teacher.user == @logged_in_user
+                  elem.to_s.should include(warning_str)
+                  elem.to_s.should_not include(confirm_str)
+                else
+                  elem.to_s.should include(confirm_str)
+                  elem.to_s.should_not include(warning_str)
+                end
+              end
+            end
+          end
+        end
+      end
     end
     
     it "populates the list of available teachers for ADD functionality if current user is authorized" do
@@ -253,7 +289,7 @@ describe Portal::ClazzesController do
         if user == :unauthorized_teacher_user
           # Unauthorized users cannot add teachers, and will receive an error message
           assert !@mock_clazz.teachers.include?(@unauthorized_teacher)
-          assert @response.body.include?(Portal::ClazzesController::ERROR_UNAUTHORIZED)
+          assert @response.body.include?(Portal::Clazz::ERROR_UNAUTHORIZED)
         else
           # Authorized users can add teachers
           assert @mock_clazz.teachers.include?(@unauthorized_teacher)
@@ -280,7 +316,7 @@ describe Portal::ClazzesController do
         if user == :unauthorized_teacher_user
           # Unauthorized users cannot remove teachers, and will receive an error message
           assert @mock_clazz.teachers.include?(teachers.first)
-          assert @response.body.include?(Portal::ClazzesController::ERROR_UNAUTHORIZED)
+          assert @response.body.include?(Portal::Clazz::ERROR_UNAUTHORIZED)
         else
           # Authorized users can remove teachers
           assert !@mock_clazz.teachers.include?(teachers.first)
@@ -294,7 +330,7 @@ describe Portal::ClazzesController do
       @mock_clazz.reload
 
       assert @mock_clazz.teachers.include?(@authorized_teacher)
-      assert @response.body.include?(Portal::ClazzesController::CANNOT_REMOVE_LAST_TEACHER)
+      assert @response.body.include?(Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
     end
     
     it "will disable the remaining delete button if there is only one remaining teacher after this operation" do
@@ -327,6 +363,24 @@ describe Portal::ClazzesController do
       with_tag("tr#portal__teacher_#{@unauthorized_teacher.id}")
       with_tag("tr#portal__teacher_#{@random_teacher.id}")
       without_tag("tr#portal__teacher_#{@authorized_teacher.id}")
+    end
+    
+    it "will redirect the user to their home page if they remove themselves from a class" do
+      [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+        setup_for_repeated_tests
+        login_as user
+        
+        teachers = [@authorized_teacher, @unauthorized_teacher]
+        @mock_clazz.teachers = teachers
+          
+        delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
+                        
+        if user == :authorized_teacher_user
+          @response.body.should include(home_url)
+        else
+          @response.body.should_not include(home_url)
+        end
+      end
     end
   end
   

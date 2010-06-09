@@ -25,9 +25,17 @@ class Portal::Clazz < ActiveRecord::Base
   include PortalChangeable
   
   # String constants for error messages -- Cantina-CMH 6/2/10
-  ERROR_REMOVE_TEACHER_UNAUTHORIZED = "You are not allowed to modify this class."
+  ERROR_UNAUTHORIZED = "You are not allowed to modify this class."
   ERROR_REMOVE_TEACHER_LAST_TEACHER = "You cannot remove the last teacher from this class."
   #ERROR_REMOVE_TEACHER_CURRENT_USER = "You cannot remove yourself from this class."
+  
+  # JavaScript confirm messages -- Cantina-CMH 6/9/10
+  def self.WARNING_REMOVE_TEACHER_CURRENT_USER(clazz_name)
+    "This action will remove YOU from the class: #{clazz_name}.\n\nIf you remove yourself, you will lose all access to this class. Are you sure you want to do this?"
+  end
+  def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
+    "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
+  end
   
   
 
@@ -245,7 +253,7 @@ class Portal::Clazz < ActiveRecord::Base
     # - user is trying to remove the last teacher from this class
     # - user is trying to remove themselves from this class
     
-    return ERROR_REMOVE_TEACHER_UNAUTHORIZED if !changeable?(attempting_user)
+    return ERROR_UNAUTHORIZED if attempting_user.nil? || !changeable?(attempting_user)
     return ERROR_REMOVE_TEACHER_LAST_TEACHER if teachers.size == 1
     #return ERROR_REMOVE_TEACHER_CURRENT_USER if target_teacher.user == attempting_user
     

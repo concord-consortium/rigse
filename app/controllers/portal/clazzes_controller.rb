@@ -5,8 +5,7 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
   
-  CANNOT_REMOVE_LAST_TEACHER = "Sorry, you can't remove the last teacher from a class. Please add another teacher before attempting to remove any."
-  ERROR_UNAUTHORIZED = "You are not authorized to perform the requested operation."
+  
   
   public
   # GET /portal_clazzes
@@ -239,7 +238,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
     
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
-    (render(:update) { |page| page << "$('flash').update('#{ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
+    (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
     
     @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
     
@@ -261,32 +260,34 @@ class Portal::ClazzesController < ApplicationController
   
   def remove_teacher
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-    
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
-    (render(:update) { |page| page << "$('flash').update('#{ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
     
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
-
     (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
-    (render(:update) { |page| page << "$('flash').update('#{CANNOT_REMOVE_LAST_TEACHER}')" } and return) unless @portal_clazz.teachers.length > 1
+    
+    if (reason = @portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, @teacher))
+      render(:update) { |page| page << "$('flash').update('#{reason}')" }
+      return
+    end
 
     begin
       @teacher.remove_clazz(@portal_clazz)
       @portal_clazz.reload
       
-      # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 06/09/10
-      render :update do |page|
-        page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+      if @teacher == current_user.portal_teacher
+        flash[:notice] = "You have been successfully removed from class: #{@portal_clazz.name}"
+        render(:update) { |page| page.redirect_to home_url }
+      else
+        # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 6/9/10
+        render(:update) { |page| page.replace_html 'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz} }
       end
       
-      # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 06/09/10
+      # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 6/9/10
       # respond_to do |format|
       #   format.js
       # end
     rescue
-      render :update do |page|
-        page << "$('flash').update('There was an error while processing your request.')"
-      end
+      render(:update) { |page| page << "$('flash').update('There was an error while processing your request.')" }
     end
   end
     

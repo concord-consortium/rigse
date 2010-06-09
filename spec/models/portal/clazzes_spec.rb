@@ -64,7 +64,7 @@ describe Portal::Clazz do
     it "should say it is illegal for an unauthorized user to remove a teacher" do
       random_user = Factory.next(:anonymous_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
-      @existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1).should == Portal::Clazz::ERROR_REMOVE_TEACHER_UNAUTHORIZED
+      @existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1).should == Portal::Clazz::ERROR_UNAUTHORIZED
     end
     
     it "should say it is illegal for a user to remove the last teacher" do

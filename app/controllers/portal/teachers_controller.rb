@@ -44,11 +44,11 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers
   # POST /portal_teachers.xml
   def create
-    if params[:school][:id]
-      @portal_school = Portal::School.find(params[:school][:id])
-    else
-      @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
-    end
+    #if params[:school][:id]
+      @portal_school = Portal::School.find_by_id(params[:school][:id])
+    #else
+    #  @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
+    #end
     @portal_grade = Portal::Grade.find(params[:grade][:id])
     @domain = nil
     if params[:domain]
@@ -56,25 +56,30 @@ class Portal::TeachersController < ApplicationController
     end
     domains_and_grades
     @user = User.new(params[:user])
-    if @user && @user.valid?
-      @user.register!
-      @user.save
-    end
+    #if @user && @user.valid?
+    #  @user.register!
+    #  @user.save
+    #end
     
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
       t.domain = @domain
-      t.schools << @portal_school
+      t.schools << @portal_school if !@portal_school.nil?
       t.grades << @portal_grade
     end
     
-    if @user.errors.empty? && @portal_teacher.save
+    #if @user.errors.empty? && @portal_teacher.save
+    if @user.valid? && @portal_teacher.valid? && !@portal_school.nil?
+      if @user.register! && @portal_teacher.save
       # will redirect:
-      successful_creation(@user)    
-    else 
-      # will redirect:
-      failed_creation
+        successful_creation(@user)
+        return
+      end
     end
+
+    # will redirect:
+    @portal_teacher.errors.add(:schools, "association cannot be empty") if @portal_school.nil?
+    failed_creation
     
   end
 
