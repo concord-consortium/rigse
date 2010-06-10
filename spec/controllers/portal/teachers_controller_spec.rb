@@ -66,6 +66,7 @@ describe Portal::TeachersController do
       assert_equal Portal::Teacher.count(:all), current_teacher_count, "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
       assert_not_nil flash[:error]
       assert_nil flash[:notice]
+      @response.body.should include("association cannot be empty")
     end
   end
 
