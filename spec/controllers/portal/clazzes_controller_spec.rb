@@ -39,12 +39,12 @@ describe Portal::ClazzesController do
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
   end
   
-  def login_as(user_sym)
-    @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
-    
-    @controller.stub!(:current_user).and_return(@logged_in_user)
-    @logged_in_user
-  end
+  # def login_as(user_sym)
+  #     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
+  #     
+  #     @controller.stub!(:current_user).and_return(@logged_in_user)
+  #     @logged_in_user
+  #   end
 
   def mock_clazz(stubs={})
     mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
@@ -55,7 +55,7 @@ describe Portal::ClazzesController do
   
   before(:each) do
     setup_for_repeated_tests
-    login_as :admin_user # Make admin our default test user
+    stub_current_user :admin_user # Make admin our default test user
     
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
@@ -69,7 +69,7 @@ describe Portal::ClazzesController do
     it "shows the full class summary, with edit button if current user is authorized" do
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         get :show, { :id => @mock_clazz.id }
 
@@ -109,7 +109,7 @@ describe Portal::ClazzesController do
     it "shows the details of all teachers assigned to the requested class with removal links" do
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
@@ -152,7 +152,7 @@ describe Portal::ClazzesController do
       end
       
       it "the user is not allowed to edit this class in the first place" do
-        login_as :unauthorized_teacher_user
+        stub_current_user :unauthorized_teacher_user
         
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
@@ -210,7 +210,7 @@ describe Portal::ClazzesController do
       # end
       
       it "this teacher is the current user" do
-        login_as :authorized_teacher_user
+        stub_current_user :authorized_teacher_user
         
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
@@ -249,7 +249,7 @@ describe Portal::ClazzesController do
     it "populates the list of available teachers for ADD functionality if current user is authorized" do
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         1.upto 10 do |i|
           teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
@@ -280,7 +280,7 @@ describe Portal::ClazzesController do
       # @teacher_id
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         post :add_teacher, { :id => @mock_clazz.id, :teacher_id => @unauthorized_teacher.id }
       
@@ -304,7 +304,7 @@ describe Portal::ClazzesController do
       # @teacher_id
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         teachers = [@authorized_teacher, @random_teacher] # Any teachers except for @unauthorized_teacher will work here
         @mock_clazz.teachers = teachers
@@ -368,7 +368,7 @@ describe Portal::ClazzesController do
     it "will redirect the user to their home page if they remove themselves from a class" do
       [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         teachers = [@authorized_teacher, @unauthorized_teacher]
         @mock_clazz.teachers = teachers
@@ -386,7 +386,7 @@ describe Portal::ClazzesController do
   
   describe "GET new" do
     it "should show a list of the current teacher's schools to which to assign this class" do
-      login_as :authorized_teacher_user
+      stub_current_user :authorized_teacher_user
       
       get :new
       
@@ -400,7 +400,7 @@ describe Portal::ClazzesController do
     it "should populate the schools list with the project default school if the current user does not belong to any schools" do
       [:admin_user, :authorized_teacher_user].each do |user|
         setup_for_repeated_tests
-        login_as user
+        stub_current_user user
         
         get :new
       
@@ -448,7 +448,7 @@ describe Portal::ClazzesController do
     end
     
     it "should create a new class, assigned to the correct teacher, in the correct school" do
-      login_as :authorized_teacher_user
+      stub_current_user :authorized_teacher_user
       
       post :create, @post_params
       
@@ -468,7 +468,7 @@ describe Portal::ClazzesController do
       assert course
       course.clazzes.size.should == 0
       
-      login_as :authorized_teacher_user
+      stub_current_user :authorized_teacher_user
       
       post :create, @post_params
       
@@ -485,7 +485,7 @@ describe Portal::ClazzesController do
     it "should create a new course in the specified school if this class has a unique name" do      
       assert_nil Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
       
-      login_as :authorized_teacher_user
+      stub_current_user :authorized_teacher_user
       
       post :create, @post_params
       
@@ -498,7 +498,7 @@ describe Portal::ClazzesController do
     
     it "should create exactly one teacher object for the current user if the current user does not already have one" do
       @random_user = Factory.create(:user, :login => "random_user")
-      login_as :random_user
+      stub_current_user :random_user
       
       assert_nil @logged_in_user.portal_teacher
       current_count = Portal::Teacher.count(:all)
@@ -514,7 +514,7 @@ describe Portal::ClazzesController do
     end
     
     it "should not let me create a class with no school" do
-      login_as :authorized_teacher_user
+      stub_current_user :authorized_teacher_user
       
       current_count = Portal::Clazz.count(:all)
       

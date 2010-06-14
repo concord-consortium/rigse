@@ -1,6 +1,7 @@
 class Admin::ProjectsController < ApplicationController
   
-  before_filter :admin_only
+  before_filter :admin_only, :except => [:index, :edit, :update]
+  before_filter :admin_or_manager, :only => [:index, :edit, :update]
   # before_filter :setup_object, :except => [:index]
   # before_filter :render_scope, :only => [:show]
 
@@ -11,11 +12,22 @@ class Admin::ProjectsController < ApplicationController
   # in_place_edit_for :activity, :name
   # in_place_edit_for :activity, :description
   
-  protected  
+  protected 
 
   def admin_only
     unless current_user.has_role?('admin')
       flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def admin_or_manager
+    if current_user.has_role?('admin')
+      @admin_role = true
+    elsif current_user.has_role?('manager')
+      @manager_role = true
+    else
+      flash[:notice] = "Please log in as an administrator or manager" 
       redirect_to(:home)
     end
   end
@@ -25,8 +37,13 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects
   # GET /admin/projects.xml
   def index
-    @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
     default_project = Admin::Project.default_project
+    
+    if @manager_role
+      @admin_projects = [default_project].paginate
+    else
+      @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
+    end
 
     # If default_project is in collection to be displayed then put it first.
     unless @admin_projects.length == 1 || @admin_projects[0].default_project?

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::ProjectsController do
-
+  
   def mock_project(stubs={})
     @mock_project.stub!(stubs) unless stubs.empty?
     @mock_project
@@ -19,6 +19,36 @@ describe Admin::ProjectsController do
       Admin::Project.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_project])
       get :index
       assigns[:admin_projects].should == [mock_project]
+    end
+    
+    it "doesn't allow anybody who isn't an admin or manager to access to index" do
+      logout_user
+      get :index
+      assert_response :redirect
+    end
+  end
+  
+  describe "GET index for managers" do
+    integrate_views
+    
+    it "only allows managers to edit the current project and only shows them the information they can change" do
+      project = Factory.create(:admin_project)
+      second_project = Factory.create(:admin_project, { :name => "Test project" })
+      Admin::Project.should_receive(:default_project).and_return(project)
+      
+      manager_user = Factory.create(:user)
+      manager_user.add_role("manager")
+      
+      stub_current_user manager_user
+      
+      get :index
+      
+      assert_response :success
+      assert_template :partial => "_show_for_managers"
+      
+      assigns[:admin_projects].size.should == 1
+      assigns[:admin_projects].should include(project)
+      assigns[:admin_projects].should_not include(second_project)
     end
   end
 
@@ -43,6 +73,31 @@ describe Admin::ProjectsController do
       Admin::Project.should_receive(:find).with("37").and_return(mock_project)
       get :edit, :id => "37"
       assigns[:admin_project].should equal(mock_project)
+    end
+  end
+  
+  describe "GET edit for managers" do
+    integrate_views
+    
+    it "renders the _form_for_managers partial" do
+      project = Factory.create(:admin_project)
+      Admin::Project.should_receive(:find).with("37").and_return(project)
+      
+      manager_user = Factory.create(:user)
+      manager_user.add_role("manager")
+      
+      stub_current_user manager_user
+      
+      get :edit, :id => "37"
+      
+      assert_response :success
+      assert_template :partial => "_form_for_managers"
+ 
+      with_tag("*[name=?]", "admin_project[home_page_content]")
+      
+      (project.attributes.keys - ["home_page_content"]).each do |attribute|
+        without_tag("*[name=?]", "admin_project[#{attribute}]")
+      end
     end
   end
 
