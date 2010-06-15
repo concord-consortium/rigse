@@ -1,0 +1,31 @@
+.scroll.report
+
+  %h3 Activities
+
+  %table
+    %tr
+      %td ID
+      %td Name
+      %td Activity URL
+      %td Save URL
+      %td Page ID
+    - @activities.each do |activity|
+      %tr
+        %td
+          = activity.id
+        %td
+          = activity.name
+        %td
+          = activity.activity_url
+        %td
+          = activity.save_url
+        %td
+          = activity.page_id
+        %td
+          = link_to 'Show', activity
+        %td
+          = link_to 'Edit', edit_sparks_activity_path(activity)
+        %td
+          = link_to 'Destroy', activity, :confirm => 'Are you sure?', :method => :delete
+
+  = link_to 'New Activity', :action => 'new'

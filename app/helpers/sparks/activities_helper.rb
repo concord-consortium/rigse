@@ -1,0 +1,2 @@
+module Sparks::ActivitiesHelper
+end

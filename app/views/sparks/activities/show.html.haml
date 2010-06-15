@@ -1,0 +1,17 @@
+.report.scroll
+  %h3 Activity
+  %p 
+    Name:
+    = @activity.name
+  %p
+    Activity URL:
+    = @activity.activity_url
+  %p
+    Save URL:
+    = @activity.save_url
+  %p
+    Page ID:
+    = @activity.page_id
+  
+  = link_to 'Edit', edit_sparks_activity_path(@activity)
+  = link_to 'Back', sparks_activities_path

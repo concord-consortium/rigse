@@ -1,0 +1,21 @@
+%h3 Editing Activity
+
+- form_for(@activity) do |f|
+  = f.error_messages
+  %p
+    = f.label :name, 'Name'
+    = f.text_field :name, :size => 72
+  %p
+    = f.label :activity_url, 'Activity URL'
+    = f.text_field :activity_url, :psize => 72
+  %p
+    = f.label :save_url, 'Save URL'
+    = f.text_field :save_url, :size => 72
+  %p
+    = f.label :page_id, 'Page ID'
+    = f.text_field :page_id, :size => 8
+  %p
+    = f.submit "Update"
+
+= link_to 'Show', @activity |
+= link_to 'Back', sparks_activities_path

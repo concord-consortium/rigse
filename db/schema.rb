@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100525211358) do
+ActiveRecord::Schema.define(:version => 20100613202116) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1931,6 +1931,16 @@ ActiveRecord::Schema.define(:version => 20100525211358) do
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
+
+  create_table "sparks_activities", :force => true do |t|
+    t.string   "name",              :limit => 72
+    t.string   "activity_url",      :limit => 256
+    t.string   "save_url",          :limit => 256
+    t.integer  "default_rubric_id"
+    t.integer  "page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sparks_rubrics", :force => true do |t|
     t.string   "rubric_id",   :limit => 72

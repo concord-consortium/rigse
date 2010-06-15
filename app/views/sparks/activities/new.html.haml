@@ -1,0 +1,29 @@
+%h3 New Activity
+- form_for(@activity) do |f|
+  = f.error_messages
+  %table
+    %tr
+      %td
+        = f.label :name, 'Name'
+      %td
+        = f.text_field :name, :size => 72
+    %tr
+      %td
+        = f.label :activity_url, 'Activity URL'
+      %td
+        = f.text_field :activity_url, :size => 72
+    %tr
+      %td
+        = f.label :save_url, 'Save URL'
+      %td
+        = f.text_field :save_url, :size => 72
+    %tr
+      %td
+        = f.label :page_id, 'Page ID'
+      %td
+        = f.text_field :page_id, :size => 8
+    
+  = f.submit "Create"
+ 
+= link_to 'Back', sparks_activities_path
+ 

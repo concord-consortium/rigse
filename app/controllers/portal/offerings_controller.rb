@@ -32,8 +32,10 @@ class Portal::OfferingsController < ApplicationController
       format.xml  { render :xml => @offering }
       
       format.run_sparks_html {
+        page = @offering.runnable
+        activity = Sparks::Activity.find_by_page_id(page)
         if @learner
-          cookies[:save_path] = url_for(:controller => '/saveable/sparks/measuring_resistances',
+          cookies[:save_path] = url_for(:controller => activity.save_url,
             :action => 'save_data', :only_path => true);
           cookies[:rubric_path] = '/sparks/rubrics'
           cookies[:learner_id] = @learner.id
@@ -52,7 +54,7 @@ class Portal::OfferingsController < ApplicationController
         end
         logger.debug("learner_id=#{cookies[:learner_id]} put_path=#{cookies[:put_path]}")
         #render 'pages/show', :layout => "layouts/run" 
-        redirect_to '/sparks-content/activities/measuring-resistance/index.html'
+        redirect_to activity.activity_url
       }
       
       format.jnlp {
