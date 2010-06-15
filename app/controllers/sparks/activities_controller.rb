@@ -18,7 +18,7 @@ class Sparks::ActivitiesController < ApplicationController
   end
   
   def edit
-    @activity = Sparks::Activity.find(params[:id])
+    @sparks_activity = Sparks::Activity.find(params[:id])
   end
   
   def create
