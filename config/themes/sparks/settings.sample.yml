@@ -1,5 +1,6 @@
 --- 
-production: 
+production:
+  :qucs_url: http://otto.concord.org/qucs/index.php 
   :default_admin_user: 
     :login: skim
     :last_name: Kim
@@ -44,6 +45,7 @@ production:
   - all-otrunk-snapshot
   :help_email: skim@concord.org
 development: 
+  :qucs_url: http://otto.concord.org/qucs/index.php
   :default_admin_user: 
     :login: skim
     :last_name: Kim
@@ -84,7 +86,8 @@ development:
   :maven_jnlp_families: 
   - all-otrunk-snapshot
   :help_email: skim@concord.org
-cucumber: 
+cucumber:
+  :qucs_url: http://otto.concord.org/qucs/index.php 
   :default_admin_user: 
     :login: skim
     :last_name: Kim
@@ -128,7 +131,8 @@ cucumber:
   :maven_jnlp_families: 
   - all-otrunk-snapshot
   :help_email: skim@concord.org
-staging: 
+staging:
+  :qucs_url: http://otto.concord.org/qucs/index.php 
   :default_admin_user: 
     :login: skim
     :last_name: Kim
@@ -169,7 +173,8 @@ staging:
   :maven_jnlp_families: 
   - all-otrunk-snapshot
   :help_email: skim@concord.org
-test: 
+test:
+  :qucs_url: http://otto.concord.org/qucs/index.php 
   :default_admin_user: 
     :login: skim
     :last_name: Kim
