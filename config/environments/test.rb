@@ -55,6 +55,8 @@ config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.13"
 
 config.gem "ci_reporter",      :lib => false
 
+config.gem "spork",            :lib => false
+
 unless RUBY_PLATFORM =~ /java/
   # See: http://www.datanoise.com/ruby-debug/
   require 'ruby-debug'

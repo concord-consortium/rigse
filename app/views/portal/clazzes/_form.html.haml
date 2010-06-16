@@ -10,12 +10,25 @@
         %li
           = label_tag :class_word, 'Class Word: ', :class=>"right"
           = f.text_field :class_word, :size => 24
+        - if action_name == "new"
+          %li
+            - schools = []
+            - if current_user.portal_teacher
+              - schools = current_user.portal_teacher.schools
+            - if schools.empty?
+              - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+            = label_tag :school, 'School: ', :class=>"right"
+            = f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
         %li
           = label_tag :semester, 'Semester: ', :class=>"right"
           = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
         %li
           = label_tag :description, 'Description: ', :class=>"right"
           = f.text_area :description, :rows => 10, :cols => 50, :class => 'mceNoEditor'
+        - if action_name == "edit"
+          %li
+            %div{:style => "width: 400px; margin: 0 0 0 30%;"}
+              = render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
 
     = f.hidden_field :teacher_id
     / .aligned

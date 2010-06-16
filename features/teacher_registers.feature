@@ -22,6 +22,7 @@ ITSI-SU requires that teachers self-register.
       | user_password  | password                           |
       | user_password_confirmation | password               |
  
+    And I select a school from the list of schools
     And I press "Submit"
     Then I should see " Thanks for signing up!"
     And "example@example.com" should receive an email

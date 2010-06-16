@@ -10,14 +10,14 @@
           / = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
           / = edit_button_for(portal_clazz)
           = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
-    .action_menu
+    .block_list
       %ul
-        %li
-          %strong Teacher:
-          - if portal_clazz.teachers.size > 0
-            = portal_clazz.teachers.map { |t| t.name}.join(", ")
-          - else
-            = "no teacher"
+        - if false && portal_clazz.teachers.size > 0
+          = render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        - else
+          %li
+            %strong Teachers:
+            = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no teacher"
         - if portal_clazz.semester
           %li
             %strong Semester:

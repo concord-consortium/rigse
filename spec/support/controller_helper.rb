@@ -143,6 +143,7 @@ def generate_default_project_and_jnlps_with_mocks
   @mock_project = mock_model(Admin::Project,
     :name => project_name,
     :url =>  project_url,
+    :home_page_content => nil,
     :jnlp_version_str =>  version, 
     :snapshot_enabled => false,
     :enable_default_users  => APP_CONFIG[:enable_default_users],
@@ -273,6 +274,17 @@ end
 
 def logout_user
   @logged_in_user = Factory.next :anonymous_user
+  @controller.stub!(:current_user).and_return(@logged_in_user)
+  @logged_in_user
+end
+
+def stub_current_user(user_sym)
+  if user_sym.is_a?(User)
+    @logged_in_user = user_sym
+  else
+    @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
+  end
+  
   @controller.stub!(:current_user).and_return(@logged_in_user)
   @logged_in_user
 end

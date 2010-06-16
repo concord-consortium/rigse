@@ -6,6 +6,7 @@ class Portal::ClazzesController < ApplicationController
   include RestrictedPortalController
   
   
+  
   public
   # GET /portal_clazzes
   # GET /portal_clazzes.xml
@@ -60,9 +61,19 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes.xml
   def create
     @semesters = Portal::Semester.find(:all)
-    @portal_clazz = Portal::Clazz.new(params[:portal_clazz])
+    
+    @object_params = params[:portal_clazz]
+    school_id = @object_params.delete(:school)
+    @portal_clazz = Portal::Clazz.new(@object_params)
+    
     okToCreate = true
-    if (! @portal_clazz.teacher)
+    if !school_id
+      # This should never happen, since the schools dropdown should consist of the default site school if the current user has no schools
+      flash[:error] = "You need to belong to a school in order to create classes. Please join a school and try again."
+      okToCreate = false
+    end
+    
+    if okToCreate && !@portal_clazz.teacher
       if current_user.anonymous?
         flash[:error] = "Anonymous can't create classes. Please log in and try again."
         okToCreate = false
@@ -70,12 +81,36 @@ class Portal::ClazzesController < ApplicationController
         @portal_clazz.teacher_id = current_user.portal_teacher.id
         @portal_clazz.teacher = current_user.portal_teacher
       else
-        teacher = Portal::Teacher.create(:user_id => current_user.id).id
-        @portal_clazz.teacher_id = Portal::Teacher.create(:user_id => current_user.id).id
-        @portal_clazz.teacher = teacher
-        @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+        teacher = Portal::Teacher.create(:user => current_user) # Former call set :user_id directly; class validations didn't like that
+        if teacher && teacher.id # Former call used .id directly on create method, leaving room for NilClass error
+          @portal_clazz.teacher_id = teacher.id # Former call tried to do another Portal::Teacher.create. We don't want to double-create this teacher
+          @portal_clazz.teacher = teacher
+          @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+        else
+          flash[:error] = "There was an error trying to associate you with this class. Please try again."
+          okToCreate = false
+        end
       end
     end
+    
+    if okToCreate
+      # We can't use Course.find_or_create_by_course_number_name_and_school_id here, because we don't know what course_number we're looking for
+      course = Portal::Course.find_by_name_and_school_id(@portal_clazz.name, school_id)
+      course = Portal::Course.create({
+        :name => @portal_clazz.name,
+        :course_number => nil,
+        :school_id => school_id
+      }) if course.nil?
+      
+      if course
+        # This will finally tie this clazz to a course and a school
+        @portal_clazz.course = course
+      else
+        flash[:error] = "There was an error trying to create your new class. Please try again."
+        okToCreate = false
+      end
+    end
+    
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         flash[:notice] = 'Portal::Clazz was successfully created.'
@@ -196,6 +231,63 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page << "$('flash').update('that was a total failure')"
       end
+    end
+  end
+  
+  def add_teacher
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    
+    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
+    (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
+    
+    @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
+    
+    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    
+    begin
+      @teacher.add_clazz(@portal_clazz)
+      @portal_clazz.reload
+      render :update do |page|
+        page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+        page.visual_effect :highlight, 'teachers_listing'
+      end
+    rescue
+      render :update do |page|
+        page << "$('flash').update('There was an error while processing your request.')"
+      end
+    end
+  end
+  
+  def remove_teacher
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
+    
+    @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
+    (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
+    
+    if (reason = @portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, @teacher))
+      render(:update) { |page| page << "$('flash').update('#{reason}')" }
+      return
+    end
+
+    begin
+      @teacher.remove_clazz(@portal_clazz)
+      @portal_clazz.reload
+      
+      if @teacher == current_user.portal_teacher
+        flash[:notice] = "You have been successfully removed from class: #{@portal_clazz.name}"
+        render(:update) { |page| page.redirect_to home_url }
+      else
+        # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 6/9/10
+        render(:update) { |page| page.replace_html 'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz} }
+      end
+      
+      # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 6/9/10
+      # respond_to do |format|
+      #   format.js
+      # end
+    rescue
+      render(:update) { |page| page << "$('flash').update('There was an error while processing your request.')" }
     end
   end
     
