@@ -186,12 +186,14 @@ ActionController::Routing::Routes.draw do |map|
 
   # Restful Authentication Resources
   map.resources :users, :member => { 
-    :preferences => [:get, :put], 
-    :switch => [:get, :put], 
-    :interface => :get,
-    :suspend   => :put,
-    :unsuspend => :put,
-    :purge     => :delete }
+      :preferences => [:get, :put], 
+      :switch => [:get, :put], 
+      :interface => :get,
+      :suspend   => :put,
+      :unsuspend => :put,
+      :purge     => :delete } do |users|
+    users.resource :security_questions, :only => [ :edit, :update ]
+  end
     
   map.resources :passwords
   map.resource :session

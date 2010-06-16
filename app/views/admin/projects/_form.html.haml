@@ -17,6 +17,11 @@
             = f.check_box :enable_default_users
             %br
             (default users should normally be disabled on a production system)
+          %li
+            Enable Student Security Questions:
+            = f.check_box :use_student_security_questions
+            %br
+            (this option will allow students to reset their own passwords)
 
       - field_set_tag 'Maven Jnlp', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }

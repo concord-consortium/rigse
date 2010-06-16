@@ -1,0 +1,16 @@
+- field_set_tag "Security Questions" do
+  - form_tag user_security_questions_path(current_user), :method => "put" do
+    .aligned
+      %ul
+        - question_names = ["First", "Second", "Third"]
+        - @security_questions.each_with_index do |question, i|
+          - border = "border: 2px #FF0000 solid;" unless question.errors.on(:answer).nil?
+          = hidden_field_tag "question#{i}[id]", question.id
+          %li
+            = label_tag "question#{i}[question_idx]", "#{question_names[i]} question:", :class => "right"
+            = select_tag "question#{i}[question_idx]", question.select_options
+          %li
+            = label_tag "question#{i}[answer]", "Answer:", :class => "right"
+            = text_field_tag "question#{i}[answer]", question.answer, :style => border
+        
+      = submit_tag "Save"
