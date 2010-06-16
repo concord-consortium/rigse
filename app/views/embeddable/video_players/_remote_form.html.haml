@@ -1,0 +1,2 @@
+- remote_form_for(video_player, :update => dom_id_for(video_player, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "embeddable/video_players/form", :locals => { :video_player => video_player, :f => f  }

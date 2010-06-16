@@ -119,3 +119,14 @@ stylesheets:
   - notes
   - data_table
 
+- xproject:
+  - themes/xproject/xproject
+  - themes/xproject/action_menu_tab
+  - themes/xproject/drop_down
+  - themes/xproject/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
+

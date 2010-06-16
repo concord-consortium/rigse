@@ -1,7 +1,8 @@
 !has_green = #AAF53D
-!has_light_green = #7AB02C
-!has_brown = #BEF56E
-!has_dark_brown = #5A9800
+!has_light_green = #466d5f
+!has_brown = #855734
+!has_light_brown = #c2995b
+!has_dark_green = #254c4d
 !light_green = !has_light_green
 !almost_white = #F2F8FC
 !container_box_color = #CBE1F2
@@ -54,19 +55,19 @@
 
 
 =left_nav_colors
-  +color_mixer(!has_dark_brown,white,!has_dark_brown)
+  +color_mixer(!has_dark_green,white,!has_dark_green)
   a
     :text-decoration none
   +delete_links
 
 =content_area_colors
-  +color_mixer(!black,white,!has_dark_brown)
+  +color_mixer(!has_dark_green,white,!has_dark_green)
   +delete_links
 
 =top_nav_colors
-  +color_mixer(!has_light_green,!has_dark_brown,!almost_white)
+  +color_mixer(!almost_white,!has_dark_green,!almost_white)
   +delete_links
   
 =bottom_nav_colors
-  +color_mixer(!black,!has_dark_brown,!almost_black)
+  +color_mixer(white,!has_dark_green,!almost_white)
   +delete_links

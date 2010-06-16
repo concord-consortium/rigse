@@ -174,7 +174,7 @@ again by running these rake tasks in sequence again:
   RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
 
 If you have access to an ITSI database you can also import ITSI activities 
-into RITES by running this rake task:
+into #{APP_CONFIG[:theme].upcase} by running this rake task:
 
   #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
 
@@ -184,11 +184,11 @@ into RITES by running this rake task:
   RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
 
 If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
-you can also import these ITSI activities into RITES Investigations by running this rake task:
+you can also import these ITSI activities into #{APP_CONFIG[:theme].upcase} Investigations by running this rake task:
 
   #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
 
-If you have ssh access to the RITES production server you can get a copy of the production database on
+If you have ssh access to the #{APP_CONFIG[:theme].upcase} production server you can get a copy of the production database on
 your local development instance with the following steps:
 
   cap production db:fetch_remote_db

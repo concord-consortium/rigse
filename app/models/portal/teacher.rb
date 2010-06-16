@@ -31,9 +31,18 @@ class Portal::Teacher < ActiveRecord::Base
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   validates_presence_of :user,  :message => "user association not specified"
+    
+  # Added to force Teachers to belong to at least one school, virtual or otherwise.
+  # There should be no Teachers without schools, but if there are any that predate this change,
+  # it could cause problems, so it's disabled until we discuss it further. -- Cantina-CMH 6/9/10
+  #validates_presence_of :schools, :message => "association cannot be empty"
   
   def name
     user ? user.name : 'unnamed teacher'
+  end
+  
+  def list_name
+    user ? "#{user.last_name}, #{user.first_name[0, 1].upcase}. (#{user.login})" : "unnamed teacher"
   end
         
   include Changeable
@@ -81,6 +90,10 @@ class Portal::Teacher < ActiveRecord::Base
     unless self.has_clazz?(clazz)
       self.clazzes << clazz
     end
+  end
+  
+  def remove_clazz(clazz)
+    self.clazzes.delete clazz
   end
   
   def school

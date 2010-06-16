@@ -14,12 +14,12 @@ ol
 
 em
   :font-style italic 
-
+n
 body
   :padding 0px
   +main_font
   :background
-    :color = !has_brown
+    :color = !has_light_green
   :margin 10px 
     :bottom 0px
   :background-position right top
@@ -74,7 +74,7 @@ pre
   :line-height 1.1em
   
 .wrapper
-  :border 2px solid
+  :border 2px solid !has_dark_green
   :background-color white
   :-moz-border-radius .5em
   :-webkit-border-radius .5em
@@ -91,21 +91,22 @@ pre
   :margin 0px
   :height auto
   :background-color white
-  :-moz-border-radius-topright .5em
-  :-webkit-border-top-right-radius .5em
-  :-moz-border-radius-topleft .5em
-  :-webkit-border-top-left-radius .5em
-  :color = !has_dark_brown
+
+  :color = !has_brown
 
   a
-    :color = !has_green
+    :color = !has_dark_green
     :background-color transparent
     :font-weight bold
   a:hover
     :color = !has_brown
     :background-color white
   .left_content
-    +column(24,true)
+    +column(24, true)
+    #has_nav
+      :font-size 18px
+      :font-weight bold
+        
     :text-align left
     :float none
     :clear none
@@ -135,7 +136,10 @@ pre
       :display block
     a.numbered
       :display inline
-      
+#logo 
+  :text-align center
+  :margin-bottom 20px
+       
 #waiter
   :z-index 20
   :font-size 9pt
@@ -174,14 +178,12 @@ pre
 //  :height auto !important
   
 #content_header
-  +content_area_colors
   +column(!main_content_columns,true)
   :padding 0px
   :margin 0px
 #main_content
   :display block
   +column(!main_content_columns,true)
-  +content_area_colors
   :min-height 600px
   :height auto !important
 
@@ -604,4 +606,8 @@ input[type=password]
   :overflow hidden
   :text-align right
   :height 20px
+.thumbnail
+  :display block
+  :overflow hidden
+  :width 200px
 

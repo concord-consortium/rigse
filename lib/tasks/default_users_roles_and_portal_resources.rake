@@ -201,6 +201,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       
       manager_user.add_role('manager')
       researcher_user.add_role('researcher')
+      teacher_user.add_role('member')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
     end

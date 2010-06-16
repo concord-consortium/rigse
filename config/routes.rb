@@ -1,4 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
+
   map.namespace(:saveable) do |saveable|
     saveable.namespace(:sparks) do |sparks|
       sparks.resources :measuring_resistances
@@ -105,6 +106,13 @@ ActionController::Routing::Routes.draw do |map|
     embeddable.resources :sound_graphers, :member => {
       :destroy => :post
     }
+
+    embeddable.resources :image_questions, :member => {
+      :destroy => :post
+    }
+    embeddable.resources :video_players, :member => {
+      :destroy => :post
+    }
   end
 
 # ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********
@@ -118,7 +126,9 @@ ActionController::Routing::Routes.draw do |map|
         :add_offering => [:get,:post],
         :add_student => [:get, :post],
         :remove_offering => [:get, :post],
-        :edit_offerings => [:get,:post]
+        :edit_offerings => [:get,:post],
+        :add_teacher => [:post],
+        :remove_teacher => [:delete]
     }
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
@@ -377,6 +387,7 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get
   }
 
+  # not being used, but being tested
   map.resources :images
   
   # Home Controller
