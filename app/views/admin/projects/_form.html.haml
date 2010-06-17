@@ -7,31 +7,35 @@
       %p
         %ul.menu_v
           %li
-            Name:
+            %b
+              Name:
             = f.text_field :name, :size => 60
           %li
-            Url:
+            %b
+              Url:
             = f.text_field :url,  :size => 60
           %li
-            Enable Default Users:
+            %b
+              Enable Default Users:
             = f.check_box :enable_default_users
             %br
-            (default users should normally be disabled on a production system)
+            (Default users should normally be disabled on a production system.)
           %li
-            Enable Student Security Questions:
+            %b
+              Enable Student Security Questions:
             = f.check_box :use_student_security_questions
             %br
-            (this option will allow students to reset their own passwords)
+            (This option will allow students to reset their own passwords.)
 
-      - field_set_tag 'Maven Jnlp', { :id => dom_id_for(admin_project, :maven_jnlp) } do
+      - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
       %p
-        Description
+        %b
+          Description
         = f.text_area :description, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
       %p
-        Home Page Content
-        = f.text_area :home_page_content, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
-      - field_set_tag 'Vendor Interfaces' do
+        = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }
+      - field_set_tag '<b>Vendor Interfaces</b>' do
         - Probe::VendorInterface.find(:all).each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid
