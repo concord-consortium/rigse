@@ -107,6 +107,15 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   };
 };
 
+is_mac = function() {
+  if (navigator) {
+    if (navigator.platform) {
+      return (navigator.platform.indexOf("Mac") > -1);
+    }
+  }
+  return false;
+}
+
 
 show_alert = function(elem, force) {
   if (force || (!readCookie(elem.identify()))) {
@@ -120,6 +129,13 @@ show_alert = function(elem, force) {
   };
 };
 
+show_mac_alert = function(elem, force) {
+  if (is_mac()) {
+    show_alart(elem,force);
+  }
+}
+// depricated I think:
+/**
 show_mac_content = function(element_id) {
   var el_id = element_id || 'macintosh_content';
   if (navigator.appVersion.indexOf("Mac")!=-1) {
@@ -128,7 +144,8 @@ show_mac_content = function(element_id) {
     }
   };
 };
-  
+**/
+
 document.observe("dom:loaded", function() {
   show_mac_content();
 });
