@@ -261,6 +261,18 @@ class User < ActiveRecord::Base
     end
     return self.settings_hash
   end
+  
+  # This method gets a bang because it saves the new questions. -- Cantina-CMH 6/17/10
+  def update_security_questions!(new_questions)
+    return unless new_questions.is_a?(Array)
+    
+    self.security_questions.destroy_all
+    
+    new_questions.each do |q|
+      self.security_questions << q
+      q.save
+    end
+  end
 
   protected
   def make_activation_code

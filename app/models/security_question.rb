@@ -11,6 +11,10 @@ class SecurityQuestion < ActiveRecord::Base
       "What is your favorite food?"
     ]
     
+    ERROR_BLANK_ANSWER        = "Answers can't be blank."
+    ERROR_TOO_FEW_QUESTIONS   = "You must select three questions."
+    ERROR_DUPLICATE_QUESTIONS = "You can't use the same question twice."
+    
     def question_idx
       SecurityQuestion::QUESTIONS.index(self.question)
     end
@@ -32,5 +36,60 @@ class SecurityQuestion < ActiveRecord::Base
       end
       
       options
+    end
+    
+    def self.fill_array(questions = [])
+      questions += Array.new(3 - questions.size) { |i| SecurityQuestion.new } if questions.size < 3
+      questions
+    end
+    
+    def self.make_questions_from_hash_and_user(hash, user = nil)
+      hash = hash.with_indifferent_access
+      (0..2).to_a.collect do |i|
+        data = hash["question#{i}"]
+        next if data.nil?
+
+        existing_object = user.security_questions.find_by_id(data[:id]) if user && data[:id] && data[:question_idx] == "current"
+
+        if existing_object.nil?
+          new_question = SecurityQuestion::QUESTIONS[data[:question_idx].to_i] if data[:question_idx].to_i.to_s == data[:question_idx].to_s
+          next if new_question.nil?
+        else
+          new_question = existing_object.question
+        end
+
+        SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })
+      end.compact
+    end
+    
+    # This method gets a bang because it will add errors to SecurityQuestions if necessary.
+    # Return value here is negative: !errors_for_questions_list!() == OK, anything else == failure. -- Cantina-CMH 6/17/10
+    def self.errors_for_questions_list!(questions = [])
+      valid = true
+      errors = ""
+
+      questions.each do |q|
+        if q.answer.empty?
+          errors = "<li>#{ERROR_BLANK_ANSWER}</li>"
+          q.errors.add :answer, "can't be blank"
+          valid = false
+        end
+      end
+
+      if questions.size < 3
+        errors += "<li>#{ERROR_TOO_FEW_QUESTIONS}</li>"
+        valid = false
+      end
+
+      if questions.collect { |q| q.question }.uniq.size < questions.size
+        errors += "<li>#{ERROR_DUPLICATE_QUESTIONS}</li>"
+        valid = false
+      end
+      
+      if valid
+        return nil
+      else
+        return "There were problems setting your security questions:" + "<ul>" + errors + "</ul>"
+      end
     end
 end

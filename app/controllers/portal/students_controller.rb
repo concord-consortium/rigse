@@ -63,19 +63,36 @@ class Portal::StudentsController < ApplicationController
     @grade_level = find_grade_level_from_params
     user_attributes = generate_user_attributes_from_params
     @user = User.new(user_attributes)
+    
+    # Only do this check if the student is signing themselves up. Everything else will work silently if these values are not set.
+    if @project.use_student_security_questions && params[:clazz][:class_word]
+      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
+      sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
+    end
 
-    # temporarily disable sending email notifications for state change events
-    @user.skip_notifications = true
-    @user.register!
-    user_created = @user.save
-    if user_created
-      @user.activate!
-      @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
+    # TODO: This creation logic should be reorganized a la Portal::Teachers, so orphan Users don't get
+    # created and fill up the usernamespace if there's an error later in the process. -- Cantina-CMH 6/17/10
+
+    # Validate the user before trying to save it. Security questions are part of the user, but
+    # are validated separately, so we should validate both before we save anything.
+    if @user.valid? && !sq_errors
+      # temporarily disable sending email notifications for state change events
+      @user.skip_notifications = true
+      @user.register!
+      user_created = @user.save
+      if user_created
+        @user.activate!
+        @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
+      end
     end
     respond_to do |format|
       if user_created && @portal_clazz && @portal_student && @grade_level
         @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
+        
         if params[:clazz][:class_word]
+          # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
+          @user.update_security_questions!(@security_questions) if @project.use_student_security_questions
+          
           format.html { render 'signup_success' }
         else
           format.html { redirect_to(@portal_clazz) }
@@ -84,6 +101,10 @@ class Portal::StudentsController < ApplicationController
         @portal_student = Portal::Student.new unless @portal_student
         @user = User.new unless @user
         if params[:clazz][:class_word]
+          if @project.use_student_security_questions
+            flash[:error] = sq_errors
+            @security_questions = SecurityQuestion.fill_array(@security_questions)
+          end
           format.html { render :action => "signup" }
           format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
         else
@@ -156,6 +177,7 @@ class Portal::StudentsController < ApplicationController
   # GET /portal_students/signup.xml
   def signup
     @portal_student = Portal::Student.new
+    @security_questions = SecurityQuestion.fill_array
     @user = User.new
     respond_to do |format|
       format.html # new.html.erb
