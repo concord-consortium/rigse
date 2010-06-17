@@ -48,10 +48,12 @@ stylesheets:
   - window/window
   - window/rites
   - live_validation
-  - action_menu_tab
+  - accordion
   - notes
+  - action_menu_tab
   - drop_down
   - data_table
+  - themes/rites/rites
   
 - investigations:
   - themes/investigations/investigations
