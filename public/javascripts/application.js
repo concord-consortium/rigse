@@ -64,7 +64,7 @@ dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   var drop_down = $(drop_down_dom_id);
   var menu_width = menu.getDimensions().width
   var drop_down_width = drop_down.getDimensions().width
-  var padding = 18;
+  var padding = 0;
   drop_down.hide();
   drop_down.show();
   drop_down.setStyle({'z-index': 2000});

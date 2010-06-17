@@ -1,0 +1,5 @@
+.padded_content
+  - render :partial => 'project_info'
+  - render :partial => 'tech_info'
+  = @project.home_page_content
+  = yield :tech_info

@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@video_player.uuid
+- content_for(:video_player_object_id) do
+  =dom_id_for(@video_player)
+= render :partial => "show", :locals => { :video_player => @video_player }

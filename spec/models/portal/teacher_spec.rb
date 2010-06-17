@@ -20,11 +20,11 @@ describe Portal::Teacher do
     @nces_teacher.clazzes[0].should be_real
   end
   
-  it "virtial teachers should have virtual classes" do
+  it "virtual teachers should have virtual classes" do
     @virtual_teacher.clazzes[0].should be_virtual
   end
   
-  it "teachers with real clazzes shouldn't be able to change them'" do
+  it "teachers with real clazzes shouldn't be able to change them" do
     @nces_teacher.clazzes[0].should_not be_changeable(@nces_teacher)
   end
   
@@ -37,13 +37,24 @@ describe Portal::Teacher do
     @virtual_teacher.clazzes.size.should_not be(0)
   end
   
-  it "vritual teachers class should not be real" do 
+  it "virtual teachers class should not be real" do 
     @virtual_teacher.clazzes[0].real?.should_not be_true
     @virtual_teacher.clazzes[0].virtual?.should be_true
   end
   
-  it "Teachers in virtuals schools should be able to change their clazzes'" do
+  it "Teachers in virtual schools should be able to change their clazzes" do
     @virtual_teacher.clazzes[0].should be_changeable(@virtual_teacher)
   end
+
+  # Should we enforce the school requirement via a validation, or should it be done in the controller at registration? -- Cantina-CMH 6/9/10
+  # it "should not allow a teacher to exist without a school" do
+  #   @virtual_teacher.should be_valid
+  #   @virtual_teacher.schools = []
+  #   @virtual_teacher.should_not be_valid
+  #   
+  #   @nces_teacher.should be_valid
+  #   @nces_teacher.schools = []
+  #   @nces_teacher.should_not be_valid
+  # end
 
 end

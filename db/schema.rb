@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100517145944) do
+ActiveRecord::Schema.define(:version => 20100616164653) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20100517145944) do
     t.string   "uuid",                 :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "home_page_content"
   end
 
   create_table "author_notes", :force => true do |t|
@@ -358,6 +359,15 @@ ActiveRecord::Schema.define(:version => 20100517145944) do
     t.datetime "updated_at"
   end
 
+  create_table "embeddable_image_questions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",       :limit => 36
+    t.string   "name"
+    t.text     "prompt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "embeddable_inner_page_pages", :force => true do |t|
     t.integer  "inner_page_id"
     t.integer  "page_id"
@@ -488,6 +498,17 @@ ActiveRecord::Schema.define(:version => 20100517145944) do
     t.integer  "user_id"
     t.string   "uuid",       :limit => 36
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "embeddable_video_players", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.string   "image_url"
+    t.string   "video_url"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

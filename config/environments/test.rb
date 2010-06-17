@@ -39,7 +39,7 @@ config.gem 'rspec',            :lib => false, :version => '>=1.3.0' unless File.
 config.gem 'rspec-rails',      :lib => false, :version => '>=1.3.2' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
 config.gem "factory_girl",                    :version => "= 1.2.3"
 config.gem 'email_spec',                      :version => "= 0.3.5"
-
+config.gem 'fakeweb',                         :version => ">=1.2.8"
 # config.gem 'webrat',      :lib => false,        :version => '>=0.5.3' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
 
 # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
@@ -54,6 +54,8 @@ config.gem "autotest-rails", :lib => false,          :version => "= 4.1.0"
 config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.13"
 
 config.gem "ci_reporter",      :lib => false
+
+config.gem "spork",            :lib => false
 
 unless RUBY_PLATFORM =~ /java/
   # See: http://www.datanoise.com/ruby-debug/

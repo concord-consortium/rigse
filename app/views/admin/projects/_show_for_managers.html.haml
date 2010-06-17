@@ -1,0 +1,10 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(admin_project), :class => "container_element" }
+  = show_menu_for(admin_project, options)
+
+  %div{:id => dom_id_for(admin_project, :item), :class => 'item'}
+    %div{:id => dom_id_for(admin_project, :details), :class => 'content'}
+      = wrap_edit_link_around_content(admin_project, {:complete => mce_init_string}) do
+        %h4= h(admin_project.name)
+        - field_set_tag 'Home Page Content' do
+          %p= admin_project.home_page_content

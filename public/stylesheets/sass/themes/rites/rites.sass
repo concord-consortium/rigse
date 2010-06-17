@@ -1,0 +1,108 @@
+!rites_purple = #450688
+!rites_yellow = #f2d61b
+= link_colors
+  a
+    :text-decoration underline
+    :color = !rites_purple
+    :background
+      :color inherit
+  a:active
+    :text-decoration underline
+    :color = !rites_purple
+    :background
+      :color inherit
+  a:link
+    :text-decoration underline
+    :color = !rites_purple
+    :background
+      :color inherit
+
+  a:visited
+    :text-decoration underline
+    :color = !rites_purple
+    :background
+      :color inherit
+
+  a:hover
+    :color = !rites_yellow
+    :background
+      :color = !rites_purple
+
+
+body
+  :background
+    :image none
+    :color = !rites_purple 
+
+#header
+  +link_colors
+  :background
+    :color white
+    :image none
+  .left_content
+    :margin 0px
+      :bottom 2px
+  .right_content
+    :margin 0px
+      :bottom 2px
+#nav_top
+  a
+    :text-decoration none
+    :color = !rites_yellow
+    :background
+      :color inherit
+  a:active
+    :text-decoration underline
+    :color = !rites_yellow
+    :background
+      :color inherit
+  a:link
+    :text-decoration underline
+    :color = !rites_yellow
+    :background
+      :color inherit
+
+  a:visited
+    :text-decoration underline
+    :color = !rites_yellow
+    :background
+      :color inherit
+
+  a:hover
+    :color = !rites_purple
+    :background
+      :color = !rites_yellow
+  :background
+    :color = !rites_purple 
+
+#main_content
+  +link_colors
+  :background
+    :color white 
+.conent_colors  
+  :background
+    :color white
+
+.authform
+  :color = !rites_purple 
+  td
+    :vertical-align bottom
+    :padding 8px
+  td.left 
+    :text-align right
+    :padding-right 16px
+  td.right
+    :text-align left
+input[type=password]
+  &:focus
+    :background
+      :color = !rites_yellow
+  :border
+    :color = !rites_purple
+input[type=text]
+  &:focus
+    :background
+      :color = !rites_yellow
+  :border
+    :color = !rites_purple
+

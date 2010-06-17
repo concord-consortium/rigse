@@ -1,6 +1,6 @@
 - form_for portal_student do |f|
   = error_messages_for 'user'
-  = error_messages_for 'portal_student'
+  = error_messages_for 'portal_student', :object_name => 'student'
   - field_set_tag 'name' do
     .aligned
       %ul

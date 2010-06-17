@@ -228,6 +228,8 @@ if @options[:force] && File.exists?(@settings_config_path)
 end
 @settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
 @settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
+
+puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
   @theme_settings_config_sample        = AppSettings.load_all_app_settings(@theme_settings_config_sample_path)
@@ -720,7 +722,7 @@ Here are the current settings in config/database.yml:
 
     puts <<-HEREDOC
 
-If you have access to a ITSI database for importing ITSI Activities into RITES 
+If you have access to a ITSI database for importing ITSI Activities into #{APP_CONFIG[:theme].upcase} 
 specify the values for the mysql database name, host, username, password, and asset_url.
 
     HEREDOC
@@ -1190,6 +1192,7 @@ end
 puts <<-HEREDOC
   MRI Ruby:
     rake gems:install
+    RAILS_ENV=cucumber rake gems:install
     RAILS_ENV=production rake db:migrate:reset
     RAILS_ENV=production rake rigse:setup:new_rites_app
     
