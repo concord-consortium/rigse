@@ -2,7 +2,7 @@
 Some global helper functions:
 *******************************/
 debug = function (message) {
-  if(console.log) {
+  if(console && typeof console.log != 'undefined') {
     console.log(message);
   }
 }
@@ -57,8 +57,6 @@ focus_first_field = function() {
   }
 }
 
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
 dropdown_for = function(menu_dom_id,drop_down_dom_id) {
   var menu = $(menu_dom_id);
   var drop_down = $(drop_down_dom_id);
@@ -134,21 +132,6 @@ show_mac_alert = function(elem, force) {
     show_alart(elem,force);
   }
 }
-// depricated I think:
-/**
-show_mac_content = function(element_id) {
-  var el_id = element_id || 'macintosh_content';
-  if (navigator.appVersion.indexOf("Mac")!=-1) {
-    if ($(el_id)) {
-      $(el_id).show();
-    }
-  };
-};
-**/
-
-document.observe("dom:loaded", function() {
-  show_mac_content();
-});
 
 
 
