@@ -9,16 +9,20 @@
         %ul.menu
           %li= submit_tag "Submit"
 
-    %fieldset{:style => "background-color: transparent;"}
+    %fieldset
       %legend Enter Your Username
       %ul.quiet_list
         %li= label_tag :login, "Username", :class => "aligned"
         %li= text_field_tag :login, "", :live => false, :class => "aligned"
       
     %p
-      If you're having trouble,
+      Forgot your username?
+    %p
+      Students, ask your teacher for help.
+      %br
+      Teachers,
       = link_to "click here", forgot_password_email_path
-      to retrieve your password by entering your email address.
+      to enter your email address.
 
 
 
