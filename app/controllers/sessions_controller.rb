@@ -35,12 +35,20 @@ class SessionsController < ApplicationController
   def successful_login
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
-    redirect_to(root_path)
     flash[:notice] = "Logged in successfully"
+    redirect_to(root_path) unless !check_student_security_questions_ok
   end
 
   def note_failed_signin
     flash[:error] = "Couldn't log you in as '#{params[:login]}'"
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
+  end
+  
+  def check_student_security_questions_ok
+    if @project && @project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
+      redirect_to(edit_user_security_questions_path(current_user))
+      return false
+    end
+    return true
   end
 end

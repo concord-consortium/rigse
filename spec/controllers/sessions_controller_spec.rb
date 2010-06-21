@@ -11,9 +11,12 @@ describe SessionsController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
-    login_admin
+    
+    # This line prevented successful testing of a non-admin (eg, Student) user. -- Cantina-CMH 6/15/10
+    #login_admin
+    
     @user  = mock_user
-    @login_params = { :login => 'quentin', :password => 'test' }
+    @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
   end
   
@@ -133,6 +136,71 @@ describe SessionsController do
               end
             end
           end # inner describe
+        end
+      end
+    end
+      
+    it "should not check for security questions if the user is not a student" do
+      @controller.stub!(:cookies).and_return({})
+      @user.stub!(:remember_me) 
+      @user.stub!(:refresh_token) 
+      @user.stub!(:forget_me)
+      @user.stub!(:remember_token)
+      @user.stub!(:remember_token_expires_at)
+      @user.stub!(:remember_token?)
+      @login_params[:remember_me] = '0'
+      
+      @mock_project.should_receive(:use_student_security_questions).and_return(true)
+      @user.should_receive(:portal_student).and_return(nil)
+      @user.should_not_receive(:security_questions)
+      
+      do_create
+      
+      @response.should redirect_to(root_path)
+    end
+    
+    describe "Student login" do
+      before(:each) do
+        User.destroy_all
+        Portal::Student.destroy_all
+        @login_params = { :login => 'grrrrrr', :password => 'testpassword' }
+        @student = Factory.create(:portal_student, :user => Factory.create(:user, @login_params))
+        User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@student.user)
+      end
+      
+      it "should not check for security questions if the current Admin::Project says not to" do
+        @mock_project.should_receive(:use_student_security_questions).and_return(false)
+        @student.user.should_not_receive(:security_questions)
+        
+        do_create
+        
+        @response.should redirect_to(root_path)
+      end
+      
+      describe "Student with security questions" do
+        it "should allow the student to log in normally" do
+          questions = [
+            true,
+            true,
+            true
+          ]
+          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          @student.user.should_receive(:security_questions).and_return(questions)
+          
+          do_create
+          
+          @response.should redirect_to(root_path)
+        end
+      end
+      
+      describe "Student without security questions" do
+        it "should redirect to the page where the student must set their security questions" do
+          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          @student.user.should_receive(:security_questions).and_return([])
+          
+          do_create
+          
+          @response.should redirect_to(edit_user_security_questions_path(@student.user))
         end
       end
     end

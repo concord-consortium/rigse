@@ -5,9 +5,7 @@
       .action_menu_header_left
         .padded_content
           %h3 Please enter a new password and confirm it.
-      .action_menu_header_right
-        %ul.menu
-          %li= f.submit "Submit"
+
     %fieldset
       %legend= "Password for #{@user.login}"
       %ul.quiet_list
@@ -15,6 +13,9 @@
         %li= f.password_field :password, :live => false, :class=>"aligned"
         %li= f.label :password_confirmation, "confirm password",:class=>"aligned"
         %li= f.password_field :password_confirmation, :live => false, :class=>"aligned"
+      .aligned
+        %ul.quiet_list
+          %li= submit_tag "Submit"
 
     = f.error_messages
   = hidden_field_tag :reset_code, params[:reset_code]

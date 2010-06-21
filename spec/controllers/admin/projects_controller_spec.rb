@@ -69,10 +69,26 @@ describe Admin::ProjectsController do
   end
 
   describe "GET edit" do
-    it "assigns the requested project as @project" do
+    before(:each) do
+      mock_project.stub!(:home_page_content=).and_return("") # Our controller uses this now, to set default content
       Admin::Project.should_receive(:find).with("37").and_return(mock_project)
+    end
+    
+    it "assigns the requested project as @admin_project" do
       get :edit, :id => "37"
       assigns[:admin_project].should equal(mock_project)
+    end
+    
+    it "uses default content if home_page_content is empty" do
+      mock_project.stub!(:home_page_content).and_return(nil)
+      mock_project.should_receive(:home_page_content=)
+      get :edit, :id => "37"
+    end
+    
+    it "uses the value of home_page_content if it is not empty" do
+      mock_project.stub!(:home_page_content).and_return("test content")
+      mock_project.should_not_receive(:home_page_content=)
+      get :edit, :id => "37"
     end
   end
   

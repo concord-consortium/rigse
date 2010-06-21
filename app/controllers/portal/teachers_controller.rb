@@ -60,7 +60,7 @@ class Portal::TeachersController < ApplicationController
     #  @user.register!
     #  @user.save
     #end
-    
+        
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
       t.domain = @domain
