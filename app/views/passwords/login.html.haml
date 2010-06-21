@@ -5,15 +5,15 @@
       .action_menu_header_left
         .padded_content
           %h3 reset your password
-      .action_menu_header_right
-        %ul.menu
-          %li= submit_tag "Submit"
 
     %fieldset
       %legend Enter Your Username
       %ul.quiet_list
         %li= label_tag :login, "Username", :class => "aligned"
         %li= text_field_tag :login, "", :live => false, :class => "aligned"
+      .aligned
+        %ul.quiet_list
+          %li= submit_tag "Submit"
       
     %p
       Forgot your username?

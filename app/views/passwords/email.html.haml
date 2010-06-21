@@ -5,15 +5,15 @@
       .action_menu_header_left
         .padded_content
           %h3 request an email reminder.
-      .action_menu_header_right
-        %ul.menu
-          %li= f.submit "Submit"
 
     %fieldset
       %legend Enter Your Email Address
       %ul.quiet_list
         %li= f.label :email, "Email Address", :class=>"aligned"
         %li= f.text_field :email, :live => false, :class=>"aligned"
+      .aligned
+        %ul.quiet_list
+          %li= f.submit "Submit"
     = f.error_messages
 
 
