@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100525180729) do
+ActiveRecord::Schema.define(:version => 20100615195612) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -46,9 +46,11 @@ ActiveRecord::Schema.define(:version => 20100525180729) do
     t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
     t.boolean  "enable_default_users"
-    t.string   "uuid",                 :limit => 36
+    t.string   "uuid",                           :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "home_page_content"
+    t.boolean  "use_student_security_questions",               :default => false
   end
 
   create_table "author_notes", :force => true do |t|
@@ -110,10 +112,10 @@ ActiveRecord::Schema.define(:version => 20100525180729) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body",             :limit => 16777215
+    t.text     "body",             :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "otml",             :limit => 16777215
+    t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
     t.boolean  "valid_xml"
     t.boolean  "empty"
@@ -1926,6 +1928,14 @@ ActiveRecord::Schema.define(:version => 20100525180729) do
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
   add_index "sections", ["position"], :name => "index_sections_on_position"
+
+  create_table "security_questions", :force => true do |t|
+    t.integer "user_id",                 :null => false
+    t.string  "question", :limit => 100, :null => false
+    t.string  "answer",   :limit => 100, :null => false
+  end
+
+  add_index "security_questions", ["user_id"], :name => "index_security_questions_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
