@@ -8,7 +8,7 @@
       .action_menu_header_right
         %ul.menu
           %li= f.submit "Submit"
-    %fieldset
+    %fieldset{:style => "background-color: transparent;"}
       %legend= "Password for #{@user.login}"
       %ul.quiet_list
         %li= f.label :password, "password", :class=>"aligned"

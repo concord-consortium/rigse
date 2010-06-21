@@ -6,9 +6,14 @@ class SecurityQuestion < ActiveRecord::Base
     validates_presence_of :answer
     
     QUESTIONS = [
-      "What is the name of your favorite pet?",
       "What is your favorite color?",
-      "What is your favorite food?"
+      "What is your favorite food?",
+      "What is your favorite ice cream flavor?",
+      "What is your pet's name?",
+      "What color is your bedroom?",
+      "What is your favorite ocean animal?",
+      "What is your favorite zoo animal?",
+      "What is your favorite farm animal?"
     ]
     
     ERROR_BLANK_ANSWER        = "Answers can't be blank."
@@ -92,4 +97,15 @@ class SecurityQuestion < ActiveRecord::Base
         return "There were problems setting your security questions:" + "<ul>" + errors + "</ul>"
       end
     end
+    
+    # def self.check_questions_list!(questions = [])
+    #   valid = true
+    #   questions.each do |q|
+    #     if q.answer.empty?
+    #       errors = "<li>#{ERROR_BLANK_ANSWER}</li>"
+    #       q.errors.add :answer, "can't be blank"
+    #       valid = false
+    #     end
+    #   end
+    # end
 end

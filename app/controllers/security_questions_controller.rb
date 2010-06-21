@@ -14,6 +14,7 @@ class SecurityQuestionsController < ApplicationController
     
     if !errors
       current_user.update_security_questions!(@security_questions)
+      flash[:notice] = "Your security questions have been successfully updated."
       redirect_to(root_path)
     else
       flash[:error] = errors

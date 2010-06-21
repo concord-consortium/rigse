@@ -60,6 +60,7 @@ class Portal::TeachersController < ApplicationController
     #  @user.register!
     #  @user.save
     #end
+    @user.skip_notifications = true
     
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
