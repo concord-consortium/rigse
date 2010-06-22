@@ -9,10 +9,10 @@ class InvestigationsController < AuthoringController
 
   prawnto :prawn=>{ :page_layout=>:landscape }
 
-  before_filter :setup_object, :except => [:index,:list_filter]
+  before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -124,6 +124,15 @@ class InvestigationsController < AuthoringController
     end
   end
 
+  def preview_index
+    page= params[:page] || 1
+    @investigations = Investigation.published.paginate(
+        :page => page || 1, 
+        :per_page => params[:per_page] || 20,
+        :order => 'name')
+    render 'preview_index'
+  end
+  
   # GET /investigations/1
   # GET /investigations/1.jnlp
   # GET /investigations/1.config
