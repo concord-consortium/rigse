@@ -43,10 +43,6 @@ body
   :margin-top 0px
   a
     :color white
-  a:hover
-    :color = !rites_purple
-    :background
-      :color = white
 
 #header
   +link_colors
@@ -62,30 +58,26 @@ body
 #nav_top
   a
     :text-decoration none
-    :color = !rites_yellow
+    :color white
     :background
       :color inherit
   a:active
     :text-decoration underline
-    :color = !rites_yellow
+    :color white
     :background
       :color inherit
   a:link
     :text-decoration underline
-    :color = !rites_yellow
+    :color white
     :background
       :color inherit
 
   a:visited
     :text-decoration underline
-    :color = !rites_yellow
+    :color white
     :background
       :color inherit
 
-  a:hover
-    :color = !rites_purple
-    :background
-      :color = !rites_yellow
   :background
     :color = !rites_purple 
 
@@ -125,3 +117,18 @@ input[type=text]
 .drop_target
   :background
     :color white
+.action_menu
+  :background
+    :color inherit !important
+  .action_menu_header_right
+    ul
+      li
+        :background
+          :color white
+.accordion_container
+  :background
+    :color #D1E5F2
+input[type="text"]
+  :background
+    :color white
+  
