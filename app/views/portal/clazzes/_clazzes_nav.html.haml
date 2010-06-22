@@ -18,5 +18,3 @@
             = link_to link_text,clazz, :class=> 'selected'
           -else
             = link_to link_text, clazz
-      - if (!current_user.portal_teacher.nil?)
-        %li= link_to "create new class", new_portal_clazz_url
