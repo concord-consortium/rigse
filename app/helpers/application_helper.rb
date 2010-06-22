@@ -1086,13 +1086,13 @@ module ApplicationHelper
     message = ""
     if current_user.anonymous?
       if opts[:guest]
-        message += "#{opts[:welcome]} #{opts[:guest]} "
+        message += "#{opts[:welcome]} #{opts[:guest]} &nbsp;"
       end
       message += link_to opts[:login], login_path
       message += " / "
       message += link_to opts[:signup], pick_signup_path
     else
-      message += "#{opts[:welcome]} #{current_user.send(opts[:name_method])} "
+      message += "#{opts[:welcome]} #{current_user.send(opts[:name_method])} &nbsp;"
       message += link_to opts[:prefs],  preferences_user_path(current_user)
       message += " / "
       message += link_to opts[:logout], logout_path
