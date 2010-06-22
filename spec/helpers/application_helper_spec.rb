@@ -24,6 +24,7 @@ describe ApplicationHelper do
     describe "as anonymous" do
       before(:each) do
         stub!(:current_user).and_return(@anonymous_user)
+        @original_user = @anonymous_user
       end
       it "should display appropriate login messages" do
         login_line.should match(/login/i)
@@ -37,6 +38,7 @@ describe ApplicationHelper do
     describe "as admin" do
       before(:each) do
         stub!(:current_user).and_return(@admin_user)
+        @original_user = @admin_user
       end
       it "should display appropriate login messages" do
         login_line.should match(/log\s*out/i)
