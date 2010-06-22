@@ -107,18 +107,6 @@ body
     :padding-right 5px
   td.right
     :text-align left
-input[type=password]
-  &:focus
-    :background
-      :color = !rites_yellow
-  :border
-    :color = !rites_purple
-input[type=text]
-  &:focus
-    :background
-      :color = !rites_yellow
-  :border
-    :color = !rites_purple
 .drop_target
   :background
     :color white
@@ -140,9 +128,25 @@ input[type=text]
   :background
     :color #e5dcee
 
-input[type="text"]
+input[type=password]
   :background
-    :color white
+    :color white !important
+  &:focus
+    :background
+      :color white !important
+  :border
+    :color = !rites_purple
+input[type=text]
+  :background
+    :color white !important
+  &:focus
+    :background
+      :color white !important
+  :border
+    :color = !rites_purple
+textarea
+  :background
+    :color white !important
 h3 
   :font-weight bold
 a
