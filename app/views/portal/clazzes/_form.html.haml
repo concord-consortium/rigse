@@ -22,13 +22,14 @@
         %li
           = label_tag :semester, 'Semester: ', :class=>"right"
           = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
-        %li
-          = label_tag :description, 'Description: ', :class=>"right"
-          = f.text_area :description, :rows => 10, :cols => 50, :class => 'mceNoEditor'
         - if action_name == "edit"
           %li
+            = label_tag :teachers, 'Add or remove', :class=>"right"
             %div{:style => "width: 400px; margin: 0 0 0 30%;"}
               = render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
+        %li
+          = label_tag :description, 'Description: ', :class=>"right"
+          = f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
 
     = f.hidden_field :teacher_id
     / .aligned
