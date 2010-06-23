@@ -350,7 +350,7 @@ module ApplicationHelper
     url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("run.png",  url, 
       :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_alert($('launch_warning'),false);") 
+      :onclick => "show_mac_alert($('launch_warning'),false);") 
   end
 
   def preview_button_for(component)
@@ -358,7 +358,7 @@ module ApplicationHelper
     url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("preview.png",  url, 
       :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_alert($('launch_warning'),false);")      
+      :onclick => "show_mac_alert($('launch_warning'),false);")      
   end
 
   def preview_link_for(component, as_name=nil, params={})
@@ -373,7 +373,7 @@ module ApplicationHelper
     url = polymorphic_url(component, :format => :jnlp, :params => params)
     preview_button_for(component) +
     link_to(link_text, url, 
-      :onclick => "show_alert($('launch_warning'),false);",
+      :onclick => "show_mac_alert($('launch_warning'),false);",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
@@ -404,7 +404,7 @@ module ApplicationHelper
     else
       run_button_for(component) +
       link_to(link_text, url, 
-        :onclick => "show_alert($('launch_warning'),false);",
+        :onclick => "show_mac_alert($('launch_warning'),false);",
         :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
     end
   end
@@ -1059,4 +1059,48 @@ module ApplicationHelper
     all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
 
+#            Welcome
+#            = "#{current_user.name}."
+#            - unless current_user.anonymous?
+#              = link_to 'Preferences', preferences_user_path(current_user)
+#              \/
+#              = link_to 'Logout', logout_path
+#            - else
+#              = link_to 'Login', login_path
+#              \/
+#              = link_to 'Sign Up', pick_signup_path
+#            - if @original_user.has_role?('admin', 'manager')
+#              \/
+#              = link_to 'Switch', switch_user_path(current_user)
+  def login_line(options = {})
+    opts = {
+      :welcome  => "Welcome",
+      :login => "Login",
+      :signup => "Sign up",
+      :logout => "Logout",
+      :prefs => "Preferences",
+      :guest => false,
+      :name_method => "name"
+    }
+    opts.merge!(options)
+    message = ""
+    if current_user.anonymous?
+      if opts[:guest]
+        message += "#{opts[:welcome]} #{opts[:guest]} &nbsp;"
+      end
+      message += link_to opts[:login], login_path
+      message += " / "
+      message += link_to opts[:signup], pick_signup_path
+    else
+      message += "#{opts[:welcome]} #{current_user.send(opts[:name_method])} &nbsp;"
+      message += link_to opts[:prefs],  preferences_user_path(current_user)
+      message += " / "
+      message += link_to opts[:logout], logout_path
+      if @original_user.has_role?('admin','manager')
+        message += " " 
+        message += link_to 'Switch', switch_user_path(current_user)
+      end
+    end
+    message
+  end
 end

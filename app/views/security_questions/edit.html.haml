@@ -1,0 +1,6 @@
+- form_tag user_security_questions_path(current_user), :method => "put" do
+  - field_set_tag "Security Questions" do
+    .aligned
+      = render :partial => "header"
+      = render :partial => "fields"
+      = submit_tag "Save"

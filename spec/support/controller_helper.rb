@@ -144,6 +144,7 @@ def generate_default_project_and_jnlps_with_mocks
     :name => project_name,
     :url =>  project_url,
     :home_page_content => nil,
+    :use_student_security_questions => false,
     :jnlp_version_str =>  version, 
     :snapshot_enabled => false,
     :enable_default_users  => APP_CONFIG[:enable_default_users],

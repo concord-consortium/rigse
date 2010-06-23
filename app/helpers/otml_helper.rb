@@ -1,4 +1,4 @@
-  module OtmlHelper
+module OtmlHelper
 
   def net_logo_package_name
     return APP_CONFIG[:net_logo_package_name] || "otrunknl4"

@@ -179,19 +179,24 @@ ActionController::Routing::Routes.draw do |map|
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
-  map.forgot_password '/forgot_password', :controller => 'passwords', :action => 'new'
+  map.forgot_password '/forgot_password', :controller => 'passwords', :action => 'login'
+  map.forgot_password_email '/forgot_password/email', :controller => 'passwords', :action => 'email'
   map.change_password '/change_password/:reset_code', :controller => 'passwords', :action => 'reset'
+  map.password_questions '/password/:user_id/questions', :controller => 'passwords', :action => 'questions'
+  map.check_password_questions '/password/:user_id/check_questions', :controller => 'passwords', :action => 'check_questions'
   map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
 
   # Restful Authentication Resources
   map.resources :users, :member => { 
-    :preferences => [:get, :put], 
-    :switch => [:get, :put], 
-    :interface => :get,
-    :suspend   => :put,
-    :unsuspend => :put,
-    :purge     => :delete }
+      :preferences => [:get, :put], 
+      :switch => [:get, :put], 
+      :interface => :get,
+      :suspend   => :put,
+      :unsuspend => :put,
+      :purge     => :delete } do |users|
+    users.resource :security_questions, :only => [ :edit, :update ]
+  end
     
   map.resources :passwords
   map.resource :session
@@ -349,6 +354,7 @@ ActionController::Routing::Routes.draw do |map|
     :export => :get,
     :destroy => :post
   }
+  map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml

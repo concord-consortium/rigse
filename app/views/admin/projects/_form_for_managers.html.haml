@@ -2,5 +2,4 @@
   = edit_menu_for(admin_project, f, { :omit_cancel => true })
   .content
     %p
-      Home Page Content
-      = f.text_area :home_page_content, :id => dom_id_for(admin_project, :item, :textarea), :class => 'tinymce_textarea'
+      = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }

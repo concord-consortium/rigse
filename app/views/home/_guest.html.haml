@@ -3,6 +3,9 @@
   
 .padded_content
   =render :partial => 'sessions/new'
-    
-  - render_project_info
-  = yield :project_info
+  
+  - unless @project.home_page_content.nil? || @project.home_page_content.empty?
+    = @project.home_page_content
+  - else
+    - render_project_info
+    = yield :project_info
