@@ -6,7 +6,7 @@
     %li= print_link_for(@investigation)
     %li= print_link_for(@investigation, {:teacher_mode => true}) 
     %li= toggle_all('activities')
-    - unless(current_user.anonymous?)
+    - if (investigation.duplicateable?(current_user))
       %li= duplicate_link_for(@investigation)
     - if (investigation.changeable?(current_user))
       %li= edit_link_for(@investigation)
