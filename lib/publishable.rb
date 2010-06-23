@@ -15,12 +15,15 @@ module Publishable
       # and http://www.ruby-forum.com/topic/179721
       # for a discussion on how the new aasm gem differs from the old plugin...
       include AASM
-      cattr_accessor :publication_states
+      
       aasm_initial_state :draft
       aasm_column :publication_status
       @@protected_publication_states=[:published]
       @@publication_states = [:draft,:published,:private]
       @@publication_states.each { |s| aasm_state s}
+      
+      # this needs to come after the class variable definition...
+      cattr_accessor :publication_states
 
       aasm_event :publish do
         transitions :to => :published, :from => [:draft]

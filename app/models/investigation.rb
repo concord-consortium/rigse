@@ -1,6 +1,6 @@
 class Investigation < ActiveRecord::Base
   
-  cattr_accessor :publication_states
+  # cattr_accessor :publication_states
   
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
