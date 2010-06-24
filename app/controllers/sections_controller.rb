@@ -228,12 +228,12 @@ class SectionsController < ApplicationController
           @component = @original.duplicate
         else
           @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
-          if (@component)
-            # @component.original = @original
-            @component.name = "copy of #{@component.name}"
-            @component.section = @section
-            @component.save
-          end
+          @component.name = "copy of #{@original.name}"
+        end
+        if (@component)
+          # @component.original = @original
+          @component.section = @section
+          @component.save
         end
         @component.deep_set_user current_user
       end
