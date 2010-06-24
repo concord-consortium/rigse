@@ -29,9 +29,8 @@ module Clipboard
   def get_clipboard_object(clipboard_data_type, clipboard_data_id)
     results = nil
     if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id
-      clipboard_data_type.de_clipboardify!
       begin
-        clazz = clipboard_data_type.classify.constantize
+        clazz = clipboard_data_type.de_clipboardify.classify.constantize
         obj_array = clazz.find(:all, :conditions => {:id => clipboard_data_id})
         results = obj_array.empty? ? nil : obj_array.first
       rescue NameError
