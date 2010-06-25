@@ -77,8 +77,9 @@ class Portal::TeachersController < ApplicationController
       end
     end
 
+    # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
-    @portal_teacher.errors.add(:schools, "association cannot be empty") if @portal_school.nil?
+    @user.errors.add(:you, "must select a school") if @portal_school.nil?
     failed_creation
     
   end
