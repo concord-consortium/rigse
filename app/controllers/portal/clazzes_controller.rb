@@ -61,9 +61,11 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes.xml
   def create
     @semesters = Portal::Semester.find(:all)
-    
+
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
+    grade_levels = @object_params.delete(:grade_levels)
+    
     @portal_clazz = Portal::Clazz.new(@object_params)
     
     okToCreate = true
@@ -71,6 +73,17 @@ class Portal::ClazzesController < ApplicationController
       # This should never happen, since the schools dropdown should consist of the default site school if the current user has no schools
       flash[:error] = "You need to belong to a school in order to create classes. Please join a school and try again."
       okToCreate = false
+    end
+    
+    if okToCreate
+      grade_levels.each do |name, v|
+        grade = Portal::Grade.find_by_name(name)
+        @portal_clazz.grades << grade if grade
+      end if grade_levels
+      if @portal_clazz.grades.empty?
+        flash[:error] = "You need to select at least one grade level for this class."
+        okToCreate = false
+      end
     end
     
     if okToCreate && !@portal_clazz.teacher
@@ -128,13 +141,42 @@ class Portal::ClazzesController < ApplicationController
   def update
     @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.find(params[:id])
+    
     if request.xhr?
-      @portal_clazz.update_attributes(params[:portal_clazz])
+      object_params = params[:portal_clazz]
+      grade_levels = object_params.delete(:grade_levels)
+      if grade_levels
+        # This logic will attempt to prevent someone from removing all grade levels from a class.
+        grades_to_add = []
+        grade_levels.each do |name, v|
+          grade = Portal::Grade.find_by_name(name)
+          grades_to_add << grade if grade
+        end
+        object_params[:grades] = grades_to_add if !grades_to_add.empty?
+      end
+      
+      @portal_clazz.update_attributes(object_params)
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
     else
       respond_to do |format|
-        if @portal_clazz.update_attributes(params[:portal_portal_clazz])
-          flash[:notice] = 'Portal::Clazz was successfully updated.'
+        okToUpdate = true
+        object_params = params[:portal_clazz]
+        grade_levels = object_params.delete(:grade_levels)
+        if grade_levels
+          # This logic will attempt to prevent someone from removing all grade levels from a class.
+          grades_to_add = []
+          grade_levels.each do |name, v|
+            grade = Portal::Grade.find_by_name(name)
+            grades_to_add << grade if grade
+          end
+          object_params[:grades] = grades_to_add if !grades_to_add.empty?
+        else
+          flash[:error] = "You need to select at least one grade level for this class."
+          okToUpdate = false
+        end
+        
+        if okToUpdate && @portal_clazz.update_attributes(object_params)
+          flash[:notice] = 'Class was successfully updated.'
           format.html { redirect_to(@portal_clazz) }
           format.xml  { head :ok }
         else
