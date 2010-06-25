@@ -1,8 +1,0 @@
-- content_for :top_menu_items do
-  =link_to(top_level_container_name.pluralize, investigations_path)
-  
-.padded_content
-  =render :partial => 'sessions/new'
-  = @project.home_page_content
-  - render_project_info
-  = yield :project_info
