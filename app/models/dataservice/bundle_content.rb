@@ -60,29 +60,97 @@ class Dataservice::BundleContent < ActiveRecord::Base
     if valid_xml
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
+      ## extract blobs from the otml and convert the changed otml back to bundle format
+      blobs_present = extract_blobs
+      convert_otml_to_body if blobs_present
     end
   end
     
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      s = StringIO.new(B64::B64.decode(otml_b64gzip))
-      z = ::Zlib::GzipReader.new(s)
-      z.read
+      return b64gzip_unpack(otml_b64gzip)
       # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
     else
       nil
     end
   end
   
-  def convert_otml_to_body
+  def b64gzip_unpack(b64gzip_content)
+    s = StringIO.new(B64::B64.decode(b64gzip_content))
+    z = ::Zlib::GzipReader.new(s)
+    return z.read
+  end
+  
+  def b64gzip_pack(content)
     gzip_string_io = StringIO.new()
     gzip = Zlib::GzipWriter.new(gzip_string_io)
-    gzip.write(self.otml)
+    gzip.write(content)
     gzip.close
     gzip_string_io.rewind
-    encoded_str = B64::B64.encode(gzip_string_io.string)
+    return B64::B64.encode(gzip_string_io.string)
+  end
+  
+  def convert_otml_to_body
+    encoded_str = b64gzip_pack(self.otml)
     self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+  end
+  
+  @@url_resolver = URLResolver.new
+  @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
+  @@blob_content_regexp = /\s*gzb64:([^<]+)/m
+  
+  def extract_blobs(host = nil)
+    return if ! self.otml
+    
+    changed = false
+      
+    if ! host
+      address = URI.parse(APP_CONFIG[:site_url])
+      host = address.host
+    end
+
+    text = self.otml
+
+		# first find all the previously processed blobs, and re-point their urls
+    begin
+      text.gsub!(@@blob_url_regexp) {|match|
+        changed = true
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
+        puts "Substituting for existing url: #{match}"
+        match
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    begin
+      # find all the unprocessed blobs, and extract them and create Blob objects for them
+      text.gsub!(@@blob_content_regexp) {|match|
+        changed = true
+        blob = Dataservice::Blob.find_or_create_by_content_and_bundle_content_id(b64gzip_unpack($1.gsub!(/\s/, "")), self.id)
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
+        puts "Substituting url: #{match}"
+        match
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    self.otml = text if changed
+    puts "text is: #{text}" if changed
+    return changed
+  end
+
+  def bundle_content_return_address
+    return_address = nil
+    if self.bundle_content =~ /sdsReturnAddresses>(.*?)<\/sdsReturnAddresses/m
+      begin
+        return URI.parse($1)
+      rescue
+      end
+    end
+    return nil
   end
   
   def extract_saveables
