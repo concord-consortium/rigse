@@ -50,22 +50,27 @@ end
 ##
 ## Singleton Factory Pattern for Anonymous user.
 ##
-Factory.sequence :anonymous_user do |n| 
-  anon = User.find_by_login('anonymous') 
-  unless anon
-    anon = Factory(:user,
-    {
-      :login => 'anonymous',
-      :first_name => 'anonymous',
-      :roles => [Factory.next(:guest_role)]
-    })
-    anon.register
-    anon.activate
-    # clear any previous Anonymous user still cached as a class variable in the User class
-    User.anonymous(true)
-    anon.save!
+Factory.sequence :anonymous_user do |n|
+  anon = nil
+  begin
+    anon = User.find_by_login('anonymous')
+    unless anon
+      anon = Factory(:user,
+      {
+        :login => 'anonymous',
+        :first_name => 'anonymous',
+        :roles => [Factory.next(:guest_role)]
+      })
+      anon.register
+      anon.activate
+      # clear any previous Anonymous user still cached as a class variable in the User class
+      User.anonymous(true)
+      anon.save!
+    end
+    anon
+  rescue
+    nil
   end
-  anon
 end
 
 Factory.next(:anonymous_user)
