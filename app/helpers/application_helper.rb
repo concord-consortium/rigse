@@ -778,7 +778,12 @@ module ApplicationHelper
   end
 
   def menu_for_offering(offering, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options = { 
+      :omit_delete => true, 
+      :omit_edit => true, 
+      :hide_component_name => true,
+      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+    }
     options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -787,7 +792,7 @@ module ApplicationHelper
           # haml_concat "Active students: #{offering.learners.length}"
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          haml_concat dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+          haml_concat options[:print_link]
           haml_concat " | "
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
           haml_concat " | "
