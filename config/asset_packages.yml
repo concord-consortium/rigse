@@ -14,6 +14,7 @@ javascripts:
   - flotr/flotr
   - canvas2image
   - application
+  - dropdown
   - cookie
   - accordion
   - item_selectable
