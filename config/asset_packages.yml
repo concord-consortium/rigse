@@ -14,6 +14,7 @@ javascripts:
   - flotr/flotr
   - canvas2image
   - application
+  - dropdown
   - cookie
   - accordion
   - item_selectable
@@ -48,10 +49,12 @@ stylesheets:
   - window/window
   - window/rites
   - live_validation
-  - action_menu_tab
+  - accordion
   - notes
+  - action_menu_tab
   - drop_down
   - data_table
+  - themes/rites/rites
   
 - investigations:
   - themes/investigations/investigations
@@ -113,6 +116,17 @@ stylesheets:
   - themes/has/action_menu_tab
   - themes/has/drop_down
   - themes/has/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
+
+- xproject:
+  - themes/xproject/xproject
+  - themes/xproject/action_menu_tab
+  - themes/xproject/drop_down
+  - themes/xproject/accordion
   - window/window
   - window/rites
   - live_validation

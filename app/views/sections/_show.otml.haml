@@ -23,10 +23,10 @@
         - unless ((teacher_only?(section.pages.first)) && (!teacher_mode))
           %object{ :refid => ot_refid_for(section.pages.first, :content) }/
     %viewedCards
-  %OTMenu{ :local_id => ot_local_id_for(section, :menu), :moveToNextSectionAllowed => 'true' }
+  %OTMenu{ :local_id => ot_local_id_for(section, :menu), :forceSectionFirstOrLast => 'true', :moveToNextSectionAllowed => 'true' }
     %cardContainer
       %object{ :refid => ot_refid_for(section, :page_card_container) }/
     %menuRule
       %object{ :refid => ot_refid_for(section, :page_rule) }/
 
-  %OTMenuRule{ :local_id => ot_local_id_for(section, :page_rule), :jumpToViewedCard => 'true', :stepAhead => 'true' }/
+  %OTMenuRule{ :local_id => ot_local_id_for(section, :page_rule), :jumpToAnyCard => 'true', :stepAhead => 'true' }/

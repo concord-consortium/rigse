@@ -1,6 +1,6 @@
 - form_for portal_student do |f|
   = error_messages_for 'user'
-  = error_messages_for 'portal_student'
+  = error_messages_for 'portal_student', :object_name => 'student'
   - field_set_tag 'name' do
     .aligned
       %ul
@@ -30,5 +30,9 @@
           %li
             = label_tag :clazz, 'Class Word: ', :class=>"right"
             = text_field :clazz, :class_word, {:live => false}
+            
+      - if signup && @project.use_student_security_questions
+        = render :partial => "security_questions/header"
+        = render :partial => "security_questions/fields"
       
   = f.submit 'Submit'

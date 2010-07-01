@@ -2,7 +2,7 @@
 Some global helper functions:
 *******************************/
 debug = function (message) {
-  if(console.log) {
+  if(console && typeof console.log != 'undefined') {
     console.log(message);
   }
 }
@@ -57,55 +57,16 @@ focus_first_field = function() {
   }
 }
 
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
-dropdown_for = function(menu_dom_id,drop_down_dom_id) {
-  var menu = $(menu_dom_id);
-  var drop_down = $(drop_down_dom_id);
-  var menu_width = menu.getDimensions().width
-  var drop_down_width = drop_down.getDimensions().width
-  var padding = 18;
-  drop_down.hide();
-  drop_down.show();
-  drop_down.setStyle({'z-index': 2000});
-  drop_down.setStyle({'padding' : padding + "px"})
-    
-  if (drop_down_width < menu_width) {
-    drop_down.setStyle({
-      width: menu_width+"px"
-    }); 
-    drop_down_width = menu_width;
-  }
-  
-  var left_offset = (drop_down_width - menu_width) / -2
-  var top_offset = menu.getDimensions().height - padding
-  var options = { setWidth: false, setHeight: false, offsetLeft:left_offset, offsetTop: top_offset};
 
-  drop_down.clonePosition(menu,options);
-  
 
-  drop_down.observe('mouseout', function(event) {
-    var mouse_over_element = event.relatedTarget;
-    if(mouse_over_element) {
-     if (!mouse_over_element.descendantOf(drop_down)) {
-       if (event.toElement != drop_down) {
-         if (event.toElement != menu) {
-           hide();
-         }
-       }
-     }
+is_mac = function() {
+  if (navigator) {
+    if (navigator.platform) {
+      return (navigator.platform.indexOf("Mac") > -1);
     }
-  });
-
-  drop_down.observe('click', function(event) {
-    hide();
-  });
-  
-  function hide() {
-    drop_down.fade({ duration: 0.3});
-    drop_down.stopObserving();
-  };
-};
+  }
+  return false;
+}
 
 
 show_alert = function(elem, force) {
@@ -120,18 +81,11 @@ show_alert = function(elem, force) {
   };
 };
 
-show_mac_content = function(element_id) {
-  var el_id = element_id || 'macintosh_content';
-  if (navigator.appVersion.indexOf("Mac")!=-1) {
-    if ($(el_id)) {
-      $(el_id).show();
-    }
-  };
-};
-  
-document.observe("dom:loaded", function() {
-  show_mac_content();
-});
+show_mac_alert = function(elem, force) {
+  if (is_mac()) {
+    show_alart(elem,force);
+  }
+}
 
 
 

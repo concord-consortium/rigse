@@ -23,6 +23,21 @@ class Portal::Clazz < ActiveRecord::Base
 
   #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
   include PortalChangeable
+  
+  # String constants for error messages -- Cantina-CMH 6/2/10
+  ERROR_UNAUTHORIZED = "You are not allowed to modify this class."
+  ERROR_REMOVE_TEACHER_LAST_TEACHER = "You cannot remove the last teacher from this class."
+  #ERROR_REMOVE_TEACHER_CURRENT_USER = "You cannot remove yourself from this class."
+  
+  # JavaScript confirm messages -- Cantina-CMH 6/9/10
+  def self.WARNING_REMOVE_TEACHER_CURRENT_USER(clazz_name)
+    "This action will remove YOU from the class: #{clazz_name}.\n\nIf you remove yourself, you will lose all access to this class. Are you sure you want to do this?"
+  end
+  def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
+    "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
+  end
+  
+  
 
   self.extend SearchableModel
 
@@ -199,6 +214,13 @@ class Portal::Clazz < ActiveRecord::Base
     return (! virtual?)
   end
   
+  def school
+    if course
+      return course.school
+    end
+    return nil
+  end
+  
   # HACK: to support transitioning to multiple teachers.
   def teacher
     self.teachers.first
@@ -217,6 +239,25 @@ class Portal::Clazz < ActiveRecord::Base
     unless self.has_teacher?(_teacher)
       self.teachers << _teacher
     end
+  end
+  
+  # This method is used to check whether a user is allowed to remove a specific teacher from this class
+  # @attempting_user : User object initiating the request
+  # @target_teacher  : Portal::Teacher object to be deleted
+  # return values:
+  #   nil    : User is allowed to remove this teacher
+  #   String : reason why user is not allowed to remove this teacher
+  def reason_user_cannot_remove_teacher_from_class(attempting_user, target_teacher)
+    # Possible reasons for illegality:
+    # - user is not allowed to edit this class at all
+    # - user is trying to remove the last teacher from this class
+    # - user is trying to remove themselves from this class
+    
+    return ERROR_UNAUTHORIZED if attempting_user.nil? || !changeable?(attempting_user)
+    return ERROR_REMOVE_TEACHER_LAST_TEACHER if teachers.size == 1
+    #return ERROR_REMOVE_TEACHER_CURRENT_USER if target_teacher.user == attempting_user
+    
+    nil
   end
 
   def refresh_saveable_response_objects

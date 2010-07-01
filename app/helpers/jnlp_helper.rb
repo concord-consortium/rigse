@@ -220,6 +220,19 @@ module JnlpHelper
       end
     }
   end
+  
+  def jnlp_mac_java_config(xml)
+    # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
+    xml.resources(:os => "Mac OS X", :arch => "ppc i386") {
+      xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m"
+    }
+    xml.resources(:os => "Mac OS X", :arch => "x86_64") {
+      xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
+    } 
+    xml.resource(:os => "Mac OS X") {
+      xml.j2se :version => "1.6", :"max-heap-size" => "128m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
+    }
+  end
 
   def jnlp_resources_macosx(xml)
     xml.resources(:os => "Mac OS X") { 

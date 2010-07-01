@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="javascripts/dropdown.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/application.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/scriptaculous.js" type="text/javascript" charset="utf-8"></script>
+    <title>Javascript-tests</title>
+    <style type="text/css" media="screen">
+      div {
+        border: 1px solid black;
+        width: 200px;
+      }
+      #dropdown_menu {
+        display: hidden;
+        width: auto;
+        background-color: gray;
+      }
+      #lots_of_space {
+        height: 2000px;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="maconly">
+      Hi this is mac content.  You cant see me if your not a mac.
+    </div>
+
+    <div id="lots_of_space"></div>
+    <div id="dropdown test">
+      <div id="dropdown_link">
+        Menu
+      </div>
+      <div id="dropdown_menu">
+        <ul>
+        	<li>first item</li>
+        	<li>second item</li>
+        	<li>third item</li>
+        	<li>fouth item</li>
+        </ul>
+      </div>
+
+    </div> 
+
+    <script type="text/javascript" charset="utf-8">
+            document.observe("dom:loaded", function(){
+              if(is_mac()) {
+                $('maconly').show();
+              }
+              else {
+                $('maconly').hide();
+              }
+              dropdown_for('dropdown_link','dropdown_menu');
+            });
+    </script>
+  </body>
+</html>

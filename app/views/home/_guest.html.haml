@@ -1,8 +1,10 @@
 - content_for :top_menu_items do
   =link_to(top_level_container_name.pluralize, investigations_path)
-  
+
+=render :partial => 'sessions/new'
 .padded_content
-  =render :partial => 'sessions/new'
-    
-  - render_project_info
-  = yield :project_info
+  - unless @project.home_page_content.nil? || @project.home_page_content.empty?
+    = @project.home_page_content
+  - else
+    - render_project_info
+    = yield :project_info

@@ -39,7 +39,7 @@
     - if (page.previous)
       = remote_link_button "previous_node.png", :url => set_page_embeddable_inner_page_path(:page_id =>page.previous, :id=>inner_page.id), :title => "go to previous page", :update => dom_id_for(inner_page, :inner_page_area)
     - else
-      .rollover= image_tag("previous_node_disabled.png")
+      .rollover= image_tag("disabled.png")
     / - if page.parent
     /   - page.parent.pages.each do |p|
     /     - if (p.id == page.id)
@@ -49,7 +49,7 @@
     - if (page.next)
       = remote_link_button "next_node.png", :url => set_page_embeddable_inner_page_path(:page_id => page.next,:id=>inner_page.id), :title => 'next page', :update => dom_id_for(inner_page, :inner_page_area)
     - else
-      .rollover= image_tag("next_node_disabled.png")
+      .rollover= image_tag("disabled.png")
     - if (page.changeable?(current_user))
       = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_embeddable_inner_page_path(:page_id =>page, :id=>inner_page.id), :title => "delete page", :update => dom_id_for(inner_page, :inner_page_area)
     - if (page.section)

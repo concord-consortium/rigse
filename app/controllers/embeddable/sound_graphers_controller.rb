@@ -2,11 +2,11 @@ class Embeddable::SoundGraphersController < ApplicationController
   # GET /embeddable_sound_graphers
   # GET /embeddable_sound_graphers.xml
   def index    
-    @embeddable_sound_graphers = Embeddable::SoundGrapher.search(params[:search], params[:page], nil)
+    @sound_graphers  = Embeddable::SoundGrapher.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @embeddable_sound_graphers}
+      format.xml  { render :xml => @sound_graphers}
     end
   end
 
@@ -15,14 +15,14 @@ class Embeddable::SoundGraphersController < ApplicationController
   def show
     @sound_grapher = Embeddable::SoundGrapher.find(params[:id])
     if request.xhr?
-      render :partial => 'sound_grapher', :locals => { :sound_grapher => @sound_grapher }
+      render :partial => 'show', :locals => { :sound_grapher => @sound_grapher }
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.otml   { render :layout => "layouts/sound_grapher" } # sound_grapher.otml.haml
-        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @sound_grapher } }
+        format.otml   { render :layout => "layouts/embeddable/sound_grapher" } # sound_grapher.otml.haml
+        format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher, :teacher_mode => false } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @sound_grapher, :session_id => (params[:session] || request.env["rack.session.options"][:id]), :teacher_mode => false } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @sound_grapher, :teacher_mode => @teacher_mode} }
         format.xml    { render :sound_grapher => @sound_grapher }
       end
     end
