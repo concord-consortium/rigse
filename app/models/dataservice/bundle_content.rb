@@ -15,6 +15,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def before_create
     process_bundle
   end
+  
+  def after_create
+    process_blobs
+  end
 
   def before_save
     process_bundle unless processed
@@ -36,6 +40,21 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
     def display_name
       "Dataservice::BundleContent"
+    end
+    
+    def b64gzip_unpack(b64gzip_content)
+      s = StringIO.new(B64::B64.decode(b64gzip_content))
+      z = ::Zlib::GzipReader.new(s)
+      return z.read
+    end
+
+    def b64gzip_pack(content)
+      gzip_string_io = StringIO.new()
+      gzip = Zlib::GzipWriter.new(gzip_string_io)
+      gzip.write(content)
+      gzip.close
+      gzip_string_io.rewind
+      return B64::B64.encode(gzip_string_io.string)
     end
   end
 
@@ -61,45 +80,36 @@ class Dataservice::BundleContent < ActiveRecord::Base
     if valid_xml
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
-      ## extract blobs from the otml and convert the changed otml back to bundle format
-      blobs_present = extract_blobs
-      convert_otml_to_body if blobs_present
     end
   end
     
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      return b64gzip_unpack(otml_b64gzip)
+      return self.class.b64gzip_unpack(otml_b64gzip)
       # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
     else
       nil
     end
   end
   
-  def b64gzip_unpack(b64gzip_content)
-    s = StringIO.new(B64::B64.decode(b64gzip_content))
-    z = ::Zlib::GzipReader.new(s)
-    return z.read
-  end
-  
-  def b64gzip_pack(content)
-    gzip_string_io = StringIO.new()
-    gzip = Zlib::GzipWriter.new(gzip_string_io)
-    gzip.write(content)
-    gzip.close
-    gzip_string_io.rewind
-    return B64::B64.encode(gzip_string_io.string)
-  end
-  
   def convert_otml_to_body
-    encoded_str = b64gzip_pack(self.otml)
-    self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+    encoded_str = self.class.b64gzip_pack(self.otml)
+    self.original_body = self.body unless self.original_body != nil && self.original_body.length > 0
+    self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
   
   @@url_resolver = URLResolver.new
   @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
+  
+  def process_blobs
+    return unless self.valid_xml
+    ## extract blobs from the otml and convert the changed otml back to bundle format
+    blobs_present = extract_blobs
+    convert_otml_to_body if blobs_present
+    self.save if blobs_present
+  end
   
   def extract_blobs(host = nil)
     return false if ! self.otml
@@ -118,8 +128,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
       text.gsub!(@@blob_url_regexp) {|match|
         changed = true
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
-        puts "Substituting for existing url: #{match}"
-        match
       }
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
@@ -129,10 +137,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(@@blob_content_regexp) {|match|
         changed = true
-        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, b64gzip_unpack($1.gsub!(/\s/, "")))
+        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
-        puts "Substituting url: #{match}"
-        match
       }
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
