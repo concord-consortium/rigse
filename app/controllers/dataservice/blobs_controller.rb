@@ -35,8 +35,8 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs/1
   # GET /dataservice_blobs/1.xml
   def show
-    @blob = Dataservice::Blob.find(params[:id])
-    is_authorized = is_admin? || (@blob && @blob.token == params[:token])
+    @dataservice_blob = Dataservice::Blob.find(params[:id])
+    is_authorized = is_admin? || (@dataservice_blob && @dataservice_blob.token == params[:token])
     
     respond_to do |format|
       format.html {
@@ -48,15 +48,15 @@ class Dataservice::BlobsController < ApplicationController
       }
       format.xml  {
         if is_authorized
-          render :xml => @blob
+          render :xml => @dataservice_blob
         else
           login_redirect
         end
       }
       format.blob  {
         if is_authorized
-          type = params[:mimetype] ? params[:mimetype] : @blob.mimetype
-          send_data(@blob.content, :type => type, :filename => "file", :disposition => 'inline' )
+          type = params[:mimetype] ? params[:mimetype] : @dataservice_blob.mimetype
+          send_data(@dataservice_blob.content, :type => type, :filename => "file", :disposition => 'inline' )
         else
           render :text => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
         end
@@ -67,32 +67,32 @@ class Dataservice::BlobsController < ApplicationController
   # GET /dataservice_blobs/new
   # GET /dataservice_blobs/new.xml
   def new
-    @blob = Dataservice::Blob.new
+    @dataservice_blob = Dataservice::Blob.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @blob }
+      format.xml  { render :xml => @dataservice_blob }
     end
   end
 
   # GET /dataservice_blobs/1/edit
   def edit
-    @blob = Dataservice::Blob.find(params[:id])
+    @dataservice_blob = Dataservice::Blob.find(params[:id])
   end
 
   # POST /dataservice_blobs
   # POST /dataservice_blobs.xml
   def create
-    @blob = Dataservice::Blob.new(params[:blob])
+    @dataservice_blob = Dataservice::Blob.new(params[:blob])
 
     respond_to do |format|
-      if @blob.save
+      if @dataservice_blob.save
         flash[:notice] = 'Dataservice::Blob was successfully created.'
-        format.html { redirect_to(@blob) }
-        format.xml  { render :xml => @blob, :status => :created, :location => @blob }
+        format.html { redirect_to(@dataservice_blob) }
+        format.xml  { render :xml => @dataservice_blob, :status => :created, :location => @dataservice_blob }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @blob.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @dataservice_blob.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -100,16 +100,16 @@ class Dataservice::BlobsController < ApplicationController
   # PUT /dataservice_blobs/1
   # PUT /dataservice_blobs/1.xml
   def update
-    @blob = Dataservice::Blob.find(params[:id])
+    @dataservice_blob = Dataservice::Blob.find(params[:id])
 
     respond_to do |format|
-      if @blob.update_attributes(params[:blob])
+      if @dataservice_blob.update_attributes(params[:blob])
         flash[:notice] = 'Dataservice::Blob was successfully updated.'
-        format.html { redirect_to(@blob) }
+        format.html { redirect_to(@dataservice_blob) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @blob.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @dataservice_blob.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -117,8 +117,8 @@ class Dataservice::BlobsController < ApplicationController
   # DELETE /dataservice_blobs/1
   # DELETE /dataservice_blobs/1.xml
   def destroy
-    @blob = Dataservice::Blob.find(params[:id])
-    @blob.destroy
+    @dataservice_blob = Dataservice::Blob.find(params[:id])
+    @dataservice_blob.destroy
 
     respond_to do |format|
       format.html { redirect_to(dataservice_blobs_url) }

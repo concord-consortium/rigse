@@ -2,15 +2,23 @@ require 'spec_helper'
 
 describe Dataservice::BlobsController do
 
-  def mock_blob(stubs={})
+  before(:each) do
+    generate_default_project_and_jnlps_with_mocks
+    logout_user
+    login_admin
+  end
+  
+  def mock_blob(stubs={:token => "8ad04a50ba96463d80407cd119173b86"})
     @mock_blob ||= mock_model(Dataservice::Blob, stubs)
   end
 
   describe "GET index" do
     it "assigns all dataservice_blobs as @dataservice_blobs" do
-      Dataservice::Blob.stub(:find).with(:all).and_return([mock_blob])
-      get :index
-      assigns[:dataservice_blobs].should == [mock_blob]
+      pending
+      # this tests the default controller, but now we're setting @dataservice_blobs to be a search collection
+      # Dataservice::Blob.stub(:find).with(:all).and_return([mock_blob])
+      # get :index
+      # assigns[:dataservice_blobs].should == [mock_blob]
     end
   end
 
@@ -18,7 +26,7 @@ describe Dataservice::BlobsController do
     it "assigns the requested blob as @blob" do
       Dataservice::Blob.stub(:find).with("37").and_return(mock_blob)
       get :show, :id => "37"
-      assigns[:blob].should equal(mock_blob)
+      assigns[:dataservice_blob].should equal(mock_blob)
     end
   end
 
@@ -26,7 +34,7 @@ describe Dataservice::BlobsController do
     it "assigns a new blob as @blob" do
       Dataservice::Blob.stub(:new).and_return(mock_blob)
       get :new
-      assigns[:blob].should equal(mock_blob)
+      assigns[:dataservice_blob].should equal(mock_blob)
     end
   end
 
@@ -34,7 +42,7 @@ describe Dataservice::BlobsController do
     it "assigns the requested blob as @blob" do
       Dataservice::Blob.stub(:find).with("37").and_return(mock_blob)
       get :edit, :id => "37"
-      assigns[:blob].should equal(mock_blob)
+      assigns[:dataservice_blob].should equal(mock_blob)
     end
   end
 
@@ -44,7 +52,7 @@ describe Dataservice::BlobsController do
       it "assigns a newly created blob as @blob" do
         Dataservice::Blob.stub(:new).with({'these' => 'params'}).and_return(mock_blob(:save => true))
         post :create, :blob => {:these => 'params'}
-        assigns[:blob].should equal(mock_blob)
+        assigns[:dataservice_blob].should equal(mock_blob)
       end
 
       it "redirects to the created blob" do
@@ -58,7 +66,7 @@ describe Dataservice::BlobsController do
       it "assigns a newly created but unsaved blob as @blob" do
         Dataservice::Blob.stub(:new).with({'these' => 'params'}).and_return(mock_blob(:save => false))
         post :create, :blob => {:these => 'params'}
-        assigns[:blob].should equal(mock_blob)
+        assigns[:dataservice_blob].should equal(mock_blob)
       end
 
       it "re-renders the 'new' template" do
@@ -82,7 +90,7 @@ describe Dataservice::BlobsController do
       it "assigns the requested blob as @blob" do
         Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => true))
         put :update, :id => "1"
-        assigns[:blob].should equal(mock_blob)
+        assigns[:dataservice_blob].should equal(mock_blob)
       end
 
       it "redirects to the blob" do
@@ -102,7 +110,7 @@ describe Dataservice::BlobsController do
       it "assigns the blob as @blob" do
         Dataservice::Blob.stub(:find).and_return(mock_blob(:update_attributes => false))
         put :update, :id => "1"
-        assigns[:blob].should equal(mock_blob)
+        assigns[:dataservice_blob].should equal(mock_blob)
       end
 
       it "re-renders the 'edit' template" do
