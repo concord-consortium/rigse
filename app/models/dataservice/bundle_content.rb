@@ -2,6 +2,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   set_table_name :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
+  has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
   acts_as_list :scope => :bundle_logger_id
 
