@@ -118,7 +118,6 @@ ActiveRecord::Schema.define(:version => 20100630165146) do
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
-  add_index "dataservice_blobs", ["content"], :name => "index_dataservice_blobs_on_content"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"

@@ -128,7 +128,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(@@blob_content_regexp) {|match|
         changed = true
-        blob = Dataservice::Blob.find_or_create_by_content_and_bundle_content_id(b64gzip_unpack($1.gsub!(/\s/, "")), self.id)
+        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, b64gzip_unpack($1.gsub!(/\s/, "")))
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
         puts "Substituting url: #{match}"
         match
