@@ -35,14 +35,12 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
   dropDownMenu.clonePosition(dropDownLink,options);
   
   var hide = function() {
-    console.log("fading %s", dropDownLink); 
     dropDownMenu.hide();
     is_showing = false;
     hide_timer = null;
   };
 
   var show =  function() {
-    console.log("showing %s",dropDownLink);
     dropDownMenu.show();
     is_showing = true;
     if (hide_timer !== null) {
@@ -64,7 +62,6 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
         hide_timer = setTimeout(hide,100);        
       }
       else {
-        console.log("is_showing is false");
       }
     }
   };
@@ -74,14 +71,12 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
     if(mouse_over_element) {
      if (mouse_over_element == dropDownMenu || mouse_over_element.descendantOf(dropDownMenu)) {
         in_dropDownMenu = true;
-        console.log("over dropDownMenu");
      }
      else {
         in_dropDownMenu = false;
      }
      if (mouse_over_element == dropDownLink || mouse_over_element.descendantOf(dropDownLink)) {
        in_dropDownLink = true;
-        console.log("over dropDownLink");
      }
      else {
        in_dropDownLink = false;
@@ -93,7 +88,6 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
 
   document.observe('mouseover', mouseEnterHandler);
   dropDownMenu.observe('click', function(event) {
-    console.log("showing");
     show();
   });
   
