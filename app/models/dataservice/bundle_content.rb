@@ -2,6 +2,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   set_table_name :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
+  has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
   acts_as_list :scope => :bundle_logger_id
 
@@ -13,6 +14,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
   
   def before_create
     process_bundle
+  end
+  
+  def after_create
+    process_blobs
   end
 
   def before_save
@@ -35,6 +40,21 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
     def display_name
       "Dataservice::BundleContent"
+    end
+    
+    def b64gzip_unpack(b64gzip_content)
+      s = StringIO.new(B64::B64.decode(b64gzip_content))
+      z = ::Zlib::GzipReader.new(s)
+      return z.read
+    end
+
+    def b64gzip_pack(content)
+      gzip_string_io = StringIO.new()
+      gzip = Zlib::GzipWriter.new(gzip_string_io)
+      gzip.write(content)
+      gzip.close
+      gzip_string_io.rewind
+      return B64::B64.encode(gzip_string_io.string)
     end
   end
 
@@ -66,9 +86,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      s = StringIO.new(B64::B64.decode(otml_b64gzip))
-      z = ::Zlib::GzipReader.new(s)
-      z.read
+      return self.class.b64gzip_unpack(otml_b64gzip)
       # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
     else
       nil
@@ -76,13 +94,70 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def convert_otml_to_body
-    gzip_string_io = StringIO.new()
-    gzip = Zlib::GzipWriter.new(gzip_string_io)
-    gzip.write(self.otml)
-    gzip.close
-    gzip_string_io.rewind
-    encoded_str = B64::B64.encode(gzip_string_io.string)
-    self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+    encoded_str = self.class.b64gzip_pack(self.otml)
+    self.original_body = self.body unless self.original_body != nil && self.original_body.length > 0
+    self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+  end
+  
+  @@url_resolver = URLResolver.new
+  @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
+  @@blob_content_regexp = /\s*gzb64:([^<]+)/m
+  
+  def process_blobs
+    return unless self.valid_xml
+    ## extract blobs from the otml and convert the changed otml back to bundle format
+    blobs_present = extract_blobs
+    convert_otml_to_body if blobs_present
+    self.save if blobs_present
+  end
+  
+  def extract_blobs(host = nil)
+    return false if ! self.otml
+    
+    changed = false
+      
+    if ! host
+      address = URI.parse(APP_CONFIG[:site_url])
+      host = address.host
+    end
+
+    text = self.otml
+
+		# first find all the previously processed blobs, and re-point their urls
+    begin
+      text.gsub!(@@blob_url_regexp) {|match|
+        changed = true
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    begin
+      # find all the unprocessed blobs, and extract them and create Blob objects for them
+      text.gsub!(@@blob_content_regexp) {|match|
+        changed = true
+        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    self.otml = text if changed
+    
+    return changed
+  end
+
+  def bundle_content_return_address
+    return_address = nil
+    if self.bundle_content =~ /sdsReturnAddresses>(.*?)<\/sdsReturnAddresses/m
+      begin
+        return URI.parse($1)
+      rescue
+      end
+    end
+    return nil
   end
   
   def extract_saveables

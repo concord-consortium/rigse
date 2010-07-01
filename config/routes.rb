@@ -1,5 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-
   map.namespace(:saveable) do |saveable|
     saveable.namespace(:sparks) do |sparks|
       sparks.resources :measuring_resistances
@@ -209,6 +208,7 @@ ActionController::Routing::Routes.draw do |map|
 # ----------------------------------------------
 
   map.namespace(:dataservice) do |dataservice|
+    dataservice.resources :blobs
     dataservice.resources :bundle_contents
     dataservice.resources :bundle_loggers do |bundle_logger|
       bundle_logger.resources :bundle_contents
@@ -219,6 +219,9 @@ ActionController::Routing::Routes.draw do |map|
     end
     
   end
+  
+  # FIXME not sure how to map this within the dataservice namespace above...
+  map.dataservice_blob_raw "dataservice/blobs/:id.blob/:token", :controller => "dataservice/blobs", :action => "show", :format => "blob", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ } 
 
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
