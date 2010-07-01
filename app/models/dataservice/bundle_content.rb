@@ -101,7 +101,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def extract_blobs(host = nil)
-    return if ! self.otml
+    return false if ! self.otml
     
     changed = false
       
@@ -138,7 +138,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     
     self.otml = text if changed
-    puts "text is: #{text}" if changed
+    
     return changed
   end
 
