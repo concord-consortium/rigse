@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100630165146) do
+ActiveRecord::Schema.define(:version => 20100701180427) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(:version => 20100630165146) do
     t.boolean  "valid_xml"
     t.boolean  "empty"
     t.string   "uuid",             :limit => 36
+    t.text     "original_body"
   end
 
   add_index "dataservice_bundle_contents", ["bundle_logger_id"], :name => "index_dataservice_bundle_contents_on_bundle_logger_id"
