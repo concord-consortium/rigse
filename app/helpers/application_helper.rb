@@ -1108,4 +1108,39 @@ module ApplicationHelper
     end
     message
   end
+  
+  def use_contentflow
+    javascript_include_tag("contentflow/contentflow.js").sub(/></, " load='white' ><")
+  end
+  
+  def contentflow(name, opts = {})
+    defaults = {:load_indicator => false, :scrollbar => true}
+    opts.merge!(defaults){|k,o,n| o}
+    
+    capture_haml do
+      haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false, startItem: 'first' } );"
+      haml_tag :div, :class => 'ContentFlow', :id => name do
+        if opts[:load_indicator]
+          haml_tag :div, :class => 'loadIndicator' do
+            haml_tag :div, :class => 'indicator'
+          end
+        end
+        haml_tag :div, :class => 'flow' do
+          if block_given? 
+            haml_concat yield
+          end
+        end
+        haml_tag :div, :class => 'globalCaption' do
+          haml_concat opts[:global_caption]
+        end
+        if opts[:scrollbar]
+          haml_tag :div, :class => 'scrollbar' do
+            haml_tag :div, :class => 'slider' do
+              haml_tag :div, :class => 'position'
+            end
+          end
+        end
+      end
+    end
+  end
 end
