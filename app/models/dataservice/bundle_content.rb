@@ -94,8 +94,14 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def convert_otml_to_body
+    # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
+    self.otml_will_change!
+    self.body_will_change!
     encoded_str = self.class.b64gzip_pack(self.otml)
-    self.original_body = self.body unless self.original_body != nil && self.original_body.length > 0
+    unless self.original_body != nil && self.original_body.length > 0
+      self.original_body_will_change!
+      self.original_body = self.body
+    end
     self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
   
@@ -104,11 +110,14 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def process_blobs
-    return unless self.valid_xml
+    return false unless self.valid_xml
     ## extract blobs from the otml and convert the changed otml back to bundle format
     blobs_present = extract_blobs
-    convert_otml_to_body if blobs_present
-    self.save if blobs_present
+    if blobs_present
+      convert_otml_to_body
+      self.save!
+    end
+    return blobs_present
   end
   
   def extract_blobs(host = nil)
@@ -128,6 +137,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       text.gsub!(@@blob_url_regexp) {|match|
         changed = true
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
+        match
       }
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
@@ -139,6 +149,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
         changed = true
         blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
+        match
       }
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
