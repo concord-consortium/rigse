@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100701180427) do
+ActiveRecord::Schema.define(:version => 20100702164051) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1860,6 +1860,29 @@ ActiveRecord::Schema.define(:version => 20100701180427) do
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id"
   add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id"
+
+  create_table "saveable_image_question_answers", :force => true do |t|
+    t.integer  "image_question_id"
+    t.integer  "bundle_content_id"
+    t.integer  "blob_id"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "saveable_image_question_answers", ["image_question_id", "position"], :name => "i_q_id_and_position_index"
+
+  create_table "saveable_image_questions", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "offering_id"
+    t.integer  "image_question_id"
+    t.integer  "response_count",    :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "saveable_image_questions", ["learner_id"], :name => "index_saveable_image_questions_on_learner_id"
+  add_index "saveable_image_questions", ["offering_id"], :name => "index_saveable_image_questions_on_offering_id"
 
   create_table "saveable_multiple_choice_answers", :force => true do |t|
     t.integer  "multiple_choice_id"
