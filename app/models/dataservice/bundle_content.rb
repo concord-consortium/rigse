@@ -174,6 +174,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def extract_saveables
     extract_open_responses
     extract_multiple_choices
+    extract_image_questions
   end
   
   OR_MATCHER = /open_response_(\d+).*?<OTText.*?(?:(?:text="(.*?)")|(?:<text>(.*?)<\/text>))/m
@@ -228,6 +229,45 @@ class Dataservice::BundleContent < ActiveRecord::Base
       elsif ! multiple_choice
         logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
       end
+    end
+    match_data.post_match
+  end
+  
+  IMAGE_MATCHER = /<entry key="([^"!\/]*?)\/input">.*?<OTLabbookEntryChooser.*?<oTObject>.*?<object refid="(.*?)" \/>.*?<\/oTObject>.*?<\/entry>/m
+  def extract_image_questions
+    learner = self.bundle_logger.learner
+    @offering_id = learner.offering.id
+    @learner_id = learner.id
+    if match_data = IMAGE_MATCHER.match(self.otml)
+      while IMAGE_MATCHER.match(process_image_question(match_data))
+        match_data = $~
+      end
+    end
+  end
+  
+  def process_image_question(match_data)
+    if question = Embeddable::ImageQuestion.find_by_uuid(match_data[1])
+      saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, question.id)
+      answer_id = match_data[2]
+      image_data_matcher = Regexp.compile("<OTBlob id=\"#{answer_id}\">.*?<src>(.*?)<\/src>.*?<\/OTBlob>", Regexp::MULTILINE)
+      if image_data_match_data = image_data_matcher.match(self.otml)
+        answer = image_data_match_data[1]
+        if answer =~ /http:.*?\/dataservice\/blobs\/(\d+)\.blob/
+          blob_id = $1
+          if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id
+            saveable_image_question.answers.create(:bundle_content_id => self.id, :blob_id => blob_id)
+          end
+        elsif answer =~ /^gzb64/
+          # There's an unextracted image blob... this shouldn't happen!
+          logger.error("Found unextracted blob in bundle content #{self.id}")
+        else
+          logger.error("Unknown image question data format: #{answer}")
+        end
+      else
+        logger.error("Had an image question answer, but couldn't find the object! bundle_content: #{self.id}, answer id: #{answer_id}")
+      end
+    else
+      logger.error("Missing Embeddable::ImageQuestion id: #{match_data[1]}")
     end
     match_data.post_match
   end
