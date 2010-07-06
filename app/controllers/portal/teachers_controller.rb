@@ -49,7 +49,10 @@ class Portal::TeachersController < ApplicationController
     #else
     #  @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
     #end
-    @portal_grade = Portal::Grade.find(params[:grade][:id])
+    @portal_grade = nil
+    if params[:grade]
+      @portal_grade = Portal::Grade.find(params[:grade][:id])
+    end
     @domain = nil
     if params[:domain]
       @domain = RiGse::Domain.find(params[:domain][:id])
