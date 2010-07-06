@@ -397,6 +397,16 @@ describe Portal::ClazzesController do
       end
     end
     
+    it "should show a check box for each possible site grade level" do
+      stub_current_user :authorized_teacher_user
+      
+      get :new
+      
+      APP_CONFIG[:active_grades].each do |name|
+        with_tag("input[type='checkbox'][name=?]", "portal_clazz[grade_levels][#{name}]")
+      end
+    end
+    
     it "should populate the schools list with the project default school if the current user does not belong to any schools" do
       [:admin_user, :authorized_teacher_user].each do |user|
         setup_for_repeated_tests
@@ -435,6 +445,13 @@ describe Portal::ClazzesController do
 
   describe "POST create" do
     before(:each) do
+      # Make sure we have the grade levels we want
+      0.upto(12).each do |num|
+        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade.active = true
+        grade.save
+      end
+      
       @post_params = {
         :portal_clazz => {
           :name => "New Test Class",
@@ -442,7 +459,12 @@ describe Portal::ClazzesController do
           :school => @mock_school.id,
           :semester_id => @mock_semester.id,
           :description => "Test!",
-          :teacher_id => @authorized_teacher.id
+          :teacher_id => @authorized_teacher.id,
+          :grade_levels => {
+            :"6" => "1",
+            :"7" => "1",
+            :"9" => "1"
+          }
         }
       }
     end
@@ -519,6 +541,33 @@ describe Portal::ClazzesController do
       current_count = Portal::Clazz.count(:all)
       
       @post_params[:portal_clazz][:school] = nil
+      
+      post :create, @post_params
+      
+      assert flash[:error]
+      Portal::Clazz.count(:all).should == current_count
+    end
+    
+    it "should assign the specified grade levels to the new class" do
+      stub_current_user :authorized_teacher_user
+      
+      post :create, @post_params
+      
+      @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
+      
+      @post_params[:portal_clazz][:grade_levels].each do |name, v|
+        grade = Portal::Grade.find_by_name(name.to_s)
+        @new_clazz.grades.should include(grade)
+      end
+    end
+    
+    # Is this a reasonable requirement? Revisit. -- Cantina-CMH
+    it "should not let me create a class with no grade levels" do
+      stub_current_user :authorized_teacher_user
+      
+      current_count = Portal::Clazz.count(:all)
+      
+      @post_params[:portal_clazz][:grade_levels] = nil
       
       post :create, @post_params
       

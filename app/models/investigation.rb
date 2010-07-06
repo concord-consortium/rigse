@@ -264,6 +264,10 @@ class Investigation < ActiveRecord::Base
     return @return_investigation
   end
   
+  def duplicateable?(user)
+    user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author") || user.has_role?("researcher")
+  end
+  
   def print_listing
     listing = []
     self.activities.each do |a|

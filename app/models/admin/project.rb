@@ -181,7 +181,7 @@ class Admin::Project < ActiveRecord::Base
           end
         end
         Portal::Grade.find(:all).each do |grade|
-          if (active_grades && [grade.name]).empty?
+          if (active_grades & [grade.name]).empty?
             grade.active = false
             puts "deactivated grade #{grade.name}, active: #{grade.active}"
           else

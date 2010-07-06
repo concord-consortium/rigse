@@ -242,7 +242,10 @@ class Portal::StudentsController < ApplicationController
   def find_grade_level_from_params
     grade_level = Portal::GradeLevel.find_by_name('9')
     if @portal_clazz
-      if (@portal_clazz.course && @portal_clazz.course.grade_levels && @portal_clazz.course.grade_levels.size > 0)
+      # Try to get a grade level from the class first.
+      if (!(grade_levels = @portal_clazz.grade_levels).nil? && grade_levels.size > 0)
+        grade_level = grade_levels[0] if grade_levels[0]
+      elsif (@portal_clazz.course && @portal_clazz.course.grade_levels && @portal_clazz.course.grade_levels.size > 0)
         course = @portal_clazz.course
         grade_levels = course.grade_levels
         grade_level = grade_levels[0] if grade_levels[0]
