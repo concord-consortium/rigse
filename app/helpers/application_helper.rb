@@ -649,6 +649,50 @@ module ApplicationHelper
       }
     end
   end
+  
+  def offering_details_image_question(offering, image_question, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    reportUtil = Report::Util.factory(offering)
+    total = reportUtil.learners.size
+    answered_saveables = reportUtil.saveables(:embeddable => image_question, :answered => true)
+    answered = answered_saveables.size
+    skipped = total - answered
+    answers_map = answered_saveables.sort_by{|s| [s.learner.last_name, s.learner.first_name]}.map{|sa| {:name => sa.learner.name, :image_url => dataservice_blob_raw_url(:id => sa.answer.id, :token => sa.answer.token)} }
+    capture_haml do
+      haml_tag :div, :class => 'action_menu' do
+        haml_tag :div, :class => 'action_menu_header_left'
+      end
+      haml_tag(:div, :class => 'item', :style => 'width: 565px; display: -moz-inline-block; display: inline-block;') {
+        haml_concat(image_question.prompt)
+      }
+      haml_tag(:div, :style => 'width: 90px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top; font-weight: bold;') {
+        haml_tag(:div) { haml_concat("Answered") }
+        haml_tag(:div) { haml_concat("Skipped") }
+        haml_tag(:div) { haml_concat("Total") }
+      }
+      haml_tag(:div, :style => 'width: 15px; display: -moz-inline-block; display: inline-block; text-align: right; vertical-align: top;') {
+        haml_tag(:div) { haml_concat(answered) }
+        haml_tag(:div) { haml_concat(skipped) }
+        haml_tag(:div) { haml_concat(total) }
+      }
+      haml_tag(:div, :style => 'width: 670px') {
+        haml_concat(contentflow("image_question_#{image_question.id}_content_flow") do
+          capture_haml do
+            answers_map.each do |b|
+              haml_tag(:div, :class => 'item') {
+                haml_tag(:img, :class =>' content', :src=> b[:image_url], :title => b[:name])
+                haml_tag(:div, :class => 'caption') {
+                  haml_concat(b[:name])
+                }
+              }
+            end
+          end
+        end
+        )
+      }
+    end
+  end
 
   def offering_details_multiple_choice(offering, multiple_choice, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }

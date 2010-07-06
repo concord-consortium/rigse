@@ -128,11 +128,11 @@ class Investigation < ActiveRecord::Base
     end
     
     def saveable_types
-      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
+      [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]
     end
     
     def reportable_types
-      [ Embeddable::OpenResponse, Embeddable::MultipleChoice ]
+      [ Embeddable::OpenResponse, Embeddable::MultipleChoice, Embeddable::ImageQuestion ]
     end
     
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
