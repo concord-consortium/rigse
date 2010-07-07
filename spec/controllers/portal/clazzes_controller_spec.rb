@@ -446,7 +446,7 @@ describe Portal::ClazzesController do
   describe "POST create" do
     before(:each) do
       # Make sure we have the grade levels we want
-      0.upto(12).each do |num|
+      0.upto(12) do |num|
         grade = Portal::Grade.find_or_create_by_name(num.to_s)
         grade.active = true
         grade.save
