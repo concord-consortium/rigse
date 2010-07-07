@@ -68,7 +68,7 @@ class Portal::TeachersController < ApplicationController
       t.user = @user
       t.domain = @domain
       t.schools << @portal_school if !@portal_school.nil?
-      t.grades << @portal_grade
+      t.grades << @portal_grade if !@portal_grade.nil?
     end
     
     #if @user.errors.empty? && @portal_teacher.save
