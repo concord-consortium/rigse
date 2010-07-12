@@ -229,7 +229,7 @@ module JnlpHelper
     xml.resources(:os => "Mac OS X", :arch => "x86_64") {
       xml.j2se :version => "1.5", :"max-heap-size" => "128m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
     } 
-    xml.resource(:os => "Mac OS X") {
+    xml.resources(:os => "Mac OS X") {
       xml.j2se :version => "1.6", :"max-heap-size" => "128m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
     }
   end
