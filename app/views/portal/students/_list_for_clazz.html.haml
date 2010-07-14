@@ -10,7 +10,7 @@
       .action_menu_header_right
         %ul
           - if portal_clazz.changeable?(current_user)     
-            - if (defined? existing_students) && existing_students.size > -1
+            - if (defined? existing_students) && existing_students.size > 0
               %li 
                 %span{:id => 'link_text'} 
                 = link_to_remote "Add ", :url => {:action=>'add_student', :id => portal_clazz}, :with => "'student_id='+$('student_id_selector').value"
