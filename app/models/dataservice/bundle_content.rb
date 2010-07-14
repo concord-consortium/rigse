@@ -2,6 +2,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   set_table_name :dataservice_bundle_contents
 
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
+  has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
   acts_as_list :scope => :bundle_logger_id
 
@@ -13,6 +14,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
   
   def before_create
     process_bundle
+  end
+  
+  def after_create
+    process_blobs
   end
 
   def before_save
@@ -35,6 +40,21 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
     def display_name
       "Dataservice::BundleContent"
+    end
+    
+    def b64gzip_unpack(b64gzip_content)
+      s = StringIO.new(B64::B64.decode(b64gzip_content))
+      z = ::Zlib::GzipReader.new(s)
+      return z.read
+    end
+
+    def b64gzip_pack(content)
+      gzip_string_io = StringIO.new()
+      gzip = Zlib::GzipWriter.new(gzip_string_io)
+      gzip.write(content)
+      gzip.close
+      gzip_string_io.rewind
+      return B64::B64.encode(gzip_string_io.string)
     end
   end
 
@@ -66,9 +86,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      s = StringIO.new(B64::B64.decode(otml_b64gzip))
-      z = ::Zlib::GzipReader.new(s)
-      z.read
+      return self.class.b64gzip_unpack(otml_b64gzip)
       # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
     else
       nil
@@ -76,18 +94,87 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def convert_otml_to_body
-    gzip_string_io = StringIO.new()
-    gzip = Zlib::GzipWriter.new(gzip_string_io)
-    gzip.write(self.otml)
-    gzip.close
-    gzip_string_io.rewind
-    encoded_str = B64::B64.encode(gzip_string_io.string)
-    self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+    # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
+    self.otml_will_change!
+    self.body_will_change!
+    encoded_str = self.class.b64gzip_pack(self.otml)
+    unless self.original_body != nil && self.original_body.length > 0
+      self.original_body_will_change!
+      self.original_body = self.body
+    end
+    self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
+  end
+  
+  @@url_resolver = URLResolver.new
+  @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
+  @@blob_content_regexp = /\s*gzb64:([^<]+)/m
+  
+  def process_blobs
+    return false unless self.valid_xml
+    ## extract blobs from the otml and convert the changed otml back to bundle format
+    blobs_present = extract_blobs
+    if blobs_present
+      convert_otml_to_body
+      self.save!
+    end
+    return blobs_present
+  end
+  
+  def extract_blobs(host = nil)
+    return false if ! self.otml
+    
+    changed = false
+      
+    if ! host
+      address = URI.parse(APP_CONFIG[:site_url])
+      host = address.host
+    end
+
+    text = self.otml
+
+		# first find all the previously processed blobs, and re-point their urls
+    begin
+      text.gsub!(@@blob_url_regexp) {|match|
+        changed = true
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => $1, :token => $2, :host => host, :format => "blob", :only_path => false})
+        match
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    begin
+      # find all the unprocessed blobs, and extract them and create Blob objects for them
+      text.gsub!(@@blob_content_regexp) {|match|
+        changed = true
+        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+        match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
+        match
+      }
+    rescue Exception => e
+      $stderr.puts "#{e}: #{$&}"
+    end
+    
+    self.otml = text if changed
+    
+    return changed
+  end
+
+  def bundle_content_return_address
+    return_address = nil
+    if self.bundle_content =~ /sdsReturnAddresses>(.*?)<\/sdsReturnAddresses/m
+      begin
+        return URI.parse($1)
+      rescue
+      end
+    end
+    return nil
   end
   
   def extract_saveables
     extract_open_responses
     extract_multiple_choices
+    extract_image_questions
   end
   
   OR_MATCHER = /open_response_(\d+).*?<OTText.*?(?:(?:text="(.*?)")|(?:<text>(.*?)<\/text>))/m
@@ -142,6 +229,45 @@ class Dataservice::BundleContent < ActiveRecord::Base
       elsif ! multiple_choice
         logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
       end
+    end
+    match_data.post_match
+  end
+  
+  IMAGE_MATCHER = /<entry key="([^"!\/]*?)\/input">.*?<OTLabbookEntryChooser.*?<oTObject>.*?<object refid="(.*?)" \/>.*?<\/oTObject>.*?<\/entry>/m
+  def extract_image_questions
+    learner = self.bundle_logger.learner
+    @offering_id = learner.offering.id
+    @learner_id = learner.id
+    if match_data = IMAGE_MATCHER.match(self.otml)
+      while IMAGE_MATCHER.match(process_image_question(match_data))
+        match_data = $~
+      end
+    end
+  end
+  
+  def process_image_question(match_data)
+    if question = Embeddable::ImageQuestion.find_by_uuid(match_data[1])
+      saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, question.id)
+      answer_id = match_data[2]
+      image_data_matcher = Regexp.compile("<OTBlob id=\"#{answer_id}\">.*?<src>(.*?)<\/src>.*?<\/OTBlob>", Regexp::MULTILINE)
+      if image_data_match_data = image_data_matcher.match(self.otml)
+        answer = image_data_match_data[1]
+        if answer =~ /http:.*?\/dataservice\/blobs\/(\d+)\.blob/
+          blob_id = $1
+          if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id
+            saveable_image_question.answers.create(:bundle_content_id => self.id, :blob_id => blob_id)
+          end
+        elsif answer =~ /^gzb64/
+          # There's an unextracted image blob... this shouldn't happen!
+          logger.error("Found unextracted blob in bundle content #{self.id}")
+        else
+          logger.error("Unknown image question data format: #{answer}")
+        end
+      else
+        logger.error("Had an image question answer, but couldn't find the object! bundle_content: #{self.id}, answer id: #{answer_id}")
+      end
+    else
+      logger.error("Missing Embeddable::ImageQuestion id: #{match_data[1]}")
     end
     match_data.post_match
   end

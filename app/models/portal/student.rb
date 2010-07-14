@@ -31,7 +31,9 @@ class Portal::Student < ActiveRecord::Base
   end
   
   def self.generate_user_login(first_name, last_name)
-    generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
+    # Old method, first_name + last initial
+    #generated_login = "#{first_name.downcase.gsub(/[^a-z0-9]/,'')}#{last_name[0..0].downcase}"
+    generated_login = "#{first_name[0..0].downcase}#{last_name.downcase.gsub(/[^a-z0-9]/,'')}"
     existing_users = User.find(:all, :conditions => "login RLIKE '#{generated_login}[0-9]*$'", :order => :login)
     if existing_users.size > 0
       generated_login << "#{existing_users.size + 1}"

@@ -1,6 +1,6 @@
 class Investigation < ActiveRecord::Base
   
-  cattr_accessor :publication_states
+  # cattr_accessor :publication_states
   
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
@@ -128,11 +128,11 @@ class Investigation < ActiveRecord::Base
     end
     
     def saveable_types
-      [ Saveable::OpenResponse, Saveable::MultipleChoice ]
+      [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]
     end
     
     def reportable_types
-      [ Embeddable::OpenResponse, Embeddable::MultipleChoice ]
+      [ Embeddable::OpenResponse, Embeddable::MultipleChoice, Embeddable::ImageQuestion ]
     end
     
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
@@ -262,6 +262,10 @@ class Investigation < ActiveRecord::Base
     @return_investigation.deep_set_user(new_owner)
     @return_investigation.publication_status = :draft
     return @return_investigation
+  end
+  
+  def duplicateable?(user)
+    user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author") || user.has_role?("researcher")
   end
   
   def print_listing

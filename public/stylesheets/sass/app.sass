@@ -415,15 +415,6 @@ ul.menu
   :border
     :width 1px
     :style dotted
-  .answered
-    :background-color= !answered_color !important
-  .not_answered
-    :background-color= !not_answered_color !important
-  .correct
-    :background-color= !correct_color !important
-  .incorrect
-    :background-color= !incorrect_color !important
-  
 
 .draggable, .sortable, .movable
   :cursor move
@@ -554,6 +545,14 @@ ul
   :list-style-position inside
   :margin 0 0 5px
 
+#clazzes_nav
+  ul
+    .create_link
+      :background-color #cccccc
+      :border 1px solid #444444
+      :margin-left -15px
+      :text-align center
+
 dt
   :margin-top 1.2em
   :text-decoration underline
@@ -649,46 +648,3 @@ input[type=password]
 .copy_paste_disabled
   :display none
   :visibility hidden
-  
-.table
-  :width 100%
-  :display table
-  :border-collapse collapse
-
-.row
-  :display table-row
-  :width 100%
-
-.cell
-  :display table-cell
-  
-.cellheader
-  :font-weight bold
-
-.optionlabel
-  :padding-left 10px
-  :width 310px
-
-.optionbar
-  :width 300px
-  :padding-right 10px
-  :padding-bottom 2px
-  :vertical-align middle
-  :border-left 1px solid black
-
-.optionbarbar
-  :display block
-  :height 100%
-  :border 1px solid black
-  :margin-left 1px
-  
-.optionpercent
-  :border-left 2px solid black
-  :padding-right 2px
-  :padding-left 2px
-  :text-align right
-
-.optioncount
-  :border-left 1px solid black
-  :padding-left 2px
-  :text-align right

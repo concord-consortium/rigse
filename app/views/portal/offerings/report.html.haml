@@ -1,3 +1,4 @@
+= use_contentflow
 %div{:id => dom_id_for(@offering, :report), :class => 'item'}
   - section = (@offering.clazz.section && @offering.clazz.section.length > 0) ? @offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
@@ -31,3 +32,7 @@
                         = render :partial => 'portal/offerings/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learners => @learners}
                       - elsif embeddable.kind_of? Embeddable::OpenResponse
                         = render :partial => 'portal/offerings/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learners => @learners}
+                      - elsif embeddable.kind_of? Embeddable::ImageQuestion
+                        = render :partial => 'portal/offerings/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learners => @learners}
+                      - else
+                        = "Unknown type of embeddable: #{embeddable.class}"

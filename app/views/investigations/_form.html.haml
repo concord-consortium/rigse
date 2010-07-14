@@ -5,9 +5,10 @@
       %li
         %label.right Name
         = f.text_field :name
-      / %li
-      /   %label.right Publication status
-      /   = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
+      // without publication status options, projects won't be able to set investigations as active...
+      %li
+        %label.right Publication status
+        = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'

@@ -49,11 +49,22 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   default_value_for :name, "Multiple Choice Question element"
   default_value_for :description, "description ..."
   default_value_for :prompt, "Why do you think ..."
-  default_value_for :choices, [
-    Embeddable::MultipleChoiceChoice.create(:choice => 'a'),
-    Embeddable::MultipleChoiceChoice.create(:choice => 'b'),
-    Embeddable::MultipleChoiceChoice.create(:choice => 'c')
-  ]
+  ## this actually creates MultipleChoiceChoice objects at Class eval time, and not at object instantiation time
+  ## we'll use an after create filter instead
+  # default_value_for :choices, [
+  #   Embeddable::MultipleChoiceChoice.create(:choice => 'a'),
+  #   Embeddable::MultipleChoiceChoice.create(:choice => 'b'),
+  #   Embeddable::MultipleChoiceChoice.create(:choice => 'c')
+  # ]
+  
+  after_create :create_default_choices
+  
+  def create_default_choices
+    Embeddable::MultipleChoiceChoice.create(:choice => 'a', :multiple_choice => self)
+    Embeddable::MultipleChoiceChoice.create(:choice => 'b', :multiple_choice => self)
+    Embeddable::MultipleChoiceChoice.create(:choice => 'c', :multiple_choice => self)
+  end
+  
   send_update_events_to :investigations
 
   def self.display_name

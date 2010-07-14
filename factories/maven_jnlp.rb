@@ -36,9 +36,12 @@ Factory.define :admin_project, :class => Admin::Project do |f|
   
   if USING_JNLPS
     server, family, version = Admin::Project.default_jnlp_info
-    maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
-    f.maven_jnlp_server maven_jnlp_server
-    f.maven_jnlp_family maven_jnlp_server.maven_jnlp_families.find_by_name(family)
+    begin
+      maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
+      f.maven_jnlp_server maven_jnlp_server
+      f.maven_jnlp_family maven_jnlp_server.maven_jnlp_families.find_by_name(family)
+    rescue
+    end
     f.jnlp_version_str version
   end
 
