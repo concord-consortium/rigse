@@ -271,7 +271,10 @@ class Portal::ClazzesController < ApplicationController
       end
     else
       render :update do |page|
-        page << "$('flash').update('that was a total failure')"
+        # previous message was "that was a total failure"
+        # this case should not happen, but if it does, display something
+        # more friendly such as:
+        # page << "$('flash').update('Please elect a user from the list before clicking add button.')"
       end
     end
   end
