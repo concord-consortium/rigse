@@ -22,7 +22,8 @@
             = investigation.user.name
         %div.action_menu_header_right   
           %ul.menu
-            - if(current_user.has_role?("author"))
+            %li= preview_button_for(investigation)
+            - if (investigation.duplicateable?(current_user))
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
               %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 

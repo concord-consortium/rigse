@@ -18,6 +18,10 @@ class PasswordsController < ApplicationController
     else
       # If this fails, we probably didn't find the user by email. Perhaps we should use a friendly custom error
       # message, instead of displaying the Rails error_for content for the failed save? -- Cantina-CMH 6/18/10
+      if @password.user.nil?
+        flash[:error] = "Sorry, we could not find a user with that email address. Please verify the address and try again."
+        @password.errors.clear # Ideally, we would only clear the error on :user, but there is no built-in method for that.
+      end
       render :action => :email
     end
   end

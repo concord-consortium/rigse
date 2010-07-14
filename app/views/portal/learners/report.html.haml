@@ -31,3 +31,7 @@
                         = render :partial => 'portal/learners/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learner => @portal_learner}
                       - elsif embeddable.kind_of? Embeddable::OpenResponse
                         = render :partial => 'portal/learners/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learner => @portal_learner}
+                      - elsif embeddable.kind_of? Embeddable::ImageQuestion
+                        = render :partial => 'portal/learners/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learner => @portal_learner}
+                      - else
+                        = "Unknown type of embeddable: #{embeddable.class}"

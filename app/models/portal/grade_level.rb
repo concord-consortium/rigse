@@ -7,6 +7,8 @@ class Portal::GradeLevel < ActiveRecord::Base
   belongs_to :has_grade_levels, :polymorphic => true
   # Schools, Teachers, Courses, Classes, and Students have_many grade_levels
   
+  delegate :name, :to => :grade
+  
   
   include Changeable
   

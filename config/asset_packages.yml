@@ -31,6 +31,7 @@ stylesheets:
   - notes
   - drop_down
   - data_table
+  - reports
 
 - default:
   - app
@@ -42,6 +43,7 @@ stylesheets:
   - notes
   - drop_down
   - data_table
+  - reports
   
 - rites:
   - app
@@ -54,6 +56,7 @@ stylesheets:
   - action_menu_tab
   - drop_down
   - data_table
+  - reports
   - themes/rites/rites
   
 - investigations:
@@ -66,6 +69,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 
 - itsisu:
   - themes/itsisu/itsisu
@@ -77,6 +81,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 
 - smartgraphs:
   - themes/smartgraphs/smartgraphs
@@ -88,6 +93,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 
 - sglight:
   - themes/sglight/sglight
@@ -99,6 +105,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 
 - sparks:
   - themes/sparks/sparks
@@ -110,6 +117,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
   
 - has:
   - themes/has/has
@@ -121,6 +129,7 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 
 - xproject:
   - themes/xproject/xproject
@@ -132,4 +141,5 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
 

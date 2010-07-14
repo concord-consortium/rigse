@@ -26,6 +26,7 @@ In NO case should the system allow:
       | /dataservice/bundle_loggers    | 
       | /dataservice/console_loggers   | 
       | /dataservice/console_contents  | 
+      | /dataservice/blobs             | 
   
     
   Scenario Outline: Admin user can accesss dataservice routes
@@ -42,6 +43,7 @@ In NO case should the system allow:
       | /dataservice/bundle_loggers   |
       | /dataservice/console_loggers  |
       | /dataservice/console_contents |
+      | /dataservice/blobs            | 
 
 
 

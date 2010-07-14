@@ -97,13 +97,13 @@ class Report::Util
     page_lambda = lambda {|e| @pages.detect{|p| p.id == e.page_id.to_i} }
     @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
     
-    learner_lambda = lambda{|s| s.learner_id }
-    embeddable_lambda = lambda{|s|
-      result = nil
-      result = s.open_response_id if s.respond_to? 'open_response_id'
-      result = s.multiple_choice_id if s.respond_to? 'multiple_choice_id'
-      result
-    }
+    # learner_lambda = lambda{|s| s.learner_id }
+    # embeddable_lambda = lambda{|s|
+    #   result = nil
+    #   result = s.open_response_id if s.respond_to? 'open_response_id'
+    #   result = s.multiple_choice_id if s.respond_to? 'multiple_choice_id'
+    #   result
+    # }
     
     Investigation.saveable_types.each do |type|
       all = type.find_all_by_offering_id(@offering.id)
