@@ -255,6 +255,8 @@ class Portal::ClazzesController < ApplicationController
   
   # HACK: Add a student to a clazz
   # TODO: test this method
+  # NOTE: delete student is in the student_clazzes_controller.
+  # we should put these functions in the same place ...
   def add_student
     @student = nil
     @portal_clazz = Portal::Clazz.find(params[:id])
@@ -268,6 +270,7 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page.replace_html  'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page.visual_effect :highlight, 'students_listing'
+        page.replace_html  'student_add_dropdown', @template.student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|
