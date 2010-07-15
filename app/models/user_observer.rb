@@ -8,6 +8,8 @@ class UserObserver < ActiveRecord::Observer
   def after_save(user)
     return if user.skip_notifications
     user.reload
-    UserMailer.deliver_activation(user) if user.recently_activated?
+    # Frieda had a good point: Why send this acitivation email?
+    # It doesn't contain any useful information.   
+    # UserMailer.deliver_activation(user) if user.recently_activated?
   end
 end
