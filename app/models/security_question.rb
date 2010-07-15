@@ -71,32 +71,28 @@ class SecurityQuestion < ActiveRecord::Base
     # Return value here is negative: !errors_for_questions_list!() == OK, anything else == failure. -- Cantina-CMH 6/17/10
     def self.errors_for_questions_list!(questions = [])
       valid = true
-      errors = ""
+      errors = []
 
       questions.each do |q|
         if q.answer.empty?
-          errors = "<li>#{ERROR_BLANK_ANSWER}</li>"
-          q.errors.add :answer, "can't be blank"
+          errors << ERROR_BLANK_ANSWER
+          q.errors.add :answer, ERROR_BLANK_ANSWER
           valid = false
         end
       end
 
       if questions.size < 3
-        errors += "<li>#{ERROR_TOO_FEW_QUESTIONS}</li>"
+        errors << ERROR_TOO_FEW_QUESTIONS
         valid = false
       end
 
       if questions.collect { |q| q.question }.uniq.size < questions.size
-        errors += "<li>#{ERROR_DUPLICATE_QUESTIONS}</li>"
+        errors << ERROR_DUPLICATE_QUESTIONS
         valid = false
       end
-      
-      if valid
-        return nil
-      else
-        return "There were problems setting your security questions:" + "<ul>" + errors + "</ul>"
-      end
+      return errors
     end
+    
     
     # def self.check_questions_list!(questions = [])
     #   valid = true
