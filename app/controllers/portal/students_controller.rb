@@ -95,6 +95,12 @@ class Portal::StudentsController < ApplicationController
           
           format.html { render 'signup_success' }
         else
+          flash[:info] = <<-EOF
+            You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>. 
+            <br/>
+            
+
+          EOF
           format.html { redirect_to(@portal_clazz) }
         end
       else  # something didn't get created or referenced correctly
