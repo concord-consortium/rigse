@@ -1104,9 +1104,6 @@ module ApplicationHelper
     Investigation.search_list(options)
   end
   
-  def students_in_class(all_students)
-    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
-  end
 
 #            Welcome
 #            = "#{current_user.name}."
