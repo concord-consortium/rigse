@@ -111,6 +111,18 @@
   step_size: 0.1
   ptype: 7
   created_at: 2009-05-15 13:20:30 Z
+- name: CO2
+  uuid: 20286398-4163-11de-aad1-001ff3caa767
+  port: 0
+  period: 1.0
+  max: 500.0
+  id: 9
+  display_precision: 2
+  user_id: 5
+  unit: ppm
+  min: 0.0
+  step_size: 20.0
+  ptype: 18
 - name: pH
   updated_at: 2009-05-15 17:20:30 Z
   period: 0.1
