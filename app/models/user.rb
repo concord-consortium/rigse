@@ -176,7 +176,7 @@ class User < ActiveRecord::Base
   #  user.has_role?(%w{admin manager})
   #
   def has_role?(*role_list)
-    roles.reload
+    roles.reload # will always hit the database?
     (roles.map{ |r| r.title.downcase } & role_list.flatten).length > 0
   end
 
