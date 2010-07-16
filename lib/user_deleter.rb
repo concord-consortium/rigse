@@ -18,7 +18,7 @@ class UserDeleter
 
   def initialize(options = {})
     new_date = 6.months.ago
-    exception_list = %q[ knowuh ed ehazzard freichsman manager ].split
+    exception_list = %q[ knowuh ed ehazzard freichsman manager teacher student anonymous guest manager admin].split
     self.keep_list = User.find(:all, :conditions => ["login in (?)", exception_list]);
     
     new_users = User.find(:all, :conditions => "created_at > '#{new_date}'")
