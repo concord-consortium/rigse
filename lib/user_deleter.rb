@@ -17,7 +17,7 @@ class UserDeleter
   attr_accessor :default_owner
 
   def initialize(options = {})
-    new_date = 6.months.ago
+    new_date = 4.months.ago
     exception_list = %q[ knowuh ed ehazzard freichsman manager teacher student anonymous guest manager admin].split
     self.keep_list = User.find(:all, :conditions => ["login in (?)", exception_list]);
     
@@ -25,6 +25,7 @@ class UserDeleter
     admin_users =  User.with_role('admin')
     manager_users = User.with_role('manager')
     report_users = User.find(:all, :conditions => "login like 'report%'")
+    sakai_users =  User.find(:all, :conditions => "login like '%_rinet_sakai'")
     team_users = User.find(:all, :conditions => "last_name like '%team%'")
 
     self.keep_list = self.keep_list + new_users
@@ -32,6 +33,8 @@ class UserDeleter
     self.keep_list = self.keep_list + admin_users
     self.keep_list = self.keep_list + team_users
     self.keep_list = self.keep_list - report_users
+    self.keep_list = self.keep_list - sakai_users
+
     self.keep_list.uniq!
 
     self.default_owner = User.find_by_login(DEFAULT_OWNER_LOGIN)
