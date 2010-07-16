@@ -21,7 +21,9 @@ class User < ActiveRecord::Base
   named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
-
+  named_scope :with_role, lambda { | role_name | 
+    { :include => :roles, :conditions => ['roles.title = ?',role_name]}
+  }
   has_settings
   
   # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
