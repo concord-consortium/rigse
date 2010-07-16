@@ -71,7 +71,7 @@ class Portal::StudentsController < ApplicationController
     if @project.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
       @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
       sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
-      if sq_errors.size > 0
+      if sq_errors && sq_errors.size > 0
         errors << [:security_questions, " have errors: #{sq_errors.join(',')}"]
       end
     end
