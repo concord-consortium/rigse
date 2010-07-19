@@ -1,6 +1,6 @@
 require 'rake'
 
-namespace :rigse do
+namespace :app do
   namespace :convert do
 
     desc 'Add the author role to all users who have authored an Investigation'

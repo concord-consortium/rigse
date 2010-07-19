@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :jnlp do
 
     autoload :HighLine, 'highline'

@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :import do
     desc "import RINET RIEPS SIS student / class data for RI."
     task :rinet => :environment do

@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :test do
 
     def instance_to_fixture(object, name_attr)
