@@ -12,50 +12,50 @@
 #end
 
 class UserDeleter 
-  DEFAULT_OWNER_LOGIN = "knowuh"
+  DEFAULT_OWNER_LOGIN = "freichsman"
   attr_accessor :keep_list
   attr_accessor :default_owner
 
   def initialize(options = {})
-    new_date = 4.months.ago
-    exception_list = %q[ knowuh ed ehazzard freichsman manager teacher student anonymous guest manager admin].split
-    self.keep_list = User.find(:all, :conditions => ["login in (?)", exception_list]);
-    
-    new_users = User.find(:all, :conditions => "created_at > '#{new_date}'")
+    save_these_logins = %q[
+      karensaul lspelman sciencepup adelvecchio fogleman
+      knowuh ehazzard freichsman stephen cstaudt nkimball abean
+      manager teacher student anonymous guest admin].split
+
+
+    self.keep_list = User.find(:all, :conditions => ["login in (?)", save_these_logins]);
+    concord_users =  User.find(:all, :conditions => "email like '%concord.org'")
+    no_email_users = User.find(:all, :conditions => "email like 'no-email%'")
+    published_authors = Investigation.published.map { |i| i.user }
+
+    # new_users = User.find(:all, :conditions => "created_at > '#{new_date}'")
     admin_users =  User.with_role('admin')
     manager_users = User.with_role('manager')
     report_users = User.find(:all, :conditions => "login like 'report%'")
     sakai_users =  User.find(:all, :conditions => "login like '%_rinet_sakai'")
     team_users = User.find(:all, :conditions => "last_name like '%team%'")
 
-    self.keep_list = self.keep_list + new_users
+    # build a keep list:
     self.keep_list = self.keep_list + manager_users
     self.keep_list = self.keep_list + admin_users
     self.keep_list = self.keep_list + team_users
+    self.keep_list = self.keep_list + concord_users
+    self.keep_list = self.keep_list + published_authors
+
+    # build a remove list:
     self.keep_list = self.keep_list - report_users
     self.keep_list = self.keep_list - sakai_users
-
+    self.keep_list = self.keep_list - no_email_users
     self.keep_list.uniq!
 
     self.default_owner = User.find_by_login(DEFAULT_OWNER_LOGIN)
   end
   
-
-
-  def nuclear
-    delete_old_investigations
-    delete_all(User.find(:all))
+  def delete_all
+    delete_user_list(User.find(:all))
   end
 
-  def delete_old_investigations(from="2010")
-    to_delete = Investigation.find(:all, :conditions => "created_at < '#{from}'")
-    to_delete = to_delete - Investigation.published
-    to_delete.each do |investigation|
-      investigation.destroy
-    end
-  end
-  
-  def delete_all(user_list=User.find(:all, :conditions => "login like '%rinet_sakai%'"))
+  def delete_user_list(user_list=User.find(:all, :conditions => "login like '%rinet_sakai%'"))
     user_list = user_list - self.keep_list
     user_list.each do |user|
       print "Removing user: #{user.login} #{user.email}::::"
