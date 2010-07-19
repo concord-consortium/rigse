@@ -18,7 +18,7 @@ class UserDeleter
 
   def initialize(options = {})
     save_these_logins = %q[
-      karensaul lspelman sciencepup adelvecchio fogleman
+      fogleman DAN gdeoliveira hdooley
       knowuh ehazzard freichsman stephen cstaudt nkimball abean
       manager teacher student anonymous guest admin].split
 
