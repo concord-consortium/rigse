@@ -53,7 +53,7 @@
         - if should_show_teacher_note? page, :investigation
           %tr{:valign=>"top"}
             %td{:width=>"25%"}
-              %h3= "#{top_level_container_name.humanize.pluralize} notes:"
+              %h3= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize} notes:"
             %td
               .activity_teacher_note= page.section.investigation.teacher_note_otml
 

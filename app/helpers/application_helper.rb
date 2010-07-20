@@ -4,10 +4,6 @@ include Clipboard
 
 module ApplicationHelper
 
-  def top_level_container_name
-    APP_CONFIG[:top_level_container_name] || "investigation"
-  end
-  
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #
@@ -179,13 +175,12 @@ module ApplicationHelper
   end
 
   def render_top_level_container_list_partial(locals)
-    container = top_level_container_name.pluralize
-    container_sym = top_level_container_name.pluralize.to_sym
-    container_class = top_level_container_name.capitalize.constantize
-    if container_class.respond_to?(:search_list)
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.search_list(locals) }
+    if TOP_LEVEL_CONTAINER_CLASS.respond_to?(:search_list)
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+        :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.search_list(locals) }
     else
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.find(:all) }
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+        :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.find(:all) }
     end
   end
 

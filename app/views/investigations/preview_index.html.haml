@@ -3,13 +3,13 @@
     .action_menu_header
       .action_menu_header_left
         - if @investigations
-          %p= page_entries_info @investigations, :entry_name=>top_level_container_name
+          %p= page_entries_info @investigations, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
           %p.paginator
             = will_paginate @investigations
       .action_menu_header_right
         %ul.menu
           -if current_user.has_role? "author"
-            %li= link_to "create #{top_level_container_name}", new_investigation_path
+            %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_investigation_path
 
   %ul.preview_list       
     - for investigation in @investigations
