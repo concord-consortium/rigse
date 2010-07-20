@@ -248,8 +248,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :teacher_notes
   map.resources :author_notes
-  
-  
+
 #
 # ********* Start of Page embeddable objects *********
 #
@@ -313,15 +312,14 @@ ActionController::Routing::Routes.draw do |map|
     :change_probe_type => :put
   }
 
-  map.resources :sections, :member => {
-    :destroy => :post,
-    :add_page => [:post, :get],
-    :sort_pages => :post, 
-    :delete_page => :post,
-    :print => :get,
-    :duplicate => :get
+  map.resources :page_elements, :member => {
+    :destroy => :post
   }
-    
+
+#
+# ********* End of Page embeddable objects *********
+#
+
   map.resources :pages, :member => {
     :destroy => :post,
     :add_element => :post,
@@ -333,20 +331,46 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get
   }
+  map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
 
-#
-# ********* End of Page embeddable objects *********
-#
-
+  # seb: are these nested routes needed or used anywhere ??
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
     page.resources :data_collectors
   end
-  
-  map.resources :page_elements, :member => {
+
+  map.resources :sections, :member => {
+    :destroy => :post,
+    :add_page => [:post, :get],
+    :sort_pages => :post, 
+    :delete_page => :post,
+    :print => :get,
+    :duplicate => :get
+  }
+  map.list_filter_section '/section/list/filter', :controller => 'sections', :action => 'index', :method => :post
+
+  map.resources :activities, :member => {
+    :add_section => [:post,:get],
+    :sort_sections => :post,
+    :delete_section => :post,
+    :print => :get,
+    :duplicate => :get,
+    :export => :get,
     :destroy => :post
   }
+  map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
+  #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+  
+  # seb: are these nested routes needed or used anywhere ??
+  map.resources :activities do |activity|
+    activity.resources :sections do |section|
+      section.resources :pages do |page|
+        page.resources :page_elements
+      end
+    end
+  end
 
   map.resources :investigations, :member => {
     :add_activity => :post,
@@ -361,29 +385,12 @@ ActionController::Routing::Routes.draw do |map|
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
-  
-  
-  map.resources :activities, :member => {
-    :add_section => [:post,:get],
-    :sort_sections => :post,
-    :delete_section => :post,
-    :print => :get,
+
+  map.resources :external_activities, :member => {
     :duplicate => :get,
-    :export => :get,
     :destroy => :post
   }
-  map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
-  #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
-  #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
-  
-
-  map.resources :activities do |activity|
-    activity.resources :sections do |section|
-      section.resources :pages do |page|
-        page.resources :page_elements
-      end
-    end
-  end
+  map.list_filter_external_activity '/external_activity/list/filter', :controller => 'external_activities', :action => 'index', :method => :post
 
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
