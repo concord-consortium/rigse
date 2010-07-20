@@ -115,10 +115,7 @@ class Page < ActiveRecord::Base
     end
     
     def search_list(options)
-      grade_span = options[:grade_span] || ""
-      domain_id = options[:domain_id].to_i
       name = options[:name]
-
       if (options[:include_drafts])
         pages = Page.like(name)
       else
@@ -133,8 +130,7 @@ class Page < ActiveRecord::Base
       else
         pages
       end
-    end  
-
+    end
   end
 
   
