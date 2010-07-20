@@ -56,6 +56,8 @@ class Section < ActiveRecord::Base
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true 
 
+  include Publishable
+
   acts_as_replicatable
 
   include Changeable
