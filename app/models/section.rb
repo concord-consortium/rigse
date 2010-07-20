@@ -59,7 +59,7 @@ class Section < ActiveRecord::Base
   
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-  include Noteable # convinience methods for notes...
+  include Noteable # convenience methods for notes...
   
   validates_presence_of :name, :on => :create, :message => "can't be blank"
   

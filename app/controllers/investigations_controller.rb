@@ -92,8 +92,8 @@ class InvestigationsController < AuthoringController
     @domain_id = param_find(:domain_id)
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
-    pagenation = params[:page]
-    if (pagenation)
+    pagination = params[:page]
+    if (pagination)
        @include_drafts = param_find(:include_drafts)
     else
       @include_drafts = param_find(:include_drafts,true)
@@ -105,7 +105,7 @@ class InvestigationsController < AuthoringController
       :grade_span => @grade_span,
       :domain_id => @domain_id,
       :paginate => true, 
-      :page => pagenation
+      :page => pagination
     })
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_user.id }

@@ -48,7 +48,7 @@ class Activity < ActiveRecord::Base
   
   delegate :saveable_types, :reportable_types, :to => :investigation
   
-  include Noteable # convinience methods for notes...
+  include Noteable # convenience methods for notes...
   acts_as_replicatable
   include Changeable
   include TreeNode
