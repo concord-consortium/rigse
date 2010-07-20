@@ -1,7 +1,9 @@
 --- 
 development: &development
+  theme: smartgraphs
   runnables_use: browser
-  runnable_mime_type: run_html
+  runnable_mime_type: run_external_html
+  top_level_container_name: external_activity
   active_school_levels:
     - "2"
     - "3"
@@ -17,8 +19,6 @@ development: &development
   use_gse: false
   include_otrunk_examples: false
   help_email: stephen.bannasch@gmail.com
-  theme: smartgraphs
-  top_level_container_name: page
   site_school: SmartGraphs School
   description: ""
   site_district: Smart Graphs District
