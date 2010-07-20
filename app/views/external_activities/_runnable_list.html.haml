@@ -10,29 +10,29 @@
     .action_menu_header_right
       %ul.menu
         / -if current_user.has_role? "author"
-        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_page_path
+        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_external_activity_path
 
-- for page in external_activities
-  %div{ :id => dom_id_for(page), :class => 'runnable' }
-    = accordion_for(page, (preview_button_for(page) + name_for_component(page, :hide_componenent_name => true)), :page) do  
+- for external_activity in external_activities
+  %div{ :id => dom_id_for(external_activity), :class => 'runnable' }
+    = accordion_for(external_activity, (preview_button_for(external_activity) + name_for_component(external_activity, :hide_componenent_name => true)), :external_activity) do  
       %div.action_menu
         %div.action_menu_header_left   
-          = link_to_container(page)
+          = link_to_container(external_activity)
           %span.author
-            = page.user.name
+            = external_activity.user.name
         %div.action_menu_header_right   
           %ul.menu
             - unless(current_user.anonymous?)
-              %li.menu=link_to 'duplicate', duplicate_page_url(page)
-            - if (page.changeable?(current_user))
-              %li.menu=link_to 'delete', page, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{page.id}", :method => :delete 
-      %div{:id => dom_id_for(page, :details), :class => 'tiny'}
-        %p=page.description
+              %li.menu=link_to 'duplicate', duplicate_external_activity_url(external_activity)
+            - if (external_activity.changeable?(current_user))
+              %li.menu=link_to 'delete', external_activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{external_activity.id}", :method => :delete 
+      %div{:id => dom_id_for(external_activity, :details), :class => 'tiny'}
+        %p=external_activity.description
         %p
-          %i= updated_time_text(page)
+          %i= updated_time_text(external_activity)
         %p
           %i
-            Used in: #{page.offerings.length} classes.
+            Used in: #{external_activity.offerings.length} classes.
 
-  =draggable_element dom_id_for(page), :revert => true , :scroll => 'window'
+  =draggable_element dom_id_for(external_activity), :revert => true , :scroll => 'window'
 
