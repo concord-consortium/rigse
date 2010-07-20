@@ -389,8 +389,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
-      Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
-      Rake::Task['rigse:setup:create_additional_users'].invoke
+      Rake::Task['app:setup:default_users_roles_and_portal_resources'].invoke
+      Rake::Task['app:setup:create_additional_users'].invoke
     end
 
     
