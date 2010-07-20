@@ -1,6 +1,9 @@
 class Section < ActiveRecord::Base
   belongs_to :activity
   belongs_to :user
+  
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+  
   has_one :investigation, :through => :activity
   
   has_many :pages, :order => :position, :dependent => :destroy do
