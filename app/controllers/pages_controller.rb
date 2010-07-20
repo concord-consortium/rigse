@@ -67,8 +67,6 @@ class PagesController < ApplicationController
     # @pages = @activity.pages
     # @pages = Page.find(:all)
     
-    @grade_span = param_find(:grade_span)
-    @domain_id = param_find(:domain_id)
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
     
@@ -83,8 +81,6 @@ class PagesController < ApplicationController
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
-      :grade_span => @grade_span,
-      :domain_id => @domain_id,
       :paginate => true, 
       :page => pagination
     })
