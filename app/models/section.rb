@@ -72,10 +72,45 @@ class Section < ActiveRecord::Base
   default_value_for :description, "describe the purpose of this section here..."
   
   send_update_events_to :investigation
+
+  named_scope :like, lambda { |name|
+    name = "%#{name}%"
+    {
+     :conditions => ["sections.name LIKE ? OR sections.description LIKE ?", name,name]
+    }
+  }
   
-  def self.display_name
-    'Section'
+  self.extend SearchableModel
+  @@searchable_attributes = %w{name description}
+  
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+
+    def display_name
+      "Section"
+    end
+    
+    def search_list(options)
+      name = options[:name]
+      if (options[:include_drafts])
+        sections = Section.like(name)
+      else
+        sections = Section.published.like(name)
+      end
+      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+      if portal_clazz
+        sections = sections - portal_clazz.offerings.map { |o| o.runnable }
+      end
+      if options[:paginate]
+        sections = sections.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+      else
+        sections
+      end
+    end
   end
+
 
   def parent
     return activity
