@@ -15,7 +15,7 @@ else
   TOP_LEVEL_CONTAINER_NAME = 'investigation'
 end
 
-TOP_LEVEL_CONTAINER_CLASS       = TOP_LEVEL_CONTAINER_NAME.capitalize.constantize
+TOP_LEVEL_CONTAINER_CLASS       = TOP_LEVEL_CONTAINER_NAME.camelize.constantize
 
 TOP_LEVEL_CONTAINER_SYM         = TOP_LEVEL_CONTAINER_NAME.to_sym
 
