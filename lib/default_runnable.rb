@@ -6,12 +6,15 @@ class DefaultRunnable
       if USING_JNLPS && TOP_LEVEL_CONTAINER_NAME == 'investigation'
         runnable = create_default_investigation_for_user(user, name, logging)
       else
-        runnable_assoc = TOP_LEVEL_CONTAINER_NAME.pluralize
-        unless runnable = user.send(runnable_assoc).find_by_name(name)
-          runnable = TOP_LEVEL_CONTAINER_NAME.capitalize.constantize.create do |i|
+        unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
+          runnable = TOP_LEVEL_CONTAINER_CLASS.create do |i|
             i.name = name
             i.user = user
             i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
+            case TOP_LEVEL_CONTAINER_NAME
+              when 'external_activity'
+                i.url = "http://redcloth.org/hobix.com/textile/quick.html"
+              end
           end
         end
       end
