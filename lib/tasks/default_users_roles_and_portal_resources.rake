@@ -216,7 +216,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     task :default_portal_resources => :environment do
 
       # some constants that should probably be moved to settings.yml
-      DEFAULT_CLASS_NAME = 'Fun with Investigations'
+      DEFAULT_CLASS_NAME = 'Sample Class'
 
       author_user = User.find_by_login('author')
       teacher_user = User.find_by_login('teacher')
