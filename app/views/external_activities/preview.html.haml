@@ -1,0 +1,12 @@
+
+.action_menu
+  .action_menu_header_left
+    %ul#sections.sortable
+      %li
+        = name_for_component(@page)
+  .action_menu_header_right
+    %ul
+      %li= link_to  toggle_link_title('edit', 'preview'), page_path(@page)
+
+#elements_container.item
+  = render  :partial => 'preview', :locals => { :page => @page }
