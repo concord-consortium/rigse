@@ -74,5 +74,9 @@ class ExternalActivity < ActiveRecord::Base
     300
   end
 
+  def print_listing
+    listing = []
+  end
+
 end
 
