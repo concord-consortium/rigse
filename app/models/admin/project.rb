@@ -173,20 +173,15 @@ class Admin::Project < ActiveRecord::Base
       project.save!
       active_grades = APP_CONFIG[:active_grades]
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
-        active_grades.each do |grade_name|
-          grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
-          unless grade
-            grade = Portal::Grade.create(:name => grade_name, :active => true)
-            puts "created grade #{grade.name}, active: #{grade.active}"
-          end
-        end
+        # active_grades.each do |grade_name|
+        #   grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
+        #   unless grade
+        #     grade = Portal::Grade.create(:name => grade_name, :active => true)
+        #     puts "created grade #{grade.name}, active: #{grade.active}"
+        #   end
+        # end
         Portal::Grade.find(:all).each do |grade|
-          if (active_grades & [grade.name]).empty?
-            grade.active = false
-            puts "deactivated grade #{grade.name}, active: #{grade.active}"
-          else
-            grade.active = true
-          end
+          grade.active = active_grades.include?(grade.name)
           grade.save!
         end
       end
