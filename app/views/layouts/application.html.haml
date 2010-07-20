@@ -81,7 +81,8 @@
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           - if current_user.has_role?('admin', 'manager', 'teacher', 'researcher', 'author', 'member')
-            %li.trail=link_to(TOP_LEVEL_CONTAINER_CLASS.display_name.pluralize, :controller => TOP_LEVEL_CONTAINER_CLASS.name.underscore.pluralize, :action => :index)
+            / %li.trail=link_to(TOP_LEVEL_CONTAINER_CLASS.display_name.pluralize, :controller => TOP_LEVEL_CONTAINER_CLASS.name.underscore.pluralize, :action => :index)
+            %li.trail=link_to(TOP_LEVEL_CONTAINER_CLASS.display_name.pluralize, eval("#{TOP_LEVEL_CONTAINER_NAME_PLURAL}_path"))
             
           %ul.menu_h_right
 
