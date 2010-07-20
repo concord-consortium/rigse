@@ -59,7 +59,7 @@ namespace :db do
         cmd << " -u #{db_config["username"]}"
       end
       if db_config["password"]
-        cmd << " -p#{db_config["password"]}"
+        cmd << " -p'#{db_config["password"]}'"
       end
       cmd << " #{db_config["database"]} < db/#{RAILS_ENV}_data.sql"
       # puts "Fetching database\n#{cmd}"
