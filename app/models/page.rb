@@ -69,8 +69,18 @@ class Page < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   include Noteable # convenience methods for notes...
+  
+  include Publishable
+  
   acts_as_replicatable
   acts_as_list :scope => :section
+  
+  named_scope :like, lambda { |name|
+    name = "%#{name}%"
+    {
+     :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]
+    }
+  }
   
   include Changeable
   # validates_presence_of :name, :on => :create, :message => "can't be blank"
@@ -103,7 +113,30 @@ class Page < ActiveRecord::Base
     def display_name
       "Page"
     end
+    
+    def search_list(options)
+      grade_span = options[:grade_span] || ""
+      domain_id = options[:domain_id].to_i
+      name = options[:name]
+
+      if (options[:include_drafts])
+        pages = Page.like(name)
+      else
+        pages = Page.published.like(name)
+      end
+      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+      if portal_clazz
+        pages = pages - portal_clazz.offerings.map { |o| o.runnable }
+      end
+      if options[:paginate]
+        pages = pages.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+      else
+        pages
+      end
+    end  
+
   end
+
   
   def page_number
     if (self.parent)

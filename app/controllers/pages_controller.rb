@@ -65,10 +65,43 @@ class PagesController < ApplicationController
   def index
     # @activity = Activity.find(params['section_id'])
     # @pages = @activity.pages
-    @pages = Page.find(:all)
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @page }
+    # @pages = Page.find(:all)
+    
+    @grade_span = param_find(:grade_span)
+    @domain_id = param_find(:domain_id)
+    @include_drafts = param_find(:include_drafts)
+    @name = param_find(:name)
+    
+    pagination = params[:page]
+    if (pagination)
+       @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+    
+    @pages = Page.search_list({
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => @include_drafts, 
+      :grade_span => @grade_span,
+      :domain_id => @domain_id,
+      :paginate => true, 
+      :page => pagination
+    })
+
+    if params[:mine_only]
+      @pages = @pages.reject { |i| i.user.id != current_user.id }
+    end
+
+    @paginated_objects = @pages
+    
+    if request.xhr?
+      render :partial => 'pages/runnable_list', :locals => {:pages => @pages, :paginated_objects => @pages}
+    else
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @page }
+      end
     end
   end
 
