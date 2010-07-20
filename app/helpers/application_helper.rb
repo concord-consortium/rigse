@@ -342,10 +342,15 @@ module ApplicationHelper
   def run_button_for(component)
     name = component.name
     users_params = current_user.extra_params
-    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
-    link_button("run.png",  url, 
-      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);") 
+    if NOT_USING_JNLPS
+      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type])      
+      link_button("preview.png",  url, :title => "Run the #{component.class.display_name}: '#{name}'.", :popup => true)
+    else
+      url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
+      link_button("preview.png",  url, 
+        :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+        :onclick => "show_mac_alert($('launch_warning'),false);")      
+    end
   end
 
   def preview_button_for(component)
