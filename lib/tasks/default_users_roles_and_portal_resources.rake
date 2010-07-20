@@ -222,7 +222,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
       
-      default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
+      default_runnable = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -295,8 +295,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # default offering
       attributes = {
         :clazz_id => default_course_class.id,
-        :runnable_id => default_investigation.id,
-        :runnable_type => default_investigation.class.name
+        :runnable_id => default_runnable.id,
+        :runnable_type => default_runnable.class.name
       }
       unless offering = Portal::Offering.find(:first, :conditions => attributes)
         offering = Portal::Offering.create!(attributes)

@@ -1,8 +1,25 @@
-class DefaultInvestigation
+class DefaultRunnable
 
   class <<self
+
+    def create_default_runnable_for_user(user, name="simple default #{TOP_LEVEL_CONTAINER_NAME}", logging=false)
+      if USING_JNLPS && TOP_LEVEL_CONTAINER_NAME == 'investigation'
+        runnable = create_default_investigation_for_user(user, name, logging)
+      else
+        runnable_assoc = TOP_LEVEL_CONTAINER_NAME.pluralize
+        unless runnable = user.send(runnable_assoc).find_by_name(name)
+          runnable = TOP_LEVEL_CONTAINER_NAME.capitalize.constantize.create do |i|
+            i.name = name
+            i.user = user
+            i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
+          end
+        end
+      end
+      runnable.publish! unless runnable.publication_status == "published"
+      runnable
+    end
     
-    def create_default_investigation_for_user(user, name='Simple Investigation', logging=false)
+    def create_default_investigation_for_user(user, name, logging)
       puts
       @@prediction_graph = nil
       unless investigation = user.investigations.find_by_name(name)
@@ -12,7 +29,6 @@ class DefaultInvestigation
           i.user = user
           i.description = "A simple default Investigation"
         end
-        investigation.publish!
         activity = Activity.create do |i|
           i.name = 'Activity'
           i.description = "Learn About ..."
@@ -28,6 +44,8 @@ class DefaultInvestigation
       end
       investigation
     end
+
+
 
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?
