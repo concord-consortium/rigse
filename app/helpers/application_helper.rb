@@ -831,7 +831,7 @@ module ApplicationHelper
       :omit_delete => true, 
       :omit_edit => true, 
       :hide_component_name => true,
-      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{TOP_LEVEL_CONTAINER_NAME}")
     }
     options.update(opts)
     capture_haml do
@@ -843,7 +843,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat options[:print_link]
           haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{TOP_LEVEL_CONTAINER_NAME}")
           haml_concat " | "
           haml_concat report_link_for(offering, 'report', 'Report')
           # haml_concat " | "
