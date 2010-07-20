@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100702164051) do
+ActiveRecord::Schema.define(:version => 20100719175651) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -768,13 +768,14 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1951,13 +1952,14 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
