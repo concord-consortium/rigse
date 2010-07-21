@@ -23,8 +23,22 @@ class SchoolImporter
     importer = self.new(filename)
     importer.read_file
     importer.parse_data
+    self.title_case
   end
+  
+  def self.title_case
+    entities = Portal::School.all
+    entities = entities + Portal::District.all
 
+    entities.each do |e|
+      e.name = e.name.titlecase.strip
+      e.save
+    end
+    entities.map! { |e| e.name }
+    entities.sort.each { |e| puts e }
+    nil
+  end
+  
   def initialize(csv_filename=DEFAULT_FILENAME)
     self.filename = csv_filename
     self.schools = {}
@@ -61,7 +75,7 @@ class SchoolImporter
   end
   
   def district_for(row)
-    district_name = row[:district_name]
+    district_name = row[:district_name].titlecase.strip
     cached_district = self.districts[:district_name]
     if cached_district
       log("District cache hit")
@@ -85,7 +99,7 @@ class SchoolImporter
   end
 
   def school_for(row)
-    school_name = row[:school_name]
+    school_name = row[:school_name].titlecase.strip
     cached_school = self.schools[school_name]
     if cached_school
       log("School Cache hit for #{school_name}")
