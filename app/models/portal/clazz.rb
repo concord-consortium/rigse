@@ -21,8 +21,7 @@ class Portal::Clazz < ActiveRecord::Base
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
-  #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
-  include PortalChangeable
+  include Changeable
   
   # String constants for error messages -- Cantina-CMH 6/2/10
   ERROR_UNAUTHORIZED = "You are not allowed to modify this class."

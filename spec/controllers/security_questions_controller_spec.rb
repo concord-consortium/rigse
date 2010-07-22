@@ -63,7 +63,7 @@ describe SecurityQuestionsController do
     end
     
     it "does not accept invalid question values" do
-      SecurityQuestion.should_receive(:errors_for_questions_list!).and_return("Wicked bad errors!")
+      SecurityQuestion.should_receive(:errors_for_questions_list!).and_return(["Wicked bad errors!"])
       
       put :update, @params_for_update
       

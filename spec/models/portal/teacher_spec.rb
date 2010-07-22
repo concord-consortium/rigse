@@ -24,8 +24,10 @@ describe Portal::Teacher do
     @virtual_teacher.clazzes[0].should be_virtual
   end
   
-  it "teachers with real clazzes shouldn't be able to change them" do
-    @nces_teacher.clazzes[0].should_not be_changeable(@nces_teacher)
+  # new policy: Teachers CAN change their real clazzes
+  # TODO: If we want to lock classes we need to implement a different mechanism
+  it "teachers with real clazzes should be able to change them" do
+    @nces_teacher.clazzes[0].should be_changeable(@nces_teacher)
   end
   
   it "should support virtual teachers" do

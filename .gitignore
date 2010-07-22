@@ -9,6 +9,7 @@ coverage
 rinet/**/*
 db/*.sqlite3
 db/*.sql
+db/*.sql.gz
 config/database.yml
 config/glassfish.yml
 config/sds.yml

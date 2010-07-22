@@ -361,6 +361,16 @@ module ApplicationHelper
       :onclick => "show_mac_alert($('launch_warning'),false);")      
   end
 
+  def teacher_preview_button_for(component)
+    name = component.name
+    url_params = current_user.extra_params
+    url_params[:teacher_mode] = true
+    url = polymorphic_url(component, :format => :jnlp, :params => url_params)
+    link_button("teacher_preview.png",  url, 
+      :title => "Preview the #{component.class.display_name} '#{name}' as a Teacher. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+      :onclick => "show_mac_alert($('launch_warning'),false);")      
+  end
+
   def preview_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
@@ -1104,9 +1114,6 @@ module ApplicationHelper
     Investigation.search_list(options)
   end
   
-  def students_in_class(all_students)
-    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
-  end
 
 #            Welcome
 #            = "#{current_user.name}."

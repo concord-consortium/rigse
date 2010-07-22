@@ -1,5 +1,6 @@
-dom_id = dom_id_for(@portal_student_clazz)
-safe_js(page,dom_id) do
-  page.remove dom_id
+
+safe_js(page,@dom_id) do
+  page.remove @dom_id
+  page.replace 'student_add_dropdown', student_add_dropdown(@clazz)
 end
 

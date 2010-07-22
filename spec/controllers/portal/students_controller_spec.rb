@@ -62,8 +62,8 @@ describe Portal::StudentsController do
       Portal::Student.count(:all).should == current_student_count + 1
     end
     
-    it "does not create a user or a student when given invalid parameters" do
-      @params_for_creation[:user][:password] = "wrong"
+    it "does not create a user or a student when given incorrect password_confirmation" do
+      @params_for_creation[:user][:password_confirmation] = "wrong"
       
       current_user_count = User.count(:all)
       current_student_count = Portal::Student.count(:all)
@@ -73,6 +73,19 @@ describe Portal::StudentsController do
       User.count(:all).should == current_user_count
       Portal::Student.count(:all).should == current_student_count
     end
+    
+    it "does not create a user or a student when given an invalid classword" do
+      @params_for_creation[:clazz][:class_word] = "wrong"
+      
+      current_user_count = User.count(:all)
+      current_student_count = Portal::Student.count(:all)
+      
+      post :create, @params_for_creation
+      
+      User.count(:all).should == current_user_count
+      Portal::Student.count(:all).should == current_student_count
+    end
+    
     
     describe "security questions" do
       before(:each) do
