@@ -85,7 +85,7 @@ production:
   site_school: Investigations-school
   help_email: investigations@concord.org
   admin_email: npaessel@concord.org
-  allow_drafts_in_assignmets: false
+  allow_drafts_in_assignments: false
   maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
