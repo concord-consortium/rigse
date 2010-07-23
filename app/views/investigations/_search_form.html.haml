@@ -9,8 +9,8 @@
       searching ...
       = image_tag "ajax-loader.gif"
 
-
-%form{ :id => 'investigation_search_form'}
+- # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
+%form{ :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
   %table{:width => "100%"}
     %tr
