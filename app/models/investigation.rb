@@ -152,11 +152,17 @@ class Investigation < ActiveRecord::Base
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
           end
-        else
+        elsif (!grade_span.empty?)
           if (options[:include_drafts])
             investigations = Investigation.like(name).with_gse.grade(grade_span)
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          end
+        else 
+          if (options[:include_drafts])
+            investigations = Investigation.like(name)
+          else
+            investigations = Investigation.published.like(name)
           end
         end
       else

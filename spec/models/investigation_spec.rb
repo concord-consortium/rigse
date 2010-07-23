@@ -61,5 +61,149 @@ describe Investigation do
       end
     end
   end
+  
+
+  describe "search_list (searching for investigations)" do
+    
+    before(:each) do
+      @bio = Factory.create( :rigse_domain,            { :name => "biology" } )
+      bio_ks = Factory.create( :rigse_knowledge_statement, { :domain => @bio     } )
+      bio_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => bio_ks })
       
+      @physics = Factory.create( :rigse_domain,            { :name => "physics"  } )
+      physics_ks = Factory.create( :rigse_knowledge_statement, { :domain => @physics  } )
+      physics_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => physics_ks })
+      
+      @seven = "7"
+      @eight = "8"
+
+      physics7  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => physics_at, :grade_span => @seven} )
+      physics8  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => physics_at, :grade_span => @eight} )
+
+      bio7      = Factory.create( :rigse_grade_span_expectation, {:assessment_target => bio_at, :grade_span => @seven} )
+      bio8      = Factory.create( :rigse_grade_span_expectation, {:assessment_target => bio_at, :grade_span => @eight} )
+
+      invs = [
+        {
+          :name                   => "grade 7 physics",
+          :grade_span_expectation => physics7
+        },
+        {
+          :name                   => "grade 8 physics",
+          :grade_span_expectation => physics8
+        },
+        {
+          :name                   => "grade 7 bio",
+          :grade_span_expectation => bio7
+        },
+        {
+          :name                   => "grade 8 bio",
+          :grade_span_expectation => bio8
+        },
+      ]
+      @published = []
+      @drafts = []
+      invs.each do |inv|
+        published = Factory.create(:investigation, inv)
+        published.name << " (published) "
+        published.publish!
+        published.save
+        @published << published.reload
+        draft = Factory.create(:investigation, inv)
+        draft.name << " (draft) "
+        draft.save
+        @drafts << draft.reload
+      end
+      @public_non_gse = Factory.create(:investigation, :name => "published non-gse investigation");
+      @public_non_gse.publish!
+      @public_non_gse.save
+      @public_non_gse.reload
+      @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation"); 
+    end
+    # search (including drafts):
+    # search for drafts in grade 8                # two entries
+    
+    it "should find all grade 8 phsysics investigations, including drafts" do
+      options = {
+        :grade_span => @eight,
+        :domain_id  => @physics.id,
+        :include_drafts => true
+      }
+      found = Investigation.search_list(options)
+      found.each do |inv|
+        inv.domain.should == @physics
+        inv.grade_span.should == @eight
+      end
+    end
+
+  
+    it "should find all grade phsysics investigations, including drafts" do
+      options = {
+        :domain_id  => @physics.id,
+        :include_drafts => true
+      }
+      found = Investigation.search_list(options)
+      found.each do |inv|
+        inv.domain.should == @physics
+      end
+    end
+
+    it "should find all public and draft investigations" do
+      options = {
+        :include_drafts => true
+      }
+      found = Investigation.search_list(options)
+      found.should include(*@drafts)
+      found.should include(*@published)
+    end
+
+    it "should find all public and draft NON-GSE investigations too" do
+      options = {
+        :include_drafts => true
+      }
+      found = Investigation.search_list(options)
+      found.should include(@public_non_gse)
+      found.should include(@draft_non_gse)
+    end
+    
+    it "should find only published, in grade 8 physics domain" do
+      options = {
+        :grade_span => @eight,
+        :domain_id  => @physics.id,
+        :include_drafts => false
+      }
+      found = Investigation.search_list(options)
+      found.size.should == 1
+      found.each do |inv|
+        inv.should be_public
+        inv.domain.should == @physics
+        inv.grade_span.should == @eight
+      end
+    end
+
+    it "should find only published in pysics domain" do
+      options = {
+        :domain_id  => @physics.id,
+        :include_drafts => false
+      }
+      found = Investigation.search_list(options)
+      found.should_not include(*@drafts)
+      found.each do |inv|
+        inv.should be_public
+        inv.domain.should == @physics
+      end
+    end
+    
+    it "should find all published investigations" do
+      options = {
+        :include_drafts => false
+      }
+      found = Investigation.search_list(options)
+      found.should include(*@published)
+      found.should include(@public_non_gse)
+      found.should_not include(*@drafts)
+    end
+  end 
 end
+
+

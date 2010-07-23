@@ -1,4 +1,5 @@
 - locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => ""}
+- locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
 
 = render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/search_form", :locals => locals
 .tiny (drag to your class assignments list on the top)
