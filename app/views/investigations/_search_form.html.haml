@@ -1,4 +1,6 @@
-/ requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
+- # requires: grade_span, portal_clazz_id, domain_id
+- # optional: hide_drafts_checkbox
+- # (next line is a hack, so that portal_clazz_id is defined)
 - portal_clazz_id ||= nil 
 
 .action_menu
@@ -24,5 +26,6 @@
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'drafts too: ', :class=>"right"
-        = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
+        - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
+          = label_tag :filter, 'drafts too: ', :class=>"right"
+          = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
