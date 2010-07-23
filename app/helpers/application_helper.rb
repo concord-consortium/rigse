@@ -796,7 +796,7 @@ module ApplicationHelper
   end
   
   def percent_str(count, max, precision = 1)
-    return "undefined" if max < 1
+    return "" if max < 1
     number_to_percentage(percent(count,max,precision), :precision => precision)
   end
   
