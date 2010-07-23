@@ -1,6 +1,6 @@
 --- 
 development: &development
-  theme: smartgraphs
+  theme: geniverse
   runnables_use: browser
   runnable_mime_type: run_external_html
   top_level_container_name: external_activity

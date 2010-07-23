@@ -142,4 +142,21 @@ stylesheets:
   - notes
   - data_table
   - reports
+  
+- geniverse:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+  - themes/geniverse/geniverse
+  - themes/geniverse/action_menu_tab
+  - themes/geniverse/drop_down
+  - themes/geniverse/accordion
 
