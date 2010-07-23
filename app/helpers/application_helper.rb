@@ -4,10 +4,6 @@ include Clipboard
 
 module ApplicationHelper
 
-  def top_level_container_name
-    APP_CONFIG[:top_level_container_name] || "investigation"
-  end
-  
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #
@@ -179,13 +175,12 @@ module ApplicationHelper
   end
 
   def render_top_level_container_list_partial(locals)
-    container = top_level_container_name.pluralize
-    container_sym = top_level_container_name.pluralize.to_sym
-    container_class = top_level_container_name.capitalize.constantize
-    if container_class.respond_to?(:search_list)
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.search_list(locals) }
+    if TOP_LEVEL_CONTAINER_CLASS.respond_to?(:search_list)
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+        :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.search_list(locals) }
     else
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.find(:all) }
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+        :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.find(:all) }
     end
   end
 
@@ -347,18 +342,28 @@ module ApplicationHelper
   def run_button_for(component)
     name = component.name
     users_params = current_user.extra_params
-    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
-    link_button("run.png",  url, 
-      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);") 
+    if NOT_USING_JNLPS
+      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type])      
+      link_button("preview.png",  url, :title => "Run the #{component.class.display_name}: '#{name}'.", :popup => true)
+    else
+      url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
+      link_button("preview.png",  url, 
+        :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+        :onclick => "show_mac_alert($('launch_warning'),false);")      
+    end
   end
 
   def preview_button_for(component)
     name = component.name
-    url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
-    link_button("preview.png",  url, 
-      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);")      
+    if NOT_USING_JNLPS
+      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type])      
+      link_button("preview.png",  url, :title => "Preview the #{component.class.display_name}: '#{name}'.", :popup => true)
+    else
+      url = polymorphic_url(component, :format => :jnlp)
+      link_button("preview.png",  url, 
+        :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
+        :onclick => "show_mac_alert($('launch_warning'),false);")      
+    end
   end
 
   def teacher_preview_button_for(component)
@@ -836,7 +841,7 @@ module ApplicationHelper
       :omit_delete => true, 
       :omit_edit => true, 
       :hide_component_name => true,
-      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
+      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{TOP_LEVEL_CONTAINER_NAME}")
     }
     options.update(opts)
     capture_haml do
@@ -848,7 +853,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_concat options[:print_link]
           haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{TOP_LEVEL_CONTAINER_NAME}")
           haml_concat " | "
           haml_concat report_link_for(offering, 'report', 'Report')
           # haml_concat " | "

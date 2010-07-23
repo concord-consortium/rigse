@@ -1194,12 +1194,14 @@ puts <<-HEREDOC
     rake gems:install
     RAILS_ENV=cucumber rake gems:install
     RAILS_ENV=production rake db:migrate:reset
-    RAILS_ENV=production rake rigse:setup:new_rites_app
+    RAILS_ENV=production rake app:setup:new_app
+
     
   JRuby:
     jruby -S rake gems:install
     RAILS_ENV=production jruby -S rake db:migrate:reset
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+    RAILS_ENV=production jruby -S rake app:setup:new_app
+
 
 HEREDOC
 

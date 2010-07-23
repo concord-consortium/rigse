@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :setup do
     #
     #

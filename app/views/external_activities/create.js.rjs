@@ -1,0 +1,22 @@
+page << "document.dialog.close()"
+
+safe_js(page,'section_external_activities_list') do
+  page.insert_html :bottom, 'section_external_activities_list', render(
+    :partial => 'sections/page_list_item', 
+    :locals => {:page => @page})
+    
+  page.visual_effect :highlight, 'section_external_activities_list'
+  page.sortable :section_external_activities_list, :url=> {
+    :controller => 'sections', 
+    :action => 'sort_external_activities', 
+    :params => {:id => @page.section_id}}
+end
+
+safe_js(page,'page_tabs') do
+  page.insert_html :bottom, 'page_tabs', tab_for(@page)
+  page.visual_effect :highlight, 'page_tabs'
+end
+
+# this is new, try redirecting the user to the page they just created?
+page.redirect_to(url_for @page)
+

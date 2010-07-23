@@ -1,0 +1,29 @@
+
+.page
+  -unless defined? hide_title
+    %h4=page.section ? "#{page.activity.name} : #{page.section.name} : #{page.name}" : page.name
+  .page_content
+    - page.page_elements.each do |element|
+      %div{ :id => dom_id_for(element.embeddable, :item), :class => element.changeable?(current_user) ? 'item item_selectable': 'item' }
+        = render_show_partial_for(element.embeddable)
+
+  - if teacher_mode && (should_show_teacher_notes? page)
+    .teacher_content
+      .teacher_notes
+        %h3 Teacher notes
+        %hr
+        - if page.section
+          - if should_show_teacher_note? page, :investigation
+            %h4= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} notes:"
+            .teacher_note= page.section.investigation.teacher_note_otml
+
+          - if should_show_teacher_note? page, :activity
+            %h4= "Activity notes:"
+            .teacher_note= page.section.activity.teacher_note_otml
+
+          - if should_show_teacher_note? page, :section
+            %h4= "Section notes:"
+            .teacher_note= page.section.teacher_note_otml
+          - if page.has_good_teacher_note?
+            %h4="ExternalActivity notes (#{page.name}):"
+            .teacher_note= page.teacher_note_otml

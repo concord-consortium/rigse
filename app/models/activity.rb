@@ -2,6 +2,9 @@ class Activity < ActiveRecord::Base
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
+  
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+  
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})
@@ -48,7 +51,7 @@ class Activity < ActiveRecord::Base
   
   delegate :saveable_types, :reportable_types, :to => :investigation
   
-  include Noteable # convinience methods for notes...
+  include Noteable # convenience methods for notes...
   acts_as_replicatable
   include Changeable
   include TreeNode

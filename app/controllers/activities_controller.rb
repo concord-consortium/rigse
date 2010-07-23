@@ -68,8 +68,8 @@ class ActivitiesController < ApplicationController
   def index
     @include_drafts = params[:include_drafts]
     @name = param_find(:name)
-    pagenation = params[:page]
-    if (pagenation)
+    pagination = params[:page]
+    if (pagination)
       @include_drafts = param_find(:include_drafts)
     else
       @include_drafts = param_find(:include_drafts,true)
@@ -77,7 +77,7 @@ class ActivitiesController < ApplicationController
     @activities = Activity.search_list({
       :name => @name, 
       :paginate => true, 
-      :page => pagenation
+      :page => pagination
     })
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
@@ -106,6 +106,7 @@ class ActivitiesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
+      format.run_html   { render :show, :layout => "layouts/run" }
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }            
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @activity, :teacher_mode => @teacher_mode} }

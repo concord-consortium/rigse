@@ -1,6 +1,5 @@
 --- 
 :delivery_method: :test
-:host: rigse.org
 :smtp: 
   :password: your_smtp_password
   :address: mail.rigse.org

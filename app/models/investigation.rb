@@ -79,7 +79,8 @@ class Investigation < ActiveRecord::Base
   acts_as_replicatable
 
   include Publishable
-  # for convinience (will not work in find_by_* &etc.)
+
+  # for convenience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
   
   #
@@ -112,7 +113,7 @@ class Investigation < ActiveRecord::Base
   }
 
   include Changeable
-  include Noteable # convinience methods for notes...
+  include Noteable # convenience methods for notes...
   
   self.extend SearchableModel
   @@searchable_attributes = %w{name description publication_status}
@@ -123,8 +124,7 @@ class Investigation < ActiveRecord::Base
     end
     
     def display_name
-      name = APP_CONFIG[:top_level_container_name] || "Investigation"
-      name.humanize
+      TOP_LEVEL_CONTAINER_NAME.humanize
     end
     
     def saveable_types

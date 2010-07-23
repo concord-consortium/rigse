@@ -1,0 +1,5 @@
+- locals = { :name => @name, :external_activities => @external_activities, :paginated_objects => @paginated_objects}  
+= render :partial => 'external_activities/search_form', :locals => locals         
+= observe_form 'external_activity_search_form', :url => list_filter_external_activity_url(:index=>"yes"),:before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency => 1, :update => {:success => 'offering_list'}
+#offering_list.item_collection
+  =render :partial=>"external_activities/runnable_list", :locals=> locals

@@ -38,6 +38,15 @@ class Portal::OfferingsController < ApplicationController
         end
         render 'pages/show', :layout => "layouts/run" 
       }
+
+      format.run_external_html   { 
+         if learner = setup_portal_student
+           # session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
+         else
+           # session[:put_path] = nil
+         end
+         redirect_to(@offering.runnable.url, 'popup' => true)
+       }
       
       format.jnlp {
         # check if the user is a student in this offering's class

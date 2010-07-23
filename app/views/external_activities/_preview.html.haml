@@ -1,0 +1,3 @@
+- page.page_elements.each do |element|
+  %div{ :id => dom_id_for(element.embeddable, :item), :class => style_for_item(element) }
+    = render_show_partial_for(element.embeddable)

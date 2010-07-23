@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_many :activities
   has_many :sections
   has_many :pages
+  has_many :external_activities
   has_many :security_questions
   
   has_many :data_collectors, :class_name => 'Embeddable::DataCollector'

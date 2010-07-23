@@ -2,13 +2,13 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/sg.dev.concord.org"
-set :branch, "master"
+set :deploy_to, "/web/smartgraphs.dev.concord.org"
+set :branch, "smartgraphs-dev"
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "sg.dev.concord.org"
+set :domain, "smartgraphs.dev.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
