@@ -40,6 +40,12 @@ Next time you work on (eg has) try:
 
 and you will have only the gems you configured for has.
 
+Another super cool thing you can do is create a ".rvmrc" file at the top of your project
+the file can have just one line:
+<pre><code>rvm use 1.8.7@has</pre></code>
+
+From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
+
 h4. GIT
 
 <pre><code>
@@ -612,15 +618,27 @@ load times and saves you bandwidth.
 
 h2. Routing
 
-
 h2. Application Settings
 
-h3. Settings YAML
+
+
+h2. Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site name, url and admin email are all used
 in the RESTful Auth mailers, so you don't need to worry about editing them.
 
 h3. Database YAML
+
+
+h2. Technical debt.
+
+Here is a brief list of things which need to be looked into:
+
+* the embeddables should be dryed up with some mixin / super class.
+* not all embeddables are using send_update_events, which is causing stale pages.
+* ocassionally browser rendering gets wonky and raw html and or javascript get displayed in the page.
+* transition to unobtrusive JS.
+* send_update_events _might_ not do what we want it to do, tests should be written for it.
 
 
 h2. Misc 
