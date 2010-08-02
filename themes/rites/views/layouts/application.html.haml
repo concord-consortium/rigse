@@ -62,7 +62,7 @@
         %ul.menu_h
           / offer people a way to pop-out of iframe:
           %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'_blank'
-          %li.trail= link_to 'Help', "http://rites.concord.org/faq.html", :target=>'_blank'
+          %li.trail= link_to 'Help', "http://rites.concord.org/participants.html", :target=>'_blank'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           - if current_user.has_role?('admin', 'manager', 'researcher', 'author')
