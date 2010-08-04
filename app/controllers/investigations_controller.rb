@@ -141,6 +141,7 @@ class InvestigationsController < AuthoringController
   def show
     # display for teachers? Later we can determin via roles?    
     @teacher_mode = params[:teacher_mode]
+    @will_save_data = params[:will_save_data]
     respond_to do |format|
       format.html {
         if params['print'] 

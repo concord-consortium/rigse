@@ -5,6 +5,9 @@
     %title
       %OTCompoundDoc
         %bodyText
+          - unless (@will_save_data)
+            %h4.warning PREVIEW: NO DATA WILL BE SAVED
+
           - if teacher_only?(investigation)
             - if teacher_mode
               #content.teacher_mode
