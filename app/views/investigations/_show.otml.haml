@@ -26,7 +26,7 @@
         %cards
           - investigation.activities.each do |activity|
             - unless ((teacher_only?(activity)) && (!teacher_mode))
-              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
+              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => h(activity.name)}
                 %content
                   %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                     %cards
