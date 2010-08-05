@@ -13,9 +13,16 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
         if teacher_mode && runnable.class == Investigation 
           xml.OTInclude :href => investigation_teacher_otml_url(runnable)
         else
-          xml.OTInclude :href => polymorphic_url(runnable, :format => :otml, :teacher_mode => teacher_mode, :will_save_data => will_save_data)
+          # FIXME we need to pass options such as teacher_mode 
+          # in a a more maintainable, unified manner
+          xml.OTInclude :href => polymorphic_url(
+              runnable, 
+              :format => :otml, 
+              :teacher_mode => teacher_mode
+          )
         end
       }
+
       xml.bundles {
         # FIXME This should probably get figured out in a more dynamic way, since if anyone ever changes ot_bundles() in otml_helper.rb
         # this will need to be updated correspondingly.
