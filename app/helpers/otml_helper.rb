@@ -368,7 +368,22 @@ module OtmlHelper
     end
   end
   
+  def preview_warning_message
+    APP_CONFIG[:OTML_PREVIEW_MESSAGE] || "Your data will not be saved"
+  end
+  
+  def preview_warning(message=preview_warning_message)
+    haml_tag (:OTCompoundDoc ,{:local_id => 'preview_warning'}) do
+      if (message == false)
+        haml_tag :bodyText
+      else
+        haml_tag :bodyText do
+          haml_tag(:h4, :class => 'warning') do
+            haml_concat message
+          end
+        end
+      end
+    end
+  end
 
 end
-
-

@@ -3,8 +3,12 @@
 - content_for(:investigation) do
   %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
     %title
+      - # This message shows up when there is no learner data.
+      - # see app/helpers/otml_helper.rb
+      - preview_warning
       %OTCompoundDoc
         %bodyText
+
           - if teacher_only?(investigation)
             - if teacher_mode
               #content.teacher_mode
@@ -23,7 +27,7 @@
         %cards
           - investigation.activities.each do |activity|
             - unless ((teacher_only?(activity)) && (!teacher_mode))
-              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
+              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => h(activity.name)}
                 %content
                   %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                     %cards

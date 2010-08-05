@@ -38,4 +38,21 @@ describe InvestigationsController do
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
 
+  
+  it "should render prievew warning in OTML" do
+    get :show, :id => @investigation.id, :format => 'otml'
+    assert_select "*.warning", preview_warning_message # defined in otml_helper.rb
+  end
+
+  it "should render overlay removing warning in dynamic_otml" do
+    get :show, :id => @investigation.id, :format => 'dynamic_otml'
+    assert_select "overlays" do
+      assert_select "OTOverlay" do
+        assert_select "deltaObjectMap" do
+          assert_select "entry[key=?]", "#{@investigation.uuid}!/preview_warning"
+        end
+      end
+    end
+  end
+
 end
