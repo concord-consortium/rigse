@@ -5,6 +5,8 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
     xml.import :class => "org.concord.otrunk.OTInclude"
     xml.import :class => "org.concord.sensor.state.OTDeviceConfig"
     xml.import :class => "org.concord.sensor.state.OTInterfaceManager"
+    xml.import :class => "org.concord.otrunk.overlay.OTOverlay"
+    xml.import :class => "org.concord.otrunk.view.document.OTCompoundDoc"
   }
 
   xml.objects { 
@@ -33,10 +35,26 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
         xml.object :refid => "#{runnable.uuid}!/lab_book_bundle"
         xml.object :refid => "#{runnable.uuid}!/script_engine_bundle"
       }
+
+      # FIXME This should probably get figured out in a more dynamic way, 
+      # since if we ever start adding overlays,
+      # this will need to be updated correspondingly each time one is added.
       xml.overlays { 
-        # FIXME This should probably get figured out in a more dynamic way, since if we ever start adding overlays,
-        # this will need to be updated correspondingly each time one is added.
+        
+        # remove the "preview only warning" if user data is going be saved.
+        xml.OTOverlay {  
+          xml.deltaObjectMap {
+            xml.entry(:key => "#{runnable.uuid}!/preview_warning") {
+              xml.OTCompoundDoc {
+                xml.bodyText {
+                  ""
+                }
+              }
+            }
+          }
+        }
       }
+
       xml.root { 
         xml.object :refid => "#{runnable.uuid}!/system/root"
       }

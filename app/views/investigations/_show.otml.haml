@@ -3,6 +3,9 @@
 - content_for(:investigation) do
   %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
     %title
+      - # This message shows up when there is no learner data.
+      - # see app/helpers/otml_helper.rb
+      - preview_warning
       %OTCompoundDoc
         %bodyText
 
