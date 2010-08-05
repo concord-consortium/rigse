@@ -38,18 +38,21 @@ describe InvestigationsController do
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
 
-#          - unless (@will_save_data)
-#            %h4.warning PREVIEW: NO DATA WILL BE SAVED
-# from views/investigations/_show.html ^^^^
-#
-  it "should render prievew warning in OTML when without :will_save_data param" do
+  
+  it "should render prievew warning in OTML" do
     get :show, :id => @investigation.id, :format => 'otml'
-    assert_select "*.warning", /no data will be saved/i
+    assert_select "*.warning", preview_warning_message # defined in otml_helper.rb
   end
 
-  it "should not render the prievew warning in OTML when without :will_save_data param" do
-    get :show, :id => @investigation.id, :format => 'otml', :will_save_data=> true
-    assert_select "*.warning",:count => 0
+  it "should render overlay removing warning in dynamic_otml" do
+    get :show, :id => @investigation.id, :format => 'dynamic_otml'
+    assert_select "overlays" do
+      assert_select "OTOverlay" do
+        assert_select "deltaObjectMap" do
+          assert_select "entry[key=?]", "#{@investigation.uuid}!/preview_warning"
+        end
+      end
+    end
   end
 
 end
