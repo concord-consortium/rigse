@@ -373,7 +373,7 @@ module OtmlHelper
   end
   
   def preview_warning(message=preview_warning_message)
-    haml_tag (:OTCompoundDoc ,{:local_id => 'preview_warning'}) do
+    haml_tag(:OTCompoundDoc ,{:local_id => 'preview_warning'}) do
       if (message == false)
         haml_tag :bodyText
       else
