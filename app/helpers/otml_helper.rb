@@ -369,7 +369,7 @@ module OtmlHelper
   end
   
   def preview_warning_message
-    APP_CONFIG[:OTML_PREVIEW_MESSAGE] || "Your data will not be saved"
+    APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
   
   def preview_warning(message=preview_warning_message)
