@@ -133,7 +133,7 @@ ActionController::Routing::Routes.draw do |map|
       clazz.resources :student_clazzes
     end
     portal.resources :courses
-    portal.resources :districts
+    portal.resources :districts, :member => { :destroy => :post }
     portal.resources :grades
     portal.resources :grade_levels
     portal.resources :learners,  :member => { 
@@ -147,7 +147,7 @@ ActionController::Routing::Routes.draw do |map|
       :open_response_report => :get, 
       :multiple_choice_report => :get 
     }, :collection => { :data_test => [:get,:post] }
-    portal.resources :schools
+    portal.resources :schools, :member => { :destroy => :post }
     portal.resources :school_memberships
     portal.resources :semesters
     portal.resources :students, :collection => {
