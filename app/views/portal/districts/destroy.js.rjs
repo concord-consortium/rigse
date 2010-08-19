@@ -1,0 +1,9 @@
+container_dom_ids = [ 
+  dom_id_for(@portal_district, '')
+]
+
+container_dom_ids.each do |dom_id|
+  safe_js(page,dom_id) do
+    page.remove dom_id
+  end
+end
