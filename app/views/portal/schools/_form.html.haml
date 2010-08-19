@@ -6,7 +6,7 @@
         = f.text_field :name, :size => 60
     %p
       - field_set_tag 'NCES School' do
-        = select(:portal_school, "nces_school_id", Portal::Nces06School.all.collect {|nces| [ nces.NAME, nces.id ] }, {:include_blank => 'None'})
+        = select(:portal_school, "nces_school_id", Portal::Nces06School.all.collect {|nces| [ nces.SCHNAM, nces.id ] }, {:include_blank => 'None'})
     %p
       - field_set_tag 'District' do
         = select(:portal_school, "district_id", Portal::District.all.collect {|district| [ district.name, district.id ] }, {:include_blank => 'None'})
