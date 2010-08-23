@@ -82,7 +82,7 @@ class SchoolImporter
       return cached_district
     end
 
-    nces_district = Portal::Nces06District.find(:first, :conditions => ["NAME like ?", "#{district_name.upcase.strip}%"]);
+    nces_district = Portal::Nces06District.find(:first, :conditions => ["NAME = ?", "#{district_name.upcase.strip}"]);
     if nces_district
       district = Portal::District.find_or_create_by_nces_district(nces_district)
     else
@@ -105,7 +105,7 @@ class SchoolImporter
       log("School Cache hit for #{school_name}")
       return cached_school
     end
-    nces_school = Portal::Nces06School.find(:first, :conditions => ["SCHNAM like ?", "#{school_name.upcase.strip}%"], :select => "id, nces_district_id, NCESSCH, SCHNAM")
+    nces_school = Portal::Nces06School.find(:first, :conditions => ["SCHNAM = ?", "#{school_name.upcase.strip}"], :select => "id, nces_district_id, NCESSCH, SCHNAM")
     if nces_school
       school = Portal::School.find_or_create_by_nces_school(nces_school)
       log("found NCES school: #{school_name}")
