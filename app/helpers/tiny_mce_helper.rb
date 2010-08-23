@@ -10,6 +10,8 @@ tinyMCE.init({
     height : '100%',
     editor_deselector : "mceNoEditor",
     auto_resize : true,
+    remove_script_host : false,
+    relative_urls : false,
     content_css : "/stylesheets/app.css",
     gecko_spellcheck : true,
     theme_advanced_resizing : true,
