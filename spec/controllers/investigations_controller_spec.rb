@@ -41,7 +41,7 @@ describe InvestigationsController do
   
   it "should render prievew warning in OTML" do
     get :show, :id => @investigation.id, :format => 'otml'
-    assert_select "*.warning", preview_warning_message # defined in otml_helper.rb
+    assert_select "*.warning"
   end
 
   it "should render overlay removing warning in dynamic_otml" do

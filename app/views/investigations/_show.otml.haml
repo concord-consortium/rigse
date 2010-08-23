@@ -3,9 +3,13 @@
 - content_for(:investigation) do
   %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
     %title
-      - # This message shows up when there is no learner data.
-      - # see app/helpers/otml_helper.rb
-      - preview_warning
+      -# render a preview_warning message by default.
+      -# dynamic_otml will remove the element.
+      %OTCompoundDoc{:local_id => 'preview_warning'}
+        %bodyText
+          .warning
+            = render :partial => "preview_warning"
+          
       %OTCompoundDoc
         %bodyText
 
