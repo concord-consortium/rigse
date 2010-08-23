@@ -98,7 +98,9 @@ module TruncatableXhtml
     /(&nbsp;)+/ => " "}
     
   ## for ITSI carolyn might want everything 
-  # REPLACEMENT_MAP = {}
+  if (APP_CONFIG[:dont_sanitize_xhtml])
+    REPLACEMENT_MAP = {}
+  end
   
   ##
   ## These methods are added to the class when 
