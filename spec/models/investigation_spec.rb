@@ -1,5 +1,23 @@
 require 'spec_helper'
 
+# matchers for acts_as_list
+def be_before(expected)
+  simple_matcher("be before") do |given,matcher|
+    matcher.failure_message = "expected #{given.inspect} to be before #{expected.inspect}"
+    matcher.negative_failure_message = "expected #{given.inspect} not to be before #{expected.inspect}"
+    given.position < expected.position
+  end
+end
+
+def be_after(expected)
+  simple_matcher("be after") do |given,matcher|
+    matcher.failure_message = "expected #{given.inspect} to be after #{expected.inspect}"
+    matcher.negative_failure_message = "expected #{given.inspect} not to be after #{expected.inspect}"
+    given.position > expected.position
+  end
+end
+
+
 describe Investigation do
   before(:each) do
     @valid_attributes = {
