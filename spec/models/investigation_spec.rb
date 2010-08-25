@@ -204,6 +204,49 @@ describe Investigation do
       found.should_not include(*@drafts)
     end
   end 
+
+  describe "investigation with activities" do
+    before(:each) do
+      @inv_attributes = {
+        :name => "test investigation",
+        :description => "new decription"
+      }
+      @investigation = Investigation.create(@inv_attributes)
+    end
+
+    # We might want to have one activity in the future. 
+    it "should have no acitivities initially" do
+      @investigation.should have(0).activities
+    end
+
+    it "should have one activitiy after it is added" do
+      @investigation.activities << Factory(:activity)
+      @investigation.should have(1).activities
+    end
+
+    it "the position of the first activity should be 1" do
+      activity = Factory(:activity)
+      @investigation.activities << activity
+      @investigation.should have(1).activities
+      @investigation.save
+      activity.position.should_not be_nil
+      activity.position.should eql 1
+    end
+
+
+    it "the position of the first activity should be 1" do
+      activity_one = Factory(:activity) 
+      activity_two = Factory(:activity)
+      @investigation.activities << activity_one
+      @investigation.activities << activity_two
+      @investigation.should have(2).activities
+      activity_one.position.should eql 1
+      activity_two.position.should eql 2
+    end
+
+  end
+
+  
 end
 
 
