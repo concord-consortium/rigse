@@ -82,7 +82,17 @@ describe Investigation do
   
 
   describe "search_list (searching for investigations)" do
-    
+    before(:all) do
+      # Fake use of GSE's
+      # TODO: Test search for projects not using GSE's!
+      @enable_gses = APP_CONFIG[:use_gse]
+      APP_CONFIG[:use_gse] = true
+    end
+    after(:all) do
+      # Restore use of GSE's
+      APP_CONFIG[:use_gse] = @enable_gses
+    end
+
     before(:each) do
       @bio = Factory.create( :rigse_domain,            { :name => "biology" } )
       bio_ks = Factory.create( :rigse_knowledge_statement, { :domain => @bio     } )
