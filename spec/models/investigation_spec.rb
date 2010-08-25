@@ -262,6 +262,29 @@ describe Investigation do
       activity_two.position.should eql 2
     end
 
+    it "the activities honor the acts_as_list methods" do
+      activity_one = Factory(:activity) 
+      activity_two = Factory(:activity)
+      @investigation.activities << activity_one
+      @investigation.activities << activity_two
+      
+      @investigation.reload
+      @investigation.activities.should eql([activity_one, activity_two])
+
+      activity_one.move_to_bottom
+      @investigation.reload
+      @investigation.activities.should eql([activity_two, activity_one])
+      
+      # must reload the other activity for updated position.
+      activity_two.reload
+      activity_two.should be_before(activity_one)
+      activity_one.should be_after(activity_two)
+      
+      # more fragile, but worth checking:
+      activity_one.position.should eql 2
+      activity_two.position.should eql 1
+    end
+
   end
 
   
