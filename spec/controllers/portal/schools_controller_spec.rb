@@ -1,5 +1,4 @@
 require 'spec_helper'
-include ApplicationHelper
 
 describe Portal::SchoolsController do
   integrate_views
@@ -56,8 +55,8 @@ describe Portal::SchoolsController do
   end
   
   describe "GET edit" do
-    @school.should_receive(:changeable?).and_return(:true)
     it "assigns the requested school as @portal_school" do
+      @school.should_receive(:changeable?).and_return(:true)
       Portal::School.stub!(:find).with("37").and_return(@school)
       get :edit, :id => "37"
       assigns[:portal_school].should equal(@school)
@@ -171,8 +170,7 @@ describe Portal::SchoolsController do
 
     it "the rjs response should remove a dom elemet" do
       xhr :post, :destroy, :id => "1"
-      changed_dom_id = dom_id_for(@school,'')
-      response.should have_rjs(:remove, changed_dom_id)
+      response.should have_rjs(:remove)
     end
   end
 
