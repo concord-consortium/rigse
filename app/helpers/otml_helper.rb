@@ -372,4 +372,16 @@ module OtmlHelper
     APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
   
+  def otml_css_path(base="stylesheets",name="otml")
+    theme = APP_CONFIG[:theme]
+    file = "#{name}.css"
+    default_path = File.join(base,file)
+    if theme
+      themed_path = File.join(base,'themes', theme, file)
+      if File.exists? File.join(RAILS_ROOT,'public',themed_path)
+        return "/#{themed_path}"
+      end
+    end
+    return "/#{default_path}"
+  end
 end
