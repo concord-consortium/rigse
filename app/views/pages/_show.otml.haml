@@ -15,14 +15,16 @@
       - if teacher_only?(page)
         - if teacher_mode
           #content.teacher_mode
-            %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
+            - if page.section
+              %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
                     
             - page.page_elements.each do |element|
               .element
                 %object{ :refid => ot_refid_for(element.embeddable) }/
       - else
         #content
-          %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
+          - if page.section
+            %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
                   
           - page.page_elements.each do |element|
             .element
