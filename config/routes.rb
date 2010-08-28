@@ -147,6 +147,11 @@ ActionController::Routing::Routes.draw do |map|
       :open_response_report => :get, 
       :multiple_choice_report => :get 
     }, :collection => { :data_test => [:get,:post] }
+
+    # TODO: Totally not restful.  We should change
+    # all routes to use :delete, and then modify
+    # the delete_button in application controller
+    # to use :method => :delete
     portal.resources :schools, :member => { :destroy => :post }
     portal.resources :school_memberships
     portal.resources :semesters
