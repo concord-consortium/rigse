@@ -19,6 +19,7 @@ javascripts:
   - accordion
   - item_selectable
   - live_validation
+  - please_wait
   
 stylesheets: 
 - base: 
@@ -48,6 +49,7 @@ stylesheets:
 - rites:
   - app
   - accordion
+  - please_wait
   - window/window
   - window/rites
   - live_validation
