@@ -28,6 +28,7 @@
       
     
   %body
+    = render :partial => 'shared/please_wait'
     #launch_warning{:class=>"alert",:style=>"display: none;"}
       .padded_content
         = render :partial => "home/java_launch_info"
