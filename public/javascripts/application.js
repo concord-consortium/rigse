@@ -83,7 +83,7 @@ show_alert = function(elem, force) {
 
 show_mac_alert = function(elem, force) {
   if (is_mac()) {
-    show_alart(elem,force);
+    show_alert(elem,force);
   }
 }
 
