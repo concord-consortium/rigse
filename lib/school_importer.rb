@@ -128,7 +128,7 @@ class SchoolImporter
 
   def delete_all_others!
     save_schools = self.schools.values
-    site_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
+    site_school = Portal::School.find_by_name(APP_CONFIG[:site_school]) || Portal::School.first
     save_schools << site_school
     delete_schools = Portal::School.all - save_schools
     
