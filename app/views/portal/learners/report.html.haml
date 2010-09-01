@@ -24,9 +24,8 @@
                   %span{:style => 'font-weight: bold;'}= "Page"
                   = " &ndash; #{page.name}"
                 %div{:style => 'padding-left: 30px;'}
-                  - page_embeddables.sort_by{|a| a.position}.each do |page_embeddable|
+                  - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
                     %div
-                      - embeddable = page_embeddable.embeddable
                       - if embeddable.kind_of? Embeddable::MultipleChoice
                         = render :partial => 'portal/learners/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learner => @portal_learner}
                       - elsif embeddable.kind_of? Embeddable::OpenResponse
