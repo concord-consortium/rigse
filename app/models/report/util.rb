@@ -84,18 +84,20 @@ class Report::Util
     @saveables_by_correct = {}
     @saveables_by_answered = {}
     
-    elements = PageElement.by_investigation(@offering.runnable).student_only.by_type(Investigation.reportable_types.map{|t| t.to_s}).to_a
-    @embeddables = elements.map{|e| e.embeddable}.uniq
-    @embeddables_by_type = @embeddables.group_by{|e| e.class.to_s }
-    
     @activities = @investigation.activities.student_only
     @sections = @investigation.student_sections
     @pages = @investigation.student_pages
     
-    activity_lambda = lambda {|e| @activities.detect{|a| a.id == e.activity_id.to_i} }
-    section_lambda = lambda {|e| @sections.detect{|s| s.id == e.section_id.to_i} }
-    page_lambda = lambda {|e| @pages.detect{|p| p.id == e.page_id.to_i} }
-    @page_elements = elements.extended_group_by([activity_lambda, section_lambda, page_lambda])
+    reportables = @offering.runnable.reportable_elements
+    elements = reportables.map { |r| r[:element] }
+    @embeddables = reportables.map { |r| r[:embeddable] }
+    @embeddables_by_type = @embeddables.group_by{|e| e.class.to_s }
+    
+    
+    activity_lambda = lambda { |e| e[:activity] }
+    section_lambda  = lambda { |e| e[:section]  }
+    page_lambda     = lambda { |e| e[:page]     }
+    @page_elements = reportables.extended_group_by([activity_lambda, section_lambda, page_lambda])
     
     # learner_lambda = lambda{|s| s.learner_id }
     # embeddable_lambda = lambda{|s|
