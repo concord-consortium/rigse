@@ -297,7 +297,40 @@ describe Investigation do
 
   end
 
-  
+  describe "finding reportables within an investigation" do
+    before(:all) do
+      @investigation = Factory(:investigation)
+      @activity = Factory(:activity)
+      @section = Factory(:section)
+      @page = Factory(:page)
+      @m_choice = Factory(:multiple_choice)
+      @m_choice_b = Factory(:multiple_choice)
+      @sub_page = Factory(:page)
+      @sub_page.page_elements << Factory(:page_element, :embeddable => @m_choice)
+      @inner_page = Factory(:inner_page)
+      @inner_page.sub_pages << @sub_page
+      @page.page_elements << Factory(:page_element, :embeddable => @inner_page)
+      @page.page_elements << Factory(:page_element, :embeddable => @m_choice_b)
+      @page.page_elements << Factory(:page_element, :embeddable => Factory(:xhtml))
+      @section.pages << @page
+      @activity.sections << @section
+      @investigation.activities << @activity
+    end
+
+    it "should have 2 multiple choices" do
+      @investigation.should have(2).reportable_elements
+      @investigation.reportable_elements.each do |elm|
+        elm[:embeddable].should be_a(Embeddable::MultipleChoice)
+      end
+    end
+
+    it "should not have any xhtmls" do
+      @investigation.reportable_elements.each do |elm|
+      elm[:embeddable].should_not be_a(Embeddable::Xhtml)
+      end
+    end
+  end
+
 end
 
 
