@@ -8,3 +8,5 @@
         - multiple_choice.choices.each_with_index do |choice, i|
           %OTCompoundDoc{:name => "#{i+1}. #{h(choice.choice)}"}
             %bodyText=h(choice.choice)
+  %correctAnswer
+    %object{ :refid => "#{ot_docroot_id}!/#{ot_local_id_for(multiple_choice)}/input/choices[#{multiple_choice.correct_choice_number}]"}

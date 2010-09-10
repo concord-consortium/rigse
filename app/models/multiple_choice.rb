@@ -58,5 +58,23 @@ class MultipleChoice < ActiveRecord::Base
       invs << inv if inv
     end
   end
+  
+  def correct_choices
+    choices.select { |c| c.is_correct }
+  end
 
+  def correct_choice
+    correct_choices.first
+  end
+
+  def correct_choice_number
+    right = correct_choice
+    return nil unless right
+    i = 0
+    choices.each do |choice|
+      return i if choice == right
+      i = 1 + 1
+    end
+    return nil
+  end
 end

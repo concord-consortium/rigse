@@ -350,6 +350,26 @@
     end
   end
   
+  def top_container
+    container = nil
+    if defined? @page
+      container = @page
+      while (! container.parent.nil?)
+        container = container.parent  
+      end
+    end
+    return container
+  end
+  
+  def ot_docroot_id
+    if defined? @ot_docroot_id
+      return @ot_docroot_id
+    end
+    top = top_container
+    if (top && (top.respond_to? :uuid))
+      @ot_docroot_id = top.uuid
+    end
+  end
 
 end
 
