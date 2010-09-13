@@ -362,13 +362,14 @@
   end
   
   def ot_docroot_id
-    if defined? @ot_docroot_id
+    if (defined? @ot_docroot_id) && (@ot_docroot_id)
       return @ot_docroot_id
     end
     top = top_container
     if (top && (top.respond_to? :uuid))
       @ot_docroot_id = top.uuid
     end
+    return @ot_docroot_id
   end
 
 end
