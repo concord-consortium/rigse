@@ -2,7 +2,7 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/production/smartgraphs"
+set :deploy_to, "/web/production/smartgraphs.portal"
 set :branch, "smartgraphs-production"
 
 #############################################################
