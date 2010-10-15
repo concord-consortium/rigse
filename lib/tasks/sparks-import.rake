@@ -23,7 +23,7 @@ namespace :rigse do
   
     def git_clone_sparks_content
       puts "\ncreating local git repository of sparks-content: #{sparks_content_dir}"
-      `git clone git://github.com/gigamorph/sparks.git public/sparks-content`
+      `git clone git://github.com/concord-consortium/sparks.git public/sparks-content`
     end
     
     def git_svn_clone_sparks_content
