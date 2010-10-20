@@ -21,7 +21,7 @@ namespace :rigse do
     end
     
     desc "generate MavenJnlp resources from jnlp servers in settings.yml"
-    task :generate_maven_jnlp_resources => :generate_names_for_maven_jnlp_servers do
+    task :generate_maven_jnlp_resources => [:environment, :empty_jnlp_object_cache, :generate_names_for_maven_jnlp_servers] do
       puts <<-HEREDOC
 
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
@@ -71,7 +71,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
 
         HEREDOC
 
-        if RAILS_ENV != 'development' || wrapped_agree("Do you want to do this? (y/n) ")  
+        if RAILS_ENV != 'development' || wrapped_agree("Do you want to do this? (y/n) ")
           mj_server.create_maven_jnlp_families
         end
         puts
