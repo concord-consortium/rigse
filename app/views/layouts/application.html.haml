@@ -73,16 +73,15 @@
           %li.trail= link_to 'About', about_path
           - if current_user.has_role?('admin', 'manager', 'teacher', 'researcher', 'author', 'member')
             %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
-            
-          %ul.menu_h_right
+        %ul.menu_h_right
 
-            - if current_user.has_role?('admin', 'manager')
-              %li.trail= link_to 'Districts', portal_districts_path
-              %li.trail= link_to 'Schools', portal_schools_path
-              - if APP_CONFIG[:use_gse]
-                %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
-              %li.trail= link_to 'Users', users_path
-              %li.trail= link_to 'Projects', admin_projects_path
+          - if current_user.has_role?('admin', 'manager')
+            %li.trail= link_to 'Districts', portal_districts_path
+            %li.trail= link_to 'Schools', portal_schools_path
+            - if APP_CONFIG[:use_gse]
+              %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
+            %li.trail= link_to 'Users', users_path
+            %li.trail= link_to 'Projects', admin_projects_path
 
       #content_container      
         #left_nav.nav_menu
