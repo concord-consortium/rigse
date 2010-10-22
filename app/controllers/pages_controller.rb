@@ -92,6 +92,14 @@ class PagesController < ApplicationController
     end
   end
 
+  # GET /page/1
+  # GET /page/1.xml
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || @page.teacher_only
+
+    # TODO: make special layout for this view?
+    render :layout => 'template'
+  end
 
   # GET /page/1/preview
   # GET /page/1.xml

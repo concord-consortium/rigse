@@ -1,0 +1,6 @@
+%h3 Actvitiy Name
+= text_field_tag(:title)
+%h3 description
+= text_area_tag(:description, @page.description, :class => 'mceNoEditor')
+%p
+= render :partial=> 'pages/template_edit', :locals=>{:page => @page }

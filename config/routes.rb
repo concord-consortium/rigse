@@ -336,7 +336,8 @@ ActionController::Routing::Routes.draw do |map|
     :paste_link => :post,
     :preview => :get,
     :print => :get,
-    :duplicate => :get
+    :duplicate => :get,
+    :template_edit => :get
   }
 
 #
