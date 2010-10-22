@@ -29,6 +29,7 @@ body
 h1,h2,h3,h4,h5
   :padding-top 0.5em
   :font-weight bold
+  :color = !itsi_brown
 h2,h3,h4,h5
   :padding-bottom 0.25em
 
@@ -106,14 +107,14 @@ input[type=text]
   :border solid
   :border-width 2px
   :border-color= !input_border_color
-  :background-color= !input_color
+  //:background-color= !input_color
   &:focus
     :background-color= !input_focus_color
 textarea
   :border solid
   :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
+  //:border-color= !input_border_color
+  //:background-color= !input_color
   &:focus
     :background-color= !input_focus_color
 
@@ -126,15 +127,18 @@ input[type=password]
     :background-color= !input_focus_color
 
 #wrapper
-  +container
+  //+container
   :padding 10px 
   // that's the blueprint default...
 
 #header
-  +column(24,true)
+  //+column(24,true)
   :padding 0px
   :margin 0px
-  :height auto
+  :margin-bottom 10px
+  :clear both
+  :overflow hidden
+  //:height auto
   :background-color white
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
@@ -150,7 +154,7 @@ input[type=password]
     :color = !itsi_brown
     :background-color white
   .left_content
-    +column(24,true)
+    //+column(24,true)
     :text-align left
     :float none
     :clear none
@@ -159,7 +163,7 @@ input[type=password]
       :clear none
       :margin-right 5em
   .right_content
-    +column(24,true)
+    //+column(24,true)
     :text-align right
     
 #waiter
@@ -177,54 +181,62 @@ input[type=password]
   :border 2px solid
 
 #nav_top
-  +column(24,true)
+  //+column(24,true)
   +top_and_bottom_nav_colors
   :overflow hidden
+  :clear both
   :padding 0.5em 0px
 
 #content_container
   :display block
-  +column(24,true)
+  //+column(24,true)
   :min-height 600px
   :height auto !important
   :line-height 1.4em
   :font-size 12px
 #left_nav
   :display block
-  +column(!left_nav_columns)
+  //+column(!left_nav_columns)
   +left_nav_colors
-  :padding 0px
   :margin-bottom 0px
+  :width 18%
+  :clear left
+  :float left
 
 #content_header
   +content_area_colors
-  +column(!main_content_columns,true)
+  //+column(!main_content_columns,true)
   :padding 0px
   :margin 0px
 #main_content
   :display block
-  +column(!main_content_columns,true)
+  :margin right 20px
+  //+column(!main_content_columns,true)
+  :float right
+  :width 80%
   +content_area_colors
 
 #footer
-  +column(24,true)
+  //+column(24,true)
   +top_and_bottom_nav_colors
   :padding 0.5em 0px
   :margin 0em
+  :display block
+  :height auto
   :-moz-border-radius-bottomright .5em
   :-webkit-border-bottom-right-radius .5em
   :-moz-border-radius-bottomleft .5em
   :-webkit-border-bottom-left-radius .5em
-  
+  :clear both 
   #footer_left
-    +column(12)
+    //+column(12)
   #footer_right
     :text-align right
-    +column(12,true)
+    //+column(12,true)
     :float right
 
 #under_footer
-  +column(25,true)
+  //+column(25,true)
   :text-align center
   :padding 2px 0px
 
@@ -280,12 +292,12 @@ input[type=password]
   :height 400px
   :overflow hidden
 .tinymce_textarea
-  :width 100%
+  :width 95%
   :height 700px  
   :word-break break-all
 
 .tinymce_textarea_short
-  :width 100%
+  :width 95%
   :height 100px  
   :word-break break-all
 
@@ -309,7 +321,7 @@ input[type=password]
   li
     :list-style-type none
     :background-color = !light_green
-    :margin-top 0.5em
+    :margin-bottom 0.5em
     :padding 4px
     a
       :display block
@@ -368,7 +380,6 @@ input[type=password]
   :padding 0.5em 0em 
 
 .container_element
-  :background-color= !light_green
   :padding 2px
   :margin-bottom 5px
   &:hover
@@ -426,12 +437,14 @@ input[type=password]
     :width 0px
     :style solid
   :background-color white
+  :overflow hidden
   :cursor text
   a
     :background-color transparent
   a:hover
     :color inherit
     :background-color transparent
+  :color black
 
 .legal
   :font-size 0.8em
