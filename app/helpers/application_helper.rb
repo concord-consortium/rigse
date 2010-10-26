@@ -181,7 +181,7 @@ module ApplicationHelper
   def render_top_level_container_list_partial(locals)
     container = top_level_container_name.pluralize
     container_sym = top_level_container_name.pluralize.to_sym
-    container_class = top_level_container_name.capitalize.constantize
+    container_class = top_level_container_name.classify.constantize
     if container_class.respond_to?(:search_list)
       render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.search_list(locals) }
     else
@@ -606,31 +606,35 @@ module ApplicationHelper
   end
   
   def offering_report_summary(offering, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :hide_statistics => true }
     options.update(opts)
-    reportUtil = Report::Util.factory(offering)
-    questions = reportUtil.embeddables(:type => options[:type])
-    type_id_lambda = lambda{|s|
-      types = Investigation.reportable_types.map{|t| t.to_s.demodulize.underscore }
-      type = types.detect{|t| s.respond_to?(t) }
-      if type
-        type_id = "#{type}_id"
-        embeddable_identifier = "#{type}-#{s.send(type_id)}"
-      else
-        nil
-      end
-    }
-    answered = reportUtil.saveables_by_embeddable
-    answered = answered.select{|s,v| s.kind_of? options[:type]} if options[:type]
+    unless options[:hide_statistics]
+      reportUtil = Report::Util.factory(offering)
+      questions = reportUtil.embeddables(:type => options[:type])
+      type_id_lambda = lambda{|s|
+        types = Investigation.reportable_types.map{|t| t.to_s.demodulize.underscore }
+        type = types.detect{|t| s.respond_to?(t) }
+        if type
+          type_id = "#{type}_id"
+          embeddable_identifier = "#{type}-#{s.send(type_id)}"
+        else
+          nil
+        end
+      }
+      answered = reportUtil.saveables_by_embeddable
+      answered = answered.select{|s,v| s.kind_of? options[:type]} if options[:type]
+    end
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
         end
       end
-      haml_tag :div do
-        haml_tag :p do
-          haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+      unless options[:hide_statistics]
+        haml_tag :div do
+          haml_tag :p do
+            haml_concat("#{questions.size} questions, #{answered.size} have been answered")
+          end
         end
       end
     end

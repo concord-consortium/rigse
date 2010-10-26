@@ -140,12 +140,14 @@ ActionController::Routing::Routes.draw do |map|
       :report => :get,
       :open_response_report => :get, 
       :multiple_choice_report => :get,
+      :report_embeddable_filter => :post,
       :bundle_report => :get
     }
     portal.resources :offerings, :member => { 
       :report => :get,
       :open_response_report => :get, 
-      :multiple_choice_report => :get 
+      :multiple_choice_report => :get,
+      :report_embeddable_filter => :post
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change

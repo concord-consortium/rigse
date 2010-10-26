@@ -2,7 +2,7 @@ class Portal::OfferingsController < ApplicationController
   
   layout 'report', :only => %w{report open_response_report multiple_choice_report}
   include RestrictedPortalController
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :report_embeddable_filter]
   
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
@@ -133,7 +133,7 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
     
     respond_to do |format|
-      format.html # multiple_choice_report.html.haml
+      format.html # report.html.haml
     end
   end
   
@@ -155,6 +155,33 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def report_embeddable_filter
+    @offering = Portal::Offering.find(params[:id])
+    @report_embeddable_filter = @offering.report_embeddable_filter
+    embeddables = []
+    if params[:filter] && params[:commit] != "Show all"
+      embeddables = params[:filter].collect{|type, ids|
+        logger.info "processing #{type}: #{ids.inspect}"
+        klass = type.constantize
+        ids.collect{|id|
+          klass.find(id.to_i)
+        }
+      }.flatten.compact.uniq
+    end
+    @report_embeddable_filter.embeddables = embeddables
+    
+    redirect_url = report_portal_offering_url(@offering)
+    respond_to do |format|
+      if @report_embeddable_filter.save
+        flash[:notice] = 'Report filter was successfully updated.'
+        format.html { debugger; redirect_to redirect_url }
+        format.xml  { head :ok }
+      else
+        format.html { redirect_to redirect_url }
+        format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
   
   # GET /portal/offerings/data_test(.format)
   def data_test
