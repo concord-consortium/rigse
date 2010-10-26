@@ -14,31 +14,37 @@
       %div
         - @page_elements.keys.sort_by{|a| a.position}.each do |activity|
           - sections = @page_elements[activity]
-          %div
-            %span{:style => 'font-weight: bold;'}= "Activity"
-            = " &ndash; #{activity.name}"
-          %div{:style => 'padding-left: 10px;'}
-            - sections.keys.sort_by{|a| a.position}.each do |section|
-              - pages = sections[section]
-              %div
-                %span{:style => 'font-weight: bold;'}= "Section"
-                = " &ndash; #{section.name}"
-              %div{:style => 'padding-left: 20px;'}
-                - pages.keys.sort_by{|a| a.position}.each do |page|
-                  - page_embeddables = pages[page]
+          %div{:id => dom_id_for(activity)}
+            %div
+              %span{:style => 'font-weight: bold;'}= "Activity"
+              = selectAllNone(dom_id_for(activity))
+              = " &ndash; #{activity.name}"
+            %div{:style => 'padding-left: 10px;'}
+              - sections.keys.sort_by{|a| a.position}.each do |section|
+                - pages = sections[section]
+                %div{:id => dom_id_for(section)}
                   %div
-                    %span{:style => 'font-weight: bold;'}= "Page"
-                    = " &ndash; #{page.name}"
-                  %div{:style => 'padding-left: 30px;'}
-                    - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
-                      %div{:style => 'position: relative;'}
-                        %div{:style => 'position: absolute; left: -20px; top: 50%;'}
-                          = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered
-                        - if embeddable.kind_of? Embeddable::MultipleChoice
-                          = render :partial => 'portal/offerings/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learners => @learners}
-                        - elsif embeddable.kind_of? Embeddable::OpenResponse
-                          = render :partial => 'portal/offerings/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learners => @learners}
-                        - elsif embeddable.kind_of? Embeddable::ImageQuestion
-                          = render :partial => 'portal/offerings/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learners => @learners}
-                        - else
-                          = "Unknown type of embeddable: #{embeddable.class}"
+                    %span{:style => 'font-weight: bold;'}= "Section"
+                    = selectAllNone(dom_id_for(section))
+                    = " &ndash; #{section.name}"
+                  %div{:style => 'padding-left: 20px;'}
+                    - pages.keys.sort_by{|a| a.position}.each do |page|
+                      - page_embeddables = pages[page]
+                      %div{:id => dom_id_for(page)}
+                        %div
+                          %span{:style => 'font-weight: bold;'}= "Page"
+                          = selectAllNone(dom_id_for(page))
+                          = " &ndash; #{page.name}"
+                        %div{:style => 'padding-left: 30px;'}
+                          - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
+                            %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;'}
+                              %div{:style => 'position: absolute; left: -20px; top: 50%;'}
+                                = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered, :class => "filter_checkbox"
+                              - if embeddable.kind_of? Embeddable::MultipleChoice
+                                = render :partial => 'portal/offerings/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learners => @learners}
+                              - elsif embeddable.kind_of? Embeddable::OpenResponse
+                                = render :partial => 'portal/offerings/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learners => @learners}
+                              - elsif embeddable.kind_of? Embeddable::ImageQuestion
+                                = render :partial => 'portal/offerings/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learners => @learners}
+                              - else
+                                = "Unknown type of embeddable: #{embeddable.class}"

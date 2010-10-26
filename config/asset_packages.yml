@@ -19,6 +19,7 @@ javascripts:
   - accordion
   - item_selectable
   - live_validation
+  - report_filter
   
 stylesheets: 
 - base: 

@@ -1171,6 +1171,16 @@ module ApplicationHelper
     message
   end
   
+  def selectAllNone(parentId)
+    capture_haml do
+      haml_concat " ("
+      haml_tag :a, "all", :onClick => "selectAll('##{parentId}');", :href => '#'
+      haml_concat " | "
+      haml_tag :a, "none", :onClick => "selectNone('##{parentId}');", :href => '#'
+      haml_concat " )"
+    end
+  end
+  
   def use_contentflow
     javascript_include_tag("contentflow/contentflow.js").sub(/></, " load='white' ><")
   end
