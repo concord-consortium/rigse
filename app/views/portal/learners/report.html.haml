@@ -1,49 +1,8 @@
-%div{:id => dom_id_for(@portal_learner, :report), :class => 'item'}
+- content_for :report_title do
   - section = (@portal_learner.offering.clazz.section && @portal_learner.offering.clazz.section.length > 0) ? @portal_learner.offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
-  - @filtered = @portal_learner.offering.report_embeddable_filter && @portal_learner.offering.report_embeddable_filter.embeddables.size > 0
-  - form_for :report_embeddable_filter, :url => report_embeddable_filter_portal_offering_url(@portal_learner.offering) do |filter_form|
-    %h3
-      = "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
-      = filter_form.submit "Show all", :disabled => !@filtered
-      = filter_form.submit "Show selected"
-    %div{:id => dom_id_for(@portal_learner.offering, :details), :class => 'content'}
-      %div{:style => 'font-weight: bold'}
-        = learner_report_summary(@portal_learner)
-      %div{:id => dom_id_for(@portal_learner.offering, :content)}
-        - @page_elements.keys.sort_by{|a| a.position}.each do |activity|
-          - sections = @page_elements[activity]
-          %div{:id => dom_id_for(activity)}
-            %div{:id => dom_id_for(activity, :name)}
-              %span{:style => 'font-weight: bold;'}= "Activity"
-              = selectAllNone(dom_id_for(activity))
-              = " &ndash; #{activity.name}"
-            %div{:id => dom_id_for(activity, :content), :style => 'padding-left: 10px;'}
-              - sections.keys.sort_by{|a| a.position}.each do |section|
-                - pages = sections[section]
-                %div{:id => dom_id_for(section)}
-                  %div{:id => dom_id_for(section, :name)}
-                    %span{:style => 'font-weight: bold;'}= "Section"
-                    = selectAllNone(dom_id_for(section))
-                    = " &ndash; #{section.name}"
-                  %div{:id => dom_id_for(section, :content), :style => 'padding-left: 20px;'}
-                    - pages.keys.sort_by{|a| a.position}.each do |page|
-                      - page_embeddables = pages[page]
-                      %div{:id => dom_id_for(page)}
-                        %div{:id => dom_id_for(page, :name)}
-                          %span{:style => 'font-weight: bold;'}= "Page"
-                          = selectAllNone(dom_id_for(page))
-                          = " &ndash; #{page.name}"
-                        %div{:id => dom_id_for(page, :content), :style => 'padding-left: 30px;'}
-                          - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
-                            %div{:style => 'position: relative;'}
-                              %div{:style => 'position: absolute; left: -20px; top: 50%;'}
-                                = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered, :class => "filter_checkbox"
-                              - if embeddable.kind_of? Embeddable::MultipleChoice
-                                = render :partial => 'portal/learners/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learner => @portal_learner}
-                              - elsif embeddable.kind_of? Embeddable::OpenResponse
-                                = render :partial => 'portal/learners/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learner => @portal_learner}
-                              - elsif embeddable.kind_of? Embeddable::ImageQuestion
-                                = render :partial => 'portal/learners/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learner => @portal_learner}
-                              - else
-                                = "Unknown type of embeddable: #{embeddable.class}"
+  = "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
+- content_for :report_summary do
+  = learner_report_summary(@portal_learner)
+
+= render :partial => '/portal/reports/report', :locals => {:report_context => @portal_learner, :offering => @portal_learner.offering, :learners => @portal_learner, :page_elements => @page_elements}
