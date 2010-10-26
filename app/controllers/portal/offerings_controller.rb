@@ -174,10 +174,10 @@ class Portal::OfferingsController < ApplicationController
     respond_to do |format|
       if @report_embeddable_filter.save
         flash[:notice] = 'Report filter was successfully updated.'
-        format.html { debugger; redirect_to redirect_url }
+        format.html { redirect_to :back }
         format.xml  { head :ok }
       else
-        format.html { redirect_to redirect_url }
+        format.html { redirect_to :back }
         format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
       end
     end
