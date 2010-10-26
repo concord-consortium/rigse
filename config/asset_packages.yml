@@ -33,6 +33,18 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  
+- print:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
 
 - default:
   - app
