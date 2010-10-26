@@ -6,8 +6,8 @@
   - form_for :report_embeddable_filter, :url => report_embeddable_filter_portal_offering_url(@offering) do |filter_form|
     %h3
       = "Report for: #{@offering.clazz.name} #{section}"
-      = filter_form.submit "Show all", :disabled => !@filtered
-      = filter_form.submit "Show selected"
+      = filter_form.submit "Show all", :disabled => !@filtered, :class => 'filter_selection_control'
+      = filter_form.submit "Show selected", :class => 'filter_selection_control'
     %div{:id => dom_id_for(@offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold'}
         = offering_report_summary(@offering)

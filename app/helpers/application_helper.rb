@@ -1173,11 +1173,13 @@ module ApplicationHelper
   
   def selectAllNone(parentId)
     capture_haml do
-      haml_concat " ("
-      haml_tag :a, "all", :onClick => "selectAll('##{parentId}');", :href => '#'
-      haml_concat " | "
-      haml_tag :a, "none", :onClick => "selectNone('##{parentId}');", :href => '#'
-      haml_concat " )"
+      haml_tag :span, :class => 'filter_selection_control' do
+        haml_concat " ("
+        haml_tag :a, "all", :onClick => "selectAll('##{parentId}');", :href => '#'
+        haml_concat " | "
+        haml_tag :a, "none", :onClick => "selectNone('##{parentId}');", :href => '#'
+        haml_concat " )"
+      end
     end
   end
   
