@@ -734,7 +734,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_header_left'
       end
       haml_tag(:div) {
-        haml_tag(:div, :style => 'background-color: white; border: 1px dotted black;') {
+        haml_tag(:div, :class => 'item') {
           haml_concat(multiple_choice.prompt)
         }
         haml_tag(:div) {

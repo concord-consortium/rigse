@@ -76,23 +76,21 @@
   :display inline-block
   
 @media print
-  .filter_checkbox
+  .filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer
     :display none
-    
-  .filter_selection_control
-    :display none
-    
-  .print_button
-    :display none
-
   .report_embeddable
+    :overflow visible
+    :page-break-after auto
+    :page-break-inside auto
+    .item
+      :border none
     .ContentFlow
       :display none
-      
     .accordion_container
-      :page-break-inside avoid
-      :overflow visible
-  
+      :overflow auto
+      :page-break-inside auto
       .accordion_content
-        :page-break-inside avoid
         :overflow visible
+        :page-break-inside auto
+  #wrapper
+    :overflow visible

@@ -73,20 +73,23 @@
   display: inline-block; }
 
 @media print {
-  .filter_checkbox {
+  .filter_checkbox, .filter_selection_control, .print_control, #header, #footer, #under_footer {
     display: none; }
 
-  .filter_selection_control {
-    display: none; }
+  .report_embeddable {
+    overflow: visible;
+    page-break-after: auto;
+    page-break-inside: auto; }
+    .report_embeddable .item {
+      border: none; }
+    .report_embeddable .ContentFlow {
+      display: none; }
+    .report_embeddable .accordion_container {
+      overflow: auto;
+      page-break-inside: auto; }
+      .report_embeddable .accordion_container .accordion_content {
+        overflow: visible;
+        page-break-inside: auto; }
 
-  .print_button {
-    display: none; }
-
-  .report_embeddable .ContentFlow {
-    display: none; }
-  .report_embeddable .accordion_container {
-    page-break-inside: avoid;
-    overflow: visible; }
-    .report_embeddable .accordion_container .accordion_content {
-      page-break-inside: avoid;
-      overflow: visible; } }
+  #wrapper {
+    overflow: visible; } }
