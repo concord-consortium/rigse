@@ -1,8 +1,8 @@
 class Portal::OfferingsController < ApplicationController
   
-  layout 'report', :only => %w{report open_response_report multiple_choice_report}
+  layout 'report', :only => %w{report open_response_report multiple_choice_report separated_report}
   include RestrictedPortalController
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :report_embeddable_filter]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
   
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
@@ -152,6 +152,18 @@ class Portal::OfferingsController < ApplicationController
 
     respond_to do |format|
       format.html # open_response_report.html.haml
+    end
+  end
+  
+  def separated_report
+    @offering = Portal::Offering.find(params[:id])
+    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+    @learners = reportUtil.learners
+    
+    @page_elements = reportUtil.page_elements
+    
+    respond_to do |format|
+      format.html # report.html.haml
     end
   end
   
