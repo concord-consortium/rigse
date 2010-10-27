@@ -1,10 +1,13 @@
 %div{:id => dom_id_for(report_context, :report), :class => 'item'}
   - @filtered = offering.report_embeddable_filter && offering.report_embeddable_filter.embeddables.size > 0
   - form_for :report_embeddable_filter, :url => report_embeddable_filter_portal_offering_url(offering) do |filter_form|
-    %h3
-      = yield :report_title
+    %h3{:class => 'inline_block'}
+      %span= yield :report_title
+    %div{:class => 'inline_block', :style => 'position: relative; top: -3px; left: 15px;'}
       = filter_form.submit "Show all", :disabled => !@filtered, :class => 'filter_selection_control'
       = filter_form.submit "Show selected", :class => 'filter_selection_control'
+    %div{:style => 'float: right;'}
+      %a{:href => 'javascript:window.print();', :style => 'font-size: 1em;'}= 'print summary'
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold'}
         = yield :report_summary
@@ -34,7 +37,7 @@
                           = " &ndash; #{page.name}"
                         %div{:style => 'padding-left: 30px;'}
                           - page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
-                            %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;'}
+                            %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;', :class => 'report_embeddable'}
                               %div{:style => 'position: absolute; left: -20px; top: 50%;'}
                                 = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered, :class => "filter_checkbox"
                               - if learners.kind_of? Array

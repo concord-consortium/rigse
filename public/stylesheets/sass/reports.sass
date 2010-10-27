@@ -56,6 +56,25 @@
   :padding-left 2px
   :text-align right
   
+.learner_response
+  :margin-top 2px
+  :padding 2px
+  :border 1px solid black
+  :width 680px
+
+.learner_response_name
+  :font-weight bold
+  :width 200px
+  :vertical-align top
+
+.learner_response_content
+  :width 460px
+  :vertical-align top
+  
+.inline_block
+  :display -moz-inline-block
+  :display inline-block
+  
 @media print
   .filter_checkbox
     :display none
@@ -65,6 +84,15 @@
     
   .print_button
     :display none
+
+  .report_embeddable
+    .ContentFlow
+      :display none
+      
+    .accordion_container
+      :page-break-inside avoid
+      :overflow visible
   
-  .ContentFlow
-    :display none
+      .accordion_content
+        :page-break-inside avoid
+        :overflow visible
