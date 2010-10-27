@@ -9,6 +9,7 @@
       :display inline
       :list-style-type none 
       :background-color= !_bg_color
+      :color !_color
       :padding 0px
         :right 10px
         
@@ -25,7 +26,7 @@
     li.selected 
       a, a:visited, a:active
         :background-color !has_dark_green
-        :color = white
+        :color = !_color
     li.label 
       :font-weight bold
 
@@ -60,12 +61,12 @@ a.rollover:hover
 
     
 .action_menu
-  :color !has_brown
-  +color_mixer(white,!has_dark_green,white)
+  +color_mixer(!has_dark_green,white,!has_dark_green)
   :font-size 11px
   :margin 0px
   :padding 3px 10px
-  :background-color = !has_dark_green
+  fieldset
+    :background-color transparent
   ul
     li
       :list-style-type none 
@@ -74,7 +75,7 @@ a.rollover:hover
   +clearfix
   .action_menu_header_left
     :float left
-    +color_mixer(white,!has_dark_green,white)
+    +color_mixer(!has_dark_green,white,!has_dark_green)
     :text-align left
     :margin 0px
     .author
@@ -89,7 +90,7 @@ a.rollover:hover
     .author
       :font-size 9px
       :font-style italic
-    +action_menu_tab(white,!has_dark_green)
+    +action_menu_tab(!has_dark_green,white,!has_dark_green)
     ul
       li
         a, a:visited, a:active
@@ -103,12 +104,12 @@ a.rollover:hover
   .action_menu_left
     :float left
     :display table-cell
-    +action_menu_tab(white,!has_dark_green)
+    +action_menu_tab(!has_dark_green,white,!has_dark_green)
     :text-align left
   .action_menu_right
     :float right
     :display table-cell
     :text-align right
-    +action_menu_tab(white,!has_dark_green)
+    +action_menu_tab(!has_dark_green,white,!has_dark_green)
   
 
