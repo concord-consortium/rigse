@@ -53,6 +53,15 @@
   padding-left: 2px;
   text-align: right; }
 
+.report_embeddable .accordion_container {
+  overflow: visible; }
+  .report_embeddable .accordion_container .accordion_name {
+    display: inline-block;
+    display: -moz-inline-block;
+    width: 100%; }
+  .report_embeddable .accordion_container .accordion_content {
+    clear: both;
+    overflow: visible; }
 .report_embeddable img {
   max-width: 680px; }
 .report_embeddable .learner_response {
