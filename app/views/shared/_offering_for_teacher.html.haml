@@ -17,7 +17,8 @@
         %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
   %div{ :id => dom_id_for(offering), :class => 'offering' }
     = accordion_for(offering, menu_for_offering(offering),nil, {:show_hide_text=>"show individual reports"}) do  
-      %div{:id => dom_id_for(offering, :details), :class => 'tiny'}
+      %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
+        %div{:class => 'offering_print_all'}= report_link_for(offering, 'separated_report', 'print all users')
         %span.author= "Author: #{offering.runnable.user.name}"
         %p= "Description: #{offering.runnable.description}"
         %p= updated_time_text(offering.runnable)
