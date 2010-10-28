@@ -293,6 +293,7 @@ module ApplicationHelper
         else
           haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle'
         end
+        haml_tag :div, :class => 'empty_break'
         haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content"), :class => 'accordion_content', :style=>'display: none;' do
           if block_given?
             yield

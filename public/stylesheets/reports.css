@@ -58,10 +58,13 @@
   .report_embeddable .accordion_container .accordion_name {
     display: inline-block;
     display: -moz-inline-block;
-    width: 100%; }
+    width: 100%;
+    float: none; }
   .report_embeddable .accordion_container .accordion_content {
     clear: both;
     overflow: visible; }
+  .report_embeddable .accordion_container .empty_break {
+    clear: both; }
 .report_embeddable img {
   max-width: 680px; }
 .report_embeddable .learner_response {
