@@ -387,13 +387,15 @@ module ApplicationHelper
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
-  def report_link_for(reportable, action='report', link_text='Report ')
+  def report_link_for(reportable, action='report', link_text='Report ', title=nil)
     reportable_display_name = reportable.class.display_name.downcase
     action_string = action.gsub('_', ' ')
     name = reportable.name
     url = polymorphic_url(reportable, :action => action)
-    link_to(link_text, url, :popup => true,
-      :title => "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window.")
+    if title.nil?
+      title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
+    end
+    link_to(link_text, url, :popup => true, :title => title)
   end
 
   def run_link_for(component, as_name=nil, params={})

@@ -1,5 +1,6 @@
 - show_selection_controls = true if local_assigns[:show_selection_controls].nil?
 - show_print_controls = true if local_assigns[:show_print_controls].nil?
+- show_print_all = true if local_assigns[:show_print_all].nil?
 %div{:id => dom_id_for(report_context, :report), :class => 'item', :style => 'page-break-after: always;'}
   - @filtered = offering.report_embeddable_filter && offering.report_embeddable_filter.embeddables.size > 0
   - form_for :report_embeddable_filter, :url => report_embeddable_filter_portal_offering_url(offering) do |filter_form|
@@ -12,8 +13,9 @@
     - if show_print_controls
       %div{:style => 'float: right;', :class => 'print_control'}
         %a{:href => 'javascript:window.print();', :style => 'font-size: 1em;'}= 'print this'
-        = " | "
-        = link_to "print all users", separated_report_portal_offering_url(offering)
+        - if show_print_all
+          = " | "
+          = report_link_for(offering, 'separated_report', 'print all users')
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold'}
         = yield :report_summary
