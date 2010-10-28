@@ -47,7 +47,7 @@
 
 .accordion_container
   :display block
-  :overflow visible
+  :overflow hidden
   :width auto
   :height auto
   :background-color white
@@ -59,9 +59,9 @@
     :font-size 9px
     :clear both
   .accordion_name
-    :display inline-block
-    :display -moz-inline-block
-    :width inherit
+    :display block
+    :float left
+    :width 90%
 
   .selected
     :font-weight bold !important
@@ -78,8 +78,8 @@
     
   .accordion_content
     :display block
-    :overflow visible
-    :clear both
+    :overflow hidden
+    :clear left
     :margin 5px
     :padding 2px
     ul
