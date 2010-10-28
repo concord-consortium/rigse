@@ -90,26 +90,24 @@
     :display none
   .report_embeddable
     :overflow visible
-    :page-break-after auto
-    :page-break-inside auto
+    .learner_response
+      :page-break-inside avoid
     .item
       :border none
     .ContentFlow
       :display none
       :overflow visible
     .accordion_container
-      :overflow auto
+      :overflow visible
       :border none
       :border-bottom 2px solid black
-      :page-break-inside auto
+      :page-break-inside avoid
       .action_menu
         :overflow visible
       .accordion_toggle
         :display none
       .accordion_content
         :overflow visible
-        :page-break-inside auto
-        .learner_response
-          :page-break-inside avoid
+        
   #wrapper
     :overflow visible
