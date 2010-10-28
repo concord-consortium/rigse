@@ -26,7 +26,7 @@
     li.selected 
       a, a:visited, a:active
         :background-color !has_dark_green
-        :color = !_color
+        :color = white
     li.label 
       :font-weight bold
 
@@ -61,7 +61,7 @@ a.rollover:hover
 
     
 .action_menu
-  +color_mixer(!has_dark_green,white,!has_dark_green)
+  +color_mixer(white,!has_dark_green,white)
   :font-size 11px
   :margin 0px
   :padding 3px 10px
@@ -75,7 +75,7 @@ a.rollover:hover
   +clearfix
   .action_menu_header_left
     :float left
-    +color_mixer(!has_dark_green,white,!has_dark_green)
+    +color_mixer(white,!has_dark_green,white)
     :text-align left
     :margin 0px
     .author
@@ -90,7 +90,7 @@ a.rollover:hover
     .author
       :font-size 9px
       :font-style italic
-    +action_menu_tab(!has_dark_green,white,!has_dark_green)
+    +action_menu_tab(white,!has_dark_green)
     ul
       li
         a, a:visited, a:active
@@ -104,12 +104,12 @@ a.rollover:hover
   .action_menu_left
     :float left
     :display table-cell
-    +action_menu_tab(!has_dark_green,white,!has_dark_green)
+    +action_menu_tab(white,!has_dark_green)
     :text-align left
   .action_menu_right
     :float right
     :display table-cell
     :text-align right
-    +action_menu_tab(!has_dark_green,white,!has_dark_green)
+    +action_menu_tab(white,!has_dark_green)
   
 
