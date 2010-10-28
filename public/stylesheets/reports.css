@@ -53,20 +53,22 @@
   padding-left: 2px;
   text-align: right; }
 
-.learner_response {
+.report_embeddable img {
+  max-width: 680px; }
+.report_embeddable .learner_response {
   margin-top: 2px;
   padding: 2px;
   border: 1px solid black;
   width: 680px; }
-
-.learner_response_name {
+.report_embeddable .learner_response_name {
   font-weight: bold;
   width: 200px;
   vertical-align: top; }
-
-.learner_response_content {
+.report_embeddable .learner_response_content {
   width: 460px;
   vertical-align: top; }
+  .report_embeddable .learner_response_content img {
+    max-width: 460px; }
 
 .inline_block {
   display: -moz-inline-block;
@@ -102,6 +104,8 @@
       .report_embeddable .accordion_container .accordion_content {
         overflow: visible;
         page-break-inside: auto; }
+        .report_embeddable .accordion_container .accordion_content .learner_response {
+          page-break-inside: avoid; }
 
   #wrapper {
     overflow: visible; } }
