@@ -186,7 +186,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extractor.find_all('OTText') do |text|
       parent_id = extractor.get_parent_id(text)
       if parent_id && parent_id =~ /open_response_(\d+)/
-        process_open_response($1.to_i, extractor.get_property('text'))
+        process_open_response($1.to_i, extractor.get_property(text, 'text'))
       end
     end
   end
@@ -206,6 +206,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extractor.find_all('currentChoices') do |choice|
       choices = choice.children
       choices.each do |c|
+        next unless c.elem?
         process_multiple_choice($1.to_i) if c.has_attribute?('refid') && c.get_attribute('refid') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
         process_multiple_choice($1.to_i) if c.has_attribute?('local_id') && c.get_attribute('local_id') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
       end
