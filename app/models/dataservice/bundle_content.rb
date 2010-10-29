@@ -186,7 +186,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extractor.find_all('OTText') do |text|
       parent_id = extractor.get_parent_id(text)
       if parent_id && parent_id =~ /open_response_(\d+)/
-        process_open_response($1.to_i, extractor.get_property(text, 'text'))
+        process_open_response($1.to_i, extractor.get_text_property(text, 'text'))
       end
     end
   end
@@ -237,7 +237,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       if parent_id && parent_id =~ /image_question_(\d+)/
         saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, $1)
         answer = extractor.get_property_path(chooser, 'embeddedEntries/oTObject').first
-        src = answer.nil? ? nil : extractor.get_property(answer, 'src')
+        src = answer.nil? ? nil : extractor.get_text_property(answer, 'src')
         if src =~ @@blob_url_regexp
           blob_id = $1
           if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id

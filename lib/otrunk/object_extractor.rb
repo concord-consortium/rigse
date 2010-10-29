@@ -6,6 +6,18 @@ class Otrunk::ObjectExtractor
     @doc_id = @otml.at("otrunk[@id]").get_attribute("id")
   end
   
+  def get_text_property(element, property)
+    prop = nil
+    
+    return element.get_attribute(property) if element.has_attribute?(property)
+    
+    prop = element.children_of_type(property)
+    prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
+    
+    # we should now have nil or an element
+    return (prop.nil? ? '' : prop.inner_text.strip)
+  end
+  
   # returns an array of zero or more elements or attributes
   def get_property(element, property)
     prop = nil
