@@ -43,8 +43,6 @@ describe Dataservice::BundleContent do
   end
   
   it "should extract saveables into separate model objects" do
-    $\ = $, = $; = "<br/>\n"
-    ActiveRecord::Base.logger = Logger.new(STDOUT)
     blogger = Dataservice::BundleLogger.create!()
     student = Portal::Student.create!()
     offering = Portal::Offering.create!()
