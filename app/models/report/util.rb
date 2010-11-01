@@ -97,7 +97,7 @@ class Report::Util
     # results = @report_embeddable_filter.filter(results)
     reportables = @offering.runnable.reportable_elements
     allowed_embeddables = @report_embeddable_filter.embeddables
-    if allowed_embeddables.size > 0
+    if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
       reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
     end
     elements = reportables.map { |r| r[:element] }

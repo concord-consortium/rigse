@@ -17,8 +17,10 @@
           = " | "
           = report_link_for(offering, 'separated_report', 'print all users')
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
-      %div{:style => 'font-weight: bold'}
+      %div{:style => 'font-weight: bold', :class => 'inline-block'}
         = yield :report_summary
+      - if show_selection_controls
+        %div{:class => 'inline-block'}= selectAllNone(dom_id_for(offering, :details))
       %div
         - page_elements.keys.sort_by{|a| a.position}.each do |activity|
           - sections = page_elements[activity]
@@ -51,7 +53,7 @@
                             %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;', :class => 'report_embeddable'}
                               - if show_selection_controls
                                 %div{:style => 'position: absolute; left: -20px; top: 50%;'}
-                                  = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered, :class => "filter_checkbox"
+                                  = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered && offering.report_embeddable_filter.embeddables.include?(embeddable), :class => "filter_checkbox"
                               - report_type = "offerings"
                               - locals = {:embeddable => embeddable, :offering => offering }
                               - if learners.kind_of?(Array)

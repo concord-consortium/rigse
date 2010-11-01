@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101025175546) do
+ActiveRecord::Schema.define(:version => 20101101153846) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1783,6 +1783,7 @@ ActiveRecord::Schema.define(:version => 20101025175546) do
     t.text     "embeddables"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "ignore"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|

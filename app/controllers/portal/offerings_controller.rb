@@ -170,16 +170,20 @@ class Portal::OfferingsController < ApplicationController
   def report_embeddable_filter
     @offering = Portal::Offering.find(params[:id])
     @report_embeddable_filter = @offering.report_embeddable_filter
-    embeddables = []
-    if params[:filter] && params[:commit] != "Show all"
-      embeddables = params[:filter].collect{|type, ids|
-        logger.info "processing #{type}: #{ids.inspect}"
-        klass = type.constantize
-        ids.collect{|id|
-          klass.find(id.to_i)
-        }
-      }.flatten.compact.uniq
+
+    if params[:commit] == "Show all"
+      @report_embeddable_filter.ignore = true
+    else
+      @report_embeddable_filter.ignore = false
     end
+    
+    embeddables = params[:filter].collect{|type, ids|
+      logger.info "processing #{type}: #{ids.inspect}"
+      klass = type.constantize
+      ids.collect{|id|
+        klass.find(id.to_i)
+      }
+    }.flatten.compact.uniq
     @report_embeddable_filter.embeddables = embeddables
     
     redirect_url = report_portal_offering_url(@offering)
