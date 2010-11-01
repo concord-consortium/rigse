@@ -247,7 +247,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
           logger.error("Unknown image question object: #{answer}")
         end
       else                                                                    
-        logger.error("Missing Embeddable::ImageQuestion id: #{match_data[1]}")
+        logger.error("Missing Embeddable::ImageQuestion id: #{parent_id}")
       end
     end
   end
