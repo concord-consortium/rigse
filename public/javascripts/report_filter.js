@@ -1,7 +1,7 @@
 // Some helpers for toggling checkboxes in the learner and offering reports.
 // requires prototype
 // requires cookie.js
-/*globals $$ createCookie readCookie eraseCookie Form*/
+/*globals $$ createCookie readCookie eraseCookie Form Event*/
 
 function set(parentId, selected) {
   $$(parentId + ' input.filter_checkbox').each(function(box){ box.checked = selected; } );
@@ -58,6 +58,6 @@ function saveChangesAndPrint(parentId, formId) {
   }
 }
 
-document.observe("dom:loaded", function() {
-  autoPrint();
+Event.observe(window, 'load', function() {
+  window.setTimeout("autoPrint();", 3000);
 });
