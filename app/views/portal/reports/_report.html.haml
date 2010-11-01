@@ -15,7 +15,7 @@
         %a{:href => "javascript:saveChangesAndPrint('##{dom_id_for(offering, :details)}', '#{dom_id_for(offering, :form)}');", :style => 'font-size: 1em;'}= 'print this'
         - if show_print_all
           = " | "
-          = report_link_for(offering, 'separated_report', 'print all users')
+          = link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold', :class => 'inline-block'}
         = yield :report_summary
