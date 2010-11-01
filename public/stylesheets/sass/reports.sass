@@ -7,11 +7,6 @@
   :background-color= !answered_color
 .not_answered
   :background-color= !not_answered_color
-.correct
-  :background-color= !correct_color
-.incorrect
-  :background-color= !incorrect_color
-
 
 .table
   :width 100%
@@ -31,6 +26,10 @@
 .optionlabel
   :padding-left 10px
   :width 310px
+.optionlabel.incorrect
+  :text-decoration line-through
+.optionlabel.correct
+  :font-style oblique
 
 .optionbar
   :width 300px
@@ -44,6 +43,10 @@
   :height 100%
   :border 1px solid black
   :margin-left 1px
+.optionbarbar.correct
+  :background-color= !correct_color
+.optionbarbar.incorrect
+  :background-color= !incorrect_color
   
 .optionpercent
   :border-left 2px solid black
@@ -76,6 +79,10 @@
     :padding 2px
     :border 1px solid black
     :width 680px
+  .learner_response.correct
+    :background-color= !correct_color
+  .learner_response.incorrect
+    :background-color= !incorrect_color
 
   .learner_response_name
     :font-weight bold
@@ -87,6 +94,10 @@
     :vertical-align top
     img
       :max-width 460px
+  .learner_response_content.incorrect
+    :text-decoration line-through
+  .learner_response_content.correct
+    :font-style oblique
   
 .inline_block
   :display -moz-inline-block
@@ -96,6 +107,18 @@
   :float right
   :font-size 1.5em
   :margin-top 5px
+
+.item
+  .correct
+    :font-style oblique
+  .incorrect
+    :text-decoration line-through
+  .chosen_answer
+    :font-weight bold
+  .chosen_answer.correct
+    :background-color= !correct_color
+  .chosen_answer.incorrect
+    :background-color= !incorrect_color
   
 @media print
   .filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer

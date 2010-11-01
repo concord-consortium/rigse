@@ -756,12 +756,13 @@ module ApplicationHelper
             }
             all_choices.each_with_index do |choice,i|
               answer_count = answer_counts.has_key?(choice.choice) ? answer_counts[choice.choice] : 0
+              correctness = choice.is_correct ? "correct" : "incorrect"
               haml_tag(:div, :class => 'row') {
-                haml_tag(:div, :class => 'cell optionlabel') {
+                haml_tag(:div, :class => "cell optionlabel #{correctness}") {
                   haml_concat("#{i+1}. #{choice.choice}")
                 }
                 haml_tag(:div, :class => 'cell optionbar') {
-                  haml_tag(:div, :class => "optionbarbar #{choice.is_correct ? "correct" : "incorrect"}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "width: #{percent(answer_count, learners.size)}%;") {
+                  haml_tag(:div, :class => "optionbarbar #{correctness}", :id => "question_id_#{multiple_choice.id}_bar_graph_choice_#{choice.id}", :style => "width: #{percent(answer_count, learners.size)}%;") {
                     haml_concat("&nbsp;")
                   }
                 }

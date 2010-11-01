@@ -4,12 +4,6 @@
 .not_answered {
   background-color: #cccccc; }
 
-.correct {
-  background-color: #ddffdd; }
-
-.incorrect {
-  background-color: #ffdddd; }
-
 .table {
   width: 100%;
   display: table;
@@ -29,6 +23,12 @@
   padding-left: 10px;
   width: 310px; }
 
+.optionlabel.incorrect {
+  text-decoration: line-through; }
+
+.optionlabel.correct {
+  font-style: oblique; }
+
 .optionbar {
   width: 300px;
   padding-right: 10px;
@@ -41,6 +41,12 @@
   height: 100%;
   border: 1px solid black;
   margin-left: 1px; }
+
+.optionbarbar.correct {
+  background-color: #ddffdd; }
+
+.optionbarbar.incorrect {
+  background-color: #ffdddd; }
 
 .optionpercent {
   border-left: 2px solid black;
@@ -72,6 +78,10 @@
   padding: 2px;
   border: 1px solid black;
   width: 680px; }
+.report_embeddable .learner_response.correct {
+  background-color: #ddffdd; }
+.report_embeddable .learner_response.incorrect {
+  background-color: #ffdddd; }
 .report_embeddable .learner_response_name {
   font-weight: bold;
   width: 200px;
@@ -81,6 +91,10 @@
   vertical-align: top; }
   .report_embeddable .learner_response_content img {
     max-width: 460px; }
+.report_embeddable .learner_response_content.incorrect {
+  text-decoration: line-through; }
+.report_embeddable .learner_response_content.correct {
+  font-style: oblique; }
 
 .inline_block {
   display: -moz-inline-block;
@@ -90,6 +104,17 @@
   float: right;
   font-size: 1.5em;
   margin-top: 5px; }
+
+.item .correct {
+  font-style: oblique; }
+.item .incorrect {
+  text-decoration: line-through; }
+.item .chosen_answer {
+  font-weight: bold; }
+.item .chosen_answer.correct {
+  background-color: #ddffdd; }
+.item .chosen_answer.incorrect {
+  background-color: #ffdddd; }
 
 @media print {
   .filter_checkbox, .filter_selection_control, .print_control, #header, #footer, #under_footer {

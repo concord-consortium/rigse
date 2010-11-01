@@ -6,13 +6,11 @@
     %item{:style => 'display: block;'}
       = embeddable.prompt
     - embeddable.choices.each_with_index do |choice, i|
+      - css = choice.is_correct ? 'correct' : 'incorrect'
       - if saveable && choice.choice == saveable.answer
-        %item{:class => css_style, :style => 'display: block; font-weight: bold;'}
-          = "#{i+1}. #{choice.choice}"
-      - else
-        - css = choice.is_correct ? 'correct' : ''
-        %item{:class => css, :style => 'display: block;'}
-          = "#{i+1}. #{choice.choice}"
+        - css << " chosen_answer"
+      %item{:class => css, :style => 'display: block;'}
+        = "#{i+1}. #{choice.choice}"
     - if saveable.answer == 'not answered'
       %item{:class => 'not_answered', :style => 'font-weight: bold;'}
         = 'not answered'
