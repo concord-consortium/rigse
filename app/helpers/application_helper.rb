@@ -589,7 +589,7 @@ module ApplicationHelper
   end
   
   def learner_report_summary(learner, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :hide_statistics => true }
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :hide_statistics => true, :show_selection_controls => true }
     options.update(opts)
     unless options[:hide_statistics]
       reportUtil = Report::Util.factory(learner.offering)
@@ -600,6 +600,9 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner.offering, options)
+          if options[:show_selection_controls]
+            haml_concat selectAllNone(dom_id_for(learner.offering, :details))
+          end
         end
       end
       unless options[:hide_statistics]
@@ -613,7 +616,7 @@ module ApplicationHelper
   end
   
   def offering_report_summary(offering, opts = {})
-    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :hide_statistics => true }
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :hide_statistics => true, :show_selection_controls => true }
     options.update(opts)
     unless options[:hide_statistics]
       reportUtil = Report::Util.factory(offering)
@@ -635,6 +638,9 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(offering, options)
+          if options[:show_selection_controls]
+            haml_concat selectAllNone(dom_id_for(offering, :details))
+          end
         end
       end
       unless options[:hide_statistics]
