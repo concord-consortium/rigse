@@ -4,8 +4,8 @@ h2. Setup
 
 h3. Prerequisites
 
-Working git, ruby or jruby, and rubgems, wget
-Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
+Working git, ruby or jruby, and rubygems, wget
+Gems: capistrano, capistrano-ext, ruby-debug19 (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
 h3. Install
@@ -23,26 +23,26 @@ while you are working on this project. Here is one pattern you could use;
 
 sudo gem install rvm      # install RVM 
 rvm list known            # show all available Rubies
-rvm install 1.8.7         # install the latest 1.8.7 ruby
+rvm install 1.9.2         # install the latest 1.9.2 ruby
 rvm list                  # show locally installed Rubies
-rvm use 1.8.7             # use it
-rvm gemset create has     # make  a gemset
-rvm gemset use has        # use your gemset
+rvm use 1.9.2             # use it
+rvm gemset create investigations     # make  a gemset
+rvm gemset use investigations        # use your gemset
 gem install capistrano    # don't sudo gem install!
 gem install capistrano-ext
 gem install ruby-debug
 gem install haml
 </pre></code>
 
-Next time you work on (eg has) try:
+Next time you work on (eg investigations) try:
 
-<pre><code>rvm use 1.8.7@has</pre></code>
+<pre><code>rvm use ruby-1.8.7-p299@investigations</pre></code>
 
-and you will have only the gems you configured for has.
+and you will have only the gems you configured for investigations.
 
 Another super cool thing you can do is create a ".rvmrc" file at the top of your project
 the file can have just one line:
-<pre><code>rvm use 1.8.7@has</pre></code>
+<pre><code>rvm use ruby-1.8.7-p299@investigations</pre></code>
 
 From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
 
@@ -114,6 +114,16 @@ h3. when deploying to a new server
 
 
 _there's a bunch more that needs to go here_
+
+h3. Setting up administrative users
+
+from the command line:
+<pre><code>
+script/console
+username = User.find_by_login('username')
+username.add_role('admin')
+username.save
+</code></pre>
 
 h2. Copying the production database to a development environment
 
