@@ -28,7 +28,7 @@ class Otrunk::ObjectExtractor
     prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
     
     # we should now have nil or an element
-    return [] if prop.nil?
+    return [] if prop.nil? || prop.size == 0
     resolved_children = resolve_elements(prop.children)
     if property =~ /\[(.*)\]$/
       return [resolved_children[$1.to_i]]
@@ -109,8 +109,13 @@ class Otrunk::ObjectExtractor
   end
   
   def find_all(object_type, &block)
-    @otml.search("//#{object_type}").each do |element|
-      yield(element)
+    elements = @otml.search("//#{object_type}")
+    if block_given?
+      elements.each do |element|
+        yield(element)
+      end
+    else
+      return elements
     end
   end
   

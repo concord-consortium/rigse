@@ -173,16 +173,17 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def extract_saveables
+    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
     extractor = Otrunk::ObjectExtractor.new(self.otml)
-    learner = self.bundle_logger.learner
-    @offering_id = learner.offering.id
-    @learner_id = learner.id
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)
     extract_image_questions(extractor)
   end
   
   def extract_open_responses(extractor = Otrunk::ObjectExtractor.new(self.otml))
+    learner = self.bundle_logger.learner
+    @offering_id = learner.offering.id
+    @learner_id = learner.id
     extractor.find_all('OTText') do |text|
       parent_id = extractor.get_parent_id(text)
       if parent_id && parent_id =~ /open_response_(\d+)/
@@ -203,6 +204,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def extract_multiple_choices(extractor = Otrunk::ObjectExtractor.new(self.otml))
+    learner = self.bundle_logger.learner
+    @offering_id = learner.offering.id
+    @learner_id = learner.id
     extractor.find_all('currentChoices') do |choice|
       choices = choice.children
       choices.each do |c|
@@ -232,6 +236,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def extract_image_questions(extractor = Otrunk::ObjectExtractor.new(self.otml))
+    learner = self.bundle_logger.learner
+    @offering_id = learner.offering.id
+    @learner_id = learner.id
     extractor.find_all('OTLabbookEntryChooser') do |chooser|
       parent_id = extractor.get_parent_id(chooser)
       if parent_id && parent_id =~ /image_question_(\d+)/
