@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100702164051) do
+ActiveRecord::Schema.define(:version => 20101101215801) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -165,6 +165,49 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "diy_model_types", :force => true do |t|
+    t.string  "name"
+    t.text    "description"
+    t.string  "url"
+    t.string  "image_url"
+    t.text    "credits"
+    t.string  "otrunk_object_class"
+    t.string  "otrunk_view_class"
+    t.boolean "authorable"
+    t.integer "diy_id"
+    t.integer "user_id"
+    t.boolean "sizeable"
+    t.string  "uuid"
+  end
+
+  add_index "diy_model_types", ["diy_id"], :name => "index_diy_model_types_on_diy_id"
+  add_index "diy_model_types", ["user_id"], :name => "index_diy_model_types_on_user_id"
+
+  create_table "diy_models", :force => true do |t|
+    t.integer "user_id"
+    t.integer "diy_id"
+    t.integer "model_type_id"
+    t.string  "name"
+    t.string  "url"
+    t.string  "image_url"
+    t.boolean "public"
+    t.text    "description"
+    t.text    "instructions"
+    t.boolean "snapshot_active"
+    t.text    "credits"
+    t.string  "uuid"
+    t.string  "short_name"
+    t.integer "height"
+    t.integer "width"
+    t.integer "version"
+  end
+
+  add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
+  add_index "diy_models", ["model_type_id"], :name => "index_diy_models_on_model_type_id"
+  add_index "diy_models", ["name"], :name => "index_diy_models_on_name"
+  add_index "diy_models", ["public"], :name => "index_diy_models_on_public"
+  add_index "diy_models", ["user_id"], :name => "index_diy_models_on_user_id"
 
   create_table "embeddable_biologica_breed_offsprings", :force => true do |t|
     t.integer  "user_id"
