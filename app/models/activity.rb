@@ -69,10 +69,8 @@ class Activity < ActiveRecord::Base
     }
   }
   
-  named_scope :published, 
-  {
-    :conditions =>{:publication_status => "published"}
-  }
+  named_scope :published, :conditions => {:publication_status => "published"}
+
   
   class <<self
     def searchable_attributes
