@@ -36,6 +36,15 @@ describe Diy::Model do
       end
     end
   end
+  
+  it "should deligate otrunk_object_class and otrunk_view_class to model_type" do
+    test_case = make(@valid_attributes)
+    test_case.should be_valid
+    [:otrunk_object_class, :otrunk_view_class].each do |method|
+      @valid_model_type.should respond_to method
+      test_case.should respond_to method
+    end
+  end
 
   describe "importing objects from itisisu-diy portal" do
     before(:each) do
@@ -80,4 +89,5 @@ describe Diy::Model do
       test_case.should be_valid
     end
   end
+
 end
