@@ -3,7 +3,8 @@ class Diy::Model < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :model_type, :class_name => "Diy::ModelType"
-  
+  has_many :embeddable_models, :class_name =>"Embeddable::Diy::Model", :dependent => :destroy
+
   validates_presence_of :model_type
   validates_presence_of :diy_id
   validates_presence_of :name
@@ -13,6 +14,7 @@ class Diy::Model < ActiveRecord::Base
 
   include Changeable
   include HasImage
+  include Publishable
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description url}

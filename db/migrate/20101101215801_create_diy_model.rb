@@ -8,6 +8,7 @@ class CreateDiyModel < ActiveRecord::Migration
       t.string  :url
       t.string  :image_url
       t.boolean :public
+      t.string  :publication_status 
       t.text    :description
       t.text    :instructions
       t.boolean :snapshot_active
