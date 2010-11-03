@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101215801) do
+ActiveRecord::Schema.define(:version => 20101103134042) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -192,6 +192,7 @@ ActiveRecord::Schema.define(:version => 20101101215801) do
     t.string  "url"
     t.string  "image_url"
     t.boolean "public"
+    t.string  "publication_status"
     t.text    "description"
     t.text    "instructions"
     t.boolean "snapshot_active"
@@ -398,7 +399,10 @@ ActiveRecord::Schema.define(:version => 20101101215801) do
     t.boolean  "static"
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
+    t.boolean  "is_prototype",                             :default => false
   end
+
+  add_index "embeddable_data_collectors", ["is_prototype"], :name => "index_embeddable_data_collectors_on_is_prototype"
 
   create_table "embeddable_data_tables", :force => true do |t|
     t.integer  "user_id"
@@ -412,6 +416,28 @@ ActiveRecord::Schema.define(:version => 20101101215801) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "embeddable_diy_models", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "diy_model_id"
+    t.string   "uuid",         :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_models", ["diy_model_id"], :name => "index_embeddable_diy_models_on_diy_model_id"
+  add_index "embeddable_diy_models", ["user_id"], :name => "index_embeddable_diy_models_on_user_id"
+
+  create_table "embeddable_diy_sensors", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",           :limit => 36
+    t.integer  "prototype_id"
+    t.text     "customizations"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_sensors", ["prototype_id"], :name => "index_embeddable_diy_sensors_on_prototype_id"
 
   create_table "embeddable_drawing_tools", :force => true do |t|
     t.integer  "user_id"
