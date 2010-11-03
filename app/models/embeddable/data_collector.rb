@@ -17,8 +17,11 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
-  # validates_associated :probe_type
+  # diy_sensors is a simplified controller for 
+  # a dataCollector. 
+  has_many :diy_sensors, :as => 'prototype'
   
+  # validates_associated :probe_type
   validates_presence_of :probe_type_id
   validate :associated_probe_type_must_exist
   
@@ -28,6 +31,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
   # validates_associated :probe_type, :message => "must exist"
   
   validates_presence_of :name, :message => "can't be blank"
+  
+  # proto-type datastores are hints for how to create diy-sensors 
+  named_scope :prototypes, :conditions => {:is_prototype => true}
+
   
   
   # this could work if the finder sql was redone
