@@ -5,7 +5,7 @@ h2. Setup
 h3. Prerequisites
 
 Working git, ruby or jruby, and rubygems, wget
-Gems: capistrano, capistrano-ext, ruby-debug19 (oddly, haml too, when deploying ...)
+Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
 h3. Install
@@ -23,9 +23,9 @@ while you are working on this project. Here is one pattern you could use;
 
 sudo gem install rvm      # install RVM 
 rvm list known            # show all available Rubies
-rvm install 1.9.2         # install the latest 1.9.2 ruby
+rvm install 1.8.7         # install the latest 1.8.7 ruby
 rvm list                  # show locally installed Rubies
-rvm use 1.9.2             # use it
+rvm use 1.8.7             # use it
 rvm gemset create investigations     # make  a gemset
 rvm gemset use investigations        # use your gemset
 gem install capistrano    # don't sudo gem install!
