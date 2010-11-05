@@ -408,8 +408,119 @@ class ItsiImporter
         activity
     end
     
+    ##
+    ## NP: Import a section from the activity (NEW)
+    ##
+    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description) 
+      # this is the "standard" form, for which there are exceptions
+      #t.boolean "collectdata2_text_response"
+      #t.boolean "collectdata2_probe_active"
+      #t.boolean "collectdata2_model_active"
+      #t.integer "collectdata2_probetype_id"
+      #t.integer "collectdata2_model_id"
+      #t.boolean "collectdata2_probe_multi"
+      #t.boolean "collectdata2_drawing_response"
+      #t.boolean "collectdata2_calibration_active"
+      #t.integer "collectdata2_calibration_id"
+      section = Section.create(
+        :name => section_name,
+        :description => section_description,
+        :activity => activity)
+      page = Page.create(
+        :name => section_name,
+        :description => section_description,
+        :section => section)
+      activity.sections << section
+      methods =  %w[ 
+        text_response 
+        drawing_response 
+        model_active 
+        model_id 
+        probe_active 
+        probetype_id 
+        probe_multi 
+        calibration_active 
+        calibration_id].map { |e| e.to_sym }
+      
+      # see initializers/00_core_extensions.rb for the array modification to_hash_keys
+      methods = methods.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
+      
+      # There are some exceptions for these naming conventions:
+      if section_key == "collect_data"
+            methods[:probetype_id] = :probe_type_id
+            methods[:model_id] = :model_id
+            methods[:calibration_active] = :collectdata1_calibration_active
+            methods[:calibration_id] = :collectdata1_calibration_id
+      elsif section_key == "further"
+            methods[:calibration_active] = :furtherprobe_calibration_active
+            methods[:calibration_id] = :furtherprobe_calibration_id
+      end
 
+      # main text content for section
+      content,intentionally_blank = process_textile_content(diy_act.send(section_key.to_sym),false)
+      main_content = Embeddable::Diy::Section.create(
+          :name => section_name,
+          :content => content,
+          :has_question => (diy_act.respond_to? methods[:text_response]) && diy_act.send(methods[:text_response]))
+      main_content.pages << page
 
+      # drawing response
+      if (methods[:drawing_response] && (diy_act.respond_to? methods[:drawing_response]))
+        drawing_response = Embeddable::DrawingTool.create(
+          :name => "drawing tool",
+          :description => "drawing tool")
+        drawing_response.pages << page
+        if diy_act.send(methods[:drawing_response])
+          drawing_response.enable
+        else
+          drawing_response.disable
+        end
+      end
+
+      # model
+      if (methods[:model_active] && (diy_act.respond_to? methods[:model_active]))
+        model = Diy::Model.first
+        model_id = diy_act.seond(methods[:model_id])
+        
+        if (model_id && model_id > 0)
+          diy_model = Itsi::Model.find(model_id)
+          if diy_model
+            model = Diy::Model.from_external_portal(diy_model) 
+          end
+        end
+
+        em_model = Emmeddable::Diy::Model.create(:model => model)
+        em_model.pages << page
+        if diy_act.send(methods[:model_active])
+          em_model.enable
+        else
+          em_sensor.disable
+        end
+      end
+      
+      # probe / sensor
+      if (methods[:probetype_id] && (diy_act.respond_to? methods[:probetype_id]))
+        probe_type_id = diy_act.send(methods[:probetype_id])
+        probe_type = Probe::ProbeType.find(probe_type_id)
+        calibration = nil
+        if probe_type
+          # see if we have a clibration to work with:
+          if diy_act.send(methods[:calibration_active])
+            calibration_id = diy_act.send(methods[:calibration_id])
+            calibration = Probe::Calibration.find(calibration_id) if calibration_id
+          end
+        end
+        prototype_data_collector = Embeddable::DataCollector.prototype_by_type_and_calibration(probe_type,calibration)
+        em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector)
+        em_sensor.pages << page
+        if diy_act.send(methods[:probe_active])
+          em_sensor.enable
+        else
+          em_sensor.disable
+        end
+      end
+    end
+    
     def process_textile_content(textile_content, split_last_paragraph=false)
       doc = Hpricot(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
