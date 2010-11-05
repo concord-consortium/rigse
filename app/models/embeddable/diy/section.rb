@@ -10,8 +10,6 @@ class Embeddable::Diy::Section < Embeddable::Embeddable
     # t.timestamps
 
   @@searchable_attributes = %w{name description content}
-  
-  self.extend SearchableSection
   class <<self
     def searchable_attributes
       @@searchable_attributes
