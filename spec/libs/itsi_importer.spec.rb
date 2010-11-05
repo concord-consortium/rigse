@@ -60,4 +60,37 @@ describe ItsiImporter do
 
   end
   
+  describe "create_activity_from_itsi_activity method" do
+    def call_create_activity(act = @itsi_activity, user = @user)
+      ItsiImporter.create_activity_from_itsi_activity(act,user)
+    end
+    
+    before(:each) do
+      @itsi_activity = mock_model(Itsi::Activity,
+          :name => "fake diy activity",
+          :description => "fake diy activity")
+      @user = mock_model(User,
+          :login => "fake_user",
+          :first_name => "fake",
+          :last_name => "user",
+          :name => "fake user",
+          :add_role => true)
+    end
+
+    it "should respond to create_activity_from_itsi_activity" do
+      ItsiImporter.should respond_to :create_activity_from_itsi_activity
+    end
+
+    it "should try to create all the required sections" do
+      expected_calls = ItsiImporter::SECTIONS_MAP.size
+      ItsiImporter::SECTIONS_MAP.map{ |e| e[:key] }.each do |key|
+        @itsi_activity.should_receive(key).and_return("some text")
+        [:text_response, :drawing_response, :model_active, :probetype_id].each do |attribute|
+          attribute_key = ItsiImporter.attribute_name_for(key,attribute)
+          @itsi_activity.should_receive(:respond_to?).with(attribute_key).and_return(false)
+        end
+      end
+      call_create_activity
+    end
+  end
 end

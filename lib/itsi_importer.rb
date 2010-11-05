@@ -1,4 +1,63 @@
 class ItsiImporter
+  @@attributes = nil  
+  SECTIONS_MAP = [
+    { :key => :introduction,
+      :name => "Introduction",
+      :page_desc => "ITSI Activities start with a Discovery Question.",
+    },
+    { :key => :standards,
+      :name => "Standards",
+      :page_desc => "What standards does this ITSI Activity cover?",
+    },
+    { :key => :career_stem,
+      :name => "Career STEM Question",
+      :page_desc => "Career STEM Question",
+    },
+    { :key => :materials,
+      :name => "Materials",
+      :page_desc => "What materials does this ITSI Activity require?",
+    },
+    { :key => :safety,
+      :name => "Safety",
+      :page_desc => "Are there any safety considerations to be aware of in this ITSI Activity?",
+    },
+    { :key => :proced,
+      :name => "Procedure",
+      :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
+    },
+    { :key => :predict,
+      :name => "Prediction",
+      :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+    },
+    { :key => :collectdata,
+      :name => "Collect Data",
+      :page_desc => "The learner conducts experiments using probes and models.",
+    },
+    { :key => :collectdata2,
+      :name => "Collect Data",
+      :page_desc => "The learner conducts experiments using probes and models.",
+    },
+    { :key => :collectdata3,
+      :name => "Collect Data",
+      :page_desc => "The learner conducts experiments using probes and models.",
+    },
+    { :key => :analysis,
+      :name => "Analysis",
+      :page_desc => "How can learners reflect and analyze the experiments they just completed?",
+    },
+    { :key => :conclusion,
+      :name => "Conclusion",
+      :page_desc => "What are some reasonable conclusions a learner might come to after this ITSI Activity?",
+    },
+    { :key => :career_stem2,
+      :name => "Second Career STEM Question",
+      :page_desc => "Second Career STEM Question",
+    },
+    { :key => :further,
+      :name => "Further Activities",
+      :page_desc => "Think about any further activities a learner might want to try.",
+    }
+  ]
 
   class <<self
     
@@ -84,7 +143,7 @@ class ItsiImporter
       investigation
     end
     
-    def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
+    def create_activity_from_itsi_activity_old(itsi_activity, user, prefix="")
        @@prediction_graph = nil
         if itsi_activity.collectdata_probe_active
           @@first_probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
@@ -409,9 +468,24 @@ class ItsiImporter
     end
     
     ##
-    ## NP: Import a section from the activity (NEW)
+    ## NP: new definition of create_activity_from_itsi_activity
     ##
-    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description) 
+    def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
+      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
+      activity = Activity.create do |i|
+        i.name = name
+        i.user = user
+        i.description = itsi_activity.description
+      end
+      
+      SECTIONS_MAP.each do |section|
+        process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+      end
+    end
+
+   
+    def attributes
+      return @@attributes if @@attributes
       # this is the "standard" form, for which there are exceptions
       #t.boolean "collectdata2_text_response"
       #t.boolean "collectdata2_probe_active"
@@ -422,16 +496,7 @@ class ItsiImporter
       #t.boolean "collectdata2_drawing_response"
       #t.boolean "collectdata2_calibration_active"
       #t.integer "collectdata2_calibration_id"
-      section = Section.create(
-        :name => section_name,
-        :description => section_description,
-        :activity => activity)
-      page = Page.create(
-        :name => section_name,
-        :description => section_description,
-        :section => section)
-      activity.sections << section
-      methods =  %w[ 
+      @@attributes =  %w[ 
         text_response 
         drawing_response 
         model_active 
@@ -441,36 +506,55 @@ class ItsiImporter
         probe_multi 
         calibration_active 
         calibration_id].map { |e| e.to_sym }
-      
+      return @@attributes
+    end
+    
+    def attribute_name_for(section_key, attribute_name)
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
-      methods = methods.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
+      attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
       
       # There are some exceptions for these naming conventions:
       if section_key == "collect_data"
-            methods[:probetype_id] = :probe_type_id
-            methods[:model_id] = :model_id
-            methods[:calibration_active] = :collectdata1_calibration_active
-            methods[:calibration_id] = :collectdata1_calibration_id
+            attribs[:probetype_id] = :probe_type_id
+            attribs[:model_id] = :model_id
+            attribs[:calibration_active] = :collectdata1_calibration_active
+            attribs[:calibration_id] = :collectdata1_calibration_id
       elsif section_key == "further"
-            methods[:calibration_active] = :furtherprobe_calibration_active
-            methods[:calibration_id] = :furtherprobe_calibration_id
+            attribs[:calibration_active] = :furtherprobe_calibration_active
+            attribs[:calibration_id] = :furtherprobe_calibration_id
       end
+      return attribs[attribute_name]
+    end
 
+    ##
+    ## NP: Import a section from the activity (NEW)
+    ##
+    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description) 
+      section = Section.create(
+        :name => section_name,
+        :description => section_description,
+        :activity => activity)
+      page = Page.create(
+        :name => section_name,
+        :description => section_description,
+        :section => section)
+      activity.sections << section
+      
       # main text content for section
       content,intentionally_blank = process_textile_content(diy_act.send(section_key.to_sym),false)
       main_content = Embeddable::Diy::Section.create(
           :name => section_name,
           :content => content,
-          :has_question => (diy_act.respond_to? methods[:text_response]) && diy_act.send(methods[:text_response]))
+          :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)))
       main_content.pages << page
-
+      
       # drawing response
-      if (methods[:drawing_response] && (diy_act.respond_to? methods[:drawing_response]))
+      if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
         drawing_response = Embeddable::DrawingTool.create(
           :name => "drawing tool",
           :description => "drawing tool")
         drawing_response.pages << page
-        if diy_act.send(methods[:drawing_response])
+        if diy_act.send(attribute_name_for(section_key,:drawing_response))
           drawing_response.enable
         else
           drawing_response.disable
@@ -478,9 +562,9 @@ class ItsiImporter
       end
 
       # model
-      if (methods[:model_active] && (diy_act.respond_to? methods[:model_active]))
+      if (attribute_name_for(section_key,:model_active) && (diy_act.respond_to? attribute_name_for(section_key,:model_active)))
         model = Diy::Model.first
-        model_id = diy_act.seond(methods[:model_id])
+        model_id = diy_act.seond(attribute_name_for(section_key,:model_id))
         
         if (model_id && model_id > 0)
           diy_model = Itsi::Model.find(model_id)
@@ -491,7 +575,7 @@ class ItsiImporter
 
         em_model = Emmeddable::Diy::Model.create(:model => model)
         em_model.pages << page
-        if diy_act.send(methods[:model_active])
+        if diy_act.send(attribute_name_for(section_key,:model_active))
           em_model.enable
         else
           em_sensor.disable
@@ -499,21 +583,21 @@ class ItsiImporter
       end
       
       # probe / sensor
-      if (methods[:probetype_id] && (diy_act.respond_to? methods[:probetype_id]))
-        probe_type_id = diy_act.send(methods[:probetype_id])
+      if (attribute_name_for(section_key,:probetype_id) && (diy_act.respond_to? attribute_name_for(section_key,:probetype_id)))
+        probe_type_id = diy_act.send(attribute_name_for(section_key,:probetype_id))
         probe_type = Probe::ProbeType.find(probe_type_id)
         calibration = nil
         if probe_type
           # see if we have a clibration to work with:
-          if diy_act.send(methods[:calibration_active])
-            calibration_id = diy_act.send(methods[:calibration_id])
+          if diy_act.send(attribute_name_for(section_key,:calibration_active))
+            calibration_id = diy_act.send(attribute_name_for(section_key,:calibration_id))
             calibration = Probe::Calibration.find(calibration_id) if calibration_id
           end
         end
         prototype_data_collector = Embeddable::DataCollector.prototype_by_type_and_calibration(probe_type,calibration)
         em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector)
         em_sensor.pages << page
-        if diy_act.send(methods[:probe_active])
+        if diy_act.send(attribute_name_for(section_key,:probe_active))
           em_sensor.enable
         else
           em_sensor.disable
