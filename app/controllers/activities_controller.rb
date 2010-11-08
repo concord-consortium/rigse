@@ -151,6 +151,10 @@ class ActivitiesController < ApplicationController
       format.pdf {render :layout => false }
     end
   end
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || false
+    render :layout => 'template'
+  end
 
   # GET /pages/new
   # GET /pages/new.xml
