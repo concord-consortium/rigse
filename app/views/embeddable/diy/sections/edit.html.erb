@@ -1,0 +1,12 @@
+<h1>Editing section</h1>
+
+<% form_for(@section) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @section %> |
+<%= link_to 'Back', embeddable_sections_path %>
