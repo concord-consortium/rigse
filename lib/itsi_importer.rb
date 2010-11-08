@@ -572,7 +572,7 @@ class ItsiImporter
           end
         end
 
-        em_model = Embeddable::Diy::Model.create(:diy_model => model)
+        em_model = Embeddable::Diy::EmbeddedModel.create(:diy_model => model)
         em_model.pages << page
         if diy_act.send(attribute_name_for(section_key,:model_active))
           em_model.enable

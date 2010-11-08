@@ -3,7 +3,7 @@ class Diy::Model < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :model_type, :class_name => "Diy::ModelType"
-  has_many :embeddable_models, :class_name =>"Embeddable::Diy::Model", :foreign_key => "diy_model_id", :dependent => :destroy
+  has_many :embeddable_models, :class_name =>"Embeddable::Diy::EmbeddedModel", :foreign_key => "diy_model_id", :dependent => :destroy
 
   validates_presence_of :model_type
   validates_presence_of :diy_id
