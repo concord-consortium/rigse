@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
     embeddable.namespace(:diy) do |diy|
       diy.resources :sections, :member => { :destroy => :post }
       diy.resources :sensors, :member => { :destroy => :post }
-      diy.resources :models, :member => { :destroy => :post }
+      diy.resources :embedded_models, :member => { :destroy => :post }
     end
 
     embeddable.resources :inner_pages, :member => {
