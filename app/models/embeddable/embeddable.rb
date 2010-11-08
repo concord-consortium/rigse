@@ -1,5 +1,5 @@
 class Embeddable::Embeddable < ActiveRecord::Base
-
+  self.abstract_class=true
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
