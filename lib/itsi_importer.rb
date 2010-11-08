@@ -512,9 +512,8 @@ class ItsiImporter
     def attribute_name_for(section_key, attribute_name)
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
       attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
-      
       # There are some exceptions for these naming conventions:
-      if section_key == "collect_data"
+      if section_key.to_s == "collectdata"
             attribs[:probetype_id] = :probe_type_id
             attribs[:model_id] = :model_id
             attribs[:calibration_active] = :collectdata1_calibration_active
@@ -564,7 +563,7 @@ class ItsiImporter
       # model
       if (attribute_name_for(section_key,:model_active) && (diy_act.respond_to? attribute_name_for(section_key,:model_active)))
         model = Diy::Model.first
-        model_id = diy_act.seond(attribute_name_for(section_key,:model_id))
+        model_id = diy_act.send(attribute_name_for(section_key,:model_id))
         
         if (model_id && model_id > 0)
           diy_model = Itsi::Model.find(model_id)
@@ -573,12 +572,12 @@ class ItsiImporter
           end
         end
 
-        em_model = Emmeddable::Diy::Model.create(:model => model)
+        em_model = Embeddable::Diy::Model.create(:diy_model => model)
         em_model.pages << page
         if diy_act.send(attribute_name_for(section_key,:model_active))
           em_model.enable
         else
-          em_sensor.disable
+          em_model.disable
         end
       end
       
@@ -606,6 +605,7 @@ class ItsiImporter
     end
     
     def process_textile_content(textile_content, split_last_paragraph=false)
+      return ['',''] if textile_content.nil? || textile_content.empty?
       doc = Hpricot(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
