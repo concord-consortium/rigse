@@ -207,8 +207,7 @@ class Portal::ClazzesController < ApplicationController
   end
   
   # HACK:
-  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids 
-  # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
+  # TODO: (IMPORTANT:) This method is currenlty only for ajax requests
   def add_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
     dom_id = params[:dragged_dom_id]
@@ -221,13 +220,28 @@ class Portal::ClazzesController < ApplicationController
         @offering.save
         @portal_clazz.reload
       end
-      render :update do |page|
-        page << "var element = $('#{dom_id}');"
-        page << "element.remove();"
-        page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+      if container
+        # HACK:
+        # TODO: (IMPORTANT:) This method is currenlty only for ajax requests, and this part of it uses dom_ids 
+        # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific.
+        render :update do |page|
+          page << "var element = $('#{dom_id}');"
+          page << "element.remove();"
+          page.insert_html :top, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
+        end
+      else
+        # Assume this was called from a offfering/assigment checkbox and not by dragging and dropping
+        # Update the input DOM element that called this method with the offering.id or -1 if creating an offer failed
+        if @offering
+          render :text => @offering.id.to_s
+        else
+          render :text => "-1"
+        end
       end
     end
-    @offering.refresh_saveable_response_objects
+    if @offering 
+      @offering.refresh_saveable_response_objects
+    end
   end
   
   
@@ -245,12 +259,21 @@ class Portal::ClazzesController < ApplicationController
       @offering.destroy
       @portal_clazz.reload
     end
-    render :update do |page|
-      page << "var container = $('#{container}');"
-      page << "var element = $('#{dom_id}');"
-      page << "element.remove();"
-      page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
-    end  
+    if container
+      render :update do |page|
+        page << "var container = $('#{container}');"
+        page << "var element = $('#{dom_id}');"
+        page << "element.remove();"
+        page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
+      end
+    else
+      # Assume this was called from a remove-offfering/de-assigment checkbox and not by dragging and dropping
+      if @offering
+        render :text => "Successfully unassigned that activity from your class."
+      else
+        render :text => "<h3>Failed to unassign that activity to your class!</h3>" + " offering_id:" + offering_id.to_s + "@portal_clazz.id:" + @portal_clazz.id.to_s
+      end
+    end
   end
   
   # HACK: Add a student to a clazz

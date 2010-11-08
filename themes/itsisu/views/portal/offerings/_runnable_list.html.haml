@@ -1,4 +1,66 @@
-/ required locals: activities, portal_clazz
+/ required locals: activities, portal_clazz, is_being_edited
+/ TODO: Update the input DOM element that makes the AJAX request
+- if is_being_edited
+  :javascript
+    $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type) {
+      // TODO: remove console logging statements
+      console.log("input:",input);
+      console.log("input.parentNode.:",input.parentNode);
+      //console.log("portal_clazz_id:",portal_clazz_id);
+      //console.log("activity_id:",activity_id);
+      //console.log("offering_id:",offering_id);
+      //console.log("runnable_type:",runnable_type);
+      var ajaxUpdater;
+      var new_checked_state = input.checked;
+      //console.log("new_checked_state:",new_checked_state);
+      if(new_checked_state){
+        // User wants to make a new offering
+        // TODO: Stop updating the flash div here
+        ajaxUpdater = new Ajax.Updater('flash', 
+          '/portal/classes/' + portal_clazz_id + '/add_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // TODO: find all input elements for the same activity and update them all
+              console.log("transport.responseText",transport.responseText);
+              console.log("input",input);
+              input.setAttribute("onclick", "updateOfferings(this, "+portal_clazz_id+", "+activity_id+", "+transport.responseText+", '"+runnable_type+"')");
+              console.log("input.onclick",input.onclick);
+              // TODO: flash a success message from here
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (uncheck them)
+            // TODO: flash a failure message from here
+          }
+        );
+      } else{
+        // User wants to remove an offering
+        ajaxUpdater = new Ajax.Updater('flash', 
+          '/portal/classes/' + portal_clazz_id + '/remove_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              offering_id: offering_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // TODO: find all input elements for the same activity and update them all (uncheck them and set offering id to -1)
+              console.log("transport.responseText",transport.responseText);
+              console.log("input",input);
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (check them)
+          }
+        );
+      }
+      //console.log("ajaxUpdater:",ajaxUpdater);
+      return false;
+    };
 - paginated_objects ||= nil
 .action_menu
   .action_menu_header
@@ -15,9 +77,25 @@
 - for activity in activities
   %div{ :id => dom_id_for(activity), :class => 'runnable' }
     / = accordion_for(activity, preview_button_for(activity) + link_to_container(activity, :hide_componenent_name => true), :activity) do  
-    - assigned = (activity.offerings.select {|offer| portal_clazz.offerings.include?(offer)}.length > 0)
+    - activity_matched_offerings = activity.offerings.select {|offer| portal_clazz.offerings.include?(offer)}
+    - offering_id = -1
+    - assigned = (activity_matched_offerings.length > 0)
+    - if assigned
+      - offering_id = activity_matched_offerings[0].id
     %strong Assigned to this class?
-    %input{:type=>"checkbox",:checked => assigned,:onclick=>"updateTotalActivities(this); updateSectionActivities('highschoolphysics', this);",:value=>"#{activity.id}",:name=>"activities[]"}
+    - if is_being_edited
+      %input{:type => "checkbox",
+        :checked => assigned,
+        :disabled => !is_being_edited,
+        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{activity.id}, #{offering_id}, '#{activity.type}')",
+        :value => "#{activity.id}",
+        :name => "activity_id"}
+    - else
+      %input{:type => "checkbox",
+        :checked => assigned,
+        :disabled => !is_being_edited,
+        :value => "#{activity.id}",
+        :name => "activity_id"}
     %div.action_menu
       %div.action_menu_header_left   
         = link_to_container(activity)
