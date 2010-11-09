@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
+require 'spec_helper'
 
 describe Embeddable::Diy::Model do
   def create(attributes)
@@ -24,6 +24,8 @@ describe Embeddable::Diy::Model do
       :diy_model => @model
     }
   end
+  
+  it_should_behave_like 'an embeddable'
 
   describe "field validations" do
     it "should create a new instance given valid attributes" do

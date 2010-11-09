@@ -52,7 +52,7 @@ namespace :rigse do
     task :erase_and_import_ccp_itsi_units_to_itsi_su => :erase_itsi_imports do
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
-      ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSI')
+      ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
       puts "importing #{ccp_itsi_project.units.length} ITSI Units ..."
       ccp_itsi_project.units.each do |ccp_itsi_unit|
         ItsiImporter.create_activities_from_ccp_itsi_unit(ccp_itsi_unit, itsi_import_user,@prefix)

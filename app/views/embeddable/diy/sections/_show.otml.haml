@@ -1,0 +1,15 @@
+%OTQuestion{:local_id => ot_local_id_for(diy_section)}
+  %prompt
+    %OTCompoundDoc
+      %bodyText= diy_section.prompt
+  %input
+    %OTCompoundDoc
+      %bodyText
+        %table{:width => '90%'}
+          %tr
+            %td{:width => '5%'}
+            %td
+              %object{:refid => ot_refid_for(diy_section, :response)}
+
+%OTText{ :local_id => ot_local_id_for(diy_section, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{diy_section.name}_field"}
+  %text= h(diy_section.default_response)

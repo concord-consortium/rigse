@@ -8,6 +8,7 @@ module ApplicationHelper
     APP_CONFIG[:top_level_container_name] || "investigation"
   end
   
+  Diy::Model.first
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #

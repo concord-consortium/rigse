@@ -33,10 +33,7 @@ module Publishable
         transitions :to => :draft, :from => [:published]
       end  
 
-      named_scope :published, 
-      {
-        :conditions =>{:publication_status => "published"}
-      }
+      named_scope :published, :conditions =>{:publication_status => "published"}
       
       after_save :add_author_role_to_author
       

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101103134042) do
+ActiveRecord::Schema.define(:version => 20101103195016) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -428,6 +428,22 @@ ActiveRecord::Schema.define(:version => 20101103134042) do
   add_index "embeddable_diy_models", ["diy_model_id"], :name => "index_embeddable_diy_models_on_diy_model_id"
   add_index "embeddable_diy_models", ["user_id"], :name => "index_embeddable_diy_models_on_user_id"
 
+  create_table "embeddable_diy_sections", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "content"
+    t.text     "default_response"
+    t.boolean  "has_question"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_sections", ["has_question"], :name => "index_embeddable_diy_sections_on_has_question"
+  add_index "embeddable_diy_sections", ["name"], :name => "index_embeddable_diy_sections_on_name"
+  add_index "embeddable_diy_sections", ["uuid"], :name => "index_embeddable_diy_sections_on_uuid"
+
   create_table "embeddable_diy_sensors", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",           :limit => 36
@@ -839,6 +855,7 @@ ActiveRecord::Schema.define(:version => 20101103134042) do
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
     t.integer  "user_id"
+    t.boolean  "is_enabled",      :default => true
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"

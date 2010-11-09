@@ -92,6 +92,25 @@ class Embeddable::DataCollector < ActiveRecord::Base
     def default_probe_type
       @@default_probe_type ||= Probe::ProbeType.find_by_name('Temperature') 
     end
+
+    # find or make a prototype that matches this...
+    def prototype_by_type_and_calibration(probe_type,calibration)
+      found = nil
+      if calibration.nil?
+        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id})
+      else 
+        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id, :calibration => calibration})
+      end
+      return found if found
+      made = self.create
+      made.probe_type_id = probe_type.id
+      made.is_prototype=true
+      if calibration 
+        made.calibration_id = calibration.id
+      end
+      made.save
+      return made
+    end
   end
   
   def other_data_collectors_in_activity_scope(scope)

@@ -52,6 +52,11 @@ ActionController::Routing::Routes.draw do |map|
       biologica.resources :organisms, :member => { :destroy => :post }
       biologica.resources :worlds, :member => { :destroy => :post }
     end
+    embeddable.namespace(:diy) do |diy|
+      diy.resources :sections, :member => { :destroy => :post }
+      diy.resources :sensors, :member => { :destroy => :post }
+      diy.resources :embedded_models, :member => { :destroy => :post }
+    end
 
     embeddable.resources :inner_pages, :member => {
       :destroy => :post,

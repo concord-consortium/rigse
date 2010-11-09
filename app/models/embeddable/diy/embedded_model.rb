@@ -1,4 +1,4 @@
-class Embeddable::Diy::Model < Embeddable::Embeddable
+class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
   set_table_name "embeddable_diy_models"
   belongs_to :diy_model, :class_name => 'Diy::Model'
 
