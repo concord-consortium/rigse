@@ -1,37 +1,8 @@
-%div{:id => dom_id_for(@portal_learner, :report), :class => 'item'}
+- content_for :report_title do
   - section = (@portal_learner.offering.clazz.section && @portal_learner.offering.clazz.section.length > 0) ? @portal_learner.offering.clazz.section : nil
   - section = (section ? "(#{section})" : "")
-  %h3= "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
-  %div{:id => dom_id_for(@portal_learner.offering, :details), :class => 'content'}
-    %div{:style => 'font-weight: bold'}
-      = learner_report_summary(@portal_learner)
-    %div
-      - @page_elements.keys.sort_by{|a| a.position}.each do |activity|
-        - sections = @page_elements[activity]
-        %div
-          %span{:style => 'font-weight: bold;'}= "Activity"
-          = " &ndash; #{activity.name}"
-        %div{:style => 'padding-left: 10px;'}
-          - sections.keys.sort_by{|a| a.position}.each do |section|
-            - pages = sections[section]
-            %div
-              %span{:style => 'font-weight: bold;'}= "Section"
-              = " &ndash; #{section.name}"
-            %div{:style => 'padding-left: 20px;'}
-              - pages.keys.sort_by{|a| a.position}.each do |page|
-                - page_embeddables = pages[page]
-                %div
-                  %span{:style => 'font-weight: bold;'}= "Page"
-                  = " &ndash; #{page.name}"
-                %div{:style => 'padding-left: 30px;'}
-                  - page_embeddables.sort_by{|a| a.position}.each do |page_embeddable|
-                    %div
-                      - embeddable = page_embeddable.embeddable
-                      - if embeddable.kind_of? Embeddable::MultipleChoice
-                        = render :partial => 'portal/learners/embeddable_multiple_choice', :locals => {:multiple_choice => embeddable, :offering => @offering, :learner => @portal_learner}
-                      - elsif embeddable.kind_of? Embeddable::OpenResponse
-                        = render :partial => 'portal/learners/embeddable_open_response', :locals => {:open_response => embeddable, :offering => @offering, :learner => @portal_learner}
-                      - elsif embeddable.kind_of? Embeddable::ImageQuestion
-                        = render :partial => 'portal/learners/embeddable_image_question', :locals => {:image_question => embeddable, :offering => @offering, :learner => @portal_learner}
-                      - else
-                        = "Unknown type of embeddable: #{embeddable.class}"
+  = "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
+- content_for :report_summary do
+  = learner_report_summary(@portal_learner)
+
+= render :partial => '/portal/reports/report', :locals => {:report_context => @portal_learner, :offering => @portal_learner.offering, :learners => @portal_learner, :page_elements => @page_elements}

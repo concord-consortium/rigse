@@ -9,6 +9,7 @@
       :display inline
       :list-style-type none 
       :background-color= !_bg_color
+      :color !_color
       :padding 0px
         :right 10px
         
@@ -60,12 +61,12 @@ a.rollover:hover
 
     
 .action_menu
-  :color !has_brown
   +color_mixer(white,!has_dark_green,white)
   :font-size 11px
   :margin 0px
   :padding 3px 10px
-  :background-color = !has_dark_green
+  fieldset
+    :background-color transparent
   ul
     li
       :list-style-type none 

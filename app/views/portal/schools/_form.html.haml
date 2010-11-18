@@ -2,27 +2,14 @@
   = edit_menu_for(portal_school, f, { :omit_cancel => true })
   .content
     %p
-      %ul.menu_v
-        %li
-          District:
-
-          - if portal_school.district && (portal_school.district.respond_to? :name)
-            =h(portal_school.district.name)
-    
-        %li
-          Nces school:
-
-          - if portal_school.nces_school && (portal_school.nces_school.respond_to? :name)
-            =h(portal_school.nces_school.name)
-    
-        %li
-          Name:
-
-          =f.text_field :name 
-    
-        %li
-          Description:
-
-          =f.text_area :description 
-    
-    
+      - field_set_tag 'Name' do
+        = f.text_field :name, :size => 60
+    %p
+      - field_set_tag 'NCES School' do
+        = select(:portal_school, "nces_school_id", Portal::Nces06School.all.collect {|nces| [ nces.SCHNAM, nces.id ] }, {:include_blank => 'None'})
+    %p
+      - field_set_tag 'District' do
+        = select(:portal_school, "district_id", Portal::District.all.collect {|district| [ district.name, district.id ] }, {:include_blank => 'None'})
+    %p
+      - field_set_tag 'Description' do
+        = f.text_area :description

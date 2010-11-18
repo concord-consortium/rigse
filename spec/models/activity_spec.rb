@@ -33,5 +33,4 @@ describe Activity do
     end
   end
   
-  puts "done"
 end

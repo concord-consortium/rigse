@@ -1,10 +1,10 @@
-= accordion_for(multiple_choice, offering_details_multiple_choice(offering, multiple_choice), nil, {:show_hide_text => "show responses"}) do
+= accordion_for(embeddable, offering_details_multiple_choice(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
-    - saveable = saveable_for_learner(multiple_choice, l)
+    - saveable = saveable_for_learner(embeddable, l)
     - css_style = saveable.answered? ? 'answered' : 'not_answered'
     - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
-    %div{:id => dom_id_for(multiple_choice, :saveable, :learner, l.id), :style =>  "clear: both; float: left; margin-top: 2px; padding: 2px; border: 1px solid black; width: 680px;", :class => css_style}
-      %div{:class => css_style, :style => 'font-weight: bold; width: 200px; float: left;'}
+    %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response inline_block"}
+      %div{:class => "#{css_style} learner_response_name inline_block"}
         = l.name
-      %div{:class => css_style, :style => "width: 460px; float: left;"}
+      %div{:class => "#{css_style} learner_response_content inline_block"}
         = saveable.answer

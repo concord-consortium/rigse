@@ -1,18 +1,16 @@
-%div{:id => dom_id_for(multiple_choice, :item), :class => 'item'}
-  %div{ :id => dom_id_for(multiple_choice, :details), :class => 'content' }
-    - saveable = saveable_for_learner(multiple_choice, learner)
+%div{:id => dom_id_for(embeddable, :item), :class => 'item'}
+  %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+    - saveable = saveable_for_learner(embeddable, learner)
     - css_style = saveable.answered? ? 'answered' : 'not_answered'
     - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
     %item{:style => 'display: block;'}
-      = multiple_choice.prompt
-    - multiple_choice.choices.each_with_index do |choice, i|
+      = embeddable.prompt
+    - embeddable.choices.each_with_index do |choice, i|
+      - css = choice.is_correct ? 'correct' : 'incorrect'
       - if saveable && choice.choice == saveable.answer
-        %item{:class => css_style, :style => 'display: block; font-weight: bold;'}
-          = "#{i+1}. #{choice.choice}"
-      - else
-        - css = choice.is_correct ? 'correct' : ''
-        %item{:class => css, :style => 'display: block;'}
-          = "#{i+1}. #{choice.choice}"
+        - css << " chosen_answer"
+      %item{:class => css, :style => 'display: block;'}
+        = "#{i+1}. #{choice.choice}"
     - if saveable.answer == 'not answered'
       %item{:class => 'not_answered', :style => 'font-weight: bold;'}
         = 'not answered'

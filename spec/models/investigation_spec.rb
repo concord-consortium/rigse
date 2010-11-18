@@ -1,5 +1,23 @@
 require 'spec_helper'
 
+# matchers for acts_as_list
+def be_before(expected)
+  simple_matcher("be before") do |given,matcher|
+    matcher.failure_message = "expected #{given.inspect} to be before #{expected.inspect}"
+    matcher.negative_failure_message = "expected #{given.inspect} not to be before #{expected.inspect}"
+    given.position < expected.position
+  end
+end
+
+def be_after(expected)
+  simple_matcher("be after") do |given,matcher|
+    matcher.failure_message = "expected #{given.inspect} to be after #{expected.inspect}"
+    matcher.negative_failure_message = "expected #{given.inspect} not to be after #{expected.inspect}"
+    given.position > expected.position
+  end
+end
+
+
 describe Investigation do
   before(:each) do
     @valid_attributes = {
@@ -64,7 +82,17 @@ describe Investigation do
   
 
   describe "search_list (searching for investigations)" do
-    
+    before(:all) do
+      # Fake use of GSE's
+      # TODO: Test search for projects not using GSE's!
+      @enable_gses = APP_CONFIG[:use_gse]
+      APP_CONFIG[:use_gse] = true
+    end
+    after(:all) do
+      # Restore use of GSE's
+      APP_CONFIG[:use_gse] = @enable_gses
+    end
+
     before(:each) do
       @bio = Factory.create( :rigse_domain,            { :name => "biology" } )
       bio_ks = Factory.create( :rigse_knowledge_statement, { :domain => @bio     } )
@@ -204,6 +232,105 @@ describe Investigation do
       found.should_not include(*@drafts)
     end
   end 
+
+  describe "investigation with activities" do
+    before(:each) do
+      @inv_attributes = {
+        :name => "test investigation",
+        :description => "new decription"
+      }
+      @investigation = Investigation.create(@inv_attributes)
+    end
+
+    # We might want to have one activity in the future. 
+    it "should have no acitivities initially" do
+      @investigation.should have(0).activities
+    end
+
+    it "should have one activitiy after it is added" do
+      @investigation.activities << Factory(:activity)
+      @investigation.should have(1).activities
+    end
+
+    it "the position of the first activity should be 1" do
+      activity = Factory(:activity)
+      @investigation.activities << activity
+      @investigation.should have(1).activities
+      @investigation.save
+      activity.position.should_not be_nil
+      activity.position.should eql 1
+    end
+
+
+    it "the position of the first activity should be 1" do
+      activity_one = Factory(:activity) 
+      activity_two = Factory(:activity)
+      @investigation.activities << activity_one
+      @investigation.activities << activity_two
+      @investigation.should have(2).activities
+      activity_one.position.should eql 1
+      activity_two.position.should eql 2
+    end
+
+    it "the activities honor the acts_as_list methods" do
+      activity_one = Factory(:activity) 
+      activity_two = Factory(:activity)
+      @investigation.activities << activity_one
+      @investigation.activities << activity_two
+      
+      @investigation.reload
+      @investigation.activities.should eql([activity_one, activity_two])
+
+      activity_one.move_to_bottom
+      @investigation.reload
+      @investigation.activities.should eql([activity_two, activity_one])
+      
+      # must reload the other activity for updated position.
+      activity_two.reload
+      activity_two.should be_before(activity_one)
+      activity_one.should be_after(activity_two)
+      
+      # more fragile, but worth checking:
+      activity_one.position.should eql 2
+      activity_two.position.should eql 1
+    end
+
+  end
+
+  describe "finding reportables within an investigation" do
+    before(:all) do
+      @investigation = Factory(:investigation)
+      @activity = Factory(:activity)
+      @section = Factory(:section)
+      @page = Factory(:page)
+      @m_choice = Factory(:multiple_choice)
+      @m_choice_b = Factory(:multiple_choice)
+      @sub_page = Factory(:page)
+      @sub_page.page_elements << Factory(:page_element, :embeddable => @m_choice)
+      @inner_page = Factory(:inner_page)
+      @inner_page.sub_pages << @sub_page
+      @page.page_elements << Factory(:page_element, :embeddable => @inner_page)
+      @page.page_elements << Factory(:page_element, :embeddable => @m_choice_b)
+      @page.page_elements << Factory(:page_element, :embeddable => Factory(:xhtml))
+      @section.pages << @page
+      @activity.sections << @section
+      @investigation.activities << @activity
+    end
+
+    it "should have 2 multiple choices" do
+      @investigation.should have(2).reportable_elements
+      @investigation.reportable_elements.each do |elm|
+        elm[:embeddable].should be_a(Embeddable::MultipleChoice)
+      end
+    end
+
+    it "should not have any xhtmls" do
+      @investigation.reportable_elements.each do |elm|
+      elm[:embeddable].should_not be_a(Embeddable::Xhtml)
+      end
+    end
+  end
+
 end
 
 

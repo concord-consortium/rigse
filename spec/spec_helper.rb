@@ -13,6 +13,9 @@ Spork.prefork do
   
   require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
   
+  # log all rails logger calls to STDOUT
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  
   require 'spec/autorun'
   require 'spec/rails'
   require 'spec/mocks'

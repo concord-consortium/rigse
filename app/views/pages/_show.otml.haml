@@ -16,14 +16,7 @@
         - if teacher_mode
           #content.teacher_mode
             - if page.section
-              %table{:width=>"100%"}
-                %tr
-                  %td{:align => "left"}
-                    %h2= "#{h(page.section.name)}  (#{h(page.name)})"
-                  %td{:align => 'center'}
-                    %object{:refid =>'${labbook}'}/
-                  %td{:align => 'right'}
-                    %object{ :refid => ot_refid_for(page.section, :menu) }/
+              %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
                     
             - page.page_elements.each do |element|
               .element
@@ -31,15 +24,7 @@
       - else
         #content
           - if page.section
-            %table{:width=>"100%"}
-              %tr
-                %td{:align => "left"}
-                  %h2= "#{h(page.section.name)}  (#{h(page.name)})"
-                %td{:align => 'center'}
-                  %object{:refid =>'${labbook}'}/
-                %td{:align => 'right'}
-                  %object{ :refid => ot_refid_for(page.section, :menu) }/
-
+            %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
                   
           - page.page_elements.each do |element|
             .element
