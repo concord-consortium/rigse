@@ -129,7 +129,7 @@ describe CCCookieAuth do
       end
     end
 
-    describe 'too old' do
+    describe 'tokens that are too old' do
       before(:each) do
         @time = 14.days.ago.to_i
         @host = '127.0.0.1'
