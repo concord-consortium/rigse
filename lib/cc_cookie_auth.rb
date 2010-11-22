@@ -2,6 +2,9 @@ require 'digest/sha1'
 module CCCookieAuth
   extend self
   
+  def self.cookie_name
+    'cc_auth_token'
+  end
   ## token_separator
   def self.token_separator
     "||"

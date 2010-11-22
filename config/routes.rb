@@ -179,6 +179,7 @@ ActionController::Routing::Routes.draw do |map|
 
   
   # Restful Authentication Rewrites
+  map.verify_cc_token '/verify_cc_token', :controller => 'sessions', :action => 'verify_cc_token'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.linktool '/linktool', :controller => 'sakai_link', :action => 'index'

@@ -53,6 +53,11 @@ describe SessionsController do
               do_create
             end    
 
+            it "sets a CC auth token" do 
+              controller.should_receive(:save_cc_cookie)
+              do_create
+            end    
+
             it "authorizes me"               do 
               do_create
               controller.send(:authorized?).should be_true
@@ -248,6 +253,7 @@ describe SessionsController do
     end
     it 'logs me out'                   do 
       controller.should_receive(:logout_killing_session!)
+      controller.should_receive(:delete_cc_cookie)
       do_destroy 
     end
 
@@ -270,6 +276,9 @@ describe SessionsController do
     it "should route the destroy sessions action correctly" do
       route_for(:controller => 'sessions', :action => 'destroy').should == "/logout"
     end
+    it "should route the verify_cc_token action correctly" do
+      route_for(:controller => 'sessions', :action => 'verify_cc_token').should == "/verify_cc_token"
+    end
   end
   
   describe "route recognition" do
@@ -281,6 +290,9 @@ describe SessionsController do
     end
     it "should generate params from DELETE /session correctly" do
       params_from(:delete, '/logout').should == {:controller => 'sessions', :action => 'destroy'}
+    end
+    it "should generate params from GET /verify_cc_token correctly" do
+      params_from(:get, '/verify_cc_token').should == {:controller => 'sessions', :action => 'verify_cc_token'}
     end
   end
   
