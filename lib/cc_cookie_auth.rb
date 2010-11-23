@@ -52,7 +52,8 @@ module CCCookieAuth
       return false if item.nil?
       return false if item.empty?
     end
-    return false if (remote_host != host) 
+    # because we are proxying hosts, we must ignore this
+    # return false if (remote_host != host) 
     return false if expired?(time.to_i)
     key = key_for(host)
     data = [login,host,time].join(token_separator)
