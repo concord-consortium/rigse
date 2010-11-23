@@ -71,14 +71,30 @@ class SessionsController < ApplicationController
     return true
   end
 
+  def cookie_domain
+    if defined? @cookie_domain
+      return @cookie_domain
+    end  
+    # use wildcard domain (last two parts ".concord.org") for this cookie
+    name_parts = request.host.split(".")
+    if(name_parts.length > 1)
+      # use the last two bits
+      @cookie_domain = ".#{name_parts[-2..-1].join(".")}"
+    else
+      @cookie_domain = nil
+    end
+    return @cookie_domain
+  end
+
   def delete_cc_cookie
-    cookies.delete CCCookieAuth.cookie_name.to_sym
+    #cookies.delete CCCookieAuth.cookie_name.to_sym
+    cookies.delete CCCookieAuth.cookie_name.to_sym, :domain => cookie_domain
   end
   
   def save_cc_cookie
     token = CCCookieAuth.make_auth_token(current_user.login, request.remote_ip)
-    cookies[CCCookieAuth.cookie_name.to_sym] = token
-    # TODO: use concord as a domain?  {:value => token, :domain => '.concord.org' }
+    #cookies[CCCookieAuth.cookie_name.to_sym] = token
+    cookies[CCCookieAuth.cookie_name.to_sym] = {:value => token, :domain => cookie_domain }
   end
 
 end
