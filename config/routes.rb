@@ -179,6 +179,8 @@ ActionController::Routing::Routes.draw do |map|
 
   
   # Restful Authentication Rewrites
+  map.remote_login '/remote_login', :controller => 'sessions', :action => 'remote_login', :requirements => { :method => :post }
+  map.remote_logout '/remote_logout', :controller => 'sessions', :action => 'remote_logout', :requirements => { :method => :post }
   map.verify_cc_token '/verify_cc_token', :controller => 'sessions', :action => 'verify_cc_token'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'

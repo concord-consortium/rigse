@@ -32,6 +32,29 @@ class SessionsController < ApplicationController
       render :text => "authentication failure: #{e.message}", :status => 403
     end
   end
+  
+  # verify a remote login attempt
+  def remote_login
+    user = User.authenticate(params[:login], params[:password])
+    if user
+      values = {:login => user.login, :first => user.first_name, :last => user.last_name}
+      render :json => values
+    else
+      error = "authentication failure: invalid user or password"
+      values = {:error => error}
+      #render :text => error, :status => 403
+      render :json => values, :status => 403
+    end
+  end
+
+  # silently logout using a post request
+  def remote_logout
+    logout_keeping_session!
+    delete_cc_cookie
+    message = "logged out."
+    values = {:message => message}
+    render :json => values
+  end
 
   protected
   
