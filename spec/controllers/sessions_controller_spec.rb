@@ -313,6 +313,7 @@ describe SessionsController do
     describe "remote_login" do
       describe "with a valid login" do
         it "should log the user in" do
+          controller.should_receive(:save_cc_cookie)
           @user.should_receive(:first_name).and_return("mock")
           @user.should_receive(:last_name).and_return("user")
           post :remote_login, @login_params
