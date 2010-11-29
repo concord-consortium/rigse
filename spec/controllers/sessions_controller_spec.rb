@@ -320,6 +320,7 @@ describe SessionsController do
           response.should be_success
           json_data = ActiveSupport::JSON.decode(response.body)
           json_data['first'].should == "mock"
+          controller.current_user.should == @user
         end
       end
       describe "with a bad login" do

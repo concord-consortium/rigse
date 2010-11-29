@@ -37,6 +37,7 @@ class SessionsController < ApplicationController
   def remote_login
     user = User.authenticate(params[:login], params[:password])
     if user
+      self.current_user = user
       save_cc_cookie
       values = {:login => user.login, :first => user.first_name, :last => user.last_name}
       render :json => values
