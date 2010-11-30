@@ -51,7 +51,7 @@ class SessionsController < ApplicationController
 
   # silently logout using a post request
   def remote_logout
-    logout_keeping_session!
+    logout_killing_session!
     delete_cc_cookie
     message = "logged out."
     values = {:message => message}
