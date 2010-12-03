@@ -201,6 +201,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
+    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
   end
     
   desc "install required gems for application"
