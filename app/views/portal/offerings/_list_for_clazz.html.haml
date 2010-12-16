@@ -3,14 +3,14 @@
   .action_menu
     %p
       %strong="Class word: #{portal_clazz.class_word}"
-  %br
   .action_menu
     .action_menu_left
       %p
-        %strong="Assignments:" 
-        (drag items from the search area below to add)
+        %strong="Assignments:"
+        %br To add assignments, drag items from the search area into the box below.         
   #clazz_offerings.drop_target
     = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering
+    
   %br
   = render :partial => "shared/runnable_list", :locals => {:portal_clazz_id => portal_clazz.id, :is_teacher => true, :domain_id => @domain_id, :grade_span => @grade_span}
 
