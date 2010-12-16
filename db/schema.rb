@@ -9,15 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101153846) do
+ActiveRecord::Schema.define(:version => 20101103195016) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",               :limit => 36
     t.string   "name"
-    t.text     "description"
+    t.string   "uuid",               :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -52,6 +52,19 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
   end
+
+  create_table "ancestries", :force => true do |t|
+    t.integer  "ancestor_id"
+    t.string   "ancestor_type"
+    t.integer  "descendant_id"
+    t.string   "descendant_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ancestries", ["ancestor_id"], :name => "index_ancestries_on_ancestor_id"
+  add_index "ancestries", ["ancestor_type"], :name => "index_ancestries_on_ancestor_type"
+  add_index "ancestries", ["descendant_id"], :name => "index_ancestries_on_descendant_id"
 
   create_table "author_notes", :force => true do |t|
     t.text     "body"
@@ -152,6 +165,50 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "diy_model_types", :force => true do |t|
+    t.string  "name"
+    t.text    "description"
+    t.string  "url"
+    t.string  "image_url"
+    t.text    "credits"
+    t.string  "otrunk_object_class"
+    t.string  "otrunk_view_class"
+    t.boolean "authorable"
+    t.integer "diy_id"
+    t.integer "user_id"
+    t.boolean "sizeable"
+    t.string  "uuid"
+  end
+
+  add_index "diy_model_types", ["diy_id"], :name => "index_diy_model_types_on_diy_id"
+  add_index "diy_model_types", ["user_id"], :name => "index_diy_model_types_on_user_id"
+
+  create_table "diy_models", :force => true do |t|
+    t.integer "user_id"
+    t.integer "diy_id"
+    t.integer "model_type_id"
+    t.string  "name"
+    t.string  "url"
+    t.string  "image_url"
+    t.boolean "public"
+    t.string  "publication_status"
+    t.text    "description"
+    t.text    "instructions"
+    t.boolean "snapshot_active"
+    t.text    "credits"
+    t.string  "uuid"
+    t.string  "short_name"
+    t.integer "height"
+    t.integer "width"
+    t.integer "version"
+  end
+
+  add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
+  add_index "diy_models", ["model_type_id"], :name => "index_diy_models_on_model_type_id"
+  add_index "diy_models", ["name"], :name => "index_diy_models_on_name"
+  add_index "diy_models", ["public"], :name => "index_diy_models_on_public"
+  add_index "diy_models", ["user_id"], :name => "index_diy_models_on_user_id"
 
   create_table "embeddable_biologica_breed_offsprings", :force => true do |t|
     t.integer  "user_id"
@@ -312,25 +369,25 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
+    t.integer  "y_axis_min",                               :default => 0
+    t.integer  "y_axis_max",                               :default => 5
+    t.integer  "x_axis_min",                               :default => 0
+    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.float    "y_axis_min",                               :default => 0.0
-    t.float    "y_axis_max",                               :default => 5.0
-    t.float    "x_axis_min"
-    t.float    "x_axis_max"
-    t.string   "x_axis_label",                             :default => "Time"
-    t.string   "x_axis_units",                             :default => "s"
+    t.string   "x_axis_label"
+    t.string   "x_axis_units"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -342,7 +399,10 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.boolean  "static"
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
+    t.boolean  "is_prototype",                             :default => false
   end
+
+  add_index "embeddable_data_collectors", ["is_prototype"], :name => "index_embeddable_data_collectors_on_is_prototype"
 
   create_table "embeddable_data_tables", :force => true do |t|
     t.integer  "user_id"
@@ -356,6 +416,44 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "embeddable_diy_models", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "diy_model_id"
+    t.string   "uuid",         :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_models", ["diy_model_id"], :name => "index_embeddable_diy_models_on_diy_model_id"
+  add_index "embeddable_diy_models", ["user_id"], :name => "index_embeddable_diy_models_on_user_id"
+
+  create_table "embeddable_diy_sections", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "content"
+    t.text     "default_response"
+    t.boolean  "has_question"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_sections", ["has_question"], :name => "index_embeddable_diy_sections_on_has_question"
+  add_index "embeddable_diy_sections", ["name"], :name => "index_embeddable_diy_sections_on_name"
+  add_index "embeddable_diy_sections", ["uuid"], :name => "index_embeddable_diy_sections_on_uuid"
+
+  create_table "embeddable_diy_sensors", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid",           :limit => 36
+    t.integer  "prototype_id"
+    t.text     "customizations"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_diy_sensors", ["prototype_id"], :name => "index_embeddable_diy_sensors_on_prototype_id"
 
   create_table "embeddable_drawing_tools", :force => true do |t|
     t.integer  "user_id"
@@ -458,14 +556,14 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.text     "prompt"
+    t.string   "default_response"
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
@@ -763,13 +861,14 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_id"
+    t.integer  "position"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
     t.integer  "user_id"
+    t.boolean  "is_enabled",      :default => true
   end
 
   add_index "page_elements", ["embeddable_id"], :name => "index_page_elements_on_embeddable_id"
@@ -777,16 +876,15 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "section_id"
+    t.string   "uuid",         :limit => 36
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -2016,6 +2114,23 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "taggable_type"
+    t.string   "context"
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
     t.string   "uuid",                 :limit => 36
@@ -2028,6 +2143,7 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
+    t.string   "identity_url"
     t.string   "first_name",                :limit => 100, :default => ""
     t.string   "last_name",                 :limit => 100, :default => ""
     t.string   "email",                     :limit => 100

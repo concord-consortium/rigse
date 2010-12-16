@@ -22,6 +22,19 @@ module HashExtensions
 end
 Hash.send(:include, HashExtensions)
 
+
+## to_hash_keys -- take from discussion: http://snippets.dzone.com/posts/show/302
+## example [1,2,3].to_hash_keys{|e| "number #{e}!"}
+## => {1 => "number 1!", 2 => "number 2!", 3 => "number 3!"}
+module ArrayExtensions
+  def to_hash_keys(&block)
+    Hash[*self.collect { |v|
+      [v, block.call(v)]
+    }.flatten]
+  end
+end
+Array.send(:include,ArrayExtensions)
+
 # To enable selective supression of warnings from Ruby such as when
 # redefining the constant: REST_AUTH_SITE_KEY when running spec tests
 # See: http://mentalized.net/journal/2010/04/02/suppress_warnings_from_ruby/

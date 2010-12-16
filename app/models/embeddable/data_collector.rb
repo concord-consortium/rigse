@@ -17,8 +17,11 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
-  # validates_associated :probe_type
+  # diy_sensors is a simplified controller for 
+  # a dataCollector. 
+  has_many :diy_sensors, :as => 'prototype'
   
+  # validates_associated :probe_type
   validates_presence_of :probe_type_id
   validate :associated_probe_type_must_exist
   
@@ -28,6 +31,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
   # validates_associated :probe_type, :message => "must exist"
   
   validates_presence_of :name, :message => "can't be blank"
+  
+  # proto-type datastores are hints for how to create diy-sensors 
+  named_scope :prototypes, :conditions => {:is_prototype => true}
+
   
   
   # this could work if the finder sql was redone
@@ -84,6 +91,25 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
     def default_probe_type
       @@default_probe_type ||= Probe::ProbeType.find_by_name('Temperature') 
+    end
+
+    # find or make a prototype that matches this...
+    def prototype_by_type_and_calibration(probe_type,calibration)
+      found = nil
+      if calibration.nil?
+        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id})
+      else 
+        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id, :calibration => calibration})
+      end
+      return found if found
+      made = self.create
+      made.probe_type_id = probe_type.id
+      made.is_prototype=true
+      if calibration 
+        made.calibration_id = calibration.id
+      end
+      made.save
+      return made
     end
   end
   

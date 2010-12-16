@@ -4,10 +4,10 @@ class ActivitiesController < ApplicationController
   prawnto :prawn=>{
     :page_layout=>:landscape,
   }
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index,:browse]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
+  before_filter :can_edit, :except => [:index,:browse  ,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create,:duplicate]
   
   in_place_edit_for :activity, :name
@@ -77,7 +77,8 @@ class ActivitiesController < ApplicationController
     @activities = Activity.search_list({
       :name => @name, 
       :paginate => true, 
-      :page => pagenation
+      :page => pagenation,
+      :include_drafts => @include_drafts
     })
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
@@ -94,6 +95,42 @@ class ActivitiesController < ApplicationController
         format.js
       end
     end
+  end
+  
+  def browse
+    # @activities = Activity.find(:all)
+    subjects = Activity.tag_counts_on(:subject_areas).map { |tc| tc.name }
+    grade_levels = Activity.tag_counts_on(:grade_levels).map { |tc| tc.name }
+    @search_results = {}
+    @key_strings = []
+    @units = []
+    @selection = params[:selection]
+    grade_levels.reject{|level| level =~ /probe|math/i}.uniq.sort.each do |grade_level|
+      subjects.uniq.sort.each do |subject|
+        key_string = "#{grade_level} : #{subject}"
+        unless @search_results[key_string]
+          @search_results[key_string] = {}
+        end
+        @activities = Activity.published.tagged_with(grade_level, :on=>:grade_levels).tagged_with(subject, :on=> :subject_areas)
+        if @activities.size > 0
+          @key_strings << key_string
+        end
+        @activities.sort!{ |a,b| a.name <=> b.name}
+        @activities.each do |activity|
+          activity.unit_list.sort.each do |unit|
+            @units << unit  
+            unless @search_results[key_string][unit]
+              @search_results[key_string][unit] = []
+            end
+            @search_results[key_string][unit] << activity
+          end
+        end
+      end
+    end
+    @key_strings.sort!
+    @selection ||= @key_strings.first
+    @units.sort!
+    @key_strings.sort!
   end
   
   # GET /pages/1
@@ -113,6 +150,10 @@ class ActivitiesController < ApplicationController
       format.xml  { render :xml => @activity }
       format.pdf {render :layout => false }
     end
+  end
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || false
+    render :layout => 'template'
   end
 
   # GET /pages/new
@@ -229,12 +270,11 @@ class ActivitiesController < ApplicationController
   ##
   def duplicate
     @original = Activity.find(params['id'])
-    @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
-    @activity.name = "copy of #{@activity.name}"
-    @activity.deep_set_user current_user
-    @activity.save
-    flash[:notice] ="Copied #{@original.name}"
-    redirect_to url_for(@activity)
+    if @original
+      @activity = @original.copy(current_user)
+      flash[:notice] ="Copied #{@original.name}"
+      redirect_to url_for(@activity)
+    end
   end
   
   #

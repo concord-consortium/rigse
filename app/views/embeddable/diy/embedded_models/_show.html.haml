@@ -1,0 +1,8 @@
+%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
+  = wrap_edit_link_around_content(diy_embedded_model, options={:complete => mce_init_string}) do
+    %ul
+
+      %li
+        Authored Data URL: 
+        %a{:href => diy_embedded_model.url}
+          = diy_embedded_model.url

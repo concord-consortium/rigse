@@ -10,7 +10,8 @@ class Activity < ActiveRecord::Base
   has_many :pages, :through => :sections
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+  
   [ Embeddable::Xhtml,
     Embeddable::OpenResponse,
     Embeddable::MultipleChoice,
@@ -47,14 +48,16 @@ class Activity < ActiveRecord::Base
     WHERE sections.activity_id = #{id}'
   
   delegate :saveable_types, :reportable_types, :to => :investigation
+  acts_as_replicatable
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
   
   include Noteable # convinience methods for notes...
-  acts_as_replicatable
-  acts_as_list :scope => :investigation
   include Changeable
   include TreeNode
   include Publishable
-    
+  include TagDefaults
+  include HasPedigree
+  
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
@@ -66,10 +69,8 @@ class Activity < ActiveRecord::Base
     }
   }
   
-  named_scope :published, 
-  {
-    :conditions =>{:publication_status => "published"}
-  }
+  named_scope :published, :conditions => {:publication_status => "published"}
+
   
   class <<self
     def searchable_attributes
@@ -85,8 +86,7 @@ class Activity < ActiveRecord::Base
       if (options[:include_drafts])
         activities = Activity.like(name)
       else
-        # activities = Activity.published.like(name)
-        activities = Activity.like(name)
+        activities = Activity.published.like(name)
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
@@ -101,13 +101,6 @@ class Activity < ActiveRecord::Base
       end
     end
     
-  end
-  
-  ##
-  ## Hackish stubs: Noah Paessel
-  ##
-  def offerings
-    []
   end
   
   def parent
@@ -127,8 +120,28 @@ class Activity < ActiveRecord::Base
   end
 
 
-      
-      
+  def copy(user)
+    original = self
+    copy_of_original = original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    copy_of_original.name = "copy of #{original.name}"
+    copy_of_original.deep_set_user user
+    copy_of_original.investigation= original.investigation
+    
+    # copy tags too:
+    original.tag_types.each do | tag_type|
+      method = (tag_type.to_s.singularize + "_list").to_sym
+      types = original.send method
+      method = "#{method.to_sym}=".to_sym
+      copy_of_original.send(method,types)
+    end
+    
+    copy_of_original.ancestor = original
+    copy_of_original.publication_status = :draft
+    copy_of_original.save
+    return copy_of_original
+  end
+  alias duplicate copy
+  
   def deep_xml
     self.to_xml(
       :include => {
@@ -211,6 +224,16 @@ HEREDOC
   <p></p>
 HEREDOC
 
+
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
+  end
 
   
 end

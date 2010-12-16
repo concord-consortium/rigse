@@ -52,6 +52,11 @@ ActionController::Routing::Routes.draw do |map|
       biologica.resources :organisms, :member => { :destroy => :post }
       biologica.resources :worlds, :member => { :destroy => :post }
     end
+    embeddable.namespace(:diy) do |diy|
+      diy.resources :sections, :member => { :destroy => :post }
+      diy.resources :sensors, :member => { :destroy => :post }
+      diy.resources :embedded_models, :member => { :destroy => :post }
+    end
 
     embeddable.resources :inner_pages, :member => {
       :destroy => :post,
@@ -339,7 +344,8 @@ ActionController::Routing::Routes.draw do |map|
     :paste_link => :post,
     :preview => :get,
     :print => :get,
-    :duplicate => :get
+    :duplicate => :get,
+    :template_edit => :get
   }
 
 #
@@ -380,6 +386,7 @@ ActionController::Routing::Routes.draw do |map|
     :export => :get,
     :destroy => :post
   }
+  map.browse_activities '/activity/browse', :controller=>'activities', :action => 'browse'
   map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
   #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml

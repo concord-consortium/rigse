@@ -1,7 +1,7 @@
 - content_for :top_menu_items do
   - content_for(:authored_investigations) do
-    - field_set_tag "#{top_level_container_name.pluralize.humanize} you've authored" do
-      %ul
-        - current_user.investigations.each do |inv|
-          %li
-            = link_to_container(inv)
+    %h3 activities you have authored
+
+    #offering_list.item_collection
+      = render :partial => 'activities/runnable_list', :locals => {:activities => current_user.activities}
+  

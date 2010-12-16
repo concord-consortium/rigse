@@ -55,10 +55,11 @@
       #header
         .left_content
           =image_tag("itsi_su.png")
+        .right_content
           / %h1=APP_CONFIG[:site_name]
           %h1=APP_CONFIG[:site_name]|| "ITSI-SU"
           %h3 Innovative Technology in Science Inquiry (scale up)
-        .right_content
+          %hr
           .padded_content_right
             Welcome
             = "#{current_user.name}."
@@ -73,7 +74,6 @@
             - if @original_user.has_role?('admin', 'manager')
               \/
               = link_to 'Switch', switch_user_path(current_user)
-            
 
 
       #content_container      
@@ -82,8 +82,9 @@
             %li= link_to 'Home', home_path
             %li= link_to 'About', about_path
             - unless current_user.anonymous? || current_user.portal_student
-              %li= link_to "activities", activities_path        
-              - if @activity 
+              %li= link_to "Search Activities", activities_path
+              %li= link_to "Browse Activities", browse_activities_path
+              - if @activity && @activity.id
                 %li
                   = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :depth => 2, :selects => [@activity,@section,@page]}
 

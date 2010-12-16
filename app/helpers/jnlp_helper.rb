@@ -114,11 +114,21 @@ module JnlpHelper
     }
   end
   
+  # There might be issues with filname lengths on IE 6 & 7
+  # see http://support.microsoft.com/kb/897168
+  def smoosh_file_name(_name,length=28,missing_char="_")
+    name = _name.strip.gsub(/[\s+|\/\(\)\:]/,missing_char)
+    left_trunc = right_trunc = length/2
+    name = "#{name[0,left_trunc]}#{missing_char}#{name[-right_trunc,right_trunc]}"
+    return name.strip.gsub(/_+/,missing_char)
+  end
+  
   def jnlp_headers(runnable)
     response.headers["Content-Type"] = "application/x-java-jnlp-file"
     response.headers["Cache-Control"] = "max-age=1"
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
-    response.headers["Content-Disposition"] = "inline; filename=#{APP_CONFIG[:theme]}_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+    filename = smoosh_file_name("#{APP_CONFIG[:site_name]} #{runnable.class.name} #{short_name(runnable.name)}")
+    response.headers["Content-Disposition"] = "inline; filename=#{filename}.jnlp"
   end
   
   def config_headers(runnable)

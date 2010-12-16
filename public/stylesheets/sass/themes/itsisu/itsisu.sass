@@ -29,6 +29,7 @@ body
 h1,h2,h3,h4,h5
   :padding-top 0.5em
   :font-weight bold
+  :color = !itsi_brown
 h2,h3,h4,h5
   :padding-bottom 0.25em
 
@@ -37,12 +38,12 @@ h1
   :letter-spacing 100%
   :padding-top 0px
   :font 
-    :size 4em
+    :size 2.5em
 
 h2
   :letter-spacing .15em
   :font
-    :size 1.5em
+    :size 2em
 
 h3
   :letter-spacing .15em
@@ -96,45 +97,20 @@ dt
 dd
   :margin-left 1.2em
 
-input
-  +main_font
-  :color= !very_dark
-  :padding 0.2em
-
-
-input[type=text]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-textarea
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-
-input[type=password]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
 
 #wrapper
-  +container
+  //+container
   :padding 10px 
   // that's the blueprint default...
 
 #header
-  +column(24,true)
+  //+column(24,true)
   :padding 0px
   :margin 0px
-  :height auto
+  :margin-bottom 10px
+  :clear both
+  :overflow hidden
+  //:height auto
   :background-color white
   :-moz-border-radius-topright .5em
   :-webkit-border-top-right-radius .5em
@@ -150,7 +126,7 @@ input[type=password]
     :color = !itsi_brown
     :background-color white
   .left_content
-    +column(24,true)
+    //+column(24,true)
     :text-align left
     :float none
     :clear none
@@ -159,7 +135,7 @@ input[type=password]
       :clear none
       :margin-right 5em
   .right_content
-    +column(24,true)
+    //+column(24,true)
     :text-align right
     
 #waiter
@@ -177,54 +153,62 @@ input[type=password]
   :border 2px solid
 
 #nav_top
-  +column(24,true)
+  //+column(24,true)
   +top_and_bottom_nav_colors
   :overflow hidden
+  :clear both
   :padding 0.5em 0px
 
 #content_container
   :display block
-  +column(24,true)
+  //+column(24,true)
   :min-height 600px
   :height auto !important
   :line-height 1.4em
   :font-size 12px
 #left_nav
   :display block
-  +column(!left_nav_columns)
+  //+column(!left_nav_columns)
   +left_nav_colors
-  :padding 0px
   :margin-bottom 0px
+  :width 18%
+  :clear left
+  :float left
 
 #content_header
   +content_area_colors
-  +column(!main_content_columns,true)
+  //+column(!main_content_columns,true)
   :padding 0px
   :margin 0px
 #main_content
   :display block
-  +column(!main_content_columns,true)
+  :margin right 20px
+  //+column(!main_content_columns,true)
+  :float right
+  :width 80%
   +content_area_colors
 
 #footer
-  +column(24,true)
+  //+column(24,true)
   +top_and_bottom_nav_colors
   :padding 0.5em 0px
   :margin 0em
+  :display block
+  :height auto
   :-moz-border-radius-bottomright .5em
   :-webkit-border-bottom-right-radius .5em
   :-moz-border-radius-bottomleft .5em
   :-webkit-border-bottom-left-radius .5em
-  
+  :clear both 
   #footer_left
-    +column(12)
+    //+column(12)
   #footer_right
     :text-align right
-    +column(12,true)
+    //+column(12,true)
     :float right
 
 #under_footer
-  +column(25,true)
+  //+column(25,true)
   :text-align center
   :padding 2px 0px
 
@@ -280,12 +264,12 @@ input[type=password]
   :height 400px
   :overflow hidden
 .tinymce_textarea
-  :width 100%
+  :width 95%
   :height 700px  
   :word-break break-all
 
 .tinymce_textarea_short
-  :width 100%
+  :width 95%
   :height 100px  
   :word-break break-all
 
@@ -309,7 +293,7 @@ input[type=password]
   li
     :list-style-type none
     :background-color = !light_green
-    :margin-top 0.5em
+    :margin-bottom 0.5em
     :padding 4px
     a
       :display block
@@ -323,7 +307,15 @@ input[type=password]
 .main_content_colors
   +content_area_colors
   
-  
+.field_set
+  :display inline-block
+  :margin 2px
+  :padding 2px
+  :background-color = !light_green
+  :vertical-align top
+  label
+    :color = !itsi_brown
+    :font-weight bold
 .toggle
   .future_state
     :font-size 1em
@@ -360,7 +352,6 @@ input[type=password]
   :padding 0.5em 0em 
 
 .container_element
-  :background-color= !light_green
   :padding 2px
   :margin-bottom 5px
   &:hover
@@ -418,12 +409,14 @@ input[type=password]
     :width 0px
     :style solid
   :background-color white
+  :overflow hidden
   :cursor text
   a
     :background-color transparent
   a:hover
     :color inherit
     :background-color transparent
+  :color black
 
 .legal
   :font-size 0.8em
@@ -644,3 +637,77 @@ li.tiny
       :border 1px solid #444444
       :margin-left -15px
       :text-align center
+
+.template_container
+  :position relative
+  :display block
+  :min-height 40px
+  :margin-bottom 20px
+  :color black 
+  .over
+    :overflow hidden
+    :background-color #DDDDDD
+
+.template_view_title
+  :margin-left 30px
+  :display block
+
+.template_view_container
+  :margin-left 30px
+  :display block
+
+.template_edit_container
+  :margin-left 30px
+  :display block
+
+.template_disable_button
+  :display block
+  :position absolute
+  :left 0px
+  :top  10px
+  :width 16px
+  :height 16px
+  :background
+    :image url('/images/x_alt_16x16.png')
+    :position top right
+
+.template_enable_button
+  :display block
+  :position absolute
+  :left 0px
+  :top  10px
+  :width 16px
+  :height 16px
+  :background
+    :image url('/images/check_alt_16x16.png')
+    :position top right
+
+.template_edit_button
+  :display block
+  :position absolute
+  :left 0px
+  :top  30px
+  :width 16px
+  :height 16px
+  :background
+    :image url('/images/pen_16x16.png')
+    :position top right
+
+.template_save_button
+  :display block
+  :position absolute
+  :left 0px
+  :top  50px
+  :width 16px
+  :height 16px
+  :background
+    :image url('/images/check_alt_16x16.png')
+    :position top right
+
+.disabled
+  :opacity 0.2
+.enabled
+  :opacity 1
+
+.buttons
+  :opacity 0.8

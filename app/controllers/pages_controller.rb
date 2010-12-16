@@ -93,6 +93,12 @@ class PagesController < ApplicationController
   end
 
 
+
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || @page.teacher_only
+    render :layout => 'template'
+  end
+
   # GET /page/1/preview
   # GET /page/1.xml
   def preview

@@ -73,6 +73,7 @@ Rails::Initializer.run do |config|
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
+  config.gem "acts-as-taggable-on", :source => "http://gemcutter.org"
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
@@ -122,7 +123,7 @@ Rails::Initializer.run do |config|
   # ... observers are now started in config/initializers/observers.rb
   # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
   # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-  if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
+  if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:/).length > 0
     puts "Didn't start observers because you are running: rake db:migrate"
   else
     config.after_initialize do
