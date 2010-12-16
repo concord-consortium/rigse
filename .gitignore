@@ -80,3 +80,4 @@ hudson/*
 spec/reports
 .rvmrc
 config/preinitializer.rb
+config/newrelic.yml
