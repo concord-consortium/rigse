@@ -27,6 +27,16 @@ class SessionsController < ApplicationController
       user = User.find_by_login(login)
       riase 'bogus user' unless user
       values = {:login => login, :first => user.first_name, :last => user.last_name}
+      student = user.portal_student
+      teacher = user.portal_teacher
+      if student
+        values[:class_words] = student.clazzes.map{ |c| c.class_word }
+        values[:teacher] = false
+      end
+      if teacher
+        values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
+        values[:teacher] = true
+      end
       render :json => values
     rescue Exception => e
       render :text => "authentication failure: #{e.message}", :status => 403
