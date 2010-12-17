@@ -34,9 +34,6 @@ class Embeddable::Biologica::World < ActiveRecord::Base
     def available_species_paths
       @@available_species_paths
     end
-    def cloneable_associations
-      @@cloneable_associations
-    end
   end
 
   default_value_for :name, "Biologica World element"

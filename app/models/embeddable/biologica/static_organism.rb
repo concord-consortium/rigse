@@ -13,7 +13,7 @@ class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:organism]
+  cloneable_associations = :organism
 
   self.extend SearchableModel
   
@@ -22,9 +22,6 @@ class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def cloneable_associations
-      @@cloneable_associations
     end
   end
 

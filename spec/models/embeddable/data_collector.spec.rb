@@ -1,10 +1,9 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-
+require 'spec_helper'
 describe Embeddable::DataCollector do
   before(:each) do
-
   end
 
+  it_should_behave_like 'a cloneable model'
   it "should create a new instance given valid attributes" do
     data_collector = Embeddable::DataCollector.new
     data_collector.save 

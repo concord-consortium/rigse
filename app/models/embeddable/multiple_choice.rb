@@ -33,16 +33,13 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
 
   include Cloneable
   self.extend SearchableModel
-    
-  @@cloneable_associations = [:choices]
+
+  cloneable_associations :choices
   @@searchable_attributes = %w{uuid name description prompt}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def cloneable_associations
-      @@cloneable_associations
     end
   end
 

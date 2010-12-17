@@ -1,25 +1,23 @@
 module Cloneable
-#  def self.included(base)
-#    base.class_eval do
-#      @@cloneable_associations = []
-#      def self.cloneable_associations
-#        @@cloneable_associations
-#      end
-#
-#      def self.include_in_clone(associations)
-#        logger.info("including associations: '#{Array(associations).join("','")}'")
-#        Array(associations).each do |a|
-#          if (! @@cloneable_associations.include?(a))
-#            @@cloneable_associations << a
-#          end
-#        end
-#      end
-#    end
-#  end
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+
+  module ClassMethods
+    def cloneable_associations(*args)
+      @cloneable_associations ||= []
+      @cloneable_associations += args
+      @cloneable_associations
+    end
+  end
 
   def clone(options = {})
-    new_assocs = self.class.cloneable_associations
-    # puts("new associations are: '#{new_assocs.join("','")}'")
+    begin
+      new_assocs = self.class.cloneable_associations
+    rescue
+      # Can't immagine how this would happen, but it would be hard to debug:
+      throw("cloneable class #{self.class.name} fails #cloneable_associations {$!}")
+    end
     if new_assocs.size > 0
       options[:include] ||= []
       if options[:include].kind_of? Hash
@@ -27,9 +25,7 @@ module Cloneable
       end
       options[:include] += new_assocs
     end
-    # puts "Class is: #{self.class.name.to_s}"
-    # puts(options.to_yaml)
+    # invokes on superclas (possilby up to Object#clone)
     super(options)
   end
-
 end

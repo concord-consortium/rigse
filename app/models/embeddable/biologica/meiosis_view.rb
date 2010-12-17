@@ -15,7 +15,7 @@ class Embeddable::Biologica::MeiosisView < ActiveRecord::Base
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:father_organism, :mother_organism]
+  cloneable_associations :father_organism, :mother_organism
 
   self.extend SearchableModel
   
@@ -24,9 +24,6 @@ class Embeddable::Biologica::MeiosisView < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def cloneable_associations
-      @@cloneable_associations
     end
   end
 

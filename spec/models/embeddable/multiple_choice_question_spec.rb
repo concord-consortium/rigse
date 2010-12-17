@@ -1,8 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-
-
+require 'spec_helper'
 
 describe Embeddable::MultipleChoice do
+  it_should_behave_like 'a cloneable model'
   before(:each) do
     @page = Factory(:page)
     @user = Factory(:user)

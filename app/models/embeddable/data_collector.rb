@@ -76,7 +76,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   include Changeable
   
   include Cloneable
-  @@cloneable_associations = [:prediction_graph_destinations]
+  cloneable_associations :prediction_graph_destinations
   
   self.extend SearchableModel
   
@@ -85,9 +85,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def cloneable_associations
-      @@cloneable_associations
     end
     def default_probe_type
       @@default_probe_type ||= Probe::ProbeType.find_by_name('Temperature') 
