@@ -11,7 +11,7 @@ class Activity < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
-  
+  acts_as_list :scope => :investigation_id 
   [ Embeddable::Xhtml,
     Embeddable::OpenResponse,
     Embeddable::MultipleChoice,
