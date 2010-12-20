@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Embeddable::Diy::Model do
+describe Embeddable::Diy::EmbeddedModel do
   def create(attributes)
-    Embeddable::Diy::Model.create(attributes)
+    Embeddable::Diy::EmbeddedModel.create(attributes)
   end
 
   before(:all) do

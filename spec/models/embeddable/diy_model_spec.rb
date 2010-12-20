@@ -1,8 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-
-describe Embeddable::Diy::Model do
+require 'spec_helper'
+describe Embeddable::Diy::EmbeddedModel do
   def create(attributes)
-    Embeddable::Diy::Model.create(attributes)
+    Embeddable::Diy::EmbeddedModel.create(attributes)
   end
 
   before(:each) do
@@ -48,7 +47,7 @@ describe Embeddable::Diy::Model do
           :description => "description",
           :url => "url")
       @page = Page.create
-      @embeddable = Embeddable::Diy::Model.create(
+      @embeddable = Embeddable::Diy::EmbeddedModel.create(
           :diy_model => @model)
     end
     it "belongs to a page" do
