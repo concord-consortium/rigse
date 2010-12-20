@@ -67,14 +67,14 @@ class PageElement < ActiveRecord::Base
   end
   
   def duplicate
-    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy = self.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at]
     @em = self.embeddable
     
     # let embeddables define their own means to save
     if @em.respond_to? :duplicate
       @copy.embeddable = @em.duplicate
     else
-      @copy.embeddable = @em.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+      @copy.embeddable = @em.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at]
     end
     
     if @copy.embeddable

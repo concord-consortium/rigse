@@ -209,7 +209,7 @@ class Page < ActiveRecord::Base
   # maybe, but it will confuse authors
   #
   def duplicate
-    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy = self.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at]
     @copy.name = "" # allow for auto-numbering of pages
     @copy.section = self.section
     @copy.save
