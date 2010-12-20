@@ -2,7 +2,6 @@ class Probe::ProbeType < ActiveRecord::Base
   set_table_name "probe_probe_types"
 
   include Changeable
-  
   acts_as_replicatable
 
   has_many :activities, :class_name => "Itsi::Activity"
@@ -17,5 +16,7 @@ class Probe::ProbeType < ActiveRecord::Base
 
   before_create :generate_uuid
 
-
+  def self.default 
+    return self.find_by_name('Temperature')
+  end
 end

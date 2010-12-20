@@ -1,4 +1,5 @@
 class Embeddable::DataCollector < ActiveRecord::Base
+  MISSING_PROBE_MESSAGE = "Unable to find default probes. try running"
   set_table_name "embeddable_data_collectors"
 
   belongs_to :user
@@ -22,13 +23,20 @@ class Embeddable::DataCollector < ActiveRecord::Base
   has_many :diy_sensors, :as => 'prototype'
   
   # validates_associated :probe_type
-  validates_presence_of :probe_type_id
-  validate :associated_probe_type_must_exist
+  validate :associated_probe
   
-  def associated_probe_type_must_exist
-    errors.add(:probe_type, "must exist") unless Probe::ProbeType.find_by_id(self.probe_type_id)
+  def associated_probe
+    if self.probe_type
+      unless Probe::ProbeType.find_by_id(self.probe_type_id)
+        errors.add(:probe_type, "has bad id: #{self.probe_type_id}")
+      end
+    else
+      errors.add(:probe_type, "is required")
+      unless Probe::ProbeType.default
+        self.errors.add(:probe_type, MISSING_PROBE_MESSAGE)
+      end
+    end
   end
-  # validates_associated :probe_type, :message => "must exist"
   
   validates_presence_of :name, :message => "can't be blank"
   
@@ -53,12 +61,17 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
   
   def before_validation
-    default_pt = Embeddable::DataCollector.default_probe_type
-    self.probe_type_id = default_pt.id unless self.probe_type_id
+    # self.probe_type should be available before this validation is run
+    # thanks to default_value_for lambda blocks above.
+    default_pt = self.probe_type
+    # its an error if there is no default, but we handle that elsewhere.
+    if default_pt
+      self.probe_type_id = default_pt.id unless self.probe_type_id
+      self.name = default_pt.name if self.name.nil? || self.name.empty?
+      self.y_axis_label = default_pt.name unless self.y_axis_label
+    end
     self.name = title unless self.title.nil? || self.title.empty?
-    self.name = default_pt.name if self.name.nil? || self.name.empty?
     self.title = self.name if self.title.nil? || self.title.empty?
-    self.y_axis_label = default_pt.name unless self.y_axis_label
   end
   
   acts_as_replicatable
@@ -85,9 +98,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def default_probe_type
-      @@default_probe_type ||= Probe::ProbeType.find_by_name('Temperature') 
     end
 
     # find or make a prototype that matches this...
@@ -215,8 +225,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
                  :show_tare                   =>  false,
                  :single_value                =>  false
 
-  # default_value_for :probe_type, default_probe_type
-  # default_value_for :probe_type_id, 1
+  default_value_for :probe_type do |v| 
+    found = Probe::ProbeType.default
+  end
   
   # send_update_events_to :investigations
 
