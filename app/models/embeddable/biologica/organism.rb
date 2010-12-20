@@ -45,7 +45,7 @@ end
   include Changeable
   
   include Cloneable
-  cloneable_associations = :world
+  cloneable_associations :world
 
   self.extend SearchableModel
   
