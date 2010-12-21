@@ -24,6 +24,15 @@
         new Effect.Appear(element, {duration:1, from:1.0, to:1.0});
       }
     }
+
+    var updateOfferingCounter = function(delta) {
+      ;
+      var counter = $('total-selected');
+      var text  = counter.innerText;
+      var value = parseInt(text);
+      value = value + delta;
+      counter.update(value);
+    }; 
     
     $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type) {
       // TODO: remove console logging statements
@@ -39,7 +48,17 @@
               runnable_type: runnable_type
             },
             asynchronous:true, evalScripts:true,
+            onCreate: function() {
+              updateOfferingCounter(+1);
+              $('total-selected').setStyle({opacity: 0.5});
+            },
+            onFailure: function(transport) {
+              updateOfferingCounter(-1);
+              $('total-selected').setStyle({opacity: 1});
+            }, 
             onSuccess: function(transport) {
+              $('total-selected').setStyle({opacity: 1});
+              
               // Find all input elements for the same activity and update them all
               $$('input[name="'+input.name+'"]').each(function(inputElement) {
                 if(inputElement.value == input.value){
@@ -65,7 +84,17 @@
               runnable_type: runnable_type
             },
             asynchronous:true, evalScripts:true,
+            onCreate: function() {
+              updateOfferingCounter(-1);
+              $('total-selected').setStyle({opacity: 0.5});
+            },
+            onFailure: function(transport) {
+              updateOfferingCounter(+1);
+              $('total-selected').setStyle({opacity: 1});
+            }, 
             onSuccess: function(transport) {
+              $('total-selected').setStyle({opacity: 1});
+              
               // TODO: find all input elements for the same activity and update them all (uncheck them and set offering id to -1)
               $$('input[name="'+input.name+'"]').each(function(inputElement) {
                 if(inputElement.value == input.value){
@@ -90,8 +119,8 @@
     public activities
   - Activity.published.each do |runnable|
     - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
-    - offering_id = offering_nil? ? nil : offering.id
-    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering => offering, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
+    - offering_id = offering.nil? ? false : offering.id
+    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
   %h2
     your activities
   - @current_user.activities.each do |runnable|
