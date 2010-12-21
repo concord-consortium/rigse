@@ -73,15 +73,18 @@ stylesheets:
   - reports
 
 - itsisu:
-  - themes/itsisu/itsisu
-  - themes/itsisu/action_menu_tab
-  - themes/itsisu/drop_down
-  - themes/itsisu/accordion
-  - themes/itsisu/bin
+  - app
+  #- themes/itsisu/itsisu
+  #- themes/itsisu/action_menu_tab
+  #- themes/itsisu/drop_down
+  #- themes/itsisu/accordion
+  #- themes/itsisu/bin
+  - accordion
   - window/window
-  - window/itsisu
-  - live_validation
+  - window/rites
+  - action_menu_tab
   - notes
+  - drop_down
   - data_table
   - reports
 
