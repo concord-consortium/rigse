@@ -1,24 +1,100 @@
 / %h2 BEGIN: Custom code for ITSI-SU
 / required locals: is_being_edited
 - if portal_clazz.is_teacher? current_user
+  :javascript
+
+    function toggle_info_block(link, element_id) {
+      var offset = $(link).offset();
+      var element = $(element_id)
+      var info_block_top = offset.top + 'px';
+      var info_block_left = offset.left + 'px';
+      if (element.getStyle('display') == 'block') {
+        new Effect.Fade(element, { duration:1});
+      } else {
+        element.setStyle({
+                'position': 'absolute',
+                'left': '0',
+                'top': '10px',
+                'width': '250px',
+                'z-index': 1000000,
+                'box-shadow': '3px 3px 10px #555',
+                '-moz-box-shadow': '3px 3px 10px #555',
+                '-webkit-box-shadow': '3px 3px 10px #555'
+                });
+        new Effect.Appear(element, {duration:1, from:1.0, to:1.0});
+      }
+    }
+    
+    $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type) {
+      // TODO: remove console logging statements
+      var ajaxUpdater;
+      var new_checked_state = input.checked;
+      if(new_checked_state){
+        // User wants to make a new offering
+        ajaxUpdater = new Ajax.Request('/portal/classes/' + portal_clazz_id + '/add_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // Find all input elements for the same activity and update them all
+              $$('input[name="'+input.name+'"]').each(function(inputElement) {
+                if(inputElement.value == input.value){
+                  inputElement.writeAttribute("checked", true);
+                  inputElement.writeAttribute("onclick", "updateOfferings(this, "+portal_clazz_id+", "+activity_id+", "+transport.responseText+", '"+runnable_type+"')");
+                }
+              });
+              // TODO: flash a success message from here
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (uncheck them)
+            // TODO: flash a failure message from here
+           }
+        );
+      } else{
+        // User wants to remove an offering
+        ajaxUpdater = new Ajax.Updater('flash', 
+          '/portal/classes/' + portal_clazz_id + '/remove_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              offering_id: offering_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // TODO: find all input elements for the same activity and update them all (uncheck them and set offering id to -1)
+              $$('input[name="'+input.name+'"]').each(function(inputElement) {
+                if(inputElement.value == input.value){
+                  inputElement.writeAttribute("checked", null);
+                  inputElement.writeAttribute("onclick", "updateOfferings(this, "+portal_clazz_id+", "+activity_id+", -1, '"+runnable_type+"')");
+                }
+              });
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (check them)
+          }
+        );
+      }
+      return false;
+    };
   -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
   = hidden_field_tag 'portal_clazz_id', :portal_clazz.id
-  %h2
+  %h2 
     assigned activities (
     %span#total-selected="#{portal_clazz.offerings.size}"
     )
-  - portal_clazz.offerings.each do |offering|
-    - runnable = offering.runnable
-    .activity-box
-      .activity-title
-        %input{:type => "checkbox", :name => "activities[]", :value => "101", :onclick => "updateTotalActivities(this); updateSectionActivities('middleschoolearthscience', this);"} 
-        = runnable.name
-        %a.info-link{:href => "#", :onclick => "toggle_info_block(this, '#activity-description-101'); if (window.event) event.returnValue=false; return false;", :title => "View activity description"}
-          %span.info>  		
-        .activity-info
-          (Model: MW)
-        .activity-links{:id =>"activity-links-101"}
-          %a{:class => 'button-link try-link', :id => "try_button_52", :href => "/diy/view/52/type/Activity/", :title => "Try this activity (as a teacher, do not save data)"} 
-            
-        .activity-description{:id => "activity-description-101"}
-          = runnable.description
+  %h2
+    public activities
+  - Activity.published.each do |runnable|
+    - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+    - offering_id = offering_nil? ? nil : offering.id
+    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering => offering, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
+  %h2
+    your activities
+  - @current_user.activities.each do |runnable|
+    - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+    - offering_id = offering.nil? ? false : offering.id
+    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
