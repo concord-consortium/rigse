@@ -1,0 +1,24 @@
+/ %h2 BEGIN: Custom code for ITSI-SU
+/ required locals: is_being_edited
+- if portal_clazz.is_teacher? current_user
+  -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
+  = hidden_field_tag 'portal_clazz_id', :portal_clazz.id
+  %h2
+    assigned activities (
+    %span#total-selected="#{portal_clazz.offerings.size}"
+    )
+  - portal_clazz.offerings.each do |offering|
+    - runnable = offering.runnable
+    .activity-box
+      .activity-title
+        %input{:type => "checkbox", :name => "activities[]", :value => "101", :onclick => "updateTotalActivities(this); updateSectionActivities('middleschoolearthscience', this);"} 
+        = runnable.name
+        %a.info-link{:href => "#", :onclick => "toggle_info_block(this, '#activity-description-101'); if (window.event) event.returnValue=false; return false;", :title => "View activity description"}
+          %span.info>  		
+        .activity-info
+          (Model: MW)
+        .activity-links{:id =>"activity-links-101"}
+          %a{:class => 'button-link try-link', :id => "try_button_52", :href => "/diy/view/52/type/Activity/", :title => "Try this activity (as a teacher, do not save data)"} 
+            
+        .activity-description{:id => "activity-description-101"}
+          = runnable.description
