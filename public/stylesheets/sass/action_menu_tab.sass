@@ -59,6 +59,10 @@ a.rollover:hover
   :text-indent -18px
   :background-color inherit !important
 
+#investigation_activities_list
+  :list-style-type none
+  :margin 20px 0 0
+  :padding-left 0
     
 .action_menu
   :font-size 11px
@@ -82,8 +86,11 @@ a.rollover:hover
     .author
       :font-size 9px
       :font-style italic
+    a
+      :color #fff
 
   .action_menu_header_right
+    :background transparent
     :float right
     :text-align right
     :margin 0px
@@ -93,12 +100,19 @@ a.rollover:hover
       :font-style italic
     +action_menu_tab
     ul
+      :background transparent
       li
+        :background transparent
         a, a:visited, a:active
-          :border-bottom-width 2px
-          :border-style solid
+          :font-weight normal
+          :text-align center
+          :margin 7px 0
+          :padding 3px 7px
+          /* CSS3
+          :border-radius 8px
+          :-moz-border-radius 8px
+          :-webkit-border-radius 8px
         a.rollover
-          :border-style none
           img
             :border-style none
 
@@ -158,7 +172,7 @@ a.rollover:hover
   :border solid 1px #ddd
   :color #333
   :height auto
-  :margin-top 20px
+  :margin-top 0
   :margin-right 40px
   :min-height 50px
   :padding 6px 4px 4px
