@@ -109,21 +109,33 @@
       }
       return false;
     };
+
   -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
   = hidden_field_tag 'portal_clazz_id', :portal_clazz.id
   %h2 
-    assigned activities (
+    Activities (total selected:
     %span#total-selected="#{portal_clazz.offerings.size}"
     )
-  %h2
-    public activities
-  - Activity.published.each do |runnable|
-    - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
-    - offering_id = offering.nil? ? false : offering.id
-    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
-  %h2
-    your activities
-  - @current_user.activities.each do |runnable|
-    - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
-    - offering_id = offering.nil? ? false : offering.id
-    = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
+  %table.activity-chart{ :border =>"0" :cellspacing=>"0" :cellpadding => "0" :width=> "100%"}
+    %tr
+      %td#activity-chart-navigation{:width => "225"}
+        %ul
+          - Activity.tags.each do |tag|
+            -#%li#middleschoolearthscience-control.unit-navigation.level1{:onclick => "show_section('#middleschoolearthscience', this);"}
+            %li#middleschoolearthscience-control{:class => tag[:classes], :onclick => "show_section('#{tag[:show_section]}', this);"}
+              =tag[:name]
+              %span#middleschoolearthscience-count.navigation-count
+      %td#activity-chart-panels
+
+        %h2
+          public activities
+        - Activity.published.each do |runnable|
+          - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+          - offering_id = offering.nil? ? false : offering.id
+          = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
+        %h2
+          your activities
+        - @current_user.activities.each do |runnable|
+          - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+          - offering_id = offering.nil? ? false : offering.id
+          = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
