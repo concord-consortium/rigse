@@ -2,8 +2,14 @@
 / required locals: is_being_edited
 - if portal_clazz.is_teacher? current_user
   :javascript
+    var show_section = function(element, button) {
+      $$('.unit-navigation').each(function(elem) { elem.removeClassName('selected-category'); } );
+      $$('.show_section').each(function(elem)    { elem.hide();                      } );
+      $(element).show();
+      $(button).addClassName('selected-category'); 
+    };
 
-    function toggle_info_block(link, element_id) {
+    var toggle_info_block = function(link, element_id) {
       var offset = $(link).offset();
       var element = $(element_id)
       var info_block_top = offset.top + 'px';
@@ -23,7 +29,7 @@
                 });
         new Effect.Appear(element, {duration:1, from:1.0, to:1.0});
       }
-    }
+    };
 
     var updateOfferingCounter = function(delta) {
       ;
@@ -116,23 +122,26 @@
     Activities (total selected:
     %span#total-selected="#{portal_clazz.offerings.size}"
     )
+  - bins = Activity.list_bins(current_user)
   %table.activity-chart{ :border =>"0" :cellspacing=>"0" :cellpadding => "0" :width=> "100%"}
     %tr
       %td#activity-chart-navigation{:width => "225"}
         %ul
-          - Activity.tags.each do |tag|
+          - bins.each do |tag|
             -#%li#middleschoolearthscience-control.unit-navigation.level1{:onclick => "show_section('#middleschoolearthscience', this);"}
-            %li#middleschoolearthscience-control{:class => tag[:classes], :onclick => "show_section('#{tag[:show_section]}', this);"}
-              =tag[:name]
+            %li#middleschoolearthscience-control{:class => tag[:classes], :onclick => "show_section('#{tag[:key]}', this);"}
+              ="#{tag[:name]} (#{tag[:count]})"
               %span#middleschoolearthscience-count.navigation-count
       %td#activity-chart-panels
-
-        %h2
-          public activities
-        - Activity.published.each do |runnable|
-          - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
-          - offering_id = offering.nil? ? false : offering.id
-          = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
+        - bins.each do |tag|
+          %div.show_section{:id => tag[:key], :style=>"display: none;"}
+            - tag[:units].each do |unit|
+              %h2="#{unit[:name]} (#{unit[:count]})"
+              - unit[:activities].each do |runnable|
+                -#- Activity.published.each do |runnable|
+                - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+                - offering_id = offering.nil? ? false : offering.id
+                = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
         %h2
           your activities
         - @current_user.activities.each do |runnable|
