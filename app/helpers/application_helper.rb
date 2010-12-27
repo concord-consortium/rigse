@@ -424,6 +424,7 @@ module ApplicationHelper
     name = component.name
     params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || "Run "
+    title = params.delete(:title) || "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
     if as_name
       link_text << " as #{as_name}"
     end
@@ -438,7 +439,7 @@ module ApplicationHelper
       run_button_for(component) +
       link_to(link_text, url, 
         :onclick => "show_mac_alert($('launch_warning'),false);",
-        :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+        :title => title)
     end
   end
 
