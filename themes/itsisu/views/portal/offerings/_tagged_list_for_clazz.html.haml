@@ -117,7 +117,7 @@
     };
 
   -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
-  = hidden_field_tag 'portal_clazz_id', :portal_clazz.id
+  = hidden_field_tag 'portal_clazz_id', portal_clazz.id
   %h2 
     Activities (total selected:
     %span#total-selected="#{portal_clazz.offerings.size}"
@@ -127,24 +127,19 @@
     %tr
       %td#activity-chart-navigation{:width => "225"}
         %ul
-          - bins.each do |tag|
+          - bins.each do |_tag|
             -#%li#middleschoolearthscience-control.unit-navigation.level1{:onclick => "show_section('#middleschoolearthscience', this);"}
-            %li#middleschoolearthscience-control{:class => tag[:classes], :onclick => "show_section('#{tag[:key]}', this);"}
-              ="#{tag[:name]} (#{tag[:count]})"
+            %li#middleschoolearthscience-control{:class => _tag[:classes], :onclick => "show_section('#{_tag[:key]}', this);"}
+              ="#{_tag[:name]} (#{_tag[:count]})"
               %span#middleschoolearthscience-count.navigation-count
       %td#activity-chart-panels
-        - bins.each do |tag|
-          %div.show_section{:id => tag[:key], :style=>"display: none;"}
-            - tag[:units].each do |unit|
+        - bins.each do |_tag|
+          %div.show_section{:id => _tag[:key], :style=>"display: none;"}
+            - units = _tag[:units]
+            - units.each do |unit|
               %h2="#{unit[:name]} (#{unit[:count]})"
               - unit[:activities].each do |runnable|
                 -#- Activity.published.each do |runnable|
                 - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
                 - offering_id = offering.nil? ? false : offering.id
                 = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}
-        %h2
-          your activities
-        - @current_user.activities.each do |runnable|
-          - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
-          - offering_id = offering.nil? ? false : offering.id
-          = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}

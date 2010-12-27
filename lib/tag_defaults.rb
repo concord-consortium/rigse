@@ -66,7 +66,8 @@ module TagDefaults
       subject_areas = self.subject_area_counts
       units = self.unit_counts.map { |u| u.name }
       results = []
-      grade_levels.sort{|a,b| a.name <=> b.name}.each_with_index do |grade_level,i|
+      i = 0
+      grade_levels.sort{|a,b| a.name <=> b.name}.each do |grade_level|
         subject_areas.sort{|a,b| a.name <=> b.name}.each_with_index do |subject,j|
           query = self.published
           query = query.tagged_with(grade_level.name, :on => :grade_levels)
@@ -91,38 +92,41 @@ module TagDefaults
           }
           results << record
         end
-        if user
-          users = self.find(:all, :conditions => {:user_id => user.id});
-          remainder = users.clone
-          unit_listing = units.map do |u| 
-            unit_activities = users.select { |a| a.unit_list && a.unit_list.include?(u) }
-             { 
-              :name => u,
-              :count => unit_activities.size,
-              :activities => unit_activities
-            }
-            remainder = remainder - unit_activities
-          end
-
-          if remainder.size > 0
-            unit_record = {
-              :name => "no assigned unit",
-              :count => remainder.size,
-              :activities => remainder
-            }
-            unit_listing << [unit_record]
-          end
-
-          record = {
-            :key          => "users_own",
-            :name         => "Your activities",
-            :classes      => "unit-navigation level#{i+1}",
-            :units        => unit_listing,
-            :count        => users.size,
-            :query        => users
-          } 
-          results << record 
+        i = i + 1
+      end # End Grade Levels
+      
+      # Add unpublished activities of the user:
+      if user
+        users = self.find(:all, :conditions => {:user_id => user.id});
+        remainder = users.clone
+        unit_listing = units.map do |u| 
+          unit_activities = users.select { |a| a.unit_list && a.unit_list.include?(u) }
+          remainder = remainder - unit_activities
+          { 
+            :name => u,
+            :count => unit_activities.size,
+            :activities => unit_activities
+          }
         end
+
+        if remainder.size > 0
+          unit_record = {
+            :name => "no assigned unit",
+            :count => remainder.size,
+            :activities => remainder
+          }
+          unit_listing << unit_record
+        end
+
+        record = {
+          :key          => "users_own",
+          :name         => "Your activities",
+          :classes      => "unit-navigation level#{i+1}",
+          :units        => unit_listing,
+          :count        => users.size,
+          :query        => users
+        } 
+        results << record 
       end
       results.each
       results.sort {|a,b| a[:key] <=> b[:key] }.uniq
