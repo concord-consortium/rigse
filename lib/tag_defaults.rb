@@ -61,7 +61,15 @@ module TagDefaults
       end
     end
 
-    def list_bins(user=nil)
+    def list_bins(portal_clazz=nil)
+      user = nil
+      offerings = nil
+      off_runnables = []
+      if portal_clazz && portal_clazz.teacher
+        user = portal_clazz.teacher.user
+        offerings = portal_clazz.offerings
+        off_runnables= offerings.map { |o| o.runnable }
+      end
       grade_levels  = self.grade_level_counts
       subject_areas = self.subject_area_counts
       units = self.unit_counts.map { |u| u.name }
@@ -74,10 +82,15 @@ module TagDefaults
           query = query.tagged_with(subject.name, :on => :subject_areas)
           unit_listing = units.map do |u| 
             u_query = query.tagged_with(u, :on => :units)
+            offered = []
             { :name => u,
               :count => u_query.count,
               :activities => u_query
             }
+          end
+          offered=[]
+          if off_runnables
+            offered = query & off_runnables
           end
           unit_listing.reject! { |u| u[:count] < 1 }
           record = {
@@ -88,7 +101,8 @@ module TagDefaults
             :subject_area => subject.name,
             :query        => query,
             :units        => unit_listing,
-            :count        => query.count
+            :count        => query.count,
+            :off_count    => offered.size
           }
           results << record
         end
@@ -117,12 +131,16 @@ module TagDefaults
           }
           unit_listing << unit_record
         end
-
+        offered=[]
+        if off_runnables
+          offered = users & off_runnables
+        end
         record = {
           :key          => "users_own",
           :name         => "Your activities",
           :classes      => "unit-navigation level#{i+1}",
           :units        => unit_listing,
+          :off_count    => offered.size,
           :count        => users.size,
           :query        => users
         } 
