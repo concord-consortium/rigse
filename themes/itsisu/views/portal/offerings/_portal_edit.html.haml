@@ -18,7 +18,7 @@
     %a.info-link{:href => "#", 
       :onclick => "toggle_info_block(this, '#runnable-description-#{runnable.id}'); if (window.event) event.returnValue=false; return false;", 
       :title => "View runnable description"}
-      %span.info>  		
+      %span.info
     .runnable-info
       = runnable.published? ? "(published)" : "(private)"
       %span.runnable-links{:id =>"runnable-links#{runnable.id}"}
