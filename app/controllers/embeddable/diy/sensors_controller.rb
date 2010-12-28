@@ -1,135 +1,135 @@
-class Embeddable::XhtmlsController < ApplicationController
-  # GET /Embeddable/xhtmls
-  # GET /Embeddable/xhtmls.xml
+class Embeddable::SensorsController < ApplicationController
+  # GET /Embeddable/sensors
+  # GET /Embeddable/sensors.xml
   def index
-    @xhtmls = Embeddable::Xhtml.search(params[:search], params[:page], nil)
+    @sensors = Embeddable::Sensor.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @xhtmls }
+      format.xml  { render :xml => @sensors }
     end
   end
 
-  # GET /Embeddable/xhtmls/1
-  # GET /Embeddable/xhtmls/1.xml
+  # GET /Embeddable/sensors/1
+  # GET /Embeddable/sensors/1.xml
   def show
-    @xhtml = Embeddable::Xhtml.find(params[:id])
+    @sensor = Embeddable::Sensor.find(params[:id])
     if request.xhr?
-      render :partial => 'show', :locals => { :xhtml => @xhtml }
+      render :partial => 'show', :locals => { :sensor => @sensor }
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.otml { render :layout => "layouts/embeddable/xhtml" } # xhtml.otml.haml
-        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @xhtml , :teacher_mode => false } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @xhtml, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
-        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @xhtml, :teacher_mode => @teacher_mode} }
-        format.xml  { render :xml => @xhtml }
+        format.otml { render :layout => "layouts/embeddable/sensor" } # sensor.otml.haml
+        format.jnlp { render :partial => 'shared/show', :locals => { :runnable => @sensor , :teacher_mode => false } }
+        format.config { render :partial => 'shared/show', :locals => { :runnable => @sensor, :session_id => (params[:session] || request.env["rack.session.options"][:id]) , :teacher_mode => false } }
+        format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @sensor, :teacher_mode => @teacher_mode} }
+        format.xml  { render :xml => @sensor }
       end
     end
   end
 
-  # GET /Embeddable/xhtmls/1/print
+  # GET /Embeddable/sensors/1/print
   def print
-    @xhtml = Embeddable::Xhtml.find(params[:id])
+    @sensor = Embeddable::Sensor.find(params[:id])
     respond_to do |format|
       format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @xhtml }
+      format.xml  { render :xml => @sensor }
     end
   end
 
-  # GET /Embeddable/xhtmls/new
-  # GET /Embeddable/xhtmls/new.xml
+  # GET /Embeddable/sensors/new
+  # GET /Embeddable/sensors/new.xml
   def new
-    @xhtml = Embeddable::Xhtml.new
+    @sensor = Embeddable::Sensor.new
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
+      render :partial => 'remote_form', :locals => { :sensor => @sensor }
     else
       respond_to do |format|
         format.html
-        format.xml  { render :xml => @xhtml }
+        format.xml  { render :xml => @sensor }
       end
     end
   end
 
-  # GET /Embeddable/xhtmls/1/edit
+  # GET /Embeddable/sensors/1/edit
   def edit
-    @xhtml = Embeddable::Xhtml.find(params[:id])
+    @sensor = Embeddable::Sensor.find(params[:id])
     if request.xhr?
-      render :partial => 'remote_form', :locals => { :xhtml => @xhtml }
+      render :partial => 'remote_form', :locals => { :sensor => @sensor }
     else
       respond_to do |format|
         format.html 
-        format.xml  { render :xml => @xhtml }
+        format.xml  { render :xml => @sensor }
       end
     end
   end
 
-  # POST /Embeddable/xhtmls
-  # POST /Embeddable/xhtmls.xml
+  # POST /Embeddable/sensors
+  # POST /Embeddable/sensors.xml
   def create
-    @xhtml = Embeddable::Xhtml.new(params[:xhtml])
+    @sensor = Embeddable::Sensor.new(params[:sensor])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 
         redirect_to :index
-      elsif @xhtml.save
-        render :partial => 'new', :locals => { :xhtml => @xhtml }
+      elsif @sensor.save
+        render :partial => 'new', :locals => { :sensor => @sensor }
       else
-        render :xml => @xhtml.errors, :status => :unprocessable_entity
+        render :xml => @sensor.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @xhtml.save
-          flash[:notice] = 'Embeddable::Xhtml.was successfully created.'
-          format.html { redirect_to(@xhtml) }
-          format.xml  { render :xml => @xhtml, :status => :created, :location => @xhtml }
+        if @sensor.save
+          flash[:notice] = 'Embeddable::Sensor.was successfully created.'
+          format.html { redirect_to(@sensor) }
+          format.xml  { render :xml => @sensor, :status => :created, :location => @sensor }
         else
           format.html { render :action => "new" }
-          format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @sensor.errors, :status => :unprocessable_entity }
         end
       end
     end
   end
 
-  # PUT /Embeddable/xhtmls/1
-  # PUT /Embeddable/xhtmls/1.xml
+  # PUT /Embeddable/sensors/1
+  # PUT /Embeddable/sensors/1.xml
   def update
     cancel = params[:commit] == "Cancel"
-    @xhtml = Embeddable::Xhtml.find(params[:id])
+    @sensor = Embeddable::Sensor.find(params[:id])
     if request.xhr?
-      if cancel || @xhtml.update_attributes(params[:embeddable_xhtml])
-        render :partial => 'show', :locals => { :xhtml => @xhtml }
+      if cancel || @sensor.update_attributes(params[:embeddable_sensor])
+        render :partial => 'show', :locals => { :sensor => @sensor }
       else
-        render :xml => @xhtml.errors, :status => :unprocessable_entity
+        render :xml => @sensor.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @xhtml.update_attributes(params[:embeddable_xhtml])
-          flash[:notice] = 'Embeddable::Xhtml.was successfully updated.'
-          format.html { redirect_to(@xhtml) }
+        if @sensor.update_attributes(params[:embeddable_sensor])
+          flash[:notice] = 'Embeddable::Sensor.was successfully updated.'
+          format.html { redirect_to(@sensor) }
           format.xml  { head :ok }
         else
           format.html { render :action => "edit" }
-          format.xml  { render :xml => @xhtml.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @sensor.errors, :status => :unprocessable_entity }
         end
       end
     end
   end
 
-  # DELETE /Embeddable/xhtmls/1
-  # DELETE /Embeddable/xhtmls/1.xml
+  # DELETE /Embeddable/sensors/1
+  # DELETE /Embeddable/sensors/1.xml
   def destroy
-    @xhtml = Embeddable::Xhtml.find(params[:id])
+    @sensor = Embeddable::Sensor.find(params[:id])
     respond_to do |format|
-      format.html { redirect_to(xhtmls_url) }
+      format.html { redirect_to(sensors_url) }
       format.xml  { head :ok }
       format.js
     end
     
     # TODO:  We should move this logic into the model!
-    @xhtml.page_elements.each do |pe|
+    @sensor.page_elements.each do |pe|
       pe.destroy
     end
-    @xhtml.destroy    
+    @sensor.destroy    
   end
 end
