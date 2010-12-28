@@ -519,7 +519,7 @@ class ItsiImporter
             attribs[:model_id] = :model_id
             attribs[:calibration_active] = :collectdata1_calibration_active
             attribs[:calibration_id] = :collectdata1_calibration_id
-      elsif section_key == "further"
+      elsif section_key.to_s == "further"
             attribs[:calibration_active] = :furtherprobe_calibration_active
             attribs[:calibration_id] = :furtherprobe_calibration_id
       end
