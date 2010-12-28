@@ -1,7 +1,7 @@
-%OTQuestion{:local_id => ot_local_id_for(diy_section)}
+%OTQuestion{:local_id => ot_local_id_for(section)}
   %prompt
     %OTCompoundDoc
-      %bodyText= diy_section.prompt
+      %bodyText= section.prompt
   %input
     %OTCompoundDoc
       %bodyText
@@ -9,7 +9,7 @@
           %tr
             %td{:width => '5%'}
             %td
-              %object{:refid => ot_refid_for(diy_section, :response)}
+              %object{:refid => ot_refid_for(section, :response)}
 
-%OTText{ :local_id => ot_local_id_for(diy_section, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{diy_section.name}_field"}
-  %text= h(diy_section.default_response)
+%OTText{ :local_id => ot_local_id_for(section, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{section.name}_field"}
+  %text= h(section.default_response)
