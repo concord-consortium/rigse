@@ -469,13 +469,14 @@ class ItsiImporter
     
     ##
     ## NP: new definition of create_activity_from_itsi_activity
-    ##
+    ## TODO: Add itsi user(!)
     def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
       name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
       activity = Activity.create do |i|
         i.name = name
         i.user = user
         i.description = itsi_activity.description
+        i.publish if itsi_activity.public
       end
       
       SECTIONS_MAP.each do |section|
