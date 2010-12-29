@@ -1,5 +1,6 @@
 class ItsiImporter
-  @@attributes = nil  
+  ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
+  @@attributes = nil
   SECTIONS_MAP = [
     { :key => :introduction,
       :name => "Introduction",
@@ -565,11 +566,15 @@ class ItsiImporter
       if (attribute_name_for(section_key,:model_active) && (diy_act.respond_to? attribute_name_for(section_key,:model_active)))
         model = Diy::Model.first
         model_id = diy_act.send(attribute_name_for(section_key,:model_id))
-        
+
         if (model_id && model_id > 0)
-          diy_model = Itsi::Model.find(model_id)
-          if diy_model
-            model = Diy::Model.from_external_portal(diy_model) 
+          begin 
+            diy_model = Itsi::Model.find(model_id)
+            if diy_model
+              model = Diy::Model.from_external_portal(diy_model)
+            end
+          rescue
+            puts "couldn't find DIY model with id #{model_id} actvity => #{diy_act.name} #{diy_act.id}"
           end
         end
 
@@ -581,11 +586,14 @@ class ItsiImporter
           em_model.disable
         end
       end
-      
+
       # probe / sensor
       if (attribute_name_for(section_key,:probetype_id) && (diy_act.respond_to? attribute_name_for(section_key,:probetype_id)))
         probe_type_id = diy_act.send(attribute_name_for(section_key,:probetype_id))
-        probe_type = Probe::ProbeType.find(probe_type_id)
+        probe_type = Probe::ProbeType.default
+        if probe_type_id != nil
+          probe_type = Probe::ProbeType.find(probe_type_id)
+        end
         calibration = nil
         if probe_type
           # see if we have a clibration to work with:
