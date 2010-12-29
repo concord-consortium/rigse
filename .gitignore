@@ -77,3 +77,4 @@ resources/rinet_test_data/report*
 mkmf.log
 hudson/*
 spec/reports
+.rvmrc

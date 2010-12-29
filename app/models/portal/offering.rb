@@ -6,6 +6,8 @@ class Portal::Offering < ActiveRecord::Base
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true
   
+  has_one :report_embeddable_filter, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
+  
   has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id", :dependent => :destroy
   
   [:name, :description].each { |m| delegate m, :to => :runnable }

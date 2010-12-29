@@ -16,6 +16,12 @@ class Portal::Learner < ActiveRecord::Base
       find(:all).select { |question| question.answered? }
     end
   end
+  
+  has_many :image_questions, :class_name => "Saveable::ImageQuestion" do
+    def answered
+      find(:all).select { |question| question.answered? }
+    end
+  end
 
   has_many :multiple_choices, :class_name => "Saveable::MultipleChoice" do
     def answered

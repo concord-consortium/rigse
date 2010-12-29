@@ -14,7 +14,7 @@
     %div{:id => dom_id_for(section, :details),  :style =>'display:block;'}
       = section.description
       %ul.tiny
-      - section.pages.each_with_index do |page, i|
-        %li.tiny
-          = link_to "page: #{page.name}", page
-          %span.tiny= page.description
+        - section.pages.each_with_index do |page, i|
+          %li.tiny
+            = link_to "page: #{page.name}", page
+            %span.tiny= page.description

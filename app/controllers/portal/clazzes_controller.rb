@@ -5,7 +5,11 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
   
+  before_filter :teacher_admin_or_config, :only => [:class_list]
   
+  def current_clazz
+    Portal::Clazz.find(params[:id])
+  end
   
   public
   # GET /portal_clazzes
@@ -336,6 +340,14 @@ class Portal::ClazzesController < ApplicationController
       # end
     rescue
       render(:update) { |page| page << "$('flash').update('There was an error while processing your request.')" }
+    end
+  end
+  
+  def class_list
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    
+    respond_to do |format|
+      format.html { render :layout => 'report'}
     end
   end
     

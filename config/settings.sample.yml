@@ -39,6 +39,16 @@ development: &non_production_settings
     family: all-otrunk-snapshot
     version: snapshot
   net_logo_package_name: otrunknl4
+  dont_sanitize_xhtml: true
+  tiny_mce: 
+    buttons1: 
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code 
   
 test:
   <<: *non_production_settings
@@ -70,6 +80,16 @@ staging:
     family: all-otrunk-snapshot
     version: snapshot
   net_logo_package_name: otrunknl4
+  dont_sanitize_xhtml: true
+  tiny_mce: 
+    buttons1: 
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code 
   
 production:
   site_name: Investigations
@@ -97,3 +117,13 @@ production:
     family: all-otrunk-snapshot
     version: snapshot
   net_logo_package_name: otrunknl4
+  dont_sanitize_xhtml: true
+  tiny_mce: 
+    buttons1: 
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code 

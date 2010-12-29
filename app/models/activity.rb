@@ -53,6 +53,7 @@ class Activity < ActiveRecord::Base
   
   include Noteable # convenience methods for notes...
   acts_as_replicatable
+  acts_as_list :scope => :investigation
   include Changeable
   include TreeNode
   include Publishable

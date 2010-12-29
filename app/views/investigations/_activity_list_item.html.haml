@@ -14,7 +14,7 @@
     %div{:id => dom_id_for(activity, :details), :class => 'content ', :style =>'display:block;'}
       = activity.description
       %ul.tiny
-      - activity.sections.each_with_index do |section, i|
-        %li.tiny
-          = link_to "#{section.name}", section
-          %span.tiny= section.description
+        - activity.sections.each_with_index do |section, i|
+          %li.tiny
+            = link_to "#{section.name}", section
+            %span.tiny= section.description

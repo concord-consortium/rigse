@@ -201,12 +201,18 @@ class Admin::Project < ActiveRecord::Base
     def default_jnlp_info
       default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
       # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
-      server = APP_CONFIG[:maven_jnlp_servers].find { |s| s[:name] == default_maven_jnlp[:server] }
-      # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
-      family = default_maven_jnlp[:family]
-      # => "all-otrunk-snapshot"
-      version = default_maven_jnlp[:version]
-      # => "snapshot"
+      servers = APP_CONFIG[:maven_jnlp_servers]
+      if servers
+        server = servers.find { |s| s[:name] == default_maven_jnlp[:server] }
+        # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+        family = default_maven_jnlp[:family]
+        # => "all-otrunk-snapshot"
+        version = default_maven_jnlp[:version]
+        # => "snapshot"
+      else
+        # needed for factories in testing
+        server = family = version = 'FIXME_LINE_213_project.rb(APP_CONFIG[:maven_jnlp_servers])' 
+      end
       [server, family, version]
     end
 
@@ -232,6 +238,13 @@ Portal::Learner:  #{Portal::Learner.count}
 
 Dataservice::BundleLogger:  #{Dataservice::BundleLogger.count}
 Dataservice::BundleContent: #{Dataservice::BundleContent.count}
+Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
+Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
+
+There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
+There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
+
+If these numbers are large you may want to consider cleaning up the database.
 
 # code template for use in script/console
 

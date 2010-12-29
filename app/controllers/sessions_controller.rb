@@ -11,8 +11,61 @@ class SessionsController < ApplicationController
 
   def destroy
     logout_killing_session!
+    delete_cc_cookie
     flash[:notice] = "You have been logged out."
     redirect_back_or_default(root_path)
+  end
+
+  # verify a CC token
+  def verify_cc_token
+    begin
+      token = cookies[CCCookieAuth.cookie_name]
+      valid = CCCookieAuth.verify_auth_token(token,request.remote_ip)
+      raise 'invalid token' unless valid
+      login = token.split(CCCookieAuth.token_separator).first
+      raise 'token parse error' unless login
+      user = User.find_by_login(login)
+      riase 'bogus user' unless user
+      values = {:login => login, :first => user.first_name, :last => user.last_name}
+      student = user.portal_student
+      teacher = user.portal_teacher
+      if student
+        values[:class_words] = student.clazzes.map{ |c| c.class_word }
+        values[:teacher] = false
+      end
+      if teacher
+        values[:class_words] = teacher.clazzes.map{ |c| c.class_word }
+        values[:teacher] = true
+      end
+      render :json => values
+    rescue Exception => e
+      render :text => "authentication failure: #{e.message}", :status => 403
+    end
+  end
+  
+  # verify a remote login attempt
+  def remote_login
+    user = User.authenticate(params[:login], params[:password])
+    if user
+      self.current_user = user
+      save_cc_cookie
+      values = {:login => user.login, :first => user.first_name, :last => user.last_name}
+      render :json => values
+    else
+      error = "authentication failure: invalid user or password"
+      values = {:error => error}
+      #render :text => error, :status => 403
+      render :json => values, :status => 403
+    end
+  end
+
+  # silently logout using a post request
+  def remote_logout
+    logout_killing_session!
+    delete_cc_cookie
+    message = "logged out."
+    values = {:message => message}
+    render :json => values
   end
 
   protected
@@ -35,6 +88,7 @@ class SessionsController < ApplicationController
   def successful_login
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
+    save_cc_cookie
     flash[:notice] = "Logged in successfully"
     redirect_to(root_path) unless !check_student_security_questions_ok
   end
@@ -51,4 +105,31 @@ class SessionsController < ApplicationController
     end
     return true
   end
+
+  def cookie_domain
+    if defined? @cookie_domain
+      return @cookie_domain
+    end  
+    # use wildcard domain (last two parts ".concord.org") for this cookie
+    name_parts = request.host.split(".")
+    if(name_parts.length > 1)
+      # use the last two bits
+      @cookie_domain = ".#{name_parts[-2..-1].join(".")}"
+    else
+      @cookie_domain = nil
+    end
+    return @cookie_domain
+  end
+
+  def delete_cc_cookie
+    #cookies.delete CCCookieAuth.cookie_name.to_sym
+    cookies.delete CCCookieAuth.cookie_name.to_sym, :domain => cookie_domain
+  end
+  
+  def save_cc_cookie
+    token = CCCookieAuth.make_auth_token(current_user.login, request.remote_ip)
+    #cookies[CCCookieAuth.cookie_name.to_sym] = token
+    cookies[CCCookieAuth.cookie_name.to_sym] = {:value => token, :domain => cookie_domain }
+  end
+
 end
