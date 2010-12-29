@@ -44,6 +44,13 @@ describe Embeddable::Diy::Sensor do
       test_case.name.should_not be_nil 
       test_case.name.should == @backed_proto.name
     end
+
+    it "should respond_to? for proxied attributes" do
+      test_case = create(@valid_attributes)
+      test_case.should respond_to :description
+      test_case.should respond_to :name
+    end
+
   end
   
   describe "simple serialized fields" do
