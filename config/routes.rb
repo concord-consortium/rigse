@@ -384,7 +384,8 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post
+    :destroy => :post,
+    :template_edit => :get
   }
   map.browse_activities '/activity/browse', :controller=>'activities', :action => 'browse'
   map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post

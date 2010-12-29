@@ -41,6 +41,13 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     end
   end
 
+  def respond_to?(method, *args, &block)
+    return true if Embeddable::Diy::Sensor.custom_set?(method)
+    return true if Embeddable::Diy::Sensor.custom_get?(method)
+    return true if super
+    return true if self.prototype.respond_to?(method, *args, &block)
+  end
+
   def method_missing(method, *args, &block)
     if Embeddable::Diy::Sensor.custom_set?(method)
       # remove the trailing '=' from method_name to get field name

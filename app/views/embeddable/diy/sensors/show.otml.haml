@@ -1,5 +1,5 @@
 - content_for(:otrunk_doc_id) do
-  =@diy_sensor.uuid
-- content_for(:diy_sensor_object_id) do
-  =dom_id_for(@diy_sensor)
-= render :partial => "show", :locals => { :diy_sensor => @diy_sensor }
+  =@sensor.uuid
+- content_for(:sensor_object_id) do
+  =dom_id_for(@sensor)
+= render :partial => "show", :locals => { :sensor => @sensor }

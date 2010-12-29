@@ -20,7 +20,8 @@ javascripts:
   - item_selectable
   - live_validation
   - report_filter
-  
+  - template_toggle 
+
 stylesheets: 
 - base: 
   - app
@@ -74,7 +75,7 @@ stylesheets:
 
 - itsisu:
   - app
-  #- themes/itsisu/itsisu
+  - themes/itsisu/template_edit
   #- themes/itsisu/action_menu_tab
   #- themes/itsisu/drop_down
   #- themes/itsisu/accordion
