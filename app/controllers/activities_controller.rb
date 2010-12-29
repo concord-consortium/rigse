@@ -159,7 +159,6 @@ class ActivitiesController < ApplicationController
   end
   def template_edit
     @teacher_mode = params[:teacher_mode] || false
-    render :layout => 'template'
   end
 
   # GET /pages/new
