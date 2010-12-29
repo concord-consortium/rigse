@@ -61,7 +61,7 @@ class ItsiImporter
   ]
 
   class <<self
-    
+
     def find_or_create_itsi_import_user
       unless user = User.find_by_login('itsi_import_user')
         member_role = Role.find_by_title('member')
@@ -73,8 +73,8 @@ class ItsiImporter
       end
       user
     end
-    
-    
+
+
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit,user, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
@@ -100,7 +100,7 @@ class ItsiImporter
       end
       puts
     end
-    
+
     def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
@@ -138,12 +138,12 @@ class ItsiImporter
       end
       ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix)
     end
-    
+
     def add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix="")
       investigation.activities << create_activity_from_itsi_activity(itsi_activity, user, prefix="")
       investigation
     end
-    
+
     def create_activity_from_itsi_activity_old(itsi_activity, user, prefix="")
        @@prediction_graph = nil
         if itsi_activity.collectdata_probe_active
@@ -255,7 +255,7 @@ class ItsiImporter
 
         name = "Prediction"
         page_desc = "Have the learner think about and predict the outcome of an experiment."
-        extract_question_prompt = itsi_activity.prediction_text_response || 
+        extract_question_prompt = itsi_activity.prediction_text_response ||
           itsi_activity.prediction_drawing_response || itsi_activity.prediction_graph_response
         body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.predict, extract_question_prompt)
         unless body.empty? && question_prompt.empty?
@@ -289,11 +289,11 @@ class ItsiImporter
         #   graph
         #     collectdata_graph_response
         #     (for probe in second collect data section)
-        # 
+        #
 
         name = "Collect Data"
         page_desc = "The learner conducts experiments using probes and models."
-        extract_question_prompt = itsi_activity.collectdata_text_response || 
+        extract_question_prompt = itsi_activity.collectdata_text_response ||
           itsi_activity.collectdata_drawing_response || itsi_activity.collectdata_graph_response
         body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.collectdata, extract_question_prompt)
         unless body.empty? && question_prompt.empty?
@@ -467,10 +467,11 @@ class ItsiImporter
         end
         activity
     end
-    
+
     ##
     ## NP: new definition of create_activity_from_itsi_activity
-    ## TODO: Add itsi user(!)
+    ## TODO: Add itsi user
+
     def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
       name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
       activity = Activity.create do |i|
@@ -479,13 +480,13 @@ class ItsiImporter
         i.description = itsi_activity.description
         i.publish if itsi_activity.public
       end
-      
+
       SECTIONS_MAP.each do |section|
         process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
       end
     end
 
-   
+
     def attributes
       return @@attributes if @@attributes
       # this is the "standard" form, for which there are exceptions
@@ -498,19 +499,19 @@ class ItsiImporter
       #t.boolean "collectdata2_drawing_response"
       #t.boolean "collectdata2_calibration_active"
       #t.integer "collectdata2_calibration_id"
-      @@attributes =  %w[ 
-        text_response 
-        drawing_response 
-        model_active 
-        model_id 
-        probe_active 
-        probetype_id 
-        probe_multi 
-        calibration_active 
+      @@attributes =  %w[
+        text_response
+        drawing_response
+        model_active
+        model_id
+        probe_active
+        probetype_id
+        probe_multi
+        calibration_active
         calibration_id].map { |e| e.to_sym }
       return @@attributes
     end
-    
+
     def attribute_name_for(section_key, attribute_name)
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
       attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
@@ -530,7 +531,7 @@ class ItsiImporter
     ##
     ## NP: Import a section from the activity (NEW)
     ##
-    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description) 
+    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description)
       section = Section.create(
         :name => section_name,
         :description => section_description,
@@ -540,7 +541,7 @@ class ItsiImporter
         :description => section_description,
         :section => section)
       activity.sections << section
-      
+
       # main text content for section
       content,intentionally_blank = process_textile_content(diy_act.send(section_key.to_sym),false)
       main_content = Embeddable::Diy::Section.create(
@@ -548,7 +549,7 @@ class ItsiImporter
           :content => content,
           :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)))
       main_content.pages << page
-      
+
       # drawing response
       if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
         drawing_response = Embeddable::DrawingTool.create(
@@ -612,7 +613,7 @@ class ItsiImporter
         end
       end
     end
-    
+
     def process_textile_content(textile_content, split_last_paragraph=false)
       return ['',''] if textile_content.nil? || textile_content.empty?
       doc = Hpricot(RedCloth.new(textile_content).to_html)
@@ -673,7 +674,7 @@ class ItsiImporter
           x.content = html_content
         end
         page = Page.create do |p|
-          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....          
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....
           # p.name = "#{name}"
           p.description = page_description
           page_embeddable.pages << p
