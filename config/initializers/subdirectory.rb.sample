@@ -1,0 +1,3 @@
+# if you're running the app in a subdirectory, make sure to create a subdirectory.rb file with the following content changed to match your deployment
+
+ActionController::Base.relative_url_root = '/portal'
