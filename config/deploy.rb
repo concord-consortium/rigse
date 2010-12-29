@@ -183,6 +183,7 @@ namespace :deploy do
     run "touch #{shared_path}/config/rinet_data.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
+    run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
   end
 
@@ -194,6 +195,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
+    run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
