@@ -82,7 +82,7 @@
           %li#home.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           - if current_user.has_role?('admin', 'manager', 'teacher', 'researcher', 'author', 'member')
-            %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
+            %li.trail=link_to(top_level_container_name.humanize.pluralize, activities_path)
         .menu_h_right
           %ul
             - if current_user.has_role?('admin', 'manager')
