@@ -61,7 +61,15 @@ class PageElement < ActiveRecord::Base
   def teacher_only?
     false
   end
-  
+ 
+  def enabled?
+    return is_enabled
+  end
+
+  def enabled=(isit)
+    is_enabled=isit
+  end
+
   def parent
     return page
   end
