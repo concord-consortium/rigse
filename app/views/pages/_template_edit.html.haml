@@ -1,6 +1,8 @@
 - page.page_elements.each_with_index do |element,i|
   - component = element.embeddable
-  %div{:id => dom_id_for(element, :template_container), :class => 'template_container'}
+  - # TODO: we should still render disabled pieces, but render them small like ...
+  - dom_class = element.enabled? ? "template_container" : "template_container disabled"
+  %div{:id => dom_id_for(element, :template_container), :class => dom_class }
     %div.buttons
       %div.template_disable_button
       %div.template_enable_button
