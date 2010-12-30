@@ -66,7 +66,7 @@ class Embeddable::Diy::SectionsController < ApplicationController
   # POST /Embeddable/sections
   # POST /Embeddable/section.xml
   def create
-    @section = Embeddable::Diy::Section.new(params[:section])
+    @section = Embeddable::Diy::Section.new(params[:embeddable_diy_section])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 
@@ -95,15 +95,16 @@ class Embeddable::Diy::SectionsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @section = Embeddable::Diy::Section.find(params[:id])
+    debugger
     if request.xhr?
-      if cancel || @section.update_attributes(params[:embeddable_section])
+      if cancel || @section.update_attributes(params[:embeddable_diy_section])
         render :partial => 'show', :locals => { :section => @section }
       else
         render :xml => @section.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @section.update_attributes(params[:embeddable_section])
+        if @section.update_attributes(params[:embeddable_diy_section])
           flash[:notice] = 'Embeddable::Diy::Section.was successfully updated.'
           format.html { redirect_to(@section) }
           format.xml  { head :ok }
