@@ -31,6 +31,7 @@
     _save_button.show();
     disable_button(_save_button);
     container.down(view_container_class).show();
+    container.removeClassName('disabled');
     enabler.hide();
     disabler.show();
   };
@@ -44,6 +45,7 @@
     container.down(save_class).hide();
     container.down(view_container_class).hide();
     container.down(edit_container_class).hide();
+    container.addClassName('disabled');
     disabler.hide();
     enabler.show();
   };
@@ -84,6 +86,8 @@
     $$(edit_container_class).each(function(element){ 
       element.hide();
     });
+    
+    
     $$(edit_class).each(function(element){
         element.observe('click', open_editor);
         enable_button(element);
@@ -110,9 +114,9 @@
       });
     });
     // remove the action menu from the dom TODO: HACKY.
-    $$('.action_menu').each(function(element) {
-      element.remove();
-    });
+    //$$('.action_menu').each(function(element) {
+      //element.remove();
+    //});
 
     // cancel the double-click behavior of editable_block
     // TODO: (?) dont put the editable behavior inline? Use unobtrusive jquery?
@@ -123,6 +127,21 @@
       });
       element.remove();
     });
+    
+    //$$(template_container_class + " .disabled").each(function(container) {
+      //debugger;
+      //var disabler = container.down(disable_class);
+      //var enabler = container.down(enable_class);
+      //var title = container.down(title_container_class);
+
+      //container.down(edit_class).hide();
+      //container.down(save_class).hide();
+      //container.down(view_container_class).hide();
+      //container.down(edit_container_class).hide();
+      //container.addClassName('disabled');
+      //disabler.hide();
+      //enabler.show();
+    //});
 
     console.log("loaded the template button code");
   });
