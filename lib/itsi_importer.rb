@@ -553,8 +553,8 @@ class ItsiImporter
       # drawing response
       if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
         drawing_response = Embeddable::DrawingTool.create(
-          :name => "drawing tool",
-          :description => "drawing tool")
+          :name => "drawing response",
+          :description => "drawing response")
         drawing_response.pages << page
         if diy_act.send(attribute_name_for(section_key,:drawing_response))
           drawing_response.enable

@@ -16,7 +16,7 @@ class Embeddable::DrawingTool < Embeddable::Embeddable
   send_update_events_to :investigations
 
   def self.display_name
-    "Draw Tool"
+    "Drawing Response"
   end
   
 end
