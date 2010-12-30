@@ -1,14 +1,14 @@
---- 
+---
 development: &development
-  theme: geniverse
-  runnables_use: browser
-  runnable_mime_type: run_external_html
-  top_level_container_name: external_activity
-  active_school_levels:
+  :theme: geniverse
+  :runnables_use: browser
+  :runnable_mime_type: run_external_html
+  :top_level_container_name: external_activity
+  :active_school_levels:
     - "2"
     - "3"
     - "4"
-  active_grades:
+  :active_grades:
     - "6"
     - "7"
     - "8"
@@ -16,21 +16,21 @@ development: &development
     - "10"
     - "11"
     - "12"
-  use_gse: false
-  include_otrunk_examples: false
-  help_email: stephen.bannasch@gmail.com
-  site_school: Geniverse School
-  description: ""
-  site_district: Geniverse District
-  site_name: Geniverse
-  site_url: http://localhost:3000
-  enable_default_users: true
-  default_admin_user: 
-    first_name: Stephen
-    last_name: Bannasch
-    login: stephen
-    email: stephen.bannasch@gmail.com
-  states_and_provinces: 
+  :use_gse: false
+  :include_otrunk_examples: false
+  :help_email: stephen.bannasch@gmail.com
+  :site_school: Geniverse School
+  :description: ""
+  :site_district: Geniverse District
+  :site_name: Geniverse
+  :site_url: http://localhost:3000
+  :enable_default_users: true
+  :default_admin_user:
+    :first_name: Stephen
+    :last_name: Bannasch
+    :login: stephen
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces:
   - MA
 test: *development
 staging: *development

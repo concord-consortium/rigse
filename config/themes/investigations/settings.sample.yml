@@ -1,10 +1,10 @@
---- 
+---
 development: &development
-  active_school_levels: &active_school_levels
+  :active_school_levels: &active_school_levels
     - "2"
     - "3"
     - "4"
-  active_grades: &active_grades
+  :active_grades: &active_grades
     - "6"
     - "7"
     - "8"
@@ -12,59 +12,59 @@ development: &development
     - "10"
     - "11"
     - "12"
-  theme: investigations
-  site_name: Investigations
-  site_url: http://localhost:3000
-  runnables_use: otrunk_jnlp
-  runnable_mime_type: 
-  top_level_container_name: investigation
-  site_school: Investigations-school
-  description: ""
-  site_district: Investigations-district
-  help_email: investigations@concord.org
-  use_gse: false
-  enable_default_users: true
-  default_admin_user: &default_admin_user
-    first_name: Stephen
-    login: stephen
-    last_name: Bannasch
-    email: stephen.bannasch@gmail.com
-  states_and_provinces: <%= StatesAndProvinces::STATES_AND_PROVINCES.collect { |state| state[0] }.inspect %>
-  maven_jnlp_servers: &maven_jnlp_servers
+  :theme: investigations
+  :site_name: Investigations
+  :site_url: http://localhost:3000
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: Investigations-school
+  :description: ""
+  :site_district: Investigations-district
+  :help_email: investigations@concord.org
+  :use_gse: false
+  :enable_default_users: true
+  :default_admin_user: &default_admin_user
+    :first_name: Stephen
+    :login: stephen
+    :last_name: Bannasch
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces: <%= StatesAndProvinces::STATES_AND_PROVINCES.collect { |state| state[0] }.inspect %>
+  :maven_jnlp_servers: &maven_jnlp_servers
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families: &maven_jnlp_families
+  :maven_jnlp_families: &maven_jnlp_families
     - all-otrunk-snapshot
-  default_maven_jnlp: 
-    version: snapshot
-    server: concord
-    family: all-otrunk-snapshot
-  
+  :default_maven_jnlp:
+    :version: snapshot
+    :server: concord
+    :family: all-otrunk-snapshot
+
 test: *development
 staging: *development
 cucumber: *development
 
 production:
-  active_school_levels: *active_school_levels
-  active_grades: *active_grades
-  theme: investigations
-  site_name: Investigations
-  site_url: http://localhost:3000
-  runnables_use: otrunk_jnlp
-  runnable_mime_type: 
-  top_level_container_name: investigation
-  site_school: Investigations-school
-  description: ""
-  site_district: Investigations-district
-  help_email: investigations@concord.org
-  use_gse: false
-  enable_default_users: true
-  default_admin_user: *default_admin_user
-  states_and_provinces: <%= StatesAndProvinces::STATES_AND_PROVINCES.collect { |state| state[0] }.inspect %>
-  maven_jnlp_servers: *maven_jnlp_servers
-  maven_jnlp_families: *maven_jnlp_families
-  default_maven_jnlp: 
-    version: 0.1.0-20100513.161426
-    server: concord
-    family: all-otrunk-snapshot
+  :active_school_levels: *active_school_levels
+  :active_grades: *active_grades
+  :theme: investigations
+  :site_name: Investigations
+  :site_url: http://localhost:3000
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: Investigations-school
+  :description: ""
+  :site_district: Investigations-district
+  :help_email: investigations@concord.org
+  :use_gse: false
+  :enable_default_users: true
+  :default_admin_user: *default_admin_user
+  :states_and_provinces: <%= StatesAndProvinces::STATES_AND_PROVINCES.collect { |state| state[0] }.inspect %>
+  :maven_jnlp_servers: *maven_jnlp_servers
+  :maven_jnlp_families: *maven_jnlp_families
+  :default_maven_jnlp:
+    :version: 0.1.0-20100513.161426
+    :server: concord
+    :family: all-otrunk-snapshot
