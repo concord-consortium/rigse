@@ -975,7 +975,7 @@ Here are the current settings in config/settings.yml:
       @settings_config[env][:site_url] =         ask("            site url: ") { |q| q.default = @settings_config[env][:site_url] }
       @settings_config[env][:site_name] =        ask("           site_name: ") { |q| q.default = @settings_config[env][:site_name] }
 
-      @settings_config[env][:default_admin_user] || = {}
+      @settings_config[env][:default_admin_user] ||= {}
       @settings_config[env][:default_admin_user][:email] = ask("         admin_email: ") { |q| q.default = @settings_config[env][:default_admin_user][:email] }
       @settings_config[env][:default_admin_user][:login] =      ask("         admin_login: ") { |q| q.default = @settings_config[env][:default_admin_user][:login] }
       @settings_config[env][:default_admin_user][:first_name] = ask("    admin_first_name: ") { |q| q.default = @settings_config[env][:default_admin_user][:first_name] }
