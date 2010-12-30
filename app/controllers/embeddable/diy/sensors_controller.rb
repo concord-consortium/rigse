@@ -1,4 +1,4 @@
-class Embeddable::SensorsController < ApplicationController
+class Embeddable::Diy::SensorsController < ApplicationController
   # GET /Embeddable/sensors
   # GET /Embeddable/sensors.xml
   def index
