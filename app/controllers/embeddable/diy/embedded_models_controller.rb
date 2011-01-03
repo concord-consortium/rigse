@@ -97,14 +97,14 @@ class Embeddable::Diy::EmbeddedModelsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @embedded_model = Embeddable::Diy::EmbeddedModel.find(params[:id])
     if request.xhr?
-      if cancel || @embedded_model.update_attributes(params[:embeddable_embedded_model])
+      if cancel || @embedded_model.update_attributes(params[:embeddable_diy_embedded_model])
         render :partial => 'show', :locals => { :embedded_model => @embedded_model }
       else
         render :xml => @embedded_model.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @embedded_model.update_attributes(params[:embeddable_embedded_model])
+        if @embedded_model.update_attributes(params[:embeddable_diy_embedded_model])
           flash[:notice] = 'Embeddable::Diy::EmbeddedModel.was successfully updated.'
           format.html { redirect_to(@embedded_model) }
           format.xml  { head :ok }
