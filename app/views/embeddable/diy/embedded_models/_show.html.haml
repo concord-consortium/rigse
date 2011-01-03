@@ -1,8 +1,7 @@
-%div{:id => dom_id_for(embedded_model, :details), :class => 'content'}
-  = wrap_edit_link_around_content(embedded_model, options={:complete => mce_init_string}) do
-    %ul
-
-      %li
-        Authored Data URL: 
-        %a{:href => embedded_model.url}
-          = embedded_model.url
+%div{:id => dom_id_for(embedded_model, :details), :class => 'content foobar'}
+  -# = wrap_edit_link_around_content(embedded_model, options={:complete => mce_init_string, :class => 'foobar edit'}) do
+  %ul{:class => "foo"}
+    %li
+      Authored Data URL: 
+      %a{:href => embedded_model.url}
+        = embedded_model.url
