@@ -40,11 +40,11 @@ gem install haml
 Next time you work on (eg has) try:
 
 <pre><code>rvm use 1.8.7@has</pre></code>
-
 and you will have only the gems you configured for has.
 
 Another super cool thing you can do is create a ".rvmrc" file at the top of your project
 the file can have just one line:
+
 <pre><code>rvm use 1.8.7@has</pre></code>
 
 From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
@@ -75,6 +75,7 @@ rvm_shell_ruby_string=ruby-1.8.7-p302@rites
 We use the following three build shell scripts in sequence to run the tests:
 
 h5. Setup environment
+
 <pre><code>
 ruby config/setup.rb -y -q -t rites
 echo '
@@ -169,16 +170,16 @@ logrotate -s logrotate.status logrotate.conf
 
 h5. Post Build Actions
 
-* *Publish JUnit test result report*: @hudson/reports/**/*xml@
-* *Additional test report features*: @Publish test attachments@
+Publish JUnit test result report: @hudson/reports/**/*xml@
+Additional test report features: @Publish test attachments@
 
-*Publish HTML reports*: @Publish test attachments@
+*Publish HTML reports*
 
-||HTML directory to archive||Index page[s]||Report title||Keep past HTML reports||
+|_.HTML directory to archive|_.Index page[s]|_.Report title|_.Keep past HTML reports|
 |hudson/reports/features|report.html|Cucumber Report|true|
 |hudson/reports/specs|report.html|RSpec Report|true|
 
-* *Copy files back to the master*: @hudson/reports/**@
+Copy files back to the master: @hudson/reports/**@
 
 h4. GIT
 
