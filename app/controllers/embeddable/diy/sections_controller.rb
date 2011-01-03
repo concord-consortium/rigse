@@ -95,7 +95,6 @@ class Embeddable::Diy::SectionsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @section = Embeddable::Diy::Section.find(params[:id])
-    debugger
     if request.xhr?
       if cancel || @section.update_attributes(params[:embeddable_diy_section])
         render :partial => 'show', :locals => { :section => @section }
