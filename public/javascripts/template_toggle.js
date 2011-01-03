@@ -1,6 +1,7 @@
 /*globals $ $$ Event document window */
 (function() {
   var edit_class = '.template_edit_button';
+  var cancel_class = '.template_cancel_button';
   var save_class = '.template_save_button';
   var disable_class = '.template_disable_button';
   var enable_class = '.template_enable_button';
@@ -35,7 +36,7 @@
     enabler.hide();
     disabler.show();
   };
-  
+
   var disable_section = function(evt) {
     var disabler = evt.element();
     var container = disabler.up(template_container_class);
@@ -49,9 +50,8 @@
     disabler.hide();
     enabler.show();
   };
-  
-  var open_editor = function(evt) { 
-    console.log('open editor in');
+
+  var open_editor = function(evt) {
     var edit_button = evt.element();
     var container = edit_button.up(template_container_class);
     var save_button = container.down(save_class);
@@ -61,21 +61,17 @@
     disable_button(edit_button);
     edit_container.show();
     view_container.hide();
-    console.log('open editor out');
   };
 
   var close_editor = function(evt) {
-    console.log('close editor in');
     var save_button = evt.element();
     var container = save_button.up(template_container_class);
     var edit_button = container.down(edit_class);
     var edit_container = container.down(edit_container_class);
     var view_container = container.down(view_container_class);
     enable_button(edit_button);
-    disable_button(save_button);
     edit_container.hide();
     view_container.show();
-    console.log('close editor out');
   };
 
   document.observe('dom:loaded', function() {
@@ -83,11 +79,17 @@
         element.observe('click', close_editor);
         disable_button(element);
     });
-    $$(edit_container_class).each(function(element){ 
+    $$(cancel_class).each(function(element){
+        element.observe('click', function(evt) {
+        evt.stop(); // don't submit form
+        close_editor(evt);
+        });
+    });
+    $$(edit_container_class).each(function(element){
       element.hide();
     });
-    
-    
+
+
     $$(edit_class).each(function(element){
         element.observe('click', open_editor);
         enable_button(element);
@@ -100,6 +102,7 @@
       elm.observe('click', disable_section);
     });
 
+    // initial visibility of buttons:
     $$(template_container_class).each(function(elm) {
       elm.observe('mouseover', function(evt) {
         if (elm.hasClassName('over')) {
@@ -113,10 +116,6 @@
         elm.down('.buttons').show();
       });
     });
-    // remove the action menu from the dom TODO: HACKY.
-    //$$('.action_menu').each(function(element) {
-      //element.remove();
-    //});
 
     // cancel the double-click behavior of editable_block
     // TODO: (?) dont put the editable behavior inline? Use unobtrusive jquery?
@@ -127,23 +126,7 @@
       });
       element.remove();
     });
-    
-    //$$(template_container_class + " .disabled").each(function(container) {
-      //debugger;
-      //var disabler = container.down(disable_class);
-      //var enabler = container.down(enable_class);
-      //var title = container.down(title_container_class);
 
-      //container.down(edit_class).hide();
-      //container.down(save_class).hide();
-      //container.down(view_container_class).hide();
-      //container.down(edit_container_class).hide();
-      //container.addClassName('disabled');
-      //disabler.hide();
-      //enabler.show();
-    //});
-
-    console.log("loaded the template button code");
   });
 
 }());

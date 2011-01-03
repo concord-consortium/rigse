@@ -67,7 +67,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # POST /Embeddable/sensors
   # POST /Embeddable/sensors.xml
   def create
-    @sensor = Embeddable::Siy::Sensor.new(params[:sensor])
+    @sensor = Embeddable::Siy::Sensor.new(params[:embeddable_diy_sensor])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 
@@ -97,14 +97,14 @@ class Embeddable::Diy::SensorsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @sensor = Embeddable::Diy::Sensor.find(params[:id])
     if request.xhr?
-      if cancel || @sensor.update_attributes(params[:sensor])
+      if cancel || @sensor.update_attributes(params[:embeddable_diy_sensor])
         render :partial => 'show', :locals => { :sensor => @sensor }
       else
         render :xml => @sensor.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @sensor.update_attributes(params[:sensor])
+        if @sensor.update_attributes(params[:embeddable_diy_sensor])
           flash[:notice] = 'Embeddable::Siy::Sensor.was successfully updated.'
           format.html { redirect_to(@sensor) }
           format.xml  { head :ok }
