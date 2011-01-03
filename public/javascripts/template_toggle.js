@@ -2,6 +2,7 @@
 (function() {
   var edit_class = '.template_edit_button';
   var cancel_class = '.template_cancel_button';
+  var wait_class = ".template_wait";
   var save_class = '.template_save_button';
   var disable_class = '.template_disable_button';
   var enable_class = '.template_enable_button';
@@ -74,7 +75,55 @@
     view_container.show();
   };
 
+
+  window.template_save_loading = function(container){
+    var el = $(container).up('.template_container');
+    var save_button = el.down(save_class);
+    var edit_button = el.down(edit_class);
+    var disable_button = el.down(disable_class);
+    var wait = el.down(wait_class);
+    var edit_container = el.down(edit_container_class);
+    var view_container = el.down(view_container_class);
+    wait.show();
+    edit_button.hide();
+    disable_button.hide();
+    //el.addClassName('disabled');
+  };
+
+  window.template_save_success = function(container) {
+    var el = $(container).up('.template_container');
+    var save_button = el.down(save_class);
+    var edit_button = el.down(edit_class);
+    var disable_button = el.down(disable_class);
+    var wait = el.down(wait_class);
+    var edit_container = el.down(edit_container_class);
+    var view_container = el.down(view_container_class);
+    wait.hide();
+    edit_button.show();
+    disable_button.show();
+    el.removeClassName('disabled');
+  };
+
+  window.template_save_failure = function(container) {
+    var el = $(container).up('.template_container');
+    var save_button = el.down(save_class);
+    var edit_button = el.down(edit_class);
+    var wait = el.down(wait_class);
+    var edit_container = el.down(edit_container_class);
+    var view_container = el.down(view_container_class);
+    alert('unable to save your change, please try again ...');
+    wait.hide();
+    edit_button.show();
+    disable_button.show();
+    el.removeClassName('disabled');
+  };
+
+
   document.observe('dom:loaded', function() {
+    $$(wait_class).each(function(element){
+        element.hide();
+    });
+
     $$(save_class).each(function(element){
         element.observe('click', close_editor);
         disable_button(element);
