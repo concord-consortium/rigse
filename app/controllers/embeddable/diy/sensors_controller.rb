@@ -2,7 +2,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # GET /Embeddable/sensors
   # GET /Embeddable/sensors.xml
   def index
-    @sensors = Embeddable::Sensor.search(params[:search], params[:page], nil)
+    @sensors = Embeddable::Siy::Sensor.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # GET /Embeddable/sensors/1
   # GET /Embeddable/sensors/1.xml
   def show
-    @sensor = Embeddable::Sensor.find(params[:id])
+    @sensor = Embeddable::Siy::Sensor.find(params[:id])
     if request.xhr?
       render :partial => 'show', :locals => { :sensor => @sensor }
     else
@@ -30,7 +30,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
 
   # GET /Embeddable/sensors/1/print
   def print
-    @sensor = Embeddable::Sensor.find(params[:id])
+    @sensor = Embeddable::Siy::Sensor.find(params[:id])
     respond_to do |format|
       format.html { render :layout => "layouts/embeddable/print" }
       format.xml  { render :xml => @sensor }
@@ -40,7 +40,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # GET /Embeddable/sensors/new
   # GET /Embeddable/sensors/new.xml
   def new
-    @sensor = Embeddable::Sensor.new
+    @sensor = Embeddable::Siy::Sensor.new
     if request.xhr?
       render :partial => 'remote_form', :locals => { :sensor => @sensor }
     else
@@ -53,7 +53,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
 
   # GET /Embeddable/sensors/1/edit
   def edit
-    @sensor = Embeddable::Sensor.find(params[:id])
+    @sensor = Embeddable::Siy::Sensor.find(params[:id])
     if request.xhr?
       render :partial => 'remote_form', :locals => { :sensor => @sensor }
     else
@@ -67,7 +67,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # POST /Embeddable/sensors
   # POST /Embeddable/sensors.xml
   def create
-    @sensor = Embeddable::Sensor.new(params[:sensor])
+    @sensor = Embeddable::Siy::Sensor.new(params[:sensor])
     cancel = params[:commit] == "Cancel"
     if request.xhr?
       if cancel 
@@ -80,7 +80,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
     else
       respond_to do |format|
         if @sensor.save
-          flash[:notice] = 'Embeddable::Sensor.was successfully created.'
+          flash[:notice] = 'Embeddable::Siy::Sensor.was successfully created.'
           format.html { redirect_to(@sensor) }
           format.xml  { render :xml => @sensor, :status => :created, :location => @sensor }
         else
@@ -95,17 +95,17 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # PUT /Embeddable/sensors/1.xml
   def update
     cancel = params[:commit] == "Cancel"
-    @sensor = Embeddable::Sensor.find(params[:id])
+    @sensor = Embeddable::Diy::Sensor.find(params[:id])
     if request.xhr?
-      if cancel || @sensor.update_attributes(params[:embeddable_sensor])
+      if cancel || @sensor.update_attributes(params[:sensor])
         render :partial => 'show', :locals => { :sensor => @sensor }
       else
         render :xml => @sensor.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @sensor.update_attributes(params[:embeddable_sensor])
-          flash[:notice] = 'Embeddable::Sensor.was successfully updated.'
+        if @sensor.update_attributes(params[:sensor])
+          flash[:notice] = 'Embeddable::Siy::Sensor.was successfully updated.'
           format.html { redirect_to(@sensor) }
           format.xml  { head :ok }
         else
@@ -119,7 +119,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
   # DELETE /Embeddable/sensors/1
   # DELETE /Embeddable/sensors/1.xml
   def destroy
-    @sensor = Embeddable::Sensor.find(params[:id])
+    @sensor = Embeddable::Siy::Sensor.find(params[:id])
     respond_to do |format|
       format.html { redirect_to(sensors_url) }
       format.xml  { head :ok }

@@ -83,4 +83,9 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   def remove(field)
     self.customizations.delete(field) if self.customizations.has_key?
   end
+
+  # remove all customizations
+  def remove_customizations
+    self.customizations = {}
+  end
 end

@@ -42,7 +42,7 @@
     var enabler = container.down(enable_class);
     var title = container.down(title_container_class);
     container.down(edit_class).hide();
-    container.down(save_class).hide();
+    //container.down(save_class).hide();
     container.down(view_container_class).hide();
     container.down(edit_container_class).hide();
     container.addClassName('disabled');
