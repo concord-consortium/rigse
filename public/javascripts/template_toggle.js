@@ -1,6 +1,7 @@
 /*globals $ $$ Event document window */
 (function() {
   var edit_class = '.template_edit_button';
+  var cancel_class = '.template_cancel_button';
   var save_class = '.template_save_button';
   var disable_class = '.template_disable_button';
   var enable_class = '.template_enable_button';
@@ -69,7 +70,6 @@
     var edit_container = container.down(edit_container_class);
     var view_container = container.down(view_container_class);
     enable_button(edit_button);
-    disable_button(save_button);
     edit_container.hide();
     view_container.show();
   };
@@ -78,6 +78,12 @@
     $$(save_class).each(function(element){
         element.observe('click', close_editor);
         disable_button(element);
+    });
+    $$(cancel_class).each(function(element){
+        element.observe('click', function(evt) {
+        evt.stop(); // don't submit form
+        close_editor(evt);
+        });
     });
     $$(edit_container_class).each(function(element){
       element.hide();

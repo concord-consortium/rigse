@@ -1,6 +1,7 @@
 - remote_form_for(section, :update => dom_id_for(section, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   -#= edit_menu_for(section, f)
   = f.submit("Save", :class=> "template_save_button")
+  = f.submit("Cancel", :class=> "template_cancel_button")
   - field_set_tag 'content' do
     = f.text_area :content, :id => dom_id_for(section, :item, :content, :textarea), :class => 'tinymce_textarea'
   - if section.has_question
