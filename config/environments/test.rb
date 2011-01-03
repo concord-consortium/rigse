@@ -53,7 +53,7 @@ config.gem "autotest-rails", :lib => false,          :version => "= 4.1.0"
 # as well as better support for I18n, collections, creating custom matchers 
 config.gem "remarkable_rails", :lib => false,        :version => ">= 3.1.13"
 
-config.gem "ci_reporter",      :lib => false
+config.gem "ci_reporter",      :lib => false,        :version => '=1.6.0'
 
 config.gem "spork",            :lib => false
 
