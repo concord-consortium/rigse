@@ -1,5 +1,9 @@
-gem 'ar-extensions', '>= 0.9.1'
-require 'ar-extensions'
+begin
+  require 'ar-extensions'
+rescue LoadError
+  gem 'ar-extensions', '>= 0.9.1'
+  require 'ar-extensions'
+end
 
 class NcesParser
   
