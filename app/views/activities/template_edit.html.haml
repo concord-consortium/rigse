@@ -1,14 +1,13 @@
 - form_for(@activity) do |f|
   %h3 Activity Name
   = f.text_field(:name, :size => '72')
-  %h3 grade level:
-  = grade_level_select
-  %h3 subject area:
-  = subject_area_select
-  %h3 unit:
-  = unit_select
-
-
+  - if current_user.has_role?('admin','manager')
+    %h3 grade level:
+    = grade_level_select
+    %h3 subject area:
+    = subject_area_select
+    %h3 unit:
+    = unit_select
 
   %h3 description
   = f.text_area(:description, :class => 'mceNoEditor',:cols => '72')
