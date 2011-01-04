@@ -16,7 +16,7 @@ module TemplateEditHelper
       :failure    => "template_save_failure('#{dom_id_for(component, :item)}')",
       :loading    => "template_save_loading('#{dom_id_for(component, :item)}')"
     }
-    opts.merge!(opts)
+    options.merge!(opts)
     remote_form_for(component,options,&block)
   end
 

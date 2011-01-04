@@ -2,9 +2,7 @@
   %div.template_disable_button
   %div.template_enable_button
   %div.template_wait
-
-  %div.template_view_title{:id => dom_id_for(page_element, :template_view_title)}
-    %h3= element.embeddable.name
+  = render :partial => 'template_view_title', :locals => {:page_element => page_element}
   %div.template_view_container{:id => dom_id_for(page_element, :template_view_container)}
     = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> page_element}
     -#= render_show_partial_for(component,false)

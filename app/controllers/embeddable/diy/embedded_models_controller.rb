@@ -96,9 +96,13 @@ class Embeddable::Diy::EmbeddedModelsController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @embedded_model = Embeddable::Diy::EmbeddedModel.find(params[:id])
+    @page_element = @embedded_model.page_elements.first ## right now this is probably ok. if we ever embed the same embedded_model into multiple pages, we'll have to change this.
     if request.xhr?
       if cancel || @embedded_model.update_attributes(params[:embeddable_diy_embedded_model])
-        render :partial => 'show', :locals => { :embedded_model => @embedded_model }
+        render(:update) {|page|
+          page.replace(dom_id_for(@embedded_model, :details), :partial => 'show', :locals => { :embedded_model => @embedded_model } )
+          page.replace(dom_id_for(@page_element, :template_view_title), :partial => 'pages/template_view_title', :locals => {:page_element => @page_element})
+        }
       else
         render :xml => @embedded_model.errors, :status => :unprocessable_entity
       end

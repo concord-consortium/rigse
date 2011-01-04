@@ -1,4 +1,4 @@
-- remote_form_for(embedded_model, :update => dom_id_for(embedded_model, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+- template_form(embedded_model, {:update => nil}) do |f|
   = f.submit("Save", :class=> "template_save_button")
   = f.submit("Cancel", :class=> "template_cancel_button")
   = render :partial => "embeddable/diy/embedded_models/form", :locals => { :embedded_model => embedded_model, :f => f  }

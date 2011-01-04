@@ -19,7 +19,11 @@ class Diy::Model < ActiveRecord::Base
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description url}
-  
+
+  def name_with_id
+    "#{self.id}: #{self.name}"
+  end
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
