@@ -1,0 +1,11 @@
+%h3=@activity.name
+%p=@activity.description
+- if @activity.changeable?(current_user)
+  = link_to 'edit', template_edit_activity_path(@activity)
+  = run_link_for(@activity)
+- @activity.pages.each do |page|
+  - page.page_elements.each do |element|
+    - if element.enabled?
+      - component = element.embeddable
+      %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
+        = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
