@@ -493,6 +493,7 @@ class ItsiImporter
 
     def find_or_import_itsi_user(diy_user)
       user = User.find_by_uuid(diy_user.uuid)
+      user = User.find_by_login(diy_user.login) unless user
       unless user
         ccp_user = Ccportal::Member.find_by_diy_member_id(diy_user.id)
         attrs = {
@@ -503,19 +504,27 @@ class ItsiImporter
           :vendor_interface_id => diy_user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
         }
 
-        user = User.create!(attrs) {|u|
-          u.skip_notifications = true
-          if (ccp_user)
-            u.password = u.password_confirmation = ccp_user.member_password_ue
-          else
-            ## Because of the difference in how the DIY creates the password hash and how we create the hash, this password won't work
-            u.crypted_password = diy_user.crypted_password
-            u.salt = diy_user.salt
-          end
-          u.uuid = diy_user.uuid
-          u.register!
-          u.activate!
-        }
+        user = User.new(attrs)
+        user.skip_notifications = true
+        if (ccp_user)
+          user.password = user.password_confirmation = ccp_user.member_password_ue
+        else
+          ## Because of the difference in how the DIY creates the password hash and how we create the hash, this password won't work
+          user.crypted_password = diy_user.crypted_password
+          user.salt = diy_user.salt
+        end
+        user.save(false)
+        user.uuid = diy_user.uuid
+        user.save
+        user.reload
+        c = 0
+        begin
+          user.register!
+          user.activate!
+        rescue AASM::InvalidTransition
+          c += 1
+          retry unless c > 2
+        end
         user.roles << Role.find_by_title('member')
         user.roles << Role.find_by_title('author')
       end
@@ -615,7 +624,7 @@ class ItsiImporter
               model = Diy::Model.from_external_portal(diy_model)
             end
           rescue
-            puts "couldn't find DIY model with id #{model_id} actvity => #{diy_act.name} #{diy_act.id}"
+            puts "couldn't find DIY model with id #{model_id}. activity => #{diy_act.name} #{diy_act.id}"
           end
         end
 
@@ -633,7 +642,11 @@ class ItsiImporter
         probe_type_id = diy_act.send(attribute_name_for(section_key,:probetype_id))
         probe_type = Probe::ProbeType.default
         if probe_type_id != nil
-          probe_type = Probe::ProbeType.find(probe_type_id)
+          begin
+            probe_type = Probe::ProbeType.find(probe_type_id)
+          rescue ActiveRecord::RecordNotFound => e
+            puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+          end
         end
         calibration = nil
         if probe_type
