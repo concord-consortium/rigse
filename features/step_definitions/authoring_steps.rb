@@ -1,7 +1,7 @@
 
 Given /^the following investigation exists:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
-    user = User.find_by_login(hash.delete('user'))
+    user = User.first(:conditions => { :login => hash.delete('user') })
     hash[:user_id] = user.id
     investigation = Investigation.create(hash)
     activity =Activity.create(hash)
