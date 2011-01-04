@@ -84,7 +84,7 @@ class ItsiImporter
         begin
           unless foreign_key.empty?
             itsi_activity = Itsi::Activity.find(foreign_key)
-            activity = create_activity_from_itsi_activity(itsi_activity, user,prefix)
+            activity = create_activity_from_itsi_activity(itsi_activity, nil,prefix) # nil user will import the DIY user and associate the activity with that user
             activity.unit_list = ccp_itsi_unit.unit_name
             activity.grade_level_list = ccp_itsi_activity.level.level_name
             activity.subject_area_list = ccp_itsi_activity.subject.subject_name
@@ -472,20 +472,48 @@ class ItsiImporter
     ## NP: new definition of create_activity_from_itsi_activity
     ## TODO: Add itsi user
 
-    def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
-      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
-      activity = Activity.create do |i|
-        i.name = name
-        i.user = user
-        i.description = itsi_activity.description
-        i.publish if itsi_activity.public
-      end
+    def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="")
+      prefix += " "
+      name = "#{prefix}#{itsi_activity.name} (#{itsi_activity.id})".strip
+      user = find_or_import_itsi_user(itsi_activity.user) unless user
+      activity = Activity.find_by_uuid(itsi_activity.uuid)
+      unless activity
+        activity = Activity.create do |i|
+          i.name = name
+          i.user = user
+          i.description = itsi_activity.description
+          i.uuid = itsi_activity.uuid
+          i.publish if itsi_activity.public
+        end
 
-      SECTIONS_MAP.each do |section|
-        process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+        SECTIONS_MAP.each do |section|
+          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+        end
       end
     end
 
+    def find_or_import_itsi_user(user)
+      portal_user = User.find_by_uuid(user.uuid)
+      unless portal_user
+        attrs = {
+          :login => user.login,
+          :first_name => user.first_name,
+          :last_name => user.last_name,
+          :email => user.email =~ /^no-email/ ? (user.email + "@concord.org") : user.email,
+          :vendor_interface_id => user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
+          :state => 'active',
+          :activated_at => Time.now
+        }
+        puts "Creating user: #{attrs.inspect}"
+        portal_user = User.create!(attrs) {|u|
+          u.skip_notifications = true
+          u.crypted_password = user.crypted_password
+          u.salt = user.salt
+          u.uuid = user.uuid
+        }
+      end
+      return portal_user
+    end
 
     def attributes
       return @@attributes if @@attributes
@@ -532,14 +560,17 @@ class ItsiImporter
     ## NP: Import a section from the activity (NEW)
     ##
     def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description)
+      user = activity.user
       section = Section.create(
         :name => section_name,
         :description => section_description,
-        :activity => activity)
+        :activity => activity,
+        :user => user)
       page = Page.create(
         :name => section_name,
         :description => section_description,
-        :section => section)
+        :section => section,
+        :user => user)
       activity.sections << section
 
       # main text content for section
@@ -547,14 +578,16 @@ class ItsiImporter
       main_content = Embeddable::Diy::Section.create(
           :name => section_name,
           :content => content,
-          :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)))
+          :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)),
+          :user => user)
       main_content.pages << page
 
       # drawing response
       if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
         drawing_response = Embeddable::DrawingTool.create(
           :name => "drawing response",
-          :description => "drawing response")
+          :description => "drawing response",
+          :user => user)
         drawing_response.pages << page
         if diy_act.send(attribute_name_for(section_key,:drawing_response))
           drawing_response.enable
@@ -579,7 +612,7 @@ class ItsiImporter
           end
         end
 
-        em_model = Embeddable::Diy::EmbeddedModel.create(:diy_model => model)
+        em_model = Embeddable::Diy::EmbeddedModel.create(:diy_model => model, :user => user)
         em_model.pages << page
         if diy_act.send(attribute_name_for(section_key,:model_active))
           em_model.enable
@@ -604,7 +637,7 @@ class ItsiImporter
           end
         end
         prototype_data_collector = Embeddable::DataCollector.prototype_by_type_and_calibration(probe_type,calibration)
-        em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector)
+        em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector, :user => user)
         em_sensor.pages << page
         if diy_act.send(attribute_name_for(section_key,:probe_active))
           em_sensor.enable
