@@ -492,27 +492,35 @@ class ItsiImporter
       end
     end
 
-    def find_or_import_itsi_user(user)
-      portal_user = User.find_by_uuid(user.uuid)
-      unless portal_user
+    def find_or_import_itsi_user(diy_user)
+      user = User.find_by_uuid(diy_user.uuid)
+      unless user
+        ccp_user = Ccportal::Member.find_by_diy_member_id(diy_user.id)
         attrs = {
-          :login => user.login,
-          :first_name => user.first_name,
-          :last_name => user.last_name,
-          :email => user.email =~ /^no-email/ ? (user.email + "@concord.org") : user.email,
-          :vendor_interface_id => user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
-          :state => 'active',
-          :activated_at => Time.now
+          :login => diy_user.login,
+          :first_name => diy_user.first_name,
+          :last_name => diy_user.last_name,
+          :email => diy_user.email =~ /^no-email/ ? (diy_user.email + "@concord.org") : diy_user.email,
+          :vendor_interface_id => diy_user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
         }
-        puts "Creating user: #{attrs.inspect}"
-        portal_user = User.create!(attrs) {|u|
+
+        user = User.create!(attrs) {|u|
           u.skip_notifications = true
-          u.crypted_password = user.crypted_password
-          u.salt = user.salt
-          u.uuid = user.uuid
+          if (ccp_user)
+            u.password = u.password_confirmation = ccp_user.member_password_ue
+          else
+            ## Because of the difference in how the DIY creates the password hash and how we create the hash, this password won't work
+            u.crypted_password = diy_user.crypted_password
+            u.salt = diy_user.salt
+          end
+          u.uuid = diy_user.uuid
+          u.register!
+          u.activate!
         }
+        user.roles << Role.find_by_title('member')
+        user.roles << Role.find_by_title('author')
       end
-      return portal_user
+      return user
     end
 
     def attributes
