@@ -20,13 +20,29 @@ module TagDefaults
       end
       results
     end
-    
+
+    def read_defaults
+      yaml_file = RAILS_ROOT + "/config/tag_defaults.yml"
+      sample_file = RAILS_ROOT + "/config/tag_defaults.sample.yml"
+      begin
+        YAML.load(File.read(yaml_file))
+      rescue
+        Rails.logger.warn("can't read default tags file #{yaml_file}")
+        begin
+          Rails.logger.warn("copying sample:  #{sample_file} to #{yaml_file}")
+          %x[cp #{sample_file} #{yaml_file}]
+          YAML.load(File.read(yaml_file))
+        rescue
+          Rails.logger.error("Can't load tag defaults. See lib/tag_defaults.rb")
+        end
+      end
+    end
+
     def default_tags
-      {
-        :units => "Crystals, Global Warming, Earthquakes, Water Cycle, Solar System, Weather".split(","),
-        :grade_levels => "Elementary, Middle School, High School".split(","),
-        :subject_areas => "Earth Science, Space Science, Life Science, Physics, Biology, Chemestry".split(",")
-      }
+      unless defined? @@default_tags
+        @@default_tags = read_defaults
+      end
+      @@default_tags
     end
 
     def add_tag(scope,tag)
