@@ -33,7 +33,8 @@ class ApplicationController < ActionController::Base
   protected
   
   def setup_container
-    @container_type = self.class.name[/(.+s)Controller/,1].singularize
+    @container_type = self.class.name[/(.+s)Controller/,1]
+    @container_type = @container_type.singularize if @container_type
     @container_id =  request.symbolized_path_parameters[:id]
   end
   
