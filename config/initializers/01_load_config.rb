@@ -8,3 +8,10 @@ NOT_USING_RITES = !USING_RITES
 
 NOT_USING_JNLPS = APP_CONFIG[:runnables_use] && APP_CONFIG[:runnables_use] == 'browser'
 USING_JNLPS = !NOT_USING_JNLPS
+
+if ActiveRecord::Base.configurations['itsi'] && ActiveRecord::Base.configurations['itsi']['asset_url']
+  require 'uri'
+  ITSI_ASSET_URL = URI.parse(ActiveRecord::Base.configurations['itsi']['asset_url']) if ActiveRecord::Base.configurations['itsi']['asset_url']
+else
+  ITSI_ASSET_URL = nil
+end

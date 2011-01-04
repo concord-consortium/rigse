@@ -1,5 +1,4 @@
 class ItsiImporter
-  ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
   @@attributes = nil
   SECTIONS_MAP = [
     { :key => :introduction,
@@ -492,27 +491,44 @@ class ItsiImporter
       end
     end
 
-    def find_or_import_itsi_user(user)
-      portal_user = User.find_by_uuid(user.uuid)
-      unless portal_user
+    def find_or_import_itsi_user(diy_user)
+      user = User.find_by_uuid(diy_user.uuid)
+      user = User.find_by_login(diy_user.login) unless user
+      unless user
+        ccp_user = Ccportal::Member.find_by_diy_member_id(diy_user.id)
         attrs = {
-          :login => user.login,
-          :first_name => user.first_name,
-          :last_name => user.last_name,
-          :email => user.email =~ /^no-email/ ? (user.email + "@concord.org") : user.email,
-          :vendor_interface_id => user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
-          :state => 'active',
-          :activated_at => Time.now
+          :login => diy_user.login,
+          :first_name => diy_user.first_name,
+          :last_name => diy_user.last_name,
+          :email => diy_user.email =~ /^no-email/ ? (diy_user.email + "@concord.org") : diy_user.email,
+          :vendor_interface_id => diy_user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
         }
-        puts "Creating user: #{attrs.inspect}"
-        portal_user = User.create!(attrs) {|u|
-          u.skip_notifications = true
-          u.crypted_password = user.crypted_password
-          u.salt = user.salt
-          u.uuid = user.uuid
-        }
+
+        user = User.new(attrs)
+        user.skip_notifications = true
+        if (ccp_user)
+          user.password = user.password_confirmation = ccp_user.member_password_ue
+        else
+          ## Because of the difference in how the DIY creates the password hash and how we create the hash, this password won't work
+          user.crypted_password = diy_user.crypted_password
+          user.salt = diy_user.salt
+        end
+        user.save(false)
+        user.uuid = diy_user.uuid
+        user.save
+        user.reload
+        c = 0
+        begin
+          user.register!
+          user.activate!
+        rescue AASM::InvalidTransition
+          c += 1
+          retry unless c > 2
+        end
+        user.roles << Role.find_by_title('member')
+        user.roles << Role.find_by_title('author')
       end
-      return portal_user
+      return user
     end
 
     def attributes
@@ -608,7 +624,7 @@ class ItsiImporter
               model = Diy::Model.from_external_portal(diy_model)
             end
           rescue
-            puts "couldn't find DIY model with id #{model_id} actvity => #{diy_act.name} #{diy_act.id}"
+            puts "couldn't find DIY model with id #{model_id}. activity => #{diy_act.name} #{diy_act.id}"
           end
         end
 
@@ -626,7 +642,11 @@ class ItsiImporter
         probe_type_id = diy_act.send(attribute_name_for(section_key,:probetype_id))
         probe_type = Probe::ProbeType.default
         if probe_type_id != nil
-          probe_type = Probe::ProbeType.find(probe_type_id)
+          begin
+            probe_type = Probe::ProbeType.find(probe_type_id)
+          rescue ActiveRecord::RecordNotFound => e
+            puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+          end
         end
         calibration = nil
         if probe_type
@@ -652,9 +672,7 @@ class ItsiImporter
       doc = Hpricot(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
-        if img[:src][0..6] == '/images'
-          img[:src] = ITSIDIY_URL + img[:src]
-        end
+        img[:src] = ITSI_ASSET_URL.merge(img[:src]).to_s
       end
       # if split_last_paragraph is true then split the content at the
       # last paragraph and return the last paragraph in the second element

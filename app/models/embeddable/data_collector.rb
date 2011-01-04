@@ -108,7 +108,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
       if calibration.nil?
         found = self.prototypes.find(:first, :conditions => {:probe_type_id => probe_type.id})
       else
-        found = self.prototypes.find(:first, :conditions => {:probe_type_id => probe_type.id, :calibration => calibration})
+        found = self.prototypes.find(:first, :conditions => {:probe_type_id => probe_type.id, :calibration_id => calibration.id})
       end
       return found if found
       made = self.create
