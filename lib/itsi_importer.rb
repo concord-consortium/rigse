@@ -1,5 +1,4 @@
 class ItsiImporter
-  ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
   @@attributes = nil
   SECTIONS_MAP = [
     { :key => :introduction,
@@ -660,9 +659,7 @@ class ItsiImporter
       doc = Hpricot(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
-        if img[:src][0..6] == '/images'
-          img[:src] = ITSIDIY_URL + img[:src]
-        end
+        img[:src] = ITSI_ASSET_URL.merge(img[:src]).to_s
       end
       # if split_last_paragraph is true then split the content at the
       # last paragraph and return the last paragraph in the second element
