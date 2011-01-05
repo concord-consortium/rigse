@@ -45,12 +45,12 @@ class Diy::Model < ActiveRecord::Base
       if ITSI_ASSET_URL
         ## double-check model url -- if it's not absolute, prepend with the itsi asset_url
         if attributes["url"] && attributes["url"].size > 0
-          attributes["url"] = ITSI_ASSET_URL.merge(attributes["url"]).to_s
+          attributes["url"] = ITSI_ASSET_URL.merge(attributes["url"].strip).to_s
         end
 
         ## also check the image url
         if attributes["image_url"] && attributes["image_url"].size > 0
-          attributes["image_url"] = ITSI_ASSET_URL.merge(attributes["image_url"]).to_s
+          attributes["image_url"] = ITSI_ASSET_URL.merge(attributes["image_url"].strip).to_s
         end
       end
 
