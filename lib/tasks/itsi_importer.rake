@@ -48,16 +48,19 @@ namespace :rigse do
     
     
     desc "erase and import ITSI DIY from the CCPortal as ITSI_SU activities with unit tags"
-    task :erase_and_import_ccp_itsi_units_to_itsi_su => :erase_itsi_imports do
+    task :erase_and_import_ccp_itsi_units_to_itsi_su => [:erase_itsi_imports,:import_ccp_itsi_units_to_itsi_su] do
+    end
+    
+    desc "import ITSI DIY from the CCPortal as ITSI_SU activities with unit tags"
+    task :import_ccp_itsi_units_to_itsi_su => :environment do
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       itsi_import_user = ItsiImporter.find_or_create_itsi_import_user
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
       puts "importing #{ccp_itsi_project.units.length} ITSI Units ..."
       ccp_itsi_project.units.each do |ccp_itsi_unit|
-        ItsiImporter.create_activities_from_ccp_itsi_unit(ccp_itsi_unit, itsi_import_user,@prefix)
+        ItsiImporter.create_activities_from_ccp_itsi_unit(ccp_itsi_unit, itsi_import_user,"")
       end
     end
-    
 
     desc "erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal"
     task :erase_and_import_ccp_itsi_units => :erase_itsi_imports do
