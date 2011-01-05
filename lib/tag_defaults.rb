@@ -124,15 +124,15 @@ module TagDefaults
         end
         i = i + 1
       end # End Grade Levels
-      
+
       # Add unpublished activities of the user:
       if user
         users = self.find(:all, :conditions => {:user_id => user.id});
         remainder = users.clone
-        unit_listing = units.map do |u| 
+        unit_listing = units.map do |u|
           unit_activities = users.select { |a| a.unit_list && a.unit_list.include?(u) }
           remainder = remainder - unit_activities
-          { 
+          {
             :name => u,
             :count => unit_activities.size,
             :activities => unit_activities
@@ -165,16 +165,16 @@ module TagDefaults
       results.each
       results.sort {|a,b| a[:key] <=> b[:key] }.uniq
     end
-  
+
     #def keys(tags=self.tag_types)
       #results = []
-      #_keys = tags.each do |t| 
+      #_keys = tags.each do |t|
         #counts = self.send("#{t.to_s.singularize}_counts".to_sym)
         #results << counts.map { |count| count.name }
       #end
 
       #_keys = results.compact
-      ## [["1", "2", "3"], ["1", "2", "3", "4"], ["A","B"], ["a","b"]] 
+      ## [["1", "2", "3"], ["1", "2", "3", "4"], ["A","B"], ["a","b"]]
         ##
         ##
       ## [ "1-1-A-a", "1-1-A-b", "1-1-B-a", "1-1-B-b", ]
