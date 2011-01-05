@@ -83,7 +83,7 @@
   step_size: 0.1
   ptype: 5
   created_at: 2009-05-15 13:20:30 Z
-- name: Distance
+- name: Position
   updated_at: 2009-05-15 17:20:30 Z
   period: 0.1
   unit: m
