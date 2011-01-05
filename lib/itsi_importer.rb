@@ -592,13 +592,19 @@ class ItsiImporter
       activity.sections << section
 
       # main text content for section
-      content,intentionally_blank = process_textile_content(diy_act.send(section_key.to_sym),false)
+      orig_content = diy_act.send(section_key.to_sym)
+      content,prompt = process_textile_content(orig_content,false)
       main_content = Embeddable::Diy::Section.create(
           :name => section_name,
           :content => content,
           :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)),
           :user => user)
       main_content.pages << page
+      if (orig_content.nil? || orig_content.empty? || content.nil? || content.empty?)
+        main_content.disable
+      else
+        main_content.enable
+      end
 
       # drawing response
       if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
@@ -681,9 +687,9 @@ class ItsiImporter
       if split_last_paragraph
         last_paragraph = (doc/"p:last-of-type").remove.to_html
         body = doc.to_html
-        [body, last_paragraph]
+        return [body, last_paragraph]
       else
-        [doc.to_html, '']
+        return [doc.to_html, '']
       end
     end
 
