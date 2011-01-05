@@ -83,11 +83,11 @@ class ItsiImporter
         begin
           unless foreign_key.empty?
             itsi_activity = Itsi::Activity.find(foreign_key)
-            activity = create_activity_from_itsi_activity(itsi_activity, nil,prefix) # nil user will import the DIY user and associate the activity with that user
+            activity = create_activity_from_itsi_activity(itsi_activity, nil, prefix) # nil user will import the DIY user and associate the activity with that user
             activity.unit_list = ccp_itsi_unit.unit_name
             activity.grade_level_list = ccp_itsi_activity.level.level_name
             activity.subject_area_list = ccp_itsi_activity.subject.subject_name
-            activity.publish!
+            activity.publish! unless activity.published?
             activity.save
             puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
           else
@@ -472,7 +472,8 @@ class ItsiImporter
     ## TODO: Add itsi user
 
     def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="")
-      prefix += " "
+      prefix = "" if prefix.nil?
+      prefix << " " if prefix.size > 0
       name = "#{prefix}#{itsi_activity.name} (#{itsi_activity.id})".strip
       user = find_or_import_itsi_user(itsi_activity.user) unless user
       activity = Activity.find_by_uuid(itsi_activity.uuid)
@@ -489,6 +490,7 @@ class ItsiImporter
           process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
         end
       end
+      return activity
     end
 
     def find_or_import_itsi_user(diy_user)
