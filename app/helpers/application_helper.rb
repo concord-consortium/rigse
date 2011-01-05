@@ -190,7 +190,7 @@ module ApplicationHelper
     end
   end
 
-  def render_show_partial_for(component,teacher_mode=false)
+  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
     class_name = component.class.name.underscore
     #demodulized_class_name = component.class.name.delete_module.underscore_module
     demodulized_class_name = component.class.name.demodulize.underscore
@@ -198,7 +198,7 @@ module ApplicationHelper
     # if component.respond_to? :print_partial_name
     #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
     # end
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
   end
 
   def render_edit_partial_for(component)

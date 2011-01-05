@@ -4,7 +4,7 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
 
   validates_presence_of :diy_model
 
-  [:name, :description, :url, :width, :height, :otrunk_object_class, :otrunk_view_class].each { |m| delegate m, :to => :diy_model }
+  [:name, :description, :url, :width, :height, :otrunk_object_class, :otrunk_view_class, :otrunk_object_class_short, :sizeable].each { |m| delegate m, :to => :diy_model }
 
   @@searchable_attributes = %w{uuid}
   

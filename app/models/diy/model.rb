@@ -8,7 +8,7 @@ class Diy::Model < ActiveRecord::Base
   validates_presence_of :model_type
   validates_presence_of :diy_id
   validates_presence_of :name
-  [:otrunk_object_class, :otrunk_view_class].each { |m| delegate m, :to => :model_type }
+  [:otrunk_object_class, :otrunk_object_class_short, :otrunk_view_class, :sizeable].each { |m| delegate m, :to => :model_type }
 
   acts_as_taggable_on :grade_levels, :subject_areas, :tags
   acts_as_replicatable

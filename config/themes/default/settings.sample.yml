@@ -1,5 +1,6 @@
 ---
 development: &id003
+  :single_page_activity: false
   :active_school_levels:
     - "2"
     - "3"
@@ -52,6 +53,7 @@ staging: *id003
 cucumber: *id003
 
 production:
+  :single_page_activity: false
   :active_school_levels:
     - "2"
     - "3"
