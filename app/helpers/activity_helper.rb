@@ -29,12 +29,12 @@ module ActivityHelper
 
   def unit_select(activity = :activity)
     count = Activity.unit_counts
-    select(activity, :unit_ids, count.map{ |c| [ c.name, c.id] })
+    select(activity, :unit_list, count.map{ |c| [ c.name, c.name ]})
   end
 
   def grade_level_select(activity = :activity)
     count = Activity.grade_level_counts
-    select(activity, :grade_level_ids, count.map{ |c| [ c.name, c.id] })
+    select(activity, :grade_level_list, count.map{ |c| [ c.name, c.name] })
     #haml_tag(:p) do
       #haml_concat("grade level select")
     #end
@@ -42,7 +42,7 @@ module ActivityHelper
 
   def subject_area_select(activity = :acvtivity)
     count = Activity.subject_area_counts
-    select(activity, :subject_area_ids, count.map{ |c| [ c.name, c.id] })
+    select(activity, :subject_area_list, count.map{ |c| [ c.name, c.name] })
     #haml_tag(:p) do
       #haml_concat("subject area select")
     #end
