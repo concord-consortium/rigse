@@ -1,4 +1,2 @@
-%OTNLogoModel{ :local_id => ot_local_id_for(sensor), 
-  :name => sensor.name,
-  :authoredDataURL => sensor.authored_data_url }
-
+- content_for(:library) do
+  = render_show_partial_for(sensor.prototype,teacher_mode)

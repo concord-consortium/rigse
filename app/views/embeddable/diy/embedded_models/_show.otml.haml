@@ -1,4 +1,6 @@
-%OTNLogoModel{ :local_id => ot_local_id_for(embedded_model), 
-  :name => embedded_model.name,
-  :authoredDataURL => embedded_model.authored_data_url }
-
+- content_for(:library) do
+  - model_opts = {:local_id => ot_local_id_for(embedded_model), :authoredDataURL => embedded_model.url, :name => embedded_model.name}
+  - if embedded_model.sizeable
+    - model_opts[:objectHeight] = embedded_model.height if embedded_model.height
+    - model_opts[:objectWidth] = embedded_model.width if embedded_model.width
+  - haml_tag(embedded_model.otrunk_object_class_short, model_opts)
