@@ -151,7 +151,7 @@ module TagDefaults
         record[:activities].sort!{ |a,b| a.name <=> b.name }
         record[:units].each_key do |unit_key|
           unit = record[:units][unit_key]
-          unit[:activities].sort!
+          unit[:activities].sort!{ |a,b| a.name <=> b.name }
           unit[:count] = unit[:activities].size
         end
       end
