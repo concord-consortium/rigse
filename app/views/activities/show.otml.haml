@@ -1,1 +1,4 @@
-= render :partial => "show", :locals => { :activity => @activity, :teacher_mode => @teacher_mode || false }
+- if APP_CONFIG[:single_page_activity]
+  = render :partial => "single_page", :locals => {:activity => @activity, :teacher_mode => @teacher_mode || false }
+- else
+  = render :partial => "show", :locals => { :activity => @activity, :teacher_mode => @teacher_mode || false }
