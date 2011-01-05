@@ -169,32 +169,6 @@ module TagDefaults
       end
       results.sort {|a,b| a[:key] <=> b[:key] }.uniq
     end
-
-    #def keys(tags=self.tag_types)
-      #results = []
-      #_keys = tags.each do |t|
-        #counts = self.send("#{t.to_s.singularize}_counts".to_sym)
-        #results << counts.map { |count| count.name }
-      #end
-
-      #_keys = results.compact
-      ## [["1", "2", "3"], ["1", "2", "3", "4"], ["A","B"], ["a","b"]]
-        ##
-        ##
-      ## [ "1-1-A-a", "1-1-A-b", "1-1-B-a", "1-1-B-b", ]
-      ## [1,2] [a,b] => [1-a, 1-b, 2-a, 2 -b]
-      #index = _keys.size() -1
-      #while index > 0
-        #_keys[index-1].map! do |k|
-          #_keys[index].flatten.map do |kk|
-            #"#{k}-#{kk}"
-          #end
-        #end
-        #_keys[index-1].flatten!
-        #index = index - 1
-      #end
-      #_keys[0]
-    #end
   end
 
   def random_tags
