@@ -86,17 +86,17 @@ module TagDefaults
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
-      grade_levels  = self.grade_level_counts
-      subject_areas = self.subject_area_counts
-      units = self.unit_counts.map { |u| u.name }
+      grade_levels  = self.grade_level_counts.reject  {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
+      subject_areas = self.subject_area_counts.reject {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
+      units         = self.unit_counts.reject { |a| a.count < 1}.map { |u| u.name }.sort
       results = []
       i = 0
-      grade_levels.sort{|a,b| a.name <=> b.name}.each do |grade_level|
-        subject_areas.sort{|a,b| a.name <=> b.name}.each_with_index do |subject,j|
+      grade_levels.each do |grade_level|
+        subject_areas.each_with_index do |subject,j|
           query = self.published
           query = query.tagged_with(grade_level.name, :on => :grade_levels)
-          query = query.tagged_with(subject.name, :on => :subject_areas)
-          unit_listing = units.map do |u| 
+          query = query.tagged_with(subject.name,     :on => :subject_areas)
+          unit_listing = units.map do |u|
             u_query = query.tagged_with(u, :on => :units)
             offered = []
             { :name => u,
@@ -120,7 +120,9 @@ module TagDefaults
             :count        => query.count,
             :off_count    => offered.size
           }
-          results << record
+          if (unit_listing.size > 0)
+            results << record
+          end
         end
         i = i + 1
       end # End Grade Levels
@@ -151,6 +153,7 @@ module TagDefaults
         if off_runnables
           offered = users & off_runnables
         end
+        unit_listing.reject!{ |u| u[:count] < 1}
         record = {
           :key          => "users_own",
           :name         => "Your activities",
@@ -159,10 +162,11 @@ module TagDefaults
           :off_count    => offered.size,
           :count        => users.size,
           :query        => users
-        } 
-        results << record 
+        }
+        if (unit_listing.size > 0)
+          results << record
+        end
       end
-      results.each
       results.sort {|a,b| a[:key] <=> b[:key] }.uniq
     end
   
