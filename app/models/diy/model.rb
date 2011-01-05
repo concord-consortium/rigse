@@ -38,12 +38,22 @@ class Diy::Model < ActiveRecord::Base
       return found if found
       type = Diy::ModelType.from_external_portal(_diy_model.model_type)
       attributes = _diy_model.attributes
+
       nontrasferable_attributes.each { |na| attributes.delete(na) }
       attributes.delete_if { |k,v| (! (self.column_names.detect {|c| c == k} )) }
-      ## double-check model authored_data_url -- if it's not absolute, prepend with the itsi asset_url
+
       if ITSI_ASSET_URL
-        attributes[:authored_data_url] = ITSI_ASSET_URL.merge(attributes[:authored_data_url])
+        ## double-check model url -- if it's not absolute, prepend with the itsi asset_url
+        if attributes["url"] && attributes["url"].size > 0
+          attributes["url"] = ITSI_ASSET_URL.merge(attributes["url"]).to_s
+        end
+
+        ## also check the image url
+        if attributes["image_url"] && attributes["image_url"].size > 0
+          attributes["image_url"] = ITSI_ASSET_URL.merge(attributes["image_url"]).to_s
+        end
       end
+
       return self.create!(attributes.update(:diy_id => _diy_model.id, :model_type => type))
     end
   end
