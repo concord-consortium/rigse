@@ -623,8 +623,8 @@ class ItsiImporter
             if diy_model
               model = Diy::Model.from_external_portal(diy_model)
             end
-          rescue
-            puts "couldn't find DIY model with id #{model_id}. activity => #{diy_act.name} #{diy_act.id}"
+          rescue => e
+            puts "#{e}. activity => #{diy_act.name} #{diy_act.id}"
           end
         end
 
