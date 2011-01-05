@@ -86,17 +86,17 @@ module TagDefaults
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
-      grade_levels  = self.grade_level_counts
-      subject_areas = self.subject_area_counts
-      units = self.unit_counts.map { |u| u.name }
+      grade_levels  = self.grade_level_counts.reject  {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
+      subject_areas = self.subject_area_counts.reject {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
+      units         = self.unit_counts.reject { |a| a.count < 1}.map { |u| u.name }.sort
       results = []
       i = 0
-      grade_levels.sort{|a,b| a.name <=> b.name}.each do |grade_level|
-        subject_areas.sort{|a,b| a.name <=> b.name}.each_with_index do |subject,j|
+      grade_levels.each do |grade_level|
+        subject_areas.each_with_index do |subject,j|
           query = self.published
           query = query.tagged_with(grade_level.name, :on => :grade_levels)
-          query = query.tagged_with(subject.name, :on => :subject_areas)
-          unit_listing = units.map do |u| 
+          query = query.tagged_with(subject.name,     :on => :subject_areas)
+          unit_listing = units.map do |u|
             u_query = query.tagged_with(u, :on => :units)
             offered = []
             { :name => u,
@@ -120,19 +120,21 @@ module TagDefaults
             :count        => query.count,
             :off_count    => offered.size
           }
-          results << record
+          if (unit_listing.size > 0)
+            results << record
+          end
         end
         i = i + 1
       end # End Grade Levels
-      
+
       # Add unpublished activities of the user:
       if user
         users = self.find(:all, :conditions => {:user_id => user.id});
         remainder = users.clone
-        unit_listing = units.map do |u| 
+        unit_listing = units.map do |u|
           unit_activities = users.select { |a| a.unit_list && a.unit_list.include?(u) }
           remainder = remainder - unit_activities
-          { 
+          {
             :name => u,
             :count => unit_activities.size,
             :activities => unit_activities
@@ -151,6 +153,7 @@ module TagDefaults
         if off_runnables
           offered = users & off_runnables
         end
+        unit_listing.reject!{ |u| u[:count] < 1}
         record = {
           :key          => "users_own",
           :name         => "Your activities",
@@ -159,38 +162,13 @@ module TagDefaults
           :off_count    => offered.size,
           :count        => users.size,
           :query        => users
-        } 
-        results << record 
+        }
+        if (unit_listing.size > 0)
+          results << record
+        end
       end
-      results.each
       results.sort {|a,b| a[:key] <=> b[:key] }.uniq
     end
-  
-    #def keys(tags=self.tag_types)
-      #results = []
-      #_keys = tags.each do |t| 
-        #counts = self.send("#{t.to_s.singularize}_counts".to_sym)
-        #results << counts.map { |count| count.name }
-      #end
-
-      #_keys = results.compact
-      ## [["1", "2", "3"], ["1", "2", "3", "4"], ["A","B"], ["a","b"]] 
-        ##
-        ##
-      ## [ "1-1-A-a", "1-1-A-b", "1-1-B-a", "1-1-B-b", ]
-      ## [1,2] [a,b] => [1-a, 1-b, 2-a, 2 -b]
-      #index = _keys.size() -1
-      #while index > 0
-        #_keys[index-1].map! do |k|
-          #_keys[index].flatten.map do |kk|
-            #"#{k}-#{kk}"
-          #end
-        #end
-        #_keys[index-1].flatten!
-        #index = index - 1
-      #end
-      #_keys[0]
-    #end
   end
 
   def random_tags

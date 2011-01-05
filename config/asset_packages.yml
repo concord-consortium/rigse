@@ -21,6 +21,7 @@ javascripts:
   - live_validation
   - report_filter
   - template_toggle 
+  - unit_bins
 
 stylesheets: 
 - base: 
