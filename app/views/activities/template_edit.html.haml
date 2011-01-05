@@ -10,7 +10,7 @@
     = unit_select
   %h3 description
   -#= f.hidden_field :redirect, activity_template_edit(@activity)
-  = f.text_area(:description, :class => 'mceNoEditor',:cols => '72')
+  = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
   %p
   = f.submit "save"
 - @activity.pages.each do |page|
