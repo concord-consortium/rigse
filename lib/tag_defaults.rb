@@ -25,13 +25,13 @@ module TagDefaults
       yaml_file = RAILS_ROOT + "/config/tag_defaults.yml"
       sample_file = RAILS_ROOT + "/config/tag_defaults.sample.yml"
       begin
-        YAML.load(File.read(yaml_file))
+        YAML.load_file(yaml_file)
       rescue
         Rails.logger.warn("can't read default tags file #{yaml_file}")
         begin
           Rails.logger.warn("copying sample:  #{sample_file} to #{yaml_file}")
           %x[cp #{sample_file} #{yaml_file}]
-          YAML.load(File.read(yaml_file))
+          YAML.load_file(yaml_file)
         rescue
           Rails.logger.error("Can't load tag defaults. See lib/tag_defaults.rb")
         end
