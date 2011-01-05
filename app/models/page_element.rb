@@ -50,8 +50,10 @@ class PageElement < ActiveRecord::Base
 
   # only destroy the embeddable if it isn't referenced by any other page elements
   def before_destroy
-    other_related_page_elements = self.embeddable.page_elements.uniq - [self]
-    self.embeddable.destroy if other_related_page_elements.empty?
+    if self.embeddable ## FIXME This shouldn't happen -- if the embeddable never gets created, this page_element shouldn't exist either!
+      other_related_page_elements = self.embeddable.page_elements.uniq - [self]
+      self.embeddable.destroy if other_related_page_elements.empty?
+    end
   end
 
   def dom_id
