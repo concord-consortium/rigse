@@ -16,4 +16,4 @@
       = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
       -#= render_show_partial_for(component,false)
     %div.template_edit_container{:id =>dom_id_for(element, :edit_container)}
-      = render_edit_partial_for(component)
+      = render_template_edit_partial_for(component)

@@ -1,0 +1,4 @@
+- template_form(drawing_tool) do |f|
+  = f.submit("Save", :class=> "template_save_button")
+  = f.submit("Cancel", :class=> "template_cancel_button")
+  = render :partial => 'embeddable/drawing_tools/form', :locals => {:drawing_tool => drawing_tool, :f => f}
