@@ -20,7 +20,8 @@ Feature: An author adds multiple choice_questions
     Then I should see "Page: 1"
     When I follow "Multiple Choice Question"
     Then I should see "Why do you think ..."
-    When I follow "edit multiple choice question"
+    And show me the page
+    When I follow xpath "//a[@title='edit multiple choice question']"
     Then I should see "choices"
     And I should see "a"
     And I should see "b"

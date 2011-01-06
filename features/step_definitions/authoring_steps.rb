@@ -18,6 +18,10 @@ When /add a multiple choice question$/ do
   # pending # express the regexp above with the code you wish you had
 end
 
+When /^(?:|I )follow xpath "([^\"]*)"$/ do |xpath|
+  find(:xpath, xpath).click
+end
+
 When /show the first page of the "(.*)" investigation$/ do |investigation_name|
   investigation = Investigation.find_by_name(investigation_name)
   page = investigation.pages.first
