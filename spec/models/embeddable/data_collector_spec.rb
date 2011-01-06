@@ -32,7 +32,7 @@ describe Embeddable::DataCollector do
       data_collector.should_not be_valid
     end
 
-    describe "Embeddable::DataCollector.prototype_by_type_and_calibration" do
+    describe "Embeddable::DataCollector.get_prototype" do
       it "should find and use an existing datacollector prototype with a known probeType" do
         @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
         moc_data_collector = mock_model(Embeddable::DataCollector,
@@ -40,7 +40,7 @@ describe Embeddable::DataCollector do
         prototypes = mock(:find => moc_data_collector)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
 
-        proto = Embeddable::DataCollector.prototype_by_type_and_calibration(@fake_probe_a,nil)
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
         proto.probe_type.should == @fake_probe_a
       end
       
@@ -48,7 +48,7 @@ describe Embeddable::DataCollector do
         @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
         prototypes = mock(:find => nil)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
-        proto = Embeddable::DataCollector.prototype_by_type_and_calibration(@fake_probe_a,nil)
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
         proto.probe_type.should == @fake_probe_a
       end
 
@@ -56,7 +56,7 @@ describe Embeddable::DataCollector do
         @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
         prototypes = mock(:find => nil)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
-        proto = Embeddable::DataCollector.prototype_by_type_and_calibration(@fake_probe_a,nil)
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
         proto.probe_type.should == @fake_probe_a
         proto.name.should match @fake_probe_a.name
       end

@@ -40,7 +40,7 @@ describe ItsiImporter do
       @diy_act.should_receive(:respond_to?).with(:collect_data_drawing_response).and_return(true)
       #@diy_act.should_receive(:respond_to?).with(:probe_type_id).and_return(true)
       @diy_act.should_receive(:respond_to?).with(:collect_data_probetype_id).and_return(true)
-      Embeddable::DataCollector.stub!(:prototype_by_type_and_calibration => Factory(:data_collector))
+      Embeddable::DataCollector.stub!(:get_prototype => Factory(:data_collector))
       # respond with these answers:
       @diy_act.should_receive(:collect_data_drawing_response).and_return(false)
       @diy_act.should_receive(:collect_data_text_response).and_return(true)

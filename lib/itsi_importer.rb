@@ -658,13 +658,14 @@ class ItsiImporter
         end
         calibration = nil
         if probe_type
-          # see if we have a clibration to work with:
+          # see if we have a calibration to work with:
           if diy_act.send(attribute_name_for(section_key,:calibration_active))
             calibration_id = diy_act.send(attribute_name_for(section_key,:calibration_id))
             calibration = Probe::Calibration.find(calibration_id) if calibration_id
           end
         end
-        prototype_data_collector = Embeddable::DataCollector.prototype_by_type_and_calibration(probe_type,calibration)
+
+        prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor'})
         em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector, :user => user)
         em_sensor.pages << page
         if diy_act.send(attribute_name_for(section_key,:probe_active))

@@ -103,20 +103,23 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
 
     # find or make a prototype that matches this...
-    def prototype_by_type_and_calibration(probe_type,calibration)
-      found = nil
-      if calibration.nil?
-        found = self.prototypes.find(:first, :conditions => {:probe_type_id => probe_type.id})
-      else
-        found = self.prototypes.find(:first, :conditions => {:probe_type_id => probe_type.id, :calibration_id => calibration.id})
-      end
+    def get_prototype(opts = {})
+      return nil unless opts[:probe_type]
+      conds = {}
+      conds[:probe_type_id] = opts[:probe_type].id if opts[:probe_type]
+      conds[:calibration_id] = opts[:calibration].id if opts[:calibration]
+      conds[:graph_type_id] = self.graph_type_id_for(opts[:graph_type]) if opts[:graph_type]
+
+      found = self.prototypes.find(:first, :conditions => conds)
       return found if found
+
       made = self.create
-      made.probe_type = probe_type
+      made.probe_type = opts[:probe_type]
       made.name_from_probe_type
       made.is_prototype=true
-      if calibration
-        made.calibration_id = calibration.id
+      made.graph_type = opts[:graph_type]
+      if opts[:calibration]
+        made.calibration_id = opts[:calibration].id
       end
       made.save!
       return made
@@ -190,6 +193,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
     [["Sensor", 1], ["Prediction", 2]]
   end
 
+  def self.graph_type_id_for(gtype)
+    self.graph_types.select{|gt| gt[0] == gtype}.first[1]
+  end
+
   def graph_type_id
     self[:graph_type_id] || 1
   end
@@ -200,6 +207,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   def graph_type
     Embeddable::DataCollector.graph_types[graph_type_id-1][0]
+  end
+
+  def graph_type=(gtype)
+    self[:graph_type_id] = Embeddable::DataCollector.graph_type_id_for(gtype)
   end
 
   def y_axis_title
