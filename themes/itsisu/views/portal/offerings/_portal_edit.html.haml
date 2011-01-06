@@ -5,7 +5,7 @@
       %input{:type => "checkbox",
         :checked => offering_id,
         :disabled => !is_being_edited,
-        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{runnable.id}, #{offering_id}, '#{runnable.type}')",
+        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{runnable.id}, #{offering_id}, '#{runnable.class}')",
         :value => "#{runnable.id}",
         :name => "runnable_id"}
     - else

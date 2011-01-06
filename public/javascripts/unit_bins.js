@@ -3,7 +3,9 @@
     window.show_section = function(element, button) {
       $$('.unit-navigation').each(function(elem) { elem.removeClassName('selected-category'); } );
       $$('.show_section').each(function(elem)    { elem.hide();                               } );
-      $(element).show();
+      if (typeof element !== 'undefined') {
+        $(element).show();
+      }
       if (typeof button !== 'undefined') {
         $(button).addClassName('selected-category');
       }
@@ -127,8 +129,10 @@
       }
       return false;
     };
-    var last_button = $$('bin_button').last();
     var last_panel = $$(".show_section").last();
-    show_section(last_panel,last_button);
+    var last_button = $$('.bin_button').last();
+    if (last_panel && last_button) {
+      show_section(last_panel,last_button);
+    }
   });
 })();

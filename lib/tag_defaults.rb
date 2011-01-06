@@ -81,93 +81,81 @@ module TagDefaults
       user = nil
       offerings = nil
       off_runnables = []
+
       if portal_clazz && portal_clazz.teacher
         user = portal_clazz.teacher.user
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
-      grade_levels  = self.grade_level_counts.reject  {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
-      subject_areas = self.subject_area_counts.reject {|a| a.count < 1 }.sort { |a,b| a.name <=> b.name}
-      units         = self.unit_counts.reject { |a| a.count < 1}.map { |u| u.name }.sort
-      results = []
-      i = 0
-      grade_levels.each do |grade_level|
-        subject_areas.each_with_index do |subject,j|
-          query = self.published
-          query = query.tagged_with(grade_level.name, :on => :grade_levels)
-          query = query.tagged_with(subject.name,     :on => :subject_areas)
-          unit_listing = units.map do |u|
-            u_query = query.tagged_with(u, :on => :units)
-            offered = []
-            { :name => u,
-              :count => u_query.count,
-              :activities => u_query
-            }
-          end
-          offered=[]
-          if off_runnables
-            offered = query & off_runnables
-          end
-          unit_listing.reject! { |u| u[:count] < 1 }
-          record = {
-            :key          => "#{grade_level.name}#{subject.name}".gsub(/\s+/,"").downcase,
-            :name         => "#{grade_level.name} #{subject.name}",
-            :classes      => "unit-navigation level#{i+1}",
-            :grade_level  => grade_level.name,
-            :subject_area => subject.name,
-            :query        => query,
-            :units        => unit_listing,
-            :count        => query.count,
-            :off_count    => offered.size
-          }
-          if (unit_listing.size > 0)
-            results << record
-          end
-        end
-        i = i + 1
-      end # End Grade Levels
-
+      activities = Activity.published
+      key_map = activities.map { |a| {:activity => a, :keys => a.keys }}
       # Add unpublished activities of the user:
       if user
-        users = self.find(:all, :conditions => {:user_id => user.id});
-        remainder = users.clone
-        unit_listing = units.map do |u|
-          unit_activities = users.select { |a| a.unit_list && a.unit_list.include?(u) }
-          remainder = remainder - unit_activities
+        users_own = self.find(:all, :conditions => {:user_id => user.id});
+        users_key_map = users_own.map do |a|
+          grade_level = "Your activities"
+          subject_area = a.subject_area_list.first || "no subject area"
+          unit = a.unit_list.first || "no unit"
+          key = [grade_level,subject_area,unit]
           {
-            :name => u,
-            :count => unit_activities.size,
-            :activities => unit_activities
+            :activity => a,
+            :keys => [key]
           }
         end
+        key_map = key_map + users_key_map
+      end
 
-        if remainder.size > 0
-          unit_record = {
-            :name => "no assigned unit",
-            :count => remainder.size,
-            :activities => remainder
-          }
-          unit_listing << unit_record
-        end
-        offered=[]
-        if off_runnables
-          offered = users & off_runnables
-        end
-        unit_listing.reject!{ |u| u[:count] < 1}
-        record = {
-          :key          => "users_own",
-          :name         => "Your activities",
-          :classes      => "unit-navigation level#{i+1}",
-          :units        => unit_listing,
-          :off_count    => offered.size,
-          :count        => users.size,
-          :query        => users
-        }
-        if (unit_listing.size > 0)
-          results << record
+      results = {}
+      key_counter = 0
+      key_map.each do |key_map|
+        keys = key_map[:keys]
+        act  = key_map[:activity]
+        keys.each do |key|
+          grade_level = key[0]
+          subject = key[1]
+          unit = key[2]
+          key_string = "#{grade_level}#{subject}".gsub(/\s+/,"").downcase
+          # hacky ordering of grade levels
+          order = 4
+          case key_string
+          when /^elem/i
+            order = 1
+          when /^midd/i
+            order = 2
+          when /^high/i
+            order = 3
+          end
+          keystring = "#{order}#{keystring}"
+          unless results[key_string]
+            results[key_string] = {
+              :order => order,
+              :name => "#{key[0]} #{key[1]}",
+              :grade_level => grade_level,
+              :subject_area => subject,
+              :activities => [],
+              :units => {},
+            }
+          end
+          results[key_string][:activities] << act
+          results[key_string][:units][unit] ||= {:activities => [], :count => 0, :name => unit}
+          results[key_string][:units][unit][:activities] << act
         end
       end
-      results.sort {|a,b| a[:key] <=> b[:key] }.uniq
+
+      # update aggregate values
+      results.each_key do |key|
+        record=results[key]
+        record[:query] = record[:activities]
+        record[:count] = record[:activities].size
+        record[:off_count] = (record[:activities] & off_runnables).size
+        record[:activities].sort!{ |a,b| a.name <=> b.name }
+        record[:units].each_key do |unit_key|
+          unit = record[:units][unit_key]
+          unit[:activities].sort!{ |a,b| a.name <=> b.name }
+          unit[:count] = unit[:activities].size
+        end
+      end
+      results
     end
   end
 
@@ -182,7 +170,7 @@ module TagDefaults
     self.grade_level_list.each do |grade|
       self.subject_area_list.each do |subject|
         self.unit_list.each do |unit|
-          results << "#{grade} #{subject} #{unit}"
+          results << [grade,subject,unit]
         end
       end
     end
