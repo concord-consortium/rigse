@@ -562,14 +562,20 @@ class ItsiImporter
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
       attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
       # There are some exceptions for these naming conventions:
-      if section_key.to_s == "collectdata"
-            attribs[:probetype_id] = :probe_type_id
-            attribs[:model_id] = :model_id
-            attribs[:calibration_active] = :collectdata1_calibration_active
-            attribs[:calibration_id] = :collectdata1_calibration_id
-      elsif section_key.to_s == "further"
-            attribs[:calibration_active] = :furtherprobe_calibration_active
-            attribs[:calibration_id] = :furtherprobe_calibration_id
+      case section_key
+      when :predict
+        attribs[:graph_response] = :prediction_graph_response
+        attribs[:text_response] = :prediction_text_response
+        attribs[:drawing_response] = :prediction_drawing_response
+      when :collectdata
+        attribs[:probetype_id] = :probe_type_id
+        attribs[:model_id] = :model_id
+        attribs[:calibration_active] = :collectdata1_calibration_active
+        attribs[:calibration_id] = :collectdata1_calibration_id
+        attribs[:graph_response] = :collectdata_graph_response
+      when :further
+        attribs[:calibration_active] = :furtherprobe_calibration_active
+        attribs[:calibration_id] = :furtherprobe_calibration_id
       end
       return attribs[attribute_name]
     end
@@ -672,6 +678,43 @@ class ItsiImporter
           em_sensor.enable
         else
           em_sensor.disable
+        end
+      end
+
+      ## embed a prediction graph
+      if (attribute_name_for(section_key,:graph_response) && (diy_act.respond_to? attribute_name_for(section_key,:graph_response)))
+        next_skey = next_section_key(section_key)
+        if (attribute_name_for(next_skey,:probetype_id) && (diy_act.respond_to? attribute_name_for(next_skey,:probetype_id)))
+          probe_type_id = diy_act.send(attribute_name_for(next_skey,:probetype_id))
+          probe_type = Probe::ProbeType.default
+          if probe_type_id != nil
+            begin
+              probe_type = Probe::ProbeType.find(probe_type_id)
+            rescue ActiveRecord::RecordNotFound => e
+              puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+            end
+          end
+
+          prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
+          em_predict = Embeddable::Diy::Sensor.create(:prototype => prototype_prediction, :user => user)
+          em_predict.pages << page
+          if diy_act.send(attribute_name_for(section_key,:graph_response))
+            em_predict.enable
+          else
+            em_predict.disable
+          end
+        end
+      end
+    end
+
+    def next_section_key(section_key)
+      next_one = false
+      SECTIONS_MAP.each_with_index do |s,i|
+        if next_one
+          return s[:key]
+        end
+        if s[:key] == section_key
+          next_one = true
         end
       end
     end
