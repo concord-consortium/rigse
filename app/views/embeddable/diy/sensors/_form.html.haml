@@ -1,5 +1,3 @@
-= f.submit("Save", :class=> "template_save_button")
-= f.submit("Cancel", :class=> "template_cancel_button")
 .content
   - field_set_tag 'Sensor' do
     = f.collection_select(:prototype_id, Embeddable::DataCollector.prototypes, :id, :name)
