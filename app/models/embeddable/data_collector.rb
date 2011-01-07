@@ -48,28 +48,20 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   serialize :data_store_values
 
-  #def before_save
-    #if self.title
-      #self.name = self.title
-    #end
-  #end
   acts_as_replicatable
   send_update_events_to :investigations
 
 
   def before_validation
-    #
-    # self.probe_type should be available before this validation is run
-    # thanks to default_value_for lambda blocks above.
-    default_pt = self.probe_type
-    ## its an error if there is no default, but we handle that elsewhere.
-    if default_pt
-      #self.probe_type_id = default_pt.id unless self.probe_type_id
-      self.name = default_pt.name if self.name.nil? || self.name.empty? || self.name == Embeddable::DataCollector::DEFAULT_NAME
-      self.y_axis_label = default_pt.name unless self.y_axis_label
+    if self.probe_type_id_changed?
+      unless (self.name_changed? && self.name != Embeddable::DataCollector::DEFAULT_NAME)
+        self.name = self.probe_type.name
+      end
+      unless self.y_axis_label_changed?
+        self.y_axis_label = self.name
+        self.y_axis_units  = self.probe_type.unit
+      end
     end
-    #self.name = title unless self.title.nil? || self.title.empty?
-    #self.title = self.name if self.title.nil? || self.title.empty?
   end
 
 
