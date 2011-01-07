@@ -223,7 +223,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
                  :single_value                =>  false
 
   default_value_for :probe_type do |v|
-    found = Probe::ProbeType.default
+    Probe::ProbeType.default
   end
 
   def name_from_probe_type
