@@ -1,5 +1,20 @@
 class PageElementsController < ApplicationController
+  
+  protected
 
+  def toggle_enabled(isit)
+    page_element = PageElement.find(params[:id])
+    page_element.is_enabled=isit
+    results = :bad_request
+    if page_element.changeable?(current_user)
+      if page_element.save
+        results = :ok
+      end
+    end
+    head results
+  end
+
+  public
   # DELETE /page_elements/1
   # DELETE /page_elements/1.xml
   def destroy
@@ -12,4 +27,12 @@ class PageElementsController < ApplicationController
     end
   end
   
+  def enable
+    toggle_enabled(true)
+  end
+
+  def disable
+    toggle_enabled(false)
+  end
+
 end
