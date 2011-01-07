@@ -10,8 +10,7 @@
       %div.template_edit_button
       -#%div.template_save_button
     %div.template_view_title{:id => dom_id_for(element, :template_view_title)}
-      -# Below: weird active record glitch? proxy objects dont work:
-      %h3= element.embeddable.send :name
+      %h3= element.embeddable.name
     %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
       = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
       -#= render_show_partial_for(component,false)
