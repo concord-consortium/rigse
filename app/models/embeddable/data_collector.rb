@@ -6,11 +6,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
   belongs_to :calibration, :class_name => 'Probe::Calibration'
-
-  has_many :page_elements, :as => :embeddable
-  has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
-
   belongs_to :prediction_graph_source,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
@@ -18,12 +13,13 @@ class Embeddable::DataCollector < ActiveRecord::Base
   has_many :prediction_graph_destinations,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
-
-  # diy_sensors is a simplified controller for
-  # a dataCollector.
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
+  has_many :teacher_notes, :as => :authored_entity
+  # diy_sensors is a simplified interface for a dataCollector.
   has_many :diy_sensors, :as => 'prototype'
 
-  # validates_associated :probe_type
+  validates_presence_of :name, :message => "can't be blank"
   validate :associated_probe
 
   def associated_probe
@@ -39,12 +35,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
   end
 
-  validates_presence_of :name, :message => "can't be blank"
 
   # proto-type datastores are hints for how to create diy-sensors
   named_scope :prototypes, :conditions => {:is_prototype => true}
-
-
 
   # this could work if the finder sql was redone
   # has_many :investigations,
@@ -60,6 +53,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
       #self.name = self.title
     #end
   #end
+  acts_as_replicatable
+  send_update_events_to :investigations
+
 
   def before_validation
     #
@@ -76,9 +72,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
     #self.title = self.name if self.title.nil? || self.title.empty?
   end
 
-  acts_as_replicatable
-
-  send_update_events_to :investigations
 
   def investigations
     invs = []
@@ -89,7 +82,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
   include Changeable
-
   include Cloneable
   cloneable_associations :prediction_graph_destinations
 
@@ -309,3 +301,4 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
 end
+
