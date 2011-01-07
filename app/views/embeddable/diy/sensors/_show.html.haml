@@ -1,7 +1,5 @@
 %div{:id => dom_id_for(sensor, :details), :class => 'content'}
   -#= wrap_edit_link_around_content(sensor, options={:complete => mce_init_string}) do
-  %ul
-    %li
-      Sensor: 
-      = sensor.name
+  = render :partial => "embeddable/data_collectors/show", :locals => {:data_collector => sensor}
+  %p= sensor.name
 
