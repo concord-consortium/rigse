@@ -36,7 +36,7 @@ flatten_sortables = function() {
 
 // take a extended dom_element and return a model name and id
 decode_model = function(elem) {
-  var dom_id = elem.identify() 
+  var dom_id = elem.identify();
   var match = dom_id.gsub(/(.*)_([0-9]+)/, function(match){
     return match;
   });
