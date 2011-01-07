@@ -51,19 +51,30 @@ class Embeddable::DataCollector < ActiveRecord::Base
   acts_as_replicatable
   send_update_events_to :investigations
 
-
-  def before_validation
-    if self.probe_type_id_changed?
-      unless (self.name_changed? && self.name != Embeddable::DataCollector::DEFAULT_NAME)
-        self.name = self.probe_type.name
-      end
-      unless self.y_axis_label_changed?
-        self.y_axis_label = self.name
-        self.y_axis_units  = self.probe_type.unit
+  def handle_probe_type_change
+    self.calibration = nil
+    fields = {
+      :name         => proc { |p| "#{p.name} Data Collector"},
+      :title        => proc { |p| "#{p.name} Data Collector"},
+      :y_axis_label => proc { |p| p.name},
+      :y_axis_units => proc { |p| p.unit},
+      :y_axis_min   => proc { |p| p.min },
+      :y_axis_max   => proc { |p| p.max }
+    }
+    # check to make sure the destination attribute values haven't 
+    # also been changed concurrently ..
+    fields.each_pair do |attr, lamb|
+      unless self.send("#{attr.to_s}_changed?".to_sym)
+        self.send("#{attr.to_s}=".to_sym, lamb.call(self.probe_type))
       end
     end
   end
 
+  def before_validation
+    if self.probe_type_id_changed?
+      self.handle_probe_type_change
+    end
+  end
 
   def investigations
     invs = []
@@ -160,17 +171,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   #   else
   #     puts "boo"
   #   end
-  # end
-
-  # def probe_type=(probe_type)
-  #   self.calibration = nil
-  #   self.probe_type_id = probe_type.id
-  #   self.title = "#{probe_type.name} Data Collector"
-  #   self.name = self.title
-  #   self.y_axis_label = probe_type.name
-  #   self.y_axis_units = probe_type.unit
-  #   self.y_axis_min = probe_type.min
-  #   self.y_axis_max = probe_type.max
   # end
 
   def self.graph_types
