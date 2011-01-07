@@ -32,8 +32,10 @@
             %li
               = label_tag :domain, 'Domain: ', :class=>"right"
               = select_tag('domain[id]', options_for_select(domains.map { |d| [d.name, d.id] } ) )
-        
+
   = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+
+  = render :partial => 'users/source', :locals => { :user => portal_teacher.user }
 
   .aligned
     = f.submit 'Submit'
