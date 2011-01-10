@@ -73,7 +73,9 @@ Rails::Initializer.run do |config|
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
-  config.gem "newrelic_rpm" 
+  # This is part of the setup necessary for using newrelics reporting gem
+  # config.gem "newrelic_rpm" 
+
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
   # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'
