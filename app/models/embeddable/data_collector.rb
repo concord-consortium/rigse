@@ -99,7 +99,14 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
     # find or make a prototype that matches this...
     def get_prototype(opts = {})
-      return nil unless opts[:probe_type]
+      unless opts[:probe_type]
+        Rails.logger.error("must pass :probe_type in DataCollector#get_prototypes option hash")
+        return nil
+      end
+      unless opts[:graph_type]
+        Rails.logger.error("must pass :graph_type in DataCollector#get_prototypes option hash")
+        return nil
+      end
       conds = {}
       conds[:probe_type_id] = opts[:probe_type].id if opts[:probe_type]
       conds[:calibration_id] = opts[:calibration].id if opts[:calibration]
@@ -161,6 +168,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
     self.valid_calibrations.collect {|c| [c.name,c.id] }
   end
 
+  # DISCUSS: Should we define constants or us AR records?
   def self.graph_types
     [["Sensor", 1], ["Prediction", 2]]
   end
