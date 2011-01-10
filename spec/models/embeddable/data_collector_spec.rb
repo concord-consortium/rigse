@@ -1,10 +1,20 @@
 require 'spec_helper'
+  def mock_probe_type(_opts = {})
+    defaults = {
+      :name => "type a", 
+      :id => 2, 
+      :unit => "fako units",
+      :min => 0,
+      :max => 10
+    }
+    opts = defaults.merge(_opts)
+    return mock_model(Probe::ProbeType, opts)
+  end
 describe Embeddable::DataCollector do
 
   describe "When there are existing probes" do
     before(:all) do
-      @fake_probe= mock_model(Probe::ProbeType,
-        :name => 'fake', :id => 1)
+      @fake_probe = mock_probe_type({:name => 'fake', :id => 1})
       Probe::ProbeType.stub!(:find_by_name => @fake_probe)
       Probe::ProbeType.stub!(:find => @fake_probe)
     end
@@ -34,29 +44,28 @@ describe Embeddable::DataCollector do
 
     describe "Embeddable::DataCollector.get_prototype" do
       it "should find and use an existing datacollector prototype with a known probeType" do
-        @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
-        moc_data_collector = mock_model(Embeddable::DataCollector,
-                               :probe_type => @fake_probe_a)
+        @fake_probe_a = mock_probe_type
+        moc_data_collector = mock_model(Embeddable::DataCollector, :probe_type => @fake_probe_a)
         prototypes = mock(:find => moc_data_collector)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
 
-        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :graph_type => 'Sensor'})
         proto.probe_type.should == @fake_probe_a
       end
       
       it "should create a datacollector with the given probeType, when an existing prototype cant be found" do
-        @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
+        @fake_probe_a = mock_probe_type
         prototypes = mock(:find => nil)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
-        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :graph_type => 'Sensor'})
         proto.probe_type.should == @fake_probe_a
       end
 
       it "should use the name of the probeType for the name of the dataCollector when making a new prototype" do
-        @fake_probe_a = mock_model(Probe::ProbeType, :name => "type a", :id => 2)
+        @fake_probe_a = mock_probe_type
         prototypes = mock(:find => nil)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
-        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a})
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :graph_type => 'Sensor'})
         proto.probe_type.should == @fake_probe_a
         proto.name.should match @fake_probe_a.name
       end
