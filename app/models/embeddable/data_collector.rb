@@ -161,18 +161,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
     self.valid_calibrations.collect {|c| [c.name,c.id] }
   end
 
-  # def calibration
-  #   return nil
-  # end
-  #
-  # def calibration=(calibration)
-  #   if probe_type.calibrations.include?(calibration)
-  #     puts "hazzza"
-  #   else
-  #     puts "boo"
-  #   end
-  # end
-
   def self.graph_types
     [["Sensor", 1], ["Prediction", 2]]
   end
