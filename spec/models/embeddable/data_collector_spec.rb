@@ -75,7 +75,7 @@ describe Embeddable::DataCollector do
 
   describe "When no probes exist" do
     # todo: whats the behavior here?
-    before(:all) do
+    before(:each) do
       Probe::ProbeType.stub!(:find_by_name => nil)
       Probe::ProbeType.stub!(:find => nil)
       Probe::ProbeType.stub!(:default => nil)
@@ -90,6 +90,91 @@ describe Embeddable::DataCollector do
       data_collector = Embeddable::DataCollector.create
       data_collector.should_not be_valid
       data_collector.errors.on(:probe_type).should include(Embeddable::DataCollector::MISSING_PROBE_MESSAGE)
+    end
+  end
+
+  describe "Dyanimcally updating name and axis properties when changing probe type" do
+    before(:each) do
+      @inital_probe_type = mock_probe_type(:name => 'initial_probe_type', :id => 1)
+      @initial_name  = "initial name"
+      @initial_units = "initial units"
+      @initial_params = {
+        :name  => @initial_name,
+        :y_axis_units  => @initial_units,
+        :y_axix_min    =>  0,
+        :y_axis_max    =>  1,
+        :initial_probe_type => @initial_probe_type
+      }
+      @alternate_probe_type = mock_probe_type(:name => "specometer", :id => 3, :units => 'specatrons', :min => 100, :max => 101)
+      @data_collector = Embeddable::DataCollector.create
+    end
+
+    describe "When the probe_type changes by itself" do
+      before(:each) do
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save
+      end
+
+      it "Should update the name property of the data collector when the probe_type changes" do
+        @data_collector.name.should match @alternate_probe_type.name
+      end
+      
+      it "Should update the y_axis_label property when the probe_type changes" do
+        @data_collector.y_axis_label.should match @alternate_probe_type.name
+      end
+      
+      it "should update the y_axis_units property when the probe_type changes" do
+        @data_collector.y_axis_units.should match @alternate_probe_type.unit
+      end
+      
+      it "should update the y_axis_min property when the probe_type changes" do
+        @data_collector.y_axis_min.should be @alternate_probe_type.min
+      end
+
+      it "should update the y_axis_max property when the probe_type changes" do
+        @data_collector.y_axis_max.should be @alternate_probe_type.max
+      end
+    end
+    
+    describe "when the probe_type changes, and dynimic fields are set by hand too" do
+      before(:each) do
+        @stringP = "something new"
+        @numericP = 1234566
+      end
+      it "Should use the manually set name property even when the probe_type changes" do
+        @data_collector.name = @stringP
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save!
+        @data_collector.name.should be @stringP
+      end
+
+      it "Should use the manually set the y_axis_label even when the probe_type changes" do
+        @data_collector.y_axis_label = @stringP
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save
+        @data_collector.y_axis_label.should be @stringP
+      end
+
+      it "should use the manually set the y_axis_units even when the probe_type changes" do
+        @data_collector.y_axis_units = @stringP
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save
+        @data_collector.y_axis_units.should be @stringP
+      end
+
+      it "should use the manually set the y_axis_min even when the probe_type changes" do
+        @data_collector.y_axis_min = @numericP
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save
+        @data_collector.y_axis_min.should be @numericP
+      end
+
+      it "should use the manually set the y_axis_max even when the probe_type changes" do
+        @data_collector.y_axis_max = @numericP
+        @data_collector.probe_type = @alternate_probe_type
+        @data_collector.save
+        @data_collector.y_axis_max.should be @numericP
+      end
     end
   end
 end
