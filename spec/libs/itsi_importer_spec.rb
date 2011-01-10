@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-
+#require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 describe ItsiImporter do
   before(:all) do
   end
@@ -38,15 +38,19 @@ describe ItsiImporter do
       @activity.should_receive(:sections).and_return(@sections)
       @diy_act.should_receive(:respond_to?).with(:collect_data_text_response).and_return(true)
       @diy_act.should_receive(:respond_to?).with(:collect_data_drawing_response).and_return(true)
-      @diy_act.should_receive(:respond_to?).with(:probe_type_id).and_return(true)
-      Embeddable::DataCollector.stub!(:prototype_by_type_and_calibration => Factory(:data_collector))
+      #@diy_act.should_receive(:respond_to?).with(:probe_type_id).and_return(true)
+      @diy_act.should_receive(:respond_to?).with(:collect_data_probetype_id).and_return(true)
+      Embeddable::DataCollector.stub!(:get_prototype => Factory(:data_collector))
       # respond with these answers:
       @diy_act.should_receive(:collect_data_drawing_response).and_return(false)
       @diy_act.should_receive(:collect_data_text_response).and_return(true)
-      @diy_act.should_receive(:collectdata1_calibration_active).and_return(true)
+      #@diy_act.should_receive(:collectdata1_calibration_active).and_return(true)
+      #@diy_act.should_receive(:collectdata1_calibration_id).and_return(1)
+      @diy_act.should_receive(:collect_data_calibration_active).and_return(true)
+      @diy_act.should_receive(:collect_data_calibration_id).and_return(1)
       @diy_act.should_receive(:collect_data_probe_active ).and_return(true)
-      @diy_act.should_receive(:collectdata1_calibration_id).and_return(1)
-      @diy_act.should_receive(:probe_type_id).and_return(1)
+      #@diy_act.should_receive(:probe).and_return(1)
+      @diy_act.should_receive(:collect_data_probetype_id).and_return(1)
       
       # dont handle these types:
       @diy_act.should_receive(:respond_to?).with(:collect_data_model_active).and_return(false)

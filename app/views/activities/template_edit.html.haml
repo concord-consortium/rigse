@@ -1,8 +1,19 @@
-%h3 Actvitiy Name
-= text_field_tag(:title, @activity.name, :size => '72')
-%h3 description
-= text_area_tag(:description, @activity.description, :class => 'mceNoEditor',:cols => '72')
-%p
-  - @activity.sections.each do |section|
-    - section.pages.each do |page|
-      = render :partial=> 'pages/template_edit', :locals=>{:page => page }
+- form_for(@activity) do |f|
+  %h3 Activity Name
+  = f.text_field(:name, :size => '72')
+  - if current_user.has_role?('admin','manager')
+    %h3 grade level:
+    = grade_level_select
+    %h3 subject area:
+    = subject_area_select
+    %h3 unit:
+    = unit_select
+    %h3 public:
+    = f.select :publication_status, Activity.publication_states.map {|s| s.to_s} 
+  %h3 description
+  -#= f.hidden_field :redirect, activity_template_edit(@activity)
+  = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
+  %p
+  = f.submit "save"
+- @activity.pages.each do |page|
+  = render :partial=> 'pages/template_edit', :locals=>{:page => page }

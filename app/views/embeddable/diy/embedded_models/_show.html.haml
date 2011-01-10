@@ -1,8 +1,12 @@
-%div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
-  = wrap_edit_link_around_content(diy_embedded_model, options={:complete => mce_init_string}) do
-    %ul
-
-      %li
+%div{:id => dom_id_for(embedded_model, :details), :class => 'content'}
+  -# = wrap_edit_link_around_content(embedded_model, options={:complete => mce_init_string, :class => 'foobar edit'}) do
+  %p
+    -if embedded_model.diy_model && embedded_model.diy_model.image_url
+      =image_tag(embedded_model.diy_model.image_url)
+      %p
         Authored Data URL: 
-        %a{:href => diy_embedded_model.url}
-          = diy_embedded_model.url
+        =link_to embedded_model.url
+    - else
+      %p
+        (No authored data URL)
+

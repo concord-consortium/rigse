@@ -1,15 +1,11 @@
 class Embeddable::DataCollector < ActiveRecord::Base
+  DEFAULT_NAME = "Data Graph"
   MISSING_PROBE_MESSAGE = "Unable to find default probes. try running"
   set_table_name "embeddable_data_collectors"
 
   belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
   belongs_to :calibration, :class_name => 'Probe::Calibration'
-  
-  has_many :page_elements, :as => :embeddable
-  has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
-  
   belongs_to :prediction_graph_source,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
@@ -17,14 +13,15 @@ class Embeddable::DataCollector < ActiveRecord::Base
   has_many :prediction_graph_destinations,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
-
-  # diy_sensors is a simplified controller for 
-  # a dataCollector. 
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
+  has_many :teacher_notes, :as => :authored_entity
+  # diy_sensors is a simplified interface for a dataCollector.
   has_many :diy_sensors, :as => 'prototype'
-  
-  # validates_associated :probe_type
+
+  validates_presence_of :name, :message => "can't be blank"
   validate :associated_probe
-  
+
   def associated_probe
     if self.probe_type
       unless Probe::ProbeType.find_by_id(self.probe_type_id)
@@ -37,14 +34,11 @@ class Embeddable::DataCollector < ActiveRecord::Base
       end
     end
   end
-  
-  validates_presence_of :name, :message => "can't be blank"
-  
-  # proto-type datastores are hints for how to create diy-sensors 
+
+
+  # proto-type datastores are hints for how to create diy-sensors
   named_scope :prototypes, :conditions => {:is_prototype => true}
 
-  
-  
   # this could work if the finder sql was redone
   # has_many :investigations,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
@@ -53,31 +47,35 @@ class Embeddable::DataCollector < ActiveRecord::Base
   #   WHERE pages.section_id = #{id}'
 
   serialize :data_store_values
-  
-  def before_save
-    if self.title
-      self.name = self.title
-    end
-  end
-  
-  def before_validation
-    # self.probe_type should be available before this validation is run
-    # thanks to default_value_for lambda blocks above.
-    default_pt = self.probe_type
-    # its an error if there is no default, but we handle that elsewhere.
-    if default_pt
-      self.probe_type_id = default_pt.id unless self.probe_type_id
-      self.name = default_pt.name if self.name.nil? || self.name.empty?
-      self.y_axis_label = default_pt.name unless self.y_axis_label
-    end
-    self.name = title unless self.title.nil? || self.title.empty?
-    self.title = self.name if self.title.nil? || self.title.empty?
-  end
-  
+
   acts_as_replicatable
-  
   send_update_events_to :investigations
-  
+
+  def handle_probe_type_change
+    self.calibration = nil
+    fields = {
+      :name         => proc { |p| "#{p.name} Data Collector"},
+      :title        => proc { |p| "#{p.name} Data Collector"},
+      :y_axis_label => proc { |p| p.name},
+      :y_axis_units => proc { |p| p.unit},
+      :y_axis_min   => proc { |p| p.min },
+      :y_axis_max   => proc { |p| p.max }
+    }
+    # check to make sure the destination attribute values haven't 
+    # also been changed concurrently ..
+    fields.each_pair do |attr, lamb|
+      unless self.send("#{attr.to_s}_changed?".to_sym)
+        self.send("#{attr.to_s}=".to_sym, lamb.call(self.probe_type))
+      end
+    end
+  end
+
+  def before_validation
+    if self.probe_type_id_changed?
+      self.handle_probe_type_change
+    end
+  end
+
   def investigations
     invs = []
     self.pages.each do |page|
@@ -87,39 +85,49 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
   include Changeable
-  
   include Cloneable
   cloneable_associations :prediction_graph_destinations
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
 
     # find or make a prototype that matches this...
-    def prototype_by_type_and_calibration(probe_type,calibration)
-      found = nil
-      if calibration.nil?
-        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id})
-      else 
-        found = self.prototypes.find(:conditions => {:probe_type_id => probe_type.id, :calibration => calibration})
+    def get_prototype(opts = {})
+      unless opts[:probe_type]
+        Rails.logger.error("must pass :probe_type in DataCollector#get_prototypes option hash")
+        return nil
       end
+      unless opts[:graph_type]
+        Rails.logger.error("must pass :graph_type in DataCollector#get_prototypes option hash")
+        return nil
+      end
+      conds = {}
+      conds[:probe_type_id] = opts[:probe_type].id if opts[:probe_type]
+      conds[:calibration_id] = opts[:calibration].id if opts[:calibration]
+      conds[:graph_type_id] = self.graph_type_id_for(opts[:graph_type]) if opts[:graph_type]
+
+      found = self.prototypes.find(:first, :conditions => conds)
       return found if found
+
       made = self.create
-      made.probe_type_id = probe_type.id
+      made.probe_type = opts[:probe_type]
+      made.name_from_probe_type
       made.is_prototype=true
-      if calibration 
-        made.calibration_id = calibration.id
+      made.graph_type = opts[:graph_type]
+      if opts[:calibration]
+        made.calibration_id = opts[:calibration].id
       end
-      made.save
+      made.save!
       return made
     end
   end
-  
+
   def other_data_collectors_in_activity_scope(scope)
     if scope && scope.class != Embeddable::DataCollector
       scope.activity.data_collectors - [self]
@@ -127,7 +135,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
       []
     end
   end
-  
+
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::DataCollector
       scope.activity.investigation.data_collectors
@@ -135,18 +143,18 @@ class Embeddable::DataCollector < ActiveRecord::Base
       []
     end
   end
-  
+
   def self.prediction_graphs
     Embeddable::DataCollector.find_all_by_graph_type_id(2)
   end
-  
+
   def ot_button_str
     buttons = '0,1,2,3,4'
     buttons << ',5' if ruler_enabled
     buttons << ',6' if autoscale_enabled
     buttons
   end
-  
+
   def valid_calibrations
     if probe_type
       probe_type.calibrations
@@ -159,34 +167,16 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def calibration_select
     self.valid_calibrations.collect {|c| [c.name,c.id] }
   end
-  
-  # def calibration
-  #   return nil
-  # end
-  # 
-  # def calibration=(calibration)
-  #   if probe_type.calibrations.include?(calibration)
-  #     puts "hazzza"
-  #   else
-  #     puts "boo"
-  #   end
-  # end
 
-  # def probe_type=(probe_type)
-  #   self.calibration = nil
-  #   self.probe_type_id = probe_type.id
-  #   self.title = "#{probe_type.name} Data Collector"
-  #   self.name = self.title
-  #   self.y_axis_label = probe_type.name
-  #   self.y_axis_units = probe_type.unit
-  #   self.y_axis_min = probe_type.min
-  #   self.y_axis_max = probe_type.max
-  # end
-
+  # DISCUSS: Should we define constants or us AR records?
   def self.graph_types
     [["Sensor", 1], ["Prediction", 2]]
   end
-  
+
+  def self.graph_type_id_for(gtype)
+    self.graph_types.select{|gt| gt[0] == gtype}.first[1]
+  end
+
   def graph_type_id
     self[:graph_type_id] || 1
   end
@@ -199,6 +189,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
     Embeddable::DataCollector.graph_types[graph_type_id-1][0]
   end
 
+  def graph_type=(gtype)
+    self[:graph_type_id] = Embeddable::DataCollector.graph_type_id_for(gtype)
+  end
+
   def y_axis_title
     "#{self.y_axis_label} (#{self.y_axis_units})"
   end
@@ -206,13 +200,12 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def x_axis_title
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
-  
-  default_value_for :name, "Data Graph"
-  default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
 
+  default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
+  default_value_for :name, Embeddable::DataCollector::DEFAULT_NAME
   # default_value_for :y_axis_label, default_probe_type.name
   # default_value_for :y_axis_label, 'Temperature'
-  
+
   default_values :x_axis_min                  =>  0,
                  :x_axis_max                  =>  30,
                  :x_axis_label                =>  "Time",
@@ -225,16 +218,20 @@ class Embeddable::DataCollector < ActiveRecord::Base
                  :show_tare                   =>  false,
                  :single_value                =>  false
 
-  default_value_for :probe_type do |v| 
-    found = Probe::ProbeType.default
+  default_value_for :probe_type do |v|
+    Probe::ProbeType.default
   end
-  
+
+  def name_from_probe_type
+    self.name = "#{self.probe_type.name} Data Collector"
+  end
+
   # send_update_events_to :investigations
 
   def display_type
     graph_type
   end
-  
+
   def self.display_name
     "Graph"
   end
@@ -246,7 +243,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def authorable_in_java?
     Embeddable::DataCollector.authorable_in_java?
   end
-  
+
   def update_from_otml_library_content
     olc = Hash.from_xml(otml_library_content)
     if ot_data_collector = olc['OTDataCollector']
@@ -292,3 +289,4 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
 end
+

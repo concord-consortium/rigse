@@ -1,9 +1,0 @@
-- remote_form_for(section, :update => dom_id_for(section, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
-  = edit_menu_for(section, f)
-  .content
-    / - field_set_tag 'Name' do
-    /   = f.text_field :name, :size => 40
-    - field_set_tag 'Prompt' do
-      -#= f.text_area :prompt, :id => dom_id_for(section, :item, :prompt, :textarea), :class => 'tinymce_textarea'
-    - field_set_tag 'Default response' do
-      = f.text_field :default_response, :size => 80, :id => dom_id_for(section, :item, :default_response_field)

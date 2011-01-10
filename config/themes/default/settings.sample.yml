@@ -1,10 +1,11 @@
---- 
+---
 development: &id003
-  active_school_levels:
+  :single_page_activity: false
+  :active_school_levels:
     - "2"
     - "3"
     - "4"
-  active_grades:
+  :active_grades:
     - "6"
     - "7"
     - "8"
@@ -12,51 +13,52 @@ development: &id003
     - "10"
     - "11"
     - "12"
-  theme: default
-  site_name: DEFAULT Investigations
-  site_url: http://localhost:3000
-  runnables_use: otrunk_jnlp
-  runnable_mime_type: 
-  top_level_container_name: investigation
-  site_school: DEFAULT Investigations-school
-  description: ""
-  site_district: DEFAULT Investigations-district
-  help_email: default-investigations@concord.org
-  use_gse: true
-  enable_default_users: true
-  default_admin_user: 
-    first_name: Stephen
-    login: stephen
-    last_name: Bannasch
-    email: stephen.bannasch@gmail.com
-  states_and_provinces: 
+  :theme: default
+  :site_name: DEFAULT Investigations
+  :site_url: http://localhost:3000
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: DEFAULT Investigations-school
+  :description: ""
+  :site_district: DEFAULT Investigations-district
+  :help_email: default-investigations@concord.org
+  :use_gse: true
+  :enable_default_users: true
+  :default_admin_user:
+    :first_name: Stephen
+    :login: stephen
+    :last_name: Bannasch
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces:
     - RI
-  maven_jnlp_servers:
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families: 
+  :maven_jnlp_families:
     - all-otrunk-snapshot
-  default_maven_jnlp: 
-    version: snapshot
-    server: concord
-    family: all-otrunk-snapshot
-  valid_sakai_instances: 
+  :default_maven_jnlp:
+    :version: snapshot
+    :server: concord
+    :family: all-otrunk-snapshot
+  :valid_sakai_instances:
     - http://test.porfolio.ri.net/
     - http://portfolio.ri.net
     - https://test.portfolio.ri.net/
     - https://portfolio.ri.net/
-  
+
 test: *id003
 staging: *id003
 cucumber: *id003
 
-production: 
-  active_school_levels:
+production:
+  :single_page_activity: false
+  :active_school_levels:
     - "2"
     - "3"
     - "4"
-  active_grades:
+  :active_grades:
     - "6"
     - "7"
     - "8"
@@ -64,36 +66,36 @@ production:
     - "10"
     - "11"
     - "12"
-  theme: default
-  site_name: DEFAULT Investigations
-  site_url: http://localhost:3000
-  runnables_use: otrunk_jnlp
-  runnable_mime_type: 
-  top_level_container_name: investigation
-  site_school: DEFAULT Investigations-school
-  description: ""
-  site_district: DEFAULT Investigations-district
-  help_email: default-investigations@concord.org
-  use_gse: true
-  enable_default_users: true
-  default_admin_user: 
-    first_name: Stephen
-    login: stephen
-    last_name: Bannasch
-    email: stephen.bannasch@gmail.com
-  states_and_provinces: 
+  :theme: default
+  :site_name: DEFAULT Investigations
+  :site_url: http://localhost:3000
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: DEFAULT Investigations-school
+  :description: ""
+  :site_district: DEFAULT Investigations-district
+  :help_email: default-investigations@concord.org
+  :use_gse: true
+  :enable_default_users: true
+  :default_admin_user:
+    :first_name: Stephen
+    :login: stephen
+    :last_name: Bannasch
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces:
     - RI
-  maven_jnlp_servers:
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families: 
+  :maven_jnlp_families:
     - all-otrunk-snapshot
-  default_maven_jnlp: 
-    version: 0.1.0-20090724.190238
-    server: concord
-    family: all-otrunk-snapshot
-  valid_sakai_instances: 
+  :default_maven_jnlp:
+    :version: 0.1.0-20090724.190238
+    :server: concord
+    :family: all-otrunk-snapshot
+  :valid_sakai_instances:
     - http://moleman.concord.org/
     - http://test.porfolio.ri.net/
     - http://portfolio.ri.net

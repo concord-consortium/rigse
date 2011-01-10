@@ -100,16 +100,6 @@ class Activity < ActiveRecord::Base
         activities
       end
     end
-    def tags
-      [
-        {:name => "Middle School: Earth Science", :classes => "unit-navigation level1 selected-category", :show_section => "middleschoolearthscience"},
-        {:name => "Middle School: Physical Science", :classes => "unit-navigation level1", :show_section => "middleschoolphysicalscience"},
-        {:name => "Middle School: Life Science",  :classes => "unit-navigation level1", :show_section => "middleschoollifescience"},
-        {:name => "Hight School:  Physics", :classes => "unit-navigation level2", :show_section => "highschoolphysics"},
-        {:name => "Hight School:  chemistry", :classes => "unit-navigation level2", :show_section => "highschoolchemestry"},
-        {:name => "Hight School:  biology", :classes => "unit-navigation level2", :show_section => "highschoolbiology"}
-      ]
-    end
     
   end
   

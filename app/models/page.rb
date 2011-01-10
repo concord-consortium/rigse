@@ -85,7 +85,13 @@ class Page < ActiveRecord::Base
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
-  
+
+  def has_enabled_elements?
+    enabled = self.page_elements.detect{|pe| pe.is_enabled }
+    # puts "Found enabled page_element: #{enabled.inspect}"
+    return ! enabled.nil?
+  end
+
   class <<self
     def searchable_attributes
       @@searchable_attributes

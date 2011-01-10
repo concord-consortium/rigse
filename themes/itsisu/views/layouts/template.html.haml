@@ -15,7 +15,6 @@
     / see the yaml file too: config/asset_packages.yml
     = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
     = javascript_include_merged :base
-    = javascript_include_tag "template_toggle"
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag "tiny_mce/tiny_mce"
     
@@ -59,7 +58,7 @@
           =image_tag("itsi_su.png")
         .right_content
           / %h1=APP_CONFIG[:site_name]
-          %h1=APP_CONFIG[:site_name]|| "ITSI-SU"
+          %h1= APP_CONFIG[:site_name] || "ITSI-SU"
           %h3 Innovative Technology in Science Inquiry (scale up)
           %hr
           .padded_content_right

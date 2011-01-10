@@ -132,7 +132,15 @@ class ActivitiesController < ApplicationController
     @units.sort!
     @key_strings.sort!
   end
-  
+ 
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || false
+  end
+  # def template_edit
+  #   @teacher_mode = params[:teacher_mode] || @activity.teacher_only
+  #   #render :layout => 'template'
+  # end
+
   # GET /pages/1
   # GET /pages/1.xml
   def show
@@ -150,10 +158,6 @@ class ActivitiesController < ApplicationController
       format.xml  { render :xml => @activity }
       format.pdf {render :layout => false }
     end
-  end
-  def template_edit
-    @teacher_mode = params[:teacher_mode] || false
-    render :layout => 'template'
   end
 
   # GET /pages/new

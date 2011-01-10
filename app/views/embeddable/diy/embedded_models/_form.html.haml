@@ -1,6 +1,3 @@
-= edit_menu_for(embedded_model, f)
 .content
-  - field_set_tag 'name' do
-    = f.text_field :name, :id => dom_id_for(embedded_model, :item, :name_field)
-  - field_set_tag 'url' do
-    = f.text_field :url, :id => dom_id_for(embedded_model, :item, :url), :size => 80
+  - field_set_tag 'model' do
+    = f.collection_select(:diy_model_id, Diy::Model.all.sort{|a,b| a.name <=> b.name }, :id, :name_with_id)

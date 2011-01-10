@@ -1,5 +1,5 @@
 class ItsiImporter
-  @@attributes = nil  
+  @@attributes = nil
   SECTIONS_MAP = [
     { :key => :introduction,
       :name => "Introduction",
@@ -60,7 +60,7 @@ class ItsiImporter
   ]
 
   class <<self
-    
+
     def find_or_create_itsi_import_user
       unless user = User.find_by_login('itsi_import_user')
         member_role = Role.find_by_title('member')
@@ -72,8 +72,8 @@ class ItsiImporter
       end
       user
     end
-    
-    
+
+
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit,user, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
@@ -83,11 +83,11 @@ class ItsiImporter
         begin
           unless foreign_key.empty?
             itsi_activity = Itsi::Activity.find(foreign_key)
-            activity = create_activity_from_itsi_activity(itsi_activity, user,prefix)
+            activity = create_activity_from_itsi_activity(itsi_activity, nil, prefix) # nil user will import the DIY user and associate the activity with that user
             activity.unit_list = ccp_itsi_unit.unit_name
             activity.grade_level_list = ccp_itsi_activity.level.level_name
             activity.subject_area_list = ccp_itsi_activity.subject.subject_name
-            activity.publish!
+            activity.publish! unless activity.published?
             activity.save
             puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
           else
@@ -99,7 +99,7 @@ class ItsiImporter
       end
       puts
     end
-    
+
     def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
@@ -137,12 +137,12 @@ class ItsiImporter
       end
       ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix)
     end
-    
+
     def add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix="")
       investigation.activities << create_activity_from_itsi_activity(itsi_activity, user, prefix="")
       investigation
     end
-    
+
     def create_activity_from_itsi_activity_old(itsi_activity, user, prefix="")
        @@prediction_graph = nil
         if itsi_activity.collectdata_probe_active
@@ -254,7 +254,7 @@ class ItsiImporter
 
         name = "Prediction"
         page_desc = "Have the learner think about and predict the outcome of an experiment."
-        extract_question_prompt = itsi_activity.prediction_text_response || 
+        extract_question_prompt = itsi_activity.prediction_text_response ||
           itsi_activity.prediction_drawing_response || itsi_activity.prediction_graph_response
         body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.predict, extract_question_prompt)
         unless body.empty? && question_prompt.empty?
@@ -288,11 +288,11 @@ class ItsiImporter
         #   graph
         #     collectdata_graph_response
         #     (for probe in second collect data section)
-        # 
+        #
 
         name = "Collect Data"
         page_desc = "The learner conducts experiments using probes and models."
-        extract_question_prompt = itsi_activity.collectdata_text_response || 
+        extract_question_prompt = itsi_activity.collectdata_text_response ||
           itsi_activity.collectdata_drawing_response || itsi_activity.collectdata_graph_response
         body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.collectdata, extract_question_prompt)
         unless body.empty? && question_prompt.empty?
@@ -466,24 +466,73 @@ class ItsiImporter
         end
         activity
     end
-    
+
     ##
     ## NP: new definition of create_activity_from_itsi_activity
-    ##
-    def create_activity_from_itsi_activity(itsi_activity, user, prefix="")
-      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
-      activity = Activity.create do |i|
-        i.name = name
-        i.user = user
-        i.description = itsi_activity.description
+    ## TODO: Add itsi user
+
+    def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="")
+      prefix = "" if prefix.nil?
+      prefix << " " if prefix.size > 0
+      name = "#{prefix}#{itsi_activity.name} (#{itsi_activity.id})".strip
+      user = find_or_import_itsi_user(itsi_activity.user) unless user
+      activity = Activity.find_by_uuid(itsi_activity.uuid)
+      unless activity
+        activity = Activity.create do |i|
+          i.name = name
+          i.user = user
+          i.description = itsi_activity.description
+          i.uuid = itsi_activity.uuid
+          i.publish if itsi_activity.public
+        end
+
+        SECTIONS_MAP.each do |section|
+          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+        end
       end
-      
-      SECTIONS_MAP.each do |section|
-        process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
-      end
+      return activity
     end
 
-   
+    def find_or_import_itsi_user(diy_user)
+      user = User.find_by_uuid(diy_user.uuid)
+      user = User.find_by_login(diy_user.login) unless user
+      unless user
+        ccp_user = Ccportal::Member.find_by_diy_member_id(diy_user.id)
+        attrs = {
+          :login => diy_user.login,
+          :first_name => diy_user.first_name,
+          :last_name => diy_user.last_name,
+          :email => diy_user.email =~ /^no-email/ ? (diy_user.email + "@concord.org") : diy_user.email,
+          :vendor_interface_id => diy_user.vendor_interface_id,  ## FIXME: Do these map 1:1 with the DIY?
+        }
+
+        user = User.new(attrs)
+        user.skip_notifications = true
+        if (ccp_user)
+          user.password = user.password_confirmation = ccp_user.member_password_ue
+        else
+          ## Because of the difference in how the DIY creates the password hash and how we create the hash, this password won't work
+          user.crypted_password = diy_user.crypted_password
+          user.salt = diy_user.salt
+        end
+        user.save(false)
+        user.uuid = diy_user.uuid
+        user.save
+        user.reload
+        c = 0
+        begin
+          user.register!
+          user.activate!
+        rescue AASM::InvalidTransition
+          c += 1
+          retry unless c > 2
+        end
+        user.roles << Role.find_by_title('member')
+        user.roles << Role.find_by_title('author')
+      end
+      return user
+    end
+
     def attributes
       return @@attributes if @@attributes
       # this is the "standard" form, for which there are exceptions
@@ -496,31 +545,37 @@ class ItsiImporter
       #t.boolean "collectdata2_drawing_response"
       #t.boolean "collectdata2_calibration_active"
       #t.integer "collectdata2_calibration_id"
-      @@attributes =  %w[ 
-        text_response 
-        drawing_response 
-        model_active 
-        model_id 
-        probe_active 
-        probetype_id 
-        probe_multi 
-        calibration_active 
+      @@attributes =  %w[
+        text_response
+        drawing_response
+        model_active
+        model_id
+        probe_active
+        probetype_id
+        probe_multi
+        calibration_active
         calibration_id].map { |e| e.to_sym }
       return @@attributes
     end
-    
+
     def attribute_name_for(section_key, attribute_name)
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
       attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
       # There are some exceptions for these naming conventions:
-      if section_key.to_s == "collectdata"
-            attribs[:probetype_id] = :probe_type_id
-            attribs[:model_id] = :model_id
-            attribs[:calibration_active] = :collectdata1_calibration_active
-            attribs[:calibration_id] = :collectdata1_calibration_id
-      elsif section_key == "further"
-            attribs[:calibration_active] = :furtherprobe_calibration_active
-            attribs[:calibration_id] = :furtherprobe_calibration_id
+      case section_key
+      when :predict
+        attribs[:graph_response] = :prediction_graph_response
+        attribs[:text_response] = :prediction_text_response
+        attribs[:drawing_response] = :prediction_drawing_response
+      when :collectdata
+        attribs[:probetype_id] = :probe_type_id
+        attribs[:model_id] = :model_id
+        attribs[:calibration_active] = :collectdata1_calibration_active
+        attribs[:calibration_id] = :collectdata1_calibration_id
+        attribs[:graph_response] = :collectdata_graph_response
+      when :further
+        attribs[:calibration_active] = :furtherprobe_calibration_active
+        attribs[:calibration_id] = :furtherprobe_calibration_id
       end
       return attribs[attribute_name]
     end
@@ -528,30 +583,41 @@ class ItsiImporter
     ##
     ## NP: Import a section from the activity (NEW)
     ##
-    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description) 
+    def process_diy_activity_section(activity,diy_act,section_key,section_name,section_description)
+      user = activity.user
       section = Section.create(
         :name => section_name,
         :description => section_description,
-        :activity => activity)
+        :activity => activity,
+        :user => user)
       page = Page.create(
         :name => section_name,
         :description => section_description,
-        :section => section)
+        :section => section,
+        :user => user)
       activity.sections << section
-      
+
       # main text content for section
-      content,intentionally_blank = process_textile_content(diy_act.send(section_key.to_sym),false)
+      orig_content = diy_act.send(section_key.to_sym)
+      content,prompt = process_textile_content(orig_content,false)
       main_content = Embeddable::Diy::Section.create(
           :name => section_name,
           :content => content,
-          :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)))
+          :has_question => (diy_act.respond_to? attribute_name_for(section_key,:text_response)) && diy_act.send(attribute_name_for(section_key,:text_response)),
+          :user => user)
       main_content.pages << page
-      
+      if (orig_content.nil? || orig_content.empty? || content.nil? || content.empty?)
+        main_content.disable
+      else
+        main_content.enable
+      end
+
       # drawing response
       if (attribute_name_for(section_key,:drawing_response) && (diy_act.respond_to? attribute_name_for(section_key,:drawing_response)))
         drawing_response = Embeddable::DrawingTool.create(
-          :name => "drawing tool",
-          :description => "drawing tool")
+          :name => "drawing response",
+          :description => "drawing response",
+          :user => user)
         drawing_response.pages << page
         if diy_act.send(attribute_name_for(section_key,:drawing_response))
           drawing_response.enable
@@ -564,15 +630,19 @@ class ItsiImporter
       if (attribute_name_for(section_key,:model_active) && (diy_act.respond_to? attribute_name_for(section_key,:model_active)))
         model = Diy::Model.first
         model_id = diy_act.send(attribute_name_for(section_key,:model_id))
-        
+
         if (model_id && model_id > 0)
-          diy_model = Itsi::Model.find(model_id)
-          if diy_model
-            model = Diy::Model.from_external_portal(diy_model) 
+          begin 
+            diy_model = Itsi::Model.find(model_id)
+            if diy_model
+              model = Diy::Model.from_external_portal(diy_model)
+            end
+          rescue => e
+            puts "#{e}. activity => #{diy_act.name} #{diy_act.id}"
           end
         end
 
-        em_model = Embeddable::Diy::EmbeddedModel.create(:diy_model => model)
+        em_model = Embeddable::Diy::EmbeddedModel.create(:diy_model => model, :user => user)
         em_model.pages << page
         if diy_act.send(attribute_name_for(section_key,:model_active))
           em_model.enable
@@ -580,21 +650,29 @@ class ItsiImporter
           em_model.disable
         end
       end
-      
+
       # probe / sensor
       if (attribute_name_for(section_key,:probetype_id) && (diy_act.respond_to? attribute_name_for(section_key,:probetype_id)))
         probe_type_id = diy_act.send(attribute_name_for(section_key,:probetype_id))
-        probe_type = Probe::ProbeType.find(probe_type_id)
+        probe_type = Probe::ProbeType.default
+        if probe_type_id != nil
+          begin
+            probe_type = Probe::ProbeType.find(probe_type_id)
+          rescue ActiveRecord::RecordNotFound => e
+            puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+          end
+        end
         calibration = nil
         if probe_type
-          # see if we have a clibration to work with:
+          # see if we have a calibration to work with:
           if diy_act.send(attribute_name_for(section_key,:calibration_active))
             calibration_id = diy_act.send(attribute_name_for(section_key,:calibration_id))
             calibration = Probe::Calibration.find(calibration_id) if calibration_id
           end
         end
-        prototype_data_collector = Embeddable::DataCollector.prototype_by_type_and_calibration(probe_type,calibration)
-        em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector)
+
+        prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor'})
+        em_sensor = Embeddable::Diy::Sensor.create(:prototype => prototype_data_collector, :user => user)
         em_sensor.pages << page
         if diy_act.send(attribute_name_for(section_key,:probe_active))
           em_sensor.enable
@@ -602,25 +680,60 @@ class ItsiImporter
           em_sensor.disable
         end
       end
+
+      ## embed a prediction graph
+      if (attribute_name_for(section_key,:graph_response) && (diy_act.respond_to? attribute_name_for(section_key,:graph_response)))
+        next_skey = next_section_key(section_key)
+        if (attribute_name_for(next_skey,:probetype_id) && (diy_act.respond_to? attribute_name_for(next_skey,:probetype_id)))
+          probe_type_id = diy_act.send(attribute_name_for(next_skey,:probetype_id))
+          probe_type = Probe::ProbeType.default
+          if probe_type_id != nil
+            begin
+              probe_type = Probe::ProbeType.find(probe_type_id)
+            rescue ActiveRecord::RecordNotFound => e
+              puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+            end
+          end
+
+          prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
+          em_predict = Embeddable::Diy::Sensor.create(:prototype => prototype_prediction, :user => user)
+          em_predict.pages << page
+          if diy_act.send(attribute_name_for(section_key,:graph_response))
+            em_predict.enable
+          else
+            em_predict.disable
+          end
+        end
+      end
     end
-    
+
+    def next_section_key(section_key)
+      next_one = false
+      SECTIONS_MAP.each_with_index do |s,i|
+        if next_one
+          return s[:key]
+        end
+        if s[:key] == section_key
+          next_one = true
+        end
+      end
+    end
+
     def process_textile_content(textile_content, split_last_paragraph=false)
       return ['',''] if textile_content.nil? || textile_content.empty?
       doc = Hpricot(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
-        if img[:src][0..6] == '/images'
-          img[:src] = ITSIDIY_URL + img[:src]
-        end
+        img[:src] = ITSI_ASSET_URL.merge(img[:src]).to_s
       end
       # if split_last_paragraph is true then split the content at the
       # last paragraph and return the last paragraph in the second element
       if split_last_paragraph
         last_paragraph = (doc/"p:last-of-type").remove.to_html
         body = doc.to_html
-        [body, last_paragraph]
+        return [body, last_paragraph]
       else
-        [doc.to_html, '']
+        return [doc.to_html, '']
       end
     end
 
@@ -664,7 +777,7 @@ class ItsiImporter
           x.content = html_content
         end
         page = Page.create do |p|
-          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....          
+          # For ITSI_SU Ed Hazzard says he doesn't want page names to be added....
           # p.name = "#{name}"
           p.description = page_description
           page_embeddable.pages << p

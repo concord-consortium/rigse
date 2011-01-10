@@ -5,7 +5,7 @@
       %input{:type => "checkbox",
         :checked => offering_id,
         :disabled => !is_being_edited,
-        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{runnable.id}, #{offering_id}, '#{runnable.type}')",
+        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{runnable.id}, #{offering_id}, '#{runnable.class}')",
         :value => "#{runnable.id}",
         :name => "runnable_id"}
     - else
@@ -18,14 +18,15 @@
     %a.info-link{:href => "#", 
       :onclick => "toggle_info_block(this, '#runnable-description-#{runnable.id}'); if (window.event) event.returnValue=false; return false;", 
       :title => "View runnable description"}
-      %span.info>  		
+      %span.info
     .runnable-info
-      (Model: MW)
-    .runnable-links{:id =>"runnable-links#{runnable.id}"}
-      %a{:class => 'button-link try-link', 
-        :id => "try_button_#{runnable.id}", 
-        :href => "/diy/view/52/type/runnable/", 
-        :title => "Try this runnable (as a teacher, do not save data)"} 
-        
-    .runnable-description{:id => "runnable-description-#{runnable.id}"}
-      = runnable.description
+      = runnable.published? ? "(published)" : "(private)"
+      %span.runnable-links{:id =>"runnable-links#{runnable.id}"}
+        = run_link_for(runnable,nil,{:title => runnable.description})
+      -#%a{:class => 'button-link try-link', 
+        -#:id => "try_button_#{runnable.id}", 
+        -#:href => "/diy/view/52/type/runnable/", 
+        -#:title => "Try this runnable (as a teacher, do not save data)"} 
+        -#try it. 
+    -#.runnable-description{:id => "runnable-description-#{runnable.id}"}
+      -#= runnable.description

@@ -1,2 +1,3 @@
-%div{ :id => dom_id_for(@diy_sensor, :item), :class => 'item' }
-  = render :partial => "show", :locals => { :diy_sensor => @diy_sensor }
+%div{ :id => dom_id_for(@sensor, :item), :class => 'item' }
+  = render :partial => "embeddable/diy/sensors/show", :locals => { :sensor => @sensor }
+

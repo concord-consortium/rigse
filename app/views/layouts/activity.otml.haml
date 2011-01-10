@@ -4,7 +4,7 @@
   =ot_imports
   %objects
     %OTSystem{:local_id => 'system'}
-      =ot_bundles({:left_nav_panel_width => @activity.left_nav_panel_width, :title => h(@activity.name)})
+      =ot_bundles({:left_nav_panel_width => @activity.left_nav_panel_width, :title => h(@activity.name), :use_scroll_pane => !!APP_CONFIG[:single_page_activity]})
       %root
         =yield "activity_#{dom_id_for(@activity)}".to_sym
       %library

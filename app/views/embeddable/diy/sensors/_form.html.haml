@@ -1,6 +1,15 @@
-= edit_menu_for(sensor, f)
 .content
-  - field_set_tag 'name' do
-    = f.text_field :name, :id => dom_id_for(sensor, :item, :name_field)
-  - field_set_tag 'authored_data_url' do
-    = f.text_field :authored_data_url, :id => dom_id_for(sensor, :item, :authored_data_url), :size => 80
+  - field_set_tag 'Sensor' do
+    = f.collection_select(:prototype_id, Embeddable::DataCollector.prototypes, :id, :name)
+  - field_set_tag 'Customizations' do
+    = f.label 'enable customizations', :class => 'customize_button'
+    = check_box_tag :customize 
+    .customizations
+      - sensor.class.customizable_fields.each do |field|
+        - if field.to_s =~ /_enabled/
+          = f.check_box field
+        - else
+          = f.label field.to_s.humanize
+          = f.text_field field, :size => 20
+  -#- field_set_tag 'authored_data_url' 
+    -#= f.text_field :authored_data_url, :id => dom_id_for(sensor, :item, :authored_data_url), :size => 80

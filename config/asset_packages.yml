@@ -20,10 +20,14 @@ javascripts:
   - item_selectable
   - live_validation
   - report_filter
-  
+  - template_toggle 
+  - unit_bins
+
 stylesheets: 
 - base: 
   - app
+  - authoring
+  - template_edit
   - accordion
   - window/window
   - window/rites
@@ -36,6 +40,8 @@ stylesheets:
 
 - default:
   - app
+  - authoring
+  - template_edit
   - accordion
   - window/window
   - window/rites
@@ -48,6 +54,7 @@ stylesheets:
   
 - rites:
   - app
+  - authoring
   - accordion
   - window/window
   - window/rites
@@ -74,7 +81,8 @@ stylesheets:
 
 - itsisu:
   - app
-  #- themes/itsisu/itsisu
+  - authoring
+  - template_edit
   #- themes/itsisu/action_menu_tab
   #- themes/itsisu/drop_down
   #- themes/itsisu/accordion

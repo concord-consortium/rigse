@@ -1,7 +1,7 @@
 module OtmlHelper
 
   def net_logo_package_name
-    return APP_CONFIG[:net_logo_package_name] || "otrunknl4"
+    return APP_CONFIG[:net_logo_package_name] || "otrunknl41"
   end
   
   def ot_menu_display_name(object)
@@ -124,8 +124,12 @@ module OtmlHelper
       org.concord.otrunk.script.ui.OTScriptVariableView
       org.concord.smartgraph.OTSmartGraphTool
       org.concord.multimedia.state.OTSoundGrapherModel
-    } + data_filter_inports + (@otrunk_imports || []).uniq
+    } + data_filter_inports + (@otrunk_imports || [])
     imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
+    Diy::ModelType.all.each do |mt|
+      imports << mt.otrunk_object_class
+    end
+    return imports.uniq
   end
   
   def ot_imports
@@ -139,7 +143,7 @@ module OtmlHelper
   end
 
   def view_entries
-    [
+    v_entries = [
       ['text_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['question_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
       ['choice_radio_button_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
@@ -181,7 +185,11 @@ module OtmlHelper
       ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
       ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView'],
       ['sound_grapher_view', 'org.concord.multimedia.state.OTSoundGrapherModel', 'org.concord.multimedia.state.ui.OTSoundGrapherModelView']
-    ] + (@otrunk_view_entries || []).uniq
+    ] + (@otrunk_view_entries || [])
+    Diy::ModelType.all.each do |mt|
+      v_entries << [mt.name, mt.otrunk_object_class, mt.otrunk_view_class]
+    end
+    return v_entries.uniq
   end
   
   def authoring_view_entries

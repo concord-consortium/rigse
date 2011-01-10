@@ -16,7 +16,11 @@ class Diy::ModelType < ActiveRecord::Base
   include HasImage
   self.extend SearchableModel
   @@searchable_attributes = %w{name description credits}
-  
+
+  def otrunk_object_class_short
+    self.otrunk_object_class[/\.([^\.]*)$/,1]
+  end
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
