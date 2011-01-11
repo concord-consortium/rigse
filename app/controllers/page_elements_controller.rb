@@ -4,9 +4,9 @@ class PageElementsController < ApplicationController
 
   def toggle_enabled(isit)
     page_element = PageElement.find(params[:id])
-    page_element.is_enabled=isit
     results = :bad_request
     if page_element.changeable?(current_user)
+      page_element.is_enabled=isit
       if page_element.save
         results = :ok
       end
