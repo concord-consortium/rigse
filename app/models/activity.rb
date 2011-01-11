@@ -70,7 +70,7 @@ class Activity < ActiveRecord::Base
   }
   
   named_scope :published, :conditions => {:publication_status => "published"}
-
+  named_scope :templates, :conditions => {:is_template => true}
   
   class <<self
     def searchable_attributes
@@ -126,9 +126,10 @@ class Activity < ActiveRecord::Base
     copy_of_original.name = "copy of #{original.name}"
     copy_of_original.deep_set_user user
     copy_of_original.investigation= original.investigation
-    
+    copy_of_original.is_template = false
+
     # copy tags too:
-    original.tag_types.each do | tag_type|
+    original.tag_types.each do |tag_type|
       method = (tag_type.to_s.singularize + "_list").to_sym
       types = original.send method
       method = "#{method.to_sym}=".to_sym

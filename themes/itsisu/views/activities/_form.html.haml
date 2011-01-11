@@ -9,6 +9,10 @@
   - field_set_tag 'Activity Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
 
+  - if @new
+    - field_set_tag 'Activity Template' do
+      = select_tag "activity_template", options_from_collection_for_select(Activity.templates, :id, :name)
+
   - field_set_tag 'Tags' do
     = tag_selector(@activity,"activity",:grade_level)
     = tag_selector(@activity,"activity",:subject_area)

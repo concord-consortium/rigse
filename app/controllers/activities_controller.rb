@@ -163,6 +163,7 @@ class ActivitiesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.xml
   def new
+    @new = true
     @activity = Activity.new
     @activity.user = current_user
     respond_to do |format|
@@ -184,6 +185,12 @@ class ActivitiesController < ApplicationController
   def create
     @activity = Activity.new(params[:activity])
     @activity.user = current_user
+    if params[:activity_template] && (! params[:activity_template].empty?) && @activity.valid?
+      # create the new activity from the template
+      template = Activity.find(params[:activity_template].to_i)
+      @activity = template.copy(current_user)
+      @activity.update_attributes(params[:activity])
+    end
     respond_to do |format|
       if @activity.save
         format.js  # render the js file
