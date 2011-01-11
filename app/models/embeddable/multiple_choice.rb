@@ -31,7 +31,6 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   # the main xhtml attribute (examples: content or prompt) that can plausibly be 
   # turned into a name. Otherwise the default_value_for :name specified below is used.
 
-  include Cloneable
   self.extend SearchableModel
 
   cloneable_associations :choices

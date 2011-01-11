@@ -11,7 +11,6 @@ class Embeddable::Biologica::StaticOrganism < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
-  include Cloneable
   cloneable_associations :organism
 
   self.extend SearchableModel

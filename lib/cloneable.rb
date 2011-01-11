@@ -1,9 +1,11 @@
 module Cloneable
   def self.included(base)
-    base.class_eval do
-      alias_method_chain :deep_clone, :defaults
+    unless base.method_defined? :deep_clone_without_defaults
+      base.class_eval do
+        alias_method_chain :deep_clone, :defaults
+      end
+      base.extend(ClassMethods)
     end
-    base.extend(ClassMethods)
   end
 
   module ClassMethods

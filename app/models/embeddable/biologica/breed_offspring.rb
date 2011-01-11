@@ -14,7 +14,6 @@ class Embeddable::Biologica::BreedOffspring < ActiveRecord::Base
 
   include Changeable
   
-  include Cloneable
   cloneable_associations :father_organism, :mother_organism
 
   self.extend SearchableModel

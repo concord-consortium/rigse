@@ -11,7 +11,6 @@ class Embeddable::Embeddable < ActiveRecord::Base
   
   acts_as_replicatable
   include Changeable
-  include Cloneable
   
   self.extend SearchableModel
 

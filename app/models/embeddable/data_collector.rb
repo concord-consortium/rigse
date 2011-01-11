@@ -85,7 +85,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
   include Changeable
-  include Cloneable
   cloneable_associations :prediction_graph_destinations
 
   self.extend SearchableModel

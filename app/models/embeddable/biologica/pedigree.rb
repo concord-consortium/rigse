@@ -13,7 +13,6 @@ class Embeddable::Biologica::Pedigree < ActiveRecord::Base
 
   include Changeable
   
-  include Cloneable
   cloneable_associations :organisms
 
   self.extend SearchableModel

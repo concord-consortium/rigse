@@ -13,7 +13,6 @@ class Embeddable::Biologica::Chromosome < ActiveRecord::Base
 
   include Changeable
   
-  include Cloneable
   cloneable_associations :organism
 
   self.extend SearchableModel
