@@ -88,7 +88,7 @@ module TagDefaults
         off_runnables= offerings.map { |o| o.runnable }
       end
       activities = Activity.published
-      key_map = activities.map { |a| {:activity => a, :keys => a.keys }}
+      key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       # Add unpublished activities of the user:
       if user
         users_own = self.find(:all, :conditions => {:user_id => user.id});
@@ -159,13 +159,17 @@ module TagDefaults
     end
   end
 
+  ## Instance Methods:
+  
+  ## Tag this instance with random tags:
   def random_tags
     self.grade_level_list = self.class.default_tags[:grade_levels].rand
     self.unit_list = self.class.default_tags[:units].rand
     self.subject_area_list = self.class.default_tags[:subject_areas].rand
   end
 
-  def keys
+  ## Return the set of tag-keys[grade,subject,unit] for this instance.
+  def bin_keys
     results = []
     self.grade_level_list.each do |grade|
       self.subject_area_list.each do |subject|
