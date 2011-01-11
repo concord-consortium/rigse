@@ -487,7 +487,7 @@ class ItsiImporter
         end
 
         SECTIONS_MAP.each do |section|
-          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:page_desc])
         end
       end
       return activity
