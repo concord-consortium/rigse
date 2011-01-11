@@ -195,12 +195,12 @@ module ApplicationHelper
     demodulized_class_name = component.class.name.demodulize.underscore
     opts = {
       :teacher_mode => false,
-      :substitue    => nil,
+      :substitute    => nil,
       :partial      => 'show'
     }
     opts.merge!(_opts)
     teacher_mode = opts[:teacher_mode]
-    substitute = opts[:sustitute]
+    substitute = opts[:substitute]
     partial = "#{class_name.pluralize}/#{opts[:partial]}"
     render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
   end
