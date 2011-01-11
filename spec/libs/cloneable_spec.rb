@@ -53,13 +53,6 @@ describe CloneableClass do
       @instance.spy.should_receive :clone
       @instance.clone
     end
-    it "should add new clone includes" do
-      @instance.clone().should include(:include)
-    end
-    it "should include custom associations" do
-      @instance.clone()[:include].should include(:one)
-    end
+  
   end
-
-
 end
