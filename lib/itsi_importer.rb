@@ -1,61 +1,76 @@
 class ItsiImporter
   @@attributes = nil
+  ACTIVITY_TEMPLATE_UUID = "7d7f511d-45c6-4002-a5d8-6d6d63a7f12d"
   SECTIONS_MAP = [
     { :key => :introduction,
       :name => "Introduction",
       :page_desc => "ITSI Activities start with a Discovery Question.",
+      :extra_elements => [:text_response, :draw_response]
     },
     { :key => :standards,
       :name => "Standards",
       :page_desc => "What standards does this ITSI Activity cover?",
+      :extra_elements => []
     },
     { :key => :career_stem,
       :name => "Career STEM Question",
       :page_desc => "Career STEM Question",
+      :extra_elements => [:text_response]
     },
     { :key => :materials,
       :name => "Materials",
       :page_desc => "What materials does this ITSI Activity require?",
+      :extra_elements => []
     },
     { :key => :safety,
       :name => "Safety",
       :page_desc => "Are there any safety considerations to be aware of in this ITSI Activity?",
+      :extra_elements => []
     },
     { :key => :proced,
       :name => "Procedure",
       :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
+      :extra_elements => [:text_response, :draw_response]
     },
     { :key => :predict,
       :name => "Prediction",
       :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+      :extra_elements => [:text_response, :draw_response, :prediction_response]
     },
     { :key => :collectdata,
       :name => "Collect Data",
       :page_desc => "The learner conducts experiments using probes and models.",
+      :extra_elements => [:probe, :model, :text_response, :draw_response, :prediction_response]
     },
     { :key => :collectdata2,
       :name => "Collect Data",
       :page_desc => "The learner conducts experiments using probes and models.",
+      :extra_elements => [:probe, :model, :text_response, :draw_response]
     },
     { :key => :collectdata3,
       :name => "Collect Data",
       :page_desc => "The learner conducts experiments using probes and models.",
+      :extra_elements => [:probe, :model, :text_response, :draw_response]
     },
     { :key => :analysis,
       :name => "Analysis",
       :page_desc => "How can learners reflect and analyze the experiments they just completed?",
+      :extra_elements => [:text_response, :draw_response]
     },
     { :key => :conclusion,
       :name => "Conclusion",
       :page_desc => "What are some reasonable conclusions a learner might come to after this ITSI Activity?",
+      :extra_elements => [:text_response, :draw_response]
     },
     { :key => :career_stem2,
       :name => "Second Career STEM Question",
       :page_desc => "Second Career STEM Question",
+      :extra_elements => [:text_response]
     },
     { :key => :further,
       :name => "Further Activities",
       :page_desc => "Think about any further activities a learner might want to try.",
+      :extra_elements => [:probe, :model, :text_response, :draw_response]
     }
   ]
 
@@ -73,6 +88,46 @@ class ItsiImporter
       user
     end
 
+    def find_or_create_itsi_activity_template
+      act = Activity.find_by_uuid(ACTIVITY_TEMPLATE_UUID)
+      return act if act
+
+      act = Activity.create!(:name => "Single-page Activity Template", :user => ItsiImporter.find_or_create_itsi_import_user, :is_template => true ) {|a| a.uuid = ACTIVITY_TEMPLATE_UUID}
+      SECTIONS_MAP.each do |section_def|
+        section = Section.create!(:name => section_def[:name], :description => section_def[:name], :activity => act, :user => act.user)
+        page = Page.create!(:name => section_def[:name], :description => section_def[:page_desc], :section => section, :user => act.user)
+
+        components = [:main_content] + section_def[:extra_elements]
+        components.each do |elem|
+          page_elem = nil
+          case elem
+            when :main_content
+              page_elem = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
+              page_elem.pages << page
+              page_elem.disable
+            when :probe
+              probe_type = Probe::ProbeType.default
+              prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
+              page_elem = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
+            when :model
+              model = Diy::Model.first
+              page_elem = Embeddable::Diy::EmbeddedModel.create!(:diy_model => model, :user => act.user)
+            when :text_response
+              # Is handled by has_question attribute of main_content?
+            when :draw_response
+              page_elem = Embeddable::DrawingTool.create(:name => "drawing response", :description => "drawing response", :user => act.user)
+            when :prediction_response
+              probe_type = Probe::ProbeType.default
+              prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
+              page_elem = Embeddable::Diy::Sensor.create!(:prototype => prototype_prediction, :user => act.user)
+          end
+          if ! page_elem.nil?
+            page_elem.pages << page
+            page_elem.disable
+          end
+        end
+      end
+    end
 
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
