@@ -10,11 +10,12 @@
         %ul.menu
           -if portal_clazz.changeable? current_user
             %li.menu=link_to(image_tag('http://itsisu.portal.concord.org/images/icons/cog.png'),edit_portal_clazz_url(portal_clazz))
-            %li.menu=link_to("edit",edit_portal_clazz_url(portal_clazz))
+            %li.menu=link_to("edit",edit_portal_clazz_url(portal_clazz),{:class => "button" })
 
     .block_list
       - if portal_clazz.changeable? current_user
         This is a preview of how your students will see the activities when they sign in.
+        %br
       -#%ul
         -#%li
           -#%strong="Class word: #{portal_clazz.class_word}"

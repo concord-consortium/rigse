@@ -8,8 +8,10 @@
 
 .activity-box
   .activity-title
-    %a{:href => "#", :onclick => "$('activity-description-9517').toggle(); return false;", :title => "View activity description"}
+    - description_id = dom_id_for(offering, :description);
+    %a{:href => "#", :onclick => "$('#{description_id}').toggle();return false;", :title => "View activity description"}
+      = image_tag("http://itsisu.portal.concord.org/images/icons/information.png")
     = link_to image_tag("http://itsisu.portal.concord.org/images/icons/bullet_go.png"), polymorphic_url(offering, :format => :jnlp), {:class => 'waiter'}
     = offering.name
-  #activity-description-9517.activity-description
+  .activity-description{:id => description_id}
     = offering.description
