@@ -90,6 +90,7 @@ class ItsiImporter
 
     def find_or_create_itsi_activity_template
       act = Activity.find_by_uuid(ACTIVITY_TEMPLATE_UUID)
+      puts "ITSI Template - Activity #{act.id}" if act
       return act if act
 
       act = Activity.create!(:name => "Single-page Activity Template", :user => ItsiImporter.find_or_create_itsi_import_user, :is_template => true ) {|a| a.uuid = ACTIVITY_TEMPLATE_UUID}
@@ -103,8 +104,6 @@ class ItsiImporter
           case elem
             when :main_content
               page_elem = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
-              page_elem.pages << page
-              page_elem.disable
             when :probe
               probe_type = Probe::ProbeType.default
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
@@ -127,6 +126,8 @@ class ItsiImporter
           end
         end
       end
+      puts "ITSI Template - Activity #{act.id}"
+      return act
     end
 
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
