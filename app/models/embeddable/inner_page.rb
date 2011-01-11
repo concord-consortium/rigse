@@ -110,7 +110,7 @@ class Embeddable::InnerPage < ActiveRecord::Base
   # Duplicate: try and create a deep clone of this innerpage with all of its sub_pages
   #
   def duplicate
-    @copy = self.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at]
+    @copy = self.deep_clone
     @copy.static_page = self.static_page.duplicate
     self.sub_pages.each do |page| 
       copy_of_page = page.duplicate

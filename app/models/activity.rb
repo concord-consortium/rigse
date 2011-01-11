@@ -122,7 +122,7 @@ class Activity < ActiveRecord::Base
 
   def copy(user)
     original = self
-    copy_of_original = original.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    copy_of_original = original.deep_clone :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     copy_of_original.name = "copy of #{original.name}"
     copy_of_original.deep_set_user user
     copy_of_original.investigation= original.investigation

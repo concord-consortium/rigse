@@ -53,7 +53,7 @@ describe DeepCloning do
   end
   
   it "should not clone uuid or timestamps" do
-    klone = @page.deep_clone :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
+    klone = @page.deep_clone :include => {:page_elements => :embeddable}
     klone.save!
     compare_not_equal(klone, @page, [:uuid, :created_at, :updated_at])
     compare_not_equal(klone.page_elements[0].embeddable, @static_org, [:uuid, :created_at, :updated_at])
@@ -62,14 +62,14 @@ describe DeepCloning do
   end
   
   it "should not make multiple organisms or worlds" do
-    klone = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
+    klone = @section.deep_clone :include => {:pages => {:page_elements => :embeddable}}
     klone.pages.size.should == 2
     klone.pages[0].page_elements[0].embeddable.organism.should == klone.pages[1].page_elements[0].embeddable.organism
     klone.pages[0].page_elements[0].embeddable.organism.world.should == klone.pages[1].page_elements[0].embeddable.organism.world
   end
   
   it "should make multiple organisms or worlds" do
-    klone = @section.deep_clone :no_duplicates => false, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
+    klone = @section.deep_clone :include => {:pages => {:page_elements => :embeddable}}
     klone.pages.size.should == 2
     klone.pages[0].page_elements[0].embeddable.organism.should_not == klone.pages[1].page_elements[0].embeddable.organism
     klone.pages[0].page_elements[0].embeddable.organism.world.should_not == klone.pages[1].page_elements[0].embeddable.organism.world

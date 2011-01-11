@@ -1,5 +1,8 @@
 module Cloneable
   def self.included(base)
+    base.class_eval do
+      alias_method_chain :deep_clone, :defaults
+    end
     base.extend(ClassMethods)
   end
 
@@ -11,7 +14,7 @@ module Cloneable
     end
   end
 
-  def deep_clone(options = {})
+  def deep_clone_with_defaults(options = {})
     begin
       new_assocs = self.class.cloneable_associations
     rescue
@@ -19,16 +22,22 @@ module Cloneable
       throw("cloneable class #{self.class.name} fails #cloneable_associations {$!}")
     end
     if new_assocs.size > 0
-      options[:except] ||= []
       options[:include] ||= []
       if options[:include].kind_of? Hash
         options[:include] = Array(options[:include])
       end
       options[:include] += new_assocs
-      options[:use_dictionary] = true # prevent duplicates
-      options[:except] += ['uuid','id','update_at','created_at']
     end
-    # invokes on superclas (possilby up to Object#clone)
-    super(options)
+
+    options[:use_dictionary] = true # prevent duplicates
+    
+    options[:except] ||= []
+    options[:except] += [:uuid,:id,:updated_at,:created_at]
+    # invokes on superclass (possibly up to Object#clone)
+    deep_clone_without_defaults(options)
   end
+end
+
+class ActiveRecord::Base
+  include Cloneable
 end

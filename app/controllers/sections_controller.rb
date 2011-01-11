@@ -200,7 +200,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @section.deep_clone :use_dictionary => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
+    @copy = @section.deep_clone :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
     @copy.deep_set_user current_user
@@ -227,7 +227,7 @@ class SectionsController < ApplicationController
         if @original.class == Page
           @component = @original.duplicate
         else
-          @component = @original.deep_clone :use_dictionary => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
+          @component = @original.deep_clone :include =>  {:page_elements => :embeddable}
           @component.name = "copy of #{@original.name}"
         end
         if (@component)
