@@ -74,7 +74,7 @@ class ItsiImporter
     end
 
 
-    def create_activities_from_ccp_itsi_unit(ccp_itsi_unit,user, prefix="")
+    def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
       puts "creating: #{name}: "
@@ -487,7 +487,7 @@ class ItsiImporter
         end
 
         SECTIONS_MAP.each do |section|
-          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:description])
+          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:page_desc])
         end
       end
       return activity
