@@ -1,18 +1,12 @@
 class Portal::ResourcePage < ActiveRecord::Base
   set_table_name :portal_resource_pages
-  
-  PUBLICATION_STATUSES = %w(draft public private)
+  include Publishable
   
   attr_accessor :new_attached_files
   
   belongs_to :user
   has_many :attached_files, :as => :attachable, :dependent => :destroy
-  has_many :clazz_resource_pages, :dependent => :destroy
-  has_many :clazzes, :through => :clazz_resource_pages
-  
   validates_presence_of :user_id, :name, :publication_status
-  
-  before_validation :set_publication_status_to_draft_if_nil
   
   named_scope :by_user, proc { |u| { :conditions => {:user_id => u.nil? ? u : u.id} } }
   named_scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
@@ -39,12 +33,6 @@ class Portal::ResourcePage < ActiveRecord::Base
   
   def has_attached_files?
     !self.attached_files.blank?
-  end
-  
-private
-
-  def set_publication_status_to_draft_if_nil
-    self.publication_status ||= "draft"
   end
   
 end

@@ -13,11 +13,11 @@
 	%p
 		= f.label :publication_status
 		%br/
-		= f.select :publication_status, Portal::ResourcePage::PUBLICATION_STATUSES.collect { |c| c }
+		= f.select :publication_status, Portal::ResourcePage::publication_states.collect { |c| c }
 
 	%h2 Attachments
-	- for attached_file in @portal_resource_page.attached_files
-		%p= link_to attached_file.name, attached_file.attachment.url
+	#attachments
+		= render :partial => 'attached_files/attached_file', :collection => @portal_resource_page.attached_files
 	
 	%p
 		%strong Attach Files:
