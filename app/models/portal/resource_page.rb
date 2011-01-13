@@ -6,6 +6,8 @@ class Portal::ResourcePage < ActiveRecord::Base
   
   belongs_to :user
   has_many :attached_files, :as => :attachable, :dependent => :destroy
+  has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
+    
   validates_presence_of :user_id, :name, :publication_status
   
   named_scope :by_user, proc { |u| { :conditions => {:user_id => u.nil? ? u : u.id} } }
@@ -13,9 +15,22 @@ class Portal::ResourcePage < ActiveRecord::Base
   named_scope :public_status, :conditions => { :publication_status => 'public' }
   named_scope :private_status, :conditions => { :publication_status => 'private' }
   named_scope :draft_status, :conditions => { :publication_status => 'draft' }
-  named_scope :public_or_by_user, proc { |u| 
-    { :conditions => ["portal_resource_pages.user_id = ? OR portal_resource_pages.publication_status = ?", u.nil? ? u : u.id, "public"] }
+  named_scope :published_or_by_user, proc { |u| 
+    { :conditions => ["portal_resource_pages.user_id = ? OR portal_resource_pages.publication_status = ?", u.nil? ? u : u.id, "published"] }
   }
+  
+  self.extend SearchableModel
+  @@searchable_attributes = %w{name description publication_status}
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+    
+    def display_name
+      "Resource Page"
+    end
+  end
+  
   
   def editable_by?(other_user)
     self.user == other_user || other_user.has_role?("admin")

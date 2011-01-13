@@ -1,4 +1,5 @@
 class Portal::ResourcePagesController < ApplicationController
+  before_filter :login_required
   before_filter :teacher_required, :except => [:show]
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
   
@@ -8,7 +9,7 @@ class Portal::ResourcePagesController < ApplicationController
 
   def show
     # TODO: don't show "draft" pages to non-creators
-    @portal_resource_page = Portal::ResourcePage.public_or_by_user(current_user).find(params[:id])
+    @portal_resource_page = Portal::ResourcePage.published_or_by_user(current_user).find(params[:id])
   end
 
   def new

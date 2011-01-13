@@ -25,13 +25,13 @@
 		= render :partial => 'attached_file_form'
 			
 	%p
-		= link_to_function "Attach another file", "rites_portal.attachAnotherFile()"
+		= link_to_function "Attach another file", "ritesPortal.attachAnotherFile()"
 	%p
 		= f.submit
 		
 :javascript
-	var rites_portal = rites_portal || {};
-	rites_portal.attachAnotherFile = function() {
+	var ritesPortal = ritesPortal || {};
+	ritesPortal.attachAnotherFile = function() {
 		var newDiv = new Element('div');
 		newDiv.innerHTML = "#{render(:partial => 'attached_file_form').gsub('"', '\"').gsub("\n", "")}";
 		$('new-attachments-form').insert(newDiv);

@@ -7,4 +7,8 @@ class AttachedFile < ActiveRecord::Base
   
   validates_presence_of :user_id, :name, :attachable_type, :attachable_id
   
+  def editable_by?(other_user)
+    self.user == other_user || other_user.has_role?("admin")
+  end
+  
 end
