@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Portal::ResourcePage do
+describe ResourcePage do
   
   describe "being created" do
     before do
-      @resource_page = Portal::ResourcePage.new
+      @resource_page = ResourcePage.new
     end
     
     it "should not be valid by default" do

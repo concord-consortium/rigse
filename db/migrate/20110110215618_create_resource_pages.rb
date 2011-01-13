@@ -1,6 +1,6 @@
 class CreateResourcePages < ActiveRecord::Migration
   def self.up
-    create_table :portal_resource_pages do |t|
+    create_table :resource_pages do |t|
       t.integer   :user_id
       t.string    :name
       t.text      :description
@@ -11,6 +11,6 @@ class CreateResourcePages < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :portal_resource_pages
+    drop_table :resource_pages
   end
 end

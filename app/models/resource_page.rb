@@ -1,5 +1,5 @@
-class Portal::ResourcePage < ActiveRecord::Base
-  set_table_name :portal_resource_pages
+class ResourcePage < ActiveRecord::Base
+  set_table_name :resource_pages
   include Publishable
   
   attr_accessor :new_attached_files
@@ -16,8 +16,10 @@ class Portal::ResourcePage < ActiveRecord::Base
   named_scope :private_status, :conditions => { :publication_status => 'private' }
   named_scope :draft_status, :conditions => { :publication_status => 'draft' }
   named_scope :published_or_by_user, proc { |u| 
-    { :conditions => ["portal_resource_pages.user_id = ? OR portal_resource_pages.publication_status = ?", u.nil? ? u : u.id, "published"] }
+    { :conditions => ["resource_pages.user_id = ? OR resource_pages.publication_status = ?", u.nil? ? u : u.id, "published"] }
   }
+  
+  accepts_nested_attributes_for :attached_files
   
   self.extend SearchableModel
   @@searchable_attributes = %w{name description publication_status}
@@ -49,5 +51,10 @@ class Portal::ResourcePage < ActiveRecord::Base
   def has_attached_files?
     !self.attached_files.blank?
   end
+  
+  def print_listing
+    [{ "#{self.name}" => self }]
+  end
+  
   
 end

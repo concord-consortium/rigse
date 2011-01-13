@@ -1,0 +1,15 @@
+%h1 Resource Pages
+%br
+%table{:width=>"100%"}
+  - @resource_pages.each do |resource_page|
+    %tr
+      %td= resource_page.id
+      %td= resource_page.name
+      - if resource_page.editable_by?(current_user)
+        %td= link_to 'Show', resource_page
+        %td= link_to 'Edit', edit_resource_page_path(resource_page)
+        %td= link_to 'Destroy', resource_page, :confirm => 'Are you sure?', :method => :delete
+  
+%br
+
+= link_to 'New Resource Page', new_resource_page_path

@@ -1,48 +1,49 @@
-class Portal::ResourcePagesController < ApplicationController
+class ResourcePagesController < ApplicationController
   before_filter :login_required
   before_filter :teacher_required, :except => [:show]
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
   
   def index
-    @portal_resource_pages = Portal::ResourcePage.all
+    @resource_pages = ResourcePage.all
   end
 
   def show
     # TODO: don't show "draft" pages to non-creators
-    @portal_resource_page = Portal::ResourcePage.published_or_by_user(current_user).find(params[:id])
+    @resource_page = ResourcePage.published_or_by_user(current_user).find(params[:id])
   end
 
   def new
-    @portal_resource_page = Portal::ResourcePage.new
-    @portal_resource_page.user = current_user
+    @resource_page = ResourcePage.new
+    @resource_page.user = current_user
   end
   
   def create
-    @portal_resource_page = Portal::ResourcePage.new(params[:portal_resource_page])
-    @portal_resource_page.user = current_user
-    unless @portal_resource_page.save
+    @resource_page = ResourcePage.new(params[:resource_page])
+    @resource_page.user = current_user
+    unless @resource_page.save
       render :action => 'new' and return
     end
     
+    @resource_page.new_attached_files = params[:attached_files]
     flash[:notice] = "Successfully created Resource Page"
-    redirect_to @portal_resource_page
+    redirect_to @resource_page
   end
 
   def edit
   end
   
   def update
-    unless @portal_resource_page.update_attributes(params[:portal_resource_page])
+    unless @resource_page.update_attributes(params[:resource_page].merge({:new_attached_files => params[:attached_files]}))
       render :action => 'edit' and return
     end
     
     flash[:notice] = "Successfully updated this resource page"
-    redirect_to @portal_resource_page
+    redirect_to @resource_page
   end
   
   def destroy
-    @portal_resource_page.destroy
-    redirect_to portal_resource_pages_path
+    @resource_page.destroy
+    redirect_to resource_pages_path
   end
   
 protected
@@ -54,8 +55,8 @@ protected
   end
   
   def find_resource_page_and_verify_owner
-    @portal_resource_page = Portal::ResourcePage.find(params[:id])
-    return if @portal_resource_page.user == current_user
+    @resource_page = ResourcePage.find(params[:id])
+    return if @resource_page.user == current_user
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end

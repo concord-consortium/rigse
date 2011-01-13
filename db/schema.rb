@@ -1591,15 +1591,6 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.datetime "updated_at"
   end
 
-  create_table "portal_resource_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "publication_status", :default => "draft"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "portal_school_memberships", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
@@ -1794,6 +1785,15 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ignore"
+  end
+
+  create_table "resource_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "publication_status", :default => "draft"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|

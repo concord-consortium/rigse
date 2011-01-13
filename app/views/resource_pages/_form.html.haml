@@ -1,5 +1,5 @@
-- form_for @portal_resource_page, :html => { :multipart => true } do |f|
-	= error_messages_for :portal_resource_page
+- form_for @resource_page, :html => { :multipart => true } do |f|
+	= error_messages_for :resource_page
 	%p
 		= f.label :name
 		%br/
@@ -13,11 +13,11 @@
 	%p
 		= f.label :publication_status
 		%br/
-		= f.select :publication_status, Portal::ResourcePage::publication_states.collect { |c| c }
+		= f.select :publication_status, ResourcePage::publication_states.collect { |c| c }
 
 	%h2 Attachments
 	#attachments
-		= render :partial => 'attached_files/attached_file', :collection => @portal_resource_page.attached_files
+		= render :partial => @resource_page.attached_files
 	
 	%p
 		%strong Attach Files:
@@ -25,13 +25,13 @@
 		= render :partial => 'attached_file_form'
 			
 	%p
-		= link_to_function "Attach another file", "ritesPortal.attachAnotherFile()"
+		= link_to_function "Attach another file", "resourcePage.attachAnotherFile()"
 	%p
 		= f.submit
 		
 :javascript
-	var ritesPortal = ritesPortal || {};
-	ritesPortal.attachAnotherFile = function() {
+	var resourcePage = resourcePage || {};
+	resourcePage.attachAnotherFile = function() {
 		var newDiv = new Element('div');
 		newDiv.innerHTML = "#{render(:partial => 'attached_file_form').gsub('"', '\"').gsub("\n", "")}";
 		$('new-attachments-form').insert(newDiv);
