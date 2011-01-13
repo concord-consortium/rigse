@@ -136,13 +136,13 @@ class Activity < ActiveRecord::Base
           :except => [:id,:authored_entity_id, :authored_entity_type]
         }, 
         :sections => {
-          :exlclude => [:id,:activity_id],
+          :exclude => [:id,:activity_id],
           :include => {
             :teacher_notes=>{
               :except => [:id,:authored_entity_id, :authored_entity_type]
             },
             :pages => {
-              :exlclude => [:id,:section_id],
+              :exclude => [:id,:section_id],
               :include => {
                 :teacher_notes=>{
                   :except => [:id,:authored_entity_id, :authored_entity_type]
