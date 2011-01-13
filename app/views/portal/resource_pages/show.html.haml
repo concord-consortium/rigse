@@ -1,0 +1,12 @@
+%h1= @portal_resource_page.name
+
+%p= @portal_resource_page.description
+
+- if @portal_resource_page.has_attached_files?
+	%h2 Attachments
+	%ol
+		- @portal_resource_page.attached_files.each do |attached_file|
+			%li= link_to attached_file.name, attached_file.attachment.url
+			
+- if logged_in? && @portal_resource_page.editable_by?(current_user)
+	%p= link_to 'Edit this page', edit_portal_resource_page_path(@portal_resource_page)

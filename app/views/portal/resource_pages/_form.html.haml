@@ -1,0 +1,38 @@
+- form_for @portal_resource_page, :html => { :multipart => true } do |f|
+	= error_messages_for :portal_resource_page
+	%p
+		= f.label :name
+		%br/
+		= f.text_field :name
+		
+	%p
+		= f.label :description
+		%br/
+		= f.text_area :description
+	
+	%p
+		= f.label :publication_status
+		%br/
+		= f.select :publication_status, Portal::ResourcePage::PUBLICATION_STATUSES.collect { |c| c }
+
+	%h2 Attachments
+	- for attached_file in @portal_resource_page.attached_files
+		%p= link_to attached_file.name, attached_file.attachment.url
+	
+	%p
+		%strong Attach Files:
+	#new-attachments-form
+		= render :partial => 'attached_file_form'
+			
+	%p
+		= link_to_function "Attach another file", "rites_portal.attachAnotherFile()"
+	%p
+		= f.submit
+		
+:javascript
+	var rites_portal = rites_portal || {};
+	rites_portal.attachAnotherFile = function() {
+		var newDiv = new Element('div');
+		newDiv.innerHTML = "#{render(:partial => 'attached_file_form').gsub('"', '\"').gsub("\n", "")}";
+		$('new-attachments-form').insert(newDiv);
+	}

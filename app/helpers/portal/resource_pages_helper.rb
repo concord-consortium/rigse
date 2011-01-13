@@ -1,0 +1,2 @@
+module Portal::ResourcePagesHelper
+end

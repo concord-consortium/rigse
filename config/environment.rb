@@ -73,6 +73,8 @@ Rails::Initializer.run do |config|
   config.gem "ar-extensions", :version => ">= 0.9.1"
   config.gem "fastercsv", :version => "= 1.5.0"
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
+  config.gem 'paperclip', :source => 'http://rubygems.org'
+  
   # This is part of the setup necessary for using newrelics reporting gem
   # config.gem "newrelic_rpm" 
 
