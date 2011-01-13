@@ -211,7 +211,17 @@ HEREDOC
   <p></p>
 HEREDOC
 
+  # TODO: we have to make this container nuetral,
+  # using parent / tree structure (children)
+  def reportable_elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = []
+    unless teacher_only?
+      @reportable_elements = sections.collect{|s| s.reportable_elements }.flatten
+      @reportable_elements.each{|elem| elem[:activity] = self}
+    end
+    return @reportable_elements
+  end
 
-  
 end
 
