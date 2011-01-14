@@ -201,7 +201,8 @@ ActionController::Routing::Routes.draw do |map|
       :purge     => :delete } do |users|
     users.resource :security_questions, :only => [ :edit, :update ]
   end
-    
+  map.users_account_report '/users/reports/account_report', :controller => 'users', :action => 'account_report', :method => :get
+
   map.resources :passwords
   map.resource :session
 
@@ -360,6 +361,8 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
+    :details_report => :get,
+    :usage_report => :get,
     :destroy => :post
   }
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
@@ -367,6 +370,8 @@ ActionController::Routing::Routes.draw do |map|
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
   
+  map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
+  map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
   
   map.resources :activities, :member => {
     :add_section => [:post,:get],

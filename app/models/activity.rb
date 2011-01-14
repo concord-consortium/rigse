@@ -136,13 +136,13 @@ class Activity < ActiveRecord::Base
           :except => [:id,:authored_entity_id, :authored_entity_type]
         }, 
         :sections => {
-          :exlclude => [:id,:activity_id],
+          :exclude => [:id,:activity_id],
           :include => {
             :teacher_notes=>{
               :except => [:id,:authored_entity_id, :authored_entity_type]
             },
             :pages => {
-              :exlclude => [:id,:section_id],
+              :exclude => [:id,:section_id],
               :include => {
                 :teacher_notes=>{
                   :except => [:id,:authored_entity_id, :authored_entity_type]
@@ -211,7 +211,17 @@ HEREDOC
   <p></p>
 HEREDOC
 
+  # TODO: we have to make this container nuetral,
+  # using parent / tree structure (children)
+  def reportable_elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = []
+    unless teacher_only?
+      @reportable_elements = sections.collect{|s| s.reportable_elements }.flatten
+      @reportable_elements.each{|elem| elem[:activity] = self}
+    end
+    return @reportable_elements
+  end
 
-  
 end
 

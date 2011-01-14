@@ -1,6 +1,9 @@
 .action_menu
   .action_menu_header
     .action_menu_header_left
+      - if current_user.has_role?("researcher")
+        %ul.menu
+          %li.menu=link_to 'Account Report', users_account_report_url
       - form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
         - content_tag :label do
           = text_field_tag :search, params[:search], :size => 30
