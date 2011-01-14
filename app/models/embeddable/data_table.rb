@@ -7,7 +7,9 @@ class Embeddable::DataTable < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-  
+ 
+  belongs_to :data_collector, :class_name => "Embeddable::DataCollector"
+
   acts_as_replicatable
 
   include Changeable
