@@ -201,7 +201,8 @@ ActionController::Routing::Routes.draw do |map|
       :purge     => :delete } do |users|
     users.resource :security_questions, :only => [ :edit, :update ]
   end
-    
+  map.users_account_report '/users/reports/account_report', :controller => 'users', :action => 'account_report', :method => :get
+
   map.resources :passwords
   map.resource :session
 
