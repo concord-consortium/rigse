@@ -413,5 +413,34 @@ class InvestigationsController < AuthoringController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end
-  
+
+  def usage_report
+    sio = get_report(:usage)
+    filename = @investigation.id.nil? ? "investigations-published-usage.xml" : "investigation-#{@investigation.id}-usage.xml"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  def details_report
+    sio = get_report(:detail)
+    filename = @investigation.id.nil? ? "investigations-published-details.xml" : "investigation-#{@investigation.id}-details.xml"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  private
+
+  def get_report(type)
+    sio = StringIO.new
+    opts = {:verbose => false}
+    opts[:investigations] = [@investigation] unless @investigation.id.nil?
+    rep = nil
+    case type
+    when :detail
+      rep = Reports::Detail.new(opts)
+    when :usage
+      rep = Reports::Usage.new(opts)
+    end
+    rep.run_report(sio) if rep
+    return sio
+  end
+
 end

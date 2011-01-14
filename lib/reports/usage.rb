@@ -19,7 +19,7 @@ class Reports::Usage < Reports::Excel
     end
   end
 
-  def run_report
+  def run_report(stream_or_path)
     book = Spreadsheet::Workbook.new
 
     sheet1 = book.create_worksheet :name => 'Usage'
@@ -57,6 +57,6 @@ class Reports::Usage < Reports::Excel
       row[0,3] = [student.id, student.name, teachers]
     end
 
-    book.write '/Users/aunger/Desktop/rites-usage.xls'
+    book.write stream_or_path
   end
 end

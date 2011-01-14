@@ -15,7 +15,7 @@ class Reports::Account < Reports::Excel
     ]
   end
 
-  def run_report
+  def run_report(stream_or_path)
     book = Spreadsheet::Workbook.new
 
     sheet1 = book.create_worksheet :name => 'Accounts'
@@ -42,7 +42,7 @@ class Reports::Account < Reports::Excel
       row.concat [user_name, user_type, user_school, user_classes, user_created, user_runs, user_last_run]
     end
 
-    book.write '/Users/aunger/Desktop/rites-account.xls'
+    book.write stream_or_path
   end
 
   private

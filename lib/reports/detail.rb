@@ -15,7 +15,7 @@ class Reports::Detail < Reports::Excel
     ]
   end
 
-  def run_report
+  def run_report(stream_or_path)
     book = Spreadsheet::Workbook.new
 
     print "Prepping worksheets..." if @verbose
@@ -39,7 +39,7 @@ class Reports::Detail < Reports::Excel
       col_defs = sheet_defs + answer_defs
       write_sheet_headers(@inv_sheet[inv], col_defs)
     end
-    puts " done."
+    puts " done." if @verbose
 
     @report_utils = {}  # map of offerings to Report::Util objects
     students = Portal::Student.all
@@ -80,6 +80,6 @@ class Reports::Detail < Reports::Excel
       end
     end
 
-    book.write '/Users/aunger/Desktop/rites-detail.xls'
+    book.write stream_or_path
   end
 end
