@@ -17,6 +17,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  has_many :data_tables, :class_name => "Embeddable::DataTable"
+
   # validates_associated :probe_type
   
   validates_presence_of :probe_type_id

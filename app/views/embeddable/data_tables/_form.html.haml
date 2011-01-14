@@ -3,6 +3,11 @@
 .content
   - field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
+  - field_set_tag 'linked datacollector' do
+    %p
+      Link contents with a Graph in this Investigation:
+      = "Scope is : #{@scope.inspect}"
+      = f.select(:data_collector_id, Embeddable::DataCollector.by_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => false, :include_blank => "None" }, { :id => dom_id_for(data_table, :select_linked_data_collector)})
   - field_set_tag 'column labels' do
     .action_menu
       .action_menu_header_right
