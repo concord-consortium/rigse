@@ -6,6 +6,7 @@ class InvestigationsController < AuthoringController
 
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
+  access_rule 'researcher', :only => [:usage_report, :details_report]
 
   prawnto :prawn=>{ :page_layout=>:landscape }
 
