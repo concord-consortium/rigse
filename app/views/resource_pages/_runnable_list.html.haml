@@ -1,25 +1,5 @@
 - for resource_page in resource_pages
   %div{ :id => dom_id_for(resource_page), :class => 'runnable' }
-    - link_text = current_user.portal_teacher || current_user.has_role?("manager", "admin") ? teacher_preview_button_for(resource_page) : ""
-    - link_text += preview_button_for(resource_page) + name_for_component(resource_page, :hide_componenent_name => true)
-
-    = accordion_for(resource_page, link_text, :resource_page) do
-      %div.action_menu
-        %div.action_menu_header_left
-          %span.author
-            = resource_page.user.name
-        %div.action_menu_header_right   
-          %ul.menu
-            - if (resource_page.changeable?(current_user))
-              %li.menu=link_to 'edit', resource_page
-              %li.menu=link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete Resource Page #{resource_page.id}", :method => :delete 
-      %div{:id => dom_id_for(resource_page, :details), :class => 'tiny'}
-        %p=resource_page.description
-        %p
-          %i= updated_time_text(resource_page)
-        %p
-          %i
-            Used in: #{resource_page.offerings.length} classes.
-
+    = render :partial => 'resource_pages/accordion', :locals => { :resource_page => resource_page }
   = draggable_element dom_id_for(resource_page), :revert => true , :scroll => 'window'
 
