@@ -1,4 +1,4 @@
 .attached-file{:id => "attached-file-#{attached_file.id}"}
 	= link_to attached_file.name, attached_file.attachment.url
-	- if logged_in? && attached_file.editable_by?(current_user)
+	- if logged_in? && attached_file.changeable?(current_user)
 		= link_to "[delete]", attached_file, :confirm => 'Are you sure?', :method => :delete

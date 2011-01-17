@@ -1,6 +1,7 @@
 class ResourcePage < ActiveRecord::Base
   set_table_name :resource_pages
   include Publishable
+  include Changeable
   
   attr_accessor :new_attached_files
   
@@ -55,12 +56,7 @@ class ResourcePage < ActiveRecord::Base
       resource_pages
     end
   end
-  
-  
-  def editable_by?(other_user)
-    self.user == other_user || other_user.has_role?("admin")
-  end
-  
+    
   # Should receive a list in the form of [ {:name='', :attachment=''}, ...] 
   # or just a single item: {:name='', :attachment=''}
   def new_attached_files=(item_or_list)
