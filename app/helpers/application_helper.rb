@@ -183,9 +183,9 @@ module ApplicationHelper
     container_sym = top_level_container_name.pluralize.to_sym
     container_class = top_level_container_name.classify.constantize
     if container_class.respond_to?(:search_list)
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.search_list(locals) }
+      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.search_list(locals) }
     else
-      render :partial => "#{container}/runnable_list.html.haml", :locals => { container_sym => container_class.find(:all) }
+      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.find(:all) }
     end
   end
 
