@@ -3,23 +3,16 @@
     - link_text = current_user.portal_teacher || current_user.has_role?("manager", "admin") ? teacher_preview_button_for(resource_page) : ""
     - link_text += preview_button_for(resource_page) + name_for_component(resource_page, :hide_componenent_name => true)
 
-    = accordion_for(resource_page, link_text, :investigation) do
-      &nbsp;
-    - if false
+    = accordion_for(resource_page, link_text, :resource_page) do
       %div.action_menu
-        %div.action_menu_header_left   
-          /= link_to_container(investigation)
+        %div.action_menu_header_left
           %span.author
             = resource_page.user.name
         %div.action_menu_header_right   
           %ul.menu
-            -# %li= preview_button_for(investigation)
-            -# %li= teacher_preview_button_for(investigation)
-            - if (investigation.duplicateable?(current_user))
-              %li.menu=link_to 'duplicate', duplicate_investigation_url(resource_page)
-            - if (investigation.changeable?(current_user))
+            - if (resource_page.changeable?(current_user))
               %li.menu=link_to 'edit', resource_page
-              %li.menu=link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete Resource Page #{resource_page.id}", :method => :delete 
       %div{:id => dom_id_for(resource_page, :details), :class => 'tiny'}
         %p=resource_page.description
         %p
@@ -28,5 +21,5 @@
           %i
             Used in: #{resource_page.offerings.length} classes.
 
-  =draggable_element dom_id_for(resource_page), :revert => true , :scroll => 'window'
+  = draggable_element dom_id_for(resource_page), :revert => true , :scroll => 'window'
 
