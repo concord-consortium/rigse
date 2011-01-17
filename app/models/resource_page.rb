@@ -19,7 +19,7 @@ class ResourcePage < ActiveRecord::Base
     { :conditions => ["resource_pages.user_id = ? OR resource_pages.publication_status = ?", u.nil? ? u : u.id, "published"] }
   }
   named_scope :like, lambda { |name|
-    name = "%#{name.gsub(" ", "%")}%"
+    name = "%#{name}%"
     { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ?", name,name] }
   }
   
@@ -37,8 +37,7 @@ class ResourcePage < ActiveRecord::Base
     end
     
     def search_list(options)
-      name = options[:name]
-      resource_pages = ResourcePage.like(name)
+      resource_pages = ResourcePage.like(options[:name])
 
       unless options[:include_drafts]
         resource_pages = resource_pages.published
