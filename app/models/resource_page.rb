@@ -74,9 +74,5 @@ class ResourcePage < ActiveRecord::Base
   def print_listing
     [{ "#{self.name}" => self }]
   end
-  
 
-    
-  
-  
 end
