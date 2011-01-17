@@ -57,8 +57,8 @@ class ResourcePage < ActiveRecord::Base
     end
   end
     
-  # Should receive a list in the form of [ {:name='', :attachment=''}, ...] 
-  # or just a single item: {:name='', :attachment=''}
+  # Should receive a list (or single item) in the form of:
+  # { 'name' => '...', 'attachment' => 'File...' }
   def new_attached_files=(item_or_list)
     item_or_list = [ item_or_list ] unless item_or_list.is_a? Array
     item_or_list.each do |item| 
