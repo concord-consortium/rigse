@@ -10,13 +10,17 @@ class ResourcePage < ActiveRecord::Base
     
   validates_presence_of :user_id, :name, :publication_status
   
-  named_scope :by_user, proc { |u| { :conditions => {:user_id => u.nil? ? u : u.id} } }
-  named_scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
-  named_scope :public_status, :conditions => { :publication_status => 'public' }
+  named_scope :published, :conditions => { :publication_status => 'published' }
   named_scope :private_status, :conditions => { :publication_status => 'private' }
   named_scope :draft_status, :conditions => { :publication_status => 'draft' }
+  named_scope :by_user, proc { |u| { :conditions => {:user_id => u.nil? ? u : u.id} } }
+  named_scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
   named_scope :published_or_by_user, proc { |u| 
     { :conditions => ["resource_pages.user_id = ? OR resource_pages.publication_status = ?", u.nil? ? u : u.id, "published"] }
+  }
+  named_scope :like, lambda { |name|
+    name = "%#{name.gsub(" ", "%")}%"
+    { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ?", name,name] }
   }
   
   accepts_nested_attributes_for :attached_files
@@ -30,6 +34,26 @@ class ResourcePage < ActiveRecord::Base
     
     def display_name
       "Resource Page"
+    end
+    
+    def search_list(options)
+      name = options[:name]
+      resource_pages = ResourcePage.like(name)
+
+      unless options[:include_drafts]
+        resource_pages = resource_pages.published
+      end
+
+      if options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0)
+        portal_clazz =  Portal::Clazz.find(options[:portal_clazz_id].to_i)
+        resource_pages = resource_pages - portal_clazz.offerings.map { |o| o.runnable }
+      end
+
+      if options[:paginate]
+        resource_pages = resource_pages.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
+      end
+
+      resource_pages
     end
   end
   
@@ -55,6 +79,9 @@ class ResourcePage < ActiveRecord::Base
   def print_listing
     [{ "#{self.name}" => self }]
   end
+  
+
+    
   
   
 end
