@@ -13,7 +13,7 @@
 	%p
 		= f.label :publication_status
 		%br/
-		= f.select :publication_status, ResourcePage::publication_states.collect { |c| c }
+		= f.select :publication_status, ResourcePage.publication_states.map {|s| s.to_s}
 
 	%h2 Attachments
 	#attachments
