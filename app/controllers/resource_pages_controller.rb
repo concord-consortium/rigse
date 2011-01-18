@@ -8,7 +8,6 @@ class ResourcePagesController < ApplicationController
   end
 
   def show
-    # TODO: don't show "draft" pages to non-creators
     @resource_page = ResourcePage.published_or_by_user(current_user).find(params[:id])
   end
 
@@ -25,7 +24,7 @@ class ResourcePagesController < ApplicationController
     end
     
     @resource_page.new_attached_files = params[:attached_files]
-    flash[:notice] = "Successfully created Resource Page"
+    flash[:notice] = "Resource Page was successfully created."
     redirect_to @resource_page
   end
 
