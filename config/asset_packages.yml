@@ -20,6 +20,7 @@ javascripts:
   - item_selectable
   - live_validation
   - please_wait
+  - report_filter
   
 stylesheets: 
 - base: 

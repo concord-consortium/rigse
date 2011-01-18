@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100702164051) do
+ActiveRecord::Schema.define(:version => 20101101153846) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -122,10 +122,10 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
     t.integer  "position"
-    t.text     "body",             :limit => 16777215
+    t.text     "body",             :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "otml",             :limit => 16777215
+    t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
     t.boolean  "valid_xml"
     t.boolean  "empty"
@@ -535,6 +535,17 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
     t.datetime "updated_at"
   end
 
+  create_table "external_activities", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.text     "description"
+    t.text     "url"
+    t.string   "publication_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -768,13 +779,14 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1766,6 +1778,14 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
     t.integer "versioned_jnlp_id"
   end
 
+  create_table "report_embeddable_filters", :force => true do |t|
+    t.integer  "offering_id"
+    t.text     "embeddables"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "ignore"
+  end
+
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
     t.integer "assessment_target_id"
     t.integer "unifying_theme_id"
@@ -1951,13 +1971,14 @@ ActiveRecord::Schema.define(:version => 20100702164051) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"

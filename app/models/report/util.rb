@@ -71,6 +71,11 @@ class Report::Util
   def initialize(offering, show_only_active_learners=false)
     @last_accessed = Time.now
     @offering = offering
+    @report_embeddable_filter = @offering.report_embeddable_filter
+    unless (@report_embeddable_filter)
+      @report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => [])
+      @offering.reload
+    end
     
     @learners = @offering.learners
     @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
@@ -88,7 +93,13 @@ class Report::Util
     @sections = @investigation.student_sections
     @pages = @investigation.student_pages
     
+    ## FIXME filtering of embeddables should happen here
+    # results = @report_embeddable_filter.filter(results)
     reportables = @offering.runnable.reportable_elements
+    allowed_embeddables = @report_embeddable_filter.embeddables
+    if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
+      reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
+    end
     elements = reportables.map { |r| r[:element] }
     @embeddables = reportables.map { |r| r[:embeddable] }
     @embeddables_by_type = @embeddables.group_by{|e| e.class.to_s }

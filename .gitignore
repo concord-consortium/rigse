@@ -45,6 +45,7 @@ config/jnlp_objects/*/*
 config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
 public/otrunk-examples/
+public/resources
 public/stylesheets/data_table.css
 public/stylesheets/active_scaffold/DO_NOT_EDIT
 public/stylesheets/active_scaffold/default/stylesheet-ie.css
@@ -78,3 +79,5 @@ resources/rinet_test_data/report*
 mkmf.log
 hudson/*
 spec/reports
+.rvmrc
+config/preinitializer.rb
