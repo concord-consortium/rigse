@@ -9,10 +9,12 @@
     %div.action_menu_header_right   
       %ul.menu
         - if (resource_page.changeable?(current_user))
-          %li.menu=link_to 'edit', edit_resource_page_url(resource_page)
-          %li.menu=link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete Resource Page #{resource_page.id}", :method => :delete 
+          %li.menu= link_to 'view', resource_page
+          %li.menu= link_to 'edit', edit_resource_page_url(resource_page)
+          %li.menu= link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete Resource Page #{resource_page.id}", :method => :delete 
   %div{:id => dom_id_for(resource_page, :details), :class => 'tiny'}
-    %p=resource_page.description
+    %p= resource_page.description
+    %p= pluralize(resource_page.attached_files.size, "attachment")
     %p
       %i= updated_time_text(resource_page)
     %p
