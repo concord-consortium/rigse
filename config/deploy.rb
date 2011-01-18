@@ -96,9 +96,10 @@ namespace :db do
 
   desc '[NOTE: use "fetch_remote_db" instead!] Downloads db/production_data.sql from the remote production environment to your local machine'
   task :remote_db_download, :roles => :db, :only => { :primary => true } do
+    remote_db_compress
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
-    download("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql", :via => :sftp)
+    download("#{deploy_to}/#{current_dir}/db/production_data.sql.gz", "db/production_data.sql.gz", :via => :scp)
     ssh_options[:compression] = ssh_compression
   end
   
@@ -106,15 +107,25 @@ namespace :db do
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
-    upload("db/production_data.sql", "#{deploy_to}/#{current_dir}/db/production_data.sql", :via => :sftp)
+    upload("db/production_data.sql.gz", "#{deploy_to}/#{current_dir}/db/production_data.sql.gz", :via => :scp)
     ssh_options[:compression] = ssh_compression
+    remote_db_uncompress
+  end
+
+  task :remote_db_compress, :roles => :db, :only => { :primary => true } do
+    run "gzip -f #{deploy_to}/#{current_dir}/db/production_data.sql"
+  end
+
+  task :remote_db_uncompress, :roles => :db, :only => { :primary => true } do
+    run "gunzip -f #{deploy_to}/#{current_dir}/db/production_data.sql.gz"
   end
 
   desc 'Cleans up data dump file'
   task :remote_db_cleanup, :roles => :db, :only => { :primary => true } do
     execute_on_servers(options) do |servers|
       self.sessions[servers.first].sftp.connect do |tsftp|
-        tsftp.remove! "#{deploy_to}/#{current_dir}/db/production_data.sql" 
+        tsftp.remove "#{deploy_to}/#{current_dir}/db/production_data.sql"
+        tsftp.remove "#{deploy_to}/#{current_dir}/db/production_data.sql.gz"
       end
     end
   end 
