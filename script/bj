@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+RAILS_ROOT = File.expand_path(File.join(__FILE__, "..")) unless defined?(RAILS_ROOT)
+
+load File.join(RAILS_ROOT, "config", "boot.rb")
+
 require "bj"
 require "main"
 

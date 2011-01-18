@@ -35,8 +35,21 @@ class Bj
         thread = Thread.new do
           Thread.current.abort_on_exception = true
           # systemu(*a){|pid| q << pid}
+          command = a[0]
+          opts = a[1] # hash of options, including :stdout, :stderr, :cwd, etc
+          begin
+            ActiveRecord::Base.logger = ::Logger.new(StringIO.new(opts[:stdout], "w"))
+          rescue Exception => e
+            opts[:stderr] << ("#{e}\n#{e.backtrace.join("\n")}")
+          end
           q << 0
-          eval(a[0])
+          begin
+            eval(command)
+            0
+          rescue Exception => e
+            opts[:stderr] << ("#{e}\n#{e.backtrace.join("\n")}")
+            1
+          end
         end
         pid = q.pop
         thread.singleton_class{ define_method(:pid){ pid } }

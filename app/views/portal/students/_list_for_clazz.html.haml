@@ -2,12 +2,17 @@
   .content
     .action_menu
       .action_menu_header_left
-        %strong= "Students: #{portal_clazz.students.length}"    
+        %div
+          %strong= "Class: #{portal_clazz.name}"
+        %div
+          %strong= "Students: #{portal_clazz.students.length}"    
       .action_menu_header_right
-        - if portal_clazz.changeable?(current_user)     
+        = link_to "Print", class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+        - if portal_clazz.changeable?(current_user)
+          %br
           = student_add_dropdown(portal_clazz)
           %br
           = link_to "Register and add a new student", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
 
   .item{:id=>'students_listing'}
-    = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+    = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}

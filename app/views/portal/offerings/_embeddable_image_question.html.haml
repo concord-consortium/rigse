@@ -1,11 +1,11 @@
-= accordion_for(image_question, offering_details_image_question(offering, image_question), nil, {:show_hide_text => "show responses"}) do
+= accordion_for(embeddable, offering_details_image_question(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
   - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
-    - saveable = saveable_for_learner(image_question, l)
+    - saveable = saveable_for_learner(embeddable, l)
     - css_style = (saveable.answered? && saveable.answer) ? 'answered' : 'not_answered'
-    %div{:id => dom_id_for(image_question, :saveable, :learner, l.id), :style => "clear: both; float: left; margin-top: 2px; padding: 2px; border: 1px solid black; width: 680px;", :class => css_style}
-      %div{:class => css_style, :style => 'font-weight: bold; width: 200px; float: left;'}
+    %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response image_question"}
+      %div{:class => "#{css_style} learner_response_name inline_block"}
         = h(l.name)
-      %div{:class => css_style, :style => "width: 460px; float: left;"}
+      %div{:class => "#{css_style} learner_response_content inline_block", :style => ""}
         - if saveable.answered? && saveable.answer
           %img{:src => dataservice_blob_raw_url(:id => saveable.answer.id, :token => saveable.answer.token)}
         -else

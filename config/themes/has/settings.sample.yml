@@ -14,18 +14,28 @@ development: &id003
     - "12"
   theme: has
   site_name: HAS Investigations
-  site_url: http://localhost:3000
+  site_url: http://has.portal.concord.org
   runnables_use: otrunk_jnlp
   runnable_mime_type: 
   top_level_container_name: investigation
   site_school: HAS Investigations-school
   description: ""
   site_district: HAS Investigations-district
-  help_email: has-investigations@concord.org
+  help_email: apallant@concord.org
   use_gse: false
   enable_default_users: true
-  help_email: has@concord.org
   admin_email: aunger@concord.org
+  net_logo_package_name: otrunknl41
+  tiny_mce:
+    :buttons1:
+    - bold,italic,underline
+    - sup,sub
+    - bullist,numlist
+    - link,image
+    - pastext, pasteword,selectall
+    - justifyleft,justifycenter,justifyright
+    - code
+
   default_admin_user: 
     first_name: Aaron
     login: aunger
@@ -38,11 +48,11 @@ development: &id003
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
   maven_jnlp_families: 
-    - all-otrunk-snapshot
+    - has-otrunk
   default_maven_jnlp: 
-    version: snapshot
+    version: 0.1.0-20100824.215501
     server: concord
-    family: all-otrunk-snapshot
+    family: has-otrunk
   valid_sakai_instances:
   
 test: *id003

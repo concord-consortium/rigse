@@ -514,6 +514,13 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:empty_jnlp_object_cache --trace"
   end
 
+  # seb: 20101019
+  desc "Reset all activity position information"
+  task :reset_activity_positions, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:fixup:reset_activity_positions --trace"
+  end
+
 end
 
 
