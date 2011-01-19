@@ -177,6 +177,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
+    run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
@@ -201,6 +202,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
+    run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem 
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
   end
@@ -214,6 +216,10 @@ namespace :deploy do
   task :set_permissions, :roles => :app do
     sudo "chown -R apache.users #{deploy_to}"
     sudo "chmod -R g+rw #{deploy_to}"
+    
+    # Grant write access to the paperclip attachments folder
+    sudo "chown -R apache.users #{shared_path}/system/attachments"
+    sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
   
   desc "Create asset packages for production" 
