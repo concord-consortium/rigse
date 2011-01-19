@@ -55,4 +55,27 @@ describe InvestigationsController do
     end
   end
 
+  describe "Researcher Reports" do
+    it 'should return an XLS file for the global Usage Report' do
+      get :usage_report
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the global Details Report' do
+      get :details_report
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the specific Usage Report' do
+      get :usage_report, :id => @investigation.id
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the specific Details Report' do
+      get :details_report, :id => @investigation.id
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+  end
+
 end
