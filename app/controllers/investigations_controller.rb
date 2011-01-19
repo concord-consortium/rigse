@@ -417,13 +417,13 @@ class InvestigationsController < AuthoringController
 
   def usage_report
     sio = get_report(:usage)
-    filename = @investigation.id.nil? ? "investigations-published-usage.xml" : "investigation-#{@investigation.id}-usage.xls"
+    filename = @investigation.id.nil? ? "investigations-published-usage.xls" : "investigation-#{@investigation.id}-usage.xls"
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
   end
 
   def details_report
     sio = get_report(:detail)
-    filename = @investigation.id.nil? ? "investigations-published-details.xml" : "investigation-#{@investigation.id}-details.xls"
+    filename = @investigation.id.nil? ? "investigations-published-details.xls" : "investigation-#{@investigation.id}-details.xls"
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
   end
 
