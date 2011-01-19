@@ -4,7 +4,7 @@ class ResourcePagesController < ApplicationController
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
   
   def index
-    @resource_pages = ResourcePage.all
+    @resource_pages = current_user.resource_pages.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 20)
   end
 
   def show
@@ -12,13 +12,11 @@ class ResourcePagesController < ApplicationController
   end
 
   def new
-    @resource_page = ResourcePage.new
-    @resource_page.user = current_user
+    @resource_page = current_user.resource_pages.new
   end
   
   def create
-    @resource_page = ResourcePage.new(params[:resource_page])
-    @resource_page.user = current_user
+    @resource_page = current_user.resource_pages.new(params[:resource_page])
     unless @resource_page.save
       render :action => 'new' and return
     end
@@ -55,7 +53,7 @@ protected
   
   def find_resource_page_and_verify_owner
     @resource_page = ResourcePage.find(params[:id])
-    return if @resource_page.user == current_user
+    return if @resource_page.changeable?(current_user)
     flash[:error] = "You're not authorized to do this"
     redirect_to :home
   end

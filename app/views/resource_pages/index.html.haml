@@ -1,15 +1,8 @@
 %h1 Resource Pages
-%br
-%table{:width=>"100%"}
-  - @resource_pages.each do |resource_page|
-    %tr
-      %td= resource_page.id
-      %td= resource_page.name
-      - if resource_page.changeable?(current_user)
-        %td= link_to 'Show', resource_page
-        %td= link_to 'Edit', edit_resource_page_path(resource_page)
-        %td= link_to 'Destroy', resource_page, :confirm => 'Are you sure?', :method => :delete
-  
-%br
+%p#new-resource-page-link
+= link_to 'Create a new resource page', new_resource_page_path
 
-= link_to 'New Resource Page', new_resource_page_path
+#resource-pages
+  = render :partial => 'resource_pages/runnable_list', :locals => { :resource_pages => @resource_pages, :paginated_objects => @resource_pages }
+
+  
