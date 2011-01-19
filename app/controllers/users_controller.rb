@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
   # skip_before_filter :verify_authenticity_token, :only => :create
  
-  access_rule 'researcher', :only => :account_report 
   access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
-  access_rule 'admin || manager', :only => :index
+  access_rule 'admin || manager || researcher', :only => [:index, :account_report]
   
   def index
     if params[:mine_only]
