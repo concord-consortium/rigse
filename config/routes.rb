@@ -404,9 +404,12 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get
   }
 
+  map.resources :resource_pages
+  map.resources :attached_files
+
   # not being used, but being tested
   map.resources :images
-  
+    
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.home '/readme', :controller => 'home', :action => 'readme'

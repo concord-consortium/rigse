@@ -41,6 +41,10 @@ class Portal::Offering < ActiveRecord::Base
     multiple_choices + open_responses
   end
   
+  def resource_page?
+    self.runnable.is_a? ResourcePage
+  end
+  
   self.extend SearchableModel
 
   @@searchable_attributes = %w{status}

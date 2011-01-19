@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101153846) do
+ActiveRecord::Schema.define(:version => 20110111211551) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -51,6 +51,19 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+  end
+
+  create_table "attached_files", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "attachable_type"
+    t.integer  "attachable_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "author_notes", :force => true do |t|
@@ -535,17 +548,6 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "updated_at"
   end
 
-  create_table "external_activities", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid"
-    t.string   "name"
-    t.text     "description"
-    t.text     "url"
-    t.string   "publication_status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -779,14 +781,13 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",               :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1786,6 +1787,15 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.boolean  "ignore"
   end
 
+  create_table "resource_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "publication_status", :default => "draft"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
     t.integer "assessment_target_id"
     t.integer "unifying_theme_id"
@@ -1971,14 +1981,13 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",               :limit => 36
+    t.string   "uuid",         :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"

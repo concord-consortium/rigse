@@ -23,6 +23,8 @@ module NavigationHelpers
       "/admin/projects/#{Admin::Project.default_project.id}/show"
     when /the create investigation page/
       "/investigations/new"
+    when /the create resource page page/
+      "/resource_pages/new"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
