@@ -98,7 +98,8 @@ class InvestigationsController < AuthoringController
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    @investigations = Investigation.search_list({
+    
+    search_options = {
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
@@ -106,14 +107,21 @@ class InvestigationsController < AuthoringController
       :domain_id => @domain_id,
       :paginate => true, 
       :page => pagenation
-    })
+    }
+    @investigations = Investigation.search_list(search_options)
+    
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_user.id }
     end
+    
     @paginated_objects = @investigations
     
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:investigations => @investigations, :paginated_objects =>@investigations}
+      @resource_pages = ResourcePage.search_list(search_options)
+      render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
+        :investigations => @investigations,
+        :resource_pages => @resource_pages
+      }
     else
       respond_to do |format|
         format.html do
