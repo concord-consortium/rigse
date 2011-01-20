@@ -23,7 +23,11 @@ class ResourcePagesController < ApplicationController
   end
 
   def show
-    @resource_page = ResourcePage.visible_to_user_with_drafts(current_user).find(params[:id])
+    if current_user.has_role? 'admin'
+      @resource_page = ResourcePage.find(params[:id])
+    else
+      @resource_page = ResourcePage.visible_to_user_with_drafts(current_user).find(params[:id])
+    end
   end
 
   def new
