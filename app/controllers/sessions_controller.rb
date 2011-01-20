@@ -20,6 +20,7 @@ class SessionsController < ApplicationController
   def verify_cc_token
     begin
       token = cookies[CCCookieAuth.cookie_name]
+      raise 'non-existent token' unless token
       valid = CCCookieAuth.verify_auth_token(token,request.remote_ip)
       raise 'invalid token' unless valid
       login = token.split(CCCookieAuth.token_separator).first
@@ -109,15 +110,12 @@ class SessionsController < ApplicationController
   def cookie_domain
     if defined? @cookie_domain
       return @cookie_domain
-    end  
-    # use wildcard domain (last two parts ".concord.org") for this cookie
-    name_parts = request.host.split(".")
-    if(name_parts.length > 1)
-      # use the last two bits
-      @cookie_domain = ".#{name_parts[-2..-1].join(".")}"
-    else
-      @cookie_domain = nil
     end
+
+    # use wildcard domain (last two parts ".concord.org") for this cookie
+    @cookie_domain = request.host
+    @cookie_domain = '.concord.org' if @cookie_domain =~ /\.concord\.org$/
+
     return @cookie_domain
   end
 
