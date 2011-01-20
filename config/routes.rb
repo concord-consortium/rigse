@@ -404,6 +404,7 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get
   }
 
+  map.list_filter_resource_page '/resource_pages/list/filter', :controller => 'resource_pages', :action => 'index', :method => :post
   map.resources :resource_pages
   map.resources :attached_files
 

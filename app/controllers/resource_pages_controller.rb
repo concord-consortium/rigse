@@ -4,7 +4,21 @@ class ResourcePagesController < ApplicationController
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
   
   def index
-    @resource_pages = current_user.resource_pages.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 20)
+    @include_drafts = param_find(:include_drafts, true)
+    @name = param_find(:name)
+    
+    @resource_pages = ResourcePage.search_list({
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => @include_drafts, 
+      :paginate => true, 
+      :page => params[:page]
+    })
+    
+    if request.xhr?
+      render :partial => 'runnable_list', :locals => { :resource_pages => @resource_pages, :paginated_objects => @resource_pages }
+      return
+    end
   end
 
   def show

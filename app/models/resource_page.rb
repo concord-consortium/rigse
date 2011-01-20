@@ -40,7 +40,7 @@ class ResourcePage < ActiveRecord::Base
     def search_list(options)
       resource_pages = ResourcePage.like(options[:name])
 
-      unless options[:include_drafts]
+      unless options[:include_drafts] # Only show published resource pages unless we explicitly as for drafts
         resource_pages = resource_pages.published
       end
 
