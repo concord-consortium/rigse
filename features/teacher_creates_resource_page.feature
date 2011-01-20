@@ -12,7 +12,8 @@ Feature: A teacher creates a resource page
       | login         | password        |
       | teacher       | teacher         |
     And I login with username: teacher password: teacher
-    When I go to the create resource page page
+    When I go to the resource pages page
+    And I follow "Create a new resource page"
     Then I should see "New Resource Page"
     When I fill in the following:
       | resource_page[name] | Test Page |

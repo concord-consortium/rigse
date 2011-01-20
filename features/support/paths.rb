@@ -25,6 +25,8 @@ module NavigationHelpers
       "/investigations/new"
     when /the create resource page page/
       "/resource_pages/new"
+    when /the resource pages page/
+      "/resource_pages/"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
