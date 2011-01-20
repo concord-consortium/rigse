@@ -16,7 +16,12 @@
           %li.menu= link_to 'delete', resource_page, :class => 'delete', :confirm => "Are you sure you want to delete Resource Page #{resource_page.id}", :method => :delete 
   %div{:id => dom_id_for(resource_page, :details), :class => 'tiny'}
     %p= resource_page.description
-    %p= pluralize(resource_page.attached_files.size, "attachment")
+    %p
+      %strong= pluralize resource_page.attached_files.size, "attachment"
+      %ul
+        - resource_page.attached_files.each do |attached_file|
+          %li= link_to attached_file.name, attached_file.attachment.url
+      
     %p
       %i= updated_time_text(resource_page)
     %p
