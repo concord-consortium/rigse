@@ -3,7 +3,7 @@ set :stages, %w(
   itsisu-dev itsisu-staging itsisu-production 
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
-  geniverse-dev
+  geniverse-dev geniverse-production
   xproject-dev
   fall2009 jnlp-staging seymour
   sparks-dev)
