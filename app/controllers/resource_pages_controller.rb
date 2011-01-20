@@ -9,6 +9,7 @@ class ResourcePagesController < ApplicationController
     
     @resource_pages = ResourcePage.search_list({
       :name => @name, 
+      :user => current_user,
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
       :paginate => true, 
@@ -22,7 +23,7 @@ class ResourcePagesController < ApplicationController
   end
 
   def show
-    @resource_page = ResourcePage.published_or_by_user(current_user).find(params[:id])
+    @resource_page = ResourcePage.visible_to_user_with_drafts(current_user).find(params[:id])
   end
 
   def new

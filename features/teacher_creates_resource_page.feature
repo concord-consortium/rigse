@@ -19,3 +19,28 @@ Feature: A teacher creates a resource page
       | resource_page[name] | Test Page |
     And I press "resource_page_submit"
     Then I should see "Resource Page was successfully created."
+    
+  
+  @selenium
+  Scenario: The teacher can view public and draft resource pages, and only their private ones
+    Given the following teachers exist:
+      | login         | password        |
+      | teacherA      | teacher         |
+      | teacherB      | teacher         |
+    And the following resource pages exist:
+      | name              | publication_status  | user      |
+      | published page A  | published           | teacherA  |
+      | published page B  | published           | teacherB  |
+      | draft page A      | draft               | teacherA  |
+      | draft page B      | draft               | teacherB  |
+      | private page A    | private             | teacherA  |
+      | private page B    | private             | teacherB  |
+    And I login with username: teacherA password: teacher
+    When I go to the resource pages page
+    Then I should see "published page A"
+    And I should see "published page B"
+    And I should see "private page A"
+    And I should not see "private page B"
+    When I go to the resource pages with drafts page
+    Then I should see "draft page A"
+    And I should see "draft page B"

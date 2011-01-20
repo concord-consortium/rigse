@@ -27,6 +27,8 @@ module NavigationHelpers
       "/resource_pages/new"
     when /the resource pages page/
       "/resource_pages/"
+    when /the resource pages with drafts page/
+      "/resource_pages/?include_drafts=true"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
