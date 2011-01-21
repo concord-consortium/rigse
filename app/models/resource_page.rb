@@ -79,6 +79,13 @@ class ResourcePage < ActiveRecord::Base
       resource_pages
     end
   end
+  
+  def display_name
+    res = []
+    res << "[#{self.publication_status.upcase}]" if %w(draft private).include?(self.publication_status)
+    res << self.name
+    res.join(" ")
+  end
     
   # Should receive a list (or single item) in the form of:
   # { 'name' => '...', 'attachment' => 'File...' }

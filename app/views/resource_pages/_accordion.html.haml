@@ -1,6 +1,5 @@
 - link_text = link_button("preview.png", resource_page, :title => "View the Resource Page: '#{resource_page.name}'.")
-- link_text += "[#{resource_page.publication_status.upcase}] " if %w(private draft).include?(resource_page.publication_status)
-- link_text += name_for_component(resource_page, :hide_componenent_name => true)
+- link_text += resource_page.display_name
 
 
 = accordion_for(resource_page, link_text, :resource_page) do
