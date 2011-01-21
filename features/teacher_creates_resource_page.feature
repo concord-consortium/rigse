@@ -39,8 +39,23 @@ Feature: A teacher creates a resource page
     When I go to the resource pages page
     Then I should see "published page A"
     And I should see "published page B"
-    And I should see "private page A"
-    And I should not see "private page B"
+    And I should see "[PRIVATE] private page A"
+    And I should not see "[PRIVATE] private page B"
     When I go to the resource pages with drafts page
-    Then I should see "draft page A"
-    And I should see "draft page B"
+    Then I should see "[DRAFT] draft page A"
+    And I should see "[DRAFT] draft page B"
+    
+  @selenium
+  Scenario: The teacher can view public and draft resource pages, and only their private ones
+    Given the following teachers exist:
+      | login         | password        |
+      | teacherA      | teacher         |
+    And the following resource pages exist:
+      | name              | publication_status  | user      |
+      | published page A  | published           | teacherA  |
+      | draft page A      | draft               | teacherA  |
+      | private page A    | private             | teacherA  |
+    And I login with username: teacherA password: teacher
+    Then I should see "published page A"
+    And I should see "[PRIVATE] private page A"
+    Then I should see "[DRAFT] draft page A"
