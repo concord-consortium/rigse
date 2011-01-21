@@ -13,12 +13,12 @@ Feature: A teacher creates a resource page
       | teacher       | teacher         |
     And I login with username: teacher password: teacher
     When I go to the resource pages page
-    And I follow "Create a new resource page"
-    Then I should see "New Resource Page"
+    And I follow "Create a new resource"
+    Then I should see "New Resource"
     When I fill in the following:
       | resource_page[name] | Test Page |
     And I press "resource_page_submit"
-    Then I should see "Resource Page was successfully created."
+    Then I should see "Resource was successfully created."
     
   
   @selenium

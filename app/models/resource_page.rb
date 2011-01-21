@@ -48,7 +48,7 @@ class ResourcePage < ActiveRecord::Base
     end
     
     def display_name
-      "Resource Page"
+      "Resource"
     end
     
     def search_list(options)
