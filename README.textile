@@ -144,11 +144,11 @@ CI_REPORTS=hudson/reports/spec/ spec --require ${GEM_HOME}/gems/ci_reporter-1.6.
 
 h5. Updating to a newer codebase.
 
-Example of "updating an older instance to to newer code":/doc/updating_an_older_instance.md
+Example of "updating an older instance to to newer code":doc/updating_an_older_instance.md
 
 h5. Core Extensions
 
-"Extensions to core classes applied at application startup":/doc/core-extensions.textile
+"Extensions to core classes applied at application startup":doc/core-extensions.textile
 
 h5. Cleaaning up
 
