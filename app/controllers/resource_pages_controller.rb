@@ -41,7 +41,7 @@ class ResourcePagesController < ApplicationController
     end
     
     @resource_page.new_attached_files = params[:attached_files]
-    flash[:notice] = "Resource Page was successfully created."
+    flash[:notice] = "#{ResourcePage.display_name} was successfully created."
     redirect_to @resource_page
   end
 
@@ -53,7 +53,7 @@ class ResourcePagesController < ApplicationController
       render :action => 'edit' and return
     end
     
-    flash[:notice] = "Successfully updated this resource page"
+    flash[:notice] = "Successfully updated this #{ResourcePage.display_name.downcase}"
     redirect_to @resource_page
   end
   

@@ -48,7 +48,7 @@ class ResourcePage < ActiveRecord::Base
     end
     
     def display_name
-      "Resource Page"
+      "Resource"
     end
     
     def search_list(options)
@@ -56,14 +56,14 @@ class ResourcePage < ActiveRecord::Base
       
       if options[:user] && options[:user].is_a?(User) && options[:user].has_role?('admin')
         # admin users can see all ResourcePages
-        resource_pages = ResourcePage.no_drafts unless options[:include_drafts]
+        resource_pages = resource_pages.no_drafts unless options[:include_drafts]
       else
         if options[:include_drafts]
           # published, draft, and private by user
-          resource_pages = ResourcePage.visible_to_user_with_drafts(options[:user])
+          resource_pages = resource_pages.visible_to_user_with_drafts(options[:user])
         else
           # published and private by user
-          resource_pages = ResourcePage.visible_to_user(options[:user])
+          resource_pages = resource_pages.visible_to_user(options[:user])
         end
       end
       
@@ -78,6 +78,13 @@ class ResourcePage < ActiveRecord::Base
 
       resource_pages
     end
+  end
+  
+  def display_name
+    res = []
+    res << "[#{self.publication_status.upcase}]" if %w(draft private).include?(self.publication_status)
+    res << self.name
+    res.join(" ")
   end
     
   # Should receive a list (or single item) in the form of:

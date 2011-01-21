@@ -2,13 +2,13 @@
   .action_menu_header
     .action_menu_header_left
       - if local_assigns[:paginated_objects]
-        %p= page_entries_info paginated_objects, :entry_name => "resource page"
+        %p= page_entries_info paginated_objects, :entry_name => ResourcePage.display_name.downcase
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
         - if current_user.has_role?("author", "teacher")
-          %li= link_to "create resource page", new_resource_page_path
+          %li= link_to "create #{ResourcePage.display_name.downcase}", new_resource_page_path
 
 
 - for resource_page in resource_pages
