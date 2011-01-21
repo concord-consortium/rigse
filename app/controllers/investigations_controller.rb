@@ -116,8 +116,8 @@ class InvestigationsController < AuthoringController
     
     @paginated_objects = @investigations
     
-    @resource_pages = ResourcePage.search_list(search_options)
     if request.xhr?
+      @resource_pages = ResourcePage.search_list(search_options) unless params[:investigations_only]
       render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
         :investigations => @investigations,
         :resource_pages => @resource_pages
