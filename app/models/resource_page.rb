@@ -56,14 +56,14 @@ class ResourcePage < ActiveRecord::Base
       
       if options[:user] && options[:user].is_a?(User) && options[:user].has_role?('admin')
         # admin users can see all ResourcePages
-        resource_pages = ResourcePage.no_drafts unless options[:include_drafts]
+        resource_pages = resource_pages.no_drafts unless options[:include_drafts]
       else
         if options[:include_drafts]
           # published, draft, and private by user
-          resource_pages = ResourcePage.visible_to_user_with_drafts(options[:user])
+          resource_pages = resource_pages.visible_to_user_with_drafts(options[:user])
         else
           # published and private by user
-          resource_pages = ResourcePage.visible_to_user(options[:user])
+          resource_pages = resource_pages.visible_to_user(options[:user])
         end
       end
       
