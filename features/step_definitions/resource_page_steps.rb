@@ -9,3 +9,11 @@ Given /^the following resource pages exist:$/ do |table|
     resource_page.save!
   end
 end
+
+When /^I search for a resource page named "([^"]*)"$/ do |query|
+  visit("/resource_pages?name=#{query}")
+end
+
+When /^I search for a resource page including drafts named "([^"]*)"$/ do |query|
+  visit("/resource_pages?name=#{query}&include_drafts=true")
+end

@@ -57,10 +57,12 @@ describe ResourcePage do
       @resource_page.attached_files.size.should == 3
     end
     
-    
-    # new_attached_files=
-    # has_attached_files?
-    # print_listing
+    it "should include draft flag when in draft or private mode" do
+      %w(draft private).each do |status|
+        @resource_page = create_resource_page(:publication_status => status)
+        @resource_page.display_name.should == "[#{status.upcase}] #{@resource_page.name}"
+      end
+    end
   end
 
 protected
