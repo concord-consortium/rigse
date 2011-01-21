@@ -59,3 +59,25 @@ Feature: A teacher creates a resource page
     Then I should see "published page A"
     And I should see "[PRIVATE] private page A"
     Then I should see "[DRAFT] draft page A"
+    
+  @selenium
+  Scenario: The teacher can search for resource pages
+    Given the following teachers exist:
+      | login         | password        |
+      | teacherA      | teacher         |
+    And the following resource pages exist:
+      | name            | publication_status  | user      |
+      | Testing Page    | published           | teacherA  |
+      | Testing Page 2  | draft               | teacherA  |
+      | Demo Page       | published           | teacherA  |
+
+    And I login with username: teacherA password: teacher
+    When I search for a resource page named "Testing"
+    Then I should see "Testing Page"
+    And I should not see "Demo Page"
+    And I should not see "Testing Page 2"
+    When I search for a resource page including drafts named "Testing"
+    Then I should see "Testing Page"
+    And I should see "Testing Page 2"
+    And I should not see "Demo Page"
+
