@@ -413,9 +413,10 @@ ActionController::Routing::Routes.draw do |map|
     
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
-  map.home '/readme', :controller => 'home', :action => 'readme'
-  map.home '/home', :controller => 'home', :action => 'index'
-  map.about '/about', :controller => 'home', :action => 'about'
+  map.readme '/readme', :controller => 'home', :action => 'readme'
+  map.doc    '/doc/:document', :controller => 'home', :action => 'doc', :requirements => { :document => /\S+/ }
+  map.home   '/home', :controller => 'home', :action => 'index'
+  map.about  '/about', :controller => 'home', :action => 'about'
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
