@@ -29,6 +29,8 @@ module NavigationHelpers
       "/resource_pages/"
     when /the resource pages with drafts page/
       "/resource_pages/?include_drafts=true"
+    when /the reports for resource pages/
+      "/reports/resource_pages"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
