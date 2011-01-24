@@ -46,7 +46,7 @@ Feature: A teacher creates a resource page
     And I should see "[DRAFT] draft page B"
     
   @selenium
-  Scenario: The teacher can view public and draft resource pages, and only their private ones
+  Scenario: The teacher can see their resource pages on the homepage
     Given the following teachers exist:
       | login         | password        |
       | teacherA      | teacher         |
@@ -56,6 +56,7 @@ Feature: A teacher creates a resource page
       | draft page A      | draft               | teacherA  |
       | private page A    | private             | teacherA  |
     And I login with username: teacherA password: teacher
+    When I am on the homepage
     Then I should see "published page A"
     And I should see "[PRIVATE] private page A"
     Then I should see "[DRAFT] draft page A"
