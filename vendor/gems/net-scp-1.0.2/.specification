@@ -1,6 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: net-scp
 version: !ruby/object:Gem::Version 
+  hash: 19
   prerelease: false
   segments: 
   - 1
@@ -21,9 +22,11 @@ dependencies:
   name: net-ssh
   prerelease: false
   requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 409
         segments: 
         - 1
         - 99
@@ -35,9 +38,11 @@ dependencies:
   name: echoe
   prerelease: false
   requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         version: "0"
@@ -93,16 +98,20 @@ rdoc_options:
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
 required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 11
       segments: 
       - 1
       - 2
@@ -110,7 +119,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: net-ssh
-rubygems_version: 1.3.6
+rubygems_version: 1.3.7
 signing_key: 
 specification_version: 2
 summary: A pure Ruby implementation of the SCP client protocol

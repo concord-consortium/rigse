@@ -1,4 +1,4 @@
-## Updating and older portal instance to master
+## Updating an older portal instance to master
 
 This documentation shows details for how an older branch of the code (xproject-dev)nwas updated to master and deployed.
 
