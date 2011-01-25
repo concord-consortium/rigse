@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110111211551) do
+ActiveRecord::Schema.define(:version => 20110125193007) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1589,6 +1589,7 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                      :default => true
   end
 
   create_table "portal_school_memberships", :force => true do |t|

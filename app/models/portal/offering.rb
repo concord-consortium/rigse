@@ -64,6 +64,29 @@ class Portal::Offering < ActiveRecord::Base
   end
   
   
+  def active?
+    active
+  end
+  
+  def activate
+    self.active = true
+  end
+  
+  def activate!
+    self.activate
+    self.save
+  end
+  
+  def deactivate
+    self.active = false
+  end
+  
+  def deactivate!
+    self.deactivate
+    self.save
+  end
+  
+  
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable

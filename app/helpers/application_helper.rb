@@ -398,6 +398,16 @@ module ApplicationHelper
     end
     link_to(link_text, url, :popup => true, :title => title)
   end
+  
+  def activation_toggle_link_for(activatable, action='activate', link_text='Activate', title=nil)
+    activatable_display_name = activatable.class.display_name.downcase
+    action_string = action.gsub('_', ' ')
+    url = polymorphic_url(activatable, :action => action)
+    if title.nil?
+      title = "#{action_string} the #{activatable_display_name}: '#{activatable.name}'."
+    end
+    link_to(link_text, url, :title => title)
+  end
 
   def run_link_for(component, as_name=nil, params={})
     component_display_name = component.class.display_name.downcase
@@ -872,6 +882,14 @@ module ApplicationHelper
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
           haml_concat " | "
           haml_concat report_link_for(offering, 'report', 'Report')
+          haml_concat " | "
+
+          if offering.active?
+            haml_concat activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
+          else
+            haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
+          end
+          
           # haml_concat " | "
           # haml_concat report_link_for(offering, 'open_response_report','OR Report')
           # haml_concat " | "

@@ -148,7 +148,9 @@ ActionController::Routing::Routes.draw do |map|
       :open_response_report => :get, 
       :multiple_choice_report => :get,
       :separated_report => :get,
-      :report_embeddable_filter => :post
+      :report_embeddable_filter => :post,
+      :activate => :get,
+      :deactivate => :get
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
