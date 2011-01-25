@@ -3,6 +3,7 @@ require 'fileutils'
 require 'yaml'
 require 'erb'
 require 'optparse'
+require 'pathname'
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
@@ -112,7 +113,11 @@ def copy_file(source, destination)
 end
 
 def rails_file_path(*args)
-  File.join([RAILS_ROOT] + args)
+  path = File.join([RAILS_ROOT] + args)
+  if File.exists?(path)
+    path = Pathname.new(path).realpath.to_s
+  end
+  path
 end
 
 def rails_file_exists?(*args)
