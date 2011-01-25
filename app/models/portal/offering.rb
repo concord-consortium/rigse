@@ -86,6 +86,10 @@ class Portal::Offering < ActiveRecord::Base
     self.save
   end
   
+  def can_be_deleted?
+    learners.empty?
+  end
+  
   
   # def saveable_count
   #   @saveable_count ||= begin

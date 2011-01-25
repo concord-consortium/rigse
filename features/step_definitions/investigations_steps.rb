@@ -63,3 +63,28 @@ When /^I open the accordion for the offering for investigation "([^"]*)" for the
   selector = "#_toggle_portal__offering_#{offering.id}"
   find(selector).click
 end
+
+
+When /^I drag the investigation "([^"]*)" in the class "(.*)" to "([^"]*)"$/ do |investigation_name, class_name, to|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  investigation = Investigation.find_by_name(investigation_name)
+  offering = Portal::Offering.first(:conditions => {
+    :runnable_type => investigation.class.name,
+    :runnable_id => investigation.id,
+    :clazz_id => clazz.id
+  })
+  selector = "#portal__offering_#{offering.id}"
+  find(selector).drag_to(find(to))
+end
+
+Then /^the investigation "([^"]*)" in the class "(.*)" should be active$/ do |investigation_name, class_name|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  investigation = Investigation.find_by_name(investigation_name)
+  offering = Portal::Offering.first(:conditions => {
+    :runnable_type => investigation.class.name,
+    :runnable_id => investigation.id,
+    :clazz_id => clazz.id
+  })
+  offering.should be_active
+end
+
