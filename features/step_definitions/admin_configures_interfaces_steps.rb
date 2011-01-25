@@ -37,6 +37,10 @@ Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/
   click_button("Login")
 end
 
+When /^I log out$/ do
+  visit "/logout"
+end
+
 Given /^the following vendor interfaces exist:$/ do |interfaces_table|
   # table is a Cucumber::Ast::Table
   interfaces_table.hashes.each do |hash|
