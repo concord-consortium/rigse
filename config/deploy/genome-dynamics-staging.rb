@@ -2,8 +2,8 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/staging/genome-dynamics"
-set :branch, "genome-dynamics-staging"
+set :deploy_to, "/web/staging/genomedynamics"
+set :branch, "genomedynamics-staging"
 
 #############################################################
 #  Servers
@@ -12,5 +12,3 @@ set :branch, "genome-dynamics-staging"
 set :domain, "seymour.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
-
-after 'deploy:update_code'

@@ -12,7 +12,7 @@ development: &id003
     - "10"
     - "11"
     - "12"
-  :theme: genome-dynamics
+  :theme: genomedynamics
   :site_name: Genome Dynamics
   :site_url: http://localhost:3000
   :runnables_use: otrunk_jnlp
@@ -21,10 +21,10 @@ development: &id003
   :site_school: Genome Dynamics-school
   :description: ""
   :site_district: Genome Dynamics-district
-  :help_email: genome-dynamics@concord.org
+  :help_email: genomedynamics@concord.org
   :use_gse: false
   :enable_default_users: true
-  :help_email: genome-dynamics@concord.org
+  :help_email: genomedynamics@concord.org
   :default_admin_user:
     :first_name: Stephen
     :login: stephen

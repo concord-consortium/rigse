@@ -2,8 +2,8 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/production/genome-dynamics"
-set :branch, "genome-dynamics-production"
+set :deploy_to, "/web/production/genomedynamics"
+set :branch, "genomedynamics-production"
 
 #############################################################
 #  Servers

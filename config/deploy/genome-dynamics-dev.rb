@@ -2,15 +2,13 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/genome-dynamics.dev.concord.org"
-set :branch, "genome-dynamics-dev"
+set :deploy_to, "/web/genomedynamics.dev.concord.org"
+set :branch, "genomedynamics-dev"
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "genome-dynamics.dev.concord.org"
+set :domain, "genomedynamics.dev.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
-
-after 'deploy:update_code'
