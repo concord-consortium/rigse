@@ -162,8 +162,8 @@ namespace :deploy do
   end
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
-  task :from_scratch do
-    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
+  task :setup_new_app do
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:new_rites_app --trace"
   end
   
   desc "setup directory remote directory structure"
