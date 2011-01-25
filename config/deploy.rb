@@ -5,6 +5,7 @@ set :stages, %w(
   has-dev has-staging has-production
   geniverse-dev geniverse-production
   xproject-dev
+  genome-dynamics-dev genome-dynamics-staging genome-dynamics-production
   fall2009 jnlp-staging seymour
   sparks-dev)
 set :default_stage, "development"
