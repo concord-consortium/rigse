@@ -8,9 +8,6 @@ Working git, ruby or jruby, and rubgems, wget
 Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
-
-
-gem install ruby-debug
 h3. Install
 
 The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need a running mysql
@@ -49,145 +46,17 @@ the file can have just one line:
 
 From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
 
+h4. Updating to a newer codebase.
+
+* Example of "updating an older instance to to newer code":doc/updating_an_older_instance.md
+
+h4. Core Extensions
+
+* "Extensions to core classes applied at application startup":doc/core-extensions.textile
+
 h4. Setting up a Hudson CI project
 
-Creating an rvm gemset assuming you are using Ruby 1.8.7 p302:
-
-h5. Install gem prerequisites
-
-First install some of the prerequisite gems not specified in the application.
-You will need the development packages installed for mysql, libxml2, and libxslt-devel on the server.
-
-<pre><code>
-rvm install ruby-1.8.7-p302
-rvm use ruby-1.8.7-p302
-rvm gemset create rites
-rvm use ruby-1.8.7-p302@rites
-gem install rake mysql ruby-debug
-</pre></code>
-
-Set the following build environment variable:
-
-<pre><code>
-rvm_shell_ruby_string=ruby-1.8.7-p302@rites
-</pre></code>
-
-We use the following three build shell scripts in sequence to run the tests:
-
-h5. Setup environment
-
-<pre><code>
-ruby config/setup.rb -y -q -t rites
-echo '
-development:
-  encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: hudson
-  database: hudson_rites
-  password: hudson_ci_server
-  pool: 5
-itsi:
-  encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: hudson
-  database: hudson_rites_itsi
-  password: hudson_ci_server
-  pool: 5
-ccportal:
-  encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: hudson
-  database: hudson_rites_ccportal
-  password: hudson_ci_server
-  pool: 5
-test:  &test_settings
-  encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
-  username: hudson
-  database: hudson_rites
-  password: hudson_ci_server
-  pool: 5
-cucumber:
-  <<: *test_settings
-' > config/database.yml
-
-# If the gem specifications in: config/environments/test.rb have
-# changed install the new gems and uninstall the older versions
-# WARNING: this won't work if you are updating a gem that rails has
-# already activated -- for example when updating cucumber or capybara. 
-# In this case login and install the news gems by hand:
-#
-#  $ gem update cucumber capybara
-#  $ gem cleanup
-#
-RAILS_ENV=test rake gems:install
-</pre></code>
-
-h5. Running Cucumber and RSpec tests
-
-<pre><code>
-rm -f rerun.txt
-RAILS_ENV=cucumber rake hudson:cucumber --trace
-
-#
-# The rake task is not generating both junit and html output
-# so run the spec tests manually.
-#
-# Note, there is a hard-coded path to the ci_reporter
-# gem -- will need to be updated if the gem is updated
-#
-mkdir -p hudson/reports/spec
-rm -rf hudson/reports/spec/*
-rake db:test:prepare
-CI_REPORTS=hudson/reports/spec/ spec --require ${GEM_HOME}/gems/ci_reporter-1.6.0/lib/ci/reporter/rake/rspec_loader --format CI::Reporter::RSpec --format html:hudson/reports/spec/report.html spec
-</pre></code>
-
-h5. Updating to a newer codebase.
-
-Example of "updating an older instance to to newer code":doc/updating_an_older_instance.md
-
-h5. Core Extensions
-
-"Extensions to core classes applied at application startup":doc/core-extensions.textile
-
-h5. Cleaaning up
-
-<pre><code>
-# to avoid ever climbing disk space needs, rotate the logs
-CUR=`pwd`
-echo "${CUR}/log/test.log {
-  rotate 4
-  compress
-  notifempty
-  missingok
-}
-${CUR}/log/cucumber.log {
-  rotate 4
-  compress
-  notifempty
-  missingok
-}
-${CUR}/log/development.log {
-  rotate 4
-  compress
-  notifempty
-  missingok
-}" > logrotate.conf
-logrotate -s logrotate.status logrotate.conf
-</pre></code>
-
-h5. Post Build Actions
-
-Publish JUnit test result report: @hudson/reports/**/*xml@
-Additional test report features: @Publish test attachments@
-
-*Publish HTML reports*
-
-|_.HTML directory to archive|_.Index page[s]|_.Report title|_.Keep past HTML reports|
-|hudson/reports/features|report.html|Cucumber Report|true|
-|hudson/reports/specs|report.html|RSpec Report|true|
-
-Copy files back to the master: @hudson/reports/**@
+* "Setting up a Hudson CI project":doc/hudson-ci.textile
 
 h4. GIT
 
@@ -226,8 +95,8 @@ h4. GIT
 h3. Roll your own theme:
 
 For now the best thing to do is to copy an existing set of themes. eg:
-<code><pre>
 
+<pre><code>
   cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
   cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
   cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
@@ -236,8 +105,7 @@ For now the best thing to do is to copy an existing set of themes. eg:
   vim ./config/asset_packages.yml
   # then pass arguments to setup.
   ruby ./config/setup.rb -t <new_theme_name>
-
-  </code></pre>
+</code></pre>
 
 h3. when deploying to a new server
 
@@ -293,7 +161,6 @@ The '-fxd' parameters to to git clean:
 # d: Remove untracked directories in addition to untracked files.
 # X: Remove only files ignored by git.
 # f: force removal
-
 
 h3. Setting up a local JNLP Web Start servlet
 
