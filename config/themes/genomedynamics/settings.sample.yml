@@ -15,6 +15,7 @@ development: &id003
   :theme: genomedynamics
   :site_name: Genome Dynamics
   :site_url: http://localhost:3000
+  :help_email: genome-dynamics@concord.org
   :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
@@ -24,7 +25,6 @@ development: &id003
   :help_email: genomedynamics@concord.org
   :use_gse: false
   :enable_default_users: true
-  :help_email: genomedynamics@concord.org
   :default_admin_user:
     :first_name: Stephen
     :login: stephen
