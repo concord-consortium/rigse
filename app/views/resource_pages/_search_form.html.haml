@@ -15,9 +15,17 @@
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
+        - sort_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+        = label_tag :sort_order, 'sort: ', :class => 'right'
+        = select nil, :sort_order, sort_options, {:selected => @sort_order, :include_blank => true }
+      %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :include_usage_count, 'show count: ', :class=>"right"
+        = check_box_tag 'include_usage_count', 'true', @include_usage_count
       %td{:style=>"padding: 0.5em;"}
         - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
           = label_tag :filter, 'drafts too: ', :class=>"right"
           = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
+
