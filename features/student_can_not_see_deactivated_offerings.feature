@@ -22,16 +22,22 @@ Feature: Student can not see deactivated offerings
     When I assign the investigation "Test Investigation" to the class "My Class"
     
   @selenium
-  Scenario: User should see activated offerings
+  Scenario: Student should see activated offerings
     When I log out
     And I login with username: student password: student
     Then I should see "run Test Investigation"
   
   @selenium
-  Scenario: User should not see deactivated offerings
+  Scenario: Student should not see deactivated offerings
     When I am on the class page for "My Class"
     And I follow "deactivate" on the investigation "Test Investigation" from the class "My Class"
     And I log out
     And I login with username: student password: student
-    Then I should not see "run Test Investigation"
+    Then I should be on the homepage
+    And I should not see "run Test Investigation"
+    And I should see "No Investigations available."
+    
+    When I am on the class page for "My Class"
+    And I should not see "run Test Investigation"
+    And I should see "No Investigations available."
     
