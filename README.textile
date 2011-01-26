@@ -170,6 +170,30 @@ You can also setup a local jnlp web start server for a development environment w
 
 # "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
 
+h2. NCES District and School Tables
+
+When a rails-portal instance is created two tables containing data for schools and districts in the US are created from data supplied by the "National Center for Education Statistics (NCES)":http://nces.ed.gov/.
+
+NCES maintains a database about US districts and schools called the "Common Core of Data":http://nces.ed.gov/ccd
+
+The rake task: <code>portal:setup:create_districts_and_schools_from_nces_data</code> downloads 2006 NCES CCD data files from NCES website and imports data from these data files into the following models:
+
+* <code>Portal::Nces06District</code>
+* <code>Portal::Nces06School</code>
+
+Only data from states and provinces identified in the <code>config/settings.yml</code> for the portal instance are imported.
+
+The NCES district and school models are used to provide data from which districts and schools actively using the portal are be created.
+
+The <code>Portal::Nces06District</code> includes about 50 different fields of data for each district.
+
+The <code>Portal::Nces06School</code> includes about 500 different fields of data for each school.
+
+h3. PDF documentation for the NCES data schemas
+
+* "NCES Common Core of Data Public Elementary/Secondary School Universe Survey: School Year 2006–07, Version 1b":http://nces.ed.gov/ccd/pdf/psu061bgen.pdf
+* "NCES Common Core of Data Local Education Agency Universe Survey: School Year 2006–07":http://nces.ed.gov/ccd/pdf/pau061bgen.pdf
+
 h2. Testing
 
 h3. Testing Frameworks
