@@ -4,7 +4,7 @@ class Portal::Offering < ActiveRecord::Base
   acts_as_replicatable
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
-  belongs_to :runnable, :polymorphic => true
+  belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
   
   has_one :report_embeddable_filter, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
   

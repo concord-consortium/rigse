@@ -7,3 +7,9 @@ Given /^there are (\d+) (.+)$/ do |number, model_name|
     Factory.create(model_name.to_sym)
   end
 end
+
+# Then the investigation named "Test" should have "offerings_count" equal to "1"
+Then /^the (.*) named "([^"]*)" should have "([^"]*)" equal to "([^"]*)"$/ do |class_name, obj_name, field, value|
+  obj = class_name.gsub(/\s/, "_").classify.constantize.find_by_name(obj_name)
+  obj.send(field.to_sym).to_s.should == value
+end
