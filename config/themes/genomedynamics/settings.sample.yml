@@ -22,7 +22,6 @@ development: &id003
   :site_school: Genome Dynamics-school
   :description: ""
   :site_district: Genome Dynamics-district
-  :help_email: genomedynamics@concord.org
   :use_gse: false
   :enable_default_users: true
   :default_admin_user:
