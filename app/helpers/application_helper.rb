@@ -310,6 +310,11 @@ module ApplicationHelper
       end
     end
   end
+  
+  def sort_dropdown(selected)
+    sort_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    select nil, :sort_order, sort_options, {:selected => selected, :include_blank => true }
+  end
 
   def otrunk_edit_button_for(component, options={})
     controller = component.class.name.pluralize.underscore

@@ -99,12 +99,16 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts,true)
     end
     
+    @sort_order = param_find(:sort_order, true)
+    @include_usage_count = param_find(:include_usage_count, true)
+    
     search_options = {
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
       :grade_span => @grade_span,
       :domain_id => @domain_id,
+      :sort_order => @sort_order,
       :paginate => true, 
       :page => pagenation
     }

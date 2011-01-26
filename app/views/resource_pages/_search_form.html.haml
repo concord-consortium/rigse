@@ -15,9 +15,8 @@
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
-        - sort_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
         = label_tag :sort_order, 'sort: ', :class => 'right'
-        = select nil, :sort_order, sort_options, {:selected => @sort_order, :include_blank => true }
+        = sort_dropdown(@sort_order)
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name

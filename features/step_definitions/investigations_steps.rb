@@ -1,9 +1,26 @@
+# This is a slightly different method than the one in the authoring_steps.rb file
+# This one uses factories, whereas the other builds a valid Investigation from scratch
+Given /^the following investigations exist:$/ do |table|
+  table.hashes.each do |hash|
+    user = User.find_by_login hash['user']
+    Factory.create(:investigation, hash.merge('user' => user))
+  end
+end
+
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['teacher']
     teacher = user.portal_teacher
     Factory.create(:portal_clazz, hash.merge('teacher' => teacher))
   end
+end
+
+When /^I sort investigations by "([^"]*)"$/ do |sort_str|
+  visit "/investigations?sort_order=#{sort_str}"
+end
+
+When /^I show offerings count on the investigations page$/ do 
+  visit "/investigations?include_usage_count=true"
 end
 
 When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|

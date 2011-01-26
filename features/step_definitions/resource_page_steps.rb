@@ -10,6 +10,14 @@ Given /^the following resource pages exist:$/ do |table|
   end
 end
 
+When /^I sort resource pages by "([^"]*)"$/ do |sort_str|
+  visit "/resource_pages?sort_order=#{sort_str}"
+end
+
+When /^I show offerings count on the resource pages page$/ do 
+  visit "/resource_pages?include_usage_count=true"
+end
+
 When /^I search for a resource page named "([^"]*)"$/ do |query|
   visit("/resource_pages?name=#{query}")
 end

@@ -13,3 +13,7 @@ Then /^the (.*) named "([^"]*)" should have "([^"]*)" equal to "([^"]*)"$/ do |c
   obj = class_name.gsub(/\s/, "_").classify.constantize.find_by_name(obj_name)
   obj.send(field.to_sym).to_s.should == value
 end
+
+Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
+  page.body.should =~ /#{first_item}.*#{second_item}/m
+end
