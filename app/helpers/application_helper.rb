@@ -293,6 +293,13 @@ module ApplicationHelper
         else
           haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle'
         end
+        
+        unless options[:usage_count].blank?
+          haml_tag :div, :class => 'accordion_count' do
+            haml_concat options[:usage_count]
+          end
+        end
+        
         haml_tag :div, :class => 'empty_break'
         haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_content"), :class => 'accordion_content', :style=>'display: none;' do
           if block_given?
@@ -302,6 +309,11 @@ module ApplicationHelper
 
       end
     end
+  end
+  
+  def sort_dropdown(selected)
+    sort_options = [ [ "Newest", "created_at DESC" ], [ "Alphabetical", "name ASC" ], [ "Popularity", "offerings_count DESC" ] ]
+    select nil, :sort_order, sort_options, {:selected => selected, :include_blank => true }
   end
 
   def otrunk_edit_button_for(component, options={})
@@ -397,6 +409,16 @@ module ApplicationHelper
       title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
     end
     link_to(link_text, url, :popup => true, :title => title)
+  end
+  
+  def activation_toggle_link_for(activatable, action='activate', link_text='Activate', title=nil)
+    activatable_display_name = activatable.class.display_name.downcase
+    action_string = action.gsub('_', ' ')
+    url = polymorphic_url(activatable, :action => action)
+    if title.nil?
+      title = "#{action_string} the #{activatable_display_name}: '#{activatable.name}'."
+    end
+    link_to(link_text, url, :title => title)
   end
 
   def run_link_for(component, as_name=nil, params={})
@@ -872,6 +894,14 @@ module ApplicationHelper
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
           haml_concat " | "
           haml_concat report_link_for(offering, 'report', 'Report')
+          haml_concat " | "
+
+          if offering.active?
+            haml_concat activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
+          else
+            haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
+          end
+          
           # haml_concat " | "
           # haml_concat report_link_for(offering, 'open_response_report','OR Report')
           # haml_concat " | "
