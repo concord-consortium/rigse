@@ -274,7 +274,7 @@ print "\nInitial setup of Rails Portal application named '#{@options[:app_name]}
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
 
 if @options[:site_url]
-  @mailer_config_sample[:host] = @options[:site_url]
+  @mailer_config_sample[:host] = @options[:site_url][/\/\/(.*)/, 1]
 end
 
 # @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
