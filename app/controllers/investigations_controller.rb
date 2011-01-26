@@ -6,14 +6,16 @@ class InvestigationsController < AuthoringController
 
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
-  access_rule 'researcher', :only => [:usage_report, :details_report]
 
+  include RestrictedController
+  #access_rule 'researcher', :only => [:usage_report, :details_report]
   prawnto :prawn=>{ :page_layout=>:landscape }
 
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :manager_or_researcher, :only => [:usage_report, :details_report]
+  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
