@@ -251,6 +251,7 @@ end
 puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
+  raise "\n\n*** missing theme: #{@theme_settings_config_sample_path}\n\n" unless File.exists?(@theme_settings_config_sample_path)
   @theme_settings_config_sample        = AppSettings.load_all_app_settings(@theme_settings_config_sample_path)
   @settings_config_sample.merge!(@theme_settings_config_sample)
   if @options[:db_name_prefix] == default_db_name_prefix
