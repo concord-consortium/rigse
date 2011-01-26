@@ -409,7 +409,7 @@ ActionController::Routing::Routes.draw do |map|
   map.list_filter_resource_page '/resource_pages/list/filter', :controller => 'resource_pages', :action => 'index', :method => :post
   map.resources :resource_pages
   map.resources :attached_files
-  map.resources :reports, :only => [:index, :show]
+
   # not being used, but being tested
   map.resources :images
     
