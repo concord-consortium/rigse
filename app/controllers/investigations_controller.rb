@@ -1,5 +1,4 @@
 class InvestigationsController < AuthoringController
-  
   # This doesn't work, but the technique is described here:
   # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
   # caches_page :show if => Proc.new { |c| c.request.format == :otml }
@@ -12,7 +11,7 @@ class InvestigationsController < AuthoringController
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :can_edit, :except => [:preview_index, :printable_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -134,6 +133,24 @@ class InvestigationsController < AuthoringController
         format.js
       end
     end
+  end
+  
+  def printable_index
+    @investigations = Investigation.search_list({
+      :name => param_find(:name), 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => param_find(:include_drafts, true), 
+      :grade_span => param_find(:grade_span),
+      :domain_id => param_find(:domain_id),
+      :sort_order => param_find(:sort_order),
+      :paginate => false
+    })
+    
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
+    
+    render :layout => false
   end
 
   def preview_index

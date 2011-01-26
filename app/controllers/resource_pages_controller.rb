@@ -25,6 +25,19 @@ class ResourcePagesController < ApplicationController
       return
     end
   end
+  
+  def printable_index    
+    @resource_pages = ResourcePage.search_list({
+      :name => param_find(:name), 
+      :user => current_user,
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => param_find(:include_drafts, true), 
+      :sort_order => param_find(:sort_order, true),
+      :paginate => false
+    })
+    
+    render :layout => false
+  end
 
   def show
     if current_user.has_role? 'admin'

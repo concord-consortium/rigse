@@ -365,7 +365,9 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post
+    :destroy => :post,
+  }, :collection => {
+    :printable_index => :get
   }
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
@@ -407,7 +409,9 @@ ActionController::Routing::Routes.draw do |map|
   }
 
   map.list_filter_resource_page '/resource_pages/list/filter', :controller => 'resource_pages', :action => 'index', :method => :post
-  map.resources :resource_pages
+  map.resources :resource_pages, :collection => {
+    :printable_index => :get
+  }
   map.resources :attached_files
 
   # not being used, but being tested

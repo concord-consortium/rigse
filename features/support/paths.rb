@@ -33,6 +33,14 @@ module NavigationHelpers
       "/reports/resource_pages"
     when /the class page for "(.*)"/
       "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
+    when /the investigations printable index page/
+      "/investigations/printable_index"
+    when /the investigations like "(.*)"/
+      "/investigations?name=#{$1}"
+    when /the resource pages printable index page/
+      "/resource_pages/printable_index"
+    when /the resource pages like "(.*)"/
+      "/resource_pages?name=#{$1}"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
