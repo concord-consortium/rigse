@@ -1,5 +1,5 @@
 development: &non_production_settings
-  :site_name: Investigations (development)
+  :site_name: Rails Portal (development)
   :site_url: http://localhost:3000
   :description: ""
   :default_admin_user: &default_admin_user
@@ -9,8 +9,8 @@ development: &non_production_settings
     :last_name: Bannasch
   :enable_default_users: true
   :include_otrunk_examples: false
-  :site_district: Investigations-district
-  :site_school: Investigations-school
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
   :states_and_provinces: &states_and_provinces
     - MA
   :active_school_levels: &active_school_levels
@@ -27,7 +27,7 @@ development: &non_production_settings
     - "12"
   :active_grades: *active_grades
   :theme: default
-  :help_email: investigations@concord.org
+  :help_email: rails-portal@concord.org
   :maven_jnlp_families:
     - "all-otrunk-snapshot"
   :maven_jnlp_servers:
@@ -57,8 +57,8 @@ cucumber:
   <<: *non_production_settings
 
 staging:
-  :site_name: Investigations (staging)
-  :site_url: http://investigations.staging.concord.org
+  :site_name: Rails Portal (staging)
+  :site_url: http://rails-portal.staging.concord.org
   :description: ""
   :default_admin_user: *default_admin_user
   :enable_default_users: true
@@ -66,9 +66,9 @@ staging:
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels
   :active_grades: *active_grades
-  :site_district: Investigations-district
-  :site_school: Investigations-school
-  :help_email: investigations@concord.org
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
+  :help_email: rails-portal@concord.org
   :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
@@ -92,8 +92,8 @@ staging:
       - code
 
 production:
-  :site_name: Investigations
-  :site_url: http://investigations.concord.org
+  :site_name: Rails Portal
+  :site_url: http://rails-portal.concord.org
   :description: ""
   :default_admin_user: *default_admin_user
   :enable_default_users: false
@@ -101,9 +101,9 @@ production:
   :states_and_provinces: *states_and_provinces
   :active_school_levels: *active_school_levels
   :active_grades: *active_grades
-  :site_district: Investigations-district
-  :site_school: Investigations-school
-  :help_email: investigations@concord.org
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
+  :help_email: rails-portal@concord.org
   :admin_email: npaessel@concord.org
   :allow_drafts_in_assignments: false
   :maven_jnlp_servers:
