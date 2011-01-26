@@ -9,8 +9,6 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 
-require 'uuidtools'
-
 # ==================================================================
 #
 #   General utility methods
@@ -60,6 +58,8 @@ end
 Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir|
   $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
 end
+
+require 'uuidtools'
 
 require rails_file_path(%w{ config initializers 00_core_extensions })
 require rails_file_path(%w{ lib app_settings })
