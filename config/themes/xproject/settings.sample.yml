@@ -13,14 +13,14 @@ development: &id003
     - "11"
     - "12"
   :theme: xproject
-  :site_name: XPROJECT Investigations
+  :site_name: Cross Project Portal
   :site_url: http://localhost:3000
   :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
-  :site_school: XPROJECT Investigations-school
+  :site_school: Cross Project Portal-school
   :description: ""
-  :site_district: XPROJECT Investigations-district
+  :site_district: Cross Project Portal-district
   :help_email: xproject-investigations@concord.org
   :use_gse: false
   :enable_default_users: true
