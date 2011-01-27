@@ -26,7 +26,10 @@ We use the following three build shell scripts in sequence to run the tests:
 h5. Setup environment
 
 <pre><code>
-ruby config/setup.rb -y -q -t rites
+export PATH=$PATH:/sbin
+ruby config/setup.rb -n Rails Portal -D hudson_rites -u hudson -p <password> -t xproject -y -q -f
+
+# replace the database.yml because the correct names need to be special-cased
 echo '
 development:
   encoding: utf8
@@ -70,6 +73,7 @@ cucumber:
 #  $ gem cleanup
 #
 RAILS_ENV=test rake gems:install
+
 </pre></code>
 
 h5. Running Cucumber and RSpec tests
