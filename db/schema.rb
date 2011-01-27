@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110111211551) do
+ActiveRecord::Schema.define(:version => 20110126161409) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -581,6 +581,7 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                         :default => 0
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -1589,6 +1590,7 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                      :default => true
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1794,6 +1796,7 @@ ActiveRecord::Schema.define(:version => 20110111211551) do
     t.string   "publication_status", :default => "draft"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|

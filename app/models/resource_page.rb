@@ -38,6 +38,8 @@ class ResourcePage < ActiveRecord::Base
     { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ?", name,name] }
   }
   
+  named_scope :ordered_by, lambda { |order| { :order => order } }
+  
   accepts_nested_attributes_for :attached_files
   
   self.extend SearchableModel
@@ -70,6 +72,10 @@ class ResourcePage < ActiveRecord::Base
       if options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0)
         portal_clazz =  Portal::Clazz.find(options[:portal_clazz_id].to_i)
         resource_pages = resource_pages - portal_clazz.offerings.map { |o| o.runnable }
+      end
+
+      unless options[:sort_order].blank?
+        resource_pages = resource_pages.ordered_by(options[:sort_order])
       end
 
       if options[:paginate]

@@ -6,12 +6,16 @@ class ResourcePagesController < ApplicationController
   def index
     @include_drafts = param_find(:include_drafts, true)
     @name = param_find(:name)
+    @sort_order = param_find(:sort_order, true)
+    @include_usage_count = param_find(:include_usage_count, true)
+    
     
     @resource_pages = ResourcePage.search_list({
       :name => @name, 
       :user => current_user,
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
+      :sort_order => @sort_order,
       :paginate => true, 
       :page => params[:page]
     })
@@ -20,6 +24,19 @@ class ResourcePagesController < ApplicationController
       render :partial => 'runnable_list', :locals => { :resource_pages => @resource_pages, :paginated_objects => @resource_pages }
       return
     end
+  end
+  
+  def printable_index    
+    @resource_pages = ResourcePage.search_list({
+      :name => param_find(:name), 
+      :user => current_user,
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => param_find(:include_drafts, true), 
+      :sort_order => param_find(:sort_order, true),
+      :paginate => false
+    })
+    
+    render :layout => false
   end
 
   def show
