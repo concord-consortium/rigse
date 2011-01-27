@@ -35,7 +35,10 @@ class Portal::School < ActiveRecord::Base
   #   student.schools
   #
   
-  has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/school_memberships"
+  # TODO: We should probably remove has_many_polymorphs all together.
+  #  removed for students because it was interfering with manually written "schools" methods
+  #has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/school_memberships"
+  has_many_polymorphs :members, :from => [:"portal/teachers"], :through => :"portal/school_memberships"
 
   named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
   named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
