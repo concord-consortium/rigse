@@ -782,13 +782,14 @@ ActiveRecord::Schema.define(:version => 20110126161409) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                  :default => false
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1684,11 +1685,12 @@ ActiveRecord::Schema.define(:version => 20110126161409) do
   add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
 
   create_table "portal_teachers", :force => true do |t|
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "domain_id"
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
