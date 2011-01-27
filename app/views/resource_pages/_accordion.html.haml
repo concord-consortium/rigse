@@ -1,5 +1,13 @@
 - link_text = link_button("preview.png", resource_page, :title => "View the #{ResourcePage.display_name}: '#{resource_page.name}'.")
 - link_text += resource_page.display_name
+- if local_assigns[:offering]
+  - link_text += " | "
+  - if offering.active?
+    - link_text += activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
+  - else
+    - link_text += activation_toggle_link_for(offering, 'activate', 'Activate')
+
+
 - accordion_options = {}
 - if @include_usage_count
   - accordion_options[:usage_count] = "assigned #{pluralize(resource_page.offerings_count, "time")}"

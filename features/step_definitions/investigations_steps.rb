@@ -44,15 +44,17 @@ When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |inves
 end
 
 
-When /^I follow "(.*)" on the investigation "(.*)" from the class "(.*)"$/ do |button_name, investigation_name, class_name|
+When /^I follow "(.*)" on the (.*) "(.*)" from the class "(.*)"$/ do |button_name, model_name, obj_name, class_name|
+  the_class = model_name.gsub(/\s/, '_').singularize.classify.constantize
   clazz = Portal::Clazz.find_by_name(class_name)
-  investigation = Investigation.find_by_name(investigation_name)
+  obj = the_class.find_by_name(obj_name)
   offering = Portal::Offering.first(:conditions => {
-    :runnable_type => investigation.class.name,
-    :runnable_id => investigation.id,
+    :runnable_type => obj.class.name,
+    :runnable_id => obj.id,
     :clazz_id => clazz.id
   })
-  selector = "#_portal__offering_#{offering.id}"
+  
+  selector = "#portal__offering_#{offering.id}"
   with_scope(selector) do
     click_link(button_name)
   end
