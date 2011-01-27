@@ -78,7 +78,6 @@ class Reports::Detail < Reports::Excel
       end
     }
 
-    # sort by username
     iterate_with_status(students) do |student|
       learners = student.learners
       learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
