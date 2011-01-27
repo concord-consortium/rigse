@@ -28,15 +28,6 @@
       
     
   %body
-    #launch_warning{:class=>"alert",:style=>"display: none;"}
-      .padded_content
-        = render :partial => "home/java_launch_info"
-        %p
-          %a
-            [Click anywhere to close this window.]
-        %p
-          Don't show again:
-          %input{:type=>'checkbox', :onclick=>"createCookie('launch_warning','true');"}
             
     #note{:style=>"display: none;"}
     #waiter{:style=>"display: none;"}

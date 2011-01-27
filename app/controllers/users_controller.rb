@@ -1,9 +1,22 @@
 class UsersController < ApplicationController
   # skip_before_filter :verify_authenticity_token, :only => :create
-  
-  access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
-  access_rule 'admin || manager', :only => :index
-  
+  #access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
+  #access_rule 'admin || manager || researcher', :only => [:index, :account_report]
+  include RestrictedController
+  before_filter :manager, 
+    :only => [
+      :show,
+      :new,
+      :edit,
+      :update,
+      :destroy
+    ]
+  before_filter :manager_or_researcher,
+    :only => [
+      :index,
+      :account_report
+    ]
+
   def index
     if params[:mine_only]
       @users = User.search(params[:search], params[:page], self.current_user)
@@ -218,7 +231,14 @@ class UsersController < ApplicationController
       render(:nothing => true) 
     end
   end
-  
+
+  def account_report
+    sio = StringIO.new
+    rep = Reports::Account.new({:verbose => false})
+    rep.run_report(sio)
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
+  end
+
   protected
   
   def create_new_user(attributes)

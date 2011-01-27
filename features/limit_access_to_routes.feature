@@ -103,4 +103,25 @@ In NO case should the system allow:
       | /portal/nces06_districts                   | 
       | /portal/nces06_schools                     | 
       | /portal/offerings                          | 
-      | /portal/teachers                           | 
+ 
+  Scenario Outline: Anonymous user can't access user listing routes:
+    Given I am not logged in
+    When I visit the route <route>
+    Then I should be on my home page
+
+    Examples:
+      | route                                      |
+      | /users                                     |
+      
+      
+  Scenario Outline: Admin user can accesss user listing routes
+    Given the following users exist:
+      | login        | password            | roles                |
+      | admin_login  | admin_password      | admin, member, author|
+    And I login with username: admin_login password: admin_password
+    When I visit the route <route>
+    Then I should be on <route>
+    
+    Examples:
+      | route                                      | 
+      | /users                                     | 

@@ -17,6 +17,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
+  has_many :data_tables, :class_name => "Embeddable::DataTable"
+
   # validates_associated :probe_type
   
   validates_presence_of :probe_type_id
@@ -96,7 +98,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
   
   def self.by_scope(scope)
-    if scope && scope.class != Embeddable::DataCollector
+    if scope && scope.class != Embeddable::DataCollector && scope.respond_to?(:activity)
       scope.activity.investigation.data_collectors
     else
       []

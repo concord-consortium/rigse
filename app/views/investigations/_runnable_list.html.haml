@@ -9,6 +9,9 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
+        - if current_user.has_role?("researcher")
+          %li.menu=link_to 'Usage Report', investigation_usage_report_url
+          %li.menu=link_to 'Details Report', investigation_details_report_url
         -if current_user.has_role? "author"
           %li= link_to "create #{top_level_container_name}", new_investigation_path
 
@@ -27,6 +30,9 @@
           %ul.menu
             -# %li= preview_button_for(investigation)
             -# %li= teacher_preview_button_for(investigation)
+            - if (current_user.has_role?("researcher"))
+              %li.menu=link_to 'Usage Report', usage_report_investigation_url(investigation)
+              %li.menu=link_to 'Details Report', details_report_investigation_url(investigation)
             - if (investigation.duplicateable?(current_user))
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))

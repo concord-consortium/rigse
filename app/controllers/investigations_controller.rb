@@ -7,12 +7,15 @@ class InvestigationsController < AuthoringController
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
 
+  include RestrictedController
+  #access_rule 'researcher', :only => [:usage_report, :details_report]
   prawnto :prawn=>{ :page_layout=>:landscape }
 
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :manager_or_researcher, :only => [:usage_report, :details_report]
+  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -413,5 +416,34 @@ class InvestigationsController < AuthoringController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end
-  
+
+  def usage_report
+    sio = get_report(:usage)
+    filename = @investigation.id.nil? ? "investigations-published-usage.xls" : "investigation-#{@investigation.id}-usage.xls"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  def details_report
+    sio = get_report(:detail)
+    filename = @investigation.id.nil? ? "investigations-published-details.xls" : "investigation-#{@investigation.id}-details.xls"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  private
+
+  def get_report(type)
+    sio = StringIO.new
+    opts = {:verbose => false}
+    opts[:investigations] = [@investigation] unless @investigation.id.nil?
+    rep = nil
+    case type
+    when :detail
+      rep = Reports::Detail.new(opts)
+    when :usage
+      rep = Reports::Usage.new(opts)
+    end
+    rep.run_report(sio) if rep
+    return sio
+  end
+
 end
