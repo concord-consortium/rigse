@@ -519,6 +519,15 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:fixup:reset_activity_positions --trace"
   end
 
+  # seb: 20110126
+  # See commit: Add "offerings_count" cache counter to runnables
+  # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
+  desc "Recalculate the 'offerings_count' field for runnable objects"
+  task :reset_offering_counts, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
+  end
+
 end
 
 

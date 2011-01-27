@@ -25,7 +25,6 @@ development: &id003
   :use_gse: false
   :enable_default_users: true
   :admin_email: aunger@concord.org
-  :net_logo_package_name: otrunknl41
   :tiny_mce:
     :buttons1:
     - bold,italic,underline
