@@ -52,3 +52,18 @@ When /^I assign the resource page "([^"]*)" to the class "([^"]*)"$/ do |page_na
     :clazz => clazz
   })
 end
+
+Then /^"([^"]*)" should have href like "([^"]*)"$/ do |link, href|
+  a = page.find("a##{link}")
+  a[:href].should =~ /#{href}/i
+end
+
+Then /^the link to "([^"]*)" should have a target "([^"]*)"$/ do |link, target|
+  a = page.find("a##{link}")
+  a[:target].should == target
+end
+
+Then /^"([^"]*)" should have href like "([^"]*)" with params "([^"]*)"$/ do |link, href, params|
+  a = page.find("a##{link}")
+  a[:href].should =~ /#{href}.*#{params}/i
+end
