@@ -31,7 +31,7 @@ class Reports::Detail < Reports::Excel
         reportables = a.reportable_elements.map {|re| re[:embeddable]}
         first = true
         reportables.each do |r|
-          answer_defs << Reports::ColumnDefinition.new(:title => (r.respond_to?(:prompt) ? r.prompt : r.name), :width => 25, :left_border => first)
+          answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => first)
           first = false
         end
       end

@@ -1,5 +1,6 @@
 class Reports::Excel
   require 'spreadsheet'
+  require 'nokogiri' # text sanitization ...
 
   def initialize(opts = {})
     @verbose = !!opts[:verbose]
@@ -43,6 +44,10 @@ class Reports::Excel
 
   def reset_status
     @count = 0
+  end
+
+  def clean_text(html)
+    return Nokogiri::HTML(html).inner_text
   end
 
 end
