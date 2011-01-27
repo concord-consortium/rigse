@@ -38,7 +38,6 @@ development: &non_production_settings
     :server: concord
     :family: all-otrunk-snapshot
     :version: snapshot
-  :net_logo_package_name: otrunknl4
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:
@@ -79,7 +78,6 @@ staging:
     :server: concord
     :family: all-otrunk-snapshot
     :version: snapshot
-  :net_logo_package_name: otrunknl4
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:
@@ -116,7 +114,6 @@ production:
     :server: concord
     :family: all-otrunk-snapshot
     :version: snapshot
-  :net_logo_package_name: otrunknl4
   :dont_sanitize_xhtml: true
   :tiny_mce:
     :buttons1:
