@@ -20,11 +20,6 @@ class Reports::Detail < Reports::Excel
     ]
   end
 
-  def school_name_for(student)
-    name = student.school ? (student.school.name || "School #{student.school.name}") : "No School"
-    return name
-  end
-
   def run_report(stream_or_path)
     book = Spreadsheet::Workbook.new
 

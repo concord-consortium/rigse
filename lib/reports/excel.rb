@@ -8,6 +8,11 @@ class Reports::Excel
     STDOUT.sync = true if @verbose
   end
 
+  def school_name_for(student)
+    name = student.school ? (student.school.name || "School #{student.school.name}") : "No School"
+    return name
+  end
+
   protected
 
   def iterate_with_status(objects, &block)
