@@ -60,18 +60,27 @@ h4. Setting up a Hudson CI project
 
 h4. GIT
 
+In the example below we use the xproject theme and also as the name of the directory and 
+the prefix of the names for the databases that will be created in mysql.
+
 <pre><code>
   # If you are a committer in this repo:
-  git clone git@github.com:stepheneb/rigse.git rites
+  git clone git@github.com:stepheneb/rigse.git xproject
 
   # else
-  git clone git://github.com/stepheneb/rigse.git rites
+  git clone git://github.com/stepheneb/rigse.git xproject
 
-  cd rites
+  cd xproject
 
   # follow instructions for installing necessary gem prerequisites
   # until config/setup.rb completes successfully
-  ruby config/setup.rb
+  
+  ruby config/setup.rb -n Cross Project Portal -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
+
+  # The options -y -q -f to setup mean: 
+  #   answer 'yes' to accept default values
+  #   use 'quieter' console output
+  #   force updates of the existing settings.yml and databse.yml if they exist
 
   # finish installing necessary gems for rails application
   rake gems:install
@@ -85,7 +94,7 @@ h4. GIT
 
   # save a copy of the development database to make subsequent clean starts much quicker
   # Saves database to: db/development_data.sql
-  # can be reloaded with: rake db:load
+  # can be reloaded later with: rake db:load
   rake db:dump
   
   # start server
