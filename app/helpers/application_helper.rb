@@ -182,10 +182,11 @@ module ApplicationHelper
     container = top_level_container_name.pluralize
     container_sym = top_level_container_name.pluralize.to_sym
     container_class = top_level_container_name.classify.constantize
+    hide_print = locals.delete(:hide_print) || false
     if container_class.respond_to?(:search_list)
-      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.search_list(locals) }
+      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.search_list(locals), :hide_print => hide_print }
     else
-      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.find(:all) }
+      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.find(:all), :hide_print => hide_print }
     end
   end
 

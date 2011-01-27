@@ -7,7 +7,8 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        %li= link_to "printable view", printable_index_resource_pages_path(resource_page_printable_index_params)
+        - unless local_assigns[:hide_print]
+          %li= link_to "printable view", printable_index_resource_pages_path(resource_page_printable_index_params)
         - if current_user.has_role?("author", "teacher")
           %li= link_to "create #{ResourcePage.display_name.downcase}", new_resource_page_path
 
