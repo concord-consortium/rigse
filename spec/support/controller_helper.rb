@@ -28,7 +28,7 @@ def generate_default_project_and_jnlps_with_factories
     if version == "snapshot" 
       @versioned_jnlp_url = @maven_jnlp_family.snapshot_jnlp_url
     else
-      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(version)
     end
     @versioned_jnlp = @versioned_jnlp_url.versioned_jnlp
   end
