@@ -1,7 +1,7 @@
 module OtmlHelper
 
   def net_logo_package_name
-    return APP_CONFIG[:net_logo_package_name] || "otrunknl4"
+    @jnlp_adaptor.net_logo_package_name
   end
   
   def ot_menu_display_name(object)
