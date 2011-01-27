@@ -259,7 +259,13 @@ h3. Running the feature tests with cucumber
 <pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
 
 *Running all the feature tests:*
-<pre><code>  rake:features</code></pre>  
+<pre><code>  rake cucumber</code></pre>  
+
+*Running all the feature tests using the ci_reporter gem that's used on the hudson CI system:*
+<pre><code>  rake hudson:cucumber</code></pre>  
+
+*Running a single feature:*
+<pre><code>  rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature</code></pre>  
 
 h2. Understanding the Codebase
 
