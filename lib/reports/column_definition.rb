@@ -1,7 +1,7 @@
 class Reports::ColumnDefinition
   require 'spreadsheet'
 
-  attr_accessor :title, :width, :left_border, :right_border, :top_border, :bottom_border
+  attr_accessor :title, :width, :left_border, :right_border, :top_border, :bottom_border, :col_index
 
   def initialize(opts = {})
     @title = opts[:title] || 'Title'
@@ -10,6 +10,8 @@ class Reports::ColumnDefinition
     @top_border = !!opts[:top_border]
     @right_border = !!opts[:right_border]
     @bottom_border = !!opts[:bottom_border]
+    @col_index = opts[:col_index]
+    @heading_row = opts[:heading_row] || 1 # allow for one additional row above
   end
 
   def write_header(sheet)
@@ -17,10 +19,10 @@ class Reports::ColumnDefinition
     @title_format = Spreadsheet::Format.new :weight => :bold, :left => @left_border, :right => @right_border, :top => @top_border, :bottom => @bottom_border
     @column_format = Spreadsheet::Format.new :left => @left_border, :right => @right_border, :top => @top_border, :bottom => @bottom_border
 
-    col_idx = sheet.column_count
-    sheet[0, col_idx] = @title
-    sheet.row(0).set_format(col_idx, @title_format)
-    sheet.column(col_idx).width = @width
-    sheet.column(col_idx).default_format = @column_format
+    @col_index ||= sheet.column_count  # allow to manually set the column index
+    sheet[@heading_row, @col_index] = @title
+    sheet.row(@heading_row).set_format(@col_index, @title_format)
+    sheet.column(@col_index).width = @width
+    sheet.column(@col_index).default_format = @column_format
   end
 end
