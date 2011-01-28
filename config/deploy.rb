@@ -143,13 +143,20 @@ namespace :db do
     upload("config/initializers/site_keys.rb", "#{deploy_to}/shared/config/initializers/site_keys.rb", :via => :sftp)
   end
 
-end
-
-namespace :paperclip do 
   desc "Pulls Paperclip images"
-  task :fetch_attachments, :roles => :web do 
-    download "#{shared_path}/system/attachments", "public/system/attachments/", :via => :sftp, :recursive => true
+  task :fetch_remote_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync --recursive --rsh=ssh --compress --human-readable --progress #{domain}:#{remote_dir} #{local_dir}"
   end
+  
+  desc "Pulls Paperclip images"
+  task :push_local_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync --recursive --rsh=ssh --compress --human-readable --progress #{local_dir} #{domain}:#{remote_dir}"
+  end
+
 end
 
 namespace :deploy do
