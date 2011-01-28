@@ -24,9 +24,11 @@ Feature: Resource Page index pages can be printed
     Then I should see "Newest"
     And I should see "Medium"
     And I should see "Oldest"
-    When I follow "printable view"
-    Then I should be on the resource pages printable index page
-    And I should see "Resources"
+    And I should see "printable view"
+    And "printable-view" should have href like "printable_index"
+    And the link to "printable-view" should have a target "_blank"
+    When I am on the resource pages printable index page
+    Then I should see "Resources"
     And I should see "Usage Count"
     And I should see "Newest"
     And I should see "Medium"
@@ -38,9 +40,11 @@ Feature: Resource Page index pages can be printed
     Then I should see "Newest"
     And I should not see "Medium"
     And I should not see "Oldest"
-    When I follow "printable view"
-    Then I should be on the resource pages printable index page
-    And I should see "Resources"
+    And I should see "printable view"
+    And "printable-view" should have href like "printable_index" with params "name=New"
+    And the link to "printable-view" should have a target "_blank"
+    When I am on the resource pages printable index page
+    Then I should see "Resources"
     And I should see "Usage Count"
     And I should see "Newest"
     And I should not see "Medium"

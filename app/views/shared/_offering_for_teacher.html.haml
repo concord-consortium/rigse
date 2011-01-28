@@ -17,7 +17,7 @@
         %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
   %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}" }
     - if offering.resource_page?
-      = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable }
+      = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
     - else  
       = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>"show individual reports"}) do
         %div{:id => dom_id_for(offering, :details), :class => "tiny", :style => 'clear: both;'}

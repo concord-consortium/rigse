@@ -145,6 +145,13 @@ namespace :db do
 
 end
 
+namespace :paperclip do 
+  desc "Pulls Paperclip images"
+  task :fetch_attachments, :roles => :web do 
+    download "#{shared_path}/system/attachments", "public/system/attachments/", :via => :sftp, :recursive => true
+  end
+end
+
 namespace :deploy do
   #############################################################
   #  Passenger
