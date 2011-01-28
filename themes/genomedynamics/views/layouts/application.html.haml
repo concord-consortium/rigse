@@ -14,7 +14,7 @@
     / see the yaml file too: config/asset_packages.yml
     = stylesheet_link_merged( (APP_CONFIG[:theme]||'default').to_sym, {'media' => 'all'})
     / experiment: ovveride stylesheet
-    = stylesheet_link_tag("/resources/override.css")
+    -#= stylesheet_link_tag("/resources/override.css")
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
@@ -57,10 +57,6 @@
         .left_content
           #logo 
             =theme_image_tag("jackson-logo.gif", :alt => "Jackson Labs logo")
-          #has_nav
-            = link_to 'HAS Home', "http://has.concord.org" 
-            &#8674; 
-            HAS Portal
         .right_content
           .padded_content_right
             Welcome
@@ -88,7 +84,7 @@
           - if current_user.has_role?('admin', 'manager', 'researcher', 'author')
             %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
           - elsif current_user.has_role?('guest')
-            %li.trail=link_to("Preview #{top_level_container_name.humanize.pluralize}", investigation_preview_list_path)
+            %li.trail=link_to("#{top_level_container_name.humanize.pluralize}", investigation_preview_list_path)
               
           %ul.menu_h_right
 
