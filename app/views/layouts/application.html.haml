@@ -69,11 +69,12 @@
         != "&nbsp;"
         %ul.menu_h
           / offer people a way to pop-out of iframe:
-          %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          - if current_user.has_role?('admin', 'manager', 'teacher', 'researcher', 'author', 'member')
+          - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
             %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
+          - if current_user.has_role?('admin') || current_user.portal_teacher
+            %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
         %ul.menu_h_right
 
           - if current_user.has_role?('admin', 'manager')
@@ -119,25 +120,3 @@
       #under_footer
         - if current_user.has_role?('admin')
           = display_system_info
-          
-      / once somebody is logged in,they should open outside the iframe.
-      - unless current_user.anonymous?
-        :javascript 
-          document.observe("dom:loaded", function() {
-            // if we are in an iframe, pop-out.
-            if (top!=self) {
-              // Option #1: Redirect the browser to a new location, taking
-              // the user away from whatever site (EG RIEPS) is containing us.
-              top.location.href=location.href;
-              // Option #2: Open a new window. Requires user education.
-              // Pop-Up blockers on all major browsers will prevent this:
-              // window.open(location.href);
-            }
-          });
-
-      :javascript
-        document.observe("dom:loaded", function() {
-          if (top!=self) {
-            $('pop_out_link').show();
-          }
-        });
