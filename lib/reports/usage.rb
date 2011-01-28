@@ -1,5 +1,4 @@
 class Reports::Usage < Reports::Excel
-
   def initialize(opts = {})
     super(opts)
 
@@ -67,7 +66,7 @@ class Reports::Usage < Reports::Excel
         teachers    = clazz.teachers.compact.uniq.map{|t| t.name}.join(",")
         learners    = student.learners
         learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
-        learners.reject! { |l| l.offering.clazz.id != clazz.id }
+        learners.reject! { |l| ever_offered_for(clazz).include? l.offering}
         learners.each do |l|
           inv = l.offering.runnable
           next unless @investigations.include?(inv)
@@ -80,10 +79,12 @@ class Reports::Usage < Reports::Excel
           row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
           actually_wrote_data = true
         end
-        next unless actually_wrote_data
-        # stud.id, class, school, user.id, username, student name, teachers
-        row[0,7] = [student_id, class_name, school_name, user.id, user.login, student_name, teachers]
-
+        if actually_wrote_data
+          # stud.id, class, school, user.id, username, student name, teachers
+          row[0,7] = [student_id, class_name, school_name, user.id, user.login, student_name, teachers]
+        else
+          row[0,8] = [student_id, class_name, school_name, user.id, user.login, student_name, teachers, 0, 0, 'never']
+        end
       end
     end
 
