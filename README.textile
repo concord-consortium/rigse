@@ -1,4 +1,4 @@
-h1. RITES Investigations Portal and Authoring System
+h1. CC Rails Portal Activity Authoring, Deployment, and Reporting System
 
 h2. Setup
 
@@ -60,18 +60,27 @@ h4. Setting up a Hudson CI project
 
 h4. GIT
 
+In the example below we use the xproject theme and also as the name of the directory and 
+the prefix of the names for the databases that will be created in mysql.
+
 <pre><code>
   # If you are a committer in this repo:
-  git clone git@github.com:stepheneb/rigse.git rites
+  git clone git@github.com:stepheneb/rigse.git xproject
 
   # else
-  git clone git://github.com/stepheneb/rigse.git rites
+  git clone git://github.com/stepheneb/rigse.git xproject
 
-  cd rites
+  cd xproject
 
   # follow instructions for installing necessary gem prerequisites
   # until config/setup.rb completes successfully
-  ruby config/setup.rb
+  
+  ruby config/setup.rb -n Cross Project Portal -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
+
+  # The options -y -q -f to setup mean: 
+  #   answer 'yes' to accept default values
+  #   use 'quieter' console output
+  #   force updates of the existing settings.yml and databse.yml if they exist
 
   # finish installing necessary gems for rails application
   rake gems:install
@@ -85,7 +94,7 @@ h4. GIT
 
   # save a copy of the development database to make subsequent clean starts much quicker
   # Saves database to: db/development_data.sql
-  # can be reloaded with: rake db:load
+  # can be reloaded later with: rake db:load
   rake db:dump
   
   # start server
@@ -128,10 +137,12 @@ _there's a bunch more that needs to go here_
 
 h2. Copying the production database to a development environment
 
-If you have ssh access to the RITES production server you can get a copy of the production database on
+If you have ssh access to a portal instance running on a server you can get a copy of the database on
 your local development instance with the following steps:
+
+In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject_dev*.
 <pre><code>
-    cap production db:fetch_remote_db
+    cap <stage> db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
 </code></pre>
 
@@ -145,9 +156,9 @@ If the codebase on your development system has moved forward you may need to run
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>  cap production db:copy_remote_site_keys</code></pre>
+<pre><code>  cap <stage> db:copy_remote_site_keys</code></pre>
 
-Recreating a new RITES application from scratch from an existing application.
+Recreating a new portal instance from scratch from an existing application.
 <pre><code>
     rake db:drop:all
     git clean -fXd
@@ -259,7 +270,13 @@ h3. Running the feature tests with cucumber
 <pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
 
 *Running all the feature tests:*
-<pre><code>  rake:features</code></pre>  
+<pre><code>  rake cucumber</code></pre>  
+
+*Running all the feature tests using the ci_reporter gem that's used on the hudson CI system:*
+<pre><code>  rake hudson:cucumber</code></pre>  
+
+*Running a single feature:*
+<pre><code>  rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature</code></pre>  
 
 h2. Understanding the Codebase
 
@@ -297,7 +314,7 @@ h3. Some video walk-throughs
 * "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
 * "PageElement View partials":http://screencast.com/t/800TVxOC
 * "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
-* "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
+* "Javascript use in Portal":http://screencast.com/t/z7Vkt32iTp
 
 ---
 
@@ -354,9 +371,9 @@ Brief introduction to the technologies generally, and how we use them specifical
 
 ---
 
-h3. Javascript use in Rites
+h3. Javascript use in Portal
 
-screencast: "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
+screencast: "Javascript use in Portal":http://screencast.com/t/z7Vkt32iTp
 
 Javascript librararies we are using, and what things we have written by ourselves;
 Stuff we did:
@@ -434,44 +451,60 @@ h3. Miscellaneous recipes
 *Set the gse_key field for existing GradeSpanExpectations*
 * <code>cap convert:set_gse_keys</code>
 
-h2. Updating the RITES staging server.
+h2. Updating a staging server.
 
-Once the master branch has been deployed to the dev site, tested
+Once a development branch has been deployed to a development server, tested
 and found reliable enough to deploy to staging here's how to do it.
+
+Our convention is to create dev, staging, and production branches in the git repository following that use the same name.
+
+For example the _xproject_ family have the following capistrano stages and branches in teh git repository:
+
+* _xproject_dev__
+* _xproject_staging__
+* _xproject_production__
+
+In the code below _<stage>_ I will assume that we are using the _xproject_ series of stages and branches.
 
 If you don't already have a local branch of staging
 <pre><code>
-  git branch --track staging origin/staging
+  git branch --track xproject_staging origin/xproject_staging
 </code></pre>
 
 
-Switch to the staging branch and merge from master
+Switch to the staging branch and merge from xproject_dev
 <pre><code>    
-  git co staging
-  git merge master
+  git co xproject_staging
+  git merge xproject_dev
 </code></pre>
 
 Push your copy of the staging branch to the gihub repository:
-<pre><code>  git push origin staging</code></pre>
+<pre><code>  git push origin xproject_staging</code></pre>
 
 Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
 download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
-<pre><code>  cap production db:fetch_remote_db</code></pre>
+<pre><code>  cap xproject_production db:fetch_remote_db</code></pre>
 
-Push the production database from the local <code>db/production_data.sql</code> to the staging server, the import
+Push the production database from the local <code>db/production_data.sql</code> to the staging server, then import
 the data into the database on staging, then cleanup.
-<pre><code>  cap staging db:push_remote_db</code></pre>
+<pre><code>  cap xproject_staging db:push_remote_db</code></pre>
 
 Run any migrations on the staging server:
-<pre><code>  cap staging deploy:migrate</code></pre>
+<pre><code>  cap xproject_staging deploy:migrate</code></pre>
+
+There may be rake tasks that need to be run to update or fix data in the database.
+
+These should have corresponding capistrano tasks.
+
+Here's an older example:
 
 If the ITSI importers have been updated and you want to run them again:
 <pre><code>    
-  cap staging import:erase_and_import_itsi_activities
-  cap staging import:erase_and_import_ccp_itsi_units
+  cap xproject_staging import:erase_and_import_itsi_activities
+  cap xproject_staging import:erase_and_import_ccp_itsi_units
 </code></pre>
 
-Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
+Test the staging server: "http://xproject.staging.concord.org/":http://xproject.staging.concord.org/
 
 If the authors confirm that there are no blockers then let people know when the
 update will take place and perform these tasks on the production server.
@@ -640,7 +673,7 @@ h2. CSS
 
 h3. Asset Packager
 
-RITES Authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
+Portal authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
 
 cap deploy will trigger the asset_packager to run.
 you can also run locally by hand: rake asset:packager:build_all
