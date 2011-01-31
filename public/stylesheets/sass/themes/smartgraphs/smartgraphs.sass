@@ -19,7 +19,7 @@ body
   :padding 0px
   +main_font
   :background
-    :color = !itsi_brown
+    :color #fee9aa
   :margin 10px 
     :bottom 0px
   :background-position right top
@@ -74,10 +74,13 @@ pre
   :line-height 1.1em
   
 .wrapper
-  :border 2px solid
   :background-color white
-  :-moz-border-radius .5em
-  :-webkit-border-radius .5em
+  :border-radius-topright .5em
+  :border-radius-topleft .5em
+  :-moz-border-radius-topright .5em
+  :-webkit-border-top-right-radius .5em
+  :-moz-border-radius-topleft .5em
+  :-webkit-border-top-left-radius .5em
 
   
 #wrapper
@@ -89,33 +92,38 @@ pre
   +column(24,true)
   :padding 0px
   :margin 0px
-  :height auto
-  :background-color white
-  :-moz-border-radius-topright .5em
-  :-webkit-border-top-right-radius .5em
-  :-moz-border-radius-topleft .5em
-  :-webkit-border-top-left-radius .5em
-  :color = !black
+  :height 173px
+  :background url(../../../images/banner.png) no-repeat
+  :position relative
+  :color = white
 
   a
-    :color = !itsi_green
+    :color = !cc_light_blue
     :background-color transparent
     :font-weight bold
   a:hover
-    :color = !itsi_brown
-    :background-color white
+    :color = !cc_light_orange
+    :background-color transparent
   .left_content
     +column(24,true)
     :text-align left
     :float none
     :clear none
+    h1
+      :text-indent -999em
     img
       :float left
       :clear none
 
   .right_content
     +column(24,true)
+    :background transparent url(../../../images/bg-right-content.png) repeat-y right top
+    :bottom -5px
+    :padding 7px
+    :position absolute
+    :right 0
     :text-align right
+    :width 100%
     
 .nav_menu
   :display block
@@ -129,7 +137,6 @@ pre
     :padding-top 1em
   li
     :list-style-type none
-
     :padding-top 0.5em
     a
       :display block
@@ -184,20 +191,25 @@ pre
   +content_area_colors
   :min-height 600px
   :height auto !important
-
+  a
+    :color #3a878b
 
 #footer
   +column(24,true)
   +bottom_nav_colors
-  :padding 0.5em 0px
-  :margin 0em
-  :-moz-border-radius-bottomright .5em
-  :-webkit-border-bottom-right-radius .5em
-  :-moz-border-radius-bottomleft .5em
-  :-webkit-border-bottom-left-radius .5em
+  :background url(../../../images/cc-footer.png) no-repeat left bottom
+  :height 200px
+  :padding 0.5em 0
+  :position relative
+  :margin 0 -10px
+  :width 970px
   
   #footer_left
     +column(12)
+    :bottom 15px !important
+    :left 600px !important
+    :position absolute !important
+    
   #footer_right
     :text-align right
     +column(12,true)
