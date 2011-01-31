@@ -854,13 +854,7 @@ module ApplicationHelper
     options.update(opts)
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(learner, options)
-          haml_tag :span, :class => 'tiny' do
-            haml_concat sessions_learner_stat(learner)
-          end
-        end
-        haml_tag :div, :class => 'action_menu_header_right' do
+        haml_tag :div, :class => 'action_menu_activity_options' do
           haml_concat report_link_for(learner, 'report', 'Report')
           # haml_concat " | "
           # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
@@ -869,6 +863,12 @@ module ApplicationHelper
           if USING_JNLPS && current_user.has_role?("admin")
             haml_concat " | "
             haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+          end
+        end
+        haml_tag :div, :class => 'action_menu_activity_title' do
+          haml_concat title_for_component(learner, options)
+          haml_tag :span, :class => 'tiny' do
+            haml_concat sessions_learner_stat(learner)
           end
         end
       end
@@ -884,12 +884,8 @@ module ApplicationHelper
     }
     options.update(opts)
     capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(offering, options)
-          # haml_concat "Active students: #{offering.learners.length}"
-        end
-        haml_tag :div, :class => 'action_menu_header_right' do
+      haml_tag :div, :class => 'action_menu_activity' do
+        haml_tag :div, :class => 'action_menu_activity_options' do
           haml_concat options[:print_link]
           haml_concat " | "
           haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
@@ -907,6 +903,10 @@ module ApplicationHelper
           # haml_concat report_link_for(offering, 'open_response_report','OR Report')
           # haml_concat " | "
           # haml_concat report_link_for(offering, 'multiple_choice_report','MC Report')
+        end
+        haml_tag :div, :class => 'action_menu_activity_title' do
+          haml_concat title_for_component(offering, options)
+          # haml_concat "Active students: #{offering.learners.length}"
         end
       end
     end
