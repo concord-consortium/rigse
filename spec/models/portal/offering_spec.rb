@@ -36,6 +36,29 @@ describe Portal::Offering do
       @offering.activate!
       @offering.active?.should be_true
     end
+
+    describe "an offering with learners" do
+      before (:each) do
+        # TODO: Why is delete and destroy being called on this association?  It shouldn't be
+        @learner = mock_model(Portal::Learner, :valid? => true,:[]= => true, :save => true, :destroy=> false, :delete=>false)
+        @offering = Factory.create(:portal_offering, 
+                                   :runnable => @investigation,
+                                   :learners => [@learner])
+      end
+
+      it "can not be destroyed" do
+        @learner.destroy.should be false
+        lambda { @learner.destroy!}.should raise_exception()
+      end
+
+      it "can not be deleted" do
+        @learner.delete.should be false
+        lambda { @learner.delete!}.should raise_exception()
+      end
+
+    end
+
+
   end
   
 end
