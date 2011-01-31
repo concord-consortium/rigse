@@ -75,6 +75,12 @@ Rails::Initializer.run do |config|
   config.gem "net-sftp", :version => '=2.0.2', :lib => "net/sftp"
   config.gem "newrelic_rpm" 
   config.gem "nokogiri"
+  config.gem 'paperclip', :source => 'http://rubygems.org'
+  config.gem 'maruku', :version => '0.6.0'
+  
+  # This is part of the setup necessary for using newrelics reporting gem
+  # config.gem "newrelic_rpm" 
+
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
   # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'

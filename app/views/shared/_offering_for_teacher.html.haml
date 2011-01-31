@@ -15,13 +15,16 @@
       %ul
         %li= preview_link_for(offering.runnable, nil, :link_text => "preview as a student...")
         %li= run_link_for(offering.runnable, nil, :teacher_mode => true, :link_text => "run in teacher mode")
-  %div{ :id => dom_id_for(offering), :class => 'offering' }
-    = accordion_for(offering, menu_for_offering(offering),nil, {:show_hide_text=>"show individual reports"}) do  
-      %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
-        %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
-        %span.author= "Author: #{offering.runnable.user.name}"
-        %p= "Description: #{offering.runnable.description}"
-        %p= updated_time_text(offering.runnable)
-        %p= pluralize(offering.learners.length, "student response")
-        = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
+  %div{ :id => dom_id_for(offering), :class => "offering #{"no-delete" unless offering.can_be_deleted?}" }
+    - if offering.resource_page?
+      = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
+    - else  
+      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>"show individual reports"}) do
+        %div{:id => dom_id_for(offering, :details), :class => "tiny", :style => 'clear: both;'}
+          %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+          %span.author= "Author: #{offering.runnable.user.name}"
+          %p= "Description: #{offering.runnable.description}"
+          %p= updated_time_text(offering.runnable)
+          %p= pluralize(offering.learners.length, "student response")
+          = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
   = draggable_element dom_id_for(offering), :revert => true

@@ -1,0 +1,10 @@
+.attached_file
+	%p
+		= label_tag "attached_files[][name]", "Name"
+		%br/
+		= text_field_tag "attached_files[][name]"
+
+	%p
+		= label_tag "attached_files[][attachment]", "File"
+		%br/
+		= file_field_tag "attached_files[][attachment]"

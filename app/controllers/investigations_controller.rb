@@ -1,5 +1,4 @@
 class InvestigationsController < AuthoringController
-  
   # This doesn't work, but the technique is described here:
   # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
   # caches_page :show if => Proc.new { |c| c.request.format == :otml }
@@ -101,22 +100,34 @@ class InvestigationsController < AuthoringController
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    @investigations = Investigation.search_list({
+    
+    @sort_order = param_find(:sort_order, true)
+    @include_usage_count = param_find(:include_usage_count, true)
+    
+    search_options = {
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
       :grade_span => @grade_span,
       :domain_id => @domain_id,
+      :sort_order => @sort_order,
       :paginate => true, 
       :page => pagenation
-    })
+    }
+    @investigations = Investigation.search_list(search_options)
+    
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_user.id }
     end
+    
     @paginated_objects = @investigations
     
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:investigations => @investigations, :paginated_objects =>@investigations}
+      @resource_pages = ResourcePage.search_list(search_options) unless params[:investigations_only]
+      render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
+        :investigations => @investigations,
+        :resource_pages => @resource_pages
+      }
     else
       respond_to do |format|
         format.html do
@@ -125,6 +136,24 @@ class InvestigationsController < AuthoringController
         format.js
       end
     end
+  end
+  
+  def printable_index
+    @investigations = Investigation.search_list({
+      :name => param_find(:name), 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => param_find(:include_drafts, true), 
+      :grade_span => param_find(:grade_span),
+      :domain_id => param_find(:domain_id),
+      :sort_order => param_find(:sort_order),
+      :paginate => false
+    })
+    
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
+    
+    render :layout => false
   end
 
   def preview_index

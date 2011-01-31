@@ -8,7 +8,8 @@ class Portal::Clazz < ActiveRecord::Base
   # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
   
   has_many :offerings, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
-  
+  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :conditions => { :active => true }
+
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
   

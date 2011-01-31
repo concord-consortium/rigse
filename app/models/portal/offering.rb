@@ -4,11 +4,11 @@ class Portal::Offering < ActiveRecord::Base
   acts_as_replicatable
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
-  belongs_to :runnable, :polymorphic => true
+  belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
   
   has_one :report_embeddable_filter, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
   
-  has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id", :dependent => :destroy
+  has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id"
   
   [:name, :description].each { |m| delegate m, :to => :runnable }
   
@@ -28,7 +28,8 @@ class Portal::Offering < ActiveRecord::Base
   end
   
   attr_reader :saveable_objects
-  
+  before_destroy :can_be_deleted?
+
   def sessions
     self.learners.inject(0) { |sum, l| sum + l.sessions }
   end
@@ -39,6 +40,10 @@ class Portal::Offering < ActiveRecord::Base
   
   def saveables
     multiple_choices + open_responses
+  end
+  
+  def resource_page?
+    self.runnable.is_a? ResourcePage
   end
   
   self.extend SearchableModel
@@ -57,6 +62,33 @@ class Portal::Offering < ActiveRecord::Base
   
   def refresh_saveable_response_objects
     self.learners.each { |l| l.refresh_saveable_response_objects }
+  end
+  
+  
+  def active?
+    active
+  end
+  
+  def activate
+    self.active = true
+  end
+  
+  def activate!
+    self.activate
+    self.save
+  end
+  
+  def deactivate
+    self.active = false
+  end
+  
+  def deactivate!
+    self.deactivate
+    self.save
+  end
+  
+  def can_be_deleted?
+    learners.empty?
   end
   
   

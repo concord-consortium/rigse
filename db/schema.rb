@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110114204236) do
+ActiveRecord::Schema.define(:version => 20110126161409) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -51,6 +51,19 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+  end
+
+  create_table "attached_files", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "attachable_type"
+    t.integer  "attachable_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "author_notes", :force => true do |t|
@@ -569,6 +582,7 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                         :default => 0
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -769,13 +783,14 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                  :default => false
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1577,6 +1592,7 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                      :default => true
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1670,11 +1686,12 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
   add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
 
   create_table "portal_teachers", :force => true do |t|
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "domain_id"
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
@@ -1773,6 +1790,16 @@ ActiveRecord::Schema.define(:version => 20110114204236) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ignore"
+  end
+
+  create_table "resource_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "publication_status", :default => "draft"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
