@@ -98,7 +98,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
   
   def self.by_scope(scope)
-    if scope && scope.class != Embeddable::DataCollector
+    if scope && scope.class != Embeddable::DataCollector && scope.respond_to?(:activity)
       scope.activity.investigation.data_collectors
     else
       []

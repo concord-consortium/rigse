@@ -1,6 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: prawn-format
 version: !ruby/object:Gem::Version 
+  hash: 25
   segments: 
   - 0
   - 1
@@ -22,6 +23,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         - 4
@@ -36,6 +38,7 @@ dependencies:
     requirements: 
     - - <
       - !ruby/object:Gem::Version 
+        hash: 1
         segments: 
         - 0
         - 5
@@ -50,6 +53,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         version: "0"
@@ -133,6 +137,7 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
@@ -141,6 +146,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 11
       segments: 
       - 1
       - 2
@@ -149,7 +155,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: prawn
-rubygems_version: 1.3.6
+rubygems_version: 1.3.7
 signing_key: 
 specification_version: 2
 summary: an extension of Prawn that allows inline formatting

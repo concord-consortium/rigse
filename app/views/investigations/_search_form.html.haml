@@ -5,7 +5,9 @@
 
 .action_menu
   #search_title
-    ="Search #{top_level_container_name.humanize.pluralize}"
+    = "Search #{top_level_container_name.humanize.pluralize}"
+    - unless local_assigns[:investigations_only]
+      = " & #{ResourcePage.display_name.pluralize}"
   .progress_container
     #search_spinner.tiny{:style=>'display: none;'}
       searching ...
@@ -14,6 +16,8 @@
 - # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
 %form{ :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
+  - if local_assigns[:investigations_only]
+    = hidden_field_tag 'investigations_only', true
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
@@ -25,7 +29,16 @@
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name
-      %td{:style=>"padding: 0.5em;"}
+      %td{:style=>"padding: 0.5em; text-align: right"}
         - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
           = label_tag :filter, 'drafts too: ', :class=>"right"
           = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
+    %tr
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :sort_order, 'sort: ', :class => 'right'
+        = sort_dropdown(@sort_order)
+      %td{:style=>"padding: 0.5em;"}
+      %td{:style=>"padding: 0.5em;"}
+      %td{:style=>"padding: 0.5em; text-align: right"}
+        = label_tag :include_usage_count, 'show count: ', :class=>"right"
+        = check_box_tag 'include_usage_count', 'true', @include_usage_count

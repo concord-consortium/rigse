@@ -9,15 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101153846) do
+ActiveRecord::Schema.define(:version => 20110126161409) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",               :limit => 36
     t.string   "name"
-    t.text     "description"
+    t.string   "uuid",               :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -51,6 +51,19 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+  end
+
+  create_table "attached_files", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "attachable_type"
+    t.integer  "attachable_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "author_notes", :force => true do |t|
@@ -312,25 +325,25 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
+    t.integer  "y_axis_min",                               :default => 0
+    t.integer  "y_axis_max",                               :default => 5
+    t.integer  "x_axis_min",                               :default => 0
+    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.float    "y_axis_min",                               :default => 0.0
-    t.float    "y_axis_max",                               :default => 5.0
-    t.float    "x_axis_min"
-    t.float    "x_axis_max"
-    t.string   "x_axis_label",                             :default => "Time"
-    t.string   "x_axis_units",                             :default => "s"
+    t.string   "x_axis_label"
+    t.string   "x_axis_units"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -346,7 +359,7 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
 
   create_table "embeddable_data_tables", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",              :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "column_count"
@@ -355,6 +368,7 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.text     "column_data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "data_collector_id"
   end
 
   create_table "embeddable_drawing_tools", :force => true do |t|
@@ -458,14 +472,14 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.text     "prompt"
+    t.string   "default_response"
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
@@ -526,22 +540,11 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "external_activities", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid"
-    t.string   "name"
-    t.text     "description"
-    t.text     "url"
-    t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -579,6 +582,7 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                         :default => 0
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -763,12 +767,12 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_id"
+    t.integer  "position"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
     t.integer  "user_id"
   end
 
@@ -777,16 +781,16 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "section_id"
+    t.string   "uuid",            :limit => 36
+    t.boolean  "teacher_only",                  :default => false
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1588,6 +1592,7 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                      :default => true
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1681,11 +1686,12 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
 
   create_table "portal_teachers", :force => true do |t|
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "domain_id"
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
@@ -1784,6 +1790,16 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ignore"
+  end
+
+  create_table "resource_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "publication_status", :default => "draft"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
@@ -1969,16 +1985,15 @@ ActiveRecord::Schema.define(:version => 20101101153846) do
   end
 
   create_table "sections", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "activity_id"
+    t.string   "uuid",         :limit => 36
+    t.boolean  "teacher_only",               :default => false
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"

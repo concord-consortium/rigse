@@ -47,6 +47,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
           end
         end
       end
+      puts
     end
 
     # 

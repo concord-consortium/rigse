@@ -9,12 +9,21 @@ shared_examples_for 'an embeddable controller' do
     self.send("with_tags_like_an_otml_#{model_name}".to_sym)
   end
 
+  def create_new(model_name)
+    method_name = "create_new_#{model_name}".to_sym
+    if self.respond_to?(method_name)
+      return self.send(method_name)
+    else
+      return Factory.create(model_name)
+    end
+  end
+
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     @model_class = model_class_lambda.call
     @model_ivar_name = model_ivar_name_lambda.call
     unless instance_variable_defined?("@#{@model_ivar_name}".to_sym)
-      @model_ivar = instance_variable_set("@#{@model_ivar_name}", Factory.create(@model_ivar_name))
+      @model_ivar = instance_variable_set("@#{@model_ivar_name}", create_new(@model_ivar_name))
     end    
     login_admin
     @session_options = {

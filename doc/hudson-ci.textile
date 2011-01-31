@@ -1,0 +1,135 @@
+h4. Setting up a Hudson CI project
+
+Creating an rvm gemset assuming you are using Ruby 1.8.7 p302:
+
+h5. Install gem prerequisites
+
+First install some of the prerequisite gems not specified in the application.
+You will need the development packages installed for mysql, libxml2, and libxslt-devel on the server.
+
+<pre><code>
+rvm install ruby-1.8.7-p302
+rvm use ruby-1.8.7-p302
+rvm gemset create rites
+rvm use ruby-1.8.7-p302@rites
+gem install rake mysql ruby-debug
+</pre></code>
+
+Set the following build environment variable:
+
+<pre><code>
+rvm_shell_ruby_string=ruby-1.8.7-p302@rites
+</pre></code>
+
+We use the following three build shell scripts in sequence to run the tests:
+
+h5. Setup environment
+
+<pre><code>
+export PATH=$PATH:/sbin
+ruby config/setup.rb -n Rails Portal -D hudson_rites -u hudson -p <password> -t xproject -y -q -f
+
+# replace the database.yml because the correct names need to be special-cased
+echo '
+development:
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: hudson
+  database: hudson_rites
+  password: <password>
+  pool: 5
+itsi:
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: hudson
+  database: hudson_rites_itsi
+  password: <password>
+  pool: 5
+ccportal:
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: hudson
+  database: hudson_rites_ccportal
+  password: <password>
+  pool: 5
+test:  &test_settings
+  encoding: utf8
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  username: hudson
+  database: hudson_rites
+  password: <password>
+  pool: 5
+cucumber:
+  <<: *test_settings
+' > config/database.yml
+
+# If the gem specifications in: config/environments/test.rb have
+# changed install the new gems and uninstall the older versions
+# WARNING: this won't work if you are updating a gem that rails has
+# already activated -- for example when updating cucumber or capybara. 
+# In this case login and install the news gems by hand:
+#
+#  $ gem update cucumber capybara
+#  $ gem cleanup
+#
+RAILS_ENV=test rake gems:install
+
+</pre></code>
+
+h5. Running Cucumber and RSpec tests
+
+<pre><code>
+rm -f rerun.txt
+RAILS_ENV=cucumber rake hudson:cucumber --trace
+
+#
+# The rake task is not generating both junit and html output
+# so run the spec tests manually.
+#
+# Note, there is a hard-coded path to the ci_reporter
+# gem -- will need to be updated if the gem is updated
+#
+mkdir -p hudson/reports/spec
+rm -rf hudson/reports/spec/*
+rake db:test:prepare
+CI_REPORTS=hudson/reports/spec/ spec --require ${GEM_HOME}/gems/ci_reporter-1.6.0/lib/ci/reporter/rake/rspec_loader --format CI::Reporter::RSpec --format html:hudson/reports/spec/report.html spec
+</pre></code>
+
+h5. Cleaaning up
+
+<pre><code>
+# to avoid ever climbing disk space needs, rotate the logs
+CUR=`pwd`
+echo "${CUR}/log/test.log {
+  rotate 4
+  compress
+  notifempty
+  missingok
+}
+${CUR}/log/cucumber.log {
+  rotate 4
+  compress
+  notifempty
+  missingok
+}
+${CUR}/log/development.log {
+  rotate 4
+  compress
+  notifempty
+  missingok
+}" > logrotate.conf
+logrotate -s logrotate.status logrotate.conf
+</pre></code>
+
+h5. Post Build Actions
+
+Publish JUnit test result report: @hudson/reports/**/*xml@
+Additional test report features: @Publish test attachments@
+
+*Publish HTML reports*
+
+|_.HTML directory to archive|_.Index page[s]|_.Report title|_.Keep past HTML reports|
+|hudson/reports/features|report.html|Cucumber Report|true|
+|hudson/reports/specs|report.html|RSpec Report|true|
+
+Copy files back to the master: @hudson/reports/**@

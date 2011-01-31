@@ -28,7 +28,7 @@ def generate_default_project_and_jnlps_with_factories
     if version == "snapshot" 
       @versioned_jnlp_url = @maven_jnlp_family.snapshot_jnlp_url
     else
-      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(version)
     end
     @versioned_jnlp = @versioned_jnlp_url.versioned_jnlp
   end
@@ -157,6 +157,7 @@ def generate_default_project_and_jnlps_with_mocks
   Admin::Project.stub!(:default_project).and_return(@mock_project)
   mock_anonymous_user
   mock_admin_user
+  mock_researcher_user
   @mock_project
 end
 
@@ -218,6 +219,8 @@ def mock_anonymous_user
     @anonymous_user.stub!(:forget_me).and_return(nil)
     @anonymous_user.stub!(:anonymous?).and_return(true)
     @anonymous_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
+    @anonymous_user.stub!(:extra_params).and_return({})
+    @anonymous_user.stub!(:resource_pages).and_return([])
     User.stub!(:anonymous).and_return(@anonymous_user)
     User.stub!(:find_by_login).with('anonymous').and_return(@anonymous_user)
   end
@@ -241,7 +244,32 @@ def mock_admin_user
    @admin_user.stub!(:forget_me).and_return(nil)
    @admin_user.stub!(:anonymous?).and_return(false)
    @admin_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
+   @admin_user.stub!(:resource_pages).and_return([])
+   @admin_user.stub!(:extra_params).and_return({})
    User.stub!(:find_by_login).with('admin').and_return(@admin_user)
+ end
+end
+
+def mock_researcher_user
+ if @researcher_user
+   @researcher_user
+ else
+   @researcher_user = mock_model(User, :login => "admin", :name => "Admin User")
+   @researcher_role = mock_model(Role, :title => "researcher")
+   @researcher_user.stub!(:id).and_return(2)
+   @researcher_user.stub!(:portal_teacher).and_return(nil)
+   @researcher_user.stub!(:portal_student).and_return(nil)
+   @researcher_user.stub!(:has_role?).and_return(true)
+   @researcher_user.stub!(:has_role?).with("admin").and_return(nil)
+   @researcher_user.stub!(:has_role?).with("teacher").and_return(nil)
+   @researcher_user.stub!(:has_role?).with("guest").and_return(nil)
+   @researcher_user.stub!(:has_role?).with("student").and_return(nil)
+   @researcher_user.stub!(:roles).and_return([@researcher_role])
+   @researcher_user.stub!(:forget_me).and_return(nil)
+   @researcher_user.stub!(:anonymous?).and_return(false)
+   @researcher_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
+   @researcher_user.stub!(:extra_params).and_return({})
+   User.stub!(:find_by_login).with('researcher').and_return(@researcher_user)
  end
 end
 
@@ -265,6 +293,12 @@ end
 def login_admin(options = {})
   options[:admin] = true
   @logged_in_user = Factory.next :admin_user
+  @controller.stub!(:current_user).and_return(@logged_in_user)
+  @logged_in_user
+end
+
+def login_researcher(options = {})
+  @logged_in_user = Factory.next :researcher_user
   @controller.stub!(:current_user).and_return(@logged_in_user)
   @logged_in_user
 end

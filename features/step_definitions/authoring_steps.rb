@@ -1,7 +1,7 @@
 
 Given /^the following investigation exists:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
-    user = User.find_by_login(hash.delete('user'))
+    user = User.first(:conditions => { :login => hash.delete('user') })
     hash[:user_id] = user.id
     investigation = Investigation.create(hash)
     activity =Activity.create(hash)
@@ -16,6 +16,10 @@ end
 
 When /add a multiple choice question$/ do
   # pending # express the regexp above with the code you wish you had
+end
+
+When /^(?:|I )follow xpath "([^\"]*)"$/ do |xpath|
+  find(:xpath, xpath).click
 end
 
 When /show the first page of the "(.*)" investigation$/ do |investigation_name|
