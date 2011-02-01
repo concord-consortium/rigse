@@ -365,7 +365,6 @@ ActionController::Routing::Routes.draw do |map|
     :delete_activity => :post,
     :print => :get,
     :duplicate => :get,
-    :export => :get,
     :details_report => :get,
     :usage_report => :get,
     :destroy => :post,
