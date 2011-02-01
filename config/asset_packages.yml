@@ -131,6 +131,7 @@ stylesheets:
   - window/rites
   - live_validation
   - notes
+  - please_wait
   - data_table
   - reports
 
