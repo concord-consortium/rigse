@@ -6,6 +6,7 @@ class Reports::Account < Reports::Excel
 
     @column_defs = [
       Reports::ColumnDefinition.new(:title => "User name",    :width => 25),
+      Reports::ColumnDefinition.new(:title => "Login",        :width =>  9),
       Reports::ColumnDefinition.new(:title => "User type",    :width =>  9),
       Reports::ColumnDefinition.new(:title => "School",       :width => 27),
       Reports::ColumnDefinition.new(:title => "Classes",      :width => 50),
@@ -15,6 +16,14 @@ class Reports::Account < Reports::Excel
     ]
   end
 
+  def school_name(portal_user)
+    portal_user.school ? (portal_user.school.name || "School: #{portal_user.school.id}") : "No School"
+  end
+
+  def class_name(clazz)
+    (clazz.name && !clazz.name.empty?) ? clazz.name : "Class: #{clazz.id}"
+  end
+  
   def run_report(stream_or_path)
     book = Spreadsheet::Workbook.new
 
@@ -22,26 +31,29 @@ class Reports::Account < Reports::Excel
 
     write_sheet_headers(sheet1, @column_defs)
 
-    active_users = User.active
-    iterate_with_status(active_users) do |u|
-      next if u.default_user
-      next unless u.portal_teacher || u.portal_student
-      is_teacher = !!u.portal_teacher
-      row = sheet1.row(sheet1.last_row_index + 1)
-      user_name = u.name
-      user_type = is_teacher ? 'Teacher' : 'Student'
+    active_users = User.active.sort {|a,b| a.last_name <=> b.last_name }
+    active_users.reject! { |u| u.default_user }
+    teachers = active_users.map {|u| u.portal_teacher }
+    students = active_users.map {|u| u.portal_student }
+    [teachers, students].each do |collection|
+      user_type = teachers == collection ? "Teacher" : "Student"
+      collection.compact!.uniq!
+      iterate_with_status(collection) do |portal_user|
+        user = portal_user.user
+        row = sheet1.row(sheet1.last_row_index + 1)
+        user_name  = "#{user.last_name}, #{user.first_name}"
+        user_login = user.login
 
-      portal_user = is_teacher ? u.portal_teacher : u.portal_student
-      user_school = portal_user.school ? portal_user.school.name : "No School"
-      user_classes = portal_user.clazzes.compact.collect{|c| c.name }.join(',')
+        user_school = school_name(portal_user)
+        user_classes = portal_user.clazzes.compact.map{ |c| class_name(c) }.join(',')
 
-      user_created = u.created_at
+        user_created = user.created_at
 
-      user_runs,user_last_run = run_info(u.portal_student)  # only students have learners, so use a teacher's associated student (if any)
+        user_runs,user_last_run = run_info(user.portal_student)  # only students have learners, so use a teacher's associated student (if any)
 
-      row.concat [user_name, user_type, user_school, user_classes, user_created, user_runs, user_last_run]
+        row.concat [user_name, user_login, user_type, user_school, user_classes, user_created, user_runs, user_last_run]
+      end
     end
-
     book.write stream_or_path
   end
 
