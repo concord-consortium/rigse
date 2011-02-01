@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110126161409) do
+ActiveRecord::Schema.define(:version => 20110128192029) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2029,6 +2029,15 @@ ActiveRecord::Schema.define(:version => 20110126161409) do
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
+
+  create_table "student_views", :force => true do |t|
+    t.integer "user_id",       :null => false
+    t.integer "viewable_id",   :null => false
+    t.string  "viewable_type", :null => false
+    t.integer "count"
+  end
+
+  add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"

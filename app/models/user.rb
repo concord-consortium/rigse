@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   has_many :sections
   has_many :pages
   has_many :security_questions
-  
+
   has_many :data_collectors, :class_name => 'Embeddable::DataCollector'
   has_many :xhtmls, :class_name => 'Embeddable::Xhtml'
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
@@ -18,15 +18,15 @@ class User < ActiveRecord::Base
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
-  named_scope :active, { :conditions => { :state => 'active' } }  
+  named_scope :active, { :conditions => { :state => 'active' } }
   named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
   named_scope :default, { :conditions => { :default_user => true } }
-  named_scope :with_role, lambda { | role_name | 
+  named_scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
   }
   has_settings
-  
+
   # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
   # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
   # has_many :domains, :class_name => 'RiGse::Domain'
@@ -35,20 +35,20 @@ class User < ActiveRecord::Base
   # has_many :grade_span_expectations, :class_name => 'RiGse::GradeSpanExpectation'
   # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
   # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
-  
+
   include Changeable
-  
+
   include Authentication
   include Authentication::ByPassword
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
-  
+
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces
-  
+
   # strip leading and trailing spaces from names, login and email
-  def strip_spaces  
+  def strip_spaces
     # these are conditionalized because it is called before the validation
     # so the validation will make sure they are setup correctly
     self.first_name? && self.first_name.strip!
@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   end
 
   # Validations
-  
+
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
   validates_uniqueness_of   :login
@@ -80,41 +80,41 @@ class User < ActiveRecord::Base
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
-  
+
   has_one :portal_teacher, :class_name => "Portal::Teacher"
   has_one :portal_student, :class_name => "Portal::Student"
-  
+
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
 
   acts_as_replicatable
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{login first_name last_name email}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
     def login_exists?(login)
       User.count(:conditions => "`login` = '#{login}'") >= 1
     end
-    
+
     def login_does_not_exist?(login)
       User.count(:conditions => "`login` = '#{login}'") == 0
     end
-    
+
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
-    
+
     def suspend_default_users
-      default_users.each { |user| user.suspend! if user.state == 'active' }  
+      default_users.each { |user| user.suspend! if user.state == 'active' }
     end
-    
+
     def unsuspend_default_users
-      default_users.each { |user| user.unsuspend! if user.state == 'suspended' }  
+      default_users.each { |user| user.unsuspend! if user.state == 'suspended' }
     end
 
     # return the user who is the site administrator
@@ -128,17 +128,17 @@ class User < ActiveRecord::Base
       self.remove_role('author')
     end
   end
-  
+
   def has_investigations?
     investigations.length > 0
   end
 
   # we will lazy load the anonymous user later
-  @@anonymous_user = nil 
-  
+  @@anonymous_user = nil
+
   # default users are a class of users that can be enable
   default_value_for :default_user, false
- 
+
   # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
   default_value_for :vendor_interface_id, 6
 
@@ -152,7 +152,7 @@ class User < ActiveRecord::Base
     u1 = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
     u1 && u1.authenticated?(password) ? u1 : nil
   end
-  
+
   def name
     _fullname = "#{first_name} #{last_name}".strip
     _fullname.empty? ? login : _fullname
@@ -211,12 +211,12 @@ class User < ActiveRecord::Base
   def make_user_a_member
     self.add_role('member')
   end
-  
+
   # is this user the anonymous user?
   def anonymous?
     self == User.anonymous
   end
-  
+
   # Class method for returning the memoized anonymous user
   #
   # If you have deleted and recreated the Anonymous user
@@ -233,9 +233,9 @@ class User < ActiveRecord::Base
     if @@anonymous_user
       @@anonymous_user
     else
-      anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
+      anonymous_user = User.find_or_create_by_login(:login => "anonymous",
         :first_name => "Anonymous", :last_name => "User",
-        :email => "anonymous@concord.org", 
+        :email => "anonymous@concord.org",
         :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
       anonymous_user.add_role('guest')
       @@anonymous_user = anonymous_user
@@ -254,23 +254,23 @@ class User < ActiveRecord::Base
       return school_person.school
     end
   end
-  
+
   def extra_params
     if self.school
       params = school.settings_hash
     end
-    if params 
+    if params
       return params.merge(self.settings_hash)
     end
     return self.settings_hash
   end
-  
+
   # This method gets a bang because it saves the new questions. -- Cantina-CMH 6/17/10
   def update_security_questions!(new_questions)
     return unless new_questions.is_a?(Array)
-    
+
     self.security_questions.destroy_all
-    
+
     new_questions.each do |q|
       self.security_questions << q
       q.save
@@ -282,6 +282,4 @@ class User < ActiveRecord::Base
     self.deleted_at = nil
     self.activation_code = self.class.make_token
   end
-  
-
 end
