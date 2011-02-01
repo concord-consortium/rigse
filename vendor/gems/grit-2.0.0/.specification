@@ -1,6 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: grit
 version: !ruby/object:Gem::Version 
+  hash: 15
   prerelease: false
   segments: 
   - 2
@@ -22,9 +23,11 @@ dependencies:
   name: mime-types
   prerelease: false
   requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 17
         segments: 
         - 1
         - 15
@@ -35,9 +38,11 @@ dependencies:
   name: diff-lcs
   prerelease: false
   requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 23
         segments: 
         - 1
         - 1
@@ -134,23 +139,27 @@ rdoc_options:
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
 required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
 requirements: []
 
 rubyforge_project: grit
-rubygems_version: 1.3.6
+rubygems_version: 1.3.7
 signing_key: 
 specification_version: 3
 summary: Grit is a Ruby library for extracting information from a git repository in an object oriented manner.

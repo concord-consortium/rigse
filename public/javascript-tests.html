@@ -1,10 +1,12 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <script src="javascripts/dropdown.js" type="text/javascript" charset="utf-8"></script>
-    <script src="javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/scriptaculous.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/please_wait.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/dropdown.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/application.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <title>Javascript-tests</title>
     <style type="text/css" media="screen">
       div {
@@ -20,6 +22,46 @@
         height: 2000px;
         width: 100%;
       }
+      #please_wait {
+        position: absolute;
+        display: block;
+        width: 100%;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        background-color: white;
+        filter: alpha(opacity=80);
+        -moz-opacity: 0.9;
+        -khtml-opacity: 0.9;
+        opacity: 0.9;
+        z-index: 5000; }
+
+      #please_wait_inside {
+        position: relative;
+        padding: 10px;
+        width: 350px;
+        background-color: white;
+        filter: alpha(opacity=100);
+        -moz-opacity: 1.0;
+        -khtml-opacity: 1.0;
+        opacity: 1.0;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 25%;
+        z-index: 5001;
+        border: 3px grey solid; }
+        #please_wait_inside .wait_image {
+          display: block;
+          height: 16px;
+          width: 16px;
+          margin: 4px;
+          float: left;
+          vertical-align: center;
+          background-image: url('/images/wait16.gif');
+          background-repeat: no-repeat;
+          background-position: left;
+      }
+
     </style>
   </head>
 
@@ -28,7 +70,15 @@
       Hi this is mac content.  You cant see me if your not a mac.
     </div>
 
-    <div id="lots_of_space"></div>
+    <div id="please_wait" style="display: none;">
+      <div id="please_wait_inside">
+        <div class="wait_image">a</div>
+        Please <strong>wait</strong> while your activity loads.
+        This may take several minutes.
+        <span id="counter">counter</div>
+      </div>
+    </div>
+    <div id="lots_of_space_a">(ignore me)</div>
     <div id="dropdown test">
       <div id="dropdown_link">
         Menu
@@ -43,6 +93,11 @@
       </div>
 
     </div> 
+    <hr/>
+    <div>
+      <a href="#" class="run_link">run_link</a>
+    </div>
+    <br/>
 
     <script type="text/javascript" charset="utf-8">
             document.observe("dom:loaded", function(){

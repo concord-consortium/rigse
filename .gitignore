@@ -39,6 +39,7 @@ public/stylesheets/notes.css
 public/stylesheets/screen.css
 public/stylesheets/readme.css
 public/stylesheets/teacher_overlay.css
+public/stylesheets/please_wait.css
 public/jnlp/*/*
 config/jnlp_objects/*/*
 config/jnlp_objects/*.yaml
@@ -80,3 +81,6 @@ hudson/*
 spec/reports
 .rvmrc
 config/preinitializer.rb
+local_files
+config/newrelic.yml
+public/system/attachments/*

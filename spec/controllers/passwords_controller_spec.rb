@@ -16,6 +16,12 @@ describe PasswordsController do
       @params = {
         :login => @user.login
       }
+      
+      # Stub User.find_by_login because of an rspec-related bug using the dynamic finder
+      User.stub(:find_by_login) do |*login|
+        User.first(:conditions => { :login => login })
+      end
+      
     end
     
     it "will fail gracefully if the user is not found by login" do

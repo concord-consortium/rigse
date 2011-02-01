@@ -9,6 +9,11 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
+        - unless local_assigns[:hide_print]
+          %li= link_to "printable view", printable_index_investigations_path(investigation_printable_index_params), :id => "printable-view", :target => "_blank"
+        - if current_user.has_role?("researcher")
+          %li.menu=link_to 'Usage Report', investigation_usage_report_url
+          %li.menu=link_to 'Details Report', investigation_details_report_url
         -if current_user.has_role? "author"
           %li= link_to "create #{top_level_container_name}", new_investigation_path
 
@@ -17,7 +22,10 @@
     - link_text = current_user.portal_teacher || current_user.has_role?("manager", "admin") ? teacher_preview_button_for(investigation) : ""
     - link_text += preview_button_for(investigation) + name_for_component(investigation, :hide_componenent_name => true)
 
-    = accordion_for(investigation, link_text, :investigation) do  
+    - accordion_options = {}
+    - if @include_usage_count
+      - accordion_options[:usage_count] = "assigned #{pluralize(investigation.offerings_count, "time")}"
+    = accordion_for(investigation, link_text, :investigation, accordion_options) do
       %div.action_menu
         %div.action_menu_header_left   
           /= link_to_container(investigation)
@@ -27,6 +35,9 @@
           %ul.menu
             -# %li= preview_button_for(investigation)
             -# %li= teacher_preview_button_for(investigation)
+            - if (current_user.has_role?("researcher"))
+              %li.menu=link_to 'Usage Report', usage_report_investigation_url(investigation)
+              %li.menu=link_to 'Details Report', details_report_investigation_url(investigation)
             - if (investigation.duplicateable?(current_user))
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
@@ -38,7 +49,7 @@
           %i= updated_time_text(investigation)
         %p
           %i
-            Used in: #{investigation.offerings.length} classes.
+            Used in: #{investigation.offerings_count} classes.
 
   =draggable_element dom_id_for(investigation), :revert => true , :scroll => 'window'
 

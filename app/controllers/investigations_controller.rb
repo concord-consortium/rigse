@@ -1,5 +1,4 @@
 class InvestigationsController < AuthoringController
-  
   # This doesn't work, but the technique is described here:
   # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
   # caches_page :show if => Proc.new { |c| c.request.format == :otml }
@@ -7,12 +6,15 @@ class InvestigationsController < AuthoringController
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
 
+  include RestrictedController
+  #access_rule 'researcher', :only => [:usage_report, :details_report]
   prawnto :prawn=>{ :page_layout=>:landscape }
 
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :manager_or_researcher, :only => [:usage_report, :details_report]
+  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
   
   in_place_edit_for :investigation, :name
@@ -98,22 +100,34 @@ class InvestigationsController < AuthoringController
     else
       @include_drafts = param_find(:include_drafts,true)
     end
-    @investigations = Investigation.search_list({
+    
+    @sort_order = param_find(:sort_order, true)
+    @include_usage_count = param_find(:include_usage_count, true)
+    
+    search_options = {
       :name => @name, 
       :portal_clazz_id => @portal_clazz_id,
       :include_drafts => @include_drafts, 
       :grade_span => @grade_span,
       :domain_id => @domain_id,
+      :sort_order => @sort_order,
       :paginate => true, 
       :page => pagenation
-    })
+    }
+    @investigations = Investigation.search_list(search_options)
+    
     if params[:mine_only]
       @investigations = @investigations.reject { |i| i.user.id != current_user.id }
     end
+    
     @paginated_objects = @investigations
     
     if request.xhr?
-      render :partial => 'investigations/runnable_list', :locals => {:investigations => @investigations, :paginated_objects =>@investigations}
+      @resource_pages = ResourcePage.search_list(search_options) unless params[:investigations_only]
+      render :partial => 'investigations/runnable_list_with_resource_pages', :locals => {
+        :investigations => @investigations,
+        :resource_pages => @resource_pages
+      }
     else
       respond_to do |format|
         format.html do
@@ -122,6 +136,24 @@ class InvestigationsController < AuthoringController
         format.js
       end
     end
+  end
+  
+  def printable_index
+    @investigations = Investigation.search_list({
+      :name => param_find(:name), 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => param_find(:include_drafts, true), 
+      :grade_span => param_find(:grade_span),
+      :domain_id => param_find(:domain_id),
+      :sort_order => param_find(:sort_order),
+      :paginate => false
+    })
+    
+    if params[:mine_only]
+      @investigations = @investigations.reject { |i| i.user.id != current_user.id }
+    end
+    
+    render :layout => false
   end
 
   def preview_index
@@ -413,5 +445,34 @@ class InvestigationsController < AuthoringController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end
-  
+
+  def usage_report
+    sio = get_report(:usage)
+    filename = @investigation.id.nil? ? "investigations-published-usage.xls" : "investigation-#{@investigation.id}-usage.xls"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  def details_report
+    sio = get_report(:detail)
+    filename = @investigation.id.nil? ? "investigations-published-details.xls" : "investigation-#{@investigation.id}-details.xls"
+    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
+  end
+
+  private
+
+  def get_report(type)
+    sio = StringIO.new
+    opts = {:verbose => false}
+    opts[:investigations] = [@investigation] unless @investigation.id.nil?
+    rep = nil
+    case type
+    when :detail
+      rep = Reports::Detail.new(opts)
+    when :usage
+      rep = Reports::Usage.new(opts)
+    end
+    rep.run_report(sio) if rep
+    return sio
+  end
+
 end

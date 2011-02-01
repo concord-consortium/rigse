@@ -68,7 +68,6 @@ is_mac = function() {
   return false;
 }
 
-
 show_alert = function(elem, force) {
   if (force || (!readCookie(elem.identify()))) {
     Effect.toggle(elem, 'blind', {});
@@ -80,12 +79,4 @@ show_alert = function(elem, force) {
     });
   };
 };
-
-show_mac_alert = function(elem, force) {
-  if (is_mac()) {
-    show_alart(elem,force);
-  }
-}
-
-
 

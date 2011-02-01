@@ -21,3 +21,8 @@ end
 Factory.define :nces_portal_teacher, :parent => :portal_teacher do |teacher|
   teacher.clazzes {[Factory(:nces_portal_clazz)]}
 end
+
+Factory.define :teacher, :class => Portal::Teacher do |f|
+  f.association :user, :factory => :user
+  f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
+end

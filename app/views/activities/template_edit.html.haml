@@ -1,0 +1,8 @@
+%h3 Actvitiy Name
+= text_field_tag(:title, @activity.name, :size => '72')
+%h3 description
+= text_area_tag(:description, @activity.description, :class => 'mceNoEditor',:cols => '72')
+%p
+  - @activity.sections.each do |section|
+    - section.pages.each do |page|
+      = render :partial=> 'pages/template_edit', :locals=>{:page => page }

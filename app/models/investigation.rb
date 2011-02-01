@@ -110,6 +110,8 @@ class Investigation < ActiveRecord::Base
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
+  
+  named_scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
   include Noteable # convinience methods for notes...
@@ -176,6 +178,11 @@ class Investigation < ActiveRecord::Base
       if portal_clazz
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
+      
+      unless options[:sort_order].blank?
+        investigations = investigations.ordered_by(options[:sort_order])
+      end
+      
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else
@@ -287,32 +294,10 @@ class Investigation < ActiveRecord::Base
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements
-    elements = []
-    activities.each do |act|
-      next if act.teacher_only?
-      act.sections.each do |section|
-        next if section.teacher_only?
-        section.pages.each do |page|
-          next if page.teacher_only?
-          page.page_elements.each do |element|
-            embeddable = element.embeddable
-            if embeddable.class == Embeddable::InnerPage
-              inner_page = embeddable
-              inner_page.sub_pages.each do |subpage|
-                subpage.page_elements.each do |ipe|
-                  if Investigation.reportable_types.include?(ipe.embeddable.class)
-                    elements << {:embeddable => ipe.embeddable, :page_element => ipe, :page => page, :section => section, :activity => act}
-                  end
-                end
-              end
-            elsif Investigation.reportable_types.include?(embeddable.class)
-              elements << {:embeddable => embeddable, :page_element => element, :page => page, :section => section, :activity => act}
-            end
-          end
-        end
-      end
-    end
-    return elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = activities.collect{|a| a.reportable_elements }.flatten
+    @reportable_elements.each{|elem| elem[:investigation] = self}
+    return @reportable_elements
   end
 
 end
