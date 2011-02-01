@@ -244,8 +244,8 @@ def mock_admin_user
    @admin_user.stub!(:forget_me).and_return(nil)
    @admin_user.stub!(:anonymous?).and_return(false)
    @admin_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
-   @admin_user.stub!(:extra_params).and_return({})
    @admin_user.stub!(:resource_pages).and_return([])
+   @admin_user.stub!(:extra_params).and_return({})
    User.stub!(:find_by_login).with('admin').and_return(@admin_user)
  end
 end
