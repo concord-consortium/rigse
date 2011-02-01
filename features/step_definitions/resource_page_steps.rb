@@ -65,6 +65,13 @@ When /^I open the accordion for the resource "([^"]*)"$/ do |resource_name|
   find(selector).click
 end
 
+When /^I follow "([^"]*)" for the resource page "([^"]*)"$/ do |link_name, resource_page_name|
+  resource = ResourcePage.find_by_name resource_page_name
+  with_scope("#resource_page_resource_page_#{resource.id}") do
+    click_link(link_name)
+  end
+end
+
 Then /^"([^"]*)" should have href like "([^"]*)"$/ do |link, href|
   a = page.find("a##{link}")
   a[:href].should =~ /#{href}/i

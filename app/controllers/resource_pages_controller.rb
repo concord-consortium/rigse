@@ -45,11 +45,13 @@ class ResourcePagesController < ApplicationController
     else
       @resource_page = ResourcePage.visible_to_user_with_drafts(current_user).find(params[:id])
       # If this is a student, increment the counter on StudentViews
-      @student_view = StudentView.find_or_create_by_user_id_and_viewable_id_and_viewable_type(current_user.id,
+      if current_user.portal_student
+        @student_view = StudentView.find_or_create_by_user_id_and_viewable_id_and_viewable_type(current_user.id,
                                                                                                 @resource_page.id,
                                                                                                 @resource_page.class.name)
-      @student_view.increment(:count)
-      @student_view.save
+        @student_view.increment(:count)
+        @student_view.save
+      end
     end
   end
 

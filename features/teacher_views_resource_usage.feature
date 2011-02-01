@@ -40,5 +40,14 @@ Feature: Teacher views resource usage
     When I open the accordion for the resource "Test Resource Page"
     Then I should see "Viewed by: 1 student"
 
-  @wip
+  @selenium
   Scenario: Teacher resource page views do not increment counter
+    When I login with username: teacher password: teacher
+    And I am on the resource pages page
+    Then I should see "Test Resource Page"
+    When I open the accordion for the resource "Test Resource Page"
+    Then I should see "Viewed by: 0 students"
+    When I follow "view" for the resource page "Test Resource Page"
+    And I am on the resource pages page
+    And I open the accordion for the resource "Test Resource Page"
+    Then I should see "Viewed by: 0 students"
