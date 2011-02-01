@@ -3,18 +3,24 @@ Given /^the following resource pages exist:$/ do |table|
     user_name = hash.delete('user')
     user = User.first(:conditions => { :login => user_name })
     next if user.blank?
-    
+
     hash['user'] = user
     resource_page = Factory(:resource_page, hash)
     resource_page.save!
   end
 end
 
+Given /^the resource page "([^"]*)" has an attachment named "([^"]*)"$/ do |resource_name, attachment_name|
+  resource = ResourcePage.find_by_name resource_name
+  resource.new_attached_files = {'name' => attachment_name, 'attachment' => File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')}
+  resource.save
+end
+
 When /^I sort resource pages by "([^"]*)"$/ do |sort_str|
   visit "/resource_pages?sort_order=#{sort_str}"
 end
 
-When /^I show offerings count on the resource pages page$/ do 
+When /^I show offerings count on the resource pages page$/ do
   visit "/resource_pages?include_usage_count=true"
 end
 
@@ -51,6 +57,12 @@ When /^I assign the resource page "([^"]*)" to the class "([^"]*)"$/ do |page_na
     :runnable => resource_page,
     :clazz => clazz
   })
+end
+
+When /^I open the accordion for the resource "([^"]*)"$/ do |resource_name|
+  resource = ResourcePage.find_by_name resource_name
+  selector = "#resource_page_toggle_resource_page_#{resource.id}"
+  find(selector).click
 end
 
 Then /^"([^"]*)" should have href like "([^"]*)"$/ do |link, href|

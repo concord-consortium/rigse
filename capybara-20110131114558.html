@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>
+
+  
+    <title>
+      RITES Investigations
+    </title>
+    <meta http-equiv="content-type" content="text/xhtml; charset=utf-8" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta name="distribution" content="all" />
+    <meta name="robots" content="all" />
+    <meta name="resource-type" content="document" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <!-- see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager -->
+    <!-- see the yaml file too: config/asset_packages.yml -->
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/app.css?1295969404" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/accordion.css?1296225535" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/window/window.css?1295966927" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/window/rites.css?1295966927" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/live_validation.css?1295966927" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/action_menu_tab.css?1295969404" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/notes.css?1295969404" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/drop_down.css?1295966927" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/data_table.css?1295969404" />
+    <link type="text/css" rel="stylesheet" media="all" href="/stylesheets/reports.css?1295966927" />
+    <!-- experiment: ovveride stylesheet -->
+    <script type="text/javascript" src="/javascripts/prototype.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/prototype-ui/prototype-ui.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/effects.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/dragdrop.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/controls.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/scriptaculous.js?1295966927"></script><script src="http://localhost:9887/javascripts/effects.js" type="text/javascript"></script><script src="http://localhost:9887/javascripts/dragdrop.js" type="text/javascript"></script><script src="http://localhost:9887/javascripts/controls.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/misc/resizable.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/livepipe/livepipe.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/livepipe/window.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/flotr/excanvas.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/flotr/flotr.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/canvas2image.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/application.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/dropdown.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/cookie.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/accordion.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/item_selectable.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/live_validation.js?1295966927"></script>
+    <script type="text/javascript" src="/javascripts/report_filter.js?1295966927"></script>
+    <!-- tiny_mce didn't play nice with the asset_packager.. -->
+    <script type="text/javascript" src="/javascripts/tiny_mce/tiny_mce.js?1295966927"></script>
+    <!-- shouldn't probably do this here, do it on domloaded elsewhere..: -->
+    <script type="text/javascript">
+    //&lt;![CDATA[
+    tinyMCE.init({
+        theme : 'advanced',
+        mode : 'textareas',
+        plugins : "paste, safari",
+        width : '100%',
+        height : '100%',
+        editor_deselector : "mceNoEditor",
+        auto_resize : true,
+        remove_script_host : false,
+        relative_urls : false,
+        content_css : "/stylesheets/app.css",
+        gecko_spellcheck : true,
+        theme_advanced_resizing : true,
+        theme_advanced_resizing_use_cookie : true,
+        theme_advanced_toolbar_location : 'top',
+        theme_advanced_buttons1 : 'bold,italic,underline,|,sup,sub,|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall,|,justifyleft,justifycenter,justifyright',
+        theme_advanced_buttons2 : '',
+        theme_advanced_buttons3 : '',
+        paste_auto_cleanup_on_paste : true,
+        paste_preprocess : function(pl, o) {
+            // Content string containing the HTML from the clipboard
+            // alert(o.content);
+        },
+        paste_postprocess : function(pl, o) {
+            // Content DOM node containing the DOM structure of the clipboard
+            // alert(o.node.innerHTML);
+        },
+        theme_advanced_statusbar_location : 'bottom',
+        convert_newlines_to_brs : false,
+        convert_fonts_to_spans : true,
+        theme_advanced_path : false
+    });
+    
+    //]]&gt;
+    </script>
+    <script type="text/javascript">
+    //&lt;![CDATA[
+    var container_type = 'ResourcePage';
+    //]]&gt;
+    </script>
+  </head><body>
+    <div style="display: none;" id="launch_warning" class="alert">
+      <div class="padded_content">
+        <h2>
+          Mac OS X Web Start Fix
+        </h2>
+        <hr />
+        <p>
+          If you are using Java 1.5 on Mac OS X 10.4 or 10.5, you will need to run our Fix MacOS Java 1.5
+          Web Start Utility once on each computer before you launch any activities.
+        </p>
+        <p>
+          Without the fix, activities that you have run before will freeze during download.
+          <a href="http://jnlp.concord.org/dev/org/concord/maven-jnlp/web-start-fix/web-start-fix.jnlp">
+            Click here to run it now.
+          </a>
+        </p>
+        <p>
+          <strong>
+            WARNING:
+          </strong>
+          If you update Java on your Macintosh you will need to fix this problem again.
+        </p>
+        <p>
+          <a>
+            [Click anywhere to close this window.]
+          </a>
+        </p>
+        <p>
+          Don't show again:
+          <input type="checkbox" onclick="createCookie('launch_warning','true');" />
+        </p>
+      </div>
+    </div>
+    <div style="display: none;" id="note"></div>
+    <div style="display: none;" id="waiter">
+      please wait
+      <img src="/images/ajax-loader.gif?1295966927" alt="Ajax-loader" />
+    </div>
+    <div id="body2">
+      <!-- 
+        For non-visual user agents:
+      -->
+      <div id="top">
+        <a href="#main_content" class="hidden doNotPrint">
+          Skip to main content.
+        </a>
+      </div>
+    </div>
+    <div id="wrapper" class="wrapper">
+      <div id="section_nav_menu" class="dropdown">
+      </div>
+      <div id="page_nav_menu" class="dropdown">
+      </div>
+      <div id="element_nav_menu" class="dropdown">
+      </div>
+      <div id="header">
+        <div class="left_content">
+          <div id="logo">
+            <img src="/Users/drmanitoba/Sites/rigse/public/themes/genomedynamics/images/jackson-logo.gif?1296230406" alt="Jackson Labs logo" />
+          </div>
+        </div>
+        <div class="right_content">
+          <div class="padded_content_right">
+            Welcome
+            joe user.
+            <a href="/users/3/preferences">Preferences</a>
+            /
+            <a href="/logout">Logout</a>
+          </div>
+        </div>
+      </div>
+      <div id="nav_top">
+        <span class="hidden doNotPrint">
+          Navigation:
+        </span>
+         
+        <ul class="menu_h">
+          <!-- offer people a way to pop-out of iframe: -->
+          <li class="trail"><a href="/home">Home</a></li>
+          <li class="trail"><a href="/about">About</a></li>
+          <ul class="menu_h_right">
+          </ul>
+        </ul>
+      </div>
+      <div id="content_container">
+        <div id="left_nav" class="nav_menu">
+          <!-- TODO: possible refactoring to make more clazzes specific. -->
+          <!-- Clazz navigation: top_node could be course, teacher, student ... -->
+          <br />
+          <div id="clazzes_nav">
+            <div class="padded_content">
+              <strong>Classes:</strong>
+              <ul id="nav_list_portal__teacher_1">
+                <li id="nav_item_portal__clazz_1">
+                  <a href="/portal/classes/1">My Class</a>
+                </li>
+              </ul>
+              <ul id="nav_list_create_class_portal__teacher_1">
+                <div class="create_link">
+                  <a href="/portal/classes/new">create a class</a>
+                </div>
+              </ul>
+            </div>
+          </div>
+          
+        </div>
+        <div id="main_content" class="main_content_colors">
+          <div id="content_header" class="main_content_colors">
+            
+          </div>
+          <div style="display: none;" id="js_flash"></div>
+          <div id="flash">
+            <div class="padded_contents">
+            </div>
+          </div>
+          <h1>Resources</h1>
+          <p id="new-resource-page-link">
+            <a href="/resource_pages/new">Create a new resource</a>
+          </p>
+          <div class="action_menu">
+            <div id="search_title">
+              Search Resources
+            </div>
+            <div class="progress_container">
+              <div style="display: none;" id="search_spinner" class="tiny">
+                searching ...
+                <img src="/images/ajax-loader.gif?1295966927" alt="Ajax-loader" />
+              </div>
+            </div>
+          </div>
+          <form onkeypress="return event.keyCode!=13;" id="resource_page_search_form">
+            <input type="hidden" name="portal_clazz_id" id="portal_clazz_id" />
+            <table width="100%">
+              <tbody><tr>
+                <td style="padding: 0.5em;">
+                  <label for="sort_order" class="right">sort: </label>
+                  <select name="[sort_order]" id="_sort_order"><option value=""></option>
+                  <option value="created_at DESC">Newest</option>
+                  <option value="name ASC">Alphabetical</option>
+                  <option value="offerings_count DESC">Popularity</option></select>
+                </td>
+                <td style="padding: 0.5em;">
+                  <label for="filter" class="right">matching: </label>
+                  <input type="text" name="name" id="name" />
+                </td>
+                <td style="padding: 0.5em;">
+                  <label for="include_usage_count" class="right">show count: </label>
+                  <input type="checkbox" value="true" name="include_usage_count" id="include_usage_count" />
+                </td>
+                <td style="padding: 0.5em;">
+                  <label for="filter" class="right">drafts too: </label>
+                  <input type="checkbox" value="include drafts" name="include_drafts" id="include_drafts" />
+                </td>
+              </tr>
+            </tbody></table>
+          </form>
+          <script type="text/javascript">
+          //&lt;![CDATA[
+          new Form.Observer('resource_page_search_form', 1, function(element, value) {$('search_spinner').show();; new Ajax.Updater({success:'offering-list'}, 'http://localhost:9887/resource_pages/list/filter', {asynchronous:true, evalScripts:true, onLoaded:function(request){$('search_spinner').hide();}, parameters:value})})
+          //]]&gt;
+          </script>
+          <div id="offering-list">
+            <div class="action_menu">
+              <div class="action_menu_header">
+                <div class="action_menu_header_left">
+                  <p>Displaying <b>1</b> resource</p>
+                  <p class="paginator">
+                    
+                  </p>
+                </div>
+                <div class="action_menu_header_right">
+                  <ul class="menu">
+                    <li><a target="_blank" id="printable-view" href="/resource_pages/printable_index">printable view</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div id="resource_page_1" class="runnable" style="position: relative;">
+              <div id="resource_page_resource_page_1" class="accordion_container">
+                <div class="accordion_name">
+                  <a title="View the Resource: 'Test Resource Page'." class="rollover" href="/resource_pages/1"><img src="/images/preview.png?1295966927" alt="View the Resource: 'Test Resource Page'." /></a>Test Resource Page
+                </div>
+                <div id="resource_page_toggle_resource_page_1" class="accordion_toggle accordion_toggle_closed"></div>
+                <div class="empty_break"></div>
+                <div style="overflow: hidden; height: 76px;" id="resource_page_content_resource_page_1" class="accordion_content">
+                  <div class="action_menu">
+                    <div class="action_menu_header_left">
+                      <span class="author">
+                        joe user
+                      </span>
+                    </div>
+                    <div class="action_menu_header_right">
+                      <ul class="menu">
+                        <li class="menu"><a href="/resource_pages/1">view</a></li>
+                        <li class="menu"><a href="http://localhost:9887/resource_pages/1/edit">edit</a></li>
+                        <li class="menu"><a onclick="if (confirm('Are you sure you want to delete Resource 1')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;" class="delete" href="/resource_pages/1">delete</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div id="details_resource_page_1" class="tiny">
+                    <p>fake resource page description</p>
+                    <p>
+                      <strong>0 attachments</strong>
+                      </p><ul>
+                      </ul>
+                    
+                    <p>
+                      <i>Last updated: 01/31/2011 11:45AM EST</i>
+                    </p>
+                    <p>
+                      <i>
+                        Used in: 1 classes.
+                      </i>
+                      <i>
+                        Viewed by: 0 students
+                      </i>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+            //&lt;![CDATA[
+            new Draggable("resource_page_1", {revert:true, scroll:window})
+            //]]&gt;
+            </script>
+          </div>
+        </div>
+      </div>
+      <div id="footer">
+        <div class="padded_content">
+          <div id="footer_left">
+            Questions/Feedback:
+            <script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%72%69%74%65%73%2d%69%6e%76%65%73%74%69%67%61%74%69%6f%6e%73%40%63%6f%6e%63%6f%72%64%2e%6f%72%67%3f%73%75%62%6a%65%63%74%3d%44%45%46%41%55%4c%54%25%32%30%71%75%65%73%74%69%6f%6e%22%3e%53%65%6e%64%20%75%73%20%61%6e%20%65%6d%61%69%6c%3c%2f%61%3e%27%29%3b'))</script><a href="mailto:rites-investigations@concord.org?subject=DEFAULT%20question">Send us an email</a>
+          </div>
+          <div id="footer_right"></div>
+        </div>
+      </div>
+      <div id="under_footer">
+      </div>
+    </div>
+  </body></html>
