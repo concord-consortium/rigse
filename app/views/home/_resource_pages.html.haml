@@ -1,0 +1,6 @@
+- unless current_user.resource_pages.blank?
+  - field_set_tag "#{ResourcePage.display_name.pluralize} you've authored" do
+    %ul
+      - current_user.resource_pages.each do |resource_page|
+        %li
+          = link_to resource_page.display_name, resource_page

@@ -5,6 +5,8 @@
 set :deploy_to, "/web/geniverse-portal.dev.concord.org"
 set :branch, "geniverse-dev"
 
+set :user, "geniverse"
+
 #############################################################
 #  Servers
 #############################################################

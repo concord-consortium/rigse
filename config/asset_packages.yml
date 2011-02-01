@@ -131,18 +131,31 @@ stylesheets:
   - window/rites
   - live_validation
   - notes
+  - please_wait
   - data_table
   - reports
 
 - xproject:
-  - themes/xproject/xproject
-  - themes/xproject/action_menu_tab
-  - themes/xproject/drop_down
-  - themes/xproject/accordion
+  - app
+  - accordion
   - window/window
   - window/rites
   - live_validation
+  - action_menu_tab
   - notes
+  - drop_down
+  - data_table
+  - reports
+
+- genomedynamics:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
   - data_table
   - reports
   

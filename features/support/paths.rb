@@ -23,6 +23,24 @@ module NavigationHelpers
       "/admin/projects/#{Admin::Project.default_project.id}/show"
     when /the create investigation page/
       "/investigations/new"
+    when /the create resource page page/
+      "/resource_pages/new"
+    when /the resource pages page/
+      "/resource_pages/"
+    when /the resource pages with drafts page/
+      "/resource_pages/?include_drafts=true"
+    when /the reports for resource pages/
+      "/reports/resource_pages"
+    when /the class page for "(.*)"/
+      "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
+    when /the investigations printable index page/
+      "/investigations/printable_index"
+    when /the investigations like "(.*)"/
+      "/investigations?name=#{$1}"
+    when /the resource pages printable index page/
+      "/resource_pages/printable_index"
+    when /the resource pages like "(.*)"/
+      "/resource_pages?name=#{$1}"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name

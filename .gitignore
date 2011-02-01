@@ -82,3 +82,5 @@ spec/reports
 .rvmrc
 config/preinitializer.rb
 local_files
+config/newrelic.yml
+public/system/attachments/*
