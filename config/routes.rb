@@ -26,8 +26,8 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace(:ri_gse) do |ri_gse|
     ri_gse.resources :assessment_targets, :knowledge_statements, :domains
     ri_gse.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
-    ri_gse.resources :grade_span_expectations,
-      :collection => {
+    ri_gse.resources :grade_span_expectations, 
+      :collection => { 
         :select_js => :post,
         :summary => :post,
         :reparse_gses => :put,
@@ -206,6 +206,7 @@ ActionController::Routing::Routes.draw do |map|
       :purge     => :delete } do |users|
     users.resource :security_questions, :only => [ :edit, :update ]
   end
+  map.users_account_report '/users/reports/account_report', :controller => 'users', :action => 'account_report', :method => :get
 
   map.resources :passwords
   map.resource :session
@@ -364,7 +365,8 @@ ActionController::Routing::Routes.draw do |map|
     :delete_activity => :post,
     :print => :get,
     :duplicate => :get,
-    :export => :get,
+    :details_report => :get,
+    :usage_report => :get,
     :destroy => :post,
   }, :collection => {
     :printable_index => :get
@@ -373,8 +375,10 @@ ActionController::Routing::Routes.draw do |map|
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
-
-
+  
+  map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
+  map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
+  
   map.resources :activities, :member => {
     :add_section => [:post,:get],
     :sort_sections => :post,

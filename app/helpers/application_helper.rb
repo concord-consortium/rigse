@@ -363,16 +363,16 @@ module ApplicationHelper
     users_params = current_user.extra_params
     url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("run.png",  url, 
-      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);") 
-  end
+      :class => "run_link rollover",
+      :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
+    end
 
   def preview_button_for(component)
     name = component.name
     url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("preview.png",  url, 
-      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);")      
+      :class => "run_link rollover",
+      :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def teacher_preview_button_for(component)
@@ -381,8 +381,8 @@ module ApplicationHelper
     url_params[:teacher_mode] = true
     url = polymorphic_url(component, :format => :jnlp, :params => url_params)
     link_button("teacher_preview.png",  url, 
-      :title => "Preview the #{component.class.display_name} '#{name}' as a Teacher. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-      :onclick => "show_mac_alert($('launch_warning'),false);")      
+      :class => "run_link rollover",
+      :title => "Preview the #{component.class.display_name} '#{name}' as a Teacher. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def preview_link_for(component, as_name=nil, params={})
@@ -397,7 +397,7 @@ module ApplicationHelper
     url = polymorphic_url(component, :format => :jnlp, :params => params)
     preview_button_for(component) +
     link_to(link_text, url, 
-      :onclick => "show_mac_alert($('launch_warning'),false);",
+      :class => "run_link",
       :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
@@ -440,7 +440,7 @@ module ApplicationHelper
     else
       run_button_for(component) +
       link_to(link_text, url, 
-        :onclick => "show_mac_alert($('launch_warning'),false);",
+        :class => 'run_link',
         :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
     end
   end

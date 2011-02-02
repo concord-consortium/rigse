@@ -29,7 +29,7 @@ module Embeddable::DataTableHelper
   def data_table_heading_tag(heading = "new column")
     <<-EOF_HTML
     <div class="deletable_field_container">
-      <input type="text" size="16" name="heading" class="data_table_js_field_target" value="#{heading}"></input>
+      <input type="text" size="16" name="heading" class="data_table_js_field_target" value="#{heading}" />
       #{function_link_button('delete.png',"$(this).up().remove();")}
     </div>
     EOF_HTML

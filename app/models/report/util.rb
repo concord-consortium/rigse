@@ -68,7 +68,7 @@ class Report::Util
     return results
   end
   
-  def initialize(offering, show_only_active_learners)
+  def initialize(offering, show_only_active_learners=false)
     @last_accessed = Time.now
     @offering = offering
     @report_embeddable_filter = @offering.report_embeddable_filter
