@@ -23,12 +23,14 @@
       :background-color= !very_dark  !important
 
 .accordion_show_hide_text
+  :display block
+  :float right
   :margin-right 16px
   
 .accordion_toggle
   :display inline-block
   :min-width 14px
-  :min-height 16px
+  :min-height 12px
   :float right  
   :cursor pointer
   :font-size 10px
@@ -37,19 +39,19 @@
 
 .accordion_toggle_closed
   :background-image url(/images/plus-minus-sprite.png)
-  :height 17px
+  :height 12px
   :padding-right 5px
   &:hover
     :background-image url(/images/plus-minus-sprite.png)
     
 .accordion_toggle_open
   :background-image url(/images/plus-minus-sprite.png)
-  :background-position right -17px
-  :height 17px
+  :background-position right -11px
+  :height 8px
   :padding-right 5px
   &:hover
     :background-image url(/images/plus-minus-sprite.png)
-    :background-position right -17px
+    :background-position right -11px
 
 .accordion_count
   :display inline-block
@@ -71,6 +73,7 @@
   .accordion_name
     :display block
     :float left
+    :font-weight bold
     :width 100%
 
   .selected

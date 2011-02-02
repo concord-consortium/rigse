@@ -103,47 +103,46 @@ body
   :margin 0
 
 #userlinks
-  :background url(/images/new/bg-userlinks.png) repeat-y
+  :background url(/images/new/bg-userlinks.png) repeat-y right top
   :max-height 40px
   :min-height 24px
   :padding-left 100px
   :position absolute
   :right 0
+  :text-align right
   :top 0
-  :width 368px
   p
     :clear none
     :color #fff
+    :display inline
     :float left
     :margin 3px 13px 0 0
     :padding 0
     :position relative
     :text-align right
-    :width 187px
   ul
     :clear none
     :color #fff
+    :display inline
     :float left
-    :margin 0
+    :margin 3px 0 0 0
     :padding 0
     :position relative
     :text-align right
-    :width 165px
   li
-    :float left
+    :border none 
+    :display inline
     :list-style none
-    :margin-left 5px
-    :padding 3px 0 0 0
+    :padding 0
     :text-align right
     :text-transform uppercase
     a
-      :border-right solid 1px #fff
       :color #fff
       :font-weight bold
-      :padding-right 5px
+      :padding 0 8px
       :text-decoration none
-    &.last a
-      :border-right none
+  li + li
+    :border-left solid 1px #fff
 
 #lead
   :border-bottom 1px solid #a1d2d1
@@ -177,24 +176,25 @@ body
 #nav_top
   :background #f8ac1a
   :clear both
-  :height 36px
+  :height 26px
   :position relative
+  :text-align left
   a
     :color #416962
   ul
     :float left
     :list-style none
     :height 26px
-    :margin 0
+    :margin 4px 0 0 0
     :padding 0
     :width 50%
   li
-    :border-right solid 1px #416962
+    :border none
     :color #555
-    :float left
+    :display inline
     :font-size 1em
     :font-weight bold
-    :margin 4px 0 0
+    :margin 0
     :padding 0 10px 0
     :text-transform uppercase
     &#main-site
@@ -212,10 +212,17 @@ body
         :display block
         :height 42px
         :width 349px
-  ul.menu_h_right
-    :background #f8ac1a !important
+  li + li
+    :border-left solid 1px #416962
+  li#home
+    :border none
+  .menu_h_right
     :float right
+    :text-align right
     :width 50%
+    ul
+      :float right
+      :width 100%
 
 /* SHARE AND PRINT LINKS
 .page-utility
@@ -269,6 +276,7 @@ body
   :display inline
   :float left
   :margin 0 0 0 228px
+  :min-height 350px
   :padding 0
   :width 632px
 
@@ -747,6 +755,23 @@ h2, h3
     :margin-left 3px
     :width 166px
 
+#left-col
+  :float left
+  :width 300px
+#right-col
+  :clear right
+  :float left
+  :width 250px
+  img
+    :border solid 1px #999
+    :float right
+    :margin 12px 0 0 10px
+.menu_h
+  :clear both
+  li
+    :float left
+    :margin-right 10px
+
 /* ACTIVITY TABLE STYLES
 #activity-chart
   :border-top solid 1px #327c83
@@ -1023,7 +1048,18 @@ div.section
 /* CLASS LISTINGS
 .component_title
   :clear both
+  :font-weight bold
   :width 100%
+#search-investigations
+  :background #fff
+  :border solid 1px #ddd
+  :margin-bottom 20px
+  :padding 10px
+  select
+    :margin-left 0
+  table
+    :margin 0
+    :padding 0
 
 /* FOOTER
 #footer

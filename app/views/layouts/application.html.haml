@@ -53,7 +53,7 @@
             %li.last= link_to 'Logout', logout_path
           - else
             %li= link_to 'Login', login_path
-            %li.last= link_to 'Sign Up', pick_signup_path
+            %li= link_to 'Sign Up', pick_signup_path
           - if @original_user.has_role?('admin', 'manager')
             %li.last= link_to 'Switch', switch_user_path(current_user)
 
@@ -69,21 +69,22 @@
           Navigation:
         %ul.menu_h
           / offer people a way to pop-out of iframe:
-          %li.trail= link_to 'Home', home_path
+          %li#home.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
           - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
             %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
           - if current_user.has_role?('admin') || current_user.portal_teacher
             %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
-        %ul.menu_h_right
+        .menu_h_right
+          %ul
 
-          - if current_user.has_role?('admin', 'manager')
-            %li.trail= link_to 'Districts', portal_districts_path
-            %li.trail= link_to 'Schools', portal_schools_path
-            - if APP_CONFIG[:use_gse]
-              %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
-            %li.trail= link_to 'Users', users_path
-            %li.trail= link_to 'Projects', admin_projects_path
+            - if current_user.has_role?('admin', 'manager')
+              %li.trail= link_to 'Districts', portal_districts_path
+              %li.trail= link_to 'Schools', portal_schools_path
+              - if APP_CONFIG[:use_gse]
+                %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
+              %li.trail= link_to 'Users', users_path
+              %li.trail= link_to 'Projects', admin_projects_path
 
       #primary      
 
