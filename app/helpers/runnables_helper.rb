@@ -12,7 +12,6 @@ module RunnablesHelper
   end
 
   def run_button_for(component)
-    users_params = current_user.extra_params
     url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
     link_button("run.png",  url,
                 :class => "run_link rollover",
