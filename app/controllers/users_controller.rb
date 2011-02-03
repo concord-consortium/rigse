@@ -6,7 +6,6 @@ class UsersController < ApplicationController
   before_filter :manager, 
     :only => [
       :show,
-      :new,
       :edit,
       :update,
       :destroy
