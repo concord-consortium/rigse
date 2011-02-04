@@ -7,7 +7,7 @@
   .action_menu
     .action_menu_left
       %p
-        %strong="Assignments:" 
+        %strong="Assignments:"
         (drag items from the search area below to add)
   #clazz_offerings.drop_target
     = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering
