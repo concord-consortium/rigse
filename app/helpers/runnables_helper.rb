@@ -41,13 +41,19 @@ module RunnablesHelper
     preview_button_for(component, url_params, "teacher_preview.png", "Teacher")
   end
 
-  def preview_link_for(component, as_name=nil, params={})
+  def link_text_for(text, as_name = nil)
     params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "preview "
+    link_text = params.delete(:link_text) || text
 
     if as_name
       link_text << " as #{as_name}"
     end
+
+    link_text
+  end
+
+  def preview_link_for(component, as_name=nil, params={})
+    link_text = link_text_for "preview ", as_name
 
     url = polymorphic_url(component, :format => :jnlp, :params => params)
     preview_button_for(component) +
@@ -57,12 +63,7 @@ module RunnablesHelper
   end
 
   def run_link_for(component, as_name=nil, params={})
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "run "
-
-    if as_name
-      link_text << " as #{as_name}"
-    end
+    link_text = link_text_for "run ", as_name
 
     if NOT_USING_JNLPS
       url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)
