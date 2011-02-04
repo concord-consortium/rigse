@@ -18,6 +18,24 @@ module RunnablesHelper
                 :title => run_text(component))
   end
 
+  def button_and_link_for(component, as_name = nil, run_or_preview = :run)
+    url = polymorphic_url(component, :format => :jnlp, :params => params)
+
+    if run_or_preview == :preview
+      link_text = link_text_for "preview ", as_name
+      preview_button_for(component) +
+        link_to(link_text, url,
+                :class => "run_link",
+                :title => preview_text(component))
+    else
+      link_text = link_text_for "run ", as_name
+      run_button_for(component) +
+        link_to(link_text, url,
+                :class => 'run_link',
+                :title => run_text(component))
+    end
+  end
+
   def preview_button_for(component, url_params = nil, img = "preview.png", run_as = nil)
     unless url_params
       url_params = current_user.extra_params
@@ -52,28 +70,16 @@ module RunnablesHelper
     link_text
   end
 
-  def preview_link_for(component, as_name=nil, params={})
-    link_text = link_text_for "preview ", as_name
-
-    url = polymorphic_url(component, :format => :jnlp, :params => params)
-    preview_button_for(component) +
-      link_to(link_text, url,
-              :class => "run_link",
-              :title => preview_text(component))
+  def preview_link_for(component, as_name = nil, params = {})
+    button_and_link_for component, as_name, :preview
   end
 
-  def run_link_for(component, as_name=nil, params={})
-    link_text = link_text_for "run ", as_name
-
+  def run_link_for(component, as_name = nil, params = {})
     if NOT_USING_JNLPS
       url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)
       run_button_for(component) + link_to(link_text, url, :popup => true)
     else
-      url = polymorphic_url(component, :format => :jnlp, :params => params)
-      run_button_for(component) +
-        link_to(link_text, url,
-                :class => 'run_link',
-                :title => run_text(component))
+      button_and_link_for component, as_name
     end
   end
 end
