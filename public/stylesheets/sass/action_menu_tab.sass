@@ -68,7 +68,7 @@ a.rollover:hover
   :font-size 11px
   :margin 0 !important
   :padding 3px 10px
-  :background-color #53857c
+  :background-color #3a878b
   :color #fff
   ul
     li
@@ -82,12 +82,18 @@ a.rollover:hover
   .action_menu_header_left
     :float left
     :text-align left
-    :margin 0px
+    :margin 0
+    :width 50% !important
     .author
       :font-size 9px
       :font-style italic
     a
       :color #fff
+    input
+      :float left
+      :margin-right 5px
+    p
+      :clear both
 
   .action_menu_header_right
     :background transparent
@@ -134,7 +140,9 @@ a.rollover:hover
     :list-style-image none
     :list-style-position outside
     :list-style-type none
-    
+    li.menu a
+      :margin-top 3px !important
+      
   ul.subsection_tabs
     :list-style-image none
     :list-style-position outside
@@ -216,14 +224,16 @@ a.rollover:hover
   :text-align left !important
 div.action_menu_header_left span.dev_note a, div.action_menu_header_left span.filter_selection_control a, div.action_menu_header_left a.container_link
   :color #333 !important
-#section_pages_list
+#section_pages_list, #elements_container, #activity_sections_list
   :margin-left 0
   a.container_link
     :font-weight bold
   li
     :list-style none
   .action_menu
-    :background #fff
+    :background transparent
+    .component_title
+      :color #333
   p
     :font-size 11px
     :font-style italic

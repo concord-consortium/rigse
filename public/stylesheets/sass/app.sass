@@ -268,6 +268,7 @@ body
 /* MAIN CONTENT - two columns, #primary on right, #secondary on left
 #content
   :overflow hidden
+  :overflow-y visible
   :padding-top 40px
   :padding-right 30px
   :position relative
@@ -366,6 +367,89 @@ p.note
   :padding 39px 40px 0 30px
   :width 623px
   /*630
+
+/* LEGACY CODE?  
+.toggle
+  .future_state
+    :font-size 1em
+  .current_state
+    :font-size 1em
+    :display none
+
+.component_title
+  :font-size 1em
+
+.important
+  :font-size 1.2em
+  :color = #a80011
+  :margin 1em
+  a
+    :color = #a80011 !important
+    :text-decoration underline !important
+.discouraged
+  :opacity 0.5
+
+.in_place_editor_field
+  :display inline-block
+  :min-width 5em !important
+  :width auto !important
+  :min-height 1em
+  :height auto !important
+  :padding 1px
+  :margin 0px
+
+.item_collection
+  :background-color white
+  :padding 0.5em 0em 
+
+.container_element
+  :background-color #fff
+  :padding 2px
+  :margin-bottom 5px
+  &:hover
+    :background-color #fff
+  .action_menu
+    :font-size 10px
+    :border-bottom 1px solid
+    :opacity .8
+    &:hover
+      :opacity 1
+
+.item
+  :background-color white
+  :padding 0.5em
+  :padding-top 0
+  :padding-bottom 0
+  .action_menu
+    :padding 0
+  .action_menu_header_left
+    :font-size 12px
+    :font-weight bold
+  .action_menu_header_right
+    :margin-right 0 !important
+    :padding-right 0 !important
+  ul.tiny
+    :background-color #eee
+    :margin-left 0
+    li
+      :background-color #eee
+      :list-style disc !important
+      :margin-left 20px
+      :padding 2px
+  &.item_selected
+    :border-bottom
+      :width 2px
+      :style solid
+      :color= #3a878b
+  &.item_selectable
+    :border-bottom
+      :width 2px
+      :style solid
+      :color= #bddfdf
+    &:hover
+      :border
+        :width 2px
+        :color= #f4b626
 
 /* ------- edit, copy, delete etc buttons -------
 
@@ -543,13 +627,19 @@ form
     :margin 0
   li
     :margin-bottom 1.65em
-
+fieldset
+  :clear both !important
+  :display block !important
 legend
-  :color #EE864E
-  :font-family Georgia, Times, serif
-  :font-size 1.5em
-  :margin 0 0 .65em 0
-form legend
+  :clear both
+  :color #222
+  :display block
+  :font-size 1.1em
+  :font-weight bold
+  :margin 1em 0 0 0 !important
+  :padding 1em 0 0 0 !important
+
+form#project-signin legend
   :display none
 
 label
@@ -778,259 +868,6 @@ h2, h3
     :float left
     :margin-right 10px
 
-/* ACTIVITY TABLE STYLES
-#activity-chart
-  :border-top solid 1px #327c83
-  :border-right solid 1px #327c83
-  :width 100%
-
-#activity-chart-navigation
-  :overflow visible
-  :vertical-align top
-  :width 225px
-  ul
-    :list-style none
-    :margin 0
-    :overflow visible
-    :padding 0
-    :width 225px
-  li
-    :cursor pointer
-    :font-size 100%
-    :font-weight bold
-    :list-style none
-    :margin 0
-    :padding 8px 4px
-    :position relative
-    :width 216px
-
-#activity-chart-panels
-  h2
-    :border-top solid 1px #327c83
-    :font bold 1.5em Arial, Helvetica, sans-serif
-    :margin 0 -5px 10px
-    :padding 5px 0 0 10px
-  div.unit-activities script + div h2
-    :border-top none !important
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :vertical-align top
-
-.heading-info
-  :font-weight normal
-  :font-size 12px
-  label
-    :float none
-    :cursor pointer
-
-.activity-title
-  :font-weight bold
-  :margin-top 0
-
-.activity-info
-  :font-weight normal
-  :color #327c83
-
-.activity-links
-  :margin-bottom 10px
-  a
-    :color #333
-
-.activity-description
-  :background #fff
-  :border solid 1px #ccc
-  :display none
-  :margin 5px 0
-  :padding 5px
-  :width auto
-
-.activity-image
-  :background-color #ffffff
-
-.activity-box
-  :margin 0 10px 15px 5px
-
-li.selected-category
-  :background-color #cfe3e3 !important
-  :color #327c83 !important
-  :margin-right -1px !important
-  :position absolute
-  :width 217px !important
-  :z-index 1000
-
-div.selected-category
-  :background-color #cfe3e3 !important
-  :border none !important
-  :color #327c83 !important
-  h2
-    :color #327c83 !important
-
-.level1
-  :background-color #368991
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #cfe3e3
-
-.level2
-  :background-color #ea9b18
-  :border-bottom solid 1px #d07810
-  :border-left solid 1px #327c83
-  :color #555
-
-.level3
-  :background-color #8fbf5f
-  :border-bottom solid 1px #3e6616
-  :border-left solid 1px #327c83
-  :color #555
-
-.level4
-  :background-color #fee9aa
-  :border-bottom solid 1px #877233
-  :border-left solid 1px #327c83
-  :color #555
-
-.level5, .level6
-  :background-color #fff
-  :border-bottom solid 1px #877233
-  :border-left solid 1px #327c83
-  :color #555
-
-.level7
-  :background-color #cac9e4
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level8
-  :background-color #96a3be
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level9
-  :background-color #b9884a
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level10
-  :background-color #81a88e
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level11
-  :background-color #ccc
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level12
-  :background-color #bdb3cd
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level13
-  :background-color #7c94aa
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level14
-  :background-color #fff
-  :border-bottom solid 1px #877233
-  :border-left solid 1px #327c83
-  :color #555
-
-.level15
-  :background-color #bebebe
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.level16
-  :background-color #eee38b
-  :border-bottom solid 1px #877233
-  :border-left solid 1px #327c83
-  :color #555
-
-.level17
-  :background-color #fff
-  :border-bottom solid 1px #877233
-  :border-left solid 1px #327c83
-  :color #555
-
-.level999
-  :background-color #d6c754
-  :border-bottom solid 1px #327c83
-  :border-left solid 1px #327c83
-  :color #555
-
-.unit-activities
-  :padding 5px
-  :min-height 375px
-
-#page-content .unit-title
-  :margin 0px
-  :padding 0px
-
-.navigation-count
-  :font-weight normal
-  :text-decoration none
-
-.roster-table
-  :border 1px solid #6a0e04
-  th
-    :background-color #dab4b0
-    :border 1px solid #6a0e04
-    :font-weight bold
-    :padding 4px
-  td
-    :background-color #fff
-    :border 1px solid #6a0e04
-    :padding 3px
-
-.activity-header
-  :background-color #fff
-  :border 1px solid #6a0e04
-  :font-weight bold
-  :padding 4px
-
-#activity-table-container
-  table
-    :border 1px solid #6a0e04
-  th
-    :background-color #dab4b0
-    :border 1px solid #6a0e04
-    :font-weight bold
-    :padding 4px
-  td
-    :background-color #fff
-    :border 1px solid #6a0e04
-    :padding 3px
-
-/* ICON LEGEND -- hidden for now
-.icon-legend-box
-  :display none
-  :visibility hidden
-
-
-  :position absolute
-  :right 30px
-  :top 60px
-  :width 200px
-  p
-    :font-size 92%
-    :text-align right
-
-#icon-legend
-  :background #ccc
-  :border 1px solid #999
-  :position absolute
-  :right 0
-  :top 23px
-
 /* HOME SCREEN SECTIONS
 div.section
   :border-bottom solid 1px #ccc
@@ -1066,6 +903,35 @@ div.section
   table
     :margin 0
     :padding 0
+    
+#element_nav_menu, #page_nav_menu, #section_nav_menu
+  :display none
+  
+ul.quiet_list
+  :margin-left 0
+  :padding-left 0
+  .item .action_menu
+    :padding 5px 10px
+  .item .action_menu .action_menu_header_left a
+    :color #000
+  .item .tiny .menu_h
+    :margin 0 0 5px 10px
+    :padding 5px 0
+    li
+    :list-style none
+    :margin-right 15px
+
+.menu_h
+  :margin 0 0 5px 10px
+  :padding 5px 0
+  li
+    :list-style none
+    :margin-right 15px
+    
+.data_collector
+  :display block
+  :width  100%
+  :height 400px
 
 /* FOOTER
 #footer
