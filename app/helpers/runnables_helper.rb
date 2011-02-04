@@ -87,7 +87,7 @@ module RunnablesHelper
     if offering.resource_page?
       link_to "View #{offering.name}", offering.runnable, :target => '_blank'
     else
-      button_and_link_for offering, as_name, params
+      x_link_for(offering, "run", as_name, params)
     end
   end
 
