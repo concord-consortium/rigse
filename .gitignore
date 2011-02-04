@@ -85,4 +85,5 @@ local_files
 config/newrelic.yml
 public/system/attachments/*
 *.swp
+*.swo
 capybara-*.html
