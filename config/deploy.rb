@@ -544,8 +544,9 @@ namespace :convert do
   # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
   desc "Recalculate the 'offerings_count' field for runnable objects"
   task :reset_offering_counts, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
+    # remove investigation cache files
+    sudo "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
+    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
 end
