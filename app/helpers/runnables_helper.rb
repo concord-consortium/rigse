@@ -18,17 +18,17 @@ module RunnablesHelper
                 :title => run_text(component))
   end
 
-  def button_and_link_for(component, as_name = nil, run_or_preview = :run)
+  def button_and_link_for(component, as_name = nil, params = {}, run_or_preview = :run)
     url = polymorphic_url(component, :format => :jnlp, :params => params)
 
     if run_or_preview == :preview
-      link_text = link_text_for "preview ", as_name
+      link_text = link_text_for "preview ", as_name, params
       preview_button_for(component) +
         link_to(link_text, url,
                 :class => "run_link",
                 :title => preview_text(component))
     else
-      link_text = link_text_for "run ", as_name
+      link_text = link_text_for "run ", as_name, params
       run_button_for(component) +
         link_to(link_text, url,
                 :class => 'run_link',
@@ -59,7 +59,7 @@ module RunnablesHelper
     preview_button_for(component, url_params, "teacher_preview.png", "Teacher")
   end
 
-  def link_text_for(text, as_name = nil)
+  def link_text_for(text, as_name = nil, params = {})
     params.update(current_user.extra_params)
     link_text = params.delete(:link_text) || text
 
@@ -71,7 +71,7 @@ module RunnablesHelper
   end
 
   def preview_link_for(component, as_name = nil, params = {})
-    button_and_link_for component, as_name, :preview
+    button_and_link_for component, as_name, params, :preview
   end
 
   def run_link_for(component, as_name = nil, params = {})
@@ -79,7 +79,7 @@ module RunnablesHelper
       url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)
       run_button_for(component) + link_to(link_text, url, :popup => true)
     else
-      button_and_link_for component, as_name
+      button_and_link_for component, as_name, params
     end
   end
 end
