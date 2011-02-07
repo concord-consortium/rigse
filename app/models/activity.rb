@@ -1,10 +1,12 @@
 class Activity < ActiveRecord::Base
+  include JnlpLaunchable
+
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
-  
+
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
-  
+
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})
@@ -38,52 +40,52 @@ class Activity < ActiveRecord::Base
       eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
-      INNER JOIN pages ON page_elements.page_id = pages.id 
-      INNER JOIN sections ON pages.section_id = sections.id  
+      INNER JOIN pages ON page_elements.page_id = pages.id
+      INNER JOIN sections ON pages.section_id = sections.id
       WHERE sections.activity_id = \#\{id\}'"
   end
-  
+
   has_many :page_elements,
     :finder_sql => 'SELECT page_elements.* FROM page_elements
-    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
-  
+
   delegate :saveable_types, :reportable_types, :to => :investigation
-  
+
   include Noteable # convenience methods for notes...
   acts_as_replicatable
   acts_as_list :scope => :investigation
   include Changeable
   include TreeNode
   include Publishable
-    
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
-  
+
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
     }
   }
-  
-  named_scope :published, 
+
+  named_scope :published,
   {
     :conditions =>{:publication_status => "published"}
   }
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
     def display_name
       "Activity"
     end
-    
-    def search_list(options) 
+
+    def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
         activities = Activity.like(name)
@@ -103,41 +105,41 @@ class Activity < ActiveRecord::Base
         activities
       end
     end
-    
+
   end
-  
+
   ##
   ## Hackish stubs: Noah Paessel
   ##
   def offerings
     []
   end
-  
+
   def parent
     return investigation
   end
-  
+
   def children
     sections
   end
-  
+
   def self.display_name
     'Activity'
   end
-  
+
   def left_nav_panel_width
     300
   end
 
 
-      
-      
+
+
   def deep_xml
     self.to_xml(
       :include => {
         :teacher_notes=>{
           :except => [:id,:authored_entity_id, :authored_entity_type]
-        }, 
+        },
         :sections => {
           :exclude => [:id,:activity_id],
           :include => {
@@ -165,9 +167,9 @@ class Activity < ActiveRecord::Base
       }
     )
   end
-    
+
 @@opening_xhtml= <<HEREDOC
-  <h3>Procedures</h3>  
+  <h3>Procedures</h3>
   <p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
   <p></p>
   <h4>What will you be doing?</h4>
@@ -187,7 +189,7 @@ class Activity < ActiveRecord::Base
 HEREDOC
 
 @@engagement_xhtml= <<HEREDOC
-  <h3>Engagement</h3>  
+  <h3>Engagement</h3>
   <h4>What will you be doing?</h4>
   <p><em>What questions can you pose to encourage students to take risks and to deepen students’ understanding?</em></p>
   <p></p>
@@ -204,7 +206,7 @@ HEREDOC
 HEREDOC
 
 @@closure_xhtml= <<HEREDOC
-  <h3>Closure</h3>  
+  <h3>Closure</h3>
   <h4>What will you be doing?</h4>
   <p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
   <p></p>
@@ -227,4 +229,3 @@ HEREDOC
   end
 
 end
-

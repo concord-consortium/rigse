@@ -4,11 +4,11 @@ require 'pathname'
 module AppSettings
 
   APP_SETTINGS_PATH = "#{RAILS_ROOT}/config/settings.yml"
-  
+
   def settings_exists?(path=APP_SETTINGS_PATH)
     File.exists?(path) && File.stat(path).size > 0
   end
-    
+
   def load_app_settings(env=RAILS_ENV)
     load_all_app_settings[env]
   end

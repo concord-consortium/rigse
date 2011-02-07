@@ -5,11 +5,11 @@ class Portal::Offering < ActiveRecord::Base
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
-  
+
   has_one :report_embeddable_filter, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
-  
+
   has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id"
-  
+
   [:name, :description].each { |m| delegate m, :to => :runnable }
 
   has_many :open_responses, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
@@ -41,11 +41,11 @@ class Portal::Offering < ActiveRecord::Base
   def saveables
     multiple_choices + open_responses
   end
-  
+
   def resource_page?
     self.runnable.is_a? ResourcePage
   end
-  
+
   self.extend SearchableModel
 
   @@searchable_attributes = %w{status}
@@ -63,35 +63,35 @@ class Portal::Offering < ActiveRecord::Base
   def refresh_saveable_response_objects
     self.learners.each { |l| l.refresh_saveable_response_objects }
   end
-  
-  
+
+
   def active?
     active
   end
-  
+
   def activate
     self.active = true
   end
-  
+
   def activate!
     self.activate
     self.save
   end
-  
+
   def deactivate
     self.active = false
   end
-  
+
   def deactivate!
     self.deactivate
     self.save
   end
-  
+
   def can_be_deleted?
     learners.empty?
   end
-  
-  
+
+
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable
