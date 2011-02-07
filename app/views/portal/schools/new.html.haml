@@ -1,0 +1,5 @@
+
+- form_for(:portal_school, @portal_school, :url => { :action => "create" }) do |f|
+  = render :partial => 'form', :locals => { :portal_school => @portal_school, :f => f }
+  = submit_tag
+

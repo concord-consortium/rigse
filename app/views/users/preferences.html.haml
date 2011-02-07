@@ -2,20 +2,23 @@
   User Preferences
 - form_for @user do |form|
   .item
-    %ul.menu_h
-      %li
-        = submit_tag 'Save'
-      %li
-        = submit_tag 'Cancel'
     .content
-      = form.error_messages
-      = render :partial => 'form', :locals => { :f => form }
+      #left-col
+        = form.error_messages
+        = render :partial => 'form', :locals => { :f => form }
       
-      - if @user.portal_student
-        %fieldset
-          %legend Security Questions
-          = link_to "Click here", edit_user_security_questions_path(@user)
-          to change the security questions you use to reset your password if you forget it.
-        
-      = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
+        - if @user.portal_student
+          %fieldset
+            %legend Security Questions
+            = link_to "Click here", edit_user_security_questions_path(@user)
+            to change the security questions you use to reset your password if you forget it.
+
+      #right-col
+        = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
+
+      %ul.menu_h
+        %li
+          = submit_tag 'Save'
+        %li
+          = submit_tag 'Cancel'
 

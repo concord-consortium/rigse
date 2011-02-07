@@ -1,21 +1,18 @@
-- existing_students = portal_clazz.teacher ? (portal_clazz.teacher.students - portal_clazz.students) : nil
-- student_list = (students_in_class(portal_clazz.students)).sort { |a,b| (a.user.last_name <=> b.user.last_name) }
-/ = accordion_for(portal_clazz, "Students: #{student_list.length}", 'students_container') do
-
 = accordion_for(portal_clazz, 'Student Roster') do
   .content
     .action_menu
       .action_menu_header_left
-        %strong= "Students: #{student_list.length}"    
+        %div
+          %strong= "Class: #{portal_clazz.name}"
+        %div
+          %strong= "Students: #{portal_clazz.students.length}"    
       .action_menu_header_right
-        %ul
-          - if portal_clazz.changeable?(current_user)     
-            - if (defined? existing_students) && existing_students.size > -1
-              %li 
-                %span{:id => 'link_text'} 
-                = link_to_remote "Add ", :url => {:action=>'add_student', :id => portal_clazz}, :with => "'student_id='+$('student_id_selector').value"
-                =select_tag('student_id', options_for_select(existing_students.map { |s| [s.login,s.id] }), :id=>'student_id_selector')
-              
-            %li= link_to "add new", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
+        = link_to "Print", class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+        - if portal_clazz.changeable?(current_user)
+          %br
+          = student_add_dropdown(portal_clazz)
+          %br
+          = link_to "Register and add a new student", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
+
   .item{:id=>'students_listing'}
-    = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+    = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}

@@ -111,6 +111,8 @@ class Investigation < ActiveRecord::Base
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
+  
+  named_scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
   include Noteable # convenience methods for notes...
@@ -152,11 +154,17 @@ class Investigation < ActiveRecord::Base
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
           end
-        else
+        elsif (!grade_span.empty?)
           if (options[:include_drafts])
             investigations = Investigation.like(name).with_gse.grade(grade_span)
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+          end
+        else 
+          if (options[:include_drafts])
+            investigations = Investigation.like(name)
+          else
+            investigations = Investigation.published.like(name)
           end
         end
       else
@@ -170,6 +178,11 @@ class Investigation < ActiveRecord::Base
       if portal_clazz
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
+      
+      unless options[:sort_order].blank?
+        investigations = investigations.ordered_by(options[:sort_order])
+      end
+      
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else
@@ -276,6 +289,15 @@ class Investigation < ActiveRecord::Base
       end
     end
     listing
+  end
+
+  # TODO: we have to make this container nuetral,
+  # using parent / tree structure (children)
+  def reportable_elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = activities.collect{|a| a.reportable_elements }.flatten
+    @reportable_elements.each{|elem| elem[:investigation] = self}
+    return @reportable_elements
   end
 
 end

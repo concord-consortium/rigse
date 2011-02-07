@@ -5,7 +5,11 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
   
+  before_filter :teacher_admin_or_config, :only => [:class_list]
   
+  def current_clazz
+    Portal::Clazz.find(params[:id])
+  end
   
   public
   # GET /portal_clazzes
@@ -240,21 +244,32 @@ class Portal::ClazzesController < ApplicationController
     container = params[:dropped_dom_id]
     offering_id = params[:offering_id]
     @offering = Portal::Offering.find(offering_id)
-    if @offering
+    if (@offering && @offering.can_be_deleted?)
       @runnable = @offering.runnable
       @offering.destroy
       @portal_clazz.reload
+      render :update do |page|
+        page << "var container = $('#{container}');"
+        page << "var element = $('#{dom_id}');"
+        page << "element.remove();"
+        page << "$('flash').update('');"
+        page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
+      end  
+    else
+      error_msg = "Cannot delete offering with student data. Please deactivate instead."
+      render :update do |page|
+        page << "var element = $('#{dom_id}');"
+        page << "element.show();"
+        page << "$('flash').update('#{error_msg}');"
+        page << "alert('#{error_msg}');"
+      end
     end
-    render :update do |page|
-      page << "var container = $('#{container}');"
-      page << "var element = $('#{dom_id}');"
-      page << "element.remove();"
-      page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
-    end  
   end
   
   # HACK: Add a student to a clazz
   # TODO: test this method
+  # NOTE: delete student is in the student_clazzes_controller.
+  # we should put these functions in the same place ...
   def add_student
     @student = nil
     @portal_clazz = Portal::Clazz.find(params[:id])
@@ -268,10 +283,14 @@ class Portal::ClazzesController < ApplicationController
       render :update do |page|
         page.replace_html  'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
         page.visual_effect :highlight, 'students_listing'
+        page.replace_html  'student_add_dropdown', @template.student_add_dropdown(@portal_clazz)
       end
     else
       render :update do |page|
-        page << "$('flash').update('that was a total failure')"
+        # previous message was "that was a total failure"
+        # this case should not happen, but if it does, display something
+        # more friendly such as:
+        # page << "$('flash').update('Please elect a user from the list before clicking add button.')"
       end
     end
   end
@@ -330,6 +349,14 @@ class Portal::ClazzesController < ApplicationController
       # end
     rescue
       render(:update) { |page| page << "$('flash').update('There was an error while processing your request.')" }
+    end
+  end
+  
+  def class_list
+    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
+    
+    respond_to do |format|
+      format.html { render :layout => 'report'}
     end
   end
     

@@ -11,8 +11,17 @@ class Embeddable::LabBookSnapshot < ActiveRecord::Base
   acts_as_replicatable
 
   include Changeable
-
   self.extend SearchableModel
+  
+  send_update_events_to :investigations
+  
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
   
   @@searchable_attributes = %w{name description}
   
@@ -24,10 +33,12 @@ class Embeddable::LabBookSnapshot < ActiveRecord::Base
 
   default_value_for :name, "Embeddable::LabBookSnapshot element"
   default_value_for :description, "description ..."
+  
 
   def self.display_name
     "Snapshot Button"
   end
+
 
   def other_elements_on_page
     results = []

@@ -15,7 +15,7 @@ class BundleContent
     bundle_logger_id = env[PATH_INFO][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
     if env[REQUEST_METHOD] == POST && bundle_logger_id && bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
       bundle_content = bundle_logger.bundle_contents.create(:body => env[POST_BODY].read)
-      digest = Digest::MD5.hexdigest(bundle_content.original_body ? bundle_content.original_body : bodybundle_content.body)
+      digest = Digest::MD5.hexdigest(bundle_content.original_body ? bundle_content.original_body : bundle_content.body)
       [201, 
         { 'Content-Type' => 'text/xml', 
           'Last-Modified' => bundle_content.created_at.httpdate, 

@@ -60,10 +60,33 @@ describe Portal::StudentsController do
       
       User.count(:all).should == current_user_count + 1
       Portal::Student.count(:all).should == current_student_count + 1
+      
     end
     
-    it "does not create a user or a student when given invalid parameters" do
-      @params_for_creation[:user][:password] = "wrong"
+
+    # after creating a new account, students still need to login.
+    # this is because they need to remember their username and password
+    it "clearly shows that the student needs to login after successful create" do
+      stub_user_with_params
+      post :create, @params_for_creation
+      
+      # should show text "your username is"
+      assert_select "p", /username\s+is/i
+      
+      # should show directions to login:
+      assert_select "p", /log\s+in/i
+    end
+
+    # student is not logged in, so we shouldn't display their classes!
+    it "does not show any of the students classes after successful creation" do
+      stub_user_with_params
+      post :create, @params_for_creation
+      assert_select "*#clazzes_nav", false
+      assert_select "input#login"
+    end
+
+    it "does not create a user or a student when given incorrect password_confirmation" do
+      @params_for_creation[:user][:password_confirmation] = "wrong"
       
       current_user_count = User.count(:all)
       current_student_count = Portal::Student.count(:all)
@@ -73,6 +96,19 @@ describe Portal::StudentsController do
       User.count(:all).should == current_user_count
       Portal::Student.count(:all).should == current_student_count
     end
+    
+    it "does not create a user or a student when given an invalid classword" do
+      @params_for_creation[:clazz][:class_word] = "wrong"
+      
+      current_user_count = User.count(:all)
+      current_student_count = Portal::Student.count(:all)
+      
+      post :create, @params_for_creation
+      
+      User.count(:all).should == current_user_count
+      Portal::Student.count(:all).should == current_student_count
+    end
+    
     
     describe "security questions" do
       before(:each) do

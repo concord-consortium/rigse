@@ -1,6 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: jnlp
 version: !ruby/object:Gem::Version 
+  hash: 5
   prerelease: false
   segments: 
   - 0
@@ -21,9 +22,11 @@ dependencies:
   name: hpricot
   prerelease: false
   requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - "="
       - !ruby/object:Gem::Version 
+        hash: 335
         segments: 
         - 0
         - 6
@@ -35,9 +38,11 @@ dependencies:
   name: rspec
   prerelease: false
   requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 27
         segments: 
         - 1
         - 3
@@ -49,9 +54,11 @@ dependencies:
   name: ci_reporter
   prerelease: false
   requirement: &id003 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 15
         segments: 
         - 1
         - 6
@@ -97,16 +104,20 @@ rdoc_options:
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
 required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 31
       segments: 
       - 1
       - 3
@@ -115,7 +126,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: rubywebstart
-rubygems_version: 1.3.6
+rubygems_version: 1.3.7
 signing_key: 
 specification_version: 3
 summary: Ruby tools for working with Java Web Start JNLPs.

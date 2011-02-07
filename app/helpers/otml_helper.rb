@@ -1,7 +1,7 @@
 module OtmlHelper
 
   def net_logo_package_name
-    return APP_CONFIG[:net_logo_package_name] || "otrunknl4"
+    @jnlp_adaptor.net_logo_package_name
   end
   
   def ot_menu_display_name(object)
@@ -317,6 +317,10 @@ module OtmlHelper
   def generate_otml_datastore(data_collector)
     capture_haml do
       haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+        haml_tag :channelDescriptions do
+          haml_tag :OTDataChannelDescription
+          haml_tag :OTDataChannelDescription
+        end
         if data_collector.data_store_values && data_collector.data_store_values.length > 0
           haml_tag :values do
             data_collector.data_store_values.each do |value|
@@ -368,7 +372,20 @@ module OtmlHelper
     end
   end
   
-
+  def preview_warning
+    APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
+  end
+  
+  def otml_css_path(base="stylesheets",name="otml")
+    theme = APP_CONFIG[:theme]
+    file = "#{name}.css"
+    default_path = File.join(base,file)
+    if theme
+      themed_path = File.join(base,'themes', theme, file)
+      if File.exists? File.join(RAILS_ROOT,'public',themed_path)
+        return "/#{themed_path}"
+      end
+    end
+    return "/#{default_path}"
+  end
 end
-
-

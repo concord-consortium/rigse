@@ -12,7 +12,7 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
+    = stylesheet_link_merged( (APP_CONFIG[:theme]||'default').to_sym, {'media' => 'all'})
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag "tiny_mce/tiny_mce"
@@ -28,15 +28,6 @@
       
     
   %body
-    #launch_warning{:class=>"alert",:style=>"display: none;"}
-      .padded_content
-        = render :partial => "home/java_launch_info"
-        %p
-          %a
-            [Click anywhere to close this window.]
-        %p
-          Don't show again:
-          %input{:type=>'checkbox', :onclick=>"createCookie('launch_warning','true');"}
             
     #note{:style=>"display: none;"}
     #waiter{:style=>"display: none;"}
@@ -97,9 +88,9 @@
 
           - if @portal_school
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
-          - elsif @portal_teacher
+          - elsif @portal_teacher && (@portal_teacher.user == current_user)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
-          - elsif @portal_student && @portal_student.user
+          - elsif @portal_student && (@portal_student.user == current_user)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
           = yield :side_bar
 

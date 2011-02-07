@@ -12,7 +12,7 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged(APP_CONFIG[:theme]||'default').to_sym
+    = stylesheet_link_merged( (APP_CONFIG[:theme]||'default').to_sym, {'media' => 'all'})
     / experiment: ovveride stylesheet
     = stylesheet_link_tag("/resources/override.css")
     = javascript_include_merged :base
@@ -30,15 +30,6 @@
       
     
   %body
-    #launch_warning{:class=>"alert",:style=>"display: none;"}
-      .padded_content
-        = render :partial => "home/java_launch_info"
-        %p
-          %a
-            [Click anywhere to close this window.]
-        %p
-          Don't show again:
-          %input{:type=>'checkbox', :onclick=>"createCookie('launch_warning','true');"}
             
     #note{:style=>"display: none;"}
     #waiter{:style=>"display: none;"}
@@ -85,9 +76,11 @@
           / offer people a way to pop-out of iframe:
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          - if current_user.has_role?('admin', 'member', 'guest', 'manager', 'teacher', 'researcher', 'author')
-            %li.trail=link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize, investigations_path)
-            
+          - if current_user.has_role?('admin', 'manager', 'researcher', 'author')
+            %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
+          - elsif current_user.has_role?('guest')
+            %li.trail=link_to("Preview #{top_level_container_name.humanize.pluralize}", investigation_preview_list_path)
+              
           %ul.menu_h_right
 
             - if current_user.has_role?('admin', 'manager')
@@ -107,9 +100,9 @@
             = render :partial => 'shared/accordian_nav'
           - elsif @portal_school
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
-          - elsif @portal_teacher
+          - elsif @portal_teacher && (@portal_teacher.user == current_user)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
-          - elsif @portal_student && @portal_student.user
+          - elsif @portal_student && (@portal_student.user == current_user)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
           = yield :side_bar
 

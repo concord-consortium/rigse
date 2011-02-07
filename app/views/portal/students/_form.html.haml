@@ -7,15 +7,15 @@
         %li
           = label_tag :user, 'First Name: ', :class=>"right"
           = text_field :user, :first_name, {:live => false}
+          - if portal_clazz
+            = hidden_field :clazz, :id, {:value => portal_clazz.id}
         %li  
           = label_tag :user, 'Last Name: ', :class=>"right"
           = text_field :user, :last_name, {:live => false}
-        - unless signup
+        -# unless signup
           %li 
             = label_tag :portal_student, 'grade level: ', :class=>"right" 
             = f.collection_select(:grade_level_id, (current_user.portal_teacher ? current_user.portal_teacher.schools.collect{|s| s.grade_levels}.flatten.uniq : []), :id, :name, options ={:prompt => "-Select a grade level"}, :class =>"string")
-            - if portal_clazz
-              = hidden_field :clazz, :id, {:value => portal_clazz.id}
   - field_set_tag 'password' do
     .aligned
       %ul
@@ -23,12 +23,13 @@
           = label_tag :user, 'Password: ', :class=>"right"
           = password_field :user, :password, {:live => false} 
         %li
-          = label_tag :user, 'Again : ', :class=>"right"
+          = label_tag :user, 'Password Again : ', :class=>"right"
           = password_field :user, :password_confirmation, {:live => false}
         
         - if signup
           %li
             = label_tag :clazz, 'Class Word: ', :class=>"right"
+            - value = portal_clazz ? portal_clazz.class_word : 'class word'
             = text_field :clazz, :class_word, {:live => false}
             
       - if signup && @project.use_student_security_questions

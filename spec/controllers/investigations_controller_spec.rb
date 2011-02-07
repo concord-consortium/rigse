@@ -38,4 +38,44 @@ describe InvestigationsController do
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
 
+  
+  it "should render prievew warning in OTML" do
+    get :show, :id => @investigation.id, :format => 'otml'
+    assert_select "*.warning"
+  end
+
+  it "should render overlay removing warning in dynamic_otml" do
+    get :show, :id => @investigation.id, :format => 'dynamic_otml'
+    assert_select "overlays" do
+      assert_select "OTOverlay" do
+        assert_select "deltaObjectMap" do
+          assert_select "entry[key=?]", "#{@investigation.uuid}!/preview_warning"
+        end
+      end
+    end
+  end
+
+  describe "Researcher Reports" do
+    it 'should return an XLS file for the global Usage Report' do
+      get :usage_report
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the global Details Report' do
+      get :details_report
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the specific Usage Report' do
+      get :usage_report, :id => @investigation.id
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+    it 'should return an XLS file for the specific Details Report' do
+      get :details_report, :id => @investigation.id
+      response.sending_file?.should be_true
+      response.content_type.should eql "application/vnd.ms.excel"
+    end
+  end
+
 end

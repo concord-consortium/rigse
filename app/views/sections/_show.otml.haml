@@ -3,13 +3,16 @@
 - content_for("section_#{dom_id_for(section)}".to_sym) do
   %OTSection{ :name => ot_menu_display_name(section)   }
     %header
-      %OTCompoundDoc{ :local_id => ot_local_id_for(section, :header) }
-
     %content
       %object{ :refid => ot_refid_for(section, :page_card_container)}/
       
     %footer
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :footer) }
+        %bodyText
+          %p{:style=>"text-align: right; margin: 0px; margin-right: 10px;"}
+            %object{:refid =>'${labbook}'}/
+            &nbsp;
+            %object{ :refid => ot_refid_for(section, :menu) }/
 
           
 - content_for(:library) do

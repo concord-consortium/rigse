@@ -9,6 +9,7 @@ coverage
 rinet/**/*
 db/*.sqlite3
 db/*.sql
+db/*.sql.gz
 config/database.yml
 config/glassfish.yml
 config/sds.yml
@@ -38,11 +39,13 @@ public/stylesheets/notes.css
 public/stylesheets/screen.css
 public/stylesheets/readme.css
 public/stylesheets/teacher_overlay.css
+public/stylesheets/please_wait.css
 public/jnlp/*/*
 config/jnlp_objects/*/*
 config/jnlp_objects/*.yaml
 config/maven_jnlp_object*.yaml
 public/otrunk-examples/
+public/resources
 public/stylesheets/data_table.css
 public/stylesheets/active_scaffold/DO_NOT_EDIT
 public/stylesheets/active_scaffold/default/stylesheet-ie.css
@@ -76,3 +79,12 @@ resources/rinet_test_data/report*
 mkmf.log
 hudson/*
 spec/reports
+.rvmrc
+config/preinitializer.rb
+local_files
+config/newrelic.yml
+public/system/attachments/*db/:wq
+public/system/attachments/*
+*.swp
+*.swo
+capybara-*.html

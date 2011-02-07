@@ -8,7 +8,8 @@ class Portal::Clazz < ActiveRecord::Base
   # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
   
   has_many :offerings, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
-  
+  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :conditions => { :active => true }
+
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
   
@@ -21,8 +22,7 @@ class Portal::Clazz < ActiveRecord::Base
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
-  #TODO: alias chain changeable? to check all teachers, but honor PortalChangable
-  include PortalChangeable
+  include Changeable
   
   # String constants for error messages -- Cantina-CMH 6/2/10
   ERROR_UNAUTHORIZED = "You are not allowed to modify this class."

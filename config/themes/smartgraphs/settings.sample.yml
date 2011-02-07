@@ -1,14 +1,10 @@
---- 
-development: &development
-  theme: smartgraphs
-  runnables_use: browser
-  runnable_mime_type: run_external_html
-  top_level_container_name: external_activity
-  active_school_levels:
+---
+development: &id003
+  :active_school_levels:
     - "2"
     - "3"
     - "4"
-  active_grades:
+  :active_grades:
     - "6"
     - "7"
     - "8"
@@ -16,23 +12,23 @@ development: &development
     - "10"
     - "11"
     - "12"
-  use_gse: false
-  include_otrunk_examples: false
-  help_email: stephen.bannasch@gmail.com
-  site_school: SmartGraphs School
-  description: ""
-  site_district: Smart Graphs District
-  site_name: SmartGraphs
-  site_url: http://localhost:3000
-  enable_default_users: true
-  default_admin_user: 
-    first_name: Stephen
-    last_name: Bannasch
-    login: stephen
-    email: stephen.bannasch@gmail.com
-  states_and_provinces: 
-  - MA
-test: *development
-staging: *development
-cucumber: *development
-production: *development
+  :use_gse: false
+  :help_email: skim@concord.org
+  :theme: smartgraphs
+  :site_school: SmartGraphs School
+  :description: ""
+  :site_district: SmartGraphs District
+  :site_name: SmartGraphs
+  :site_url: http://smartgraphs.dev.concord.org
+  :enable_default_users: true
+  :default_admin_user:
+    :first_name: Aaron
+    :last_name: Unger
+    :login: aunger
+    :email: aunger@concord.org
+  :states_and_provinces:
+  - MA PA
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003

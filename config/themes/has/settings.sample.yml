@@ -1,10 +1,10 @@
---- 
+---
 development: &id003
-  active_school_levels:
+  :active_school_levels:
     - "2"
     - "3"
     - "4"
-  active_grades:
+  :active_grades:
     - "6"
     - "7"
     - "8"
@@ -12,39 +12,48 @@ development: &id003
     - "10"
     - "11"
     - "12"
-  theme: has
-  site_name: HAS Investigations
-  site_url: http://localhost:3000
-  runnables_use: otrunk_jnlp
-  runnable_mime_type: 
-  top_level_container_name: investigation
-  site_school: HAS Investigations-school
-  description: ""
-  site_district: HAS Investigations-district
-  help_email: has-investigations@concord.org
-  use_gse: false
-  enable_default_users: true
-  help_email: has@concord.org
-  admin_email: aunger@concord.org
-  default_admin_user: 
-    first_name: Aaron
-    login: aunger
-    last_name: Unger
-    email: aunger@concord.org
-  states_and_provinces: 
+  :theme: has
+  :site_name: HAS Investigations
+  :site_url: http://has.portal.concord.org
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: HAS Investigations-school
+  :description: ""
+  :site_district: HAS Investigations-district
+  :help_email: apallant@concord.org
+  :use_gse: false
+  :enable_default_users: true
+  :admin_email: aunger@concord.org
+  :tiny_mce:
+    :buttons1:
+    - bold,italic,underline
+    - sup,sub
+    - bullist,numlist
+    - link,image
+    - pastext, pasteword,selectall
+    - justifyleft,justifycenter,justifyright
+    - code
+
+  :default_admin_user:
+    :first_name: Aaron
+    :login: aunger
+    :last_name: Unger
+    :email: aunger@concord.org
+  :states_and_provinces:
     - MA
-  maven_jnlp_servers:
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families: 
-    - all-otrunk-snapshot
-  default_maven_jnlp: 
-    version: snapshot
-    server: concord
-    family: all-otrunk-snapshot
-  valid_sakai_instances:
-  
+  :maven_jnlp_families:
+    - has-otrunk
+  :default_maven_jnlp:
+    :version: 0.1.0-20100824.215501
+    :server: concord
+    :family: has-otrunk
+  :valid_sakai_instances:
+
 test: *id003
 production: *id003
 staging: *id003

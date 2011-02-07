@@ -3,7 +3,9 @@ set :stages, %w(
   itsisu-dev itsisu-staging itsisu-production 
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
+  geniverse-dev geniverse-production
   xproject-dev
+  genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
   sparks-dev)
 set :default_stage, "development"
@@ -11,6 +13,7 @@ set :default_stage, "development"
 require 'capistrano/ext/multistage'
 require 'haml'
 
+require 'lib/yaml_editor'
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
@@ -94,9 +97,10 @@ namespace :db do
 
   desc '[NOTE: use "fetch_remote_db" instead!] Downloads db/production_data.sql from the remote production environment to your local machine'
   task :remote_db_download, :roles => :db, :only => { :primary => true } do
+    remote_db_compress
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
-    download("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql", :via => :sftp)
+    download("#{deploy_to}/#{current_dir}/db/production_data.sql.gz", "db/production_data.sql.gz", :via => :scp)
     ssh_options[:compression] = ssh_compression
   end
   
@@ -104,15 +108,25 @@ namespace :db do
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do  
     ssh_compression = ssh_options[:compression] 
     ssh_options[:compression] = true
-    upload("db/production_data.sql", "#{deploy_to}/#{current_dir}/db/production_data.sql", :via => :sftp)
+    upload("db/production_data.sql.gz", "#{deploy_to}/#{current_dir}/db/production_data.sql.gz", :via => :scp)
     ssh_options[:compression] = ssh_compression
+    remote_db_uncompress
+  end
+
+  task :remote_db_compress, :roles => :db, :only => { :primary => true } do
+    run "gzip -f #{deploy_to}/#{current_dir}/db/production_data.sql"
+  end
+
+  task :remote_db_uncompress, :roles => :db, :only => { :primary => true } do
+    run "gunzip -f #{deploy_to}/#{current_dir}/db/production_data.sql.gz"
   end
 
   desc 'Cleans up data dump file'
   task :remote_db_cleanup, :roles => :db, :only => { :primary => true } do
     execute_on_servers(options) do |servers|
       self.sessions[servers.first].sftp.connect do |tsftp|
-        tsftp.remove! "#{deploy_to}/#{current_dir}/db/production_data.sql" 
+        tsftp.remove "#{deploy_to}/#{current_dir}/db/production_data.sql"
+        tsftp.remove "#{deploy_to}/#{current_dir}/db/production_data.sql.gz"
       end
     end
   end 
@@ -141,6 +155,20 @@ namespace :db do
     upload("config/initializers/site_keys.rb", "#{deploy_to}/shared/config/initializers/site_keys.rb", :via => :sftp)
   end
 
+  desc "Pulls uploaded attachments from the remote server"
+  task :fetch_remote_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync -avx --delete #{domain}:#{remote_dir} #{local_dir}"
+  end
+  
+  desc "Pushes uploaded attachments to the remote server"
+  task :push_local_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync -avx --delete #{local_dir} #{domain}:#{remote_dir}"
+  end
+
 end
 
 namespace :deploy do
@@ -160,8 +188,8 @@ namespace :deploy do
   end
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
-  task :from_scratch do
-    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
+  task :setup_new_app do
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:new_rites_app --trace"
   end
   
   desc "setup directory remote directory structure"
@@ -176,12 +204,14 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
+    run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
+    run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
   end
 
@@ -193,11 +223,16 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
+    run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
+    run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
+    # This is part of the setup necessary for using newrelics reporting gem 
+    # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
   end
     
   desc "install required gems for application"
@@ -209,6 +244,10 @@ namespace :deploy do
   task :set_permissions, :roles => :app do
     sudo "chown -R apache.users #{deploy_to}"
     sudo "chmod -R g+rw #{deploy_to}"
+    
+    # Grant write access to the paperclip attachments folder
+    sudo "chown -R apache.users #{shared_path}/system/attachments"
+    sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
   
   desc "Create asset packages for production" 
@@ -500,6 +539,23 @@ namespace :convert do
       "rake RAILS_ENV=#{rails_env} rigse:jnlp:empty_jnlp_object_cache --trace"
   end
 
+  # seb: 20101019
+  desc "Reset all activity position information"
+  task :reset_activity_positions, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} rigse:fixup:reset_activity_positions --trace"
+  end
+
+  # seb: 20110126
+  # See commit: Add "offerings_count" cache counter to runnables
+  # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
+  desc "Recalculate the 'offerings_count' field for runnable objects"
+  task :reset_offering_counts, :roles => :app do
+    # remove investigation cache files
+    sudo "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
+    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
+  end
+
 end
 
 
@@ -520,6 +576,9 @@ namespace :installer do
     %x[cp config/installer.yml config/installer.yml.mine]
     download("#{deploy_to}/#{current_dir}/config/installer.yml", "config/installer.yml", :via => :scp)
     # build the installers
+    editor = YamlEditor.new('./config/installer.yml')
+    editor.edit
+    editor.write_file
     %x[rake build:installer:build_all ]
     
     # post the config back up to remote server
@@ -540,4 +599,4 @@ before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
 after 'deploy:symlink', 'deploy:create_asset_packages'
 after 'deploy:create_asset_packages', 'deploy:cleanup'
-
+after 'installer:create', 'deploy:restart'

@@ -1,8 +1,8 @@
 class Portal::OfferingsController < ApplicationController
   
-  layout 'report', :only => %w{report open_response_report multiple_choice_report}
+  layout 'report', :only => %w{report open_response_report multiple_choice_report separated_report}
   include RestrictedPortalController
-  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
   
   def current_clazz
     Portal::Offering.find(params[:id]).clazz
@@ -134,6 +134,18 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def activate
+    @offering = Portal::Offering.find(params[:id])
+    @offering.activate!
+    redirect_to :back
+  end
+  
+  def deactivate
+    @offering = Portal::Offering.find(params[:id])
+    @offering.deactivate!
+    redirect_to :back
+  end
+  
   def report
     @offering = Portal::Offering.find(params[:id])
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
@@ -142,7 +154,7 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
     
     respond_to do |format|
-      format.html # multiple_choice_report.html.haml
+      format.html # report.html.haml
     end
   end
   
@@ -164,6 +176,49 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def separated_report
+    @offering = Portal::Offering.find(params[:id])
+    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+    @learners = reportUtil.learners
+    
+    @page_elements = reportUtil.page_elements
+    
+    respond_to do |format|
+      format.html # report.html.haml
+    end
+  end
+  
+  def report_embeddable_filter
+    @offering = Portal::Offering.find(params[:id])
+    @report_embeddable_filter = @offering.report_embeddable_filter
+
+    if params[:commit] == "Show all"
+      @report_embeddable_filter.ignore = true
+    else
+      @report_embeddable_filter.ignore = false
+    end
+    
+    embeddables = params[:filter].collect{|type, ids|
+      logger.info "processing #{type}: #{ids.inspect}"
+      klass = type.constantize
+      ids.collect{|id|
+        klass.find(id.to_i)
+      }
+    }.flatten.compact.uniq
+    @report_embeddable_filter.embeddables = embeddables
+    
+    redirect_url = report_portal_offering_url(@offering)
+    respond_to do |format|
+      if @report_embeddable_filter.save
+        flash[:notice] = 'Report filter was successfully updated.'
+        format.html { redirect_to :back }
+        format.xml  { head :ok }
+      else
+        format.html { redirect_to :back }
+        format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
   
   # GET /portal/offerings/data_test(.format)
   def data_test

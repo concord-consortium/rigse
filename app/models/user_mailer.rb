@@ -16,7 +16,7 @@ class UserMailer < ActionMailer::Base
   def setup_email(user)
     self.current_theme = (APP_CONFIG[:theme]||'default')
     @recipients = "#{user.email}"
-    @from = APP_CONFIG[:admin_email]
+    @from = APP_CONFIG[:help_email]
     @subject = "[#{APP_CONFIG[:site_name]}] "
     @sent_on = Time.now
     @body[:user] = user

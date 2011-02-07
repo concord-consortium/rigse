@@ -129,4 +129,11 @@ class Embeddable::InnerPage < ActiveRecord::Base
     return "print"
   end
   
+  # TODO: we have to make this container nuetral,
+  # using parent / tree structure (children)
+  def reportable_elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = sub_pages.collect{|s| s.reportable_elements }.flatten
+    return @reportable_elements
+  end
 end

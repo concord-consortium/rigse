@@ -1,0 +1,51 @@
+---
+development: &id003
+  :active_school_levels:
+    - "2"
+    - "3"
+    - "4"
+  :active_grades:
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  :theme: genomedynamics
+  :site_name: Genome Dynamics
+  :site_url: http://localhost:3000
+  :help_email: genome-dynamics@concord.org
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: Genome Dynamics-school
+  :description: ""
+  :site_district: Genome Dynamics-district
+  :use_gse: false
+  :enable_default_users: true
+  :default_admin_user:
+    :first_name: Stephen
+    :login: stephen
+    :last_name: Bannasch
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces:
+    - ME
+  :maven_jnlp_servers:
+    - :name: concord-current-sig
+      :host: http://jnlp.concord.org
+      :path: /dev2/org/concord/maven-jnlp/
+    - :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  :maven_jnlp_families:
+    - all-otrunk-snapshot
+  :default_maven_jnlp:
+    :version: 0.1.0-20110120.152517
+    :server: concord-current-sig
+    :family: all-otrunk-snapshot
+
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003

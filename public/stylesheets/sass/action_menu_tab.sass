@@ -59,12 +59,17 @@ a.rollover:hover
   :text-indent -18px
   :background-color inherit !important
 
+#investigation_activities_list
+  :list-style-type none
+  :margin 20px 0 0
+  :padding-left 0
     
 .action_menu
   :font-size 11px
-  :margin 0px
+  :margin 0 !important
   :padding 3px 10px
-  :background-color = !rieps_content_text_color
+  :background-color #3a878b
+  :color #fff
   ul
     li
       :list-style-type none 
@@ -77,12 +82,21 @@ a.rollover:hover
   .action_menu_header_left
     :float left
     :text-align left
-    :margin 0px
+    :margin 0
+    :width 50% !important
     .author
       :font-size 9px
       :font-style italic
+    a
+      :color #fff
+    input
+      :float left
+      :margin-right 5px
+    p
+      :clear both
 
   .action_menu_header_right
+    :background transparent
     :float right
     :text-align right
     :margin 0px
@@ -92,12 +106,19 @@ a.rollover:hover
       :font-style italic
     +action_menu_tab
     ul
+      :background transparent
       li
+        :background transparent
         a, a:visited, a:active
-          :border-bottom-width 2px
-          :border-style solid
+          :font-weight normal
+          :text-align center
+          :margin 7px 0
+          :padding 3px 7px
+          /* CSS3
+          :border-radius 8px
+          :-moz-border-radius 8px
+          :-webkit-border-radius 8px
         a.rollover
-          :border-style none
           img
             :border-style none
 
@@ -111,12 +132,17 @@ a.rollover:hover
     :display table-cell
     :text-align right
     +action_menu_tab
+
+  .action_menu_header_right a
+    :color #fff
   
   ul.menu
     :list-style-image none
     :list-style-position outside
     :list-style-type none
-    
+    li.menu a
+      :margin-top 3px !important
+      
   ul.subsection_tabs
     :list-style-image none
     :list-style-position outside
@@ -143,3 +169,72 @@ a.rollover:hover
     a:hover
       :text-decoration underline !important
       :color = !rieps_brown !important
+
+.block_list ul
+  :list-style none
+  :margin 0 0 1.5em
+  :padding 0
+
+#clazz_offerings
+  :background #fff
+  :border solid 1px #ddd
+  :color #333
+  :height auto
+  :margin-top 0
+  :margin-right 40px
+  :min-height 50px
+  :padding 25px 4px 30px
+  :width 592px
+
+.action_menu_activity
+  :background #fff
+  :color #333
+  :padding 0 6px 6px
+.action_menu_activity_title
+  :clear both
+  :font-size 1.2em
+  :width 100%
+.action_menu_activity_options
+  :float left
+  :margin-bottom 15px
+  :text-transform uppercase
+  :width 100%
+.action_menu_activity_options a
+  :color #333
+
+.item .action_menu
+  :background-color #e5e5e5
+  :color #333
+.item .action_menu .action_menu_activity_options
+  :clear none !important
+  :color #333
+  :float right
+  :margin 3px 0 0 0
+  :padding 0
+  :text-align right
+  :text-transform uppercase
+  :width 10%
+.item .action_menu .action_menu_activity_options a
+  :color #333 !important
+.item .action_menu .action_menu_activity_title
+  :clear none !important
+  :float left
+  :width 85%
+#students_listing table th, #students_listing table td 
+  :text-align left !important
+div.action_menu_header_left span.dev_note a, div.action_menu_header_left span.filter_selection_control a, div.action_menu_header_left a.container_link
+  :color #333 !important
+#section_pages_list, #elements_container, #activity_sections_list
+  :margin-left 0
+  a.container_link
+    :font-weight bold
+  li
+    :list-style none
+  .action_menu
+    :background transparent
+    .component_title
+      :color #333
+  p
+    :font-size 11px
+    :font-style italic
+    :padding 5px 10px

@@ -111,6 +111,7 @@ class Portal::DistrictsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(portal_districts_url) }
+      format.js {}
       format.xml  { head :ok }
     end
   end

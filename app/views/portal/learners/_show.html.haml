@@ -1,12 +1,3 @@
-%div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
-  = menu_for_learner(portal_learner)
-  / %div{ :id => dom_id_for(portal_learner, :details), :class => 'content' }
-  /   items to follow
-  /   %item
-  /     item 1
-  /   %item
-  /     item 2
-
-/ = accordion_for(portal_learner, menu_for_learner(portal_learner, options)) do
-/   %div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
-/     %div{:id => dom_id_for(portal_learner, :details), :class => 'content'}
+- if portal_learner && portal_learner.student
+  %div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
+    = menu_for_learner(portal_learner)

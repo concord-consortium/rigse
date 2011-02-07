@@ -27,8 +27,9 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/new.xml
   def new
     @portal_teacher = Portal::Teacher.new
-    # order @portal_districts so the virtual districts appear first in the list of Districts and Schools
-    domains_and_grades
+    
+    # TODO: We dont use domains or grades for teachers anymore.
+    load_domains_and_grades
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_teacher }
@@ -44,11 +45,9 @@ class Portal::TeachersController < ApplicationController
   # POST /portal_teachers
   # POST /portal_teachers.xml
   def create
-    #if params[:school][:id]
-      @portal_school = Portal::School.find_by_id(params[:school][:id])
-    #else
-    #  @portal_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
-    #end
+    portal_school = Portal::School.find_by_id(params[:school][:id])
+    
+    # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
     if params[:grade]
       @portal_grade = Portal::Grade.find(params[:grade][:id])
@@ -57,7 +56,8 @@ class Portal::TeachersController < ApplicationController
     if params[:domain]
       @domain = RiGse::Domain.find(params[:domain][:id])
     end
-    domains_and_grades
+    load_domains_and_grades
+
     @user = User.new(params[:user])
     #if @user && @user.valid?
     #  @user.register!
@@ -67,12 +67,12 @@ class Portal::TeachersController < ApplicationController
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
       t.domain = @domain
-      t.schools << @portal_school if !@portal_school.nil?
+      t.schools << portal_school if !portal_school.nil?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
     
     #if @user.errors.empty? && @portal_teacher.save
-    if @user.valid? && @portal_teacher.valid? && !@portal_school.nil?
+    if @user.valid? && @portal_teacher.valid? && !portal_school.nil?
       if @user.register! && @portal_teacher.save
       # will redirect:
         successful_creation(@user)
@@ -82,7 +82,7 @@ class Portal::TeachersController < ApplicationController
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
-    @user.errors.add(:you, "must select a school") if @portal_school.nil?
+    @user.errors.add(:you, "must select a school") if portal_school.nil?
     failed_creation
     
   end
@@ -117,9 +117,8 @@ class Portal::TeachersController < ApplicationController
   end
   
   def successful_creation(user)
-    flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation link."
-    redirect_back_or_default(root_path)
+    # Render the UsersController#thanks page instead of showing a flash message.
+    render :template => 'users/thanks'
   end
   
   def failed_creation(message = 'Sorry, there was an error creating your account')
@@ -132,8 +131,10 @@ class Portal::TeachersController < ApplicationController
   
   
   private 
-  def domains_and_grades
-    @portal_districts = Portal::District.virtual + Portal::District.real
+  def load_domains_and_grades
+    # @portal_districts = Portal::District.virtual + Portal::District.real
+    # Maybe this easier, and cleaner:
+    @portal_districts = Portal::District.find(:all, :order => :name)
     @portal_grades = Portal::Grade.active
     if (@portal_grades && @portal_grades.size > 1)
       @default_grade_id = @portal_grades.last.id

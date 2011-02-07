@@ -1,9 +1,12 @@
-- locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => ""}
+- locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => "", :hide_print => true}
+- locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
 
-= render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/search_form", :locals => locals
-.tiny (drag to your class assignments list on the top)
-= observe_form "#{TOP_LEVEL_CONTAINER_NAME}_search_form", :url => eval("list_filter_#{TOP_LEVEL_CONTAINER_NAME}_url"), :frequency => 2, :before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :update => {:success => 'offering_list'}
+= render :partial => 'investigations/search_form', :locals => locals
+.tiny To add assignments to your class, drag the investigations below to your class assignments list above. If there are no investigations listed below, select and/or enter some search options in the form above.
+= observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 2, :before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render_top_level_container_list_partial(locals)
+  = render :partial => "resource_pages/runnable_list", :locals => { :resource_pages => ResourcePage.search_list(locals), :hide_print => true }
+  
   / = render :partial => "investigations/runnable_list.html.haml", :locals => { :investigations => Investigation.search_list(locals) }
   

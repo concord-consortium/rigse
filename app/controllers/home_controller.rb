@@ -1,7 +1,14 @@
 class HomeController < ApplicationController
   def readme
-    @readme = ReadMe.new
-    render :action => "readme", :layout => "readme"
+    @document = FormattedDoc.new('README.textile')
+    render :action => "formatted_doc", :layout => "technical_doc"
+  end
+
+  def doc
+    if document_path = params[:document]
+      @document = FormattedDoc.new(File.join('doc', File.basename(document_path)))
+      render :action => "formatted_doc", :layout => "technical_doc"
+    end
   end
 
   def pick_signup

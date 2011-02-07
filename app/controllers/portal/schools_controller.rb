@@ -113,6 +113,7 @@ class Portal::SchoolsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(portal_schools_url) }
+      format.js {} # will render destroy.rjs
       format.xml  { head :ok }
     end
   end

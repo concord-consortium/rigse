@@ -327,5 +327,71 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     end
 
   end
+
+  namespace :report do
+    # NSP: 20100826
+    desc "report on activities without position attributes"
+    task :activity_positon_bug_report, :file_name, :needs => :environment do |t,args|
+      args.with_defaults(:file_name => 'position_bug_activity_report.csv')
+      file_name = args.file_name
+      suspect_activities = Activity.find(:all, :conditions => "position is null and investigation_id is not null")
+      good_activities =  Activity.find(:all, :conditions => "position is not null and investigation_id is not null")
+      puts "#{suspect_activities.size} without positions & #{good_activities.size} with good positions" 
+      bad_hash = suspect_activities.map do |a|
+        {
+          :id => a.id,
+          :inv_id => a.investigation.id,
+          :investigation => a.investigation.name,
+          :act_size => a.investigation.activities.size,
+          :z => "[ #{a.investigation.activities.map{ |iact| iact.id}.join(",")} ]",
+          :published => (a.investigation.published? ? "public" : "draft"),
+          :offerings => a.investigation.offerings.size,
+          :updated => (a.updated_at.strftime("%F"))
+        }
+      end
+      bad_hash = bad_hash.sort_by {|a| [a[:published], a[:inv_id], a[:id] ]}
+      File.open(file_name,'w') do |file|
+        bad_hash.each do |a|
+          line = %/ "#{a[:investigation]}", "#{a[:published]}", "#{a[:act_size]}", "#{a[:updated]}", "#{a[:id]}", "#{a[:z]}"/
+          file.puts(line)
+        end
+      end
+      puts "report results should be in #{file_name}"
+    end
+  end
+
+  namespace :fixup do
+    desc "reset all activity position information"
+    task :reset_activity_positions => :environment do
+      # We actually want to reset the position attribute on ALL activities
+      all_invs = Investigation.all
+      puts "fixing up #{all_invs.length} investigations"
+      all_invs.sort_by { |inv| inv.id }.each do |inv|
+        inv.reload # force the default ordering of activities
+        act_order = inv.activities.map{ |a| a.id}.join(",")
+        puts "working with #{inv.id} #{inv.name}"
+        position = 1
+        inv.activities.each do |act|
+          if (act.position != position)
+            puts "    fix: (#{act.position}) ==> (#{position})"
+          end
+          act.update_attributes!(:position => position)
+          position = position + 1
+        end
+        inv.reload
+        new_order = inv.activities.map{ |a| a.id}.join(",")
+        raise "Non-matching activity order" unless (new_order == act_order)
+        predicted_position = 1
+        inv.activities.each do |act|
+          raise "Activity has wrong position: #{act.position} != #{predicted_position}" unless (act.position == predicted_position)
+          predicted_position = predicted_position + 1
+        end
+        puts "  reset position information for #{position - 1} activities in #{inv.name}:"
+        puts "     PRE: #{act_order}"
+        puts "    POST: #{new_order}"
+        puts
+      end
+    end
+  end
 end
 
