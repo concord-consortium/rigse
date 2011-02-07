@@ -1,15 +1,15 @@
 class Portal::Offering < ActiveRecord::Base
   set_table_name :portal_offerings
-  
+
   acts_as_replicatable
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true
-  
+
   has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id", :dependent => :destroy
-  
+
   [:name, :description].each { |m| delegate m, :to => :runnable }
-  
+
   has_many :open_responses, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
     def answered
       find(:all).select { |question| question.answered? }
@@ -24,21 +24,21 @@ class Portal::Offering < ActiveRecord::Base
       find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
     end
   end
-  
+
   attr_reader :saveable_objects
-  
+
   def sessions
     self.learners.inject(0) { |sum, l| sum + l.sessions }
   end
-  
+
   def find_or_create_learner(student)
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
   end
-  
+
   def saveables
     multiple_choices + open_responses
   end
-  
+
   self.extend SearchableModel
 
   @@searchable_attributes = %w{status}
@@ -52,12 +52,12 @@ class Portal::Offering < ActiveRecord::Base
       "Offering"
     end
   end
-  
+
   def refresh_saveable_response_objects
     self.learners.each { |l| l.refresh_saveable_response_objects }
   end
-  
-  
+
+
   # def saveable_count
   #   @saveable_count ||= begin
   #     runnable = self.runnable
@@ -69,14 +69,14 @@ class Portal::Offering < ActiveRecord::Base
   #     end
   #   end
   # end
-  # 
+  #
   # def saveable_objects
   #   @saveable_objects || begin
   #     saveable_count
   #     @saveable_objects
   #   end
   # end
-  # 
+  #
   # def saveable_answered
   #   @saveable_answered ||= begin
   #     saveable_objects
