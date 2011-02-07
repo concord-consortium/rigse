@@ -16,7 +16,7 @@ module ApplicationHelper
   #
   #   @scoped_model = OuterScope::InnerScope::Model.find(3)
   #   dom_id_for(@scoped_model)                 # => "outer_scope__inner_scope__model_3"
-  
+
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
     prefix = ''
@@ -34,9 +34,9 @@ module ApplicationHelper
   def short_name(name)
     name.strip.downcase.gsub(/\W+/, '_')
   end
-  
+
   def display_system_info
-    list1 = 
+    list1 =
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
         # grit (git gem) throws strange errors when running rspec tests
@@ -51,7 +51,7 @@ module ApplicationHelper
         end
         list
       end
-    # list2 = 
+    # list2 =
     #   content_tag('ul', :class => 'tiny menu_h') do
     #     list = ''
     #     maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
@@ -63,7 +63,7 @@ module ApplicationHelper
   def git_repo_info
     # For some strange reason running repo.head during tests sometimes generates this
     # error running the first time: Errno::ECHILD Exception: No child processes
-    # 
+    #
     # The operation seems to work fine the second time ... ?
     # Here's an example from the debugger:
     #
@@ -81,7 +81,7 @@ module ApplicationHelper
         head = repo.head
       rescue Errno::ECHILD
       end
-    end        
+    end
     if head
       branch = head.name
       last_commit = repo.commits(branch).first
@@ -107,13 +107,13 @@ module ApplicationHelper
     else
       info << "(frozen)"
     end
-    
+
     # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
     #   info << "(snapshot)"
     # else
     #   info << "(frozen)"
     # end
-  end    
+  end
 
   def display_repo_info
     if repo = Grit::Repo.new(".")
@@ -130,11 +130,11 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def short_format_gse_summary(gse)
     gse.print_summary_data("<div><strong>%s</strong><ul>%s</ul></div>","<li>%s</li>")
   end
-  
+
   # Sets the page title and outputs title if container is passed in.
   # eg. <%= title('Hello World', :h2) %> will return the following:
   # <h2>Hello World</h2> as well as setting the page title.
@@ -155,7 +155,7 @@ module ApplicationHelper
   def labeled_check_box(form, field, name=field.to_s.humanize)
     form.label(field, name) + "\n" + form.check_box(field)
   end
-  
+
   # http://davidwparker.com/2008/11/12/simple-non-model-checkbox-in-rails/
   def check_box_tag_new(name, value = "1", options = {})
     html_options = { "type" => "checkbox", "name" => name, "id" => name, "value" => value }.update(options.stringify_keys)
@@ -176,10 +176,10 @@ module ApplicationHelper
 
   def render_top_level_container_list_partial(locals)
     if TOP_LEVEL_CONTAINER_CLASS.respond_to?(:search_list)
-      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml",
         :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.search_list(locals) }
     else
-      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml", 
+      render :partial => "#{TOP_LEVEL_CONTAINER_NAME_PLURAL}/runnable_list.html.haml",
         :locals => { TOP_LEVEL_CONTAINER_SYM_PLURAL => TOP_LEVEL_CONTAINER_CLASS.find(:all) }
     end
   end
@@ -212,12 +212,12 @@ module ApplicationHelper
     capture_haml do
       if component.changeable?(current_user)
         haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
-          if block_given? 
+          if block_given?
             yield
           end
         end
       else
-        if block_given? 
+        if block_given?
           yield
         end
       end
@@ -236,20 +236,20 @@ module ApplicationHelper
 
   def edit_url_for(component, scope=false)
     if scope
-      { :controller => component.class.name.pluralize.underscore, 
-        :action => :edit, 
+      { :controller => component.class.name.pluralize.underscore,
+        :action => :edit,
         :id  => component.id,
         :scope_type => scope.class,
         :scope_id =>scope.id}
     else
-      { :controller => component.class.name.pluralize.underscore, 
-        :action => :edit, 
+      { :controller => component.class.name.pluralize.underscore,
+        :action => :edit,
         :id  => component.id,
         :container_type => @container_type,
         :container_id => @container_id }
     end
   end
-  
+
   def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
@@ -270,7 +270,7 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def accordion_for(model, title, dom_prefix='', options={})
     show_hide_text = options[:show_hide_text]
     capture_haml do
@@ -278,7 +278,7 @@ module ApplicationHelper
         haml_tag :div, :class => 'accordion_name' do
           haml_concat title
         end
-        
+
         if show_hide_text
           haml_tag :div, :id => dom_id_for(model, "#{dom_prefix}_toggle"), :class => 'accordion_toggle_closed accordion_toggle' do
             haml_tag :span, :class => "accordion_show_hide_text" do
@@ -305,10 +305,10 @@ module ApplicationHelper
   end
 
   def otml_url_for(component,options={})
-    url = url_for( 
-      :controller => component.class.name.pluralize.underscore, 
+    url = url_for(
+      :controller => component.class.name.pluralize.underscore,
       :action => :show,
-      :format => :otml, 
+      :format => :otml,
       :id  => component.id,
       :only_path => false,
       :teacher_mode => options[:teacher_mode] )
@@ -316,20 +316,20 @@ module ApplicationHelper
   end
 
   def edit_otml_url_for(component)
-    url = url_for( 
-      :controller => component.class.name.pluralize.underscore, 
+    url = url_for(
+      :controller => component.class.name.pluralize.underscore,
       :action => :edit,
-      :format => :otml, 
+      :format => :otml,
       :id  => component.id,
       :only_path => false )
     URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
   end
 
   def update_otml_url_for(component, escape=true)
-    url = url_for( 
-      :controller => component.class.name.pluralize.underscore, 
+    url = url_for(
+      :controller => component.class.name.pluralize.underscore,
       :action => :update,
-      :format => :otml, 
+      :format => :otml,
       :id  => component.id,
       :only_path => false )
     if escape
@@ -337,49 +337,6 @@ module ApplicationHelper
     else
       url
     end
-  end
-
-  def run_button_for(component)
-    name = component.name
-    users_params = current_user.extra_params
-    if NOT_USING_JNLPS
-      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type])      
-      link_button("preview.png",  url, :title => "Run the #{component.class.display_name}: '#{name}'.", :popup => true)
-    else
-      url = polymorphic_url(component, :format => :jnlp, :params => current_user.extra_params)
-      link_button("preview.png",  url, 
-        :title => "Run the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-        :onclick => "show_mac_alert($('launch_warning'),false);")      
-    end
-  end
-
-  def preview_button_for(component)
-    name = component.name
-    if NOT_USING_JNLPS
-      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type])      
-      link_button("preview.png",  url, :title => "Preview the #{component.class.display_name}: '#{name}'.", :popup => true)
-    else
-      url = polymorphic_url(component, :format => :jnlp)
-      link_button("preview.png",  url, 
-        :title => "Preview the #{component.class.display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.",
-        :onclick => "show_mac_alert($('launch_warning'),false);")      
-    end
-  end
-
-  def preview_link_for(component, as_name=nil, params={})
-    component_display_name = component.class.display_name.downcase
-    name = component.name
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "preview "
-    if as_name
-      link_text << " as #{as_name}"
-    end
-    
-    url = polymorphic_url(component, :format => :jnlp, :params => params)
-    preview_button_for(component) +
-    link_to(link_text, url, 
-      :onclick => "show_mac_alert($('launch_warning'),false);",
-      :title => "Preview the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
   end
 
   def report_link_for(reportable, action='report', link_text='Report ')
@@ -391,50 +348,27 @@ module ApplicationHelper
       :title => "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window.")
   end
 
-  def run_link_for(component, as_name=nil, params={})
-    component_display_name = component.class.display_name.downcase
-    name = component.name
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || "run "
-    if as_name
-      link_text << " as #{as_name}"
-    end
-    if NOT_USING_JNLPS
-      url = polymorphic_url(component, :format => APP_CONFIG[:runnable_mime_type], :params => params)      
-    else
-      url = polymorphic_url(component, :format => :jnlp, :params => params)
-    end
-    if NOT_USING_JNLPS
-      run_button_for(component) + link_to(link_text, url, :popup => true)
-    else
-      run_button_for(component) +
-      link_to(link_text, url, 
-        :onclick => "show_mac_alert($('launch_warning'),false);",
-        :title => "run the #{component_display_name}: '#{name}' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.")
-    end
-  end
-
-  def edit_link_for(component, params={}) 
+  def edit_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
     link_text = params.delete(:link_text) || "edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
     edit_button_for(component) +
-    link_to(link_text, url, 
+    link_to(link_text, url,
         :title => "edit the #{component_display_name}: '#{name}'")
   end
-  
+
   def duplicate_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     text = params[:text] || 'duplicate'
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
-    link_button("itsi_copy.png", url, 
+    link_button("itsi_copy.png", url,
       :title => "copy the #{component_display_name}: '#{name}'") +
     link_to(text, url)
   end
-  
+
 
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
@@ -445,15 +379,15 @@ module ApplicationHelper
     end
     params.merge!({:print => true})
     url = polymorphic_url(component,:params => params)
-    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") + 
+    link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") +
     link_to(link_text,url,:popup => true)
   end
-  
+
   def otml_link_for(component, params={})
-    link_to('otml', 
-      :controller => component.class.name.pluralize.underscore, 
+    link_to('otml',
+      :controller => component.class.name.pluralize.underscore,
       :action => :show,
-      :format => :otml, 
+      :format => :otml,
       :id  => component.id,
       :params => params)
   end
@@ -478,16 +412,16 @@ module ApplicationHelper
   def link_to_container(container, options={})
     link_to name_for_component(container, options), container, :class => 'container_link'
   end
-  
+
   def title_for_component(component, options={})
     title = name_for_component(component, options)
     if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>" 
+      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
     else
       "<span class='component_title'>#{title}</span>"
     end
   end
-    
+
   def name_for_component(component, options={})
     name = ''
     unless options[:hide_component_name]
@@ -510,7 +444,7 @@ module ApplicationHelper
       when component.name == component.class.default_value('name') then ''
       when component.name then component.name
       else ''
-    end    
+    end
   end
 
   def name_for_gse(gse)
@@ -537,7 +471,7 @@ module ApplicationHelper
     total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
     " Multiple Choice: #{answered}/#{correct}/#{total} "
   end
-  
+
   def sessions_learner_stat(learner)
     sessions = learner.bundle_logger.bundle_contents.count
     if sessions > 0
@@ -546,7 +480,7 @@ module ApplicationHelper
       ''
     end
   end
-  
+
   def learner_specific_stats(learner)
     reportUtil = Report::Util.factory(learner.offering)
     or_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
@@ -556,7 +490,7 @@ module ApplicationHelper
     mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
     "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{or_answered}/#{or_total}, multiple choice:  #{mc_answered}/#{mc_correct}/#{mc_total}"
   end
-  
+
   def report_details_for_learner(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses, :correctable => false }
     options.update(opts)
@@ -569,14 +503,14 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def report_correct_count_for_learner(learner, opts = {} )
     options = {:type => Embeddable::MultipleChoice}
     options.update(opts)
     reportUtil = Report::Util.factory(learner.offering)
     mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => options[:type]).size
   end
-  
+
   def learner_report_summary(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
@@ -596,7 +530,7 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def offering_report_summary(offering, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
@@ -654,7 +588,7 @@ module ApplicationHelper
       }
     end
   end
-  
+
   def offering_details_image_question(offering, image_question, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
     options.update(opts)
@@ -783,18 +717,18 @@ module ApplicationHelper
       }
     end
   end
-  
+
   def percent(count,max,precision = 1)
     return 0 if max < 1
     raw = (count/max.to_f)*100
     result = (raw*(10**precision)).round/(10**precision).to_f
   end
-  
+
   def percent_str(count, max, precision = 1)
     return "undefined" if max < 1
     number_to_percentage(percent(count,max,precision), :precision => precision)
   end
-  
+
   def saveable_for_learner(question, learner)
     reportUtil = Report::Util.factory(learner.offering)
     reportUtil.saveable(learner, question)
@@ -827,9 +761,9 @@ module ApplicationHelper
   end
 
   def menu_for_offering(offering, opts = {})
-    options = { 
-      :omit_delete => true, 
-      :omit_edit => true, 
+    options = {
+      :omit_delete => true,
+      :omit_edit => true,
       :hide_component_name => true,
       :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{TOP_LEVEL_CONTAINER_NAME}")
     }
@@ -854,7 +788,7 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def menu_for_school(school, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -865,7 +799,7 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def show_menu_for(component, options={})
     is_page_element = (component.respond_to? :embeddable)
     deletable_element = component
@@ -884,7 +818,7 @@ module ApplicationHelper
             restrict_to 'admin' do
               haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
             end
-          end              
+          end
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
@@ -911,7 +845,7 @@ module ApplicationHelper
   def toggle_more(component, details_id=nil, label="show/hide")
     toggle_id = dom_id_for(component,:show_hide)
     details_id ||= dom_id_for(component, :details)
-   
+
     link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
       page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
       # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
@@ -950,7 +884,7 @@ module ApplicationHelper
     options = defaults.merge(options)
     dropdown_link_for options
   end
-  
+
   def link_button(image,url,options={})
     defaults = {
       :class      => 'rollover'
@@ -958,7 +892,7 @@ module ApplicationHelper
     options = defaults.merge(options)
     link_to image_tag(image, :alt=>options[:title]) , url, options
   end
-  
+
   def remote_link_button(image,options={})
     defaults = {
       :html       => {
@@ -971,7 +905,7 @@ module ApplicationHelper
     options = defaults.merge(options)
     link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
   end
-  
+
   def function_link_button(image,javascript,options={})
     javascript ||= "alert('Hello world!'); return false;"
     defaults = {
@@ -980,7 +914,7 @@ module ApplicationHelper
     options = defaults.merge(options)
     link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
   end
-  
+
   def tab_for(component, options={})
     if(options[:active])
       "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
@@ -988,24 +922,24 @@ module ApplicationHelper
       "<li id=#{dom_id_for(component, :tab)} class='tab'>#{link_to component.name, component}</li>"
     end
   end
-  
+
   def generate_javascript_datastore(data_collector)
-    # 
+    #
     # data: [ [1,2.5], [2,3.7], [2.5,6.78] ]
-    # 
+    #
     js = ''
     if data_collector.data_store_values
       if data_collector.data_store_values.length > 0
         js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
       else
-        js << "var default_data_#{data_collector.id} = [];\n"        
+        js << "var default_data_#{data_collector.id} = [];\n"
       end
     else
       js << "var default_data_#{data_collector.id} = [];\n"
     end
     js
   end
-  
+
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
     if (teacher_only?(component))
@@ -1013,9 +947,9 @@ module ApplicationHelper
     end
     return style_classes
   end
-  
-  
-  def style_for_item(component,style_classes=[]) 
+
+
+  def style_for_item(component,style_classes=[])
     style_classes << 'item' << 'selectable' << 'item_selectable'
     if (component.respond_to? 'changeable?') && (component.changeable?(current_user))
       style_classes << 'movable'
@@ -1023,23 +957,23 @@ module ApplicationHelper
     style_classes = style_for_teachers(component,style_classes)
     return style_classes.join(" ")
   end
-  
+
   def simple_div_helper_that_yields
     capture_haml do
       haml_tag :div, :class => 'simple_div' do
-        if block_given? 
+        if block_given?
           haml_concat yield
         end
       end
     end
   end
-  
+
   def in_render_scope?(thing)
     return true if thing == nil
     if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
       return true
     end
-    
+
     if @render_scope
       if @render_scope.respond_to?("page_elements")
         embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.uniq
@@ -1050,7 +984,7 @@ module ApplicationHelper
     end
     return false
   end
-  
+
   def render_scoped_reference(thing)
     return "" if thing == nil
     if in_render_scope?(thing)
@@ -1063,7 +997,7 @@ module ApplicationHelper
       render_show_partial_for(thing)
     end
   end
-  
+
   #
   # is a component viewable only by teacher?
   # cascading logic.
@@ -1076,7 +1010,7 @@ module ApplicationHelper
     if (thing.respond_to?("parent"))
       while (thing = thing.parent)
         if (thing.respond_to?("teacher_only?"))
-          if thing.teacher_only? 
+          if thing.teacher_only?
             return true
           end
         end
@@ -1084,14 +1018,14 @@ module ApplicationHelper
     end
     return false
   end
-  
+
   def render_project_info
     unless @rendered_project_info
       render :partial => "home/project_info"
       @rendered_project_info = true
     end
   end
-  
+
   def add_top_menu_item(link)
     @top_menu_items ||= []
     @top_menu_items << link
@@ -1104,11 +1038,11 @@ module ApplicationHelper
       "<br/>"
     end
   end
-  
+
   def runnable_list(options)
     Investigation.search_list(options)
   end
-  
+
   def students_in_class(all_students)
     all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
@@ -1151,21 +1085,21 @@ module ApplicationHelper
       message += " / "
       message += link_to opts[:logout], logout_path
       if @original_user.has_role?('admin','manager')
-        message += " " 
+        message += " "
         message += link_to 'Switch', switch_user_path(current_user)
       end
     end
     message
   end
-  
+
   def use_contentflow
     javascript_include_tag("contentflow/contentflow.js").sub(/></, " load='white' ><")
   end
-  
+
   def contentflow(name, opts = {})
     defaults = {:load_indicator => false, :scrollbar => true}
     opts.merge!(defaults){|k,o,n| o}
-    
+
     capture_haml do
       haml_concat javascript_tag "var myNewFlow = new ContentFlow('#{name}', { reflectionHeight: 0, circularFlow: false, startItem: 'first' } );"
       haml_tag :div, :class => 'ContentFlow', :id => name do
@@ -1175,7 +1109,7 @@ module ApplicationHelper
           end
         end
         haml_tag :div, :class => 'flow' do
-          if block_given? 
+          if block_given?
             haml_concat yield
           end
         end
