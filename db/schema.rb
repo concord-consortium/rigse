@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110128192029) do
+ActiveRecord::Schema.define(:version => 20110208172815) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -558,6 +558,7 @@ ActiveRecord::Schema.define(:version => 20110128192029) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
   end
 
   create_table "external_user_domains", :force => true do |t|
