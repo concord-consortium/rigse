@@ -46,5 +46,11 @@ describe RunnablesHelper do
     it "should render a run link for a given component with parameters" do
       helper.run_link_for(@page, nil, {:link_text => "run Biscuits"}).should == "<a href=\"http://test.host/pages/1014.jnlp\" class=\"run_link rollover\" title=\"Run the Page: 'Foo' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.\"><img alt=\"Run the Page: 'Foo' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.\" src=\"/images/run.png?1295966927\" /></a><a href=\"http://test.host/pages/1014.jnlp\" title=\"Run the Page: 'Foo' as a Java Web Start application. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive.\">run Biscuits</a>"
     end
+
+    it "should render a link for a resource page" do
+      resource_page = mock_model(Portal::Offering, :name => "The Pajama Jammy Jam")
+      resource_page.stub!(:runnable).and_return(mock_model(ResourcePage))
+      resource_page.stub!(:resource_page?).and_return true
+      helper.run_link_for(resource_page).should == "<a href=\"/resource_pages/1018\" target=\"_blank\">View The Pajama Jammy Jam</a>"   end
   end
 end
