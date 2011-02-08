@@ -27,11 +27,11 @@
       - accordion_options[:usage_count] = "assigned #{pluralize(investigation.offerings_count, "time")}"
     = accordion_for(investigation, link_text, :investigation, accordion_options) do
       %div.action_menu
-        %div.action_menu_header_left   
+        %div.action_menu_header_left
           /= link_to_container(investigation)
           %span.author
             = investigation.user.name
-        %div.action_menu_header_right   
+        %div.action_menu_header_right
           %ul.menu
             -# %li= preview_button_for(investigation)
             -# %li= teacher_preview_button_for(investigation)
@@ -42,7 +42,7 @@
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
               %li.menu=link_to 'edit', investigation
-              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
         %p
