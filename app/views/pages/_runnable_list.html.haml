@@ -14,18 +14,18 @@
 
 - for page in pages
   %div{ :id => dom_id_for(page), :class => 'runnable' }
-    = accordion_for(page, (preview_button_for(page) + name_for_component(page, :hide_componenent_name => true)), :page) do  
+    = accordion_for(page, (preview_button_for(page) + name_for_component(page, :hide_componenent_name => true)), :page) do
       %div.action_menu
-        %div.action_menu_header_left   
+        %div.action_menu_header_left
           = link_to_container(page)
           %span.author
             = page.user.name
-        %div.action_menu_header_right   
+        %div.action_menu_header_right
           %ul.menu
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_page_url(page)
             - if (page.changeable?(current_user))
-              %li.menu=link_to 'delete', page, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{page.id}", :method => :delete 
+              %li.menu=link_to 'delete', page, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{page.id}", :method => :delete
       %div{:id => dom_id_for(page, :details), :class => 'tiny'}
         %p=page.description
         %p
