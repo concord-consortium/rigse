@@ -7,6 +7,4 @@
 #offering_list.drop_target
   = render_top_level_container_list_partial(locals)
   = render :partial => "resource_pages/runnable_list", :locals => { :resource_pages => ResourcePage.search_list(locals), :hide_print => true }
-  
-  / = render :partial => "investigations/runnable_list.html.haml", :locals => { :investigations => Investigation.search_list(locals) }
-  
+  = render :partial => "investigations/runnable_list", :locals => { :investigations => Investigation.search_list(locals), :hide_print => true }

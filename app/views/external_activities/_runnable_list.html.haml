@@ -12,7 +12,7 @@
         / -if current_user.has_role? "author"
         %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_external_activity_path
 
-- for external_activity in external_activities
+- external_activities.each do |external_activity|
   %div{ :id => dom_id_for(external_activity), :class => 'runnable' }
     = accordion_for(external_activity, (preview_button_for(external_activity) + name_for_component(external_activity, :hide_componenent_name => true)), :external_activity) do
       %div.action_menu

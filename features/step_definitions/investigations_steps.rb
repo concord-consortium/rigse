@@ -15,8 +15,20 @@ Given /^the following classes exist:$/ do |table|
   end
 end
 
+Given /^the investigation "([^"]*)" is published$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  investigation.publish
+  investigation.save
+end
+
 When /^I sort investigations by "([^"]*)"$/ do |sort_str|
   visit "/investigations?sort_order=#{sort_str}"
+end
+
+When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
+  investigation = Investigation.find_by_name investigation_name
+  selector = "#investigation_#{investigation.id}"
+  find(selector).drag_to(find(to))
 end
 
 When /^I show offerings count on the investigations page$/ do 

@@ -34,7 +34,8 @@ Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/
   visit "/login"
   fill_in("login", :with => username)
   fill_in("password", :with => password)
-  click_button("Login")
+  #click_button("Login")
+  click_button("Submit")
 end
 
 When /^I log out$/ do

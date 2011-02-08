@@ -17,3 +17,7 @@ end
 Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
   page.body.should =~ /#{first_item}.*#{second_item}/m
 end
+
+When /^I debug$/ do
+  debugger
+end
