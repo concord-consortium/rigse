@@ -9,5 +9,3 @@
   = render :partial => "resource_pages/runnable_list",      :locals => { :resource_pages      => ResourcePage.search_list(locals),     :hide_print => true }
   = render :partial => "external_activities/runnable_list", :locals => { :external_activities => ExternalActivity.search_list(locals), :hide_print => true }
   = render :partial => "investigations/runnable_list",      :locals => { :investigations      => Investigation.search_list(locals),    :hide_print => true }
-  = render :partial => "pages/runnable_list",               :locals => { :pages               => Page.search_list(locals),             :hide_print => true }
-  = render :partial => "activities/runnable_list",          :locals => { :activities          => Activity.search_list(locals),         :hide_print => true }
