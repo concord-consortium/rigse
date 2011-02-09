@@ -83,10 +83,7 @@ stylesheets:
   - app
   - authoring
   - template_edit
-  #- themes/itsisu/action_menu_tab
-  #- themes/itsisu/drop_down
-  #- themes/itsisu/accordion
-  #- themes/itsisu/bin
+  - themes/itsisu/itsisu
   - accordion
   - window/window
   - window/rites
