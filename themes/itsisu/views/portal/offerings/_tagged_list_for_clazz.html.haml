@@ -134,7 +134,7 @@
     - offering_size = portal_clazz.offerings ? portal_clazz.offerings.size : 0
     %span#total-selected="#{offering_size}"
     )
-  - bins = Activity.list_bins(portal_clazz)
+  - bins = Activity.list_bins({:portal_clazz => portal_clazz})
   - bin_keys = bins.keys.sort
   %table.activity-chart{ :border =>"0" :cellspacing=>"0" :cellpadding => "0" :width=> "100%"}
     %tr

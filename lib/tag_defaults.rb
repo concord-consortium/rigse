@@ -77,7 +77,9 @@ module TagDefaults
       end
     end
 
-    def list_bins(portal_clazz=nil)
+    def list_bins(opts = {})
+      portal_clazz = opts[:portal_clazz]
+      activities = opts[:activities] || self.published # self should be publishable
       user = nil
       offerings = nil
       off_runnables = []
@@ -87,7 +89,6 @@ module TagDefaults
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
-      activities = Activity.published
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       # Add unpublished activities of the user:
       if user
