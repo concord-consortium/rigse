@@ -15,7 +15,7 @@
           %li.menu=link_to 'Usage Report', investigation_usage_report_url
           %li.menu=link_to 'Details Report', investigation_details_report_url
         -#-if current_user.has_role? "author"
-        %li= link_to "create Investigation", new_investigation_path
+        %li= link_to "create #{Investigation.display_name}", new_investigation_path
 
 - investigations.each do |investigation|
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }

@@ -4,13 +4,13 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
+        %p= page_entries_info paginated_objects, :entry_name => "External Activity"
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
         / -if current_user.has_role? "author"
-        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_external_activity_path
+        %li= link_to "create #{ExternalActivity.display_name}", new_external_activity_path
 
 - external_activities.each do |external_activity|
   %div{ :id => dom_id_for(external_activity), :class => 'runnable' }

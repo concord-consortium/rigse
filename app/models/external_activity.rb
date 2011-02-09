@@ -33,7 +33,7 @@ class ExternalActivity < ActiveRecord::Base
     end
 
     def display_name
-      "ExternalActivity"
+      "External Activity"
     end
 
     def search_list(options)
@@ -66,9 +66,9 @@ class ExternalActivity < ActiveRecord::Base
     []
   end
 
-  def self.display_name
-    'Activity'
-  end
+  #def self.display_name
+    #'Activity'
+  #end
 
   def left_nav_panel_width
     300
