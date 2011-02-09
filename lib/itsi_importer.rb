@@ -109,6 +109,7 @@ class ItsiImporter
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
               page_elem = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
             when :model
+              # TODO: If there is no Diy::Model.first, we need to make one.
               model = Diy::Model.first
               page_elem = Embeddable::Diy::EmbeddedModel.create!(:diy_model => model, :user => act.user)
             when :text_response
@@ -527,10 +528,13 @@ class ItsiImporter
     ## NP: new definition of create_activity_from_itsi_activity
     ## TODO: Add itsi user
 
-    def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="")
+    def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="", use_number=false)
       prefix = "" if prefix.nil?
       prefix << " " if prefix.size > 0
-      name = "#{prefix}#{itsi_activity.name} (#{itsi_activity.id})".strip
+      name = "#{prefix}#{itsi_activity.name}".strip
+      if use_number
+        name = "#{name} (#{itsi_activity.id})"
+      end
       user = find_or_import_itsi_user(itsi_activity.user) unless user
       activity = Activity.find_by_uuid(itsi_activity.uuid)
       unless activity
