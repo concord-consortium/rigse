@@ -1,5 +1,6 @@
 -#TODO: Add search results param to list_bins?
-- bins = Activity.list_bins
+- bins = ( defined? activities ) ? Activity.list_bins({:activities => activities}) : Activity.list_bins
+-#- bins = Activity.list_bins
 - bin_keys = bins.keys.sort
 %table.activity-chart{ :border =>"0" :cellspacing=>"0" :cellpadding => "0" :width=> "100%"}
   %tr
@@ -23,6 +24,9 @@
             %h2="#{unit[:name]} (#{unit[:count]})"
             - unit[:activities].each do |runnable|
               .activity-title
+                - if runnable.changeable? current_user
+                  %a{:href => edit_polymorphic_url(runnable)}
+                    %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
                 %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
                   %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
                 %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:description)}').toggle(); return false;", :title => "View activity description"}
@@ -34,5 +38,5 @@
                 %a#run_button_.waiter{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
                   %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
                 =runnable.name
-                .description{:id=> dom_id_for(runnable,:description), :style => "display: none; font-weight: normal; padding: 1em;"}
+                .activity_description{:id=> dom_id_for(runnable,:description), :style => "display: none;"}
                   =runnable.description
