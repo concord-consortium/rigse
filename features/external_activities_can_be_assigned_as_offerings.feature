@@ -25,13 +25,17 @@ Feature: External Activities can be assigned as offerings
     When I assign the investigation "Test Investigation" to the class "My Class"
     Then the investigation named "Test Investigation" should have "offerings_count" equal to "1"
 
+  # DO NOT TOUCH THE BROWSER WINDOW THAT SELENIUM IS DRIVING
+  # IT WILL CAUSE THE TEST TO FAIL
   @selenium
   Scenario: External Activities and Investigations are draggable items
     Given I login with username: teacher password: teacher
     When I am on the class page for "My Class"
     Then I should see "My Activity"
-    And I should see "Test Investigation"
+    And I should see "Investigation: Test Investigation"
     When I drag the investigation "Test Investigation" to "#clazz_offerings"
+    # TODO: Eliminate sleep() call.
+    # Problem is that selenium is not waiting for callback to finish
     And I wait "2" seconds
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds

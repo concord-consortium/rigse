@@ -127,7 +127,7 @@ class Investigation < ActiveRecord::Base
     end
 
     def display_name
-      TOP_LEVEL_CONTAINER_NAME.humanize
+      self.to_s
     end
 
     def saveable_types

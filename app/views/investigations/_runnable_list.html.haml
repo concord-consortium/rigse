@@ -4,7 +4,7 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name=>top_level_container_name
+        %p= page_entries_info paginated_objects, :entry_name => "Investigation"
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
@@ -17,7 +17,7 @@
         -#-if current_user.has_role? "author"
         %li= link_to "create Investigation", new_investigation_path
 
-- for investigation in investigations
+- investigations.each do |investigation|
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }
     - link_text = current_user.portal_teacher || current_user.has_role?("manager", "admin") ? teacher_preview_button_for(investigation) : ""
     - link_text += preview_button_for(investigation) + name_for_component(investigation, :hide_componenent_name => true)
