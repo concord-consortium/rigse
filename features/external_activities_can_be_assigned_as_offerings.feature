@@ -31,8 +31,9 @@ Feature: External Activities can be assigned as offerings
     When I am on the class page for "My Class"
     Then I should see "My Activity"
     And I should see "Test Investigation"
-    And I debug
-    When I drag the external activity "My Activity" to "#clazz_offerings"
-    And I drag the investigation "Test Investigation" to "#clazz_offerings"
+    When I drag the investigation "Test Investigation" to "#clazz_offerings"
+    And I wait "2" seconds
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
     Then the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the investigation named "Test Investigation" should have "offerings_count" equal to "1"

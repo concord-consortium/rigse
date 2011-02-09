@@ -27,8 +27,9 @@ end
 
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
   investigation = Investigation.find_by_name investigation_name
-  selector = "#investigation_#{investigation.id}"
-  find(selector).drag_to(find(to))
+  selector = find("#investigation_#{investigation.id}")
+  drop = find(to)
+  selector.drag_to(drop)
 end
 
 When /^I show offerings count on the investigations page$/ do 

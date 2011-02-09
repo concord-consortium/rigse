@@ -19,6 +19,7 @@ end
 
 When /^I drag the external activity "([^"]*)" to "([^"]*)"$/ do |activity_name, to|
   activity = ExternalActivity.find_by_name activity_name
-  selector = "#external_activity_#{activity.id}"
-  find(selector).drag_to(find(to))
+  selector = find("#external_activity_#{activity.id}")
+  drop = find(to)
+  selector.drag_to(drop)
 end
