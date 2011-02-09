@@ -9,8 +9,8 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        / -if current_user.has_role? "author"
-        %li= link_to "create #{ExternalActivity.display_name}", new_external_activity_path
+        -if current_user.has_role? "author"
+          %li= link_to "create #{ExternalActivity.display_name}", new_external_activity_path
 
 - external_activities.each do |external_activity|
   %div{ :id => dom_id_for(external_activity), :class => 'runnable' }
