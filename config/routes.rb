@@ -408,6 +408,8 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get,
     :export => :get,
     :destroy => :post
+  }, :collection => {
+    :printable_index => :get
   }
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
