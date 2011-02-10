@@ -19,7 +19,8 @@ When /add a multiple choice question$/ do
 end
 
 When /^(?:|I )follow xpath "([^\"]*)"$/ do |xpath|
-  find(:xpath, xpath).click
+  node = find(:xpath, xpath)
+  node.click
 end
 
 When /show the first page of the "(.*)" investigation$/ do |investigation_name|
