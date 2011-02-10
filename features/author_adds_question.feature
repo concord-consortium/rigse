@@ -16,7 +16,6 @@ Feature: An author adds multiple choice_questions
       | testing fast cars | how fast can cars go? | author |
 
     And I login with username: author password: author
-		And I debug
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: 1"
     When I follow "Multiple Choice Question"
