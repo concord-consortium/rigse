@@ -85,3 +85,4 @@ config/tag_defaults.yml
 public/stylesheets/authoring.css
 public/stylesheets/template_edit.css
 public/activities/
+Gemfile.lock
