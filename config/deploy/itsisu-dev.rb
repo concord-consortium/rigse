@@ -4,7 +4,7 @@
 
 set :deploy_to, "/web/itsisu.dev.concord.org"
 #set :branch, "itsisu-dev"
-set :branch "itsisu_use_bundler"
+set :branch, "itsisu_use_bundler"
 #############################################################
 #  Servers
 #############################################################
