@@ -11,7 +11,7 @@ set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
 require 'haml'
-
+require "bundler/capistrano"
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
