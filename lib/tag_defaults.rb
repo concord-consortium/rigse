@@ -80,12 +80,12 @@ module TagDefaults
     def list_bins(opts = {})
       portal_clazz = opts[:portal_clazz]
       activities = opts[:activities] || self.published # self should be publishable
-      user = nil
+      user = opts[:user]
       offerings = nil
       off_runnables = []
 
       if portal_clazz && portal_clazz.teacher
-        user = portal_clazz.teacher.user
+        user ||= portal_clazz.teacher.user
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
@@ -94,7 +94,8 @@ module TagDefaults
       if user
         users_own = self.find(:all, :conditions => {:user_id => user.id});
         users_key_map = users_own.map do |a|
-          grade_level = "Your activities"
+          # todo
+          grade_level = "My #{self.name.humanize.pluralize}"
           subject_area = a.subject_area_list.first || "no subject area"
           unit = a.unit_list.first || "no unit"
           key = [grade_level,subject_area,unit]

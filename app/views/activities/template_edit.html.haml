@@ -15,5 +15,12 @@
   = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
   %p
   = f.submit "save"
-- @activity.pages.each do |page|
-  = render :partial=> 'pages/template_edit', :locals=>{:page => page }
+- @activity.sections.each do |section|
+  - if section.is_enabled
+    - section.pages.each do |page|
+      - if page.is_enabled
+        = render :partial => 'pages/template_edit', :locals => {:page => page }
+      - else
+        = render :partial => 'pages/disabled', :locals => {:page => page }
+  - else
+    = render :partial => 'section/disabled', :locals => {:section => section}

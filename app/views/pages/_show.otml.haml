@@ -8,7 +8,8 @@
       
 - content_for(:library) do
   - page.page_elements.each do |element|
-    = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => page }
+    - if element.is_enabled
+      = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => page }
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
@@ -19,8 +20,9 @@
               %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
                     
             - page.page_elements.each do |element|
-              .element
-                %object{ :refid => ot_refid_for(element.embeddable) }/
+              - if element.is_enabled
+                .element
+                  %object{ :refid => ot_refid_for(element.embeddable) }/
       - else
         #content
           - if page.section
