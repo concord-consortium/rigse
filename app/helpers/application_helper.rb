@@ -1061,7 +1061,8 @@ module ApplicationHelper
   # TODO: generic container-based method-forwarding mechanism
   #
   def teacher_only?(thing)
-    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
+    #if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
+    if (thing.respond_to?("teacher_only?"))
       return true;
     end
     if (thing.respond_to?("parent"))
