@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   helper :all
   
-  before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]

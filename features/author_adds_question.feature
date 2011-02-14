@@ -9,8 +9,8 @@ Feature: An author adds multiple choice_questions
   @selenium
   Scenario: The author adds a multiple choice question to an investigation
     Given the following users exist:
-      | login  | password | roles          |
-      | author | author   | member, author |
+      | login  | password | roles  |
+      | author | author   | author |
     Given the following investigation exists:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
