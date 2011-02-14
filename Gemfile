@@ -3,7 +3,7 @@ source :gemcutter
 #### COMMON
   gem "mysql",                "~>2.7"
   gem "mongrel",              "~>1.1.5"
-  gem "rails",                "2.3.5"
+  gem "rails",                "2.3.11"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
@@ -18,7 +18,7 @@ source :gemcutter
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
-  gem "compass"               
+  gem "compass"
   gem "jnlp",                 "~> 0.6.1"
   gem "has_many_polymorphs",  "~> 2.13"
   gem "ar-extensions",        "~> 0.9.1"
@@ -42,7 +42,7 @@ group :test do
   gem "factory_girl",      "= 1.2.3"
   gem "email_spec",        "= 0.3.5"
   gem "fakeweb",           "~>1.2.8"
-  gem "remarkable_rails",  "~>3.1.13"
+  gem "remarkable_rails",  "~>3.1.13", :require => nil
   gem "ci_reporter"
   # TODO: Use sport or not?
   gem "spork"
@@ -50,7 +50,6 @@ group :test do
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
   # gem "ZenTest",                  "= 4.1.4"
   # gem "autotest-rails",           "= 4.1.0"
-
 
 end
 
