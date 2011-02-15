@@ -1,5 +1,17 @@
 class PageElementsController < ApplicationController
-  
+  public
+  # DELETE /page_elements/1
+  # DELETE /page_elements/1.xml
+  def destroy
+    @page_element = PageElement.find(params[:id])
+    @page_element.destroy
+    respond_to do |format|
+      format.html { redirect_to(page_elements_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
+
   protected
 
   def toggle_enabled(isit)
@@ -14,19 +26,8 @@ class PageElementsController < ApplicationController
     head results
   end
 
-  public
-  # DELETE /page_elements/1
-  # DELETE /page_elements/1.xml
-  def destroy
-    @page_element = PageElement.find(params[:id])
-    @page_element.destroy
-    respond_to do |format|
-      format.html { redirect_to(page_elements_url) }
-      format.xml  { head :ok }
-      format.js
-    end
-  end
-  
+  public 
+
   def enable
     toggle_enabled(true)
   end

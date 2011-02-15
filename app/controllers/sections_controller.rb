@@ -245,4 +245,27 @@ class SectionsController < ApplicationController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end  
+  protected
+
+  def toggle_enabled(isit)
+    section = Section.find(params[:id])
+    results = :bad_request
+    if section.changeable?(current_user)
+      section.is_enabled=isit
+      if section.save
+        results = :ok
+      end
+    end
+    head results
+  end
+
+  public
+  def enable
+    toggle_enabled(true)
+  end
+
+  def disable
+    toggle_enabled(false)
+  end
+
 end

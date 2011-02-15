@@ -331,6 +331,8 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post,
     :add_page => [:post, :get],
     :sort_pages => :post, 
+    :enable => :post,
+    :disable => :post,
     :delete_page => :post,
     :print => :get,
     :duplicate => :get
@@ -338,6 +340,8 @@ ActionController::Routing::Routes.draw do |map|
     
   map.resources :pages, :member => {
     :destroy => :post,
+    :enabled => :post,
+    :disable => :post,
     :add_element => :post,
     :sort_elements => :post,
     :delete_element => :post,
@@ -384,6 +388,8 @@ ActionController::Routing::Routes.draw do |map|
     :add_section => [:post,:get],
     :sort_sections => :post,
     :delete_section => :post,
+    :enable => :post,
+    :disable => :post,
     :print => :get,
     :duplicate => :get,
     :export => :get,

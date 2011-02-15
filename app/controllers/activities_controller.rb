@@ -329,4 +329,26 @@ class ActivitiesController < ApplicationController
     end
   end
   
+  protected
+
+  def toggle_enabled(isit)
+    activity = Activity.find(params[:id])
+    results = :bad_request
+    if activity.changeable?(current_user)
+      activity.is_enabled=isit
+      if activity.save
+        results = :ok
+      end
+    end
+    head results
+  end
+
+  public
+  def enable
+    toggle_enabled(true)
+  end
+
+  def disable
+    toggle_enabled(false)
+  end
 end
