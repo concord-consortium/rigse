@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include Clipboard
-
+  include ContainerController
+  
   self.allow_forgery_protection = false
 
   theme(APP_CONFIG[:theme]||'default')

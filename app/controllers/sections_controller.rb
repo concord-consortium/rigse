@@ -1,25 +1,21 @@
 class SectionsController < ApplicationController
-  
+  toggle_controller_for :sections
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
-  
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
   protected 
-  
   def can_create
     if (current_user.anonymous?)
       flash[:error] = "Anonymous users can not create sections"
       redirect_back_or sections_path
     end
   end
-  
   def render_scope
     @render_scope = @section
   end
-  
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
@@ -245,27 +241,4 @@ class SectionsController < ApplicationController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end  
-  protected
-
-  def toggle_enabled(isit)
-    section = Section.find(params[:id])
-    results = :bad_request
-    if section.changeable?(current_user)
-      section.is_enabled=isit
-      if section.save
-        results = :ok
-      end
-    end
-    head results
-  end
-
-  public
-  def enable
-    toggle_enabled(true)
-  end
-
-  def disable
-    toggle_enabled(false)
-  end
-
 end

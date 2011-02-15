@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  toggle_controller_for :pages
   helper :all
   
   before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
@@ -278,27 +279,4 @@ class PagesController < ApplicationController
       end
     end
   end
-  protected
-
-  def toggle_enabled(isit)
-    page = Page.find(params[:id])
-    results = :bad_request
-    if page.changeable?(current_user)
-      page.is_enabled=isit
-      if page.save
-        results = :ok
-      end
-    end
-    head results
-  end
-
-  public
-  def enable
-    toggle_enabled(true)
-  end
-
-  def disable
-    toggle_enabled(false)
-  end
-
 end
