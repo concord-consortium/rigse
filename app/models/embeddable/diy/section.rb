@@ -17,7 +17,8 @@ class Embeddable::Diy::Section < Embeddable::Embeddable
   end
   
   def self.display_name
-    self.name 
+    #self.name 
+    "main content"
   end
   
 end

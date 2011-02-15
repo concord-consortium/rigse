@@ -88,4 +88,8 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   def remove_customizations
     self.customizations = {}
   end
+  
+  def display_name
+    "Sensor"
+  end
 end
