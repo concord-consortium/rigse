@@ -3,9 +3,12 @@
 - if @activity.changeable?(current_user)
   = link_to 'edit', template_edit_activity_path(@activity)
   = run_link_for(@activity)
-- @activity.pages.each do |page|
-  - page.page_elements.each do |element|
-    - if element.is_enabled?
-      - component = element.embeddable
-      %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
-        = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
+- @activity.sections.each do |section|
+  - next unless section.is_enabled?
+  - section.pages.each do |page|
+    - next unless page.is_enabled?
+    - page.page_elements.each do |element|
+      - if element.is_enabled?
+        - component = element.embeddable
+        %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
+          = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}

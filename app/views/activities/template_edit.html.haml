@@ -16,11 +16,10 @@
   %p
   = f.submit "save"
 - @activity.sections.each do |section|
-  - if section.is_enabled
-    - section.pages.each do |page|
-      - if page.is_enabled
+  = template_container_for(section) do
+    %div.template_disabled_container{:id => dom_id_for(section, :template_disabled_container),:style => 'display: none;'}
+      %h3= section.name
+    %div.template_view_container{:id => dom_id_for(section, :template_view_container)}
+      %h3= section.name
+      - section.pages.each do |page|
         = render :partial => 'pages/template_edit', :locals => {:page => page }
-      - else
-        = render :partial => 'pages/disabled', :locals => {:page => page }
-  - else
-    = render :partial => 'section/disabled', :locals => {:section => section}

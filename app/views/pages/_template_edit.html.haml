@@ -2,23 +2,17 @@
 -#%div.template_listing{:style => "display: none;"}
   - dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
   %div{:id => dom_id_for(element, :template_container), :class => dom_class }
-= template_container_for(page)
+-#= template_container_for(page) do
 - page.page_elements.each_with_index do |element,i|
   - component = element.embeddable
   -#- # TODO: we should still render disabled pieces, but render them small like ...
   -#- dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
   -#%div{:id => dom_id_for(element, :template_container), :class => dom_class }
-  = template_container_for(element)
-    %div.buttons
-      %div.template_disable_button{:id => dom_id_for(element, :disable_button)}
-      %div.template_enable_button{:id  => dom_id_for(element, :enable_button)}
-      %div.template_wait
-      %div.template_edit_button
-      -#%div.template_save_button
-    %div.template_view_title{:id => dom_id_for(element, :template_view_title)}
-      %h3= element.embeddable.name
+  = template_container_for(element) do
+    -#%div.template_view_title{:id => dom_id_for(element, :template_view_title)}
+    %div.template_disabled_container{:id => dom_id_for(element, :template_disabled_container),:style => 'display: none;'}
+      .tiny= name_for_component(element.embeddable)
     %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
       = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
-      -#= render_show_partial_for(component,false)
     %div.template_edit_container{:id =>dom_id_for(element, :edit_container)}
       = render_template_edit_partial_for(component)

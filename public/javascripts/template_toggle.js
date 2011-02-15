@@ -9,24 +9,34 @@
   var disabled_section_class = '.disabled_section';
   var enabled_section_class = '.enabled_section';
   var template_container_class = '.template_container';
+  var disabled_container_class = '.template_disabled_container';
   var edit_container_class = '.template_edit_container';
   var view_container_class = '.template_view_container';
   var title_container_class = '.template_view_title';
 
-  var get_model_id = function(element) {
+  var get_rails_model = function(element) {
     var id = null;
-    element.identify().gsub(/_(\d+)/, function(match){
-      id = match[1];
+    var type = null;
+    element.identify().gsub(/template_container_([\w|_]+)_(\d+)/, function(match){
+      type = match[1];
+      id = match[2];
     });
-    return id;
+    return ({ type: type, id: id});
+  };
+
+  var get_model_type = function(element) {
+    return get_rails_model(element).type;
+  };
+  var get_model_id = function(element) {
+    return get_rails_model(element).id;
   };
 
   var disable_url = function(element) {
-    return "/page_elements/{id}/disable".gsub("{id}",get_model_id(element));
+    return "/{type}s/{id}/disable".gsub("{id}",get_model_id(element)).gsub("{type}",get_model_type(element));
   };
 
   var enable_url = function(element) {
-    return "/page_elements/{id}/enable".gsub("{id}",get_model_id(element));
+    return "/{type}s/{id}/enable".gsub("{id}",get_model_id(element)).gsub("{type}",get_model_type(element));
   };
 
   var server_enable = function(element) {
@@ -61,7 +71,11 @@
     _save_button.show();
     disable_button(_save_button);
     container.down(view_container_class).show();
+    container.down(disabled_container_class).hide();
     container.removeClassName('disabled');
+    container.select(template_container_class).each(function (elm) {
+      elm.show();
+    });
     enabler.hide();
     disabler.show();
   };
@@ -80,6 +94,10 @@
     container.down(edit_class).hide();
     container.down(view_container_class).hide();
     container.down(edit_container_class).hide();
+    container.down(disabled_container_class).show();
+    container.select(template_container_class).each(function (elm) {
+      elm.hide();
+    });
     container.addClassName('disabled');
     disabler.hide();
     enabler.show();
@@ -192,8 +210,19 @@
     });
 
     // initial visibility of buttons:
-    $$(template_container_class).each(function(elm) {
-      elm.observe('mouseover', function(evt) {
+    $$(template_container_class).each(function(selected){
+      selected.removeClassName('over');
+      selected.down('.buttons').hide();
+    });
+    $$('body').each(function(container) {
+      container.observe('mouseover', function(evt) {
+        var elm = evt.element();
+        if (!elm.match(template_container_class)) {
+          elm = elm.up(template_container_class);
+        }
+        if (typeof elm == 'undefined' || typeof elm === null) {
+          return;
+        }
         if (elm.hasClassName('over')) {
           return;
         }
