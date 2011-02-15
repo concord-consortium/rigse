@@ -863,7 +863,7 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
-    view_class = teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
+    view_class = for_teacher_only(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -999,7 +999,7 @@ module ApplicationHelper
 
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
-    if (teacher_only?(component))
+    if (for_teacher_only(component))
       style_classes << 'teacher_only' # funny, just adding a style text
     end
     return style_classes
@@ -1060,7 +1060,7 @@ module ApplicationHelper
   # cascading logic.
   # TODO: generic container-based method-forwarding mechanism
   #
-  def teacher_only?(thing)
+  def for_teacher_only(thing)
     if thing.respond_to? :teacher_only?
       return true if thing.teacher_only?
     end
