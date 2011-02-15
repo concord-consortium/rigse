@@ -10,10 +10,13 @@
       - else
         #content
           %h3= h(activity.name)
-      - activity.pages.each do |page|
-        - if page.has_enabled_elements?
-          %object{:refid => ot_refid_for(page) }/
-          %br/
+      - activity.sections.each do |section|
+        - next unless section.is_enabled?
+        - section.pages.each do |page|
+          - next unless page.is_enabled?
+          - if page.has_enabled_elements?
+            %object{:refid => ot_refid_for(page) }/
+            %br/
 
 - content_for(:library) do
   - activity.pages.each do |page|
