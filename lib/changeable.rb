@@ -8,7 +8,7 @@ module Changeable
   def changeable?(user)
     # the Anonymous user can't change anything, always return false
     if(user.anonymous?)
-      return false;
+      return false
 
     # admin and manager users can change everything the system delivers to them
     elsif user.has_role?("admin", "manager")

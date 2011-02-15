@@ -1,4 +1,4 @@
-Feature: An author adds multiple choice_questions
+Feature: An author adds multiple choice questions
   As a Investigations author
   I want to add a multiple choice questions to my investigations
   So that I can understand what my students are learning.
