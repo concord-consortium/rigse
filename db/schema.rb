@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210191336) do
+ActiveRecord::Schema.define(:version => 20110216225547) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
     t.boolean  "is_enabled",                       :default => true
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
