@@ -74,7 +74,7 @@ describe Portal::StudentsController do
       assert_select "p", /username\s+is/i
 
       # should show directions to login:
-      assert_select "p", /log\s+in/i
+      assert_select "p", /login/i
     end
 
     # student is not logged in, so we shouldn't display their classes!
