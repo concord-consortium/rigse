@@ -22,7 +22,7 @@ class Portal::School < ActiveRecord::Base
     end
   end
 
-  has_many :school_memberships, :class_name => "Portal::SchoolMembership", :foreign_key => "school_id"
+  has_many :members, :class_name => "Portal::SchoolMembership", :foreign_key => "school_id"
 
   # because of has_many polyporphs this means the the associations look like this:
   #
@@ -35,7 +35,8 @@ class Portal::School < ActiveRecord::Base
   #   student.schools
   #
   
-  has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/school_memberships"
+  # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
+  has_many :teachers, :through => :members, :source => "teacher"
 
   named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
   named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
@@ -140,13 +141,12 @@ class Portal::School < ActiveRecord::Base
     nil
   end
   
-  def has_member?(student_or_teacher)
-    members.detect {|m| m.class == student_or_teacher.class && m.id == student_or_teacher.id}
-  end
-  
   def add_member(student_or_teacher)
-    return members if self.has_member?(student_or_teacher)
-    members << student_or_teacher
+    # add school to the otherside of the relationship
+    unless student_or_teacher.schools.include? self
+      student_or_teacher.schools << self
+      self.reload
+    end
   end
   
   # if the school is a 'real' school return the NCES local school id
