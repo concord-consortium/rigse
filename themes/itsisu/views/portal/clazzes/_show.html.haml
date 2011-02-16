@@ -5,7 +5,9 @@
     .action_menu
       .action_menu_left
         %h2
-          #{portal_clazz.name} (#{portal_clazz.semester.name})
+          #{portal_clazz.name} 
+          - if portal_clazz.semester
+            (#{portal_clazz.semester.name})
       .action_menu_header_right
         %ul.menu
           -if portal_clazz.changeable? current_user
