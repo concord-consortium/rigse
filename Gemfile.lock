@@ -77,6 +77,8 @@ GEM
     json (1.4.6)
     json_pure (1.5.1)
     linecache (0.43)
+    maruku (0.6.0)
+      syntax (>= 1.0.0)
     mime-types (1.16)
     mongrel (1.1.5)
       cgi_multipart_eof_fix (>= 2.4)
@@ -139,6 +141,7 @@ GEM
     spork (0.8.4)
     spreadsheet (0.6.5.2)
       ruby-ole (>= 1.0)
+    syntax (1.0.0)
     term-ansicolor (1.0.5)
     uuidtools (2.0.0)
     will_paginate (2.3.15)
@@ -170,6 +173,7 @@ DEPENDENCIES
   hpricot (= 0.6.164)
   httpclient (~> 2.1.5.2)
   jnlp (~> 0.6.1)
+  maruku (~> 0.6)
   mongrel (~> 1.1.5)
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
@@ -183,5 +187,6 @@ DEPENDENCIES
   ruby-debug
   spork
   spreadsheet
+  syntax (~> 1.0)
   uuidtools (~> 2.0.0)
   will_paginate (~> 2.3.6)

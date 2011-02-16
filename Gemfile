@@ -24,6 +24,8 @@ source :gemcutter
   gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
+  gem "maruku",               "~> 0.6"
+  gem "syntax",               "~> 1.0"
   gem "acts-as-taggable-on"
   gem "ruby-debug"
 
