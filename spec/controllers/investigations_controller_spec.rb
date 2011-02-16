@@ -17,7 +17,9 @@ describe InvestigationsController do
       :name => "test investigation",
       :description => "new decription"
     })
+
     Investigation.stub!(:find).and_return(@investigation)
+    Investigation.stub!(:published).and_return([@investigation])
   end
 
   it "should display a 'duplicate' link for authorized users" do
