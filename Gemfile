@@ -26,6 +26,7 @@ source :gemcutter
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
   gem "syntax",               "~> 1.0"
+  gem "paperclip"
   gem "acts-as-taggable-on"
   gem "ruby-debug"
 

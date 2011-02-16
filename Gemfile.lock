@@ -93,6 +93,9 @@ GEM
       net-ssh (>= 1.99.1)
     nokogiri (1.4.4)
     open4 (0.9.6)
+    paperclip (2.3.8)
+      activerecord
+      activesupport
     prawn (0.4.1)
       prawn-layout
     prawn-format (0.1.1)
@@ -175,6 +178,7 @@ DEPENDENCIES
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
   open4 (~> 0.9.6)
+  paperclip
   prawn (~> 0.4.1)
   prawn-format (~> 0.1.1)
   rails (= 2.3.11)
