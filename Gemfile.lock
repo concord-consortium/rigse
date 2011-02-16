@@ -66,7 +66,7 @@ GEM
     grit (2.0.0)
       diff-lcs (>= 1.1.2)
       mime-types (>= 1.15)
-    haml (2.2.24)
+    haml (3.0.25)
     highline (1.6.1)
     hpricot (0.6.164)
     httpclient (2.1.5.2)
@@ -165,7 +165,7 @@ DEPENDENCIES
   fakeweb (~> 1.2.8)
   fastercsv (= 1.5.0)
   grit (~> 2.0.0)
-  haml (~> 2.2.0)
+  haml (~> 3.0.25)
   highline
   hpricot (= 0.6.164)
   httpclient (~> 2.1.5.2)

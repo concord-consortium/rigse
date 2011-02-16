@@ -10,7 +10,7 @@ source :gemcutter
   gem "capistrano-ext",                   :require => "capistrano"
   gem "aasm",                 "~> 2.0.2"
   gem "will_paginate",        "~> 2.3.6"
-  gem "haml",                 "~> 2.2.0"
+  gem "haml",                 "~> 3.0.25"
   gem "RedCloth",             "~> 4.1.1"
   gem "uuidtools",            "~> 2.0.0"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
