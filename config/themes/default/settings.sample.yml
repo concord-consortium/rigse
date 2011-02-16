@@ -1,6 +1,5 @@
 ---
 development: &id003
-  :single_page_activity: false
   :active_school_levels:
     - "2"
     - "3"
@@ -33,6 +32,9 @@ development: &id003
   :states_and_provinces:
     - RI
   :maven_jnlp_servers:
+    - :host: http://jnlp.concord.org
+      :name: concord-current-sig
+      :path: /dev2/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
@@ -40,20 +42,14 @@ development: &id003
     - all-otrunk-snapshot
   :default_maven_jnlp:
     :version: snapshot
-    :server: concord
+    :server: concord-current-sig
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-    - http://test.porfolio.ri.net/
-    - http://portfolio.ri.net
-    - https://test.portfolio.ri.net/
-    - https://portfolio.ri.net/
 
 test: *id003
 staging: *id003
 cucumber: *id003
 
 production:
-  :single_page_activity: false
   :active_school_levels:
     - "2"
     - "3"
@@ -86,19 +82,16 @@ production:
   :states_and_provinces:
     - RI
   :maven_jnlp_servers:
+    - :host: http://jnlp.concord.org
+      :name: concord-current-sig
+      :path: /dev2/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - all-otrunk-snapshot
   :default_maven_jnlp:
-    :version: 0.1.0-20090724.190238
-    :server: concord
+    :version: 0.1.0-20110120.152517
+    :server: concord-current-sig
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-    - http://moleman.concord.org/
-    - http://test.porfolio.ri.net/
-    - http://portfolio.ri.net
-    - https://test.portfolio.ri.net/
-    - https://portfolio.ri.net/
 

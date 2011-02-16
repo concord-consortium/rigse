@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210191336) do
+ActiveRecord::Schema.define(:version => 20110126161409) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -66,6 +66,19 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
   add_index "ancestries", ["ancestor_id"], :name => "index_ancestries_on_ancestor_id"
   add_index "ancestries", ["ancestor_type"], :name => "index_ancestries_on_ancestor_type"
   add_index "ancestries", ["descendant_id"], :name => "index_ancestries_on_descendant_id"
+
+  create_table "attached_files", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "attachable_type"
+    t.integer  "attachable_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "author_notes", :force => true do |t|
     t.text     "body"
@@ -625,11 +638,13 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.string  "name"
-    t.text    "description"
-    t.integer "user_id"
-    t.string  "uuid",        :limit => 36
-    t.text    "content"
+    t.integer  "user_id"
+    t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "external_user_domains", :force => true do |t|
@@ -665,6 +680,7 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
     t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                            :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                         :default => 0
   end
 
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
@@ -1675,6 +1691,7 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                      :default => true
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1768,40 +1785,45 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
   add_index "portal_teacher_clazzes", ["teacher_id"], :name => "index_portal_teacher_clazzes_on_teacher_id"
 
   create_table "portal_teachers", :force => true do |t|
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "domain_id"
+    t.integer  "offerings_count",               :default => 0
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_calibrations", :force => true do |t|
-    t.integer "data_filter_id"
-    t.integer "probe_type_id"
-    t.boolean "default_calibration"
-    t.integer "physical_unit_id"
-    t.string  "name"
-    t.text    "description"
-    t.float   "k0"
-    t.float   "k1"
-    t.float   "k2"
-    t.float   "k3"
-    t.string  "uuid"
-    t.integer "user_id"
+    t.integer  "data_filter_id"
+    t.integer  "probe_type_id"
+    t.boolean  "default_calibration"
+    t.integer  "physical_unit_id"
+    t.string   "name"
+    t.text     "description"
+    t.float    "k0"
+    t.float    "k1"
+    t.float    "k2"
+    t.float    "k3"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.text    "description"
-    t.string  "otrunk_object_class"
-    t.boolean "k0_active"
-    t.boolean "k1_active"
-    t.boolean "k2_active"
-    t.boolean "k3_active"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "otrunk_object_class"
+    t.boolean  "k0_active"
+    t.boolean  "k1_active"
+    t.boolean  "k2_active"
+    t.boolean  "k3_active"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1814,40 +1836,46 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
   end
 
   create_table "probe_physical_units", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "quantity"
-    t.string  "unit_symbol"
-    t.string  "unit_symbol_text"
-    t.text    "description"
-    t.boolean "si"
-    t.boolean "base_unit"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "quantity"
+    t.string   "unit_symbol"
+    t.string   "unit_symbol_text"
+    t.text     "description"
+    t.boolean  "si"
+    t.boolean  "base_unit"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_probe_types", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.integer "ptype"
-    t.float   "step_size"
-    t.integer "display_precision"
-    t.integer "port"
-    t.string  "unit"
-    t.float   "min"
-    t.float   "max"
-    t.float   "period"
-    t.string  "uuid"
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "ptype"
+    t.float    "step_size"
+    t.integer  "display_precision"
+    t.integer  "port"
+    t.string   "unit"
+    t.float    "min"
+    t.float    "max"
+    t.float    "period"
+    t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.string  "short_name"
-    t.text    "description"
-    t.string  "communication_protocol"
-    t.string  "image"
-    t.string  "uuid"
-    t.integer "device_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "short_name"
+    t.text     "description"
+    t.string   "communication_protocol"
+    t.string   "image"
+    t.string   "uuid"
+    t.integer  "device_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -1861,6 +1889,16 @@ ActiveRecord::Schema.define(:version => 20110210191336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ignore"
+  end
+
+  create_table "resource_pages", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "publication_status", :default => "draft"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|

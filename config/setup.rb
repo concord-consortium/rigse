@@ -3,10 +3,80 @@ require 'fileutils'
 require 'yaml'
 require 'erb'
 require 'optparse'
+require 'pathname'
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
+
+# ==================================================================
+#
+#   General utility methods
+#
+# ==================================================================
+
+def copy_file(source, destination)
+
+  unless @options[:quiet]
+    puts <<-HEREDOC
+  copying: #{source}
+       to: #{destination}
+
+    HEREDOC
+  end
+  FileUtils.cp(source, destination)
+end
+
+def rails_file_path(*args)
+  path = File.join([RAILS_ROOT] + args)
+  if File.exists?(path)
+    path = Pathname.new(path).realpath.to_s
+  end
+  path
+end
+
+def rails_file_exists?(*args)
+  File.exists?(rails_file_path(args))
+end
+
+def file_exists_and_is_not_empty?(path)
+   File.exists?(path) && File.stat(path).size > 0
+end
+
+def jruby_system_command
+  JRUBY ? "jruby -S" : ""
+end
+
+# ==================================================================
+#
+#   Load required gems, libraries, and modules
+#
+# ==================================================================
+
+
+# Add the unpacked gems in vendor/gems to the $LOAD_PATH
+Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir|
+  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
+end
+
+require 'uuidtools'
+
+require rails_file_path(%w{ config initializers 00_core_extensions })
+require rails_file_path(%w{ lib app_settings })
+require rails_file_path(%w{ lib states_and_provinces })
+
+# Some of the AppSettings module methods need the constant RAILS_ENV defined
+RAILS_ENV = 'development'
+include AppSettings
+
+@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
+@settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
+
+if AppSettings.settings_exists?
+  @app_settings = AppSettings.load_app_settings
+else
+  @app_settings = @settings_config_sample[RAILS_ENV]
+end
 
 # ==================================================================
 #
@@ -28,6 +98,7 @@ default_db_name_prefix = APP_DIR_NAME.gsub(/\W/, '_')
 default_quiet = false
 default_answer_yes = false
 default_force = false
+default_site_url = @app_settings[:site_url] || @settings_config_sample[RAILS_ENV][:site_url] || 'http://localhost:3000'
 
 optparse = OptionParser.new do |opts|
   # Set a banner, displayed at the top
@@ -39,6 +110,12 @@ optparse = OptionParser.new do |opts|
   opts.on( '-t', '--theme THEME',
     "theme used to setup and run this Investigations instance, default: '#{default_theme}'" ) do |theme|
     @options[:theme] = theme
+  end
+
+  @options[:site_url] = default_site_url
+  opts.on( '-s', '--site SITE_URL',
+    "site url for this portal instance, default: '#{default_site_url}'" ) do |site_url|
+    @options[:site_url] = site_url
   end
 
   @options[:app_name] = default_app_name
@@ -95,40 +172,6 @@ optparse.parse!
 
 # ==================================================================
 #
-#   General utility methods
-#
-# ==================================================================
-
-def copy_file(source, destination)
-
-  unless @options[:quiet]
-    puts <<-HEREDOC
-  copying: #{source}
-       to: #{destination}
-
-    HEREDOC
-  end
-  FileUtils.cp(source, destination)
-end
-
-def rails_file_path(*args)
-  File.join([RAILS_ROOT] + args)
-end
-
-def rails_file_exists?(*args)
-  File.exists?(rails_file_path(args))
-end
-
-def file_exists_and_is_not_empty?(path)
-   File.exists?(path) && File.stat(path).size > 0
-end
-
-def jruby_system_command
-  JRUBY ? "jruby -S" : ""
-end
-
-# ==================================================================
-#
 #   Check for gems that need to be installed manually
 #
 # ==================================================================
@@ -170,28 +213,6 @@ if @missing_gems.length > 0
 end
 
 
-# ==================================================================
-#
-#   Load required gems, libraries, and modules
-#
-# ==================================================================
-
-
-# Add the unpacked gems in vendor/gems to the $LOAD_PATH
-Dir["#{RAILS_ROOT}/vendor/gems/**"].each do |dir|
-  $LOAD_PATH << File.expand_path(File.directory?(lib = "#{dir}/lib") ? lib : dir)
-end
-
-require 'uuidtools'
-
-require rails_file_path(%w{ config initializers 00_core_extensions })
-require rails_file_path(%w{ lib app_settings })
-require rails_file_path(%w{ lib states_and_provinces })
-
-# Some of the AppSettings module methods need the constant RAILS_ENV defined
-RAILS_ENV = 'development'
-include AppSettings
-
 # FIXME: see comment about this hack in config/environments/development.rb
 $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
 
@@ -226,12 +247,11 @@ end
 if @options[:force] && File.exists?(@settings_config_path)
   FileUtils.rm(@settings_config_path)
 end
-@settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
-@settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
 
 puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
+  raise "\n\n*** missing theme: #{@theme_settings_config_sample_path}\n\n" unless File.exists?(@theme_settings_config_sample_path)
   @theme_settings_config_sample        = AppSettings.load_all_app_settings(@theme_settings_config_sample_path)
   @settings_config_sample.merge!(@theme_settings_config_sample)
   if @options[:db_name_prefix] == default_db_name_prefix
@@ -240,14 +260,23 @@ if @options[:theme]
   if @options[:app_name] == default_app_name && @theme_settings_config_sample['development'] && @theme_settings_config_sample['development'][:site_name]
     @options[:app_name] = @theme_settings_config_sample['development'][:site_name]
   end
+  if @options[:site_url]
+    @settings_config_sample.each_key { |env| @settings_config_sample[env][:site_url] = @options[:site_url] }
+  end
 end
 
-@options[:app_name]
-print "\nInitial setup of Investigations application named '#{@options[:app_name]}' ... "
+puts "using site_url: #{@options[:site_url]} (use -s argument to specify alternate site url)\n"
+
+print "\nInitial setup of Rails Portal application named '#{@options[:app_name]}' ... "
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
+
+if @options[:site_url]
+  @mailer_config_sample[:host] = @options[:site_url][/\/\/(.*)/, 1]
+end
+
 # @sds_config_sample             = YAML::load_file(@sds_config_sample_path)
 
 @new_database_yml_created = false
@@ -972,7 +1001,12 @@ Here are the current settings in config/settings.yml:
   else
     %w{development staging production}.each do |env|
       puts "\n#{env}:\n"
-      @settings_config[env][:site_url] =         ask("            site url: ") { |q| q.default = @settings_config[env][:site_url] }
+      if @options[:site_url]
+        @settings_config[env][:site_url] = @options[:site_url]  
+      else
+        @settings_config[env][:site_url] =         ask("            site url: ") { |q| q.default = @settings_config[env][:site_url] }
+      end
+      
       @settings_config[env][:site_name] =        ask("           site_name: ") { |q| q.default = @settings_config[env][:site_name] }
 
       @settings_config[env][:default_admin_user] ||= {}

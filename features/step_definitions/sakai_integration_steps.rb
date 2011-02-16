@@ -13,7 +13,7 @@ end
 
 Given "an unknown sakai user" do
   @user_login = "someunknownuser"
-  while User.find_by_login(@user_login)
+  while User.first(:conditions => { :login => @user_login })
     @user_login << (rand * 100).to_i
   end
   @user = nil

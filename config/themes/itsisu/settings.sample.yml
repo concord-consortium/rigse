@@ -1,6 +1,5 @@
 ---
 production: &prod
-  :single_page_activity: true
   :help_email: itsisu@concord.org
   :site_url: http://itsisu.units.concord.org
   :active_school_levels:

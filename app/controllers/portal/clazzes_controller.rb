@@ -258,7 +258,7 @@ class Portal::ClazzesController < ApplicationController
     container = params[:dropped_dom_id]
     offering_id = params[:offering_id]
     @offering = Portal::Offering.find(offering_id)
-    if @offering
+    if (@offering && @offering.can_be_deleted?)
       @runnable = @offering.runnable
       @offering.destroy
       @portal_clazz.reload

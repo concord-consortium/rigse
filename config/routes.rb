@@ -154,7 +154,9 @@ ActionController::Routing::Routes.draw do |map|
       :open_response_report => :get, 
       :multiple_choice_report => :get,
       :separated_report => :get,
-      :report_embeddable_filter => :post
+      :report_embeddable_filter => :post,
+      :activate => :get,
+      :deactivate => :get
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
@@ -376,7 +378,9 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get,
     :export => :get,
-    :destroy => :post
+    :destroy => :post,
+  }, :collection => {
+    :printable_index => :get
   }
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
@@ -421,14 +425,21 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get
   }
 
+  map.list_filter_resource_page '/resource_pages/list/filter', :controller => 'resource_pages', :action => 'index', :method => :post
+  map.resources :resource_pages, :collection => {
+    :printable_index => :get
+  }
+  map.resources :attached_files
+
   # not being used, but being tested
   map.resources :images
-  
+    
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
-  map.home '/readme', :controller => 'home', :action => 'readme'
-  map.home '/home', :controller => 'home', :action => 'index'
-  map.about '/about', :controller => 'home', :action => 'about'
+  map.readme '/readme', :controller => 'home', :action => 'readme'
+  map.doc    '/doc/:document', :controller => 'home', :action => 'doc', :requirements => { :document => /\S+/ }
+  map.home   '/home', :controller => 'home', :action => 'index'
+  map.about  '/about', :controller => 'home', :action => 'about'
   map.root :controller => 'home', :action => 'index'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'

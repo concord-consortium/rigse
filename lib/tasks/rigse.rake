@@ -100,7 +100,7 @@ REST_AUTH_DIGEST_STRETCHES = 10
     
     #######################################################################
     #
-    # New from scratch
+    # Setup a new instance
     #
     #######################################################################
     desc "setup a new rites instance, run: ruby config/setup.rb first"
@@ -132,7 +132,7 @@ This task will:
         Rake::Task['rigse:setup:default_users_roles'].invoke
         Rake::Task['rigse:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
-        # FIXME: when and if any other projetcs/hemes need RI GSE models
+        # FIXME: when and if any other projects/themes need RI GSE models
         if USING_RITES
           Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
@@ -143,7 +143,7 @@ This task will:
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
         else
-          puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n"
+          puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n\n"
         end
         Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke

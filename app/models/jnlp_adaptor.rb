@@ -1,6 +1,12 @@
 class JnlpAdaptor
   
   attr_reader :jnlp
+  attr_reader :net_logo_package_name
+
+  OTRUNK_NLOGO_JAR_PACKAGE_MAP = {
+    "otrunk-nlogo41" => "otrunknl41",
+    "otrunk-nlogo4"  => "otrunknl4"
+  }
   
   def initialize(project=Admin::Project.default_project)
     @default_maven_jnlp_server = project.maven_jnlp_server
@@ -12,6 +18,12 @@ class JnlpAdaptor
     else
       jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
       @jnlp = jnlp_url.versioned_jnlp
+    end
+    otrunk_nlogo_jars = @jnlp.jars.select { |j2| j2.name[/otrunk-nlogo.*?/] }
+    if otrunk_nlogo_jars.empty?
+      @net_logo_package_name = nil
+    else
+      @net_logo_package_name = JnlpAdaptor::OTRUNK_NLOGO_JAR_PACKAGE_MAP[otrunk_nlogo_jars.first.name]
     end
   end
   

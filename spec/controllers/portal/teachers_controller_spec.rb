@@ -32,11 +32,12 @@ describe Portal::TeachersController do
       current_teacher_count = Portal::Teacher.count(:all)
       
       post :create, params
+      @response.should render_template("users/thanks")
       
       assert_equal User.count(:all), current_user_count + 1, "TeachersController#create did not create a User when given valid POST data"
       assert_equal Portal::Teacher.count(:all), current_teacher_count + 1, "TeachersController#create did not create a Portal::Teacher when given valid POST data"
       assert_nil flash[:error]
-      assert_not_nil flash[:notice]
+      assert_nil flash[:notice]
     end
     
     it "should not allow the teacher not to select a school" do

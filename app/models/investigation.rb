@@ -110,6 +110,8 @@ class Investigation < ActiveRecord::Base
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
+  
+  named_scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
   include Noteable # convinience methods for notes...
@@ -176,6 +178,11 @@ class Investigation < ActiveRecord::Base
       if portal_clazz
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
+      
+      unless options[:sort_order].blank?
+        investigations = investigations.ordered_by(options[:sort_order])
+      end
+      
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else

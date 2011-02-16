@@ -3,8 +3,9 @@ set :stages, %w(
   itsisu-dev itsisu-staging itsisu-production 
   sg-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
-  geniverse-dev
+  geniverse-dev geniverse-production
   xproject-dev
+  genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
   sparks-dev)
 set :default_stage, "development"
@@ -144,6 +145,13 @@ namespace :db do
 
 end
 
+namespace :paperclip do 
+  desc "Pulls Paperclip images"
+  task :fetch_attachments, :roles => :web do 
+    download "#{shared_path}/system/attachments", "public/system/attachments/", :via => :sftp, :recursive => true
+  end
+end
+
 namespace :deploy do
   #############################################################
   #  Passenger
@@ -161,8 +169,8 @@ namespace :deploy do
   end
 
   desc "setup a new version of rigse from-scratch using rake task of similar name"
-  task :from_scratch do
-    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:force_new_rigse_from_scratch"
+  task :setup_new_app do
+    run "cd #{deploy_to}/current; RAILS_ENV=production rake rigse:setup:new_rites_app --trace"
   end
   
   desc "setup directory remote directory structure"
@@ -177,12 +185,14 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/public/sparks-content"
     run "mkdir -p #{shared_path}/public/installers"  
     run "mkdir -p #{shared_path}/config/initializers"
+    run "mkdir -p #{shared_path}/system/attachments" # paperclip file attachment location
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
     run "touch #{shared_path}/config/rinet_data.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
+    run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
   end
 
@@ -194,11 +204,15 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
+    run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
     run "ln -nfs #{shared_path}/public/otrunk-examples #{release_path}/public/otrunk-examples"
     run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
     run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
+    run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
+    # This is part of the setup necessary for using newrelics reporting gem 
+    # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
   end
     
   desc "install required gems for application"
@@ -210,6 +224,10 @@ namespace :deploy do
   task :set_permissions, :roles => :app do
     sudo "chown -R apache.users #{deploy_to}"
     sudo "chmod -R g+rw #{deploy_to}"
+    
+    # Grant write access to the paperclip attachments folder
+    sudo "chown -R apache.users #{shared_path}/system/attachments"
+    sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
   
   desc "Create asset packages for production" 
@@ -513,6 +531,16 @@ namespace :convert do
   task :reset_activity_positions, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} rigse:fixup:reset_activity_positions --trace"
+  end
+
+  # seb: 20110126
+  # See commit: Add "offerings_count" cache counter to runnables
+  # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
+  desc "Recalculate the 'offerings_count' field for runnable objects"
+  task :reset_offering_counts, :roles => :app do
+    # remove investigation cache files
+    sudo "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
+    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
 end
