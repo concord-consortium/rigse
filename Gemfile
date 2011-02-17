@@ -20,7 +20,7 @@ source :gemcutter
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass"
   gem "jnlp",                 "~> 0.6.1"
-  gem "has_many_polymorphs",  "~> 2.13"
+  #gem "has_many_polymorphs",  "~> 2.13"
   gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
