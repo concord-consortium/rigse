@@ -14,6 +14,7 @@ require 'capistrano/ext/multistage'
 require 'haml'
 
 require 'lib/yaml_editor'
+require "bundler/capistrano"
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
