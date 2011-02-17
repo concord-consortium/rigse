@@ -2,8 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
-    %title
-      = @page_title || APP_CONFIG[:site_name]
+    %title= @page_title || APP_CONFIG[:site_name]
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
@@ -12,12 +11,11 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged( (APP_CONFIG[:theme]||'default').to_sym, {'media' => 'screen, presentation'})
-    
+    = stylesheet_link_merged(current_theme.to_sym, {'media' => 'screen, presentation'})
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
-    
+
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
@@ -26,81 +24,31 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if defined? @container_type && @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
-      
-    
   %body
-            
+
     #note{:style=>"display: none;"}
     #waiter{:style=>"display: none;"}
       please wait
       = image_tag "ajax-loader.gif"
     #page
-      /
-        For non-visual user agents:
+      / For non-visual user agents:
       #top
-        %a.hidden.doNotPrint{ :href => "#primary" }
-          Skip to main content.
+        %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
     #wrapper.wrapper
-
-    
-      #userlinks
-        %p
-          Welcome
-          = "#{current_user.name}."
-        %ul
-          - unless current_user.anonymous?
-            %li= link_to 'Preferences', preferences_user_path(current_user)
-            %li.last= link_to 'Logout', logout_path
-          - else
-            %li= link_to 'Login', login_path
-            %li= link_to 'Sign Up', pick_signup_path
-          - if @original_user.has_role?('admin', 'manager')
-            %li.last= link_to 'Switch', switch_user_path(current_user)
-
-            = render :partial => 'shared/activity_trail'
-
-      #lead.project-header
-        %h1
-          %a{ :href => "/" }
-            APP_CONFIG[:site_name]
-
-      #nav_top
-        %span.hidden.doNotPrint
-          Navigation:
-        %ul.menu_h
-          / offer people a way to pop-out of iframe:
-          %li#home.trail= link_to 'Home', home_path
-          %li.trail= link_to 'About', about_path
-          - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
-            %li.trail=link_to(top_level_container_name.humanize.pluralize, investigations_path)
-          - if current_user.has_role?('admin') || current_user.portal_teacher
-            %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
-        .menu_h_right
-          %ul
-
-            - if current_user.has_role?('admin', 'manager')
-              %li.trail= link_to 'Districts', portal_districts_path
-              %li.trail= link_to 'Schools', portal_schools_path
-              - if APP_CONFIG[:use_gse]
-                %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
-              %li.trail= link_to 'Users', users_path
-              %li.trail= link_to 'Projects', admin_projects_path
-
-      #primary      
-
+      = render :partial => 'shared/project_header'
+      #primary
         #content.main_content_colors
           #content_header.main_content_colors
             = yield :content_header
           #js_flash{:style=>"display: none;"}
-
           #flash
             .padded_contents
               - flash.each_pair do |key, message|
-                %div{:class=>"flash flash_#{key}"}= message 
+                %div{:class=>"flash flash_#{key}"}= message
           = yield :layout
 
       #secondary
-        - if @investigation 
+        - if @investigation
           / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
           = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
         - elsif @activity
@@ -108,42 +56,12 @@
         - elsif @portal_school
           = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
         - elsif @portal_teacher && (@portal_teacher.user == current_user)
-          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
+          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
         - elsif @portal_student && (@portal_student.user == current_user)
           = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
         = yield :side_bar
 
-      #footer
-        .footer-inner
-          %ul.utility-footer
-            %li
-              %a{ :href=>"http://www.concord.org/about/contact" }
-                Contact Us
-            %li
-              %a{ :href=>"http://www.concord.org/project-login" }
-                Project Login
-            %li
-              %a{ :href=>"http://www.concord.org/subscribe" }
-                Subscribe
-            %li
-              %a{ :href=>"http://www.concord.org/site-map" }
-                Sitemap
-            %li
-              %a{ :href=>"http://www.concord.org/privacy-policy" }
-                Privacy
-            %li
-              %a{ :href=>"http://www.concord.org/logo-usage" }
-                Logo Usage
-          %p.legal
-            Copyright 
-            %span.copyright
-              &copy;
-            2010 Concord Consortium. All rights reserved. 
-    		
-          %p#footer_left
-            Questions/Feedback:
-            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
-          %p#footer_right
+      = render :partial => 'shared/footer'
       #under_footer
         - if current_user.has_role?('admin')
           = display_system_info
