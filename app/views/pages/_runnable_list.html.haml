@@ -9,8 +9,8 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        / -if current_user.has_role? "author"
-        %li= link_to "create #{Page.display_name}", new_page_path
+        -if current_user.has_role? "author"
+          %li= link_to "create #{Page.display_name}", new_page_path
 
 - pages.each do |page|
   %div{ :id => dom_id_for(page), :class => 'runnable' }
