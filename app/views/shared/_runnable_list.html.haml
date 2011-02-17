@@ -6,6 +6,8 @@
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 2, :before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :update => {:success => 'offering_list'}
 #offering_list.drop_target
   -#= render_top_level_container_list_partial(locals)
-  = render :partial => "resource_pages/runnable_list",      :locals => { :resource_pages      => ResourcePage.search_list(locals),     :hide_print => true }
-  = render :partial => "external_activities/runnable_list", :locals => { :external_activities => ExternalActivity.search_list(locals), :hide_print => true }
-  = render :partial => "investigations/runnable_list",      :locals => { :investigations      => Investigation.search_list(locals),    :hide_print => true }
+  -#= render :partial => "resource_pages/runnable_list",      :locals => { :resource_pages      => ResourcePage.search_list(locals),     :hide_print => true }
+  -#= render :partial => "external_activities/runnable_list", :locals => { :external_activities => ExternalActivity.search_list(locals), :hide_print => true }
+  -#= render :partial => "investigations/runnable_list",      :locals => { :investigations      => Investigation.search_list(locals),    :hide_print => true }
+  - ["Investigation", "ResourcePage", "ExternalActivity"].each do |klass|
+    = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }
