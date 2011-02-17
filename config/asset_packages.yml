@@ -60,7 +60,6 @@ stylesheets:
   - drop_down
   - data_table
   - reports
-  - themes/rites/rites
   
 - investigations:
   - themes/investigations/investigations
