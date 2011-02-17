@@ -157,6 +157,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - themes/genomedynamics/genomedynamics
   
 - geniverse:
   - app

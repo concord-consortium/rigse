@@ -1,272 +1,374 @@
-!blueprint_grid_width = 26
-@import compass/reset.sass
-@import app_colors.sass
-@import app_fonts.sass
-@import app_metrics.sass
-@import blueprint.sass
+/* browser reset
 
-p
-  :margin 1em 0em
+body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form
+  :margin 0
+  :padding 0
+  :border 0
 
-ol
-  :padding-left 10px
-  :list-style-type decimal
-  :list-style-position inside
+html, input, textarea, select
+  :font-size 100%
 
-em
-  :font-style italic 
+/*keep ie happy
 
 body
-  :padding 0px
-  +main_font
-  :background
-    :image url(/images/rites-bg.jpg) 
-    :repeat repeat
-  :margin 10px 
-    :bottom 0px
+  :font 75%/1.5 Arial, Helvetica, sans-serif
 
-h1,h2,h3,h4,h5
-  :padding-top 0.5em
+h1, h2, h3, h4, h5, h6
+  :font-weight normal
+  :margin 0 0 .25em 0
 
-h2,h3,h4,h5
-  :padding-bottom 0.25em
+h1
+  :font-size 2em
 
-h1 
-  :letter-spacing .15em
-  :font 
-    :size 2.5em
-    :weight normal
+/* 24px
 
 h2
-  :letter-spacing .15em
-  :font
-    :size 1.5em
-    :weight normal
+  :font-size 1.833em
+  :color #ee864e
+
+/* 20px
 
 h3
-  :letter-spacing .15em
-  :font
-    :size 1.3em
-    :weight normal
+  :font-size 1.165em
+  :font-weight bold
+  :padding-top 3px
+  :line-height 1.3
+
+/* 14px
 
 h4
-  :padding-left 10px
-  :font
-    :size 1.3em
-    :weight normal
+  :font-size 1.165em
+  :color #ef864e
 
-strong
+/* 14px
+
+h5
+  :font-size 1em
   :font-weight bold
+  :text-transform uppercase
 
-fieldset
-  :background-color white
-  :border 1px solid
-  :margin 0.5em 0.5em 1em 0.5em
-  :padding 0.5em 1em 1em 1em
-  ul
-    :style horizontal
+/* 12px;
 
-td
-  :vertical-align top
-  :padding 2px
-pre
-  :overflow auto
-  :background-color #ffffe0
-  :border 1px solid
-  :margin 0.5em 0.5em 1em 0.5em
-  :padding 0.5em 1em 1em 1em
-  :font-family monospace
-  :font
-    :size 0.9em
-    :weight normal
-  :background-color #ffffee
-  :line-height 1.1em
-  
-.wrapper
-  +page_white
-  :-moz-border-radius .5em
-  :-webkit-border-radius .5em
-  
-#wrapper
-  +container
+h6
+  :font-size .917em
 
-#header
-  +column(24,true)
-  :padding 0px
-  :margin 0px
-  :background-color = !rieps_brown
-  :background
-    :image url(/images/header-bg2.jpg) 
+/* 11px;
+
+li h3
+  :display inline
+  :padding 0
+
+p
+  :margin-bottom 1em
+
+input, textarea
+  :border 1px solid #242323
+
+abbr, acronym
+  :border-bottom 1px dotted #999
+  :cursor help
+
+ul, ol
+  :margin 0 0 1em 3em
+
+table
+  :border-collapse collapse
+  :margin 1em 0
+
+body
+  background:
+    :color #fee9aa
+    :image url('/images/new/bg-body.png')
     :repeat repeat-x
-  :color = !very_dark_blue
-  :-moz-border-radius-topright .5em
-  :-webkit-border-top-right-radius .5em
-  :-moz-border-radius-topleft .5em
-  :-webkit-border-top-left-radius .5em
-  a
-    :color = !very_dark_blue
-    :background-color transparent
-    :font-weight bold
-  a:hover
-    :color = !rieps_brown
-    :background-color white
-  .left_content
-    +column(24,true)
-    :float left
-    :text-align left
+  :color #3f3f3f
 
-  .right_content
-    +column(24,true)
-    :float right
-    :text-align right
-    
-.nav_menu
-  :display block
-  :padding
-    :left 0px
-  :margin
-    :right 0px
-    :left 0px
-    :bottom 1em
-  ul
-    :padding-top 1em
-  li
-    :list-style-type none
+.hidden
+  :display none
 
-    :padding-top 0.5em
-    a
-      :display block
-    a.numbered
-      :display inline
-      
-#waiter
-  :z-index 20
-  :font-size 9pt
-  :margin 1em
-  :padding 4em
-  +content_area_colors
-  :text-align left  
-  :position fixed
-  :margin-left 25%
-  :width 50%
-  :z-index 20
+#page
+  :min-width 860px
+
+#wrapper
+  :background #f3f2ed url('/images/new/bg-content.gif') 0 0 repeat-y
   :height auto
-  :border 2px solid
-    
-#nav_top
-  +column(24,true)
-  +top_and_bottom_nav_colors
-  :overflow hidden
-  :padding 0.5em 0px
-
-.main_content_colors
-  +content_area_colors
-
-#content_container
-  :display block
-  +column(24,true)
+  :margin 0 auto
   :min-height 600px
-  :height auto !important
-  :line-height 1.4em
-  :font-size 12px
-#left_nav
-  :display block
-  +column(!left_nav_columns)
-  +left_nav_colors
-  :min-height 600px
-//  :height auto !important
-  
-#content_header
-  +content_area_colors
-  +column(!main_content_columns,true)
-  :padding 0px
-  :margin 0px
+  :position relative
+  :width 860px
 
-#report_content
-  :display block
-  +column(!report_content_columns,true)
-  +content_area_colors
-  :min-height 600px
-  :height auto !important
+/* HEADER
+#header
+  :background transparent
+  :height 179px
+  :margin 0
 
-#main_content
-  :display block
-  +column(!main_content_columns,true)
-  +content_area_colors
-  :min-height 600px
-  :height auto !important
-
-
-#footer
-  +column(24,true)
-  +top_and_bottom_nav_colors
-  :padding 0.5em 0px
-  :margin 0em
-  :-moz-border-radius-bottomright .5em
-  :-webkit-border-bottom-right-radius .5em
-  :-moz-border-radius-bottomleft .5em
-  :-webkit-border-bottom-left-radius .5em
-  
-  #footer_left
-    +column(12)
-  #footer_right
-    :text-align right
-    +column(12,true)
-    :float right
-
-#under_footer
-  +column(25,true)
-  :text-align center
-  :padding 2px 0px
-
-ul.menu_h_right
-  :display inline
-  :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  :float right
+#userlinks
+  :background url(/images/new/bg-userlinks.png) repeat-y right top
+  :max-height 40px
+  :min-height 24px
+  :padding-left 100px
+  :position absolute
+  :right 0
   :text-align right
-  li
-    :margin 0em
-    :padding 0em
-      :left 0.5em
-      :right 0.5em
+  :top 0
+  p
+    :clear none
+    :color #fff
     :display inline
-    :list-style-type none
-    :white-space nowrap
+    :float left
+    :margin 3px 13px 0 0
+    :padding 0
+    :position relative
+    :text-align right
+  ul
+    :clear none
+    :color #fff
+    :display inline
+    :float left
+    :margin 3px 0 0 0
+    :padding 0
+    :position relative
+    :text-align right
+  li
+    :border none 
+    :display inline
+    :list-style none
+    :padding 0
+    :text-align right
+    :text-transform uppercase
     a
-      :font-weight bold !important
-ul.menu_h
-  :display inline
-  :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  .rt
+      :color #fff
+      :font-weight bold
+      :padding 0 8px
+      :text-decoration none
+  li + li
+    :border-left solid 1px #fff
+
+#lead
+  :border-bottom 1px solid #a1d2d1
+  :clear both
+  :float left
+  :line-height 1.833
+  :margin-bottom 1.833em
+  &.project-header
+    :border none
+    :margin 0
+    :padding 0
+    :width 860px
+#_toggle_portal__offering_1
+  :margin 2px 2px 0 0
+  
+.project-header h1
+  background:
+    :color white
+    :image url('/images/new/banners/jax.png')
+    :repeat no-repeat
+  :height 172px
+  :margin 0
+  :text-indent -999em
+  &.loops
+    :background white url('/images/new/banners/loops.png') 0 0 no-repeat
+  a
+    :background transparent
+    :display block
+    :height 172px
+    :width 100%
+
+/* HORIZONTAL NAVIGATION
+#nav_top
+  :background #f8ac1a
+  :clear both
+  :height 26px
+  :position relative
+  :text-align left
+  a
+    :color #416962
+  ul
+    :float left
+    :list-style none
+    :height 26px
+    :margin 4px 0 0 0
+    :padding 0
+    :width 50%
+  li
+    :border none
+    :color #555
+    :display inline
+    :font-size 1em
+    :font-weight bold
+    :margin 0
+    :padding 0 10px 0
+    :text-transform uppercase
+    &#main-site
+      :background transparent url(/images/new/main-site.png) no-repeat
+      :border-right none
+      :height 42px
+      :margin-top -10px
+      :padding 0 5px 0 0
+      :position absolute
+      :right 0
+      :text-indent -999em
+      :top 0
+      :width 354px
+      a
+        :display block
+        :height 42px
+        :width 349px
+  li + li
+    :border-left solid 1px #416962
+  li#home
+    :border none
+  .menu_h_right
     :float right
     :text-align right
-  .lt
-    :float left
-    :text-align left
-  li
-    :margin 0em
-    :padding 0em
-      :left 0.5em
-      :right 0.5em
-    :display inline
-    :list-style-type none
-    :white-space nowrap
+    :width 50%
+    ul
+      :float right
+      :width 100%
 
-ul.menu
-  :display inline
+/* SHARE AND PRINT LINKS
+.page-utility
   :list-style-type none
-  :list-style-position inside
-  :margin 0em
-  :padding 0em
-  :font-weight 100
+  :margin 0
+  :padding 0
+  :position absolute
+  :top 1.5em
+  :right 1em
+  li
+    :float right
+    :width 56px
 
+.send-to-friend
+  :margin-right 21px
 
+.page-utility a
+  :background transparent url('/images/new/bg-sprite-btns.png') 0 0 no-repeat
+  :display block
+  :height 16px
+  :overflow hidden
+  :text-indent -999em
+  :width 56px
+  &:hover
+    :background-position 0 -16px
+
+.share-it
+  :position relative
+
+.page-utility
+  a.addthis_button
+    :background-position -112px 0
+    :width 52px
+    &:hover, &:focus
+      :background-position -112px -16px
+  .print-this-page a
+    :background-position -56px 0
+    &:hover, &:focus
+      :background-position -56px -16px
+
+/* MAIN CONTENT - two columns, #primary on right, #secondary on left
+#content
+  :overflow hidden
+  :overflow-y visible
+  :padding-top 40px
+  :padding-right 30px
+  :position relative
+
+/* ------- #primary -------
+
+#primary
+  :display inline
+  :float left
+  :margin 0 0 0 228px
+  :min-height 350px
+  :padding 0
+  :width 632px
+
+/* login form
+
+#content-upper
+  :background #f3f2ed
+  :float left
+  :margin 0 0 30px
+  :padding 22px 40px 0 40px
+  :width 100%
+
+.login-area
+  :border solid 2px #aaa
+  :margin-left -30px
+  :padding 15px 20px 5px
+  :width 540px
+  /* CSS3
+  :border-radius 8px
+  :-moz-border-radius 8px
+  :-webkit-border-radius 8px
+  .graphic-input li
+    :width 180px
+.login-area
+  li
+    :margin-bottom 4px
+  ul.graphic-input
+    :margin-bottom 6px
+  h2
+    :background transparent url('/images/new/headers-sprite.png') 0 -75px no-repeat
+    :overflow hidden
+    :height 13px
+    :text-indent -9999px
+    :width 119px
+  h3
+    :color #999
+    :font-family Arial, Helvetica, sans-serif
+    :margin -4px 0 0 0
+    :padding 0
+  input[type='submit'], button, ul.menu li a#printable-view
+    &.button
+      :background transparent url("/images/new/bg-sprite-btns.png") -130px -69px no-repeat
+      :float left
+      :height 26px
+      :margin-left -6px
+      :margin-right 14px
+      :text-indent -999em
+      :width 64px
+    &:hover, &.over
+      :background-position -130px -95px
+#project-signin
+  :border-right solid 1px rgb(161, 211, 208)
+  :margin-bottom 20px
+.forgot
+  :font-size .9em
+  :margin-left 93px
+  :padding-top 5px
+
+p.note
+  :border-top solid 1px #ddd
+  :clear both
+  :font-size .9em
+  :margin-top 170px !important
+  :padding-top 10px
+
+.col
+  :float left
+  :width 50%
+  :margin-right 1.8%
+
+.col2
+  :float left
+  :margin-left 4.8%
+  :width 43%
+  p
+    :color #999
+
+#content-lower
+  :background-color #fffae6
+  :clear both
+  :margin-left -29px
+  /* -30px
+  :margin-bottom -14px
+  /* keep the last paragraph from messing with the margin
+  :padding 39px 40px 0 30px
+  :width 623px
+  /*630
+
+/* LEGACY CODE?  
 .toggle
   .future_state
     :font-size 1em
@@ -274,31 +376,19 @@ ul.menu
     :font-size 1em
     :display none
 
-.dev_note
-  :font-size 0.6em
-  :color= !dev_note_color
-
-.teacher_only
-  :background-color= !teacher_only_color !important
-  
-.legend
-  :font-size 0.8em
-  :letter-spacing 0.1em
-  :color = !legend_color
-
 .component_title
   :font-size 1em
 
 .important
   :font-size 1.2em
-  :color = !dark_red
+  :color = #a80011
   :margin 1em
   a
-    :color = !dark_red !important
+    :color = #a80011 !important
     :text-decoration underline !important
 .discouraged
   :opacity 0.5
-  
+
 .in_place_editor_field
   :display inline-block
   :min-width 5em !important
@@ -307,352 +397,579 @@ ul.menu
   :height auto !important
   :padding 1px
   :margin 0px
-  
+
 .item_collection
   :background-color white
   :padding 0.5em 0em 
 
 .container_element
-  :background-color= !container_box_color
+  :background-color #fff
   :padding 2px
   :margin-bottom 5px
   &:hover
-    :background-color= !container_box_hover_color
+    :background-color #fff
   .action_menu
     :font-size 10px
     :border-bottom 1px solid
     :opacity .8
     &:hover
       :opacity 1
-    
+
 .item
   :background-color white
   :padding 0.5em
-  :padding-top 0px
-  :padding-bottom 0px
-  ul
-    :background-color= !almost_white
+  :padding-top 0
+  :padding-bottom 0
+  .action_menu
+    :padding 0
+  .action_menu_header_left
+    :font-size 12px
+    :font-weight bold
+  .action_menu_header_right
+    :margin-right 0 !important
+    :padding-right 0 !important
+  ul.tiny
+    :background-color #eee
+    :margin-left 0
     li
-      :background-color= !almost_white
+      :background-color #eee
+      :list-style disc !important
+      :margin-left 20px
+      :padding 2px
   &.item_selected
-    :border
+    :border-bottom
       :width 2px
       :style solid
-      :color= !very_dark_blue
+      :color= #3a878b
   &.item_selectable
-    :border
+    :border-bottom
       :width 2px
       :style solid
-      :color= !light_blue
+      :color= #bddfdf
     &:hover
       :border
         :width 2px
-        :color= !light_brown
-  
-.mceContentBody
-  :font-size 0.8em
-  :white-space normal
-  :border
-    :width 0px
-    :style solid
-  :background-image none
-  :background-color white
-  :cursor text
-  a
-    :background-color transparent
-  a:hover
-    :color inherit
-    :background-color transparent
-.content
-  :font-size 1em
-  :white-space normal
-  :border
-    :width 0px
-    :style solid
-  :background-color white
-  :cursor text
-  a
-    :background-color transparent
-  a:hover
-    :color inherit
-    :background-color transparent
+        :color= #f4b626
 
-.legal
-  :font-size 0.5em
-  :line-height 0.5em
-  :white-space normal
-  :text-align center
-  :color = !rieps_brown
-  :border
-    :width 0px
-    :style solid
-  :background-color white
+/* ------- edit, copy, delete etc buttons -------
+
+.list
   a
-    :background-color transparent
-  a:hover
-    :color inherit
-    :background-color transparent
-  
-.padded_content
-  :margin 0px 5px
+    :border solid 1px #479492
+    :font-size 0.75em
+    :margin 0 2px 0 0
+    :padding 2px 5px
+    /* CSS3
+    :border-radius 3px
+    :-moz-border-radius 3px
+    :-webkit-border-radius 3px
+    &:link, &:visited
+      :background transparent
+      :color #479492
+    &:hover
+      :background #479492
+      :color #fff
+    &:active
+      :background transparent
+      :color #479492
+  select
+    :clear both
+    :display block
+    :margin-bottom -10px
+#section_pages_list
+  :margin-left 0
+  li
+    :list-style none
+
+/* ------- #secondary -------
+
+#secondary
+  :background #fbf4db
+  :display inline
   :float left
+  :margin-top -10px
+  :margin-left -860px
+  :padding-top 10px
+  :width 200px
+  h2
+    :color #555
+    :font bold 1.3em Arial, Helvetica, sans-serif !important
+    :margin 10px 0 10px 20px
+  ul
+    :border-top solid 1px #a1d3d0
+    :list-style none
+    :margin 0
+    :padding 0
+  li
+    :background #f3f2ed
+    :border-bottom solid 1px #a1d3d0
+    :color #ee864e
+    :font-size 1.3em
+    :list-style none
+    :margin 0
+    :padding 0
+    strong
+      :display block
+      :font-weight normal
+      :padding 5px 20px
+    a
+      :background #fbf4db
+      :color #555
+      :display block
+      :margin 0
+      :padding 5px 20px
+    a.selected
+      :background #fff
+      :color #ee864e
+  ul.create
+    :border-top none
+  .create_link
+    :margin 10px 0 0 20px
 
-.padded_content_right
-  :margin 0px 5px
-  :float right
+.user-info-box
+  :background #fff
+  :margin 10px 10px 20px
+  :padding 10px
+  /* CSS3
+  :border-radius 12px
+  :-moz-border-radius 12px
+  :-webkit-border-radius 12px
 
-.right_content
-  :margin 5px
-  :float right
-  :text-align right
-  
-.left_content
-  :margin 5px
-  :float left
-  :text-align left
-    
-.item
-  :padding 0.5em
+/* TYPE AND LINKS
+a
+  :color #479492
+  :text-decoration none
+  &:visited
+    :color #479492
+    :text-decoration none
+  &:hover, &:focus
+    :color #da5936
+
+h2 a, h3 a
+  :font-family arial, helvetica, sans-serif
+
+a img
+  :border 0
+
+blockquote
+  :background-color #fff
+  :border 1px solid #479492
+  :border-width 1px 0
+  :color #da5936
+  :font 1.5em/1.25 Georgia, Times, serif
+  :margin 20px 0
+  :padding 1.1em 25px 1.2em 25px
+  *, p
+    :margin 0
+    :padding 0
+
+div.hr
+  :background #A1D2D1
   :clear both
-  :border
-    :width 1px
-    :style dotted
+  :height 1px
+  :margin 20px 0
+  hr
+    :display none
 
-.draggable, .sortable, .movable
-  :cursor move
-  
-.hidden
+.copyright
+  :letter-spacing .1em
+
+code
+  :font-size 1.2em
+
+dl
+  :margin 1em 0
+
+/* GENERIC TABLE STYLES
+table
+  &.tablesorter
+    th, td
+      :border solid 1px #a8d6d5 !important
+      :color #555
+      :padding 5px
+  &.yui-dt-table
+    th, td
+      :border solid 1px #a8d6d5 !important
+      :color #555
+      :padding 5px
+  &.roster-table
+    th, td
+      :border solid 1px #a8d6d5 !important
+      :color #555
+      :padding 5px
+  &.tablesorter th, &.yui-dt-table th, &.roster-table th
+    :background #a0d1d0 url(/images/new/bg-thead.png) left bottom repeat-x !important
+    :border-bottom 1px solid #b9dedd !important
+    :color #222
+    :font-size 1em
+    :text-align left
+  &.yui-dt-table th a, &.roster-table th a
+    :color #222 !important
+  &.tablesorter thead th, &.yui-dt-table thead th, &.roster-table th
+    :border-right-color #fff !important
+  &.tablesorter thead th.last, &.yui-dt-table thead th.last, &.roster-table th.last
+    :border-right-color #a8d6d5 !important
+  &.tablesorter td, &.yui-dt-table td, &.roster-table td
+    :background-color #f7f2df !important
+    :vertical-align top
+  &.tablesorter .odd td, &.yui-dt-table .odd td, &.roster-table .odd td
+    :background-color #fff
+  &.tablesorter tfoot td, &.yui-dt-table tfoot td, &.roster-table tfoot td
+    :background #f7f2df
+
+html body #content table.roster-table
+  :width 545px !important
+
+/* GENERAL FORM STYLES
+form
+  ul
+    :list-style none
+    :margin 0
+  li
+    :margin-bottom 1.65em
+fieldset
+  :clear both !important
+  :display block !important
+legend
+  :clear both
+  :color #222
+  :display block
+  :font-size 1.1em
+  :font-weight bold
+  :margin 1em 0 0 0 !important
+  :padding 1em 0 0 0 !important
+
+form#project-signin legend
+  :display none
+
+label
+  :font-weight bold
+
+select, textarea, label, button
+  :display block
+
+input, textarea
+  :border 1px solid #a1d2d1
+  :padding .3em 5px
+
+input
+  &.text:focus, &[type='text']:focus
+    :border-color #da5936
+
+textarea
+  &:focus
+    :border-color #da5936
+  :font 1em Arial, Helvetica, sans-serif
+  :padding 1px 2px
+  :width 400px
+
+#wrapper input[type=hidden]
+  :border none
+
+button
+  :background-color #57a19f
+  :color #fff
+  :cursor pointer
+  :font-size 1.2em
+  :text-align center
+
+input
+  &[type=button], &.button, &[type='submit']
+    :background-color #57a19f
+    :color #fff
+    :cursor pointer
+    :font-size 1.2em
+    :text-align center
+
+button
+  :background #f3951d
+  :border 0 solid #f3951d
+  :color #FFF
+  :font 12px/1 Arial, Helvetica, sans-serif
+  :padding 4px 14px
+  /* CSS 3
+  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  :border-radius 12px
+  /* Opera 10.5, IE 9
+  :-moz-border-radius 12px
+  /* FF1+
+  :-webkit-border-radius 12px
+  /* Saf3+, Chrome
+
+input
+  &[type=button], &.button, &[type=submit]
+    :background #f3951d
+    :border 0 solid #f3951d
+    :color #FFF
+    :font 12px/1 Arial, Helvetica, sans-serif
+    :padding 4px 14px
+    /* CSS 3
+    :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+    :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+    :border-radius 12px
+    /* Opera 10.5, IE 9
+    :-moz-border-radius 12px
+    /* FF1+
+    :-webkit-border-radius 12px
+    /* Saf3+, Chrome
+
+a.button
+  :background #f3951d
+  :border 0 solid #f3951d
+  :color #FFF
+  :font 12px/1 Arial, Helvetica, sans-serif
+  :padding 4px 14px
+  /* CSS 3
+  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  :border-radius 12px
+  /* Opera 10.5, IE 9
+  :-moz-border-radius 12px
+  /* FF1+
+  :-webkit-border-radius 12px
+  /* Saf3+, Chrome
+
+button:hover
+  :background #f3951d
+  /* CSS 3
+  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+
+input
+  &[type=button]:hover, &.button.over, &[type=submit]:hover
+    :background #f3951d
+    /* CSS 3
+    :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+    :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+
+a.button:hover, button.over
+  :background #f3951d
+  /* CSS 3
+  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+
+p select
+  :display inline
+  :margin 0 2px
+
+a.more, ul.more a
+  :background transparent url('/images/new/icon-arrow-more.gif') right center no-repeat
+  :padding-right 10px
+
+h1
+  :color #ee864e
+  :font-family Arial, Helvetica, sans-serif
+
+h2, h3
+  :font-family Arial, Helvetica, sans-serif
+
+.tab
+  h2, h3
+    :clear both
+  .col .lead
+    :background-color #feefc1
+    :border-radius 8px
+    /* Opera 10.5, IE 9
+    :margin 1.5em 0
+    :padding 30px 24px 12px 24px
+    /* CSS3
+    :-moz-border-radius 8px
+    /* FF1+
+    :-webkit-border-radius 8px
+    /* Saf3+, Chrome
+
+.tags
+  :background-color #feefc1
+  :border-radius 8px
+  /* Opera 10.5, IE 9
+  :margin 1.5em 0
+  :padding 30px 24px 12px 24px
+  /* CSS3
+  :-moz-border-radius 8px
+  /* FF1+
+  :-webkit-border-radius 8px
+  /* Saf3+, Chrome
+
+#project-signin fieldset ul.graphic-input li input
+  :background transparent url('/images/new/bg-sprite-btns.png') -32px -39px no-repeat !important
+  :border none !important
+  :color #888
+  :font 11px arial, helvetica, sans-serif
+  :margin-left -8px
+  :min-height 13px
+  :padding 7px 0 6px 11px
+  :position relative
+  /* ie
+  :width 144px
+
+*+html #page #wrapper .graphic-input input
+  :float left
+
+#page #wrapper
+  .login-area .graphic-input input
+    :width 164px
+  .graphic-input input:focus
+    :outline-width 0
+
+/* class="graphic-input" can be on the li to change only one or on any outer elment to change many.
+
+.graphic-input
+  :position relative
+  label.textfield
+    :color #ccc
+    :left 10px
+    :position absolute
+    :top 2px
+  label.right
+    :display inline
+
+#page #wrapper .graphic-input
+  :display block
+
+.graphic-input li
+  :background url('/images/new/bg-sprite-btns.png') right -39px no-repeat
+  :position relative
+.graphic-input li.remember 
+  :background transparent
+  input#remember_me
+    :display inline
+    :float left
+    :width 25px
+  label
+    font-size .9em
+    :font-weight normal
+
+#page
+  #header li.graphic-input
+    :background url('/images/new/bg-sprite-btns.png') right -39px no-repeat
+    :display block
+    :padding-right 8px
+    :width 153px
+  #wrapper #secondary .graphic-input
+    :background url('/images/new/bg-sprite-btns.png') right -39px no-repeat
+    :margin-left 3px
+    :width 166px
+
+#left-col
+  :float left
+  :width 300px
+#right-col
+  :clear right
+  :float left
+  :width 250px
+  img
+    :border solid 1px #999
+    :float right
+    :margin 12px 0 0 10px
+.menu_h
+  :clear both
+  li
+    :float left
+    :margin-right 10px
+
+/* HOME SCREEN SECTIONS
+div.section
+  :border-bottom solid 1px #ccc
+  :margin 0 auto 10px
+  :padding 0 0 10px
+  :position relative
+  h3
+    :color #257270
+    :font-weight normal
+    :margin-bottom 10px
+  p.add-new
+    :top 5px
+    :font-size .9em
+    :padding 0
+    :position absolute
+    :right 10px
+  select
+    :color #333
+    :margin-left 0
+    
+/* CLASS LISTINGS
+.component_title
+  :clear both
+  :font-weight bold
+  :width 100%
+#search-investigations
+  :background #fff
+  :border solid 1px #ddd
+  :margin-bottom 20px
+  :padding 10px
+  select
+    :margin-left 0
+  table
+    :margin 0
+    :padding 0
+    
+#element_nav_menu, #page_nav_menu, #section_nav_menu
   :display none
   
 ul.quiet_list
-  :list-style-type none
-  :white-space nowrap
-  :margin 0em
-  :padding 0em
-  li
-    :margin 0em
-    :padding 0em 0.5em
-    :list-style-type none
-    :white-space nowrap
+  :margin-left 0
+  :padding-left 0
+  .item .action_menu
+    :padding 5px 10px
+  .item .action_menu .action_menu_header_left a
+    :color #000
+  .item .tiny .menu_h
+    :margin 0 0 5px 10px
+    :padding 5px 0
+    li
+    :list-style none
+    :margin-right 15px
 
-ul.preview_list
-  :list-style-type none
-  :margin 0em
-  :padding 0em
+.menu_h
+  :margin 0 0 5px 10px
+  :padding 5px 0
   li
-    :margin 0em
-    :padding 0em 0.5em
-
-ul.menu_v
-  :display block
-  :list-style-type none
-  :white-space nowrap
-  :margin 0em
-    :left 0.5em
-  li
-    :margin 0.5em 0em
-    :display block
-    :white-space nowrap
-    :list-style-type none
-  
-li.tiny
-  :margin 0em
-    :left 0.5em
+    :list-style none
+    :margin-right 15px
     
-.tiny
-  :font-size 0.80em
-  p
-    :margin 0.2em
-  
-.small_left_menu
-  :font-size 10px
-  :margin-left 60px
-  
-.item_list
-  :cursor move
-  
 .data_collector
   :display block
   :width  100%
   :height 400px
-    
-.tinymce_textarea
-  :width  100%
-  :height 700px  
-  :word-break break-all
 
-.tinymce_textarea_short
-  :width 100%
-  :height 100px  
-  :word-break break-all
-
-#js_flash
-  :position fixed
-  :left 0
-  :top 0
-  :width 100%
-  :height 100%
-  :text-align center
-  :vertical-align center
-  :font-size 24pt
-  :opacity 0.9
-  :color= !almost_white
-  :background-color= !very_dark
-  :z-index 400
-    
-.flash
-  +left_nav_colors
-  :font-weight bold
-  :text-align center
-  :display block
+/* FOOTER
+#footer
+  :background transparent url('/images/new/bg-footer.png') center bottom no-repeat
   :clear both
-.flash_error
-  :color= !dark_red
-
-.errorExplanation
-  :color= !dark_red
-  h2
-    :font-weight bold
-    :letter-spacing normal
-    :font-size 12pt
-
-.data_table_title
-  :font-size 1.2em
-  :font-style bold
-  :padding 5px 10px 10px 10px
-  :text-align center
-
-.data_table
-  :width 100%
-  .title
-    :font-size 18pt
-    :font-style bold    
-  th
-    :font-size 12pt
-    :text-decoration underline
-    :border-style solid
-    :border-bottom-width 2px
-    :border-right-width 1px
-    :padding 5px
-  td
-    :padding 5px
-    :padding-left 10px
-    :border-style dotted
-    :border-right-width 1px
-    
-
-ul
-  :padding-left 10px
-  :list-style-type circle
-  :list-style-position inside
-  :margin 0 0 5px
-
-#clazzes_nav
-  ul
-    .create_link
-      :background-color #cccccc
-      :border 1px solid #444444
-      :margin-left -15px
-      :text-align center
-
-dt
-  :margin-top 1.2em
-  :text-decoration underline
-dd
-  :margin-left 1.2em
-
-input
-  +main_font
-  :color= !very_dark
-  :padding 0.2em
-
-  
-input[type=text]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-textarea
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-
-input[type=password]
-  :border solid
-  :border-width 2px
-  :border-color= !input_border_color
-  :background-color= !input_color
-  &:focus
-    :background-color= !input_focus_color
-    
-.fieldWithErrors
-  input
-    :border-color= !dark_red
-    
-.aligned
-  ol 
-    :margin 0px
-    :padding 0px
-  ul
-    :margin 0px
-    :padding 0px
+  :height 235px
+  :min-height 235px
+  :position relative
+  p
+    :font-size .9em
+    :margin .3em 0 0
+  ul, p
+    :color #a0a0a0
+    :font .9em georgia, times, serif
+    :margin-bottom 0
+    :margin-left 300px
   li
-    :list-style none
-    :padding 5px
-    :margin 0px
-
-    label
-      :width 30%
-      :display inline-block
-      :clear none
-      :font-weight bold
-      :line-height 1.8em
-      
-    label.right
-      :text-align right
-    input
-      :margin 0px
-      :margin-top 4px
-      
-.drop_target
-  :height 100%
-  :min-width 50px
-  :background-color #ead9c7
-  :padding 5px
-  :padding-bottom 30px
-.drop_target_selected
-  :background-color= !selected_color
-#search_title
-  :display block
-  :width 40%
-  :float left
-  :font-weight bold
-.progress_container
-  :display block
-  :overflow hidden
-  :text-align right
-  :height 20px
-.text_button
-  :display inline-block
-  :float left
-  :margin-left 4px  
-  :margin-right 10px  
-
-.copy_paste_enabled
-  :display block
-  :visibility visible
-
-.copy_paste_disabled
+    :display inline
+    a
+      :color #727272
+      :margin-right 10px
+      &:hover, &:focus
+        :color #3e3e3e
+  .footer-inner
+    :bottom 5px
+    :display block
+    :left 0
+    :margin 0 0 0 -40px
+    :position absolute
+    :width 800px
+  #share-it
+    :float right
+    :margin -26px 123px 0 0
+    :width 125px
+#under_footer
   :display none
-  :visibility hidden
-
 
 .attached_file
   border: 1px solid
   margin: 2px
-  padding: 5px
+  padding: 5px  

@@ -83,4 +83,8 @@ spec/reports
 config/preinitializer.rb
 local_files
 config/newrelic.yml
+public/system/attachments/*db/:wq
 public/system/attachments/*
+*.swp
+*.swo
+capybara-*.html

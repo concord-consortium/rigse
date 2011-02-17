@@ -3,7 +3,7 @@
 - # (next line is a hack, so that portal_clazz_id is defined)
 - portal_clazz_id ||= nil 
 
-.action_menu
+%h3
   #search_title
     = "Search #{top_level_container_name.humanize.pluralize}"
     - unless local_assigns[:investigations_only]
@@ -21,13 +21,13 @@
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'grade: ', :class=>"right"
+        = label_tag :filter, 'Grade: ', :class=>"right"
         = select(nil,  :grade_span, RiGse::GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'domain: ', :class=>"right"          
+        = label_tag :filter, 'Domain: ', :class=>"right"          
         = select(nil,  :domain_id, RiGse::Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'matching: ', :class=>"right"
+        = label_tag :filter, 'Matching: ', :class=>"right"
         = text_field_tag :name, name
       %td{:style=>"padding: 0.5em; text-align: right"}
         - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)

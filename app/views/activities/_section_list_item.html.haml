@@ -1,15 +1,15 @@
 %li{:id => dom_id_for(section, :container), :class => 'menu container_element' }
   %div{ :id => dom_id_for(section, :item), :class => style_for_item(section) }
     %div.action_menu
-      %div.action_menu_header_left   
+      %div.action_menu_header_left  
         = link_to_container(section)
       %div.action_menu_header_right   
         %ul.menu
-          /%li= run_link_for(section)
+          %li= run_link_for(section)
           - if (section.changeable?(current_user))
-            /%li= link_to 'duplicate', duplicate_section_url(section)
-            / %li= link_to 'edit', section
-            / %li.menu=toggle_more section
+            %li= link_to 'duplicate', duplicate_section_url(section)
+            %li= link_to 'edit', section
+            %li.menu=toggle_more section
             %li.menu=link_to_remote 'delete', :confirm => "delete section #{section.name}?", :url => { :controller => 'activities', :action => 'delete_section', :params => {:id=>section.activity.id, :section_id => section.id}}, :html => {:class=>"delete"}
     %div{:id => dom_id_for(section, :details),  :style =>'display:block;'}
       = section.description

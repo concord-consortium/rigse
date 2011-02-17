@@ -2,7 +2,7 @@ Feature: Investigation index pages can be printed
   So I can take investigation data with me
   As a teacher
   I want to print the investigation index page
-  
+
   Background:
     Given The default project and jnlp resources exist using factories
     Given the following teachers exist:
@@ -33,7 +33,7 @@ Feature: Investigation index pages can be printed
     And I should see "Newest"
     And I should see "Medium"
     And I should see "Oldest"
-    
+
   @selenium
   Scenario: Teacher prints the listing of a subset of investigations
     When I am on the investigations like "New" page
