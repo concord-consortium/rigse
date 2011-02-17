@@ -24,8 +24,7 @@
       %p
         Sign up for access as:
         %br
-        %a{ :href=>"/portal/students/new", :class=>'more' }
-          Student
+        = link_to("Student", signup_portal_students_path, :class=>'more')
         %br
         %a{ :href=>"/portal/teachers/new", :class=>'more' }
           Teacher
