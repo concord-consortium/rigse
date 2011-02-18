@@ -19,7 +19,7 @@ source :gemcutter
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass"
-  gem "jnlp",                 "~> 0.6.1"
+  gem "jnlp",                 "0.6.2"
   #gem "has_many_polymorphs",  "~> 2.13"
   gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
