@@ -6,5 +6,5 @@
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 2, :before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :update => {:success => 'offering_list'}
 #offering_list.drop_target
   = render :partial => "investigations/runnable_list", :locals => { :investigations => Investigation.search_list(locals), :hide_print => true }
-  - ["ResourcePage", "ExternalActivity"].each do |klass|
+  - ["ResourcePage", "ExternalActivity", "Page"].each do |klass|
     = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }
