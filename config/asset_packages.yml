@@ -21,6 +21,7 @@ javascripts:
   - live_validation
   - please_wait
   - report_filter
+  - pagination
   
 stylesheets: 
 - base: 
