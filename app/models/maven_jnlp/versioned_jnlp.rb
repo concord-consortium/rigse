@@ -171,17 +171,17 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     self.argument                           = jnlp_object.argument
     self.offline_allowed                    = jnlp_object.offline_allowed
     self.local_resource_signatures_verified = jnlp_object.local_resource_signatures_verified
-    self.include_pack_gzip                  = jnlp_object.include_pack_gzip
-    self.spec                               = jnlp_object.spec
-    self.codebase                           = jnlp_object.codebase
-    self.href                               = jnlp_object.href
-    self.j2se_version                       = jnlp_object.j2se_version
-    self.max_heap_size                      = jnlp_object.max_heap_size
-    self.initial_heap_size                  = jnlp_object.initial_heap_size
-    self.title                              = jnlp_object.title
-    self.vendor                             = jnlp_object.vendor
-    self.homepage                           = jnlp_object.homepage
-    self.description                        = jnlp_object.description
+    self.include_pack_gzip        = jnlp_object.include_pack_gz
+    self.spec                     = jnlp_object.spec
+    self.codebase                 = jnlp_object.codebase
+    self.href                     = jnlp_object.href
+    self.j2se_version             = jnlp_object.j2se_version
+    self.max_heap_size            = jnlp_object.max_heap_size
+    self.initial_heap_size        = jnlp_object.initial_heap_size
+    self.title                    = jnlp_object.title
+    self.vendor                   = jnlp_object.vendor
+    self.homepage                 = jnlp_object.homepage
+    self.description              = jnlp_object.description
 
     if icon_object = jnlp_object.icon
       icon = MavenJnlp::Icon.find_or_create_by_href_and_height_and_width(:href => icon_object.href, :height => icon_object.height, :width => icon_object.width)
