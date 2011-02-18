@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   
   JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 
@@ -103,12 +103,12 @@ REST_AUTH_DIGEST_STRETCHES = 10
     # Setup a new instance
     #
     #######################################################################
-    desc "setup a new rites instance, run: ruby config/setup.rb first"
-    task :new_rites_app => :environment do
+    desc "setup a new app instance, run: ruby config/setup.rb first"
+    task :new_app => :environment do
 
       db_config = ActiveRecord::Base.configurations[RAILS_ENV]
 
-      # Rake::Task['rigse:setup:development_environment_only'].invoke
+      # Rake::Task['app:setup:development_environment_only'].invoke
       
       puts <<-HEREDOC
 
@@ -129,27 +129,27 @@ This task will:
       HEREDOC
       if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
         # Rake::Task['gems:install'].invoke
-        Rake::Task['rigse:setup:default_users_roles'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
+        Rake::Task['app:setup:default_users_roles'].invoke
+        Rake::Task['app:setup:create_additional_users'].invoke
         Rake::Task['db:backup:load_probe_configurations'].invoke
         # FIXME: when and if any other projects/themes need RI GSE models
         if USING_RITES
           Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
         end
-        Rake::Task['rigse:convert:assign_vernier_golink_to_users'].invoke
+        Rake::Task['app:convert:assign_vernier_golink_to_users'].invoke
         if USING_JNLPS
-          Rake::Task['rigse:jnlp:generate_maven_jnlp_resources'].invoke
+          Rake::Task['app:jnlp:generate_maven_jnlp_resources'].invoke
         end
         if APP_CONFIG[:include_otrunk_examples]
-          Rake::Task['rigse:import:generate_otrunk_examples_rails_models'].invoke
+          Rake::Task['app:import:generate_otrunk_examples_rails_models'].invoke
         else
           puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n\n"
         end
-        Rake::Task['rigse:convert:create_default_project_from_config_settings_yml'].invoke
+        Rake::Task['app:convert:create_default_project_from_config_settings_yml'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
         Rake::Task['portal:setup:import_nces_from_files'].invoke
         Rake::Task['portal:setup:create_districts_and_schools_from_nces_data'].invoke
-        Rake::Task['rigse:setup:default_portal_resources'].invoke
+        Rake::Task['app:setup:default_portal_resources'].invoke
 
   
         puts <<-HEREDOC
@@ -171,7 +171,8 @@ Re-create the database from scratch and setup default users
 again by running these rake tasks in sequence again:
 
   RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_rites_app
+  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_app
+
 
 If you have access to an ITSI database you can also import ITSI activities 
 into #{APP_CONFIG[:theme].upcase} by running this rake task:
@@ -218,23 +219,26 @@ config/initializers/site_keys.rb as on the server you copied the production data
     # Force New from scratch
     #
     #######################################################################
-    desc "force setup a new rigse instance, with no prompting! Danger!"
-    task :force_new_rigse_from_scratch => :environment do
-      
-      db_config = ActiveRecord::Base.configurations[RAILS_ENV]
-
-      puts <<-HEREDOC
-      This task will drop your existing rigse database: #{db_config['database']}, rebuild it from scratch, 
-      and install default users.
-      HEREDOC
-        # save the old data?
-        # Rake::Task['rigse:setup:development_environment_only'].invoke
-        Rake::Task['db:reset'].invoke
-        Rake::Task['rigse:setup:force_default_users_roles'].invoke
-        Rake::Task['rigse:setup:create_additional_users'].invoke
-        Rake::Task['rigse:setup:import_gses_from_file'].invoke
-        Rake::Task['db:backup:load_probe_configurations'].invoke
-        Rake::Task['rigse:setup:assign_vernier_golink_to_users'].invoke
-    end
+    #
+    # seb 20100719: I've commented this task out -- I don't think it works anymore.
+    #
+    # desc "force setup a new rigse instance, with no prompting! Danger!"
+    # task :force_new_rigse_from_scratch => :environment do
+    #   
+    #   db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    # 
+    #   puts <<-HEREDOC
+    #   This task will drop your existing rigse database: #{db_config['database']}, rebuild it from scratch, 
+    #   and install default users.
+    #   HEREDOC
+    #     # save the old data?
+    #     # Rake::Task['app:setup:development_environment_only'].invoke
+    #     Rake::Task['db:reset'].invoke
+    #     Rake::Task['app:setup:force_default_users_roles'].invoke
+    #     Rake::Task['app:setup:create_additional_users'].invoke
+    #     Rake::Task['app:setup:import_gses_from_file'].invoke
+    #     Rake::Task['db:backup:load_probe_configurations'].invoke
+    #     Rake::Task['app:setup:assign_vernier_golink_to_users'].invoke
+    # end
   end
 end

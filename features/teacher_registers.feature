@@ -34,7 +34,7 @@ ITSI-SU requires that teachers self-register.
     When I fill in the following:
       | login    | login    |
       | password | password |
-    And I press "Login"
+    And I press "Submit"
     Then I should see "Logged in successfully"
     And I should not see "Sorry, there was an error creating your account"
 

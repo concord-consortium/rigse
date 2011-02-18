@@ -8,7 +8,7 @@ module RunnablesHelper
   end
 
   def run_url_for(component, params = {}, format = :jnlp)
-    format = APP_CONFIG[:runnable_mime_type] if NOT_USING_JNLPS
+    format = APP_CONFIG[:runnable_mime_type] if component.is_a? JnlpLaunchable
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
@@ -33,7 +33,7 @@ module RunnablesHelper
 
     html_options={}
 
-    if NOT_USING_JNLPS
+    if component.is_a? JnlpLaunchable
       html_options[:popup] = true
     else
       html_options[:title] = title
@@ -42,41 +42,12 @@ module RunnablesHelper
     x_button_for(component, verb) + link_to(link_text, url, html_options)
   end
 
-  def button_and_link_for(component, as_name = nil, params = {}, run_or_preview = :run)
-    url = polymorphic_url(component, :format => :jnlp, :params => params)
-
-    if run_or_preview == :preview
-      link_text = link_text_for "preview ", as_name, params
-      preview_button_for(component) +
-        link_to(link_text, url,
-                :class => "run_link",
-                :title => title_text(component, "preview"))
-    else
-      link_text = link_text_for "run ", as_name, params
-      run_button_for(component) +
-        link_to(link_text, url,
-                :class => 'run_link',
-                :title => title_text(component, "run"))
-    end
-  end
-
   def preview_button_for(component, url_params = nil, img = "preview.png", run_as = nil)
     x_button_for(component, "preview")
   end
 
   def teacher_preview_button_for(component)
     x_button_for(component, "preview", "teacher_preview", {:teacher_mode => true}, "Teacher")
-  end
-
-  def link_text_for(text, as_name = nil, params = {})
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || text
-
-    if as_name
-      link_text << " as #{as_name}"
-    end
-
-    link_text
   end
 
   def preview_link_for(component, as_name = nil, params = {})

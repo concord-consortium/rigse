@@ -1,6 +1,6 @@
 require 'rake'
 
-namespace :rigse do
+namespace :app do
   namespace :make do
     #
     #

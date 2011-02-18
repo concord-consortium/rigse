@@ -1,8 +1,28 @@
-class DefaultInvestigation
+class DefaultRunnable
 
   class <<self
+
+    def create_default_runnable_for_user(user, name="simple default #{TOP_LEVEL_CONTAINER_NAME}", logging=false)
+      if USING_JNLPS && TOP_LEVEL_CONTAINER_NAME == 'investigation'
+        runnable = create_default_investigation_for_user(user, name, logging)
+      else
+        unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
+          runnable = TOP_LEVEL_CONTAINER_CLASS.create do |i|
+            i.name = name
+            i.user = user
+            i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
+            case TOP_LEVEL_CONTAINER_NAME
+              when 'external_activity'
+                i.url = "http://redcloth.org/hobix.com/textile/quick.html"
+              end
+          end
+        end
+      end
+      runnable.publish! unless runnable.publication_status == "published"
+      runnable
+    end
     
-    def create_default_investigation_for_user(user, name='Simple Investigation', logging=false)
+    def create_default_investigation_for_user(user, name, logging)
       puts
       @@prediction_graph = nil
       unless investigation = user.investigations.find_by_name(name)
@@ -12,7 +32,6 @@ class DefaultInvestigation
           i.user = user
           i.description = "A simple default Investigation"
         end
-        investigation.publish!
         activity = Activity.create do |i|
           i.name = 'Activity'
           i.description = "Learn About ..."
@@ -28,6 +47,8 @@ class DefaultInvestigation
       end
       investigation
     end
+
+
 
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?

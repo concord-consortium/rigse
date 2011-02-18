@@ -1,0 +1,38 @@
+/ required locals: sections
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name => TOP_LEVEL_CONTAINER_NAME_PLURAL
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        / -if current_user.has_role? "author"
+        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_section_path
+
+- for section in sections
+  %div{ :id => dom_id_for(section), :class => 'runnable' }
+    = accordion_for(section, (preview_button_for(section) + name_for_component(section, :hide_componenent_name => true)), :section) do  
+      %div.action_menu
+        %div.action_menu_header_left   
+          = link_to_container(section)
+          %span.author
+            = section.user.name
+        %div.action_menu_header_right   
+          %ul.menu
+            - unless(current_user.anonymous?)
+              %li.menu=link_to 'duplicate', duplicate_section_url(section)
+            - if (section.changeable?(current_user))
+              %li.menu=link_to 'delete', section, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{section.id}", :method => :delete 
+      %div{:id => dom_id_for(section, :details), :class => 'tiny'}
+        %p=section.description
+        %p
+          %i= updated_time_text(section)
+        %p
+          %i
+            Used in: #{section.offerings.length} classes.
+
+  =draggable_element dom_id_for(section), :revert => true , :scroll => 'window'
+

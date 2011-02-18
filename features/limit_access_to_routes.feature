@@ -15,43 +15,44 @@ In NO case should the system allow:
   Background:
     Given The default project and jnlp resources exist using mocks
 
+  @selenium
   Scenario Outline: Anonymous user cant access dataservice routes
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
-  
-    Examples:                            
-      | route                          | 
-      | /dataservice/bundle_contents   | 
-      | /dataservice/bundle_loggers    | 
-      | /dataservice/console_loggers   | 
-      | /dataservice/console_contents  | 
-      | /dataservice/blobs             | 
-  
-    
+
+    Examples:
+      | route                          |
+      | /dataservice/bundle_contents   |
+      | /dataservice/bundle_loggers    |
+      | /dataservice/console_loggers   |
+      | /dataservice/console_contents  |
+      | /dataservice/blobs             |
+
+
+  @selenium
   Scenario Outline: Admin user can accesss dataservice routes
     Given the following users exist:
-      | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
+      | login       | password       | roles                 |
+      | admin_login | admin_password | admin, member, author |
     And I login with username: admin_login password: admin_password
     When I visit the route <route>
     Then I should be on <route>
-    
-    Examples:                         
+
+    Examples:
       | route                         |
       | /dataservice/bundle_contents  |
       | /dataservice/bundle_loggers   |
       | /dataservice/console_loggers  |
       | /dataservice/console_contents |
-      | /dataservice/blobs            | 
+      | /dataservice/blobs            |
 
-
-
+	@selenium
   Scenario Outline: Anonymous user can't access portal listing routes:
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
-    
+
     Examples:
       | route                                      |
       | /portal/clazzes                            |
@@ -73,8 +74,8 @@ In NO case should the system allow:
       | /portal/nces06_schools                     |
       | /portal/offerings                          |
       | /portal/teachers                           |
-      
-      
+
+	@selenium
   Scenario Outline: Admin user can accesss portal listing routes
     Given the following users exist:
       | login        | password            | roles                |
@@ -82,28 +83,29 @@ In NO case should the system allow:
     And I login with username: admin_login password: admin_password
     When I visit the route <route>
     Then I should be on <route>
-    
+
     Examples:
-      | route                                      | 
-      | /portal/clazzes                            | 
-      | /portal/courses                            | 
-      | /portal/school_memberships                 | 
-      | /portal/schools                            | 
-      | /portal/semesters                          | 
-      | /portal/student_clazzes                    | 
-      | /portal/students                           | 
-      | /portal/subjects                           | 
-      | /portal/teachers                           | 
-      | /portal/districts                          | 
-      | /portal/grades                             | 
-      | /portal/learners                           | 
-      | /portal/external_user_domains              | 
-      | /portal/external_users                     | 
-      | /portal/grade_levels                       | 
-      | /portal/nces06_districts                   | 
-      | /portal/nces06_schools                     | 
-      | /portal/offerings                          | 
- 
+      | route                                      |
+      | /portal/clazzes                            |
+      | /portal/courses                            |
+      | /portal/school_memberships                 |
+      | /portal/schools                            |
+      | /portal/semesters                          |
+      | /portal/student_clazzes                    |
+      | /portal/students                           |
+      | /portal/subjects                           |
+      | /portal/teachers                           |
+      | /portal/districts                          |
+      | /portal/grades                             |
+      | /portal/learners                           |
+      | /portal/external_user_domains              |
+      | /portal/external_users                     |
+      | /portal/grade_levels                       |
+      | /portal/nces06_districts                   |
+      | /portal/nces06_schools                     |
+      | /portal/offerings                          |
+
+	@selenium
   Scenario Outline: Anonymous user can't access user listing routes:
     Given I am not logged in
     When I visit the route <route>
@@ -112,8 +114,8 @@ In NO case should the system allow:
     Examples:
       | route                                      |
       | /users                                     |
-      
-      
+
+	@selenium
   Scenario Outline: Admin user can accesss user listing routes
     Given the following users exist:
       | login        | password            | roles                |
@@ -121,7 +123,7 @@ In NO case should the system allow:
     And I login with username: admin_login password: admin_password
     When I visit the route <route>
     Then I should be on <route>
-    
+
     Examples:
-      | route                                      | 
-      | /users                                     | 
+      | route                                      |
+      | /users                                     |

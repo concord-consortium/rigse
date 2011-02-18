@@ -14,7 +14,7 @@
         %hr
         - if page.section
           - if should_show_teacher_note? page, :investigation
-            %h4= "#{top_level_container_name.pluralize.humanize} notes:"
+            %h4= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} notes:"
             .teacher_note= page.section.investigation.teacher_note_otml
 
           - if should_show_teacher_note? page, :activity

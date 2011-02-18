@@ -71,7 +71,7 @@
           %li#pop_out_link{:style => "display: none;"}= link_to "pop-out", '', :target=>'new'
           %li.trail= link_to 'Home', home_path
           %li.trail= link_to 'About', about_path
-          %li.trail=link_to(top_level_container_name.humanize.pluralize, pages_path)
+          %li.trail=link_to(TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize, pages_path)
           %li.trail=link_to('New Page', new_page_path)
           - if current_user.has_role?('researcher')
             %li.trail=link_to('GSEs', ri_gse_grade_span_expectations_path)

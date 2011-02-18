@@ -7,7 +7,8 @@
 # 
 # but it won't help when running a task like this the first time:
 #
-#   rake rigse:setup:new_rites_app
+#   rake rigse:setup:new_app
+
 #
 # So I'm using this method to find out if the standard "ActiveRecord::Base" 
 # connection in the connection_pool is working:

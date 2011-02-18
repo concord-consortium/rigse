@@ -2,13 +2,12 @@
 %h1="#{portal_clazz.name}"
 .clazz_info{:id => dom_id_for(portal_clazz,:item)}
   .clazz_details{:id => dom_id_for(portal_clazz, :details)}
-    /
-      .action_menu
-        .action_menu_right
-          -if portal_clazz.changeable? current_user
-            = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
-            = edit_button_for(portal_clazz)
-            = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
+    .action_menu
+      .action_menu_right
+        -if portal_clazz.changeable? current_user
+          = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
+          = edit_button_for(portal_clazz)
+          = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
     .block_list
       %ul
         %li
@@ -29,5 +28,3 @@
             Class word:
             %strong
               = portal_clazz.class_word
-            
-

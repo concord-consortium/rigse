@@ -4,7 +4,7 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name=>top_level_container_name
+        %p= page_entries_info paginated_objects, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
@@ -28,7 +28,7 @@
               %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
             %li.menu=link_to 'export (xml)', export_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
-              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{investigation.id}", :method => :delete 
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
         - if params[:mine_only]

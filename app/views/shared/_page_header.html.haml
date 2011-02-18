@@ -16,7 +16,7 @@
       %li= link_to 'duplicate', duplicate_page_url(page)
       %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see lib/clipboard.rb
  
-- if (teacher_only? page)
+- if (for_teacher_only page)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"

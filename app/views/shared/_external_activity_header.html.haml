@@ -1,0 +1,29 @@
+#actions_menu.dropdown
+  %ul
+    %li= run_link_for(@external_activity)
+    %li#copy_link copy (disabled)
+    - if (external_activity.changeable?(current_user))
+      %li=duplicate_link_for(@external_activity)
+      %li=edit_link_for(@external_activity)
+      %li#paste_link= paste_link_for(['section'],{:container_id => @container_id}) # see pages_helper.rb
+
+- view_class = "action_menu"
+
+%div{:id => dom_id_for(external_activity,:item), :class => view_class }
+  .action_menu_header_left
+    .padded_content
+      - if (@external_activity.changeable?(current_user))
+        %h3= "Activity: #{in_place_editor_field :external_activity, 'name'}"
+        .tiny=in_place_editor_field :external_activity, 'description', {},{:rows=>3, :cols=>80}
+        .tiny=in_place_editor_field :external_activity, 'url', {},{:rows=>3, :cols=>80}
+      - else
+        %h3= @external_activity.name
+        .small= @external_activity.description
+        .small= @external_activity.description
+  .action_menu_header_right
+    = dropdown_button "actions.png", :title => "actions for this external_activity"
+    - if (external_activity.changeable?(current_user))
+      = delete_button_for(external_activity)
+    - else
+      = link_button "disabled.png", "#"
+

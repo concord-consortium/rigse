@@ -42,10 +42,10 @@ Feature: Student can not see deactivated offerings
     Then I should be on the homepage
     And I should not see "run Test Investigation"
     And I should not see "View Test Resource"
-    And I should see "No Investigations available."
+    And I should see "No offerings available."
 
     When I am on the class page for "My Class"
     And I should not see "run Test Investigation"
-    And I should see "No Investigations available."
+    And I should see "No offerings available."
     And I should not see "View Test Resource"
 
