@@ -1,0 +1,10 @@
+h3. Using Vagrant
+
+This could be more automated but current here are the steps:
+gem install vagrant
+vagrant up
+vagrant ssh
+sudo gem install bundler
+cd /vagrant
+bundle install
+
