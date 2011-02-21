@@ -25,3 +25,30 @@ Feature: An author adds multiple choice questions
     And I should see "a"
     And I should see "b"
     And I should see "c"
+
+  @selenium
+  Scenario: The author adds a multiple choice question to an investigation
+    Given the following users exist:
+      | login  | password | roles  |
+      | author | author   | author |
+    Given the following investigation exists:
+      | name              | description           | user   |
+      | testing fast cars | how fast can cars go? | author |
+
+    And I login with username: author password: author
+    When I show the first page of the "testing fast cars" investigation
+    Then I should see "Page: 1"
+    When I follow "Multiple Choice Question"
+    Then I should see "Why do you think ..."
+    When I follow xpath "//a[@title='edit multiple choice question']"
+    Then I should see "choices"
+    And I should see "a"
+    And I should see "b"
+    And I should see "c"
+    When I follow "delete" within "span.small_left_menu"
+    And I press "Save"
+    And I show the first page of the "testing fast cars" investigation
+    Then I should see "Why do you think ..."
+    And I should see "b"
+    And I should see "c"
+    But I should not see the xpath "//a[@value='a']"
