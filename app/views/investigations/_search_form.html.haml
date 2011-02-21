@@ -5,7 +5,7 @@
 
 %h3
   #search_title
-    = "Search #{top_level_container_name.humanize.pluralize}"
+    = "Search #{Investigation.display_name.pluralize}"
     - unless local_assigns[:investigations_only]
       = " & #{ResourcePage.display_name.pluralize}"
   .progress_container
