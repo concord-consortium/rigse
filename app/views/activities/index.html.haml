@@ -18,7 +18,7 @@
 
 .item_collection
   %ul.quiet_list
-    - for activity in @pages
+    - @pages.each do |activity|
       %div{ :id => dom_id_for(activity, :item), :class => 'item' }
         %div.action_menu
           %div.action_menu_header_left
