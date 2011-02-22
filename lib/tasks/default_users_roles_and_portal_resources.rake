@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :setup do
 
     require 'fileutils'
@@ -222,7 +222,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
       
-      default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
+      default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -269,7 +269,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_school_teacher.grades << grade_9
       
-      site_school.members << default_school_teacher
+      site_school.portal_teachers << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
 
@@ -315,7 +315,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
-      site_school.members << default_student
+      site_school.add_member(default_student)
       #
       # default_student = student_user.student || student_user.student.create!
       # 
@@ -390,8 +390,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
-      Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
-      Rake::Task['rigse:setup:create_additional_users'].invoke
+      Rake::Task['app:setup:default_users_roles_and_portal_resources'].invoke
+      Rake::Task['app:setup:create_additional_users'].invoke
     end
 
     
