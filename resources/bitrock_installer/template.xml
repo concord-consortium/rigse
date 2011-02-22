@@ -1,6 +1,6 @@
 <project>
   <shortName>#{shortname}</shortName>
-  <fullName>RITES Runtime</fullName>
+  <fullName>RITES Investigation Software</fullName>
   <version>#{version}</version>
   <installerFilename></installerFilename>
   <preBuildActionList>

@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
         :select_js => :post,
         :summary => :post,
         :reparse_gses => :put,
-        :select => :get }, 
+        :select => :get },
       :member => { :print => :get }
   end
 
@@ -58,7 +58,7 @@ ActionController::Routing::Routes.draw do |map|
       :add_page => :post,
       :add_element => :post,
       :set_page => :post,
-      :sort_pages => :post, 
+      :sort_pages => :post,
       :delete_page => :post
     }
 
@@ -101,7 +101,7 @@ ActionController::Routing::Routes.draw do |map|
       :destroy => :post,
       :change_probe_type => :put
     }
-    
+
     embeddable.resources :sound_graphers, :member => {
       :destroy => :post
     }
@@ -137,15 +137,15 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :districts, :member => { :destroy => :post }
     portal.resources :grades
     portal.resources :grade_levels
-    portal.resources :learners,  :member => { 
+    portal.resources :learners,  :member => {
       :report => :get,
-      :open_response_report => :get, 
+      :open_response_report => :get,
       :multiple_choice_report => :get,
       :bundle_report => :get
     }
-    portal.resources :offerings, :member => { 
+    portal.resources :offerings, :member => {
       :report => :get,
-      :open_response_report => :get, 
+      :open_response_report => :get,
       :multiple_choice_report => :get,
       :separated_report => :get,
       :report_embeddable_filter => :post,
@@ -167,19 +167,19 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :student_clazzes, :as => 'student_classes'
     portal.resources :subjects
     portal.resources :teachers
-    
+
     portal.resources :external_user_domains
     portal.resources :external_users
-    
+
     portal.resources :nces06_districts
     portal.resources :nces06_schools
-    # portal.home 'readme', :controller => 'home', :action => 'readme'  
+    # portal.home 'readme', :controller => 'home', :action => 'readme'
     # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
-  
-  
 
-  
+
+
+
   # Restful Authentication Rewrites
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
@@ -197,21 +197,22 @@ ActionController::Routing::Routes.draw do |map|
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
 
   # Restful Authentication Resources
-  map.resources :users, :member => { 
-      :preferences => [:get, :put], 
-      :switch => [:get, :put], 
+  map.resources :users, :member => {
+      :preferences => [:get, :put],
+      :switch => [:get, :put],
       :interface => :get,
       :suspend   => :put,
       :unsuspend => :put,
       :purge     => :delete } do |users|
     users.resource :security_questions, :only => [ :edit, :update ]
   end
-    
+  map.users_account_report '/users/reports/account_report', :controller => 'users', :action => 'account_report', :method => :get
+
   map.resources :passwords
   map.resource :session
 
   map.resources :external_user_domains do |external_user_domain|
-    external_user_domain.resources :external_users    
+    external_user_domain.resources :external_users
     external_user_domain.resources :external_sessions
   end
 
@@ -227,11 +228,11 @@ ActionController::Routing::Routes.draw do |map|
     dataservice.resources :console_loggers do |console_logger|
       console_logger.resources :console_contents
     end
-    
+
   end
-  
+
   # FIXME not sure how to map this within the dataservice namespace above...
-  map.dataservice_blob_raw "dataservice/blobs/:id.blob/:token", :controller => "dataservice/blobs", :action => "show", :format => "blob", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ } 
+  map.dataservice_blob_raw "dataservice/blobs/:id.blob/:token", :controller => "dataservice/blobs", :action => "show", :format => "blob", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
 
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
@@ -258,8 +259,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :teacher_notes
   map.resources :author_notes
-  
-  
+
+
 #
 # ********* Start of Page embeddable objects *********
 #
@@ -271,7 +272,7 @@ ActionController::Routing::Routes.draw do |map|
     :add_page => :post,
     :add_element => :post,
     :set_page => :post,
-    :sort_pages => :post, 
+    :sort_pages => :post,
     :delete_page => :post
   }
 
@@ -311,7 +312,7 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :destroy => :post
   }
-  
+
   map.resources :open_responses, :member  => {
     :print => :get,
     :destroy => :post
@@ -326,12 +327,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :sections, :member => {
     :destroy => :post,
     :add_page => [:post, :get],
-    :sort_pages => :post, 
+    :sort_pages => :post,
     :delete_page => :post,
     :print => :get,
     :duplicate => :get
   }
-    
+
   map.resources :pages, :member => {
     :destroy => :post,
     :add_element => :post,
@@ -343,28 +344,28 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get
   }
+  map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
 
-#
-# ********* End of Page embeddable objects *********
-#
-
+  # seb: are these nested routes needed or used anywhere ??
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
     page.resources :data_collectors
   end
-  
+
   map.resources :page_elements, :member => {
     :destroy => :post
   }
 
-  map.resources :investigations, :member => {
-    :add_activity => :post,
-    :sort_activities => :post,
-    :delete_activity => :post,
+  map.resources :sections, :member => {
+    :destroy => :post,
+    :add_page => [:post, :get],
+    :sort_pages => :post, 
+    :delete_page => :post,
     :print => :get,
     :duplicate => :get,
-    :export => :get,
+    :details_report => :get,
+    :usage_report => :get,
     :destroy => :post,
   }, :collection => {
     :printable_index => :get
@@ -374,6 +375,8 @@ ActionController::Routing::Routes.draw do |map|
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
   
+  map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
+  map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
   
   map.resources :activities, :member => {
     :add_section => [:post,:get],
@@ -387,7 +390,7 @@ ActionController::Routing::Routes.draw do |map|
   map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
   #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
-  
+
 
   map.resources :activities do |activity|
     activity.resources :sections do |section|
@@ -397,9 +400,33 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.resources :investigations, :member => {
+    :add_activity => :post,
+    :sort_activities => :post,
+    :delete_activity => :post,
+    :print => :get,
+    :duplicate => :get,
+    :usage_report => :get,
+    :details_report => :get,
+    :export => :get,
+    :destroy => :post
+  }, :collection => {
+    :printable_index => :get
+  }
+  map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
+  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
+  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+
+  map.resources :external_activities, :member => {
+    :duplicate => :get,
+    :destroy => :post
+  }
+  map.list_filter_external_activity '/external_activity/list/filter', :controller => 'external_activities', :action => 'index', :method => :post
+
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
-  map.resources :grade_span_expectations, :collection => { 
+  map.resources :grade_span_expectations, :collection => {
     :select_js => :post,
     :summary => :post,
     :reparse_gses => :put,
@@ -416,7 +443,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # not being used, but being tested
   map.resources :images
-    
+
   # Home Controller
   map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
   map.readme '/readme', :controller => 'home', :action => 'readme'
@@ -428,7 +455,7 @@ ActionController::Routing::Routes.draw do |map|
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   # map. ':controller/:action/:id.:format'
-  
+
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'

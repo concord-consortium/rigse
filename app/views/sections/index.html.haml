@@ -1,0 +1,5 @@
+- locals = {:name => @name, :sections => @sections, :paginated_objects => @paginated_objects}
+= render :partial => 'sections/search_form', :locals => locals
+= observe_form 'section_search_form', :url => list_filter_investigation_url(:index=>"yes"),:before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency => 1, :update => {:success => 'offering_list'}
+#offering_list.item_collection
+  =render :partial=>"sections/runnable_list", :locals=> locals

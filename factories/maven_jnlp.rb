@@ -26,14 +26,14 @@ end
 
 Factory.define :admin_project, :class => Admin::Project do |f|
   name, url = Admin::Project.default_project_name_url
-  
-  f.user  { |p| Factory.next(:admin_user) } 
-  f.name  name 
-  f.url  url 
-  f.states_and_provinces  APP_CONFIG[:states_and_provinces] 
-  f.snapshot_enabled  0 
+
+  f.user  { |p| Factory.next(:admin_user) }
+  f.name  name
+  f.url  url
+  f.states_and_provinces  APP_CONFIG[:states_and_provinces]
+  f.snapshot_enabled  0
   f.enable_default_users  APP_CONFIG[:enable_default_users]
-  
+
   if USING_JNLPS
     server, family, version = Admin::Project.default_jnlp_info
     begin
@@ -64,7 +64,7 @@ end
 #   f.description  'Preview Basic Pas'
 #   f.association :versioned_jnlp_url, :factory => :maven_jnlp_versioned_jnlp_url
 # end
-# 
+#
 # Factory.define :maven_jnlp_versioned_jnlp_url, :class => MavenJnlp::VersionedJnlpUrl do |f|
 #   server, family, version = Admin::Project.default_jnlp_info
 #   f.path  '/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
@@ -73,32 +73,32 @@ end
 #   f.version_str  version
 #   f.association :maven_jnlp_family, :factory => :maven_jnlp_maven_jnlp_family
 # end
-# 
+#
 # Factory.define :maven_jnlp_maven_jnlp_family, :class => MavenJnlp::MavenJnlpFamily do |f|
-#   server, family, version = Admin::Project.default_jnlp_info  
+#   server, family, version = Admin::Project.default_jnlp_info
 #   f.name family
 #   f.snapshot_version version
 #   f.url 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/'
 #   f.association :maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
 # end
-# 
+#
 # Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServer do |f|
 #   server, family, version = Admin::Project.default_jnlp_info
 #   f.host server[:host]
 #   f.path server[:path]
 #   f.name server[:name]
 # end
-# 
-# 
+#
+#
 # Factory.define :maven_jnlp_jar, :class => MavenJnlp::Jar do |f|
 # end
-# 
+#
 # Factory.define :maven_jnlp_native_library, :class => MavenJnlp::NativeLibrary do |f|
 # end
-# 
+#
 # Factory.define :maven_jnlp_icon, :class => MavenJnlp::Icon do |f|
 # end
-# 
+#
 # Factory.define :maven_jnlp_property, :class => MavenJnlp::Property do |f|
 # end
-# 
+#

@@ -3,4 +3,4 @@
     - page.page_elements.each_with_index do |element,i|
       = render :partial => 'pages/element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => page }
   - if (page.changeable?(current_user))
-    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"
+    =sortable_element :elements_container, :url=> {:action => 'sort_elements', :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

@@ -1,0 +1,22 @@
+/ requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
+- portal_clazz_id ||= nil
+
+.action_menu
+  #search_title
+    ="Search #{Page.display_name.pluralize}"
+  .progress_container
+    #search_spinner.tiny{:style=>'display: none;'}
+      searching ...
+      = image_tag "ajax-loader.gif"
+
+
+%form{ :id => 'page_search_form'}
+  = hidden_field_tag 'portal_clazz_id', portal_clazz_id
+  %table{:width => "100%"}
+    %tr
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :filter, 'matching: ', :class=>"right"
+        = text_field_tag :name, name
+      %td{:style=>"padding: 0.5em;"}
+        = label_tag :filter, 'drafts too: ', :class=>"right"
+        = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]

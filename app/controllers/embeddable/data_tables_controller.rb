@@ -55,6 +55,7 @@ class Embeddable::DataTablesController < ApplicationController
   # GET /Embeddable/data_tables/1/edit
   def edit
     @data_table = Embeddable::DataTable.find(params[:id])
+    @scope = get_scope(@data_table)
     if request.xhr?
       render :partial => 'remote_form', :locals => { :data_table => @data_table }
     else

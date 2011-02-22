@@ -19,6 +19,7 @@ javascripts:
   - accordion
   - item_selectable
   - live_validation
+  - please_wait
   - report_filter
   
 stylesheets: 
@@ -49,6 +50,7 @@ stylesheets:
 - rites:
   - app
   - accordion
+  - please_wait
   - window/window
   - window/rites
   - live_validation
@@ -155,6 +157,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - themes/genomedynamics/genomedynamics
   
 - geniverse:
   - app

@@ -291,6 +291,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_course_class.status = 'open'
       default_course_class.teacher = default_school_teacher
+      default_course_class.save!
       
       # default offering
       attributes = {

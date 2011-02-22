@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe ApplicationHelper do
   include ApplicationHelper
-  attr_accessor :page_title  
-  
+  attr_accessor :page_title
+
   describe "title" do
     it "should set @page_title" do
-      title('hello').should be_nil
+      title_tag('hello').should be_nil
       page_title.should eql('hello')
     end
-    
+
     it "should output container if set" do
-      title('hello', :h2).should have_tag('h2', 'hello')
+      title_tag('hello', :h2).should have_tag('h2', 'hello')
     end
   end
-  
+
   describe "login_line" do
     before(:each) do
       @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
@@ -46,7 +46,5 @@ describe ApplicationHelper do
         login_line(:logout => "Log Out").should match(/Log Out/)
       end
     end
-
   end
-
 end
