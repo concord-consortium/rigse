@@ -22,3 +22,30 @@ package "libxslt1-dev"
 
 # this is needed by the nces importer
 package "unzip"
+
+# install bundler
+gem_package 'bundler'
+
+
+execute "bundle-install" do
+  cwd "/vagrant"
+  command "bundle install"
+end
+
+execute "setup-xportal-app" do
+  cwd "/vagrant"
+  command "ruby config/setup.rb -n 'Cross Project Portal' -D xproject -u root -p '' -t xproject -y -q -f"
+end
+
+execute "initialize-xportal-database" do
+  cwd "/vagrant"
+  environment ({'RAILS_ENV' => 'production'})
+  command "rake db:migrate:reset"
+end
+
+execute "setup-xportal-database" do
+  cwd "/vagrant"
+  environment ({'RAILS_ENV' => 'production'})
+  command "rake app:setup:new_app"
+end
+
