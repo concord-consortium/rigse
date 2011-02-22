@@ -30,6 +30,7 @@ production:
   encoding: utf8
   adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   username: root
+  reconnect: true
   database: rites_production
   password: *****
   pool: 5

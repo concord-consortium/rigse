@@ -19,3 +19,6 @@ end
 # the package name varies depending on the plaform
 # there is a chef api to handle this but for now it is hardcoded
 package "libxslt1-dev"
+
+# this is needed by the nces importer
+package "unzip"

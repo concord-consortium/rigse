@@ -7,4 +7,13 @@ vagrant ssh
 sudo gem install bundler
 cd /vagrant
 bundle install
+ruby config/setup.rb -n 'Cross Project Portal' -D xproject -u root -p '' -t xproject -y -q -f
+RAILS_ENV=production rake db:migrate:reset
+RAILS_ENV=production rake app:setup:new_app
 
+TODO
+- use the template in passenger_apache to generate the virtual host config (fewer duplicate files to search through)
+- have the provisioner at least do the gem install bundler, and possibly "bundle install" too
+
+NOTES
+- needed to add reconnect: true to the database.yml inorder to get past the nces importing
