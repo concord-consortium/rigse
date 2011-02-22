@@ -16,7 +16,7 @@ namespace :hudson do
 
   if defined? Cucumber
     Cucumber::Rake::Task.new({:cucumber  => [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']}) do |t|
-      t.cucumber_opts = %{--profile default  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+      t.cucumber_opts = %{--profile default --tags ~@dialog  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
     end
   end
 
