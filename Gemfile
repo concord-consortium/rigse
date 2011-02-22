@@ -46,7 +46,9 @@ group :test do
   gem "email_spec",        "= 0.3.5"
   gem "fakeweb",           "~>1.2.8"
   gem "remarkable_rails",  "~>3.1.13", :require => nil
-  gem "ci_reporter"
+  # If you update the version of ci_reporter
+  # please make sure to update the --require path in Hudson
+  gem "ci_reporter",       "~>1.6.4"
   gem "launchy"
   # TODO: Use sport or not?
   gem "spork"
