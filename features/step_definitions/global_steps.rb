@@ -25,3 +25,7 @@ end
 When /^I wait "(.*)" seconds$/ do |seconds|
   sleep(seconds.to_i)
 end
+
+Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
+  page.should have_no_xpath xpath
+end

@@ -47,6 +47,7 @@ group :test do
   gem "fakeweb",           "~>1.2.8"
   gem "remarkable_rails",  "~>3.1.13", :require => nil
   gem "ci_reporter"
+  gem "launchy"
   # TODO: Use sport or not?
   gem "spork"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy

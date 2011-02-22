@@ -34,6 +34,7 @@ Feature: Teacher can deactivate investigations from a class
     Then I should not see "0 student responses"
     And I should see "1 student response"
 
+  @dialog
   @selenium
   Scenario: Teacher drags active investigation with students off of class
     Given the following teachers exist:

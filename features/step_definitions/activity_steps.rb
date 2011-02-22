@@ -16,3 +16,9 @@ When /^I assign the activity "([^"]*)" to the class "([^"]*)"$/ do |activity_nam
     :clazz => clazz
   })
 end
+
+When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
+  with_scope("span.small_left_menu") do
+    click_link("delete")
+  end
+end
