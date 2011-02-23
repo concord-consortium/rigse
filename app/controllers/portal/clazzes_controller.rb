@@ -1,16 +1,16 @@
 class Portal::ClazzesController < ApplicationController
-  
-  # TODO:  There need to be a lot more 
+
+  # TODO:  There need to be a lot more
   # controller filters here...
   # this only protects management actions:
   include RestrictedPortalController
-  
+
   before_filter :teacher_admin_or_config, :only => [:class_list]
-  
+
   def current_clazz
     Portal::Clazz.find(params[:id])
   end
-  
+
   public
   # GET /portal_clazzes
   # GET /portal_clazzes.xml
@@ -69,16 +69,16 @@ class Portal::ClazzesController < ApplicationController
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
-    
+
     @portal_clazz = Portal::Clazz.new(@object_params)
-    
+
     okToCreate = true
     if !school_id
       # This should never happen, since the schools dropdown should consist of the default site school if the current user has no schools
       flash[:error] = "You need to belong to a school in order to create classes. Please join a school and try again."
       okToCreate = false
     end
-    
+
     if okToCreate
       grade_levels.each do |name, v|
         grade = Portal::Grade.find_by_name(name)
@@ -89,7 +89,7 @@ class Portal::ClazzesController < ApplicationController
         okToCreate = false
       end
     end
-    
+
     if okToCreate && !@portal_clazz.teacher
       if current_user.anonymous?
         flash[:error] = "Anonymous can't create classes. Please log in and try again."
@@ -109,7 +109,7 @@ class Portal::ClazzesController < ApplicationController
         end
       end
     end
-    
+
     if okToCreate
       # We can't use Course.find_or_create_by_course_number_name_and_school_id here, because we don't know what course_number we're looking for
       course = Portal::Course.find_by_name_and_school_id(@portal_clazz.name, school_id)
@@ -118,7 +118,7 @@ class Portal::ClazzesController < ApplicationController
         :course_number => nil,
         :school_id => school_id
       }) if course.nil?
-      
+
       if course
         # This will finally tie this clazz to a course and a school
         @portal_clazz.course = course
@@ -127,7 +127,7 @@ class Portal::ClazzesController < ApplicationController
         okToCreate = false
       end
     end
-    
+
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         flash[:notice] = 'Class was successfully created.'
@@ -145,7 +145,7 @@ class Portal::ClazzesController < ApplicationController
   def update
     @semesters = Portal::Semester.find(:all)
     @portal_clazz = Portal::Clazz.find(params[:id])
-    
+
     if request.xhr?
       object_params = params[:portal_clazz]
       grade_levels = object_params.delete(:grade_levels)
@@ -158,7 +158,7 @@ class Portal::ClazzesController < ApplicationController
         end
         object_params[:grades] = grades_to_add if !grades_to_add.empty?
       end
-      
+
       @portal_clazz.update_attributes(object_params)
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
     else
@@ -178,7 +178,7 @@ class Portal::ClazzesController < ApplicationController
           flash[:error] = "You need to select at least one grade level for this class."
           okToUpdate = false
         end
-        
+
         if okToUpdate && @portal_clazz.update_attributes(object_params)
           flash[:notice] = 'Class was successfully updated.'
           format.html { redirect_to(@portal_clazz) }
@@ -189,7 +189,7 @@ class Portal::ClazzesController < ApplicationController
         end
       end
     end
-  end  
+  end
 
   # DELETE /portal_clazzes/1
   # DELETE /portal_clazzes/1.xml
@@ -202,16 +202,16 @@ class Portal::ClazzesController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
   ## END OF CRUD METHODS
   def edit_offerings
     @portal_clazz = Portal::Clazz.find(params[:id])
     @grade_span = session[:grade_span] ||= cookies[:grade_span]
     @domain_id = session[:domain_id] ||= cookies[:domain_id]
   end
-  
+
   # HACK:
-  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids 
+  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def add_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
@@ -233,10 +233,10 @@ class Portal::ClazzesController < ApplicationController
     end
     @offering.refresh_saveable_response_objects
   end
-  
-  
+
+
   # HACK:
-  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids 
+  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def remove_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
@@ -254,7 +254,7 @@ class Portal::ClazzesController < ApplicationController
         page << "element.remove();"
         page << "$('flash').update('');"
         page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
-      end  
+      end
     else
       error_msg = "Cannot delete offering with student data. Please deactivate instead."
       render :update do |page|
@@ -265,7 +265,7 @@ class Portal::ClazzesController < ApplicationController
       end
     end
   end
-  
+
   # HACK: Add a student to a clazz
   # TODO: test this method
   # NOTE: delete student is in the student_clazzes_controller.
@@ -294,17 +294,17 @@ class Portal::ClazzesController < ApplicationController
       end
     end
   end
-  
+
   def add_teacher
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-    
+
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
     (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')" } and return) unless current_user && @portal_clazz.changeable?(current_user)
-    
+
     @teacher = Portal::Teacher.find_by_id(params[:teacher_id])
-    
+
     (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
-    
+
     begin
       @teacher.add_clazz(@portal_clazz)
       @portal_clazz.reload
@@ -318,14 +318,14 @@ class Portal::ClazzesController < ApplicationController
       end
     end
   end
-  
+
   def remove_teacher
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
     (render(:update) { |page| page << "$('flash').update('Class not found')" } and return) unless @portal_clazz
-    
+
     @teacher = @portal_clazz.teachers.find_by_id(params[:teacher_id])
     (render(:update) { |page| page << "$('flash').update('Teacher not found')" } and return) unless @teacher
-    
+
     if (reason = @portal_clazz.reason_user_cannot_remove_teacher_from_class(current_user, @teacher))
       render(:update) { |page| page << "$('flash').update('#{reason}')" }
       return
@@ -334,7 +334,7 @@ class Portal::ClazzesController < ApplicationController
     begin
       @teacher.remove_clazz(@portal_clazz)
       @portal_clazz.reload
-      
+
       if @teacher == current_user.portal_teacher
         flash[:notice] = "You have been successfully removed from class: #{@portal_clazz.name}"
         render(:update) { |page| page.redirect_to home_url }
@@ -342,7 +342,7 @@ class Portal::ClazzesController < ApplicationController
         # Redraw the entire table, to disable delete links as needed. -- Cantina-CMH 6/9/10
         render(:update) { |page| page.replace_html 'teachers_listing', :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz} }
       end
-      
+
       # Former remove_teacher.js.rjs has been deleted. It was very similar to destroy.js.rjs. -- Cantina-CMH 6/9/10
       # respond_to do |format|
       #   format.js
@@ -351,13 +351,12 @@ class Portal::ClazzesController < ApplicationController
       render(:update) { |page| page << "$('flash').update('There was an error while processing your request.')" }
     end
   end
-  
+
   def class_list
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-    
+
     respond_to do |format|
       format.html { render :layout => 'report'}
     end
   end
-    
 end

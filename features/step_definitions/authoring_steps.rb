@@ -4,7 +4,7 @@ Given /^the following investigation exists:$/ do |investigation_table|
     user = User.first(:conditions => { :login => hash.delete('user') })
     hash[:user_id] = user.id
     investigation = Investigation.create(hash)
-    activity =Activity.create(hash)
+    activity = Activity.create(hash)
     section = Section.create(hash)
     page = Page.create(hash)
     section.pages << page
@@ -19,7 +19,8 @@ When /add a multiple choice question$/ do
 end
 
 When /^(?:|I )follow xpath "([^\"]*)"$/ do |xpath|
-  find(:xpath, xpath).click
+  node = find(:xpath, xpath)
+  node.click
 end
 
 When /show the first page of the "(.*)" investigation$/ do |investigation_name|

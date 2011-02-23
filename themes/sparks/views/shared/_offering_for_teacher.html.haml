@@ -2,7 +2,7 @@
   .dropdown{:id => dom_id_for(offering.runnable,"print_dropdown")}
     .container
       %ul{:style=>"overflow-y: auto; max-height: 300px;"}
-        / %li=link_to("print #{top_level_container_name}", investigation_url(offering.runnable,:print=>true), :popup => true )
+        / %li=link_to("print #{TOP_LEVEL_CONTAINER_NAME_PLURAL}", investigation_url(offering.runnable,:print=>true), :popup => true )
         / %li=link_to("print teachers version", investigation_url(offering.runnable,:teacher_mode=>true,:print=>true),:popup => true )
         %hr
         / .tiny

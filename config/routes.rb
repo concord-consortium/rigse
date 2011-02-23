@@ -344,11 +344,9 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get
   }
+  map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
 
-#
-# ********* End of Page embeddable objects *********
-#
-
+  # seb: are these nested routes needed or used anywhere ??
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
@@ -359,10 +357,11 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post
   }
 
-  map.resources :investigations, :member => {
-    :add_activity => :post,
-    :sort_activities => :post,
-    :delete_activity => :post,
+  map.resources :sections, :member => {
+    :destroy => :post,
+    :add_page => [:post, :get],
+    :sort_pages => :post, 
+    :delete_page => :post,
     :print => :get,
     :duplicate => :get,
     :details_report => :get,
@@ -400,6 +399,30 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
+
+  map.resources :investigations, :member => {
+    :add_activity => :post,
+    :sort_activities => :post,
+    :delete_activity => :post,
+    :print => :get,
+    :duplicate => :get,
+    :usage_report => :get,
+    :details_report => :get,
+    :export => :get,
+    :destroy => :post
+  }, :collection => {
+    :printable_index => :get
+  }
+  map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
+  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
+  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
+  map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+
+  map.resources :external_activities, :member => {
+    :duplicate => :get,
+    :destroy => :post
+  }
+  map.list_filter_external_activity '/external_activity/list/filter', :controller => 'external_activities', :action => 'index', :method => :post
 
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems

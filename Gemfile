@@ -19,7 +19,7 @@ source :gemcutter
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass"
-  gem "jnlp",                 "~> 0.6.1"
+  gem "jnlp",                 "0.6.2"
   #gem "has_many_polymorphs",  "~> 2.13"
   gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
@@ -47,6 +47,7 @@ group :test do
   gem "fakeweb",           "~>1.2.8"
   gem "remarkable_rails",  "~>3.1.13", :require => nil
   gem "ci_reporter"
+  gem "launchy"
   # TODO: Use sport or not?
   gem "spork"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy

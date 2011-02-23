@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :activities
   has_many :sections
   has_many :pages
+  has_many :external_activities
   has_many :security_questions
 
   has_many :data_collectors, :class_name => 'Embeddable::DataCollector'
@@ -233,10 +234,13 @@ class User < ActiveRecord::Base
     if @@anonymous_user
       @@anonymous_user
     else
-      anonymous_user = User.find_or_create_by_login(:login => "anonymous",
-        :first_name => "Anonymous", :last_name => "User",
-        :email => "anonymous@concord.org",
-        :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+      anonymous_user = User.find_or_create_by_login(
+        :login                 => "anonymous",
+        :first_name            => "Anonymous",
+        :last_name             => "User",
+        :email                 => "anonymous@concord.org",
+        :password              => "password",
+        :password_confirmation => "password"){|u| u.skip_notifications = true}
       anonymous_user.add_role('guest')
       @@anonymous_user = anonymous_user
     end

@@ -14,7 +14,7 @@
   %ul
     %li= link_to "add new page", add_page_section_path(section)
 
-- if (teacher_only? section)
+- if (for_teacher_only section)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"

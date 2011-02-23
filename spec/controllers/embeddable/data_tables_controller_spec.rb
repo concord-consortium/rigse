@@ -31,6 +31,4 @@ describe Embeddable::DataTablesController do
       end
     end
   end
-
 end
-

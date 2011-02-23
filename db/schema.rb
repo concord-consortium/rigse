@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110128192029) do
+ActiveRecord::Schema.define(:version => 20110209184336) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20110128192029) do
     t.integer  "original_id"
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -549,6 +550,18 @@ ActiveRecord::Schema.define(:version => 20110128192029) do
     t.datetime "updated_at"
   end
 
+  create_table "external_activities", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.text     "description"
+    t.text     "url"
+    t.string   "publication_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
+  end
+
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -783,14 +796,15 @@ ActiveRecord::Schema.define(:version => 20110128192029) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                  :default => false
-    t.integer  "offerings_count",               :default => 0
+    t.boolean  "teacher_only",                     :default => false
+    t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1987,13 +2001,14 @@ ActiveRecord::Schema.define(:version => 20110128192029) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"

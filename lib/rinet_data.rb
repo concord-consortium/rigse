@@ -8,7 +8,7 @@
 #
 # If you are doing development you will want to create a dump of the state of
 # your working database before any imports have been made:
-# 
+#
 #    rake db:dump
 #
 # After testing the importer you can restore the database to it's previous state
@@ -24,19 +24,19 @@
 #   :districts => @rinet_data_config[:districts]
 #   :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
 #
-# You can customize the operation, here's an example: 
+# You can customize the operation, here's an example:
 #
 #   If you want to:
 #
 #   - import data from just district "17", Lincoln
 #   - skip reloading the csv files from the external SFTP server
 #   - display a complete log on the console as you run the task
-#   - create a log file that consists of ONLY the items recorded as :errors 
+#   - create a log file that consists of ONLY the items recorded as :errors
 #
 #   RinetData.new({:districts => ["17"], :skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
 #
 # Here is the command I use to reload the production and development databases
-# (on my development setup they are the same database) to the condition just after 
+# (on my development setup they are the same database) to the condition just after
 # initial app creation and then test the importer in JRuby with data from Cranston.
 #
 #   rake db:load; RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner \
@@ -44,14 +44,14 @@
 #
 # Note: In order to avoid issues with shell interpretation of characters in the command
 # string passed to script/runner I use single-quotes around the command -- this then requires
-# the use of an alternate string delimeter around: the district string: 07. I use double-quotes 
+# the use of an alternate string delimeter around: the district string: 07. I use double-quotes
 # here but Ruby has additional string delimters if needed.
 
 require 'fileutils'
 require 'arrayfields'
 
 class RinetData
-  
+
   class RinetDataError < ArgumentError
   end
 
@@ -64,9 +64,9 @@ class RinetData
       self.folder = district_folder
     end
   end
-  
-  
-  
+
+
+
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :log
@@ -77,7 +77,7 @@ class RinetData
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
-    
+
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
@@ -85,7 +85,7 @@ class RinetData
       :log_level => Logger::WARN,
       :drop_enrollments => false
     }
-    
+
     @rinet_data_options = defaults.merge(options)
     @rinet_data_options[:log_directory] ||= @rinet_data_options[:district_data_root_dir]
     @verbose = @rinet_data_options[:verbose]
@@ -99,55 +99,55 @@ class RinetData
     @errors = {:districts => {}}
     @last_log_level = nil
     @last_log_column = 0
-    
+
     FileUtils.mkdir_p @log_directory
     @log = Logger.new(@log_path,'daily')
     @log.level = @rinet_data_options[:log_level]
     @report = Logger.new(@report_path,'daily')
     @report.level = Logger::INFO
-    
+
     message = <<-HEREDOC
 
 Started in: #{@district_data_root_dir} at #{Time.now}
 
 Logging to: #{File.expand_path(@log_path)}
-    
+
     HEREDOC
-    log_message(message)    
+    log_message(message)
 
     clear_ar_maps
   end
-  
-  
+
+
   # We keep intermediate hash maps around in memory
-  # for faster fetching of entities. Cleared between 
+  # for faster fetching of entities. Cleared between
   # each district.
   def clear_ar_maps
     @parsed_data = {}
     # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
     # See rinet_csv_fields for a complete list..
-    
+
     @students_active_record_map = {}
     # Example map entry:  SASID => Portal::Student
-    
+
     @teachers_active_record_map = {}
     # Example map entry: CertID => Portal::Teacher
-    
+
     @course_active_record_map = {}
     # Example map entry:  CourseNumber => Portal::course
-    
+
     @clazz_active_record_map = {}
-    # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}  
-    
+    # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}
+
     @nces_districts = {}
     @nces_schools = {}
   end
-  
+
 
   def run_scheduled_job(opts = {})
     # disable observable behavior on useres for import task
     User.delete_observers
-    
+
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
@@ -155,26 +155,26 @@ Logging to: #{File.expand_path(@log_path)}
       log_message "\n (getting csv files ...)\n"
       get_csv_files
     end
-    
+
     num_districts = num_teachers = num_students = num_courses = num_classes = 0
-    
+
     @districts.each do |district|
       begin
         if @errors[:districts][district]
           log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
         else
-      
+
           clear_ar_maps
-      
+
           log_message "\n (parsing csv files for district #{district}...)\n"
           parse_csv_files_for_district(district)
-      
+
           log_message "\n (joining data for district #{district}...)\n"
           join_data
-    
+
           log_message "\n (updating models for district #{district}...)\n"
           update_models
-      
+
           district_summary = <<-HEREDOC
 
     Import Summary for district #{district}:
@@ -185,7 +185,7 @@ Logging to: #{File.expand_path(@log_path)}
 
           HEREDOC
           report(district_summary)
-      
+
           num_districts += 1
           num_teachers += @parsed_data[:staff].length
           num_students += @parsed_data[:students].length
@@ -199,20 +199,20 @@ Logging to: #{File.expand_path(@log_path)}
         log_message e.message, {:log_level => 'error'}
         log_message e.backtrace, {:log_level => 'debug'}
       end
-      
-        
+
+
     end
-    
+
     end_time = Time.now
-    grand_total = <<-HEREDOC 
+    grand_total = <<-HEREDOC
 
 ============================
-Import Summary: 
+Import Summary:
 ============================
 Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
   End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}
    Minutes: #{((end_time - start_time)/60).to_i}
- 
+
  Districts: #{num_districts}
   Teachers: #{num_teachers}
   Students: #{num_students}
@@ -251,7 +251,7 @@ Logged to: #{File.expand_path(@log_path)}
       raise
     end
   end
-  
+
   ## sftp: a Net::SFTP::Session object
   def get_csv_files_for_district(district, sftp)
     new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
@@ -284,7 +284,7 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def parse_csv_files_in_dir(csv_data_directory,existing_data={})
-    @parsed_data = existing_data    
+    @parsed_data = existing_data
     if File.exists?(csv_data_directory)
       count = 0
       @@csv_files.each do |csv_file|
@@ -320,7 +320,7 @@ Logged to: #{File.expand_path(@log_path)}
     @parsed_data[:student_sakai].each do |auth_tokens|
       student_sakai_map[auth_tokens[0]] = auth_tokens[1]
     end
-    
+
     new_students = @parsed_data[:students]
     @collection_length = new_students.length
     @collection_index = 0
@@ -342,7 +342,7 @@ Logged to: #{File.expand_path(@log_path)}
     @parsed_data[:staff_sakai].each do |auth_tokens|
       staff_sakai_map[auth_tokens[0]] = auth_tokens[1]
     end
-    
+
     new_teachers = @parsed_data[:staff]
     @collection_length = new_teachers.length
     @collection_index = 0
@@ -358,13 +358,13 @@ Logged to: #{File.expand_path(@log_path)}
       @collection_index += 1
     end
   end
-  
+
   def school_for(row)
     ## try to find a cached AR entity for this school:
     found_school = @nces_schools[row[:SchoolNumber]]
     return found_school unless found_school.nil?
     # pass in a row that has a :SchoolNumber
-    # These are raw or processed csv rows from: 
+    # These are raw or processed csv rows from:
     #   students, staff, courses, enrollments, staff_assignments
     nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
     if nces_school
@@ -377,13 +377,13 @@ Logged to: #{File.expand_path(@log_path)}
     else
       message = <<-HEREDOC
       could not find school for: #{row[:SchoolNumber]}
-      Have the NCES schools been imported? Yyou might need to run the rake tasks: 
+      Have the NCES schools been imported? Yyou might need to run the rake tasks:
         rake portal:setup:download_nces_data
         rake portal:setup:import_nces_from_files
       HEREDOC
       log_message(message, {:log_level => :warn})
-      # 
-      # 
+      #
+      #
       # log_message("could not find school for: #{row[:SchoolNumber]} (have the NCES schools been imported?)", {:log_level => :error})
       # log_message("you might need to run the rake tasks: rake portal:setup:download_nces_data || rake portal:setup:import_nces_from_files", {:log_level => :info)
       # TODO, create one with a special name? Throw exception?
@@ -391,18 +391,18 @@ Logged to: #{File.expand_path(@log_path)}
     end
     school
   end
-  
+
   def district_for(row)
     ## try to find a cached AR entity for this district
     found_district = @nces_districts[row[:District]]
     return found_district unless found_district.nil?
-    
+
     nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => row[:District]});
     district = nil
     unless nces_district
       message = <<-HEREDOC
       could not find district for: #{row[:District]}
-      Have the NCES schools been imported? You might need to run the rake tasks: 
+      Have the NCES schools been imported? You might need to run the rake tasks:
         rake portal:setup:download_nces_data
         rake portal:setup:import_nces_from_files
       HEREDOC
@@ -416,12 +416,12 @@ Logged to: #{File.expand_path(@log_path)}
     end
     district
   end
-  
+
 
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      if row[:login] 
+      if row[:login]
         if row[:EmailAddress] && row[:EmailAddress].length > 0
           email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
         end
@@ -435,7 +435,7 @@ Logged to: #{File.expand_path(@log_path)}
           end
           email = row[:email] ||
             "#{rites_login}@mailinator.com" # (temporary unique email address to pass valiadations)
-            
+
           rites_user_params = {
             :login  => rites_login,
             :password => row[:Password] || row[:Birthdate],
@@ -506,12 +506,12 @@ Logged to: #{File.expand_path(@log_path)}
     @existing_teachers = @parsed_data[:staff].select {|row| ExternalUserDomain.login_exists?(row[:login])}
 
     puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
-    new_teachers.each do |teacher| 
+    new_teachers.each do |teacher|
       log_message("processing teacher #{teacher[:Lastname]}", '')
       create_or_update_teacher(teacher)
-    end  
+    end
   end
-  
+
   def update_teachers
     new_teachers = @parsed_data[:staff]
     @collection_length = new_teachers.length
@@ -521,9 +521,9 @@ Logged to: #{File.expand_path(@log_path)}
       log_message("#{teacher[:Lastname]}", {:log_level => :info, :info_in_columns => ['teachers', 6, 24]})
       create_or_update_teacher(teacher)
       @collection_index += 1
-    end  
+    end
   end
-  
+
   def create_or_update_teacher(row)
     # try and cache our data
     teacher = nil
@@ -534,12 +534,12 @@ Logged to: #{File.expand_path(@log_path)}
         row[:rites_user_id]=teacher.id
         # how do we find out the teacher grades?
         # teacher.grades << grade_9
-    
+
         # optionally remove assignments from teacher:
         if @rinet_data_options[:drop_enrollments]
           teacher.clazzes = []
         end
-    
+
         # add the teacher to the school
         school = school_for(row)
         if school
@@ -555,20 +555,20 @@ Logged to: #{File.expand_path(@log_path)}
     end
     teacher
   end
-  
+
   def update_students
     new_students = @parsed_data[:students]
     @collection_length = new_students.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} students: )")
-    new_students.each do |student| 
+    new_students.each do |student|
       log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['students', 6, 24]})
       create_or_update_student(student)
       @collection_index += 1
     end
   end
-  
-  
+
+
   def create_or_update_student(row)
     student = nil
     unless row[:rites_student_id]
@@ -584,7 +584,7 @@ Logged to: #{File.expand_path(@log_path)}
         if @rinet_data_options[:drop_enrollments]
           student.clazzes = []
         end
-        
+
         # add the student to the school
         school = school_for(row)
         if school
@@ -599,22 +599,22 @@ Logged to: #{File.expand_path(@log_path)}
     end
     row
   end
-  
-  
+
+
   def update_courses
     new_courses = @parsed_data[:courses]
     @collection_length = new_courses.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} courses:)\n")
-    new_courses.each do |course_csv_row| 
+    new_courses.each do |course_csv_row|
       log_message("#{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})",
         {:log_level => :info, :info_in_columns => ['courses', 3, 40]})
       create_or_update_course(course_csv_row)
       @collection_index += 1
     end
   end
-  
-  
+
+
   def create_or_update_course(course_csv_row)
     # course_csv_row contains:
     #   :CourseNumber, :CourseSection, :Term, :Title, :Description, :StartDate,
@@ -635,7 +635,7 @@ Logged to: #{File.expand_path(@log_path)}
     end
     course_csv_row
   end
-  
+
   def update_classes
     # passes class member-relationship rows to create_or_update_class
     # from staff assignments:
@@ -643,17 +643,17 @@ Logged to: #{File.expand_path(@log_path)}
     @collection_length = new_staff_assignments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} staff assignments:)\n")
-    new_staff_assignments.each do |assignment| 
+    new_staff_assignments.each do |assignment|
       create_or_update_class(assignment)
       @collection_index += 1
     end
-    
+
     # enroll students
     enrollments = @parsed_data[:enrollments]
     @collection_length = enrollments.length
     @collection_index = 0
     log_message("\n\n(processing: #{@collection_length} enrollments:)\n")
-    enrollments.each do |enrollment| 
+    enrollments.each do |enrollment|
       create_or_update_class(enrollment)
       @collection_index += 1
     end
@@ -669,7 +669,7 @@ Logged to: #{File.expand_path(@log_path)}
       nil
     end
   end
-    
+
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
     # debugger
@@ -679,13 +679,13 @@ Logged to: #{File.expand_path(@log_path)}
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
-    
+
     return unless check_start_date(member_relation_row[:StartDate])
-    
+
     section = member_relation_row[:CourseSection]
-    start_date = DateTime.parse(member_relation_row[:StartDate]) 
+    start_date = DateTime.parse(member_relation_row[:StartDate])
     clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
-    
+
     if member_relation_row[:SASID] && @students_active_record_map[member_relation_row[:SASID]]
       student =  @students_active_record_map[member_relation_row[:SASID]]
       student.add_clazz(clazz)
@@ -693,13 +693,13 @@ Logged to: #{File.expand_path(@log_path)}
     elsif member_relation_row[:TeacherCertNum] && @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
       clazz.teacher = @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
       clazz.save
-      log_message("#{clazz.teacher.last_name}", {:log_level => :info, :info_in_columns => ['teacher-assigments', 6, 24]})      
+      log_message("#{clazz.teacher.last_name}", {:log_level => :info, :info_in_columns => ['teacher-assigments', 6, 24]})
     else
       log_message("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n", {:log_level => :error})
     end
     member_relation_row
   end
-  
+
   def log_message(message, options={})
     # optional formmating for short :log_level => :info messages
     #   print a continuing sequence of :info messages in 3 columns of 30 characters each
@@ -726,7 +726,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     else
       if @last_log_column != 0
-        message = "\n" + message 
+        message = "\n" + message
         @last_log_column = 0
       end
     end
@@ -747,7 +747,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     end
   end
-  
+
   ##
   ## Used to print out student login info
   ##
@@ -761,19 +761,19 @@ Logged to: #{File.expand_path(@log_path)}
       student_row.fields = FIELD_DEFINITIONS[:students]
       sassid = student_row[:SASID]
       password = student_row[:Birthdate]
-      open(student_sakai_file_name) do |fd| 
+      open(student_sakai_file_name) do |fd|
         fd.each do |line|
            if line =~ /#{student_row[:SASID]}\s*,\s*(\S+)/
              login = $1
              break
            end
-        end   
+        end
       end
     end
     "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
   end
-  
-  
+
+
   ##
   ## Used to print out staff login info
   ##
@@ -790,19 +790,19 @@ Logged to: #{File.expand_path(@log_path)}
     end
     "Login: #{ExternalUserDomain.external_login_to_login(login)}, Pass:#{password}"
   end
-  
+
   def find_staff_login(district,certification_number)
     staff_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/staff_sakai.csv"
-    open(staff_sakai_file_name) do |fd| 
+    open(staff_sakai_file_name) do |fd|
       fd.each do |line|
          if line =~ /#{certification_number}\s*,\s*(\S+)/
            return $1
          end
-      end   
+      end
     end
     nil
   end
-  
+
   #
   # TODO: What? email send to log?
   #
@@ -810,7 +810,7 @@ Logged to: #{File.expand_path(@log_path)}
     log_message(message, {:log_level => :error})
     @report.info(message)
   end
-  
+
   #
   # report the number of students successfully imported to ActiveRecord
   # for each district:
@@ -832,7 +832,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     end
   end
-  
+
   #
   # report the number of students successfully imported to ActiveRecord
   # for a given district:
@@ -842,7 +842,7 @@ Logged to: #{File.expand_path(@log_path)}
     ["student","staff"].each do |type|
       file_name = "#{@district_data_root_dir}/#{district}/current/#{type}_sakai.csv"
       missing = 0; found = 0; total = 0;
-      open(file_name) do |fd| 
+      open(file_name) do |fd|
         fd.each do |line|
            if line =~ /\d+\s*,\s*(\S+)/
              login = $1
@@ -855,13 +855,13 @@ Logged to: #{File.expand_path(@log_path)}
              total += 1
            end
         end
-      end  
+      end
       report "district: #{district}, #{type} records found in #{File.basename(file_name)}: #{total}, imported to AR: #{found}, missing: #{missing}"
     end
   end
-  
+
   def cache_course_ar_map(course_number,school_id,value=nil)
-    unless (course_number && school_id) 
+    unless (course_number && school_id)
       raise RinetDataError("must supply a course_number and a school")
     end
     unless @course_active_record_map[course_number]
@@ -870,7 +870,7 @@ Logged to: #{File.expand_path(@log_path)}
     if value
       @course_active_record_map[course_number][school_id] = value
     end
-    value = @course_active_record_map[course_number][school_id] 
+    value = @course_active_record_map[course_number][school_id]
     return value
   end
 end

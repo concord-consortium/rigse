@@ -2,18 +2,18 @@
   .action_menu_header
     .action_menu_header_left
       - if local_assigns[:paginated_objects]
-        %p= page_entries_info paginated_objects, :entry_name => ResourcePage.display_name.downcase
+        %p= page_entries_info paginated_objects, :entry_name => ResourcePage.display_name
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
         - unless local_assigns[:hide_print]
           %li= link_to "printable view", printable_index_resource_pages_path(resource_page_printable_index_params), :id => "printable-view", :target => "_blank"
-        - if current_user.has_role?("author", "teacher")
-          %li= link_to "create #{ResourcePage.display_name.downcase}", new_resource_page_path
+        - if current_user.has_role?("author", "member")
+          %li= link_to "create #{ResourcePage.display_name}", new_resource_page_path
 
 
-- for resource_page in resource_pages
+- resource_pages.each do |resource_page|
   %div{ :id => dom_id_for(resource_page), :class => 'runnable' }
     = render :partial => 'resource_pages/accordion', :locals => { :resource_page => resource_page }
   = draggable_element dom_id_for(resource_page), :revert => true , :scroll => 'window'

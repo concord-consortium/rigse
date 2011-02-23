@@ -1,0 +1,8 @@
+// This is crapy, but for some reason, rendering partials inline here is not working.
+// This is a temprorary fix...
+
+document.dialog.close();
+$('js_flash').insert({top:'<br/><br/>adding page ... <img src="/images/rites-wait.gif">'});
+$('js_flash').show();
+window.location = '<%= url_for @page %>';
+

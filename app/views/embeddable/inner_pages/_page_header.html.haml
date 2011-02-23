@@ -22,7 +22,7 @@
 /       %li= link_to 'edit page details', edit_page_url(page)
 /       %li= link_to 'duplicate', duplicate_page_url(page)
 
-- if (teacher_only? page)
+- if (for_teacher_only page)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"

@@ -1,8 +1,28 @@
-class DefaultInvestigation
+class DefaultRunnable
 
   class <<self
+
+    def create_default_runnable_for_user(user, name="simple default #{TOP_LEVEL_CONTAINER_NAME}", logging=false)
+      if USING_JNLPS && TOP_LEVEL_CONTAINER_NAME == 'investigation'
+        runnable = create_default_investigation_for_user(user, name, logging)
+      else
+        unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
+          runnable = TOP_LEVEL_CONTAINER_CLASS.create do |i|
+            i.name = name
+            i.user = user
+            i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
+            case TOP_LEVEL_CONTAINER_NAME
+              when 'external_activity'
+                i.url = "http://redcloth.org/hobix.com/textile/quick.html"
+              end
+          end
+        end
+      end
+      runnable.publish! unless runnable.publication_status == "published"
+      runnable
+    end
     
-    def create_default_investigation_for_user(user, name='Simple Investigation', logging=false)
+    def create_default_investigation_for_user(user, name, logging)
       puts
       @@prediction_graph = nil
       unless investigation = user.investigations.find_by_name(name)
@@ -12,22 +32,23 @@ class DefaultInvestigation
           i.user = user
           i.description = "A simple default Investigation"
         end
-        investigation.publish!
         activity = Activity.create do |i|
           i.name = 'Activity'
           i.description = "Learn About ..."
         end
         investigation.activities << activity
-        section1 = DefaultInvestigation.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
-        page1, xhtml = DefaultInvestigation.add_page_to_section(section1, "Find the hottest",
+        section1 = DefaultRunnable.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
+        page1, xhtml = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
           '<p>Find the hottest thing in the room with the temperature probe.</p>', 
           "Student's explore their environment with a tempemerature probe.")
         temperature_probe = Probe::ProbeType.find_by_name('temperature')
-        DefaultInvestigation.add_data_collector_to_page(page1, temperature_probe, false)
+        DefaultRunnable.add_data_collector_to_page(page1, temperature_probe, false)
         investigation.deep_set_user(user)
       end
       investigation
     end
+
+
 
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?

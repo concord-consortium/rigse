@@ -4,7 +4,7 @@ class Reports::Detail < Reports::Excel
     super(opts)
 
     @investigations = opts[:investigations] || Investigation.published
-  
+
     # stud.id, class, school, user.id, username, student name, teachers, completed, %completed, last_run
     @common_columns = [
       Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
@@ -33,7 +33,7 @@ class Reports::Detail < Reports::Excel
       answer_defs = []
       header_defs = [] # top level header:  Investigation
       activities = inv.activities.student_only
-      # offset the reportables counter by 2 
+      # offset the reportables counter by 2
       reportable_header_counter = sheet_defs.size
       header_defs << Reports::ColumnDefinition.new(:title => inv.name, :heading_row => 0, :col_index => reportable_header_counter)
       activities.each do |a|
@@ -65,7 +65,7 @@ class Reports::Detail < Reports::Excel
     students.reject! { |s| s.user.nil? || s.user.default_user || s.learners.size==0 }
 
     # sort by school and last
-    students.sort!{ |a,b| 
+    students.sort!{ |a,b|
       if school_name_for(a) !=  school_name_for(b)
         school_name_for(a)  <=> school_name_for(b)
       else
@@ -76,7 +76,7 @@ class Reports::Detail < Reports::Excel
     iterate_with_status(students) do |student|
       learners = student.learners
       learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
-      learners.sort! { |a,b| 
+      learners.sort! { |a,b|
         aname = a.offering.clazz.name || "No Class Name"
         bname = b.offering.clazz.name || "No Class Name"
         aname <=> bname

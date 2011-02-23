@@ -57,9 +57,37 @@ class SectionsController < ApplicationController
   ##
   ##
   def index
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @section }
+    @include_drafts = param_find(:include_drafts)
+    @name = param_find(:name)
+
+    pagination = params[:page]
+    if (pagination)
+       @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+
+    @sections = Section.search_list({
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => @include_drafts, 
+      :paginate => true, 
+      :page => pagination
+    })
+
+    if params[:mine_only]
+      @sections = @sections.reject { |i| i.user.id != current_user.id }
+    end
+
+    @paginated_objects = @sections
+    
+    if request.xhr?
+      render :partial => 'sections/runnable_list', :locals => {:sections => @sections, :paginated_objects => @sections}
+    else
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @section }
+      end
     end
   end
 
