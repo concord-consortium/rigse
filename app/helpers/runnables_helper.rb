@@ -8,7 +8,7 @@ module RunnablesHelper
   end
 
   def run_url_for(component, params = {}, format = :jnlp)
-    format = APP_CONFIG[:runnable_mime_type] if component.is_a? JnlpLaunchable
+    format = APP_CONFIG[:runnable_mime_type] unless component.is_a? JnlpLaunchable
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)

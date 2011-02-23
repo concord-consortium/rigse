@@ -162,7 +162,7 @@ DEPENDENCIES
   arrayfields
   capistrano-ext
   capybara (~> 0.3.8)
-  ci_reporter
+  ci_reporter (~> 1.6.4)
   compass
   cucumber (~> 0.10.0)
   cucumber-rails (~> 0.3.2)
