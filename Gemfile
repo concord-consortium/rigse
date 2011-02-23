@@ -34,6 +34,12 @@ group :development do
   gem "highline"
 end
 
+group :development, :test do
+  gem 'hirb'
+  gem 'what_methods'
+  gem 'wirble'
+end
+
 group :test do
   #gem "gherkin",           "~>2.3"
   gem "cucumber",          "~>0.10.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber"))

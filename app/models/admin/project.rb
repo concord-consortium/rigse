@@ -2,38 +2,38 @@ require 'fileutils'
 
 class Admin::Project < ActiveRecord::Base
   set_table_name "admin_projects"
-  
+
   belongs_to :user
 
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
-  
+
   has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
-  
+
   serialize :states_and_provinces
- 
+
   acts_as_replicatable
-  
+
   include Changeable
   include AppSettings
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{name description}
 
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
   validate :states_and_provinces_array_members_must_match_list
-  
+
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.find(:all)
   end
-  
-  if USING_JNLPS
-    validates_associated :maven_jnlp_server
-    validates_associated :maven_jnlp_family
-  end
+
+  #if USING_JNLPS
+    #validates_associated :maven_jnlp_server
+    #validates_associated :maven_jnlp_family
+  #end
 
   def states_and_provinces_array_members_must_match_list
     if states_and_provinces && states_and_provinces.is_a?(Array)
@@ -51,7 +51,7 @@ class Admin::Project < ActiveRecord::Base
       self.jnlp_version_str = maven_jnlp_family.snapshot_version
     end
   end
-  
+
   def after_save
     if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
       update_app_settings
@@ -89,17 +89,17 @@ class Admin::Project < ActiveRecord::Base
       nil
     end
   end
-  
-  
+
+
   def display_type
     self.default_project? ? 'Default ' : ''
   end
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
     # Admin::Project.default_project
     def default_project
       name, url = default_project_name_url
@@ -109,7 +109,7 @@ class Admin::Project < ActiveRecord::Base
       end
       proj
     end
-    
+
     def default_project_name_url
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
@@ -117,7 +117,7 @@ class Admin::Project < ActiveRecord::Base
     def display_name
       "Project"
     end
-    
+
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"
     end
@@ -146,7 +146,7 @@ class Admin::Project < ActiveRecord::Base
           jnlp_version_str = nil
           snapshot_enabled = nil
       end
-      
+
       enable_default_users = APP_CONFIG[:enable_default_users]
 
       attributes = {
@@ -189,15 +189,15 @@ class Admin::Project < ActiveRecord::Base
     end
 
     # Returns an array of the default maven_jnlp server,  family, and jnlp snampshot version info
-    # 
+    #
     # Example:
-    # 
+    #
     #   server, family, version = Admin::Project.default_jnlp_info
     #
     #   server  # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
     #   family  # => "all-otrunk-snapshot"
     #   version # => "0.1.0-20091013.161730"
-    #    
+    #
     def default_jnlp_info
       default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
       # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
@@ -211,12 +211,12 @@ class Admin::Project < ActiveRecord::Base
     end
 
   end
-  
+
   def default_project?
     default_name, default_url = Admin::Project.default_project_name_url
     self.name == default_name && self.url == default_url
   end
-  
+
   def summary_info
     puts <<HEREDOC
 
@@ -246,6 +246,6 @@ ut = User.find_by_login('teacher'); us = User.find_by_login('student')
 t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
 
 HEREDOC
-    
-  end 
+
+  end
 end
