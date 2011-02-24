@@ -8,7 +8,7 @@ class Admin::Project < ActiveRecord::Base
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
 
-  has_one :admin_project_settings
+  has_one :admin_project_settings, :class_name => "Admin::ProjectSettings"
 
   has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
