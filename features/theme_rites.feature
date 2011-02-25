@@ -26,33 +26,33 @@ Feature: Investigations can be searched
         | a Investigation         | author  | 5               | published          | 
       
 
-  #@selenium
-  #Scenario: Investigation and resource links are hidden from teachers
-    #When I login with username: teacher password: teacher
-    #And  I am on the home page
-    #Then I should see "RITES"
-    #And  I should not see "APP_CONFIG"
-    #And  I should not see "Resources" within "#nav_top"
-    #And  I should not see "Investigation" within "#nav_top"
+  @selenium
+  Scenario: Investigation and resource links are hidden from teachers
+    When I login with username: teacher password: teacher
+    And  I am on the home page
+    Then I should see "RITES"
+    And  I should not see "APP_CONFIG"
+    And  I should not see "Resources" within "#nav_top"
+    And  I should not see "Investigation" within "#nav_top"
 
 
-  #@selenium
-  #Scenario: Investigation and resource links are hidden from students
-    #When I login with username: student password: student
-    #And  I am on the home page
-    #Then I should see "RITES"
-    #And  I should not see "APP_CONFIG"
-    #And  I should not see "Resources" within "#nav_top"
-    #And  I should not see "Investigation" within "#nav_top"
+  @selenium
+  Scenario: Investigation and resource links are hidden from students
+    When I login with username: student password: student
+    And  I am on the home page
+    Then I should see "RITES"
+    And  I should not see "APP_CONFIG"
+    And  I should not see "Resources" within "#nav_top"
+    And  I should not see "Investigation" within "#nav_top"
   
-  #@selenium
-  #Scenario: Investigation links are shown to authors
-    #When I login with username: author password: author
-    #And  I am on the home page
-    #Then I should see "RITES"
-    #And  I should see "Investigation" within "#nav_top"
-    #And  I should not see "APP_CONFIG"
-    #And  I should not see "Resources" within "#nav_top"
+  @selenium
+  Scenario: Investigation links are shown to authors
+    When I login with username: author password: author
+    And  I am on the home page
+    Then I should see "RITES"
+    And  I should see "Investigation" within "#nav_top"
+    And  I should not see "APP_CONFIG"
+    And  I should not see "Resources" within "#nav_top"
 
   @selenium
   Scenario: Resources are hidden from teachers in class assignment
