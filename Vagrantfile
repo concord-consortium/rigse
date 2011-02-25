@@ -10,9 +10,20 @@ Vagrant::Config.run do |config|
   # doesn't already exist on the user's system.
   config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
 
+  config.vm.customize do |vm|
+    vm.memory_size = 1024
+    vm.cpu_count = 2
+    vm.name = "XPortal VM"
+  end
+
+  # enable this so we can install the extensions
+  # config.vm.boot_mode = :gui
+
   # Assign this VM to a host only network IP, allowing you to access it
   # via the IP.
-  # config.vm.network "33.33.33.10"
+  config.vm.network "33.33.33.10"
+
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
@@ -30,6 +41,8 @@ Vagrant::Config.run do |config|
   #   chef.json = { :mysql_password => "foo" }
   # end
   config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
+
     # Tell chef what recipe to run. In this case, the `vagrant_main` recipe
     # does all the magic.
     chef.add_recipe("vagrant_main")
