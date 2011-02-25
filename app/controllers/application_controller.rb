@@ -4,10 +4,18 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
-  theme(APP_CONFIG[:theme]||'default')
+  theme :get_theme
 
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
+  end
+
+  def self.set_theme(name)
+    @@theme = name
+  end
+  
+  def get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   # helper :all # include all helpers, all the time
@@ -28,9 +36,8 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
 
-  theme(APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
-
   protected
+
 
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
