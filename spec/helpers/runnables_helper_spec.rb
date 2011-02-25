@@ -102,6 +102,16 @@ describe RunnablesHelper do
                                                              "/images/run.png")
     end
 
+    it "should render a link for a Investigation Offering" do
+      offering = mock_model(Portal::Offering, :name => "Investigation Offering")
+      investigation = mock_model(Investigation)
+      offering.stub!(:runnable).and_return(investigation)
+      offering.stub!(:resource_page?).and_return false
+      helper.run_link_for(offering).should be_link_like("http://test.host/portal/offerings/#{offering.id}.jnlp",
+                                                             "run_link rollover",
+                                                             "/images/run.png")
+    end
+
     it "should render a link for an Activity as a JNLP launchable" do
       activity = mock_model(Activity, :name => "Fun in the Garden")
       helper.run_link_for(activity).should be_link_like("http://test.host/activities/#{activity.id}.jnlp",
