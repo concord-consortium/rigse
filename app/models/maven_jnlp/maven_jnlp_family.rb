@@ -1,30 +1,32 @@
 class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
   set_table_name "maven_jnlp_maven_jnlp_families"
-  
+
   has_many :projects, :class_name => "Admin::Project"
-  
+
   belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
 
   has_many :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
 
   has_many :recent_versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl", :order => 'date_str DESC', :limit => 20
-  
+
+  has_and_belongs_to_many :admin_project_settings
+
   # has_many :versioned_jnlps, :through => :versioned_jnlp_urls, :class_name => "MavenJnlp::VersionedJnlpUrl"
-  
+
   acts_as_replicatable
-  
+
   include Changeable
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{uuid name}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
   end
-  
+
   def create_versioned_jnlp_urls(mjf_object)
     count = 0; print '.'; STDOUT.flush
     mjf_object.versions.each do |version_object|
@@ -40,7 +42,7 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
       end
     end
   end
-  
+
   def update_snapshot_jnlp_url
     jnlp_url = snapshot_jnlp_url
     current = snapshot_version
@@ -71,5 +73,4 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
       snapshot_version
     end
   end
-  
 end

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110209184336) do
+ActiveRecord::Schema.define(:version => 20110224150841) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -29,6 +29,45 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
 
+  create_table "admin_project_settings", :force => true do |t|
+    t.string   "top_level_container_name"
+    t.string   "site_name"
+    t.text     "description"
+    t.string   "help_email"
+    t.string   "theme"
+    t.integer  "default_admin_user_id"
+    t.integer  "default_maven_jnlp_family_id"
+    t.integer  "default_maven_jnlp_server_id"
+    t.string   "default_maven_jnlp_version"
+    t.text     "states_and_provinces"
+    t.string   "site_url"
+    t.string   "runnables_use"
+    t.string   "site_district"
+    t.string   "site_school"
+    t.string   "runnable_mime_type"
+    t.boolean  "use_gse"
+    t.boolean  "enable_default_users"
+    t.text     "active_school_levels"
+    t.integer  "admin_project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "admin_project_settings_maven_jnlp_maven_jnlp_families", :force => true do |t|
+    t.integer "admin_project_settings_id"
+    t.integer "maven_jnlp_maven_jnlp_families_id"
+  end
+
+  create_table "admin_project_settings_maven_jnlp_maven_jnlp_servers", :force => true do |t|
+    t.integer "admin_project_settings_id"
+    t.integer "maven_jnlp_maven_jnlp_servers_id"
+  end
+
+  create_table "admin_project_settings_portal_grade_levels", :force => true do |t|
+    t.integer "admin_project_settings_id"
+    t.integer "portal_grade_level_id"
+  end
+
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
     t.integer  "probe_vendor_interface_id"
@@ -41,9 +80,6 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.string   "name"
     t.string   "url"
     t.text     "description"
-    t.text     "states_and_provinces"
-    t.integer  "maven_jnlp_server_id"
-    t.integer  "maven_jnlp_family_id"
     t.string   "jnlp_version_str"
     t.boolean  "snapshot_enabled"
     t.boolean  "enable_default_users"

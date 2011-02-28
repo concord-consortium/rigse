@@ -7,6 +7,8 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
 
   has_many :maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily"
 
+  has_and_belongs_to_many :admin_project_settings
+
   acts_as_replicatable
 
   include Changeable
