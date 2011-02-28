@@ -31,19 +31,19 @@
 #   Mysql::Error.ancestors
 #   => [Mysql::Error, StandardError, ...
 #
-RUNNING_TESTS = RAILS_ENV == 'test' || RAILS_ENV == 'cucumber'
+#RUNNING_TESTS = RAILS_ENV == 'test' || RAILS_ENV == 'cucumber'
 
-if RUNNING_TESTS || $PROGRAM_NAME =~ /rake/
-  puts "Executing rake task or running in test/cucumber env: skipping Admin::Project.create_or_update_default_project_from_settings_yml"
-else
-  begin
-    ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
-    puts "running Admin::Project.create_or_update_default_project_from_settings_yml"
-    Admin::Project.create_or_update_default_project_from_settings_yml
-  rescue RuntimeError, StandardError => e
-    puts e.backtrace
-    puts "the database or some required models in the database don't exist ... run migrations, load a database schema, or create resources"
-    puts "not running Admin::Project.create_or_update_default_project_from_settings_yml"
-    puts "(In a test environment factory girl should create these resources for you)"
-  end
-end
+#if RUNNING_TESTS || $PROGRAM_NAME =~ /rake/
+  #puts "Executing rake task or running in test/cucumber env: skipping Admin::Project.create_or_update_default_project_from_settings_yml"
+#else
+  #begin
+    #ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connection
+    #puts "running Admin::Project.create_or_update_default_project_from_settings_yml"
+    #Admin::Project.create_or_update_default_project_from_settings_yml
+  #rescue RuntimeError, StandardError => e
+    #puts e.backtrace
+    #puts "the database or some required models in the database don't exist ... run migrations, load a database schema, or create resources"
+    #puts "not running Admin::Project.create_or_update_default_project_from_settings_yml"
+    #puts "(In a test environment factory girl should create these resources for you)"
+  #end
+#end

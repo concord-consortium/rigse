@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110224150841) do
+ActiveRecord::Schema.define(:version => 20110228164147) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20110224150841) do
     t.integer  "admin_project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "active_grades"
   end
 
   create_table "admin_project_settings_maven_jnlp_maven_jnlp_families", :force => true do |t|
@@ -63,11 +64,6 @@ ActiveRecord::Schema.define(:version => 20110224150841) do
     t.integer "maven_jnlp_maven_jnlp_servers_id"
   end
 
-  create_table "admin_project_settings_portal_grade_levels", :force => true do |t|
-    t.integer "admin_project_settings_id"
-    t.integer "portal_grade_level_id"
-  end
-
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
     t.integer  "probe_vendor_interface_id"
@@ -76,7 +72,6 @@ ActiveRecord::Schema.define(:version => 20110224150841) do
   end
 
   create_table "admin_projects", :force => true do |t|
-    t.integer  "user_id"
     t.string   "name"
     t.string   "url"
     t.text     "description"

@@ -3,17 +3,17 @@ require 'fileutils'
 class Admin::Project < ActiveRecord::Base
   set_table_name "admin_projects"
 
-  belongs_to :user
+  #belongs_to :user
 
-  belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
-  belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
+  #belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
+  #belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
 
   has_one :admin_project_settings, :class_name => "Admin::ProjectSettings"
 
   has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
 
-  serialize :states_and_provinces
+  #serialize :states_and_provinces
 
   acts_as_replicatable
 
@@ -37,9 +37,10 @@ class Admin::Project < ActiveRecord::Base
     #validates_associated :maven_jnlp_family
   #end
 
+
   def states_and_provinces_array_members_must_match_list
-    if states_and_provinces && states_and_provinces.is_a?(Array)
-      unknown_provinces = states_and_provinces.select { |i| StatesAndProvinces::STATES_AND_PROVINCES[i] ? false : i }
+    if admin_project_settings.states_and_provinces.is_a?(Array)
+      unknown_provinces = admin_project_settings.states_and_provinces.select { |i| StatesAndProvinces::STATES_AND_PROVINCES[i] ? false : i }
       unless unknown_provinces.empty?
         errors.add(:states_and_provinces, "array members: #{unknown_provinces.join(', ')} must match list of known state and province two-character abreviations")
       end
@@ -48,49 +49,49 @@ class Admin::Project < ActiveRecord::Base
     end
   end
 
-  def before_save
-    if snapshot_enabled
-      self.jnlp_version_str = maven_jnlp_family.snapshot_version
-    end
-  end
+  #def before_save
+    #if snapshot_enabled
+      #self.jnlp_version_str = maven_jnlp_family.snapshot_version
+    #end
+  #end
 
-  def after_save
-    if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
-      update_app_settings
-    end
-    if self.enable_default_users
-      User.unsuspend_default_users
-    else
-      User.suspend_default_users
-    end
-  end
+  #def after_save
+    #if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
+      #update_app_settings
+    #end
+    #if self.enable_default_users
+      #User.unsuspend_default_users
+    #else
+      #User.suspend_default_users
+    #end
+  #end
 
-  def update_app_settings
-    new_app_settings = load_all_app_settings
-    new_app_settings[RAILS_ENV][:site_name] = self.name
-    new_app_settings[RAILS_ENV][:site_url] = self.url
-    new_app_settings[RAILS_ENV][:enable_default_users] = self.enable_default_users
-    new_app_settings[RAILS_ENV][:description] = self.description
-    new_app_settings[RAILS_ENV][:states_and_provinces] = self.states_and_provinces
-    new_app_settings[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
-    save_app_settings(new_app_settings)
-  end
+  #def update_app_settings
+    #new_app_settings = load_all_app_settings
+    #new_app_settings[RAILS_ENV][:site_name] = self.name
+    #new_app_settings[RAILS_ENV][:site_url] = self.url
+    #new_app_settings[RAILS_ENV][:enable_default_users] = self.enable_default_users
+    #new_app_settings[RAILS_ENV][:description] = self.description
+    #new_app_settings[RAILS_ENV][:states_and_provinces] = self.states_and_provinces
+    #new_app_settings[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
+    #save_app_settings(new_app_settings)
+  #end
 
-  def generate_default_maven_jnlp
-    if USING_JNLPS
-      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-      default_maven_jnlp[:server] = self.maven_jnlp_server.name
-      default_maven_jnlp[:family] = self.maven_jnlp_family.name
-      if self.snapshot_enabled
-        default_maven_jnlp[:version] = 'snapshot'
-      else
-        default_maven_jnlp[:version] = self.jnlp_version_str
-      end
-      default_maven_jnlp
-    else
-      nil
-    end
-  end
+  #def generate_default_maven_jnlp
+    #if USING_JNLPS
+      #default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+      #default_maven_jnlp[:server] = self.maven_jnlp_server.name
+      #default_maven_jnlp[:family] = self.maven_jnlp_family.name
+      #if self.snapshot_enabled
+        #default_maven_jnlp[:version] = 'snapshot'
+      #else
+        #default_maven_jnlp[:version] = self.jnlp_version_str
+      #end
+      #default_maven_jnlp
+    #else
+      #nil
+    #end
+  #end
 
 
   def display_type
@@ -98,6 +99,10 @@ class Admin::Project < ActiveRecord::Base
   end
 
   class <<self
+    def using_jnlps?
+      admin_project_settings.runnables_use == "otrunk-jnlp"
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end
@@ -113,7 +118,7 @@ class Admin::Project < ActiveRecord::Base
     end
 
     def default_project_name_url
-      [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
+      [admin_project_settings.site_name, admin_project_settings.site_url]
     end
 
     def display_name
@@ -126,11 +131,11 @@ class Admin::Project < ActiveRecord::Base
 
     def create_or_update_default_project_from_settings_yml
       name, url = default_project_name_url
-      states_and_provinces = APP_CONFIG[:states_and_provinces]
+      states_and_provinces = admin_project_settings.states_and_provinces
 
-      if USING_JNLPS
+      if using_jnlps?
         server, family, version = default_jnlp_info
-        default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+        default_maven_jnlp =  admin_project_settings.default_maven_jnlp
         maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
         jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(family)
         jnlp_version_str = version
@@ -149,7 +154,7 @@ class Admin::Project < ActiveRecord::Base
           snapshot_enabled = nil
       end
 
-      enable_default_users = APP_CONFIG[:enable_default_users]
+      enable_default_users = admin_project_settings.enable_default_users
 
       attributes = {
         :name => name,
@@ -173,7 +178,7 @@ class Admin::Project < ActiveRecord::Base
       project.jnlp_version_str = jnlp_version_str
       project.snapshot_enabled = snapshot_enabled
       project.save!
-      active_grades = APP_CONFIG[:active_grades]
+      active_grades = admin_project_settings.active_grades
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
         # active_grades.each do |grade_name|
         #   grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
@@ -201,13 +206,13 @@ class Admin::Project < ActiveRecord::Base
     #   version # => "0.1.0-20091013.161730"
     #
     def default_jnlp_info
-      default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
+      #default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
       # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
-      server = APP_CONFIG[:maven_jnlp_servers].find { |s| s[:name] == default_maven_jnlp[:server] }
+      server = admin_project_settings.default_maven_jnlp_server
       # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
-      family = default_maven_jnlp[:family]
+      family = admin_project_settings.default_maven_jnlp_family
       # => "all-otrunk-snapshot"
-      version = default_maven_jnlp[:version]
+      version = admin_project_settings.default_maven_jnlp_version
       # => "snapshot"
       [server, family, version]
     end

@@ -21,7 +21,7 @@ def generate_default_project_and_jnlps_with_factories
   #   APP_CONFIG[:default_maven_jnlp][:version] = @maven_jnlp_family.snapshot_version
   #   @maven_jnlp_family.stub!(:newest_snapshot_version).and_return(@maven_jnlp_family.snapshot_version)
   # end
-  if USING_JNLPS
+  if Admin::Project.using_jnlps?
     server, family, version = Admin::Project.default_jnlp_info
     @maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
     @maven_jnlp_family = @maven_jnlp_server.maven_jnlp_families.find_by_name(family)
@@ -33,7 +33,8 @@ def generate_default_project_and_jnlps_with_factories
     @versioned_jnlp = @versioned_jnlp_url.versioned_jnlp
   end
   @admin_project = Factory.create(:admin_project)
-  Admin::Project.create_or_update_default_project_from_settings_yml
+  @admin_project.create_admin_project_settings(Factory.attributes_for(:admin_project_settings))
+  #Admin::Project.create_or_update_default_project_from_settings_yml
   generate_default_users_with_factories
   generate_default_school_resources_with_factories
 end

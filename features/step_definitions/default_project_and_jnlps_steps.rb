@@ -1,5 +1,5 @@
 #
-# generator methods are in spec/helpers/controller_helper.rb
+# generator methods are in spec/support/controller_helper.rb
 #
 Given /^The default project and jnlp resources exist$/ do
   generate_default_project_and_jnlps_with_factories

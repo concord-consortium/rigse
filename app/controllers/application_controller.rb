@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
-  theme(APP_CONFIG[:theme]||'default')
 
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
@@ -28,7 +27,16 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
 
-  theme(APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
+  #theme(get_theme)
+
+  def self.get_theme_from_settings
+    project = Admin::Project.create_or_update_default_project_from_settings_yml
+    settings = project.admin_project_settings
+    theme = settings.theme
+    theme.blank? ? 'default' : theme
+  end
+
+  theme(get_theme_from_settings)
 
   protected
 
