@@ -41,22 +41,27 @@ class Reports::Detail < Reports::Excel
         reportable_header_counter += 2 # (two columns per activity header)
       end
       reportable_header_counter -= 1
+
+      # Itterate Activities
       activities.each do |a|
         sheet_defs << Reports::ColumnDefinition.new(:title => "#{a.name}\nAssessments Completed", :width => 4, :left_border => true)
         sheet_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
         reportables = a.reportable_elements.map {|re| re[:embeddable]}
         first = true
-        reportables.each do |r,r_indx|
+
+        # Itterate Reportables 
+        reportables.each do |r|
           reportable_header_counter += 1
           header_defs << Reports::ColumnDefinition.new(:title => a.name, :heading_row => 0, :col_index => reportable_header_counter)
           answer_defs << Reports::ColumnDefinition.new(:title => clean_text((r.respond_to?(:prompt) ? r.prompt : r.name)), :width => 25, :left_border => first)
           first = false
-        end
-      end
+        end # reportables
+      end #activities
 
       col_defs = sheet_defs + answer_defs + header_defs
       write_sheet_headers(@inv_sheet[inv], col_defs)
-    end
+    end # investigations
+
     puts " done." if @verbose
 
     @report_utils = {}  # map of offerings to Report::Util objects
