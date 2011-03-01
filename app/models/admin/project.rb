@@ -8,7 +8,7 @@ class Admin::Project < ActiveRecord::Base
   #belongs_to :maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer"
   #belongs_to :maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily"
 
-  has_one :admin_project_settings, :class_name => "Admin::ProjectSettings"
+  has_one :admin_project_settings, :class_name => "Admin::ProjectSettings", :foreign_key => "admin_project_id"
 
   has_many :project_vendor_interfaces, :class_name => "Admin::ProjectVendorInterface", :foreign_key => "admin_project_id"
   has_many :enabled_vendor_interfaces, :through => :project_vendor_interfaces, :class_name => "Probe::VendorInterface", :source => :probe_vendor_interface
@@ -27,6 +27,8 @@ class Admin::Project < ActiveRecord::Base
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates_length_of :name, :minimum => 1
   validate :states_and_provinces_array_members_must_match_list
+
+  named_scope :default_project, :conditions => {:default_project => true || 1}
 
   default_value_for :enabled_vendor_interfaces do
     Probe::VendorInterface.find(:all)
@@ -98,24 +100,37 @@ class Admin::Project < ActiveRecord::Base
     self.default_project? ? 'Default ' : ''
   end
 
+  def using_jnlps?
+    admin_project_settings.runnables_use == "otrunk-jnlp"
+  end
+
+  def default_jnlp_info
+    #default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
+    # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
+    server = admin_project_settings.default_maven_jnlp_server
+    # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+    family = admin_project_settings.default_maven_jnlp_family
+    # => "all-otrunk-snapshot"
+    version = admin_project_settings.default_maven_jnlp_version
+    # => "snapshot"
+    [server, family, version]
+  end
+
   class <<self
-    def using_jnlps?
-      admin_project_settings.runnables_use == "otrunk-jnlp"
-    end
 
     def searchable_attributes
       @@searchable_attributes
     end
 
     # Admin::Project.default_project
-    def default_project
-      name, url = default_project_name_url
-      proj = find_by_name_and_url(name, url)
-      if ! proj
-        logger.warn("No default project found for: #{name}, #{url}")
-      end
-      proj
-    end
+    #def default_project
+      #name, url = default_project_name_url
+      #proj = find_by_name_and_url(name, url)
+      #if ! proj
+        #logger.warn("No default project found for: #{name}, #{url}")
+      #end
+      #proj
+    #end
 
     def default_project_name_url
       [admin_project_settings.site_name, admin_project_settings.site_url]
@@ -205,17 +220,17 @@ class Admin::Project < ActiveRecord::Base
     #   family  # => "all-otrunk-snapshot"
     #   version # => "0.1.0-20091013.161730"
     #
-    def default_jnlp_info
-      #default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
-      # => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
-      server = admin_project_settings.default_maven_jnlp_server
-      # => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
-      family = admin_project_settings.default_maven_jnlp_family
-      # => "all-otrunk-snapshot"
-      version = admin_project_settings.default_maven_jnlp_version
-      # => "snapshot"
-      [server, family, version]
-    end
+    #def default_jnlp_info
+      ##default_maven_jnlp = APP_CONFIG[:default_maven_jnlp]
+      ## => {:family=>"all-otrunk-snapshot", :version=>"snapshot", :server=>"concord"}
+      #server = admin_project_settings.default_maven_jnlp_server
+      ## => {:path=>"/dev/org/concord/maven-jnlp/", :name=>"concord", :host=>"http://jnlp.concord.org"}
+      #family = admin_project_settings.default_maven_jnlp_family
+      ## => "all-otrunk-snapshot"
+      #version = admin_project_settings.default_maven_jnlp_version
+      ## => "snapshot"
+      #[server, family, version]
+    #end
 
   end
 

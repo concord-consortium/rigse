@@ -48,7 +48,7 @@ group :test do
   gem "capybara",          "~>0.3.8" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
   gem "rspec",             "~>1.3.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec"))
   gem "rspec-rails",       "~>1.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec-rails"))
-  gem "factory_girl",      "= 1.2.3"
+  gem "factory_girl",      "~>1.3.3"
   gem "email_spec",        "= 0.3.5"
   gem "fakeweb",           "~>1.2.8"
   gem "remarkable_rails",  "~>3.1.13", :require => nil

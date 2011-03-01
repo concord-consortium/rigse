@@ -131,6 +131,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
   # VersionedJnlps, Jars, NativeLibraries, Icons) listed in the application settings
   #
   def create_maven_jnlp_families
+    #@mj_families = APP_CONFIG[:maven_jnlp_families]
     @mj_families = APP_CONFIG[:maven_jnlp_families]
     @mj_families << "gui-testing"
     # remove duplicated 'gui-testing' in case settings.yml already specified importing all jnlp families

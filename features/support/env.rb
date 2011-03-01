@@ -7,6 +7,8 @@
 ENV["RAILS_ENV"] ||= "cucumber"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 
+require 'rake'
+
 require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
 require 'cucumber/rails/rspec'
 require 'cucumber/rails/world'
@@ -85,11 +87,11 @@ if defined?(ActiveRecord::Base)
   end
 end
 
-APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
+#APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
 
 # use factory girl:
 require 'factory_girl'
-Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
+#Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
 
 require 'spec/support/controller_helper'
 

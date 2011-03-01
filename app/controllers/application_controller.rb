@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include RoleRequirementSystem
 
+  theme :get_theme
+
   helper :all # include all helpers, all the time
   filter_parameter_logging :password, :password_confirmation
 
@@ -25,9 +27,13 @@ class ApplicationController < ActionController::Base
   before_filter :original_user
   before_filter :portal_resources
 
-  # Portal::School.find(:first).members.count
+  def self.set_theme(name)
+    @@theme = name
+  end
 
-  #theme(get_theme)
+  def get_theme
+    @@theme ||= (get_theme_from_settings)
+  end
 
   def self.get_theme_from_settings
     project = Admin::Project.create_or_update_default_project_from_settings_yml
@@ -35,8 +41,6 @@ class ApplicationController < ActionController::Base
     theme = settings.theme
     theme.blank? ? 'default' : theme
   end
-
-  theme(get_theme_from_settings)
 
   protected
 
