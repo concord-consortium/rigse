@@ -26,7 +26,7 @@ def generate_default_project_and_jnlps_with_factories
   if @admin_project.using_jnlps?
     server, family, version = @admin_project.default_jnlp_info
     @maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
-    @maven_jnlp_family = @maven_jnlp_server.maven_jnlp_families.find_by_name(family)
+    @maven_jnlp_family = family
     if version == "snapshot"
       @versioned_jnlp_url = @maven_jnlp_family.snapshot_jnlp_url
     else

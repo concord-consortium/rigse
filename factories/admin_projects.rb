@@ -39,4 +39,5 @@ Factory.define :admin_project_settings, :class => Admin::ProjectSettings do |f|
   f.active_school_levels ["2", "3", "4"]
   f.active_grades ["6", "7", "8", "9", "10", "11", "12"]
   f.association :default_maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
+  f.association :default_maven_jnlp_family, :factory => :maven_jnlp_maven_jnlp_family
 end
