@@ -20,6 +20,12 @@ Given /^the following students exist:$/ do |table|
   end
 end
 
+# And the student "student_a" is in the class "intro to bugs" 
+Given /^the student "([^"]*)" is in the class "([^"]*)"$/ do |student_name, class_name|
+  student = User.find_by_login(student_name).portal_student
+  clazz   = Portal::Clazz.find_by_name(class_name)
+  student.add_clazz(clazz)
+end
 
 Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_name| 
   student = User.find_by_login(student_name).portal_student
