@@ -95,11 +95,11 @@ class Report::Util
     
     ## FIXME filtering of embeddables should happen here
     # results = @report_embeddable_filter.filter(results)
+    #allowed_embeddables = @report_embeddable_filter.embeddables
+    #if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
+      #reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
+    #end
     reportables = @offering.runnable.reportable_elements
-    allowed_embeddables = @report_embeddable_filter.embeddables
-    if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
-      reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
-    end
     elements = reportables.map { |r| r[:element] }
     @embeddables = reportables.map { |r| r[:embeddable] }
     @embeddables_by_type = @embeddables.group_by{|e| e.class.to_s }
@@ -132,4 +132,24 @@ class Report::Util
     }
   end
 
+  def complete_number(learner)
+    return saveables(:learner => learner).size
+  end
+
+  def complete_percent(learner)
+    completed = Float(complete_number(learner))
+    total = Float(embeddables.size)
+    return total < 0.5 ? 0.0 : (completed/total) * 100.0
+  end
+
+  def correct_number(learner) 
+    return saveables(:learner => learner, :correct => true).size
+  end
+
+  def correct_percent(learner)
+    correct = Float(correct_number(learner))
+    #total = Float(embeddables.size)
+    total = Float( embeddables.select { |e| e.respond_to? 'correctable?' }.size )
+    return total < 0.5 ? 0.0 : (correct/total) * 100.0
+  end
 end
