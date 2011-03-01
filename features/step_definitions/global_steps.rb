@@ -1,3 +1,13 @@
+def find_or_create_offering(runnable,clazz,type="Investigation")
+    create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
+    offering = Portal::Offering.find(:first, :conditions=> create_hash)
+    unless offering
+      offering = Portal::Offering.create(create_hash)
+      offering.save
+    end
+    offering
+end
+
 Given /the following users[(?exist):\s]*$/i do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|
@@ -40,3 +50,4 @@ end
 Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
   page.body.should =~ /#{first_item}.*#{second_item}/m
 end
+

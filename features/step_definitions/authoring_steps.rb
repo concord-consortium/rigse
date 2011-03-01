@@ -48,3 +48,38 @@ Given /a mock gse/ do
   RiGse::Domain.stub!(:find).with(1).and_return(domain)
 end
 
+
+#Table: | investigation | activity | section   | page   | multiple_choices |
+Given /^The following investigation exists:$/ do |investigation_table|
+  investigation_table.hashes.each do |hash|
+    investigation = Investigation.find_or_create_by_name(hash['investigation'])
+    activity = Activity.find_or_create_by_name(hash['activity'])
+    section = Section.find_or_create_by_name(hash['section'])
+    page = Page.find_or_create_by_name(hash['page'])
+    mcs = hash['multiple_choices'].split(",").map{ |mc| Embeddable::MultipleChoice.find_by_prompt(mc.strip) }
+    mcs.each do |mc|
+      mc.pages << page
+    end
+    page.save
+    section.pages << page
+    activity.sections << section
+    investigation.activities << activity
+  end
+end
+
+#Table: | prompt | answers | correct_answer |
+Given /^the following multiple choice questions exists:$/ do |mult_table|
+  mult_table.hashes.each do |hash|
+    prompt = hash['prompt']
+    choices = hash['answers'].split(",")
+    choices.map!{|c| c.strip}
+    correct = hash['correct_answer']
+    multi = Embeddable::MultipleChoice.find_or_create_by_prompt(prompt)
+    choices.map! { |c| Embeddable::MultipleChoiceChoice.create(
+      :choice => c, 
+      :multiple_choice => multi, 
+      :is_correct => (c == correct)
+    )}
+    multi.choices = choices
+  end
+end

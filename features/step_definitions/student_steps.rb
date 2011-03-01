@@ -2,6 +2,7 @@ Given /^the following students exist:$/ do |table|
   User.anonymous(true)
   table.hashes.each do |hash|
     begin
+      clazz = Portal::Clazz.find_by_name(hash.delete('class'))
       user = Factory(:user, hash)
       user.add_role("member")
       user.register
@@ -10,6 +11,9 @@ Given /^the following students exist:$/ do |table|
       
       portal_student = Factory(:full_portal_student, { :user => user })
       portal_student.save!
+      if (clazz)
+        portal_student.add_clazz(clazz)
+      end
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
     end
