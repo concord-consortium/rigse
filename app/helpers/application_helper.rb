@@ -5,7 +5,7 @@ include Clipboard
 module ApplicationHelper
 
   def top_level_container_name
-    APP_CONFIG[:top_level_container_name] || "investigation"
+    Admin::Project.default_project.first.admin_project_settings.top_level_container_name || "investigation"
   end
 
   #

@@ -1,6 +1,5 @@
-  
 - content_for(:authored_investigations) do
-  - field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL} you've authored" do
+  - field_set_tag "#{Admin::Project.default_project.first.admin_project_settings.top_level_container_name.pluralize} you've authored" do
     %ul
       - current_user.investigations.each do |inv|
         %li
