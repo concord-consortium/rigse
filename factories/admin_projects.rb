@@ -38,6 +38,8 @@ Factory.define :admin_project_settings, :class => Admin::ProjectSettings do |f|
   f.enable_default_users "true"
   f.active_school_levels ["2", "3", "4"]
   f.active_grades ["6", "7", "8", "9", "10", "11", "12"]
+  f.tiny_mce_config {{:buttons1 => ["bold,italic,underline", "sup,sub", "bullist,numlist", "link,image", "pastext, pasteword,selectall", "justifyleft,justifycenter,justifyright", "code"]}}
   f.association :default_maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
   f.association :default_maven_jnlp_family, :factory => :maven_jnlp_maven_jnlp_family
+  f.association :default_admin_user, :factory => :default_admin_user
 end

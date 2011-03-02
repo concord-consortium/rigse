@@ -31,7 +31,16 @@ end
 Factory.define :maven_jnlp_maven_jnlp_family, :class => MavenJnlp::MavenJnlpFamily do |f|
   f.name "all-otrunk-snapshot"
   f.url 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/'
+  f.snapshot_version '0.1.0-20090724.190238'
   f.association :maven_jnlp_server, :factory => :maven_jnlp_maven_jnlp_server
+end
+
+Factory.define :maven_jnlp_versioned_jnlp_url, :class => MavenJnlp::VersionedJnlpUrl do |f|
+  f.path '/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
+  f.url 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
+  f.date_str '20091013.161730'
+  f.version_str '0.1.0-20090724.190238'
+  f.association :maven_jnlp_family, :factory => :maven_jnlp_maven_jnlp_family
 end
 
 # Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do |f|
@@ -52,14 +61,6 @@ end
 #   f.association :versioned_jnlp_url, :factory => :maven_jnlp_versioned_jnlp_url
 # end
 #
-# Factory.define :maven_jnlp_versioned_jnlp_url, :class => MavenJnlp::VersionedJnlpUrl do |f|
-#   server, family, version = Admin::Project.default_jnlp_info
-#   f.path  '/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
-#   f.url  'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/all-otrunk-snapshot-0.1.0-20091013.161730.jnlp'
-#   f.date_str  '20091013.161730'
-#   f.version_str  version
-#   f.association :maven_jnlp_family, :factory => :maven_jnlp_maven_jnlp_family
-# end
 #
 #
 # Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServer do |f|

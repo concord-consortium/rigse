@@ -25,6 +25,10 @@ Factory.define :user do |f|
   f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end
 
+Factory.define :default_admin_user, :parent => :user do |f|
+  f.roles {[Factory.next(:member_role),Factory.next(:admin_role)]}
+end
+
 
 ##
 ## Singleton Factory Pattern for Admin user.

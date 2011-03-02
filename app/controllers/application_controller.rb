@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
     @@theme ||= (get_theme_from_settings)
   end
 
-  def self.get_theme_from_settings
+  def get_theme_from_settings
     project = Admin::Project.create_or_update_default_project_from_settings_yml
     settings = project.admin_project_settings
     theme = settings.theme
@@ -50,8 +50,8 @@ class ApplicationController < ActionController::Base
   end
 
   def setup_project
-    @project = Admin::Project.default_project
-    if USING_JNLPS
+    @project = Admin::Project.default_project.first
+    if @project.using_jnlps?
       @jnlp_adaptor = JnlpAdaptor.new(@project)
       @jnlp_testing_adaptor = JnlpTestingAdaptor.new
     end

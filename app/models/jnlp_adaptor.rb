@@ -1,5 +1,5 @@
 class JnlpAdaptor
-  
+
   attr_reader :jnlp
   attr_reader :net_logo_package_name
 
@@ -7,12 +7,12 @@ class JnlpAdaptor
     "otrunk-nlogo41" => "otrunknl41",
     "otrunk-nlogo4"  => "otrunknl4"
   }
-  
-  def initialize(project=Admin::Project.default_project)
-    @default_maven_jnlp_server = project.maven_jnlp_server
-    @jnlp_family = project.maven_jnlp_family
+
+  def initialize(project=Admin::Project.default_project.first)
+    @default_maven_jnlp_server = project.admin_project_settings.default_maven_jnlp_server
+    @jnlp_family = project.admin_project_settings.default_maven_jnlp_family
     @jnlp_family.update_snapshot_jnlp_url
-    default_version_str = project.jnlp_version_str
+    default_version_str = project.admin_project_settings.default_maven_jnlp[:version]
     if project.snapshot_enabled
       @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
     else
@@ -26,7 +26,7 @@ class JnlpAdaptor
       @net_logo_package_name = JnlpAdaptor::OTRUNK_NLOGO_JAR_PACKAGE_MAP[otrunk_nlogo_jars.first.name]
     end
   end
-  
+
   def resource_jars
     @jnlp.jars.collect do |jar|
       if jar.main
@@ -36,7 +36,7 @@ class JnlpAdaptor
       end
     end
   end
-  
+
   def linux_native_jars
     @jnlp.native_libraries.find_all_by_os('linux').collect { |nl| [nl.href, nl.version_str] }
   end
@@ -44,7 +44,7 @@ class JnlpAdaptor
   def macos_native_jars
     @jnlp.native_libraries.find_all_by_os('mac_os_x').collect { |nl| [nl.href, nl.version_str] }
   end
-  
+
   def windows_native_jars
     @jnlp.native_libraries.find_all_by_os('windows').collect { |nl| [nl.href, nl.version_str] }
   end

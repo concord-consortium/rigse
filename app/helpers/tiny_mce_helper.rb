@@ -47,7 +47,7 @@ HEREDOC
   end
 
   def mce_theme_buttons(n)
-    mce_config = APP_CONFIG[:tiny_mce]
+    mce_config = Admin::Project.default_project.first.admin_project_settings.tiny_mce_config
     if mce_config
       key = "buttons#{n}"
       buttons = mce_config[key.to_sym]

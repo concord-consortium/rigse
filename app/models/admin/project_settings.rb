@@ -6,12 +6,15 @@ class Admin::ProjectSettings < ActiveRecord::Base
   belongs_to :default_maven_jnlp_server, :class_name => "MavenJnlp::MavenJnlpServer", :foreign_key => "default_maven_jnlp_server_id"
   belongs_to :default_maven_jnlp_family, :class_name => "MavenJnlp::MavenJnlpFamily", :foreign_key => "default_maven_jnlp_family_id"
 
-  has_and_belongs_to_many :maven_jnlp_maven_jnlp_servers, :class_name => "MavenJnlp::MavenJnlpServer"
-  has_and_belongs_to_many :maven_jnlp_maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily"
+  has_and_belongs_to_many :maven_jnlp_maven_jnlp_servers, :class_name => "MavenJnlp::MavenJnlpServer",
+                                                          :join_table => "admin_project_settings_maven_jnlp_maven_jnlp_servers"
+  has_and_belongs_to_many :maven_jnlp_maven_jnlp_families, :class_name => "MavenJnlp::MavenJnlpFamily",
+                                                           :join_table => "admin_project_settings_maven_jnlp_maven_jnlp_families"
 
   serialize :states_and_provinces
   serialize :active_school_levels
   serialize :active_grades
+  serialize :tiny_mce_config
 
   def default_maven_jnlp
     {:server  => default_maven_jnlp_server,

@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '../factories/admin_projects.rb')
-require File.join(File.dirname(__FILE__), '../factories/maven_jnlp.rb')
 # In order to run the user specs the encrypted passwords
 # for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
 # need to be created with a REST_AUTH_SITE_KEY used for testing.
@@ -30,7 +28,7 @@ def generate_default_project_and_jnlps_with_factories
     if version == "snapshot"
       @versioned_jnlp_url = @maven_jnlp_family.snapshot_jnlp_url
     else
-      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(version)
+      @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.create(Factory.attributes_for :maven_jnlp_versioned_jnlp_url)
     end
     @versioned_jnlp = @versioned_jnlp_url.versioned_jnlp
   end

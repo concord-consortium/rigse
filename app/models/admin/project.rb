@@ -133,7 +133,7 @@ class Admin::Project < ActiveRecord::Base
     #end
 
     def default_project_name_url
-      [admin_project_settings.site_name, admin_project_settings.site_url]
+      [default_project.first.admin_project_settings.site_name, default_project.first.admin_project_settings.site_url]
     end
 
     def display_name
@@ -145,12 +145,13 @@ class Admin::Project < ActiveRecord::Base
     end
 
     def create_or_update_default_project_from_settings_yml
+      project = default_project.first
       name, url = default_project_name_url
-      states_and_provinces = admin_project_settings.states_and_provinces
+      states_and_provinces = project.admin_project_settings.states_and_provinces
 
-      if using_jnlps?
-        server, family, version = default_jnlp_info
-        default_maven_jnlp =  admin_project_settings.default_maven_jnlp
+      if project.using_jnlps?
+        server, family, version = project.default_jnlp_info
+        default_maven_jnlp =  project.admin_project_settings.default_maven_jnlp
         maven_jnlp_server = MavenJnlp::MavenJnlpServer.find_by_name(server[:name])
         jnlp_family = maven_jnlp_server.maven_jnlp_families.find_by_name(family)
         jnlp_version_str = version
@@ -169,7 +170,7 @@ class Admin::Project < ActiveRecord::Base
           snapshot_enabled = nil
       end
 
-      enable_default_users = admin_project_settings.enable_default_users
+      enable_default_users = project.admin_project_settings.enable_default_users
 
       attributes = {
         :name => name,
@@ -182,18 +183,18 @@ class Admin::Project < ActiveRecord::Base
         :jnlp_version_str => jnlp_version_str,
         :snapshot_enabled => snapshot_enabled
       }
-      unless project = Admin::Project.find_by_name_and_url(name, url)
-        project = Admin::Project.create!(attributes)
-      end
-      project.user = User.site_admin
-      project.enable_default_users = enable_default_users
-      project.states_and_provinces = states_and_provinces
-      project.maven_jnlp_server = maven_jnlp_server
-      project.maven_jnlp_family = jnlp_family
-      project.jnlp_version_str = jnlp_version_str
-      project.snapshot_enabled = snapshot_enabled
-      project.save!
-      active_grades = admin_project_settings.active_grades
+      #unless project = Admin::Project.find_by_name_and_url(name, url)
+        #project = Admin::Project.create!(attributes)
+      #end
+      #project.user = User.site_admin
+      #project.enable_default_users = enable_default_users
+      #project.states_and_provinces = states_and_provinces
+      #project.maven_jnlp_server = maven_jnlp_server
+      #project.maven_jnlp_family = jnlp_family
+      #project.jnlp_version_str = jnlp_version_str
+      #project.snapshot_enabled = snapshot_enabled
+      #project.save!
+      active_grades = project.admin_project_settings.active_grades
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
         # active_grades.each do |grade_name|
         #   grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
