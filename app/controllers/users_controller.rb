@@ -72,7 +72,7 @@ class UsersController < ApplicationController
   def switch
     # @original_user is setup in app/controllers/application_controller.rb
     unless @original_user.has_role?('admin', 'manager')
-      redirect_to('/home')
+      redirect_to home_path
     else
       if request.get?
         @user = User.find(params[:id])
@@ -123,7 +123,7 @@ class UsersController < ApplicationController
         elsif params[:commit] =~ /#{@original_user.name}/
           self.current_user=(@original_user)
         end
-        redirect_to('/home')
+        redirect_to home_path
       end
     end
   end
