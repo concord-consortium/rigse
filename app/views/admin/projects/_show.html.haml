@@ -34,7 +34,7 @@
           - field_set_tag 'Maven Jnlp' do
             %p
               Maven Jnlp Server: 
-              = admin_project.maven_jnlp_server.name
+              = admin_project.admin_project_settings.default_maven_jnlp_server.name
               %ul.menu_h
                 -  maven_jnlp_info.each do |elem|
                   %li= elem

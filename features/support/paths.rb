@@ -18,9 +18,9 @@ module NavigationHelpers
     when /to the link tool/
       '/linktool'
     when /the current project edit page/
-      "/admin/projects/#{Admin::Project.default_project.id}/edit"
+      "/admin/projects/#{Admin::Project.default_project.first.id}/edit"
     when /the current project show page/
-      "/admin/projects/#{Admin::Project.default_project.id}/show"
+      "/admin/projects/#{Admin::Project.default_project.first.id}/show"
     when /the create investigation page/
       "/investigations/new"
     when /the create resource page page/
