@@ -9,7 +9,7 @@ If the user has not been imported, they should get a friendly error message tell
   So that I can use the investigations tools.
   
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   Scenario: Sakai user can access investigations
     Given PENDING: this scenario needs to be fixed

@@ -7,7 +7,7 @@ Authors should be able to add, edit and remove Smartgraph Range Questions to/fro
   So that I can use Smartgraph Question tool.
   
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   Scenario: Smartgraph question can be added to a page
     Given an author

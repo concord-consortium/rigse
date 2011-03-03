@@ -13,7 +13,7 @@ In NO case should the system allow:
   So that we can protect our users data
 
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   @selenium
   Scenario Outline: Anonymous user cant access dataservice routes
