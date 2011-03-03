@@ -1,5 +1,5 @@
 = edit_menu_for(investigation, f)
-- field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
+- field_set_tag "#{top_level_container_name.pluralize.humanize} details" do
   .aligned
     %ol
       %li
@@ -25,7 +25,7 @@
 /           = select_tag(:domain_id, options_for_select(domains.collect { |d| [d.name, d.id] }, @gse.domain.id))
 /         %li#gse_select
 /           = render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @gse }
-/       
+/
 /       %p
 /       #gse_summary_container
 /         - if @gse

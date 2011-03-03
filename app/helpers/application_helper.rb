@@ -794,7 +794,7 @@ module ApplicationHelper
           # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
           # haml_concat " | "
           # haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
-          if USING_JNLPS && current_user.has_role?("admin")
+          if Admin::Project.default_project.first.using_jnlps? && current_user.has_role?("admin")
             haml_concat " | "
             haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
           end

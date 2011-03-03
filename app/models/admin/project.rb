@@ -118,19 +118,13 @@ class Admin::Project < ActiveRecord::Base
 
   class <<self
 
+    def project_settings
+      default_project.first.admin_project_settings
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end
-
-    # Admin::Project.default_project
-    #def default_project
-      #name, url = default_project_name_url
-      #proj = find_by_name_and_url(name, url)
-      #if ! proj
-        #logger.warn("No default project found for: #{name}, #{url}")
-      #end
-      #proj
-    #end
 
     def default_project_name_url
       [default_project.first.admin_project_settings.site_name, default_project.first.admin_project_settings.site_url]

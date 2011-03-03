@@ -20,13 +20,13 @@ end
 
 Given /the current project is using the following interfaces:/ do |interfaces_table|
   interfaces = interfaces_table.hashes.map { |interf| Probe::VendorInterface.find_by_name(interf[:name])}
-  Admin::Project.default_project.enabled_vendor_interfaces = interfaces
-  Admin::Project.default_project.save
+  Admin::Project.default_project.first.enabled_vendor_interfaces = interfaces
+  Admin::Project.default_project.first.save
 end
 
 Then /the current project should be using the following interfaces:/ do |interfaces_table|
   interfaces_table.hashes.each do |hash|
-    Admin::Project.default_project.enabled_vendor_interfaces.should include(Probe::VendorInterface.find_by_name(hash[:name]))
+    Admin::Project.default_project.first.enabled_vendor_interfaces.should include(Probe::VendorInterface.find_by_name(hash[:name]))
   end
 end
 

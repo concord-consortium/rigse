@@ -148,7 +148,7 @@ class Investigation < ActiveRecord::Base
       grade_span = options[:grade_span] || ""
       domain_id = options[:domain_id].to_i
       name = options[:name]
-      if APP_CONFIG[:use_gse]
+      if Admin::Project.default_project.first.admin_project_settings.use_gse
         if domain_id > 0
           if (options[:include_drafts])
             investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)

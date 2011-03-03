@@ -216,7 +216,7 @@ class InvestigationsController < AuthoringController
   def new
     @investigation = Investigation.new
     @investigation.user = current_user
-    if APP_CONFIG[:use_gse]
+    if Admin::Project.default_project.first.admin_project_settings.use_gse
       @gse = RiGse::GradeSpanExpectation.default
       @investigation.grade_span_expectation = @gse
       session[:original_gse_id] = session[:gse_id] = @gse.id
