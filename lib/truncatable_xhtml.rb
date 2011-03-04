@@ -98,8 +98,10 @@ module TruncatableXhtml
     /(&nbsp;)+/ => " "}
     
   ## for ITSI carolyn might want everything 
-  if (APP_CONFIG[:dont_sanitize_xhtml])
-    REPLACEMENT_MAP = {}
+  unless Admin::Project.default_project.blank?
+    if (Admin::Project.project_settings.dont_sanitize_xhtml)
+      REPLACEMENT_MAP = {}
+    end
   end
   
   ##

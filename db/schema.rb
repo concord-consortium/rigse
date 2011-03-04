@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110303150755) do
+ActiveRecord::Schema.define(:version => 20110304163315) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20110303150755) do
     t.text     "active_grades"
     t.text     "tiny_mce_config"
     t.boolean  "allow_drafts_in_assignments"
+    t.boolean  "dont_sanitize_xhtml"
   end
 
   create_table "admin_project_settings_maven_jnlp_maven_jnlp_families", :force => true do |t|

@@ -27,8 +27,8 @@ Spork.prefork do
   include AuthenticatedTestHelper
   include AuthenticatedSystem
 
-  require 'factory_girl'
-  @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
+  #require 'factory_girl'
+  #Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
 
   if ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
     if Probe::ProbeType.count == 0
