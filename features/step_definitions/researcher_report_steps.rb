@@ -1,5 +1,10 @@
+FAKE_BLOBS_URL = "http://nowhere.com/dataservice/blobs"
 def modified_report_for(investigation)
-  report  = Reports::Detail.new({:verbose => false, :investigations => [investigation]})
+  report  = Reports::Detail.new(
+    :verbose        => false,
+    :investigations => [investigation],
+    :blobs_url      => FAKE_BLOBS_URL
+  )
   report.stub!(:learner_id).and_return('learner_id')
   report.stub!(:user_id).and_return('user_id')
   report
@@ -40,6 +45,82 @@ def recorded_data_for(thing,name)
   serialized
 end
 
+def add_response(learner,prompt_text,answer_text)
+  prompts = {}
+  Embeddable::MultipleChoice.all.each  { |q| prompts[q.prompt] = q}
+  Embeddable::OpenResponse.all.each    { |q| prompts[q.prompt] = q}
+  Embeddable::ImageQuestion.all.each   { |q| prompts[q.prompt] = q}
+  Embeddable::MultipleChoice.all.each  { |q| prompts[q.prompt] = q}
+  question = prompts[prompt_text]
+  puts "No Question found for #{prompt_text}" if question.nil?
+  return if question.nil?
+  case question.class.name
+  when "Embeddable::MultipleChoice" 
+    return add_multichoice_answer(learner,question, answer_text)
+  when "Embeddable::OpenResponse"
+    return add_openresponse_answer(learner,question, answer_text)
+  when "Embeddable::ImageQuestion"
+    return add_image_question_answer(learner,question, answer_text)
+  end
+end
+
+def add_multichoice_answer(learner,question,answer_text)
+  answer = question.choices.detect{ |c| c.choice == answer_text}
+  new_answer = Saveable::MultipleChoice.create(
+    :learner => learner,
+    :offering => learner.offering,
+    :multiple_choice => question
+  ) 
+  saveable_answer = Saveable::MultipleChoiceAnswer.create (
+    #:bundle_contents => learner.bundle_contents,
+    #:bundle_logger   => learner.bundle_logger,
+    :choice          => answer
+  )
+  new_answer.answers << saveable_answer
+end
+
+def add_openresponse_answer(learner,question,answer_text)
+  new_answer = Saveable::OpenResponse.create(
+    :learner => learner,
+    :offering => learner.offering,
+    :open_repsonse => question
+  ) 
+  saveable_answer = Saveable::OpenResponseAnswer.create (
+    :answer          => answer_text
+  )
+  new_answer.answers << saveable_answer
+end
+
+
+def add_image_question_answer(learner,question,answer_text)
+  return nil if (answer_text.nil? || answer_text.strip.empty?)
+  new_answer = Saveable::ImageQuestion.create(
+    :learner => learner,
+    :offering => learner.offering,
+    :image_question => question
+  ) 
+  # TODO: Maybe slurp in some image and encode it for the blob?
+  saveable_answer = Saveable::ImageQuestionAnswer.create (
+    :blob => Dataservice::Blob.create (
+      :content => answer_text,
+      :token => answer_text
+    )
+  )
+  new_answer.answers << saveable_answer
+end
+
+def find_bloblinks_in_spreadheet(spreadsheet,num)
+  structure = YAML::dump(spreadsheet)
+  regexp = /"@url": #{FAKE_BLOBS_URL}\/(\d+)\.blob/
+  lines = structure.lines.select{ |l| l =~ regexp}
+  if num
+    num = num.to_i
+    num.should == lines.size
+  else
+    lines.size.should_not == 0
+  end
+end
+
 Then /^"([^"]*)" should have (\d+) answers for "([^"]*)" in "([^"]*)"$/ do |student_name, num_answers, investigation_name, class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
@@ -54,7 +135,7 @@ Then /^"([^"]*)" should have answered (\d+)% of the questions for "([^"]*)" in "
   report.complete_percent(learner).should be_close(Float(percent), 1.5)
 end
 
-Then /^"([^"]*)" should have (\d+)% of the qeustions correctly for "([^"]*)" in "([^"]*)"$/ do |student_name, percent, investigation_name,class_name|
+Then /^"([^"]*)" should have (\d+)% of the questions correctly for "([^"]*)" in "([^"]*)"$/ do |student_name, percent, investigation_name,class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
@@ -78,21 +159,9 @@ Given /^the following student answers:$/ do |answer_table|
     student = User.find_by_login(hash['student']).portal_student
     clazz = Portal::Clazz.find_by_name(hash['class'])
     investigation = Investigation.find_by_name(hash['investigation'])
-    question = Embeddable::MultipleChoice.find_by_prompt(hash['question_prompt'])
-    answer = question.choices.detect{ |c| c.choice == hash['answer']}
     offering = find_or_create_offering(investigation, clazz)
     learner = offering.find_or_create_learner(student)
-    new_answer = Saveable::MultipleChoice.create(
-      :learner => learner,
-      :offering => offering,
-      :multiple_choice => question
-    ) 
-    saveable_answer = Saveable::MultipleChoiceAnswer.create (
-      #:bundle_contents => learner.bundle_contents,
-      #:bundle_logger   => learner.bundle_logger,
-      :choice          => answer
-    )
-    new_answer.answers << saveable_answer
+    add_response(learner,hash['question_prompt'],hash['answer'])
   end
 end
 
@@ -111,6 +180,14 @@ Then /^the report [^"]* "([^"]*)" should match recorded data$/ do |investigation
   modified_report_for(investigation).run_report(buffer,spreadsheet)
   recorded_data = recorded_data_for(spreadsheet,investigation_name)
   recorded_data.should == YAML::dump(spreadsheet)
+end
+
+Then /^the report generated for "([^"]*)" should have \((\d+)\) links to blobs$/ do |investigation_name, num_blobs|
+  investigation = Investigation.find_by_name(investigation_name)
+  buffer = StringIO.new
+  spreadsheet = Spreadsheet::Workbook.new
+  modified_report_for(investigation).run_report(buffer,spreadsheet)
+  find_bloblinks_in_spreadheet(spreadsheet,num_blobs)
 end
 
 

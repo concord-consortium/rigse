@@ -22,15 +22,15 @@ Feature: Investigations can be reported on
            | b_c    | a,b,c,d | a              |
            | b_d    | a,b,c,d | a              |
            | b_e    | a,b,c,d | a              |
+         
+    And there is an image question with the prompt "image_q"
+         
     And The following investigation exists:
-        | investigation       | activity | section   | page   | multiple_choices |
-        | first investigation | act 1    | section 1 | page 1 | a, b             |
-        | first investigation | act 2    | section 2 | page 2 | c, d             |
-
-     And The following investigation exists:
-         | investigation        | activity | section   | page   | multiple_choices |
-         | second investigation | act 3    | section 3 | page 3 | b_a, b_b         |
-         | second investigation | act 4    | section 4 | page 4 | b_c, b_d         |
+       | investigation        | activity | section   | page   | multiple_choices | image_questions | 
+       | first investigation  | act 1    | section 1 | page 1 | a, b             |                 | 
+       | first investigation  | act 2    | section 2 | page 2 | c, d             |                 | 
+       | second investigation | act 3    | section 3 | page 3 | b_a, b_b         | image_q         | 
+       | second investigation | act 4    | section 4 | page 4 | b_c, b_d         |                 | 
 
 
     And the following teachers exist:
@@ -44,12 +44,12 @@ Feature: Investigations can be reported on
         | Intro to flowers | teacher_b |
 
     And the following students exist:
-         | login     | password  | first_name | last_name | 
-         | student_a | student_a | Jack       | Doe       | 
-         | student_b | student_b | Jill       | Smith     | 
-         | student_c | student_c | Joe        | Pfifer    | 
+         | login     | password  | first_name | last_name |
+         | student_a | student_a | Jack       | Doe       |
+         | student_b | student_b | Jill       | Smith     |
+         | student_c | student_c | Joe        | Pfifer    |
 
-    And the student "student_a" is in the class "Intro to bugs" 
+    And the student "student_a" is in the class "Intro to bugs"
     And the student "student_b" is in the class "Intro to bugs"
     And the student "student_a" is in the class "Intro to flowers"
     And the student "student_b" is in the class "Intro to flowers"
@@ -62,117 +62,126 @@ Feature: Investigations can be reported on
 
   Scenario: A student answers all questions, and gets them all correct
     Given the following student answers:
-       | student   | class         | investigation | question_prompt | answer |
-       | student_a | Intro to bugs | first investigation     | a               | a      |
-       | student_a | Intro to bugs | first investigation     | b               | a      |
-       | student_a | Intro to bugs | first investigation     | c               | a      |
-       | student_a | Intro to bugs | first investigation     | d               | a      |
+        | student   | class         | investigation       | question_prompt | answer | 
+        | student_a | Intro to bugs | first investigation | a               | a      | 
+        | student_a | Intro to bugs | first investigation | b               | a      | 
+        | student_a | Intro to bugs | first investigation | c               | a      | 
+        | student_a | Intro to bugs | first investigation | d               | a      | 
     Then "student_a" should have 4 answers for "first investigation" in "Intro to Bugs"
     And "student_a" should have answered 100% of the questions for "first investigation" in "Intro to Bugs"
-    And "student_a" should have 100% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And "student_a" should have 100% of the questions correctly for "first investigation" in "Intro to Bugs"
 
   Scenario: A student answers half of the questions, and gets them both right
     Given the following student answers:
-       | student   | class         | investigation | question_prompt | answer |
-       | student_a | Intro to bugs | first investigation     | a               | a      |
-       | student_a | Intro to bugs | first investigation     | b               | a      |
+        | student   | class         | investigation       | question_prompt | answer | 
+        | student_a | Intro to bugs | first investigation | a               | a      | 
+        | student_a | Intro to bugs | first investigation | b               | a      | 
     Then "student_a" should have 2 answers for "first investigation" in "Intro to Bugs"
     And "student_a" should have answered 50% of the questions for "first investigation" in "Intro to Bugs"
-    And "student_a" should have 50% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And "student_a" should have 50% of the questions correctly for "first investigation" in "Intro to Bugs"
 
   Scenario: A student answers 3/4 of the questions, and gets them all wrong
     Given the following student answers:
-       | student   | class         | investigation | question_prompt | answer |
-       | student_a | Intro to bugs | first investigation     | a               | b      |
-       | student_a | Intro to bugs | first investigation     | b               | b      |
-       | student_a | Intro to bugs | first investigation     | c               | b      |
+        | student   | class         | investigation       | question_prompt | answer | 
+        | student_a | Intro to bugs | first investigation | a               | b      | 
+        | student_a | Intro to bugs | first investigation | b               | b      | 
+        | student_a | Intro to bugs | first investigation | c               | b      | 
     Then "student_a" should have 3 answers for "first investigation" in "Intro to Bugs"
     And  "student_a" should have answered 75% of the questions for "first investigation" in "Intro to Bugs"
-    And  "student_a" should have 0% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And  "student_a" should have 0% of the questions correctly for "first investigation" in "Intro to Bugs"
 
   Scenario: A student answers none of the questions, and gets them all wrong
     Given the following student answers:
        | student   | class         | investigation | question_prompt | answer |
     Then "student_a" should have 0 answers for "first investigation" in "Intro to Bugs"
     And "student_a" should have answered 0% of the questions for "first investigation" in "Intro to Bugs"
-    And "student_a" should have 0% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And "student_a" should have 0% of the questions correctly for "first investigation" in "Intro to Bugs"
 
   Scenario: A student changes their answer from incorrect, to correct.
     Given the following student answers:
-       | student   | class         | investigation | question_prompt | answer |
-       | student_a | Intro to bugs | first investigation     | a               | b      |
-       | student_a | Intro to bugs | first investigation     | a               | a      |
-       | student_a | Intro to bugs | first investigation     | c               | b      |
+        | student   | class         | investigation       | question_prompt | answer | 
+        | student_a | Intro to bugs | first investigation | a               | b      | 
+        | student_a | Intro to bugs | first investigation | a               | a      | 
+        | student_a | Intro to bugs | first investigation | c               | b      | 
     Then "student_a" should have 3 answers for "first investigation" in "Intro to Bugs"
     And  "student_a" should have answered 75% of the questions for "first investigation" in "Intro to Bugs"
-    And  "student_a" should have 25% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And  "student_a" should have 25% of the questions correctly for "first investigation" in "Intro to Bugs"
 
   Scenario: Confusions about an answered, seen, and unseen questions
     Given the following student answers:
-       | student   | class         | investigation | question_prompt | answer |
-       | student_a | Intro to bugs | first investigation     | a               | b      |
-       | student_a | Intro to bugs | first investigation     | b               | b      |
+        | student   | class         | investigation       | question_prompt | answer | 
+        | student_a | Intro to bugs | first investigation | a               | b      | 
+        | student_a | Intro to bugs | first investigation | b               | b      | 
     Then "student_a" should have answered 50% of the questions for "first investigation" in "Intro to Bugs"
-    And "student_a" should have 0% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And "student_a" should have 0% of the questions correctly for "first investigation" in "Intro to Bugs"
     And "student_a" should have 2 answers for "first investigation" in "Intro to Bugs"
-  
+
   @current
-  Scenario: Record the normal opration of reporting an investigation
+  Scenario: Comprehensive report tests for two investigations and two students
     Given the following student answers:
-          | student   | class            | investigation        | question_prompt | answer | 
-          | student_a | Intro to bugs    | first investigation  | a               | a      | 
-          | student_a | Intro to bugs    | first investigation  | b               | a      | 
-          | student_a | Intro to bugs    | first investigation  | c               | a      | 
-          | student_a | Intro to bugs    | first investigation  | d               | a      | 
-          | student_b | Intro to bugs    | first investigation  | b               | a      | 
-          | student_b | Intro to bugs    | first investigation  | c               | b      | 
-          | student_b | Intro to bugs    | first investigation  | d               | b      | 
-          | student_a | Intro to bugs    | second investigation | b_a             | a      | 
-          | student_a | Intro to bugs    | second investigation | b_b             | a      | 
-          | student_a | Intro to bugs    | second investigation | b_c             | a      | 
-          | student_a | Intro to bugs    | second investigation | b_d             | a      | 
-          | student_b | Intro to bugs    | second investigation | b_a             | a      | 
-          | student_b | Intro to bugs    | second investigation | b_b             | a      | 
-          | student_b | Intro to bugs    | second investigation | b_c             | b      | 
-          | student_b | Intro to bugs    | second investigation | b_d             | b      | 
-          | student_a | Intro to flowers | second investigation | b_a             | a      | 
-          | student_a | Intro to flowers | second investigation | b_b             | a      | 
-          | student_a | Intro to flowers | second investigation | b_c             | a      | 
-          | student_a | Intro to flowers | second investigation | b_d             | a      | 
-          | student_b | Intro to flowers | second investigation | b_a             | b      | 
-          | student_b | Intro to flowers | second investigation | b_b             | b      | 
+       | student   | class            | investigation        | question_prompt | answer | 
+       | student_a | Intro to bugs    | first investigation  | a               | a      | 
+       | student_a | Intro to bugs    | first investigation  | b               | a      | 
+       | student_a | Intro to bugs    | first investigation  | c               | a      | 
+       | student_a | Intro to bugs    | first investigation  | d               | a      | 
+       | student_b | Intro to bugs    | first investigation  | b               | a      | 
+       | student_b | Intro to bugs    | first investigation  | c               | b      | 
+       | student_b | Intro to bugs    | first investigation  | d               | b      | 
+       | student_a | Intro to bugs    | second investigation | b_a             | a      | 
+       | student_a | Intro to bugs    | second investigation | b_b             | a      | 
+       | student_a | Intro to bugs    | second investigation | b_c             | a      | 
+       | student_a | Intro to bugs    | second investigation | b_d             | a      | 
+       | student_a | Intro to bugs    | second investigation | image_q         | Y      | 
+       | student_b | Intro to bugs    | second investigation | b_a             | a      | 
+       | student_b | Intro to bugs    | second investigation | b_b             | a      | 
+       | student_b | Intro to bugs    | second investigation | b_c             | b      | 
+       | student_b | Intro to bugs    | second investigation | b_d             | b      | 
+       | student_b | Intro to bugs    | second investigation | image_q         | Y      | 
+       | student_a | Intro to flowers | second investigation | b_a             | a      | 
+       | student_a | Intro to flowers | second investigation | b_b             | a      | 
+       | student_a | Intro to flowers | second investigation | b_c             | a      | 
+       | student_a | Intro to flowers | second investigation | b_d             | a      | 
+       | student_a | Intro to flowers | second investigation | image_q         | Y      | 
+       | student_b | Intro to flowers | second investigation | b_a             | b      | 
+       | student_b | Intro to flowers | second investigation | b_b             | b      | 
 
 
     Then "student_a" should have 4 answers for "first investigation" in "Intro to Bugs"
 
     And  "student_a" should have answered 100% of the questions for "first investigation" in "Intro to Bugs"
-    And  "student_a" should have 100% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And  "student_a" should have 100% of the questions correctly for "first investigation" in "Intro to Bugs"
 
     And  "student_b" should have 3 answers for "first investigation" in "Intro to Bugs"
     And  "student_b" should have answered 75% of the questions for "first investigation" in "Intro to Bugs"
-    And  "student_b" should have 25% of the qeustions correctly for "first investigation" in "Intro to Bugs"
+    And  "student_b" should have 25% of the questions correctly for "first investigation" in "Intro to Bugs"
 
-    And  "student_a" should have 4 answers for "second investigation" in "Intro to Bugs"
+    And  "student_a" should have 5 answers for "second investigation" in "Intro to Bugs"
     And  "student_a" should have answered 100% of the questions for "second investigation" in "Intro to Bugs"
-    And  "student_a" should have 100% of the qeustions correctly for "second investigation" in "Intro to Bugs"
+    And  "student_a" should have 100% of the questions correctly for "second investigation" in "Intro to Bugs"
 
-    And  "student_b" should have 4 answers for "second investigation" in "Intro to Bugs"
+    And  "student_b" should have 5 answers for "second investigation" in "Intro to Bugs"
     And  "student_b" should have answered 100% of the questions for "second investigation" in "Intro to Bugs"
-    And  "student_b" should have 50% of the qeustions correctly for "second investigation" in "Intro to Bugs"
+    And  "student_b" should have 50% of the questions correctly for "second investigation" in "Intro to Bugs"
 
-    And  "student_a" should have 4 answers for "second investigation" in "Intro to flowers"
+    And  "student_a" should have 5 answers for "second investigation" in "Intro to flowers"
     And  "student_a" should have answered 100% of the questions for "second investigation" in "Intro to flowers"
-    And  "student_a" should have 100% of the qeustions correctly for "second investigation" in "Intro to flowers"
+    And  "student_a" should have 100% of the questions correctly for "second investigation" in "Intro to flowers"
 
     And  "student_b" should have 2 answers for "second investigation" in "Intro to flowers"
-    And  "student_b" should have answered 50% of the questions for "second investigation" in "Intro to flowers"
-    And  "student_b" should have 0% of the qeustions correctly for "second investigation" in "Intro to flowers"
+    And  "student_b" should have answered 40% of the questions for "second investigation" in "Intro to flowers"
+    And  "student_b" should have 0% of the questions correctly for "second investigation" in "Intro to flowers"
 
     # Record a complex report, and ensure that it looks the same
     # time after time.
     And  a recording of a report for "first investigation"
     Then the report generated for "first investigation" should match recorded data
 
+
+    And  the report generated for "second investigation" should have (3) links to blobs
+
+  Scenario: 
   @pending
   Scenario: a student has a record for an answer, which wasn't assigned ...
   # Failing, because question #e wasn't part of the investigation. (!) woah.
+
+

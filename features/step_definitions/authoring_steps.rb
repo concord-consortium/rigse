@@ -56,9 +56,13 @@ Given /^The following investigation exists:$/ do |investigation_table|
     activity = Activity.find_or_create_by_name(hash['activity'])
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
-    mcs = hash['multiple_choices'].split(",").map{ |mc| Embeddable::MultipleChoice.find_by_prompt(mc.strip) }
-    mcs.each do |mc|
-      mc.pages << page
+    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
+    mcs.each do |q|
+      q.pages << page
+    end
+    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
+    imgqs.each do |q|
+      q.pages << page
     end
     page.save
     section.pages << page
@@ -83,3 +87,8 @@ Given /^the following multiple choice questions exists:$/ do |mult_table|
     multi.choices = choices
   end
 end
+
+Given /^there is an image question with the prompt "([^"]*)"$/ do |prompt|
+  image_question = Embeddable::ImageQuestion.find_or_create_by_prompt(prompt)
+end
+

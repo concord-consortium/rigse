@@ -4,6 +4,7 @@ class Reports::Excel
 
   def initialize(opts = {})
     @verbose = !!opts[:verbose]
+    @blobs_url =  opts[:blobs_url] || "<specify blobs host>"
     STDOUT.sync = true if @verbose
   end
 

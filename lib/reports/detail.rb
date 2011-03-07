@@ -98,7 +98,14 @@ class Reports::Detail < Reports::Excel
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty
           row.concat [answered_answers.size, percent(answered_answers.size, reportables.size)]
-          all_answers += answers.collect{|ans| ans.answer }
+          all_answers += answers.collect{|ans| 
+            if ans.answer.class == Dataservice::Blob
+              url = "#{@blobs_url}/#{ans.answer.id.to_s}.blob"
+              Spreadsheet::Link.new url, url
+            else
+              ans.answer
+            end
+          }
         end
         row.concat all_answers
       end
