@@ -1,8 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe "/ri_gse/grade_span_expectations/show.html.haml" do
-  
+
   before(:each) do
+    generate_default_project_and_jnlps_with_factories
     target = mock('target', :number => 1, :description => "nothing here", :knowledge_statement => nil, :unifying_themes => [])
     domain = mock('domain')
     canned_responses = {
@@ -13,7 +14,7 @@ describe "/ri_gse/grade_span_expectations/show.html.haml" do
       :grade_span => "k-12",
       :number => 1
     }
-    
+
     @gse = mock_model(RiGse::GradeSpanExpectation,canned_responses)
     assigns[:grade_span_expectation] = @gse
     assigns[:grade_span_expectation] = @gse

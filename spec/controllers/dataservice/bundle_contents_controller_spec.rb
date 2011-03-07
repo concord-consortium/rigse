@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Dataservice::BundleContentsController do
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
   end
 

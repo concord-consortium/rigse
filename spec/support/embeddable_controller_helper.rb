@@ -19,7 +19,7 @@ shared_examples_for 'an embeddable controller' do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     @model_class = model_class_lambda.call
     @model_ivar_name = model_ivar_name_lambda.call
     unless instance_variable_defined?("@#{@model_ivar_name}".to_sym)

@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Dataservice::BlobsController do
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
     login_admin
   end
-  
+
   def mock_blob(stubs={:token => "8ad04a50ba96463d80407cd119173b86"})
     @mock_blob ||= mock_model(Dataservice::Blob, stubs)
   end
