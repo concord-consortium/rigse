@@ -12,14 +12,11 @@ Spork.prefork do
   # from the project root directory.
 
   require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
-
   # log all rails logger calls to STDOUT
   ActiveRecord::Base.logger = Logger.new(STDOUT)
-
   require 'spec/autorun'
   require 'spec/rails'
   require 'spec/mocks'
-
   # *** customizations ***
 
   require 'remarkable_rails'
@@ -65,9 +62,5 @@ Spork.prefork do
   # Webrat.configure do |config|
   #   config.mode = :rails
   # end
-
-end
-
-Spork.each_run do
 
 end

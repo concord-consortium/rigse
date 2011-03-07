@@ -64,5 +64,3 @@ group :test do
   # gem "autotest-rails",           "= 4.1.0"
 
 end
-
-

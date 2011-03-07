@@ -13,7 +13,6 @@ JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-
   # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
   #   $ rake middleware
   #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
@@ -30,7 +29,6 @@ Rails::Initializer.run do |config|
   #   run ActionController::Dispatcher.new
 
   config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
-
 
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -116,7 +114,6 @@ Rails::Initializer.run do |config|
     end
   end
 
-
   config.action_controller.session_store = :active_record_store
 
   # config.after_initialize do
@@ -125,7 +122,6 @@ Rails::Initializer.run do |config|
   #   opts[:file_pattern] << "#{RAILS_ROOT}/app/models/**/*.rb"
   #   config.has_many_polymorphs_options = opts
   # end
-
 end
 
 # ANONYMOUS_USER = User.find_by_login('anonymous')
@@ -150,7 +146,6 @@ require 'prawn/format'
 # # rescue Mysql::Error => e
 #   puts "e"
 # end
-
 module Enumerable
   # An extended group_by which will group at multiple depths
   # Ex:
