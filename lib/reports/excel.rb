@@ -53,22 +53,30 @@ class Reports::Excel
   # Return a list of offerings
   # that have ever been run for a clazz
   # this is to support removed offerings
-  def ever_offered_for(clazz)
-    id = clazz.id
-    @class_offering_map ||= {}
-    result =  @class_offering_map[:id]
-    unless result
-      offerings = clazz.students.map {|s| s.learners.map {|l| l.offering}}.flatten.uniq
-      result = @class_offering_map[:id] = offerings
-    end
-    result
-  end
+  #def ever_offered_for(clazz)
+    #key = "clazz_#{clazz.id}"
+    #@class_offering_map ||= {}
+    #result =  @class_offering_map[key]
+    #unless result
+      #offerings = clazz.students.map {|s| s.learners.map {|l| l.offering}}.flatten.uniq
+      #result = @class_offering_map[key] = offerings
+    #end
+    #result
+  #end
 
   def all_students_sorted
     students = Portal::Student.all
     # remove bougs students
     students.reject! { |s| s.user.nil? || s.user.default_user || s.learners.size==0 }
     sorted_students(students)
+  end
+
+  # take a list of runnables, and return a list of students.
+  def sorted_students_for_runnables(runnables)
+    runnables = [runnables] unless runnables.respond_to? :count
+    offerings = runnables.map { |i| i.offerings }.flatten.uniq.compact
+    students  = offerings.map {|o| o.learners}.flatten.compact.map {|l| l.student}.compact.uniq
+    students  = sorted_students(students)
   end
 
   def sorted_students(students)

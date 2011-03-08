@@ -60,7 +60,7 @@ class Reports::Detail < Reports::Excel
     @book = work_book
     @inv_sheet = {}
     @investigations.sort!{|a,b| a.name <=> b.name}
-
+    students = sorted_students_for_runnables(@investigations)
     print "Creating #{@investigations.size} worksheets for report" if @verbose
     @investigations.each do |inv|
       setup_sheet_for_investigation(inv)
@@ -70,7 +70,7 @@ class Reports::Detail < Reports::Excel
     @report_utils = {}  # map of offerings to Report::Util objects
 
     print "Filling in student data" if @verbose
-    iterate_with_status(all_students_sorted) do |student|
+    iterate_with_status(students) do |student|
       sorted_learners(student).each do |l|
         inv = l.offering.runnable
         next unless @investigations.include?(inv)
