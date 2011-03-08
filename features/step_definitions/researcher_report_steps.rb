@@ -10,6 +10,7 @@ def modified_report_for(investigation)
   report
 end
 
+
 def offering_for(investigation_name, class_name)
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
@@ -121,6 +122,20 @@ def find_bloblinks_in_spreadheet(spreadsheet,num)
   end
 end
 
+def assessments_completed_for(spreadsheet,student,runnable=nil)
+  sheet = spreadsheet.worksheets.first
+  header = sheet.rows[0]
+  student_row_number = 4 # todo more dynamic way of finding user_id?
+  #debugger
+  student_row = sheet.rows.detect { |r| r[student_row_number].strip.downcase == student.strip.downcase }
+  if offering
+    runnable_column_number = header.index { |r| r.to_s =~ /.*#{runnable}.*assessments\s+completed/i }
+  else
+    runnable_column_number = header.index { |r| r.to_s =~ /.*#{runnable}.*assessments\s+completed/i }
+  end
+  student_row[runnable_column_number]
+end
+
 Then /^"([^"]*)" should have (\d+) answers for "([^"]*)" in "([^"]*)"$/ do |student_name, num_answers, investigation_name, class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
@@ -190,4 +205,14 @@ Then /^the report generated for "([^"]*)" should have \((\d+)\) links to blobs$/
   find_bloblinks_in_spreadheet(spreadsheet,num_blobs)
 end
 
-
+Then /^the usage report for "([^"]*)" should have \((\d+)\) answers for "([^"]*)"$/ do |investigation_name,value,student|
+  pending
+  # The reason this is pending is beause the assessments_completed_for method at the top of this file needs help.
+  #
+  #buffer = StringIO.new
+  #spreadsheet = Spreadsheet::Workbook.new
+  #investigation = Investigation.find_by_name(investigation_name)
+  #report  = Reports::Usage.new(:investigations => Investigation.all)
+  #report.run_report(buffer,spreadsheet)
+  #assessments_completed_for(spreadsheet,student,investigation_name).strip.downcase.should == value.strip.downcase
+end

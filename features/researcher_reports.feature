@@ -176,8 +176,8 @@ Feature: Investigations can be reported on
     And  a recording of a report for "first investigation"
     Then the report generated for "first investigation" should match recorded data
 
-
     And  the report generated for "second investigation" should have (3) links to blobs
+    And  the usage report for "first investigation" should have (3) answers for "student_b"
 
   Scenario: 
   @pending

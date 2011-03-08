@@ -29,9 +29,7 @@ class Reports::Usage < Reports::Excel
     end
   end
 
-  def run_report(stream_or_path)
-    book = Spreadsheet::Workbook.new
-
+  def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
     sheet = book.create_worksheet :name => 'Usage'
     write_sheet_headers(sheet, @column_defs)
 
@@ -43,17 +41,20 @@ class Reports::Usage < Reports::Excel
         row = sheet.row(sheet.last_row_index + 1)
         learner_info = learner_info_cells(learners.first)
         row[0, learner_info.size] =  learner_info
-        learners.each do |l|
-        inv = l.offering.runnable
-          next unless @investigations.include?(inv)
-          @report_utils[l.offering] ||= Report::Util.new(l.offering)
-          total_assessments = @report_utils[l.offering].embeddables.size
-          assess_completed = @report_utils[l.offering].saveables({:learner => l})
-          assess_completed = assess_completed.select{|s| s.answered? }.size
-          assess_percent = percent(assess_completed, total_assessments)
-          last_run = l.bundle_logger.bundle_contents.compact.last
-          last_run = last_run.nil? ? 'never' : last_run.created_at
-          row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
+        @investigations.each do |inv|
+          l = learners.detect {|learner| learner.offering.runnable == inv}
+          if (l)
+            @report_utils[l.offering] ||= Report::Util.new(l.offering)
+            total_assessments = @report_utils[l.offering].embeddables.size
+            assess_completed = @report_utils[l.offering].saveables({:learner => l})
+            assess_completed = assess_completed.select{|s| s.answered? }.size
+            assess_percent = percent(assess_completed, total_assessments)
+            last_run = l.bundle_logger.bundle_contents.compact.last
+            last_run = last_run.nil? ? 'never' : last_run.created_at
+            row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
+          else
+            row[@inv_start_column[inv], 3] = ['n/a', 'n/a', 'not assigned']
+          end
         end
       end
     end
