@@ -3,14 +3,14 @@ module OtmlHelper
   def net_logo_package_name
     @jnlp_adaptor.net_logo_package_name
   end
-  
+
   def ot_menu_display_name(object)
-    if for_teacher_only(object) 
+    if for_teacher_only(object)
       return "+ #{object.name}"
     end
     return object.name
   end
-  
+
   def ot_refid_for(object, *prefixes)
     if object.is_a? String
       '${' + object + '}'
@@ -34,7 +34,7 @@ module OtmlHelper
       end
     end
   end
-  
+
   def ot_dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
     prefix = ''
@@ -42,11 +42,11 @@ module OtmlHelper
     class_name = component.class.name.split('::').last.underscore
     "#{prefix}#{class_name}_#{component.id}"
   end
-  
+
   def data_filter_inports
     Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
   end
-  
+
   def imports
     imports = %w{
       org.concord.data.state.OTDataChannelDescription
@@ -127,7 +127,7 @@ module OtmlHelper
     } + data_filter_inports + (@otrunk_imports || []).uniq
     imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
   end
-  
+
   def ot_imports
     capture_haml do
       haml_tag :imports do
@@ -183,7 +183,7 @@ module OtmlHelper
       ['sound_grapher_view', 'org.concord.multimedia.state.OTSoundGrapherModel', 'org.concord.multimedia.state.ui.OTSoundGrapherModelView']
     ] + (@otrunk_view_entries || []).uniq
   end
-  
+
   def authoring_view_entries
     [
       ['text_edit_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditEditView'],
@@ -227,7 +227,7 @@ module OtmlHelper
 
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
-    title = "#{APP_CONFIG[:theme].capitalize}: " + options[:title] ||  "sample"
+    title = "#{Admin::Project.project_settings.theme.capitalize}: " + options[:title] ||  "sample"
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
     authoring = options[:authoring] || false
     if authoring
@@ -235,15 +235,15 @@ module OtmlHelper
     else
       current_mode = 'student'
     end
-    render :partial => "otml/ot_view_bundle", 
-      :locals => { :view_entries => view_entries, 
-                   :authoring_view_entries => authoring_view_entries, 
+    render :partial => "otml/ot_view_bundle",
+      :locals => { :view_entries => view_entries,
+                   :authoring_view_entries => authoring_view_entries,
                    :use_scroll_pane => use_scroll_pane,
                    :body_width => 840,
                    :height => 700,
-                   :left_nav_panel_width => @left_nav_panel_width, 
-                   :title => title, 
-                   :authoring => authoring, 
+                   :left_nav_panel_width => @left_nav_panel_width,
+                   :title => title,
+                   :authoring => authoring,
                    :current_mode => current_mode }
   end
 
@@ -262,11 +262,11 @@ module OtmlHelper
   def ot_interface_manager(use_current_user = false)
     old_format = @template_format
     @template_format = :otml
-    # Now that we're using the HttpCookieService, current_user.vendor_interface 
+    # Now that we're using the HttpCookieService, current_user.vendor_interface
     # should be correct, even when requesting from the java client
     vendor_interface = nil
-    # allow switching between using the current user and not. This way 
-    # the cached otml can always have Go!Link, but the dynamic 
+    # allow switching between using the current user and not. This way
+    # the cached otml can always have Go!Link, but the dynamic
     # otml can use the current user's device.
     # debugger
     if use_current_user
@@ -297,8 +297,8 @@ module OtmlHelper
          haml_tag :request do
            haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
              haml_tag :sensorRequests do
-               haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
-                :type => probe_type.ptype.to_s, :unit => probe_type.unit, :port => probe_type.port.to_s, 
+               haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s,
+                :type => probe_type.ptype.to_s, :unit => probe_type.unit, :port => probe_type.port.to_s,
                 :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
                 :displayPrecision => "#{data_collector.probe_type.display_precision}"
             end
@@ -307,13 +307,13 @@ module OtmlHelper
       end
     end
   end
-  
+
   # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
   #   - if data_collector.data_store_values.length > 0
   #     %values
   #       - data_collector.data_store_values.each do |value|
   #         %float= value
-  # 
+  #
   def generate_otml_datastore(data_collector)
     capture_haml do
       haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
@@ -333,24 +333,24 @@ module OtmlHelper
       end
     end
   end
-  
+
   def otml_for_time_limit_filter(limit, seconds)
     if seconds
       ms = (seconds * 1000).to_i
     else
       ms = 0
-    end 
+    end
     capture_haml do
       if limit
         haml_tag :OTTimeLimitDataProducerFilter, :sourceChannel => "1", :timeLimit => ms do
           haml_tag :source do
-            if block_given? 
+            if block_given?
               yield
             end
           end
         end
       else
-        if block_given? 
+        if block_given?
           yield
         end
       end
@@ -363,7 +363,7 @@ module OtmlHelper
         ot_name = filter.otrunk_object_class.split(".")[-1]
         haml_tag ot_name.to_sym, :sourceChannel => "1" do
           haml_tag :source do
-            if block_given? 
+            if block_given?
               yield
             end
           end
@@ -371,13 +371,13 @@ module OtmlHelper
       end
     end
   end
-  
+
   def preview_warning
     APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
-  
+
   def otml_css_path(base="stylesheets",name="otml")
-    theme = APP_CONFIG[:theme]
+    theme = Admin::Project.project_settings.theme
     file = "#{name}.css"
     default_path = File.join(base,file)
     if theme

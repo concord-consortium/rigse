@@ -4,7 +4,7 @@ describe HomeController do
   integrate_views
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end

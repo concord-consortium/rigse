@@ -4,7 +4,7 @@ describe "/dataservice/blobs/edit.html.haml" do
   include Dataservice::BlobsHelper
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
     login_admin
     assigns[:dataservice_blob] = @dataservice_blob = stub_model(Dataservice::Blob,

@@ -5,14 +5,13 @@ describe RiGse::ExpectationStemsController do
   def mock_expectation_stem(stubs={})
     @mock_expectation_stem ||= mock_model(RiGse::ExpectationStem, stubs)
   end
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    # generate_portal_resources_with_mocks
+    generate_default_project_and_jnlps_with_factories
     login_admin
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
-  
+
   describe "responding to GET index" do
 
     it "should expose an array of all the @expectation_stems" do
@@ -22,7 +21,7 @@ describe RiGse::ExpectationStemsController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "should render all expectation_stems as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
         RiGse::ExpectationStem.should_receive(:find).with(:all).and_return(expectation_stems = mock("Array of ExpectationStems"))
@@ -30,7 +29,7 @@ describe RiGse::ExpectationStemsController do
         get :index
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -42,7 +41,7 @@ describe RiGse::ExpectationStemsController do
       get :show, :id => "37"
       assigns[:expectation_stem].should equal(mock_expectation_stem)
     end
-    
+
     describe "with mime type of xml" do
 
       it "should render the requested expectation_stem as xml" do
@@ -54,11 +53,11 @@ describe RiGse::ExpectationStemsController do
       end
 
     end
-    
+
   end
 
   describe "responding to GET new" do
-  
+
     it "should expose a new expectation_stem as @expectation_stem" do
       RiGse::ExpectationStem.should_receive(:new).and_return(mock_expectation_stem)
       get :new
@@ -68,7 +67,7 @@ describe RiGse::ExpectationStemsController do
   end
 
   describe "responding to GET edit" do
-  
+
     it "should expose the requested expectation_stem as @expectation_stem" do
       RiGse::ExpectationStem.should_receive(:find).with("37").and_return(mock_expectation_stem)
       get :edit, :id => "37"
@@ -80,7 +79,7 @@ describe RiGse::ExpectationStemsController do
   describe "responding to POST create" do
 
     describe "with valid params" do
-      
+
       it "should expose a newly created expectation_stem as @expectation_stem" do
         RiGse::ExpectationStem.should_receive(:new).with({'these' => 'params'}).and_return(mock_expectation_stem(:save => true))
         post :create, :expectation_stem => {:these => 'params'}
@@ -92,9 +91,9 @@ describe RiGse::ExpectationStemsController do
         post :create, :expectation_stem => {}
         response.should redirect_to(ri_gse_expectation_stem_url(mock_expectation_stem))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved expectation_stem as @expectation_stem" do
@@ -108,9 +107,9 @@ describe RiGse::ExpectationStemsController do
         post :create, :expectation_stem => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "responding to PUT udpate" do
@@ -136,7 +135,7 @@ describe RiGse::ExpectationStemsController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "should update the requested expectation_stem" do
@@ -168,13 +167,11 @@ describe RiGse::ExpectationStemsController do
       mock_expectation_stem.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "should redirect to the expectation_stems list" do
       RiGse::ExpectationStem.stub!(:find).and_return(mock_expectation_stem(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(expectation_stems_url)
     end
-
   end
-
 end

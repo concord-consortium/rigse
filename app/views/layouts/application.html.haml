@@ -62,8 +62,7 @@
 
       #lead.project-header
         %h1
-          %a{ :href => "/" }
-            APP_CONFIG[:site_name]
+          = link_to Admin::Project.project_settings.site_name, "/"
 
       #nav_top
         %span.hidden.doNotPrint

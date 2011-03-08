@@ -4,7 +4,7 @@ describe "/dataservice/blobs/index.html.haml" do
   include Dataservice::BlobsHelper
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
     login_admin
     collection = WillPaginate::Collection.create(1,10) do |coll|

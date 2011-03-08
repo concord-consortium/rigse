@@ -1,10 +1,10 @@
 module JnlpHelper
-  
+
   def full_url_for_image(path)
     host = root_path(:only_path => false)[0..-2]
     host + path_to_image(path)
   end
-  
+
   def resource_jars
     @jnlp_adaptor.resource_jars
   end
@@ -16,7 +16,7 @@ module JnlpHelper
   def macos_native_jars
     @jnlp_adaptor.macos_native_jars
   end
-  
+
   def windows_native_jars
     @jnlp_adaptor.windows_native_jars
   end
@@ -42,7 +42,7 @@ module JnlpHelper
     end
     @jnlp_adaptor.system_properties + additional_properties
   end
-  
+
   def jnlp_jar(xml, resource, check_for_main=true)
     if resource[2] && check_for_main
       # TODO: refactor how jar versions (or lack therof) are dealt with
@@ -59,11 +59,11 @@ module JnlpHelper
       end
     end
   end
-  
+
   def jnlp_j2se(xml, jnlp)
     xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
   end
-  
+
   def jnlp_os_specific_j2ses(xml, jnlp)
     if jnlp.j2se_version == 'mac_os_x'
       xml.resources {
@@ -81,7 +81,7 @@ module JnlpHelper
       }
     end
   end
-  
+
   def jnlp_resources(xml, options = {})
     jnlp = @jnlp_adaptor.jnlp
     xml.resources {
@@ -95,7 +95,7 @@ module JnlpHelper
       jnlp_os_specific_j2ses(xml, jnlp)
     }
   end
-  
+
   def jnlp_testing_resources(xml, options = {})
     jnlp = @jnlp_adaptor.jnlp
     jnlp_for_testing = @jnlp_testing_adaptor.jnlp
@@ -113,30 +113,30 @@ module JnlpHelper
       jnlp_os_specific_j2ses(xml, jnlp)
     }
   end
-  
+
   def jnlp_headers(runnable)
     response.headers["Content-Type"] = "application/x-java-jnlp-file"
     response.headers["Cache-Control"] = "max-age=1"
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
-    response.headers["Content-Disposition"] = "inline; filename=#{APP_CONFIG[:theme]}_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+    response.headers["Content-Disposition"] = "inline; filename=#{Admin::Project.project_settings.theme}_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
   end
-  
+
   def config_headers(runnable)
     response.headers["Content-Type"] = "application/xml"
     response.headers["Cache-Control"] = "max-age=1"
   end
-  
-  
+
+
   def jnlp_information(xml)
-    xml.information { 
-      xml.title APP_CONFIG[:site_name]
+    xml.information {
+      xml.title Admin::Project.project_settings.site_name
       xml.vendor "Concord Consortium"
-      xml.homepage :href => APP_CONFIG[:site_url]
-      xml.description APP_CONFIG[:description]
+      xml.homepage :href => Admin::Project.project_settings.site_url
+      xml.description Admin::Project.project_settings.description
       xml.icon :href => full_url_for_image("sail_orangecirc_64.gif"), :height => "64", :width => "64"
     }
   end
-  
+
   ########################################
   ## TODO: These jnlp_installer_* methods
   ## should be encapsulated in some class
@@ -145,32 +145,32 @@ module JnlpHelper
   def jnlp_installer_vendor
     "Concord Consortium".gsub(/\s+/,"")
   end
-  
+
   #
   # convinient
   #
-  def load_yaml(filename) 
+  def load_yaml(filename)
     file_txt = ""
     File.open(filename, "r") do |f|
       file_txt = f.read
     end
     return YAML::load(file_txt)
   end
-  
+
   # IMPORTANT: should match <project><name>XXXX</name></project> value
   # from bitrock installer
   def jnlp_installer_project
     config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
     config['shortname'] || "RITES"
   end
-  
+
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
     config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
     config['version'] || "200912.2"
   end
-  
+
   def jnlp_installer_not_found_url(os)
     "#{APP_CONFIG[:site_url]}/missing_installer/#{os}"
   end
@@ -194,7 +194,7 @@ module JnlpHelper
       # after conversation w/ scott & stephen, dont think we need this.
       # xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
       # xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
-      
+
       # Someday we might want to cache some resources, but right now, we don't
       # xml.property :name=> "resource_loc", :value => "resources"
 
@@ -202,25 +202,25 @@ module JnlpHelper
       xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
       xml.property :name=> "jnlp2shell.read_only", :value => "true"
     }
-    xml.resources(:os => "Linux") { 
+    xml.resources(:os => "Linux") {
       xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("linux")
     }
-    xml.resources(:os => "Mac OS X") { 
+    xml.resources(:os => "Mac OS X") {
       xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("osx")
     }
-    xml.resources(:os => "Windows") { 
+    xml.resources(:os => "Windows") {
       xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("windows")
     }
   end
-  
+
   def jnlp_resources_linux(xml)
-    xml.resources(:os => "Linux") { 
+    xml.resources(:os => "Linux") {
       linux_native_jars.each do |resource|
         xml.nativelib :href => resource[0], :version => resource[1]
       end
     }
   end
-  
+
   def jnlp_mac_java_config(xml)
     jnlp = @jnlp_adaptor.jnlp
     # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
@@ -229,14 +229,14 @@ module JnlpHelper
     }
     xml.resources(:os => "Mac OS X", :arch => "x86_64") {
       xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
-    } 
+    }
     xml.resources(:os => "Mac OS X") {
       xml.j2se :version => "1.6", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
     }
   end
 
   def jnlp_resources_macosx(xml)
-    xml.resources(:os => "Mac OS X") { 
+    xml.resources(:os => "Mac OS X") {
       macos_native_jars.each do |resource|
         xml.nativelib :href => resource[0], :version => resource[1]
       end
@@ -244,7 +244,7 @@ module JnlpHelper
   end
 
   def jnlp_resources_windows(xml)
-    xml.resources(:os => "Windows") { 
+    xml.resources(:os => "Windows") {
       windows_native_jars.each do |resource|
         xml.nativelib :href => resource[0], :version => resource[1]
       end

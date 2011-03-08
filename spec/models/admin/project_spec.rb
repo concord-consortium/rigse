@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Admin::Project do
   before(:each) do
-    generate_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     @new_valid_project = Admin::Project.new(
       :name => "Example Project",
       :url => "http://rites.org",

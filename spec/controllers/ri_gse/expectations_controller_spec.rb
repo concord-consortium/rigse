@@ -5,14 +5,14 @@ describe RiGse::ExpectationsController do
   def mock_expectation(stubs={})
     @mock_expectation ||= mock_model(RiGse::Expectation, stubs)
   end
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     # generate_portal_resources_with_mocks
     login_admin
     Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
-  
+
   describe "responding to GET index" do
 
     it "should expose an array of all the @expectations" do
@@ -22,7 +22,7 @@ describe RiGse::ExpectationsController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "should render all expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
         RiGse::Expectation.should_receive(:find).with(:all).and_return(expectations = mock("Array of Expectations"))
@@ -30,7 +30,7 @@ describe RiGse::ExpectationsController do
         get :index
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -42,7 +42,7 @@ describe RiGse::ExpectationsController do
       get :show, :id => "37"
       assigns[:expectation].should equal(mock_expectation)
     end
-    
+
     describe "with mime type of xml" do
 
       it "should render the requested expectation as xml" do
@@ -54,11 +54,11 @@ describe RiGse::ExpectationsController do
       end
 
     end
-    
+
   end
 
   describe "responding to GET new" do
-  
+
     it "should expose a new expectation as @expectation" do
       RiGse::Expectation.should_receive(:new).and_return(mock_expectation)
       get :new
@@ -68,7 +68,7 @@ describe RiGse::ExpectationsController do
   end
 
   describe "responding to GET edit" do
-  
+
     it "should expose the requested expectation as @expectation" do
       RiGse::Expectation.should_receive(:find).with("37").and_return(mock_expectation)
       get :edit, :id => "37"
@@ -80,7 +80,7 @@ describe RiGse::ExpectationsController do
   describe "responding to POST create" do
 
     describe "with valid params" do
-      
+
       it "should expose a newly created expectation as @expectation" do
         RiGse::Expectation.should_receive(:new).with({'these' => 'params'}).and_return(mock_expectation(:save => true))
         post :create, :expectation => {:these => 'params'}
@@ -92,9 +92,9 @@ describe RiGse::ExpectationsController do
         post :create, :expectation => {}
         response.should redirect_to(ri_gse_expectation_url(mock_expectation))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved expectation as @expectation" do
@@ -108,9 +108,9 @@ describe RiGse::ExpectationsController do
         post :create, :expectation => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "responding to PUT udpate" do
@@ -136,7 +136,7 @@ describe RiGse::ExpectationsController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "should update the requested expectation" do
@@ -168,13 +168,11 @@ describe RiGse::ExpectationsController do
       mock_expectation.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "should redirect to the expectations list" do
       RiGse::Expectation.stub!(:find).and_return(mock_expectation(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(expectations_url)
     end
-
   end
-
 end

@@ -7,10 +7,10 @@ describe MavenJnlp::VersionedJnlpUrlsController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
   end
-  
+
   describe "GET index" do
 
     it "exposes all maven_jnlp_versioned_jnlp_urls as @maven_jnlp_versioned_jnlp_urls" do
@@ -20,14 +20,14 @@ describe MavenJnlp::VersionedJnlpUrlsController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "renders all maven_jnlp_versioned_jnlp_urls as xml" do
         MavenJnlp::VersionedJnlpUrl.should_receive(:find).with(:all).and_return(versioned_jnlp_urls = mock("Array of MavenJnlp::VersionedJnlpUrls"))
         versioned_jnlp_urls.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -39,7 +39,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
       get :show, :id => "37"
       assigns[:versioned_jnlp_url].should equal(mock_versioned_jnlp_url)
     end
-    
+
     describe "with mime type of xml" do
 
       it "renders the requested versioned_jnlp_url as xml" do
@@ -50,11 +50,11 @@ describe MavenJnlp::VersionedJnlpUrlsController do
       end
 
     end
-    
+
   end
 
   describe "GET new" do
-  
+
     it "exposes a new versioned_jnlp_url as @versioned_jnlp_url" do
       MavenJnlp::VersionedJnlpUrl.should_receive(:new).and_return(mock_versioned_jnlp_url)
       get :new
@@ -64,7 +64,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
   end
 
   describe "GET edit" do
-  
+
     it "exposes the requested versioned_jnlp_url as @versioned_jnlp_url" do
       MavenJnlp::VersionedJnlpUrl.should_receive(:find).with("37").and_return(mock_versioned_jnlp_url)
       get :edit, :id => "37"
@@ -76,7 +76,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
   describe "POST create" do
 
     describe "with valid params" do
-      
+
       it "exposes a newly created versioned_jnlp_url as @versioned_jnlp_url" do
         MavenJnlp::VersionedJnlpUrl.should_receive(:new).with({'these' => 'params'}).and_return(mock_versioned_jnlp_url(:save => true))
         post :create, :versioned_jnlp_url => {:these => 'params'}
@@ -88,9 +88,9 @@ describe MavenJnlp::VersionedJnlpUrlsController do
         post :create, :versioned_jnlp_url => {}
         response.should redirect_to(maven_jnlp_versioned_jnlp_url_url(mock_versioned_jnlp_url))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved versioned_jnlp_url as @versioned_jnlp_url" do
@@ -104,9 +104,9 @@ describe MavenJnlp::VersionedJnlpUrlsController do
         post :create, :versioned_jnlp_url => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "PUT udpate" do
@@ -132,7 +132,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "updates the requested versioned_jnlp_url" do
@@ -164,7 +164,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
       mock_versioned_jnlp_url.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "redirects to the maven_jnlp_versioned_jnlp_urls list" do
       MavenJnlp::VersionedJnlpUrl.stub!(:find).and_return(mock_versioned_jnlp_url(:destroy => true))
       delete :destroy, :id => "1"

@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
     # return the user who is the site administrator
     def site_admin
       return false if Admin::Project.default_project.empty?
-      User.find_by_email(Admin::Project.default_project.first.admin_project_settings.default_admin_user.email)
+      User.find_by_email(Admin::Project.project_settings.default_admin_user.email)
     end
   end
 

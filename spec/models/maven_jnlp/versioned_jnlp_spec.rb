@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe MavenJnlp::VersionedJnlp do
   before(:each) do
-    generate_jnlps_with_mocks
-    
+    generate_default_project_and_jnlps_with_factories
+
     @new_valid_versioned_jnlp = MavenJnlp::VersionedJnlp.new(
       :name => "all-otrunk-snapshot-0.1.0-20090724.190238.jnlp",
       :main_class => "net.sf.sail.emf.launch.EMFLauncher3",
