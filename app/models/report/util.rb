@@ -117,6 +117,15 @@ class Report::Util
       @saveables += all
       @saveables_by_type[type.to_s] = all
     end
+    # If an investigation has changed, and daveable elements have been removed (eek!)
+    current =  @saveables.select { |s| @investigation.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
+    old = @saveables - current
+    if old.size > 0
+      warning = "WARNING: missing #{old.size} removed reportables in report for #{@investigation.name}"
+      puts warning
+      Rails.logger.info (warning)
+      @saveables = current
+    end
     @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id } 
