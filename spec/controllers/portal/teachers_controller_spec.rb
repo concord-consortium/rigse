@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Portal::TeachersController do
   integrate_views
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     generate_portal_resources_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    #Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "POST create" do
@@ -27,19 +27,19 @@ describe Portal::TeachersController do
           :id => Factory.create(:portal_grade).id
         }
       }
-      
+
       current_user_count = User.count(:all)
       current_teacher_count = Portal::Teacher.count(:all)
-      
+
       post :create, params
       @response.should render_template("users/thanks")
-      
+
       assert_equal User.count(:all), current_user_count + 1, "TeachersController#create did not create a User when given valid POST data"
       assert_equal Portal::Teacher.count(:all), current_teacher_count + 1, "TeachersController#create did not create a Portal::Teacher when given valid POST data"
       assert_nil flash[:error]
       assert_nil flash[:notice]
     end
-    
+
     it "should not allow the teacher not to select a school" do
       params = {
         :user => {
@@ -57,12 +57,12 @@ describe Portal::TeachersController do
           :id => Factory.create(:portal_grade).id
         }
       }
-      
+
       current_user_count = User.count(:all)
       current_teacher_count = Portal::Teacher.count(:all)
-      
+
       post :create, params
-      
+
       assert_equal User.count(:all), current_user_count, "TeachersController#create erroneously created a User when given invalid POST data"
       assert_equal Portal::Teacher.count(:all), current_teacher_count, "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
       assert_not_nil flash[:error]
@@ -70,9 +70,9 @@ describe Portal::TeachersController do
       @response.body.should include("must select a school")
     end
   end
-  
+
   describe "GET new" do
-      
+
     before(:all) do
       ['c','b','a'].each do |name|
         district = Factory.create(:portal_district, :name => "district_#{name}")
@@ -81,7 +81,7 @@ describe Portal::TeachersController do
         end
       end
     end
-    
+
     it "should render the dropdown list of districts in alpha order" do
       get :new
       position = last_position = nil
@@ -94,8 +94,8 @@ describe Portal::TeachersController do
         last_position = position
       end
     end
-   
-    # TODO: write test for schools also being in alpha order  
-    
+
+    # TODO: write test for schools also being in alpha order
+
   end
 end

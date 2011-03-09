@@ -15,7 +15,7 @@ describe Dataservice::BundleContent do
       :empty => false,
       :uuid => "value for uuid"
     }
-    
+
     @valid_attributes_with_blob = {
       :bundle_logger_id => 1,
       :position => 2,
@@ -35,7 +35,7 @@ describe Dataservice::BundleContent do
   it "should create a new instance given valid attributes" do
     Dataservice::BundleContent.create!(@valid_attributes)
   end
-  
+
   it "should extract blobs into separate model objects" do
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
     puts "There are #{bundle_content.blobs.size} blobs"
@@ -46,7 +46,7 @@ describe Dataservice::BundleContent do
     bundle_content.body.should eql(@expected_body)
     bundle_content.original_body.should eql(@valid_attributes_with_blob[:body])
   end
-  
+
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
     @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
@@ -158,6 +158,6 @@ describe Dataservice::BundleContent do
           <launchProperties key="sds_time" value="1275665709053"/>
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
-    
+
     end
 end

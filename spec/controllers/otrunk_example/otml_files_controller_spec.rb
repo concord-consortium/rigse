@@ -6,13 +6,13 @@ describe OtrunkExample::OtmlFilesController do
     @mock_otml_file.stub!(stubs) unless stubs.empty?
     @mock_otml_file
   end
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     generate_otrunk_example_with_mocks
     logout_user
   end
-  
+
   describe "GET index" do
 
     it "exposes all otrunk_example_otml_files as @otrunk_example_otml_files" do
@@ -22,14 +22,14 @@ describe OtrunkExample::OtmlFilesController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "renders all otrunk_example_otml_files as xml" do
         OtrunkExample::OtmlFile.should_receive(:find).with(:all).and_return(otml_files = mock("Array of OtrunkExample::OtmlFiles"))
         otml_files.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -41,7 +41,7 @@ describe OtrunkExample::OtmlFilesController do
       get :show, :id => "37"
       assigns[:otml_file].should equal(mock_otml_file)
     end
-    
+
     describe "with mime type of xml" do
 
       it "renders the requested otml_file as xml" do
@@ -52,11 +52,11 @@ describe OtrunkExample::OtmlFilesController do
       end
 
     end
-    
+
   end
 
   describe "GET new" do
-  
+
     it "exposes a new otml_file as @otml_file" do
       OtrunkExample::OtmlFile.should_receive(:new).and_return(mock_otml_file)
       get :new
@@ -66,7 +66,7 @@ describe OtrunkExample::OtmlFilesController do
   end
 
   describe "GET edit" do
-  
+
     it "exposes the requested otml_file as @otml_file" do
       OtrunkExample::OtmlFile.should_receive(:find).with("37").and_return(mock_otml_file)
       get :edit, :id => "37"
@@ -78,7 +78,7 @@ describe OtrunkExample::OtmlFilesController do
   describe "POST create" do
 
     describe "with valid params" do
-      
+
       it "exposes a newly created otml_file as @otml_file" do
         OtrunkExample::OtmlFile.should_receive(:new).with({'these' => 'params'}).and_return(mock_otml_file(:save => true))
         post :create, :otml_file => {:these => 'params'}
@@ -90,9 +90,9 @@ describe OtrunkExample::OtmlFilesController do
         post :create, :otml_file => {}
         response.should redirect_to(otrunk_example_otml_file_url(mock_otml_file))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved otml_file as @otml_file" do
@@ -106,9 +106,9 @@ describe OtrunkExample::OtmlFilesController do
         post :create, :otml_file => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "PUT udpate" do
@@ -134,7 +134,7 @@ describe OtrunkExample::OtmlFilesController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "updates the requested otml_file" do
@@ -166,13 +166,11 @@ describe OtrunkExample::OtmlFilesController do
       mock_otml_file.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "redirects to the otrunk_example_otml_files list" do
       OtrunkExample::OtmlFile.stub!(:find).and_return(mock_otml_file(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(otrunk_example_otml_files_url)
     end
-
   end
-
 end

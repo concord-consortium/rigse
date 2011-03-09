@@ -7,7 +7,7 @@ describe MavenJnlp::PropertiesController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
   end
 
@@ -20,14 +20,14 @@ describe MavenJnlp::PropertiesController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "renders all maven_jnlp_properties as xml" do
         MavenJnlp::Property.should_receive(:find).with(:all).and_return(properties = mock("Array of MavenJnlp::Properties"))
         properties.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -39,7 +39,7 @@ describe MavenJnlp::PropertiesController do
       get :show, :id => "37"
       assigns[:property].should equal(mock_property)
     end
-    
+
     describe "with mime type of xml" do
 
       it "renders the requested property as xml" do
@@ -50,11 +50,11 @@ describe MavenJnlp::PropertiesController do
       end
 
     end
-    
+
   end
 
   describe "GET new" do
-  
+
     it "exposes a new property as @property" do
       MavenJnlp::Property.should_receive(:new).and_return(mock_property)
       get :new
@@ -64,7 +64,7 @@ describe MavenJnlp::PropertiesController do
   end
 
   describe "GET edit" do
-  
+
     it "exposes the requested property as @property" do
       MavenJnlp::Property.should_receive(:find).with("37").and_return(mock_property)
       get :edit, :id => "37"
@@ -76,7 +76,7 @@ describe MavenJnlp::PropertiesController do
   describe "POST create" do
 
     describe "with valid params" do
-      
+
       it "exposes a newly created property as @property" do
         MavenJnlp::Property.should_receive(:new).with({'these' => 'params'}).and_return(mock_property(:save => true))
         post :create, :property => {:these => 'params'}
@@ -88,9 +88,9 @@ describe MavenJnlp::PropertiesController do
         post :create, :property => {}
         response.should redirect_to(maven_jnlp_property_url(mock_property))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved property as @property" do
@@ -104,9 +104,9 @@ describe MavenJnlp::PropertiesController do
         post :create, :property => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "PUT udpate" do
@@ -132,7 +132,7 @@ describe MavenJnlp::PropertiesController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "updates the requested property" do
@@ -164,13 +164,11 @@ describe MavenJnlp::PropertiesController do
       mock_property.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "redirects to the maven_jnlp_properties list" do
       MavenJnlp::Property.stub!(:find).and_return(mock_property(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(maven_jnlp_properties_url)
     end
-
   end
-
 end

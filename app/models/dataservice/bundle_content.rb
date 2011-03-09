@@ -12,11 +12,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
   include Changeable
 
   include SailBundleContent
-  
+
   def before_create
     process_bundle
   end
-  
+
   def after_create
     process_blobs
   end
@@ -24,15 +24,15 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def before_save
     process_bundle unless processed
   end
-  
+
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
 
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{body otml uuid}
-  
+
   class <<self
 
     def searchable_attributes
@@ -42,7 +42,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     def display_name
       "Dataservice::BundleContent"
     end
-    
+
     def b64gzip_unpack(b64gzip_content)
       s = StringIO.new(B64::B64.decode(b64gzip_content))
       z = ::Zlib::GzipReader.new(s)
@@ -62,11 +62,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def user
     nil
   end
-  
+
   def otml
     self[:otml] || ''
   end
-  
+
   def name
     learner = self.bundle_logger.learner
     user = learner.student.user
@@ -74,7 +74,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     login = user.login
     "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
-  
+
   def process_bundle
     self.processed = true
     self.valid_xml = valid_xml?
@@ -83,7 +83,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       self.empty = true unless self.otml && self.otml.length > 0
     end
   end
-    
+
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
@@ -93,7 +93,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       nil
     end
   end
-  
+
   def convert_otml_to_body
     # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
     self.otml_will_change!
@@ -105,11 +105,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
   end
-  
+
   @@url_resolver = URLResolver.new
   @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
-  
+
   def process_blobs
     return false unless self.valid_xml
     ## extract blobs from the otml and convert the changed otml back to bundle format
@@ -120,14 +120,14 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     return blobs_present
   end
-  
+
   def extract_blobs(host = nil)
     return false if ! self.otml
-    
+
     changed = false
-      
+
     if ! host
-      address = URI.parse(APP_CONFIG[:site_url])
+      address = URI.parse(Admin::Project.project_settings.site_url)
       host = address.host
     end
 
@@ -143,7 +143,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
     end
-    
+
     begin
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(@@blob_content_regexp) {|match|
@@ -155,9 +155,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
     rescue Exception => e
       $stderr.puts "#{e}: #{$&}"
     end
-    
+
     self.otml = text if changed
-    
+
     return changed
   end
 
@@ -171,15 +171,15 @@ class Dataservice::BundleContent < ActiveRecord::Base
     end
     return nil
   end
-  
+
   def extract_saveables
-    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
+    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17
     extractor = Otrunk::ObjectExtractor.new(self.otml)
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)
     extract_image_questions(extractor)
   end
-  
+
   def extract_open_responses(extractor = Otrunk::ObjectExtractor.new(self.otml))
     learner = self.bundle_logger.learner
     @offering_id = learner.offering.id
@@ -191,7 +191,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       end
     end
   end
-  
+
   def process_open_response(parent_id, answer)
     if Embeddable::OpenResponse.find_by_id(parent_id)
       saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(@learner_id, @offering_id, parent_id)
@@ -202,7 +202,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       logger.error("Missing Embeddable::OpenResponse id: #{parent_id}")
     end
   end
-  
+
   def extract_multiple_choices(extractor = Otrunk::ObjectExtractor.new(self.otml))
     learner = self.bundle_logger.learner
     @offering_id = learner.offering.id
@@ -234,7 +234,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       end
     end
   end
-  
+
   def extract_image_questions(extractor = Otrunk::ObjectExtractor.new(self.otml))
     learner = self.bundle_logger.learner
     @offering_id = learner.offering.id
@@ -253,7 +253,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
         else
           logger.error("Unknown image question object: #{answer}")
         end
-      else                                                                    
+      else
         logger.error("Missing Embeddable::ImageQuestion id: #{parent_id}")
       end
     end
@@ -289,7 +289,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       end
     end
     <<-HEREDOC
-    This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s 
+    This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s
     class using: '#{runnable_name}' in the '#{school_name}' school.
     HEREDOC
   end

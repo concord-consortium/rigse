@@ -9,7 +9,7 @@ describe ImagesController do
   before(:each) do
     generate_default_project_and_jnlps_with_factories
     login_admin
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    #Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
 

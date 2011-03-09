@@ -8,7 +8,7 @@ describe MavenJnlp::MavenJnlpServersController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
   end
 
@@ -21,14 +21,14 @@ describe MavenJnlp::MavenJnlpServersController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "renders all maven_jnlp_maven_jnlp_servers as xml" do
         MavenJnlp::MavenJnlpServer.should_receive(:find).with(:all).and_return(maven_jnlp_servers = mock("Array of MavenJnlp::MavenJnlpServers"))
         maven_jnlp_servers.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -40,7 +40,7 @@ describe MavenJnlp::MavenJnlpServersController do
       get :show, :id => "37"
       assigns[:maven_jnlp_server].should equal(mock_maven_jnlp_server)
     end
-    
+
     describe "with mime type of xml" do
 
       it "renders the requested maven_jnlp_server as xml" do
@@ -51,11 +51,11 @@ describe MavenJnlp::MavenJnlpServersController do
       end
 
     end
-    
+
   end
 
   describe "GET new" do
-  
+
     it "exposes a new maven_jnlp_server as @maven_jnlp_server" do
       MavenJnlp::MavenJnlpServer.should_receive(:new).and_return(mock_maven_jnlp_server)
       get :new
@@ -65,7 +65,7 @@ describe MavenJnlp::MavenJnlpServersController do
   end
 
   describe "GET edit" do
-  
+
     it "exposes the requested maven_jnlp_server as @maven_jnlp_server" do
       MavenJnlp::MavenJnlpServer.should_receive(:find).with("37").and_return(mock_maven_jnlp_server)
       get :edit, :id => "37"
@@ -77,7 +77,7 @@ describe MavenJnlp::MavenJnlpServersController do
   describe "POST create" do
 
     describe "with valid params" do
-      
+
       it "exposes a newly created maven_jnlp_server as @maven_jnlp_server" do
         MavenJnlp::MavenJnlpServer.should_receive(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_server(:save => true))
         post :create, :maven_jnlp_server => {:these => 'params'}
@@ -89,9 +89,9 @@ describe MavenJnlp::MavenJnlpServersController do
         post :create, :maven_jnlp_server => {}
         response.should redirect_to(maven_jnlp_maven_jnlp_server_url(mock_maven_jnlp_server))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved maven_jnlp_server as @maven_jnlp_server" do
@@ -105,9 +105,9 @@ describe MavenJnlp::MavenJnlpServersController do
         post :create, :maven_jnlp_server => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "PUT udpate" do
@@ -133,7 +133,7 @@ describe MavenJnlp::MavenJnlpServersController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "updates the requested maven_jnlp_server" do
@@ -165,13 +165,11 @@ describe MavenJnlp::MavenJnlpServersController do
       mock_maven_jnlp_server.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "redirects to the maven_jnlp_maven_jnlp_servers list" do
       MavenJnlp::MavenJnlpServer.stub!(:find).and_return(mock_maven_jnlp_server(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(maven_jnlp_maven_jnlp_servers_url)
     end
-
   end
-
 end

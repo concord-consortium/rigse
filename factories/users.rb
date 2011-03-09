@@ -6,7 +6,7 @@
 ## Emails and Logins will be derived from the login sequence
 ##
 
-Factory.sequence(:login) do |n| 
+Factory.sequence(:login) do |n|
   "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
 end
 
@@ -16,9 +16,9 @@ end
 Factory.define :user do |f|
   f.login    { Factory.next(:login) }
   f.first_name  'joe'
-  f.last_name  'user' 
+  f.last_name  'user'
   f.email  { |u| "#{u.login}@concord.org"}
-  f.password  'password' 
+  f.password  'password'
   f.password_confirmation  {|u| u.password}
   f.skip_notifications true
   f.roles  { [ Factory.next(:member_role)] }
@@ -33,8 +33,8 @@ end
 ##
 ## Singleton Factory Pattern for Admin user.
 ##
-Factory.sequence :admin_user do |n| 
-  admin = User.find_by_login('admin') 
+Factory.sequence :admin_user do |n|
+  admin = User.find_by_login('admin')
   unless admin
     admin = Factory(:user,
     {
@@ -54,8 +54,8 @@ end
 ##
 ## Singleton Factory Pattern for Researcher user.
 ##
-Factory.sequence :researcher_user do |n| 
-  researcher = User.find_by_login('researcher') 
+Factory.sequence :researcher_user do |n|
+  researcher = User.find_by_login('researcher')
   unless researcher
     researcher = Factory(:user,
     {

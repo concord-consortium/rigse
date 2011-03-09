@@ -5,7 +5,7 @@ describe TinyMceHelper do
 
   describe "with default settings" do
     before(:each) do
-      APP_CONFIG[:tiny_mce] = nil # remove project settings
+      Admin::Project.project_settings.tiny_mce_config = nil # remove project settings
     end
 
     it "should have default settings for buttons" do
@@ -13,7 +13,7 @@ describe TinyMceHelper do
       buttons.should match default_mce_buttons(1)
     end
   end
-  
+
   describe "witch project settings" do
     before(:each) do
       @line1 = "app_1a,app_1b"
@@ -21,12 +21,12 @@ describe TinyMceHelper do
       @line3 = "app_2a,app_2b,app_2c,|,app_2d"
 
       # setup project settings
-      APP_CONFIG[:tiny_mce] = {
+      Admin::Project.project_settings.tiny_mce_config = {
         :buttons1 => [@line1,@line2],
         :buttons2 =>  @line3
       }
     end
-    
+
     it "should use application settings for tiny_mce buttons" do
       buttons = mce_buttons(1)
       buttons.should_not match default_mce_buttons(1)
@@ -34,10 +34,5 @@ describe TinyMceHelper do
       buttons.should match(@line2)
       buttons.should match("|") # seperator for button sets.
     end
-
   end
-
 end
-
-
-

@@ -8,10 +8,10 @@ describe Admin::ProjectsController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     generate_portal_resources_with_mocks
     login_admin
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    #Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "GET index" do

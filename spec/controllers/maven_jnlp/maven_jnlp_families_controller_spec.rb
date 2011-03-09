@@ -3,8 +3,8 @@ require 'spec_helper'
 describe MavenJnlp::MavenJnlpFamiliesController do
 
   def mock_maven_jnlp_family(stubs={})
-    @mock_maven_jnlp_family.stub!(stubs) unless stubs.empty?
-    @mock_maven_jnlp_family
+    @maven_jnlp_family.stub!(stubs) unless stubs.empty?
+    @maven_jnlp_family
   end
 
   before(:each) do
@@ -15,9 +15,9 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_maven_jnlp_families as @maven_jnlp_maven_jnlp_families" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return([mock_maven_jnlp_family])
+      MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return([@maven_jnlp_family])
       get :index
-      assigns[:maven_jnlp_maven_jnlp_families].should == [mock_maven_jnlp_family]
+      assigns[:maven_jnlp_maven_jnlp_families].should == [@maven_jnlp_family]
     end
 
     describe "with mime type of xml" do
@@ -36,16 +36,16 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET show" do
 
     it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
+      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
       get :show, :id => "37"
-      assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
+      assigns[:maven_jnlp_family].should equal(@maven_jnlp_family)
     end
 
     describe "with mime type of xml" do
 
       it "renders the requested maven_jnlp_family as xml" do
-        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
-        mock_maven_jnlp_family.should_receive(:to_xml).and_return("generated XML")
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
+        @maven_jnlp_family.should_receive(:to_xml).and_return("generated XML")
         get :show, :id => "37", :format => 'xml'
         response.body.should == "generated XML"
       end
@@ -57,9 +57,9 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET new" do
 
     it "exposes a new maven_jnlp_family as @maven_jnlp_family" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(mock_maven_jnlp_family)
+      MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(@maven_jnlp_family)
       get :new
-      assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
+      assigns[:maven_jnlp_family].should equal(@maven_jnlp_family)
     end
 
   end
@@ -67,9 +67,9 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET edit" do
 
     it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
+      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
       get :edit, :id => "37"
-      assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
+      assigns[:maven_jnlp_family].should equal(@maven_jnlp_family)
     end
 
   end
@@ -81,13 +81,13 @@ describe MavenJnlp::MavenJnlpFamiliesController do
       it "exposes a newly created maven_jnlp_family as @maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_family(:save => true))
         post :create, :maven_jnlp_family => {:these => 'params'}
-        assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
+        assigns(:maven_jnlp_family).should equal(@maven_jnlp_family)
       end
 
       it "redirects to the created maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(mock_maven_jnlp_family(:save => true))
         post :create, :maven_jnlp_family => {}
-        response.should redirect_to(maven_jnlp_maven_jnlp_family_url(mock_maven_jnlp_family))
+        response.should redirect_to(maven_jnlp_maven_jnlp_family_url(@maven_jnlp_family))
       end
 
     end
@@ -97,7 +97,7 @@ describe MavenJnlp::MavenJnlpFamiliesController do
       it "exposes a newly created but unsaved maven_jnlp_family as @maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_family(:save => false))
         post :create, :maven_jnlp_family => {:these => 'params'}
-        assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
+        assigns(:maven_jnlp_family).should equal(@maven_jnlp_family)
       end
 
       it "re-renders the 'new' template" do
@@ -115,21 +115,21 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with valid params" do
 
       it "updates the requested maven_jnlp_family" do
-        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
-        mock_maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
+        @maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :maven_jnlp_family => {:these => 'params'}
       end
 
       it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
         put :update, :id => "1"
-        assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
+        assigns(:maven_jnlp_family).should equal(@maven_jnlp_family)
       end
 
       it "redirects to the maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(maven_jnlp_maven_jnlp_family_url(mock_maven_jnlp_family))
+        response.should redirect_to(maven_jnlp_maven_jnlp_family_url(@maven_jnlp_family))
       end
 
     end
@@ -137,15 +137,15 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with invalid params" do
 
       it "updates the requested maven_jnlp_family" do
-        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
-        mock_maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
+        @maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :maven_jnlp_family => {:these => 'params'}
       end
 
       it "exposes the maven_jnlp_family as @maven_jnlp_family" do
         MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => false))
         put :update, :id => "1"
-        assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
+        assigns(:maven_jnlp_family).should equal(@maven_jnlp_family)
       end
 
       it "re-renders the 'edit' template" do
@@ -161,8 +161,8 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "DELETE destroy" do
 
     it "destroys the requested maven_jnlp_family" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
-      mock_maven_jnlp_family.should_receive(:destroy)
+      MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(@maven_jnlp_family)
+      @maven_jnlp_family.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
 
@@ -171,7 +171,5 @@ describe MavenJnlp::MavenJnlpFamiliesController do
       delete :destroy, :id => "1"
       response.should redirect_to(maven_jnlp_maven_jnlp_families_url)
     end
-
   end
-
 end

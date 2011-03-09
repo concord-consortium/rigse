@@ -4,7 +4,7 @@ describe "/embeddable/data_tables/edit.html.haml" do
   include Embeddable::DataTableHelper
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
     login_admin
     assigns[:data_table] = @data_table = stub_model(Embeddable::DataTable,

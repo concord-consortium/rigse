@@ -21,12 +21,12 @@ describe Portal::SchoolsController do
     mock_school = mock_model(Portal::School,stubs)
     mock_school
   end
-  
+
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     generate_portal_resources_with_mocks
     login_admin
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    #Admin::Project.should_receive(:default_project).and_return(@mock_project)
     @school = mock_school
   end
 
@@ -45,7 +45,7 @@ describe Portal::SchoolsController do
       assigns[:portal_school].should equal(@school)
     end
   end
-  
+
   describe "GET new" do
     it "assigns a new school as @portal_school" do
       Portal::School.stub!(:new).and_return(@school)
@@ -53,7 +53,7 @@ describe Portal::SchoolsController do
       assigns[:portal_school].should equal(@school)
     end
   end
-  
+
   describe "GET edit" do
     it "assigns the requested school as @portal_school" do
       @school.should_receive(:changeable?).and_return(:true)
@@ -62,9 +62,9 @@ describe Portal::SchoolsController do
       assigns[:portal_school].should equal(@school)
     end
   end
-  
+
   describe "POST create" do
-  
+
     describe "with valid params" do
       it "assigns a newly created school as @portal_school" do
         @school.should_receive(:save).and_return(true)
@@ -72,7 +72,7 @@ describe Portal::SchoolsController do
         post :create, :portal_school => {:these => 'params'}
         assigns[:portal_school].should equal(@school)
       end
-  
+
       it "redirects to the created school" do
         @school.should_receive(:save).and_return(true)
         @school.stub(:id => 1);
@@ -81,7 +81,7 @@ describe Portal::SchoolsController do
         response.should redirect_to(portal_school_url(@school))
       end
     end
-  
+
     describe "with invalid params" do
       it "assigns a newly created but unsaved school as @portal_school" do
         @school.should_receive(:save).and_return(true)
@@ -89,7 +89,7 @@ describe Portal::SchoolsController do
         post :create, :portal_school => {:these => 'params'}
         assigns[:portal_school].should equal(@school)
       end
-  
+
       it "re-renders the 'new' template" do
         @school.should_receive(:save).and_return(false)
         Portal::School.stub!(:new).and_return(@school)
@@ -97,25 +97,25 @@ describe Portal::SchoolsController do
         response.should render_template('new')
       end
     end
-  
+
   end
-  
+
   describe "PUT update" do
-  
+
     describe "with valid params" do
       it "updates the requested school" do
         Portal::School.should_receive(:find).with("37").and_return(@school)
         @school.should_receive(:update_attributes).with({'portal_school' => 'params'})
         put :update, :id => "37", :portal_school => {:portal_school => 'params'}
       end
-  
+
       it "assigns the requested school as @portal_school" do
         @school.should_receive(:update_attributes).and_return(true)
         Portal::School.stub!(:find).and_return(@school)
         put :update, :id => "1"
         assigns[:portal_school].should equal(@school)
       end
-  
+
       it "redirects to the school" do
         @school.stub!(:id => 1)
         @school.should_receive(:update_attributes).and_return(true)
@@ -124,7 +124,7 @@ describe Portal::SchoolsController do
         response.should redirect_to(portal_school_url(@school))
       end
     end
-  
+
     describe "with invalid params" do
 
       before(:each) do
@@ -137,26 +137,26 @@ describe Portal::SchoolsController do
         put :update, :id => "1", :portal_school => {:portal_school => 'params'}
         assigns[:portal_school].should equal(@school)
       end
-  
+
       it "re-renders the 'edit' template" do
         put :update, :id => "1", :portal_school => {:portal_school => 'params'}
         response.should render_template('edit')
       end
     end
-  
+
   end
-  
+
   describe "DELETE destroy" do
     before(:each) do
       @school.stub!(:id => 1)
       @school.should_receive(:destroy).and_return(true)
       Portal::School.should_receive(:find).with("1").and_return(@school)
     end
-    
+
     it "destroys the requested school" do
       delete :destroy, :id => "1"
     end
-  
+
     it "redirects to the portal_schools list" do
       delete :destroy, :id => "1"
       response.should redirect_to(portal_schools_url)
@@ -173,5 +173,4 @@ describe Portal::SchoolsController do
       response.should have_rjs(:remove)
     end
   end
-
 end

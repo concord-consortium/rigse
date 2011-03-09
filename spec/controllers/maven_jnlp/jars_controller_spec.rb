@@ -7,7 +7,7 @@ describe MavenJnlp::JarsController do
   end
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    generate_default_project_and_jnlps_with_factories
     logout_user
   end
 
@@ -20,14 +20,14 @@ describe MavenJnlp::JarsController do
     end
 
     describe "with mime type of xml" do
-  
+
       it "renders all maven_jnlp_jars as xml" do
         MavenJnlp::Jar.should_receive(:find).with(:all).and_return(jars = mock("Array of MavenJnlp::Jars"))
         jars.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
-    
+
     end
 
   end
@@ -39,7 +39,7 @@ describe MavenJnlp::JarsController do
       get :show, :id => "37"
       assigns[:jar].should equal(mock_jar)
     end
-    
+
     describe "with mime type of xml" do
 
       it "renders the requested jar as xml" do
@@ -50,11 +50,11 @@ describe MavenJnlp::JarsController do
       end
 
     end
-    
+
   end
 
   describe "GET new" do
-  
+
     it "exposes a new jar as @jar" do
       MavenJnlp::Jar.should_receive(:new).and_return(mock_jar)
       get :new
@@ -64,7 +64,7 @@ describe MavenJnlp::JarsController do
   end
 
   describe "GET edit" do
-  
+
     it "exposes the requested jar as @jar" do
       MavenJnlp::Jar.should_receive(:find).with("37").and_return(mock_jar)
       get :edit, :id => "37"
@@ -76,7 +76,7 @@ describe MavenJnlp::JarsController do
   describe "POST create" do
 
     describe "with valid params" do
-      
+
       it "exposes a newly created jar as @jar" do
         MavenJnlp::Jar.should_receive(:new).with({'these' => 'params'}).and_return(mock_jar(:save => true))
         post :create, :jar => {:these => 'params'}
@@ -88,9 +88,9 @@ describe MavenJnlp::JarsController do
         post :create, :jar => {}
         response.should redirect_to(maven_jnlp_jar_url(mock_jar))
       end
-      
+
     end
-    
+
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved jar as @jar" do
@@ -104,9 +104,9 @@ describe MavenJnlp::JarsController do
         post :create, :jar => {}
         response.should render_template('new')
       end
-      
+
     end
-    
+
   end
 
   describe "PUT udpate" do
@@ -132,7 +132,7 @@ describe MavenJnlp::JarsController do
       end
 
     end
-    
+
     describe "with invalid params" do
 
       it "updates the requested jar" do
@@ -164,13 +164,11 @@ describe MavenJnlp::JarsController do
       mock_jar.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
-  
+
     it "redirects to the maven_jnlp_jars list" do
       MavenJnlp::Jar.stub!(:find).and_return(mock_jar(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(maven_jnlp_jars_url)
     end
-
   end
-
 end
