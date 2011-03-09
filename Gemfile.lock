@@ -177,6 +177,7 @@ DEPENDENCIES
   mongrel (~> 1.1.5)
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
+  nokogiri (~> 1.4.1)
   open4 (~> 0.9.6)
   paperclip
   prawn (~> 0.4.1)

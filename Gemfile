@@ -29,7 +29,7 @@ source :gemcutter
   gem "paperclip"
   gem "acts-as-taggable-on"
   gem "ruby-debug"
-
+  gem "nokogiri",             "~> 1.4.1"
 group :development do
   gem "highline"
 end
