@@ -216,3 +216,13 @@ Then /^the usage report for "([^"]*)" should have \((\d+)\) answers for "([^"]*)
   #report.run_report(buffer,spreadsheet)
   #assessments_completed_for(spreadsheet,student,investigation_name).strip.downcase.should == value.strip.downcase
 end
+
+Then /^"([^"]*)" should have completed \((\d+)\) assessments for Activity "([^"]*)" in "([^"]*)"$/ do |student_name, num_answers, activity_name, class_name|
+  activity = Activity.find_by_name(activity_name)
+  investigation = activity.investigation
+  offering = offering_for(investigation.name,class_name)
+  learner = learner_for(student_name,offering)
+  report = Report::Util.new(offering)
+  report.complete_number(learner,activity).should == num_answers.to_i
+end
+

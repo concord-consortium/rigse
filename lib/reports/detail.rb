@@ -81,19 +81,22 @@ class Reports::Detail < Reports::Excel
         assess_completed = @report_utils[l.offering].saveables({:learner => l})
         assess_completed = assess_completed.select{|s| s.answered? }.size
         # <=================================================>
+        total_by_activity = inv.activities.inject(0) { |a,b| a + b.reportable_elements.size}
         assess_percent = percent(assess_completed, total_assessments)
         last_run = l.bundle_logger.bundle_contents.compact.last
         last_run = last_run.nil? ? 'never' : last_run.created_at
 
         sheet = @inv_sheet[inv]
         row = sheet.row(sheet.last_row_index + 1)
+        assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_activity})"
         row[0, 3] =  learner_info_cells(l) + [assess_completed, assess_percent, last_run]
 
         all_answers = []
         inv.activities.student_only.each do |a|
           # <=================================================>
           reportables = a.reportable_elements.map {|re| re[:embeddable]}
-          answers = reportables.map{|r| @report_utils[l.offering].saveable(l,r)}
+          #answers = reportables.map{|r| @report_utils[l.offering].saveable(l,r)}
+          answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
           answered_answers = answers.select{|s| s.answered? }
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty

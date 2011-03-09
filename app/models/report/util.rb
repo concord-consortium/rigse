@@ -56,6 +56,11 @@ class Report::Util
     results = results & Array(@saveables_by_answered[true]) if options[:answered]
     results = results & Array(@saveables_by_embeddable[options[:embeddable]]) if options[:embeddable]
     results = results & Array(@saveables_by_correct[true]) if options[:correct]
+    if options[:embeddables]
+      embeddables = options[:embeddables]
+      results = results & embeddables.map { |e| @saveables_by_embeddable[e]}.flatten
+    end
+    results = results & Array(@saveables_by_correct[true]) if options[:correct]
     return results
   end
 
@@ -119,7 +124,10 @@ class Report::Util
     @saveables_by_correct    = @saveables.group_by { |s| (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false }
   end
 
-  def complete_number(learner)
+  def complete_number(learner,activity = nil)
+    if activity
+      return saveables(:learner => learner, :embeddables => activity.reportable_elements.map { |r| r[:embeddable]}).size
+    end
     return saveables(:learner => learner).size
   end
 
