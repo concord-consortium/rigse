@@ -392,6 +392,16 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
         puts
       end
     end
+
+    desc "delete orphaned teachers, clazzes, students, and learners"
+    task :delete_orphaned_items => :environment do
+      Portal::Teacher.all.select {|t| t.user.nil? }.each    {|t| t.destroy }
+      Portal::Student.all.select {|s| s.user.nil? }.each    {|s| s.destroy }
+      Portal::Clazz.all.select   {|c| c.teacher.nil? }.each {|c| c.destroy }
+      Portal::Learner.all.select {|l| l.student.nil?}.each  {|l| l.destroy }
+    end
+
+
   end
 end
 
