@@ -4,6 +4,12 @@ describe SessionsController do
 
   fixtures        :users
 
+  def mock_project(stubs={})
+    project = mock_model(Admin::Project.default_project.first)
+    project.stub!(stubs) unless stubs.empty?
+    project
+  end
+
   def do_create
     post :create, @login_params
   end
@@ -150,7 +156,7 @@ describe SessionsController do
       @user.stub!(:remember_token?)
       @login_params[:remember_me] = '0'
 
-      @mock_project.should_receive(:use_student_security_questions).and_return(true)
+      mock_project.should_receive(:use_student_security_questions).and_return(true)
       @user.should_receive(:portal_student).and_return(nil)
       @user.should_not_receive(:security_questions)
 
@@ -169,7 +175,7 @@ describe SessionsController do
       end
 
       it "should not check for security questions if the current Admin::Project says not to" do
-        @mock_project.should_receive(:use_student_security_questions).and_return(false)
+        mock_project.should_receive(:use_student_security_questions).and_return(false)
         @student.user.should_not_receive(:security_questions)
 
         do_create
@@ -184,7 +190,7 @@ describe SessionsController do
             true,
             true
           ]
-          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          mock_project.should_receive(:use_student_security_questions).and_return(true)
           @student.user.should_receive(:security_questions).and_return(questions)
 
           do_create
@@ -195,7 +201,7 @@ describe SessionsController do
 
       describe "Student without security questions" do
         it "should redirect to the page where the student must set their security questions" do
-          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          mock_project.should_receive(:use_student_security_questions).and_return(true)
           @student.user.should_receive(:security_questions).and_return([])
 
           do_create

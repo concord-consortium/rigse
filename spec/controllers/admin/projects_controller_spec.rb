@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Admin::ProjectsController do
 
   def mock_project(stubs={})
-    @mock_project.stub!(stubs) unless stubs.empty?
-    @mock_project
+    project = mock_model(Admin::Project)
+    project.stub!(stubs) unless stubs.empty?
+    project
   end
 
   before(:each) do
@@ -34,7 +35,7 @@ describe Admin::ProjectsController do
     it "only allows managers to edit the current project and only shows them the information they can change" do
       project = Factory.create(:admin_project)
       second_project = Factory.create(:admin_project, { :name => "Test project" })
-      Admin::Project.should_receive(:default_project).and_return(project)
+      #Admin::Project.should_receive(:default_project).and_return(project)
 
       manager_user = Factory.create(:user)
       manager_user.add_role("manager")

@@ -4,6 +4,10 @@ require 'spec_helper'
 describe User do
   fixtures :users
 
+  before :each do
+    generate_default_project_and_jnlps_with_factories
+  end
+
   describe 'being created' do
     before do
       @user = nil
