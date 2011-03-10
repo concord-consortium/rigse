@@ -366,7 +366,9 @@ class InvestigationsController < AuthoringController
   def add_activity
     @activity = Activity.new
     @activity.user = current_user
-    @activity.investigation = Investigation.find(params['id'])
+    @activity.investigation = @investigation
+    @activity.save
+    redirect_to edit_activity_path @activity
   end
 
   ##

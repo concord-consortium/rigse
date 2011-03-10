@@ -8,8 +8,8 @@ javascripts:
   - controls
   - scriptaculous
   - misc/resizable
-  - livepipe/livepipe
-  - livepipe/window
+  #- livepipe/livepipe
+  #- livepipe/window
   - flotr/excanvas
   - flotr/flotr
   - canvas2image

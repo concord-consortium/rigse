@@ -360,7 +360,7 @@ ActionController::Routing::Routes.draw do |map|
   }
 
   map.resources :investigations, :member => {
-    :add_activity => :post,
+    :add_activity => [:post,:get],
     :sort_activities => :post,
     :delete_activity => :post,
     :print => :get,

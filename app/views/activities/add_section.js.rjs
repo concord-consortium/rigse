@@ -1,1 +1,0 @@
-modal_dialog_for(page, @section, :activity=> @activity)
