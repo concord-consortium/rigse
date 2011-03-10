@@ -21,15 +21,17 @@ class Reports::Detail < Reports::Excel
   end
 
   def setup_sheet_for_investigation(inv)
-      # puts "Investigation #{"%4d" % inv.id}"
-      @inv_sheet[inv] = @book.create_worksheet :name => inv.name[0..30]
+      # Spreadhseet was dying on ":" and  "/" chars. Others?
+      sheet_name = inv.name.gsub /[^a-zA-z0-9 ]/,"_"
+      sheet_name = sheet_name[0..30]
+      @inv_sheet[inv] = @book.create_worksheet :name => sheet_name
       sheet_defs = @common_columns.clone
       answer_defs = []
       header_defs = [] # top level header:  Investigation
       activities = inv.activities.student_only
       # offset the reportables counter by 2
       reportable_header_counter = sheet_defs.size
-      header_defs << Reports::ColumnDefinition.new(:title => inv.name, :heading_row => 0, :col_index => reportable_header_counter)
+      header_defs << Reports::ColumnDefinition.new(:title => sheet_name, :heading_row => 0, :col_index => reportable_header_counter)
       activities.each do |a|
         header_defs << Reports::ColumnDefinition.new(:title => a.name, :width=> 30, :heading_row => 0, :col_index => reportable_header_counter)
         reportable_header_counter += 2 # (two columns per activity header)
