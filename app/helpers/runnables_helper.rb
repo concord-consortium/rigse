@@ -38,8 +38,11 @@ module RunnablesHelper
     else
       html_options[:title] = title
     end
-
-    x_button_for(component, verb) + link_to(link_text, url, html_options)
+    if params[:no_button]
+      link_to(link_text, url, html_options)
+    else
+      x_button_for(component, verb) + link_to(link_text, url, html_options)
+    end
   end
 
   def button_and_link_for(component, as_name = nil, params = {}, run_or_preview = :run)
