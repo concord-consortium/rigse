@@ -156,7 +156,7 @@ DEPENDENCIES
   capistrano-ext
   capybara (~> 0.3.8)
   ci_reporter
-  compass
+  compass (= 0.8.17)
   cucumber (~> 0.10.0)
   cucumber-rails (~> 0.3.2)
   database_cleaner (~> 0.5.0)
