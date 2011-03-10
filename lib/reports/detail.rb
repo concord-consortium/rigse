@@ -22,7 +22,7 @@ class Reports::Detail < Reports::Excel
 
   def setup_sheet_for_investigation(inv)
       # puts "Investigation #{"%4d" % inv.id}"
-      @inv_sheet[inv] = @book.create_worksheet :name => inv.name[0..20]
+      @inv_sheet[inv] = @book.create_worksheet :name => inv.name[0..30]
       sheet_defs = @common_columns.clone
       answer_defs = []
       header_defs = [] # top level header:  Investigation
