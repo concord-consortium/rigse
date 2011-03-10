@@ -870,12 +870,6 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          # haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
-          if is_page_element
-            restrict_to 'admin' do
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
-            end
-          end
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
