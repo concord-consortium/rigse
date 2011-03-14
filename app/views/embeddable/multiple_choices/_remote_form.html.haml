@@ -14,5 +14,5 @@
           %ul
             %li= link_to_remote "add choice", :url => add_choice_embeddable_multiple_choice_url(multiple_choice)
       #choices
-      - f.fields_for :choices do |choice_form|
-        = render :partial => "edit_choice", :locals => {:multiple_choice => multiple_choice, :form => choice_form}
+        - f.fields_for :choices do |choice_form|
+          = render :partial => "edit_choice", :locals => {:multiple_choice => multiple_choice, :form => choice_form}
