@@ -253,7 +253,7 @@ namespace :deploy do
   
   desc "Create asset packages for production" 
   task :create_asset_packages, :roles => :app do
-    run "cd #{deploy_to}/current && bundle exec compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
+    run "cd #{deploy_to}/current && bundle exec compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compact --force"
     run "cd #{deploy_to}/current && rake asset:packager:build_all --trace"
   end
   
