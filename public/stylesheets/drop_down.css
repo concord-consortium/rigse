@@ -1,3 +1,4 @@
+/* line 2, sass/drop_down.sass */
 .dropdown {
   z-index: 1000;
   display: block;
@@ -8,23 +9,36 @@
   float: none;
   background: transparent;
   font-size: 10px;
-  overflow-x: hidden; }
-  .dropdown .big {
-    font-size: 1.2em; }
-  .dropdown ul {
-    background-color: white;
-    list-style-type: none;
-    font-weight: normal;
-    border: 1px #bddfdf solid; }
-  .dropdown li {
-    background: #fef7e0;
-    list-style-type: none;
-    padding: 0.5em; }
-  .dropdown a {
-    display: block; }
-  .dropdown a.rollover {
-    clear: left !important; }
-  .dropdown hr {
-    border: none !important;
-    height: 1px !important;
-    padding: 0 !important; }
+  overflow-x: hidden;
+}
+/* line 14, sass/drop_down.sass */
+.dropdown .big {
+  font-size: 1.2em;
+}
+/* line 16, sass/drop_down.sass */
+.dropdown ul {
+  background-color: white;
+  list-style-type: none;
+  font-weight: normal;
+  border: 1px #bddfdf solid;
+}
+/* line 21, sass/drop_down.sass */
+.dropdown li {
+  background: #fef7e0;
+  list-style-type: none;
+  padding: 0.5em;
+}
+/* line 25, sass/drop_down.sass */
+.dropdown a {
+  display: block;
+}
+/* line 28, sass/drop_down.sass */
+.dropdown a.rollover {
+  clear: left !important;
+}
+/* line 30, sass/drop_down.sass */
+.dropdown hr {
+  border: none !important;
+  height: 1px !important;
+  padding: 0 !important;
+}
