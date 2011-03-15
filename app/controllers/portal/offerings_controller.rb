@@ -36,11 +36,15 @@ class Portal::OfferingsController < ApplicationController
         else
           session[:put_path] = nil
         end
-        render 'pages/show', :layout => "layouts/run"
+        render 'page]/show', :layout => "layouts/run"
       }
 
       format.run_external_html   {
          if learner = setup_portal_student
+           cookies[:save_path] = @offering.runnable.save_path
+           cookies[:learner_id] = learner.id
+           cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
+           cookies[:activity_name] = @offering.runnable.name
            # session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
          else
            # session[:put_path] = nil

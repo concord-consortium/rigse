@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110209184336) do
+ActiveRecord::Schema.define(:version => 20110315163710) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -560,7 +560,10 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.string   "save_path"
   end
+
+  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
 
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
