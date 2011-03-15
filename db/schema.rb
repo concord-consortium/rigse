@@ -838,8 +838,8 @@ ActiveRecord::Schema.define(:version => 20110304163315) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
