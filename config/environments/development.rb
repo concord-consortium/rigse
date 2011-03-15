@@ -28,7 +28,6 @@ config.action_mailer.raise_delivery_errors = false
 #
 #   $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
 #
-config.gem "highline",     :version => "= 1.5.2"
 
 
 # see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode

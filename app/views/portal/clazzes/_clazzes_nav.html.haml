@@ -3,7 +3,7 @@
 %br
 #clazzes_nav
   .padded_content
-    %strong Classes:
+    %h2 Classes:
     - top_container_id = dom_id_for(top_node, :nav_list)
     - top_controller ||= top_node.class.name.tableize
     - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
@@ -19,6 +19,6 @@
           -else
             = link_to link_text, clazz
     - if top_node.is_a? Portal::Teacher
-      %ul{:id=>dom_id_for(top_node, :nav_list_create_class)}
+      %ul.create{:id=>dom_id_for(top_node, :nav_list_create_class)}
         .create_link
-          = link_to("create a class",new_portal_clazz_path)
+          = link_to("Create a Class",new_portal_clazz_path)

@@ -171,7 +171,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     self.argument                 = jnlp_object.argument
     self.offline_allowed          = jnlp_object.offline_allowed
     self.local_resource_signatures_verified = jnlp_object.local_resource_signatures_verified
-    self.include_pack_gzip        = jnlp_object.include_pack_gzip
+    self.include_pack_gzip        = jnlp_object.include_pack_gz
     self.spec                     = jnlp_object.spec
     self.codebase                 = jnlp_object.codebase
     self.href                     = jnlp_object.href
