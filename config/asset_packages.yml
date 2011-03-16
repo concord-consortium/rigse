@@ -8,8 +8,8 @@ javascripts:
   - controls
   - scriptaculous
   - misc/resizable
-  - livepipe/livepipe
-  - livepipe/window
+  #- livepipe/livepipe
+  #- livepipe/window
   - flotr/excanvas
   - flotr/flotr
   - canvas2image
@@ -21,6 +21,7 @@ javascripts:
   - live_validation
   - please_wait
   - report_filter
+  - pagination
   
 stylesheets: 
 - base: 
@@ -60,7 +61,6 @@ stylesheets:
   - drop_down
   - data_table
   - reports
-  - themes/rites/rites
   
 - investigations:
   - themes/investigations/investigations
@@ -158,6 +158,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - themes/genomedynamics/genomedynamics
   
 - geniverse:
   - app

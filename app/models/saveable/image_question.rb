@@ -14,6 +14,8 @@ class Saveable::ImageQuestion < ActiveRecord::Base
   
   [:prompt, :name].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
   
+  include Saveable::Saveable
+  
   def answer
     if answered?
       answers.last.answer

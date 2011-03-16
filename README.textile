@@ -14,37 +14,9 @@ The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need 
 server and a mysql username/password with enough permissions to create and drop the 
 database you intend to use with RITES.
 
-h4. RVM
+h4. RVM, Bundler, & Gem Dependencies
 
-It might make good sense to use "RVM":http://rvm.beginrescueend.com/ to isolate gem sets
-while you are working on this project. Here is one pattern you could use;
-
-<pre><code>
-
-sudo gem install rvm      # install RVM 
-rvm list known            # show all available Rubies
-rvm install 1.8.7         # install the latest 1.8.7 ruby
-rvm list                  # show locally installed Rubies
-rvm use 1.8.7             # use it
-rvm gemset create has     # make  a gemset
-rvm gemset use has        # use your gemset
-gem install capistrano    # don't sudo gem install!
-gem install capistrano-ext
-gem install ruby-debug
-gem install haml
-</pre></code>
-
-Next time you work on (eg has) try:
-
-<pre><code>rvm use 1.8.7@has</pre></code>
-and you will have only the gems you configured for has.
-
-Another super cool thing you can do is create a ".rvmrc" file at the top of your project
-the file can have just one line:
-
-<pre><code>rvm use 1.8.7@has</pre></code>
-
-From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
+* "Maintaining gem dependencies":doc/gem-dependencies.textile
 
 h4. Updating to a newer codebase.
 
