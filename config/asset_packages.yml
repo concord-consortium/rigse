@@ -2,7 +2,7 @@
 javascripts: 
 - base: 
   - prototype
-  - prototype-ui/prototype-ui
+  #- prototype-ui/prototype-ui
   - effects
   - dragdrop
   - controls
@@ -123,15 +123,14 @@ stylesheets:
   - reports
   
 - has:
-  - themes/has/has
-  - themes/has/action_menu_tab
-  - themes/has/drop_down
-  - themes/has/accordion
-  - window/window
-  - window/rites
-  - live_validation
-  - notes
+  - app
+  - accordion
   - please_wait
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
   - data_table
   - reports
 
