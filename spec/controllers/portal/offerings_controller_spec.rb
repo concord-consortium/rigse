@@ -9,6 +9,7 @@ describe Portal::OfferingsController do
 
   it "saves learner data in the cookie" do
     offering = mock_model(Portal::Offering)
+    clazz = mock_model(Portal::Clazz)
     Portal::Offering.stub!(:find).and_return(offering)
     runnable = mock_model(ExternalActivity, :name      => "Some Activity",
                                             :url       => "http://example.com",
@@ -16,6 +17,7 @@ describe Portal::OfferingsController do
     @user = Factory(:user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
     offering.stub!(:runnable).and_return(runnable)
     offering.stub!(:find_or_create_learner).and_return(@user)
+    offering.stub!(:portal_clazz).and_return(clazz)
     portal_student = mock_model(Portal::Student)
     @user.stub!(:portal_teacher)
     @user.stub!(:portal_student).and_return(portal_student)
@@ -26,6 +28,6 @@ describe Portal::OfferingsController do
     response.cookies["learner_id"].should == @user.id.to_s
     response.cookies["student_name"].should == "#{current_user.first_name} #{current_user.last_name}"
     response.cookies["activity_name"].should == offering.runnable.name
-    #response.cookies[:class_id]
+    response.cookies["class_id"].should == clazz.id.to_s
   end
 end

@@ -45,6 +45,7 @@ class Portal::OfferingsController < ApplicationController
            cookies[:learner_id] = learner.id
            cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
            cookies[:activity_name] = @offering.runnable.name
+           cookies[:class_id] = @offering.portal_clazz.id
            # session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
          else
            # session[:put_path] = nil
