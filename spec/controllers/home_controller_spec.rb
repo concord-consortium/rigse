@@ -15,13 +15,13 @@ describe HomeController do
     controller.should be_an_instance_of(HomeController)
   end
 
-  it "should display home page content from the current admin project" do
-    content = "Test home page content"
-    @mock_project.stub!(:home_page_content).and_return(content)
+  # This test is no longer relevant
+  #it "should display home page content from the current admin project" do
+    #content = "Test home page content"
+    #@mock_project.stub!(:home_page_content).and_return(content)
 
-    get :index
+    #get :index
 
-    @response.body.should include(content)
-  end
-
+    #@response.body.should include(content)
+  #end
 end

@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
-  
+
   def new
   end
 
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
   end
 
   protected
-  
+
   def password_authentication
     user = User.authenticate(params[:login], params[:password])
     if user
@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
       render :action => :new
     end
   end
-  
+
   def successful_login
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
@@ -43,7 +43,7 @@ class SessionsController < ApplicationController
     flash[:error] = "Couldn't log you in as '#{params[:login]}'"
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
   end
-  
+
   def check_student_security_questions_ok
     if @project && @project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
       redirect_to(edit_user_security_questions_path(current_user))
