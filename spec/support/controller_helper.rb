@@ -66,8 +66,9 @@ class ArrayOfVersionedJnlpUrls < Array
 end
 
 def generate_jnlps_with_mocks
-  project_name, project_url = Admin::Project.default_project_name_url
-  server, family, version = Admin::Project.default_jnlp_info
+  project_name = Admin::Project.project_settings.site_name
+  project_url = Admin::Project.project_settings.site_url
+  server, family, version = Admin::Project.default_project.first.default_jnlp_info
 
   @mock_maven_jnlp_icon ||= mock_model(MavenJnlp::Icon)
 

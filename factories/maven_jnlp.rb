@@ -71,8 +71,8 @@ end
 # end
 #
 #
-# Factory.define :maven_jnlp_jar, :class => MavenJnlp::Jar do |f|
-# end
+ Factory.define :maven_jnlp_jar, :class => MavenJnlp::Jar do |f|
+ end
 #
 # Factory.define :maven_jnlp_native_library, :class => MavenJnlp::NativeLibrary do |f|
 # end
