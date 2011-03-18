@@ -160,7 +160,7 @@ describe MavenJnlp::JarsController do
   describe "DELETE destroy" do
 
     it "destroys the requested jar" do
-      MavenJnlp::Jar.should_receive(:find).with("37").and_return(mock_jar)
+      MavenJnlp::Jar.stub!(:find).with("37").and_return(mock_jar)
       mock_jar.should_receive(:destroy)
       delete :destroy, :id => "37"
     end

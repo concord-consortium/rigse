@@ -20,7 +20,7 @@ describe Portal::ClazzesController do
     generate_portal_resources_with_mocks
 
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
-    @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+    @mock_school = Factory.create(:portal_school, :name => "RITES Investigations-school", :semesters => [@mock_semester])
 
     # set up our user types
     @normal_user = Factory.next(:anonymous_user)
@@ -54,10 +54,11 @@ describe Portal::ClazzesController do
   end
 
   before(:each) do
+    generate_default_project_and_jnlps_with_factories
     setup_for_repeated_tests
     stub_current_user :admin_user # Make admin our default test user
 
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    #Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "GET show" do

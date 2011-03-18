@@ -115,6 +115,7 @@ def generate_jnlps_with_mocks
     :update_snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url,
     :snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url,
     :versioned_jnlp_urls => @versioned_jnlp_urls)
+  p 
 
   @mock_maven_jnlp_versioned_jnlp_url.stub!(:maven_jnlp_family).and_return(@mock_maven_jnlp_family)
 
@@ -135,30 +136,31 @@ def generate_jnlps_with_mocks
   @mock_maven_jnlp_family.stub!(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
 end
 
-# Generates a mock project and associated jnlp resources
 def generate_default_project_and_jnlps_with_mocks
-  project_name, project_url = Admin::Project.default_project_name_url
-  server, family, version = Admin::Project.default_jnlp_info
-  generate_jnlps_with_mocks
-  @mock_project = mock_model(Admin::Project,
-    :name => project_name,
-    :url =>  project_url,
-    :home_page_content => nil,
-    :use_student_security_questions => false,
-    :jnlp_version_str =>  version,
-    :snapshot_enabled => false,
-    :enable_default_users  => APP_CONFIG[:enable_default_users],
-    :states_and_provinces  => APP_CONFIG[:states_and_provinces],
-    :maven_jnlp_server => @mock_maven_jnlp_server,
-    :maven_jnlp_family => @mock_maven_jnlp_family)
+# Generates a mock project and associated jnlp resources
+  @mock_project = Factory.create(:admin_project)
+  project_name = Admin::Project.project_settings.site_name
+  project_url = Admin::Project.project_settings.site_url
+  server, family, version = Admin::Project.default_project.first.default_jnlp_info
+  #@mock_project = mock_model(Admin::Project,
+    #:name => project_name,
+    #:url =>  project_url,
+    #:home_page_content => nil,
+    #:use_student_security_questions => false,
+    #:jnlp_version_str =>  version,
+    #:snapshot_enabled => false,
+    #:enable_default_users  => APP_CONFIG[:enable_default_users],
+    #:states_and_provinces  => APP_CONFIG[:states_and_provinces],
+    #:maven_jnlp_server => @mock_maven_jnlp_server,
+    #:maven_jnlp_family => @mock_maven_jnlp_family)
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
-  MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
-  Admin::Project.stub!(:default_project).and_return(@mock_project)
+  #Admin::Project.stub!(:default_project).and_return(@mock_project)
+  Admin::Project.stub!(:the_default_project).and_return(@mock_project)
   mock_anonymous_user
   mock_admin_user
   mock_researcher_user
-  @mock_project
+  #@mock_project
 end
 
 def generate_portal_resources_with_mocks

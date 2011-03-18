@@ -117,9 +117,12 @@ class Admin::Project < ActiveRecord::Base
   end
 
   class <<self
+    def the_default_project
+      default_project.first
+    end
 
     def project_settings
-      default_project.first.admin_project_settings
+     the_default_project.admin_project_settings
     end
 
     def searchable_attributes

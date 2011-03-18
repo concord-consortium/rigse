@@ -102,7 +102,7 @@ class Portal::ClazzesController < ApplicationController
         if teacher && teacher.id # Former call used .id directly on create method, leaving room for NilClass error
           @portal_clazz.teacher_id = teacher.id # Former call tried to do another Portal::Teacher.create. We don't want to double-create this teacher
           @portal_clazz.teacher = teacher
-          @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+          @portal_clazz.teacher.schools << Portal::School.find_by_name(Admin::Project.project_settings.site_school)
         else
           flash[:error] = "There was an error trying to associate you with this class. Please try again."
           okToCreate = false
