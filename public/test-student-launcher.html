@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta content='text/xhtml; charset=utf-8' http-equiv='content-type' />
+    <title>
+      testing student workgroup selection
+    </title>
+    <meta content='no' http-equiv='imagetoolbar' />
+    <meta content='all' name='distribution' />
+    <meta content='all' name='robots' />
+    <meta content='document' name='resource-type' />
+    <meta content='true' name='MSSmartTagsPreventParsing' />
+    <link href='/images/favicon.ico' rel='shortcut icon' />
+    <link href='/stylesheets/app.css' media='screen' rel='stylesheet' type='text/css' />
+    <link href='/stylesheets/workgroup.css' media='screen' rel='stylesheet' type='text/css' />
+    <script src='/javascripts/prototype.js' type='text/javascript'></script>
+    <script src='/javascripts/student_workgroup.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div id='note' style='display: none;'></div>
+    <div id='waiter' style='display: none;'>
+      please wait
+    </div>
+    <div id='page'></div>
+    <div class='wrapper' id='wrapper'>
+      <div id='primary'>
+        <div class='main_content_colors' id='content'>
+          <div class='main_content_colors' id='content_header'>
+            <div class='padded_content'>
+              <div>
+                <button style='display: inline-block;'>run</button>
+                the activity now, or add more collaborators below.
+              </div>
+              <br />
+              <div id='add_group' style='display: none;'>
+                <h3>add colaborators</h3>
+                <select id='learners_dropdown'></select>
+                <button id='add_button'>
+                  add
+                </button>
+              </div>
+              <div id='learners_container' style='display: none;'>
+                <h3>existing colaborators:</h3>
+                <ul id='learners_list'></ul>
+              </div>
+              <div id='password_panel' style='display: none;'>
+                <span id='login_user_name'>
+                  user name
+                </span>
+                <br />
+                <span>
+                  password:
+                </span>
+                <input id='password_field' type='password'>
+                  <button id='login_button'>
+                    I am here
+                  </button>
+                </input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='secondary'></div>
+      <div id='under_footer'></div>
+    </div>
+  </body>
+</html>
