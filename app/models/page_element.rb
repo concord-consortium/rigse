@@ -84,4 +84,19 @@ class PageElement < ActiveRecord::Base
     @copy.save
     @copy
   end
+
+  # TODO: we have to make this container nuetral,
+  # using parent / tree structure (children)
+  def reportable_elements
+    return @reportable_elements if @reportable_elements
+    @reportable_elements = []
+    unless teacher_only?
+      if embeddable.respond_to?(:reportable_elements)
+        @reportable_elements = embeddable.reportable_elements
+      elsif Investigation.reportable_types.include?(embeddable.class)
+        @reportable_elements << {:embeddable => embeddable, :page_element => self}
+      end
+    end
+    return @reportable_elements
+  end
 end

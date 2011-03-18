@@ -89,7 +89,7 @@ namespace :db do
                   # filter out missing columns 
                   data[c.name] = fixture[c.name] if fixture[c.name]
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue 
               puts "failed to load table #{tbl}" 
@@ -141,7 +141,7 @@ namespace :db do
                     data[c.name] = user_id
                   end
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue StandardError => e
               puts e
@@ -198,7 +198,7 @@ namespace :db do
                     data[c.name] = user_id
                   end
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue StandardError => e
               puts e
@@ -212,14 +212,24 @@ namespace :db do
           match = regex.match(tbl)
           key1 = match[1] + '_id'
           key2 = match[2] + '_id'
-          ActiveRecord::Base.transaction do 
+          ActiveRecord::Base.transaction do
+            one_at_a_time = false
             begin 
               puts "Loading #{tbl}..." 
               table_path = "#{tbl}.yaml"
               yaml_values = YAML.load_file(table_path)
-              sql_values = yaml_values.collect { |i| "(#{i.values.join(',')})" }.join(',')
-              ActiveRecord::Base.connection.execute("INSERT INTO #{tbl} (#{key1}, #{key2}) VALUES #{sql_values}")
+              if one_at_a_time
+                yaml_values.each do |i|
+                  vals = i.values.join(',')
+                  ActiveRecord::Base.connection.execute("INSERT INTO #{tbl} (#{key1}, #{key2}) VALUES (#{vals})")
+                end
+              else
+                sql_values = yaml_values.collect { |i| "(#{i.values.join(',')})" }.join(',')
+                ActiveRecord::Base.connection.execute("INSERT INTO #{tbl} (#{key1}, #{key2}) VALUES (#{sql_values})")
+              end
             rescue StandardError => e
+              one_at_a_time = true
+              retry
               puts e
               puts "failed to load table #{tbl}" 
             end 

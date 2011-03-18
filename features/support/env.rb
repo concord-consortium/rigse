@@ -22,7 +22,6 @@ require 'email_spec'
 require 'email_spec/cucumber'
 require 'spec/stubs/cucumber'
 
-
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
 # prefer to use XPath just remove this line and adjust any selectors in your
@@ -117,6 +116,7 @@ Before do
   # To get RSpec stubs and mocks working.
   $rspec_mocks ||= Spec::Mocks::Space.new
   # generate_default_project_and_jnlps_with_mocks
+  User.anonymous(true)
 end
 
 After do

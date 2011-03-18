@@ -1,23 +1,23 @@
 - content_for("page_#{dom_id_for(page)}".to_sym) do
   %OTCompoundDoc{ :name => page.name }
-    %bodyText 
+    %bodyText
       - if teacher_mode && should_show_teacher_notes?(page)
         %object{ :refid => ot_refid_for(page, :tab_container) }/
       - else
         %object{ :refid => ot_refid_for(page, :tab_content) }/
-      
+
 - content_for(:library) do
   - page.page_elements.each do |element|
     = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => @page }
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
-      - if teacher_only?(page)
+      - if for_teacher_only(page)
         - if teacher_mode
           #content.teacher_mode
             - if page.section
               %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
-                    
+
             - page.page_elements.each do |element|
               .element
                 %object{ :refid => ot_refid_for(element.embeddable) }/
@@ -25,7 +25,7 @@
         #content
           - if page.section
             %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
-                  
+
           - page.page_elements.each do |element|
             .element
               = yield "element_#{dom_id_for(element.embeddable)}".to_sym
@@ -62,12 +62,12 @@
             %td
               .page_teacher_note= page.teacher_note_otml
 
-              
-              
+
+
   %OTTabContainer{:local_id => ot_local_id_for(page, :tab_container), :name => page.name}
     %tabs
       %entry{:key => page.name}
         %object{ :refid => ot_refid_for(page, :tab_content) }/
-      %entry{:key => "Teacher notes"}        
+      %entry{:key => "Teacher notes"}
         %object{ :refid => ot_refid_for(page, :teacher_notes) }/
 

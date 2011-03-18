@@ -57,7 +57,6 @@ class Embeddable::MultipleChoicesController < ApplicationController
     if request.xhr?
       render :partial => 'remote_form', :locals => { :multiple_choice => @multiple_choice }
     end
-    
   end
 
   # POST /Embeddable/multiple_choices

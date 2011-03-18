@@ -1,0 +1,3 @@
+= render :partial => 'investigations/runnable_list', :locals => {:investigations => investigations, :paginated_objects => investigations}
+- unless resource_pages.blank?
+  = render :partial => 'resource_pages/runnable_list', :locals => {:resource_pages => resource_pages, :paginated_objects => resource_pages}

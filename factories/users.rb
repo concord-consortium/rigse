@@ -48,6 +48,27 @@ Factory.sequence :admin_user do |n|
 end
 
 ##
+## Singleton Factory Pattern for Researcher user.
+##
+Factory.sequence :researcher_user do |n| 
+  researcher = User.find_by_login('researcher') 
+  unless researcher
+    researcher = Factory(:user,
+    {
+      :login => 'researcher',
+      # :password =>'password',  # all passwords are 'password' (defined in user factory)
+      :first_name => 'researcher',
+      :site_admin => 0,
+      :roles => [Factory.next(:member_role),Factory.next(:researcher_role)]
+    })
+    researcher.register
+    researcher.activate
+    researcher.save!
+  end
+  researcher
+end
+
+##
 ## Singleton Factory Pattern for Anonymous user.
 ##
 Factory.sequence :anonymous_user do |n|

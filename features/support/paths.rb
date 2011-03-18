@@ -7,10 +7,10 @@ module NavigationHelpers
   #
   def path_to(page_name)
     case page_name
-    
+
     when /the home\s?page/
       '/'
-    
+
     when /my home\s?page/
       '/home'
     when /the pick signup page/
@@ -19,14 +19,34 @@ module NavigationHelpers
       '/linktool'
     when /the current project edit page/
       "/admin/projects/#{Admin::Project.default_project.id}/edit"
-    when /the current project show page/  
+    when /the current project show page/
       "/admin/projects/#{Admin::Project.default_project.id}/show"
     when /the create investigation page/
       "/investigations/new"
+    when /the create resource page page/
+      "/resource_pages/new"
+    when /the resource pages page/
+      "/resource_pages/"
+    when /the resource pages with drafts page/
+      "/resource_pages/?include_drafts=true"
+    when /the reports for resource pages/
+      "/reports/resource_pages"
+    when /the class page for "(.*)"/
+      "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
+    when /the investigations printable index page/
+      "/investigations/printable_index"
+    when /the investigations like "(.*)"/
+      "/investigations?name=#{$1}"
+    when /the resource pages printable index page/
+      "/resource_pages/printable_index"
+    when /the resource pages like "(.*)"/
+      "/resource_pages?name=#{$1}"
+    when /the resource page for "(.*)"/
+      "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     # accept paths too:
     when /\/[\S+\/]+/
       page_name
-      
+
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

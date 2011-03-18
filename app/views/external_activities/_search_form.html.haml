@@ -1,9 +1,9 @@
 / requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
-- portal_clazz_id ||= nil 
+- portal_clazz_id ||= nil
 
 .action_menu
   #search_title
-    ="Search #{TOP_LEVEL_CONTAINER_NAME.humanize.pluralize}"
+    ="Search #{ExternalActivity.display_name.pluralize}"
   .progress_container
     #search_spinner.tiny{:style=>'display: none;'}
       searching ...

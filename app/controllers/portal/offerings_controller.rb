@@ -134,6 +134,18 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
+  def activate
+    @offering = Portal::Offering.find(params[:id])
+    @offering.activate!
+    redirect_to :back
+  end
+  
+  def deactivate
+    @offering = Portal::Offering.find(params[:id])
+    @offering.deactivate!
+    redirect_to :back
+  end
+  
   def report
     @offering = Portal::Offering.find(params[:id])
     reportUtil = Report::Util.reload(@offering)  # force a reload of this offering

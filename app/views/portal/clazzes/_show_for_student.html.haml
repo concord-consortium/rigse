@@ -9,5 +9,4 @@
           = " (#{portal_clazz.section})"
       .action_menu_header_right
         = portal_clazz.teachers.size > 0 ? portal_clazz.teachers.map{ |t| t.name}.join(', ') : 'no teachers'
-    = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.offerings }
-    
+    = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings }

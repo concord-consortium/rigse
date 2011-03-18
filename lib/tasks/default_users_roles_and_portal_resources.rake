@@ -216,13 +216,13 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     task :default_portal_resources => :environment do
 
       # some constants that should probably be moved to settings.yml
-      DEFAULT_CLASS_NAME = 'Sample Class'
+      DEFAULT_CLASS_NAME = 'Fun with Investigations'
 
       author_user = User.find_by_login('author')
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
       
-      default_runnable = DefaultRunnable.create_default_runnable_for_user(author_user)
+      default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -269,7 +269,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_school_teacher.grades << grade_9
       
-      site_school.members << default_school_teacher
+      site_school.portal_teachers << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
 
@@ -296,8 +296,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # default offering
       attributes = {
         :clazz_id => default_course_class.id,
-        :runnable_id => default_runnable.id,
-        :runnable_type => default_runnable.class.name
+        :runnable_id => default_investigation.id,
+        :runnable_type => default_investigation.class.name
       }
       unless offering = Portal::Offering.find(:first, :conditions => attributes)
         offering = Portal::Offering.create!(attributes)
@@ -315,7 +315,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
-      site_school.members << default_student
+      site_school.add_member(default_student)
       #
       # default_student = student_user.student || student_user.student.create!
       # 

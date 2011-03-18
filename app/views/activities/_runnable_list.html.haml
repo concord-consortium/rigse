@@ -4,28 +4,28 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name => TOP_LEVEL_CONTAINER_NAME_PLURAL
+        %p= page_entries_info paginated_objects, :entry_name => Activity.display_name
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        / -if current_user.has_role? "author"
-        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_activity_path
+        -if current_user.has_role? "author"
+          %li= link_to "create #{Activity.display_name}", new_activity_path
 
-- for activity in activities
+- activities.each do |activity|
   %div{ :id => dom_id_for(activity), :class => 'runnable' }
-    = accordion_for(activity, (preview_button_for(activity) + name_for_component(activity, :hide_componenent_name => true)), :activity) do  
+    = accordion_for(activity, (preview_button_for(activity) + name_for_component(activity, :hide_componenent_name => true)), :activity) do
       %div.action_menu
-        %div.action_menu_header_left   
+        %div.action_menu_header_left
           = link_to_container(activity)
           %span.author
             = activity.user.name
-        %div.action_menu_header_right   
+        %div.action_menu_header_right
           %ul.menu
             - unless(current_user.anonymous?)
               %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
             - if (activity.changeable?(current_user))
-              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{activity.id}", :method => :delete 
+              %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{activity.id}", :method => :delete
       %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
         %p=activity.description
         %p

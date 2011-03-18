@@ -37,12 +37,12 @@ class DefaultRunnable
           i.description = "Learn About ..."
         end
         investigation.activities << activity
-        section1 = DefaultInvestigation.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
-        page1, xhtml = DefaultInvestigation.add_page_to_section(section1, "Find the hottest",
+        section1 = DefaultRunnable.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
+        page1, xhtml = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
           '<p>Find the hottest thing in the room with the temperature probe.</p>', 
           "Student's explore their environment with a tempemerature probe.")
         temperature_probe = Probe::ProbeType.find_by_name('temperature')
-        DefaultInvestigation.add_data_collector_to_page(page1, temperature_probe, false)
+        DefaultRunnable.add_data_collector_to_page(page1, temperature_probe, false)
         investigation.deep_set_user(user)
       end
       investigation

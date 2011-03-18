@@ -1,48 +1,48 @@
---- 
-production: 
-  help_email: itsisu@concord.org
-  site_url: http://itsisu.units.concord.org
-  active_school_levels: 
-  - "2"
-  - "3"
-  - "4"
-  use_gse: false
-  theme: itsisu
-  maven_jnlp_servers: 
-  - name: concord
-    host: http://jnlp.concord.org
-    path: /dev/org/concord/maven-jnlp/
-  active_grades: 
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
-  default_maven_jnlp: 
-    version: 0.1.0-20090724.190238
-    server: concord
-    family: all-otrunk-snapshot
-  :default_maven_jnlp: 
-    version: 0.1.0-20090724.190238
-    server: concord
-    family: all-otrunk-snapshot
-  valid_sakai_instances: 
-  - https://portfolio.ri.net/
-  site_school: ITSISU school
-  maven_jnlp_families: 
-  - all-otrunk-snapshot
-  description: 
-  site_district: ITSISU district
-  top_level_container_name: unit
-  site_name: ITSISU
-  default_admin_user: 
-    first_name: Noah
-    last_name: Paessel
-    login: knowuh
-    email: knowuh@gmail.com
-  enable_default_users: true
-  states_and_provinces: 
-  - RI
-  - MA
+---
+production: &prod
+  :help_email: itsisu@concord.org
+  :site_url: http://itsisu.units.concord.org
+  :active_school_levels:
+    - "2"
+    - "3"
+    - "4"
+  :use_gse: false
+  :theme: itsisu
+  :maven_jnlp_servers:
+  - :name: concord
+    :host: http://jnlp.concord.org
+    :path: /dev2/org/concord/maven-jnlp/
+  :active_grades:
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+  :default_maven_jnlp:
+    :version: snapshot
+    :server: concord
+    :family: all-otrunk-snapshot
+  :valid_sakai_instances:
+    - https://portfolio.ri.net/
+  :site_school: ITSISU school
+  :maven_jnlp_families:
+    - all-otrunk-snapshot
+  :description:
+  :site_district: ITSISU district
+  :top_level_container_name: unit
+  :site_name: ITSISU
+  :default_admin_user:
+    :first_name: Noah
+    :last_name: Paessel
+    :login: knowuh
+    :email: knowuh@gmail.com
+  :enable_default_users: true
+  :states_and_provinces:
+    - RI
+    - MA
+test: *prod
+staging: *prod
+cucumber: *prod
+development: *prod

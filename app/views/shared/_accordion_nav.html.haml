@@ -5,28 +5,28 @@
   %ul{:id=>activity_list_name, :class=>"accordion_header"}
     = link_to investigation.name, investigation
     - investigation.activities.each do |activity|
-      - style = teacher_only?(activity) ? "accordion_container teacher_only" : "accordion_container"
+      - style = for_teacher_only(activity) ? "accordion_container teacher_only" : "accordion_container"
       %li{:id=>dom_id_for(activity,:accordion_item), :class=>style}
         .accordion_name
           -if (defined? @activity) && (@activity.id == activity.id)
             = link_to activity.name,activity, :class=> 'selected'
           -else
             =link_to activity.name, activity
-        
+
         %div{:class => "accordion_toggle_closed accordion_toggle"}
         -section_list_name = dom_id_for(activity, :accordion_section_list)
         .accordion_content{:style=>'display: none;'}
           .description=activity.description
           %ul{:id=>section_list_name}
             - activity.sections.each_with_index do |s,i|
-              - style = teacher_only?(s) ? "accordion_container teacher_only" : "accordion_container"
+              - style = for_teacher_only(s) ? "accordion_container teacher_only" : "accordion_container"
               %li{:id => dom_id_for(s, :accordion_item), :class=>style}
                 -if (defined? @section) && (@section.id == s.id)
                   = link_to "#{i+1}:#{s.name}",s, :class=> 'selected accordion_section_title '
                 -else
                   =link_to "#{i+1}: #{s.name}",s, :class=> 'accordion_section_title'
                 -s.pages.each_with_index do |p,i|
-                  - style = teacher_only?(p) ? "rollover teacher_only" : "rollover"
+                  - style = for_teacher_only(p) ? "rollover teacher_only" : "rollover"
                   - if (defined? @page) && (p.id == @page.id)
                     = link_button "this_node.png", "#", :title => "you are here", :class => style
                   - else

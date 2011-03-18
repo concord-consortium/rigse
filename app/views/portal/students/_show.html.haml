@@ -1,5 +1,5 @@
 - unless current_user.anonymous? 
-  %h3 Classes and #{TOP_LEVEL_CONTAINER_NAME_PLURAL.capitalize.pluralize}:
+  %h3 Classes and Offerings:
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
 
   %p

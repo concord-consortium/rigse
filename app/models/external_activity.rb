@@ -1,6 +1,6 @@
 class ExternalActivity < ActiveRecord::Base
   belongs_to :user
-  
+
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   has_many :teacher_notes, :as => :authored_entity
@@ -11,32 +11,32 @@ class ExternalActivity < ActiveRecord::Base
   include Changeable
 
   include Publishable
-    
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
-  
+
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
     }
   }
-  
-  named_scope :published, 
+
+  named_scope :published,
   {
     :conditions =>{:publication_status => "published"}
   }
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
     def display_name
-      "ExternalActivity"
+      "External Activity"
     end
-    
-    def search_list(options) 
+
+    def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
         external_activities = ExternalActivity.like(name)
@@ -56,20 +56,20 @@ class ExternalActivity < ActiveRecord::Base
         external_activities
       end
     end
-    
+
   end
-  
+
   ##
   ## Hackish stub: Noah Paessel
   ##
   def offerings
     []
   end
-  
-  def self.display_name
-    'Activity'
-  end
-  
+
+  #def self.display_name
+    #'Activity'
+  #end
+
   def left_nav_panel_width
     300
   end
@@ -77,6 +77,4 @@ class ExternalActivity < ActiveRecord::Base
   def print_listing
     listing = []
   end
-
 end
-

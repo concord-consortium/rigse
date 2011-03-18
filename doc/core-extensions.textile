@@ -1,0 +1,28 @@
+h1. Extensions to Existing Ruby Classes
+
+These extensions are loaded early in the application startup and are located here: config/initializers/00_core_extensions.rb
+
+h2. Core Ruby Classes
+
+h3. Hash
+
+Hash is extended with a method: recursive_symbolize_keys which Recursively converts the keys in a Hash to symbols.
+It also converts the keys in any Array elements which are Hashes to symbols.
+
+h3. Kernel
+
+Kernel is extended with the method: suppress_warnings
+
+This enables selective supression of warnings from Ruby such as when redefining 
+the constant: REST_AUTH_SITE_KEY when running spec tests
+
+See: http://mentalized.net/journal/2010/04/02/suppress_warnings_from_ruby/
+
+h3. String
+
+String is extended with the methods: underscore_module, delete_module(num=1)
+
+
+h2. Rails
+
+ActionView::Helpers::CaptureHelper is extended with the method:  set_content_for
