@@ -46,6 +46,8 @@ namespace :app do
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
+      app_settings = Admin::Project.default_project.first.admin_project_settings
+
       puts <<-HEREDOC
 
 This task creates six roles (if they don't already exist):
@@ -77,15 +79,15 @@ You can edit the default settings for all of these users.
 
 It also creates one published Investigation owned by the Author user.
 
-It also create a default School District: '#{APP_CONFIG[:site_district]}'.
-and a default School in that district: '#{APP_CONFIG[:site_school]}'.
+It also create a default School District: '#{app_settings.site_district}'.
+and a default School in that district: '#{app_settings.site_school}'.
 
-The default Teacher user will be a Teacher in the school: #{APP_CONFIG[:site_school]} and
+The default Teacher user will be a Teacher in the school: #{app_settings.site_school} and
 will be teaching a course named 'Fun with Investigations' and a class in that course named '#{DEFAULT_CLASS_NAME}'
 
 A student named: 'Student User' will be created and will be a learner in the default class: '#{DEFAULT_CLASS_NAME}'.
 
-First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
+First creating admin user account for: #{app_settings.default_admin_user.email} from site parameters in config/settings.yml:
       HEREDOC
 
       roles_in_order = [
@@ -108,7 +110,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         role.insert_at(i)
       end
 
-      default_admin_user_settings = APP_CONFIG[:default_admin_user]
+      default_admin_user_settings = app_settings.default_admin_user
 
       default_user_list = [
         admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login], 
@@ -190,7 +192,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         user.save!
       end
 
-      User.suspend_default_users unless APP_CONFIG[:enable_default_users]
+      User.suspend_default_users unless app_settings.enable_default_users
 
       admin_user.add_role('admin')
       
