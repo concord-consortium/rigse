@@ -246,7 +246,9 @@ class Portal::StudentsController < ApplicationController
     when params[:clazz] && params[:clazz][:class_word] then
       Portal::Clazz.find_by_class_word(params[:clazz][:class_word])
     else
-      raise 'no class specified'
+      #raise 'no class specified'
+      # If no class is specified, assume default class to be used
+      Portal::Clazz.default_class
     end
    @portal_clazz
   end
