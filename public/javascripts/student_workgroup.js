@@ -23,10 +23,9 @@
     login_user_name = $('login_user_name');
     password_field =  $('password_field');
     add_button.observe('click',function() {add_learner(selected_learner()); });
-    learners = get_learners();
+    $('show_workgroups').observe('click', function(){ $('workgroup_panel').toggle();});
     collaborators = [];
-    learners.each (function(l) { add_learner_to_dropdown(l); });
-    update_ui();
+    load_learners();
   };
 
   var add_learner = function(learner) {
@@ -54,7 +53,7 @@
 
 
   // return learners in this learners class
-  var get_learners = function() {
+  var load_learners = function() {
     // var learners = ajax.get('blah')
     var _learners = [
       { name: 'John Doe',      id: 1,  have_consent: false},
@@ -65,11 +64,21 @@
       { name: 'Dexter Tron',   id: 6,  have_consent: false},
       { name: 'Abraham Leaf',  id: 7,  have_consent: false},
       { name: 'Ada Paessel',   id: 8,  have_consent: false},
-      { name: 'Linden Paessel', id: 9, have_consent: false},
+      { name: 'Linden Paessel',id: 9,  have_consent: false},
       { name: 'Dan Damian',    id: 10, have_consent: false}
     ]
-    _learners = _learners.sortBy(function(e) {return e.name;} );
-    return _learners;
+    new Ajax.Request('/portal/offerings/208/learners.json', {
+      method: 'get',
+      onSuccess: function(transport) {
+        learners = transport.responseJSON;
+        console.log("OK got learners");
+        learners = learners.sortBy(function(l) {return l.name});
+        update_ui();
+      },
+      onFailure: function() {
+        console.log("Frack: error loading learners")
+      }
+    });
   };
 
 

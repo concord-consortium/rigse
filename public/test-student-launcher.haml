@@ -30,25 +30,19 @@
             .padded_content
               %div
                 %button{:style => 'display: inline-block;'} run
-                the activity now, or add more collaborators below.
+                the activity now, or 
+                %button#show_workgroups{:style=>'display: inline-block;'} 
+                  add collaborators
               %br
-              #add_group{:style => "display: none;"}
-                %h3 add colaborators
-                %select#learners_dropdown
-                %button#add_button
-                  add
-              #learners_container{:style => "display: none;"}
-                %h3 existing colaborators:
-                %div#learners_list
-              #password_panel{:style => "display: none;"}
-                %span#login_user_name
-                  user name
-                %br
-                %span
-                  password:
-                %input#password_field{:type => 'password'}
-                  %button#login_button
-                    I am here
+              #workgroup_panel{:style=>'display: none'}
+                #add_group{:style => "display: none;"}
+                  %h3 add colaborators
+                  %select#learners_dropdown
+                  %button#add_button
+                    add
+                #learners_container{:style => "display: none;"}
+                  %h3 existing colaborators:
+                  %div#learners_list
       #templates
         templates:
         %div#learner_template.learner

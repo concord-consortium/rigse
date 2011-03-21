@@ -29,33 +29,24 @@
             <div class='padded_content'>
               <div>
                 <button style='display: inline-block;'>run</button>
-                the activity now, or add more collaborators below.
-              </div>
-              <br />
-              <div id='add_group' style='display: none;'>
-                <h3>add colaborators</h3>
-                <select id='learners_dropdown'></select>
-                <button id='add_button'>
-                  add
+                the activity now, or
+                <button id='show_workgroups' style='display: inline-block;'>
+                  add collaborators
                 </button>
               </div>
-              <div id='learners_container' style='display: none;'>
-                <h3>existing colaborators:</h3>
-                <div id='learners_list'></div>
-              </div>
-              <div id='password_panel' style='display: none;'>
-                <span id='login_user_name'>
-                  user name
-                </span>
-                <br />
-                <span>
-                  password:
-                </span>
-                <input id='password_field' type='password'>
-                  <button id='login_button'>
-                    I am here
+              <br />
+              <div id='workgroup_panel' style='display: none'>
+                <div id='add_group' style='display: none;'>
+                  <h3>add colaborators</h3>
+                  <select id='learners_dropdown'></select>
+                  <button id='add_button'>
+                    add
                   </button>
-                </input>
+                </div>
+                <div id='learners_container' style='display: none;'>
+                  <h3>existing colaborators:</h3>
+                  <div id='learners_list'></div>
+                </div>
               </div>
             </div>
           </div>

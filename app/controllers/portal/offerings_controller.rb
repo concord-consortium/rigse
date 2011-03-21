@@ -229,7 +229,6 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
-  
   def setup_portal_student
     learner = nil
     if portal_student = current_user.portal_student
@@ -238,4 +237,17 @@ class Portal::OfferingsController < ApplicationController
     end
     learner
   end
+
+  def learners
+    @offering = Portal::Offering.find(params[:id])
+    @learners = @offering.learners.map do |l|
+      {:name => l.name, :id => l.id, :have_confirmation => false, :hash_passwd => "xyzzy"}
+    end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @learners }
+      format.json { render :json => @learners}
+    end  
+  end
+
 end
