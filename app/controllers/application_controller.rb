@@ -40,7 +40,6 @@ class ApplicationController < ActionController::Base
   def setup_project
     @project = Admin::Project.default_project
     if USING_JNLPS
-      @jnlp_adaptor = JnlpAdaptor.new(@project)
       @jnlp_testing_adaptor = JnlpTestingAdaptor.new
     end
   end

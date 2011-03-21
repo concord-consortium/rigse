@@ -101,9 +101,9 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    name = @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = @jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = @jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
     if @project.snapshot_enabled
@@ -112,7 +112,7 @@ module ApplicationHelper
       info << "(frozen)"
     end
 
-    # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
     #   info << "(snapshot)"
     # else
     #   info << "(frozen)"
