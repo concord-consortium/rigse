@@ -1,6 +1,6 @@
 div#learners_container
   display: block
-  width: 300px
+  width: 340px
   margin: 10px
   padding: 10px
   border: 1px solid
@@ -12,7 +12,7 @@ div#add_group
   display: block
   margin: 10px
   padding: 10px
-  width: 300px
+  width: 340px
   border: 1px solid
   select
     display: inline-block
@@ -25,7 +25,7 @@ div#password_panel
   display: block
   margin: 10px
   padding: 10px
-  width: 300px
+  width: 340px
   border: 1px solid
   #login_user_name
     display: inline-block
@@ -36,11 +36,33 @@ div#password_panel
     margin: 1em
     clear: none
 
-span.delete
-  display: inline-block
-  float: right
-  padding-left: 2em
-  padding-right: 2em
-  color: red
-  cursor: pointer
-
+#templates
+  display: none
+.learner
+  width: 90%
+  vertical-align: baseline
+  padding: 1em
+  margin-left: auto
+  margin-left: auto
+  margin-bottom: 2px
+  .name_field
+    margin-right: 1em
+  input
+    display: inline-block
+  button
+    display: inline-block
+  .pending
+    text-align: right
+    float: right
+    display: inline-block
+  .complete
+    text-align: right
+    float: right
+    display: inline-block
+  .delete
+    color: red
+    cursor: pointer
+  .fail
+    width: 100%
+    font-size: 0.8em
+    color: red

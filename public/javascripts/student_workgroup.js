@@ -30,18 +30,11 @@
   };
 
   var add_learner = function(learner) {
-    if(learner.have_consent) {
-      learners = learners.without(learner);
-      learners = learners.sortBy(function(e) {return e.name;} );
-      collaborators.push(learner);
-      collaborators = collaborators.sortBy(function(e) {return e.name;} );
-      update_ui();
-    }
-    else {
-      ask_password(learner,function() {
-        add_learner(learner);
-      });
-    }
+    learners = learners.without(learner);
+    learners = learners.sortBy(function(e) {return e.name;} );
+    collaborators.push(learner);
+    collaborators = collaborators.sortBy(function(e) {return e.name;} );
+    update_ui();
   };
 
   var remove_learner = function(learner) {
@@ -84,19 +77,69 @@
     return "_LEARNER_" + learner.id;
   };
 
+  var password_field_for = function(learner) {
+    password_panel.show();
+    login_user_name.update(learner.name);
+    login_button.observe('click', function() {
+      var passwd = password_field.value;
+      if(check_password(learner,passwd)) {
+        learner.have_consent = true;
+        login_button.stopObserving();
+        password_panel.hide();
+        callback.call();
+        return true;
+      }
+      else {
+        learner.have_consent = false;
+        login_button.stopObserving();
+        password_panel.hide();
+        return false;
+      }
+    });
+  };
+
   var add_learner_to_container = function(learner) {
-    var learner_el = new Element('li',
-      {
-        'class': 'learner',
-        id: learner_id_for(learner),
-        value: learner.i,
-      }).update(learner.name);
-    var delete_button = new Element('span', {
-      'class': 'delete'
-    }).update('remove');
+    var template       = $('learner_template');
+    var learner_el     = Element.clone(template,true);
+    var name_field     = learner_el.select('.name_field').first();
+    var delete_button  = learner_el.select('.delete').first();
+    var password_field = learner_el.select('.password_field').first();
+    var login_button   = learner_el.select('.login_button').first();
+    var pending        = learner_el.select('.pending').first();
+    var complete       = learner_el.select('.complete').first();
+    var login_failed   = learner_el.select('.fail').first();
+    var wait           = learner_el.select('.wait').first();
+
+    name_field.update(learner.name);
+    learner_el.id = learner_id_for(learner);
     learners_list.insert({ bottom: learner_el});
-    learner_el.insert({bottom: delete_button});
+
+    if (learner.have_consent) {
+      pending.hide();
+    }
+    else {
+      complete.hide();
+    }
     delete_button.observe('click',function() {remove_learner(learner);});
+    login_failed.hide();
+    wait.hide();
+    var success = function() {
+      learner.have_consent = true;
+      login_button.stopObserving();
+      pending.hide();
+      wait.hide();
+      complete.show();
+    };
+    var failure = function() {
+      login_failed.show();
+      wait.hide();
+      pending.show();
+    }
+    login_button.observe('click',function() {
+      pending.hide();
+      wait.show();
+      check_password(learner,password_field.value, success,failure);
+    });
   };
 
   var remove_learner_from_container = function(learner) {
@@ -148,33 +191,14 @@
     }
   };
 
-  var check_password = function(learner,passwd) {
+  var check_password = function(learner,passwd,succ,fail) {
     if (passwd == 'password') {
-      return true;
+      succ.call();
     }
-    return false;
+    else {
+      fail.call();
+    }
   };
-
-  var ask_password = function(learner,callback) {
-    password_panel.show();
-    login_user_name.update(learner.name);
-    login_button.observe('click', function() {
-      var passwd = password_field.value;
-      if(check_password(learner,passwd)) {
-        learner.have_consent = true;
-        login_button.stopObserving();
-        password_panel.hide();
-        callback.call();
-        return true;
-      }
-      else {
-        learner.have_consent = false;
-        login_button.stopObserving();
-        password_panel.hide();
-        return false;
-      }
-    });
-  }
 
   document.observe("dom:loaded", function() {
     initialize_workgroup_ui();
