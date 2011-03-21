@@ -13,6 +13,7 @@ Feature: Student joins default class
       | name          | teacher |
       | Default Class | teacher |
 
+  @selenium
   Scenario: Register as a student with no class word
     Given the option to allow default classes is enabled
     When I go to the pick signup page
@@ -25,7 +26,7 @@ Feature: Student joins default class
       | user_password              | password            |
       | user_password_confirmation | password            |
     And I press "Submit"
-    Then I should see "Success!"
+    Then I should see "You have successfully registered Example Student with the username estudent."
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
-    Then I should see "Logged in successfully"
+    And I should see "Logged in successfully"
