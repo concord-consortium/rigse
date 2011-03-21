@@ -45,7 +45,7 @@ class SessionsController < ApplicationController
   end
   
   def check_student_security_questions_ok
-    if @project && @project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
+    if current_project && current_project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
       redirect_to(edit_user_security_questions_path(current_user))
       return false
     end

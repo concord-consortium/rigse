@@ -37,8 +37,11 @@ class ApplicationController < ActionController::Base
     @container_id =  request.symbolized_path_parameters[:id]
   end
 
+  def current_project
+    @_project ||= Admin::Project.default_project
+  end
+
   def setup_project
-    @project = Admin::Project.default_project
     if USING_JNLPS
       @jnlp_testing_adaptor = JnlpTestingAdaptor.new
     end

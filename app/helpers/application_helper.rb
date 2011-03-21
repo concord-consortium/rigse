@@ -3,6 +3,9 @@ include JnlpHelper
 include Clipboard
 
 module ApplicationHelper
+  def current_project
+    @_project ||= Admin::Project.default_project
+  end
 
   def top_level_container_name
     APP_CONFIG[:top_level_container_name] || "investigation"
@@ -106,7 +109,7 @@ module ApplicationHelper
     url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
-    if @project.snapshot_enabled
+    if current_project.snapshot_enabled
       info << "(snapshot)"
     else
       info << "(frozen)"

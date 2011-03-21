@@ -56,8 +56,6 @@ describe Portal::ClazzesController do
   before(:each) do
     setup_for_repeated_tests
     stub_current_user :admin_user # Make admin our default test user
-
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "GET show" do

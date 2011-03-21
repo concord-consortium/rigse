@@ -1,7 +1,7 @@
 module JnlpHelper
   
   def jnlp_adaptor
-    @_jnlp_adaptor ||= JnlpAdaptor.new(@project)
+    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
   end
   
   def full_url_for_image(path)
