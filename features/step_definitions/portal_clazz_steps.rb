@@ -4,3 +4,17 @@ Given /^the class "([^"]*)" has the class word "([^"]*)"$/ do |class_name, class
   clazz.grade_levels << Factory(:full_portal_grade_level)
   clazz.save
 end
+
+Given /^the class "([^"]*)" is the default class$/ do |class_name|
+  clazz = Portal::Clazz.find_by_name class_name
+  clazz.default_class = true
+  clazz.save
+end
+
+Then /^I should see "([^"]*)" within the "([^"]*)" details pane$/ do |content, offering_name|
+  offering = Portal::Offering.find_by_name offering_name
+  p offering
+  with_scope("details_portal__offering_#{offering.id}") do
+    page.should have_content(content)
+  end
+end
