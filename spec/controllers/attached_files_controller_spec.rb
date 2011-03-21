@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe AttachedFilesController do  
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    
     @attached_file = Factory.create(:attached_file)
     AttachedFile.stub!(:find).and_return(@attached_file)
   end
