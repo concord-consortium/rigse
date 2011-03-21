@@ -240,8 +240,9 @@ class Portal::OfferingsController < ApplicationController
 
   def learners
     @offering = Portal::Offering.find(params[:id])
-    @learners = @offering.learners.map do |l|
-      {:name => l.name, :id => l.id, :have_confirmation => false, :hash_passwd => "xyzzy"}
+    @clazz = @offering.clazz
+    @learners = @clazz.students.map do |l|
+      {:name => l.name, :id => l.id, :have_confirmation => false}
     end
     respond_to do |format|
       format.html # show.html.erb
@@ -250,4 +251,19 @@ class Portal::OfferingsController < ApplicationController
     end  
   end
 
+  def check_learner_auth
+    learner_id = params[:learner_id]
+    password = params[:pw]
+      begin
+        student = Portal::Student.find(learner_id)
+        user = student.user
+        user = User.authenticate(user.login,password)
+        if user
+          render :status => 200, :text => 'ok'
+          return
+        end
+      rescue
+      end
+      render :status => 400, :text => 'could not authenticate'
+  end
 end

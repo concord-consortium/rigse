@@ -11,6 +11,7 @@
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => "/images/favicon.ico", :rel => "shortcut icon"}/
     %link{ :href => "/stylesheets/app.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}/
+    %link{ :href => "/stylesheets/action_menu_tab.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}/
     %link{ :href => "/stylesheets/workgroup.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}/
     
     %script{ :src=> "https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js", :type => "text/javascript"}
@@ -27,38 +28,40 @@
       #primary
         #content.main_content_colors
           #content_header.main_content_colors
-            .padded_content
-              %div
-                %button{:style => 'display: inline-block;'} run
-                the activity now, or 
-                %button#show_workgroups{:style=>'display: inline-block;'} 
-                  add collaborators
-              %br
-              #workgroup_panel{:style=>'display: none'}
-                #add_group{:style => "display: none;"}
-                  %h3 add colaborators
-                  %select#learners_dropdown
-                  %button#add_button
-                    add
-                #learners_container{:style => "display: none;"}
-                  %h3 existing colaborators:
-                  %div#learners_list
-      #templates
-        templates:
-        %div#learner_template.learner
-          %span.name_field
-            Name Text
-          %span.pending
-            %input.password_field{:type=>'password', :name=>'password_field', :value=>''}
-            %button.login_button
-              ok
-            .fail
-              sorry. your password is wrong.
-          %span.wait
-            %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
-          %span.complete
-            %span.delete
-              remove
+            #workgroup_overlay
+              #workgroup_root
+                .padded_content
+                  %div
+                    %button{:style => 'display: inline-block;'} run
+                    the activity now, or 
+                    %button#show_workgroups{:style=>'display: inline-block;'} 
+                      add collaborators
+                  %br
+                  #workgroup_panel{:style=>'display: none'}
+                    #add_group{:style => "display: none;"}
+                      %h3 add colaborators
+                      %select#learners_dropdown
+                      %button#add_button
+                        add
+                    #learners_container{:style => "display: none;"}
+                      %h3 existing colaborators:
+                      %div#learners_list
+                  #workgroup_templates
+                    templates:
+                    %div#learner_template.learner
+                      %a.delete.rollover
+                        %img{:src=>"/images/delete.png", :alt=>"remove this student"}
+                      %span.name_field
+                        Name Text
+                      %div.pending
+                        %input.password_field{:type=>'password', :name=>'password_field', :value=>''}
+                        %button.login_button
+                          ok
+                      %span.wait
+                        %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
+                      %span.complete
+                      %div.fail
+                        sorry. your password is wrong.
 
 
 

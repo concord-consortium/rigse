@@ -1,4 +1,4 @@
-//(function()
+(function() {
   var add_learner_button = null;
   var learners_list = null;
   var learners_dropdown = null;
@@ -11,7 +11,7 @@
   var password_field = null;
 
   // startup
-  var initialize_workgroup_ui = function() {
+  var load_workgroups = function() {
     add_learner_button = $('add_learner');
     learners_container = $('learners_container');
     learners_list = $('learners_list');
@@ -54,30 +54,14 @@
 
   // return learners in this learners class
   var load_learners = function() {
-    // var learners = ajax.get('blah')
-    var _learners = [
-      { name: 'John Doe',      id: 1,  have_consent: false},
-      { name: 'Jane Doe',      id: 2,  have_consent: false},
-      { name: 'Mark Schard',   id: 3,  have_consent: false},
-      { name: 'Linda Low',     id: 4,  have_consent: false},
-      { name: 'Steve Austin',  id: 5,  have_consent: false},
-      { name: 'Dexter Tron',   id: 6,  have_consent: false},
-      { name: 'Abraham Leaf',  id: 7,  have_consent: false},
-      { name: 'Ada Paessel',   id: 8,  have_consent: false},
-      { name: 'Linden Paessel',id: 9,  have_consent: false},
-      { name: 'Dan Damian',    id: 10, have_consent: false}
-    ]
     new Ajax.Request('/portal/offerings/208/learners.json', {
       method: 'get',
       onSuccess: function(transport) {
         learners = transport.responseJSON;
-        console.log("OK got learners");
         learners = learners.sortBy(function(l) {return l.name});
         update_ui();
       },
-      onFailure: function() {
-        console.log("Frack: error loading learners")
-      }
+      onFailure: function() { }
     });
   };
 
@@ -136,6 +120,7 @@
       learner.have_consent = true;
       login_button.stopObserving();
       pending.hide();
+      login_failed.hide();
       wait.hide();
       complete.show();
     };
@@ -201,16 +186,27 @@
   };
 
   var check_password = function(learner,passwd,succ,fail) {
-    if (passwd == 'password') {
-      succ.call();
-    }
-    else {
-      fail.call();
-    }
+    new Ajax.Request('/portal/offerings/208/check_learner_auth', {
+      parameters: {'learner_id': learner.id, 'pw': passwd},
+      onSuccess: function(transport) {
+        succ.call();
+      },
+      onFailure: function() {fail.call();}
+    });
+
+    //if (passwd == 'password') {
+      //succ.call();
+    //}
+    //else {
+      //fail.call();
+    //}
   };
 
   document.observe("dom:loaded", function() {
-    initialize_workgroup_ui();
+    $$('.run_link').each(function(el) {
+      el.observe('click',load_workgroups());
+    });
+    load_workgroups();
   });
 
-//}());
+}());

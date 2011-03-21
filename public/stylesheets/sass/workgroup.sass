@@ -1,8 +1,8 @@
 div#workgroup_panel
-  width: 340px
+  width: 400px
 div#learners_container
   display: block
-  width: 340px
+  width: 400px
   margin: 10px
   padding: 10px
   border: 1px solid
@@ -14,7 +14,7 @@ div#add_group
   display: block
   margin: 10px
   padding: 10px
-  width: 340px
+  width: 400px
   border: 1px solid
   select
     display: inline-block
@@ -23,30 +23,33 @@ div#add_group
   button
     display: inline-block
     clear: none
-div#password_panel
-  display: block
-  margin: 10px
-  padding: 10px
-  width: 340px
-  border: 1px solid
-  #login_user_name
-    display: inline-block
-    margin: 1em
-    clear: none
-  #password_field
-    display: inline-block
-    margin: 1em
-    clear: none
+#workgroup_overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0.7
+  background-color: black
+  z-order: 4000
 
-#templates
+#workgroup_root
+  width: 500px
+  margin-top: 5em
+  margin-left: auto
+  margin-right: auto
+  margin-bottom: 5em
+  padding: 2em
+  opacity: 1
+  background-color: #F3F2ED
+  z-order: 4001
+#workgroup_templates
   display: none
 .learner
   width: 90%
   vertical-align: baseline
-  padding: 1em
-  margin-left: auto
-  margin-left: auto
-  margin-bottom: 2px
+  margin-bottom: 1em
+  margin-top: 1em
   .name_field
     margin-right: 1em
   input
@@ -57,14 +60,9 @@ div#password_panel
     text-align: right
     float: right
     display: inline-block
-  .complete
-    text-align: right
-    float: right
-    display: inline-block
   .delete
     color: red
     cursor: pointer
   .fail
-    width: 100%
     font-size: 0.8em
     color: red

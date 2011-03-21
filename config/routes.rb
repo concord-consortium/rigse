@@ -151,7 +151,8 @@ ActionController::Routing::Routes.draw do |map|
       :report_embeddable_filter => :post,
       :activate => :get,
       :deactivate => :get,
-      :learners => :get
+      :learners => :get,
+      :check_learner_auth => :post
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
