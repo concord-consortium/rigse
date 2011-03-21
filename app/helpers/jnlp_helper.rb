@@ -1,24 +1,28 @@
 module JnlpHelper
   
+  def jnlp_adaptor
+    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
+  end
+  
   def full_url_for_image(path)
     host = root_path(:only_path => false)[0..-2]
     host + path_to_image(path)
   end
   
   def resource_jars
-    @jnlp_adaptor.resource_jars
+    jnlp_adaptor.resource_jars
   end
 
   def linux_native_jars
-    @jnlp_adaptor.linux_native_jars
+    jnlp_adaptor.linux_native_jars
   end
 
   def macos_native_jars
-    @jnlp_adaptor.macos_native_jars
+    jnlp_adaptor.macos_native_jars
   end
   
   def windows_native_jars
-    @jnlp_adaptor.windows_native_jars
+    jnlp_adaptor.windows_native_jars
   end
 
   def system_properties(options={})
@@ -40,7 +44,7 @@ module JnlpHelper
         ['otrunk.view.no_user', 'true' ],
       ]
     end
-    @jnlp_adaptor.system_properties + additional_properties
+    jnlp_adaptor.system_properties + additional_properties
   end
   
   def jnlp_jar(xml, resource, check_for_main=true)
@@ -83,7 +87,7 @@ module JnlpHelper
   end
   
   def jnlp_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
@@ -97,7 +101,7 @@ module JnlpHelper
   end
   
   def jnlp_testing_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     jnlp_for_testing = @jnlp_testing_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
@@ -176,7 +180,7 @@ module JnlpHelper
   end
 
   def jnlp_installer_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     # from jnlpwrapper.concord.org
     #<jar href="org/concord/utilities/response-cache/response-cache.jar" version="0.1.0-20090728.205151-9"/>
     #<jar href="org/concord/jnlp2shell/jnlp2shell.jar" version="1.0-20090729.161746-166" main="true"/>
@@ -222,7 +226,7 @@ module JnlpHelper
   end
   
   def jnlp_mac_java_config(xml)
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
     xml.resources(:os => "Mac OS X", :arch => "ppc i386") {
       xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m"

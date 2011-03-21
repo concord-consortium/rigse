@@ -3,8 +3,8 @@
 
 =render :partial => 'sessions/new'
 .padded_content
-  - unless @project.home_page_content.nil? || @project.home_page_content.empty?
-    = @project.home_page_content
+  - unless current_project.home_page_content.nil? || current_project.home_page_content.empty?
+    = current_project.home_page_content
   - else
     - render_project_info
     = yield :project_info

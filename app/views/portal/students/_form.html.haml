@@ -32,7 +32,7 @@
             - value = portal_clazz ? portal_clazz.class_word : 'class word'
             = text_field :clazz, :class_word, {:live => false}
             
-      - if signup && @project.use_student_security_questions
+      - if signup && current_project.use_student_security_questions
         = render :partial => "security_questions/header"
         = render :partial => "security_questions/fields"
       

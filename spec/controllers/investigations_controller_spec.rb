@@ -6,7 +6,6 @@ describe InvestigationsController do
 
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     @admin_user.add_role("admin")
