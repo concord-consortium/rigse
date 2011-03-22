@@ -1,34 +1,42 @@
 #workgroup_overlay
-  .padded_content
-    %div
-      %button{:style => 'display: inline-block;'} run
-      the activity now, or 
-      %button#show_workgroups{:style=>'display: inline-block;'} 
-        add collaborators
-    %br
-    #workgroup_panel{:style=>'display: none'}
-      #add_group{:style => "display: none;"}
-        %h3 add colaborators
-        %select#learners_dropdown
-        %button#add_button
-          add
-      #learners_container{:style => "display: none;"}
-        %h3 existing colaborators:
-        %div#learners_list
-    #workgroup_templates
-      templates:
-      %div#learner_template.learner
-        %a.delete.rollover
-          %img{:src=>"/images/delete.png", :alt=>"remove this student"}
-        %span.name_field
-          Name Text
-        %div.pending
-          %input.password_field{:type=>'password', :name=>'password_field', :value=>''}
-          %button.login_button
-            ok
-        %span.wait
-          %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
-        %span.complete
-        %div.fail
-          sorry. your password is wrong.
+#worgroup_background
+  #workgroup_root
+    .padded_content
+      %div
+        %span#run_button
+          %button{:style => 'display: inline-block;'} run
+          the activity now
+        %span
+          , or
+          %button#show_workgroups{:style=>'display: inline-block;'} 
+            add collaborators
+      %br
+      #load_wait{:style => 'display: none;'}
+        %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
+        loading collaborator list. Please wait.
 
+      #workgroup_panel{:style=>'display: none'}
+        #add_group{:style => "display: none;"}
+          %h3 add colaborators
+          %select#learners_dropdown
+          %button#add_button
+            add
+        #learners_container{:style => "display: none;"}
+          %h3 existing colaborators:
+          %div#learners_list
+      #workgroup_templates
+        templates:
+        %div#learner_template.learner
+          %a.delete.rollover
+            %img{:src=>"/images/delete.png", :alt=>"remove this student"}
+          %span.name_field
+            Name Text
+          %div.pending
+            %input.password_field{:type=>'password', :name=>'password_field', :value=>''}
+            %button.login_button
+              ok
+          %span.wait
+            %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
+          %span.complete
+          %div.fail
+            sorry. your password is wrong.
