@@ -13,6 +13,8 @@
 
   // startup
   var load_workgroups = function() {
+  var lightbox_hood      = null;
+  var lightbox_content   = null;
     add_learner_button = $('add_learner');
     learners_container = $('learners_container');
     learners_list = $('learners_list');
@@ -24,6 +26,8 @@
     login_user_name = $('login_user_name');
     password_field =  $('password_field');
     run_button =$('run_button');
+    lightbox_hood      = $('lightbox_hood');
+    lightbox_content   = $('lightbox_content');
     collaborators = [];
     learners = [];
     add_button.observe('click',function() {add_learner(selected_learner()); });
@@ -33,8 +37,17 @@
       $('show_workgroups').up().hide();
       $('load_wait').show();
     });
+    lightbox_hood.show();
+    lightbox_content.show();
   };
 
+  var close_workgroups = function() {
+    lightbox_hood.hide();
+    lightbox_content.hide();
+    console.log("here is where we dream big...");
+    console.log()
+    //window.setLocation();
+  }
   var add_learner = function(learner) {
     learners = learners.without(learner);
     learners = learners.sortBy(function(e) {return e.name;} );
