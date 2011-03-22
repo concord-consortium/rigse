@@ -4,7 +4,7 @@ describe Portal::OfferingsController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    Admin::Project.stub!(:default_project).and_return(@mock_project)
   end
 
   it "saves learner data in the cookie" do
@@ -15,9 +15,10 @@ describe Portal::OfferingsController do
                                             :url       => "http://example.com",
                                             :save_path => "/path/to/save")
     @user = Factory(:user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
+    @user.stub!(:offering).and_return(offering)
     offering.stub!(:runnable).and_return(runnable)
     offering.stub!(:find_or_create_learner).and_return(@user)
-    offering.stub!(:portal_clazz).and_return(clazz)
+    offering.stub!(:clazz).and_return(clazz)
     portal_student = mock_model(Portal::Student)
     @user.stub!(:portal_teacher)
     @user.stub!(:portal_student).and_return(portal_student)
