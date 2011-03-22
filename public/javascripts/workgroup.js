@@ -1,59 +1,59 @@
-var Workgroup = function() {
-  var add_learner_button = null;
+var Workgroup = function(_offering) {
   var learners_list      = null;
   var learners_dropdown  = null;
   var add_button         = null;
   var run_button         = null;
-  var learners           = null;
-  var collaborators      = null;
-  var password_panel     = null;
-  var login_button       = null;
-  var login_user_name    = null;
-  var password_field     = null;
-  var offering           = null;
+  var add_group          = null;
+  var learners_container = null;
   var lightbox_hood      = null;
   var lightbox_content   = null;
+  var learners           = [];
+  var collaborators      = [];
+  var offering           = _offering;
 
-  var init_dom = function() {
-    add_learner_button = $('add_learner');
-    learners_container = $('learners_container');
-    learners_list      = $('learners_list');
-    learners_dropdown  = $('learners_dropdown');
-    add_button         = $('add_button');
-    add_group          = $('add_group');
-    password_panel     = $('password_panel');
-    login_button       = $('login_button');
-    login_user_name    = $('login_user_name');
-    password_field     = $('password_field');
-    run_button         = $('run_button');
-    lightbox_hood      = $('lightbox_hood');
-    lightbox_content   = $('lightbox_content');
+  var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
+  
+  var load_dom_elems = function() {
+    if (learners_list == null) {
+      learners_list      =  $('learners_list');
+      learners_dropdown  =  $('learners_dropdown');
+      add_button         =  $('add_button');
+      run_button         =  $('run_button');
+      add_group          =  $('add_group');
+      learners_container =  $('learners_container');
+      lightbox_hood      =  $('lightbox_hood');
+      lightbox_content   =  $('lightbox_content');
+    }
   };
 
-  // startup
-  var load_workgroups = function(_offering) {
-    init_dom();
-    offering = _offering;
-    collaborators = [];
-    learners = [];
-    add_button.observe('click',function() {add_learner(selected_learner()); });
-    $('show_workgroups').observe('click', function() { 
-      $('workgroup_panel').show();
-      load_learners();
-      $('show_workgroups').up().hide();
-      $('load_wait').show();
-    });
-    lightbox_hood.show();
-    lightbox_content.show();
+  var show_workgroup_editor = function() {
+    $('workgroup_panel').show();
+    $('show_workgroups').up().hide();
+    $('load_wait').show();
   };
 
   var close_workgroups = function() {
     lightbox_hood.hide();
     lightbox_content.hide();
     console.log("here is where we dream big...");
-    console.log()
-    //window.setLocation();
+    window.location = "http://google.com";
   }
+
+  // startup
+  var load = function() {
+    load_dom_elems();
+    learners = [];
+    collaborators = [];
+    load_learners();
+    add_button.observe('click',function() { 
+      add_learner(selected_learner());
+    });
+    run_button.observe('click', close_workgroups);
+    $('show_workgroups').observe('click',show_workgroup_editor);
+
+    lightbox_hood.show();
+    lightbox_content.show();
+  };
 
   var add_learner = function(learner) {
     learners = learners.without(learner);
@@ -78,9 +78,9 @@ var Workgroup = function() {
     return learner;
   };
 
-
   // return learners in this learners class
   var load_learners = function() {
+    learners = []; //remove last
     new Ajax.Request('/portal/offerings/' + offering + '/learners.json', {
       method: 'get',
       onSuccess: function(transport) {
@@ -90,33 +90,6 @@ var Workgroup = function() {
         update_ui();
       },
       onFailure: function() { }
-    });
-  };
-
-
-  var learner_id_for = function(learner) {
-    return "_LEARNER_" + learner.id;
-  };
-
-  var password_field_for = function(learner) {
-    password_panel.show();
-    login_user_name.update(learner.name);
-    login_button.observe('click', function() {
-      var passwd = password_field.value;
-      if(check_password(learner,passwd)) {
-        learner.have_consent = true;
-        login_button.stopObserving();
-        password_panel.hide();
-        callback.call();
-        update_ui();
-        return true;
-      }
-      else {
-        learner.have_consent = false;
-        login_button.stopObserving();
-        password_panel.hide();
-        return false;
-      }
     });
   };
 
@@ -131,21 +104,19 @@ var Workgroup = function() {
     var complete       = learner_el.select('.complete').first();
     var login_failed   = learner_el.select('.fail').first();
     var wait           = learner_el.select('.wait').first();
-    
+
     name_field.update(learner.name);
     learner_el.id = learner_id_for(learner);
     learners_list.insert({ bottom: learner_el});
 
-    if (learner.have_consent) {
-      pending.hide();
-    }
-    else {
-      complete.hide();
-    }
+    if (learner.have_consent) { pending.hide();  }
+    else                      { complete.hide(); }
+
     delete_button.observe('click',function() {remove_learner(learner);});
     login_failed.hide();
     wait.hide();
-    var success = function() {
+
+    var login_success = function() {
       learner.have_consent = true;
       login_button.stopObserving();
       pending.hide();
@@ -154,16 +125,18 @@ var Workgroup = function() {
       complete.show();
       update_ui();
     };
-    var failure = function() {
+
+    var login_failure = function() {
       login_failed.show();
       wait.hide();
       pending.show();
       update_ui();
     }
+
     login_button.observe('click',function() {
       pending.hide();
       wait.show();
-      check_password(learner,password_field.value, success,failure);
+      check_password(learner,password_field.value, login_success,login_failure);
     });
   };
 
@@ -174,15 +147,18 @@ var Workgroup = function() {
     }
   };
 
+  var clear_containers = function() {
+    learners_dropdown.select('.learner').each(function(e) { e.remove(); });
+    learners_container.select('.learner').each(function(e) {e.remove();});
+  };
 
   var update_ui = function() {
     run_button.show();
+    clear_containers();
     learners.each(function(learner) {
-      remove_learner_from_container(learner);
       add_learner_to_dropdown(learner);
     });
     collaborators.each(function(learner){
-      remove_learner_from_dropdown(learner);
       add_learner_to_container(learner);
       if (!learner.have_consent) {
         run_button.hide();
@@ -221,7 +197,7 @@ var Workgroup = function() {
   };
 
   var check_password = function(learner,passwd,succ,fail) {
-    new Ajax.Request('/portal/offerings/208/check_learner_auth', {
+    new Ajax.Request('/portal/offerings/' + offering + '/check_learner_auth', {
       parameters: {'learner_id': learner.id, 'pw': passwd},
       onSuccess: function(transport) {
         succ.call();
@@ -233,12 +209,10 @@ var Workgroup = function() {
   document.observe("dom:loaded", function() {
     $$('.run_link').each(function(el) {
       //hack-test:
-      el.observe('click',load_workgroups(208));
+      el.observe('click',load(208));
     });
-    //load_workgroups();
   });
-  return {
-    open: load_workgroups,
-    close: close_workgroups
-  };
+
+  // all that for this:
+  load();
 };
