@@ -51,6 +51,7 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
 
+  @wip
   @selenium
   Scenario: Investigations from the default class show learner data in the default class
     Given the following classes exist:
