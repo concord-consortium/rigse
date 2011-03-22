@@ -9,7 +9,6 @@ describe ImagesController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     login_admin
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
   
   

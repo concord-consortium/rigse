@@ -20,6 +20,7 @@ end
 
 When /^I debug$/ do
   debugger
+  0
 end
 
 When /^I wait "(.*)" seconds$/ do |seconds|
@@ -28,4 +29,8 @@ end
 
 Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
   page.should have_no_xpath xpath
+end
+
+Then /^the location should be "([^"]*)"$/ do |location|
+  current_url.should == location
 end

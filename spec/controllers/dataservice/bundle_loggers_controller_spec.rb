@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe Dataservice::BundleLoggersController do
 
-  before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    logout_user
-  end
-
   def mock_bundle_content(stubs={})
     stubs[:eportfolio] = Dataservice::BundleContent::EMPTY_EPORTFOLIO_BUNDLE
     @mock_bundle_content ||= mock_model(Dataservice::BundleContent, stubs)
