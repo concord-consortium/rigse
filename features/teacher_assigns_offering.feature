@@ -51,7 +51,6 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
 
-  @wip
   @selenium
   Scenario: Investigations from the default class show learner data in the default class
     Given the following classes exist:
@@ -65,8 +64,8 @@ Feature: Teacher can assign an offering to a class
       | name               | user    |
       | Test Investigation | teacher |
 		And the investigation "Test Investigation" is published
-    When I assign the activity "Test Investigation" to the class "Default Class"
-    And I assign the activity "Test Investigation" to the class "My Class"
+    When I assign the investigation "Test Investigation" to the class "Default Class"
+    And I assign the investigation "Test Investigation" to the class "My Class"
     Then the investigation named "Test Investigation" should have "offerings_count" equal to "2"
     When a student has performed work on the investigation "Test Investigation" for the class "My Class"
     And I login with username: teacher password: teacher

@@ -12,9 +12,8 @@ Given /^the class "([^"]*)" is the default class$/ do |class_name|
 end
 
 Then /^I should see "([^"]*)" within the "([^"]*)" details pane$/ do |content, offering_name|
-  offering = Portal::Offering.find_by_name offering_name
-  p offering
-  with_scope("details_portal__offering_#{offering.id}") do
+  offering = Investigation.find_by_name offering_name
+  with_scope("#details_portal__offering_#{offering.id}") do
     page.should have_content(content)
   end
 end
