@@ -1,15 +1,10 @@
 --- 
 javascripts: 
 - base: 
-  - prototype
-  #- prototype-ui/prototype-ui
   - effects
   - dragdrop
   - controls
-  - scriptaculous
   - misc/resizable
-  #- livepipe/livepipe
-  #- livepipe/window
   - flotr/excanvas
   - flotr/flotr
   - canvas2image
