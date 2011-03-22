@@ -3,6 +3,7 @@
   var learners_list = null;
   var learners_dropdown = null;
   var add_button = null;
+  var run_button = null;
   var learners = null;
   var collaborators = null;
   var password_panel = null;
@@ -22,10 +23,16 @@
     login_button =   $('login_button');
     login_user_name = $('login_user_name');
     password_field =  $('password_field');
-    add_button.observe('click',function() {add_learner(selected_learner()); });
-    $('show_workgroups').observe('click', function(){ $('workgroup_panel').toggle();});
+    run_button =$('run_button');
     collaborators = [];
-    load_learners();
+    learners = [];
+    add_button.observe('click',function() {add_learner(selected_learner()); });
+    $('show_workgroups').observe('click', function() { 
+      $('workgroup_panel').toggle();
+      load_learners();
+      $('show_workgroups').up().hide();
+      $('load_wait').show();
+    });
   };
 
   var add_learner = function(learner) {
@@ -59,6 +66,7 @@
       onSuccess: function(transport) {
         learners = transport.responseJSON;
         learners = learners.sortBy(function(l) {return l.name});
+        $('load_wait').hide();
         update_ui();
       },
       onFailure: function() { }
@@ -80,6 +88,7 @@
         login_button.stopObserving();
         password_panel.hide();
         callback.call();
+        update_ui();
         return true;
       }
       else {
@@ -123,11 +132,13 @@
       login_failed.hide();
       wait.hide();
       complete.show();
+      update_ui();
     };
     var failure = function() {
       login_failed.show();
       wait.hide();
       pending.show();
+      update_ui();
     }
     login_button.observe('click',function() {
       pending.hide();
@@ -145,6 +156,7 @@
 
 
   var update_ui = function() {
+    run_button.show();
     learners.each(function(learner) {
       remove_learner_from_container(learner);
       add_learner_to_dropdown(learner);
@@ -152,6 +164,9 @@
     collaborators.each(function(learner){
       remove_learner_from_dropdown(learner);
       add_learner_to_container(learner);
+      if (!learner.have_consent) {
+        run_button.hide();
+      }
     });
     if (collaborators.size() < 1) {
       learners_container.hide();

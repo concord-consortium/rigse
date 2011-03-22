@@ -32,11 +32,18 @@
               #workgroup_root
                 .padded_content
                   %div
-                    %button{:style => 'display: inline-block;'} run
-                    the activity now, or 
-                    %button#show_workgroups{:style=>'display: inline-block;'} 
-                      add collaborators
+                    %span#run_button
+                      %button{:style => 'display: inline-block;'} run
+                      the activity now
+                    %span
+                      , or
+                      %button#show_workgroups{:style=>'display: inline-block;'} 
+                        add collaborators
                   %br
+                  #load_wait{:style => 'display: none;'}
+                    %img{:src=> '/images/wait_long.gif',:style=>"border: none;"}
+                    loading collaborator list. Please wait.
+
                   #workgroup_panel{:style=>'display: none'}
                     #add_group{:style => "display: none;"}
                       %h3 add colaborators

@@ -32,13 +32,22 @@
               <div id='workgroup_root'>
                 <div class='padded_content'>
                   <div>
-                    <button style='display: inline-block;'>run</button>
-                    the activity now, or
-                    <button id='show_workgroups' style='display: inline-block;'>
-                      add collaborators
-                    </button>
+                    <span id='run_button'>
+                      <button style='display: inline-block;'>run</button>
+                      the activity now
+                    </span>
+                    <span>
+                      , or
+                      <button id='show_workgroups' style='display: inline-block;'>
+                        add collaborators
+                      </button>
+                    </span>
                   </div>
                   <br />
+                  <div id='load_wait' style='display: none;'>
+                    <img src='/images/wait_long.gif' style='border: none;' />
+                    loading collaborator list. Please wait.
+                  </div>
                   <div id='workgroup_panel' style='display: none'>
                     <div id='add_group' style='display: none;'>
                       <h3>add colaborators</h3>
