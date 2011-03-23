@@ -11,6 +11,10 @@ module RunnablesHelper
     runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
     format = APP_CONFIG[:runnable_mime_type] unless runnable.is_a? JnlpLaunchable
 
+    if format.nil? && runnable.is_a?(ExternalActivity)
+      format = :run_external_html
+    end
+
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
   end

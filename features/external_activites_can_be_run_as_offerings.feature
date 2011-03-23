@@ -21,7 +21,7 @@ Feature: External Activities can be run as offerings
   # Currently need to set the following setting for this to work
   # that shouldn't be necessary
   # :runnable_mime_type: run_external_html
-  @selenium @wip
+  @selenium
   Scenario: External Activity offerings are runnable
     Given the student "student" belongs to class "My Class"
     And the external activity "My Activity" is assigned to the class "My Class"
