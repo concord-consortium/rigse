@@ -111,17 +111,19 @@ stylesheets:
   - reports
 
 - sparks:
-  - themes/sparks/sparks
-  - themes/sparks/action_menu_tab
-  - themes/sparks/drop_down
-  - themes/sparks/accordion
+  - app
+  - accordion
+  - please_wait
   - window/window
   - window/rites
   - live_validation
+  - accordion
   - notes
+  - action_menu_tab
+  - drop_down
   - data_table
   - reports
-  
+
 - has:
   - themes/has/has
   - themes/has/action_menu_tab
