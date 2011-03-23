@@ -175,6 +175,10 @@ namespace :db do
 end
 
 namespace :deploy do
+  # By default deploy:cleanup uses sudo(!)
+  # We don't want this when using a deploy user
+  set :use_sudo, false
+
   #############################################################
   #  Passenger
   #############################################################
