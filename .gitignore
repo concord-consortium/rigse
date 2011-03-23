@@ -21,6 +21,7 @@ config/nces_data
 public/images/0*
 nbproject
 config/db_backup/
+public/stylesheets/app-old.css
 public/stylesheets/app.css
 public/stylesheets/app_colors.css
 public/stylesheets/app_fonts.css
@@ -80,7 +81,14 @@ mkmf.log
 hudson/*
 spec/reports
 .rvmrc
-config/preinitializer.rb
-local_files
 config/newrelic.yml
 public/system/attachments/*
+*.swp
+*.swo
+capybara-*.html
+config/tag_defaults.yml
+public/stylesheets/authoring.css
+public/stylesheets/template_edit.css
+public/activities/
+local_files
+public/stylesheets/workgroup.css

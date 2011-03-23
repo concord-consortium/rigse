@@ -229,7 +229,6 @@ class Portal::OfferingsController < ApplicationController
     end
   end
   
-  
   def setup_portal_student
     learner = nil
     if portal_student = current_user.portal_student
@@ -237,5 +236,34 @@ class Portal::OfferingsController < ApplicationController
       learner = @offering.find_or_create_learner(portal_student)
     end
     learner
+  end
+
+  def learners
+    @offering = Portal::Offering.find(params[:id])
+    @clazz = @offering.clazz
+    @learners = @clazz.students.map do |l|
+      {:name => l.name, :id => l.id, :have_confirmation => false}
+    end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @learners }
+      format.json { render :json => @learners}
+    end  
+  end
+
+  def check_learner_auth
+    learner_id = params[:learner_id]
+    password = params[:pw]
+      begin
+        student = Portal::Student.find(learner_id)
+        user = student.user
+        user = User.authenticate(user.login,password)
+        if user
+          render :status => 200, :text => 'ok'
+          return
+        end
+      rescue
+      end
+      render :status => 400, :text => 'could not authenticate'
   end
 end

@@ -1,15 +1,10 @@
 --- 
 javascripts: 
 - base: 
-  - prototype
-  - prototype-ui/prototype-ui
   - effects
   - dragdrop
   - controls
-  - scriptaculous
   - misc/resizable
-  - livepipe/livepipe
-  - livepipe/window
   - flotr/excanvas
   - flotr/flotr
   - canvas2image
@@ -21,6 +16,8 @@ javascripts:
   - live_validation
   - please_wait
   - report_filter
+  - pagination
+  - workgroup
   
 stylesheets: 
 - base: 
@@ -34,6 +31,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - workgroup
 
 - default:
   - app
@@ -60,7 +58,6 @@ stylesheets:
   - drop_down
   - data_table
   - reports
-  - themes/rites/rites
   
 - investigations:
   - themes/investigations/investigations
@@ -123,17 +120,17 @@ stylesheets:
   - reports
   
 - has:
-  - themes/has/has
-  - themes/has/action_menu_tab
-  - themes/has/drop_down
-  - themes/has/accordion
-  - window/window
-  - window/rites
-  - live_validation
-  - notes
+  - app
+  - accordion
   - please_wait
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
   - data_table
   - reports
+  - workgroup
 
 - xproject:
   - app
@@ -158,6 +155,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - themes/genomedynamics/genomedynamics
   
 - geniverse:
   - app

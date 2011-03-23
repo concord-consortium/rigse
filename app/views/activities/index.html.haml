@@ -14,22 +14,22 @@
         -unless current_user.anonymous?
           %li= link_to 'create activity', new_activity_path
         %li= toggle_all 'activity descriptions'
-        
+
 
 .item_collection
   %ul.quiet_list
-    - for activity in @pages    
+    - for activity in @pages
       %div{ :id => dom_id_for(activity, :item), :class => 'item' }
         %div.action_menu
-          %div.action_menu_header_left   
+          %div.action_menu_header_left
             = link_to_container(activity)
-          %div.action_menu_header_right   
+          %div.action_menu_header_right
             %ul.menu
               %li= run_link_for(activity)
               - unless(current_user.anonymous?)
                 %li.menu=link_to 'duplicate', duplicate_activity_url(activity)
               %li.menu=link_to 'export (xml)', export_activity_url(activity)
               - if (activity.changeable?(current_user))
-                %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete ivestigation #{activity.id}", :method => :delete 
+                %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete ivestigation #{activity.id}", :method => :delete
         %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
           %p=activity.description
