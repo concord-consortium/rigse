@@ -33,6 +33,8 @@
     #waiter{:style=>"display: none;"}
       please wait
       = image_tag "ajax-loader.gif"
+    -#= yield :dynamic_js_contents
+    = render :partial => 'shared/workgroup'
     #page
       / For non-visual user agents:
       #top
