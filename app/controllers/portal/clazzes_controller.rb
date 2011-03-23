@@ -29,6 +29,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
+    @offerings = substitute_default_class_offerings(@portal_clazz.offerings)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @portal_clazz }
@@ -358,5 +359,24 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'report'}
     end
+  end
+
+  def substitute_default_class_offerings(offerings)
+    default_class_offerings = []
+    offerings.each do |offering|
+      default_class_offerings = offering.runnable.offerings.select {|x| x.clazz.default_class == true }
+    end
+
+    unless default_class_offerings.empty?
+      default_class_offerings.each do |dco|
+        offerings.each do |off|
+          if dco.runnable.id == off.runnable.id
+            offerings.delete off
+            offerings << dco
+          end
+        end
+      end
+    end
+    offerings
   end
 end
