@@ -25,7 +25,6 @@
           %span.author= "Author: #{offering.runnable.user.name}"
           %p= "Description: #{offering.runnable.description}"
           %p= updated_time_text(offering.runnable)
-          -#%p= pluralize(offering.learners.length, "student response")
-          %p= learner_data_report(offering)
+          %p= pluralize(offering.learners.length, "student response")
           = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
   = draggable_element dom_id_for(offering), :revert => true
