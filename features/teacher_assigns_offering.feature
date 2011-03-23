@@ -52,6 +52,9 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "External Activity: My Activity"
 
   @selenium
+	# Add field on Portal::Offering to point to ID of offering in default
+	# class if runnable being assigned in Class A is already assigned in default class
+	# Populate field when offering is assigned to Class A
   Scenario: Investigations from the default class show learner data in the default class
     Given the following classes exist:
       | name          | teacher |
@@ -60,10 +63,9 @@ Feature: Teacher can assign an offering to a class
     And the following students exist:
       | login     | password  |
       | student   | student   |
-    And the following investigation exists:
-      | name               | user    |
-      | Test Investigation | teacher |
-		And the investigation "Test Investigation" is published
+    And the following external activity exists:
+      | name        | user    |
+      | My Activity | teacher |
     When I assign the investigation "Test Investigation" to the class "Default Class"
     And I assign the investigation "Test Investigation" to the class "My Class"
     Then the investigation named "Test Investigation" should have "offerings_count" equal to "2"
