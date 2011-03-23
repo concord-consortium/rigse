@@ -60,9 +60,9 @@
             = render :partial => 'shared/activity_trail'
 
       #lead.project-header
-        %h1
+        %h1{:class => current_theme}
           %a{ :href => "/" }
-            APP_CONFIG[:site_name]
+            - APP_CONFIG[:site_name]
 
       #nav_top
         %span.hidden.doNotPrint
