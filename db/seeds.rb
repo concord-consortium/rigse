@@ -9,33 +9,39 @@ site_school.description = "This is a virtual school used as a default for Teache
 site_school.save!
 
 # Make a User
-teacher_user = User.create!(:login => 'teacher',
+teacher_user = User.find_or_create_by_login(:login => 'teacher',
   :first_name => 'Valerie', :last_name => 'Frizzle',
   :email => 'teacher@concord.org',
   :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+teacher_user.register!
+teacher_user.activate!
 
 # Give the teacher a role of 'member'
 teacher_user.add_role('member')
 teacher_user.save!
 
 # Make a Portal::Teacher with the user's id
-teacher = Portal::Teacher.create!(:user_id => teacher_user.id)
+teacher = Portal::Teacher.find_or_create_by_user_id(:user_id => teacher_user.id)
 site_school.portal_teachers << teacher
 
-["red", "green", "blue", "yellow"].each do |color|
+["purple", "green", "orange", "yellow"].each do |color|
   # Make Portal::Clazzes with the teacher's id
-  clazz = Portal::Clazz.create!(:name => color, :teacher_id => teacher.id, :class_word => color)
+  clazz = Portal::Clazz.find_or_create_by_class_word(:name => color, :teacher_id => teacher.id, :class_word => color)
+  clazz.teacher = teacher
+  clazz.save!
 
   # Make 50 users
   (1..50).each do |num|
-    u = User.create!(:login => "#{color}#{num}",
+    u = User.find_or_create_by_login(:login => "#{color}#{num}",
     :first_name             => "#{color}#{num}",
     :email                  => "#{color}#{num}@example.com",
     :password               => "#{color}#{num}",
     :password_confirmation  => "#{color}#{num}"){|u| u.skip_notifications = true}
+    u.register!
+    u.activate!
 
     # Make a student with the user's id
-    student = Portal::Student.create!(:user_id => u.id)
+    student = Portal::Student.find_or_create_by_user_id(:user_id => u.id)
 
     # Append the class to the student's classes
     student.clazzes << clazz
