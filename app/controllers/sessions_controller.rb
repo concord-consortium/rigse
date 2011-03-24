@@ -51,4 +51,5 @@ class SessionsController < ApplicationController
     end
     return true
   end
+
 end

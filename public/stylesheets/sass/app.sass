@@ -170,6 +170,14 @@ body
     :background white url(/images/new/banners/loops.png) 0 0 no-repeat
   &.rites
     :background white url(/images/new/banners/rites.png) 0 0 no-repeat
+  &.has
+    :background white url(/images/new/banners/has.png) 0 0 no-repeat
+  &.geniverse
+    :background white url(/images/new/banners/geniverse.png) 0 0 no-repeat
+  &.smartgraphs
+    :background white url(/images/new/banners/smartgraphs.png) 0 0 no-repeat
+  &.visual
+    :background white url(/images/new/banners/visual.png) 0 0 no-repeat
   &.sparks
     :background white url(/images/new/banners/sparks.png) 0 0 no-repeat
   a
@@ -275,7 +283,7 @@ body
   :overflow-y visible
   :padding-top 40px
   :padding-right 30px
-  :position relative
+  //:position relative
 
 /* ------- #primary -------
 
@@ -441,6 +449,7 @@ p.note
       :margin-left 20px
       :padding 2px
   &.item_selected
+    :background-color #F3F2ED
     :border-bottom
       :width 2px
       :style solid
@@ -897,6 +906,9 @@ div.section
   :clear both
   :font-weight bold
   :width 100%
+#search_spinner
+  img
+    :margin-right 20px
 #search-investigations
   :background #fff
   :border solid 1px #ddd
@@ -977,3 +989,19 @@ ul.quiet_list
   border: 1px solid
   margin: 2px
   padding: 5px  
+
+.button
+  :background transparent
+  a, a:visited, a:active
+    :font-weight normal
+    :text-align center
+    :padding 3px 7px
+    /* CSS3
+    :border-radius 8px
+    :-moz-border-radius 8px
+    :-webkit-border-radius 8px
+    :background-color #BCD6EA
+    :color #111
+  a:hover
+    :background-color #111
+    :color #BCD6EA 

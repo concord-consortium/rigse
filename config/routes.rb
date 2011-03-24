@@ -150,7 +150,9 @@ ActionController::Routing::Routes.draw do |map|
       :separated_report => :get,
       :report_embeddable_filter => :post,
       :activate => :get,
-      :deactivate => :get
+      :deactivate => :get,
+      :learners => :get,
+      :check_learner_auth => :post
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
@@ -330,7 +332,11 @@ ActionController::Routing::Routes.draw do |map|
     :sort_pages => :post,
     :delete_page => :post,
     :print => :get,
-    :duplicate => :get
+    :duplicate => :get,
+    :details_report => :get,
+    :usage_report => :get,
+  }, :collection => {
+    :printable_index => :get
   }
 
   map.resources :pages, :member => {
@@ -357,21 +363,21 @@ ActionController::Routing::Routes.draw do |map|
     :destroy => :post
   }
 
-  map.resources :sections, :member => {
-    :destroy => :post,
-    :add_page => [:post, :get],
-    :sort_pages => :post, 
-    :delete_page => :post,
+  map.resources :investigations, :member => {
+    :add_activity => [:post,:get],
+    :sort_activities => :post,
+    :delete_activity => :post,
     :print => :get,
     :duplicate => :get,
     :details_report => :get,
     :usage_report => :get,
+    :export => :get,
     :destroy => :post,
   }, :collection => {
     :printable_index => :get
   }
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
-  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
+  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :get
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
   map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
   
@@ -399,24 +405,6 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
-
-  map.resources :investigations, :member => {
-    :add_activity => :post,
-    :sort_activities => :post,
-    :delete_activity => :post,
-    :print => :get,
-    :duplicate => :get,
-    :usage_report => :get,
-    :details_report => :get,
-    :export => :get,
-    :destroy => :post
-  }, :collection => {
-    :printable_index => :get
-  }
-  map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
-  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :post
-  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
-  map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
 
   map.resources :external_activities, :member => {
     :duplicate => :get,

@@ -1,11 +1,3 @@
-Given /^I am an anonymous user$/ do
-  User.anonymous(true)
-  get '/sessions/destroy'
-  response.should redirect_to('/')
-  follow_redirect!
-  true #  for now ...
-end
-
 When /^I select a school from the list of schools$/ do
   school = Portal::School.first
   When "I select \"#{school.name}\" from \"school_id\""
@@ -18,6 +10,8 @@ Then /^I should see the the teacher signup form$/ do
   And I should see "login info"
 end
 
+
+# Table: | login | password |
 Given /^the following teachers exist:$/ do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|
@@ -35,4 +29,3 @@ Given /^the following teachers exist:$/ do |users_table|
     end
   end
 end
-

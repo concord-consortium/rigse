@@ -43,8 +43,11 @@ module RunnablesHelper
     else
       html_options[:title] = title
     end
-
-    x_button_for(component, verb) + link_to(link_text, url, html_options)
+    if params[:no_button]
+      link_to(link_text, url, html_options)
+    else
+      x_button_for(component, verb) + link_to(link_text, url, html_options)
+    end
   end
 
   def preview_button_for(component, url_params = nil, img = "preview.png", run_as = nil)

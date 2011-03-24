@@ -1,23 +1,4 @@
 
-Given /the following users[(?exist):\s]*$/i do |users_table|
-  User.anonymous(true)
-  users_table.hashes.each do |hash|
-    roles = hash.delete('roles')
-    roles = roles ? roles.split(/,\s*/) : nil
-    begin
-      user = Factory(:user, hash)
-      roles.each do |role|
-        user.add_role(role)
-      end
-      user.register
-      user.activate
-      user.save!
-    rescue ActiveRecord::RecordInvalid
-      # assume this user is already created...
-    end
-  end
-end
-
 Given /the current project is using the following interfaces:/ do |interfaces_table|
   interfaces = interfaces_table.hashes.map { |interf| Probe::VendorInterface.find_by_name(interf[:name])}
   Admin::Project.default_project.enabled_vendor_interfaces = interfaces

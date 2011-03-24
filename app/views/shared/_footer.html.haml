@@ -1,0 +1,31 @@
+#footer
+  .footer-inner
+    %ul.utility-footer
+      %li
+        %a{ :href=>"http://www.concord.org/about/contact" }
+          Contact Us
+      %li
+        %a{ :href=>"http://www.concord.org/project-login" }
+          Project Login
+      %li
+        %a{ :href=>"http://www.concord.org/subscribe" }
+          Subscribe
+      %li
+        %a{ :href=>"http://www.concord.org/site-map" }
+          Sitemap
+      %li
+        %a{ :href=>"http://www.concord.org/privacy-policy" }
+          Privacy
+      %li
+        %a{ :href=>"http://www.concord.org/logo-usage" }
+          Logo Usage
+    %p.legal
+      Copyright
+      %span.copyright
+        &copy;
+      2010 Concord Consortium. All rights reserved.
+
+    %p#footer_left
+      Questions/Feedback:
+      = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
+    %p#footer_right

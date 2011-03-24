@@ -4,10 +4,18 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
-  theme(APP_CONFIG[:theme]||'default')
+  theme :get_theme
 
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
+  end
+
+  def self.set_theme(name)
+    @@theme = name
+  end
+  
+  def get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
   # helper :all # include all helpers, all the time
@@ -28,9 +36,8 @@ class ApplicationController < ActionController::Base
 
   # Portal::School.find(:first).members.count
 
-  theme(APP_CONFIG[:theme] ? APP_CONFIG[:theme] : 'default')
-
   protected
+
 
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
@@ -55,16 +62,19 @@ class ApplicationController < ActionController::Base
 
   def param_find(token_sym, force_nil=false)
     token = token_sym.to_s
-     eval_string = <<-EOF
+    result = nil
+    eval_string = <<-EOF
       if params[:#{token}]
-        session[:#{token}] = cookies[:#{token}]= #{token} = params[:#{token}]
+        result = session[:#{token}] = cookies[:#{token}] = params[:#{token}]
       elsif force_nil
          session[:#{token}] = cookies[:#{token}] = nil
       else
-        #{token} = session[:#{token}] || cookies[:#{token}]
+        result = session[:#{token}] || cookies[:#{token}]
       end
     EOF
     eval eval_string
+    result = nil if result == ""
+    result
   end
 
 

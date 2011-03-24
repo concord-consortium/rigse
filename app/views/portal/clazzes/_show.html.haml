@@ -3,28 +3,22 @@
 .clazz_info{:id => dom_id_for(portal_clazz,:item)}
   .clazz_details{:id => dom_id_for(portal_clazz, :details)}
     .action_menu
-      .action_menu_right
+      .action_menu_header_left
+      .action_menu_header_right
         -if portal_clazz.changeable? current_user
-          = link_button "edit.png", edit_portal_clazz_url(portal_clazz)
-          = edit_button_for(portal_clazz)
-          = link_to_remote "edit", :url => edit_portal_clazz_url(portal_clazz), :method => :get, :update =>  dom_id_for(portal_clazz,:item)
-    .block_list
-      %ul
-        %li
-          = (portal_clazz.teachers.size == 1) ? "Teacher:" : "Teachers:"
-          %strong
-            = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no teachers"
-        - if portal_clazz.semester
+          = link_to "edit", edit_portal_clazz_url
+      .block_list
+        %ul
           %li
-            Semester:
+            = (portal_clazz.teachers.size == 1) ? "Teacher:" : "Teachers:"
             %strong
-              = portal_clazz.semester.name
-        - if portal_clazz.description
-          %li
-            Description:
-            %strong
-              = portal_clazz.description
-          %li
-            Class word:
-            %strong
-              = portal_clazz.class_word
+              = (portal_clazz.teachers.size > 0) ? portal_clazz.teachers.collect { |t| t.name }.join(", ") : "no teachers"
+          - if portal_clazz.semester
+            %li
+              Semester:
+              %strong
+                = portal_clazz.semester.name
+          - if portal_clazz.description
+            %li
+              %strong
+                = portal_clazz.description
