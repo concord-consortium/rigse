@@ -83,3 +83,4 @@ Feature: Teacher can assign an offering to a class
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
     And I should see "joe user" for the external activity "My Activity"
+    # Implement a check for learner count
