@@ -48,14 +48,14 @@
   padding: 1em;
   color: #00233a;
   background-color: #f2f8fc;
-  opacity: 1.0;
-  moz-opacity: 1.0;
+  opacity: 1;
+  moz-opacity: 1;
   text-align: left;
   position: relative;
   margin-left: 25%;
   width: 50%;
-  -moz-border-radius: .5em;
-  -webkit-border-radius: .5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
   opacity: 1;
   moz-opacity: 1; }
   #some_data .selected {

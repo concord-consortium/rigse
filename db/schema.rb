@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110209184336) do
+ActiveRecord::Schema.define(:version => 20110321171308) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+    t.boolean  "allow_default_class"
   end
 
   create_table "attached_files", :force => true do |t|
@@ -560,7 +561,10 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.string   "save_path"
   end
+
+  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
 
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
@@ -803,8 +807,8 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -819,7 +823,7 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
   end
 
   create_table "portal_clazzes", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",          :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "start_time"
@@ -832,6 +836,7 @@ ActiveRecord::Schema.define(:version => 20110209184336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "section"
+    t.boolean  "default_class",               :default => false
   end
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
