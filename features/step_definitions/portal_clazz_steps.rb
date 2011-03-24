@@ -11,8 +11,8 @@ Given /^the class "([^"]*)" is the default class$/ do |class_name|
   clazz.save
 end
 
-Then /^I should see "([^"]*)" within the "([^"]*)" details pane$/ do |content, offering_name|
-  offering = Investigation.find_by_name offering_name
+Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content, offering_name|
+  offering = ExternalActivity.find_by_name offering_name
   with_scope("#details_portal__offering_#{offering.id}") do
     page.should have_content(content)
   end

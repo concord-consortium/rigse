@@ -51,10 +51,10 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
 
-  @selenium
 	# Add field on Portal::Offering to point to ID of offering in default
 	# class if runnable being assigned in Class A is already assigned in default class
 	# Populate field when offering is assigned to Class A
+  @selenium
   Scenario: Investigations from the default class show learner data in the default class
     Given the following classes exist:
       | name          | teacher |
@@ -66,11 +66,20 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    When I assign the investigation "Test Investigation" to the class "Default Class"
-    And I assign the investigation "Test Investigation" to the class "My Class"
-    Then the investigation named "Test Investigation" should have "offerings_count" equal to "2"
-    When a student has performed work on the investigation "Test Investigation" for the class "My Class"
+    When I login with username: teacher password: teacher
+    And I am on the class page for "Default Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
+    When I am on the class page for "My Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
+    And the external activity named "My Activity" should have "offerings_count" equal to "2"
+    When I login with username: student password: student
+    And I am on the class page for "My Class"
+    And I follow "run My Activity"
     And I login with username: teacher password: teacher
     And I am on the class page for "Default Class"
-    Then I should see "Test Investigation"
-    And I should see "1 student response" within the "Test Investigation" details pane
+    Then I should see "My Activity"
+    And I should see "joe user" for the external activity "My Activity"

@@ -223,7 +223,12 @@ class Portal::ClazzesController < ApplicationController
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
       if @offering
-        @offering.save
+        if @portal_clazz.default_class == true
+          @offering.default_offering = true
+          @offering.save
+        else
+          @offering.save
+        end
         @portal_clazz.reload
       end
       render :update do |page|
@@ -362,17 +367,14 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def substitute_default_class_offerings(offerings)
-    default_class_offerings = []
+    return offerings if @portal_clazz.default_class
     offerings.each do |offering|
-      default_class_offerings = offering.runnable.offerings.select {|x| x.clazz.default_class == true }
-    end
-
-    unless default_class_offerings.empty?
-      default_class_offerings.each do |dco|
-        offerings.each do |off|
-          if dco.runnable.id == off.runnable.id
-            offerings.delete off
-            offerings << dco
+      if offering.default_offering
+        default_offerings = offering.runnable.offerings.select {|x| x.clazz.default_class == true}
+        default_offerings.each do |doff|
+          if doff.runnable == offering.runnable
+            offerings.delete offering
+            offerings << doff
           end
         end
       end
