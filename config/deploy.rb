@@ -4,6 +4,7 @@ set :stages, %w(
   smartgraphs-dev smartgraphs-staging smartgraphs-production
   has-dev has-staging has-production
   geniverse-dev geniverse-production
+  assessment-dev assessment-staging assessment-production
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
