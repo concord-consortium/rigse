@@ -41,6 +41,13 @@ class Portal::OfferingsController < ApplicationController
 
       format.run_external_html   {
          if learner = setup_portal_student
+           cookies[:save_path] = @offering.runnable.save_path
+           cookies[:learner_id] = learner.id
+           cookies[:student_name] = "#{current_user.first_name} #{current_user.last_name}"
+           cookies[:activity_name] = @offering.runnable.name
+           cookies[:class_id] = learner.offering.clazz.id
+           cookies[:student_id] = learner.student.id
+           cookies[:runnable_id] = @offering.runnable.id
            # session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
          else
            # session[:put_path] = nil
@@ -245,5 +252,34 @@ class Portal::OfferingsController < ApplicationController
       learner = @offering.find_or_create_learner(portal_student)
     end
     learner
+  end
+
+  def learners
+    @offering = Portal::Offering.find(params[:id])
+    @clazz = @offering.clazz
+    @learners = @clazz.students.map do |l|
+      {:name => l.name, :id => l.id, :have_confirmation => false}
+    end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @learners }
+      format.json { render :json => @learners}
+    end  
+  end
+
+  def check_learner_auth
+    learner_id = params[:learner_id]
+    password = params[:pw]
+      begin
+        student = Portal::Student.find(learner_id)
+        user = student.user
+        user = User.authenticate(user.login,password)
+        if user
+          render :status => 200, :text => 'ok'
+          return
+        end
+      rescue
+      end
+      render :status => 400, :text => 'could not authenticate'
   end
 end

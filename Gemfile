@@ -18,10 +18,11 @@ source :gemcutter
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
-  gem "compass"
+  gem "compass",              "0.8.17"
   gem "jnlp",                 "0.6.2"
-  #gem "has_many_polymorphs",  "~> 2.13"
-  gem "ar-extensions",        "~> 0.9.1"
+  # use https://github.com/zdennis/activerecord-import istead of
+  # ar-extensions
+  # gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
@@ -29,7 +30,7 @@ source :gemcutter
   gem "paperclip"
   gem "acts-as-taggable-on"
   gem "ruby-debug"
-
+  gem "nokogiri",             "~> 1.4.1"
 group :development do
   gem "highline"
 end

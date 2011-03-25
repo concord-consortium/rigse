@@ -150,7 +150,6 @@ module TruncatableXhtml
   ## remove any HTML patterns that we don't want.
   ##
   def replace_offensive_html
-    logger.debug "calling replace_offensive_html"
     html_tables.each do |tablename|
       if self.respond_to? tablename
         html_replacements.each_pair do |replacable,replacement|

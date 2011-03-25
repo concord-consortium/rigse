@@ -11,6 +11,10 @@ module RunnablesHelper
     runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
     format = APP_CONFIG[:runnable_mime_type] unless runnable.is_a? JnlpLaunchable
 
+    if format.nil? && runnable.is_a?(ExternalActivity)
+      format = :run_external_html
+    end
+
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
   end
@@ -39,8 +43,11 @@ module RunnablesHelper
     else
       html_options[:title] = title
     end
-
-    x_button_for(component, verb) + link_to(link_text, url, html_options)
+    if params[:no_button]
+      link_to(link_text, url, html_options)
+    else
+      x_button_for(component, verb) + link_to(link_text, url, html_options)
+    end
   end
 
   def preview_button_for(component, url_params = nil, img = "preview.png", run_as = nil)

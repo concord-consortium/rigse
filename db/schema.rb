@@ -371,6 +371,8 @@ ActiveRecord::Schema.define(:version => 20110324152702) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "data_collector_id"
+    t.integer  "precision",                       :default => 2
+    t.integer  "width",                           :default => 1200
   end
 
   create_table "embeddable_drawing_tools", :force => true do |t|

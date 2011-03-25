@@ -4,6 +4,7 @@ class Reports::Excel
 
   def initialize(opts = {})
     @verbose = !!opts[:verbose]
+    @blobs_url =  opts[:blobs_url] || "<specify blobs host>"
     STDOUT.sync = true if @verbose
   end
 
@@ -48,9 +49,59 @@ class Reports::Excel
   def clean_text(html)
     return Nokogiri::HTML(html).inner_text
   end
-  
-  def school_name_for(student)
-    name = student.school ? (student.school.name || "School #{student.school.name}") : "No School"
+
+  # Return a list of offerings
+  # that have ever been run for a clazz
+  # this is to support removed offerings
+  #def ever_offered_for(clazz)
+    #key = "clazz_#{clazz.id}"
+    #@class_offering_map ||= {}
+    #result =  @class_offering_map[key]
+    #unless result
+      #offerings = clazz.students.map {|s| s.learners.map {|l| l.offering}}.flatten.uniq
+      #result = @class_offering_map[key] = offerings
+    #end
+    #result
+  #end
+
+  def all_students_sorted
+    students = Portal::Student.all
+    # remove bougs students
+    students.reject! { |s| s.user.nil? || s.user.default_user || s.learners.size==0 }
+    sorted_students(students)
+  end
+
+  # take a list of runnables, and return a list of students.
+  def sorted_students_for_runnables(runnables)
+    runnables = [runnables] unless runnables.respond_to? :count
+    offerings = runnables.map { |i| i.offerings }.flatten.uniq.compact
+    students  = offerings.map {|o| o.learners}.flatten.compact.map {|l| l.student}.compact.uniq
+    students  = sorted_students(students)
+  end
+
+  def sorted_students(students)
+    # sort by school and last
+    students.sort{ |a,b|
+      if school_name_for(a) !=  school_name_for(b)
+        school_name_for(a)  <=> school_name_for(b)
+      else
+        a.user.last_name <=> b.user.last_name
+      end
+    }
+  end
+
+  def sorted_learners(student)
+    learners = student.learners
+    learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
+    learners.sort! { |a,b|
+      aname = clazz_name_for(a.offering) 
+      bname = clazz_name_for(b.offering)
+      aname <=> bname
+    }
+  end
+
+  def school_name_for(thing)
+    name = thing.school ? (thing.school.name || "School #{thing.school.name}") : "No School"
     return name
   end
   
@@ -58,19 +109,27 @@ class Reports::Excel
     name = offering.clazz ? (offering.clazz.name || "Class: #{offering.clazz.id}") : "No Class"
     return name
   end
+  def learner_id(learner)
+    "#{learner.student.id}_#{learner.offering.clazz.id}"
+  end
 
-  # Return a list of offerings
-  # that have ever been run for a clazz
-  # this is to support removed offerings
-  def ever_offered_for(clazz)
-    id = clazz.id
-    @class_offering_map ||= {}
-    result =  @class_offering_map[:id]
-    unless result
-      offerings = clazz.students.map {|s| s.learners.map {|l| l.offering}}.flatten.uniq
-      result = @class_offering_map[:id] = offerings
-    end
-    result
+  def user_id(learner)
+    learner.student.user.id
+  end
+
+  def learner_login(learner)
+    learner.student.user.login
+  end
+
+  def learner_name(learner)
+    "#{learner.student.user.last_name}, #{learner.student.user.first_name}"
+  end
+
+  def learner_info_cells(learner)
+    clazz = learner.offering.clazz
+    school = clazz.school
+    teachers = clazz.teachers.flatten.compact.uniq.map{|t| t.name }.join(",")
+    return [learner_id(learner), clazz.name, school_name_for(clazz), user_id(learner), learner_login(learner), learner_name(learner), teachers]
   end
 
 end

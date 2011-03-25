@@ -14,8 +14,6 @@ GEM
       activesupport (= 2.3.11)
     activesupport (2.3.11)
     acts-as-taggable-on (2.0.6)
-    ar-extensions (0.9.3)
-      activerecord (~> 2.1)
     arrayfields (4.7.4)
     builder (3.0.0)
     capistrano (2.5.19)
@@ -158,12 +156,11 @@ DEPENDENCIES
   RedCloth (~> 4.1.1)
   aasm (~> 2.0.2)
   acts-as-taggable-on
-  ar-extensions (~> 0.9.1)
   arrayfields
   capistrano-ext
   capybara (~> 0.3.8)
   ci_reporter (~> 1.6.4)
-  compass
+  compass (= 0.8.17)
   cucumber (~> 0.10.0)
   cucumber-rails (~> 0.3.2)
   database_cleaner (~> 0.5.0)
@@ -182,6 +179,7 @@ DEPENDENCIES
   mongrel (~> 1.1.5)
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
+  nokogiri (~> 1.4.1)
   open4 (~> 0.9.6)
   paperclip
   prawn (~> 0.4.1)

@@ -7,7 +7,7 @@ Feature: An author registers to use the portal
   Background:
     Given The default project and jnlp resources exist using factories
 
-	@selenium
+  @selenium
   Scenario: Anaonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
@@ -31,7 +31,7 @@ Feature: An author registers to use the portal
     When I fill in the following:
       | login    | login    |
       | password | password |
-    And I press "Submit"
+    And I press "Login"
     Then I should see "Logged in successfully"
     And I should not see "Sorry, there was an error creating your account"
 
