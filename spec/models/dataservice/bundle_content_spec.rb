@@ -1,7 +1,12 @@
 require 'spec_helper'
 
 describe Dataservice::BundleContent do
+
+  after(:each) do
+     Delorean.back_to_the_present
+  end
   before(:each) do
+    Delorean.time_travel_to "1 month ago"
     @valid_attributes = {
       :id => 1,
       :bundle_logger_id => 1,
@@ -159,5 +164,24 @@ describe Dataservice::BundleContent do
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
     
+    end
+
+    describe "should run its callbacks" do
+      before(:each) do
+        @bundle = Dataservice::BundleContent.new(:body => "hi!")
+      end
+
+      it "should process the bundle before it creates bundlecontent" do
+        @bundle.should_receive(:process_bundle)
+        @bundle.run_callbacks(:before_create)
+      end
+      it "should process blobs after being created" do
+        @bundle.should_receive(:process_blobs)
+        @bundle.run_callbacks(:after_create)
+      end
+      it "should process bundles before save" do
+        @bundle.should_receive(:process_bundle)
+        @bundle.run_callbacks(:before_save)
+      end
     end
 end

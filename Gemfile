@@ -53,6 +53,7 @@ group :test do
   gem "launchy"
   # TODO: Use sport or not?
   gem "spork"
+  gem "delorean"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
   # gem "ZenTest",                  "= 4.1.4"
