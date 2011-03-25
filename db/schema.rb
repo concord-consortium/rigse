@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110315163710) do
+ActiveRecord::Schema.define(:version => 20110323212917) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(:version => 20110315163710) do
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "in_progress_bundle_id"
   end
 
   create_table "dataservice_console_contents", :force => true do |t|
@@ -808,8 +809,8 @@ ActiveRecord::Schema.define(:version => 20110315163710) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
