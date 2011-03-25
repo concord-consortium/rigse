@@ -74,13 +74,11 @@ describe Portal::ClazzesController do
         # All users should see the full class details summary
         with_tag("div#details_portal__clazz_#{@mock_clazz.id}") do
           with_tag('div.action_menu') do
-            with_tag('div.action_menu_right') do
-              if user == :unauthorized_teacher_user
-                # Unauthorized users should not see an "edit" link in the class details section
-                without_tag('a', :text => 'edit')
-              else
-                with_tag('a', :text => 'edit')
-              end
+            if user == :unauthorized_teacher_user
+              # Unauthorized users should not see an "edit" link in the class details section
+              without_tag('a', :text => 'edit')
+            else
+              with_tag('a', :text => 'edit')
             end
           end
         end
