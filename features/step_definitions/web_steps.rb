@@ -192,7 +192,7 @@ Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should not be checked$/ do
   end
 end
  
-Then /^(?:|I )should (?:|still) be on (.+)$/ do |page_name|
+Then /^(?:|I )should (?:|still )be on (.+)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
     current_path.should == path_to(page_name)
