@@ -13,15 +13,26 @@ end
 
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   visit "/login"
-  fill_in("login", :with => username)
-  fill_in("password", :with => password)
-  #click_button("Login")
-  click_button("Submit")
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    #click_button("Submit")
+  end
 end
 
 When /^I log out$/ do
   visit "/logout"
 end
+
+Given /^I am an anonymous user$/ do
+  User.anonymous(true)
+  get '/sessions/destroy'
+  response.should redirect_to('/')
+  follow_redirect!
+  true #  for now ...
+end
+
 
 Given /^the following vendor interfaces exist:$/ do |interfaces_table|
   # table is a Cucumber::Ast::Table
