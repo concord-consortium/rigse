@@ -9,9 +9,9 @@ site_school.description = "This is a virtual school used as a default for Teache
 site_school.save!
 
 # Make a User
-teacher_user = User.find_or_create_by_login(:login => 'teacher',
-  :first_name => 'Valerie', :last_name => 'Frizzle',
-  :email => 'teacher@concord.org',
+teacher_user = User.find_or_create_by_login(:login => 'sparks_teacher',
+  :first_name => 'Ms', :last_name => 'Sparkles',
+  :email => 'sparks_teacher@concord.org',
   :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
 teacher_user.register! if teacher_user.activated_at.nil?
 teacher_user.activate! if teacher_user.activated_at.nil?
