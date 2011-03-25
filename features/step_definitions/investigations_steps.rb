@@ -165,8 +165,6 @@ end
 Then /^every investigation should contain "([^"]*)"$/ do |expected|
   within("#offering_list") do
     page.all(".runnable").each do |piece|
-      p "ZOMG"
-      p piece
       piece.should have_content(expected)
     end
   end
