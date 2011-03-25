@@ -20,7 +20,7 @@ describe Dataservice::BundleContent do
       :empty => false,
       :uuid => "value for uuid"
     }
-    
+
     @valid_attributes_with_blob = {
       :bundle_logger_id => 1,
       :position => 2,
@@ -40,10 +40,9 @@ describe Dataservice::BundleContent do
   it "should create a new instance given valid attributes" do
     Dataservice::BundleContent.create!(@valid_attributes)
   end
-  
+
   it "should extract blobs into separate model objects" do
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
-    puts "There are #{bundle_content.blobs.size} blobs"
     bundle_content.blobs.size.should eql(1)
     bundle_content.reload
     setup_expected(bundle_content.blobs.first)
@@ -51,7 +50,7 @@ describe Dataservice::BundleContent do
     bundle_content.body.should eql(@expected_body)
     bundle_content.original_body.should eql(@valid_attributes_with_blob[:body])
   end
-  
+
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
     @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
@@ -163,9 +162,74 @@ describe Dataservice::BundleContent do
           <launchProperties key="sds_time" value="1275665709053"/>
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
-    
+
     end
 
+    describe "process_bunde" do
+      before(:each) do
+        @bundle = Dataservice::BundleContent.new()
+      end
+
+      it "should set processed to true" do
+        @bundle.body = ""
+        @bundle.processed.should be_false
+        #@bundle.should_receive(:processed).with(true)
+        @bundle.process_bundle
+        @bundle.processed.should be_true
+      end
+
+      it "should set empty to true with a blank body" do
+        @bundle.body = ""
+        @bundle.process_bundle
+        @bundle.empty.should be_true
+      end
+
+      it "should set empty to true with a nil body" do
+        @bundle.body = nil
+        @bundle.process_bundle
+        @bundle.empty.should be_true
+      end
+
+      it "should not set empt? if there is a body" do
+        @bundle.body = "testing"
+        @bundle.process_bundle
+        @bundle.empty.should be_false
+      end
+
+      it "should not set valid_xml if the xml is invalid" do
+        @bundle.body = "testing"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_false
+      end
+
+      it "should not set valid_xml if the xml is valid" do
+        # TODO: this probably should be better aproximation of the
+        # actual sockentry protocols (which NP doesn't know very well)
+        @bundle.body="<sessionBundles>FAKE IT.</sessionBundles>"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_true
+      end
+
+      it "should have an otml property if the xml is valid"  do
+        # IMORTANT: this learner_otml is seriously FAKE. (np)
+        @learner_otml = "<OTText>Hello World</OTText>"
+        @ziped_otml = Dataservice::BundleContent.b64gzip_pack(@learner_otml)
+        @learner_socks = "<ot.learner.data><sockEntries value=\"#{@ziped_otml}\"/></ot.learner.data>"
+        @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
+        @bundle.process_bundle
+        @bundle.otml.should_not be_empty
+        puts "OTML IS #{@bundle.otml}"
+      end
+
+      it "should not have an otml property if the xml is invalid" do
+        @bundle.body="<INVALIDXML>"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_false
+        @bundle.otml.should be_empty
+      end
+
+    end
+  
     describe "should run its callbacks" do
       before(:each) do
         @bundle = Dataservice::BundleContent.new(:body => "hi!")

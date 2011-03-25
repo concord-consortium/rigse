@@ -13,17 +13,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   include SailBundleContent
   
-  def before_create
-    process_bundle
-  end
-  
-  def after_create
-    process_blobs
-  end
+  before_create :process_bundle
+  after_create :process_blobs
+  before_save :process_bundle
 
-  def before_save
-    process_bundle unless processed
-  end
   
   # pagination default
   cattr_reader :per_page
@@ -76,9 +69,13 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def process_bundle
+    return true if self.processed
     self.processed = true
     self.valid_xml = valid_xml?
-    if valid_xml
+    # see SailBundleContent mixin for valid_xml? and EMPTY_BUNDLE
+    # Calculate self.empty even when the xml is missing or invalid
+    self.empty = self.body.nil? || self.body.empty? || self.body == EMPTY_BUNDLE
+    if self.valid_xml
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
     end
