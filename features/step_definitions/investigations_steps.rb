@@ -142,7 +142,7 @@ end
 
 When /^I click on the next page of results$/ do
   within('.pagination') do
-    click('Next')
+    click_link('Next')
   end
 end
 
@@ -165,7 +165,7 @@ end
 Then /^every investigation should contain "([^"]*)"$/ do |expected|
   within("#offering_list") do
     page.all(".runnable").each do | piece|
-      piece.node.text.should match(expected)
+      piece.should have_content(expected)
     end
   end
 end
