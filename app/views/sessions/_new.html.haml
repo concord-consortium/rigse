@@ -15,7 +15,7 @@
             %li.remember
               = label_tag 'remember_me', 'Stay logged in', :class=>"right"
               = check_box_tag 'remember_me', '1'
-          %button.nontext.button
+          %button.nontext.button{ :type=>'submit' }
             'Login'
           %p.forgot= link_to 'Forgot Password', forgot_password_path
     .col2
