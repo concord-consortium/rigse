@@ -51,6 +51,32 @@ describe Dataservice::BundleContent do
     bundle_content.original_body.should eql(@valid_attributes_with_blob[:body])
   end
 
+  it "after multiple-processing passes, the blob count should be constant" do
+    bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.save
+    bundle_content.blobs.size.should eql(1)
+    bundle_content.process_blobs
+    bundle_content.processed=false
+    bundle_content.process_blobs
+    bundle_content.process_bundle
+    bundle_content.processed=false
+    bundle_content.process_bundle
+    bundle_content.save
+    bundle_content.blobs.size.should eql(1)
+  end
+
+  it "when a body with no learner data is added, the bundle count doesn't change" do
+    # not a sock-entry body
+    bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.body="<gah>BAD BAD</gah>"
+    bundle_content.save!
+    bundle_content.reload
+    bundle_content.blobs.size.should eql(1)
+  end
+
+  # TODO, not supported really, but we should expect more blobs if
+  # we updated the body with new learner data (?)
+
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
     @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
@@ -202,7 +228,7 @@ describe Dataservice::BundleContent do
         @bundle.valid_xml.should be_false
       end
 
-      it "should not set valid_xml if the xml is valid" do
+      it "should set valid_xml if the xml is valid" do
         # TODO: this probably should be better aproximation of the
         # actual sockentry protocols (which NP doesn't know very well)
         @bundle.body="<sessionBundles>FAKE IT.</sessionBundles>"
@@ -218,7 +244,6 @@ describe Dataservice::BundleContent do
         @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
         @bundle.process_bundle
         @bundle.otml.should_not be_empty
-        puts "OTML IS #{@bundle.otml}"
       end
 
       it "should not have an otml property if the xml is invalid" do
@@ -229,23 +254,20 @@ describe Dataservice::BundleContent do
       end
 
     end
-  
+
     describe "should run its callbacks" do
       before(:each) do
         @bundle = Dataservice::BundleContent.new(:body => "hi!")
       end
 
-      it "should process the bundle before it creates bundlecontent" do
-        @bundle.should_receive(:process_bundle)
-        @bundle.run_callbacks(:before_create)
-      end
-      it "should process blobs after being created" do
-        @bundle.should_receive(:process_blobs)
-        @bundle.run_callbacks(:after_create)
-      end
       it "should process bundles before save" do
         @bundle.should_receive(:process_bundle)
         @bundle.run_callbacks(:before_save)
+      end
+
+      it "should call process blobs after processing bundle" do
+        @bundle.should_receive(:process_blobs)
+        @bundle.process_bundle
       end
     end
 end

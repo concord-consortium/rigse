@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110323212917) do
+ActiveRecord::Schema.define(:version => 20110328184459) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -141,8 +141,8 @@ ActiveRecord::Schema.define(:version => 20110323212917) do
     t.datetime "updated_at"
     t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
-    t.boolean  "valid_xml"
-    t.boolean  "empty"
+    t.boolean  "valid_xml",                              :default => false
+    t.boolean  "empty",                                  :default => true
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
   end

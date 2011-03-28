@@ -13,11 +13,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   include SailBundleContent
   
-  before_create :process_bundle
-  after_create :process_blobs
   before_save :process_bundle
-
-  
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
@@ -27,6 +23,23 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@searchable_attributes = %w{body otml uuid}
   
   class <<self
+
+    def convert_nulls_in_bundle_content_fields
+      empty_count = 0
+      valid_count = 0
+      Self.find(:all, :conditions => "empty is null").each do |i| 
+        i.empty = "false" 
+        i.save 
+        empty_count = empty_count + 1
+      end
+      Self.find(:all, :conditions => "valid_xml is null").each do |i| 
+        i.xml = "false" 
+        i.save
+        valid_count = valid_count + 1
+      end
+      logger.info("Converted #{empty_count} bundle contents with null empty values")
+      logger.info("Converted #{valid_count} bundle contents with null valid_xml values")
+    end
 
     def searchable_attributes
       @@searchable_attributes
@@ -67,10 +80,17 @@ class Dataservice::BundleContent < ActiveRecord::Base
     login = user.login
     "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
-  
-  def process_bundle
-    return true if self.processed
+ 
+  def record_bundle_processing
+    self.updated_at = Time.now
     self.processed = true
+  end
+
+  def process_bundle
+    # this method shouldn't be called multiple times,
+    # but even if it is, no harm should come
+    # return true if self.processed
+    self.record_bundle_processing
     self.valid_xml = valid_xml?
     # see SailBundleContent mixin for valid_xml? and EMPTY_BUNDLE
     # Calculate self.empty even when the xml is missing or invalid
@@ -79,8 +99,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
     end
+    self.process_blobs
+    true # don't stop the callback chain.
   end
-    
+  
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
@@ -108,19 +130,22 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def process_blobs
+    # return true unless self.valid_xml
+    # we want to give other callbacks a chance to run
     return false unless self.valid_xml
     ## extract blobs from the otml and convert the changed otml back to bundle format
     blobs_present = extract_blobs
     if blobs_present
       convert_otml_to_body
-      self.save!
+      #self.save!
     end
     return blobs_present
+    # above would stop other callbacks from happening
+    # return true 
   end
   
   def extract_blobs(host = nil)
     return false if ! self.otml
-    
     changed = false
       
     if ! host
@@ -145,7 +170,13 @@ class Dataservice::BundleContent < ActiveRecord::Base
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(@@blob_content_regexp) {|match|
         changed = true
-        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+        _content = self.class.b64gzip_unpack($1.gsub!(/\s/, ""))
+        # the following find is probably of limited use, and is expensive:
+        # blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+
+        # sometimes we don't have a valid id, but thats OK, we build our list here:
+        blob = Dataservice::Blob.create(:bundle_content_id => self.id, :content => _content)
+        self.blobs << blob
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
         match
       }
