@@ -366,16 +366,16 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
-  def substitute_default_class_offerings(offerings)
-    return offerings if @portal_clazz.default_class
+  def substitute_default_class_offerings(clazz_offerings)
+    return clazz_offerings if @portal_clazz.default_class
+    offerings = clazz_offerings.clone
     offerings.each do |offering|
-      if offering.default_offering
-        default_offerings = offering.runnable.offerings.select {|x| x.clazz.default_class == true}
-        default_offerings.each do |doff|
-          if doff.runnable == offering.runnable
-            offerings.delete offering
-            offerings << doff
-          end
+      all_offerings = Portal::Offering.find_all_by_runnable_id(offering.runnable.id)
+      default_offerings = all_offerings.select {|x| x.default_offering == true && x.runnable.id == offering.runnable.id}
+      default_offerings.each do |doff|
+        if doff.runnable.id == offering.runnable.id
+          offerings.delete offering
+          offerings << doff
         end
       end
     end

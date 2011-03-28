@@ -51,9 +51,6 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
 
-	# Add field on Portal::Offering to point to ID of offering in default
-	# class if runnable being assigned in Class A is already assigned in default class
-	# Populate field when offering is assigned to Class A
   @selenium
   Scenario: Investigations from the default class show learner data in the default class
     Given the following classes exist:
@@ -82,5 +79,5 @@ Feature: Teacher can assign an offering to a class
     And I login with username: teacher password: teacher
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
-    And I should see "joe user" for the external activity "My Activity"
-    # Implement a check for learner count
+    And I should see "joe user"
+    And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"

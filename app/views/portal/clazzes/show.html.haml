@@ -9,4 +9,4 @@
   = render :partial =>'portal/clazzes/show', :locals => {:portal_clazz => @portal_clazz}
   - # Added to show investigations to students in class view. -- Cantina-CMH 6/21/10
   %h4 #{top_level_container_name.capitalize.pluralize}:
-  = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @portal_clazz.active_offerings }
+  = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @offerings }
