@@ -31,7 +31,7 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
   }
 
   # find the first model, and create a pane definition for it
-  firstPage = @activity.pages.first
+  firstPage = @activity.sections.first ? @activity.sections.first.pages.first : nil
   embeddables = firstPage ? firstPage.page_elements.map{|pe| pe.embeddable } : []
   model = embeddables.shift
   modelPanel = {
@@ -115,7 +115,7 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
   allSteps = source["steps"].collect{|s| s["url"]}.compact
   firstStep = allSteps.first
   source["pages"] << {
-    "name" => @activity.sections.first.name,
+    "name" => firstPage ? firstPage.name : "Some page",
     "url" => "/activity/#{@activity.id}/page/1",
     "activity" => "/activity/#{@activity.id}",
     "index" => 1,
