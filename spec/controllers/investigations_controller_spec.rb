@@ -5,7 +5,9 @@ describe InvestigationsController do
   integrate_views
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
+    controller.stub(:before_render) {
+      response.template.stub(:net_logo_package_name).and_return("blah")
+    }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     @admin_user.add_role("admin")

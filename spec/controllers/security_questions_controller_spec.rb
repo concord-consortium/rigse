@@ -4,9 +4,6 @@ describe SecurityQuestionsController do
   integrate_views
   
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    generate_portal_resources_with_mocks
-    
     @student = Factory.create(:portal_student, :user => Factory.create(:user))
     stub_current_user @student.user
   end
