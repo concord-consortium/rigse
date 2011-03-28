@@ -1,0 +1,145 @@
+<%# Renders a simple activity structure into a format expected by SmartGraphs
+
+We'll do this in 2 steps:
+ 1) Create a hash will all the appropriate info
+2) Render that hash into the view via the to_json() method
+
+Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master/apps/smartgraphs/activity_json/example.js
+
+%>
+
+<%
+  source = {
+    # some common defaults:
+    "_id" => "example.df5",
+    "_rev" =>  "1",
+    "data_format_version" => 5,
+
+    # some unused, but necessary properties
+    "units" => [],
+    "axes" => [],
+    "graphs" => [],
+    "datasets" => [],
+    "datapoints" => [],
+    "tags" => [],
+    "annotations" => [],
+
+    # question definitions
+    "responseTemplates" => [],
+    "steps" => [],
+    "pages" => []
+  }
+
+  # find the first model, and create a pane definition for it
+  firstPage = @activity.pages.first
+  embeddables = firstPage ? firstPage.page_elements.map{|pe| pe.embeddable } : []
+  model = embeddables.shift
+  modelPanel = {
+    "single" => {
+      "type" => "image",
+      "caption" => model ? "Model # #{model.id}" : "No model found!",
+      "path" => "http://www.concord.org/sites/all/themes/cc/img/css/bg-footer-home.png"
+    }
+  }
+
+  embeddables.each do |q|
+    q_data = {
+      "url" => "/activity/#{@activity.id}/response-template/#{dom_id_for(q)}",
+      "templateString" => "",
+      "fieldTypes" => [],
+      "fieldChoicesList" => [],
+      "initialValues" => []
+    }
+
+    if q.kind_of? Embeddable::MultipleChoice
+      q_data["fieldTypes"] << "multiplechoice"
+    elsif q.kind_of? Embeddable::OpenResponse
+      q_data["fieldTypes"] << "textarea"
+    end
+
+    if q.kind_of? Embeddable::MultipleChoice
+      q_data["fieldChoicesList"] << q.choices.collect{|c| c.choice }
+    end
+
+    source["responseTemplates"] << q_data
+
+    # create a step container for this question
+    step = {
+      "url" => "/activity/#{@activity.id}/page/1/step/#{dom_id_for(q)}",
+      "activityPage" => "/activity/#{@activity.id}/page/1",
+      "paneConfig" => "single",
+      "panes" => modelPanel,
+      "beforeText" => q.prompt,
+      "submitButtonTitle" => "Next",
+      "responseTemplate" => "/activity/#{@activity.id}/response-template/#{dom_id_for(q)}",
+      "hideSubmitButton" => false,
+      "isFinalStep" => false,
+      "nextButtonShouldSubmit" => false
+    }
+
+    if q.kind_of? Embeddable::MultipleChoice
+      step["submissibilityCriterion"] = ["isNumeric", ["responseField", 1]]
+    elsif q.kind_of? Embeddable::OpenResponse
+      step["submissibilityCriterion"] = ["textLengthIsAtLeast", 5, ["responseField", 1]]
+    end
+
+    source["steps"] << step
+  end
+
+  numSteps = source["steps"].size
+  numSteps.times do |i|
+    step = source["steps"][i]
+    if i == (numSteps-1)
+      step["defaultBranch"] = "/activity/#{@activity.id}/page/1/step/final-step"
+    else
+      step["defaultBranch"] = source["steps"][i+1]["url"]
+    end
+  end
+
+  finalStep = {
+      "url" => "/activity/#{@activity.id}/page/1/step/final-step",
+      "activityPage" => "/activity/#{@activity.id}/page/1",
+      "paneConfig" => "single",
+      "panes" => modelPanel,
+      "beforeText" => 'Thank you! You are now finished.',
+      "submitButtonTitle" => "Next",
+      "responseTemplate" => nil,
+      "hideSubmitButton" => true,
+      "isFinalStep" => true,
+      "nextButtonShouldSubmit" => false,
+      "submissibilityCriterion" => []
+  }
+  source["steps"] << finalStep
+
+  # page
+  allSteps = source["steps"].collect{|s| s["url"]}.compact
+  firstStep = allSteps.first
+  source["pages"] << {
+    "name" => @activity.sections.first.name,
+    "url" => "/activity/#{@activity.id}/page/1",
+    "activity" => "/activity/#{@activity.id}",
+    "index" => 1,
+    "introText" => "<h1>Questions</h1>",
+    "steps" => allSteps,
+    "firstStep" => firstStep
+  }
+
+  # activity
+  templateUrls = source["responseTemplates"].collect{|t| t["url"]}.compact
+  act = {
+    "title" => @activity.name,
+    "url" => "/activity/#{@activity.id}",
+    "owner" => "shared",
+    "pages" => [ "/activity/#{@activity.id}/page/1" ],
+    "responseTemplates" => templateUrls,
+
+    # unused, but necessary properties
+    "datasets" => [],
+    "units" => [],
+    "axes" => [],
+    "graphs" => []
+  }
+  source["activity"] = act
+
+%>
+<%= source.to_json %>

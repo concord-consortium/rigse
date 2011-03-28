@@ -113,6 +113,7 @@ class ActivitiesController < ApplicationController
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.xml  { render :xml => @activity }
       format.pdf {render :layout => false }
+      format.sg {render :layout => false }
     end
   end
 

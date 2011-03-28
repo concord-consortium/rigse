@@ -13,3 +13,5 @@ Mime::Type.register "", :run_html
 Mime::Type.register "", :run_external_html
 Mime::Type.register "", :run_sparks_html
 Mime::Type.register "application/octet-stream", :blob
+Mime::Type.register "application/json", :sg
+
