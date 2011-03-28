@@ -17,3 +17,8 @@ Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content,
     page.should have_content(content)
   end
 end
+
+Then /^the class "([^"]*)" should not have any offerings$/ do |class_name|
+  clazz = Portal::Clazz.find_by_name class_name
+  clazz.offerings.size.should == 0
+end

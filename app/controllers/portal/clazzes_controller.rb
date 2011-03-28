@@ -224,8 +224,20 @@ class Portal::ClazzesController < ApplicationController
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
       if @offering
         if @portal_clazz.default_class == true
-          @offering.default_offering = true
-          @offering.save
+          if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
+            @offering.default_offering = true
+            @offering.save
+          else
+            error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
+            @offering.destroy
+            render :update do |page|
+              page << "var element = $('#{dom_id}');"
+              page << "element.show();"
+              page << "$('flash').update('#{error_msg}');"
+              page << "alert('#{error_msg}');"
+            end
+            return
+          end
         else
           @offering.save
         end
