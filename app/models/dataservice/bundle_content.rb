@@ -5,6 +5,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
+  has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "bundle_content_id"
+  has_many :collaborators, :through => :collaborations, :class_name => "Portal::Student", :source => :student
+
   acts_as_list :scope => :bundle_logger_id
 
   acts_as_replicatable
@@ -24,22 +27,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
   
   class <<self
 
-    def convert_nulls_in_bundle_content_fields
-      empty_count = 0
-      valid_count = 0
-      Self.find(:all, :conditions => "empty is null").each do |i| 
-        i.empty = "false" 
-        i.save 
-        empty_count = empty_count + 1
-      end
-      Self.find(:all, :conditions => "valid_xml is null").each do |i| 
-        i.xml = "false" 
-        i.save
-        valid_count = valid_count + 1
-      end
-      logger.info("Converted #{empty_count} bundle contents with null empty values")
-      logger.info("Converted #{valid_count} bundle contents with null valid_xml values")
-    end
 
     def searchable_attributes
       @@searchable_attributes
@@ -320,5 +307,23 @@ class Dataservice::BundleContent < ActiveRecord::Base
     This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s 
     class using: '#{runnable_name}' in the '#{school_name}' school.
     HEREDOC
+  end
+
+  def copy_to_collaborators
+    return unless self.collaborators.size > 0
+    return unless self.bundle_logger
+    return unless self.bundle_logger.learner
+    return unless self.bundle_logger.learner.offering
+    self.collaborators.each do |student|
+      slearner = self.bundle_logger.learner.offering.find_or_create_learner(student)
+      new_bundle_logger = slearner.bundle_logger
+      new_attributes = self.attributes.merge({
+        :processed => false,
+        :bundle_logger => new_bundle_logger
+      })
+      bundle_content =Dataservice::BundleContent.create(new_attributes)
+      bundle_logger.bundle_contents << bundle_content
+      bundle_logger.reload
+    end
   end
 end

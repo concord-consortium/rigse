@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110328184459) do
+ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -121,6 +121,13 @@ ActiveRecord::Schema.define(:version => 20110328184459) do
     t.text     "stdout"
     t.text     "stderr"
     t.integer  "exit_status"
+  end
+
+  create_table "collaborations", :force => true do |t|
+    t.integer  "bundle_content_id"
+    t.integer  "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "dataservice_blobs", :force => true do |t|

@@ -270,4 +270,53 @@ describe Dataservice::BundleContent do
         @bundle.process_bundle
       end
     end
+
+    describe "collaborations and collaborators" do
+      before(:each) do
+        @bundle = Factory(:dataservice_bundle_content)
+        @student_a = Factory(:portal_student)
+        @student_b = Factory(:portal_student)
+        @student_c = Factory(:portal_student)
+      end
+      describe "basic associations" do
+        it "should allow for collaborators" do
+          @bundle.collaborators << @student_a
+          @bundle.collaborators << @student_b
+          @bundle.collaborators << @student_c
+          @bundle.save
+          @bundle.reload
+          @bundle.should have(3).collaborators
+          @bundle.collaborators.each do |s|
+            s.collaborative_bundles.should_not be_nil
+            s.collaborative_bundles.should include @bundle
+          end
+        end
+      end
+
+      describe "copying data" do
+        before(:each) do
+          @main_student = Factory(:portal_student)
+          @clazz = mock_model(Portal::Clazz)
+          @offering = mock_model(Portal::Offering, :clazz => @clazz)
+          @learner = mock_model(Portal::Learner, 
+                                :portal_student => @main_student, 
+                                :offering =>@offering)
+          @learner_a = mock_model(Portal::Learner)
+          @contents_a = []
+          @bundle_logger = mock_model(Dataservice::BundleLogger, {
+            :learner => @learner,
+            :bundle_contents => @contents_a
+          })
+          @bundle.bundle_logger = @bundle_logger
+        end
+        it "should copy the bundle contents" do
+          @bundle.collaborators << @student_a
+          @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
+          @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
+          @bundle.copy_to_collaborators
+          @contents_a.should have(1).bundle_content
+        end
+      end
+
+    end
 end
