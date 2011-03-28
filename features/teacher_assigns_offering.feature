@@ -82,6 +82,7 @@ Feature: Teacher can assign an offering to a class
     And I should see "joe user"
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
 
+  @dialog
   @selenium
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the following classes exist:
