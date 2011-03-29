@@ -152,7 +152,8 @@ ActionController::Routing::Routes.draw do |map|
       :activate => :get,
       :deactivate => :get,
       :learners => :get,
-      :check_learner_auth => :post
+      :check_learner_auth => :post,
+      :start => :post
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
