@@ -11,6 +11,8 @@ var EnableWorkgroups = function(_selector) {
   var _selector = _selector ||   'a.run_link';
     $$(_selector).each(function(el) {
     var offering_id = ParseOfferingUrl(el.href);
+    // remove other click observers!
+    el.stopObserving('click');
     el.observe('click', function(e) {
       Workgroup(offering_id);
       e.stop();
@@ -190,9 +192,6 @@ var Workgroup = function(_offering) {
           default:
         }
     });
-    
-    //password_field.activate();
-    password_field.focus();
 
     if (learner.have_consent) { pending.hide();  }
     else                      { complete.hide(); }
