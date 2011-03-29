@@ -29,7 +29,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
-    @offerings = substitute_default_class_offerings(@portal_clazz.offerings)
+    @offerings = substitute_default_class_offerings(@portal_clazz.active_offerings)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @portal_clazz }
