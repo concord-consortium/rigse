@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   before_filter :setup_container
-  before_filter :setup_project
 
   include AuthenticatedSystem
   include RoleRequirementSystem
@@ -46,12 +45,6 @@ class ApplicationController < ActionController::Base
 
   def current_project
     @_project ||= Admin::Project.default_project
-  end
-
-  def setup_project
-    if USING_JNLPS
-      @jnlp_testing_adaptor = JnlpTestingAdaptor.new
-    end
   end
 
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
