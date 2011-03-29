@@ -317,6 +317,15 @@ describe Dataservice::BundleContent do
           @contents_a.should have(1).bundle_content
         end
       end
-
+    end
+      
+    describe "observers" do
+      it " should run the after_save actions" do
+        @bundle_content = Factory(:dataservice_bundle_content)
+        @obs = Dataservice::BundleContentObserver.instance
+        @obs.should_receive(:process_saveables)
+        @obs.should_receive(:copy_to_collaborators)
+        @bundle_content.save!
+      end
     end
 end
