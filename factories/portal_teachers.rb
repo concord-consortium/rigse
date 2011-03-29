@@ -12,10 +12,13 @@
 # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
 
 
-Factory.define :portal_teacher, :class => Portal::Teacher do |f|
-  f.association   :user, :factory => :user
-  f.schools { |schools| [ schools.association(:portal_school)] }
+Factory.define :teacher, :class => Portal::Teacher do |f|
+  f.association :user, :factory => :user
   f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
+end
+
+Factory.define :portal_teacher, :parent => :teacher do |f|
+  f.schools { |schools| [ schools.association(:portal_school)] }
 end
 
 # a teacher with one class in a real school
@@ -23,7 +26,3 @@ Factory.define :nces_portal_teacher, :parent => :portal_teacher do |teacher|
   teacher.clazzes {[Factory(:nces_portal_clazz)]}
 end
 
-Factory.define :teacher, :class => Portal::Teacher do |f|
-  f.association :user, :factory => :user
-  f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
-end
