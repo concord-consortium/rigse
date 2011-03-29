@@ -1,3 +1,12 @@
+var ParseOfferingUrl = function(url) {
+  var offering_id_str = null;
+  if (url.match(/portal\/offerings\/\d+\.jnlp/gi)) {
+    offering_id_str = url.match(/\d+\.jnlp/gi).first();
+    offering_id_str = offering_id_str.match(/\d+/gi).first();
+  }
+  return offering_id_str;
+};
+
 var Workgroup = function(_offering) {
   var learners_list      = null;
   var learners_dropdown  = null;
@@ -32,12 +41,45 @@ var Workgroup = function(_offering) {
     $('load_wait').show();
   };
 
-  var close_workgroups = function() {
+  var close_dialog = function() {
     lightbox_hood.hide();
     lightbox_content.hide();
-    console.log("here is where we dream big...");
-    window.location = "http://google.com";
-  }
+    $(document).stopObserving('keydown');
+  };
+
+  var launch_action = function() {
+    //window.location = "/portal/workgroups/offering/" + offering_id + "/start";
+    new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
+      parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
+      onSuccess: function() { 
+        console.log('sucess');  
+        close_dialog();
+        window.location = "/portal/offerings/" + offering + ".jnlp"
+      },
+      onFaiulre: function() { console.log('failure'); }
+    });
+    //close_dialog();
+  };
+ 
+  var handle_keydown = function(e) {
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    switch (code) {
+      case 27: 
+        handle_escape(e);
+        break;
+      case 13:
+        handle_return(e);
+        break;
+      default:
+    }
+  };
+
+  var handle_escape = function(e) { close_dialog(); };
+
+  var handle_return = function(e) { };
 
   // startup
   var load = function() {
@@ -48,9 +90,9 @@ var Workgroup = function(_offering) {
     add_button.observe('click',function() { 
       add_learner(selected_learner());
     });
-    run_button.observe('click', close_workgroups);
+    run_button.observe('click', launch_action);
+    $(document).observe('keydown', handle_keydown);
     $('show_workgroups').observe('click',show_workgroup_editor);
-
     lightbox_hood.show();
     lightbox_content.show();
   };
@@ -199,20 +241,22 @@ var Workgroup = function(_offering) {
   var check_password = function(learner,passwd,succ,fail) {
     new Ajax.Request('/portal/offerings/' + offering + '/check_learner_auth', {
       parameters: {'learner_id': learner.id, 'pw': passwd},
-      onSuccess: function(transport) {
-        succ.call();
-      },
-      onFailure: function() {fail.call();}
+      onSuccess: function(transport) { succ.call(); } ,
+      onFailure: function()          { fail.call(); } 
     });
   };
 
-  document.observe("dom:loaded", function() {
-    $$('.run_link').each(function(el) {
-      //hack-test:
-      el.observe('click',load(208));
-    });
-  });
-
-  // all that for this:
   load();
 };
+
+document.observe("dom:loaded", function() {
+  $$('a.run_link').each(function(el) {
+    var offering_id = ParseOfferingUrl(el.href);
+    console.log("found offering: " + offering_id);
+    //el.observe('click',load(208));
+    el.observe('click', function(e) {
+      Workgroup(offering_id);
+      e.stop();
+    });
+  });
+});
