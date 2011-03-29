@@ -172,6 +172,27 @@ var Workgroup = function(_offering) {
     name_field.update(learner.name);
     learner_el.id = learner_id_for(learner);
     learners_list.insert({ bottom: learner_el});
+    var do_check_password = function() {
+      pending.hide();
+      wait.show();
+      check_password(learner,password_field.value, login_success,login_failure);
+    };
+    login_button.observe('click',do_check_password);
+    password_field.observe('keydown',function(e) {
+        var code;
+        if (!e) var e = window.event;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        switch (code) {
+          case 13:
+            do_check_password();
+          break;
+          default:
+        }
+    });
+    
+    //password_field.activate();
+    password_field.focus();
 
     if (learner.have_consent) { pending.hide();  }
     else                      { complete.hide(); }
@@ -197,11 +218,6 @@ var Workgroup = function(_offering) {
       update_ui();
     }
 
-    login_button.observe('click',function() {
-      pending.hide();
-      wait.show();
-      check_password(learner,password_field.value, login_success,login_failure);
-    });
   };
 
   var remove_learner_from_container = function(learner) {
