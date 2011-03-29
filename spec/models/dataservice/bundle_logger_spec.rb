@@ -102,6 +102,8 @@ describe Dataservice::BundleLogger do
       it "should not have any new pending bundles after end" do
         @bundle_logger.end_bundle
         @bundle_logger.in_progress_bundle.should be_nil
+        @bundle_logger.reload
+        @bundle_logger.in_progress_bundle.should be_nil
       end
     end
 

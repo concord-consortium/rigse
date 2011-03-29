@@ -89,6 +89,7 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   
   def start_bundle
     self.in_progress_bundle ||= Dataservice::BundleContent.create(:bundle_logger => self)
+    self.bundle_contents << self.in_progress_bundle
     self.save
     self.reload
   end
@@ -103,12 +104,13 @@ class Dataservice::BundleLogger < ActiveRecord::Base
       if attributes[:id] != nil
         raise "id specified, but no in_progress_bundle defined"
       end
-      self.in_progress_bundle = Dataservice::BundleContent.new({:bundle_logger => self})
+      self.start_bundle
     end
     # force processing
     self.in_progress_bundle.attributes = attributes.merge(:processed => false)
     self.in_progress_bundle.save!
     self.in_progress_bundle = nil
+    self.save
   end
 
 end
