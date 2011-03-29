@@ -1,0 +1,50 @@
+---
+development: &id003
+  :active_school_levels:
+    - "2"
+    - "3"
+    - "4"
+  :active_grades:
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  :theme: assessment
+  :site_name: Assessment Portal
+  :site_url: http://localhost:3000
+  :runnables_use: otrunk_jnlp
+  :runnable_mime_type:
+  :top_level_container_name: investigation
+  :site_school: Assessment Portal-school
+  :description: ""
+  :site_district: Assessment Portal-district
+  :help_email: assessment@concord.org
+  :use_gse: false
+  :enable_default_users: true
+  :admin_email: aunger@concord.org
+  :default_admin_user:
+    :first_name: Aaron
+    :login: aunger
+    :last_name: Unger
+    :email: aunger@concord.org
+  :states_and_provinces:
+    - MA
+  :maven_jnlp_servers:
+    - :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  :maven_jnlp_families:
+    - all-otrunk-snapshot
+  :default_maven_jnlp:
+    :version: snapshot
+    :server: concord
+    :family: all-otrunk-snapshot
+  :valid_sakai_instances:
+
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003
