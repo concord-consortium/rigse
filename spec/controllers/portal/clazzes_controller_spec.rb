@@ -16,9 +16,6 @@ describe Portal::ClazzesController do
     Portal::Semester.destroy_all
     User.destroy_all
 
-    generate_default_project_and_jnlps_with_mocks
-    generate_portal_resources_with_mocks
-
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
 
