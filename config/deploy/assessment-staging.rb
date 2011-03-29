@@ -2,7 +2,7 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/assessment"
+set :deploy_to, "/web/portal"
 set :branch, "assessment-staging"
 
 #############################################################
@@ -11,4 +11,4 @@ set :branch, "assessment-staging"
 
 set :domain, "ruby-vm3.concord.org"
 server domain, :app, :web
-role :db, "seymour.concord.org", :primary => true
+role :db, domain, :primary => true
