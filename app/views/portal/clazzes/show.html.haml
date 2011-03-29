@@ -1,12 +1,12 @@
 - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
-  = render :partial =>'portal/clazzes/show', :locals => {:portal_clazz => @portal_clazz}
-  = render :partial => 'portal/offerings/list_for_clazz', :locals => {:portal_clazz => @portal_clazz }
+  = render_portal_clazz_partial 'portal/clazzes/show'
+  = render_portal_clazz_partial 'portal/offerings/list_for_clazz'
   %br
-  = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => @portal_clazz, :existing_students => @portal_clazz.teacher.students - @portal_clazz.students }
+  = render_portal_clazz_partial 'portal/students/list_for_clazz'
 - elsif current_user.has_role?("manager", "researcher")
   = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
 - else
-  = render :partial =>'portal/clazzes/show', :locals => {:portal_clazz => @portal_clazz}
+  = render_portal_clazz_partial 'portal/clazzes/show'
   - # Added to show investigations to students in class view. -- Cantina-CMH 6/21/10
   %h4 #{top_level_container_name.capitalize.pluralize}:
   = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @portal_clazz.active_offerings }
