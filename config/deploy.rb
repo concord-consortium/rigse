@@ -221,6 +221,10 @@ namespace :deploy do
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
+
+    # support for running a SproutCore app from within the public directory
+    run "mkdir -p #{shared_path}/public/static"
+    run "mkdir -p #{shared_path}/public/labels"
   end
 
   desc "link in some shared resources, such as database.yml"
@@ -241,6 +245,10 @@ namespace :deploy do
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+
+    # support for running SproutCore app from the public directory
+    run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
+    run "cd #{release_path}/public; for i in `ls #{shared_path}/public/labels`; do rm $i; ln -s #{shared_path}/public/labels/$i $i; done"
   end
 
   desc "install required gems for application"
