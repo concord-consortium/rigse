@@ -41,7 +41,7 @@ group :test do
   gem "cucumber",          "~>0.10.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber"))
   gem "cucumber-rails",    "~>0.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber-rails"))
   gem "database_cleaner",  "~>0.5.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/database_cleaner"))
-  gem "capybara",          "~>0.4"
+  gem "capybara",          "~>0.4" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
   gem "rspec",             "~>1.3.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec"))
   gem "rspec-rails",       "~>1.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec-rails"))
   gem "factory_girl",      "= 1.2.3"

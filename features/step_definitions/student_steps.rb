@@ -8,7 +8,7 @@ Given /^the following students exist:$/ do |table|
       user.register
       user.activate
       user.save!
-      
+
       portal_student = Factory(:full_portal_student, { :user => user })
       portal_student.save!
       if (clazz)
@@ -20,17 +20,24 @@ Given /^the following students exist:$/ do |table|
   end
 end
 
-# And the student "student_a" is in the class "intro to bugs" 
+# And the student "student_a" is in the class "intro to bugs"
 Given /^the student "([^"]*)" is in the class "([^"]*)"$/ do |student_name, class_name|
   student = User.find_by_login(student_name).portal_student
   clazz   = Portal::Clazz.find_by_name(class_name)
   student.add_clazz(clazz)
 end
 
-Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_name| 
+Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_name|
   student = User.find_by_login(student_name).portal_student
   clazz   = Portal::Clazz.find_by_name(class_name)
-  
+
   Factory.create :portal_student_clazz, :student => student,
                                         :clazz   => clazz
+end
+
+Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_login, class_name|
+  user = User.find_by_login student_login
+  student = Portal::Student.find_by_user_id user.id
+  clazz = Portal::Clazz.find_by_name class_name
+  student.clazzes.should include clazz
 end

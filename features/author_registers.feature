@@ -7,6 +7,7 @@ Feature: An author registers to use the portal
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @selenium
   Scenario: Anaonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
