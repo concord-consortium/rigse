@@ -17,7 +17,7 @@ Feature: An author adds multiple choice questions
 
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
-    Then I should see "Page: 1"
+    Then I should see "Page: testing fast cars"
     When I follow "Multiple Choice Question"
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"
@@ -37,7 +37,7 @@ Feature: An author adds multiple choice questions
 
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
-    Then I should see "Page: 1"
+    Then I should see "Page: testing fast cars"
     When I follow "Multiple Choice Question"
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"

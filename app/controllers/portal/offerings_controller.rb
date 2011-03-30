@@ -36,7 +36,7 @@ class Portal::OfferingsController < ApplicationController
         else
           session[:put_path] = nil
         end
-        render 'pages/show', :layout => "layouts/run" 
+        render 'pages/show', :layout => "layouts/run"
       }
 
       format.run_external_html   {

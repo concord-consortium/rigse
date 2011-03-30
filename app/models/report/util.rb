@@ -123,7 +123,7 @@ class Report::Util
     if old.size > 0
       warning = "WARNING: missing #{old.size} removed reportables in report for #{@investigation.name}"
       puts warning
-      Rails.logger.info (warning)
+      Rails.logger.info(warning)
       @saveables = current
     end
     @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 

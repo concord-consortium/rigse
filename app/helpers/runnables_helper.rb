@@ -39,6 +39,7 @@ module RunnablesHelper
     else
       html_options[:title] = title
     end
+
     if params[:no_button]
       link_to(link_text, url, html_options)
     else
