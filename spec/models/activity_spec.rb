@@ -69,27 +69,27 @@ describe Activity do
     it "should allow searching by grade_level" do
       @activity.grade_level_list = "1-3"
       @activity.save
-      found = Activity.tagged_with("1-3", :on => :grade_level)
+      found = Activity.tagged_with("1-3", :on => :grade_levels)
       found.should have(1).activity
-      found = Activity.tagged_with("1-6", :on => :grade_level)
+      found = Activity.tagged_with("1-6", :on => :grade_levels)
       found.should have(0).activities
     end
 
     it "should allow searching by units" do
       @activity.unit_list = "Heat and Electricity"
       @activity.save
-      found = Activity.tagged_with("Heat and Electricity", :on => :unit)
+      found = Activity.tagged_with("Heat and Electricity", :on => :units)
       found.should have(1).activity
-      found = Activity.tagged_with("Heat and Water", :on => :unit)
+      found = Activity.tagged_with("Heat and Water", :on => :units)
       found.should have(0).activities
     end
 
     it "should allow searching by subject_area" do
       @activity.subject_area_list = "Math"
       @activity.save
-      found = Activity.tagged_with("Math", :on => :subject_area)
+      found = Activity.tagged_with("Math", :on => :subject_areas)
       found.should have(1).activity
-      found = Activity.tagged_with("Art", :on => :subject_area)
+      found = Activity.tagged_with("Art", :on => :subject_areas)
       found.should have(0).activities
     end
 

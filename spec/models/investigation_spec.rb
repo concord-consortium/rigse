@@ -29,12 +29,12 @@ describe Investigation do
   it "should create a new instance given valid attributes" do
     Investigation.create!(@valid_attributes)
   end
-  
+
   describe "should be publishable" do
     before(:each) do
       @investigation = Investigation.create!(@valid_attributes)
     end
-    
+
     it "should not be public by default" do
       @investigation.published?.should be(false)
     end
@@ -42,44 +42,44 @@ describe Investigation do
       @investigation.publish!
       @investigation.public?.should be(true)
     end
-    
+
     it "should not be public if unpublished " do
       @investigation.publish!
       @investigation.public?.should be(true)
       @investigation.un_publish!
       @investigation.public?.should_not be(true)
     end
-    
+
     it "should define a method for available_states" do
       @investigation.should respond_to(:available_states)
     end
   end
-  
+
   describe "should be duplicateable" do
     before(:each) do
       @investigation = Investigation.create!(@valid_attributes)
       @user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     end
-    
+
     it "should not allow teachers to duplicate" do
       [:member, :guest].each do |role|
         @user.roles.destroy_all
         @user.add_role(role.to_s)
-        
+
         @investigation.duplicateable?(@user).should be_false
       end
     end
-    
+
     it "should allow admins, managers, etc. to duplicate" do
       [:admin, :manager, :researcher, :author].each do |role|
         @user.roles.destroy_all
         @user.add_role(role.to_s)
-        
+
         @investigation.duplicateable?(@user).should be_true
       end
     end
   end
-  
+
 
   describe "search_list (searching for investigations)" do
     before(:all) do
@@ -97,11 +97,11 @@ describe Investigation do
       @bio = Factory.create( :rigse_domain,            { :name => "biology" } )
       bio_ks = Factory.create( :rigse_knowledge_statement, { :domain => @bio     } )
       bio_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => bio_ks })
-      
+
       @physics = Factory.create( :rigse_domain,            { :name => "physics"  } )
       physics_ks = Factory.create( :rigse_knowledge_statement, { :domain => @physics  } )
       physics_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => physics_ks })
-      
+
       @seven = "7"
       @eight = "8"
 
@@ -146,11 +146,11 @@ describe Investigation do
       @public_non_gse.publish!
       @public_non_gse.save
       @public_non_gse.reload
-      @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation"); 
+      @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation");
     end
     # search (including drafts):
     # search for drafts in grade 8                # two entries
-    
+
     it "should find all grade 8 phsysics investigations, including drafts" do
       options = {
         :grade_span => @eight,
@@ -164,7 +164,7 @@ describe Investigation do
       end
     end
 
-  
+
     it "should find all grade phsysics investigations, including drafts" do
       options = {
         :domain_id  => @physics.id,
@@ -193,7 +193,7 @@ describe Investigation do
       found.should include(@public_non_gse)
       found.should include(@draft_non_gse)
     end
-    
+
     it "should find only published, in grade 8 physics domain" do
       options = {
         :grade_span => @eight,
@@ -221,7 +221,7 @@ describe Investigation do
         inv.domain.should == @physics
       end
     end
-    
+
     it "should find all published investigations" do
       options = {
         :include_drafts => false
@@ -231,7 +231,7 @@ describe Investigation do
       found.should include(@public_non_gse)
       found.should_not include(*@drafts)
     end
-  end 
+  end
 
   describe "investigation with activities" do
     before(:each) do
@@ -242,7 +242,7 @@ describe Investigation do
       @investigation = Investigation.create(@inv_attributes)
     end
 
-    # We might want to have one activity in the future. 
+    # We might want to have one activity in the future.
     it "should have no acitivities initially" do
       @investigation.should have(0).activities
     end
@@ -257,13 +257,15 @@ describe Investigation do
       @investigation.activities << activity
       @investigation.should have(1).activities
       @investigation.save
+      p "ACTIVITY"
+      p activity
       activity.position.should_not be_nil
       activity.position.should eql 1
     end
 
 
     it "the position of the first activity should be 1" do
-      activity_one = Factory(:activity) 
+      activity_one = Factory(:activity)
       activity_two = Factory(:activity)
       @investigation.activities << activity_one
       @investigation.activities << activity_two
@@ -273,23 +275,23 @@ describe Investigation do
     end
 
     it "the activities honor the acts_as_list methods" do
-      activity_one = Factory(:activity) 
+      activity_one = Factory(:activity)
       activity_two = Factory(:activity)
       @investigation.activities << activity_one
       @investigation.activities << activity_two
-      
+
       @investigation.reload
       @investigation.activities.should eql([activity_one, activity_two])
 
       activity_one.move_to_bottom
       @investigation.reload
       @investigation.activities.should eql([activity_two, activity_one])
-      
+
       # must reload the other activity for updated position.
       activity_two.reload
       activity_two.should be_before(activity_one)
       activity_one.should be_after(activity_two)
-      
+
       # more fragile, but worth checking:
       activity_one.position.should eql 2
       activity_two.position.should eql 1
