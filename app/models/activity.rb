@@ -133,8 +133,28 @@ class Activity < ActiveRecord::Base
   end
 
 
-
-
+  def copy(user)
+    original = self
+    copy_of_original = original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    copy_of_original.name = "copy of #{original.name}"
+    copy_of_original.deep_set_user user
+    copy_of_original.investigation= original.investigation
+    
+    # copy tags too:
+    original.tag_types.each do | tag_type|
+      method = (tag_type.to_s.singularize + "_list").to_sym
+      types = original.send method
+      method = "#{method.to_sym}=".to_sym
+      copy_of_original.send(method,types)
+    end
+    
+    copy_of_original.ancestor = original
+    copy_of_original.publication_status = :draft
+    copy_of_original.save
+    return copy_of_original
+  end
+  alias duplicate copy
+  
   def deep_xml
     self.to_xml(
       :include => {
