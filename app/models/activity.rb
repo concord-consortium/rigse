@@ -51,9 +51,8 @@ class Activity < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
   
-  acts_as_replicatable
+  delegate :saveable_types, :reportable_types, :to => :investigation
   acts_as_taggable_on :grade_level, :subject_area, :unit, :tags
-  
   include Noteable # convinience methods for notes...
   include Changeable
   include TreeNode
