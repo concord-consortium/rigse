@@ -1,10 +1,10 @@
 class Report::Util
   ## FIXME Eventually this could use a service like memcached and then it wouldn't bloat the rails server processes
-  
+
   ## 60 reports' details should be ok to hold in memory, for now
   MAX_CACHED_REPORTS = 60
   TRIM_BY = 10
-  
+
   attr_accessor :offering, :learners
   attr_accessor :investigation, :activities, :sections, :pages, :page_elements
   # attr_accessor :saveables
@@ -12,27 +12,27 @@ class Report::Util
   # attr_accessor :saveables_by_type, :saveables_by_learner_id, :saveables_by_answered, :saveables_by_correct
   # attr_accessor :embeddables, :embeddables_by_type
   attr_accessor :last_accessed
-  
+
   cattr_accessor :cache
-  
+
   @@cache = {}
-  
+
   def self.factory(offering, show_only_active_learners = true)
     maintenance
     ## TODO This class should probably be thread-safe eventually
     @@cache[offering] ||= Report::Util.new(offering, show_only_active_learners)
     return @@cache[offering]
   end
-  
+
   def self.reload(offering)
     invalidate(offering)
     return factory(offering)
   end
-  
+
   def self.invalidate(offering)
     @@cache.delete(offering)
   end
-  
+
   def self.maintenance
     if @@cache.size > MAX_CACHED_REPORTS
       puts "Cache size is #{@@cache.size}. Trimming down."
@@ -41,16 +41,14 @@ class Report::Util
       puts "Cache size is now #{@@cache.size}."
     end
   end
-  
+
   def saveable(learner, embeddable)
-    @last_accessed = Time.now
-    results = Array(@saveables_by_embeddable[embeddable])
-    results = results & Array(@saveables_by_learner_id[learner.id])
-    results = [Saveable::SaveableStandin.new] if results.size < 1
-    # there should be at most 1 saveable per learner, but you never know
+    results = saveables(:learner => learner, :embeddable => embeddable)
+    results = [Saveable::SaveableStandin.new(embeddable)] if ( results.size < 1 )
+    warn("found #{results.size} saveables for #{learner} : #{embeddable}") if ( results.size > 1 )
     return results.first
   end
-  
+
   def saveables(options = {})
     @last_accessed = Time.now
     results = @saveables
@@ -58,17 +56,22 @@ class Report::Util
     results = results & Array(@saveables_by_answered[true]) if options[:answered]
     results = results & Array(@saveables_by_embeddable[options[:embeddable]]) if options[:embeddable]
     results = results & Array(@saveables_by_correct[true]) if options[:correct]
+    if options[:embeddables]
+      embeddables = options[:embeddables]
+      results = results & embeddables.map { |e| @saveables_by_embeddable[e]}.flatten
+    end
+    results = results & Array(@saveables_by_correct[true]) if options[:correct]
     return results
   end
-  
+
   def embeddables(options = {})
     @last_accessed = Time.now
     results = @embeddables
     results = Array(@embeddables_by_type[options[:type].to_s]) if options[:type.to_s]
     return results
   end
-  
-  def initialize(offering, show_only_active_learners)
+
+  def initialize(offering, show_only_active_learners=false)
     @last_accessed = Time.now
     @offering = offering
     @report_embeddable_filter = @offering.report_embeddable_filter
@@ -76,60 +79,81 @@ class Report::Util
       @report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => [])
       @offering.reload
     end
-    
+
     @learners = @offering.learners
     @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
-    
+
     @investigation = offering.runnable
-    
-    @saveables = []
-    @saveables_by_type = {}
+
+    @saveables               = []
+    @saveables_by_type       = {}
     @saveables_by_learner_id = {}
     @saveables_by_embeddable = {}
-    @saveables_by_correct = {}
-    @saveables_by_answered = {}
-    
+    @saveables_by_correct    = {}
+    @saveables_by_answered   = {}
+
     @activities = @investigation.activities.student_only
-    @sections = @investigation.student_sections
-    @pages = @investigation.student_pages
-    
+    @sections   = @investigation.student_sections
+    @pages      = @investigation.student_pages
+
     ## FIXME filtering of embeddables should happen here
     # results = @report_embeddable_filter.filter(results)
-    reportables = @offering.runnable.reportable_elements
-    allowed_embeddables = @report_embeddable_filter.embeddables
-    if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
-      reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
-    end
-    elements = reportables.map { |r| r[:element] }
-    @embeddables = reportables.map { |r| r[:embeddable] }
-    @embeddables_by_type = @embeddables.group_by{|e| e.class.to_s }
-    
-    
+    #allowed_embeddables = @report_embeddable_filter.embeddables
+    #if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
+      #reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
+    #end
+    reportables          = @offering.runnable.reportable_elements
+    elements             = reportables.map       { |r| r[:element]    } 
+    @embeddables         = reportables.map       { |r| r[:embeddable] } 
+    @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   } 
+
     activity_lambda = lambda { |e| e[:activity] }
     section_lambda  = lambda { |e| e[:section]  }
     page_lambda     = lambda { |e| e[:page]     }
-    @page_elements = reportables.extended_group_by([activity_lambda, section_lambda, page_lambda])
-    
-    # learner_lambda = lambda{|s| s.learner_id }
-    # embeddable_lambda = lambda{|s|
-    #   result = nil
-    #   result = s.open_response_id if s.respond_to? 'open_response_id'
-    #   result = s.multiple_choice_id if s.respond_to? 'multiple_choice_id'
-    #   result
-    # }
-    
+    @page_elements  = reportables.extended_group_by([activity_lambda, section_lambda, page_lambda])
+
     Investigation.saveable_types.each do |type|
       all = type.find_all_by_offering_id(@offering.id)
       @saveables += all
       @saveables_by_type[type.to_s] = all
     end
-    @saveables_by_answered = @saveables.group_by{|s| s.answered? }
-    @saveables_by_correct = @saveables.group_by{|s| (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false}
-    @saveables_by_learner_id = @saveables.group_by{|s| s.learner_id}
-    @saveables_by_embeddable = @saveables.group_by{|s|
-      type = Investigation.reportable_types.map{|t| {:klass => t, :str => t.to_s.demodulize.underscore} }.detect{|type| s.respond_to?(type[:str])}
-      embeddable = @embeddables.detect{|e| e.class == type[:klass] && e.id == s.send("#{type[:str]}_id")}
-    }
+    # If an investigation has changed, and daveable elements have been removed (eek!)
+    current =  @saveables.select { |s| @investigation.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
+    old = @saveables - current
+    if old.size > 0
+      warning = "WARNING: missing #{old.size} removed reportables in report for #{@investigation.name}"
+      puts warning
+      Rails.logger.info(warning)
+      @saveables = current
+    end
+    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
+    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
+    @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id } 
+    @saveables_by_embeddable = @saveables.group_by { |s| s.embeddable } 
+    @saveables_by_correct    = @saveables.group_by { |s| (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false }
   end
 
+  def complete_number(learner,activity = nil)
+    if activity
+      return saveables(:learner => learner, :embeddables => activity.reportable_elements.map { |r| r[:embeddable]}).size
+    end
+    return saveables(:learner => learner).size
+  end
+
+  def complete_percent(learner)
+    completed = Float(complete_number(learner))
+    total = Float(embeddables.size)
+    return total < 0.5 ? 0.0 : (completed/total) * 100.0
+  end
+
+  def correct_number(learner)
+    return saveables(:learner => learner, :correct => true).size
+  end
+
+  def correct_percent(learner)
+    correct = Float(correct_number(learner))
+    #total = Float(embeddables.size)
+    total = Float( embeddables.select { |e| e.respond_to? 'correctable?' }.size )
+    return total < 0.5 ? 0.0 : (correct/total) * 100.0
+  end
 end

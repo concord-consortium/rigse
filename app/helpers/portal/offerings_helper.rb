@@ -1,0 +1,2 @@
+module Portal::OfferingsHelper
+end

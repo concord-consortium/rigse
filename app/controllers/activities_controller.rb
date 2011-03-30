@@ -10,12 +10,12 @@ class ActivitiesController < ApplicationController
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:browse  ,:show,:print,:create,:new,:duplicate,:export] 
   before_filter :can_create, :only => [:new, :create,:duplicate]
-  
+
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
-  
 
-  protected  
+
+  protected
 
   def can_create
     if (current_user.anonymous?)
@@ -23,7 +23,7 @@ class ActivitiesController < ApplicationController
       redirect_back_or activities_path
     end
   end
-  
+
   def render_scope
     @render_scope = @activity
   end
@@ -41,8 +41,8 @@ class ActivitiesController < ApplicationController
       end
     end
   end
-  
-  
+
+
   def setup_object
     if params[:id]
       if params[:id].length == 36
@@ -63,9 +63,9 @@ class ActivitiesController < ApplicationController
       end
     end
   end
-  
+
   public
-  
+
   def index
     @include_drafts = params[:include_drafts]
     @name = param_find(:name)
@@ -76,10 +76,9 @@ class ActivitiesController < ApplicationController
       @include_drafts = param_find(:include_drafts,true)
     end
     @activities = Activity.search_list({
-      :name => @name, 
-      :paginate => true, 
-      :page => pagenation,
-      :include_drafts => @include_drafts
+      :name => @name,
+      :paginate => true,
+      :page => pagenation
     })
     if params[:mine_only]
       @activities = @activities.reject { |i| i.user.id != current_user.id }
@@ -148,12 +147,13 @@ class ActivitiesController < ApplicationController
     @teacher_mode = params[:teacher_mode] || @activity.teacher_only
     respond_to do |format|
       format.html {
-        if params['print'] 
+        if params['print']
           render :print, :layout => "layouts/print"
         end
       }
+      format.run_html   { render :show, :layout => "layouts/run" }
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode } }
-      format.config { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }            
+      format.config { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @activity, :teacher_mode => @teacher_mode} }
       format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.xml  { render :xml => @activity }
@@ -229,7 +229,7 @@ class ActivitiesController < ApplicationController
       end
     end
   end
-  
+
 
   # DELETE /pages/1
   # DELETE /pages/1.xml
@@ -243,8 +243,8 @@ class ActivitiesController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  
+
+
   ##
   ##
   ##
@@ -255,17 +255,17 @@ class ActivitiesController < ApplicationController
     @section.save
     redirect_to @section
   end
-  
+
   ##
   ##
-  ##  
+  ##
   def sort_sections
-    paramlistname = params[:list_name].nil? ? 'activity_sections_list' : params[:list_name]    
+    paramlistname = params[:list_name].nil? ? 'activity_sections_list' : params[:list_name]
     @activity = Activity.find(params[:id], :include => :sections)
     @activity.sections.each do |section|
       section.position = params[paramlistname].index(section.id.to_s) + 1
       section.save
-    end 
+    end
     render :nothing => true
   end
 
@@ -275,8 +275,8 @@ class ActivitiesController < ApplicationController
   def delete_section
     @section= Section.find(params['section_id'])
     @section.destroy
-  end  
-  
+  end
+
   ##
   ##
   ##
@@ -288,7 +288,7 @@ class ActivitiesController < ApplicationController
       redirect_to url_for(@activity)
     end
   end
-  
+
   #
   # Construct a link suitable for a 'paste' action in this controller.
   #
@@ -298,12 +298,12 @@ class ActivitiesController < ApplicationController
 
   #
   # In an Activities controller, we only accept section clipboard data,
-  # 
+  #
   def paste
     if @activity.changeable?(current_user)
-      @original = clipboard_object(params)      
-      if (@original) 
-        @component = @original.deep_clone :include => {:pages => {:page_elements => :embeddable}}
+      @original = clipboard_object(params)
+      if (@original)
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:pages => {:page_elements => :embeddable}}
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'activity_sections_list'
@@ -321,12 +321,13 @@ class ActivitiesController < ApplicationController
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
   end
-  
+
   def export
     respond_to do |format|
-      format.xml  { 
+      format.xml  {
         send_data @activity.deep_xml, :type => :xml, :filename=>"#{@activity.name}.xml"
       }
     end
   end
+
 end

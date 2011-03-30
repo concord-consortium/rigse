@@ -6,7 +6,6 @@ describe Portal::TeachersController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "POST create" do
@@ -70,5 +69,32 @@ describe Portal::TeachersController do
       @response.body.should include("must select a school")
     end
   end
-
+  
+  describe "GET new" do
+      
+    before(:all) do
+      ['c','b','a'].each do |name|
+        district = Factory.create(:portal_district, :name => "district_#{name}")
+        ['c','b','a'].each do |school_name|
+          Factory.create(:portal_school, :name => "school_#{name}", :district => district)
+        end
+      end
+    end
+    
+    it "should render the dropdown list of districts in alpha order" do
+      get :new
+      position = last_position = nil
+      ['a','b','c'].each do |name|
+        position = @response.body =~ /district_#{name}/
+        assert (position > 0)
+        if (last_position)
+          (last_position < position).should be_true
+        end
+        last_position = position
+      end
+    end
+   
+    # TODO: write test for schools also being in alpha order  
+    
+  end
 end

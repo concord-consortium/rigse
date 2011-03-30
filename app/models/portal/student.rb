@@ -7,14 +7,19 @@ class Portal::Student < ActiveRecord::Base
   belongs_to :grade_level, :class_name => "Portal::GradeLevel", :foreign_key => "grade_level_id"
   
   # because of has many polymorphs, we don't need the following relationships defined
-  has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
-  has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
+  # TODO: Schools must be queried through clazzes.
+  # TODO: For now we are writing custom methods...
+  # has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
+  # has_many :schools, :through => :school_memberships, :class_name => "Portal::School"
   
   has_many :learners, :class_name => "Portal::Learner", :foreign_key => "student_id"
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
   
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
   
+  has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
+  has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content 
+
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   include Changeable
@@ -24,7 +29,7 @@ class Portal::Student < ActiveRecord::Base
       "Student"
     end
   end
-  
+ 
   def self.generate_user_email
     hash = UUIDTools::UUID.timestamp_create.to_s
     "no-email-#{hash}@concord.org"
@@ -41,6 +46,13 @@ class Portal::Student < ActiveRecord::Base
     return generated_login
   end
   
+  ## TODO: fix with has_many finderSQL
+  def schools
+    schools = self.clazzes.map {|c| c.school }.uniq.flatten
+  end
+  def school
+    return schools.last
+  end
   ##
   ## Strange approach to alter the behavior of Clazz.children()
   ## to reflect a student-centric world view.

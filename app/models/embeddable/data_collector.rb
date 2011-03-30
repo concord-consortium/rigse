@@ -19,20 +19,15 @@ class Embeddable::DataCollector < ActiveRecord::Base
   # diy_sensors is a simplified interface for a dataCollector.
   has_many :diy_sensors, :as => 'prototype'
 
-  validates_presence_of :name, :message => "can't be blank"
-  validate :associated_probe
+  has_many :data_tables, :class_name => "Embeddable::DataTable"
 
-  def associated_probe
-    if self.probe_type
-      unless Probe::ProbeType.find_by_id(self.probe_type_id)
-        errors.add(:probe_type, "has bad id: #{self.probe_type_id}")
-      end
-    else
-      errors.add(:probe_type, "is required")
-      unless Probe::ProbeType.default
-        self.errors.add(:probe_type, MISSING_PROBE_MESSAGE)
-      end
-    end
+  # validates_associated :probe_type
+  
+  validates_presence_of :probe_type_id
+  validate :associated_probe_type_must_exist
+  
+  def associated_probe_type_must_exist
+    errors.add(:probe_type, "must exist") unless Probe::ProbeType.find_by_id(self.probe_type_id)
   end
 
 
@@ -136,7 +131,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   end
 
   def self.by_scope(scope)
-    if scope && scope.class != Embeddable::DataCollector
+    if scope && scope.class != Embeddable::DataCollector && scope.respond_to?(:activity)
       scope.activity.investigation.data_collectors
     else
       []

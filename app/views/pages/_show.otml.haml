@@ -5,7 +5,7 @@
         %object{ :refid => ot_refid_for(page, :tab_container) }/
       - else
         %object{ :refid => ot_refid_for(page, :tab_content) }/
-      
+
 - content_for(:library) do
   - page.page_elements.each do |element|
     - if element.is_enabled
@@ -13,12 +13,12 @@
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
-      - if teacher_only?(page)
+      - if for_teacher_only(page)
         - if teacher_mode
           #content.teacher_mode
             - if page.section
               %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
-                    
+
             - page.page_elements.each do |element|
               - if element.is_enabled
                 .element
@@ -27,7 +27,7 @@
         #content
           - if page.section
             %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
-                  
+
           - page.page_elements.each do |element|
             - if element.is_enabled
               .element
@@ -41,7 +41,7 @@
         - if should_show_teacher_note? page, :investigation
           %tr{:valign=>"top"}
             %td{:width=>"25%"}
-              %h3= "#{top_level_container_name.humanize.pluralize} notes:"
+              %h3= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize} notes:"
             %td
               .activity_teacher_note= page.section.investigation.teacher_note_otml
 
@@ -65,12 +65,12 @@
             %td
               .page_teacher_note= page.teacher_note_otml
 
-              
-              
+
+
   %OTTabContainer{:local_id => ot_local_id_for(page, :tab_container), :name => page.name}
     %tabs
       %entry{:key => page.name}
         %object{ :refid => ot_refid_for(page, :tab_content) }/
-      %entry{:key => "Teacher notes"}        
+      %entry{:key => "Teacher notes"}
         %object{ :refid => ot_refid_for(page, :teacher_notes) }/
 

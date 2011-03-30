@@ -11,8 +11,10 @@ builder -v2.1.2
 capistrano -v2.5.19
 capistrano-ext -v1.2.1
 capybara -v0.4.0
+celerity -v0.8.4
 celerity -v0.8.2
 cgi_multipart_eof_fix -v2.5.0
+childprocess -v0.1.4
 childprocess -v0.1.3
 ci_reporter -v1.6.3
 columnize -v0.3.1

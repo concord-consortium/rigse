@@ -132,7 +132,9 @@ class Portal::TeachersController < ApplicationController
   
   private 
   def load_domains_and_grades
-    @portal_districts = Portal::District.virtual + Portal::District.real
+    # @portal_districts = Portal::District.virtual + Portal::District.real
+    # Maybe this easier, and cleaner:
+    @portal_districts = Portal::District.find(:all, :order => :name)
     @portal_grades = Portal::Grade.active
     if (@portal_grades && @portal_grades.size > 1)
       @default_grade_id = @portal_grades.last.id

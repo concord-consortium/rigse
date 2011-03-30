@@ -24,6 +24,7 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   
   acts_as_replicatable
 
+  include Correctable
   include Changeable
   include TruncatableXhtml
   # Including TruncatableXhtml adds a before_save hook which will automatically
@@ -80,6 +81,10 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     end
   end
 
+  # TODO: This is ugly, and silly!
+  #   rename to "add_choice"
+  #   redefine as Embeddable::MultipleChoiceChoice.create(:choice, :mc)
+  #   ...
   def addChoice(choice_name = "new choice")
     choice = Embeddable::MultipleChoiceChoice.new(:choice => choice_name)
     self.choices << choice

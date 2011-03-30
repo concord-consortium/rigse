@@ -1,0 +1,13 @@
+- form_for(@external_activity) do |f|
+  = f.error_messages
+  = edit_menu_for(@external_activity, f)
+  - field_set_tag 'Activity Name' do
+    = f.text_field :name
+  - field_set_tag 'Activity Description' do
+    = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'External URL' do
+    = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'Save Path' do
+    = f.text_field :save_path
+
+= javascript_tag("focus_first_field();");

@@ -19,11 +19,15 @@ class SchoolImporter
   BASE_DIR = "#{RAILS_ROOT}"                          # where to look for the file
   DEFAULT_FILENAME = "resources/CohortSchools2010.csv"# a sample file
 
-  def self.run(filename=DEFAULT_FILENAME)
+  def self.run(filename=DEFAULT_FILENAME, delete_others=false)
     importer = self.new(filename)
     importer.read_file
     importer.parse_data
+    if (delete_others)
+      importer.delete_all_others!
+    end
     self.title_case
+    return importer
   end
   
   def self.title_case
@@ -120,6 +124,39 @@ class SchoolImporter
     end
     self.schools[school_name] = school
     school
+  end
+
+  def delete_all_others!
+    save_schools = self.schools.values
+    site_school = Portal::School.find_by_name(APP_CONFIG[:site_school]) || Portal::School.first
+    save_schools << site_school
+    delete_schools = Portal::School.all - save_schools
+    
+    delete_schools.each do |s| 
+      destroy_school(s, site_school)
+    end
+
+    delete_schools = Portal::School.all.select { |s| s.district.nil? }
+
+    delete_schools.each do |s| 
+      destroy_school(s,site_school)
+    end
+    
+    delete_districts = Portal::District.all.select { |d| d.schools.size < 1 }
+    delete_districts.each    { |d| d.destroy; puts "destroyed district #{d.name} with #{d.schools.size} schools" }
+  end
+
+  private
+  def destroy_school(school,replacement)
+    if replacement
+      school.members.each do |m|
+        m.schools = m.schools - [school]
+          m.schools << replacement
+          m.save
+      end
+    end
+    school.destroy
+    puts "destroyed school #{school.name} with #{school.members.size} members" 
   end
   
 end

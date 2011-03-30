@@ -9,7 +9,7 @@
     %li= print_link_for(@investigation, {:teacher_mode => true}) 
     / %li= toggle_all('activities')
     - unless(current_user.anonymous?)
-      %li= duplicate_link_for(@investigation,:text=> "duplicate #{top_level_container_name} #{@investigation.name}")
+      %li= duplicate_link_for(@investigation,:text=> "duplicate #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{@investigation.name}")
         
     %li#copy_link.copy_paste_disabled copy (disabled)
     /%li= toggle_all('pages')

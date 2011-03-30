@@ -30,6 +30,14 @@
                   - else
                     disabled.
                 (This option will allow students to reset their own passwords.)
+              %li
+                Default Class:
+                %b
+                  - if admin_project.allow_default_class
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow students to register without a class word.)
             
           - field_set_tag 'Maven Jnlp' do
             %p
