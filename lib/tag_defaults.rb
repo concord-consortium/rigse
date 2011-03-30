@@ -32,11 +32,7 @@ module TagDefaults
 
       def self.available_tags(scope)
         if scope
-          if @@default_tags[scope] && @@default_tags[scope].size > 0
-            return @@default_tags[scope].map { |i| i.strip}
-          else
-            return []
-          end
+          return @@default_tags[scope].map { |i| i.strip}
         end
         return @@default_tags.values.flatten.uniq.map { |i| i.strip}
       end
