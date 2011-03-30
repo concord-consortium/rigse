@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110324152702) do
+ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -817,8 +817,8 @@ ActiveRecord::Schema.define(:version => 20110324152702) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
