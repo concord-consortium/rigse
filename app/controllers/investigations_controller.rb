@@ -427,16 +427,8 @@ class InvestigationsController < AuthoringController
   def paste
     if @investigation.changeable?(current_user)
       @original = clipboard_object(params)
-      if (@original)
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
-        if (@component)
-          # @component.original = @original
-          @container = params[:container] || 'investigation_activities_list'
-          @component.name = "copy of #{@component.name}"
-          @component.deep_set_user current_user
-          @component.investigation = @investigation
-          @component.save
-        end
+      if (@original) 
+        @component = @original.copy(current_user)
       end
     end
 
