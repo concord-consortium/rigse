@@ -83,11 +83,14 @@ var Workgroup = function(_offering) {
         $(document).stopObserving('keydown');
       }
     }
-    timeout = setTimeout(function(){closefunction();}, 500);
+    timeout = setTimeout(function(){closefunction();}, 100);
   };
 
   var launch_action = function() {
     pending_requests = pending_requests +1;
+    lightbox_hood.hide();
+    lightbox_content.hide();
+    showWait();
     new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
       onSuccess: function() {
