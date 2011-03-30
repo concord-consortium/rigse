@@ -52,12 +52,15 @@ class Activity < ActiveRecord::Base
     WHERE sections.activity_id = #{id}'
   
   delegate :saveable_types, :reportable_types, :to => :investigation
-  acts_as_taggable_on :grade_level, :subject_area, :unit, :tags
+  acts_as_replicatable
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
+  
   include Noteable # convinience methods for notes...
   include Changeable
   include TreeNode
   include Publishable
-
+  include TagDefaults
+  
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
