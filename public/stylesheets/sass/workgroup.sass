@@ -1,11 +1,11 @@
-@mixin round-corners($amount: 5px)
+=round-corners($amount: 5px)
   border-radius: 5px
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
 
-
 #workgroup_panel
   width: 400px
+
 #learners_container
   display: block
   width: 400px
@@ -29,6 +29,7 @@
   button
     display: inline-block
     clear: none
+
 #lightbox_hood
   position: fixed
   top: 0
@@ -38,6 +39,7 @@
   opacity: 0.5
   background-color: black
   z-index: 5000
+
 #lightbox_content
   position: fixed
   float: none
@@ -48,6 +50,7 @@
   opacity: 1
   background: none
   z-index: 5001
+
 #workgroup_header
   display: block
   width: 100%
@@ -55,6 +58,7 @@
   padding: 1px
   text-align: right
   height: 22px
+
 #workgroup_root
   width: 500px
   margin-top: 5em
@@ -62,11 +66,13 @@
   margin-right: auto
   margin-bottom: 5em
   padding: 2em
-  opacity: 1.0
-  background-color: #F3F2ED
-  @include round-corners
+  opacity: 1
+  background-color: #f3f2ed
+  +round-corners
+
 #workgroup_templates
   display: none
+
 .learner
   width: 90%
   vertical-align: baseline
@@ -88,10 +94,13 @@
   .fail
     font-size: 0.8em
     color: red
+
 #run_button
   display: inline-block
+
 #show_workgroups
   display: inline-block
+
 .wg_important
   color: red
   font-weight: bold
