@@ -1,0 +1,6 @@
+#confirmation{:style=>"display: none;"}
+  = "By joining this class, the teacher #{clazz.teacher.user.first_name} #{clazz.teacher.user.last_name} will be able to see all of your current and future work. If do not want to share your work, but do want to join the class please create a second account and use it to join the class"
+  = "Click 'Join' to continue registering for this class."
+  - form_for(:portal_student, portal_student, :url => { :controller => 'portal/students', :action => 'register' }) do |f|
+    = hidden_field_tag "clazz[class_word]", class_word
+    = f.submit "Join"

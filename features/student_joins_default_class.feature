@@ -30,3 +30,24 @@ Feature: Student joins default class
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     And I should see "Logged in successfully"
+
+  @selenium
+  Scenario: Student in default class joins another class
+    Given the option to allow default classes is enabled
+    And the following classes exist:
+      | name     | teacher |
+      | My Class | teacher |
+    And the class "My Class" has the class word "word"
+    And the following students exist:
+      | login     | password  |
+      | student   | student   |
+    And the student "student" belongs to class "Default Class"
+    When I login with username: student password: student
+    And I am on the home page
+    And I fill in "clazz_class_word" with "word"
+    And I press "Submit"
+    Then I should see "By joining this class, the teacher joe user will be able to see all of your current and future work. If do not want to share your work, but do want to join the class please create a second account and use it to join the class"
+    And I should see "Click 'Join' to continue registering for this class."
+    When I press "Join"
+    Then I should see "Successfully registered for class."
+    And the student "student" should belong to the class "My Class"

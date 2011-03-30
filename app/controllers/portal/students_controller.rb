@@ -236,6 +236,18 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
+  def confirm
+    @portal_clazz = find_clazz_from_params
+    @class_word = params[:clazz][:class_word]
+    render :update do |page|
+      page.insert_html :top, "word_form", :partial => "confirmation",
+        :locals => {:class_word => @class_word,
+                    :clazz      => @portal_clazz,
+                    :portal_student => Portal::Student.new}
+      page.visual_effect :BlindDown, "confirmation", :duration => 1
+    end
+  end
+
   protected
 
   def find_clazz_from_params
