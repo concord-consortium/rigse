@@ -238,8 +238,17 @@ class Portal::StudentsController < ApplicationController
 
   def confirm
     @portal_clazz = find_clazz_from_params
+    if @portal_clazz.nil?
+      render :update do |page|
+        page.remove "invalid_word"
+        page.insert_html :top, "word_form", "<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_word", :duration => 1
+      end
+      return
+    end
     @class_word = params[:clazz][:class_word]
     render :update do |page|
+      page.remove "invalid_word"
       page.insert_html :top, "word_form", :partial => "confirmation",
         :locals => {:class_word => @class_word,
                     :clazz      => @portal_clazz,
