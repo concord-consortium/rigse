@@ -21,6 +21,14 @@ var EnableWorkgroups = function(_selector) {
 };
 
 var Workgroup = function(_offering) {
+  var load_error         = false;
+  var loading_learners   = false;
+  var learners           = [];
+  var collaborators      = [];
+  var offering           = _offering;
+  var pending_requests   = 0;
+
+  // TODO: move me to a view-class
   var learners_list      = null;
   var learners_dropdown  = null;
   var add_button         = null;
@@ -30,12 +38,9 @@ var Workgroup = function(_offering) {
   var learners_container = null;
   var lightbox_hood      = null;
   var lightbox_content   = null;
-  var learners           = [];
-  var collaborators      = [];
-  var offering           = _offering;
 
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
-  
+
   var load_dom_elems = function() {
     if (learners_list == null) {
       learners_list      =  $('learners_list');
@@ -51,34 +56,58 @@ var Workgroup = function(_offering) {
   };
 
   var show_workgroup_editor = function() {
+    load_learners();
     $('workgroup_panel').show();
     $('show_workgroups').up().hide();
   };
 
+  var hide_workgroup_editor = function() {
+    $('workgroup_panel').hide();
+    $('show_workgroups').up().show();
+  };
+
   var close_dialog = function() {
-    lightbox_hood.hide();
-    lightbox_content.hide();
-    $(document).stopObserving('keydown');
+    var timeout = null;
+    // we have to undo all our setup here:
+    // show wait
+    var closefunction = function() {
+      learners = [];
+      collaborators= [];
+      update_ui();  // this will remove and hide dom elements
+      loading_learners = true; 
+      if (pending_requests < 1) {
+        lightbox_hood.hide();
+        lightbox_content.hide();
+        hide_workgroup_editor();
+        clearTimeout(timeout)
+        $(document).stopObserving('keydown');
+      }
+    }
+    timeout = setTimeout(function(){closefunction();}, 500);
   };
 
   var launch_action = function() {
+    pending_requests = pending_requests +1;
     new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
-      onSuccess: function() { 
+      onSuccess: function() {
+        pending_requests = pending_requests -1;
         close_dialog();
         window.location = "/portal/offerings/" + offering + ".jnlp"
       },
-      onFaiulre: function() { }
+      onFaiulre: function() {
+        pending_requests = pending_requests -1;
+      }
     });
   };
- 
+
   var handle_keydown = function(e) {
     var code;
     if (!e) var e = window.event;
     if (e.keyCode) code = e.keyCode;
     else if (e.which) code = e.which;
     switch (code) {
-      case 27: 
+      case 27:
         handle_escape(e);
         break;
       case 13:
@@ -97,10 +126,6 @@ var Workgroup = function(_offering) {
     load_dom_elems();
     learners = [];
     collaborators = [];
-    load_learners();
-    add_button.observe('click',function() { 
-      add_learner(selected_learner());
-    });
     $(document).observe('keydown', handle_keydown);
     $('show_workgroups').observe('click',show_workgroup_editor);
     $('cancel_button').observe('click',close_dialog);
@@ -124,16 +149,30 @@ var Workgroup = function(_offering) {
     update_ui();
   };
 
-  var diable_run = function() {
+  var disable_run = function() {
     run_button.setOpacity(0.3);
     run_message.update('enter valid passwords for all collaborators');
+    run_message.addClassName('wg_important');
     run_button.stopObserving('click');
   };
 
   var enable_run = function() {
     run_button.setOpacity(1);
     run_message.update('run the activity now');
+    run_message.removeClassName('wg_important')
+    run_button.stopObserving('click');
     run_button.observe('click', launch_action);
+  };
+
+  var disable_add = function() {
+    add_button.setOpacity(0.5);
+    add_button.stopObserving('click');
+  };
+
+  var enable_add = function() {
+    add_button.setOpacity(1);
+    add_button.stopObserving('click'); //clear older handlers
+    add_button.observe('click',function(e) { add_learner(selected_learner()); });
   };
 
   var selected_learner = function() {
@@ -144,18 +183,29 @@ var Workgroup = function(_offering) {
     return learner;
   };
 
+
   // return learners in this learners class
   var load_learners = function() {
     learners = []; //remove last
-    $('load_error').hide();
+    load_error = false;
+    loading_learners = true;
+    update_ui();
+    pending_requests = pending_requests + 1;
     new Ajax.Request('/portal/offerings/' + offering + '/learners.json', {
       method: 'get',
       onSuccess: function(transport) {
         learners = transport.responseJSON;
         learners = learners.sortBy(function(l) {return l.name});
+        loading_learners = false;
+        load_error = false;
+        pending_requests = pending_requests - 1;
         update_ui();
       },
-      onFailure: function() { $('load_error').show(); }
+      onFailure: function() {
+        load_error = true;
+        loading_learners = false;
+        pending_requests = pending_requests - 1;
+        update_ui();}
     });
   };
 
@@ -228,36 +278,33 @@ var Workgroup = function(_offering) {
 
   var clear_containers = function() {
     learners_dropdown.select('.learner').each(function(e) { e.remove(); });
-    learners_container.select('.learner').each(function(e) {e.remove();});
+    learners_container.select('.learner').each(function(e){ e.remove();});
+  };
+
+  var reset_visual_state = function() {
+    clear_containers();
+    enable_run();
+    enable_add();
+    add_group.show();
+    learners_container.show();
+    $('load_wait').hide();
+    $('load_error').hide();
   };
 
   var update_ui = function() {
-    run_button.show();
-    clear_containers();
-    learners.each(function(learner) {
-      add_learner_to_dropdown(learner);
-    });
-    enable_run();
+    reset_visual_state();
+    learners.each(function(learner) { add_learner_to_dropdown(learner); });
     collaborators.each(function(learner){
       add_learner_to_container(learner);
       if (!learner.have_consent) {
-        diable_run();
+        disable_run();
       }
     });
-    if (collaborators.size() < 1) {
-      learners_container.hide();
-    }
-    else {
-      learners_container.show();
-    }
-    if (learners.size() < 1) {
-      add_group.hide();
-      $('load_wait').show();
-    }
-    else {
-      add_group.show();
-      $('load_wait').hide();
-    }
+
+    if (pending_requests > 1)     { disable_run(); disable_add();            }
+    if (collaborators.size() < 1) { learners_container.hide();               }
+    if (loading_learners)         { add_group.hide(); $('load_wait').show(); }
+    if (load_error)               { $('load_error').show();                  }
   };
 
   var add_learner_to_dropdown = function (learner) {
@@ -279,10 +326,17 @@ var Workgroup = function(_offering) {
   };
 
   var check_password = function(learner,passwd,succ,fail) {
+    pending_requests = pending_requests + 1;
     new Ajax.Request('/portal/offerings/' + offering + '/check_learner_auth', {
       parameters: {'learner_id': learner.id, 'pw': passwd},
-      onSuccess: function(transport) { succ.call(); } ,
-      onFailure: function()          { fail.call(); } 
+      onSuccess: function(transport) {
+        pending_requests = pending_requests - 1;
+        succ.call();
+      } ,
+      onFailure: function() {
+        pending_requests = pending_requests - 1;
+        fail.call();
+      }
     });
   };
   load();
