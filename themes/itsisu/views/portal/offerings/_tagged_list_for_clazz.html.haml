@@ -31,16 +31,27 @@
       }
     };
 
+    var updateCounter = function(delta,dom_id) {
+      var counter, text, value = null;
+      counter = $$(dom_id);
+      counter.each(
+        function(elm) {
+          text  = elm.innerText;
+          if (text) {
+            value = parseInt(text);
+            value = value + delta;
+            elm.update(value);
+          }
+        }
+      );
+    };
+
     var updateOfferingCounter = function(delta) {
-      ;
-      var counter = $('total-selected');
-      var text  = counter.innerText;
-      var value = parseInt(text);
-      value = value + delta;
-      counter.update(value);
+      updateCounter(delta,'#total-selected');
+      updateCounter(delta,'.selected-category > .tag_count');
     }; 
     
-    $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type) {
+    $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type,section_id) {
       // TODO: remove console logging statements
       var ajaxUpdater;
       var new_checked_state = input.checked;
@@ -122,7 +133,7 @@
     Activities (total selected:
     %span#total-selected="#{portal_clazz.offerings.size}"
     )
-  - bins = Activity.list_bins(current_user)
+  - bins = Activity.list_bins(portal_clazz)
   %table.activity-chart{ :border =>"0" :cellspacing=>"0" :cellpadding => "0" :width=> "100%"}
     %tr
       %td#activity-chart-navigation{:width => "225"}
@@ -130,8 +141,10 @@
           - bins.each do |_tag|
             -#%li#middleschoolearthscience-control.unit-navigation.level1{:onclick => "show_section('#middleschoolearthscience', this);"}
             %li#middleschoolearthscience-control{:class => _tag[:classes], :onclick => "show_section('#{_tag[:key]}', this);"}
-              ="#{_tag[:name]} (#{_tag[:count]})"
-              %span#middleschoolearthscience-count.navigation-count
+              ="#{_tag[:name]} ("
+              %span.tag_count
+                =_tag[:off_count]
+              ="/ #{_tag[:count]})"
       %td#activity-chart-panels
         - bins.each do |_tag|
           %div.show_section{:id => _tag[:key], :style=>"display: none;"}
