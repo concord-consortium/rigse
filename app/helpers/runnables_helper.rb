@@ -7,13 +7,9 @@ module RunnablesHelper
     "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
   end
 
-  def run_url_for(component, params = {}, format = :jnlp)
+  def run_url_for(component, params = {}, format = nil)
     runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
-    format = APP_CONFIG[:runnable_mime_type] unless runnable.is_a? JnlpLaunchable
-
-    if format.nil? && runnable.is_a?(ExternalActivity)
-      format = :run_external_html
-    end
+    format ||= runnable.run_format
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
@@ -43,6 +39,7 @@ module RunnablesHelper
     else
       html_options[:title] = title
     end
+
     if params[:no_button]
       link_to(link_text, url, html_options)
     else

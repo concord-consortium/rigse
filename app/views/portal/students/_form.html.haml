@@ -26,7 +26,7 @@
           = label_tag :user, 'Password Again : ', :class=>"right"
           = password_field :user, :password_confirmation, {:live => false}
         
-        - if signup
+        - if signup && !current_project.allow_default_class
           %li
             = label_tag :clazz, 'Class Word: ', :class=>"right"
             - value = portal_clazz ? portal_clazz.class_word : 'class word'

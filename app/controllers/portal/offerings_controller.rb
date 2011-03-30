@@ -36,7 +36,7 @@ class Portal::OfferingsController < ApplicationController
         else
           session[:put_path] = nil
         end
-        render 'pages/show', :layout => "layouts/run" 
+        render 'pages/show', :layout => "layouts/run"
       }
 
       format.run_external_html   {
@@ -281,5 +281,22 @@ class Portal::OfferingsController < ApplicationController
       rescue
       end
       render :status => 400, :text => 'could not authenticate'
+  end
+
+  # setup a collaboration for a workgroup on this offering
+  def start
+    @offering = Portal::Offering.find(params[:id])
+    if @offering
+      learner = setup_portal_student
+      bundle_logger = learner.bundle_logger
+      bundle_logger.start_bundle
+      students = params[:students] || ''
+      students = students.split(',').map { |s| Portal::Student.find(s) }
+      bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
+      bundle_logger.in_progress_bundle.save
+      render :status => 200, :text => "ok"
+    else
+      render :status => 500, :text => "problem loading offering"
+    end
   end
 end

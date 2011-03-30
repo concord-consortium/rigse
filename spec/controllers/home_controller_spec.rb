@@ -18,6 +18,9 @@ describe HomeController do
   end
   
   it "should display home page content from the current admin project" do
+    # it appears that some previous tests leave a user logged in somehow
+    # so we explicitly log in anonymous here
+    login_anonymous
     content = "Test home page content"
     @test_project.stub(:home_page_content).and_return(content)
     
