@@ -20,8 +20,12 @@ module RunnablesHelper
   end
 
   def x_button_for(component, verb, image = verb, params = {}, run_as = "Java Web Start application")
+    classes = "run_link rollover"
+    if component.is_a? Portal::Offering
+      classes << ' offering'
+    end
     link_button("#{image}.png",  run_url_for(component, params),
-                :class => "run_link rollover",
+                :class => classes,
                 :title => title_text(component, verb, run_as))
   end
 
@@ -33,7 +37,9 @@ module RunnablesHelper
     link_text << " as #{as_name}" if as_name
 
     html_options={}
-
+    if component.is_a? Portal::Offering
+      html_options[:class] = 'offering'
+    end
     if component.is_a? JnlpLaunchable
       html_options[:popup] = true
     else
