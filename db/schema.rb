@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110328200017) do
+ActiveRecord::Schema.define(:version => 20100126160244) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2062,14 +2062,22 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
-  create_table "student_views", :force => true do |t|
-    t.integer "user_id",       :null => false
-    t.integer "viewable_id",   :null => false
-    t.string  "viewable_type", :null => false
-    t.integer "count"
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "taggable_type"
+    t.string   "context"
+    t.datetime "created_at"
   end
 
-  add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
