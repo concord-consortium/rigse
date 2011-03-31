@@ -1,6 +1,6 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
-
+  include TagDefaults
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
