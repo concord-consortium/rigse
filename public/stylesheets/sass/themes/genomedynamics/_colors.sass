@@ -1,75 +1,71 @@
-!xproject_green = #AAF53D
-!xproject_light_green = #466d5f
-!xproject_brown = #855734
-!xproject_light_brown = #F2EFE8
-!xproject_dark_green = #C6C2BD
-!light_green = !xproject_light_green
-!almost_white = #F2F8FC
-!container_box_color = #CBE1F2
-!container_box_hover_color = #000
-!teacher_only_color = #eedddd 
-!selected_color = #ffffa0
-!black = #000000
-!almost_black = #101010
+$xproject_green: #aaf53d
+$xproject_light_green: #466d5f
+$xproject_brown: #855734
+$xproject_light_brown: #f2efe8
+$xproject_dark_green: #c6c2bd
+$light_green: $xproject_light_green
+$almost_white: #f2f8fc
+$container_box_color: #cbe1f2
+$container_box_hover_color: black
+$teacher_only_color: #eedddd
+$selected_color: #ffffa0
+$black: black
+$almost_black: #101010
 
-!xproject_content_text_color = !xproject_light_green
+$xproject_content_text_color: $xproject_light_green
 
-!dev_note_color =!xproject_brown
-!legend_color = !xproject_brown
-!dark_red = !xproject_brown
-!very_dark = !black
+$dev_note_color: $xproject_brown
+$legend_color: $xproject_brown
+$dark_red: $xproject_brown
+$very_dark: $black
 
-!text_input_color = !almost_white 
-!input_border_color = !black
-!input_color = !black
-!input_focus_color = !almost_white
-
+$text_input_color: $almost_white
+$input_border_color: $black
+$input_color: $black
+$input_focus_color: $almost_white
 
 =delete_links
-  a.delete:link 
-    :color = !dark_red
-  a.delete:active 
-    :color = !dark_red
-  a.delete:visited 
-    :color = !dark_red
-  a.delete:hover 
-    :color white
-    :background-color = !dark_red
-    
-=color_mixer(!fg,!bg,!link)
-  :color = !fg
-  :background-color = !bg
+  a.delete:link
+    color: $dark_red
+  a.delete:active
+    color: $dark_red
+  a.delete:visited
+    color: $dark_red
+  a.delete:hover
+    color: white
+    background-color: $dark_red
+
+=color_mixer($fg, $bg, $link)
+  color: $fg
+  background-color: $bg
   .selected
-    :color = !bg !important
-    :background-color = !fg !important
+    color: $bg !important
+    background-color: $fg !important
   a
-    :font-weight bold
-    :padding 0px
-    :background-color transparent
-    :color = !link
-
+    font-weight: bold
+    padding: 0px
+    background-color: transparent
+    color: $link
   a:hover
-    :color= !bg
-    :background-color = !link
-        
-
+    color: $bg
+    background-color: $link
 
 =left_nav_colors
-  +color_mixer(!xproject_dark_green,white,!xproject_dark_green)
+  +color_mixer($xproject_dark_green, white, $xproject_dark_green)
   a
-    :text-decoration none
+    text-decoration: none
   +delete_links
 
 =content_area_colors
-  +color_mixer(!xproject_dark_green,white,!xproject_dark_green)
+  +color_mixer($xproject_dark_green, white, $xproject_dark_green)
   +delete_links
 
 =top_nav_colors
-  +color_mixer(!almost_white,!xproject_dark_green,!almost_white)
+  +color_mixer($almost_white, $xproject_dark_green, $almost_white)
   +delete_links
   a
-    :color black
-  
+    color: black
+
 =bottom_nav_colors
-  +color_mixer(white,!xproject_dark_green,!almost_white)
+  +color_mixer(white, $xproject_dark_green, $almost_white)
   +delete_links
