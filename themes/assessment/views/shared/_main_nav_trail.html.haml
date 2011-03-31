@@ -1,0 +1,10 @@
+%li#home.trail= link_to 'Home', home_path
+%li.trail= link_to 'About', about_path
+- if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
+  %li.trail=link_to("Activities", external_activities_path)
+- if current_user.has_role?('admin') || current_user.portal_teacher
+  %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
+- if current_user.has_role?('admin','manager','author') || current_user.portal_teacher
+  %li.trail= link_to "#{Investigation.display_name.pluralize}", investigations_path
+- if current_user.has_role?('guest')
+  %li.trail= link_to "Activity Previews", external_activities_path
