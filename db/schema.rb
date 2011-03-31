@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110216225547) do
+ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -914,14 +914,10 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
     t.integer  "position"
     t.integer  "section_id"
     t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
+    t.boolean  "is_enabled",                       :default => true
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1830,34 +1826,30 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description"
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer "data_filter_id"
+    t.integer "probe_type_id"
+    t.boolean "default_calibration"
+    t.integer "physical_unit_id"
+    t.string  "name"
+    t.text    "description"
+    t.float   "k0"
+    t.float   "k1"
+    t.float   "k2"
+    t.float   "k3"
+    t.string  "uuid"
+    t.integer "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.text    "description"
+    t.string  "otrunk_object_class"
+    t.boolean "k0_active"
+    t.boolean "k1_active"
+    t.boolean "k2_active"
+    t.boolean "k3_active"
+    t.string  "uuid"
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1870,46 +1862,40 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
   end
 
   create_table "probe_physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description"
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "quantity"
+    t.string  "unit_symbol"
+    t.string  "unit_symbol_text"
+    t.text    "description"
+    t.boolean "si"
+    t.boolean "base_unit"
+    t.string  "uuid"
   end
 
   create_table "probe_probe_types", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.integer "ptype"
+    t.float   "step_size"
+    t.integer "display_precision"
+    t.integer "port"
+    t.string  "unit"
+    t.float   "min"
+    t.float   "max"
+    t.float   "period"
+    t.string  "uuid"
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description"
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "short_name"
+    t.text    "description"
+    t.string  "communication_protocol"
+    t.string  "image"
+    t.string  "uuid"
+    t.integer "device_id"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -2125,9 +2111,10 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
     t.integer  "user_id"
     t.integer  "position"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
-    t.boolean  "teacher_only",               :default => false
-    t.boolean  "is_enabled",                 :default => true
+    t.string   "uuid",               :limit => 36
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
+    t.boolean  "is_enabled",                       :default => true
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
@@ -2165,6 +2152,15 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
+  create_table "student_views", :force => true do |t|
+    t.integer "user_id",       :null => false
+    t.integer "viewable_id",   :null => false
+    t.string  "viewable_type", :null => false
+    t.integer "count"
+  end
+
+  add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
+
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
@@ -2181,15 +2177,6 @@ ActiveRecord::Schema.define(:version => 20110216225547) do
   create_table "tags", :force => true do |t|
     t.string "name"
   end
-
-  create_table "student_views", :force => true do |t|
-    t.integer "user_id",       :null => false
-    t.integer "viewable_id",   :null => false
-    t.string  "viewable_type", :null => false
-    t.integer "count"
-  end
-
-  add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
