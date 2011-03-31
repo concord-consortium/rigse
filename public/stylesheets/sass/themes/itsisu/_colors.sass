@@ -1,69 +1,64 @@
-!itsi_green = #004A16
-!itsi_light_green = #E0EDE3
-!itsi_brown = #6A0E04
-!light_green = !itsi_light_green
-!almost_white = #F2F8FC
-!container_box_color = #CBE1F2
-!container_box_hover_color = #BCD6EA
-!teacher_only_color = #eedddd 
-!selected_color = #ffffa0
+$itsi_green: #004a16
+$itsi_light_green: #e0ede3
+$itsi_brown: #6a0e04
+$light_green: $itsi_light_green
+$almost_white: #f2f8fc
+$container_box_color: #cbe1f2
+$container_box_hover_color: #bcd6ea
+$teacher_only_color: #eedddd
+$selected_color: #ffffa0
 
-!itsi_content_text_color = !itsi_light_green
+$itsi_content_text_color: $itsi_light_green
 
-!dev_note_color =!itsi_brown
-!legend_color = !itsi_brown
-!dark_red = !itsi_brown
-!very_dark = !itsi_brown
+$dev_note_color: $itsi_brown
+$legend_color: $itsi_brown
+$dark_red: $itsi_brown
+$very_dark: $itsi_brown
 
-!text_input_color = !itsi_light_green 
-!input_border_color = !itsi_green
-!input_color = !itsi_light_green
-!input_focus_color = !input_color
-
+$text_input_color: $itsi_light_green
+$input_border_color: $itsi_green
+$input_color: $itsi_light_green
+$input_focus_color: $input_color
 
 =delete_links
-  a.delete:link 
-    :color = !dark_red
-  a.delete:active 
-    :color = !dark_red
-  a.delete:visited 
-    :color = !dark_red
-  a.delete:hover 
-    :color white
-    :background-color = !dark_red
-    
-=color_mixer(!fg,!bg)
-  :color = !fg
-  :background-color = !bg
+  a.delete:link
+    color: $dark_red
+  a.delete:active
+    color: $dark_red
+  a.delete:visited
+    color: $dark_red
+  a.delete:hover
+    color: white
+    background-color: $dark_red
+
+=color_mixer($fg, $bg)
+  color: $fg
+  background-color: $bg
   .selected
-    :color = !bg !important
-    :background-color = !fg !important
+    color: $bg !important
+    background-color: $fg !important
   a
-    :font-weight bold
-    :padding 0px
-    :background-color transparent
-
+    font-weight: bold
+    padding: 0px
+    background-color: transparent
   a:link
-    :color = !fg
+    color: $fg
   a:visited
-    :color = !fg
+    color: $fg
   a:active
-    :color = !fg
+    color: $fg
   a:hover
-    :color= !bg
-    :background-color = !fg
-        
-
+    color: $bg
+    background-color: $fg
 
 =left_nav_colors
-  +color_mixer(!itsi_green,white)
+  +color_mixer($itsi_green, white)
   +delete_links
 
 =content_area_colors
-  +color_mixer(!itsi_green,white)
+  +color_mixer($itsi_green, white)
   +delete_links
 
 =top_and_bottom_nav_colors
-  +color_mixer(!itsi_green,!itsi_light_green)
+  +color_mixer($itsi_green, $itsi_light_green)
   +delete_links
-

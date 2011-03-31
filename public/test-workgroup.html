@@ -3,7 +3,7 @@
   <head>
     <meta content='text/xhtml; charset=utf-8' http-equiv='content-type' />
     <title>
-      testing student workgroup selection
+      testing student workgroup selection FOODS
     </title>
     <meta content='no' http-equiv='imagetoolbar' />
     <meta content='all' name='distribution' />
@@ -27,27 +27,33 @@
       <div id='primary'>
         <div class='main_content_colors' id='content'>
           <div class='main_content_colors' id='content_header'>
+            <div class='trigger padded_content'>
+              <a class='saves_learner_data'>RUN ME</a>
+            </div>
             <div id='lightbox_hood' style='display: none;'></div>
             <div id='lightbox_content' style='display: none;'>
               <div id='workgroup_root'>
+                <div id='workgroup_header'>
+                  <a href='#' id='cancel_button'>
+                    cancel
+                  </a>
+                </div>
                 <div class='padded_content'>
-                  <div>
-                    <span id='run_button'>
-                      <button style='display: inline-block;'>run</button>
+                  <div style='display: block; border: 1px solid black;'>
+                    <button id='run_button'>
+                      run
+                    </button>
+                    <span id='run_message'>
                       the activity now
                     </span>
                     <span>
                       , or
-                      <button id='show_workgroups' style='display: inline-block;'>
-                        add collaborators
-                      </button>
                     </span>
+                    <button id='show_workgroups'>
+                      add collaborators
+                    </button>
                   </div>
                   <br />
-                  <div id='load_wait' style='display: none;'>
-                    <img src='/images/wait_long.gif' style='border: none;' />
-                    loading collaborator list. Please wait.
-                  </div>
                   <div id='workgroup_panel' style='display: none'>
                     <div id='add_group' style='display: none;'>
                       <h3>add colaborators</h3>
@@ -55,6 +61,13 @@
                       <button id='add_button'>
                         add
                       </button>
+                    </div>
+                    <div id='load_wait' style='display: none;'>
+                      <img src='/images/wait_long.gif' style='border: none;' />
+                      loading collaborator list. Please wait.
+                    </div>
+                    <div id='load_error' style='display: none;'>
+                      error loading calaborator list. (try again?)
                     </div>
                     <div id='learners_container' style='display: none;'>
                       <h3>existing colaborators:</h3>
@@ -93,6 +106,11 @@
       </div>
       <div id='secondary'></div>
       <div id='under_footer'></div>
+      <script type='text/javascript'>
+        //<![CDATA[
+          document.observe('dom:loaded', function() { EnableWorkgroups('a.saves_learner_data');});
+        //]]>
+      </script>
     </div>
   </body>
 </html>

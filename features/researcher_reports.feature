@@ -38,11 +38,14 @@ Feature: Investigations can be reported on
        | teacher_a | teacher_a |
        | teacher_b | teacher_a |
 
+
     And the following classes exist:
         | name             | teacher |
         | Intro to bugs    | teacher_a |
         | Intro to flowers | teacher_b |
 
+    And the classes "Intro to bugs, Intro to flowers" are in a school named "Test School"
+    
     And the following students exist:
          | login     | password  | first_name | last_name |
          | student_a | student_a | Jack       | Doe       |
