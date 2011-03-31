@@ -107,3 +107,38 @@ Feature: Teacher can assign an offering to a class
     Then I should see "The External Activity My Activity is already assigned in a class."
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the class "Default Class" should not have any offerings
+
+  @selenium
+  Scenario: Only runnables tagged as active can be assigned
+    Given the following investigation exists:
+      | name               | user    |
+      | Test Investigation | teacher |
+		And the investigation "Test Investigation" is published
+    And the investigation "Test Investigation" is tagged with "active"
+    And the following resource pages exist:
+      | name               | user    |
+      | Test Resource Page | teacher |
+    And the resource page "Test Resource Page" is tagged with "active"
+    And the following external activity exists:
+      | name                 | user    |
+      | My External Activity | teacher |
+    And the external activity "My External Activity" is tagged with "active"
+    And the following pages exist:
+      | name          | teacher |
+      | My Page       | teacher |
+      | My Other Page | teacher |
+    And the page "My Page" is published
+    And the page "My Other Page" is published
+    And the page "My Page" is tagged with "active"
+    And the following activities exist:
+      | name        | user    |
+      | My Activity | teacher |
+    And the activity "My Activity" is tagged with "active"
+    When I login with username: teacher password: teacher
+    And I am on the class page for "My Class"
+    Then I should see "Test Investigation"
+    And I should see "Test Resource Page"
+    And I should see "My External Activity"
+    And I should see "My Page"
+    And I should see "My Activity"
+    But I should not see "My Other Page"

@@ -78,6 +78,7 @@ class Investigation < ActiveRecord::Base
     WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
 
   acts_as_replicatable
+  acts_as_taggable
 
   include Publishable
 
@@ -117,6 +118,7 @@ class Investigation < ActiveRecord::Base
 
   include Changeable
   include Noteable # convenience methods for notes...
+  include TagDefaults
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description publication_status}

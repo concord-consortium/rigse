@@ -70,11 +70,13 @@ class Page < ActiveRecord::Base
 
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
-  include Noteable # convenience methods for notes...
 
+  include Noteable # convenience methods for notes...
   include Publishable
+  include TagDefaults
 
   acts_as_replicatable
+  acts_as_taggable
   acts_as_list :scope => :section
 
   named_scope :like, lambda { |name|

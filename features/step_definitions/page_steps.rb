@@ -16,3 +16,9 @@ When /^I assign the page "([^"]*)" to the class "([^"]*)"$/ do |page_name, class
     :clazz => clazz
   })
 end
+
+Given /^the page "([^"]*)" is published$/ do |page_name|
+  page = Page.find_by_name page_name
+  page.publish
+  page.save
+end

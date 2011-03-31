@@ -93,3 +93,9 @@ Given /^there is an image question with the prompt "([^"]*)"$/ do |prompt|
   image_question = Embeddable::ImageQuestion.find_or_create_by_prompt(prompt)
 end
 
+Given /^the following pages exist:$/ do |table|
+  table.hashes.each do |page|
+    user = User.find_by_login page['teacher']
+    page = Factory(:page, :name => page['name'], :user => user)
+  end
+end

@@ -41,7 +41,11 @@ class ResourcePage < ActiveRecord::Base
 
   named_scope :ordered_by, lambda { |order| { :order => order } }
 
+  acts_as_taggable
+
   accepts_nested_attributes_for :attached_files
+
+  include TagDefaults
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description publication_status}

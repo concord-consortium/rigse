@@ -7,10 +7,11 @@ class ExternalActivity < ActiveRecord::Base
   has_many :author_notes, :as => :authored_entity
 
   acts_as_replicatable
+  acts_as_taggable
 
   include Changeable
-
   include Publishable
+  include TagDefaults
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
