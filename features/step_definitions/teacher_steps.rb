@@ -10,6 +10,13 @@ Then /^I should see the the teacher signup form$/ do
   And I should see "login info"
 end
 
+Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|
+  school = Factory(:portal_school, :name=>school_name)
+  teachers = teachers.split(",").map { |t| t.strip }
+  teachers.map! {|t| User.find_by_login(t)}
+  teachers.map! {|u| u.portal_teacher }
+  teachers.each {|t| t.schools = [ school ]; t.save!; t.reload}
+end
 
 # Table: | login | password |
 Given /^the following teachers exist:$/ do |users_table|
