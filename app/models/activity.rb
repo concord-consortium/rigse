@@ -50,17 +50,18 @@ class Activity < ActiveRecord::Base
     INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id}'
-  
+
   delegate :saveable_types, :reportable_types, :to => :investigation
   acts_as_replicatable
   acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
-  
+  acts_as_list :scope => :investigation
+
   include Noteable # convinience methods for notes...
   include Changeable
   include TreeNode
   include Publishable
   include TagDefaults
-  
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
@@ -139,7 +140,7 @@ class Activity < ActiveRecord::Base
     copy_of_original.name = "copy of #{original.name}"
     copy_of_original.deep_set_user user
     copy_of_original.investigation= original.investigation
-    
+
     # copy tags too:
     original.tag_types.each do | tag_type|
       method = (tag_type.to_s.singularize + "_list").to_sym
@@ -147,14 +148,14 @@ class Activity < ActiveRecord::Base
       method = "#{method.to_sym}=".to_sym
       copy_of_original.send(method,types)
     end
-    
+
     copy_of_original.ancestor = original
     copy_of_original.publication_status = :draft
     copy_of_original.save
     return copy_of_original
   end
   alias duplicate copy
-  
+
   def deep_xml
     self.to_xml(
       :include => {

@@ -257,8 +257,6 @@ describe Investigation do
       @investigation.activities << activity
       @investigation.should have(1).activities
       @investigation.save
-      p "ACTIVITY"
-      p activity
       activity.position.should_not be_nil
       activity.position.should eql 1
     end
