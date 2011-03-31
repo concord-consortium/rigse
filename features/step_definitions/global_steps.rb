@@ -51,6 +51,16 @@ Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
   page.body.should =~ /#{first_item}.*#{second_item}/m
 end
 
+
+Then /^I should see the sites name$/ do
+  site_name = APP_CONFIG[:site_name]
+  if page.respond_to? :should
+    page.should have_content(site_name)
+  else
+    assert page.has_content?(site_name)
+  end
+end
+
 When /^I debug$/ do
   debugger
   0
