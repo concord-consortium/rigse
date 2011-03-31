@@ -151,7 +151,7 @@ class ItsiImporter
             puts "  -- foreign key empty for ITSI Activity --"
           end
         rescue ActiveRecord::RecordNotFound
-          puts "  -- itsi activity id: #{itsi_activity.id} not found --"
+          puts "  -- itsi activity foreign id: #{foreign_key} not found --"
         end
       end
       puts
