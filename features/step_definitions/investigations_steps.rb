@@ -9,8 +9,12 @@ end
 
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
-    user = User.find_by_login hash['teacher']
-    teacher = user.portal_teacher
+    if hash['teacher']
+      user = User.find_by_login hash['teacher']
+      teacher = user.portal_teacher
+    else
+      teacher = Factory(:teacher)
+    end
     Factory.create(:portal_clazz, hash.merge('teacher' => teacher))
   end
 end
