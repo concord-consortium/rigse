@@ -91,6 +91,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - bin
 
 - smartgraphs:
   - themes/smartgraphs/smartgraphs
