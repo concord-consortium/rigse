@@ -2,18 +2,20 @@
 %br
 .clazz_info{:id => dom_id_for(portal_clazz,:item)}
   .clazz_details{:id => dom_id_for(portal_clazz, :details)}
+    %h1 
+      #{portal_clazz.name} 
+      - if portal_clazz.semester
+        (#{portal_clazz.semester.name})
     .action_menu
-      .action_menu_left
-        %h2
-          #{portal_clazz.name} 
-          - if portal_clazz.semester
-            (#{portal_clazz.semester.name})
+      .action_menu_header_left
       .action_menu_header_right
-        %ul.menu
-          -if portal_clazz.changeable? current_user
-            %li.menu=link_to(image_tag('http://itsisu.portal.concord.org/images/icons/cog.png'),edit_portal_clazz_url(portal_clazz))
-            %li.menu=link_to("edit",edit_portal_clazz_url(portal_clazz),{:class => "button" })
-
+        -if portal_clazz.changeable? current_user
+          %ul.menu
+            - edit_url = edit_portal_clazz_url(portal_clazz)
+            %li.menu=link_to(image_tag('cog.png'),edit_url, {:class => "button" })
+            %li.menu=link_to("edit",edit_url,{:class => "button" })
+      %div #{portal_clazz.description}
+    
     .block_list
       - if portal_clazz.changeable? current_user
         This is a preview of how your students will see the activities when they sign in.
