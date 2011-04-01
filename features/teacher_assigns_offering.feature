@@ -111,17 +111,20 @@ Feature: Teacher can assign an offering to a class
   @selenium
   Scenario: Only runnables tagged as active can be assigned
     Given the following investigation exists:
-      | name               | user    |
-      | Test Investigation | teacher |
+      | name                | user    |
+      | Test Investigation  | teacher |
+      | Other Investigation | teacher |
 		And the investigation "Test Investigation" is published
     And the investigation "Test Investigation" is tagged with "active"
     And the following resource pages exist:
-      | name               | user    |
-      | Test Resource Page | teacher |
+      | name                | user    |
+      | Test Resource Page  | teacher |
+      | Other Resource Page | teacher |
     And the resource page "Test Resource Page" is tagged with "active"
     And the following external activity exists:
       | name                 | user    |
       | My External Activity | teacher |
+      | My Other Activity    | teacher |
     And the external activity "My External Activity" is tagged with "active"
     And the following pages exist:
       | name          | teacher |
@@ -131,8 +134,9 @@ Feature: Teacher can assign an offering to a class
     And the page "My Other Page" is published
     And the page "My Page" is tagged with "active"
     And the following activities exist:
-      | name        | user    |
-      | My Activity | teacher |
+      | name           | user    |
+      | My Activity    | teacher |
+      | Other Activity | teacher |
     And the activity "My Activity" is tagged with "active"
     When I login with username: teacher password: teacher
     And I am on the class page for "My Class"
@@ -141,4 +145,8 @@ Feature: Teacher can assign an offering to a class
     And I should see "My External Activity"
     And I should see "My Page"
     And I should see "My Activity"
-    But I should not see "My Other Page"
+    But I should not see "Other Investigation"
+    And I should not see "Other Resource Page"
+    And I should not see "My Other Activity"
+    And I should not see "My Other Page"
+    And I should not see "Other Activity"

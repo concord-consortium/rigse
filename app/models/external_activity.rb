@@ -40,10 +40,10 @@ class ExternalActivity < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
-        external_activities = ExternalActivity.like(name)
+        external_activities = ExternalActivity.like(name).tagged_with("active")
       else
         # external_activities = ExternalActivity.published.like(name)
-        external_activities = ExternalActivity.like(name)
+        external_activities = ExternalActivity.like(name).tagged_with("active")
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

@@ -37,13 +37,12 @@ class Portal::Clazz < ActiveRecord::Base
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
 
-
-
   self.extend SearchableModel
 
   @@searchable_attributes = %w{name description}
 
   class <<self
+
     def default_class
       find_or_create_default_class
     end

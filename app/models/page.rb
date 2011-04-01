@@ -121,9 +121,9 @@ class Page < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
-        pages = Page.like(name)
+        pages = Page.like(name).tagged_with("active")
       else
-        pages = Page.published.like(name)
+        pages = Page.published.like(name).tagged_with("active")
       end
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz

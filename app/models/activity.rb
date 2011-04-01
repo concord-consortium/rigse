@@ -90,10 +90,10 @@ class Activity < ActiveRecord::Base
     def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
-        activities = Activity.like(name)
+        activities = Activity.like(name).tagged_with("active")
       else
         # activities = Activity.published.like(name)
-        activities = Activity.like(name)
+        activities = Activity.like(name).tagged_with("active")
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

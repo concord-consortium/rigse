@@ -59,7 +59,7 @@ class ResourcePage < ActiveRecord::Base
     end
 
     def search_list(options)
-      resource_pages = ResourcePage.like(options[:name])
+      resource_pages = ResourcePage.like(options[:name]).tagged_with("active")
 
       if options[:user] && options[:user].is_a?(User) && options[:user].has_role?('admin')
         # admin users can see all ResourcePages

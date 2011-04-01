@@ -153,28 +153,28 @@ class Investigation < ActiveRecord::Base
       if APP_CONFIG[:use_gse]
         if domain_id > 0
           if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id)
+            investigations = Investigation.like(name).with_gse.grade(grade_span).domain(domain_id).tagged_with("active")
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id)
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span).domain(domain_id).tagged_with("active")
           end
         elsif (!grade_span.empty?)
           if (options[:include_drafts])
-            investigations = Investigation.like(name).with_gse.grade(grade_span)
+            investigations = Investigation.like(name).with_gse.grade(grade_span).tagged_with("active")
           else
-            investigations = Investigation.published.like(name).with_gse.grade(grade_span)
+            investigations = Investigation.published.like(name).with_gse.grade(grade_span).tagged_with("active")
           end
         else
           if (options[:include_drafts])
-            investigations = Investigation.like(name)
+            investigations = Investigation.like(name).tagged_with("active")
           else
-            investigations = Investigation.published.like(name)
+            investigations = Investigation.published.like(name).tagged_with("active")
           end
         end
       else
         if (options[:include_drafts])
-          investigations = Investigation.like(name)
+          investigations = Investigation.like(name).tagged_with("active")
         else
-          investigations = Investigation.published.like(name)
+          investigations = Investigation.published.like(name).tagged_with("active")
         end
       end
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
