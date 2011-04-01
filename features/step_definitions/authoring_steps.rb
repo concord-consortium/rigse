@@ -54,6 +54,8 @@ end
 Given /^The following investigation exists:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.find_or_create_by_name(hash['investigation'])
+    investigation.user = Factory(:user)
+    investigation.save
     activity = Activity.find_or_create_by_name(hash['activity'])
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
