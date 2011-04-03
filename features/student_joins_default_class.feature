@@ -26,7 +26,7 @@ Feature: Student joins default class
       | user_password              | password            |
       | user_password_confirmation | password            |
     And I press "Submit"
-    Then I should see "You have successfully registered Example Student with the username estudent."
+    Then I should see "Your username is: estudent"
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     And I should see "Logged in successfully"
