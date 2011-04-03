@@ -60,6 +60,7 @@ Feature: Teacher can assign an offering to a class
     And the following students exist:
       | login     | password  |
       | student   | student   |
+    And the student "student" is in the class "My Class"
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |

@@ -18,3 +18,9 @@ Given /^the option to allow default classes is enabled$/ do
   project.allow_default_class = true
   project.save
 end
+
+Given /^the option to allow default classes is disabled$/ do
+  project = Admin::Project.default_project
+  project.allow_default_class = false
+  project.save
+end

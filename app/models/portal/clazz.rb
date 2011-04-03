@@ -192,6 +192,10 @@ class Portal::Clazz < ActiveRecord::Base
   end
   alias is_teacher? is_user?
 
+  def is_student?(_user)
+    students.include? _user.portal_student
+  end
+
   # def changeable?(_user)
   #   return true if virtual? && is_user?(_user)
   #   if _user.has_role?('manager','admin','district_admin')
