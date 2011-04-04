@@ -15,9 +15,11 @@ Feature: External Activities can be assigned as offerings
       | name               | user    |
       | Test Investigation | teacher |
     And the investigation "Test Investigation" is published
+    And the investigation "Test Investigation" is tagged with "active"
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
+    And the external activity "My Activity" is tagged with "active"
 
   Scenario: External Offerings and Investigations are both assignable
     When I assign the external activity "My Activity" to the class "My Class"

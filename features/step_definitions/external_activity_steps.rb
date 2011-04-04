@@ -39,3 +39,8 @@ Then /^the learner count for the external activity "([^"]*)" in the class "(.*)"
   offering = Portal::Offering.find_by_clazz_id_and_runnable_id(clazz.id, activity.id)
   offering.learners.size.should == learner_count.to_i
 end
+
+Then /^the external activity "([^"]*)" should have been created$/ do |ea_name|
+  ea = ExternalActivity.find_by_name ea_name
+  ea.should be
+end

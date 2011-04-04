@@ -12,6 +12,8 @@
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
+  - field_set_tag 'Tags' do
+    = tag_selector(@investigation,"investigation",:tag)
 
 / - field_set_tag 'Select GSE' do
 /   - field_set_tag 'filter' do

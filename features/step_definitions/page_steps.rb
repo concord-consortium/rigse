@@ -22,3 +22,8 @@ Given /^the page "([^"]*)" is published$/ do |page_name|
   page.publish
   page.save
 end
+
+Then /^the page "([^"]*)" should have been created$/ do |page_name|
+  page = Page.find_by_name page_name
+  page.should be
+end

@@ -15,6 +15,7 @@ Feature: Teacher views resource usage
     And the following resource pages exist:
       | name               | user    |
       | Test Resource Page | teacher |
+    And the resource page "Test Resource Page" is tagged with "active"
     And the following students exist:
       | login   | password |
       | student | student  |

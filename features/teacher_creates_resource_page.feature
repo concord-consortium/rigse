@@ -35,6 +35,14 @@ Feature: A teacher creates a resource page
       | draft page B      | draft               | teacherB  |
       | private page A    | private             | teacherA  |
       | private page B    | private             | teacherB  |
+    And the following resource pages are tagged with "active":
+      | name              |
+      | published page A  |
+      | published page B  |
+      | draft page A      |
+      | draft page B      |
+      | private page A    |
+      | private page B    |
     And I login with username: teacherA password: teacher
     When I go to the resource pages page
     Then I should see "published page A"
@@ -71,7 +79,11 @@ Feature: A teacher creates a resource page
       | Testing Page    | published           | teacherA  |
       | Testing Page 2  | draft               | teacherA  |
       | Demo Page       | published           | teacherA  |
-
+    And the following resource pages are tagged with "active":
+      | name           |
+      | Testing Page   |
+      | Testing Page 2 |
+      | Demo Page      |
     And I login with username: teacherA password: teacher
     When I search for a resource page named "Testing"
     Then I should see "Testing Page"

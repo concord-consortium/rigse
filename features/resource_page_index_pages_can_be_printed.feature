@@ -17,6 +17,11 @@ Feature: Resource Page index pages can be printed
       | Newest  | teacher   | 6               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | Medium  | teacher   | 11              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | Oldest  | teacher   | 21              | Wed Jan 20 12:00:00 -0500 2011  | published           |
+    And the following resource pages are tagged with "active":
+      | name   |
+      | Newest |
+      | Medium |
+      | Oldest |
 
   @selenium
   Scenario: Teacher prints the listing of all resource pages

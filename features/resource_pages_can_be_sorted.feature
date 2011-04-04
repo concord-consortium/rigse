@@ -2,7 +2,7 @@ Feature: Resource Pages can be sorted
   So I can find a resource page more efficiently
   As a teacher
   I want to sort the resource pages list
-  
+
   Background:
     Given The default project and jnlp resources exist using factories
     Given the following teachers exist:
@@ -16,8 +16,13 @@ Feature: Resource Pages can be sorted
       | Newest  | teacher   | 6               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | Medium  | teacher   | 11              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | Oldest  | teacher   | 21              | Wed Jan 20 12:00:00 -0500 2011  | published           |
+    And the following resource pages are tagged with "active":
+      | name   |
+      | Newest |
+      | Medium |
+      | Oldest |
     And I login with username: teacher password: teacher
-        
+
   @selenium
   Scenario: The resource pages list can be sorted by name
     When I sort resource pages by "name ASC"

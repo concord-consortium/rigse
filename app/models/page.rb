@@ -76,7 +76,7 @@ class Page < ActiveRecord::Base
   include TagDefaults
 
   acts_as_replicatable
-  acts_as_taggable
+  acts_as_taggable_on :tags
   acts_as_list :scope => :section
 
   named_scope :like, lambda { |name|

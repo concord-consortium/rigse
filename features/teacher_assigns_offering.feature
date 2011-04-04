@@ -39,12 +39,15 @@ Feature: Teacher can assign an offering to a class
       | name               | user    |
       | Test Investigation | teacher |
 		And the investigation "Test Investigation" is published
+    And the investigation "Test Investigation" is tagged with "active"
     And the following resource pages exist:
       | name               | user    |
       | Test Resource Page | teacher |
+    And the resource page "Test Resource Page" is tagged with "active"
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
+    And the external activity "My Activity" is tagged with "active"
     And I login with username: teacher password: teacher
     And I am on the class page for "My Class"
 		Then I should see "Investigation: Test Investigation"
@@ -63,6 +66,7 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
+    And the external activity "My Activity" is tagged with "active"
     When I login with username: teacher password: teacher
     And I am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
@@ -95,6 +99,7 @@ Feature: Teacher can assign an offering to a class
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
+    And the external activity "My Activity" is tagged with "active"
     When I login with username: teacher password: teacher
     And I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"

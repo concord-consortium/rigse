@@ -10,4 +10,7 @@
     (check here if this page is for teachers only)
   - field_set_tag 'Page Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'Tags' do
+    = tag_selector(@page,"page",:tag)
+  = f.submit "Save"
 = javascript_tag("focus_first_field();");

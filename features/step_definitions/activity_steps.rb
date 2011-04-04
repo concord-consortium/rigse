@@ -22,3 +22,8 @@ When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
     click_link("delete")
   end
 end
+
+Then /^the activity "([^"]*)" should have been created$/ do |act_name|
+  act = Activity.find_by_name act_name
+  act.should be
+end

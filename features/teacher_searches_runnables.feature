@@ -13,37 +13,69 @@ Feature: Investigations can be searched
       | name      | teacher     |
       | My Class  | teacher     |
     And the following investigations exist:
-          | name            | user    | offerings_count | publication_status | 
-          | a Investigation | teacher | 5               | published          | 
-          | b Investigation | teacher | 5               | published          | 
-          | c Investigation | teacher | 5               | published          | 
-          | d Investigation | teacher | 5               | published          | 
-          | e Investigation | teacher | 5               | published          | 
-          | f Investigation | teacher | 5               | published          | 
-          | g Investigation | teacher | 5               | published          | 
-          | h Investigation | teacher | 5               | published          | 
-          | i Investigation | teacher | 5               | published          | 
-          | j Investigation | teacher | 5               | published          | 
-          | k Investigation | teacher | 5               | published          | 
-          | l Investigation | teacher | 5               | published          | 
-          | m Investigation | teacher | 5               | published          | 
-          | n Investigation | teacher | 5               | published          | 
-          | o Investigation | teacher | 5               | published          | 
-          | p Investigation | teacher | 5               | published          | 
-          | q Investigation | teacher | 5               | published          | 
-          | r Investigation | teacher | 10              | published          | 
-          | s Investigation | teacher | 20              | published          | 
-          | t Investigation | teacher | 20              | published          | 
-          | u Investigation | teacher | 20              | published          | 
-          | v Investigation | teacher | 20              | published          | 
-          | w Investigation | teacher | 20              | published          | 
-          | x Investigation | teacher | 20              | published          | 
-          | y Investigation | teacher | 20              | published          | 
-          | z Investigation | teacher | 20              | published          | 
-          | Good a          | teacher | 5               | published          | 
-          | Good b          | teacher | 5               | published          | 
-          | Good c          | teacher | 5               | published          | 
-          | Good d          | teacher | 5               | published          | 
+      | name            | user    | offerings_count | publication_status |
+      | a Investigation | teacher | 5               | published          |
+      | b Investigation | teacher | 5               | published          |
+      | c Investigation | teacher | 5               | published          |
+      | d Investigation | teacher | 5               | published          |
+      | e Investigation | teacher | 5               | published          |
+      | f Investigation | teacher | 5               | published          |
+      | g Investigation | teacher | 5               | published          |
+      | h Investigation | teacher | 5               | published          |
+      | i Investigation | teacher | 5               | published          |
+      | j Investigation | teacher | 5               | published          |
+      | k Investigation | teacher | 5               | published          |
+      | l Investigation | teacher | 5               | published          |
+      | m Investigation | teacher | 5               | published          |
+      | n Investigation | teacher | 5               | published          |
+      | o Investigation | teacher | 5               | published          |
+      | p Investigation | teacher | 5               | published          |
+      | q Investigation | teacher | 5               | published          |
+      | r Investigation | teacher | 10              | published          |
+      | s Investigation | teacher | 20              | published          |
+      | t Investigation | teacher | 20              | published          |
+      | u Investigation | teacher | 20              | published          |
+      | v Investigation | teacher | 20              | published          |
+      | w Investigation | teacher | 20              | published          |
+      | x Investigation | teacher | 20              | published          |
+      | y Investigation | teacher | 20              | published          |
+      | z Investigation | teacher | 20              | published          |
+      | Good a          | teacher | 5               | published          |
+      | Good b          | teacher | 5               | published          |
+      | Good c          | teacher | 5               | published          |
+      | Good d          | teacher | 5               | published          |
+    And the following investigations are tagged with "active":
+      | name            |
+      | a Investigation |
+      | b Investigation |
+      | c Investigation |
+      | d Investigation |
+      | e Investigation |
+      | f Investigation |
+      | g Investigation |
+      | h Investigation |
+      | i Investigation |
+      | j Investigation |
+      | k Investigation |
+      | l Investigation |
+      | m Investigation |
+      | n Investigation |
+      | o Investigation |
+      | p Investigation |
+      | q Investigation |
+      | r Investigation |
+      | s Investigation |
+      | t Investigation |
+      | u Investigation |
+      | v Investigation |
+      | w Investigation |
+      | x Investigation |
+      | y Investigation |
+      | z Investigation |
+      | Good a          |
+      | Good b          |
+      | Good c          |
+      | Good d          |
     And I login with username: teacher password: teacher
 
   @selenium

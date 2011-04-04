@@ -135,18 +135,23 @@ describe Investigation do
         published = Factory.create(:investigation, inv)
         published.name << " (published) "
         published.publish!
+        published.tag_list = "active"
         published.save
         @published << published.reload
         draft = Factory.create(:investigation, inv)
         draft.name << " (draft) "
+        draft.tag_list = "active"
         draft.save
         @drafts << draft.reload
       end
       @public_non_gse = Factory.create(:investigation, :name => "published non-gse investigation");
       @public_non_gse.publish!
+      @public_non_gse.tag_list = "active"
       @public_non_gse.save
       @public_non_gse.reload
       @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation");
+      @draft_non_gse.tag_list = "active"
+      @draft_non_gse.save
     end
     # search (including drafts):
     # search for drafts in grade 8                # two entries

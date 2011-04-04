@@ -190,3 +190,7 @@ When /^I wait for all pending requests to complete/ do
   page.wait_until { true == page.evaluate_script("PendingRequests == 0;")}
 end
 
+Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|
+  inv = Investigation.find_by_name inv_name
+  inv.should be
+end
