@@ -44,7 +44,7 @@ class Reports::Usage < Reports::Excel
         @investigations.each do |inv|
           l = learners.detect {|learner| learner.offering.runnable == inv}
           if (l)
-            @report_utils[l.offering] ||= Report::Util.new(l.offering)
+            @report_utils[l.offering] ||= Report::Util.new(l.offering,false,true)
             total_assessments = @report_utils[l.offering].embeddables.size
             assess_completed = @report_utils[l.offering].saveables({:learner => l})
             assess_completed = assess_completed.select{|s| s.answered? }.size

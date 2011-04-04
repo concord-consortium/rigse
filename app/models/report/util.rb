@@ -71,7 +71,7 @@ class Report::Util
     return results
   end
 
-  def initialize(offering, show_only_active_learners=false)
+  def initialize(offering, show_only_active_learners=false,skip_filters=false)
     @last_accessed = Time.now
     @offering = offering
     @report_embeddable_filter = @offering.report_embeddable_filter
@@ -95,14 +95,19 @@ class Report::Util
     @activities = @investigation.activities.student_only
     @sections   = @investigation.student_sections
     @pages      = @investigation.student_pages
+    
+    reportables          = @offering.runnable.reportable_elements
 
     ## FIXME filtering of embeddables should happen here
-    # results = @report_embeddable_filter.filter(results)
-    #allowed_embeddables = @report_embeddable_filter.embeddables
-    #if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
-      #reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
-    #end
-    reportables          = @offering.runnable.reportable_elements
+    unless skip_filters
+      results = @report_embeddable_filter.filter(results)
+      allowed_embeddables = @report_embeddable_filter.embeddables
+      reportables          = @offering.runnable.reportable_elements
+      if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
+        reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
+      end
+    end
+    #reportables          = @offering.runnable.reportable_elements
     elements             = reportables.map       { |r| r[:element]    } 
     @embeddables         = reportables.map       { |r| r[:embeddable] } 
     @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   } 
