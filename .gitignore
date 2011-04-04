@@ -90,3 +90,6 @@ public/stylesheets/authoring.css
 public/stylesheets/template_edit.css
 public/activities/
 local_files
+.bundle/
+public/sparks-content/
+public/stylesheets/workgroup.css
