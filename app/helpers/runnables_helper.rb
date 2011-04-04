@@ -7,9 +7,9 @@ module RunnablesHelper
     "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
   end
 
-  def run_url_for(component, params = {}, format = :jnlp)
+  def run_url_for(component, params = {}, format = nil)
     runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
-    format = APP_CONFIG[:runnable_mime_type] unless runnable.is_a? JnlpLaunchable
+    format ||= runnable.run_format
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
@@ -20,8 +20,12 @@ module RunnablesHelper
   end
 
   def x_button_for(component, verb, image = verb, params = {}, run_as = "Java Web Start application")
+    classes = "run_link rollover"
+    if component.is_a? Portal::Offering
+      classes << ' offering'
+    end
     link_button("#{image}.png",  run_url_for(component, params),
-                :class => "run_link rollover",
+                :class => classes,
                 :title => title_text(component, verb, run_as))
   end
 
@@ -33,14 +37,20 @@ module RunnablesHelper
     link_text << " as #{as_name}" if as_name
 
     html_options={}
-
+    if component.is_a? Portal::Offering
+      html_options[:class] = 'offering'
+    end
     if component.is_a? JnlpLaunchable
       html_options[:popup] = true
     else
       html_options[:title] = title
     end
 
-    x_button_for(component, verb) + link_to(link_text, url, html_options)
+    if params[:no_button]
+      link_to(link_text, url, html_options)
+    else
+      x_button_for(component, verb) + link_to(link_text, url, html_options)
+    end
   end
 
   def preview_button_for(component, url_params = nil, img = "preview.png", run_as = nil)

@@ -1,3 +1,36 @@
+def find_or_create_offering(runnable,clazz,type="Investigation")
+    create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
+    offering = Portal::Offering.find(:first, :conditions=> create_hash)
+    unless offering
+      offering = Portal::Offering.create(create_hash)
+      offering.save
+    end
+    offering
+end
+
+Given /the following users[(?exist):\s]*$/i do |users_table|
+  User.anonymous(true)
+  users_table.hashes.each do |hash|
+    roles = hash.delete('roles')
+    if roles
+      roles = roles ? roles.split(/,\s*/) : nil
+    else
+      roles =  []
+    end
+    begin
+      user = Factory(:user, hash)
+      roles.each do |role|
+        user.add_role(role)
+      end
+      user.register
+      user.activate
+      user.save!
+    rescue ActiveRecord::RecordInvalid
+      # assume this user is already created...
+    end
+  end
+end
+
 Given /^there are (\d+) (.+)$/ do |number, model_name|
   model_name = model_name.gsub(/\s/, '_').singularize
   the_class = model_name.classify.constantize
@@ -16,6 +49,16 @@ end
 
 Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
   page.body.should =~ /#{first_item}.*#{second_item}/m
+end
+
+
+Then /^I should see the sites name$/ do
+  site_name = APP_CONFIG[:site_name]
+  if page.respond_to? :should
+    page.should have_content(site_name)
+  else
+    assert page.has_content?(site_name)
+  end
 end
 
 When /^I debug$/ do

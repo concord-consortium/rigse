@@ -5,7 +5,7 @@
         = link_to_container(section)
       %div.action_menu_header_right   
         %ul.menu
-          %li= run_link_for(section)
+          %li= run_link_for(section,nil,{:no_button=>true})
           - if (section.changeable?(current_user))
             %li= link_to 'duplicate', duplicate_section_url(section)
             %li= link_to 'edit', section

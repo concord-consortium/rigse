@@ -1,33 +1,32 @@
 @import app_colors.sass
-.dropdown
-  :z-index 1000
-  :position fixed
-  :display block
-  :left -1000px
-  :top 0px
-  :clear left
-  :float none
-  :background transparent
-  :font-size 10px
-  .big
-    :font-size 1.2em
-  ul
-    :display block
-    :background-color white
-    :list-style-type none
-    :font-weight normal
-    :border 1px gray solid
-    :min-width 100px
-    :min-height 40px
-  li
-    +color_mixer(!very_dark,!almost_white)
-    :list-style-type none
-    :padding 0.5em
-    :min-width 100px
-  a
-    :margin-left 5px
-    :display block
 
+.dropdown
+  z-index: 1000
+  position: fixed
+  display: block
+  left: -1000px
+  top: 0px
+  clear: left
+  float: none
+  background: transparent
+  font-size: 10px
+  .big
+    font-size: 1.2em
+  ul
+    display: block
+    background-color: white
+    list-style-type: none
+    font-weight: normal
+    border: 1px gray solid
+    min-width: 100px
+    min-height: 40px
+  li
+    +color_mixer($very_dark, $almost_white)
+    list-style-type: none
+    padding: 0.5em
+    min-width: 100px
+  a
+    margin-left: 5px
+    display: block
   a.rollover
-    :clear left !important
-    
+    clear: left !important

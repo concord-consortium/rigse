@@ -1,142 +1,132 @@
 @import themes/sglight/colors.sass
 @import compass/utilities/general/clearfix.sass
 
-=action_menu_tab(!_color = #111, !_bg_color = !sglight_content_text_color, !_color_hover = white,!_bg_color_hover = black)
+=action_menu_tab($_color: #111111, $_bg_color: $sglight_content_text_color, $_color_hover: white, $_bg_color_hover: black)
   ul
-    :margin 0
-    :padding 0em
-    :background-color= !_bg_color
+    margin: 0
+    padding: 0em
+    background-color: $_bg_color
     li
-      :display inline
-      :list-style-type none 
-      :background-color= !_bg_color
-      :padding 0px
-        :right 10px
-        
+      display: inline
+      list-style-type: none
+      background-color: $_bg_color
+      padding: 0px
+        right: 10px
       a, a:visited, a:active
-        :cursor pointer
-        :color= !_color
-        :font-weight bold
-        :text-decoration none
-        :padding 2px 8px 0px 2px
-        :background-color= !_bg_color
+        cursor: pointer
+        color: $_color
+        font-weight: bold
+        text-decoration: none
+        padding: 2px 8px 0px 2px
+        background-color: $_bg_color
       a:hover
-        :color= !_color_hover
-        :background-color= !_bg_color_hover
-    li.selected 
+        color: $_color_hover
+        background-color: $_bg_color_hover
+    li.selected
       a, a:visited, a:active
-        :background-color blue
-        :color = white
-    li.label 
-      :font-weight bold
+        background-color: blue
+        color: white
+    li.label
+      font-weight: bold
 
 .rollover
-  :padding 0px
-  :margin 0px
-  :margin-right 1em
-  :display block
-  :clear none
-  :float left
-  :height 18px
-  :width 18px
-  :overflow hidden
-  :border none
-
+  padding: 0px
+  margin: 0px
+  margin-right: 1em
+  display: block
+  clear: none
+  float: left
+  height: 18px
+  width: 18px
+  overflow: hidden
+  border: none
 
 a.rollover a.rollover:visited a.rollover:active
-  :padding 0px
-  :margin 0px
-  :margin-right 1em
-  :display block
-  :height 18px
-  :width 18px
-  :overflow hidden
-  :border none
+  padding: 0px
+  margin: 0px
+  margin-right: 1em
+  display: block
+  height: 18px
+  width: 18px
+  overflow: hidden
+  border: none
 
+a.rollover:hover
+  display: block
+  text-indent: -18px
+  background-color: inherit !important
 
-a.rollover:hover 
-  :display block
-  :text-indent -18px
-  :background-color inherit !important
-
-    
 .action_menu
-  :font-size 11px
-  :margin 0px
-  :padding 3px 10px
-  :background-color = !sglight_content_text_color
+  font-size: 11px
+  margin: 0px
+  padding: 3px 10px
+  background-color: $sglight_content_text_color
   ul
     li
-      :list-style-type none 
-  
-  :clear both
+      list-style-type: none
+  clear: both
   +clearfix
   .action_menu_header_left
-    :float left
-    :text-align left
-    :margin 0px
+    float: left
+    text-align: left
+    margin: 0px
     .author
-      :font-size 9px
-      :font-style italic
-
+      font-size: 9px
+      font-style: italic
   .action_menu_header_right
-    :float right
-    :text-align right
-    :margin 0px
-    :padding-right 10px
+    float: right
+    text-align: right
+    margin: 0px
+    padding-right: 10px
     .author
-      :font-size 9px
-      :font-style italic
+      font-size: 9px
+      font-style: italic
     +action_menu_tab
     ul
       li
         a, a:visited, a:active
-          :border-bottom-width 2px
-          :border-style solid
+          border-bottom-width: 2px
+          border-style: solid
         a.rollover
-          :border-style none
+          border-style: none
           img
-            :border-style none
-
+            border-style: none
   .action_menu_left
-    :float left
-    :display table-cell
+    float: left
+    display: table-cell
     +action_menu_tab
-    :text-align left
+    text-align: left
   .action_menu_right
-    :float right
-    :display table-cell
-    :text-align right
+    float: right
+    display: table-cell
+    text-align: right
     +action_menu_tab
-  
   ul.menu
-    :list-style-image none
-    :list-style-position outside
-    :list-style-type none
-    
+    list-style-image: none
+    list-style-position: outside
+    list-style-type: none
   ul.subsection_tabs
-    :list-style-image none
-    :list-style-position outside
-    :list-style-type none
-    :margin 0 10px 2px 0px
-    :padding 0px 10px
+    list-style-image: none
+    list-style-position: outside
+    list-style-type: none
+    margin: 0 10px 2px 0px
+    padding: 0px 10px
     li
-      :margin-top 3px
+      margin-top: 3px
     li.tab
-      :float left
-      :background url("tabs/left.gif") no-repeat left top
-      :padding 0px 8px 0px 8px
-      :text-align center
+      float: left
+      background: url("tabs/left.gif") no-repeat left top
+      padding: 0px 8px 0px 8px
+      text-align: center
     li.active
-      :background url("tabs/left_on.gif") no-repeat left top !important
+      background: url("tabs/left_on.gif") no-repeat left top !important
     a
-      :float none
-      :display block
-      :background url("tabs/right.gif") no-repeat right top
-      :padding 0px 8px 0px 2px
+      float: none
+      display: block
+      background: url("tabs/right.gif") no-repeat right top
+      padding: 0px 8px 0px 2px
     a.active
-      :background url("tabs/right_on.gif") no-repeat right top !important
-
+      background: url("tabs/right_on.gif") no-repeat right top !important
     a:hover
-      :text-decoration underline !important
-      :color = !sglight_brown !important
+      text-decoration: underline !important
+      color: $sglight_brown !important

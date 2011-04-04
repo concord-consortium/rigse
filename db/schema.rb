@@ -9,15 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314151621) do
+ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+    t.boolean  "allow_default_class"
   end
 
   create_table "attached_files", :force => true do |t|
@@ -123,6 +124,13 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
     t.integer  "exit_status"
   end
 
+  create_table "collaborations", :force => true do |t|
+    t.integer  "bundle_content_id"
+    t.integer  "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",           :limit => 16777215
     t.string   "token"
@@ -141,8 +149,8 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
     t.datetime "updated_at"
     t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
-    t.boolean  "valid_xml"
-    t.boolean  "empty"
+    t.boolean  "valid_xml",                              :default => false
+    t.boolean  "empty",                                  :default => true
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
   end
@@ -152,6 +160,7 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "in_progress_bundle_id"
   end
 
   create_table "dataservice_console_contents", :force => true do |t|
@@ -326,25 +335,25 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
-    t.integer  "y_axis_min",                               :default => 0
-    t.integer  "y_axis_max",                               :default => 5
-    t.integer  "x_axis_min",                               :default => 0
-    t.integer  "x_axis_max",                               :default => 60
     t.string   "title"
-    t.string   "x_axis_label"
-    t.string   "x_axis_units"
+    t.float    "y_axis_min",                               :default => 0.0
+    t.float    "y_axis_max",                               :default => 5.0
+    t.float    "x_axis_min"
+    t.float    "x_axis_max"
+    t.string   "x_axis_label",                             :default => "Time"
+    t.string   "x_axis_units",                             :default => "s"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled"
-    t.boolean  "draw_marks"
-    t.boolean  "connect_points"
-    t.boolean  "autoscale_enabled"
-    t.boolean  "ruler_enabled"
-    t.boolean  "show_tare"
-    t.boolean  "single_value"
-    t.integer  "probe_type_id"
+    t.boolean  "multiple_graphable_enabled",               :default => false
+    t.boolean  "draw_marks",                               :default => false
+    t.boolean  "connect_points",                           :default => true
+    t.boolean  "autoscale_enabled",                        :default => false
+    t.boolean  "ruler_enabled",                            :default => false
+    t.boolean  "show_tare",                                :default => false
+    t.boolean  "single_value",                             :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -475,14 +484,14 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",             :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.text     "prompt"
     t.string   "default_response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
@@ -543,10 +552,10 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
+    t.string   "name"
+    t.text     "description"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -562,7 +571,10 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.string   "save_path"
   end
+
+  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
 
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
@@ -782,12 +794,12 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "page_id"
-    t.integer  "position"
     t.integer  "embeddable_id"
     t.string   "embeddable_type"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
   end
 
@@ -796,14 +808,14 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "section_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
     t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
@@ -821,7 +833,7 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   end
 
   create_table "portal_clazzes", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",          :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "start_time"
@@ -834,6 +846,7 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "section"
+    t.boolean  "default_class",               :default => false
   end
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
@@ -1601,14 +1614,15 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
   create_table "portal_offerings", :force => true do |t|
-    t.string   "uuid",          :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "status"
     t.integer  "clazz_id"
     t.integer  "runnable_id"
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",                      :default => true
+    t.boolean  "active",                         :default => true
+    t.boolean  "default_offering",               :default => false
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -2001,14 +2015,14 @@ ActiveRecord::Schema.define(:version => 20110314151621) do
   end
 
   create_table "sections", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "description"
     t.integer  "user_id"
-    t.integer  "position"
     t.integer  "activity_id"
     t.string   "uuid",               :limit => 36
+    t.string   "name"
+    t.text     "description"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
   end

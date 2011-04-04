@@ -44,6 +44,18 @@ class Portal::Clazz < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
 
   class <<self
+    def default_class
+      find_or_create_default_class
+    end
+
+    def find_or_create_default_class
+      clazz = find :all, :conditions => ['default_class = ?', true || 1]
+      if clazz.blank?
+        clazz = Portal::Clazz.create :name => "Default Class", :default_class => true, :class_word => "default"
+      end
+      clazz
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end
@@ -179,6 +191,10 @@ class Portal::Clazz < ActiveRecord::Base
     teachers.include? teacher
   end
   alias is_teacher? is_user?
+
+  def is_student?(_user)
+    students.include? _user.portal_student
+  end
 
   # def changeable?(_user)
   #   return true if virtual? && is_user?(_user)

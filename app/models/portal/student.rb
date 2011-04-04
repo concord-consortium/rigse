@@ -17,6 +17,9 @@ class Portal::Student < ActiveRecord::Base
   
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz", :source => :clazz
   
+  has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "student_id"
+  has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content 
+
   [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
   
   include Changeable
