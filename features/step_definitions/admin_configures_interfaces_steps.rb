@@ -17,6 +17,7 @@ Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/
     fill_in("login", :with => username)
     fill_in("password", :with => password)
     click_button("Login")
+    @cuke_current_username = username
     #click_button("Submit")
   end
 end
