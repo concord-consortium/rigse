@@ -84,3 +84,7 @@ config/preinitializer.rb
 local_files
 config/newrelic.yml
 public/system/attachments/*
+.bundle/
+config/tag_defaults.yml
+public/sparks-content/
+public/stylesheets/workgroup.css
