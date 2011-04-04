@@ -77,7 +77,7 @@ class Reports::Detail < Reports::Excel
         inv = l.offering.runnable
         next unless @investigations.include?(inv)
 
-        @report_utils[l.offering] ||= Report::Util.new(l.offering)
+        @report_utils[l.offering] ||= Report::Util.new(l.offering,false, true)
         # <=================================================>
         total_assessments = @report_utils[l.offering].embeddables.size
         assess_completed = @report_utils[l.offering].saveables({:learner => l})
