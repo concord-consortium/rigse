@@ -14,7 +14,8 @@
 
 Factory.define :portal_teacher, :class => Portal::Teacher do |f|
   f.association   :user, :factory => :user
-  f.clazzes []
+  f.schools { |schools| [ schools.association(:portal_school)] }
+  f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
 end
 
 # a teacher with one class in a real school

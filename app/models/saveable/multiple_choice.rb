@@ -9,7 +9,9 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   has_many :answers, :order => :position, :class_name => "Saveable::MultipleChoiceAnswer"
   
   [:prompt, :name, :choices].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
-  
+
+  include Saveable::Saveable
+
   def answer
     if answered?
       answers.last.answer

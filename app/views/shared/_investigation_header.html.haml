@@ -15,8 +15,7 @@
 
 #add_menu.dropdown
   %ul
-    %li= link_to_remote "add new activity", :url=>add_activity_investigation_path(investigation)
-
+    %li= link_to "add new activity", add_activity_investigation_path(@investigation)
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
     .action_menu_header_left

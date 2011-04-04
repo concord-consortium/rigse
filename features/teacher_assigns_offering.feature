@@ -2,10 +2,10 @@ Feature: Teacher can assign an offering to a class
   So my class can perform a task
   As a teacher
   I want to assign offerings to a class
-  
+
   Background:
     Given The default project and jnlp resources exist using factories
-  
+
   @selenium
   Scenario: Teacher can assign an investigation to a class
     Given the following teachers exist:
@@ -19,7 +19,7 @@ Feature: Teacher can assign an offering to a class
       | Test Investigation  | teacher   |
     When I assign the investigation "Test Investigation" to the class "My Class"
     Then the investigation named "Test Investigation" should have "offerings_count" equal to "1"
-    
+
   @selenium
   Scenario: Teacher can assign a resource page to a class
     Given the following teachers exist:

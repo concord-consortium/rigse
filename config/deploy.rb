@@ -14,6 +14,7 @@ require 'capistrano/ext/multistage'
 require 'haml'
 
 require 'lib/yaml_editor'
+require "bundler/capistrano"
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
@@ -155,13 +156,20 @@ namespace :db do
     upload("config/initializers/site_keys.rb", "#{deploy_to}/shared/config/initializers/site_keys.rb", :via => :sftp)
   end
 
-end
-
-namespace :paperclip do 
-  desc "Pulls Paperclip images"
-  task :fetch_attachments, :roles => :web do 
-    download "#{shared_path}/system/attachments", "public/system/attachments/", :via => :sftp, :recursive => true
+  desc "Pulls uploaded attachments from the remote server"
+  task :fetch_remote_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync -avx --delete #{domain}:#{remote_dir} #{local_dir}"
   end
+  
+  desc "Pushes uploaded attachments to the remote server"
+  task :push_local_attachments, :roles => :web do 
+    remote_dir  = "#{shared_path}/system/attachments/"
+    local_dir   = "public/system/attachments/"
+    run_locally "rsync -avx --delete #{local_dir} #{domain}:#{remote_dir}"
+  end
+
 end
 
 namespace :deploy do
@@ -245,7 +253,7 @@ namespace :deploy do
   
   desc "Create asset packages for production" 
   task :create_asset_packages, :roles => :app do
-    run "cd #{deploy_to}/current && compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
+    run "cd #{deploy_to}/current && bundle exec compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compact --force"
     run "cd #{deploy_to}/current && rake asset:packager:build_all --trace"
   end
   
@@ -544,8 +552,9 @@ namespace :convert do
   # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
   desc "Recalculate the 'offerings_count' field for runnable objects"
   task :reset_offering_counts, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
+    # remove investigation cache files
+    sudo "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
+    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
 end
