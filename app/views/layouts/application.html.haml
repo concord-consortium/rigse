@@ -55,7 +55,7 @@
           / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
           = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
         - elsif @activity
-          = render :partial => 'shared/accordian_nav'
+          = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@section,@page]}
         - elsif @portal_school
           = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
         - elsif @portal_teacher && (@portal_teacher.user == current_user)
