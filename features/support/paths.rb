@@ -44,6 +44,8 @@ module NavigationHelpers
     when /the resource page for "(.*)"/
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     # accept paths too:
+    when /the route (.+)/
+      $1
     when /\/[\S+\/]+/
       page_name
 
