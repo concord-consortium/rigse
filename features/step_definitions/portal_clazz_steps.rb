@@ -5,16 +5,16 @@ Given /^the class "([^"]*)" has the class word "([^"]*)"$/ do |class_name, class
   clazz.save
 end
 
-Then /^I should be on the class edit page for "([^"]*)"$/ do |name|
-  clazz = Portal::Clazz.find_by_name(name)
-  current_path = URI.parse(current_url).path
-  expected = edit_portal_clazz_path(clazz)
-  if current_path.respond_to? :should
-    current_path.should == expected
-  else
-    assert_equal expected, current_path
-  end
-end
+#Then /^I should be on the class edit page for "([^"]*)"$/ do |name|
+  #clazz = Portal::Clazz.find_by_name(name)
+  #current_path = URI.parse(current_url).path
+  #expected = edit_portal_clazz_path(clazz)
+  #if current_path.respond_to? :should
+    #current_path.should == expected
+  #else
+    #assert_equal expected, current_path
+  #end
+#end
 
 
 #When /^I visit the class page for "([^"]*)"$/ do |name|
