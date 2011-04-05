@@ -15,7 +15,7 @@
   %ul
     %li= link_to "add new section", add_section_activity_path(activity)
 
-- if (teacher_only? activity)
+- if (for_teacher_only? activity)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"

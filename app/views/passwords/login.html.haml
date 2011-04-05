@@ -1,6 +1,6 @@
-= title "Forgot Your Password?"
+= title_tag "Forgot Your Password?"
 - form_tag({ :action => "create_by_login" }) do
-  %div{:id => dom_id_for(@user, :form), :class =>"action_menu"}       
+  %div{:id => dom_id_for(@user, :form), :class =>"action_menu"}
     .action_menu
       .action_menu_header_left
         .padded_content
@@ -14,7 +14,7 @@
       .aligned
         %ul.quiet_list
           %li= submit_tag "Submit"
-      
+
     %p
       Forgot your username?
     %p
