@@ -1,3 +1,4 @@
+@selenium
 Feature: Limit access to restricted routes
 
 Only logged in users with appropriate roles should be able to see and change resources in the portal.
