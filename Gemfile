@@ -20,9 +20,7 @@ source :gemcutter
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass",              "0.8.17"
   gem "jnlp",                 "0.6.2"
-  # use https://github.com/zdennis/activerecord-import istead of
-  # ar-extensions
-  # gem "ar-extensions",        "~> 0.9.1"
+  gem "ar-extensions",        "~> 0.9.1"
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
