@@ -12,7 +12,8 @@
         -if portal_clazz.changeable? current_user
           %ul.menu
             - edit_url = edit_portal_clazz_url(portal_clazz)
-            %li.menu=link_to(image_tag('cog.png'),edit_url, {:class => "button" })
+            - preview_url = preview_portal_clazz_url(portal_clazz)
+            %li.menu=link_to("preview",preview_url, {:class => "button" })
             %li.menu=link_to("edit",edit_url,{:class => "button" })
       %div #{portal_clazz.description}
     

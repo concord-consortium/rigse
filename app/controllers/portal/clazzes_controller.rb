@@ -31,10 +31,24 @@ class Portal::ClazzesController < ApplicationController
     @teacher = @portal_clazz.parent
     @offerings = substitute_default_class_offerings(@portal_clazz.active_offerings)
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.haml
       format.xml  { render :xml => @portal_clazz }
     end
   end
+
+  # GET /portal_clazzes/1/preview
+  # GET /portal_clazzes/1/preview.xml
+  def preview
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz.refresh_saveable_response_objects
+    @teacher = @portal_clazz.parent
+    @offerings = substitute_default_class_offerings(@portal_clazz.active_offerings)
+    respond_to do |format|
+      format.html # preview.html.haml
+      format.xml  { render :xml => @portal_clazz }
+    end
+  end
+
 
   # GET /portal_clazzes/new
   # GET /portal_clazzes/new.xml

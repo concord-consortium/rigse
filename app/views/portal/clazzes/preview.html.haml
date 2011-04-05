@@ -1,0 +1,8 @@
+%h1 ITSI-SU Portal — Student Preview
+%p
+  %em This is a preview of how your students will see the activities when they sign in.
+- if @portal_clazz.semester
+  %h2{:style => "margin-top: 1.5em;"} #{@portal_clazz.semester.name} - #{@portal_clazz.name}
+- else
+  %h2{:style => "margin-top: 1.5em;"} #{@portal_clazz.name}
+= render :partial => 'shared/offerings_for_student', :locals => { :offerings => @portal_clazz.offerings }

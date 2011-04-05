@@ -134,7 +134,8 @@ ActionController::Routing::Routes.draw do |map|
         :edit_offerings => [:get,:post],
         :add_teacher => [:post],
         :remove_teacher => [:delete],
-        :class_list => :get
+        :class_list => :get,
+        :preview => :get
     }
     portal.resources :clazzes do |clazz|
       clazz.resources :student_clazzes
