@@ -41,6 +41,10 @@ public/stylesheets/screen.css
 public/stylesheets/readme.css
 public/stylesheets/teacher_overlay.css
 public/stylesheets/please_wait.css
+public/stylesheets/drop_down.css
+public/stylesheets/reports.css
+public/stylesheets/sass/app.sass
+public/stylesheets/teacher_overlay.css
 public/jnlp/*/*
 config/jnlp_objects/*/*
 config/jnlp_objects/*.yaml
