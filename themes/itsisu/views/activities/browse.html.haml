@@ -1,3 +1,6 @@
+-if current_user_can_author
+  %li= link_to "create #{Activity.display_name}", new_activity_path
+
 #itsi_su_bin
   %table
     %tr

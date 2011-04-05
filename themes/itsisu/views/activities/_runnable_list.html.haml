@@ -1,4 +1,6 @@
 -#TODO: Add search results param to list_bins?
+-if current_user_can_author
+  .button= link_to "create #{Activity.display_name}", new_activity_path
 - bins = ( defined? activities ) ? Activity.list_bins({:activities => activities}) : Activity.list_bins
 -#- bins = Activity.list_bins
 - bin_keys = bins.keys.sort

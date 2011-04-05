@@ -54,6 +54,7 @@ development: &id003
     :family: has-otrunk
   :valid_sakai_instances:
   :use_adhoc_workgroups: true
+  :teachers_can_author: true
 test: *id003
 production: *id003
 staging: *id003

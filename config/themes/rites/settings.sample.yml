@@ -46,7 +46,7 @@ development: &id003
     - http://portfolio.ri.net
     - https://test.portfolio.ri.net/
     - https://portfolio.ri.net/
-
+  :teachers_can_author: false
 test: *id003
 staging: *id003
 cucumber: *id003

@@ -39,6 +39,7 @@ development: &non_production_settings
     :family: all-otrunk-snapshot
     :version: snapshot
   :dont_sanitize_xhtml: true
+  :teachers_can_author: true
   :tiny_mce:
     :buttons1:
       - bold,italic,underline

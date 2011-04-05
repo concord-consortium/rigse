@@ -44,6 +44,7 @@ development: &id003
     :server: concord
     :family: all-otrunk-snapshot
   :valid_sakai_instances:
+  :teachers_can_author: true
 
 test: *id003
 production: *id003

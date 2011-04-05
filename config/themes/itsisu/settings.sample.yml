@@ -39,6 +39,7 @@ production: &prod
     :login: knowuh
     :email: knowuh@gmail.com
   :enable_default_users: true
+  :teachers_can_author: true
   :states_and_provinces:
     - RI
     - MA
