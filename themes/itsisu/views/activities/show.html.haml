@@ -5,6 +5,7 @@
   = run_link_for(@activity)
 - @activity.sections.each do |section|
   - next unless section.is_enabled?
+  %h4=section.name
   - section.pages.each do |page|
     - next unless page.is_enabled?
     - page.page_elements.each do |element|
