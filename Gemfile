@@ -18,7 +18,7 @@ source :gemcutter
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
-  gem "compass",              "0.8.17"
+  gem "compass",              "~> 0.10.0"
   gem "jnlp",                 "0.6.2"
   # use https://github.com/zdennis/activerecord-import istead of ar-extensions
   # activerecord-import ONLY WORKS WITH RAILS 3!
