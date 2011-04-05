@@ -32,7 +32,8 @@ end
 Then /^I should see the following form checkboxes:$/ do |checkbox_table|
   checkbox_table.hashes.each do |hash|
     if hash[:checked] =~ /true/
-      Then "the \"#{hash[:name]}\" checkbox should be checked"
+      field_checked = find_field(hash[:name])['checked']
+      field_checked.should == "true"
     else
       Then "the \"#{hash[:name]}\" checkbox should not be checked"
     end
