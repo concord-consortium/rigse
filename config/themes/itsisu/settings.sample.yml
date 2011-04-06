@@ -1,7 +1,7 @@
 ---
 production: &prod
   :help_email: itsisu@concord.org
-  :site_url: http://itsisu.units.concord.org
+  :site_url: http://itsisu.activitys.concord.org
   :active_school_levels:
     - "2"
     - "3"
@@ -31,7 +31,7 @@ production: &prod
     - all-otrunk-snapshot
   :description:
   :site_district: ITSISU district
-  :top_level_container_name: unit
+  :top_level_container_name: activity
   :site_name: ITSISU
   :default_admin_user:
     :first_name: Noah
