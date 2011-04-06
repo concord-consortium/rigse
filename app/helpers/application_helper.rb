@@ -11,10 +11,6 @@ module ApplicationHelper
     APP_CONFIG[:top_level_container_name] || "investigation"
   end
 
-  def settings_for(key)
-    return APP_CONFIG[key]
-  end
-
   #
   # dom_for_id generates a dom id value for any object that returns an integer when sent an "id" message
   #
@@ -1228,6 +1224,10 @@ module ApplicationHelper
     end
   end
   
+  def settings_for(key)
+    Admin::Project.settings_for(key)
+  end
+
   def current_user_can_author
     return true if current_user.has_role? "author" 
     if settings_for(:teachers_can_author)
