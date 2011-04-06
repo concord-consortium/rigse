@@ -74,4 +74,3 @@ module ActionView
   end
 end
 
-require 'cloneable'
