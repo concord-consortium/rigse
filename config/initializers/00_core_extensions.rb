@@ -73,4 +73,6 @@ module ActionView
     end
   end
 end
-
+class ActiveRecord::Base
+  include Cloneable
+end
