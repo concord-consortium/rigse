@@ -94,7 +94,7 @@ class InvestigationsController < AuthoringController
     @domain_id = param_find(:domain_id)
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
-    pagenation = params[:page]
+    pagenation = params[:page] == "" ? 1 : params[:page]
     if (pagenation)
        @include_drafts = param_find(:include_drafts)
     else
@@ -102,7 +102,7 @@ class InvestigationsController < AuthoringController
     end
 
     @sort_order = param_find(:sort_order, true)
-    @include_usage_count = param_find(:include_usage_count, true)
+    @include_usage_count = param_find(:include_usage_count)
 
     search_options = {
       :name => @name,

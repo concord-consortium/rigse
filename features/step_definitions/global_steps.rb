@@ -54,3 +54,10 @@ end
 Given /^I debug$/ do
   debugger
 end
+
+Then /^the checkbox for "([^"]*)" should be checked$/ do |label|
+  field_checked = find_field(label)['checked']
+  field_checked.should == "true"
+end
+
+
