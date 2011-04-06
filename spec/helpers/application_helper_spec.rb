@@ -69,7 +69,7 @@ describe ApplicationHelper do
 
     describe "when the current user is not an author" do
       before(:each) do
-        @user = mock_model(User)
+        @user = mock_model(User, :teacher => nil)
         @user.stub!(:has_role?).with("author").and_return(false)
         stub!(:current_user).and_return(@user)
       end
