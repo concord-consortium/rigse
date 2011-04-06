@@ -40,6 +40,9 @@ development: &non_production_settings
     :version: snapshot
   :dont_sanitize_xhtml: true
   :teachers_can_author: true
+  :teachers_can_author: true
+  :require_activity_descriptions: true
+  :unique_activity_names: true
   :tiny_mce:
     :buttons1:
       - bold,italic,underline

@@ -1,6 +1,10 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
   include TagDefaults
+  MUST_HAVE_NAME = "Your activity must have a name"
+  MUST_HAVE_DESCRIPTION = "Please give your activity a description."
+  MUST_HAVE_UNIQUE_NAME = "Activity '%{value}' already exists. Please pick a unique name."
+
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
@@ -56,11 +60,20 @@ class Activity < ActiveRecord::Base
   acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
   acts_as_list :scope => :investigation
 
+
+  validates_presence_of :name, :messge => Activity::MUST_HAVE_NAME 
+  validates_presence_of :description,
+    :if => Proc.new { |a| Admin::Project.require_activity_descriptions },
+    :message => Activity::MUST_HAVE_DESCRIPTION
+  validates_uniqueness_of :name,
+    :if => Proc.new { |a| Admin::Project.unique_activity_names },
+    :message => Activity::MUST_HAVE_UNIQUE_NAME
+
   include Noteable # convinience methods for notes...
   include Changeable
   include TreeNode
   include Publishable
-
+  include HasPedigree
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
@@ -158,54 +171,6 @@ class Activity < ActiveRecord::Base
       }
     )
   end
-
-@@opening_xhtml= <<HEREDOC
-  <h3>Procedures</h3>
-  <p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
-  <p></p>
-  <h4>What will you be doing?</h4>
-  <p><em>How do you activate and assess students’ prior knowledge and connect it to this new learning?</em></li>
-  <p></p>
-  <p><em>How do you get students engaged in this lesson?</em></li>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p><em>Students will discuss the following driving question:</em></p>
-  <p></p>
-  <p><em>Key components:</p>
-  <p></p>
-  <p><em>Starting conditions:</p>
-  <p></p>
-  <p><em>Ability to change variables:</p>
-  <p></p>
-HEREDOC
-
-@@engagement_xhtml= <<HEREDOC
-  <h3>Engagement</h3>
-  <h4>What will you be doing?</h4>
-  <p><em>What questions can you pose to encourage students to take risks and to deepen students’ understanding?</em></p>
-  <p></p>
-  <p><em>How do you facilitate student discourse?</em></p>
-  <p></p>
-  <p><em>How do you facilitate the lesson so that all students are active learners and reflective during this lesson?</em></p>
-  <p></p>
-  <p><em>How do you monitor students’ learning throughout this lesson?</em></p>
-  <p></p>
-  <p><em>What formative assessment is imbedded in the lesson?</em></p>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p></p>
-HEREDOC
-
-@@closure_xhtml= <<HEREDOC
-  <h3>Closure</h3>
-  <h4>What will you be doing?</h4>
-  <p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
-  <p></p>
-  <p><em>What opportunities do you provide for students to share their understandings of the task(s)?</em></p>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p></p>
-HEREDOC
 
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)

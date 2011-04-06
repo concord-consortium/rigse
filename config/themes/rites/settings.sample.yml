@@ -47,6 +47,8 @@ development: &id003
     - https://test.portfolio.ri.net/
     - https://portfolio.ri.net/
   :teachers_can_author: false
+  :require_activity_descriptions: false
+  :unique_activity_names: false
 test: *id003
 staging: *id003
 cucumber: *id003

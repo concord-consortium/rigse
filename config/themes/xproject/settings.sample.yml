@@ -45,6 +45,8 @@ development: &id003
     :family: all-otrunk-snapshot
   :valid_sakai_instances:
   :teachers_can_author: true
+  :require_activity_descriptions: false
+  :unique_activity_names: false
 
 test: *id003
 production: *id003

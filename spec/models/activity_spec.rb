@@ -6,17 +6,60 @@ describe Activity do
       :name => "test activity",
       :description => "new decription"
     }
+    @missing_description = {
+      :name => "test activity"
+    }
+    @missing_name = {
+      :description => "new decription"
+    }
   end
 
-  it "should create a new instance given valid attributes" do
-    Activity.create!(@valid_attributes)
+  describe "create" do
+    describe "validations" do
+      it "should create a new instance given valid attributes" do
+        Activity.create!(@valid_attributes)
+      end
+      
+      describe "when unique names are required" do
+        before(:each) do
+          Admin::Project.stub!(:unique_activity_names).and_return(true)
+        end
+        it "it should be valid when it has a unique name" do
+          act_a = Activity.create(@valid_attributes)
+          act_a.should be_valid
+        end
+        it "it shouldn't be valid when the name is not unique" do
+          act_a = Activity.create(@valid_attributes)
+          act_a.should be_valid
+          act_b = Activity.create(@valid_attributes)
+          act_b.should_not be_valid
+          act_b.errors[:name].should_not be_nil
+        end
+      end
+      
+
+      describe "when descriptions are required" do
+        before(:each) do
+          Admin::Project.stub!(:require_activity_descriptions).and_return(true)
+        end
+        it "should be invalid when the descritpion is missing" do
+          act_a = Activity.create(@missing_description)
+          act_a.should_not be_valid
+          act_a.errors[:description].should  == Activity::MUST_HAVE_DESCRIPTION
+        end
+        it "should be valid when the descritpion is present" do
+          act_a = Activity.create(@valid_attributes)
+          act_a.should be_valid
+        end
+      end
+    end
   end
   
   
   ##
   ## TODO: Move to publishable_spec ?
   ##
-  describe "should be publishable and" do
+  describe "publication rules" do
     before (:each) do
       @activity = Activity.create!(@valid_attributes)
     end
@@ -40,7 +83,7 @@ describe Activity do
   ##
   ## TODO: Move to taggable_spec ?
   ##
-  describe "should be taggable and" do
+  describe "tagging rules" do
     
     before (:each) do
       @activity = Activity.create!(@valid_attributes)

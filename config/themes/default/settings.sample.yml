@@ -44,7 +44,8 @@ development: &id003
     :version: snapshot
     :server: concord-current-sig
     :family: all-otrunk-snapshot
-
+  :require_activity_descriptions: false
+  :unique_activity_names: false
 test: *id003
 staging: *id003
 cucumber: *id003

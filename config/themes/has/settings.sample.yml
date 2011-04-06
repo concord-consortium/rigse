@@ -55,6 +55,8 @@ development: &id003
   :valid_sakai_instances:
   :use_adhoc_workgroups: true
   :teachers_can_author: true
+  :require_activity_descriptions: false
+  :unique_activity_names: false
 test: *id003
 production: *id003
 staging: *id003
