@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/ghazel/ar-extensions.git
+  revision: 72bcb91e582129695c1c389cca608a4e42380b0a
+  specs:
+    ar-extensions (0.9.3)
+      activerecord (~> 2.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -14,8 +21,6 @@ GEM
       activesupport (= 2.3.11)
     activesupport (2.3.11)
     acts-as-taggable-on (2.0.6)
-    ar-extensions (0.9.3)
-      activerecord (~> 2.1)
     arrayfields (4.7.4)
     builder (3.0.0)
     capistrano (2.5.19)
@@ -68,6 +73,7 @@ GEM
       mime-types (>= 1.15)
     haml (3.0.25)
     highline (1.6.1)
+    hirb (0.4.0)
     hpricot (0.6.164)
     httpclient (2.1.5.2)
     jnlp (0.6.2)
@@ -145,7 +151,9 @@ GEM
     syntax (1.0.0)
     term-ansicolor (1.0.5)
     uuidtools (2.0.0)
+    what_methods (1.0.1)
     will_paginate (2.3.15)
+    wirble (0.1.3)
 
 PLATFORMS
   ruby
@@ -154,7 +162,7 @@ DEPENDENCIES
   RedCloth (~> 4.1.1)
   aasm (~> 2.0.2)
   acts-as-taggable-on
-  ar-extensions (~> 0.9.1)
+  ar-extensions (~> 0.9.3)!
   arrayfields
   capistrano-ext
   capybara (~> 0.3.8)
@@ -170,6 +178,7 @@ DEPENDENCIES
   grit (~> 2.0.0)
   haml (~> 3.0.25)
   highline
+  hirb
   hpricot (= 0.6.164)
   httpclient (~> 2.1.5.2)
   jnlp (= 0.6.2)
@@ -191,4 +200,6 @@ DEPENDENCIES
   spreadsheet
   syntax (~> 1.0)
   uuidtools (~> 2.0.0)
+  what_methods
   will_paginate (~> 2.3.6)
+  wirble
