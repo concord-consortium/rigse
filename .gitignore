@@ -95,3 +95,4 @@ public/stylesheets/sliding_doors_tabs.css
 public/activities/
 .bundle/
 local_files
+skip-provisioning
