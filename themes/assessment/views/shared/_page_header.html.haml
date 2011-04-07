@@ -1,6 +1,6 @@
 #add_menu.dropdown
   %ul
-    - Page.element_types.each do |type|
+    - [Embeddable::MwModelerPage,Embeddable::NLogoModel,Embeddable::MultipleChoice,Embeddable::OpenResponse].each do |type|
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #actions_menu.dropdown
   %ul
