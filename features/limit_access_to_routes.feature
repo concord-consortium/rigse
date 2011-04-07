@@ -15,7 +15,6 @@ In NO case should the system allow:
   Background:
     Given The default project and jnlp resources exist using mocks
 
-  @selenium
   Scenario Outline: Anonymous user cant access dataservice routes
     Given I am not logged in
     When I visit the route <route>
@@ -30,7 +29,6 @@ In NO case should the system allow:
       | /dataservice/blobs             |
 
 
-  @selenium
   Scenario Outline: Admin user can accesss dataservice routes
     Given the following users exist:
       | login       | password       | roles                 |
@@ -47,7 +45,6 @@ In NO case should the system allow:
       | /dataservice/console_contents |
       | /dataservice/blobs            |
 
-	@selenium
   Scenario Outline: Anonymous user can't access portal listing routes:
     Given I am not logged in
     When I visit the route <route>
@@ -75,7 +72,6 @@ In NO case should the system allow:
       | /portal/offerings                          |
       | /portal/teachers                           |
 
-	@selenium
   Scenario Outline: Admin user can accesss portal listing routes
     Given the following users exist:
       | login        | password            | roles                |
@@ -105,7 +101,6 @@ In NO case should the system allow:
       | /portal/nces06_schools                     |
       | /portal/offerings                          |
 
-	@selenium
   Scenario Outline: Anonymous user can't access user listing routes:
     Given I am not logged in
     When I visit the route <route>
@@ -115,7 +110,6 @@ In NO case should the system allow:
       | route                                      |
       | /users                                     |
 
-	@selenium
   Scenario Outline: Admin user can accesss user listing routes
     Given the following users exist:
       | login        | password            | roles                |

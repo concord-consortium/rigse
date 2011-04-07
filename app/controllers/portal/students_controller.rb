@@ -55,6 +55,11 @@ class Portal::StudentsController < ApplicationController
   #
   # If everything gets created or referenced correctly a Portal::StudentClass is generated.
   #
+  # FIXME there is a lot of logic in here that uses :class_word to indicate this is a student
+  # registering themselves.  That makes it confusing and things break when the clazz_word is 
+  # not used when registering students.  It is also unsafe because a student could just signup
+  # to a class if they new the class id
+  #
   # POST /portal_students
   # POST /portal_students.xml
   #
@@ -88,14 +93,18 @@ class Portal::StudentsController < ApplicationController
       user_created = @user.save
       if user_created
         @user.activate!
-        @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
+        if current_project.allow_default_class
+          @portal_student = Portal::Student.create(:user_id => @user.id)
+        else
+          @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
+        end
       end
     end
     respond_to do |format|
-      if user_created && @portal_clazz && @portal_student && @grade_level
+      if user_created && @portal_clazz && @portal_student #&& @grade_level
         @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
 
-        if params[:clazz][:class_word]
+        if params[:clazz] && params[:clazz][:class_word]
           # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
           @user.update_security_questions!(@security_questions) if current_project.use_student_security_questions
 
@@ -113,7 +122,7 @@ class Portal::StudentsController < ApplicationController
         errors.each do |e|
           @user.errors.add(e[0],e[1]);
         end
-        if params[:clazz][:class_word]
+        if params[:clazz] && params[:clazz][:class_word]
           if current_project.use_student_security_questions
             @security_questions = SecurityQuestion.fill_array(@security_questions)
           end
@@ -232,6 +241,27 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
+  def confirm
+    @portal_clazz = find_clazz_from_params
+    if @portal_clazz.nil?
+      render :update do |page|
+        page.remove "invalid_word"
+        page.insert_html :top, "word_form", "<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_word", :duration => 1
+      end
+      return
+    end
+    @class_word = params[:clazz][:class_word]
+    render :update do |page|
+      page.remove "invalid_word"
+      page.insert_html :top, "word_form", :partial => "confirmation",
+        :locals => {:class_word => @class_word,
+                    :clazz      => @portal_clazz,
+                    :portal_student => Portal::Student.new}
+      page.visual_effect :BlindDown, "confirmation", :duration => 1
+    end
+  end
+
   protected
 
   def find_clazz_from_params
@@ -246,7 +276,9 @@ class Portal::StudentsController < ApplicationController
     when params[:clazz] && params[:clazz][:class_word] then
       Portal::Clazz.find_by_class_word(params[:clazz][:class_word])
     else
-      raise 'no class specified'
+      #raise 'no class specified'
+      # If no class is specified, assume default class to be used
+      Portal::Clazz.default_class
     end
    @portal_clazz
   end

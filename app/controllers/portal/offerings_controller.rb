@@ -1,6 +1,5 @@
 class Portal::OfferingsController < ApplicationController
 
-  layout 'report', :only => %w{report open_response_report multiple_choice_report separated_report}
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
 
@@ -36,7 +35,7 @@ class Portal::OfferingsController < ApplicationController
         else
           session[:put_path] = nil
         end
-        render 'page]/show', :layout => "layouts/run"
+        render 'pages/show', :layout => "layouts/run"
       }
 
       format.run_external_html   {
@@ -161,8 +160,9 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
 
     respond_to do |format|
-      format.html # report.html.haml
+      format.html { render :layout => 'report' }# report.html.haml
     end
+
   end
 
   def multiple_choice_report
@@ -170,7 +170,7 @@ class Portal::OfferingsController < ApplicationController
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
-      format.html # multiple_choice_report.html.haml
+      format.html { render :layout => 'report' }# multiple_choice_report.html.haml
     end
   end
 
@@ -179,7 +179,7 @@ class Portal::OfferingsController < ApplicationController
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
-      format.html # open_response_report.html.haml
+      format.html { render :layout => 'report' }# open_response_report.html.haml
     end
   end
 
@@ -191,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
 
     respond_to do |format|
-      format.html # report.html.haml
+      format.html { render :layout => 'report' }# report.html.haml
     end
   end
 
@@ -245,7 +245,6 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
-
   def setup_portal_student
     learner = nil
     if portal_student = current_user.portal_student
@@ -253,5 +252,51 @@ class Portal::OfferingsController < ApplicationController
       learner = @offering.find_or_create_learner(portal_student)
     end
     learner
+  end
+
+  def learners
+    @offering = Portal::Offering.find(params[:id])
+    @clazz = @offering.clazz
+    @learners = @clazz.students.map do |l|
+      {:name => l.name, :id => l.id, :have_confirmation => false}
+    end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @learners }
+      format.json { render :json => @learners}
+    end  
+  end
+
+  def check_learner_auth
+    learner_id = params[:learner_id]
+    password = params[:pw]
+      begin
+        student = Portal::Student.find(learner_id)
+        user = student.user
+        user = User.authenticate(user.login,password)
+        if user
+          render :status => 200, :text => 'ok'
+          return
+        end
+      rescue
+      end
+      render :status => 400, :text => 'could not authenticate'
+  end
+
+  # setup a collaboration for a workgroup on this offering
+  def start
+    @offering = Portal::Offering.find(params[:id])
+    if @offering
+      learner = setup_portal_student
+      bundle_logger = learner.bundle_logger
+      bundle_logger.start_bundle
+      students = params[:students] || ''
+      students = students.split(',').map { |s| Portal::Student.find(s) }
+      bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
+      bundle_logger.in_progress_bundle.save
+      render :status => 200, :text => "ok"
+    else
+      render :status => 500, :text => "problem loading offering"
+    end
   end
 end

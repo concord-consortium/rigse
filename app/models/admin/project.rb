@@ -210,6 +210,25 @@ class Admin::Project < ActiveRecord::Base
       [server, family, version]
     end
 
+    def notify_missing_setting(symbol)
+      logger.warn("undefined configuartion setting in config/setttings.yml: #{symbol.to_s}")
+    end
+    
+    def settings_for(symbol)
+      value = APP_CONFIG[symbol]
+      if value.nil? 
+        notify_missing_setting(symbol)
+      end
+      return APP_CONFIG[symbol]
+    end
+
+    def require_activity_descriptions
+      return settings_for(:require_activity_descriptions)
+    end
+
+    def unique_activity_names
+      return settings_for(:unique_activity_names)
+    end
   end
   
   def default_project?

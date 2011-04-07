@@ -15,8 +15,8 @@
             %li.remember
               = label_tag 'remember_me', 'Stay logged in', :class=>"right"
               = check_box_tag 'remember_me', '1'
-          %button.nontext.button
-            'Submit'
+          %button.nontext.button{ :type=>'submit' }
+            'Login'
           %p.forgot= link_to 'Forgot Password', forgot_password_path
     .col2
       %h3
@@ -31,8 +31,9 @@
       %h3
         Just want to Try the Units?
       %p
-        %a{ :href=>"/preview", :class=>'more' }
-          View our unit previews
+        =link_to "View our unit Previews", investigation_preview_list_path, {:class=>'more'}
+        -#%a{ :href=>"/preview", :class=>'more' }
+          -#View our unit previews
     %p.note
       %strong
         IMPORTANT!

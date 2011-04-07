@@ -7,7 +7,6 @@ describe ImagesController do
   end
   
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
     login_admin
   end
   

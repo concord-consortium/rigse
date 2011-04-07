@@ -1,81 +1,78 @@
-!itsi_green = #AAF53D
-!itsi_light_green = #ffffff
-!itsi_brown = #BEF56E
-!itsi_dark_brown = #5A9800
-!light_green = #ffffff
-!almost_white = #F2F8FC
-!container_box_color = #CBE1F2
-!container_box_hover_color = #BCD6EA
-!teacher_only_color = #eedddd 
-!selected_color = #ffffa0
-!black = #000000
-!almost_black = #101010
+$itsi_green: #aaf53d
+$itsi_light_green: white
+$itsi_brown: #bef56e
+$itsi_dark_brown: #5a9800
+$light_green: white
+$almost_white: #f2f8fc
+$container_box_color: #cbe1f2
+$container_box_hover_color: #bcd6ea
+$teacher_only_color: #eedddd
+$selected_color: #ffffa0
+$black: black
+$almost_black: #101010
 
-!itsi_content_text_color = !itsi_light_green
+$itsi_content_text_color: $itsi_light_green
 
-!dev_note_color =!itsi_brown
-!legend_color = !itsi_brown
-!dark_red = !itsi_brown
-!very_dark = !black
+$dev_note_color: $itsi_brown
+$legend_color: $itsi_brown
+$dark_red: $itsi_brown
+$very_dark: $black
 
-!text_input_color = !almost_white 
-!input_border_color = !black
-!input_color = !black
-!input_focus_color = !almost_white
+$text_input_color: $almost_white
+$input_border_color: $black
+$input_color: $black
+$input_focus_color: $almost_white
 
-!cc_dark_orange = #eb8723
-!cc_light_orange = #f4b626
-!cc_medium_yellow = #f9eec1
-!cc_light_yellow = #fef7e0
-!cc_butter = #fee9aa
-!cc_dark_blue = #3a878b
-!cc_med_blue = #8cbbb8
-!cc_light_blue = #bddfdf
-!cc_green = #75a643
+$cc_dark_orange: #eb8723
+$cc_light_orange: #f4b626
+$cc_medium_yellow: #f9eec1
+$cc_light_yellow: #fef7e0
+$cc_butter: #fee9aa
+$cc_dark_blue: #3a878b
+$cc_med_blue: #8cbbb8
+$cc_light_blue: #bddfdf
+$cc_green: #75a643
 
 =delete_links
-  a.delete:link 
-    :color = !dark_red
-  a.delete:active 
-    :color = !dark_red
-  a.delete:visited 
-    :color = !dark_red
-  a.delete:hover 
-    :color white
-    :background-color = !dark_red
-    
-=color_mixer(!fg,!bg,!link)
-  :color = !fg
-  :background-color = !bg
+  a.delete:link
+    color: $dark_red
+  a.delete:active
+    color: $dark_red
+  a.delete:visited
+    color: $dark_red
+  a.delete:hover
+    color: white
+    background-color: $dark_red
+
+=color_mixer($fg, $bg, $link)
+  color: $fg
+  background-color: $bg
   .selected
-    :color = !bg !important
-    :background-color = !fg !important
+    color: $bg !important
+    background-color: $fg !important
   a
-    :font-weight bold
-    :padding 0px
-    :background-color transparent
-    :color = !link
-
+    font-weight: bold
+    padding: 0px
+    background-color: transparent
+    color: $link
   a:hover
-    :color= !bg
-    :background-color = !link
-        
-
+    color: $bg
+    background-color: $link
 
 =left_nav_colors
-  +color_mixer(!itsi_dark_brown,white,!black)
+  +color_mixer($itsi_dark_brown, white, $black)
   a
-    :text-decoration none
+    text-decoration: none
   +delete_links
 
 =content_area_colors
-  +color_mixer(!black,white,!itsi_dark_brown)
+  +color_mixer($black, white, $itsi_dark_brown)
   +delete_links
 
 =top_nav_colors
-  +color_mixer(white,!cc_dark_orange,white)
+  +color_mixer(white, $cc_dark_orange, white)
   +delete_links
-  
+
 =bottom_nav_colors
-  +color_mixer(black,!cc_dark_orange,!cc_dark_blue)
+  +color_mixer(black, $cc_dark_orange, $cc_dark_blue)
   +delete_links

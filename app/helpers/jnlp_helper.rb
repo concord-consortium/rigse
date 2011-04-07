@@ -100,15 +100,19 @@ module JnlpHelper
     }
   end
   
+  def jnlp_testing_adaptor
+    @_jnlp_testing_adaptor ||= JnlpTestingAdaptor.new
+  end
+  
   def jnlp_testing_resources(xml, options = {})
     jnlp = jnlp_adaptor.jnlp
-    jnlp_for_testing = @jnlp_testing_adaptor.jnlp
+    jnlp_for_testing = jnlp_testing_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
         jnlp_jar(xml, resource, false)
       end
-      @jnlp_testing_adaptor.resource_jars.each do |resource|
+      jnlp_testing_adaptor.resource_jars.each do |resource|
         jnlp_jar(xml, resource)
       end
       system_properties(options).each do |property|

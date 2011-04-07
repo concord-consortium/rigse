@@ -18,10 +18,15 @@ source :gemcutter
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
-  gem "compass"
+  gem "compass",              "0.8.17"
   gem "jnlp",                 "0.6.2"
-  #gem "has_many_polymorphs",  "~> 2.13"
-  gem "ar-extensions",        "~> 0.9.1"
+  # use https://github.com/zdennis/activerecord-import istead of ar-extensions
+  # activerecord-import ONLY WORKS WITH RAILS 3!
+  # gem "activerecord-import", ">= 0.2.0"
+  # use ghazel's version which fixes the to_a log messages and adds mysql2 support
+  git "git://github.com/ghazel/ar-extensions.git" do
+    gem "ar-extensions",        "~> 0.9.3"
+  end
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
@@ -29,7 +34,7 @@ source :gemcutter
   gem "paperclip"
   gem "acts-as-taggable-on"
   gem "ruby-debug"
-
+  gem "nokogiri",             "~> 1.4.1"
 group :development do
   gem "highline"
 end
@@ -39,7 +44,7 @@ group :test do
   gem "cucumber",          "~>0.10.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber"))
   gem "cucumber-rails",    "~>0.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber-rails"))
   gem "database_cleaner",  "~>0.5.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/database_cleaner"))
-  gem "capybara",          "~>0.3.8" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
+  gem "capybara",          "~>0.4" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
   gem "rspec",             "~>1.3.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec"))
   gem "rspec-rails",       "~>1.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec-rails"))
   gem "factory_girl",      "= 1.2.3"
@@ -52,6 +57,7 @@ group :test do
   gem "launchy"
   # TODO: Use sport or not?
   gem "spork"
+  gem "delorean"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
   # gem "ZenTest",                  "= 4.1.4"

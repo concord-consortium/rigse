@@ -8,13 +8,9 @@
     = "Search #{Investigation.display_name.pluralize}"
     - unless local_assigns[:investigations_only]
       = " & #{ResourcePage.display_name.pluralize}"
-  .progress_container
-    #search_spinner.tiny{:style=>'display: none;'}
-      searching ...
-      = image_tag "ajax-loader.gif"
 
 - # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
-%form{ :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
+%form{:method => 'get',  :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
   - if local_assigns[:investigations_only]
     = hidden_field_tag 'investigations_only', true

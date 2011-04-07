@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110321171308) do
+ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -124,6 +124,13 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
     t.integer  "exit_status"
   end
 
+  create_table "collaborations", :force => true do |t|
+    t.integer  "bundle_content_id"
+    t.integer  "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",           :limit => 16777215
     t.string   "token"
@@ -142,8 +149,8 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
     t.datetime "updated_at"
     t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
-    t.boolean  "valid_xml"
-    t.boolean  "empty"
+    t.boolean  "valid_xml",                              :default => false
+    t.boolean  "empty",                                  :default => true
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
   end
@@ -153,6 +160,7 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "in_progress_bundle_id"
   end
 
   create_table "dataservice_console_contents", :force => true do |t|
@@ -371,6 +379,8 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "data_collector_id"
+    t.integer  "precision",                       :default => 2
+    t.integer  "width",                           :default => 1200
   end
 
   create_table "embeddable_drawing_tools", :force => true do |t|
@@ -807,8 +817,8 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -1604,14 +1614,15 @@ ActiveRecord::Schema.define(:version => 20110321171308) do
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
   create_table "portal_offerings", :force => true do |t|
-    t.string   "uuid",          :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "status"
     t.integer  "clazz_id"
     t.integer  "runnable_id"
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",                      :default => true
+    t.boolean  "active",                         :default => true
+    t.boolean  "default_offering",               :default => false
   end
 
   create_table "portal_school_memberships", :force => true do |t|

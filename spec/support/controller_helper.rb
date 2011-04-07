@@ -9,6 +9,23 @@
 #
 suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
 
+# This modification allows stubing helper methods when using integrate views
+# the template object isn't ready until the render method is called, so this code
+# adds a hook to be run before render is run.
+class ApplicationController
+  def before_render; end
+  def render(options=nil, extra_options={}, &bloc)
+    before_render
+    super
+  end
+
+  # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
+  # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
+  # when rails copies the instance variables from the controller to view.  This copying happens
+  # sometime during the render method (after before_render)
+  @@protected_instance_variables = %w(@mock_proxy)
+end
+
 #
 # Factory Generators
 #

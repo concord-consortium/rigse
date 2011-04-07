@@ -873,12 +873,6 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          # haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
-          if is_page_element
-            restrict_to 'admin' do
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
-            end
-          end
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
@@ -1199,4 +1193,18 @@ module ApplicationHelper
       end
     end
   end
+  
+  def settings_for(key)
+    Admin::Project.settings_for(key)
+  end
+
+  def current_user_can_author
+    return true if current_user.has_role? "author" 
+    if settings_for(:teachers_can_author)
+      return true unless current_user.teacher.nil?
+    end
+    # TODO add aditional can-author conditions
+    return false
+  end
+
 end
