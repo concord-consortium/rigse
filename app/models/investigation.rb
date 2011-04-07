@@ -270,7 +270,7 @@ class Investigation < ActiveRecord::Base
 
 
   def duplicate(new_owner)
-    @return_investigation = deep_clone :exclude => [:publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
+    @return_investigation = clone :exclude => [:publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
     @return_investigation.user = new_owner
     @return_investigation.name = "copy of #{self.name}"
     @return_investigation.deep_set_user(new_owner)

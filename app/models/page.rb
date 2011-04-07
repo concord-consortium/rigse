@@ -245,7 +245,7 @@ class Page < ActiveRecord::Base
   # maybe, but it will confuse authors
   #
   def duplicate
-    @copy = self.deep_clone
+    @copy = self.clone
     @copy.name = "" # allow for auto-numbering of pages
     @copy.section = self.section
     @copy.save

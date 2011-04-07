@@ -428,7 +428,7 @@ class InvestigationsController < AuthoringController
     if @investigation.changeable?(current_user)
       @original = clipboard_object(params)
       if (@original)
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+        @component = @original.clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'investigation_activities_list'

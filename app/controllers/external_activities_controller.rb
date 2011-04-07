@@ -184,7 +184,7 @@ class ExternalActivitiesController < ApplicationController
   ##
   def duplicate
     @original = ExternalActivity.find(params['id'])
-    @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @external_activity = @original.clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @external_activity.name = "copy of #{@external_activity.name}"
     @external_activity.deep_set_user current_user
     @external_activity.save

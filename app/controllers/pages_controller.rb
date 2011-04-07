@@ -262,7 +262,7 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @page.deep_clone :include => {:page_elements => :embeddable}
+    @copy = @page.clone :include => {:page_elements => :embeddable}
     @copy.name = "" #force numbering by default
     @copy.save
     flash[:notice] ="Copied #{@page.name}"
@@ -287,7 +287,7 @@ class PagesController < ApplicationController
         if @original.respond_to? :duplicate
           @component = @original.duplicate
         else
-          @component = @original.deep_clone
+          @component = @original.clone
         end
         if (@component)
           @container = params['container'] || 'elements_container'

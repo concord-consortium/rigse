@@ -195,7 +195,7 @@ class Activity < ActiveRecord::Base
   end
 
   def duplicate(new_owner)
-    @return_actvitiy = deep_clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @return_actvitiy = clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @return_actvitiy.user = new_owner
     @return_actvitiy.name = "copy of #{self.name}"
     @return_actvitiy.deep_set_user(new_owner)
