@@ -1,3 +1,4 @@
+require 'uri'
 class ExternalActivity < ActiveRecord::Base
   belongs_to :user
 
@@ -101,10 +102,12 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def url(learner = nil)
+    uri = URI.parse(read_attribute(:url))
     if learner && append_learner_id_to_url
-      return read_attribute(:url) + "?learner_id=#{learner.id}"
+      lid = (uri.query ? '&' : '') + "learner_id=#{learner.id}"
+      uri.query = "#{uri.query}#{lid}"
     end
-    return read_attribute(:url)
+    return uri.to_s
   end
 
   ##
