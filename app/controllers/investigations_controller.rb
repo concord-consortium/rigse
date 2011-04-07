@@ -102,7 +102,13 @@ class InvestigationsController < AuthoringController
     end
 
     @sort_order = param_find(:sort_order, true)
-    @include_usage_count = param_find(:include_usage_count)
+    if params[:include_usage_count].blank?
+      # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
+      # unless it was actually checked as part of the request
+      session[:include_usage_count] = false if params[:method] == :get
+    else
+      session[:include_usage_count] = params[:include_usage_count]
+    end
 
     search_options = {
       :name => @name,

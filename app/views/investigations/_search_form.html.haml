@@ -38,4 +38,4 @@
       %td{:style=>"padding: 0.5em;"}
       %td{:style=>"padding: 0.5em; text-align: right"}
         = label_tag :include_usage_count, 'show count: ', :class=>"right"
-        = check_box_tag 'include_usage_count', 'true', @include_usage_count
+        = check_box_tag :include_usage_count, true, session[:include_usage_count]
