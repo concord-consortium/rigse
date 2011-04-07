@@ -384,7 +384,7 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
-    edit_button_for(component) +
+    link_button("edit.png", url) +
     link_to(link_text, url,
         :title => "edit the #{component_display_name}: '#{name}'")
   end
