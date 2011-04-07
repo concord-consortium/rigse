@@ -1,8 +1,8 @@
 module Cloneable
   def self.included(base)
-    unless base.method_defined? :deep_clone_without_defaults
+    unless base.method_defined? :clone_without_defaults
       base.class_eval do
-        alias_method_chain :deep_clone, :defaults
+        alias_method_chain :clone, :defaults
       end
       base.extend(ClassMethods)
     end
@@ -16,7 +16,7 @@ module Cloneable
     end
   end
 
-  def deep_clone_with_defaults(options = {})
+  def clone_with_defaults(options = {})
     begin
       new_assocs = self.class.cloneable_associations
     rescue
@@ -32,14 +32,13 @@ module Cloneable
     end
 
     options[:use_dictionary] = true # prevent duplicates
-    
     options[:except] ||= []
     options[:except] += [:uuid,:id,:updated_at,:created_at]
     # invokes on superclass (possibly up to Object#clone)
-    deep_clone_without_defaults(options)
+    clone_without_defaults(options)
   end
 end
 
-class ActiveRecord::Base
-  include Cloneable
-end
+#class ActiveRecord::Base
+  #include Cloneable
+#end
