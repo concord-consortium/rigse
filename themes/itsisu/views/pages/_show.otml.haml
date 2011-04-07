@@ -17,7 +17,7 @@
         - if teacher_mode
           #content.teacher_mode
             - if page.section
-              %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
+              %p.page_title= "#{h(page.section.name)}"
 
             - page.page_elements.each do |element|
               - if element.is_enabled
@@ -26,7 +26,7 @@
       - else
         #content
           - if page.section
-            %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
+            %p.page_title= "#{h(page.section.name)}"
 
           - page.page_elements.each do |element|
             - if element.is_enabled

@@ -5,11 +5,9 @@
     %bodyText
       - if for_teacher_only(activity)
         - if teacher_mode
-          #content.teacher_mode
-            %h3= h(activity.name)
+          %h1= h(activity.name)
       - else
-        #content
-          %h3= h(activity.name)
+        %h1= h(activity.name)
       - activity.sections.each do |section|
         - next unless section.is_enabled?
         - section.pages.each do |page|

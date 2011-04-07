@@ -7,11 +7,9 @@
         %bodyText
           - if for_teacher_only(activity)
             - if teacher_mode
-              #content.teacher_mode
-                %h3= h(activity.name)
+                %h1= h(activity.name)
           - else
-            #content
-              %h3= h(activity.name)
+              %h1= h(activity.name)
     - unless ((for_teacher_only(activity)) && (!teacher_mode))          
       %menu
         %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }       
