@@ -16,7 +16,7 @@
   %p
   = f.submit "save"
 - @activity.sections.each do |section|
-  = template_container_for(section) do
+  = template_container_for(section, :no_edit => true) do
     %div.template_disabled_container{:id => dom_id_for(section, :template_disabled_container),:style => 'display: none;'}
       %h3= section.name
     %div.template_view_container{:id => dom_id_for(section, :template_view_container)}

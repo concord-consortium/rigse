@@ -16,7 +16,7 @@ module TemplateHelper
           haml_tag :div, :class => "template_disable_button", :id => dom_id_for(container, :disable_button)
           haml_tag :div, :class => "template_enable_button",  :id => dom_id_for(container, :enable_button)
           haml_tag :div, :class => "template_wait"
-          haml_tag :div, :class => "template_edit_button"
+          haml_tag(:div, :class => "template_edit_button") unless opts[:no_edit]
         end
         if block_given? 
           yield
