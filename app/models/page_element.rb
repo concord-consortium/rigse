@@ -70,14 +70,14 @@ class PageElement < ActiveRecord::Base
   end
   
   def duplicate
-    @copy = self.clone
+    @copy = self.deep_clone
     @em = self.embeddable
     
     # let embeddables define their own means to save
     if @em.respond_to? :duplicate
       @copy.embeddable = @em.duplicate
     else
-      @copy.embeddable = @em.clone
+      @copy.embeddable = @em.deep_clone
     end
     
     if @copy.embeddable
