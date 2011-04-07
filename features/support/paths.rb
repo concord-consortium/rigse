@@ -13,6 +13,8 @@ module NavigationHelpers
 
     when /my home\s?page/
       '/home'
+    when /my preferences/
+      "/users/#{User.find_by_login(@cuke_current_username).id}/preferences"
     when /the pick signup page/
       '/pick_signup'
     when /to the link tool/
