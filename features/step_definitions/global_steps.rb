@@ -8,6 +8,17 @@ def find_or_create_offering(runnable,clazz,type="Investigation")
     offering
 end
 
+def login_as(username, password)
+  visit "/login"
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    @cuke_current_username = username
+    #click_button("Submit")
+  end
+end
+
 Given /the following users[(?exist):\s]*$/i do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|
@@ -29,6 +40,11 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
       # assume this user is already created...
     end
   end
+end
+
+Given /^(?:|I )login as an admin$/ do
+  admin = Factory.next(:admin_user)
+  login_as(admin.login, 'password')
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
