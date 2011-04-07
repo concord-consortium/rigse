@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DeepCloning do
+describe ActiveRecord::Base::DeepCloneable do
   before(:each) do
     @world = Embeddable::Biologica::World.create!(:name => "world", :description => "world description", :species_path => "org/concord/biologica/worlds/dragon.xml")
     @org = Embeddable::Biologica::Organism.create!(:name => "organism", :description => "organism description", :sex => 0, :fatal_characteristics => true, :world => @world)
