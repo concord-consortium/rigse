@@ -1,0 +1,40 @@
+= render :partial => 'sections/show', :locals => {:teacher_mode => teacher_mode}, :collection => activity.sections, :as => :section
+
+- content_for("activity_#{dom_id_for(activity)}".to_sym) do
+  %OTRITESContainer{ :leftPanelWidth => activity.left_nav_panel_width }
+    %title
+      %OTCompoundDoc
+        %bodyText
+          - if for_teacher_only(activity)
+            - if teacher_mode
+              #content.teacher_mode
+                %h3= h(activity.name)
+          - else
+            #content
+              %h3= h(activity.name)
+    - unless ((for_teacher_only(activity)) && (!teacher_mode))          
+      %menu
+        %OTViewChild{ :useScrollPane => 'true', :useHorizontalScrollPane => 'false', :scrollPanelHasBorder => 'false' }       
+          %object
+            %object{ :refid => ot_refid_for(activity, :menu) }/
+          %viewid
+            %object{ :refid => ot_refid_for('menu_accordion_section_view') }/
+    %content
+      %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
+        %cards
+          - activity.sections.each do |section|
+            - unless ((for_teacher_only(section)) && (!teacher_mode))
+              =yield "section_#{dom_id_for(section)}".to_sym
+        %currentCard
+          - if activity.sections.first
+            - unless ((for_teacher_only(activity.sections.first)) && (!teacher_mode))
+              %object{ :refid => ot_refid_for(activity.sections.first) }/
+        %viewedCards
+
+- content_for(:library) do
+  %OTMenu{ :local_id => ot_local_id_for(activity, :menu) }
+    %cardContainer
+      %object{ :refid => ot_refid_for(activity, :section_card_container) }
+    %menuRule
+      %OTMenuRule{ :jumpToAnyCard => 'true' }
+
