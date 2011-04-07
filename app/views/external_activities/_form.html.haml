@@ -8,7 +8,7 @@
   - field_set_tag 'External URL' do
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
     = f.check_box :append_learner_id_to_url
-    should append the learner id to the url (e.g. http://foo.com/bar?learner_id=4)
+    append the learner id to the url (e.g. http://foo.com/bar?learner_id=4)
   - field_set_tag 'Save Path' do
     = f.text_field :save_path
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
