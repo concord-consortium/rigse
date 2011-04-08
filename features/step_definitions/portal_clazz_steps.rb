@@ -5,10 +5,10 @@ Given /^the class "([^"]*)" has the class word "([^"]*)"$/ do |class_name, class
   clazz.save
 end
 
-Given /^the class "([^"]*)" is the default class$/ do |class_name|
-  clazz = Portal::Clazz.find_by_name class_name
-  clazz.default_class = true
-  clazz.save
+Given /^the default class is created$/ do
+  enabled_default_class(true)
+  # this has the side effect of creating the default class if it doesn't already exist
+  Portal::Clazz.default_class
 end
 
 Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content, offering_name|
