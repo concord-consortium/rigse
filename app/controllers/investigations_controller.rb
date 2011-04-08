@@ -94,9 +94,10 @@ class InvestigationsController < AuthoringController
     @domain_id = param_find(:domain_id)
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
-    pagenation = params[:page] == "" ? 1 : params[:page]
-    if (pagenation.blank? || params[:method] == :get)
+    pagination = params[:page] == "" ? 1 : params[:page]
+    if (params[:method] == :get)
       @include_drafts = param_find(:include_drafts,true)
+      pagination = params[:page] = 1
     else
       @include_drafts = param_find(:include_drafts)
     end
@@ -118,7 +119,7 @@ class InvestigationsController < AuthoringController
       :domain_id => @domain_id,
       :sort_order => @sort_order,
       :paginate => true,
-      :page => pagenation
+      :page => pagination
     }
     @investigations = Investigation.search_list(search_options)
 
