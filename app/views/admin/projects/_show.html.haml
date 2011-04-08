@@ -41,10 +41,13 @@
             
           - field_set_tag 'Maven Jnlp' do
             %p
-              Maven Jnlp Server: 
-              = admin_project.maven_jnlp_server.name
-              %ul.menu_h
-                -  maven_jnlp_info.each do |elem|
-                  %li= elem
+              Maven Jnlp Server:
+              - if admin_project.maven_jnlp_server
+                = admin_project.maven_jnlp_server.name
+                %ul.menu_h
+                  -  maven_jnlp_info.each do |elem|
+                    %li= elem
+              - else
+                no server configured
           - field_set_tag 'Project Description' do
             %p= admin_project.description

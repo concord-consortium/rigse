@@ -1,3 +1,7 @@
+Given /^The most basic default project$/ do
+  Factory.create(:admin_project_no_jnlps)
+end
+
 #
 # generator methods are in spec/helpers/controller_helper.rb
 #
