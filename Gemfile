@@ -27,6 +27,7 @@ source :gemcutter
   git "git://github.com/ghazel/ar-extensions.git" do
     gem "ar-extensions",        "~> 0.9.3"
   end
+
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
@@ -35,7 +36,12 @@ source :gemcutter
   gem "acts-as-taggable-on"
   gem "ruby-debug"
   gem "nokogiri",             "~> 1.4.1"
-  gem "deep_cloneable"
+
+  #git "/Users/npaessel/lab/ruby/deep_cloneable", :branch => "cloneable_assocations" do
+  git "git://github.com/concord-consortium/deep_cloneable.git", :branch => "cloneable_assocations" do
+    gem "deep_cloneable"
+  end
+
 group :development do
   gem "highline"
 end
