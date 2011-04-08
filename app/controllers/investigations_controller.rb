@@ -95,10 +95,10 @@ class InvestigationsController < AuthoringController
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
     pagenation = params[:page] == "" ? 1 : params[:page]
-    if (pagenation)
-       @include_drafts = param_find(:include_drafts)
-    else
+    if (pagenation.blank? || params[:method] == :get)
       @include_drafts = param_find(:include_drafts,true)
+    else
+      @include_drafts = param_find(:include_drafts)
     end
 
     @sort_order = param_find(:sort_order, true)

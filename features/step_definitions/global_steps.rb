@@ -60,4 +60,7 @@ Then /^the checkbox for "([^"]*)" should be checked$/ do |label|
   field_checked.should == "true"
 end
 
-
+Then /^the checkbox for "([^"]*)" should not be checked$/ do |label|
+  field_checked = find_field(label)['checked']
+  field_checked.should_not == 'checked'
+end
