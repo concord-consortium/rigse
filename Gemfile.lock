@@ -1,6 +1,6 @@
 GIT
-  remote: /Users/npaessel/lab/ruby/deep_cloneable
-  revision: 0a9b37d2605cd5ed37fa8e96da7ea0782a0daf54
+  remote: git://github.com/concord-consortium/deep_cloneable.git
+  revision: 6d73675dfd027ec0b77ec9e26099d54ff49b2a4e
   branch: cloneable_assocations
   specs:
     deep_cloneable (1.2.3)

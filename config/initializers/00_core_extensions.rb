@@ -80,7 +80,6 @@ module DeepCloneable
       [:uuid, :id, :created_at, :updated_at]
     end
     def default_cloneable_options
-      puts "default_cloneable_options called"
       {:use_dictionary => true}
     end
   end
