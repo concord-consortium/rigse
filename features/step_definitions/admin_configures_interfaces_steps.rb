@@ -1,23 +1,4 @@
 
-Given /the following users[(?exist):\s]*$/i do |users_table|
-  User.anonymous(true)
-  users_table.hashes.each do |hash|
-    roles = hash.delete('roles')
-    roles = roles ? roles.split(/,\s*/) : nil
-    begin
-      user = Factory(:user, hash)
-      roles.each do |role|
-        user.add_role(role)
-      end
-      user.register
-      user.activate
-      user.save!
-    rescue ActiveRecord::RecordInvalid
-      # assume this user is already created...
-    end
-  end
-end
-
 Given /the current project is using the following interfaces:/ do |interfaces_table|
   interfaces = interfaces_table.hashes.map { |interf| Probe::VendorInterface.find_by_name(interf[:name])}
   Admin::Project.default_project.enabled_vendor_interfaces = interfaces
@@ -32,14 +13,26 @@ end
 
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   visit "/login"
-  fill_in("login", :with => username)
-  fill_in("password", :with => password)
-  click_button("Login")
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    #click_button("Submit")
+  end
 end
 
 When /^I log out$/ do
   visit "/logout"
 end
+
+Given /^I am an anonymous user$/ do
+  User.anonymous(true)
+  get '/sessions/destroy'
+  response.should redirect_to('/')
+  follow_redirect!
+  true #  for now ...
+end
+
 
 Given /^the following vendor interfaces exist:$/ do |interfaces_table|
   # table is a Cucumber::Ast::Table
@@ -51,7 +44,8 @@ end
 Then /^I should see the following form checkboxes:$/ do |checkbox_table|
   checkbox_table.hashes.each do |hash|
     if hash[:checked] =~ /true/
-      Then "the \"#{hash[:name]}\" checkbox should be checked"
+      field_checked = find_field(hash[:name])['checked']
+      field_checked.should == "true"
     else
       Then "the \"#{hash[:name]}\" checkbox should not be checked"
     end
@@ -70,7 +64,7 @@ When /^I check in the following:$/ do |checkbox_table|
 end
 
 When /^(?:|I )should have the following selection options:$/ do |selection_table|
-  with_scope("select") do
+  within_fieldset("Selected Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should have_content(hash[:option])
@@ -82,7 +76,7 @@ When /^(?:|I )should have the following selection options:$/ do |selection_table
 end
 
 Then /^I should not see the following selection options:$/ do |selection_table|
-  with_scope("select") do
+  within_fieldset("Selected Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should_not have_content(hash[:option])

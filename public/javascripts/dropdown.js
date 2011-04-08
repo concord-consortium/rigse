@@ -23,9 +23,9 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
     dropDownMenu_width = dropDownLink_width;
   }
   
-  var left_offset = (dropDownMenu_width - dropDownLink_width) / -2;
+  var left_offset = dropDownLink_width/-1;
   var top_offset = dropDownLink.getDimensions().height - padding;
-  var options = { setWidth: false, setHeight: false, offsetLeft:left_offset, offsetTop: top_offset};
+  var options = { setWidth: false, setHeight: false, offsetLeft: left_offset, offsetTop: top_offset};
 
   var is_showing = false;
   var in_dropDownLink = false;

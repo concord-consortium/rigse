@@ -10,7 +10,7 @@ describe SessionsController do
   
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    Admin::Project.stub!(:default_project).and_return(@mock_project)
     
     # This line prevented successful testing of a non-admin (eg, Student) user. -- Cantina-CMH 6/15/10
     #login_admin

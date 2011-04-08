@@ -4,13 +4,13 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name=>top_level_container_name
+        %p= page_entries_info paginated_objects, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
         / -if current_user.has_role? "author"
-        %li= link_to "create #{top_level_container_name}", new_investigation_path
+        %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_investigation_path
 
 - for investigation in investigations
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }
@@ -26,7 +26,7 @@
             - unless(current_user.anonymous?)
               %li.menu=link_to 'copy', duplicate_investigation_url(investigation)
             - if (investigation.changeable?(current_user))
-              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
+              %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{investigation.id}", :method => :delete 
       %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
         %p=investigation.description
         %p

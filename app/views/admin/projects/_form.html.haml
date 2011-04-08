@@ -26,6 +26,12 @@
             = f.check_box :use_student_security_questions
             %br
             (This option will allow students to reset their own passwords.)
+          %li
+            %b
+            = f.label :allow_default_class, "Enable Default Class:", :style => "display:inline;"
+            = f.check_box :allow_default_class
+            %br
+            (This option will allow students to reset their own passwords.)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }

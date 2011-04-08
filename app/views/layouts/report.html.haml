@@ -1,22 +1,23 @@
 !!! Strict
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
-    %title
-      = @page_title || APP_CONFIG[:site_name]
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    %title= @page_title || APP_CONFIG[:site_name]
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
+    %link{ :href => "/images/favicon.ico", :rel => "shortcut icon"}/
+    %script{ :src=> "https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js", :type => "text/javascript"}
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged( (APP_CONFIG[:theme]||'default').to_sym, {'media' => 'all'})
+    = stylesheet_link_merged(current_theme.to_sym, {'media' => 'screen, presentation'})
     = javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
-    = javascript_include_tag "tiny_mce/tiny_mce"
-    
+    = javascript_include_tag("tiny_mce/tiny_mce")
+
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
@@ -25,59 +26,29 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if defined? @container_type && @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
-      
-    
   %body
+
+    #note{:style=>"display: none;"}
+    #waiter{:style=>"display: none;"}
+      please wait
+      = image_tag "ajax-loader.gif"
+    #page
+      / For non-visual user agents:
+      #top
+        %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
     #wrapper.wrapper
-      #header
-        .left_content
-          %h1= APP_CONFIG[:site_name]
-        .right_content
-          .padded_content_right
-            Welcome
-            = "#{current_user.name}."
+      = render :partial => 'shared/project_header'
+      #report_content.main_content_colors
+        = yield :content_header
+        #js_flash{:style=>"display: none;"}
 
-      #nav_top
-
-      #content_container
-        #report_content.main_content_colors
-          #content_header.main_content_colors
-            = yield :content_header
-          #js_flash{:style=>"display: none;"}
-
-          #flash
-            .padded_contents
-              - flash.each_pair do |key, message|
-                %div{:class=>"flash flash_#{key}"}= message 
-          = yield :layout
-
-      #footer
-        .padded_content
-          #footer_left
-            Questions/Feedback:
-            = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:theme].upcase} question", :encode => "javascript")
-          #footer_right
+        #flash
+          .padded_contents
+            - flash.each_pair do |key, message|
+              %div{:class=>"flash flash_#{key}"}= message 
+        = yield :layout
+      = render :partial => 'shared/footer'
       #under_footer
         - if current_user.has_role?('admin')
           = display_system_info
-          
-      / once somebody is logged in,they should open outside the iframe.
-      - unless current_user.anonymous?
-        :javascript 
-          document.observe("dom:loaded", function() {
-            // if we are in an iframe, pop-out.
-            if (top!=self) {
-              
-              // Option #1: Redirect the browser to a new location, taking
-              // the user away from whatever site (EG RIEPS) is containing us.
-              // top.location.replace(location.href);
-              // Option #2: Open a new window. Requires user education.
-              // Pop-Up blockers on all major browsers will prevent this:
-              // window.open(location.href);
-            }
-          });
 
-      :javascript
-        if (top!=self) {
-          $('pop_out_link').show();
-        }

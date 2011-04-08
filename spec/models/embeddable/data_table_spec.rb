@@ -8,5 +8,4 @@ describe Embeddable::DataTable do
     data_table.data_collector.should be_nil
     data_table.should be_valid
   end
-  
 end

@@ -1,13 +1,11 @@
-- locals = { :name => @name, :resource_pages => @resource_pages, :paginated_objects => @resource_pages}  
+- locals = { :name => @name, :resource_pages => @resource_pages, :paginated_objects => @resource_pages}
 
 %h1= ResourcePage.display_name.pluralize
 %p#new-resource-page-link
   = link_to "Create a new #{ResourcePage.display_name.downcase}", new_resource_page_path
 
-= render :partial => 'resource_pages/search_form', :locals => locals         
+= render :partial => 'resource_pages/search_form', :locals => locals
 = observe_form 'resource_page_search_form', :url => list_filter_resource_page_url, :before => "$('search_spinner').show();", :loaded => "$('search_spinner').hide();", :frequency => 1, :update => {:success => 'offering-list'}
 
 #offering-list
   = render :partial => 'resource_pages/runnable_list', :locals => locals
-
-  

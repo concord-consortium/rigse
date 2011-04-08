@@ -1,11 +1,11 @@
 module OtmlHelper
 
   def net_logo_package_name
-    @jnlp_adaptor.net_logo_package_name
+    jnlp_adaptor.net_logo_package_name
   end
   
   def ot_menu_display_name(object)
-    if teacher_only?(object) 
+    if for_teacher_only(object) 
       return "+ #{object.name}"
     end
     return object.name

@@ -1,20 +1,19 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Portal::Clazz do
-  before(:each) do
-    @course = Factory(:portal_course)
-    @start_date = DateTime.parse("2009-01-02")
-    @section_a = "section a"
-    @section_b = "section b"
-    @existing_clazz = Factory(:portal_clazz, {
-      :section => @section_a,
-      :start_time => @start_date,
-      :course => @course,
-    })
-    
-  end
-
   describe "finding or creating clazzes based on course, section, and start" do
+    before(:each) do
+      @course = Factory(:portal_course)
+      @start_date = DateTime.parse("2009-01-02")
+      @section_a = "section a"
+      @section_b = "section b"
+      @existing_clazz = Factory(:portal_clazz, {
+        :section => @section_a,
+        :start_time => @start_date,
+        :course => @course,
+      })
+
+    end
 
     it "given criterea that matches an existing class, it should return a matching clazz" do
       found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(
@@ -43,9 +42,7 @@ describe Portal::Clazz do
   
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
-      User.destroy_all
-      Portal::Teacher.destroy_all
-      
+      @existing_clazz = Factory(:portal_clazz)
       @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1"))
       @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2"))
     end
@@ -74,6 +71,35 @@ describe Portal::Clazz do
     end
   end
   
+  describe "#changeable?" do
+    before(:each) do
+      @existing_clazz = Factory.build(:portal_clazz)
+    end
+
+    it "is true for admins" do
+      admin_user = Factory.next(:admin_user)
+      @existing_clazz.changeable?(admin_user).should be_true
+    end
+
+    it "is true for class teacher" do
+      @teacher = Factory.create(:portal_teacher)
+      @existing_clazz.teachers = [@teacher]
+      @existing_clazz.changeable?(@teacher.user).should be_true
+    end
+
+    it "is true for second class teacher" do
+      @teacher1 = Factory.create(:portal_teacher)
+      @teacher2 = Factory.create(:portal_teacher)
+      @existing_clazz.teachers = [@teacher1, @teacher2]
+      @existing_clazz.changeable?(@teacher2.user).should be_true
+    end
+
+    it "is false for non class teacher" do
+      @teacher = Factory.create(:portal_teacher)
+      @existing_clazz.changeable?(@teacher.user).should be_false
+    end
+  end
+
   describe "creating a new class" do
     before(:each) do
       User.destroy_all

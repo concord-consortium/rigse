@@ -1,20 +1,42 @@
-- field_set_tag "Log in" do
-  - form_tag session_path do
-    .aligned
-      %ul
-        %li
-          = label_tag 'login', 'Username', :class=>"right"
-          = text_field_tag 'login', @login
-        %li
-          = label_tag :password, "Password", :class=>"right"
-          = password_field_tag 
-        %li
-          = label_tag 'submit', '', :class=>"right"
-          = submit_tag 'Login'
-          
-        %li
-          = label_tag 'remember_me', 'Stay logged in', :class=>"right"
-          = check_box_tag 'remember_me', '1'
-  %ul.menu_h_right
-    %li= link_to 'Trouble logging in?', forgot_password_path
-
+#content-upper
+  .cols.login-area
+    .col
+      - form_tag session_path, :id=>"project-signin" do
+        - field_set_tag "Project Sign In" do
+          %h2
+            Project Sign In
+          %ul.graphic-input
+            %li
+              = label_tag 'login', 'Username', :class=>"right textfield "
+              = text_field_tag 'login', @login, :class=>'text'
+            %li
+              = label_tag :password, "Password", :class=>"right textfield"
+              = password_field_tag 'password', '', :class=>'text password'
+            %li.remember
+              = label_tag 'remember_me', 'Stay logged in', :class=>"right"
+              = check_box_tag 'remember_me', '1'
+          %button.nontext.button{ :type=>'submit' }
+            'Login'
+          %p.forgot= link_to 'Forgot Password', forgot_password_path
+    .col2
+      %h3
+        First Time Here?
+      %p
+        Sign up for access as:
+        %br
+        = link_to("Student", signup_portal_students_path, :class=>'more')
+        %br
+        %a{ :href=>"/portal/teachers/new", :class=>'more' }
+          Teacher
+      %h3
+        Just want to Try the Units?
+      %p
+        =link_to "View our unit Previews", investigation_preview_list_path, {:class=>'more'}
+        -#%a{ :href=>"/preview", :class=>'more' }
+          -#View our unit previews
+    %p.note
+      %strong
+        IMPORTANT!
+      Before running our software and activities, please view our
+      %a{ :href=>"/requirements/" }
+        Technical Notes and Requirements section

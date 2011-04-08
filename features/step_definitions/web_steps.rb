@@ -16,13 +16,13 @@ module WithinHelpers
 end
 World(WithinHelpers)
 
-Given /^(?:|I )am on (.+)$/ do |page_name|
+Given /^(?:|I )(?:am on|visit|go to) (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
-When /^(?:|I )go to (.+)$/ do |page_name|
-  visit path_to(page_name)
-end
+#When /^(?:|I )go to (.+)$/ do |page_name|
+  #visit path_to(page_name)
+#end
 
 When /^(?:|I )press "([^\"]*)"(?: within "([^\"]*)")?$/ do |button, selector|
   with_scope(selector) do
@@ -192,7 +192,7 @@ Then /^the "([^\"]*)" checkbox(?: within "([^\"]*)")? should not be checked$/ do
   end
 end
  
-Then /^(?:|I )should be on (.+)$/ do |page_name|
+Then /^(?:|I )should (?:|still )be on (.+)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
     current_path.should == path_to(page_name)

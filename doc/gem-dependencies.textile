@@ -1,0 +1,54 @@
+h3. Using RVM
+
+Use "RVM":http://rvm.beginrescueend.com/ to isolate ruby versions and gem sets. 
+In this example, we are creating an isolated gemset for the has project.
+
+bc.  
+ sudo gem install rvm      # install RVM 
+ rvm list known            # show all available Rubies
+ rvm install 1.8.7         # install the latest 1.8.7 ruby
+ rvm list                  # show locally installed Rubies
+ rvm use 1.8.7             # use it
+ rvm gemset create has     # make  a gemset
+ rvm gemset use has        # use your gemset
+ gem install capistrano    # don't sudo gem install !!!!
+ gem install capistrano-ext
+ gem install ruby-debug
+ gem install haml
+
+
+Next time you work on has try:
+
+bc. rvm use 1.8.7@has
+
+and you will have only the gems you configured for has.
+
+Another super cool thing you can do is create a ".rvmrc" file at the top of your project
+the file can have just one line:
+
+bc. rvm use 1.8.7@has
+
+From that point on whenever you enter your project directory, your RVM gemsets will be loaded.
+
+h3. Using Bundler to manage gem dependencies.
+
+We used to use rake tasks to manage our local gem files.  We would invoke @rake gems:install@
+But using this method didn't give us as fine controll as we would have liked.  Enter "bunlder":http://gembundler.com/.
+
+To use bundler you must have a recent version of rubygems installed.  After that, managing gems is as simple as installing bundler:
+
+ @gem install bundler@
+
+Next run @gem bundle install@ to update the your gems to meet the projects dependencies.  
+
+If you need to add a gems, or change the version of a gem, make changes to the Gemfile, and run @gem install bundler@.  
+
+h4. Deployment with Bundler and capistrano
+
+Deployment works thanks to a bundler's capistrano support. When a project is deployed, a local gem directory will be created in the shared path shared/bundle -- gems will be unpacked and loaded from this shared location.  This prevents projects from contaminating system gems.
+
+h4. Files to keep in / out of version control.
+
+To get the capistrano bundle support to work, you will need to checkin the Gemfile and the Gemfile.lock files. But never checkin the bundle/ driectory.
+
+

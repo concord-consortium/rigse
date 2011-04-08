@@ -5,7 +5,7 @@
   - if ! data_table.data_collector.nil?
     = render_scoped_reference(data_table.data_collector)
 
-%OTDataTable{ :local_id => ot_local_id_for(data_table), :name => h(data_table.name), :showLastRowForAddingNew => 'true', :visibleRows => data_table.visible_rows }
+%OTDataTable{ :local_id => ot_local_id_for(data_table), :name => h(data_table.name), :showLastRowForAddingNew => 'true', :visibleRows => data_table.visible_rows, :precision => data_table.precision, :width => data_table.width }
   %dataStore
     - if data_table.data_collector_id.nil?
       %OTDataStore{ :local_id => ot_local_id_for(data_table, :data_store), :numberChannels => data_table.column_count.to_s }

@@ -1,0 +1,37 @@
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name => klass.constantize.display_name
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        -if current_user.has_role? "author"
+          %li= link_to "create #{klass.constantize.display_name}", polymorphic_url(klass.constantize, :action => :new)
+
+- runnables.each do |runnable|
+  %div{ :id => dom_id_for(runnable), :class => 'runnable' }
+    = accordion_for(runnable, (preview_button_for(runnable) + name_for_component(runnable, :hide_componenent_name => true)), runnable.class.to_s.downcase.to_sym) do
+      %div.action_menu
+        %div.action_menu_header_left
+          = link_to_container(runnable)
+          %span.author
+            = runnable.user.name
+        %div.action_menu_header_right
+          %ul.menu
+            - unless(current_user.anonymous?)
+              %li.menu=link_to 'duplicate', polymorphic_url(runnable, :action => :duplicate) unless runnable.kind_of?(ResourcePage)
+            - if (runnable.changeable?(current_user))
+              %li.menu=link_to 'delete', runnable, :class => 'delete', :confirm => "Are you sure you want to delete #{runnable.class.display_name} #{runnable.id}", :method => :delete
+      %div{:id => dom_id_for(runnable, :details), :class => 'tiny'}
+        %p=runnable.description
+        %p
+          %i= updated_time_text(runnable)
+        %p
+          %i
+            Used in: #{runnable.offerings.length} classes.
+
+  =draggable_element dom_id_for(runnable), :revert => true , :scroll => 'window'
+
