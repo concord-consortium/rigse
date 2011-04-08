@@ -49,7 +49,7 @@ class Portal::Clazz < ActiveRecord::Base
     end
 
     def find_or_create_default_class
-      clazz = find :all, :conditions => ['default_class = ?', true || 1]
+      clazz = find :first, :conditions => ['default_class = ?', true || 1]
       if clazz.blank?
         clazz = Portal::Clazz.create :name => "Default Class", :default_class => true, :class_word => "default"
       end

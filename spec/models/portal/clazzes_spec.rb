@@ -127,4 +127,18 @@ describe Portal::Clazz do
     it "should require at least one teacher" do
     end
   end
+
+  describe ".default_class" do
+    it "should return a portal clazz with default_class true" do
+      default_clazz = Portal::Clazz.default_class
+      default_clazz.should_be an_instance_of Portal::Clazz
+      default_clazz.default_clazz.should_be true
+    end
+
+    it "should return the same portal clazz on second call" do
+      default_clazz = Portal::Clazz.default_class
+      default_clazz.should be_an_instance_of Portal::Clazz
+      Portal::Clazz.default_class.should == default_clazz
+    end
+  end
 end
