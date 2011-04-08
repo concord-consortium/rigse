@@ -195,7 +195,7 @@ class Activity < ActiveRecord::Base
   end
 
   def duplicate(new_owner)
-    @return_actvitiy = deep_clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @return_actvitiy = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @return_actvitiy.user = new_owner
     @return_actvitiy.name = "copy of #{self.name}"
     @return_actvitiy.deep_set_user(new_owner)
@@ -203,6 +203,4 @@ class Activity < ActiveRecord::Base
     return @return_actvitiy
   end
   alias copy duplicate
-
-  
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DeepCloning do
+describe ActiveRecord::Base::DeepCloneable do
   before(:each) do
     @world = Embeddable::Biologica::World.create!(:name => "world", :description => "world description", :species_path => "org/concord/biologica/worlds/dragon.xml")
     @org = Embeddable::Biologica::Organism.create!(:name => "organism", :description => "organism description", :sex => 0, :fatal_characteristics => true, :world => @world)
@@ -38,7 +38,7 @@ describe DeepCloning do
   end
 
   it "should recursively clone page elements" do
-    klone = @page.deep_clone :include => {:page_elements => :embeddable}
+    klone = @page.clone :include => {:page_elements => :embeddable}
     klone.save!
     compare_equal(klone, @page, [:name, :description])
     klone.page_elements.size.should == 1
@@ -53,7 +53,7 @@ describe DeepCloning do
   end
   
   it "should not clone uuid or timestamps" do
-    klone = @page.deep_clone :include => {:page_elements => :embeddable}
+    klone = @page.clone :include => {:page_elements => :embeddable}
     klone.save!
     compare_not_equal(klone, @page, [:uuid, :created_at, :updated_at])
     compare_not_equal(klone.page_elements[0].embeddable, @static_org, [:uuid, :created_at, :updated_at])
@@ -62,14 +62,14 @@ describe DeepCloning do
   end
   
   it "should not make multiple organisms or worlds" do
-    klone = @section.deep_clone :include => {:pages => {:page_elements => :embeddable}}
+    klone = @section.clone :include => {:pages => {:page_elements => :embeddable}}
     klone.pages.size.should == 2
     klone.pages[0].page_elements[0].embeddable.organism.should == klone.pages[1].page_elements[0].embeddable.organism
     klone.pages[0].page_elements[0].embeddable.organism.world.should == klone.pages[1].page_elements[0].embeddable.organism.world
   end
   
   it "should make multiple organisms or worlds" do
-    klone = @section.deep_clone :include => {:pages => {:page_elements => :embeddable}}
+    klone = @section.clone :include => {:pages => {:page_elements => :embeddable}}, :use_dictionary => false
     klone.pages.size.should == 2
     klone.pages[0].page_elements[0].embeddable.organism.should_not == klone.pages[1].page_elements[0].embeddable.organism
     klone.pages[0].page_elements[0].embeddable.organism.world.should_not == klone.pages[1].page_elements[0].embeddable.organism.world
