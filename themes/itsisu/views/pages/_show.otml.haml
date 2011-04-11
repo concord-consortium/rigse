@@ -10,6 +10,9 @@
   - page.page_elements.each do |element|
     - if element.is_enabled
       = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => page }
+      - if (should_show_snapshot_button?(element.embeddable))
+        %OTSnapshotAlbum{:local_id => ot_local_id_for(element.embeddable, "album")}
+        %OTSnapshotButton{:local_id => ot_local_id_for(element.embeddable, "snapshot_button"), :target => ot_refid_for(element.embeddable), :snapshotAlbum => ot_refid_for(element.embeddable, "album")}
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
@@ -23,6 +26,10 @@
               - if element.is_enabled
                 .element
                   %object{ :refid => ot_refid_for(element.embeddable) }/
+                  - if (should_show_snapshot_button?(element.embeddable))
+                    .snapshot_buttons
+                      %object{ :refid => ot_refid_for(element.embeddable, "snapshot_button") }/
+                      %object{ :refid => ot_refid_for(element.embeddable, "album") }/
       - else
         #content
           - if page.section
@@ -33,6 +40,10 @@
               .element
                 = yield "element_#{dom_id_for(element.embeddable)}".to_sym
                 %object{ :refid => ot_refid_for(element.embeddable) }/
+                - if (should_show_snapshot_button?(element.embeddable))
+                  .snapshot_buttons
+                    %object{ :refid => ot_refid_for(element.embeddable, "snapshot_button") }/
+                    %object{ :refid => ot_refid_for(element.embeddable, "album") }/
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
     %bodyText

@@ -85,6 +85,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
   self.extend SearchableModel
 
   @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
+  
+  self.extend Snapshotable
 
   class <<self
     def searchable_attributes

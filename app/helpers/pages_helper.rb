@@ -28,5 +28,15 @@ module PagesHelper
     end
     return false
   end
-
+  
+  def should_show_snapshot_button?(embeddable)
+    begin
+      if embeddable.class.snapshotable?
+        return true
+      end
+    rescue NoMethodError
+    end
+    return false
+  end
+  
 end
