@@ -66,7 +66,7 @@ class ExternalActivity < ActiveRecord::Base
       lid = (uri.query ? '&' : '') + "learner=#{learner.id}"
       uri.query = "#{uri.query}#{lid}"
     end
-    return uri.to_s
+    return uri.to_sc
   end
 
   ##
