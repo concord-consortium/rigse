@@ -38,6 +38,9 @@ module NavigationHelpers
         edit_portal_clazz_path(clazz)
     when /the investigations printable index page/
       "/investigations/printable_index"
+    when /the investigations page for "(.*)"/
+      inv = Investigation.find_by_name $1
+      investigation_path inv
     when /the investigations like "(.*)"/
       "/investigations?name=#{$1}"
     when /the resource pages printable index page/
