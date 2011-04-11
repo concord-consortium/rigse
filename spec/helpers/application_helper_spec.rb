@@ -69,7 +69,7 @@ describe ApplicationHelper do
 
     describe "when the current user is not an author" do
       before(:each) do
-        @user = mock_model(User, :teacher => nil)
+        @user = mock_model(User, :portal_teacher => nil)
         @user.stub!(:has_role?).with("author").and_return(false)
         stub!(:current_user).and_return(@user)
       end
@@ -80,7 +80,7 @@ describe ApplicationHelper do
 
     describe "when the current user is a teacher" do
       before(:each) do
-        @teacher = mock_model(User,:teacher => true)
+        @teacher = mock_model(User,:portal_teacher => true)
         @teacher.stub!(:has_role?).with("author").and_return(false)
         stub!(:current_user).and_return(@teacher)
       end
@@ -90,7 +90,7 @@ describe ApplicationHelper do
           current_user_can_author.should == true
         end
       end
-      describe "when teachers cant author" do
+      describe "when teachers can't author" do
         it "should return false" do  
           stub!(:settings_for).with(:teachers_can_author).and_return(false)
           current_user_can_author.should == false
