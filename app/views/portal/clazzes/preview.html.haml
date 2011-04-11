@@ -5,4 +5,9 @@
   %h2{:style => "margin-top: 1.5em;"} #{@portal_clazz.semester.name} - #{@portal_clazz.name}
 - else
   %h2{:style => "margin-top: 1.5em;"} #{@portal_clazz.name}
-= render :partial => 'shared/offerings_for_student', :locals => { :offerings => @portal_clazz.offerings }
+- offerings = @portal_clazz.offerings_by_unit
+- offerings.keys.each do |unit_name|
+  %h2=unit_name
+  - offerings[unit_name].each do |offering|
+    = render :partial => "shared/offering_for_student", :locals => {:offering => offering}
+

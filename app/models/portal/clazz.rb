@@ -275,4 +275,14 @@ class Portal::Clazz < ActiveRecord::Base
   def refresh_saveable_response_objects
     self.offerings.each { |o| o.refresh_saveable_response_objects }
   end
+
+  def offerings_by_unit
+    self.offerings.group_by do |offering|
+      if offering.runnable.respond_to?(:units) && offering.runnable.units.size > 0
+        offering.runnable.units.first.name
+      else
+        "(not part of a unit)" #TODO: constantize/localize
+      end
+    end
+  end
 end

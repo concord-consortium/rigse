@@ -1,17 +1,8 @@
--#-if (offering.runnable)
-  -#.item
-    -#%ul.quiet_list
-      -#%li
-        -#= run_link_for(offering,nil,{:link_text=>"run #{offering.name}"})
-      -#%li
-        -#.tiny= offering.description
-
 .activity-box
   .activity-title
     - description_id = dom_id_for(offering, :description);
-    %a{:href => "#", :onclick => "$('#{description_id}').toggle();return false;", :title => "View activity description"}
-      = image_tag("http://itsisu.portal.concord.org/images/icons/information.png")
+    = info_button(description_id,"description for #{offering.name}")
     = link_to image_tag("http://itsisu.portal.concord.org/images/icons/bullet_go.png"), polymorphic_url(offering, :format => :jnlp), {:class => 'waiter'}
     = offering.name
-  .activity-description{:id => description_id}
+  .activity_description{:id => description_id, :style=>"display: none;"}
     = offering.description
