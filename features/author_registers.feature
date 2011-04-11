@@ -22,7 +22,7 @@ Feature: An author registers to use the portal
       | user_password_confirmation | password            |
 
     And I press "Sign up"
-    Then I should see " Thanks for signing up!"
+    Then I should see "Thanks for signing up!"
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
