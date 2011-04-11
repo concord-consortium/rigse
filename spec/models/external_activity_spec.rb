@@ -34,14 +34,14 @@ describe ExternalActivity do
     it "should return a modified url when appending is true" do
       @act.append_learner_id_to_url = true
       @act.url.should eql(@valid_attributes[:url])
-      @act.url(@learner).should eql(@valid_attributes[:url] + "?learner_id=34")
+      @act.url(@learner).should eql(@valid_attributes[:url] + "?learner=34")
     end
 
     it "should return a correct url when appending to a url with existing params" do
       url = "http://www.concord.org/?foo=bar"
       @act.append_learner_id_to_url = true
       @act.url = url
-      @act.url(@learner).should eql(url + "&learner_id=34")
+      @act.url(@learner).should eql(url + "&learner=34")
     end
   end
 end

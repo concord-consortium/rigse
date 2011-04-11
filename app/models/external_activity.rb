@@ -104,7 +104,7 @@ class ExternalActivity < ActiveRecord::Base
   def url(learner = nil)
     uri = URI.parse(read_attribute(:url))
     if learner && append_learner_id_to_url
-      lid = (uri.query ? '&' : '') + "learner_id=#{learner.id}"
+      lid = (uri.query ? '&' : '') + "learner=#{learner.id}"
       uri.query = "#{uri.query}#{lid}"
     end
     return uri.to_s
