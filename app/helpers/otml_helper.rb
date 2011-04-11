@@ -80,6 +80,8 @@ module OtmlHelper
       org.concord.otrunk.ui.menu.OTMenuRule
       org.concord.otrunk.ui.menu.OTNavBar
       org.concord.otrunk.ui.question.OTQuestion
+      org.concord.otrunk.ui.snapshot.OTSnapshotAlbum
+      org.concord.otrunk.ui.snapshot.OTSnapshotButton
       org.concord.otrunk.view.OTFolderObject
       org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.OTViewChild
@@ -178,6 +180,8 @@ module OtmlHelper
       ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismView'],
       ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView'],
+      ['snapshot_album_view', 'org.concord.otrunk.ui.snapshot.OTSnapshotAlbum', 'org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView'],
+      ['snapshot_button_view' ,'org.concord.otrunk.ui.snapshot.OTSnapshotButton', 'org.concord.otrunk.ui.snapshot.OTSnapshotButtonView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonView'],
       ['lab_book_view' ,'org.concord.otrunk.labbook.OTLabbook', 'org.concord.otrunk.labbook.ui.OTLabbookView'],
       ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserView'],
