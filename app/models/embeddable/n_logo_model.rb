@@ -15,6 +15,8 @@ class Embeddable::NLogoModel < ActiveRecord::Base
   
   @@searchable_attributes = %w{name description}
   
+  self.extend Snapshotable
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes

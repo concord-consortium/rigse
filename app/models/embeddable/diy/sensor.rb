@@ -6,6 +6,8 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   belongs_to :prototype, :class_name => "Embeddable::DataCollector"
   validates_presence_of :prototype
   serialize :customizations, Hash
+  
+  self.extend Snapshotable
 
   class << self
     # fields we will accept customizations on
