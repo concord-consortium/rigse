@@ -18,9 +18,11 @@ Feature: An author adds multiple choice questions
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
-    When I follow "Multiple Choice Question"
+    When I add a "Multiple Choice Question" to the page
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"
+    # this wait is necessary for IE please fixme
+    And I wait "1" second
     Then I should see "choices"
     And I should see "a"
     And I should see "b"
@@ -38,9 +40,11 @@ Feature: An author adds multiple choice questions
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
-    When I follow "Multiple Choice Question"
+    When I add a "Multiple Choice Question" to the page
     Then I should see "Why do you think ..."
     When I follow xpath "//a[@title='edit multiple choice question']"
+    # this wait is necessary for IE please fixme
+    And I wait "1" second
     Then I should see "choices"
     And I should see "a"
     And I should see "b"

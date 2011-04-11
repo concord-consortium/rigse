@@ -95,3 +95,19 @@ Given /^there is an image question with the prompt "([^"]*)"$/ do |prompt|
   image_question = Embeddable::ImageQuestion.find_or_create_by_prompt(prompt)
 end
 
+When /^I add a "([^"]*)" to the page$/ do |embeddable|
+  # this requires a javascript enabled driver
+  # this simulates roughly what happens when the mouse is moved over the plus icon
+
+  # this first part is what happens in the onmouseover event on the plus icon
+  # it is necessary to call first because it positions the menu relative to the plus icon
+  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # aren't really moving the mouse.
+  page.execute_script("dropdown_for('button_add_menu','add_menu')")
+
+  # now that the menu is positioned we can just manually show it
+  page.execute_script("$('add_menu').show()")
+  click_link(embeddable)
+  page.execute_script("$('add_menu').hide()")
+end
+

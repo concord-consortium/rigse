@@ -82,7 +82,7 @@ When /^I debug$/ do
   0
 end
 
-When /^I wait "(.*)" seconds$/ do |seconds|
+When /^I wait "(.*)" second(?:|s)$/ do |seconds|
   sleep(seconds.to_i)
 end
 
