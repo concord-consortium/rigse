@@ -49,6 +49,8 @@ module NavigationHelpers
       "/resource_pages?name=#{$1}"
     when /the resource page for "(.*)"/
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
+    when /the clazz create page/
+      new_portal_clazz_path
     # accept paths too:
     when /the route (.+)/
       $1
