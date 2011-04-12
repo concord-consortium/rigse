@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
+  validates_presence_of     :password, :on => :update, :unless => Proc.new {|u| u.portal_student.blank?}
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"

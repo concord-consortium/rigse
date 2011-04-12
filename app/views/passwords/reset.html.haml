@@ -4,6 +4,10 @@
     .action_menu
       .action_menu_header_left
         .padded_content
+          - if params[:user_errors]
+            %ul
+              - params[:user_errors].each do |msg|
+                %li= msg
           %h3 Please enter a new password and confirm it.
 
     %fieldset

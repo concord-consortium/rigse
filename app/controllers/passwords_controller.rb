@@ -101,7 +101,7 @@ class PasswordsController < ApplicationController
       redirect_to login_path
     else
       flash[:error] = 'Password could not be updated'
-      redirect_to :action => :reset, :reset_code => params[:reset_code]
+      redirect_to :action => :reset, :reset_code => params[:reset_code], :user_errors => @user.errors.full_messages
     end
   end
   
