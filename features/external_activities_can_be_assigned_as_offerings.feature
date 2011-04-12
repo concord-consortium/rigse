@@ -27,8 +27,8 @@ Feature: External Activities can be assigned as offerings
     And I am on the class page for "My Class"
     When I assign the investigation "Test Investigation"
     And I assign the external activity "My Activity"
-    Then the external activity named "My Activity" should have "offerings_count" equal to "1"
-    And the investigation named "Test Investigation" should have "offerings_count" equal to "1"
+    Then I should see "Test Investigation" within "#clazz_offerings"
+    And I should see "My Activity" within "#clazz_offerings"
 
   Scenario: Offering counts increase when either a external activity or investigation is assigned
     Given the external activity "My Activity" is assigned to the class "My Class"
