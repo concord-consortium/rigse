@@ -19,6 +19,15 @@ def login_as(username, password)
   end
 end
 
+# scroll_into_view is a hack so an element is scrolled into view in selenium in IE
+# after the following change to selenium is released then scroll_into_view shouldn't be necessary anymore
+#  http://code.google.com/p/selenium/source/detail?r=11244
+#  http://code.google.com/p/selenium/issues/detail?id=848
+def scroll_into_view(selector)
+  el = find(selector)
+  el.native.send_keys(:null)
+end
+
 Given /the following users[(?exist):\s]*$/i do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|

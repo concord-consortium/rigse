@@ -29,6 +29,11 @@ When /show the first page of the "(.*)" investigation$/ do |investigation_name|
   visit page_path(page)
 end
 
+When /^I save the investigation$/ do
+  scroll_into_view("#investigation_submit")
+  click_button("investigation_submit")
+end
+
 Given /a mock gse/ do
   domain = mock_model(RiGse::Domain,
     :id => 1,

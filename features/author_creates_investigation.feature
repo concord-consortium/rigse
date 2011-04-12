@@ -18,6 +18,6 @@ Feature: An author creates an investigation
     When I fill in the following:
       | investigation[name]           | Test Investigation    |
       | investigation[description]    | testing testing 1 2 3 |
-    And I press "investigation_submit"
+    And I save the investigation
     Then I should see "Investigation was successfully created."
     
