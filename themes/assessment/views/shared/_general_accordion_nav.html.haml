@@ -21,8 +21,6 @@
 
   .accordion_header{:id => top_container_id}
     = link_to top_node.name, top_node
-    / - if top_node.class == Investigation
-    /.   = preview_link_for(top_node)
     - depth = 1
     - if (top_node.respond_to? 'children') and (depth < max_depth)
       - top_node.children.each do |child|

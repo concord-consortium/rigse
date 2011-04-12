@@ -1,29 +1,14 @@
 #actions_menu.dropdown
   %ul
-    / %li#copy_link copy (disabled)
-    / %li= run_link_for(@investigation)
-    / %li= run_link_for(@investigation,'teacher',{:teacher_mode=>true})
-    / %li= print_link_for(@investigation)
-    / %li= print_link_for(@investigation, {:teacher_mode => true}) 
-    / %li= toggle_all('activities')
-    / - if (investigation.duplicateable?(current_user))
-    /   %li= duplicate_link_for(@investigation)
     - if (investigation.changeable?(current_user))
       %li= edit_link_for(@investigation)
-    
-      / %li#paste_link= paste_link_for(['activity'],{:container_id => @container_id}) # see pages_helper.rb
 
 #add_menu.dropdown
   %ul
     %li= link_to "add new activity", add_activity_investigation_path(@investigation)
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
-    / .action_menu_header_left
-    /   .padded_content
-    /     = render :partial=>'shared/in_place_fields', :locals => {:item=>investigation}
     .action_menu_header_right
-      / = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
-      / = dropdown_button "actions.png", :title => "actions for this investigation"
       - if (investigation.changeable?(current_user) && investigation.activities.size == 0)
         = dropdown_button "add.png"
       - else

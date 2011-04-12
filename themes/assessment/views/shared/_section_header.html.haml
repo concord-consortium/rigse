@@ -1,14 +1,7 @@
 #actions_menu.dropdown
   %ul
-    / %li= run_link_for(@section)
-    / %li= print_link_for(@section)
-    / %li= print_link_for(@section,{:teacher_mode => true})
-    / %li#copy_link copy (disabled)
-    / %li= toggle_all('pages')
     - if (section.changeable?(current_user))
-      / %li= duplicate_link_for(@section)
       %li= edit_link_for(@section)
-      / %li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
 
 #add_menu.dropdown
   %ul
@@ -20,17 +13,11 @@
   - view_class = "action_menu"
 
 %div{:id => dom_id_for(section,:item), :class => view_class }
-  / .action_menu_header_left
-  /   .padded_content
-  /     = render :partial=>'shared/in_place_fields', :locals => {:item=>section}
   .action_menu_header_right
-    / = render :partial => "shared/notes_menu", :locals => {:authorable => section}
-    / = dropdown_button "actions.png", :title => "actions for this section"
     - if (section.changeable?(current_user) && section.pages.size == 0)
       = dropdown_button "add.png"
     - else
       = link_button "disabled.png", "#", :title => "can't add pages"
-    / = render :partial => "shared/dot_pager", :locals => {:node => section}
     - if (section.changeable?(current_user))
       - if (section.activity)
         = delete_button_for(section, :redirect => url_for(section.activity))
