@@ -11,7 +11,7 @@
     - if element.is_enabled
       = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => page }
       - if (should_show_snapshot_button?(element.embeddable))
-        %OTSnapshotAlbum{:local_id => ot_local_id_for(element.embeddable, "album")}
+        %OTSnapshotAlbum{:local_id => ot_local_id_for(element.embeddable, "album"), :limitEntries => "true", :limit => 4}
         %OTSnapshotButton{:local_id => ot_local_id_for(element.embeddable, "snapshot_button"), :target => ot_refid_for(element.embeddable), :snapshotAlbum => ot_refid_for(element.embeddable, "album")}
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
