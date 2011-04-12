@@ -15,7 +15,7 @@ class Embeddable::MwModelerPage < ActiveRecord::Base
   
   @@searchable_attributes = %w{name description}
   
-  self.extend Snapshotable
+  include Snapshotable
   
   class <<self
     def searchable_attributes

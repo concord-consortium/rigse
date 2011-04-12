@@ -7,7 +7,7 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   validates_presence_of :prototype
   serialize :customizations, Hash
   
-  self.extend Snapshotable
+  include Snapshotable
 
   class << self
     # fields we will accept customizations on

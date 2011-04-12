@@ -4,7 +4,7 @@ class Embeddable::DrawingTool < Embeddable::Embeddable
   
   @@searchable_attributes = %w{uuid name description background_image_url stamps}
   
-  self.extend Snapshotable
+  include Snapshotable
   
   class <<self
     def searchable_attributes

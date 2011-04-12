@@ -8,7 +8,7 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
 
   @@searchable_attributes = %w{uuid}
   
-  self.extend Snapshotable
+  include Snapshotable
   
   self.extend SearchableModel
   class <<self
