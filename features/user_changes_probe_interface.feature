@@ -7,7 +7,6 @@ Feature: A user changes which probeware interface they are using
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Student changes probeware interface on preferences page
     Given the following students exist:
       | login     | password  |

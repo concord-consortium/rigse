@@ -4,7 +4,6 @@ Feature: Teacher can edit their class information
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Teacher can follow link to edit their class info
     Given the following teachers exist:
       | login   | password |
