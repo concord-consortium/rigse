@@ -810,7 +810,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
@@ -2017,7 +2017,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
