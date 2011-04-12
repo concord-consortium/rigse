@@ -219,3 +219,19 @@ Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do 
   investigation = Investigation.find_by_name inv_name
   investigation.offerings_count.should == count.to_i
 end
+
+When /^I duplicate the investigation$/ do
+  # this requires a javascript enabled driver
+  # this simulates roughly what happens when the mouse is moved over the plus icon
+
+  # this first part is what happens in the onmouseover event on the gear icon
+  # it is necessary to call first because it positions the menu relative to the gear icon
+  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # aren't really moving the mouse.
+  page.execute_script("dropdown_for('button_actions_menu','actions_menu')")
+
+  # now that the menu is positioned we can just manually show it
+  page.execute_script("$('actions_menu').show()")
+  click_link("duplicate")
+  page.execute_script("$('actions_menu').hide()")
+end
