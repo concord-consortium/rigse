@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @web_models, :collection_class => Embeddable::WebModel }
+- @web_models.each do |web_model|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => web_model}

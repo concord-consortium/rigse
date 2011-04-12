@@ -91,6 +91,11 @@ ActionController::Routing::Routes.draw do |map|
       :destroy => :post
     }
 
+    embeddable.resources :web_models, :member => {
+      :print => :get,
+      :destroy => :post
+    }
+
     embeddable.resources :open_responses, :member  => {
       :print => :get,
       :destroy => :post
@@ -314,6 +319,11 @@ ActionController::Routing::Routes.draw do |map|
   }
 
   map.resources :xhtmls, :member => {
+    :print => :get,
+    :destroy => :post
+  }
+
+  map.resources :web_models, :member => {
     :print => :get,
     :destroy => :post
   }

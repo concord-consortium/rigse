@@ -1,0 +1,2 @@
+- remote_form_for(web_model, :update => dom_id_for(web_model, :item)) do |f|
+  = render :partial => "embeddable/web_models/form", :locals => { :web_model => web_model, :f => f  }

@@ -1,0 +1,4 @@
+= edit_menu_for(web_model, f)
+.content
+  - field_set_tag 'model' do
+    = f.collection_select(:web_model_id, WebModel.all.sort{|a,b| a.name <=> b.name}, :id, :name_with_id)

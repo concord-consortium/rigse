@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @web_model.uuid}
+  =ot_imports
+  %objects
+    %OTSystem{:local_id => 'system'}
+      =ot_bundles(:title => h(@web_model.name))
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = h(Embeddable::WebModel.display_name + ': ' + @web_model.name)
+              %object{ :refid => ot_refid_for(@web_model) }/
+      %library
+        =yield :layout

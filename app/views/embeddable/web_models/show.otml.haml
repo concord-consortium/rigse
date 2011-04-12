@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@web_model.uuid
+- content_for(:web_model_object_id) do
+  =dom_id_for(@web_model)
+= render :partial => "show", :locals => { :web_model => @web_model }

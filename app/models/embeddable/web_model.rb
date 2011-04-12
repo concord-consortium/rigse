@@ -4,7 +4,17 @@ class Embeddable::WebModel < ActiveRecord::Base
   belongs_to :user
   belongs_to :web_model, :class_name => "WebModel"
 
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
+
   validates_presence_of :web_model
+
+  default_value_for :web_model do
+    WebModel.find(:first)
+  end
+
+  include Changeable
+  acts_as_replicatable
 
   [:name, :description, :url, :image_url].each {|m| delegate m, :to => :web_model }
 
@@ -19,5 +29,13 @@ class Embeddable::WebModel < ActiveRecord::Base
 
   def self.display_name
     "Web Model"
+  end
+
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
   end
 end
