@@ -25,10 +25,9 @@ describe "/shared/_page_header.html.haml" do
   it "should render a limited add list" do
     render :locals => {:page => @page}
     response.should have_tag("div[id=?] ul", "add_menu") do
-      with_tag("li:nth-child(1):first-child a", :text => Embeddable::MwModelerPage.display_name)
-      with_tag("li:nth-child(2) a", :text => Embeddable::NLogoModel.display_name)
-      with_tag("li:nth-child(3) a", :text => Embeddable::MultipleChoice.display_name)
-      with_tag("li:nth-child(4):last-child a", :text => Embeddable::OpenResponse.display_name)
+      with_tag("li:nth-child(1):first-child a", :text => Embeddable::WebModel.display_name)
+      with_tag("li:nth-child(2) a", :text => Embeddable::MultipleChoice.display_name)
+      with_tag("li:nth-child(3):last-child a", :text => Embeddable::OpenResponse.display_name)
     end
   end
 end
