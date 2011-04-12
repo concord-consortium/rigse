@@ -33,12 +33,11 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
   # find the first model, and create a pane definition for it
   firstPage = @activity.sections.first ? @activity.sections.first.pages.first : nil
   embeddables = firstPage ? firstPage.page_elements.map{|pe| pe.embeddable } : []
-  model = embeddables.shift
+  model = embeddables.detect{|e| e.kind_of? Embeddable::WebModel }
   modelPanel = {
     "single" => {
-      "type" => "image",
-      "caption" => model ? "Model # #{model.id}" : "No model found!",
-      "path" => "http://www.concord.org/sites/all/themes/cc/img/css/bg-footer-home.png"
+      "type" => "web",
+      "url" => (model ? model.url : "http://www.concord.org/")
     }
   }
 
@@ -55,6 +54,9 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
       q_data["fieldTypes"] << "multiplechoice"
     elsif q.kind_of? Embeddable::OpenResponse
       q_data["fieldTypes"] << "textarea"
+    else
+      # we can't handle whatever this is...
+      next
     end
 
     if q.kind_of? Embeddable::MultipleChoice
