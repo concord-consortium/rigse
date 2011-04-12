@@ -263,6 +263,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :teacher_notes
   map.resources :author_notes
 
+  map.resources :web_models
+
 
 #
 # ********* Start of Page embeddable objects *********

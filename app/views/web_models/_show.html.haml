@@ -1,0 +1,10 @@
+.content
+  %h3= "Web Model"
+  - field_set_tag 'name' do
+    = web_model.name
+  - field_set_tag 'description' do
+    = web_model.description
+  - field_set_tag 'url' do
+    = web_model.url
+  - field_set_tag 'preview image' do
+    %img{:src => web_model.image_url }

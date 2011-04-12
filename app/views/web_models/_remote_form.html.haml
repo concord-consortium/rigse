@@ -1,0 +1,2 @@
+- remote_form_for(web_model, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)", :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
+  = render :partial => "web_models/form", :locals => {:f => f, :web_model => web_model}

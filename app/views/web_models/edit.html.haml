@@ -1,0 +1,14 @@
+
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      %h3= "Editing Web Model #{@web_model.id}"
+    .action_menu_header_right
+      %ul.menu
+        %li= link_to 'list', web_models_path
+        %li= link_to 'show', edit_web_model_url(@web_model)
+
+
+- form_for(@web_model) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => {:f => f, :web_model => @web_model}

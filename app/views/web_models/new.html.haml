@@ -1,0 +1,7 @@
+%h1 New Web Model
+
+- form_for(@web_model) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => {:f => f, :web_model => @web_model}
+
+= link_to 'Back', web_models_path

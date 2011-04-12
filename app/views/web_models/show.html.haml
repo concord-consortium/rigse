@@ -1,0 +1,7 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_right
+      %ul.menu
+        %li= link_to 'edit', edit_web_model_url(@web_model)
+
+= render :partial => 'web_models/show', :locals => {:web_model => @web_model}

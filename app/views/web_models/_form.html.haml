@@ -1,0 +1,12 @@
+.content
+  %h3= "Web model"
+  - field_set_tag 'Name' do
+    = f.text_field :name, :id => dom_id_for(web_model, :form, :name_field), :style=>'width: 100%;'
+  - field_set_tag 'Description' do
+    = f.text_area :description, :id => dom_id_for(web_model, :form, :description_field), :style=>'width: 100%;'
+  - field_set_tag 'URL' do
+    = f.text_field :url, :id => dom_id_for(web_model, :form, :url_field), :style=>'width: 100%;'
+  - field_set_tag 'Preview Image URL' do
+    = f.text_field :image_url, :id => dom_id_for(web_model, :form, :image_url_field), :style=>'width: 100%;'
+  = f.hidden_field :user_id
+  = f.submit "Save"  
