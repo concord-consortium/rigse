@@ -1,7 +1,7 @@
 class WebModel < ActiveRecord::Base
   belongs_to :user
 
-  has_many :embeddable_web_models, :class_name => "Embeddable::WebModel", :foreign_key => "web_model_id", :dependent => "destroy"
+  has_many :embeddable_web_models, :class_name => "Embeddable::WebModel", :foreign_key => "web_model_id", :dependent => :destroy
 
   acts_as_replicatable
 

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110406140550) do
+ActiveRecord::Schema.define(:version => 20110411131949) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -550,6 +550,17 @@ ActiveRecord::Schema.define(:version => 20110406140550) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "embeddable_web_models", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "web_model_id"
+    t.string   "uuid",         :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "embeddable_web_models", ["user_id"], :name => "index_embeddable_web_models_on_user_id"
+  add_index "embeddable_web_models", ["web_model_id"], :name => "index_embeddable_web_models_on_web_model_id"
 
   create_table "embeddable_xhtmls", :force => true do |t|
     t.integer  "user_id"
@@ -2106,5 +2117,21 @@ ActiveRecord::Schema.define(:version => 20110406140550) do
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  create_table "web_models", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.string   "image_url"
+    t.string   "publication_status"
+    t.string   "uuid",               :limit => 36
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "web_models", ["name"], :name => "index_web_models_on_name"
+  add_index "web_models", ["publication_status"], :name => "index_web_models_on_publication_status"
+  add_index "web_models", ["user_id"], :name => "index_web_models_on_user_id"
 
 end
