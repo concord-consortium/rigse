@@ -18,7 +18,8 @@ class Portal::Clazz < ActiveRecord::Base
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
-
+  
+  before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -36,8 +37,6 @@ class Portal::Clazz < ActiveRecord::Base
   def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
-
-
 
   self.extend SearchableModel
 
@@ -278,5 +277,9 @@ class Portal::Clazz < ActiveRecord::Base
 
   def refresh_saveable_response_objects
     self.offerings.each { |o| o.refresh_saveable_response_objects }
+  end
+  
+  def class_word_lowercase
+    self.class_word.downcase! if self.class_word
   end
 end

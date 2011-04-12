@@ -4,6 +4,7 @@
     %ul.menu_h
       %li
         = label_tag :clazz, 'New Class Word: ', :class=>"right"
+        %p= "Not case sensitive"
         = text_field :clazz, :class_word, {:live => false}
       %li
         = f.submit 'Submit'

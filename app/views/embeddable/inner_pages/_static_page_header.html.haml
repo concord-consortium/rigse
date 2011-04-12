@@ -7,7 +7,7 @@
       :update =>dom_id_for(inner_page, :static_page_area), |
       :url => add_element_embeddable_inner_page_path(:class_name => type.name, :id=>inner_page.id, :page_id => page.id, :static => true), |
       :html => {:class=>'action'}, :complete => mce_init_string |
-- if (for_teacher_only page)
+- if (for_teacher_only? page)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"
