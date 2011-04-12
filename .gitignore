@@ -96,3 +96,5 @@ public/activities/
 .bundle/
 local_files
 skip-provisioning
+public/static
+public/sc-runtime
