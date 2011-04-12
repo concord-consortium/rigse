@@ -40,6 +40,15 @@ When /^I show offerings count on the investigations page$/ do
   visit "/investigations?include_usage_count=true"
 end
 
+Given /^the investigation "([^"]*)" is assigned to the class "([^"]*)"$/ do |investigation_name, class_name|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  investigation = Investigation.find_by_name(investigation_name)
+  Factory.create(:portal_offering, {
+    :runnable => investigation,
+    :clazz => clazz
+  })
+end
+
 When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
@@ -47,6 +56,13 @@ When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investi
     :runnable => investigation,
     :clazz => clazz
   })
+end
+
+# this is the interactive version of the step above
+When /^I assign the investigation "([^"]*)"$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  runnable_element = find("#investigation_#{investigation.id}")
+  assign_runnable(runnable_element)
 end
 
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
