@@ -24,5 +24,9 @@ class WebModel < ActiveRecord::Base
     def nontrasferable_attributes
       %w{id}
     end
+
+    def display_name
+      "Web Model"
+    end
   end
 end

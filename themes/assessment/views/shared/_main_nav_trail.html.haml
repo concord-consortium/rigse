@@ -6,5 +6,7 @@
   %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
 - if current_user.has_role?('admin','manager','author') || current_user.portal_teacher
   %li.trail= link_to "#{Investigation.display_name.pluralize}", investigations_path
+- if current_user.has_role?('admin')
+  %li.trail= link_to "#{WebModel.display_name.pluralize}", web_models_path
 - if current_user.has_role?('guest')
   %li.trail= link_to "Activity Previews", external_activities_path
