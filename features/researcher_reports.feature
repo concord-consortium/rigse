@@ -181,10 +181,12 @@ Feature: Investigations can be reported on
     And  the report generated for "second investigation" should have (3) links to blobs
     And  the usage report for "first investigation" should have (3) answers for "student_b"
 
-  Scenario:
   @pending
   Scenario: a student has a record for an answer, which wasn't assigned ...
   # Failing, because question #e wasn't part of the investigation. (!) woah.
+
+  Scenario: a students answers appear in the correct order in the spreadsheet
+  @pending
 
   @current
   Scenario: Comparing the total assessments completed, with total completed for each activity
