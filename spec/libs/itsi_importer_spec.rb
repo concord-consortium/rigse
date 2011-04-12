@@ -3,29 +3,31 @@ require 'spec_helper'
 describe ItsiImporter do
   before(:all) do
   end
-  # def process_diy_activity_section(actvity,diy_act,section_key,section_name,section_description) 
+  # def process_diy_activity_section(actvity,diy_act,section_key,section_name,section_description)
   describe "process diy activity section" do
     before(:each) do
       @sections = []
       @activity = mock_model(Activity,
-          :investigation => mock_model(Investigation,
-            :update_attribute => true))
+          :investigation => mock_model(Investigation, :update_attribute => true),
+          :user => mock_model(User))
       @diy_act = mock_model(Itsi::Activity,
           :collect_data => "Collect Data Rich text",
-          :update_attribute => true)
+          :update_attribute => true,
+          :uuid => '5693A069-B829-47BF-9BF0-30FBFDA9F7E2',
+          :puiblic => true)
       @section_key = "collect_data"
       @section_name = "Collect Data"
       @section_description = "go out there and get me some data!"
     end
-    
-    def call_process_diy_activity_section 
+
+    def call_process_diy_activity_section
       ItsiImporter.process_diy_activity_section(@activity,@diy_act,@section_key,@section_name,@section_description)
     end
 
     it "should respond to the method named process_diy_activity_section" do
       ItsiImporter.should respond_to :process_diy_activity_section
     end
-    
+
     it "should add a section and a page to the activity that are well named" do
       @activity.should_receive(:sections).and_return(@sections)
       call_process_diy_activity_section
@@ -33,7 +35,7 @@ describe ItsiImporter do
       @sections.first.should be_an_instance_of Section
       @sections.first.name.should be @section_name
     end
-    
+
     it "should create appropriate embeddedables" do
       @activity.should_receive(:sections).and_return(@sections)
       @diy_act.should_receive(:respond_to?).with(:collect_data_text_response).and_return(true)
@@ -51,7 +53,7 @@ describe ItsiImporter do
       @diy_act.should_receive(:collect_data_probe_active ).and_return(true)
       #@diy_act.should_receive(:probe).and_return(1)
       @diy_act.should_receive(:collect_data_probetype_id).and_return(1)
-      
+
       # dont handle these types:
       @diy_act.should_receive(:respond_to?).with(:collect_data_model_active).and_return(false)
       call_process_diy_activity_section
@@ -63,16 +65,18 @@ describe ItsiImporter do
     end
 
   end
-  
+
   describe "create_activity_from_itsi_activity method" do
     def call_create_activity(act = @itsi_activity, user = @user)
       ItsiImporter.create_activity_from_itsi_activity(act,user)
     end
-    
+
     before(:each) do
       @itsi_activity = mock_model(Itsi::Activity,
           :name => "fake diy activity",
-          :description => "fake diy activity")
+          :description => "fake diy activity",
+          :uuid => '7A46C23E-EB9B-4C59-AC78-842A021237A3',
+          :public => true)
       @user = mock_model(User,
           :login => "fake_user",
           :first_name => "fake",
@@ -89,12 +93,17 @@ describe ItsiImporter do
       expected_calls = ItsiImporter::SECTIONS_MAP.size
       ItsiImporter::SECTIONS_MAP.map{ |e| e[:key] }.each do |key|
         @itsi_activity.should_receive(key).and_return("some text")
-        [:text_response, :drawing_response, :model_active, :probetype_id].each do |attribute|
+        [:text_response, :drawing_response, :graph_response, :model_active, :probetype_id].each do |attribute|
           attribute_key = ItsiImporter.attribute_name_for(key,attribute)
-          @itsi_activity.should_receive(:respond_to?).with(attribute_key).and_return(false)
+          if attribute_key
+            @itsi_activity.should_receive(:respond_to?).with(attribute_key).and_return(false)
+          end
         end
       end
       call_create_activity
     end
+
+
   end
+
 end

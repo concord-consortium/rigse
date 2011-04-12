@@ -1,7 +1,7 @@
 class Activity < ActiveRecord::Base
   include JnlpLaunchable
   include TagDefaults
-  MUST_HAVE_NAME = "Your activity must have a name"
+  MUST_HAVE_NAME = "Your activity must have a name."
   MUST_HAVE_DESCRIPTION = "Please give your activity a description."
   MUST_HAVE_UNIQUE_NAME = "Activity '%{value}' already exists. Please pick a unique name."
 
@@ -61,7 +61,7 @@ class Activity < ActiveRecord::Base
   acts_as_list :scope => :investigation
 
 
-  validates_presence_of :name, :messge => Activity::MUST_HAVE_NAME 
+  validates_presence_of :name, :message => Activity::MUST_HAVE_NAME 
   validates_presence_of :description,
     :if => Proc.new { |a| Admin::Project.require_activity_descriptions },
     :message => Activity::MUST_HAVE_DESCRIPTION

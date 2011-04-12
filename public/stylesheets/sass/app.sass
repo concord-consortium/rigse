@@ -1020,3 +1020,23 @@ ul.quiet_list
   a:hover
     background-color: #111111
     color: #bcd6ea
+
+//Fields with validation errors:
+$error_color: #e16a3e
+.errorExplanation
+  li
+    color: $error_color
+    text-decoration: underline
+.fieldWithErrors
+  input
+    border-color: $error_color
+.LV_validation_message
+.LV_valid
+  display: none
+.LV_invalid_field
+  color: $error_color
+.LV_invalid
+  color: $error_color
+.LV_invalid_field
+  color: $error_color
+
