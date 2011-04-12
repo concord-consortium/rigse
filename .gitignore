@@ -95,3 +95,6 @@ public/stylesheets/sliding_doors_tabs.css
 public/activities/
 .bundle/
 local_files
+.bundle/
+public/sparks-content/
+public/stylesheets/workgroup.css

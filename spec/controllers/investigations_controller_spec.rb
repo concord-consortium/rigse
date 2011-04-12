@@ -41,7 +41,6 @@ describe InvestigationsController do
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
 
-
   it "should render prievew warning in OTML" do
     get :show, :id => @investigation.id, :format => 'otml'
     assert_select "*.warning"

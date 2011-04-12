@@ -30,3 +30,12 @@ Then /^the classes "([^"]*)" are in a school named "([^"]*)"$/ do |classes,schoo
   classes.each {|t| t.course.school =  school; t.course.save!; t.reload; }
 end
 
+Then /^the portal class "([^"]*)" should have been created$/ do |clazz_name|
+  clazz = Portal::Clazz.find_by_name clazz_name
+  clazz.should be
+end
+
+Then /^the class word for the portal class "([^"]*)" should be "([^"]*)"$/ do |clazz_name, class_word|
+  clazz = Portal::Clazz.find_by_name clazz_name
+  clazz.class_word.should == class_word
+end

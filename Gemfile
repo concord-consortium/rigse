@@ -35,8 +35,12 @@ source :gemcutter
   gem "acts-as-taggable-on"
   gem "ruby-debug"
   gem "nokogiri",             "~> 1.4.1"
+
 group :development do
   gem "highline"
+  gem "wirble"
+  gem "what_methods"
+  gem "hirb"
 end
 
 group :test do
@@ -64,5 +68,3 @@ group :test do
   # gem "autotest-rails",           "= 4.1.0"
 
 end
-
-
