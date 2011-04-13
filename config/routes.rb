@@ -440,6 +440,7 @@ ActionController::Routing::Routes.draw do |map|
   map.home   '/home', :controller => 'home', :action => 'index'
   map.about  '/about', :controller => 'home', :action => 'about'
   map.root :controller => 'home', :action => 'index'
+  map.requirements '/requirements', :controller => 'home', :action => 'requirements'
 
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
