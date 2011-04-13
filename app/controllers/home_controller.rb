@@ -17,6 +17,9 @@ class HomeController < ApplicationController
 
   def about
   end
+  
+  def requirements
+  end
 
   # @template is a reference to the View template object
   def name_for_clipboard_data
