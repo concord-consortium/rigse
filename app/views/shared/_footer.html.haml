@@ -4,7 +4,10 @@
       Copyright
       %span.copyright
         &copy;
-      2011 Concord Consortium. All rights reserved.
+      - now = DateTime.now
+      - copyright_year = now.year
+      = copyright_year
+      Concord Consortium. All rights reserved.
 
     %p#footer_left
       Questions/Feedback:
