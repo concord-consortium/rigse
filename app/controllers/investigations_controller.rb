@@ -281,6 +281,53 @@ class InvestigationsController < AuthoringController
     end
   end
 
+  # POST /pages/extended_create
+  # POST /pages/extended_create.xml
+  def extended_create
+    begin
+      gse = RiGse::GradeSpanExpectation.find(params[:grade_span_expectation])
+      params[:investigation][:grade_span_expectation] = gse
+    rescue
+      logger.error('could not find gse')
+    end
+    params[:investigation][:user_id] = current_user.id
+
+    success = false
+    begin
+      # create an investigation with a single nested page
+      @investigation = Investigation.create!(params[:investigation])
+      options = {
+        :name => @investigation.name,
+        :description => @investigation.description,
+        :user => @investigation.user
+      }
+      activity = Activity.create!(options)
+      section = Section.create!(options)
+      @page = Page.create!(options)
+
+      @investigation.activities << activity
+      activity.sections << section
+      section.pages << @page
+
+      [@investigation, activity, section, @page].each {|o| o.save! }
+
+      success = true
+    rescue => e
+      puts "Error creating: #{e}\n#{e.backtrace.join("\n")}"
+      success = false
+    end
+    respond_to do |format|
+      if success
+        flash[:notice] = 'Investigation was successfully created.'
+        format.html { redirect_to(@page) }
+        format.xml  { render :xml => @investigation, :status => :created, :location => @investigation }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @investigation.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
   def gse_select
     if params[:grade_span_expectation]
       @selected_gse = RiGse::GradeSpanExpectation.find_by_id(params[:grade_span_expectation][:id])

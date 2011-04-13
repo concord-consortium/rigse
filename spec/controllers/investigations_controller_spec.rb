@@ -1,5 +1,4 @@
 require 'spec_helper'
-#include ApplicationHelper
 
 describe InvestigationsController do
   integrate_views
@@ -16,7 +15,7 @@ describe InvestigationsController do
 
     @investigation = Factory.create(:investigation, {
       :name => "test investigation",
-      :description => "new decription"
+      :description => "new description"
     })
 
     Investigation.stub!(:find).and_return(@investigation)
@@ -81,6 +80,30 @@ describe InvestigationsController do
       get :details_report, :id => @investigation.id
       response.sending_file?.should be_true
       response.content_type.should eql "application/vnd.ms.excel"
+    end
+  end
+
+  describe "Assessments investigations" do
+    # include ApplicationHelper
+    before(:each) do
+      @inv_params = {:investigation => {:name => "New Investigation #{UUIDTools::UUID.timestamp_create.to_s}", :description => "Desc", :publication_status => "draft", :user_id => @admin_user.id } }
+      Investigation.unstub!(:find)
+      Investigation.unstub!(:published)
+    end
+
+    it "should create a single Page nested in a section and activity" do
+      post :extended_create, @inv_params
+      response.status.should eql("302 Found")
+      @new_investigation = Investigation.find_by_name(@inv_params[:investigation][:name])
+      @new_investigation.activities.size.should eql(1)
+      @new_investigation.activities.first.sections.size.should eql(1)
+      @new_investigation.activities.first.sections.first.pages.size.should eql(1)
+    end
+
+    it "should forward the user to the page show page" do
+      post :extended_create, @inv_params
+      @new_investigation = Investigation.find_by_name(@inv_params[:investigation][:name])
+      response.should redirect_to(page_path(@new_investigation.activities.first.sections.first.pages.first))
     end
   end
 end

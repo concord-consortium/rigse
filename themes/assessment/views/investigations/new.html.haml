@@ -1,0 +1,12 @@
+- form_for(@investigation,:before =>  "tinyMCE.triggerSave(true,true)", :url => investigation_extended_create_path) do |f|
+  = render :partial => 'investigations/form', :locals => {:investigation => @investigation,:f => f, :selected_gse => @gse, :related_gses => @related_gses}
+
+/ - field_set_tag 'Current GSE' do
+/   #current_gse_description
+/     = render :partial => 'ri_gse/grade_span_expectations/grade_span_expectation', :locals => { :grade_span_expectation => @investigation.grade_span_expectation }
+/ 
+/ = observe_field :grade_span, :url => { :action => "gse_select" }, :with => 'grade_span', :update => {:success => 'gse_select'}
+/ 
+/ = observe_field :domain_id, :url => { :action => "gse_select" }, :with => 'domain_id', :update => {:success => 'gse_select'}
+
+

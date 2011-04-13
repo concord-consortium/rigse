@@ -389,6 +389,9 @@ ActionController::Routing::Routes.draw do |map|
   }, :collection => {
     :printable_index => :get
   }
+
+  map.investigation_extended_create '/investigations/extended_create', :controller => 'investigations', :action => 'extended_create', :method => :post
+
   map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
   map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :get
   map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
