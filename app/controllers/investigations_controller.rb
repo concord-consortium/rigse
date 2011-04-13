@@ -311,6 +311,8 @@ class InvestigationsController < AuthoringController
 
       [@investigation, activity, section, @page].each {|o| o.save! }
 
+      # also create an ExternalActivity which maps this investigation in the sc-runtime
+      ExternalActivity.create!(options.merge({:append_learner_id_to_url => true, :url => "/sc-runtime/##{activity.id}" }))
       success = true
     rescue => e
       puts "Error creating: #{e}\n#{e.backtrace.join("\n")}"

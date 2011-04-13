@@ -105,5 +105,13 @@ describe InvestigationsController do
       @new_investigation = Investigation.find_by_name(@inv_params[:investigation][:name])
       response.should redirect_to(page_path(@new_investigation.activities.first.sections.first.pages.first))
     end
+
+    it "should create an ExternalActivity corresponding to this investigation" do
+      post :extended_create, @inv_params
+      @new_investigation = Investigation.find_by_name(@inv_params[:investigation][:name])
+      ea = ExternalActivity.find_by_name_and_url(@new_investigation.name, "/sc-runtime/##{@new_investigation.activities.first.id}")
+      ea.should_not be_nil
+      ea.append_learner_id_to_url.should be_true
+    end
   end
 end
