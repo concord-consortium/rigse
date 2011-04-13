@@ -88,7 +88,7 @@ Then /^I should see the sites name$/ do
   end
 end
 
-When /^I debug$/ do
+When /^(?:|I )debug$/ do
   debugger
   0
 end
