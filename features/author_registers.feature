@@ -1,3 +1,4 @@
+@wip
 Feature: An author registers to use the portal
 
   As a potential student
