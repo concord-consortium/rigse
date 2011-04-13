@@ -27,3 +27,15 @@ Feature: User updates account information
       | username | password |
       | student  | student  |
       | teacher  | teacher  |
+
+  @selenium
+  Scenario: Students can not change their email addresses
+    Given the following students exist:
+      | login   | password |
+      | student | student  |
+    When I login with username: student password: student
+    And I am on the user preferences page for the user "student"
+    Then I should see "User Preferences"
+    And I should see "First name"
+    But I should not see the xpath "//input[@id='user_email']"
+    And I should not see "Username"
