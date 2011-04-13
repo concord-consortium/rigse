@@ -88,7 +88,6 @@ end
 
 When /^I debug$/ do
   debugger
-  0
 end
 
 When /^I wait "(.*)" second(?:|s)$/ do |seconds|
