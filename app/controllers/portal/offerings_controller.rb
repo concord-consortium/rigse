@@ -1,6 +1,5 @@
 class Portal::OfferingsController < ApplicationController
 
-  layout 'report', :only => %w{report open_response_report multiple_choice_report separated_report}
   include RestrictedPortalController
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report, :separated_report, :report_embeddable_filter]
 
@@ -161,8 +160,9 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
 
     respond_to do |format|
-      format.html # report.html.haml
+      format.html { render :layout => 'report' }# report.html.haml
     end
+
   end
 
   def multiple_choice_report
@@ -170,7 +170,7 @@ class Portal::OfferingsController < ApplicationController
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
-      format.html # multiple_choice_report.html.haml
+      format.html { render :layout => 'report' }# multiple_choice_report.html.haml
     end
   end
 
@@ -179,7 +179,7 @@ class Portal::OfferingsController < ApplicationController
     @offering_report = Report::Offering::Investigation.new(@offering)
 
     respond_to do |format|
-      format.html # open_response_report.html.haml
+      format.html { render :layout => 'report' }# open_response_report.html.haml
     end
   end
 
@@ -191,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
     @page_elements = reportUtil.page_elements
 
     respond_to do |format|
-      format.html # report.html.haml
+      format.html { render :layout => 'report' }# report.html.haml
     end
   end
 

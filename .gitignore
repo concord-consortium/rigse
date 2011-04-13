@@ -98,3 +98,6 @@ local_files
 skip-provisioning
 public/static
 public/sc-runtime
+.bundle/
+public/sparks-content/
+public/stylesheets/workgroup.css

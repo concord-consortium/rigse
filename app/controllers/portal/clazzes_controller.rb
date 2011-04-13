@@ -5,7 +5,8 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
 
-  before_filter :teacher_admin_or_config, :only => [:class_list]
+  before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
+  before_filter :student_teacher_admin_or_config, :only => [:show]
 
   def current_clazz
     Portal::Clazz.find(params[:id])

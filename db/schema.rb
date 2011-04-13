@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110411131949) do
+ActiveRecord::Schema.define(:version => 20110411172214) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -861,7 +861,7 @@ ActiveRecord::Schema.define(:version => 20110411131949) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36

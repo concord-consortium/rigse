@@ -53,21 +53,20 @@ Feature: Teacher can assign an offering to a class
 
   @selenium
   Scenario: Offerings from the default class show learner data in the default class
-    Given the following classes exist:
-      | name          | teacher |
-      | Default Class | teacher |
-    And the class "Default Class" is the default class
+    Given the default class is created
     And the following students exist:
       | login     | password  |
       | student   | student   |
+    And the student "student" is in the class "My Class"
     And the following external activity exists:
       | name        | user    |
       | My Activity | teacher |
-    When I login with username: teacher password: teacher
+    When I login as an admin
     And I am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds
     Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
+    When I login with username: teacher password: teacher
     When I am on the class page for "My Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds
@@ -76,7 +75,7 @@ Feature: Teacher can assign an offering to a class
     When I login with username: student password: student
     And I am on the class page for "My Class"
     And I follow "run My Activity"
-    And I login with username: teacher password: teacher
+    And I login as an admin
     And I am on the class page for "Default Class"
     Then I should see "My Activity"
     And I should see "joe user"
@@ -85,10 +84,7 @@ Feature: Teacher can assign an offering to a class
   @dialog
   @selenium
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
-    Given the following classes exist:
-      | name          | teacher |
-      | Default Class | teacher |
-    And the class "Default Class" is the default class
+    Given the default class is created
     And the following students exist:
       | login     | password  |
       | student   | student   |
@@ -101,7 +97,8 @@ Feature: Teacher can assign an offering to a class
     And I wait "2" seconds
     Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
     And the external activity named "My Activity" should have "offerings_count" equal to "1"
-    When I am on the class page for "Default Class"
+    When I login as an admin
+    And am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
     And I wait "2" seconds
     Then I should see "The External Activity My Activity is already assigned in a class."
