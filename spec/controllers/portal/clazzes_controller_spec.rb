@@ -79,7 +79,7 @@ describe Portal::ClazzesController do
         # All users should see the full class details summary
         with_tag("div#details_portal__clazz_#{@mock_clazz.id}") do
           with_tag('div.action_menu') do
-            with_tag('a', :text => 'edit')
+            with_tag('a', :text => 'edit class information')
           end
         end
       end
