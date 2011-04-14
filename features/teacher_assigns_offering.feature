@@ -50,3 +50,57 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Investigation: Test Investigation"
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
+
+  @selenium
+  Scenario: Offerings from the default class show learner data in the default class
+    Given the default class is created
+    And the following students exist:
+      | login     | password  |
+      | student   | student   |
+    And the student "student" is in the class "My Class"
+    And the following external activity exists:
+      | name        | user    |
+      | My Activity | teacher |
+    When I login as an admin
+    And I am on the class page for "Default Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then the external activity offering "My Activity" in the class "Default Class" should be a default offering
+    When I login with username: teacher password: teacher
+    When I am on the class page for "My Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
+    And the external activity named "My Activity" should have "offerings_count" equal to "2"
+    When I login with username: student password: student
+    And I am on the class page for "My Class"
+    And I follow "run My Activity"
+    And I login as an admin
+    And I am on the class page for "Default Class"
+    Then I should see "My Activity"
+    And I should see "joe user"
+    And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
+
+  @dialog
+  @selenium
+  Scenario: Runnables with offerings in regular classes can not be assigned to the default class
+    Given the default class is created
+    And the following students exist:
+      | login     | password  |
+      | student   | student   |
+    And the following external activity exists:
+      | name        | user    |
+      | My Activity | teacher |
+    When I login with username: teacher password: teacher
+    And I am on the class page for "My Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then the external activity offering "My Activity" in the class "My Class" should not be a default offering
+    And the external activity named "My Activity" should have "offerings_count" equal to "1"
+    When I login as an admin
+    And am on the class page for "Default Class"
+    And I drag the external activity "My Activity" to "#clazz_offerings"
+    And I wait "2" seconds
+    Then I should see "The External Activity My Activity is already assigned in a class."
+    And the external activity named "My Activity" should have "offerings_count" equal to "1"
+    And the class "Default Class" should not have any offerings

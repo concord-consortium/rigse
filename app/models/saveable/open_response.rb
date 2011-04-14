@@ -14,6 +14,7 @@ class Saveable::OpenResponse < ActiveRecord::Base
   
   [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
   
+  include Saveable::Saveable
   def answer
     if answered?
       answers.last.answer

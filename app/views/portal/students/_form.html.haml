@@ -26,14 +26,18 @@
           = label_tag :user, 'Password Again : ', :class=>"right"
           = password_field :user, :password_confirmation, {:live => false}
         
-        - if signup
-          %li
-            = label_tag :clazz, 'Class Word: ', :class=>"right"
-            - value = portal_clazz ? portal_clazz.class_word : 'class word'
-            = text_field :clazz, :class_word, {:live => false}
+        - if signup 
+          - if current_project.allow_default_class
+            = hidden_field :clazz, :class_word, {:value => Portal::Clazz.default_class.class_word}
+          - else
+            %li
+              = label_tag :clazz, 'Class Word: ', :class=>"right"
+              %p= "Not case sensitive"
+              - value = portal_clazz ? portal_clazz.class_word : 'class word'
+              = text_field :clazz, :class_word, {:live => false}
             
-      - if signup && @project.use_student_security_questions
-        = render :partial => "security_questions/header"
-        = render :partial => "security_questions/fields"
+          - if current_project.use_student_security_questions
+            = render :partial => "security_questions/header"
+            = render :partial => "security_questions/fields"
       
   = f.submit 'Submit'

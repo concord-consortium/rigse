@@ -7,5 +7,7 @@
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   - field_set_tag 'External URL' do
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'Save Path' do
+    = f.text_field :save_path
 
 = javascript_tag("focus_first_field();");

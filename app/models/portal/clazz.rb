@@ -18,7 +18,8 @@ class Portal::Clazz < ActiveRecord::Base
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
-
+  
+  before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -37,13 +38,23 @@ class Portal::Clazz < ActiveRecord::Base
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
 
-
-
   self.extend SearchableModel
 
   @@searchable_attributes = %w{name description}
 
   class <<self
+    def default_class
+      find_or_create_default_class
+    end
+
+    def find_or_create_default_class
+      clazz = find :first, :conditions => ['default_class = ?', true || 1]
+      if clazz.blank?
+        clazz = Portal::Clazz.create :name => "Default Class", :default_class => true, :class_word => "default"
+      end
+      clazz
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end
@@ -180,6 +191,10 @@ class Portal::Clazz < ActiveRecord::Base
   end
   alias is_teacher? is_user?
 
+  def is_student?(_user)
+    students.include? _user.portal_student
+  end
+
   # def changeable?(_user)
   #   return true if virtual? && is_user?(_user)
   #   if _user.has_role?('manager','admin','district_admin')
@@ -262,5 +277,9 @@ class Portal::Clazz < ActiveRecord::Base
 
   def refresh_saveable_response_objects
     self.offerings.each { |o| o.refresh_saveable_response_objects }
+  end
+  
+  def class_word_lowercase
+    self.class_word.downcase! if self.class_word
   end
 end

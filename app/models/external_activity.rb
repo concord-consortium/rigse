@@ -77,4 +77,8 @@ class ExternalActivity < ActiveRecord::Base
   def print_listing
     listing = []
   end
+  
+  def run_format
+    :run_external_html
+  end
 end

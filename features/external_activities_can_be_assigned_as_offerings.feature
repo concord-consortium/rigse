@@ -19,25 +19,20 @@ Feature: External Activities can be assigned as offerings
       | name        | user    |
       | My Activity | teacher |
 
-  Scenario: External Offerings and Investigations are both assignable
-    When I assign the external activity "My Activity" to the class "My Class"
-    Then the external activity named "My Activity" should have "offerings_count" equal to "1"
-    When I assign the investigation "Test Investigation" to the class "My Class"
-    Then the investigation named "Test Investigation" should have "offerings_count" equal to "1"
-
   # DO NOT TOUCH THE BROWSER WINDOW THAT SELENIUM IS DRIVING
   # IT WILL CAUSE THE TEST TO FAIL
   @selenium
-  Scenario: External Activities and Investigations are draggable items
+  Scenario: External Activities and Investigations are assigned
     Given I login with username: teacher password: teacher
-    When I am on the class page for "My Class"
-    Then I should see "My Activity"
-    And I should see "Investigation: Test Investigation"
-    When I drag the investigation "Test Investigation" to "#clazz_offerings"
-    # TODO: Eliminate sleep() call.
-    # Problem is that selenium is not waiting for callback to finish
-    And I wait "2" seconds
-    And I drag the external activity "My Activity" to "#clazz_offerings"
-    And I wait "2" seconds
+    And I am on the class page for "My Class"
+    When I assign the investigation "Test Investigation"
+    And I assign the external activity "My Activity"
+    Then I should see "Test Investigation" within "#clazz_offerings"
+    And I should see "My Activity" within "#clazz_offerings"
+
+  Scenario: Offering counts increase when either a external activity or investigation is assigned
+    Given the external activity "My Activity" is assigned to the class "My Class"
+    And the investigation "Test Investigation" is assigned to the class "My Class"
     Then the external activity named "My Activity" should have "offerings_count" equal to "1"
     And the investigation named "Test Investigation" should have "offerings_count" equal to "1"
+

@@ -6,7 +6,8 @@ describe Portal::StudentsController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
+    Admin::Project.stub!(:default_project).and_return(@mock_project)
+    @mock_project.stub!(:allow_default_class).and_return(true)
   end
 
   describe "POST create" do

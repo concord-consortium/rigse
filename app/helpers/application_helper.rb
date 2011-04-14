@@ -3,6 +3,9 @@ include JnlpHelper
 include Clipboard
 
 module ApplicationHelper
+  def current_project
+    @_project ||= Admin::Project.default_project
+  end
 
   def top_level_container_name
     APP_CONFIG[:top_level_container_name] || "investigation"
@@ -101,18 +104,18 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    name = @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = @jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = @jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
-    if @project.snapshot_enabled
+    if current_project.snapshot_enabled
       info << "(snapshot)"
     else
       info << "(frozen)"
     end
 
-    # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
     #   info << "(snapshot)"
     # else
     #   info << "(frozen)"
@@ -384,7 +387,7 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
-    edit_button_for(component) +
+    link_button("edit.png", url) +
     link_to(link_text, url,
         :title => "edit the #{component_display_name}: '#{name}'")
   end
@@ -863,19 +866,13 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
-    view_class = for_teacher_only(component) ? "teacher_only action_menu" : "action_menu"
+    view_class = for_teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          # haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
-          if is_page_element
-            restrict_to 'admin' do
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
-            end
-          end
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
@@ -999,7 +996,7 @@ module ApplicationHelper
 
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
-    if (for_teacher_only(component))
+    if (for_teacher_only?(component))
       style_classes << 'teacher_only' # funny, just adding a style text
     end
     return style_classes
@@ -1060,9 +1057,9 @@ module ApplicationHelper
   # cascading logic.
   # TODO: generic container-based method-forwarding mechanism
   #
-  def for_teacher_only(thing)
-    if thing.respond_to? :teacher_only?
-      return true if thing.teacher_only?
+  def for_teacher_only?(thing)
+    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
+      return true;
     end
     if thing.respond_to? :parent
       while thing = thing.parent
@@ -1103,7 +1100,6 @@ module ApplicationHelper
   def students_in_class(all_students)
     all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
-
 
 #            Welcome
 #            = "#{current_user.name}."
@@ -1196,4 +1192,18 @@ module ApplicationHelper
       end
     end
   end
+  
+  def settings_for(key)
+    Admin::Project.settings_for(key)
+  end
+
+  def current_user_can_author
+    return true if current_user.has_role? "author" 
+    if settings_for(:teachers_can_author)
+      return true unless current_user.teacher.nil?
+    end
+    # TODO add aditional can-author conditions
+    return false
+  end
+
 end

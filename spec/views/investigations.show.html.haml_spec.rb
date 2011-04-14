@@ -4,13 +4,11 @@ describe "/investigations/index.html.haml" do
   include InvestigationsHelper
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    logout_user
-    login_researcher
     @inv1 = Factory.create(:investigation)
     @inv2 = Factory.create(:investigation)
     @inv3 = Factory.create(:investigation)
     assigns[:investigations] = @investigations = [@inv3,@inv2,@inv1]
+    template.stub!(:current_user).and_return(Factory.next(:researcher_user))
   end
 
   it "should have a global usage report link" do

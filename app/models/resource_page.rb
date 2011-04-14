@@ -115,4 +115,8 @@ class ResourcePage < ActiveRecord::Base
   def student_views_count
     student_views.sum('count')
   end
+  
+  def run_format
+    nil
+  end
 end

@@ -8,16 +8,13 @@
     = "Search #{Investigation.display_name.pluralize}"
     - unless local_assigns[:investigations_only]
       = " & #{ResourcePage.display_name.pluralize}"
-  .progress_container
-    #search_spinner.tiny{:style=>'display: none;'}
-      searching ...
-      = image_tag "ajax-loader.gif"
 
 - # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
-%form{ :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
+%form{:method => 'get',  :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
   - if local_assigns[:investigations_only]
     = hidden_field_tag 'investigations_only', true
+  = hidden_field_tag 'page', params[:page]
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
@@ -31,8 +28,8 @@
         = text_field_tag :name, name
       %td{:style=>"padding: 0.5em; text-align: right"}
         - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
-          = label_tag :filter, 'drafts too: ', :class=>"right"
-          = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
+          = label_tag :include_drafts, 'drafts too: ', :class=>"right"
+          = check_box_tag :include_drafts, 'include drafts', session[:include_drafts]
     %tr
       %td{:style=>"padding: 0.5em;"}
         = label_tag :sort_order, 'sort: ', :class => 'right'
@@ -41,4 +38,4 @@
       %td{:style=>"padding: 0.5em;"}
       %td{:style=>"padding: 0.5em; text-align: right"}
         = label_tag :include_usage_count, 'show count: ', :class=>"right"
-        = check_box_tag 'include_usage_count', 'true', @include_usage_count
+        = check_box_tag :include_usage_count, true, session[:include_usage_count]

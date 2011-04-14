@@ -5,8 +5,10 @@ describe InvestigationsController do
   integrate_views
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
+    controller.stub(:before_render) {
+      response.template.stub(:net_logo_package_name).and_return("blah")
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     @admin_user.add_role("admin")
@@ -39,7 +41,6 @@ describe InvestigationsController do
     #@response.body.should_not include(duplicate_link_for(@investigation))
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
-
 
   it "should render prievew warning in OTML" do
     get :show, :id => @investigation.id, :format => 'otml'

@@ -1,5 +1,4 @@
-
-- if portal_clazz.is_teacher? current_user
+- if portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
   .action_menu
     .action_menu_left
       %p

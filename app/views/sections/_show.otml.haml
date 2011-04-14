@@ -19,11 +19,11 @@
   %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
     %cards
       - section.pages.each do |page|
-        - unless ((for_teacher_only(page)) && (!teacher_mode))
+        - unless ((for_teacher_only?(page)) && (!teacher_mode))
           =yield "page_#{dom_id_for(page)}".to_sym
     %currentCard
       - if section.pages.first
-        - unless ((for_teacher_only(section.pages.first)) && (!teacher_mode))
+        - unless ((for_teacher_only?(section.pages.first)) && (!teacher_mode))
           %object{ :refid => ot_refid_for(section.pages.first, :content) }/
     %viewedCards
   %OTMenu{ :local_id => ot_local_id_for(section, :menu), :forceSectionFirstOrLast => 'true', :moveToNextSectionAllowed => 'true' }

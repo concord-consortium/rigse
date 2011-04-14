@@ -1,19 +1,22 @@
 %p
-  %ul.menu_v
-    %li
-      Maven Jnlp Server:
-      = select(:admin_project, :maven_jnlp_server_id, MavenJnlp::MavenJnlpServer.all.collect {|mjs| [ mjs.name, mjs.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_server)})
-    %li
-      Maven Jnlp Family: 
-      = select(:admin_project, :maven_jnlp_family_id, admin_project.maven_jnlp_server.maven_jnlp_families.collect {|mjf| [ mjf.name, mjf.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_family)})
-    %li 
-      Snapshot Enabled? 
-      = check_box(:admin_project, :snapshot_enabled)
-    %li
-      Jnlp Version:
-      - if admin_project.snapshot_enabled
-        = admin_project.jnlp_version_str
-      - else
-        = select(:admin_project, :jnlp_version_str, admin_project.maven_jnlp_family.recent_versioned_jnlp_urls.collect {|mjf| mjf.version_str }, { :selected => admin_project.jnlp_version_str }, { :id => dom_id_for(admin_project, :select_jnlp_version_str)})
+  - if admin_project.maven_jnlp_server.nil?
+    No Maven Jnlp Server is configured, currently this needs to be initially enabled by a developer
+  - else
+    %ul.menu_v
+      %li
+        Maven Jnlp Server:
+        = select(:admin_project, :maven_jnlp_server_id, MavenJnlp::MavenJnlpServer.all.collect {|mjs| [ mjs.name, mjs.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_server)})
+      %li
+        Maven Jnlp Family: 
+        = select(:admin_project, :maven_jnlp_family_id, admin_project.maven_jnlp_server.maven_jnlp_families.collect {|mjf| [ mjf.name, mjf.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_family)})
+      %li 
+        Snapshot Enabled? 
+        = check_box(:admin_project, :snapshot_enabled)
+      %li
+        Jnlp Version:
+        - if admin_project.snapshot_enabled
+          = admin_project.jnlp_version_str
+        - else
+          = select(:admin_project, :jnlp_version_str, admin_project.maven_jnlp_family.recent_versioned_jnlp_urls.collect {|mjf| mjf.version_str }, { :selected => admin_project.jnlp_version_str }, { :id => dom_id_for(admin_project, :select_jnlp_version_str)})
 
 = observe_form(dom_id_for(admin_project, :edit), :url => update_form_admin_project_path(admin_project), :update => dom_id_for(admin_project, :maven_jnlp))

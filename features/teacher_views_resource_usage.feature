@@ -20,7 +20,6 @@ Feature: Teacher views resource usage
       | student | student  |
     And the student "student" belongs to class "My Class"
 
-  @selenium
   Scenario: Student resource page view increments counter
     When I login with username: teacher password: teacher
     And I am on the resource pages page
@@ -40,7 +39,6 @@ Feature: Teacher views resource usage
     When I open the accordion for the resource "Test Resource Page"
     Then I should see "Viewed by: 1 student"
 
-  @selenium
   Scenario: Teacher resource page views do not increment counter
     When I login with username: teacher password: teacher
     And I am on the resource pages page

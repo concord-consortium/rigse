@@ -24,7 +24,7 @@ Factory.define :maven_jnlp_maven_jnlp_server, :class => MavenJnlp::MavenJnlpServ
   f.name server[:name]
 end
 
-Factory.define :admin_project, :class => Admin::Project do |f|
+Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
   name, url = Admin::Project.default_project_name_url
 
   f.user  { |p| Factory.next(:admin_user) }
@@ -34,6 +34,9 @@ Factory.define :admin_project, :class => Admin::Project do |f|
   f.snapshot_enabled  0
   f.enable_default_users  APP_CONFIG[:enable_default_users]
 
+end
+
+Factory.define :admin_project, :parent => :admin_project_no_jnlps do |f|
   if USING_JNLPS
     server, family, version = Admin::Project.default_jnlp_info
     begin
@@ -44,7 +47,6 @@ Factory.define :admin_project, :class => Admin::Project do |f|
     end
     f.jnlp_version_str version
   end
-
 end
 
 # Factory.define :maven_jnlp_versioned_jnlp, :class => MavenJnlp::VersionedJnlp do |f|
