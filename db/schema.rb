@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.integer  "original_id"
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -51,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.datetime "updated_at"
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
+    t.boolean  "allow_default_class"
   end
 
   create_table "attached_files", :force => true do |t|
@@ -122,6 +124,13 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.integer  "exit_status"
   end
 
+  create_table "collaborations", :force => true do |t|
+    t.integer  "bundle_content_id"
+    t.integer  "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",           :limit => 16777215
     t.string   "token"
@@ -140,8 +149,8 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.datetime "updated_at"
     t.text     "otml",             :limit => 2147483647
     t.boolean  "processed"
-    t.boolean  "valid_xml"
-    t.boolean  "empty"
+    t.boolean  "valid_xml",                              :default => false
+    t.boolean  "empty",                                  :default => true
     t.string   "uuid",             :limit => 36
     t.text     "original_body"
   end
@@ -151,6 +160,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   create_table "dataservice_bundle_loggers", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "in_progress_bundle_id"
   end
 
   create_table "dataservice_console_contents", :force => true do |t|
@@ -551,6 +561,21 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.datetime "updated_at"
   end
 
+  create_table "external_activities", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "uuid"
+    t.string   "name"
+    t.text     "description"
+    t.text     "url"
+    t.string   "publication_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offerings_count",    :default => 0
+    t.string   "save_path"
+  end
+
+  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
+
   create_table "external_user_domains", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -785,14 +810,15 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   create_table "pages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",                  :default => false
-    t.integer  "offerings_count",               :default => 0
+    t.boolean  "teacher_only",                     :default => false
+    t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -807,7 +833,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   end
 
   create_table "portal_clazzes", :force => true do |t|
-    t.string   "uuid",        :limit => 36
+    t.string   "uuid",          :limit => 36
     t.string   "name"
     t.text     "description"
     t.datetime "start_time"
@@ -820,6 +846,7 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "section"
+    t.boolean  "default_class",               :default => false
   end
 
   add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
@@ -1587,14 +1614,15 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
   create_table "portal_offerings", :force => true do |t|
-    t.string   "uuid",          :limit => 36
+    t.string   "uuid",             :limit => 36
     t.string   "status"
     t.integer  "clazz_id"
     t.integer  "runnable_id"
     t.string   "runnable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",                      :default => true
+    t.boolean  "active",                         :default => true
+    t.boolean  "default_offering",               :default => false
   end
 
   create_table "portal_school_memberships", :force => true do |t|
@@ -1989,13 +2017,14 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
   create_table "sections", :force => true do |t|
     t.integer  "user_id"
     t.integer  "activity_id"
-    t.string   "uuid",         :limit => 36
+    t.string   "uuid",               :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "teacher_only",               :default => false
+    t.boolean  "teacher_only",                     :default => false
+    t.string   "publication_status"
   end
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
