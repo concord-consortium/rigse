@@ -8,7 +8,7 @@ set :stages, %w(
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
-  sparks-dev)
+  sparks-dev sparks-staging sparks-production)
 set :default_stage, "development"
 # require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 require 'capistrano/ext/multistage'
@@ -445,7 +445,7 @@ namespace :convert do
   desc "create default Project from config/settings.yml"
   task :create_default_project_from_config_settings_yml, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:convert:create_default_project_from_config_settings_yml --trace"
+      "rake RAILS_ENV=#{rails_env} app:convert:create_default_project_from_config_settings_yml --trace"
   end
 
   desc "generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls"

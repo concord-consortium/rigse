@@ -11,3 +11,12 @@ Then /^the external activity offering "([^"]*)" in the class "([^"]*)" should no
   offering = Portal::Offering.find_by_runnable_id_and_clazz_id ea.id, clazz.id
   offering.default_offering.should == false
 end
+
+def assign_runnable(runnable_element)
+  drop = find("#clazz_offerings")
+  scroll_into_view("#clazz_offerings")
+  runnable_element.drag_to(drop)
+  # TODO: Eliminate sleep() call.
+  # Problem is that selenium is not waiting for callback to finish
+  sleep(2)
+end

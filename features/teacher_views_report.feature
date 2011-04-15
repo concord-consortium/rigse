@@ -32,7 +32,6 @@ Feature: Teacher views report
           | investigation        | class            |
           | first investigation  | Intro to bugs    |
 
-  @selenium
   Scenario: A student answers all questions, and gets them all correct
     Given the following student answers:
         | student   | class         | investigation       | question_prompt | answer |

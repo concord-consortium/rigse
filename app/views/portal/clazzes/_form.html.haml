@@ -9,6 +9,7 @@
           = f.text_field :name, :size => 50
         %li
           = label_tag :class_word, 'Class Word: ', :class=>"right"
+          %p= "Class words are not case sensitive"
           = f.text_field :class_word, :size => 24
         - if action_name == "new"
           %li

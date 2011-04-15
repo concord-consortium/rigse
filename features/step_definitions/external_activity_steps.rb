@@ -26,6 +26,13 @@ When /^I assign the external activity "([^"]*)" to the class "([^"]*)"$/ do |act
   })
 end
 
+# this is the interactive version of the step above
+When /^I assign the external activity "([^"]*)"$/ do |activity_name|
+  activity = ExternalActivity.find_by_name activity_name
+  runnable_element = find("#external_activity_#{activity.id}")
+  assign_runnable(runnable_element)
+end
+
 When /^I drag the external activity "([^"]*)" to "([^"]*)"$/ do |activity_name, to|
   activity = ExternalActivity.find_by_name activity_name
   selector = find("#external_activity_#{activity.id}")

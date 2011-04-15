@@ -12,8 +12,8 @@ Feature: External Activities can be run as offerings
       | name     | teacher |
       | My Class | teacher |
     And the following external activity exists:
-      | name        | user    | url              |
-      | My Activity | teacher | http://localhost |
+      | name        | user    | url               |
+      | My Activity | teacher | /home |
     And the following students exist:
       | login   | password |
       | student | student  |
@@ -25,4 +25,4 @@ Feature: External Activities can be run as offerings
     And I login with username: student password: student
     When I go to my home page
     And follow "My Activity"
-    Then the location should be "http://localhost/"
+    Then I should be on /home

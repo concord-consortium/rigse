@@ -18,7 +18,7 @@ Feature: An author edits a data collector
     And I login with username: author password: author
     When I show the first page of the "testing fast cars" investigation
     Then I should see "Page: testing fast cars"
-    When I follow "Graph"
+    When I add a "Graph" to the page
     Then I should see "Data Collector"
     When I follow "edit graph"
     Then I should see "Sensor Graph:"

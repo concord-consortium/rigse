@@ -13,6 +13,7 @@ describe HomeController do
   #Delete this example and add some real ones
   it "should use HomeController" do
     @test_project.stub(:home_page_content).and_return(nil)
+    @test_project.stub(:name).and_return("Test Project")
     get :index
     controller.should be_an_instance_of(HomeController)
   end
@@ -23,6 +24,7 @@ describe HomeController do
     login_anonymous
     content = "Test home page content"
     @test_project.stub(:home_page_content).and_return(content)
+    @test_project.stub(:name).and_return("Test Project")
     
     get :index
     
