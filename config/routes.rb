@@ -203,6 +203,7 @@ ActionController::Routing::Routes.draw do |map|
   map.check_password_questions '/password/:user_id/check_questions', :controller => 'passwords', :action => 'check_questions'
   map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
+  map.assessments_notification '/notifications/assessments', :controller => 'notifications', :action => 'assessments', :method => :get
 
   # Restful Authentication Resources
   map.resources :users, :member => {
