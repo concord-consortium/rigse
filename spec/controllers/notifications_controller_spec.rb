@@ -10,5 +10,7 @@ describe NotificationsController do
     couch = "http://localhost/db/assessments"
     Bj.should_receive(:submit).with("::Assessments::LearnerDataImporter.new('#{couch}').run", {:tag => 'assessments_learner_data_import'})
     get :assessments, :db => couch
+    response.should be_success
+    response.should have_text "Import Scheduled"
   end
 end

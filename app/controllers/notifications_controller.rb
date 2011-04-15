@@ -12,5 +12,10 @@ class NotificationsController < ApplicationController
         jobs = ::Bj.submit cmd, :tag => 'assessments_learner_data_import'
       end
     end
+
+    respond_to do |format|
+      format.html { render :text => "Import Scheduled" }
+      format.xml  { render :xml => "<content>Import Scheduled</content>" }
+    end
   end
 end
