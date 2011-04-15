@@ -5,9 +5,19 @@ class Assessments::LearnerDataImporter
   def initialize(couch_db_url)
     @couch_url = couch_db_url
     @changed = []
-    changes = URI.parse(@couch_url + "/_changes").read
-    json = JSON.parse(changes)
-    @last_seq = json["last_seq"].to_i
+    # ensure it exists
+    info = Notifications::AssessmentImportInfo.find_or_create_by_database(@couch_url, :last_seq => 0)
+    json = {"results" => []}
+    Notifications::AssessmentImportInfo.transaction do
+      # lock it this time, so that other importers won't re-run the same documents we're about to do
+      info = Notifications::AssessmentImportInfo.find(:first, :conditions => {:database => @couch_url}, :lock => true)
+      @since = info.last_seq
+      changes = URI.parse(@couch_url + "/_changes?since=#{@since}").read
+      json = JSON.parse(changes)
+      @last_seq = json["last_seq"].to_i
+      info.last_seq = @last_seq
+      info.save
+    end
     json["results"].each do |item|
       @changed << {:db => item["id"], :rev => item["changes"].first["rev"]}
     end

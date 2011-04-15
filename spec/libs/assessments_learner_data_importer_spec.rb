@@ -53,13 +53,15 @@ describe Assessments::LearnerDataImporter do
     @learner = Factory.create(:portal_learner, {:offering => offering, :student => student})
 
     @couch = "http://localhost/db/assessments"
-    @changes_uri = URI.parse("#{@couch}/_changes")
+    @changes_uri = URI.parse("#{@couch}/_changes?since=1")
+    @changes_since_uri = URI.parse("#{@couch}/_changes")
     @doc_uri = URI.parse("#{@couch}/doc?rev=rev")
     @design_doc_uri = URI.parse("#{@couch}/des?rev=rev")
     init_misc_docs
     OpenURI.should_receive(:open_uri) {|uri,opts|
       out = '{"results":[], "last_seq":1}'
-      if uri == @changes_uri
+      if uri == URI.parse("#{@couch}/_changes?since=1") ||
+         uri == URI.parse("#{@couch}/_changes?since=2")
         out = @changes_doc
       elsif uri == @doc_uri
         out = @learner_data
@@ -71,6 +73,15 @@ describe Assessments::LearnerDataImporter do
 
   end
 
+  it 'should initialize an assessment info object' do
+    Notifications::AssessmentImportInfo.delete_all
+    @importer = Assessments::LearnerDataImporter.new(@couch)
+    @importer.run
+    info_obj = Notifications::AssessmentImportInfo.first
+    info_obj.should_not be_nil
+    info_obj.last_seq.should eql(1)
+  end
+
   it 'should ignore the design doc and not throw errors' do
     init_misc_docs_with_design_doc
     generate_learner_data
@@ -80,6 +91,14 @@ describe Assessments::LearnerDataImporter do
     @learner.multiple_choices[0].choice.should eql(@mc_answer)
   end
 
+  it 'should correctly update the import info with the latest sequence number' do
+    init_misc_docs_with_design_doc
+    generate_learner_data
+    @importer = Assessments::LearnerDataImporter.new(@couch)
+    @importer.run
+    Notifications::AssessmentImportInfo.first.last_seq.should eql(4)
+  end
+
   it 'should create a saveable associated with the open response question' do
     generate_learner_data
     @importer = Assessments::LearnerDataImporter.new(@couch)
@@ -87,6 +106,7 @@ describe Assessments::LearnerDataImporter do
     @learner.open_responses.size.should eql(1)
     @learner.open_responses[0].answers.size.should eql(1)
     @learner.open_responses[0].answer.should eql(@or_answer)
+    Notifications::AssessmentImportInfo.first.last_seq.should eql(2)
   end
 
   it 'should create a saveable associated with the multiple choice question' do
@@ -143,6 +163,7 @@ describe Assessments::LearnerDataImporter do
   end
 
   def generate_learner_data
+    Notifications::AssessmentImportInfo.find_or_create_by_database(@couch, :last_seq => 1)
     old_choice = @choice
     while @choice == old_choice
       @choice = rand(3)+1
@@ -200,19 +221,19 @@ DATA
   def init_misc_docs
     @changes_doc = <<DOC
 {"results":[
-{"seq":1,"id":"doc","changes":[{"rev":"rev"}]}
+{"seq":2,"id":"doc","changes":[{"rev":"rev"}]}
 ],
-"last_seq":1}
+"last_seq":2}
 DOC
   end
 
   def init_misc_docs_with_design_doc
     @changes_doc = <<DOC
 {"results":[
-{"seq":1,"id":"doc","changes":[{"rev":"rev"}]},
-{"seq":2,"id":"des","changes":[{"rev":"rev"}]}
+{"seq":3,"id":"doc","changes":[{"rev":"rev"}]},
+{"seq":4,"id":"des","changes":[{"rev":"rev"}]}
 ],
-"last_seq":2}
+"last_seq":4}
 DOC
 
    @design_doc = <<DOC
