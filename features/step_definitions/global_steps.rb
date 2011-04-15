@@ -8,6 +8,28 @@ def find_or_create_offering(runnable,clazz,type="Investigation")
     offering
 end
 
+def login_as(username, password)
+  visit "/login"
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    @cuke_current_username = username
+    #click_button("Submit")
+  end
+end
+
+# scroll_into_view is a hack so an element is scrolled into view in selenium in IE
+# after the following change to selenium is released then scroll_into_view shouldn't be necessary anymore
+#  http://code.google.com/p/selenium/source/detail?r=11244
+#  http://code.google.com/p/selenium/issues/detail?id=848
+# if function is running outside of selenium it is basically a no op
+def scroll_into_view(selector)
+  el = find(selector)
+  # only do this if the native element is a selenium element
+  el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
+end
+
 Given /the following users[(?exist):\s]*$/i do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|
@@ -31,10 +53,15 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
   end
 end
 
+Given /^(?:|I )login as an admin$/ do
+  admin = Factory.next(:admin_user)
+  login_as(admin.login, 'password')
+end
+
 Given /^there are (\d+) (.+)$/ do |number, model_name|
   model_name = model_name.gsub(/\s/, '_').singularize
   the_class = model_name.classify.constantize
-  
+
   the_class.destroy_all
   number.to_i.times do |i|
     Factory.create(model_name.to_sym)
@@ -51,16 +78,33 @@ Then /"(.*)" should appear before "(.*)"/ do |first_item, second_item|
   page.body.should =~ /#{first_item}.*#{second_item}/m
 end
 
-Given /^I debug$/ do
+
+Then /^I should see the sites name$/ do
+  site_name = APP_CONFIG[:site_name]
+  if page.respond_to? :should
+    page.should have_content(site_name)
+  else
+    assert page.has_content?(site_name)
+  end
+end
+
+When /^(?:|I )debug$/ do
   debugger
 end
 
-Then /^the checkbox for "([^"]*)" should be checked$/ do |label|
-  field_checked = find_field(label)['checked']
-  field_checked.should == "true"
+When /^I wait "(.*)" second(?:|s)$/ do |seconds|
+  sleep(seconds.to_i)
 end
 
-Then /^the checkbox for "([^"]*)" should not be checked$/ do |label|
-  field_checked = find_field(label)['checked']
-  field_checked.should_not == 'checked'
+Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
+  page.should have_no_xpath xpath
+end
+
+Then /^the location should be "([^"]*)"$/ do |location|
+  current_url.should == location
+end
+
+Then /^I should see the button "([^"]*)"$/ do |locator| 
+  msg = "no button '#{locator}' found"
+  find(:xpath, XPath::HTML.button(locator), :message => msg)
 end

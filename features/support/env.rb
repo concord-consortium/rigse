@@ -127,3 +127,12 @@ After do
   end
 end
 
+# this is to add backwards compatibility so the cucumber-rails code works with our current version
+# of capybara.  A better solution is to upgrade cucumber-rails but currently it doesn't support
+# our version of rails (2.3.11)
+class Capybara::Driver::RackTest::Node
+  def node
+    native
+  end
+end
+

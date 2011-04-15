@@ -1,6 +1,6 @@
   
 - content_for(:authored_investigations) do
-  - field_set_tag "#{top_level_container_name.pluralize} you've authored" do
+  - field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} you've authored" do
     %ul
       - current_user.investigations.each do |inv|
         %li

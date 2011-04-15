@@ -1,5 +1,4 @@
 module JsHelper
-
   def js_string_value(object)
     case object
       when Fixnum; return object
@@ -9,13 +8,11 @@ module JsHelper
     return "'#{object}'" # use single quotes
   end
 
-
   def safe_js(page,dom_id)
     page << "if ($('#{dom_id}')) {"
     yield
-    page << "}" 
+    page << "}"
   end
-  
 
   def remove_link(form)
     out = ''

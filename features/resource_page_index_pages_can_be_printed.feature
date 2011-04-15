@@ -18,7 +18,6 @@ Feature: Resource Page index pages can be printed
       | Medium  | teacher   | 11              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | Oldest  | teacher   | 21              | Wed Jan 20 12:00:00 -0500 2011  | published           |
 
-  @selenium
   Scenario: Teacher prints the listing of all resource pages
     When I am on the resource pages page
     Then I should see "Newest"
@@ -28,13 +27,12 @@ Feature: Resource Page index pages can be printed
     And "printable-view" should have href like "printable_index"
     And the link to "printable-view" should have a target "_blank"
     When I am on the resource pages printable index page
-    Then I should see "Resources"
+    Then I should see "Resource Pages"
     And I should see "Usage Count"
     And I should see "Newest"
     And I should see "Medium"
     And I should see "Oldest"
     
-  @selenium
   Scenario: Teacher prints the listing of a subset of resource page
     When I am on the resource pages like "New" page
     Then I should see "Newest"
@@ -44,7 +42,7 @@ Feature: Resource Page index pages can be printed
     And "printable-view" should have href like "printable_index" with params "name=New"
     And the link to "printable-view" should have a target "_blank"
     When I am on the resource pages printable index page
-    Then I should see "Resources"
+    Then I should see "Resource Pages"
     And I should see "Usage Count"
     And I should see "Newest"
     And I should not see "Medium"

@@ -38,11 +38,14 @@ Feature: Investigations can be reported on
        | teacher_a | teacher_a |
        | teacher_b | teacher_a |
 
+
     And the following classes exist:
         | name             | teacher |
         | Intro to bugs    | teacher_a |
         | Intro to flowers | teacher_b |
 
+    And the classes "Intro to bugs, Intro to flowers" are in a school named "Test School"
+    
     And the following students exist:
          | login     | password  | first_name | last_name |
          | student_a | student_a | Jack       | Doe       |
@@ -178,10 +181,12 @@ Feature: Investigations can be reported on
     And  the report generated for "second investigation" should have (3) links to blobs
     And  the usage report for "first investigation" should have (3) answers for "student_b"
 
-  Scenario:
   @pending
   Scenario: a student has a record for an answer, which wasn't assigned ...
   # Failing, because question #e wasn't part of the investigation. (!) woah.
+
+  Scenario: a students answers appear in the correct order in the spreadsheet
+  @pending
 
   @current
   Scenario: Comparing the total assessments completed, with total completed for each activity

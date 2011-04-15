@@ -3,6 +3,9 @@ include JnlpHelper
 include Clipboard
 
 module ApplicationHelper
+  def current_project
+    @_project ||= Admin::Project.default_project
+  end
 
   def top_level_container_name
     APP_CONFIG[:top_level_container_name] || "investigation"
@@ -101,18 +104,18 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    name = @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = @jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = @jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
-    if @project.snapshot_enabled
+    if current_project.snapshot_enabled
       info << "(snapshot)"
     else
       info << "(frozen)"
     end
 
-    # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
     #   info << "(snapshot)"
     # else
     #   info << "(frozen)"
@@ -1058,9 +1061,9 @@ module ApplicationHelper
     if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
       return true;
     end
-    if (thing.respond_to?("parent"))
-      while (thing = thing.parent)
-        if (thing.respond_to?("teacher_only?"))
+    if thing.respond_to? :parent
+      while thing = thing.parent
+        if thing.respond_to? :teacher_only?
           if thing.teacher_only?
             return true
           end
@@ -1094,6 +1097,9 @@ module ApplicationHelper
     Investigation.search_list(options)
   end
 
+  def students_in_class(all_students)
+    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+  end
 
 #            Welcome
 #            = "#{current_user.name}."
@@ -1186,4 +1192,18 @@ module ApplicationHelper
       end
     end
   end
+  
+  def settings_for(key)
+    Admin::Project.settings_for(key)
+  end
+
+  def current_user_can_author
+    return true if current_user.has_role? "author" 
+    if settings_for(:teachers_can_author)
+      return true unless current_user.teacher.nil?
+    end
+    # TODO add aditional can-author conditions
+    return false
+  end
+
 end

@@ -5,7 +5,7 @@
     %header
     %content
       %object{ :refid => ot_refid_for(section, :page_card_container)}/
-      
+
     %footer
       %OTCompoundDoc{ :local_id => ot_local_id_for(section, :footer) }
         %bodyText
@@ -14,7 +14,7 @@
             &nbsp;
             %object{ :refid => ot_refid_for(section, :menu) }/
 
-          
+
 - content_for(:library) do
   %OTCardContainer{ :local_id => ot_local_id_for(section, :page_card_container), :contentsMayScroll => 'true', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
     %cards

@@ -51,7 +51,7 @@ class ResourcePage < ActiveRecord::Base
     end
 
     def display_name
-      "Resource"
+      "Resource Page"
     end
 
     def search_list(options)
@@ -114,5 +114,9 @@ class ResourcePage < ActiveRecord::Base
 
   def student_views_count
     student_views.sum('count')
+  end
+  
+  def run_format
+    nil
   end
 end

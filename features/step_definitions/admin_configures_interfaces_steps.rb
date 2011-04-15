@@ -12,19 +12,21 @@ Then /the current project should be using the following interfaces:/ do |interfa
 end
 
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
-  visit "/login"
-  within("#project-signin") do
-    fill_in("login", :with => username)
-    fill_in("password", :with => password)
-    click_button("Login")
-    @cuke_current_username = username
-    #click_button("Submit")
-  end
+  login_as(username, password)
 end
 
 When /^I log out$/ do
   visit "/logout"
 end
+
+Given /^I am an anonymous user$/ do
+  User.anonymous(true)
+  get '/sessions/destroy'
+  response.should redirect_to('/')
+  follow_redirect!
+  true #  for now ...
+end
+
 
 Given /^the following vendor interfaces exist:$/ do |interfaces_table|
   # table is a Cucumber::Ast::Table
@@ -35,11 +37,11 @@ end
 
 Then /^I should see the following form checkboxes:$/ do |checkbox_table|
   checkbox_table.hashes.each do |hash|
+    field = find_field(hash[:name])
     if hash[:checked] =~ /true/
-      field_checked = find_field(hash[:name])['checked']
-      field_checked.should == "true"
+      field.should be_checked
     else
-      Then "the \"#{hash[:name]}\" checkbox should not be checked"
+      field.should_not be_checked
     end
   end
 end
@@ -56,7 +58,7 @@ When /^I check in the following:$/ do |checkbox_table|
 end
 
 When /^(?:|I )should have the following selection options:$/ do |selection_table|
-  with_scope("select") do
+  within_fieldset("Selected Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should have_content(hash[:option])
@@ -68,7 +70,7 @@ When /^(?:|I )should have the following selection options:$/ do |selection_table
 end
 
 Then /^I should not see the following selection options:$/ do |selection_table|
-  with_scope("select") do
+  within_fieldset("Selected Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should_not have_content(hash[:option])

@@ -5,8 +5,13 @@ class SessionsController < ApplicationController
   end
 
   def create
-    logout_keeping_session!
-    password_authentication
+    if cookies.blank?
+      flash[:notice] = "Your browser does not have cookies enabled. Please refer to your browser's documentation to enable cookies."
+      render :action => :new
+    else
+      logout_keeping_session!
+      password_authentication
+    end
   end
 
   def destroy
@@ -45,10 +50,11 @@ class SessionsController < ApplicationController
   end
   
   def check_student_security_questions_ok
-    if @project && @project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
+    if current_project && current_project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
       redirect_to(edit_user_security_questions_path(current_user))
       return false
     end
     return true
   end
+
 end

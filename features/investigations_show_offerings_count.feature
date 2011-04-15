@@ -6,11 +6,11 @@ Feature: Investigations show the offerings count
   Background:
     Given The default project and jnlp resources exist using factories
     Given the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
+      | login   | password |
+      | teacher | teacher  |
     And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
+      | name     | teacher |
+      | My Class | teacher |
     And I login with username: teacher password: teacher
 
   @selenium

@@ -150,7 +150,10 @@ ActionController::Routing::Routes.draw do |map|
       :separated_report => :get,
       :report_embeddable_filter => :post,
       :activate => :get,
-      :deactivate => :get
+      :deactivate => :get,
+      :learners => :get,
+      :check_learner_auth => :post,
+      :start => :post
     }, :collection => { :data_test => [:get,:post] }
 
     # TODO: Totally not restful.  We should change
@@ -330,7 +333,11 @@ ActionController::Routing::Routes.draw do |map|
     :sort_pages => :post,
     :delete_page => :post,
     :print => :get,
-    :duplicate => :get
+    :duplicate => :get,
+    :details_report => :get,
+    :usage_report => :get,
+  }, :collection => {
+    :printable_index => :get
   }
 
   map.resources :pages, :member => {
@@ -344,11 +351,9 @@ ActionController::Routing::Routes.draw do |map|
     :print => :get,
     :duplicate => :get
   }
+  map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
 
-#
-# ********* End of Page embeddable objects *********
-#
-
+  # seb: are these nested routes needed or used anywhere ??
   map.resources :pages do |page|
     page.resources :xhtmls
     page.resources :open_responses
@@ -367,6 +372,7 @@ ActionController::Routing::Routes.draw do |map|
     :duplicate => :get,
     :details_report => :get,
     :usage_report => :get,
+    :export => :get,
     :destroy => :post,
   }, :collection => {
     :printable_index => :get
@@ -400,6 +406,12 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
+
+  map.resources :external_activities, :member => {
+    :duplicate => :get,
+    :destroy => :post
+  }
+  map.list_filter_external_activity '/external_activity/list/filter', :controller => 'external_activities', :action => 'index', :method => :post
 
   map.resources :assessment_targets, :knowledge_statements, :domains
   map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems

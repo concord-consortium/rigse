@@ -27,15 +27,15 @@ shared_examples_for 'an embeddable controller' do
     end
     login_admin
     @session_options = {
-      :secure=>false,
-      :secret=>"924cdf373582bbc17ac32060921e6f028a996bb85bbb4b4d7d8cb8c98ef18615a793e676e511e0143708ee7c243c89605bcfdfaa339ed649e58e2fbd6498e117",
-      :expire_after=>nil,
-      :path=>"/",
-      :httponly=>true,
-      :domain=>nil,
-      :key=>"_bort_session",
-      :id=>"a0fbca97e9dce0e19ec94ff9afb62b8e",
-      :cookie_only=>true
+      :secure       => false,
+      :secret       => "924cdf373582bbc17ac32060921e6f028a996bb85bbb4b4d7d8cb8c98ef18615a793e676e511e0143708ee7c243c89605bcfdfaa339ed649e58e2fbd6498e117",
+      :expire_after => nil,
+      :path         => "/",
+      :httponly     => true,
+      :domain       => nil,
+      :key          => "_bort_session",
+      :id           => "a0fbca97e9dce0e19ec94ff9afb62b8e",
+      :cookie_only  => true
     }
     request.env['rack.session.options'] = @session_options
   end
@@ -276,11 +276,7 @@ shared_examples_for 'an embeddable controller' do
             end
           end
         end
-
       end
-
     end
-
   end
-
 end

@@ -18,6 +18,6 @@ Feature: Investigations can be duplicated
   @javascript
   Scenario: Duplicating investigations have an offering count of 0
     Given I am on the investigations page for "Newest"
-    When I follow "duplicate"
+    When I duplicate the investigation
     Then the investigation "copy of Newest" should have been created
     And the investigation "copy of Newest" should have an offerings count of 0

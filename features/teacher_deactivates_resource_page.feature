@@ -6,7 +6,6 @@ Feature: Teacher can deactivate resource pages from a class
   Background:
     Given The default project and jnlp resources exist using factories
   
-  @selenium
   Scenario: Teacher can deactivate a resource page
     Given the following teachers exist:
       | login         | password        |

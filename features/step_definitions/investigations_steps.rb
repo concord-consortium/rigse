@@ -9,18 +9,44 @@ end
 
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
-    user = User.find_by_login hash['teacher']
-    teacher = user.portal_teacher
+    if hash['teacher']
+      user = User.find_by_login hash['teacher']
+      teacher = user.portal_teacher
+    else
+      teacher = Factory(:teacher)
+    end
     Factory.create(:portal_clazz, hash.merge('teacher' => teacher))
   end
+end
+
+Given /^the investigation "([^"]*)" is published$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  investigation.publish
+  investigation.save
 end
 
 When /^I sort investigations by "([^"]*)"$/ do |sort_str|
   visit "/investigations?sort_order=#{sort_str}"
 end
 
+When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
+  investigation = Investigation.find_by_name investigation_name
+  selector = find("#investigation_#{investigation.id}")
+  drop = find(to)
+  selector.drag_to(drop)
+end
+
 When /^I show offerings count on the investigations page$/ do 
   visit "/investigations?include_usage_count=true"
+end
+
+Given /^the investigation "([^"]*)" is assigned to the class "([^"]*)"$/ do |investigation_name, class_name|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  investigation = Investigation.find_by_name(investigation_name)
+  Factory.create(:portal_offering, {
+    :runnable => investigation,
+    :clazz => clazz
+  })
 end
 
 When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|
@@ -30,6 +56,13 @@ When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investi
     :runnable => investigation,
     :clazz => clazz
   })
+end
+
+# this is the interactive version of the step above
+When /^I assign the investigation "([^"]*)"$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  runnable_element = find("#investigation_#{investigation.id}")
+  assign_runnable(runnable_element)
 end
 
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
@@ -129,7 +162,7 @@ end
 
 When /^I click on the next page of results$/ do
   within('.pagination') do
-    click('Next')
+    click_link('Next')
   end
 end
 
@@ -151,8 +184,8 @@ end
 
 Then /^every investigation should contain "([^"]*)"$/ do |expected|
   within("#offering_list") do
-    page.all(".runnable").each do | piece|
-      piece.node.text.should match(expected)
+    page.all(".runnable").each do |piece|
+      piece.should have_content(expected)
     end
   end
 end
@@ -185,4 +218,20 @@ end
 Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
   investigation = Investigation.find_by_name inv_name
   investigation.offerings_count.should == count.to_i
+end
+
+When /^I duplicate the investigation$/ do
+  # this requires a javascript enabled driver
+  # this simulates roughly what happens when the mouse is moved over the plus icon
+
+  # this first part is what happens in the onmouseover event on the gear icon
+  # it is necessary to call first because it positions the menu relative to the gear icon
+  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # aren't really moving the mouse.
+  page.execute_script("dropdown_for('button_actions_menu','actions_menu')")
+
+  # now that the menu is positioned we can just manually show it
+  page.execute_script("$('actions_menu').show()")
+  click_link("duplicate")
+  page.execute_script("$('actions_menu').hide()")
 end

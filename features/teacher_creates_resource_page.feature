@@ -2,11 +2,10 @@ Feature: A teacher creates a resource page
   As a Teacher
   I want to create a resource page
   So that students can see it.
-      
+
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: The teacher creates a resource page
     Given the following teachers exist:
       | login         | password        |
@@ -18,10 +17,9 @@ Feature: A teacher creates a resource page
     When I fill in the following:
       | resource_page[name] | Test Page |
     And I press "resource_page_submit"
-    Then I should see "Resource was successfully created."
-    
-  
-  @selenium
+    Then I should see "Resource Page was successfully created."
+
+
   Scenario: The teacher can view public and draft resource pages, and only their private ones
     Given the following teachers exist:
       | login         | password        |
@@ -39,13 +37,12 @@ Feature: A teacher creates a resource page
     When I go to the resource pages page
     Then I should see "published page A"
     And I should see "published page B"
-    And I should see "[PRIVATE] private page A"
-    And I should not see "[PRIVATE] private page B"
+    And I should see "private page A"
+    And I should not see "private page B"
     When I go to the resource pages with drafts page
-    Then I should see "[DRAFT] draft page A"
-    And I should see "[DRAFT] draft page B"
-    
-  @selenium
+    Then I should see "draft page A"
+    And I should see "draft page B"
+
   Scenario: The teacher can see their resource pages on the homepage
     Given the following teachers exist:
       | login         | password        |
@@ -58,10 +55,9 @@ Feature: A teacher creates a resource page
     And I login with username: teacherA password: teacher
     When I am on the homepage
     Then I should see "published page A"
-    And I should see "[PRIVATE] private page A"
-    Then I should see "[DRAFT] draft page A"
-    
-  @selenium
+    And I should see "private page A"
+    Then I should see "draft page A"
+
   Scenario: The teacher can search for resource pages
     Given the following teachers exist:
       | login         | password        |
@@ -81,4 +77,3 @@ Feature: A teacher creates a resource page
     Then I should see "Testing Page"
     And I should see "Testing Page 2"
     And I should not see "Demo Page"
-

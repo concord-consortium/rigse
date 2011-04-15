@@ -1,11 +1,11 @@
 - # requires: grade_span, portal_clazz_id, domain_id
 - # optional: hide_drafts_checkbox
 - # (next line is a hack, so that portal_clazz_id is defined)
-- portal_clazz_id ||= nil 
+- portal_clazz_id ||= nil
 
 %h3
   #search_title
-    = "Search #{top_level_container_name.humanize.pluralize}"
+    = "Search #{Investigation.display_name.pluralize}"
     - unless local_assigns[:investigations_only]
       = " & #{ResourcePage.display_name.pluralize}"
 
@@ -21,7 +21,7 @@
         = label_tag :filter, 'Grade: ', :class=>"right"
         = select(nil,  :grade_span, RiGse::GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'Domain: ', :class=>"right"          
+        = label_tag :filter, 'Domain: ', :class=>"right"
         = select(nil,  :domain_id, RiGse::Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'Matching: ', :class=>"right"

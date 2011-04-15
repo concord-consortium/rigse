@@ -90,8 +90,8 @@ class InvestigationsController < AuthoringController
     # @domain_id = param_find(:domain_id)
     # @name = param_find(:name
     # don't save these, see: http://www.pivotaltracker.com/story/show/2428013
-    @grade_span = param_find(:grade_span)
-    @domain_id = param_find(:domain_id)
+    @grade_span = params[:grade_span]
+    @domain_id = params[:domain_id]
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
     pagination = params[:page] == "" ? 1 : params[:page]

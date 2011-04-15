@@ -1240,6 +1240,7 @@ puts <<-HEREDOC
     RAILS_ENV=production jruby -S rake db:migrate:reset
     RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 
+
 HEREDOC
 
 unless @options[:quiet]

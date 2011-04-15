@@ -13,8 +13,12 @@ module NavigationHelpers
 
     when /my home\s?page/
       '/home'
+    when /my preferences/
+      "/users/#{User.find_by_login(@cuke_current_username).id}/preferences"
     when /the pick signup page/
       '/pick_signup'
+    when /the student signup page/
+      '/portal/students/signup'
     when /to the link tool/
       '/linktool'
     when /the current project edit page/
@@ -51,6 +55,11 @@ module NavigationHelpers
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     when /the clazz create page/
       new_portal_clazz_path
+    when /the user preferences page for the user "(.*)"/
+      user = User.find_by_login $1
+      preferences_user_path user
+    when /the requirements page/
+      "/requirements/"
     # accept paths too:
     when /the route (.+)/
       $1
