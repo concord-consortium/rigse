@@ -5,14 +5,14 @@ Feature: Admin configures project settings
   I want to configure a project's settings
 
   Scenario: Admin views project without setting up jnlps
-    Given The most basic default project
+    Given the most basic default project
     And I login as an admin
     And am on the admin projects page
     Then I should see the sites name
 
   @selenium
   Scenario: Admin edits project without setting up jnlps
-    Given The most basic default project
+    Given the most basic default project
     And I login as an admin
     And am on the admin projects page
     When I follow "edit project"

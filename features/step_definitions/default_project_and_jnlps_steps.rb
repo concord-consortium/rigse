@@ -1,4 +1,4 @@
-Given /^The most basic default project$/ do
+Given /^the most basic default project$/ do
   Factory.create(:admin_project_no_jnlps)
 end
 
