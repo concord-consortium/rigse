@@ -25,14 +25,16 @@ class Assessments::LearnerDataImporter
 
   def import(document)
     json = JSON.parse(document)
-    # activity = Activity.find(json["activity"]["url"].to_i)
-    learner = Portal::Learner.find(json["learner"]["url"][/learner\/(\d+)/, 1].to_i)
-    json["pages"].each do |jpage|
-      if page = Page.find(jpage["url"][/page\/(\d+)$/,1].to_i)
-        jpage["steps"].each do |jquestion|
-          if question = object_for_dom_id(jquestion["url"][/step\/(\w+)$/, 1])
-            # create the saveable for this object and learner
-            process_question(jquestion, question, learner)
+    jlearner = json["learner"]
+    if json["learner"] && json["learner"]["url"] && json["learner"]["url"] =~ /learner\/(\d+)/
+      learner = Portal::Learner.find($1.to_i)
+      json["pages"].each do |jpage|
+        if page = Page.find(jpage["url"][/page\/(\d+)$/,1].to_i)
+          jpage["steps"].each do |jquestion|
+            if question = object_for_dom_id(jquestion["url"][/step\/(\w+)$/, 1])
+              # create the saveable for this object and learner
+              process_question(jquestion, question, learner)
+            end
           end
         end
       end
