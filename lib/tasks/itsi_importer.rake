@@ -15,6 +15,21 @@ namespace :app do
       @itsi_activity_template = ItsiImporter.find_or_create_itsi_activity_template
     end
     
+    desc "remove template from activities"
+    task :untemplate_activities => :environment do
+      templates = Activity.find_all_by_is_template(true)
+      templates.each do |t|
+        t.is_template = false
+        t.save
+      end
+    end
+    
+    desc "delete the current ITSI Activity template and create new template"
+    task :recreate_itsi_activity_template => :untemplate_activities do
+      ItsiImporter.delete_itsi_activity_template
+      @itsi_activity_template = ItsiImporter.find_or_create_itsi_activity_template
+    end
+    
     desc "delete itsi imports"
     task :erase_itsi_imports => :setup_itsi_environment do
       investigations = @itsi_import_user.investigations

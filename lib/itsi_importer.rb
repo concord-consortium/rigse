@@ -93,7 +93,7 @@ class ItsiImporter
       puts "ITSI Template - Activity #{act.id}" if act
       return act if act
 
-      act = Activity.create!(:name => "Single-page Activity Template", :user => ItsiImporter.find_or_create_itsi_import_user, :is_template => true ) {|a| a.uuid = ACTIVITY_TEMPLATE_UUID}
+      act = Activity.create!(:name => "Single-page Activity Template", :description => "Single-page Activity Template", :user => ItsiImporter.find_or_create_itsi_import_user, :is_template => true ) {|a| a.uuid = ACTIVITY_TEMPLATE_UUID}
       SECTIONS_MAP.each do |section_def|
         section = Section.create!(:name => section_def[:name], :description => section_def[:name], :activity => act, :user => act.user)
         page = Page.create!(:name => section_def[:name], :description => section_def[:page_desc], :section => section, :user => act.user)
@@ -129,6 +129,16 @@ class ItsiImporter
       end
       puts "ITSI Template - Activity #{act.id}"
       return act
+    end
+    
+    def delete_itsi_activity_template
+      act = Activity.find_by_uuid(ACTIVITY_TEMPLATE_UUID)
+      
+      puts "No template could be found" unless act
+      return unless act
+      
+      puts "Deleting Activity #{act.id}"
+      act.destroy
     end
 
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
