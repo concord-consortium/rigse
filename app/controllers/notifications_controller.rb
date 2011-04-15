@@ -4,8 +4,13 @@ class NotificationsController < ApplicationController
   def assessments
     db = params[:db]
     if db
-      importer = Assessments::LearnerDataImporter.new(db)
-      importer.run
+      if JRUBY
+        ::Assessments::LearnerDataImporter.new(db).run
+      else
+        # schedule the importer to run
+        cmd = "::Assessments::LearnerDataImporter.new('#{db}').run"
+        jobs = ::Bj.submit cmd, :tag => 'assessments_learner_data_import'
+      end
     end
   end
 end
