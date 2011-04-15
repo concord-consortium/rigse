@@ -58,6 +58,8 @@ module NavigationHelpers
     when /the user preferences page for the user "(.*)"/
       user = User.find_by_login $1
       preferences_user_path user
+    when /the requirements page/
+      "/requirements/"
     # accept paths too:
     when /the route (.+)/
       $1
