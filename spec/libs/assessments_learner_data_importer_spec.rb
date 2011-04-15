@@ -52,11 +52,30 @@ describe Assessments::LearnerDataImporter do
     student = Factory.create(:portal_student, {:user => @user})
     @learner = Factory.create(:portal_learner, {:offering => offering, :student => student})
 
+    couch = "http://localhost/db/assessments"
+    @changes_uri = URI.parse("#{couch}/_changes")
+    @doc_uri = URI.parse("#{couch}/doc?rev=rev")
+    get_changes_doc
+    OpenURI.should_receive(:open_uri) {|uri,opts|
+      out = '{"results":[], "last_seq":1}'
+      if uri == @changes_uri
+        out = @changes_doc
+      elsif uri == @doc_uri
+        out = @learner_data
+      end
+      out
+    }.at_least(:once)
+
+    @importer = Assessments::LearnerDataImporter.new(couch)
+  end
+
+  it 'should work' do
+    true.should be_true
   end
 
   it 'should create a saveable associated with the open response question' do
     generate_learner_data
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.open_responses.size.should eql(1)
     @learner.open_responses[0].answers.size.should eql(1)
     @learner.open_responses[0].answer.should eql(@or_answer)
@@ -64,7 +83,7 @@ describe Assessments::LearnerDataImporter do
 
   it 'should create a saveable associated with the multiple choice question' do
     generate_learner_data
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.multiple_choices.size.should eql(1)
     @learner.multiple_choices[0].answers.size.should eql(1)
     @learner.multiple_choices[0].choice.should eql(@mc_answer)
@@ -72,7 +91,7 @@ describe Assessments::LearnerDataImporter do
 
   it 'should not create multiple answers when the same learner data is imported twice' do
     generate_learner_data
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.multiple_choices.size.should eql(1)
     @learner.multiple_choices[0].answers.size.should eql(1)
     @learner.multiple_choices[0].choice.should eql(@mc_answer)
@@ -80,7 +99,7 @@ describe Assessments::LearnerDataImporter do
     @learner.open_responses[0].answers.size.should eql(1)
     @learner.open_responses[0].answer.should eql(@or_answer)
 
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.multiple_choices.size.should eql(1)
     @learner.multiple_choices[0].answers.size.should eql(1)
     @learner.multiple_choices[0].choice.should eql(@mc_answer)
@@ -91,7 +110,7 @@ describe Assessments::LearnerDataImporter do
 
   it 'should create multiple answers when changed learner data is imported' do
     generate_learner_data
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.multiple_choices.size.should eql(1)
     @learner.multiple_choices[0].answers.size.should eql(1)
     @learner.multiple_choices[0].choice.should eql(@mc_answer)
@@ -100,7 +119,7 @@ describe Assessments::LearnerDataImporter do
     @learner.open_responses[0].answer.should eql(@or_answer)
 
     generate_learner_data
-    Assessments::LearnerDataImporter.import(@learner_data)
+    @importer.run
     @learner.reload
     @learner.multiple_choices.size.should eql(1)
     @learner.multiple_choices[0].answers.size.should eql(2)
@@ -163,5 +182,14 @@ describe Assessments::LearnerDataImporter do
    ]
 }
 DATA
+  end
+
+  def get_changes_doc
+    @changes_doc = <<DOC
+{"results":[
+{"seq":1,"id":"doc","changes":[{"rev":"rev"}]}
+],
+"last_seq":1}
+DOC
   end
 end

@@ -1,6 +1,29 @@
 class Assessments::LearnerDataImporter
   require 'json'
-  def self.import(document)
+  require 'uri'
+
+  def initialize(couch_db_url)
+    @couch_url = couch_db_url
+    @changed = []
+    changes = URI.parse(@couch_url + "/_changes").read
+    json = JSON.parse(changes)
+    @last_seq = json["last_seq"].to_i
+    json["results"].each do |item|
+      @changed << {:db => item["id"], :rev => item["changes"].first["rev"]}
+    end
+  end
+
+  def run
+    @changed.each do |info|
+      # get the database
+      doc = URI.parse("#{@couch_url}/#{info[:db]}?rev=#{info[:rev]}").read
+      import(doc)
+    end
+  end
+
+  private
+
+  def import(document)
     json = JSON.parse(document)
     # activity = Activity.find(json["activity"]["url"].to_i)
     learner = Portal::Learner.find(json["learner"]["url"][/learner\/(\d+)/, 1].to_i)
@@ -16,9 +39,7 @@ class Assessments::LearnerDataImporter
     end
   end
 
-  private
-
-  def self.object_for_dom_id(dom_id)
+  def object_for_dom_id(dom_id)
     if dom_id =~ /_open_response_(\d+)$/
       return Embeddable::OpenResponse.find($1.to_i)
     elsif dom_id =~ /_multiple_choice_(\d+)$/
@@ -28,7 +49,7 @@ class Assessments::LearnerDataImporter
     return nil
   end
 
-  def self.process_question(json, question, learner)
+  def process_question(json, question, learner)
     if question.kind_of? Embeddable::OpenResponse
       answer = json["responseTemplate"]["values"].first
       process_open_response(question, learner, answer)
@@ -40,14 +61,14 @@ class Assessments::LearnerDataImporter
     end
   end
 
-  def self.process_open_response(open_response, learner, answer)
+  def process_open_response(open_response, learner, answer)
     saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id, learner.offering.id, open_response.id)
     if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
       saveable_open_response.answers.create(:answer => answer)
     end
   end
 
-  def self.process_multiple_choice(choice, learner)
+  def process_multiple_choice(choice, learner)
     multiple_choice = choice.multiple_choice
     saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, learner.offering.id, multiple_choice.id)
     if saveable.answers.empty? || saveable.answers.last.choice_id != choice.id
