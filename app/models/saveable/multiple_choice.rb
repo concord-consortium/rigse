@@ -12,12 +12,17 @@ class Saveable::MultipleChoice < ActiveRecord::Base
 
   include Saveable::Saveable
 
-  def answer
+  def choice
     if answered?
-      answers.last.answer
+      answers.last.choice
     else
-      "not answered"
+      nil
     end
+  end
+
+  def answer
+    c = choice
+    c ? c.answer : "not answered"
   end
   
   def answered?
