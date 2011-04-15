@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110411172214) do
+ActiveRecord::Schema.define(:version => 20110415204257) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -737,6 +737,15 @@ ActiveRecord::Schema.define(:version => 20110411172214) do
     t.integer "native_library_id"
     t.integer "versioned_jnlp_id"
   end
+
+  create_table "notifications_assessment_import_infos", :force => true do |t|
+    t.string   "database"
+    t.integer  "last_seq"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications_assessment_import_infos", ["database"], :name => "index_notifications_assessment_import_infos_on_database"
 
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
     t.integer "otml_category_id"
