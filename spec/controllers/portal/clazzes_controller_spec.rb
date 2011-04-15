@@ -34,6 +34,10 @@ describe Portal::ClazzesController do
     @mock_clazz_name = "Random Test Class"
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+
+    @controller.stub(:before_render) {
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
   end
 
   # def login_as(user_sym)

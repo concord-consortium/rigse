@@ -23,9 +23,11 @@ end
 # after the following change to selenium is released then scroll_into_view shouldn't be necessary anymore
 #  http://code.google.com/p/selenium/source/detail?r=11244
 #  http://code.google.com/p/selenium/issues/detail?id=848
+# if function is running outside of selenium it is basically a no op
 def scroll_into_view(selector)
   el = find(selector)
-  el.native.send_keys(:null)
+  # only do this if the native element is a selenium element
+  el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
 end
 
 Given /the following users[(?exist):\s]*$/i do |users_table|
@@ -86,7 +88,7 @@ Then /^I should see the sites name$/ do
   end
 end
 
-When /^I debug$/ do
+When /^(?:|I )debug$/ do
   debugger
 end
 

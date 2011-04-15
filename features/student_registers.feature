@@ -7,7 +7,6 @@ Feature: Student registers to use the portal
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Anonymous user signs up as student
     Given I am an anonymous user
     And the option to allow default classes is disabled
@@ -59,7 +58,6 @@ Feature: Student registers to use the portal
     And I press "Submit"
     Then I should see "Success!"
 
-  @selenium
   Scenario: Class words are not case sensitive
     Given the following teachers exist:
       | login   | password |

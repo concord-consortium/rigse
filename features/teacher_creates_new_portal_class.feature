@@ -11,7 +11,6 @@ Feature: Teacher creates new portal class
       | teacher | teacher  |
     And I login with username: teacher password: teacher
 
-  @javascript
   Scenario: Class words are stored as lowercase
     Given I am on the clazz create page
     When I fill in "portal_clazz[name]" with "My Class"
