@@ -14,8 +14,8 @@ class InvestigationsController < AuthoringController
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :manager_or_researcher, :only => [:usage_report, :details_report]
-  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:printable_index,:create,:new,:duplicate,:export, :gse_select]
-  before_filter :can_create, :only => [:new, :create, :duplicate]
+  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:printable_index,:create,:new,:duplicate,:export, :gse_select, :extended_create]
+  before_filter :can_create, :only => [:new, :create, :duplicate, :extended_create]
 
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description

@@ -89,6 +89,10 @@ describe InvestigationsController do
       @inv_params = {:investigation => {:name => "New Investigation #{UUIDTools::UUID.timestamp_create.to_s}", :description => "Desc", :publication_status => "draft", :user_id => @admin_user.id } }
       Investigation.unstub!(:find)
       Investigation.unstub!(:published)
+
+      # we should be able to do this as a normal user
+      @user = Factory.create(:user)
+      stub_current_user :user
     end
 
     it "should create a single Page nested in a section and activity" do
