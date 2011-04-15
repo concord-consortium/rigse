@@ -191,6 +191,7 @@ class ActivitiesController < ApplicationController
       template = Activity.find(params[:activity_template].to_i)
       @activity = template.copy(current_user)
       @activity.update_attributes(params[:activity])
+      @activity.is_template = false
     end
     respond_to do |format|
       if @activity.save
