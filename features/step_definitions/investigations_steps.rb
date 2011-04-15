@@ -177,3 +177,12 @@ When /^I wait for all pending requests to complete/ do
   page.wait_until { true == page.evaluate_script("PendingRequests == 0;")}
 end
 
+Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|
+  investigation = Investigation.find_by_name inv_name
+  investigation.should be
+end
+
+Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
+  investigation = Investigation.find_by_name inv_name
+  investigation.offerings_count.should == count.to_i
+end

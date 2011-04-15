@@ -29,6 +29,7 @@
         - if signup
           %li
             = label_tag :clazz, 'Class Word: ', :class=>"right"
+            %p= "Not case sensitive"
             - value = portal_clazz ? portal_clazz.class_word : 'class word'
             = text_field :clazz, :class_word, {:live => false}
             

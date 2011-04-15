@@ -1193,7 +1193,7 @@ worksheets:
   - !seq:Spreadsheet::Row 
     - learner_id
     - Intro to bugs
-    - Rails Portal-school
+    - RITES Investigations-school
     - user_id
     - student_a
     - Doe, Jack
@@ -1212,7 +1212,7 @@ worksheets:
   - !seq:Spreadsheet::Row 
     - learner_id
     - Intro to bugs
-    - Rails Portal-school
+    - RITES Investigations-school
     - user_id
     - student_b
     - Smith, Jill

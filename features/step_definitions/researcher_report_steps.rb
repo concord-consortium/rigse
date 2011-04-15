@@ -72,7 +72,7 @@ def add_multichoice_answer(learner,question,answer_text)
     :offering => learner.offering,
     :multiple_choice => question
   ) 
-  saveable_answer = Saveable::MultipleChoiceAnswer.create (
+  saveable_answer = Saveable::MultipleChoiceAnswer.create(
     #:bundle_contents => learner.bundle_contents,
     #:bundle_logger   => learner.bundle_logger,
     :choice          => answer
@@ -86,7 +86,7 @@ def add_openresponse_answer(learner,question,answer_text)
     :offering => learner.offering,
     :open_repsonse => question
   ) 
-  saveable_answer = Saveable::OpenResponseAnswer.create (
+  saveable_answer = Saveable::OpenResponseAnswer.create(
     :answer          => answer_text
   )
   new_answer.answers << saveable_answer
@@ -101,8 +101,8 @@ def add_image_question_answer(learner,question,answer_text)
     :image_question => question
   ) 
   # TODO: Maybe slurp in some image and encode it for the blob?
-  saveable_answer = Saveable::ImageQuestionAnswer.create (
-    :blob => Dataservice::Blob.create (
+  saveable_answer = Saveable::ImageQuestionAnswer.create(
+    :blob => Dataservice::Blob.create(
       :content => answer_text,
       :token => answer_text
     )

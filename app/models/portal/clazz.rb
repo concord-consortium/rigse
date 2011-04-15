@@ -19,6 +19,7 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
+  before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -264,4 +265,7 @@ class Portal::Clazz < ActiveRecord::Base
     self.offerings.each { |o| o.refresh_saveable_response_objects }
   end
   
+  def class_word_lowercase
+    self.class_word.downcase! if self.class_word
+  end
 end

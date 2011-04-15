@@ -60,6 +60,8 @@ ssh_options[:compression] = false
 set :use_sudo, true
 set :scm_verbose, true
 set :rails_env, "production" 
+
+set :user, "deploy"
   
 #############################################################
 #  Git
@@ -173,6 +175,10 @@ namespace :db do
 end
 
 namespace :deploy do
+  # By default deploy:cleanup uses sudo(!)
+  # We don't want this when using a deploy user
+  set :use_sudo, false
+
   #############################################################
   #  Passenger
   #############################################################
@@ -180,7 +186,7 @@ namespace :deploy do
   # Restart passenger on deploy
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    sudo "touch #{current_path}/tmp/restart.txt"
+    run "touch #{current_path}/tmp/restart.txt"
   end
   
   [:start, :stop].each do |t|
@@ -243,17 +249,17 @@ namespace :deploy do
   
   desc "set correct file permissions of the deployed files"
   task :set_permissions, :roles => :app do
-    sudo "chown -R apache.users #{deploy_to}"
-    sudo "chmod -R g+rw #{deploy_to}"
+    # sudo "chown -R apache.users #{deploy_to}"
+    # sudo "chmod -R g+rw #{deploy_to}"
     
     # Grant write access to the paperclip attachments folder
-    sudo "chown -R apache.users #{shared_path}/system/attachments"
-    sudo "chmod -R g+rw #{shared_path}/system/attachments"
+    # sudo "chown -R apache.users #{shared_path}/system/attachments"
+    # sudo "chmod -R g+rw #{shared_path}/system/attachments"
   end
   
   desc "Create asset packages for production" 
   task :create_asset_packages, :roles => :app do
-    run "cd #{deploy_to}/current && bundle exec compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compact --force"
+    run "cd #{deploy_to}/current && bundle exec compass --sass-dir public/stylesheets/sass/ --css-dir public/stylesheets/ -s compressed --force"
     run "cd #{deploy_to}/current && rake asset:packager:build_all --trace"
   end
   
@@ -553,7 +559,7 @@ namespace :convert do
   desc "Recalculate the 'offerings_count' field for runnable objects"
   task :reset_offering_counts, :roles => :app do
     # remove investigation cache files
-    sudo "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
+    run "rm -rf #{deploy_to}/#{current_dir}/public/investigations/*"
     run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 

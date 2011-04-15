@@ -1,3 +1,4 @@
+@selenium
 Feature: Limit access to restricted routes
 
 Only logged in users with appropriate roles should be able to see and change resources in the portal.
@@ -19,109 +20,104 @@ In NO case should the system allow:
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
-  
-    Examples:                            
-      | route                          | 
-      | /dataservice/bundle_contents   | 
-      | /dataservice/bundle_loggers    | 
-      | /dataservice/console_loggers   | 
-      | /dataservice/console_contents  | 
-      | /dataservice/blobs             | 
-  
-    
-  Scenario Outline: Admin user can accesss dataservice routes
-    Given the following users exist:
-      | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
-    And I login with username: admin_login password: admin_password
-    When I visit the route <route>
-    Then I should be on <route>
-    
-    Examples:                         
+
+    Examples:
       | route                         |
       | /dataservice/bundle_contents  |
       | /dataservice/bundle_loggers   |
       | /dataservice/console_loggers  |
       | /dataservice/console_contents |
-      | /dataservice/blobs            | 
+      | /dataservice/blobs            |
 
+  Scenario Outline: Admin user can accesss dataservice routes
+    Given the following users exist:
+      | login       | password       | roles                 |
+      | admin_login | admin_password | admin, member, author |
+    And I login with username: admin_login password: admin_password
+    When I visit the route <route>
+    Then I should be on <route>
 
+    Examples:
+      | route                         |
+      | /dataservice/bundle_contents  |
+      | /dataservice/bundle_loggers   |
+      | /dataservice/console_loggers  |
+      | /dataservice/console_contents |
+      | /dataservice/blobs            |
 
   Scenario Outline: Anonymous user can't access portal listing routes:
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
-    
+
     Examples:
-      | route                                      |
-      | /portal/clazzes                            |
-      | /portal/courses                            |
-      | /portal/school_memberships                 |
-      | /portal/schools                            |
-      | /portal/semesters                          |
-      | /portal/student_clazzes                    |
-      | /portal/students                           |
-      | /portal/subjects                           |
-      | /portal/teachers                           |
-      | /portal/districts                          |
-      | /portal/grades                             |
-      | /portal/learners                           |
-      | /portal/external_user_domains              |
-      | /portal/external_users                     |
-      | /portal/grade_levels                       |
-      | /portal/nces06_districts                   |
-      | /portal/nces06_schools                     |
-      | /portal/offerings                          |
-      | /portal/teachers                           |
-      
-      
+      | route                         |
+      | /portal/clazzes               |
+      | /portal/courses               |
+      | /portal/school_memberships    |
+      | /portal/schools               |
+      | /portal/semesters             |
+      | /portal/student_clazzes       |
+      | /portal/students              |
+      | /portal/subjects              |
+      | /portal/teachers              |
+      | /portal/districts             |
+      | /portal/grades                |
+      | /portal/learners              |
+      | /portal/external_user_domains |
+      | /portal/external_users        |
+      | /portal/grade_levels          |
+      | /portal/nces06_districts      |
+      | /portal/nces06_schools        |
+      | /portal/offerings             |
+      | /portal/teachers              |
+
   Scenario Outline: Admin user can accesss portal listing routes
     Given the following users exist:
-      | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
+      | login       | password       | roles                 |
+      | admin_login | admin_password | admin, member, author |
     And I login with username: admin_login password: admin_password
     When I visit the route <route>
     Then I should be on <route>
-    
+
     Examples:
-      | route                                      | 
-      | /portal/clazzes                            | 
-      | /portal/courses                            | 
-      | /portal/school_memberships                 | 
-      | /portal/schools                            | 
-      | /portal/semesters                          | 
-      | /portal/student_clazzes                    | 
-      | /portal/students                           | 
-      | /portal/subjects                           | 
-      | /portal/teachers                           | 
-      | /portal/districts                          | 
-      | /portal/grades                             | 
-      | /portal/learners                           | 
-      | /portal/external_user_domains              | 
-      | /portal/external_users                     | 
-      | /portal/grade_levels                       | 
-      | /portal/nces06_districts                   | 
-      | /portal/nces06_schools                     | 
-      | /portal/offerings                          | 
- 
+      | route                         |
+      | /portal/clazzes               |
+      | /portal/courses               |
+      | /portal/school_memberships    |
+      | /portal/schools               |
+      | /portal/semesters             |
+      | /portal/student_clazzes       |
+      | /portal/students              |
+      | /portal/subjects              |
+      | /portal/teachers              |
+      | /portal/districts             |
+      | /portal/grades                |
+      | /portal/learners              |
+      | /portal/external_user_domains |
+      | /portal/external_users        |
+      | /portal/grade_levels          |
+      | /portal/nces06_districts      |
+      | /portal/nces06_schools        |
+      | /portal/offerings             |
+
   Scenario Outline: Anonymous user can't access user listing routes:
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
 
     Examples:
-      | route                                      |
-      | /users                                     |
-      
-      
+      | route  |
+      | /users |
+
   Scenario Outline: Admin user can accesss user listing routes
     Given the following users exist:
-      | login        | password            | roles                |
-      | admin_login  | admin_password      | admin, member, author|
+      | login       | password       | roles                 |
+      | admin_login | admin_password | admin, member, author |
     And I login with username: admin_login password: admin_password
     When I visit the route <route>
     Then I should be on <route>
-    
+
     Examples:
-      | route                                      | 
-      | /users                                     | 
+      | route  |
+      | /users |

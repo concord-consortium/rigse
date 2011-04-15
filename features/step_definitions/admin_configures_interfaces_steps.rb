@@ -13,9 +13,13 @@ end
 
 Given /login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
   visit "/login"
-  fill_in("login", :with => username)
-  fill_in("password", :with => password)
-  click_button("Login")
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    @cuke_current_username = username
+    #click_button("Submit")
+  end
 end
 
 When /^I log out$/ do
@@ -32,7 +36,8 @@ end
 Then /^I should see the following form checkboxes:$/ do |checkbox_table|
   checkbox_table.hashes.each do |hash|
     if hash[:checked] =~ /true/
-      Then "the \"#{hash[:name]}\" checkbox should be checked"
+      field_checked = find_field(hash[:name])['checked']
+      field_checked.should == "true"
     else
       Then "the \"#{hash[:name]}\" checkbox should not be checked"
     end
