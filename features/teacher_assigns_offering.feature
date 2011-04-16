@@ -59,8 +59,8 @@ Feature: Teacher can assign an offering to a class
       | student   | student   |
     And the student "student" is in the class "My Class"
     And the following external activity exists:
-      | name        | user    |
-      | My Activity | teacher |
+      | name        | user    | url    |
+      | My Activity | teacher | /home/ |
     When I login as an admin
     And I am on the class page for "Default Class"
     And I drag the external activity "My Activity" to "#clazz_offerings"
