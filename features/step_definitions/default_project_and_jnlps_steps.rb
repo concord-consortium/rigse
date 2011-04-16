@@ -34,3 +34,14 @@ end
 Given /^the option to allow default classes is disabled$/ do
   enabled_default_class(false)
 end
+
+Given /^adhoc workgroups are disabled$/ do
+  # note this will disable them globally so this isn't isolated to this test
+  # so for the time being it is best to call the clean up step below
+  APP_CONFIG[:use_adhoc_workgroups] = false
+end
+
+Then /^adhoc workgroups are set based on settings.yml$/ do
+  settings = AppSettings.load_app_settings
+  APP_CONFIG[:use_adhoc_workgroups] = settings[:use_adhoc_workgroups]
+end
