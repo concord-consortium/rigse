@@ -4,7 +4,7 @@ source :gemcutter
   if ENV['RB_MYSQL2']
     gem "mysql2"
   else
-    gem "mysql"               "~>2.7"
+    gem "mysql",              "~>2.7"
   end
   gem "mongrel",              "~>1.1.5"
   gem "rails",                "2.3.11"
