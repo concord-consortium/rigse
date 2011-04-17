@@ -1,11 +1,20 @@
 source :gemcutter
 
 #### COMMON
-  if ENV['RB_MYSQL2']
-    gem "mysql2"
-  else
-    gem "mysql",              "~>2.7"
+  platforms :ruby do
+    if ENV['RB_MYSQL2']
+      gem "mysql2"
+    else
+      gem "mysql",              "~>2.7"
+    end
   end
+
+  platforms :jruby do
+    gem "rake",                            ">=0.8.7"
+    gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
+    gem "jruby-openssl",                   ">=0.6"
+  end
+
   gem "mongrel",              "~>1.1.5"
   gem "rails",                "2.3.11"
   gem "arrayfields"
