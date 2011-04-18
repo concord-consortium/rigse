@@ -54,7 +54,8 @@ end
 Given /^The following investigation exists:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.find_or_create_by_name(hash['investigation'])
-    activity = Activity.find_or_create_by_name(hash['activity'])
+    # ITSISU requires descriptions on activities
+    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
