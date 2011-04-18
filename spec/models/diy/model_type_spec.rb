@@ -52,14 +52,14 @@ describe Diy::ModelType do
           :sizeable => true,
           :valid => true,
           :attributes => {
-            :name => "itsi model type",
-            :description => "itsi model type desc.",
-            :id => 3,
-            :url => "http://netologo.org/",
-            :otrunk_object_class => "OTFakeType",
-            :otrunk_view_class => "OTFakeTypeView",
-            :authorable => true,
-            :sizeable => true,
+            "name" => "itsi model type",
+            "description" => "itsi model type desc.",
+            "id" => 3,
+            "url" => "http://netologo.org/",
+            "otrunk_object_class" => "OTFakeType",
+            "otrunk_view_class" => "OTFakeTypeView",
+            "authorable" => true,
+            "sizeable" => true,
           }
       )
     end

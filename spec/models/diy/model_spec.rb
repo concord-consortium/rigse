@@ -59,14 +59,14 @@ describe Diy::Model do
           :sizeable => true,
           :valid => true,
           :attributes => {
-            :name => "itsi model type",
-            :description => "itsi model type desc.",
-            :id => 3,
-            :url => "http://netologo.org/",
-            :otrunk_object_class => "OTFakeType",
-            :otrunk_view_class => "OTFakeTypeView",
-            :authorable => true,
-            :sizeable => true,
+            "name" => "itsi model type",
+            "description" => "itsi model type desc.",
+            "id"=> 3,
+            "url" => "http://netologo.org/",
+            "otrunk_object_class" => "OTFakeType",
+            "otrunk_view_class" => "OTFakeTypeView",
+            "authorable" => true,
+            "sizeable" => true,
           }
       )
       @itsi_model = mock_model(Itsi::Model,
@@ -75,10 +75,10 @@ describe Diy::Model do
           :url => @itsi_model_type.url,
           :id => 33,
           :attributes => {
-            :name => "fake model",
-            :model_type => @itsi_model_type,
-            :url => @itsi_model_type.url,
-            :id => 33,
+            "name" => "fake model",
+            "model_type" => @itsi_model_type,
+            "url" => @itsi_model_type.url,
+            "id" => 33,
           }
       )  
     end
