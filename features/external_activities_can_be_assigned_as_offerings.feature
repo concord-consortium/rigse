@@ -27,7 +27,7 @@ Feature: External Activities can be assigned as offerings
 
   # DO NOT TOUCH THE BROWSER WINDOW THAT SELENIUM IS DRIVING
   # IT WILL CAUSE THE TEST TO FAIL
-  @selenium
+  @selenium @itsisu-todo
   Scenario: External Activities and Investigations are draggable items
     Given I login with username: teacher password: teacher
     When I am on the class page for "My Class"

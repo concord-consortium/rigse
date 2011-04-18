@@ -25,14 +25,14 @@ Feature: Student can not see deactivated offerings
     When I assign the investigation "Test Investigation" to the class "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: Student should see activated offerings
     When I log out
     And I login with username: student password: student
     Then I should see "run Test Investigation"
     And I should see "View Test Resource"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: Student should not see deactivated offerings
     When I am on the class page for "My Class"
     And I follow "Deactivate" on the investigation "Test Investigation" from the class "My Class"

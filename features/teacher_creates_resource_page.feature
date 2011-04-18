@@ -45,7 +45,7 @@ Feature: A teacher creates a resource page
     Then I should see "draft page A"
     And I should see "draft page B"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: The teacher can see their resource pages on the homepage
     Given the following teachers exist:
       | login         | password        |

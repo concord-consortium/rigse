@@ -20,7 +20,7 @@ Feature: Teacher views resource usage
       | student | student  |
     And the student "student" belongs to class "My Class"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: Student resource page view increments counter
     When I login with username: teacher password: teacher
     And I am on the resource pages page

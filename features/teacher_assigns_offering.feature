@@ -33,7 +33,7 @@ Feature: Teacher can assign an offering to a class
     When I assign the activity "Test Activity" to the class "My Class"
     Then the activity named "Test Activity" should have "offerings_count" equal to "1"
 
-	@selenium
+	@selenium @itsisu-todo
 	Scenario: All potential offerings are visible
     Given the following investigation exists:
       | name               | user    |
@@ -51,7 +51,7 @@ Feature: Teacher can assign an offering to a class
 		Then I should see "Resource Page: Test Resource Page"
 		Then I should see "External Activity: My Activity"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: Offerings from the default class show learner data in the default class
     Given the following classes exist:
       | name          | teacher |
@@ -83,7 +83,7 @@ Feature: Teacher can assign an offering to a class
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
 
   @dialog
-  @selenium
+  @selenium @itsisu-todo
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class
     Given the following classes exist:
       | name          | teacher |

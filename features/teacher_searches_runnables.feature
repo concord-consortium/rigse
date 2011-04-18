@@ -46,21 +46,21 @@ Feature: Investigations can be searched
           | Good d          | teacher | 5               | published          | 
     And I login with username: teacher password: teacher
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: looking at the first page of runnable investigations
     When I am on the class page for "My Class"
     Then There should be 20 investigations displayed
     And  "Good" should not be displayed in the investigations list
     And  I should see "Next" within "#offering_list"
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario: looking at the second page of runnable investigations
     When I am on the class page for "My Class"
     And I click on the next page of results
     Then I should still be on the class page for "My Class"
     Then  "Good a" should be displayed in the investigations list
 
-  @selenium
+  @selenium @itsisu-todo
   Scenario:  searching through the list of runnable investigations
     When I visit the class page for "My Class"
     Then I enter "Investigation" in the search box
