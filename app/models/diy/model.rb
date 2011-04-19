@@ -32,6 +32,10 @@ class Diy::Model < ActiveRecord::Base
     def nontrasferable_attributes
       %w"id model_type model_type_id"
     end
+    
+    def display_name
+      "Model"
+    end
 
     def from_external_portal(_diy_model)
       found = self.find(:first, :conditions => {:diy_id => _diy_model.id})
