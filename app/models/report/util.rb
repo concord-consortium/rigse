@@ -84,6 +84,13 @@ class Report::Util
     @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
 
     @investigation = offering.runnable
+    # HACK HACK Detect auto-mapped external activities which actually relate to investigations
+    if offering.runnable.kind_of?(ExternalActivity) && oferring.runnable.url =~ /\/sc-runtime\/#(\d+)/
+      activity = Activity.find($1)
+      if activity
+        @investigation = activity.investigation
+      end
+    end
 
     @saveables               = []
     @saveables_by_type       = {}
@@ -96,13 +103,13 @@ class Report::Util
     @sections   = @investigation.student_sections
     @pages      = @investigation.student_pages
     
-    reportables          = @offering.runnable.reportable_elements
+    reportables          = @investigation.reportable_elements
 
     ## FIXME filtering of embeddables should happen here
     unless skip_filters
       results = @report_embeddable_filter.filter(results)
       allowed_embeddables = @report_embeddable_filter.embeddables
-      reportables          = @offering.runnable.reportable_elements
+      reportables          = @investigation.reportable_elements
       if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
         reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
       end
