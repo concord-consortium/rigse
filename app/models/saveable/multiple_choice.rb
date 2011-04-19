@@ -21,8 +21,11 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   end
 
   def answer
-    c = choice
-    c ? c.answer : "not answered"
+    if answered?
+      answers.last.answer
+    else
+      "not answered"
+    end
   end
   
   def answered?
