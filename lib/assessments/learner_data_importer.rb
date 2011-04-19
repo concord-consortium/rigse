@@ -24,10 +24,22 @@ class Assessments::LearnerDataImporter
   end
 
   def run
+    exceptions = []
     @changed.each do |info|
       # get the database
-      doc = URI.parse("#{@couch_url}/#{info[:db]}?rev=#{info[:rev]}").read
-      import(doc)
+      begin
+        doc = URI.parse("#{@couch_url}/#{info[:db]}?rev=#{info[:rev]}").read
+        import(doc)
+      rescue Exception => e
+        exceptions << e
+      end
+    end
+    if exceptions.size > 0
+      msg = "The following docs had errors:"
+      exceptions.each do |e|
+        msg += "\n#{e}"
+      end
+      raise msg
     end
   end
 
