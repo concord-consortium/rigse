@@ -77,7 +77,10 @@ module Notifications
   class Receiver
     def initialize(handler)
       @handler = handler
+      @restart_timestamp = File.stat(RAILS_ROOT + "/tmp/restart.txt").mtime
       @run = true
+      # schedule handling of each valid database on startup
+      COUCH_CONFIG[:valid_databases].each {|db| @handler.add_notification(%!{"db":"#{db}"}!)}
       # start up receiver thread
       @thread = Thread.new do
         while @run do
@@ -89,6 +92,7 @@ module Notifications
           end
         end
         @handler.shutdown
+        @handler = nil
       end
     end
 
@@ -99,6 +103,12 @@ module Notifications
     def shutdown
       @run = false
       @thread.kill
+      @handler.shutdown if @handler
+    end
+
+    def check_if_restart_changed
+      current_timestamp = File.stat(RAILS_ROOT + "/tmp/restart.txt").mtime
+      shutdown if current_timestamp != @restart_timestamp
     end
   end
 
