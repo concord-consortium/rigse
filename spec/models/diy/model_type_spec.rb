@@ -19,18 +19,8 @@ describe Diy::ModelType do
     make(@valid_attributes).errors.should be_empty
   end
 
-  it "should not create instances with invalid otrunk_view)class" do
-    test_case = make(@valid_attributes.update(:otrunk_view_class => "xxThingy"))
-    test_case.should have(1).errors_on(:otrunk_view_class)
-  end
-  
-  it "should not create instances with invalid otrunk_object)class" do
-    test_case = make(@valid_attributes.update(:otrunk_object_class => "xxThingy"))
-    test_case.should have(1).errors_on(:otrunk_object_class)
-  end
-
   describe "enforcing field validations" do
-    validating_fields = %w[ diy_id name description otrunk_object_class otrunk_view_class].map {|e| e.to_sym }
+    validating_fields = %w[ diy_id name otrunk_object_class otrunk_view_class].map {|e| e.to_sym }
     validating_fields.each do |field|
       it "should not create instances with bad #{field.to_s.humanize.pluralize}" do
         test_case = make(@valid_attributes.update(field => nil))
