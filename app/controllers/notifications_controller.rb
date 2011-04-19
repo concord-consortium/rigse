@@ -4,7 +4,7 @@ class NotificationsController < ApplicationController
   def assessments
     db = params[:db]
     if db
-      NotificationController.schedule_job(db)
+      NotificationsController.schedule_import(db)
     end
 
     respond_to do |format|
