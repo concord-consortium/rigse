@@ -72,6 +72,7 @@ describe ItsiImporter do
     end
 
     before(:each) do
+      Itsi::Activity.stub! (:find)
       @itsi_activity = mock_model(Itsi::Activity,
           :name => "fake diy activity",
           :description => "fake diy activity",
@@ -90,6 +91,7 @@ describe ItsiImporter do
     end
 
     it "should try to create all the required sections" do
+      Itsi::Activity.should_receive(:find).and_return(@itsi_activity)
       expected_calls = ItsiImporter::SECTIONS_MAP.size
       ItsiImporter::SECTIONS_MAP.map{ |e| e[:key] }.each do |key|
         @itsi_activity.should_receive(key).and_return("some text")
@@ -100,10 +102,39 @@ describe ItsiImporter do
           end
         end
       end
-      call_create_activity
+      ItsiImporter.create_activity_from_itsi_activity("1",@user)
+    end
+
+    describe "exception types" do
+      errors = %w[ DuplicateUuid MissingUuid BadModelType BadModel BadActivity BadUser ValidationError]
+      errors.each do |error_name|
+        it "should define #{error_name}" do
+          clazz = "ItsiImporter::#{error_name}".constantize
+          msg = "testing"
+          opts = {:testing => true}
+          instance = clazz.new(opts)
+          instance.should_not be_nil
+          instance.should respond_to :options
+          instance.should respond_to :message
+          instance.options[:testing].should == true
+        end
+      end
     end
 
 
+    #end
+    #describe "reporting on an import do" do
+      #it "should create a report buffer"
+      #it "should report the total number of itsi activities in the diy"
+      #it "should report on how many itsi activities are going to be imported"
+      #it "should report on itsi activities have been imported in the past"
+      #it "should report on itsi models that have been imported in the past"
+      #it "should report any error with model types"
+      #it "should report any errors with models"
+      #it "should report any errors with activities"
+      #it "should log any exception"
+      #it "should report on any activities that were not imported"
+      ## DIY
+    #end
   end
-
 end

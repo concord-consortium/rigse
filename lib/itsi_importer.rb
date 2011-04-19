@@ -1,4 +1,110 @@
 class ItsiImporter
+
+  class ImporterException < Exception
+    attr_accessor :activity
+    attr_accessor :time
+    attr_accessor :fatal
+    def initialize(msg,opts={:fatal=>true})
+      super(msg)
+      self.time = Time.now
+      self.options=opts
+    end
+    def options=(opts)
+      @options=opts
+      process_options
+    end
+    def process_options
+      self.activity = @options[:activity]
+      self.fatal = @options[:fatal]
+    end
+    def options
+      @options
+    end
+  end
+
+  class NotFoundInDiy < ImporterException
+    def initialize(opts)
+      super("Could not find object in the DIY",opts)
+    end
+  end
+
+  class NotFoundInPhpPortal < ImporterException
+    def initialize(opts)
+      super("Could not find object in the php portal",opts)
+    end
+  end
+
+  class DuplicateUuid < ImporterException
+    def initialize(opts)
+      super("Object had a duplicate UUID",opts)
+    end
+  end
+
+  class MissingUuid < ImporterException
+    def initialize(opts)
+      super("Object did not have a UUID",opts)
+    end
+  end
+
+  class BadModelType < ImporterException
+    def initialize(opts)
+      super("Bad Model Type",opts)
+    end
+  end
+
+  class BadModel < ImporterException
+    def initialize(opts)
+      super("Bad Model",opts)
+    end
+  end
+
+  class BadActivity < ImporterException
+    def initialize(opts)
+      super("Bad Activity",opts)
+    end
+  end
+
+  class ValidationError < ImporterException
+    def initialize(opts)
+      super("Validation Error",opts)
+    end
+  end
+
+  class BadUser < ImporterException
+    def initialize(opts)
+      super("Bad User",opts)
+    end
+  end
+
+
+  class ActivityImportRecord
+    attr_accessor :name
+    attr_accessor :diy_id
+    attr_accessor :uuid
+    attr_accessor :portal_id
+    attr_accessor :status
+    attr_accessor :start_time
+    attr_accessor :end_time
+    STARTED = 0
+    FAILED = -1
+    SUCCESS = 1
+    def initialize(_diy_id)
+      self.diy_id = _diy_id
+      self.start_time = Time.now
+      self.status = ActivityImportRecord::STARTED
+    end
+    def fail(exception)
+      self.end_time = Time.now
+      self.status=ActivityImportRecord::FAILED
+    end
+    def finish(activity)
+      self.status=ActivityImportRecord::SUCCESS
+      self.uuid = activity.uuid
+      self.portal_id = activity.id
+      self.name = activity.id
+    end
+  end
+
   @@attributes = nil
   ACTIVITY_TEMPLATE_UUID = "7d7f511d-45c6-4002-a5d8-6d6d63a7f12d"
   SECTIONS_MAP = [
@@ -74,8 +180,9 @@ class ItsiImporter
     }
   ]
 
-  class <<self
+  @errors = []
 
+  class <<self
     def find_or_create_itsi_import_user
       unless user = User.find_by_login('itsi_import_user')
         member_role = Role.find_by_title('member')
@@ -90,7 +197,7 @@ class ItsiImporter
 
     def find_or_create_itsi_activity_template
       act = Activity.find_by_uuid(ACTIVITY_TEMPLATE_UUID)
-      puts "ITSI Template - Activity #{act.id}" if act
+      log "ITSI Template - Activity #{act.id}" if act
       return act if act
 
       act = Activity.create!(:name => "Single-page Activity Template", :description => "Single-page Activity Template", :user => ItsiImporter.find_or_create_itsi_import_user, :is_template => true ) {|a| a.uuid = ACTIVITY_TEMPLATE_UUID}
@@ -130,41 +237,33 @@ class ItsiImporter
           end
         end
       end
-      puts "ITSI Template - Activity #{act.id}"
+      log "ITSI Template - Activity #{act.id}"
       return act
     end
-    
+
     def delete_itsi_activity_template
       act = Activity.find_by_uuid(ACTIVITY_TEMPLATE_UUID)
-      
-      puts "No template could be found" unless act
+
+      log "No template could be found" unless act
       return unless act
-      
-      puts "Deleting Activity #{act.id}"
+
+      log "Deleting Activity #{act.id}"
       act.destroy
     end
 
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
-      puts "creating: #{name}: "
+      log "creating: #{name}: "
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
         foreign_key = ccp_itsi_activity.diy_identifier
-        begin
-          unless foreign_key.empty?
-            itsi_activity = Itsi::Activity.find(foreign_key)
-            activity = create_activity_from_itsi_activity(itsi_activity, nil, prefix) # nil user will import the DIY user and associate the activity with that user
-            activity.unit_list = ccp_itsi_unit.unit_name
-            activity.grade_level_list = ccp_itsi_activity.level.level_name
-            activity.subject_area_list = ccp_itsi_activity.subject.subject_name
-            activity.publish! unless activity.published?
-            activity.save
-            puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-          else
-            puts "  -- foreign key empty for ITSI Activity --"
-          end
-        rescue ActiveRecord::RecordNotFound
-          puts "  -- itsi activity foreign id: #{foreign_key} not found --"
+        activity = create_activity_from_itsi_activity(foreign_key, nil, prefix) # nil user will import the DIY user and associate the activity with that user
+        if actvity
+          activity.unit_list = ccp_itsi_unit.unit_name
+          activity.grade_level_list = ccp_itsi_activity.level.level_name
+          activity.subject_area_list = ccp_itsi_activity.subject.subject_name
+          activity.publish! unless activity.published?
+          activity.save
         end
       end
       puts
@@ -173,7 +272,7 @@ class ItsiImporter
     def create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, user, prefix="")
       # Carolyn and Ed wanted this the prefix removed for the itsi-su importer
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
-      puts "creating: #{name}: "
+      log "creating: #{name}: "
       investigation = Investigation.create do |i|
         i.name = name
         i.user = user
@@ -181,389 +280,51 @@ class ItsiImporter
       end
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
         foreign_key = ccp_itsi_activity.diy_identifier
+        activity = create_activity_from_itsi_activity(itsi_activity, user, prefix="")
+        investigation.activities << activity
+        ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user,prefix)
+        puts
+      end
+    end
+
+
+    def create_activity_from_itsi_activity(foreign_key, user=nil, prefix="", use_number=false)
+      unless foreign_key.empty?
+        self.start(foreign_key)
         begin
-          unless foreign_key.empty?
-            itsi_activity = Itsi::Activity.find(foreign_key)
-            ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user,prefix)
-            puts "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-          else
-            puts "  -- foreign key empty for ITSI Activity --"
+          itsi_activity = Itsi::Activity.find(foreign_key)
+          prefix = "" if prefix.nil?
+          prefix << " " if prefix.size > 0
+          name = "#{prefix}#{itsi_activity.name}".strip
+          if use_number
+            name = "#{name} (#{itsi_activity.id})"
           end
+          user = find_or_import_itsi_user(itsi_activity.user) unless user
+          activity = Activity.find_by_uuid(itsi_activity.uuid)
+          unless activity
+            activity = Activity.create do |i|
+              i.name = name
+              i.user = user
+              i.description = itsi_activity.description
+              i.uuid = itsi_activity.uuid
+              i.publish if itsi_activity.public
+            end
+            SECTIONS_MAP.each do |section|
+              process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:page_desc])
+            end
+          end
+          log "  ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
+          finish(activity)
+          return activity
         rescue ActiveRecord::RecordNotFound
-          puts "  -- itsi activity id: #{itsi_activity.id} not found --"
+          message = "  -- itsi activity id: #{itsi_activity.id} not found --"
+          self.fail(NotFoundInDiy.new({:diy_id => foreign_key, :unit_name => ccp_itsi_unit.unit_name}), message)
         end
+      else
+        message = "  -- foreign key empty for ITSI Activity --"
+        self.fail(NotFoundInDiy.new({:diy_id => foreign_key, :unit_name => ccp_itsi_unit.unit_name}),message)
       end
-      puts
-    end
-
-    def create_investigation_from_itsi_activity(itsi_activity, user,  prefix="")
-      # itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-      name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
-      puts "creating: #{name}: "
-      investigation = Investigation.create do |i|
-        i.name = name
-        i.user = user
-        i.description = itsi_activity.description
-      end
-      ItsiImporter.add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix)
-    end
-
-    def add_itsi_activity_to_investigation(investigation, itsi_activity, user, prefix="")
-      investigation.activities << create_activity_from_itsi_activity(itsi_activity, user, prefix="")
-      investigation
-    end
-
-    def create_activity_from_itsi_activity_old(itsi_activity, user, prefix="")
-       @@prediction_graph = nil
-        if itsi_activity.collectdata_probe_active
-          @@first_probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
-        else
-          @@first_probe_type = Probe::ProbeType.find_by_name('Temperature')
-          @@first_probe_type.name = "Temperature as default for missing probe_type_id: #{itsi_activity.probe_type_id}"
-        end
-        # itsi_prefix = "ITSI: #{itsi_activity.id} - #{itsi_activity.name}"
-        name = "#{prefix} #{itsi_activity.name} (#{itsi_activity.id})".strip
-        activity = Activity.create do |i|
-          i.name = name
-          i.user = user
-          i.description = itsi_activity.description
-        end
-
-        # introduction
-        #   name: Introduction
-        #   xhtml: introduction
-        #   open_text_question
-        #     introduction_text_response
-        #   drawing
-        #     introduction_drawing_response
-
-        name = "Introduction"
-        page_desc = "ITSI Activities start with a Discovery Question."
-        extract_question_prompt = itsi_activity.introduction_text_response || itsi_activity.introduction_drawing_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.introduction, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-          if itsi_activity.introduction_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.introduction_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-        end
-
-        # standards
-        #   name: Standards
-        #   xhtml: standards
-
-        name = "Standards"
-        page_desc = "What standards does this ITSI Activity cover?"
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.standards)
-        unless body.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        end
-
-        # materials
-        #   name: Materials
-        #   xhtml: materials
-
-        name = "Materials"
-        page_desc = "What materials does this ITSI Activity require?"
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.materials)
-        unless body.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        end
-
-        # safety
-        #   name: Safety
-        #   xhtml: safety
-
-        name = "Safety"
-        page_desc = "Are there any safety considerations to be aware of in this ITSI Activity?"
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.safety)
-        unless body.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        end
-
-        # procedure
-        #   name: Procedure
-        #   xhtml: proced
-        #   open_text_question
-        #     proced_text_response
-        #   drawing
-        #     proced_drawing_response
-
-        name = "Procedure"
-        page_desc = "What procedures should be performed to get ready for this ITSI Activity?."
-        extract_question_prompt = itsi_activity.proced_text_response || itsi_activity.proced_drawing_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.proced, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-          if itsi_activity.proced_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.proced_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-        end
-
-        # prediction
-        #   name: Prediction
-        #   xhtml: predict
-        #   open_text_question
-        #     prediction_text_response
-        #   drawing
-        #     prediction_drawing_response
-        #   graph
-        #     prediction_graph_response
-        #     (for probe in first collect data section)
-
-        name = "Prediction"
-        page_desc = "Have the learner think about and predict the outcome of an experiment."
-        extract_question_prompt = itsi_activity.prediction_text_response ||
-          itsi_activity.prediction_drawing_response || itsi_activity.prediction_graph_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.predict, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-          if itsi_activity.prediction_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.prediction_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.prediction_graph_response
-            ItsiImporter.add_prediction_graph_response_to_page(page, question_prompt)
-          end
-        end
-
-        # collectdata
-        #   name: Collect Data
-        #   xhtml: collectdata
-        #   data_collector
-        #     collectdata_probe_active
-        #     collectdata_probetype_id
-        #     collectdata_probe_multi
-        #   model
-        #     model_id
-        #     collectdata_model_active
-        #   open_text_question
-        #     collectdata_text_response
-        #   drawing
-        #     collectdata_drawing_response
-        #   graph
-        #     collectdata_graph_response
-        #     (for probe in second collect data section)
-        #
-
-        name = "Collect Data"
-        page_desc = "The learner conducts experiments using probes and models."
-        extract_question_prompt = itsi_activity.collectdata_text_response ||
-          itsi_activity.collectdata_drawing_response || itsi_activity.collectdata_graph_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.collectdata, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-          if itsi_activity.collectdata_probe_active
-            probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
-            ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata_probe_multi)
-          end
-          if itsi_activity.collectdata_model_active
-            add_model_to_page(page, itsi_activity.model)
-          end
-          if itsi_activity.collectdata_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.collectdata_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-          # if itsi_activity.collectdata_graph_response
-          #   ItsiImporter.add_prediction_graph_response_to_page(page, question_prompt)
-          # end
-        end
-
-        #   xhtml: collectdata2
-        #   data_collector
-        #     collectdata2_probe_active
-        #     collectdata2_probetype_id
-        #     collectdata2_probe_multi
-        #     collectdata2_calibration_active
-        #     collectdata2_calibration_id
-        #   model
-        #     collectdata2_model_id
-        #     collectdata2_model_active
-        #   open_text_question
-        #     collectdata2_text_response
-        #   drawing
-        #     collectdata2_drawing_response
-        #
-
-        extract_question_prompt = itsi_activity.collectdata2_text_response || itsi_activity.collectdata2_drawing_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.collectdata2, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          ItsiImporter.add_xhtml_to_page(page, body)
-          if itsi_activity.collectdata2_probe_active
-            probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
-            ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata2_probe_multi)
-          end
-          if itsi_activity.collectdata2_model_active
-            model = itsi_activity.second_model
-            if model.model_type.name == "Molecular Workbench"
-              ItsiImporter.add_mw_model_to_page(page, model)
-            end
-          end
-          if itsi_activity.collectdata2_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.collectdata2_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-        end
-
-        #   xhtml: collectdata3
-        #   data_collector
-        #     collectdata3_probe_active
-        #     collectdata3_probetype_id
-        #     collectdata3_probe_multi
-        #     collectdata3_calibration_active
-        #     collectdata3_calibration_id
-        #   model
-        #     collectdata3_model_id
-        #     collectdata3_model_active
-        #   open_text_question
-        #     collectdata3_text_response
-        #   drawing
-        #     collectdata3_drawing_response
-
-        extract_question_prompt = itsi_activity.collectdata3_text_response || itsi_activity.collectdata3_drawing_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.collectdata3, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          ItsiImporter.add_xhtml_to_page(page, body)
-          if itsi_activity.collectdata3_probe_active
-            probe_type = Probe::ProbeType.find(itsi_activity.probe_type_id)
-            ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.collectdata3_probe_multi)
-          end
-          if itsi_activity.collectdata3_model_active
-            model = itsi_activity.third_model
-            if model.model_type.name == "Molecular Workbench"
-              ItsiImporter.add_mw_model_to_page(page, model)
-            end
-          end
-          if itsi_activity.collectdata3_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.collectdata3_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-        end
-
-        # analysis
-        #   name: Analysis
-        #   xhtml: analysis
-        #   open_text_question
-        #     analysis_text_response
-        #   drawing
-        #     analysis_drawing_response
-
-        name = "Analysis"
-        page_desc = "How can learners reflect and analyze the experiments they just completed?"
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.analysis)
-        unless body.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        end
-
-        # conclusion
-        #   name: Conclusion
-        #   xhtml: conclusion
-        #   open_text_question
-        #     conclusion_text_response
-        #   drawing
-        #     conclusion_drawing_response
-
-        name = "Conclusion"
-        page_desc = "What are some reasonable conclusions a learner might come to after this ITSI Activity?"
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.conclusion)
-        unless body.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-        end
-
-        # further
-        #   name: Further Activities
-        #   xhtml: further
-        #   data_collector
-        #     further_probe_active
-        #     further_probetype_id
-        #     further_probe_multi
-        #     furtherprobe_calibration_active
-        #     furtherprobe_calibration_id
-        #   model
-        #     further_model_id
-        #     further_model_active
-        #   open_text_question
-        #     further_text_response
-        #   drawing
-        #     further_drawing_response
-
-        name = "Further Activities"
-        page_desc = "Think about any further activities a learner might want to try."
-        extract_question_prompt = itsi_activity.further_text_response || itsi_activity.further_drawing_response
-        body, question_prompt = ItsiImporter.process_textile_content(itsi_activity.further, extract_question_prompt)
-        unless body.empty? && question_prompt.empty?
-          section = ItsiImporter.add_section_to_activity(activity, name, page_desc)
-          page, page_element = ItsiImporter.add_page_to_section(section, name, body, page_desc)
-          if itsi_activity.further_probe_active
-            probe_type = Probe::ProbeType.find(itsi_activity.further_probetype_id)
-            ItsiImporter.add_data_collector_to_page(page, probe_type, itsi_activity.further_probe_multi)
-          end
-          if itsi_activity.further_model_active
-            model = itsi_activity.fourth_model
-            if model.model_type.name == "Molecular Workbench"
-              ItsiImporter.add_mw_model_to_page(page, model)
-            end
-          end
-          if itsi_activity.further_text_response
-            ItsiImporter.add_open_response_to_page(page, question_prompt)
-          end
-          if itsi_activity.further_drawing_response
-            ItsiImporter.add_drawing_response_to_page(page, question_prompt)
-          end
-        end
-        activity
-    end
-
-    ##
-    ## NP: new definition of create_activity_from_itsi_activity
-    ## TODO: Add itsi user
-
-    def create_activity_from_itsi_activity(itsi_activity, user=nil, prefix="", use_number=false)
-      prefix = "" if prefix.nil?
-      prefix << " " if prefix.size > 0
-      name = "#{prefix}#{itsi_activity.name}".strip
-      if use_number
-        name = "#{name} (#{itsi_activity.id})"
-      end
-      user = find_or_import_itsi_user(itsi_activity.user) unless user
-      activity = Activity.find_by_uuid(itsi_activity.uuid)
-      unless activity
-        activity = Activity.create do |i|
-          i.name = name
-          i.user = user
-          i.description = itsi_activity.description
-          i.uuid = itsi_activity.uuid
-          i.publish if itsi_activity.public
-        end
-
-        SECTIONS_MAP.each do |section|
-          process_diy_activity_section(activity,itsi_activity,section[:key],section[:name],section[:page_desc])
-        end
-      end
-      return activity
+      return false
     end
 
     def find_or_import_itsi_user(diy_user)
@@ -598,7 +359,11 @@ class ItsiImporter
           user.activate!
         rescue AASM::InvalidTransition
           c += 1
-          retry unless c > 2
+          if c > 2
+            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid, :activity => activity)
+          else
+            retry
+          end
         end
         user.roles << Role.find_by_title('member')
         user.roles << Role.find_by_title('author')
@@ -705,13 +470,15 @@ class ItsiImporter
         model_id = diy_act.send(attribute_name_for(section_key,:model_id))
 
         if (model_id && model_id > 0)
-          begin 
+          begin
             diy_model = Itsi::Model.find(model_id)
             if diy_model
               model = Diy::Model.from_external_portal(diy_model)
             end
+            @errors << BadModel.new({:activity => activity, :diy_activity => diy_act, :model_id => model_id })
           rescue => e
-            puts "#{e}. activity => #{diy_act.name} #{diy_act.id}"
+            log "#{e}. activity => #{diy_act.name} #{diy_act.id}"
+            @errors << BadModel.new({:activity => activity, :diy_activity => diy_act})
           end
         end
 
@@ -732,7 +499,9 @@ class ItsiImporter
           begin
             probe_type = Probe::ProbeType.find(probe_type_id)
           rescue ActiveRecord::RecordNotFound => e
-            puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+            message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
+            log message
+            @errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
           end
         end
         calibration = nil
@@ -764,7 +533,8 @@ class ItsiImporter
             begin
               probe_type = Probe::ProbeType.find(probe_type_id)
             rescue ActiveRecord::RecordNotFound => e
-              puts "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+              log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+              @errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
             end
           end
 
@@ -845,7 +615,7 @@ class ItsiImporter
           # look for weird entity that should actually be an endash -- what causes this??
           # cant figure out right now the relations between textile / html and escape entities.
           html_content.gsub!(/â€“/,"—")
-          # we are also seeing things like this: &#8217;  =- &amp;#8217; -- double encoded?
+          # we are also seeing things like this: &#8217;  =- &amp;#821We've had instances where the code would work when firebug is turned OFF and not work when it is turned on.  7; -- double encoded?
           html_content.gsub!(/&amp;#(\d+);/, '&#\1;')
           x.content = html_content
         end
@@ -952,7 +722,42 @@ class ItsiImporter
       activity.sections << section
       section
     end
-  end
-end
 
+    def log(message,level=1)
+      puts message
+    end
+  
+    def start(diy_id)
+      @records ||= []
+      if @records.last && records.last.status == ActivityImportRecord::STARTED
+        fail(ImporterException.new("Invalid importer state! Started record without fail or finish"))
+      end
+      @records.push ActivityImportRecord.new(diy_id)
+    end
+
+    def finish(activity)
+      @records ||= [] # this is actually an error condition
+      record = @records.last
+      if record && record.status != ActivityImportRecord::FAILED
+        if activity.valid?
+          record.finish(activity)
+        else
+          self.fail(ValidationError.new(:activity => activity),"Activity fails validation #{activity.id} #{activity.name}")
+        end
+      else
+        log ("Finish called before start for #{activity.name}") unless record
+        log ("Import failed already for #{activity.name}") if record && record.status == ActivityImportRecord::FAILED
+      end
+    end
+
+    def fail(exception, message)
+      log exception.message
+      log message
+      @records.last.fail(exception)
+      @errors ||= []
+      @errors << exception
+    end
+
+  end # end of class methods
+end
 
