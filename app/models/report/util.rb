@@ -90,6 +90,8 @@ class Report::Util
       if activity
         @investigation = activity.investigation
       end
+      # force showing all learners, since we're not recording bundles for these mapped ExternalActivities
+      @learners = @offering.learners
     end
 
     @saveables               = []
