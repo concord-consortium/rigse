@@ -221,6 +221,7 @@ namespace :deploy do
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/initializers/subdirectory.rb"
     run "touch #{shared_path}/config/database.yml"
+    run "touch #{shared_path}/config/couchdb.yml"
 
     # support for running a SproutCore app from within the public directory
     run "mkdir -p #{shared_path}/public/static"
@@ -245,6 +246,8 @@ namespace :deploy do
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
+
+    run "ln -nfs #{shared_path}/config/couchdb.yml #{release_path}/config/couchdb.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
