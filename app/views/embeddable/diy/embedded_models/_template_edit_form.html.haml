@@ -1,4 +1,4 @@
-- template_form(embedded_model) do |f|
+- template_form(diy_embedded_model) do |f|
   = f.submit("Save", :class=> "template_save_button")
   = f.submit("Cancel", :class=> "template_cancel_button")
-  = render :partial => "embeddable/diy/embedded_models/form", :locals => { :embedded_model => embedded_model, :f => f  }
+  = render :partial => "embeddable/diy/embedded_models/form", :locals => { :embedded_model => diy_embedded_model, :f => f  }

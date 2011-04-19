@@ -1,5 +1,5 @@
-%div{:id => dom_id_for(section, :details), :class => 'content'}
+%div{:id => dom_id_for(diy_section, :details), :class => 'content'}
   = #wrap_edit_link_around_content(section, options={:complete => mce_init_string}) do
-  = section.content
-  - if section.has_question
-    %textarea{:type => 'text', :style=>"width: 95%;", :value =>section.default_response, :class=> "mceNoEditor",:id => dom_id_for(section, :item, :default_response_field)}
+  = diy_section.content
+  - if diy_section.has_question
+    %textarea{:type => 'text', :style=>"width: 95%;", :value =>diy_section.default_response, :class=> "mceNoEditor",:id => dom_id_for(diy_section, :item, :default_response_field)}

@@ -1,4 +1,4 @@
-- template_form(sensor) do |f|
+- template_form(diy_sensor) do |f|
   = f.submit("Save", :class=> "template_save_button")
   = f.submit("Cancel", :class=> "template_cancel_button")
-  = render :partial => "embeddable/diy/sensors/form", :locals => { :sensor => sensor, :f => f  }
+  = render :partial => "embeddable/diy/sensors/form", :locals => { :sensor => diy_sensor, :f => f  }
