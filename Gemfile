@@ -35,6 +35,7 @@ source :gemcutter
   gem "acts-as-taggable-on"
   gem "ruby-debug"
   gem "nokogiri",             "~> 1.4.1"
+  gem "json",                 "   1.5.1"
 
 group :development do
   gem "highline"
