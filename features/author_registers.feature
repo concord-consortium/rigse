@@ -53,3 +53,4 @@ Feature: An author registers to use the portal
 
     And I press "Sign up"
     Then I should see " Thanks for signing up!"
+    And I should not see "Sorry, there was an error creating your account"

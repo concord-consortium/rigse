@@ -1,4 +1,6 @@
 require 'rubygems'
+require "bundler/setup"
+
 require 'fileutils'
 require 'yaml'
 require 'erb'
@@ -170,61 +172,10 @@ end
 
 optparse.parse!
 
-# ==================================================================
-#
-#   Check for gems that need to be installed manually
-#
-# ==================================================================
-
-def gem_install_command_strings(missing_gems)
-  command = JRUBY ? "  jruby -S gem install " : "  sudo gem install "
-  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
-end
-
-@missing_gems = []
-
-# These gems need to be installed with the Ruby VM for the web application
-if JRUBY
-  @gems_needed_at_start = [
-    ['rake', '>=0.8.7'],
-    ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
-    ['jruby-openssl', '>=0.6']
-  ]
-else
-  @gems_needed_at_start = [['mysql', '>= 2.7']]
-end
-
-@gems_needed_at_start.each do |gem_name_and_version|
-  begin
-    gem gem_name_and_version[0], gem_name_and_version[1]
-  rescue Gem::LoadError
-    @missing_gems << gem_name_and_version
-  end
-  begin
-    require gem_name_and_version[0]
-  rescue LoadError
-  end
-end
-
-if @missing_gems.length > 0
-  message = "\n\n*** Please install the following gems: (#{@missing_gems.join(', ')}) and run config/setup.rb again.\n"
-  message << "\n#{gem_install_command_strings(@missing_gems)}\n"
-  raise message
-end
-
-
 # FIXME: see comment about this hack in config/environments/development.rb
 $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
 
 require 'highline/import'
-
-def wrapped_agree(prompt)
-  if @options[:answer_yes]
-    true
-  else
-    agree(prompt)
-  end
-end
 
 # ==================================================================
 #
@@ -1230,13 +1181,10 @@ end
 
 puts <<-HEREDOC
   MRI Ruby:
-    rake gems:install
-    RAILS_ENV=cucumber rake gems:install
     RAILS_ENV=production rake db:migrate:reset
     RAILS_ENV=production rake rigse:setup:new_rites_app
 
   JRuby:
-    jruby -S rake gems:install
     RAILS_ENV=production jruby -S rake db:migrate:reset
     RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
 

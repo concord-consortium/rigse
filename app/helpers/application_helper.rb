@@ -29,7 +29,14 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    id = component.id.nil? ? Time.now.to_i : component.id
+    if component.is_a?(ActiveRecord::Base)
+      id = component.id || Time.now.to_i
+    else
+      # this will be a temporary id, so it seems unlikely that these type of ids
+      # should be really be generated, however there are some parts of the code
+      # calling dom_id_for and passing a form object for example
+      id = component.object_id
+    end
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end

@@ -44,29 +44,44 @@ the prefix of the names for the databases that will be created in mysql.
 
   cd xproject
 
-  # follow instructions for installing necessary gem prerequisites
-  # until config/setup.rb completes successfully
-  
-  ruby config/setup.rb -n Cross Project Portal -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
+  # setup rvm with a gemset named xproject
+  rvm use 1.8.7
+  rvm gemset create xproject
+
+  # make .rvmrc so rvm will use this ruby gemset combo automatically
+  echo "rvm use 1.8.7@xproject" > .rvmrc
+
+  # test out .rvmrc and start using the gemset
+  cd ..;cd xproject
+
+  # install bundler
+  gem install bundler
+
+  # install the necessary gems
+  bundle install
+
+  # automatic setup of config/settings.yml and config/database.yml
+  ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
 
   # The options -y -q -f to setup mean: 
   #   answer 'yes' to accept default values
   #   use 'quieter' console output
   #   force updates of the existing settings.yml and databse.yml if they exist
 
-  # finish installing necessary gems for rails application
-  rake gems:install
-  RAILS_ENV=cucumber rake gems:install
-
   # setup database
+  # if this fails it is probably due to a bad mysql gem install, check out this page for help
+  #  https://rvm.beginrescueend.com/integration/databases/
+  RAILS_ENV=production rake db:create
   RAILS_ENV=production rake db:migrate:reset
 
   # setup application resources
-  RAILS_ENV=production rake rigse:setup:new_rites_app
+  # this can take 5 minutes or so and requires answering some questions  
+  RAILS_ENV=production rake app:setup:new_app
 
-  # save a copy of the development database to make subsequent clean starts much quicker
-  # Saves database to: db/development_data.sql
-  # can be reloaded later with: rake db:load
+  # save a copy of the development database to make subsequent clean starts much quicker (bypassing rake app:setup:new_app)
+  #  Saves database to: db/development_data.sql
+  #  can be reloaded later with: rake db:load
+  #  note: in default setup created by config.rb above the development and production database is the same
   rake db:dump
   
   # start server
