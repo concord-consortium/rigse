@@ -1,0 +1,131 @@
+#!/usr/bin/env ruby
+
+# first, boot the rails environment
+require File.dirname(__FILE__) +  '/../config/boot'
+ENV["RAILS_ENV"] ||= "production"
+RAILS_ENV.replace(ENV["RAILS_ENV"]) if defined?(RAILS_ENV)
+require RAILS_ROOT + '/config/environment'
+
+require 'yaml'
+
+# then configure our settings
+config_file = File.dirname(__FILE__) + '/../config/couchdb.yml'
+yaml_config = File.exist?(config_file) ? YAML.load_file(config_file) : {}
+COUCH_CONFIG = yaml_config.kind_of?(Hash) ? yaml_config : {}
+COUCH_CONFIG[:couch_url] ||= "http://localhost:5789"
+COUCH_CONFIG[:couch_url].sub!(/[\/]+$/, '')
+COUCH_CONFIG[:valid_databases] ||= []
+
+module Notifications
+  class Handler
+    def initialize
+      @queue = []
+      # start up handler thread
+      start_thread
+    end
+
+    def add_notification(notification)
+      @queue << notification
+      # check to make sure the handler thread is still running...
+      if @thread.alive?
+        @thread.run
+      else
+        start_thread
+      end
+    end
+
+    def shutdown
+      @run = false
+    end
+
+    def wait_for_completion
+      @thread.join
+    end
+
+    private
+
+    def start_thread
+      @run = true
+      @thread = Thread.new do
+        while @run do
+          notification = @queue.shift
+          if notification != nil
+            begin
+              handle_notification(notification)
+            rescue => e
+              $stderr.puts "Error handling notification: #{e}\n#{e.backtrace.join("\n")}"
+            end
+          else
+            Thread.stop
+          end
+        end
+      end
+    end
+
+    def handle_notification(notification)
+      # schedule the importer to run
+      if notification =~ /["]?db["]?:["]?(.*?)[\s"]/ && COUCH_CONFIG[:valid_databases].include?($1)
+        db_url = "#{COUCH_CONFIG[:couch_url]}/#{$1}"
+        puts "Submitting import job #{db_url}"
+        NotificationsController.schedule_import(db_url)
+      else
+        puts "Ignoring database #{$1}"
+      end
+    end
+  end
+
+  class Receiver
+    def initialize(handler)
+      @handler = handler
+      @run = true
+      # start up receiver thread
+      @thread = Thread.new do
+        while @run do
+          notification = gets
+          if notification == nil
+            @run = false
+          else
+            @handler.add_notification(notification)
+          end
+        end
+        @handler.shutdown
+      end
+    end
+
+    def wait_for_completion
+      @thread.join
+    end
+
+    def shutdown
+      @run = false
+      @thread.kill
+    end
+  end
+
+  class Listener
+    def initialize
+      Signal.trap("TERM") do
+        shutdown
+      end
+
+      Signal.trap("INT") do
+        shutdown
+      end
+    end
+
+    def start
+      @handler = Notifications::Handler.new
+      @receiver = Notifications::Receiver.new(@handler)
+      @receiver.wait_for_completion
+    end
+
+    def shutdown
+      puts "Shutting down..."
+      @receiver.shutdown
+    end
+  end
+end
+
+puts "Listening..."
+Notifications::Listener.new.start
+puts "Shutdown."

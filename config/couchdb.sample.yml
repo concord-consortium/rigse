@@ -1,0 +1,5 @@
+--- 
+:couch_url: http://localhost:5984/
+:valid_databases:
+- db1
+- db2
