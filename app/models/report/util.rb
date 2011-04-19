@@ -85,7 +85,7 @@ class Report::Util
 
     @investigation = offering.runnable
     # HACK HACK Detect auto-mapped external activities which actually relate to investigations
-    if offering.runnable.kind_of?(ExternalActivity) && oferring.runnable.url =~ /\/sc-runtime\/#(\d+)/
+    if offering.runnable.kind_of?(ExternalActivity) && offering.runnable.url =~ /\/sc-runtime\/#(\d+)/
       activity = Activity.find($1)
       if activity
         @investigation = activity.investigation
