@@ -83,6 +83,7 @@ describe Portal::ClazzesController do
     end
 
     it "shows the list of all teachers assigned to the requested class" do
+      pending("ITSISU modified the clazz page to not contain this info")
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
@@ -100,6 +101,7 @@ describe Portal::ClazzesController do
 
   describe "XMLHttpRequest edit" do
     it "shows the details of all teachers assigned to the requested class with removal links" do
+      pending("ITSISU theme removed teacher editing section")
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
         stub_current_user user
@@ -128,6 +130,7 @@ describe Portal::ClazzesController do
 
     describe "conditions for a user trying to remove a teacher from a class" do
       it "the user is allowed to remove any teacher in the list" do
+        pending("ITSISU theme removed teacher editing section")
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
 
@@ -145,6 +148,7 @@ describe Portal::ClazzesController do
       end
 
       it "the user is not allowed to edit this class in the first place" do
+        pending("ITSISU theme removed teacher editing section")
         stub_current_user :unauthorized_teacher_user
 
         teachers = [@authorized_teacher, @random_teacher]
@@ -163,6 +167,7 @@ describe Portal::ClazzesController do
       end
 
       it "this teacher is the last teacher assigned to this class" do
+        pending("ITSISU theme removed teacher editing section")
         # @mock_clazz should only have one teacher, but let's make sure
         teachers = [@authorized_teacher]
         @mock_clazz.teachers = teachers
@@ -203,6 +208,7 @@ describe Portal::ClazzesController do
       # end
 
       it "this teacher is the current user" do
+        pending("ITSISU theme removed teacher editing section")
         stub_current_user :authorized_teacher_user
 
         teachers = [@authorized_teacher, @random_teacher]
@@ -240,6 +246,8 @@ describe Portal::ClazzesController do
     end
 
     it "populates the list of available teachers for ADD functionality if current user is authorized" do
+      pending("ITSISU theme removed teacher editing section")
+
       [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
         setup_for_repeated_tests
         stub_current_user user
