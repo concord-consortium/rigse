@@ -40,7 +40,7 @@ describe "/pages/_show.otml.haml" do
     render :locals => { :page => @page, :teacher_mode => false }
     response.capture(:library).should have_tag("OTCompoundDoc[local_id=?][name=?]", "tab_content_#{dom_id_for(@page)}", "Test Page") do
       with_tag("div[id=?]", "content") do
-        with_tag("p[class=?]","page_title", :text => "Test Section  (Test Page)")
+        with_tag("p[class=?]","page_title", :text => "Test Section")
       end
     end
   end
