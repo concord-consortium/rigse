@@ -12,8 +12,8 @@ Feature: Activities can be created using the itsisu theme
       | teacher       | teacher         |
 		
 		And the following activities exist:
-        | name                    | user    | publication_status | 
-        | first_actvity           | teacher | published          | 
+        | name                    | user    | publication_status |
+        | first_activity          | teacher | published          |
       
 
   @selenium
@@ -31,8 +31,13 @@ Feature: Activities can be created using the itsisu theme
     When I login with username: teacher password: teacher
 		And  I am on the activities page
 		And I follow "create Activity"
-		And I fill in "activity_name" with "first_actvity"
+		And I fill in "activity_name" with "first_activity"
 		And I fill in "activity_description" with "something"
 		And I press "activity_submit"
 		Then I should see "Please pick a unique name"
 
+  Scenario: teacher sees their activities on the activities page
+    When I login with username: teacher password: teacher
+    And I am on the activities page
+    Then I should see "My Activities"
+    And I should see "first_activity"
