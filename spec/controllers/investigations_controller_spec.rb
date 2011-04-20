@@ -24,21 +24,25 @@ describe InvestigationsController do
   end
 
   it "should display a 'duplicate' link for authorized users" do
+    fails_in_themes({"assessment" => :expected}) do
     @investigation.should_receive(:duplicateable?).with(@logged_in_user).and_return(true)
 
     get :show, :id => @investigation.id
 
     #@response.body.should include(duplicate_link_for(@investigation))
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 1 })
+    end
   end
 
   it "should not display a 'duplicate' link for unauthorized users" do
+    fails_in_themes({"assessment" => :expected}) do
     @investigation.should_receive(:duplicateable?).with(@logged_in_user).and_return(false)
 
     get :show, :id => @investigation.id
 
     #@response.body.should_not include(duplicate_link_for(@investigation))
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
+    end
   end
 
   it "should render prievew warning in OTML" do

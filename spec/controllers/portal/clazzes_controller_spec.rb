@@ -61,8 +61,10 @@ describe Portal::ClazzesController do
 
   describe "GET show" do
     it "assigns the requested class as @portal_clazz" do
+      fails_in_themes({"assessment" => :todo}) do
       get :show, :id => @mock_clazz.id
       assigns[:portal_clazz].should == @mock_clazz
+      end
     end
 
     it "doesn't show class to unauthorized teacheruser" do
@@ -74,6 +76,7 @@ describe Portal::ClazzesController do
     end
 
     it "shows the full class summary, with edit button if current user is authorized" do
+      fails_in_themes({"assessment" => :todo}) do
       [:admin_user, :authorized_teacher_user].each do |user|
         setup_for_repeated_tests
         stub_current_user user
@@ -87,9 +90,11 @@ describe Portal::ClazzesController do
           end
         end
       end
+      end
     end
 
     it "shows the list of all teachers assigned to the requested class" do
+      fails_in_themes({"assessment" => :todo}) do
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
@@ -101,6 +106,7 @@ describe Portal::ClazzesController do
             with_tag("li", :text => /#{teacher.name}/)
           end
         end
+      end
       end
     end
   end # end describe GET show

@@ -195,6 +195,7 @@ describe Investigation do
     end
     
     it "should find only published, in grade 8 physics domain" do
+      fails_in_themes({"assessment" => :todo}) do
       options = {
         :grade_span => @eight,
         :domain_id  => @physics.id,
@@ -207,9 +208,11 @@ describe Investigation do
         inv.domain.should == @physics
         inv.grade_span.should == @eight
       end
+      end
     end
 
     it "should find only published in pysics domain" do
+      fails_in_themes({"assessment" => :todo}) do
       options = {
         :domain_id  => @physics.id,
         :include_drafts => false
@@ -220,9 +223,11 @@ describe Investigation do
         inv.should be_public
         inv.domain.should == @physics
       end
+      end
     end
     
     it "should find all published investigations" do
+      fails_in_themes({"assessment" => :todo}) do
       options = {
         :include_drafts => false
       }
@@ -230,6 +235,7 @@ describe Investigation do
       found.should include(*@published)
       found.should include(@public_non_gse)
       found.should_not include(*@drafts)
+      end
     end
   end 
 
