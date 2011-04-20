@@ -1,11 +1,27 @@
+- show_detail = nil if local_assigns[:show_detail].nil?
 %div{:id => dom_id_for(model, :details), :class => 'content'}
   = wrap_edit_link_around_content(model, options={:complete => mce_init_string, :class => 'foobar edit'}) do
-    - if model.image_url
+    - if (show_detail)
       %p
-        %div{:style => "float: right"}
+        %h2= model.name
+    - if model.image_url
+      %div{:style => "float: right"}
+        - if (show_detail)
+          =image_tag(model.image_url)
+        - else
           =image_tag(model.image_url, :size => '100x100')
-        = model.description
+    %p= model.description
     %p
+      - if (show_detail)
+        %b Instructions:
+        = model.instructions
+        %br
+        %b Public?
+        = model.public ? "yes" : "no"
+        %br
+        %b Publication status:
+        = model.publication_status
+        %br
       %b Author:
       - if model.user
         = model.user.first_name + " " + model.user.last_name
@@ -15,4 +31,8 @@
       %br
       %b Model type:
       = model.model_type.name
+      - if (show_detail)
+        %br
+        %b Authored Data URL:
+        = model.url
     %div{:style => "clear:both"}
