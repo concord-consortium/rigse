@@ -1,3 +1,3 @@
-- form_for(@embedded_model, :before => "tinyMCE.triggerSave(true,true)") do |f|
+- form_for(@diy_embedded_model, :before => "tinyMCE.triggerSave(true,true)") do |f|
   .item
-    = render :partial => 'form', :locals => { :embedded_model => @embedded_model, :f => f }
+    = render :partial => 'form', :locals => { :embedded_model => @diy_embedded_model, :f => f }

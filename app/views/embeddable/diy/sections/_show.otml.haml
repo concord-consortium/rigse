@@ -16,5 +16,5 @@
     %OTCompoundDoc{:local_id => ot_local_id_for(diy_section)}
       %bodyText= diy_section.content
 
-  %OTText{ :local_id => ot_local_id_for(diy_section, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{section.name}_field"}
+  %OTText{ :local_id => ot_local_id_for(diy_section, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{diy_section.name}_field"}
     %text= h(diy_section.default_response)

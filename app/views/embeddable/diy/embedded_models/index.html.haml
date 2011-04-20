@@ -1,3 +1,3 @@
-= render :partial => 'shared/collection_menu', :locals => { :collection => @embedded_models, :collection_class => Embeddable::NLogoModel }        
-- @embedded_models.each do |embedded_model|
-  = render :partial => 'shared/embeddable_container', :locals=> {:component => embedded_model}
+= render :partial => 'shared/collection_menu', :locals => { :collection => @diy_embedded_models, :collection_class => Embeddable::NLogoModel }        
+- @diy_embedded_models.each do |diy_embedded_model|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => diy_embedded_model}

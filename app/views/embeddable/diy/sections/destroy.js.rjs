@@ -1,4 +1,4 @@
-dom_id = dom_id_for(@section, :item)
+dom_id = dom_id_for(@diy_section, :item)
 safe_js(page,dom_id) do
   page.remove dom_id
 end

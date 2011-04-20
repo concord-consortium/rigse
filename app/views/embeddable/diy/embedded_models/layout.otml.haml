@@ -1,16 +1,16 @@
 !!! XML
 = render :partial => "otml/character_entities"
-%otrunk{ :id => @embedded_model.uuid}
+%otrunk{ :id => @diy_embedded_model.uuid}
   =ot_imports
   %objects
     %OTSystem
-      =ot_bundles(:title => h(@embedded_model.name))
+      =ot_bundles(:title => h(@diy_embedded_model.name))
       %root
         %OTCompoundDoc
           %bodyText
             #content
               %h3
-                = h(Embeddable::NLogoModel.display_name + ': ' + @embedded_model.name)
-              %object{ :refid => ot_refid_for(@embedded_model) }
+                = h(Embeddable::NLogoModel.display_name + ': ' + @diy_embedded_model.name)
+              %object{ :refid => ot_refid_for(@diy_embedded_model) }
       %library
         =yield :layout

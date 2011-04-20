@@ -6,7 +6,14 @@
       %p
         Authored Data URL: 
         =link_to diy_embedded_model.url
-    - else
+    - elsif diy_embedded_model.url
+      %p
+        %b Model: 
+        =diy_embedded_model.name
+      %p
+        %b Authored Data URL: 
+        =link_to diy_embedded_model.url
+    -else
       %p
         (No authored data URL)
 

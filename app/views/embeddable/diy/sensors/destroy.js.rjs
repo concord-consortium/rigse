@@ -1,4 +1,4 @@
-dom_id = dom_id_for(@sensor, :item)
+dom_id = dom_id_for(@diy_sensor, :item)
 safe_js(page,dom_id) do
   page.remove dom_id
 end

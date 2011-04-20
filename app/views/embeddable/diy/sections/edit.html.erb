@@ -2,7 +2,7 @@
 
 <% form_for(@diy_section) do |f| %>
   <%= f.error_messages %>
-  <%= render :partial => "remote_form", :locals => {:section => @section} %>
+  <%= render :partial => "remote_form", :locals => {:diy_section => @diy_section} %>
   <p>
     <%= f.submit "Update" %>
   </p>

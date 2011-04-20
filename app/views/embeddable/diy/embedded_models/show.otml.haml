@@ -1,5 +1,5 @@
 - content_for(:otrunk_doc_id) do
-  =@embedded_model.uuid
+  =@diy_embedded_model.uuid
 - content_for(:embedded_model_object_id) do
-  =dom_id_for(@embedded_model)
-= render :partial => "show", :locals => { :diy_embedded_model => @embedded_model }
+  =dom_id_for(@diy_embedded_model)
+= render :partial => "show", :locals => { :diy_embedded_model => @diy_embedded_model }
