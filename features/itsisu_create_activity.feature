@@ -1,4 +1,4 @@
-Feature: Activities can be authored using the itsisu theme
+Feature: Activities can be created using the itsisu theme
   So that new activities can be created
   As a teacher
   I want to create a new activity

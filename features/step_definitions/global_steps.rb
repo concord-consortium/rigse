@@ -77,3 +77,7 @@ end
 Then /^the location should be "([^"]*)"$/ do |location|
   current_url.should == location
 end
+
+When /^(?:|I )click "([^"]*)"$/ do |selector|
+  find(selector).click
+end
