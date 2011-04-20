@@ -5,7 +5,8 @@
       %p
         %h2= model.name
     - if model.image_url
-      %div{:style => "float: right"}
+      - style = show_detail ? '' : "float: right"
+      %div{:style => style}
         - if (show_detail)
           =image_tag(model.image_url)
         - else
