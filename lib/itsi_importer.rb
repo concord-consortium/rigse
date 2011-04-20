@@ -38,17 +38,17 @@ class ItsiImporter
       :extra_elements => [:text_response, :draw_response, :prediction_response]
     },
     { :key => :collectdata,
-      :name => "Collect Data",
+      :name => "Collect Data I",
       :page_desc => "The learner conducts experiments using probes and models.",
       :extra_elements => [:probe, :model, :text_response, :draw_response, :prediction_response]
     },
     { :key => :collectdata2,
-      :name => "Collect Data",
+      :name => "Collect Data II",
       :page_desc => "The learner conducts experiments using probes and models.",
       :extra_elements => [:probe, :model, :text_response, :draw_response]
     },
     { :key => :collectdata3,
-      :name => "Collect Data",
+      :name => "Collect Data III",
       :page_desc => "The learner conducts experiments using probes and models.",
       :extra_elements => [:probe, :model, :text_response, :draw_response]
     },
