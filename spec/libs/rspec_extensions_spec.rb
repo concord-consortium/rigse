@@ -7,7 +7,7 @@ describe "fails_in_themes" do
     }.should raise_error(Exception)
   end
 
-  describe "example passes" do
+  describe "when the example passes" do
     it "should pass when the body passes and we're not running a matching theme" do
       ApplicationController.set_theme("xproject")
       fails_in_themes({ "assessment" => :todo }) do
@@ -34,7 +34,7 @@ describe "fails_in_themes" do
     end
   end
 
-  describe "example fails" do
+  describe "when the example fails" do
     it "should fail when the body fails and we're not running a matching theme" do
       ApplicationController.set_theme("xproject")
       lambda {
@@ -58,6 +58,26 @@ describe "fails_in_themes" do
       fails_in_themes({ "assessment" => :expected }) do
         true.should be_false
       end
+    end
+  end
+
+  describe "capturing should_receive" do
+    it "should catch mock verifications as test errors, and pass" do
+      ApplicationController.set_theme("assessment")
+      fails_in_themes({ "assessment" => :expected }) do
+        ApplicationController.should_receive(:foo).once
+      end
+    end
+
+    it "should not catch mock verifications it does not wrap" do
+      lambda {
+        ApplicationController.set_theme("assessment")
+        ApplicationController.should_receive(:foo).once
+        fails_in_themes({ "assessment" => :expected }) do
+          true.should be_false
+        end
+        ApplicationController.rspec_verify
+      }.should raise_error(Spec::Mocks::MockExpectationError)
     end
   end
 end
