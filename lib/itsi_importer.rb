@@ -109,8 +109,11 @@ class ItsiImporter
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
               page_elem = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
             when :model
-              # TODO: If there is no Diy::Model.first, we need to make one.
               model = Diy::Model.first
+              if (model.nil?)
+                model_type = Diy::ModelType.create!(:name => "prototype", :diy_id => 99999, :otrunk_view_class => "OTBlah", :otrunk_object_class => "OTBlahView")
+                model = Diy::Model.create!(:model_type => model_type, :diy_id => 99999, :name => "prototype" )
+              end
               page_elem = Embeddable::Diy::EmbeddedModel.create!(:diy_model => model, :user => act.user)
             when :text_response
               # Is handled by has_question attribute of main_content?
