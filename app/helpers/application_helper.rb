@@ -822,8 +822,8 @@ module ApplicationHelper
         haml_tag :div, :class => 'action_menu_activity_options' do
           haml_concat options[:print_link]
           haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          haml_concat " | "
+          #haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
+          #haml_concat " | "
           haml_concat report_link_for(offering, 'report', 'Report')
           haml_concat " | "
 
