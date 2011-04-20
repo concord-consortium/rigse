@@ -41,3 +41,10 @@ Feature: Activities can be created using the itsisu theme
     And I am on the activities page
     Then I should see "My Activities"
     And I should see "first_activity"
+
+  @selenium
+  Scenario: teacher creates an activity by copying an existing one
+    When I login with username: teacher password: teacher
+    And I am on the activities page
+    And I follow "Make your own version of this activity"
+    Then I should be on the activity page for "copy of first_activity"

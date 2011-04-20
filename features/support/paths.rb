@@ -48,6 +48,8 @@ module NavigationHelpers
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     when /the template edit page for "(.*)"/
       "/activities/#{Activity.find_by_name($1).id}/template_edit"
+    when /the activity page for "(.*)"/
+      "/activities/#{Activity.find_by_name($1).id}"
     when /the route (.+)/
       $1
     # accept paths too:

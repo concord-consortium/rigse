@@ -285,6 +285,7 @@ class ActivitiesController < ApplicationController
     @original = Activity.find(params['id'])
     if @original
       @activity = @original.copy(current_user)
+      @activity.save
       flash[:notice] ="Copied #{@original.name}"
       redirect_to url_for(@activity)
     end
