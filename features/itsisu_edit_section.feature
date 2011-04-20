@@ -6,7 +6,6 @@ Feature: Sections of activities can be edited using the itsisu theme
   Background:
     Given The default project and jnlp resources exist using factories
     And The theme is "itsisu"
-    And the activity template is created
     And the following teachers exist:
       | login         | password        |
       | teacher       | teacher         |
@@ -14,7 +13,7 @@ Feature: Sections of activities can be edited using the itsisu theme
         | name                    | user    | publication_status |
         | first_activity          | teacher | published          | 
 
-  @selenium @wip
+  @selenium
   Scenario: teacher edits section
     When I login with username: teacher password: teacher
     And I am on the template edit page for "first_activity"    

@@ -39,12 +39,11 @@ end
 
 When /^I edit the first section$/ do
   # need to use javascript here to make them visible so selenium will allow clicking on them
-  page.evaluate_script("$$('.template_container').each(function(item) { item.down('.buttons').show()})")
+  page.execute_script("$$('.template_container').each(function(item) { item.down('.buttons').show()})")
   find(".template_container .template_container .template_enable_button").click
   find(".template_container .template_container .template_edit_button").click
 end
 
 When /^I fill in the first templated activity section with "([^"]*)"$/ do |value|
-  page.evaluate_script("$$('.tinymce_textarea').first().show()")
-  fill_in("embeddable_diy_section[content]", :with => value)
+  page.execute_script("tinyMCE.editors[0].setContent('#{value}')")
 end

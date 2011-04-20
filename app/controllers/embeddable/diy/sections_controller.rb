@@ -97,7 +97,7 @@ class Embeddable::Diy::SectionsController < ApplicationController
     @section = Embeddable::Diy::Section.find(params[:id])
     if request.xhr?
       if cancel || @section.update_attributes(params[:embeddable_diy_section])
-        render :partial => 'show', :locals => { :section => @section }
+        render :partial => 'show', :locals => { :diy_section => @section }
       else
         render :xml => @section.errors, :status => :unprocessable_entity
       end
