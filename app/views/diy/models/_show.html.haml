@@ -2,9 +2,17 @@
   = wrap_edit_link_around_content(model, options={:complete => mce_init_string, :class => 'foobar edit'}) do
     - if model.image_url
       %p
-        =image_tag(model.image_url)
+        %div{:style => "float: right"}
+          =image_tag(model.image_url, :size => '100x100')
+        = model.description
     %p
-      %b= model.name
+      %b Author:
+      - if model.user
+        = model.user.first_name + " " + model.user.last_name
+      %br
+      %b Credits:
+      = model.credits
       %br
       %b Model type:
       = model.model_type.name
+    %div{:style => "clear:both"}
