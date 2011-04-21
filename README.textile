@@ -88,6 +88,23 @@ the prefix of the names for the databases that will be created in mysql.
   ruby script/server -e production
 </code></pre>
 
+Prepare a database for use when running the tests:
+<pre><code>
+  rake db:test:prepare
+</code></pre>
+
+Run the rspec tests:
+<pre><code>
+  rake spec
+</code></pre>
+
+Run the cucumber tests
+<pre><code>
+  rake cucumber
+</code></pre>
+
+All these tests should pass.
+
 h3. Roll your own theme:
 
 For now the best thing to do is to copy an existing set of themes. eg:
