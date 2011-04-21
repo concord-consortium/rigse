@@ -1,0 +1,3 @@
+- form_for(@model_type, :before => "tinyMCE.triggerSave(true,true)") do |f|
+  .item
+    = render :partial => 'form', :locals => { :model_type => @model_type, :f => f }

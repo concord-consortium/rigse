@@ -1,0 +1,8 @@
+%div{:id => dom_id_for(model_type, :details), :class => 'content'}
+  = wrap_edit_link_around_content(model_type, options={:complete => mce_init_string, :class => 'foobar edit'}) do
+    %p
+      %b Object Class:
+      = model_type.otrunk_object_class
+    %p
+      %b View Class:
+      = model_type.otrunk_view_class

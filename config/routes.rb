@@ -36,7 +36,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.namespace(:diy) do |diy|
-    # diy.resources :model_types, :member => { :destroy => :post }
+    diy.resources :model_types, :member => { :destroy => :post }
     diy.resources :models, :member => { :destroy => :post }
   end
 
