@@ -3,7 +3,7 @@
 - content_for("activity_#{dom_id_for(activity)}".to_sym) do
   %OTCompoundDoc
     %bodyText
-      - if for_teacher_only(activity)
+      - if for_teacher_only?(activity)
         - if teacher_mode
           %h1= h(activity.name)
       - else

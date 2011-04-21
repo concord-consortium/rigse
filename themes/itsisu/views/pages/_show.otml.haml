@@ -16,7 +16,7 @@
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
-      - if for_teacher_only(page)
+      - if for_teacher_only?(page)
         - if teacher_mode
           #content.teacher_mode
             - if page.section
