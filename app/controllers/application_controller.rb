@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 

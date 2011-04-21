@@ -55,6 +55,11 @@ class Portal::StudentsController < ApplicationController
   #
   # If everything gets created or referenced correctly a Portal::StudentClass is generated.
   #
+  # FIXME there is a lot of logic in here that uses :class_word to indicate this is a student
+  # registering themselves.  That makes it confusing and things break when the clazz_word is 
+  # not used when registering students.  It is also unsafe because a student could just signup
+  # to a class if they new the class id
+  #
   # POST /portal_students
   # POST /portal_students.xml
   #

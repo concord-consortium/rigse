@@ -15,7 +15,7 @@
   %ul
     %li= link_to "add new section", add_section_activity_path(activity)
 
-- if (for_teacher_only activity)
+- if (for_teacher_only? activity)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"
@@ -36,5 +36,5 @@
     - else
       = link_button "disabled.png", "#", :title => "can't add sections"
     - if (activity.investigation)
-      = link_button "up.png", activity.investigation, :title => "got to #{TOP_LEVEL_CONTAINER_NAME_PLURAL}"
+      = link_button "up.png", activity.investigation, :title => "got to #{top_level_container_name}"
 

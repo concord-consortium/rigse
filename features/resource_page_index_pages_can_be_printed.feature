@@ -18,7 +18,6 @@ Feature: Resource Page index pages can be printed
       | Medium  | teacher   | 11              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | Oldest  | teacher   | 21              | Wed Jan 20 12:00:00 -0500 2011  | published           |
 
-  @selenium
   Scenario: Teacher prints the listing of all resource pages
     When I am on the resource pages page
     Then I should see "Newest"
@@ -34,7 +33,6 @@ Feature: Resource Page index pages can be printed
     And I should see "Medium"
     And I should see "Oldest"
     
-  @selenium
   Scenario: Teacher prints the listing of a subset of resource page
     When I am on the resource pages like "New" page
     Then I should see "Newest"

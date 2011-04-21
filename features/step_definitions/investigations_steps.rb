@@ -9,8 +9,12 @@ end
 
 Given /^the following classes exist:$/ do |table|
   table.hashes.each do |hash|
-    user = User.find_by_login hash['teacher']
-    teacher = user.portal_teacher
+    if hash['teacher']
+      user = User.find_by_login hash['teacher']
+      teacher = user.portal_teacher
+    else
+      teacher = Factory(:teacher)
+    end
     Factory.create(:portal_clazz, hash.merge('teacher' => teacher))
   end
 end
@@ -36,6 +40,15 @@ When /^I show offerings count on the investigations page$/ do
   visit "/investigations?include_usage_count=true"
 end
 
+Given /^the investigation "([^"]*)" is assigned to the class "([^"]*)"$/ do |investigation_name, class_name|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  investigation = Investigation.find_by_name(investigation_name)
+  Factory.create(:portal_offering, {
+    :runnable => investigation,
+    :clazz => clazz
+  })
+end
+
 When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
@@ -43,6 +56,13 @@ When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investi
     :runnable => investigation,
     :clazz => clazz
   })
+end
+
+# this is the interactive version of the step above
+When /^I assign the investigation "([^"]*)"$/ do |investigation_name|
+  investigation = Investigation.find_by_name investigation_name
+  runnable_element = find("#investigation_#{investigation.id}")
+  assign_runnable(runnable_element)
 end
 
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
@@ -190,3 +210,28 @@ When /^I wait for all pending requests to complete/ do
   page.wait_until { true == page.evaluate_script("PendingRequests == 0;")}
 end
 
+Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|
+  investigation = Investigation.find_by_name inv_name
+  investigation.should be
+end
+
+Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
+  investigation = Investigation.find_by_name inv_name
+  investigation.offerings_count.should == count.to_i
+end
+
+When /^I duplicate the investigation$/ do
+  # this requires a javascript enabled driver
+  # this simulates roughly what happens when the mouse is moved over the plus icon
+
+  # this first part is what happens in the onmouseover event on the gear icon
+  # it is necessary to call first because it positions the menu relative to the gear icon
+  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # aren't really moving the mouse.
+  page.execute_script("dropdown_for('button_actions_menu','actions_menu')")
+
+  # now that the menu is positioned we can just manually show it
+  page.execute_script("$('actions_menu').show()")
+  click_link("duplicate")
+  page.execute_script("$('actions_menu').hide()")
+end

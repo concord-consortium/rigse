@@ -6,7 +6,7 @@ Feature: Teacher can deactivate investigations from a class
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium @itsisu-todo
+  @itsisu-todo
   Scenario: Teacher can see if student has performed work on an investigation
     Given the following teachers exist:
       | login         | password        |

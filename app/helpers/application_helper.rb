@@ -29,7 +29,14 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    id = component.id.nil? ? Time.now.to_i : component.id
+    if component.is_a?(ActiveRecord::Base)
+      id = component.id || Time.now.to_i
+    else
+      # this will be a temporary id, so it seems unlikely that these type of ids
+      # should be really be generated, however there are some parts of the code
+      # calling dom_id_for and passing a form object for example
+      id = component.object_id
+    end
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
@@ -418,7 +425,7 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
-    edit_button_for(component) +
+    link_button("edit.png", url) +
     link_to(link_text, url,
         :title => "edit the #{component_display_name}: '#{name}'")
   end
@@ -897,7 +904,7 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
-    view_class = for_teacher_only(component) ? "teacher_only action_menu" : "action_menu"
+    view_class = for_teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
@@ -1027,7 +1034,7 @@ module ApplicationHelper
 
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
-    if (for_teacher_only(component))
+    if (for_teacher_only?(component))
       style_classes << 'teacher_only' # funny, just adding a style text
     end
     return style_classes
@@ -1088,9 +1095,9 @@ module ApplicationHelper
   # cascading logic.
   # TODO: generic container-based method-forwarding mechanism
   #
-  def for_teacher_only(thing)
-    if thing.respond_to? :teacher_only?
-      return true if thing.teacher_only?
+  def for_teacher_only?(thing)
+    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
+      return true;
     end
     if thing.respond_to? :parent
       while thing = thing.parent
@@ -1131,7 +1138,6 @@ module ApplicationHelper
   def students_in_class(all_students)
     all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
-
 
 #            Welcome
 #            = "#{current_user.name}."
@@ -1232,7 +1238,7 @@ module ApplicationHelper
   def current_user_can_author
     return true if current_user.has_role? "author" 
     if settings_for(:teachers_can_author)
-      return true unless current_user.portal_teacher.nil?
+      return true unless current_user.teacher.nil?
     end
     # TODO add aditional can-author conditions
     return false

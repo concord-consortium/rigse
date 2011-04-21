@@ -100,4 +100,7 @@ public/stylesheets/app-old.css
 public/activities/
 .bundle/
 local_files
+.bundle/
+public/sparks-content/
+public/stylesheets/workgroup.css
 public/stylesheets/bin.css

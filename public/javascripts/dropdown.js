@@ -61,8 +61,6 @@ var dropdown_for = function(dropDownLinkId,dropDownMenuId) {
         is_showing = false;
         hide_timer = setTimeout(hide,100);        
       }
-      else {
-      }
     }
   };
   

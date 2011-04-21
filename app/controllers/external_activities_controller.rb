@@ -184,10 +184,13 @@ class ExternalActivitiesController < ApplicationController
   ##
   def duplicate
     @original = ExternalActivity.find(params['id'])
-    @external_activity = @original.clone :use_dictionary => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
     @external_activity.name = "copy of #{@external_activity.name}"
-    @external_activity.deep_set_user current_user
+    @external_activity.user = current_user
     @external_activity.save
+
+    (@external_activity.teacher_notes + @external_activity.author_notes).each {|tn| n.user = current_user; n.save }
+
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)
   end

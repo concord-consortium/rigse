@@ -6,7 +6,6 @@ Feature: A teacher creates a resource page
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: The teacher creates a resource page
     Given the following teachers exist:
       | login         | password        |
@@ -21,7 +20,6 @@ Feature: A teacher creates a resource page
     Then I should see "Resource Page was successfully created."
 
 
-  @selenium
   Scenario: The teacher can view public and draft resource pages, and only their private ones
     Given the following teachers exist:
       | login         | password        |
@@ -45,7 +43,7 @@ Feature: A teacher creates a resource page
     Then I should see "draft page A"
     And I should see "draft page B"
 
-  @selenium @itsisu-todo
+  @itsisu-todo
   Scenario: The teacher can see their resource pages on the homepage
     Given the following teachers exist:
       | login         | password        |
@@ -61,7 +59,6 @@ Feature: A teacher creates a resource page
     And I should see "private page A"
     Then I should see "draft page A"
 
-  @selenium
   Scenario: The teacher can search for resource pages
     Given the following teachers exist:
       | login         | password        |
@@ -81,4 +78,3 @@ Feature: A teacher creates a resource page
     Then I should see "Testing Page"
     And I should see "Testing Page 2"
     And I should not see "Demo Page"
-

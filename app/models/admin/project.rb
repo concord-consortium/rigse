@@ -75,19 +75,17 @@ class Admin::Project < ActiveRecord::Base
   end
 
   def generate_default_maven_jnlp
-    if USING_JNLPS
-      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-      default_maven_jnlp[:server] = self.maven_jnlp_server.name
-      default_maven_jnlp[:family] = self.maven_jnlp_family.name
-      if self.snapshot_enabled
-        default_maven_jnlp[:version] = 'snapshot'
-      else
-        default_maven_jnlp[:version] = self.jnlp_version_str
-      end
-      default_maven_jnlp
+    return nil if !USING_JNLPS || self.maven_jnlp_server.nil?
+
+    default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+    default_maven_jnlp[:server] = self.maven_jnlp_server.name
+    default_maven_jnlp[:family] = self.maven_jnlp_family.name
+    if self.snapshot_enabled
+      default_maven_jnlp[:version] = 'snapshot'
     else
-      nil
+      default_maven_jnlp[:version] = self.jnlp_version_str
     end
+    default_maven_jnlp
   end
   
   

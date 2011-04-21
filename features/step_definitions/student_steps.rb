@@ -35,6 +35,22 @@ Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_nam
                                         :clazz   => clazz
 end
 
+Given /^the student "([^"]*)" has security questions set$/ do |student_login|
+  user = User.find_by_login student_login
+  student = Portal::Student.find_by_user_id user.id
+
+  questions = []
+  #"What is your favorite color?"
+  questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[0], :answer => "red" })
+  #"What is your favorite food?"
+  questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[1], :answer => "pizza" })
+  #"What is your favorite ice cream flavor?"
+  questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[2], :answer => "chocolate" })
+
+  student.user.security_questions << questions
+  student.save
+end
+
 Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_login, class_name|
   user = User.find_by_login student_login
   student = Portal::Student.find_by_user_id user.id

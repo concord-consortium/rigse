@@ -90,19 +90,26 @@ class InvestigationsController < AuthoringController
     # @domain_id = param_find(:domain_id)
     # @name = param_find(:name
     # don't save these, see: http://www.pivotaltracker.com/story/show/2428013
-    @grade_span = param_find(:grade_span)
-    @domain_id = param_find(:domain_id)
+    @grade_span = params[:grade_span]
+    @domain_id = params[:domain_id]
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
-    pagenation = params[:page]
-    if (pagenation)
-       @include_drafts = param_find(:include_drafts)
-    else
+    pagination = params[:page] == "" ? 1 : params[:page]
+    if (params[:method] == :get)
       @include_drafts = param_find(:include_drafts,true)
+      pagination = params[:page] = 1
+    else
+      @include_drafts = param_find(:include_drafts)
     end
 
     @sort_order = param_find(:sort_order, true)
-    @include_usage_count = param_find(:include_usage_count, true)
+    if params[:include_usage_count].blank?
+      # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
+      # unless it was actually checked as part of the request
+      session[:include_usage_count] = false if params[:method] == :get
+    else
+      session[:include_usage_count] = params[:include_usage_count]
+    end
 
     search_options = {
       :name => @name,
@@ -112,7 +119,7 @@ class InvestigationsController < AuthoringController
       :domain_id => @domain_id,
       :sort_order => @sort_order,
       :paginate => true,
-      :page => pagenation
+      :page => pagination
     }
     @investigations = Investigation.search_list(search_options)
 

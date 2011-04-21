@@ -5,7 +5,7 @@ module OtmlHelper
   end
   
   def ot_menu_display_name(object)
-    if for_teacher_only(object) 
+    if for_teacher_only?(object) 
       return "+ #{object.name}"
     end
     return object.name
