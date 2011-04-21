@@ -58,7 +58,7 @@ When /^I check in the following:$/ do |checkbox_table|
 end
 
 When /^(?:|I )should have the following selection options:$/ do |selection_table|
-  within_fieldset("Selected Probeware Interface") do
+  within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should have_content(hash[:option])
@@ -70,7 +70,7 @@ When /^(?:|I )should have the following selection options:$/ do |selection_table
 end
 
 Then /^I should not see the following selection options:$/ do |selection_table|
-  within_fieldset("Selected Probeware Interface") do
+  within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
       if defined?(Spec::Rails::Matchers)
         page.should_not have_content(hash[:option])
