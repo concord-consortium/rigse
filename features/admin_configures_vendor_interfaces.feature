@@ -74,7 +74,7 @@ Feature: The Project administrator disables certain vendor interfaces
     When I login with username: student_login password: student_password
     When I follow "Preferences"
     Then I should see "User Preferences"
-    And I should see "Selected Probeware Interface"
+    And I should see "Probeware Interface"
     Then I should have the following selection options:
       | option           |
       | pasco usb        |
