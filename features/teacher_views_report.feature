@@ -32,6 +32,7 @@ Feature: Teacher views report
           | investigation        | class            |
           | first investigation  | Intro to bugs    |
 
+  @itsisu-todo
   Scenario: A student answers all questions, and gets them all correct
     Given the following student answers:
         | student   | class         | investigation       | question_prompt | answer |
