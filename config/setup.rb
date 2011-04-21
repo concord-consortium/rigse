@@ -1182,11 +1182,11 @@ end
 puts <<-HEREDOC
   MRI Ruby:
     RAILS_ENV=production rake db:migrate:reset
-    RAILS_ENV=production rake rigse:setup:new_rites_app
+    RAILS_ENV=production rake app:setup:new_app
 
   JRuby:
     RAILS_ENV=production jruby -S rake db:migrate:reset
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+    RAILS_ENV=production jruby -S app:setup:new_app
 
 
 HEREDOC
