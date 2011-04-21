@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/local/bin/ruby
 
 # first, boot the rails environment
 require File.dirname(__FILE__) +  '/../config/boot'
