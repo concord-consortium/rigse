@@ -20,6 +20,10 @@ class Diy::ModelType < ActiveRecord::Base
   def otrunk_object_class_short
     self.otrunk_object_class[/\.([^\.]*)$/,1]
   end
+  
+  def name_with_id
+    "#{self.id}: #{self.name}"
+  end
 
   class <<self
     def searchable_attributes
@@ -36,6 +40,10 @@ class Diy::ModelType < ActiveRecord::Base
       attributes = _diy_model_type.attributes
       nontrasferable_attributes.each { |na| attributes.delete(na) }
       return self.create!(attributes.update(:diy_id => _diy_model_type.id))
+    end
+    
+    def display_name
+      "Model Type"
     end
   end
 
