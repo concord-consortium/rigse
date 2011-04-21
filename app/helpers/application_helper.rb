@@ -432,7 +432,7 @@ module ApplicationHelper
 
   def duplicate_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
-    text = params[:text] || 'Duplicate'
+    text = params[:text] || 'duplicate'
     name = component.name
     #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
@@ -445,7 +445,7 @@ module ApplicationHelper
   def print_link_for(component, params={})
     component_display_name = component.class.display_name.downcase
     name = component.name
-    link_text = params.delete(:link_text) || "Print #{component_display_name}"
+    link_text = params.delete(:link_text) || "print #{component_display_name}"
     if params[:teacher_mode]
       link_text = "#{link_text} (with notes) "
     end

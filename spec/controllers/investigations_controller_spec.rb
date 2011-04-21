@@ -30,7 +30,7 @@ describe InvestigationsController do
     get :show, :id => @investigation.id
 
     #@response.body.should include(duplicate_link_for(@investigation))
-    assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "Duplicate", :count => 1 })
+    assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 1 })
   end
 
   it "should not display a 'duplicate' link for unauthorized users" do
@@ -39,7 +39,7 @@ describe InvestigationsController do
     get :show, :id => @investigation.id
 
     #@response.body.should_not include(duplicate_link_for(@investigation))
-    assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "Duplicate", :count => 0 })
+    assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
 
   it "should render prievew warning in OTML" do
