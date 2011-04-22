@@ -11,17 +11,19 @@ describe ItsiImporter do
           :investigation => mock_model(Investigation, :update_attribute => true),
           :user => mock_model(User))
       @diy_act = mock_model(Itsi::Activity,
-          :collect_data => "Collect Data Rich text",
+          :collectdata => "Collect Data Rich text",
           :update_attribute => true,
           :uuid => '5693A069-B829-47BF-9BF0-30FBFDA9F7E2',
-          :puiblic => true)
+          :puiblic => true,
+          :probe_type_id => nil)
       @section_key = "collect_data"
       @section_name = "Collect Data"
       @section_description = "go out there and get me some data!"
     end
 
-    def call_process_diy_activity_section
-      ItsiImporter.process_diy_activity_section(@activity,@diy_act,@section_key,@section_name,@section_description)
+    def call_process_diy_activity_section(key=@section_key)
+      section_def = ItsiImporter::SECTIONS_MAP.find {|i| i[:key] == :collectdata}
+      ItsiImporter.process_diy_activity_section(@activity,@diy_act, section_def)
     end
 
     it "should respond to the method named process_diy_activity_section" do
@@ -72,18 +74,24 @@ describe ItsiImporter do
     end
 
     before(:each) do
-      Itsi::Activity.stub! (:find)
+      Itsi::Activity.stub!(:find)
       @itsi_activity = mock_model(Itsi::Activity,
-          :name => "fake diy activity",
-          :description => "fake diy activity",
-          :uuid => '7A46C23E-EB9B-4C59-AC78-842A021237A3',
-          :public => true)
+        :name => "fake diy activity",
+        :description => "fake diy activity",
+        :uuid => '7A46C23E-EB9B-4C59-AC78-842A021237A3',
+        :public => true
+      )
       @user = mock_model(User,
-          :login => "fake_user",
-          :first_name => "fake",
-          :last_name => "user",
-          :name => "fake user",
-          :add_role => true)
+        :login => "fake_user",
+        :first_name => "fake",
+        :last_name => "user",
+        :name => "fake user",
+        :add_role => true
+      )
+      @roll = mock_model(Role,
+        :quoted_id => '1'
+      )
+      Role.stub!(:find_by_title).and_return(@roll)
     end
 
     it "should respond to create_activity_from_itsi_activity" do
@@ -95,18 +103,20 @@ describe ItsiImporter do
       expected_calls = ItsiImporter::SECTIONS_MAP.size
       ItsiImporter::SECTIONS_MAP.map{ |e| e[:key] }.each do |key|
         @itsi_activity.should_receive(key).and_return("some text")
-        [:text_response, :drawing_response, :graph_response, :model_active, :probetype_id].each do |attribute|
+        # no extra elements:
+        [ :text_response,:drawing_response,:graph_response,
+          :model_active, :probe_active, :prediction_graph, :prediction_draw, :prediction_text].each do |attribute|
           attribute_key = ItsiImporter.attribute_name_for(key,attribute)
           if attribute_key
-            @itsi_activity.should_receive(:respond_to?).with(attribute_key).and_return(false)
+            @itsi_activity.should_receive(attribute_key).and_return(false)
           end
         end
       end
       ItsiImporter.create_activity_from_itsi_activity("1",@user)
     end
 
-    describe "exception types" do
-      errors = %w[ DuplicateUuid MissingUuid BadModelType BadModel BadActivity BadUser ValidationError]
+    describe "defined exception types" do
+      errors = %w[ MissingUuid BadModel BadActivity BadUser ValidationError]
       errors.each do |error_name|
         it "should define #{error_name}" do
           clazz = "ItsiImporter::#{error_name}".constantize
