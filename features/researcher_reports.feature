@@ -58,10 +58,10 @@ Feature: Investigations can be reported on
     And the student "student_b" is in the class "Intro to flowers"
 
     And the following assignments exist:
-          | investigation        | class            |
-          | first investigation  | Intro to bugs    |
-          | second investigation | Intro to bugs    |
-          | second investigation | Intro to flowers |
+          | type          | name                 | class            |
+          | investigation | first investigation  | Intro to bugs    |
+          | investigation | second investigation | Intro to bugs    |
+          | investigation | second investigation | Intro to flowers |
 
   Scenario: A student answers all questions, and gets them all correct
     Given the following student answers:

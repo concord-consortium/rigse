@@ -50,15 +50,6 @@ Given /^all resource pages are assigned to classes$/ do
   end
 end
 
-When /^I assign the resource page "([^"]*)" to the class "([^"]*)"$/ do |page_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  resource_page = ResourcePage.find_by_name(page_name)
-  Factory.create(:portal_offering, {
-    :runnable => resource_page,
-    :clazz => clazz
-  })
-end
-
 When /^I open the accordion for the resource "([^"]*)"$/ do |resource_name|
   resource = ResourcePage.find_by_name resource_name
   selector = "#resource_page_toggle_resource_page_#{resource.id}"

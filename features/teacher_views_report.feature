@@ -15,9 +15,6 @@ Feature: Teacher views report
            | prompt | answers | correct_answer |
            | a      | a,b,c,d | a              |
     And there is an image question with the prompt "image_q"
-    And The following investigation exists:
-       | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
-       | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher_a |
     And the following classes exist:
         | name             | teacher |
         | Intro to bugs    | teacher_a |
@@ -28,12 +25,32 @@ Feature: Teacher views report
          | student_b | student_b | Jill       | Smith     |
     And the student "student_a" is in the class "Intro to bugs"
     And the student "student_b" is in the class "Intro to bugs"
-    And the following assignments exist:
-          | investigation        | class            |
-          | first investigation  | Intro to bugs    |
 
-  Scenario: A student answers all questions, and gets them all correct
-    Given the following student answers:
+  Scenario: A teacher views a report of an investigation
+    Given The following investigation exists:
+        | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
+        | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | type          | name                 | class            |
+        | investigation | first investigation  | Intro to bugs    |
+    And the following student answers:
+        | student   | class         | investigation       | question_prompt | answer |
+        | student_a | Intro to bugs | first investigation | a               | a      |
+        | student_a | Intro to bugs | first investigation | image_q         | Y      |
+        | student_b | Intro to bugs | first investigation | a               | b      |
+    When I login with username: teacher_a password: teacher_a
+    And go to the class page for "Intro to bugs"
+    And follow "Display a report" within ".action_menu_activity"
+
+  @wip
+  Scenario: A teacher views a report of an activity
+    Given the following activities exists:
+        | activity       | section   | page   | multiple_choices | image_questions | user      |
+        | first activity | section 3 | page 3 | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | activity        | class            |
+        | first activity  | Intro to bugs    |
+    And the following student answers:
         | student   | class         | investigation       | question_prompt | answer |
         | student_a | Intro to bugs | first investigation | a               | a      |
         | student_a | Intro to bugs | first investigation | image_q         | Y      |
