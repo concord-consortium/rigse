@@ -27,7 +27,7 @@ Feature: Teacher views report
     And the student "student_b" is in the class "Intro to bugs"
 
   Scenario: A teacher views a report of an investigation
-    Given The following investigation exists:
+    Given the following investigations with multiple choices exist:
         | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
         | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher_a |
     And the following assignments exist:
@@ -42,7 +42,6 @@ Feature: Teacher views report
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
 
-  @wip
   Scenario: A teacher views a report of an activity
     Given the following activities exists:
         | activity       | section   | page   | multiple_choices | image_questions | user      |

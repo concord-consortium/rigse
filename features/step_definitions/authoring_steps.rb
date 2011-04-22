@@ -1,19 +1,4 @@
 
-Given /^the following investigation exists:$/ do |investigation_table|
-  investigation_table.hashes.each do |hash|
-    user = User.first(:conditions => { :login => hash.delete('user') })
-    hash[:user_id] = user.id
-    investigation = Investigation.create(hash)
-    activity = Activity.create(hash)
-    section = Section.create(hash)
-    page = Page.create(hash)
-    section.pages << page
-    activity.sections << section
-    investigation.activities << activity
-    investigation.save
-  end
-end
-
 When /add a multiple choice question$/ do
   # pending # express the regexp above with the code you wish you had
 end
@@ -54,30 +39,6 @@ Given /a mock gse/ do
   RiGse::Domain.stub!(:find).with(1).and_return(domain)
 end
 
-
-#Table: | investigation | activity | section   | page   | multiple_choices |
-Given /^The following investigation exists:$/ do |investigation_table|
-  investigation_table.hashes.each do |hash|
-    investigation = Investigation.find_or_create_by_name(hash['investigation'])
-    investigation.user = Factory(:user)
-    investigation.save
-    activity = Activity.find_or_create_by_name(hash['activity'])
-    section = Section.find_or_create_by_name(hash['section'])
-    page = Page.find_or_create_by_name(hash['page'])
-    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
-    mcs.each do |q|
-      q.pages << page
-    end
-    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
-    imgqs.each do |q|
-      q.pages << page
-    end
-    page.save
-    section.pages << page
-    activity.sections << section
-    investigation.activities << activity
-  end
-end
 
 #Table: | prompt | answers | correct_answer |
 Given /^the following multiple choice questions exists:$/ do |mult_table|

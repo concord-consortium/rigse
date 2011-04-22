@@ -13,7 +13,7 @@ Feature: Teacher can assign an offering to a class
       | My Class | teacher |
 
   Scenario: Teacher can assign an investigation to a class
-    Given the following investigation exists:
+    Given the following simple investigations exist:
       | name               | user    |
       | Test Investigation | teacher |
     And the investigation "Test Investigation" is assigned to the class "My Class"
@@ -35,7 +35,7 @@ Feature: Teacher can assign an offering to a class
 
 	@selenium
 	Scenario: All potential offerings are visible
-    Given the following investigation exists:
+    Given the following simple investigations exist:
       | name               | user    |
       | Test Investigation | teacher |
 		And the investigation "Test Investigation" is published

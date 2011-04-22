@@ -11,7 +11,7 @@ Feature: Investigations can be sorted
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigations exist:
+    And the following empty investigations exist:
       | name    | user      | offerings_count | created_at                      | publication_status  |
       | Newest  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | Medium  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |

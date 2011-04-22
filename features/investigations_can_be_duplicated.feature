@@ -8,7 +8,7 @@ Feature: Investigations can be duplicated
     Given the following users exist:
       | login  | password | roles          |
       | author | author   | member, author |
-    And the following investigations exist:
+    And the following empty investigations exist:
       | name   | user   | offerings_count | created_at                     | publication_status |
       | Newest | author | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |
       | Medium | author | 10              | Wed Jan 23 12:00:00 -0500 2011 | published          |
