@@ -42,18 +42,19 @@ Feature: Teacher views report
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
 
+  @wip
   Scenario: A teacher views a report of an activity
-    Given the following activities exists:
+    Given the following activities with multiple choices exist:
         | activity       | section   | page   | multiple_choices | image_questions | user      |
         | first activity | section 3 | page 3 | a                | image_q         | teacher_a |
     And the following assignments exist:
-        | activity        | class            |
-        | first activity  | Intro to bugs    |
+        | type     | name            | class            |
+        | activity | first activity  | Intro to bugs    |
     And the following student answers:
-        | student   | class         | investigation       | question_prompt | answer |
-        | student_a | Intro to bugs | first investigation | a               | a      |
-        | student_a | Intro to bugs | first investigation | image_q         | Y      |
-        | student_b | Intro to bugs | first investigation | a               | b      |
+        | student   | class         | activity       | question_prompt | answer |
+        | student_a | Intro to bugs | first activity | a               | a      |
+        | student_a | Intro to bugs | first activity | image_q         | Y      |
+        | student_b | Intro to bugs | first activity | a               | b      |
     When I login with username: teacher_a password: teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"

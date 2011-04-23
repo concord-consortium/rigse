@@ -160,11 +160,13 @@ end
 
 #Table: | student | class | investigation | question_prompt | answer |
 Given /^the following student answers:$/ do |answer_table|
+  assignable_type = answer_table.column_names[2]
+  assignable_class = assignable_type.gsub(/\s/, "_").classify.constantize
   answer_table.hashes.each do |hash|
     student = User.find_by_login(hash['student']).portal_student
     clazz = Portal::Clazz.find_by_name(hash['class'])
-    investigation = Investigation.find_by_name(hash['investigation'])
-    offering = find_or_create_offering(investigation, clazz)
+    assignable = assignable_class.find_by_name(hash[assignable_type])
+    offering = find_or_create_offering(assignable, clazz)
     learner = offering.find_or_create_learner(student)
     add_response(learner,hash['question_prompt'],hash['answer'])
   end
