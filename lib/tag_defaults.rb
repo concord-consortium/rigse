@@ -79,7 +79,6 @@ module TagDefaults
 
     def list_bins(opts = {})
       portal_clazz = opts[:portal_clazz]
-      activities = opts[:activities] || self.published # self should be publishable
       user = opts[:user]
       offerings = nil
       off_runnables = []
@@ -89,6 +88,9 @@ module TagDefaults
         offerings = portal_clazz.offerings
         off_runnables= offerings.map { |o| o.runnable }
       end
+      
+      # Add exemplar activities
+      activities = opts[:activities] || self.published_exemplars # self should be publishable
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       # Add unpublished activities of the user:
       if user
@@ -105,6 +107,23 @@ module TagDefaults
           }
         end
         key_map = key_map + users_key_map
+      end
+      # Add published activities by others (non-exemplars)
+      if (user.portal_teacher || user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author"))
+        other_activities = self.published_non_exemplars
+        other_activities.reject! { |activity| activity.user == user }
+        others_key_map = other_activities.map do |a|
+          # todo
+          grade_level = "Other #{self.name.humanize.pluralize}"
+          subject_area = a.subject_area_list.first || "no subject area"
+          unit = a.unit_list.first || "no unit"
+          key = [grade_level,subject_area,unit]
+          {
+            :activity => a,
+            :keys => [key]
+          }
+        end
+        key_map = key_map + others_key_map
       end
 
       results = {}

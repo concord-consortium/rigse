@@ -87,6 +87,8 @@ class Activity < ActiveRecord::Base
   
   named_scope :published, :conditions => {:publication_status => "published"}
   named_scope :templates, :conditions => {:is_template => true}
+  named_scope :published_exemplars, :conditions => {:publication_status => "published", :is_exemplar => true}
+  named_scope :published_non_exemplars, :conditions => {:publication_status => "published", :is_exemplar => false}
   
   class <<self
     def searchable_attributes
