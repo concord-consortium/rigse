@@ -88,7 +88,17 @@ class ItsiImporter
     end
   end
 
-  @@attributes = nil
+  SUBSECTIONS=%w[
+        text_response
+        drawing_response
+        model_active
+        model_id
+        probe_active
+        probetype_id
+        probe_multi
+        calibration_active
+        calibration_id].map { |e| e.to_sym }
+
   ACTIVITY_TEMPLATE_UUID = "7d7f511d-45c6-4002-a5d8-6d6d63a7f12d"
   SECTIONS_MAP = [
     { :key => :introduction,
@@ -96,8 +106,7 @@ class ItsiImporter
       :page_desc => "ITSI Activities start with a Discovery Question.",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-        {:key => :text_response,:diy_attribute => true},
-        {:key => :draw_response,:diy_attribute => true}
+        {:key => :drawing_response,:diy_attribute => true}
       ]
     },
     { :key => :standards,
@@ -105,7 +114,6 @@ class ItsiImporter
       :page_desc => "What standards does this ITSI Activity cover?",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-        {:key => :text_response,:diy_attribute => true}
       ]
     },
     { :key => :career_stem,
@@ -113,7 +121,6 @@ class ItsiImporter
       :page_desc => "Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-        {:key => :text_response,:diy_attribute => true}
       ]
     },
     { :key => :materials,
@@ -135,22 +142,20 @@ class ItsiImporter
       :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
-        {:key => :text_response, :diy_attribute => true  },
-        {:key => :draw_response, :diy_attribute => true  } 
+        {:key => :drawing_response, :diy_attribute => true  } 
       ]
     },
     { :key => :collectdata,
       :name => "Collect Data I",
       :page_desc => "The learner conducts experiments using probes and models.",
       :embeddable_elements => [
-        {:key => :main_content,     :diy_attribute => true },
+        {:key => :main_content,     :diy_attribute => true  },
         {:key => :prediction_graph, :diy_attribute => true  },
         {:key => :prediction_draw,  :diy_attribute => true  },
         {:key => :prediction_text,  :diy_attribute => true  },
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :text_response,    :diy_attribute => true  },
-        {:key => :draw_response,    :diy_attribute => true  } 
+        {:key => :drawing_response, :diy_attribute => true  } 
       ]
     },
     { :key => :collectdata2,
@@ -163,8 +168,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => false}, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true },
         {:key => :model_id,         :diy_attribute => true },
-        {:key => :text_response,    :diy_attribute => true },
-        {:key => :draw_response,    :diy_attribute => true } 
+        {:key => :drawing_response,    :diy_attribute => true } 
       ]
     },
     { :key => :collectdata3,
@@ -177,8 +181,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :text_response,    :diy_attribute => true  },
-        {:key => :draw_response,    :diy_attribute => true  } 
+        {:key => :drawing_response,    :diy_attribute => true  } 
       ]
     },
     { :key => :analysis,
@@ -186,8 +189,7 @@ class ItsiImporter
       :page_desc => "How can learners reflect and analyze the experiments they just completed?",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
-        {:key => :text_response, :diy_attribute => true  },
-        {:key => :draw_response, :diy_attribute => true  },
+        {:key => :drawing_response, :diy_attribute => true  },
       ]
     },
     { :key => :conclusion,
@@ -195,16 +197,14 @@ class ItsiImporter
       :page_desc => "What are some reasonable conclusions a learner might come to after this ITSI Activity?",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
-        {:key => :text_response, :diy_attribute => true  },
-        {:key => :draw_response, :diy_attribute => true  }
+        {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
     { :key => :career_stem2,
       :name => "Second Career STEM Question",
       :page_desc => "Second Career STEM Question",
       :embeddable_elements => [
-        {:key => :main_content,  :diy_attribute => false },
-        {:key => :text_response, :diy_attribute => true  } 
+        {:key => :main_content,  :diy_attribute => true },
       ]
     },
     { :key => :further,
@@ -215,10 +215,9 @@ class ItsiImporter
         {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
         {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
-        {:key => :probe,            :diy_attribute => true  },
-        {:key => :model,            :diy_attribute => true  },
-        {:key => :text_response,    :diy_attribute => true  },
-        {:key => :draw_response,    :diy_attribute => true  } 
+        {:key => :probetype_id,     :diy_attribute => true  },
+        {:key => :model_id,         :diy_attribute => true  },
+        {:key => :drawing_response, :diy_attribute => true  } 
       ]
     }
   ]
@@ -228,12 +227,12 @@ class ItsiImporter
   class <<self
     def find_or_create_itsi_import_user
       unless user = User.find_by_login('itsi_import_user')
-        member_role = Role.find_by_title('member')
         user = User.create(:login => 'itsi_import_user', :first_name => 'ITSI', :last_name => 'Importer', :email => 'itsi_import_user@concord.org', :password => "it$iu$er", :password_confirmation => "it$iu$er")
         user.save
         user.register!
         user.activate!
-        user.roles << member_role
+        user.add_role('member')
+        user.add_role('author')
       end
       user
     end
@@ -241,7 +240,7 @@ class ItsiImporter
 
     def make_activity
       act = Activity.create do |t|
-        t.name = "Acvtivity"
+        t.name = "Blank Activity"
         t.description = "Single-page Activity"
         t.user = ItsiImporter.find_or_create_itsi_import_user
       end
@@ -250,6 +249,7 @@ class ItsiImporter
         page = Page.create!(:name => section_def[:name], :description => section_def[:page_desc], :section => section, :user => act.user)
 
         components = section_def[:embeddable_elements]
+        prediction_graph = nil
         components.each do |comp|
           elem = comp[:key]
           page_elem = nil
@@ -260,6 +260,12 @@ class ItsiImporter
               probe_type = Probe::ProbeType.default
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
               embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
+              # you must define prediction graph before the probe!
+              unless prediction_graph.nil?
+                embeddable.prediction_graph_source = prediction_graph
+                embeddable.save
+                prediction_graph = nil
+              end
             when :model_id
               model = Diy::Model.first
               if (model.nil?)
@@ -271,12 +277,13 @@ class ItsiImporter
               log ":text_repsonse is handled by has_question of main_content"
               # Is handled by has_question attribute of main_content?
               # embeddable = Embeddable::OpenResponse.create(:name => "written response", :description => "written response")
-            when :draw_response
+            when :drawing_response
               embeddable = Embeddable::DrawingTool.create(:name => "drawing response", :description => "drawing response", :user => act.user)
             when :prediction_graph
               probe_type = Probe::ProbeType.default
               prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
               embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_prediction, :user => act.user)
+              prediction_graph=embeddable
             when :prediction_text
               embeddable = Embeddable::OpenResponse.create(:name => "written prediction", :description => "written prediction")
             when :prediction_draw
@@ -290,7 +297,7 @@ class ItsiImporter
           end
         end
       end
-      log "ITSI Template - Activity #{act.id}"
+      log "made #{act.name} (#{act.id})"
       return act
     end
 
@@ -438,35 +445,11 @@ class ItsiImporter
       return user
     end
 
-    def attributes
-      return @@attributes if @@attributes
-      # this is the "standard" form, for which there are exceptions
-      #t.boolean "collectdata2_text_response"
-      #t.boolean "collectdata2_probe_active"
-      #t.boolean "collectdata2_model_active"
-      #t.integer "collectdata2_probetype_id"
-      #t.integer "collectdata2_model_id"
-      #t.boolean "collectdata2_probe_multi"
-      #t.boolean "collectdata2_drawing_response"
-      #t.boolean "collectdata2_calibration_active"
-      #t.integer "collectdata2_calibration_id"
-      @@attributes =  %w[
-        text_response
-        drawing_response
-        model_active
-        model_id
-        probe_active
-        probetype_id
-        probe_multi
-        calibration_active
-        calibration_id].map { |e| e.to_sym }
-      return @@attributes
-    end
 
     def attribute_name_for(section_key, attribute_name)
       # see initializers/00_core_extensions.rb for the array modification to_hash_keys
-      attribs = self.attributes.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
-      # There are some exceptions for these naming conventions:
+      attribs = SUBSECTIONS.to_hash_keys { |k| "#{section_key}_#{k.to_s}".to_sym }
+      # There are some exceptions for the subsection naming conventions in the diy models:
       case section_key
       when :predict
         error "we shouldn't have a :predict section any more. Merged into collectdata"
@@ -540,13 +523,14 @@ class ItsiImporter
         embeddable = element[:embeddable]
         type_key = element[:key]
         working_chunk = "#{section_key} #{type_key}"
+        #log "processing #{working_chunk}"
         if diy_attribute
           if embeddable
             type_key_string = type_key.to_s
             method_symbol = "process_#{type_key_string}".to_sym
             begin
               self.send(method_symbol,embeddable,diy_act,section_def)
-            rescue NoMethodError
+            rescue NoMethodError => e
               error "Importer: no such method #{method_symbol}"
             rescue ItsiImporter::ImporterException => e
               @errors << e
@@ -564,12 +548,15 @@ class ItsiImporter
         orig_content = diy_act.send(section_def[:key].to_sym)
         content,prompt = process_textile_content(orig_content,false)
         embeddable.content = content
+        embeddable.enable
         embeddable.has_question = attribute_for(diy_act,section_def[:key],:text_response)
+        embeddable.save
     end
+
 
     def process_probetype_id(embeddable,diy_act,section_def)
       section_key = section_def[:key]
-      probe_type_id=probe_type_id(diy_act,section_key)
+      probe_type_id=probetype_id(diy_act,section_key)
       if probe_type_id
         begin
           probe_type = Probe::ProbeType.find(probe_type_id)
@@ -609,20 +596,19 @@ class ItsiImporter
       section_key = section_def[:key]
       graph_response = prediction_graph(diy_act,section_key)
       if graph_response
-        next_skey = next_section_key(section_key)
-        probe_type_id = probe_type_id(diy_act,next_skey)
+        probe_type_id = probetype_id(diy_act,section_key)
         if probe_type_id
           begin
             probe_type = Probe::ProbeType.find(probe_type_id)
             prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
-            set_embeddable(embeddable,:probe_type=,probe_type)
+            set_embeddable(embeddable,:probe_type=,prototype_prediction)
           rescue ActiveRecord::RecordNotFound => e
             log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
             @errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
           end
         else
           # TODO: What do we do with this?
-          error "prediction graph for non-existant probe section: #{section_key}, next section: #{next_skey}"
+          error "prediction graph for non-existant probe: #{section_key}"
         end
       end
     end
@@ -634,8 +620,8 @@ class ItsiImporter
       #embeddable.save
     end
 
-    def process_draw_response(embeddable,diy_act,section_def)
-      value = attribute_for(diy_act,section_def[:key], :draw_response)
+    def process_drawing_response(embeddable,diy_act,section_def)
+      value = attribute_for(diy_act,section_def[:key], :drawing_response)
       embeddable.enable if value
       embeddable.save
     end
@@ -652,19 +638,6 @@ class ItsiImporter
       embeddable.save
     end
 
-    # return the key for the next section
-    # used to find prediction graph's graph.
-    def next_section_key(section_key)
-      next_one = false
-      SECTIONS_MAP.each_with_index do |s,i|
-        if next_one
-          return s[:key]
-        end
-        if s[:key] == section_key
-          next_one = true
-        end
-      end
-    end
 
     def process_textile_content(textile_content, split_last_paragraph=false)
       return ['',''] if textile_content.nil? || textile_content.empty?
