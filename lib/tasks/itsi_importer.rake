@@ -88,6 +88,17 @@ namespace :app do
         ItsiImporter.create_investigation_from_ccp_itsi_unit(ccp_itsi_unit, @itsi_import_user,@prefix)
       end
     end
+    
+    desc "make all ITSI activities examplars"
+    task :make_itsi_exemplars => :environment do
+      itsi_user = User.find_by_login('itest')
+      itsi_activities = Activity.find_all_by_user_id(itsi_user)
+      itsi_activities.each do |itsi_activity| 
+        itsi_activity.is_exemplar = true
+        itsi_activity.save
+      end
+    end
+    
   end
 end
 
