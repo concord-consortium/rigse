@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110415204257) do
+ActiveRecord::Schema.define(:version => 20110420140632) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -581,7 +581,7 @@ ActiveRecord::Schema.define(:version => 20110415204257) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",    :default => 0
+    t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
   end
@@ -593,6 +593,14 @@ ActiveRecord::Schema.define(:version => 20110415204257) do
     t.text     "description"
     t.string   "server_url"
     t.string   "uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "favorites", :force => true do |t|
+    t.integer  "portal_teacher_id"
+    t.integer  "favoritable_id"
+    t.string   "favoritable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
