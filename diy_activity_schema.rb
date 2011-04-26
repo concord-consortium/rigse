@@ -13,7 +13,7 @@
     t.text    "conclusion"
     t.text    "career_stem2"
     t.text    "further"
-   
+    t.boolean "textile" 
     
     t.integer "probe_type_id"                 <-- (a)
     t.integer "model_id"                      <-- (a)

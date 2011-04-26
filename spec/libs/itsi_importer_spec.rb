@@ -1,7 +1,11 @@
 #require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'spec_helper'
 
-include ActionView::Helpers::SanitizeHelper
+class String
+  def strip_tags
+    ActionController::Base.helpers.strip_tags(self)
+  end
+end
 
 describe ItsiImporter do
   before(:all) do
@@ -201,6 +205,7 @@ describe ItsiImporter do
       @diy_act = mock
       @embeddable = mock
       @introduction_text = "introduction text here"
+      @processed_text,ignored = ItsiImporter.process_textile_content(@introduction_text)
       @section_def = {
         :key => :introduction,
         :embeddables => [
@@ -212,8 +217,19 @@ describe ItsiImporter do
     end
     it "should send the name of the section to get the content" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:text_response).and_return false
-      @embeddable.should_receive(:content).with(@introduction_text)
+      @diy_act.should_receive(:introduction_text_response).and_return false
+      @diy_act.should_receive(:textile).and_return false
+      @embeddable.should_receive(:content=).with(@introduction_text)
+      @embeddable.should_receive(:has_question=).with false
+      @embeddable.should_receive(:enable)
+      @embeddable.should_receive(:save)
+      ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
+    end
+    it "should send the name of the section to get the textile content if textile is setup" do
+      @diy_act.should_receive(:introduction).and_return @introduction_text
+      @diy_act.should_receive(:introduction_text_response).and_return false
+      @diy_act.should_receive(:textile).and_return true
+      @embeddable.should_receive(:content=).with(@processed_text)
       @embeddable.should_receive(:has_question=).with false
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
@@ -221,7 +237,8 @@ describe ItsiImporter do
     end
     it "should set the embeddables 'has question' to true when text_response is true" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:text_response).and_return true
+      @diy_act.should_receive(:introduction_text_response).and_return true
+      @diy_act.should_receive(:textile).and_return false
       @embeddable.should_receive(:content=).with(@introduction_text)
       @embeddable.should_receive(:has_question=).with true
       @embeddable.should_receive(:enable)
@@ -290,7 +307,30 @@ describe ItsiImporter do
   end
 
   describe "process_prediction_graph(embeddable,diy_act,section_def)" do
-
+    before(:each) do
+      @diy_act = mock
+      @embeddable = mock
+      @section_def = {
+        :key => :collectdata,
+        :embeddables => [
+          :key => 'prediction_graph',
+          :embeddables => [@embeddable],
+          :diy_attribute => true
+        ]
+      }
+      @itsi_model = mock
+      @model = mock
+      Itsi::Model.stub!(:find).and_return @itsi_model
+    end
+    it "should set diy_model= on the embeddable" do
+      Diy::Model.should_receive(:from_external_portal).with(@itsi_model).and_return(@model)
+      @diy_act.should_receive(:collectdata_model_active).and_return true
+      @diy_act.should_receive(:model_id).and_return 1
+      @embeddable.should_receive(:diy_model=).with @model
+      @embeddable.should_receive(:enable)
+      @embeddable.should_receive(:save)
+      ItsiImporter.process_model_id(@embeddable,@diy_act,@section_def)
+    end
   end
 
   describe "process_text_response(embeddable,diy_act,section_def)" do
@@ -356,6 +396,19 @@ describe ItsiImporter do
         pe.is_enabled.should be_false
       end
     end
+    describe "sensors created by the template" do
+      it "should have all prediction sources set" do
+        sections = ItsiImporter::SECTIONS_MAP.select {|e| [:collectdata, :collectdata2, :collectdata3, :further].include? e[:key] }
+        sections.each do |section|
+          elements = section[:embeddable_elements]
+          prediction_graph = elements.find { |e| e[:key] === :prediction_graph}
+          probetype = elements.find { |e| e[:key] === :probetype_id}
+          predict_emb = prediction_graph[:embeddable]
+          probe_emb = probetype[:embeddable]
+          probe_emb.prediction_graph_source.should == predict_emb
+        end
+      end
+    end
   end
 
   # def process_diy_activity_section(actvity,diy_act,section_key,section_name,section_description)
@@ -366,6 +419,7 @@ describe ItsiImporter do
       @diy_rich_text= "Collect Data Rich Text from DIY"
       @diy_act = mock_model(Itsi::Activity,
           :collectdata                  => @diy_rich_text,
+          :textile                      => true,
           :collectdata_text_response    => true,
           :prediction_drawing_response  => true,
           :prediction_text_response     => true,
@@ -401,7 +455,7 @@ describe ItsiImporter do
 
       # xhtmls and open response are adding markup to all content
       # The following is a naive attempt to remove the noise to do a compare.
-      main_content.content.gsub(/<\/?.*?>/, "").should == @diy_rich_text.gsub(/<\/?.*?>/, "")
+      main_content.content.strip_tags.should == @diy_rich_text.strip_tags
     end
 
     it "should create appropriate embeddedables" do
@@ -437,6 +491,7 @@ describe ItsiImporter do
       @itsi_activity = mock_model(Itsi::Activity,
         :name => "fake diy activity",
         :description => "fake diy activity",
+        :textile => true,
         :uuid => '7A46C23E-EB9B-4C59-AC78-842A021237A3',
         :public => true
       )

@@ -545,8 +545,13 @@ class ItsiImporter
     end
 
     def process_main_content(embeddable,diy_act,section_def)
-        orig_content = diy_act.send(section_def[:key].to_sym)
-        content,prompt = process_textile_content(orig_content,false)
+        if diy_act.textile
+          orig_content = diy_act.send(section_def[:key].to_sym)
+          content,prompt = process_textile_content(orig_content,false)
+        else
+          # if we don't use textile, just use text directly.
+          content = diy_act.send(section_def[:key].to_sym)
+        end
         embeddable.content = content
         embeddable.enable
         embeddable.has_question = attribute_for(diy_act,section_def[:key],:text_response)

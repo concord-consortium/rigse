@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110425163740) do
+ActiveRecord::Schema.define(:version => 20110426143714) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -396,10 +396,10 @@ ActiveRecord::Schema.define(:version => 20110425163740) do
     t.text     "description"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
-    t.integer  "y_axis_min",                               :default => 0
-    t.integer  "y_axis_max",                               :default => 5
-    t.integer  "x_axis_min",                               :default => 0
-    t.integer  "x_axis_max",                               :default => 60
+    t.float    "y_axis_min",                               :default => 0.0
+    t.float    "y_axis_max",                               :default => 5.0
+    t.float    "x_axis_min",                               :default => 0.0
+    t.float    "x_axis_max",                               :default => 60.0
     t.string   "title"
     t.string   "x_axis_label"
     t.string   "x_axis_units"
@@ -949,7 +949,7 @@ ActiveRecord::Schema.define(:version => 20110425163740) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
