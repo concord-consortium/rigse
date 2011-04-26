@@ -31,5 +31,6 @@ Feature: Activities should be sorted in bins in itsisu theme
     And I should see "Other Activities"
     And I should see "other_published_activity" within "#otheractivitiesphysics"
     And I should not see "other_draft_activity"
+  #  And I should see "Middle School Physics"
   #  And I should see "exemplar_activity"  within "#middleschoolphysics"   # these don't work because 'bin_keys' never gets set on activities
-  #  And I should see "draft_exemplar_activity"
+  #  And I should not see "draft_exemplar_activity"
