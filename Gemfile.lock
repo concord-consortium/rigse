@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/ghazel/ar-extensions.git
-  revision: 72bcb91e582129695c1c389cca608a4e42380b0a
+  remote: git://github.com/concord-consortium/ar-extensions.git
+  revision: 068233ed497dda6dfbad5641a7029477bb4cbaa6
   specs:
     ar-extensions (0.9.3)
       activerecord (~> 2.1)
