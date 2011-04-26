@@ -21,7 +21,7 @@
     %div.field_set
       %label Publication status
       %br
-      = f.select :publication_status, @activity.available_states(current_user).map {|s| s.to_s} 
+      = f.select :publication_status, ["private", "published"]
       
     %div.field_set
       %label Probes

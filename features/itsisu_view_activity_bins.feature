@@ -16,11 +16,11 @@ Feature: Activities should be sorted in bins in itsisu theme
 		And the following activities exist:
         | name                     | user          | publication_status | is_exemplar | grade_level_list  | subject_area_list |
         | exemplar_activity        | itest         | published          | true        | Middle School     | Physics           |
-        | draft_exemplar_activity  | itest         | draft              | true        | Middle School     | Physics           |
+        | draft_exemplar_activity  | itest         | private            | true        | Middle School     | Physics           |
         | my_published_activity    | teacher       | published          | false       | Middle School     | Physics           |
-        | my_draft_activity        | teacher       | draft              | false       | Middle School     | Physics           |
+        | my_draft_activity        | teacher       | private            | false       | Middle School     | Physics           |
         | other_published_activity | other_teacher | published          | false       | Middle School     | Physics           |
-        | other_draft_activity     | other_teacher | draft              | false       | Middle School     | Physics           |
+        | other_draft_activity     | other_teacher | private            | false       | Middle School     | Physics           |
   
   Scenario: teacher sees their activities on the activities page
     When I login with username: teacher password: teacher
