@@ -332,7 +332,7 @@ class ItsiImporter
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
         foreign_key = ccp_itsi_activity.diy_identifier
         activity = create_activity_from_itsi_activity(foreign_key, nil, prefix) # nil user will import the DIY user and associate the activity with that user
-        if actvity
+        if activity
           activity.unit_list = ccp_itsi_unit.unit_name
           activity.grade_level_list = ccp_itsi_activity.level.level_name
           activity.subject_area_list = ccp_itsi_activity.subject.subject_name
@@ -391,12 +391,12 @@ class ItsiImporter
           finish(activity)
           return activity
         rescue ActiveRecord::RecordNotFound
-          message = "  -- itsi activity id: #{itsi_activity.id} not found --"
-          self.fail(NotFoundInDiy.new({:diy_id => foreign_key, :unit_name => ccp_itsi_unit.unit_name}), message)
+          message = "  -- itsi activity id: #{foreign_key} not found --"
+          self.fail(NotFoundInDiy.new({:diy_id => foreign_key}), message)
         end
       else
         message = "  -- foreign key empty for ITSI Activity --"
-        self.fail(NotFoundInDiy.new({:diy_id => foreign_key, :unit_name => ccp_itsi_unit.unit_name}),message)
+        self.fail(NotFoundInDiy.new({:diy_id => foreign_key}),message)
       end
       return false
     end
@@ -604,9 +604,10 @@ class ItsiImporter
         probe_type_id = probetype_id(diy_act,section_key)
         if probe_type_id
           begin
+            # this is probably redundant, the make_activity sets the type
+            # and the save callbacks on DataCollectors will keep it updated
             probe_type = Probe::ProbeType.find(probe_type_id)
-            prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
-            set_embeddable(embeddable,:probe_type=,prototype_prediction)
+            set_embeddable(embeddable,:probe_type=,probe_type)
           rescue ActiveRecord::RecordNotFound => e
             log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
             @errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
@@ -815,7 +816,7 @@ class ItsiImporter
 
     def start(diy_id)
       @records ||= []
-      if @records.last && records.last.status == ActivityImportRecord::STARTED
+      if @records.last && @records.last.status == ActivityImportRecord::STARTED
         fail(ImporterException.new("Invalid importer state! Started record without fail or finish"))
       end
       @records.push ActivityImportRecord.new(diy_id)
