@@ -33,11 +33,9 @@ source :gemcutter
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass",              "0.8.17"
   gem "jnlp",                 "0.6.2"
-  # use https://github.com/zdennis/activerecord-import istead of ar-extensions
-  # activerecord-import ONLY WORKS WITH RAILS 3!
-  # gem "activerecord-import", ">= 0.2.0"
-  # use ghazel's version which fixes the to_a log messages and adds mysql2 support
-  git "git://github.com/ghazel/ar-extensions.git" do
+  # use a merge of ghazel and tracksimple ar-extensions forks
+  # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
+  git "git://github.com/concord-consortium/ar-extensions.git" do
     gem "ar-extensions",        "~> 0.9.3"
   end
   gem "fastercsv",            "   1.5.0"
