@@ -1,8 +1,7 @@
-
 .action_menu
   .action_menu_header
     .action_menu_header_left
-      %h3= "Editing Web Model #{@web_model.id}"
+      %h3= "Editing #{@web_model.name}"
     .action_menu_header_right
       %ul.menu
         %li= link_to 'list', web_models_path

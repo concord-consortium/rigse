@@ -2,6 +2,6 @@
   .action_menu_header
     .action_menu_header_right
       %ul.menu
-        %li= link_to_remote "edit", :url => {:action => :edit, :id => @web_model.id}, :method => :get
+        %li= link_to "edit", edit_web_model_path(@web_model)
 
 = render :partial => 'web_models/show', :locals => {:web_model => @web_model}

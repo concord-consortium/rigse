@@ -3,10 +3,10 @@
 = link_to 'Create new Web Model', new_web_model_path
 %table
   - @web_models.each do |web_model|
-    %tr
+    %tr{:id => "web_model_#{web_model.id}"}
       %td= web_model.name
       %td= link_to 'Show', web_model
-      %td= link_to 'Edit', edit_web_model_path(web_model) 
+      %td= link_to 'Edit', edit_web_model_path(web_model)
       %td= link_to 'Destroy', web_model, :confirm => 'Are you sure?', :method => :delete
 
 = link_to 'Create new Web Model', new_web_model_path

@@ -4,7 +4,7 @@ class WebModelsController < ApplicationController
   before_filter :admin_only
 
   before_filter :setup_object, :except => [:index]
-  
+
   def setup_object
     if params[:id]
       if params[:id].length == 36
@@ -20,8 +20,8 @@ class WebModelsController < ApplicationController
       @web_model.user = current_user
     end
   end
-  
-  
+
+
   # GET /web_models
   # GET /web_models.xml
   def index
@@ -52,18 +52,12 @@ class WebModelsController < ApplicationController
 
   # GET /web_models/1/edit
   def edit
-    respond_to do |format|
-      format.js   { render :update do |page| 
-        page.visual_effect :highlite, 'note' 
-        end 
-      }
-    end
   end
 
   # POST /web_models
   # POST /web_models.xml
   def create
-    if (@web_model.changeable?(current_user) && @web_model.update_attributes(params[:web_model]))      
+    if (@web_model.changeable?(current_user) && @web_model.update_attributes(params[:web_model]))
       flash[:notice] = 'Web model was successfully created.'
       if (request.xhr?)
          render :text => "<div class='notice'>Web model saved</div>"
