@@ -1,6 +1,7 @@
 class Embeddable::DataCollector < Embeddable::Embeddable
   DEFAULT_NAME = "Data Graph"
   MISSING_PROBE_MESSAGE = "Unable to find default probes. try running"
+  FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in DataCollector"
   set_table_name "embeddable_data_collectors"
 
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
@@ -17,10 +18,13 @@ class Embeddable::DataCollector < Embeddable::Embeddable
   has_many :data_tables, :class_name => "Embeddable::DataTable"
 
   # validates_associated :probe_type
-  
   validates_presence_of :probe_type_id
   validate :associated_probe_type_must_exist
   
+
+  # manually update the axis and other info
+  # for the prediction graph
+  after_save :update_prediction_graph 
   def associated_probe_type_must_exist
     errors.add(:probe_type, "must exist") unless Probe::ProbeType.find_by_id(self.probe_type_id)
   end
@@ -172,7 +176,7 @@ class Embeddable::DataCollector < Embeddable::Embeddable
   end
 
   def graph_type
-    Embeddable::DataCollector.graph_types[graph_type_id-1][0]
+    Embeddable::DataCollector.graph_types[graph_type_id - 1][0]
   end
 
   def graph_type=(gtype)
@@ -274,5 +278,15 @@ class Embeddable::DataCollector < Embeddable::Embeddable
     end
   end
 
+  def update_prediction_graph
+    prediction = self.prediction_graph_source
+    return unless prediction
+    copy_these = [:probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare]
+    new_values = self.attributes.reject { |k,v| (! copy_these.include?(k.to_sym))}
+    unless prediction.update_attributes(new_values)
+      Rails.logger.warn(Embeddable::DataCollector::FAIL_UPDATE_PREDICTION)
+      Rails.logger.warn(prediction.errors.full_messages)
+    end
+  end
 end
 

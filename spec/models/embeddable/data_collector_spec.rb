@@ -178,4 +178,25 @@ describe Embeddable::DataCollector do
       end
     end
   end
+
+  describe "updating the associated prediction graph on save" do
+    before(:each) do
+      @error_message = "bad bad bad"
+      @predict = mock (:errors => mock(:full_messages => @error_message))
+      @graph = Factory(:data_collector)
+      @graph.stub!(:prediction_graph_source).and_return(@predict)
+    end
+    it "should invoke 'update attrbutes' on the prediction graph" do
+      @predict.should_receive(:update_attributes).and_return(true)
+      @graph.title = "some new title"
+      @graph.save
+    end
+    it "should warn log valdation errors" do
+      @predict.should_receive(:update_attributes).and_return(false)
+      Rails.logger.should_receive(:warn).with(Embeddable::DataCollector::FAIL_UPDATE_PREDICTION)
+      Rails.logger.should_receive(:warn).with(@error_message)
+      @graph.title = "some new title"
+      @graph.save
+    end
+  end
 end
