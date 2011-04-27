@@ -26,7 +26,8 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
     investigation = Investigation.find_or_create_by_name(hash['investigation'])
     investigation.user = Factory(:user)
     investigation.save
-    activity = Activity.find_or_create_by_name(hash['activity'])
+    # ITSISU requires descriptions on activities
+    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
     section = Section.find_or_create_by_name(hash['section'])
     page = Page.find_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
