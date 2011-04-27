@@ -1,9 +1,10 @@
-class Embeddable::DataCollector < Embeddable::Embeddable
+class Embeddable::DataCollector < ActiveRecord::Base
   DEFAULT_NAME = "Data Graph"
   MISSING_PROBE_MESSAGE = "Unable to find default probes. try running"
   FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in DataCollector"
   set_table_name "embeddable_data_collectors"
 
+  belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
   belongs_to :calibration, :class_name => 'Probe::Calibration'
   belongs_to :prediction_graph_source,
@@ -13,7 +14,11 @@ class Embeddable::DataCollector < Embeddable::Embeddable
   has_many :prediction_graph_destinations,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
+  has_many :teacher_notes, :as => :authored_entity
   # diy_sensors is a simplified interface for a dataCollector.
+  has_many :diy_sensors, :as => 'prototype'
 
   has_many :data_tables, :class_name => "Embeddable::DataTable"
 
@@ -42,6 +47,8 @@ class Embeddable::DataCollector < Embeddable::Embeddable
 
   serialize :data_store_values
 
+  acts_as_replicatable
+  send_update_events_to :investigations
 
   def handle_probe_type_change
     self.calibration = nil
@@ -76,9 +83,12 @@ class Embeddable::DataCollector < Embeddable::Embeddable
     end
   end
 
+  include Changeable
   cloneable_associations :prediction_graph_destinations
   
   include Snapshotable
+
+  self.extend SearchableModel
 
   @@searchable_attributes = %w{uuid name description title x_axis_label x_axis_units y_axis_label y_axis_units}
 
