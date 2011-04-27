@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110426143714) do
+ActiveRecord::Schema.define(:version => 20110427161956) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -210,23 +210,24 @@ ActiveRecord::Schema.define(:version => 20110426143714) do
   add_index "diy_model_types", ["user_id"], :name => "index_diy_model_types_on_user_id"
 
   create_table "diy_models", :force => true do |t|
-    t.integer "user_id"
-    t.integer "diy_id"
-    t.integer "model_type_id"
-    t.string  "name"
-    t.string  "url"
-    t.string  "image_url"
-    t.boolean "public"
-    t.string  "publication_status"
-    t.text    "description"
-    t.text    "instructions"
-    t.boolean "snapshot_active"
-    t.text    "credits"
-    t.string  "uuid"
-    t.string  "short_name"
-    t.integer "height"
-    t.integer "width"
-    t.integer "version"
+    t.integer  "user_id"
+    t.integer  "diy_id"
+    t.integer  "model_type_id"
+    t.string   "name"
+    t.string   "url"
+    t.string   "image_url"
+    t.boolean  "public"
+    t.string   "publication_status"
+    t.text     "description"
+    t.text     "instructions"
+    t.boolean  "snapshot_active"
+    t.text     "credits"
+    t.string   "uuid"
+    t.string   "short_name"
+    t.integer  "height"
+    t.integer  "width"
+    t.integer  "version"
+    t.datetime "updated_at",         :default => '2011-04-27 12:32:25'
   end
 
   add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
