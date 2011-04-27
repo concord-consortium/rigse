@@ -97,12 +97,13 @@ class Diy::ModelsController < ApplicationController
   # DELETE /Embeddable/embedded_models/1.xml
   def destroy
     @model = Diy::Model.find(params[:id])
-    respond_to do |format|
-      format.html { redirect_to(model_url) }
-      format.xml  { head :ok }
-      format.js
-    end
-    
     @model.destroy    
+    
+    @redirect = params[:redirect]
+    respond_to do |format|
+      format.html { redirect_back_or(diy_models_url) }
+      format.js
+      format.xml  { head :ok }
+    end
   end
 end
