@@ -1,0 +1,12 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @model.uuid }
+  =ot_imports
+  %objects
+    %OTSystem{:local_id => 'system'}
+      =ot_bundles({:left_nav_panel_width => 0, :title => h(@model.name), :use_scroll_pane => true})
+      %root
+        =yield "model_#{dom_id_for(@model)}".to_sym
+      %library
+        %OTLabbook{:local_id =>'labbook'}/
+        =yield :library
