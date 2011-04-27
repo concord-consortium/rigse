@@ -6,7 +6,7 @@ class Report::Util
   TRIM_BY = 10
 
   attr_accessor :offering, :learners
-  attr_accessor :investigation, :activities, :sections, :pages, :page_elements
+  attr_accessor :page_elements
   # attr_accessor :saveables
   attr_accessor :saveables_by_embeddable
   # attr_accessor :saveables_by_type, :saveables_by_learner_id, :saveables_by_answered, :saveables_by_correct
@@ -92,10 +92,6 @@ class Report::Util
     @saveables_by_correct    = {}
     @saveables_by_answered   = {}
 
-    @activities = @investigation.activities.student_only
-    @sections   = @investigation.student_sections
-    @pages      = @investigation.student_pages
-    
     reportables          = @offering.runnable.reportable_elements
 
     ## FIXME filtering of embeddables should happen here
