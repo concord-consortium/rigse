@@ -16,6 +16,7 @@ class Diy::Model < ActiveRecord::Base
   include Changeable
   include HasImage
   include Publishable
+  include JnlpLaunchable
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description url}
