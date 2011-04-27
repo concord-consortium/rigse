@@ -142,7 +142,7 @@ class ItsiImporter
       :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
-        {:key => :drawing_response, :diy_attribute => true  } 
+        {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
     { :key => :collectdata,
@@ -155,7 +155,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => true  },
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :drawing_response, :diy_attribute => true  } 
+        {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
     { :key => :collectdata2,
@@ -168,7 +168,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => false}, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true },
         {:key => :model_id,         :diy_attribute => true },
-        {:key => :drawing_response,    :diy_attribute => true } 
+        {:key => :drawing_response,    :diy_attribute => true }
       ]
     },
     { :key => :collectdata3,
@@ -181,7 +181,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :drawing_response,    :diy_attribute => true  } 
+        {:key => :drawing_response,    :diy_attribute => true  }
       ]
     },
     { :key => :analysis,
@@ -217,7 +217,7 @@ class ItsiImporter
         {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :drawing_response, :diy_attribute => true  } 
+        {:key => :drawing_response, :diy_attribute => true  }
       ]
     }
   ]
@@ -546,7 +546,7 @@ class ItsiImporter
           else
             error "skipping #{working_chunk} -- no embeddable"
           end
-        else 
+        else
           log "skipping #{working_chunk} -- diy_attribute is false"
         end
       end # embeddable_elements itt
