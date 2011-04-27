@@ -99,6 +99,10 @@ When /^I wait "(.*)" second(?:|s)$/ do |seconds|
   sleep(seconds.to_i)
 end
 
+When /^I wait (\d+) second(?:|s)$/ do |seconds|
+  sleep(seconds.to_i)
+end
+
 Then /^I should not see the xpath "([^"]*)"$/ do |xpath|
   page.should have_no_xpath xpath
 end

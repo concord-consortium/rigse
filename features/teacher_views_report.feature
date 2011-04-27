@@ -42,6 +42,50 @@ Feature: Teacher views report
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
 
+  Scenario: A teacher filters a question
+    Given the following investigations with multiple choices exist:
+        | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
+        | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | type          | name                 | class            |
+        | investigation | first investigation  | Intro to bugs    |
+    And the following student answers:
+        | student   | class         | investigation       | question_prompt | answer |
+        | student_a | Intro to bugs | first investigation | a               | a      |
+        | student_a | Intro to bugs | first investigation | image_q         | Y      |
+        | student_b | Intro to bugs | first investigation | a               | b      |
+    When I login with username: teacher_a password: teacher_a
+    And go to the class page for "Intro to bugs"
+    And follow "Display a report" within ".action_menu_activity"
+    And I wait 2 seconds
+    Then I should see "image_q"
+    And I check "filter_Embeddable::MultipleChoice_"
+    And I press "Show selected"
+    Then I should not see "image_q"
+
+  Scenario: A teacher shows all questions
+    Given the following investigations with multiple choices exist:
+        | investigation        | activity | section   | page   | multiple_choices | image_questions | user      |
+        | first investigation  | act 3    | section 3 | page 3 | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | type          | name                 | class            |
+        | investigation | first investigation  | Intro to bugs    |
+    And the following student answers:
+        | student   | class         | investigation       | question_prompt | answer |
+        | student_a | Intro to bugs | first investigation | a               | a      |
+        | student_a | Intro to bugs | first investigation | image_q         | Y      |
+        | student_b | Intro to bugs | first investigation | a               | b      |
+    When I login with username: teacher_a password: teacher_a
+    And go to the class page for "Intro to bugs"
+    And follow "Display a report" within ".action_menu_activity"
+    And I wait 2 seconds
+    Then I should see "image_q"
+    And I check "filter_Embeddable::MultipleChoice_"
+    And I press "Show selected"
+    Then I should not see "image_q"
+    And I press "Show all"
+    Then I should see "image_q"
+
   @wip
   Scenario: A teacher views a report of an activity
     Given the following activities with multiple choices exist:
