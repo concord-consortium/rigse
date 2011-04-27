@@ -240,14 +240,15 @@ class ItsiImporter
 
     def make_activity
       act = Activity.create do |t|
-        t.name = "Blank Activity"
+        t.name = Activity.gen_unique_name("Blank Activity")
         t.description = "Single-page Activity"
         t.user = ItsiImporter.find_or_create_itsi_import_user
       end
       SECTIONS_MAP.each do |section_def|
         section = Section.create!(:name => section_def[:name], :description => section_def[:name], :activity => act, :user => act.user)
         page = Page.create!(:name => section_def[:name], :description => section_def[:page_desc], :section => section, :user => act.user)
-
+        section.pages << page
+        act.sections << section
         components = section_def[:embeddable_elements]
         prediction_graph = nil
         components.each do |comp|
@@ -377,7 +378,7 @@ class ItsiImporter
           activity = Activity.find_by_uuid(itsi_activity.uuid)
           unless activity
             activity = make_activity
-            activity.name = name
+            activity.name = Activity.gen_unique_name name
             activity.user = user
             activity.description = itsi_activity.description
             activity.uuid = itsi_activity.uuid

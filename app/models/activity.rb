@@ -196,6 +196,24 @@ class Activity < ActiveRecord::Base
     listing
   end
 
+  # TODO: The next two methods can be extracted to 
+  # a more general form: (write tests too)
+  def self.name_is_taken(name)
+    return true if self.find_by_name(name)
+    return false
+  end
+  def self.gen_unique_name(name)  
+    while self.name_is_taken(name)
+      number = name[/\d+$/]
+      if number
+        name = name.gsub(number,"#{number.to_i +1}")
+      else
+        name = "#{name} (2)"
+      end
+    end
+    return name
+  end
+
   def duplicate(new_owner)
     @return_actvitiy = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
     @return_actvitiy.user = new_owner
