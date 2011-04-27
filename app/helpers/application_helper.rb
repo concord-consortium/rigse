@@ -200,20 +200,28 @@ module ApplicationHelper
     end
   end
 
-  def render_show_partial_for(component,teacher_mode=false)
+  def render_partial_for(component,_opts={})
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
-    partial = "#{class_name.pluralize}/show"
-    # if component.respond_to? :print_partial_name
-    #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
-    # end
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+
+    opts = {
+      :teacher_mode => false,
+      :substitute    => nil,
+      :partial      => 'show'
+    }
+    opts.merge!(_opts)
+    teacher_mode = opts[:teacher_mode]
+    substitute = opts[:substitute]
+    partial = "#{class_name.pluralize}/#{opts[:partial]}"
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
   end
 
-  def render_edit_partial_for(component)
-    class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
+  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
+    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  end
+
+  def render_edit_partial_for(component,opts={})
+    render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
   end
 
   def wrap_edit_link_around_content(component, options={})
