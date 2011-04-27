@@ -338,7 +338,7 @@ class ItsiImporter
           activity.grade_level_list = ccp_itsi_activity.level.level_name
           activity.subject_area_list = ccp_itsi_activity.subject.subject_name
           activity.publish! unless activity.published?
-          activity.is_exemplar = true # if its in the portal, its probably an exemplar
+          activity.is_exemplar = true
           activity.save
         end
       end
@@ -383,15 +383,12 @@ class ItsiImporter
           if activity
             activity.destroy
           end
-
-          unless activity
-            activity = make_activity
-            activity.name = Activity.gen_unique_name name
-            activity.user = user
-            activity.description = itsi_activity.description
-            activity.uuid = itsi_activity.uuid
-            activity.publish if itsi_activity.public
-          end
+          activity = make_activity
+          activity.name = Activity.gen_unique_name name
+          activity.user = user
+          activity.description = itsi_activity.description
+          activity.uuid = itsi_activity.uuid
+          activity.publish if itsi_activity.public
           SECTIONS_MAP.each do |section|
             process_diy_activity_section(activity,itsi_activity,section)
           end
