@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110427161956) do
+ActiveRecord::Schema.define(:version => 20110427172336) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -475,13 +475,15 @@ ActiveRecord::Schema.define(:version => 20110427161956) do
 
   create_table "embeddable_diy_sensors", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",           :limit => 36
+    t.string   "uuid",                    :limit => 36
     t.integer  "prototype_id"
     t.text     "customizations"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "prediction_graph_source"
   end
 
+  add_index "embeddable_diy_sensors", ["prediction_graph_source"], :name => "index_embeddable_diy_sensors_on_prediction_graph_source"
   add_index "embeddable_diy_sensors", ["prototype_id"], :name => "index_embeddable_diy_sensors_on_prototype_id"
 
   create_table "embeddable_drawing_tools", :force => true do |t|

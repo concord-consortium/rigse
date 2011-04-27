@@ -1,4 +1,5 @@
 class Embeddable::Diy::Sensor < Embeddable::Embeddable
+  FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in Dit Sensor"
 # AR Attributes:
 # caption, has_prediction
   set_table_name "embeddable_diy_sensors"
@@ -6,7 +7,17 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   belongs_to :prototype, :class_name => "Embeddable::DataCollector"
   validates_presence_of :prototype
   serialize :customizations, Hash
+  belongs_to :prediction_graph_source,
+    :class_name => "Embeddable::Diy::Sensor",
+    :foreign_key => "prediction_graph_id"
+
+  has_many :prediction_graph_destinations,
+    :class_name => "Embeddable::Diy::Sensor",
+    :foreign_key => "prediction_graph_id"
   
+  # manually update the axis and other info
+  # for the prediction graph
+  after_save :update_prediction_graph 
   include Snapshotable
 
   class << self
@@ -93,5 +104,18 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   
   def display_name
     "Sensor"
+  end
+  
+  def update_prediction_graph
+    prediction = self.prediction_graph_source
+    return unless prediction
+    copy_these = [:probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare]
+    copy_these.each do |key|
+      prediction.send("#{key.to_s}=".to_sym, self.send(key))
+    end
+    unless prediction.save
+      Rails.logger.warn(Embeddable::Diy::Sensor::FAIL_UPDATE_PREDICTION)
+      Rails.logger.warn(prediction.errors.full_messages)
+    end
   end
 end
