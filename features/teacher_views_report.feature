@@ -102,7 +102,6 @@ Feature: Teacher views report
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
     And I wait 2 seconds
-    And debug
     Then I should see "image_q"
     And I check "filter_Embeddable::MultipleChoice_"
     And I press "Show selected"

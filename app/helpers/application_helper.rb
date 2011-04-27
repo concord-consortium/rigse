@@ -277,10 +277,10 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            if (component.changeable?(current_user))
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
-            end
+            #if (component.changeable?(current_user))
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
+            #end
           end
         end
       end
