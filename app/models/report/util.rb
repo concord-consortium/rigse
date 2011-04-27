@@ -83,7 +83,7 @@ class Report::Util
     @learners = @offering.learners
     @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
 
-    @investigation = offering.runnable
+    assignable = offering.runnable
 
     @saveables               = []
     @saveables_by_type       = {}
@@ -92,7 +92,7 @@ class Report::Util
     @saveables_by_correct    = {}
     @saveables_by_answered   = {}
 
-    reportables          = @offering.runnable.reportable_elements
+    reportables          = assignable.reportable_elements
 
     ## FIXME filtering of embeddables should happen here
     unless skip_filters
@@ -111,7 +111,14 @@ class Report::Util
     activity_lambda = lambda { |e| e[:activity] }
     section_lambda  = lambda { |e| e[:section]  }
     page_lambda     = lambda { |e| e[:page]     }
-    @page_elements  = reportables.extended_group_by([activity_lambda, section_lambda, page_lambda])
+    lambdas = []
+    if assignable.is_a? Investigation
+      lambdas = [activity_lambda, section_lambda, page_lambda]
+    elsif assignable.is_a? Activity
+      lambdas = [section_lambda, page_lambda]
+    end
+      
+    @page_elements  = reportables.extended_group_by(lambdas)
 
     Investigation.saveable_types.each do |type|
       all = type.find_all_by_offering_id(@offering.id)
@@ -119,7 +126,7 @@ class Report::Util
       @saveables_by_type[type.to_s] = all
     end
     # If an investigation has changed, and daveable elements have been removed (eek!)
-    current =  @saveables.select { |s| @investigation.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
+    current =  @saveables.select { |s| assignable.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
     old = @saveables - current
     if old.size > 0
       warning = "WARNING: missing #{old.size} removed reportables in report for #{@investigation.name}"

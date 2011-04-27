@@ -86,7 +86,6 @@ Feature: Teacher views report
     And I press "Show all"
     Then I should see "image_q"
 
-  @wip
   Scenario: A teacher views a report of an activity
     Given the following activities with multiple choices exist:
         | activity       | section   | page   | multiple_choices | image_questions | user      |
@@ -102,3 +101,11 @@ Feature: Teacher views report
     When I login with username: teacher_a password: teacher_a
     And go to the class page for "Intro to bugs"
     And follow "Display a report" within ".action_menu_activity"
+    And I wait 2 seconds
+    And debug
+    Then I should see "image_q"
+    And I check "filter_Embeddable::MultipleChoice_"
+    And I press "Show selected"
+    Then I should not see "image_q"
+    And I press "Show all"
+    Then I should see "image_q"

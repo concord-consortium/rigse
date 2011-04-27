@@ -216,6 +216,14 @@ HEREDOC
   <p></p>
 HEREDOC
 
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      listing << {"#{s.name}" => s}
+    end
+    listing
+  end
+
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements
