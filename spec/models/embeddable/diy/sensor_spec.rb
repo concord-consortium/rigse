@@ -90,4 +90,26 @@ describe Embeddable::Diy::Sensor do
     end
 
   end
+  describe "updating the associated prediction graph on save" do
+    before(:each) do
+      @error_message = "bad bad bad"
+      @predict = mock (:errors => mock(:full_messages => @error_message))
+      @sensor = create(@valid_attributes)
+      @sensor.stub!(:prediction_graph_source).and_return(@predict)
+    end
+    it "should invoke 'update attrbutes' on the prediction graph" do
+      Embeddable::Diy::Sensor::PREDICTION_FIELDS.each { |key| @predict.should_receive "#{key.to_s}=".to_sym }
+      @predict.should_receive(:save).and_return(true)
+      @sensor.title = "some new title"
+      @sensor.save
+    end
+    it "should warn log valdation errors" do
+      Embeddable::Diy::Sensor::PREDICTION_FIELDS.each { |key| @predict.should_receive "#{key.to_s}=".to_sym }
+      @predict.should_receive(:save).and_return(false)
+      Rails.logger.should_receive(:warn).with(Embeddable::Diy::Sensor::FAIL_UPDATE_PREDICTION)
+      Rails.logger.should_receive(:warn).with(@error_message)
+      @sensor.title = "some new title"
+      @sensor.save
+    end
+  end
 end

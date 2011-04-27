@@ -1,6 +1,11 @@
 class Embeddable::Diy::Sensor < Embeddable::Embeddable
   FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in Dit Sensor"
-# AR Attributes:
+  PREDICTION_FIELDS = [
+    :probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, 
+    :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, 
+    :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare
+  ]
+# AR Attributes
 # caption, has_prediction
   set_table_name "embeddable_diy_sensors"
   belongs_to :user
@@ -109,7 +114,11 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   def update_prediction_graph
     prediction = self.prediction_graph_source
     return unless prediction
-    copy_these = [:probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare]
+    copy_these = [
+      :probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, 
+      :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, 
+      :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare
+    ]
     copy_these.each do |key|
       prediction.send("#{key.to_s}=".to_sym, self.send(key))
     end
