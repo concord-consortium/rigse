@@ -74,9 +74,13 @@ namespace :app do
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
       puts "importing #{ccp_itsi_project.units.length} ITSISU Units ..."
+      ItsiImporter.reset_errors
       ccp_itsi_project.units.each do |ccp_itsi_unit|
         ItsiImporter.create_activities_from_ccp_itsi_unit(ccp_itsi_unit, "")
       end
+      puts ItsiImporter.import_report
+      #puts "errors:"
+      #puts ItsiImporter.error_report
     end
 
     desc "erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal"

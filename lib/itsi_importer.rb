@@ -818,6 +818,7 @@ class ItsiImporter
 
     def error(message)
       log message
+      @errors << ImporterException.new(message)
     end
 
     def start(diy_id)
@@ -849,6 +850,23 @@ class ItsiImporter
       @records.last.fail(exception)
       @errors ||= []
       @errors << exception
+    end
+
+    def reset_errors
+      @records = []
+      @errors  = []
+    end
+    
+    def import_report
+      total_activity_attempts = @records.size
+      failures = @records.select  { |r| r.status == ActivityImportRecord::FAILED }
+      completed = @records.select { |r| r.status == ActivityImportRecord::SUCCESS}
+      aborted = @records.select   { |r| r.status == ActivityImportRecord::STARTED}
+      summary = "#{completed.size}/#{total_activity_attempts} completed (#{failures.size} failed, #{aborted.size} aborted)"
+    end
+
+    def error_report
+      @errors.map { |e| e.message}.join("\n")
     end
 
   end # end of class methods
