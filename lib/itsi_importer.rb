@@ -338,6 +338,7 @@ class ItsiImporter
           activity.grade_level_list = ccp_itsi_activity.level.level_name
           activity.subject_area_list = ccp_itsi_activity.subject.subject_name
           activity.publish! unless activity.published?
+          activity.is_exemplar = true # if its in the portal, its probably an exemplar
           activity.save
         end
       end
