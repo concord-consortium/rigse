@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110427172336) do
+ActiveRecord::Schema.define(:version => 20110427210743) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -227,7 +227,7 @@ ActiveRecord::Schema.define(:version => 20110427172336) do
     t.integer  "height"
     t.integer  "width"
     t.integer  "version"
-    t.datetime "updated_at",         :default => '2011-04-27 12:32:25'
+    t.datetime "updated_at",         :default => '2011-04-27 13:56:12'
   end
 
   add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
@@ -481,8 +481,10 @@ ActiveRecord::Schema.define(:version => 20110427172336) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "prediction_graph_source"
+    t.integer  "prediction_graph_id"
   end
 
+  add_index "embeddable_diy_sensors", ["prediction_graph_id"], :name => "index_embeddable_diy_sensors_on_prediction_graph_id"
   add_index "embeddable_diy_sensors", ["prediction_graph_source"], :name => "index_embeddable_diy_sensors_on_prediction_graph_source"
   add_index "embeddable_diy_sensors", ["prototype_id"], :name => "index_embeddable_diy_sensors_on_prototype_id"
 
