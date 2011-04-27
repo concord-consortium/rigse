@@ -376,6 +376,13 @@ class ItsiImporter
           end
           user = find_or_import_itsi_user(itsi_activity.user) unless user
           activity = Activity.find_by_uuid(itsi_activity.uuid)
+
+          # TODO: How do we handle updating if the template has changed??
+          # For now we just delete and re-import. Not very great.
+          if activity
+            activity.destroy
+          end
+
           unless activity
             activity = make_activity
             activity.name = Activity.gen_unique_name name
