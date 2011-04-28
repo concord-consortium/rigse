@@ -160,7 +160,7 @@ If the codebase on your development system has moved forward you may need to run
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>  cap <stage> db:copy_remote_site_keys</code></pre>
+<pre><code>  cap <stage> db:fetch_remote_site_keys</code></pre>
 
 Recreating a new portal instance from scratch from an existing application.
 <pre><code>
