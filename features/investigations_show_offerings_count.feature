@@ -15,7 +15,7 @@ Feature: Investigations show the offerings count
 
   @selenium
   Scenario: The investigations list can show the offerings count
-    Given the following investigations exist:
+    Given the following empty investigations exist:
       | name    | user      | offerings_count | created_at                      | publication_status  |
       | Newest  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | Medium  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
@@ -27,7 +27,7 @@ Feature: Investigations show the offerings count
 
   @selenium
   Scenario: The investigations list offering count shows on all pages
-    Given the following investigations exist:
+    Given the following empty investigations exist:
       | name | user    | offerings_count | created_at                     | publication_status |
       | 1    | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |
       | 2    | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | published          |

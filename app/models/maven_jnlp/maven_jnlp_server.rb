@@ -94,10 +94,15 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
 
   def update_maven_jnlp_server_object
     server, family, version = Admin::Project.default_jnlp_info
-    versions = [version, 'snapshot']
-    versions.uniq!
+    # TODO
+    # Portals need a way of getting more of the jnlp versions ... for now get all versions 
+    # ... later perhaps expand use of settings or portal params to specify sets of versions
+    # this used to just load the specific jnlp version and the snapshot version
+    # versions = [version, 'snapshot']
+    # versions.uniq!
     @maven_jnlp_server_object = Jnlp::MavenJnlp.new(host, path,
-      { :families => { family => { :versions => versions }, 'gui-testing' => { :versions => ['snapshot'] } } })
+    # { :families => { family => { :versions => versions }, 'gui-testing' => { :versions => ['snapshot'] } } })
+    { :families => { family => {}, 'gui-testing' => { :versions => ['snapshot'] } } })
     save_maven_jnlp_server_object
   end
 

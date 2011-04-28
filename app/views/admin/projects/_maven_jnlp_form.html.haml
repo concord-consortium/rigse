@@ -17,6 +17,7 @@
         - if admin_project.snapshot_enabled
           = admin_project.jnlp_version_str
         - else
-          = select(:admin_project, :jnlp_version_str, admin_project.maven_jnlp_family.recent_versioned_jnlp_urls.collect {|mjf| mjf.version_str }, { :selected => admin_project.jnlp_version_str }, { :id => dom_id_for(admin_project, :select_jnlp_version_str)})
+          -# FIXME: all versions are shown to make sure the current version is in the list, but that can be a very long list
+          = select(:admin_project, :jnlp_version_str, admin_project.maven_jnlp_family.versioned_jnlp_urls.collect {|mjf| mjf.version_str }, { :selected => admin_project.jnlp_version_str }, { :id => dom_id_for(admin_project, :select_jnlp_version_str)})
 
 = observe_form(dom_id_for(admin_project, :edit), :url => update_form_admin_project_path(admin_project), :update => dom_id_for(admin_project, :maven_jnlp))

@@ -12,7 +12,7 @@ Feature: Investigations can be searched
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigations exist:
+    And the following empty investigations exist:
           | name            | user    | offerings_count | publication_status | 
           | a Investigation | teacher | 5               | published          | 
           | b Investigation | teacher | 5               | published          | 
