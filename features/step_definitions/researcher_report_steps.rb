@@ -157,24 +157,16 @@ Then /^"([^"]*)" should have (\d+)% of the questions correctly for "([^"]*)" in 
   report.correct_percent(learner).should be_close(Float(percent), 1.5)
 end
 
-Given /^the following assignments exist:$/ do |assignments_table|
-  assignments_table.hashes.each do |hash|
-    investigation_name = hash['investigation']
-    clazz_name = hash['class']
-    clazz = Portal::Clazz.find_by_name(clazz_name)
-    investigation = Investigation.find_by_name(investigation_name)
-    find_or_create_offering(investigation,clazz)
-  end  
-end
-
 
 #Table: | student | class | investigation | question_prompt | answer |
 Given /^the following student answers:$/ do |answer_table|
+  assignable_type = answer_table.column_names[2]
+  assignable_class = assignable_type.gsub(/\s/, "_").classify.constantize
   answer_table.hashes.each do |hash|
     student = User.find_by_login(hash['student']).portal_student
     clazz = Portal::Clazz.find_by_name(hash['class'])
-    investigation = Investigation.find_by_name(hash['investigation'])
-    offering = find_or_create_offering(investigation, clazz)
+    assignable = assignable_class.find_by_name(hash[assignable_type])
+    offering = find_or_create_offering(assignable, clazz)
     learner = offering.find_or_create_learner(student)
     add_response(learner,hash['question_prompt'],hash['answer'])
   end

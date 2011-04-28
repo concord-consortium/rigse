@@ -14,7 +14,7 @@ Feature: Student can not see deactivated offerings
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name                | user      |
       | Test Investigation  | teacher   |
     And the following resource pages exist:

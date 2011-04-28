@@ -11,7 +11,7 @@
           = label_tag :class_word, 'Class Word: ', :class=>"right"
           %p= "Class words are not case sensitive"
           = f.text_field :class_word, :size => 24
-        - if action_name == "new"
+        - if action_name != "edit"
           %li
             - schools = []
             - if current_user.portal_teacher

@@ -1,9 +1,47 @@
-# This is a slightly different method than the one in the authoring_steps.rb file
-# This one uses factories, whereas the other builds a valid Investigation from scratch
-Given /^the following investigations exist:$/ do |table|
+Given /^the following empty investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
     Factory.create(:investigation, hash.merge('user' => user))
+  end
+end
+
+Given /^the following simple investigations exist:$/ do |investigation_table|
+  investigation_table.hashes.each do |hash|
+    user = User.first(:conditions => { :login => hash.delete('user') })
+    hash[:user_id] = user.id
+    investigation = Investigation.create(hash)
+    activity = Activity.create(hash)
+    section = Section.create(hash)
+    page = Page.create(hash)
+    section.pages << page
+    activity.sections << section
+    investigation.activities << activity
+    investigation.save
+  end
+end
+
+#Table: | investigation | activity | section   | page   | multiple_choices |
+Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
+  investigation_table.hashes.each do |hash|
+    investigation = Investigation.find_or_create_by_name(hash['investigation'])
+    investigation.user = Factory(:user)
+    investigation.save
+    # ITSISU requires descriptions on activities
+    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    section = Section.find_or_create_by_name(hash['section'])
+    page = Page.find_or_create_by_name(hash['page'])
+    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
+    mcs.each do |q|
+      q.pages << page
+    end
+    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
+    imgqs.each do |q|
+      q.pages << page
+    end
+    page.save
+    section.pages << page
+    activity.sections << section
+    investigation.activities << activity
   end
 end
 
@@ -38,31 +76,6 @@ end
 
 When /^I show offerings count on the investigations page$/ do 
   visit "/investigations?include_usage_count=true"
-end
-
-Given /^the investigation "([^"]*)" is assigned to the class "([^"]*)"$/ do |investigation_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  investigation = Investigation.find_by_name(investigation_name)
-  Factory.create(:portal_offering, {
-    :runnable => investigation,
-    :clazz => clazz
-  })
-end
-
-When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  investigation = Investigation.find_by_name(investigation_name)
-  Factory.create(:portal_offering, {
-    :runnable => investigation,
-    :clazz => clazz
-  })
-end
-
-# this is the interactive version of the step above
-When /^I assign the investigation "([^"]*)"$/ do |investigation_name|
-  investigation = Investigation.find_by_name investigation_name
-  runnable_element = find("#investigation_#{investigation.id}")
-  assign_runnable(runnable_element)
 end
 
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|

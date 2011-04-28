@@ -14,7 +14,7 @@ Feature: Teacher can deactivate investigations from a class
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name                | user      |
       | Test Investigation  | teacher   |
     When I assign the investigation "Test Investigation" to the class "My Class"
@@ -43,7 +43,7 @@ Feature: Teacher can deactivate investigations from a class
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name                | user      |
       | Test Investigation  | teacher   |
     When I assign the investigation "Test Investigation" to the class "My Class"

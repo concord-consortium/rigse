@@ -21,19 +21,31 @@ Given /^the following templated activities exist:$/ do |table|
     activity.save
   end
 end
-
-When /^I assign the activity "([^"]*)" to the class "([^"]*)"$/ do |activity_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  activity = Activity.find_by_name(activity_name)
-  Factory.create(:portal_offering, {
-    :runnable => activity,
-    :clazz => clazz
-  })
-end
-
 When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
   with_scope("span.small_left_menu") do
     click_link("delete")
+  end
+end
+
+#Table: | activity | section   | page   | multiple_choices |
+Given /^the following activities with multiple choices exist:$/ do |activity_table|
+  activity_table.hashes.each do |hash|
+    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    activity.user = Factory(:user)
+    activity.save.should be_true
+    section = Section.find_or_create_by_name(hash['section'])
+    page = Page.find_or_create_by_name(hash['page'])
+    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
+    mcs.each do |q|
+      q.pages << page
+    end
+    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
+    imgqs.each do |q|
+      q.pages << page
+    end
+    page.save
+    section.pages << page
+    activity.sections << section
   end
 end
 
