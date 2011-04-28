@@ -6,13 +6,14 @@
   var save_class = '.template_save_button';
   var disable_button_class = '.template_disable_button';
   var enable_button_class = '.template_enable_button';
+  var enable_check_class = '.template_enable_check';
   var disabled_section_class = '.disabled_section';
   var enabled_section_class = '.enabled_section';
   var template_container_class = '.template_container';
   var disabled_container_class = '.template_disabled_container';
   var edit_container_class = '.template_edit_container';
   var view_container_class = '.template_view_container';
-  var title_container_class = '.template_view_title';
+  var title_container_class = '.template_section_title';
 
   var get_rails_model = function(element) {
     var id = null;
@@ -61,53 +62,45 @@
   };
 
   var enable_section = function(container) {
-    var _edit_button = container.down(edit_class);
-    var _save_button = container.down(save_class);
-    var enabler =  container.down(enable_button_class);
-    var disabler = container.down(disable_button_class);
-    var title = container.down(title_container_class);
-    _edit_button.show();
-    enable_button(_edit_button);
-    _save_button.show();
-    disable_button(_save_button);
-    container.down(view_container_class).show();
-    container.down(disabled_container_class).hide();
-    container.removeClassName('disabled');
-    container.select(template_container_class).each(function (elm) {
+    viewContainer = container.down(view_container_class);
+    viewContainer.select(template_container_class).each(function(elm){
       elm.show();
     });
-    enabler.hide();
-    disabler.show();
+    
+    var _edit_button = container.down(edit_class);
+    var _save_button = container.down(save_class);
+    if (!!_edit_button) {
+      _edit_button.show();
+      enable_button(_edit_button);
+    }
+    if (!!_save_button) {
+      _save_button.show();
+      disable_button(_save_button);
+    }
+    
+    var title = container.down(title_container_class);
+    title.removeClassName('disabled');
   };
   
-  var handle_enable_evt = function(evt) {
-    var enabler = evt.element();
-    var container = enabler.up(template_container_class);
-    enable_section(container);
-    server_enable(container);
+  var handle_enable_check_evt = function(evt) {
+    var checkbox = evt.srcElement;
+    var container = checkbox.up(template_container_class);
+    if (checkbox.checked) {
+      enable_section(container);
+      server_enable(container);
+    } else {
+      disable_section(container);
+      server_disable(container);
+    }
   };
 
   var disable_section = function(container) {
-    var enabler = container.down(enable_button_class);
-    var disabler = container.down(disable_button_class);
-    var title = container.down(title_container_class);
-    container.down(edit_class).hide();
-    container.down(view_container_class).hide();
-    container.down(edit_container_class).hide();
-    container.down(disabled_container_class).show();
-    container.select(template_container_class).each(function (elm) {
+    viewContainer = container.down(view_container_class);
+    viewContainer.select(template_container_class).each(function(elm){
       elm.hide();
     });
-    container.addClassName('disabled');
-    disabler.hide();
-    enabler.show();
-  };
-
-  var handle_disable_evt = function(evt) {
-    var disabler = evt.element();
-    var container = disabler.up(template_container_class);
-    disable_section(container);
-    server_disable(container);
+    var title = container.down(title_container_class);
+    title.addClassName('disabled');
   };
 
   var open_editor = function(evt) {
@@ -201,12 +194,9 @@
         element.observe('click', open_editor);
         enable_button(element);
     });
-    $$(enable_button_class).each(function(elm) {
-      elm.observe('click', handle_enable_evt);
-      elm.hide();
-    });
-    $$(disable_button_class).each(function(elm) {
-      elm.observe('click', handle_disable_evt);
+    
+    $$(enable_check_class).each(function(elm) {
+      elm.observe('click', handle_enable_check_evt);
     });
 
     // initial visibility of buttons:
@@ -234,10 +224,21 @@
         elm.down('.buttons').show();
       });
     });
+    
+    // enable all sections initially
+    $$(template_container_class).each(function(elm) {
+      if (elm.id.indexOf('section') > -1){
+        enable_section(elm);
+        elm.down(enable_check_class).checked = true;
+      }
+    });
 
-    // initially disabled section
+    // then disable initially disabled section
     $$(disabled_section_class).each(function(elm) {
-      disable_section(elm);
+      if (elm.id.indexOf('section') > -1){
+        disable_section(elm);
+        elm.down(enable_check_class).checked = false;
+      }
     });
 
 
