@@ -216,14 +216,6 @@ HEREDOC
   <p></p>
 HEREDOC
 
-  def print_listing
-    listing = []
-    self.sections.each do |s|
-      listing << {"#{s.name}" => s}
-    end
-    listing
-  end
-
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements
@@ -234,6 +226,16 @@ HEREDOC
       @reportable_elements.each{|elem| elem[:activity] = self}
     end
     return @reportable_elements
+  end
+
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
   end
 
 end
