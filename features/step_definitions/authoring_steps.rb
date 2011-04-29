@@ -116,3 +116,23 @@ When /^I add a "([^"]*)" to the page$/ do |embeddable|
   page.execute_script("$('add_menu').hide()")
 end
 
+When /^I add a new activity to the investigation$/ do
+  page.execute_script("dropdown_for('button_add_menu','add_menu')")
+
+  page.execute_script("$('add_menu').show()")
+  click_link("add new activity")
+end
+
+When /^I add a new section to the activity$/ do
+  page.execute_script("dropdown_for('button_add_menu','add_menu')")
+
+  page.execute_script("$('add_menu').show()")
+  click_link("add new section")
+end
+
+When /^I add a new page to the section$/ do
+  page.execute_script("dropdown_for('button_add_menu','add_menu')")
+
+  page.execute_script("$('add_menu').show()")
+  click_link("add new page")
+end
