@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe TemplateHelper do
-  include TemplateHelper
   
   before :each do
     @section = stub_model(Section, :name => "Learning About Taxidermy")
@@ -11,11 +10,9 @@ describe TemplateHelper do
   end
   
   describe 'a basic template_container' do
-    it 'should render with enable, disable and edit buttons' do
+    it 'should render with edit button' do
       container = helper.template_container_for(@section)
       container.should have_tag("div[class=?]", "buttons") do
-        with_tag("div[class=?]", "template_disable_button")
-        with_tag("div[class=?]", "template_enable_button")
         with_tag("div[class=?]", "template_edit_button")
       end
     end

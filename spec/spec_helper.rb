@@ -26,6 +26,7 @@ Spork.prefork do
 
   include AuthenticatedTestHelper
   include AuthenticatedSystem
+  include ApplicationHelper
 
   require 'factory_girl'
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
