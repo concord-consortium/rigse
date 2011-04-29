@@ -576,6 +576,30 @@ describe ItsiImporter do
         ItsiImporter.import_from_cc_portal
       end
     end
+
+    describe "remove_existing_activity" do
+      before(:each) do
+        @offering = mock
+        @activity_with_offerings = mock( :offerings => [@offering], :name => "w/ offerings")
+        @activity_without_offerings = mock( :offerings => [])
+      end
+      it "should destroy activities with no offerings" do
+        @activity_without_offerings.should_receive(:destroy).and_return(true)
+        ItsiImporter.remove_existing_activity(@activity_without_offerings)
+      end
+
+      # TODO isolate cases:
+      it "should deactivate offerings of old activities (and other things)" do
+        @activity_with_offerings.should_receive(:is_template=).with(false)
+        @activity_with_offerings.should_receive(:public?).and_return(false)
+        @activity_with_offerings.should_receive(:uuid=).and_return(true)
+        @activity_with_offerings.should_receive(:generate_uuid).and_return(true)
+        @activity_with_offerings.should_receive(:save).and_return(true)
+        @activity_with_offerings.should_not_receive(:publish!)
+        @offering.should_receive(:deactivate!).and_return(true)
+        ItsiImporter.remove_existing_activity(@activity_with_offerings)
+      end
+    end
     #end
     #describe "reporting on an import do" do
       #it "should create a report buffer"

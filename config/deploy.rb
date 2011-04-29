@@ -299,10 +299,10 @@ namespace :import do
   end
   
 
-  desc 'erase and import ITSI Activities from the ITSI DIY as itsi-su units'
-  task :erase_and_import_ccp_itsi_units_to_itsi_su, :roles => :app do
+  desc 're-import ITSI Activities from the ITSI DIY as itsi-su units'
+  task :re_import_ccp_itsi_units_to_itsi_su, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} app:import:erase_and_import_ccp_itsi_units_to_itsi_su " 
+      "rake RAILS_ENV=#{rails_env} rake app:import:re_import_ccp_itsi_units_to_itsi_su" 
   end
 
   desc "generate names for existing MavenJnlpServers that don't have them"

@@ -349,7 +349,7 @@ class ItsiImporter
       act.destroy
     end
 
-    def accept_cc_portal_unit(unit)
+    def reject_cc_portal_unit?(unit)
       return unit.unit_name.match(/Test/)
     end
 
@@ -357,7 +357,7 @@ class ItsiImporter
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
       #units = ccp_itsi_project.units.reject { |u| u.name =~ SKIP_UNIT_REGEX }
-      units = ccp_itsi_project.units.reject  { |u| accept_cc_portal_unit(u) }
+      units = ccp_itsi_project.units.reject  { |u| reject_cc_portal_unit?(u) }
       puts "importing #{units.length} ITSISU Units ..."
       reset_errors
       units.each do |ccp_itsi_unit|
@@ -403,6 +403,22 @@ class ItsiImporter
       end
     end
 
+    def remove_existing_activity(activity)
+      if activity.offerings.size > 0
+        log("deactivating offerings for #{activity.name}")
+        activity.offerings.each { |o| o.deactivate!}
+        activity.is_template = false
+        if activity.public?
+          activity.un_publish!
+        end
+        activity.uuid = nil
+        activity.generate_uuid
+        activity.save
+      else
+        activity.destroy
+      end
+      activity = nil
+    end
 
     def create_activity_from_itsi_activity(foreign_key, user=nil, prefix="", use_number=false)
       unless foreign_key.empty?
@@ -416,12 +432,13 @@ class ItsiImporter
             name = "#{name} (#{itsi_activity.id})"
           end
           user = find_or_import_itsi_user(itsi_activity.user) unless user
+          
           activity = Activity.find_by_uuid(itsi_activity.uuid)
 
           # TODO: How do we handle updating if the template has changed??
           # For now we just delete and re-import. Not very great.
           if activity
-            activity.destroy
+            remove_existing_activity(activity)
           end
           activity = make_activity
           activity.name = Activity.gen_unique_name name
