@@ -55,7 +55,6 @@ When /^I edit the first section$/ do
   # all sections are currently enabled at start. If we make them disabled by default, we need to
   # uncomment the following line:
   # find(".template_container .template_enable_check").click    
-  debugger
   find(".template_container .template_container .template_edit_button").click
 end
 
