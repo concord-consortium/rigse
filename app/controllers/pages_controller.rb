@@ -112,21 +112,11 @@ class PagesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-<<<<<<< HEAD
-      format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
-      format.config { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
-      format.otml do 
-        # maybe just for reports: we set the ot_root id
-        @ot_docroot_id = @page.uuid
-        render :layout => "layouts/page"  # page.otml.haml
-      end
-=======
       format.run_sparks_html   { render :show, :layout => "layouts/run" }
       format.run_html   { render :show, :layout => "layouts/run" }
       format.jnlp       { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
       format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
       format.otml       { render :layout => "layouts/page" } # page.otml.haml
->>>>>>> itsisu-staging
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode} }
       format.xml        { render :xml => @page }
     end
