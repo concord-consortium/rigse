@@ -27,7 +27,7 @@ Feature: Activities should be sorted in bins in itsisu theme
     And I am on the activities page
     Then I should see "My Activities"
     And I should see "my_published_activity" within "#myactivitiesphysics"
-    And I should see "my_draft_activity" within "#myactivitiesphysics"
+    And I should see "my_draft_activity (private)" within "#myactivitiesphysics"
     And I should see "Other Activities"
     And I should see "other_published_activity" within "#otheractivitiesphysics"
     And I should not see "other_draft_activity"

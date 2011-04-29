@@ -40,5 +40,6 @@
                 %a#run_button_.waiter{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
                   %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
                 =runnable.name
+                = runnable.published? ? "" : "(private)"
                 .activity_description{:id=> dom_id_for(runnable,:description), :style => "display: none;"}
                   =runnable.description
