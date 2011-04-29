@@ -673,6 +673,16 @@ config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
 
 The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
 
+h2. Databases
+
+If you are using mysql 5.5 or later you'll need the mysql2 gem.  This will be enabled by bundlers Gemfile if you define the environment variable:
+RB_MYSQL2=true
+
+On OS X the mysql2 gem usually can't find the mysql client library that it needs to run.  The command below fixes that.  It assumes your mysql is installed in the default basedir of /usr/local/mysql/lib.  And it assumes you are using bundler.
+<code><pre>
+install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
+</code></pre>
+
 h2. CSS
 
 h3. Asset Packager
