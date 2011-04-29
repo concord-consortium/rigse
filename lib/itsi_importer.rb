@@ -68,6 +68,7 @@ class ItsiImporter
     attr_accessor :status
     attr_accessor :start_time
     attr_accessor :end_time
+    attr_accessor :exceptions
     STARTED = 0
     FAILED = -1
     SUCCESS = 1
@@ -75,10 +76,12 @@ class ItsiImporter
       self.diy_id = _diy_id
       self.start_time = Time.now
       self.status = ActivityImportRecord::STARTED
+      self.exceptions = []
     end
     def fail(exception)
       self.end_time = Time.now
       self.status=ActivityImportRecord::FAILED
+      self.exceptions << exception
     end
     def finish(activity)
       self.status=ActivityImportRecord::SUCCESS
@@ -86,7 +89,25 @@ class ItsiImporter
       self.portal_id = activity.id
       self.name = activity.id
     end
+    def errors
+      self.exceptions.map { |e| e.message}
+    end
+    def report
+      case self.status
+      when SUCCESS
+        return "#{self.diy_id}: sucess"
+      when FAILED
+        return "#{self.diy_id}: failed: " << self.errors.join("\n\t")
+      when STARTED
+        return "#{self.diy_id}: in-progress: " << self.errors.join("\n\t")
+      end
+    end
+
   end
+  
+  # When importing from the portal, skip units matching
+  # the following regex:
+  SKIP_UNIT_REGEX = /tests/i
 
   SUBSECTIONS=%w[
         text_response
@@ -324,6 +345,23 @@ class ItsiImporter
       return unless act
       log "Deleting Activity #{act.id}"
       act.destroy
+    end
+
+    def accept_cc_portal_unit(unit)
+      return unit.unit_name.match(/Test/)
+    end
+
+    def import_from_cc_portal
+      raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
+      ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
+      #units = ccp_itsi_project.units.reject { |u| u.name =~ SKIP_UNIT_REGEX }
+      units = ccp_itsi_project.units.reject  { |u| accept_cc_portal_unit(u) }
+      puts "importing #{units.length} ITSISU Units ..."
+      reset_errors
+      units.each do |ccp_itsi_unit|
+        create_activities_from_ccp_itsi_unit(ccp_itsi_unit, "")
+      end
+      puts import_report
     end
 
     def create_activities_from_ccp_itsi_unit(ccp_itsi_unit, prefix="")
@@ -856,13 +894,15 @@ class ItsiImporter
       @records = []
       @errors  = []
     end
-    
+
     def import_report
       total_activity_attempts = @records.size
       failures = @records.select  { |r| r.status == ActivityImportRecord::FAILED }
       completed = @records.select { |r| r.status == ActivityImportRecord::SUCCESS}
       aborted = @records.select   { |r| r.status == ActivityImportRecord::STARTED}
       summary = "#{completed.size}/#{total_activity_attempts} completed (#{failures.size} failed, #{aborted.size} aborted)"
+      details = failures.map { |f| f.report }
+      summary << "\n" << details
     end
 
     def error_report

@@ -558,7 +558,24 @@ describe ItsiImporter do
       end
     end
 
-
+    describe "importing units from the portal" do
+      before(:each) do
+        @unit_a = mock(:unit_name => 'unit a')
+        @unit_b = mock(:unit_name => 'unit b')
+        @unit_c = mock(:unit_name => 'unit c')
+        @unit_d = mock(:unit_name => 'Tests')
+        @project= mock(:units => [@unit_a,@unit_b, @unit_c, @unit_d])
+        Ccportal::Project = mock(:find_by_project_name => @project)
+      end
+      it "should skip iporting certain units whose name starts with Test" do
+        meth_sym = :create_activities_from_ccp_itsi_unit
+        ItsiImporter.should_receive(meth_sym).with(@unit_a, "").and_return(true)
+        ItsiImporter.should_receive(meth_sym).with(@unit_b, "").and_return(true)
+        ItsiImporter.should_receive(meth_sym).with(@unit_c, "").and_return(true)
+        ItsiImporter.should_not_receive(meth_sym).with(@unit_d, "").and_return(true)
+        ItsiImporter.import_from_cc_portal
+      end
+    end
     #end
     #describe "reporting on an import do" do
       #it "should create a report buffer"
@@ -575,3 +592,19 @@ describe ItsiImporter do
     #end
   end
 end
+
+describe ItsiImporter::ActivityImportRecord do
+  
+  describe "report method" do
+    before(:each) do
+      @diy_act = 21
+      @record = ItsiImporter::ActivityImportRecord.new(@diy_act)
+    end
+    it "should include the exception message in report" do
+      @record.fail(Exception.new("FAILURE!!!"))
+      @record.report.should match /#{@diy_act}/
+      @record.report.should match /FAILURE/
+    end
+  end
+end
+
