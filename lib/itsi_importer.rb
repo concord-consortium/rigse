@@ -131,18 +131,20 @@ class ItsiImporter
       ]
     },
     { :key => :standards,
-      :name => "Standards",
+      :name => "Standards woo",
       :page_desc => "What standards does this ITSI Activity cover?",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-      ]
+      ],
+      :is_enabled => false
     },
     { :key => :career_stem,
-      :name => "Career STEM Question",
+      :name => "Career STEM Question wee",
       :page_desc => "Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-      ]
+      ],
+      :enabled => false
     },
     { :key => :materials,
       :name => "Materials",

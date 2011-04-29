@@ -52,7 +52,9 @@ end
 When /^I edit the first section$/ do
   # need to use javascript here to make them visible so selenium will allow clicking on them
   page.execute_script("$$('.template_container').each(function(item) { item.down('.buttons').show()})")
-  find(".template_container .template_container .template_enable_button").click
+  # all sections are currently enabled at start. If we make them disabled by default, we need to
+  # uncomment the following line:
+  # find(".template_container .template_enable_check").click    
   find(".template_container .template_container .template_edit_button").click
 end
 
