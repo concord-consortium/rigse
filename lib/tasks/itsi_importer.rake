@@ -65,8 +65,8 @@ namespace :app do
     end
     
     
-    desc "erase and import ITSI DIY from the CCPortal as ITSI_SU activities with unit tags"
-    task :erase_and_import_ccp_itsi_units_to_itsi_su => [:erase_itsi_imports,:import_ccp_itsi_units_to_itsi_su] do
+    desc "re-import ITSI DIY from the CCPortal as ITSI_SU activities with unit tags"
+    task :re_import_ccp_itsi_units_to_itsi_su => [:import_ccp_itsi_units_to_itsi_su] do
     end
     
     desc "import ITSI DIY from the CCPortal as ITSI_SU activities with unit tags"
