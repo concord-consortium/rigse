@@ -38,6 +38,9 @@ describe Portal::ClazzesController do
     @controller.stub(:before_render) {
       response.template.stub_chain(:current_project, :name).and_return("Test Project")
     }
+    @mock_project = mock_model(Admin::Project, :name => "Test Project")
+    @mock_project.stub(:enable_grade_levels?).and_return(true)
+    Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
   # def login_as(user_sym)
