@@ -135,6 +135,9 @@ class ActivitiesController < ApplicationController
  
   def template_edit
     @teacher_mode = params[:teacher_mode] || false
+    respond_to do |format|
+      format.html   { render :template_edit, :layout => "layouts/template-edit" }
+    end
   end
   # def template_edit
   #   @teacher_mode = params[:teacher_mode] || @activity.teacher_only
