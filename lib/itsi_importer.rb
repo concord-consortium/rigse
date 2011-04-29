@@ -903,7 +903,7 @@ class ItsiImporter
       completed = @records.select { |r| r.status == ActivityImportRecord::SUCCESS}
       aborted = @records.select   { |r| r.status == ActivityImportRecord::STARTED}
       summary = "#{completed.size}/#{total_activity_attempts} completed (#{failures.size} failed, #{aborted.size} aborted)"
-      details = failures.map { |f| f.report }
+      details = failures.map { |f| f.report }.join("\n")
       summary << "\n" << details
     end
 
