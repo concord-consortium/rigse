@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @biologica_pedigrees, :collection_class => Embeddable::Biologica::Pedigree}        
+- @biologica_pedigrees.each do |pedigree|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => pedigree}

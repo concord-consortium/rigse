@@ -1,0 +1,12 @@
+<h1>Editing expectation_stem</h1>
+
+<% form_for(@expectation_stem) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @expectation_stem %> |
+<%= link_to 'Back', ri_gse_expectation_stems_path %>

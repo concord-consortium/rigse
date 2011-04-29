@@ -1,53 +1,58 @@
-default_admin_user: &default_admin_user
-  login: stephen
-  email: stephen.bannasch@gmail.com
-  first_name: Stephen
-  last_name: Bannasch
-
-states_and_provinces: &states_and_provinces
-  - RI
-
-active_school_levels: &active_school_levels 
-  - "2"
-  - "3"
-  - "4"
-
-active_grades: &active_grades 
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
-
 development: &non_production_settings
-  site_name: RITES Investigations (development)
-  site_url: http://localhost:3000
-  description: ""
-  default_admin_user: *default_admin_user
-  enable_default_users: true
-  include_otrunk_examples: false
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
-  states_and_provinces: *states_and_provinces
-  active_school_levels: *active_school_levels 
-  active_grades: *active_grades
-  theme: default
-  help_email: rites-investigations@concord.org
-  maven_jnlp_families:
+  :site_name: Rails Portal (development)
+  :site_url: http://localhost:3000
+  :description: ""
+  :default_admin_user: &default_admin_user
+    :login: stephen
+    :email: stephen.bannasch@gmail.com
+    :first_name: Stephen
+    :last_name: Bannasch
+  :enable_default_users: true
+  :include_otrunk_examples: false
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
+  :states_and_provinces: &states_and_provinces
+    - MA
+  :active_school_levels: &active_school_levels
+    - "2"
+    - "3"
+    - "4"
+  :active_grades: &active_grades
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  :active_grades: *active_grades
+  :theme: default
+  :help_email: rails-portal@concord.org
+  :maven_jnlp_families:
     - "all-otrunk-snapshot"
-  maven_jnlp_servers:
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  default_maven_jnlp:
-    server: concord
-    family: all-otrunk-snapshot
-    version: snapshot
-  valid_sakai_instances:
-    - http://localhost:3000/
-  
+  :default_maven_jnlp:
+    :server: concord
+    :family: all-otrunk-snapshot
+    :version: snapshot
+  :dont_sanitize_xhtml: true
+  :teachers_can_author: true
+  :teachers_can_author: true
+  :require_activity_descriptions: true
+  :unique_activity_names: true
+  :tiny_mce:
+    :buttons1:
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code
+
 test:
   <<: *non_production_settings
 
@@ -55,54 +60,71 @@ cucumber:
   <<: *non_production_settings
 
 staging:
-  site_name: RITES Investigations (staging)
-  site_url: http://rites-investigations.staging.concord.org
-  description: ""
-  default_admin_user: *default_admin_user
-  enable_default_users: true
-  include_otrunk_examples: false
-  states_and_provinces: *states_and_provinces
-  active_school_levels: *active_school_levels 
-  active_grades: *active_grades 
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
-  help_email: rites-investigations@concord.org
-  maven_jnlp_servers:
+  :site_name: Rails Portal (staging)
+  :site_url: http://rails-portal.staging.concord.org
+  :description: ""
+  :default_admin_user: *default_admin_user
+  :enable_default_users: true
+  :include_otrunk_examples: false
+  :states_and_provinces: *states_and_provinces
+  :active_school_levels: *active_school_levels
+  :active_grades: *active_grades
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
+  :help_email: rails-portal@concord.org
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families:
+  :maven_jnlp_families:
     - "all-otrunk-snapshot"
-  default_maven_jnlp:
-    server: concord
-    family: all-otrunk-snapshot
-    version: snapshot
-  valid_sakai_instances:
-    - http://localhost:3000/
-  
+  :default_maven_jnlp:
+    :server: concord
+    :family: all-otrunk-snapshot
+    :version: snapshot
+  :dont_sanitize_xhtml: true
+  :tiny_mce:
+    :buttons1:
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code
+
 production:
-  site_name: RITES Investigations
-  site_url: http://rites-investigations.concord.org
-  description: ""
-  default_admin_user: *default_admin_user
-  enable_default_users: false
-  include_otrunk_examples: false
-  states_and_provinces: *states_and_provinces
-  active_school_levels: *active_school_levels 
-  active_grades: *active_grades 
-  site_district: RITES Investigations-district
-  site_school: RITES Investigations-school
-  help_email: rites-investigations@concord.org
-  maven_jnlp_servers:
+  :site_name: Rails Portal
+  :site_url: http://rails-portal.concord.org
+  :description: ""
+  :default_admin_user: *default_admin_user
+  :enable_default_users: false
+  :include_otrunk_examples: false
+  :states_and_provinces: *states_and_provinces
+  :active_school_levels: *active_school_levels
+  :active_grades: *active_grades
+  :site_district: Rails Portal-district
+  :site_school: Rails Portal-school
+  :help_email: rails-portal@concord.org
+  :admin_email: npaessel@concord.org
+  :allow_drafts_in_assignments: false
+  :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/
-  maven_jnlp_families:
+  :maven_jnlp_families:
     - "all-otrunk-snapshot"
-  default_maven_jnlp:
-    server: concord
-    family: all-otrunk-snapshot
-    version: 0.1.0-20090724.190238
-  valid_sakai_instances:
-    - http://localhost:3000/
-  
+  :default_maven_jnlp:
+    :server: concord
+    :family: all-otrunk-snapshot
+    :version: snapshot
+  :dont_sanitize_xhtml: true
+  :tiny_mce:
+    :buttons1:
+      - bold,italic,underline
+      - sup,sub
+      - bullist,numlist
+      - link,image
+      - pastext, pasteword,selectall
+      - justifyleft,justifycenter,justifyright
+      - code

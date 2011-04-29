@@ -1,7 +1,5 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
-# config.threadsafe!
-
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
 config.cache_classes = true
@@ -24,3 +22,18 @@ config.action_controller.perform_caching             = true
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
+
+# Threadsafe mode sets all of the following application
+# process state variables:
+#
+#   preload_frameworks = true
+#   cache_classes = true
+#   dependency_loading = false
+#   action_controller.allow_concurrency = true
+#
+# Running in threadsafe mode can increase performance while making more
+# efficient use of system resources when running in a Ruby VM that supports 
+# native hreads such as JRuby.
+#
+# Uncomment the next line to run in threadsafe mode:
+# config.threadsafe!

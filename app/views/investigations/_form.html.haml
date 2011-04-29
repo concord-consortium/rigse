@@ -1,13 +1,14 @@
 = edit_menu_for(investigation, f)
-- field_set_tag "#{top_level_container_name.pluralize.humanize} details" do
+- field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
   .aligned
     %ol
       %li
         %label.right Name
         = f.text_field :name
-      / %li
-      /   %label.right Publication status
-      /   = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
+      // without publication status options, projects won't be able to set investigations as active...
+      %li
+        %label.right Publication status
+        = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
       %li
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
@@ -18,7 +19,7 @@
 /       %ul.menu_h
 /         %li
 /           grade span:
-/           = select_tag(:grade_span, options_for_select(GradeSpanExpectation.grade_spans, @gse.grade_span))
+/           = select_tag(:grade_span, options_for_select(RiGse::GradeSpanExpectation.grade_spans, @gse.grade_span))
 /         %li
 /           domain:
 /           = select_tag(:domain_id, options_for_select(domains.collect { |d| [d.name, d.id] }, @gse.domain.id))
@@ -28,6 +29,6 @@
 /       %p
 /       #gse_summary_container
 /         - if @gse
-/           = render :partial => 'grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
+/           = render :partial => 'ri_gse/grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
 
 = javascript_tag("focus_first_field();");

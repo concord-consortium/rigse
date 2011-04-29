@@ -1,0 +1,20 @@
+= edit_menu_for(model, f)
+.content
+  - field_set_tag 'Name' do
+    = f.text_field :name, :id => dom_id_for(model, :item, :name_field)
+  - field_set_tag 'Authored Data URL' do
+    = f.text_field :url, :id => dom_id_for(model, :item, :url_field)
+  - field_set_tag 'Model Type' do
+    = f.collection_select(:model_type_id, Diy::ModelType.all.sort{|a,b| a.id <=> b.id }, :id, :name_with_id)
+  %br
+  %b Description
+  = f.text_area :description, :id => dom_id_for(model, :item, :description_field)
+  %br
+  %b Instructions
+  = f.text_area :instructions, :id => dom_id_for(model, :item, :instructions_field)
+  - field_set_tag 'Model Image URL' do
+    = f.text_field :image_url, :id => dom_id_for(model, :item, :image_url_field)
+  - field_set_tag 'Credits' do
+    = f.text_field :credits, :id => dom_id_for(model, :item, :credits_field)
+  %br
+= f.submit "save"

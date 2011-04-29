@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :setup do
     #
     #
@@ -36,9 +36,9 @@ HEREDOC
       if investigations_with_gses
         puts "\nRestoring gse relationship for #{investigations_with_gses.length} Investigations ..."
         inv_gse_cache.each do |inv_spec|
-          assessment_target = AssessmentTarget.find_by_description(inv_spec[1])
+          assessment_target = RiGse::AssessmentTarget.find_by_description(inv_spec[1])
           if assessment_target
-            gse = GradeSpanExpectation.find_by_grade_span_and_assessment_target_id(inv_spec[2], assessment_target.id)
+            gse = RiGse::GradeSpanExpectation.find_by_grade_span_and_assessment_target_id(inv_spec[2], assessment_target.id)
           end
           inv = inv_spec[0]
           print "  Investigation: #{inv.id}: #{inv.name}, GSE: "
@@ -59,8 +59,8 @@ HEREDOC
   namespace :convert do
     desc 'set new grade_span_expectation attribute: gse_key'
     task :set_gse_keys => :environment do
-      gses = GradeSpanExpectation.find(:all)
-      puts "resetting gse_key for #{gses.length} GradeSpanExpectations"
+      gses = RiGse::GradeSpanExpectation.find(:all)
+      puts "resetting gse_key for #{gses.length} RiGse::GradeSpanExpectations"
       gses.each { |gse|  gse.set_gse_key }
     end
   end

@@ -4,7 +4,8 @@
 # NOTE: 09-26-2009 knowuh: these migrations do not seem  to work with models which have our scoped name-spaces.
 #
 
- 
+require 'fileutils'
+require 'active_record/fixtures'
 
 def username(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
@@ -88,7 +89,7 @@ namespace :db do
                   # filter out missing columns 
                   data[c.name] = fixture[c.name] if fixture[c.name]
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue 
               puts "failed to load table #{tbl}" 
@@ -102,11 +103,11 @@ namespace :db do
     task :save_probe_configurations => :environment do 
       dir = RAILS_ROOT + '/config/probe_configurations'
       FileUtils.chdir(dir) do
-        tables = %w{device_configs data_filters vendor_interfaces physical_units calibrations probe_types}
+        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
         tables.each do |tbl|
           puts "writing #{dir}/#{tbl}.yaml"
           File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = tbl.classify.constantize.find(:all).collect { |m| m.attributes }
+            attributes = tbl.gsub(/^probe_/, "probe/").classify.constantize.find(:all).collect { |m| m.attributes }
             f.write YAML.dump(attributes)
           end
         end
@@ -116,15 +117,15 @@ namespace :db do
     desc "Load just the probe configurations from yaml fixtures in config/probe_configurations." 
     task :load_probe_configurations => :environment do 
       dir = RAILS_ROOT + '/config/probe_configurations'
-      user_id = User.site_admin.id
+      # Normally these models will be owned by the site_admin but if the site_admin doesn't
+      # exist or we are loading these into the test database set the user_id value to -1
+      user_id = User.site_admin ? User.site_admin.id : -1
       FileUtils.chdir(dir) do
-        tables = %w{device_configs data_filters vendor_interfaces physical_units calibrations probe_types}
+        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
         tables.each do |tbl|
-
           ActiveRecord::Base.transaction do 
-
             begin 
-              klass = tbl.classify.constantize
+              klass = tbl.gsub(/^probe_/, "probe/").classify.constantize
               klass.destroy_all
               klass.reset_column_information
 
@@ -140,9 +141,95 @@ namespace :db do
                     data[c.name] = user_id
                   end
                 end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.map{|kk| "#{tbl}.#{kk}"}.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
               end        
             rescue StandardError => e
+              puts e
+              puts "failed to load table #{tbl}" 
+            end 
+          end
+        end
+      end
+    end
+
+    desc "Save the RI grade span expectationss from yaml fixtures in config/rigse_data/fixtures." 
+    task :save_ri_grade_span_expectations => :environment do 
+      dir = RAILS_ROOT + '/config/rigse_data/fixtures'
+      FileUtils.mkdir_p(dir)
+      FileUtils.chdir(dir) do
+        tables = %w{ri_gse_assessment_targets ri_gse_assessment_target_unifying_themes ri_gse_big_ideas 
+                    ri_gse_domains ri_gse_expectations ri_gse_expectation_indicators ri_gse_expectation_stems 
+                    ri_gse_grade_span_expectations ri_gse_knowledge_statements ri_gse_unifying_themes}
+        tables.each do |tbl|
+          puts "writing #{dir}/#{tbl}.yaml"
+          File.open("#{tbl}.yaml", 'w') do |f| 
+            attributes = tbl.gsub(/^ri_gse_/, "ri_gse/").classify.constantize.find(:all).collect { |m| m.attributes }
+            f.write YAML.dump(attributes)
+          end
+        end
+      end
+    end
+
+    desc "Load just the RI grade span expectationss from yaml fixtures in config/rigse_data/fixtures" 
+    task :load_ri_grade_span_expectations => :environment do 
+      dir = RAILS_ROOT + '/config/rigse_data/fixtures'
+      # Normally these models will be owned by the site_admin but if the site_admin doesn't
+      # exist or we are loading these into the test database set the user_id value to -1
+      user_id = User.site_admin ? User.site_admin.id : -1
+      FileUtils.chdir(dir) do
+        tables = %w{ri_gse_assessment_targets ri_gse_big_ideas ri_gse_domains ri_gse_expectations ri_gse_expectation_indicators 
+                    ri_gse_expectation_stems ri_gse_grade_span_expectations ri_gse_knowledge_statements ri_gse_unifying_themes}
+        tables.each do |tbl|
+          ActiveRecord::Base.transaction do 
+            begin 
+              klass = tbl.gsub(/^ri_gse_/, "ri_gse/").classify.constantize
+              klass.destroy_all
+              klass.reset_column_information
+
+              puts "Loading #{tbl}..." 
+              table_path = "#{tbl}.yaml"
+              YAML.load_file(table_path).each do |fixture|
+                data = {}
+                klass.columns.each do |c|
+                  # filter out missing columns 
+                  data[c.name] = fixture[c.name] if fixture[c.name]
+                  # if there is a field named user_id set it's value to the id for the rites site admin
+                  if c.name == 'user_id'
+                    data[c.name] = user_id
+                  end
+                end
+                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
+              end        
+            rescue StandardError => e
+              puts e
+              puts "failed to load table #{tbl}" 
+            end 
+          end
+        end
+        habtm_tables = %w{ri_gse_assessment_target_unifying_themes}
+        regex = /ri_gse_(\w+_\w+)_(\w+_\w+)s/
+        habtm_tables.each do |tbl|
+          match = regex.match(tbl)
+          key1 = match[1] + '_id'
+          key2 = match[2] + '_id'
+          ActiveRecord::Base.transaction do
+            one_at_a_time = false
+            begin 
+              puts "Loading #{tbl}..." 
+              table_path = "#{tbl}.yaml"
+              yaml_values = YAML.load_file(table_path)
+              if one_at_a_time
+                yaml_values.each do |i|
+                  vals = i.values.join(',')
+                  ActiveRecord::Base.connection.execute("INSERT INTO #{tbl} (#{key1}, #{key2}) VALUES (#{vals})")
+                end
+              else
+                sql_values = yaml_values.collect { |i| "(#{i.values.join(',')})" }.join(',')
+                ActiveRecord::Base.connection.execute("INSERT INTO #{tbl} (#{key1}, #{key2}) VALUES (#{sql_values})")
+              end
+            rescue StandardError => e
+              one_at_a_time = true
+              retry
               puts e
               puts "failed to load table #{tbl}" 
             end 

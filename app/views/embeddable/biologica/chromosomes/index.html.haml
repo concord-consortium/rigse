@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @biologica_chromosomes, :collection_class => Embeddable::Biologica::Chromosome}        
+- @biologica_chromosomes.each do |chromosome|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => chromosome}

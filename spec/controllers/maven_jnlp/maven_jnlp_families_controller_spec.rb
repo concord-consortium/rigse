@@ -1,16 +1,20 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/../spec_controller_helper')
+require 'spec_helper'
 
 describe MavenJnlp::MavenJnlpFamiliesController do
 
   def mock_maven_jnlp_family(stubs={})
-    @mock_maven_jnlp_family ||= mock_model(MavenJnlp::MavenJnlpFamily, stubs)
+    @mock_maven_jnlp_family.stub!(stubs) unless stubs.empty?
+    @mock_maven_jnlp_family
   end
-  
+
+  before(:each) do
+    generate_default_project_and_jnlps_with_mocks
+    logout_user
+  end
+
   describe "GET index" do
 
     it "exposes all maven_jnlp_maven_jnlp_families as @maven_jnlp_maven_jnlp_families" do
-      pending "Broken example"
       MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return([mock_maven_jnlp_family])
       get :index
       assigns[:maven_jnlp_maven_jnlp_families].should == [mock_maven_jnlp_family]
@@ -19,7 +23,6 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_maven_jnlp_families as xml" do
-        pending "Broken example"
         MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return(maven_jnlp_families = mock("Array of MavenJnlp::MavenJnlpFamilies"))
         maven_jnlp_families.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
@@ -33,7 +36,6 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET show" do
 
     it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
-      pending "Broken example"
       MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
       get :show, :id => "37"
       assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
@@ -42,7 +44,6 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with mime type of xml" do
 
       it "renders the requested maven_jnlp_family as xml" do
-        pending "Broken example"
         MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
         mock_maven_jnlp_family.should_receive(:to_xml).and_return("generated XML")
         get :show, :id => "37", :format => 'xml'
@@ -56,7 +57,6 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET new" do
   
     it "exposes a new maven_jnlp_family as @maven_jnlp_family" do
-      pending "Broken example"
       MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(mock_maven_jnlp_family)
       get :new
       assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
@@ -67,7 +67,6 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET edit" do
   
     it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
-      pending "Broken example"
       MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
       get :edit, :id => "37"
       assigns[:maven_jnlp_family].should equal(mock_maven_jnlp_family)
@@ -80,15 +79,13 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with valid params" do
       
       it "exposes a newly created maven_jnlp_family as @maven_jnlp_family" do
-        pending "Broken example"
         MavenJnlp::MavenJnlpFamily.should_receive(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_family(:save => true))
         post :create, :maven_jnlp_family => {:these => 'params'}
         assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
       end
 
       it "redirects to the created maven_jnlp_family" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:new).and_return(mock_maven_jnlp_family(:save => true))
+        MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(mock_maven_jnlp_family(:save => true))
         post :create, :maven_jnlp_family => {}
         response.should redirect_to(maven_jnlp_maven_jnlp_family_url(mock_maven_jnlp_family))
       end
@@ -98,15 +95,13 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with invalid params" do
 
       it "exposes a newly created but unsaved maven_jnlp_family as @maven_jnlp_family" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_family(:save => false))
+        MavenJnlp::MavenJnlpFamily.should_receive(:new).with({'these' => 'params'}).and_return(mock_maven_jnlp_family(:save => false))
         post :create, :maven_jnlp_family => {:these => 'params'}
         assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
       end
 
       it "re-renders the 'new' template" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:new).and_return(mock_maven_jnlp_family(:save => false))
+        MavenJnlp::MavenJnlpFamily.should_receive(:new).and_return(mock_maven_jnlp_family(:save => false))
         post :create, :maven_jnlp_family => {}
         response.should render_template('new')
       end
@@ -120,22 +115,19 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with valid params" do
 
       it "updates the requested maven_jnlp_family" do
-        pending "Broken example"
         MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
         mock_maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :maven_jnlp_family => {:these => 'params'}
       end
 
       it "exposes the requested maven_jnlp_family as @maven_jnlp_family" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
         put :update, :id => "1"
         assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
       end
 
       it "redirects to the maven_jnlp_family" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => true))
         put :update, :id => "1"
         response.should redirect_to(maven_jnlp_maven_jnlp_family_url(mock_maven_jnlp_family))
       end
@@ -145,22 +137,19 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with invalid params" do
 
       it "updates the requested maven_jnlp_family" do
-        pending "Broken example"
         MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
         mock_maven_jnlp_family.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => "37", :maven_jnlp_family => {:these => 'params'}
       end
 
       it "exposes the maven_jnlp_family as @maven_jnlp_family" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:find).and_return(mock_maven_jnlp_family(:update_attributes => false))
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => false))
         put :update, :id => "1"
         assigns(:maven_jnlp_family).should equal(mock_maven_jnlp_family)
       end
 
       it "re-renders the 'edit' template" do
-        pending "Broken example"
-        MavenJnlp::MavenJnlpFamily.stub!(:find).and_return(mock_maven_jnlp_family(:update_attributes => false))
+        MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:update_attributes => false))
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -172,15 +161,13 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "DELETE destroy" do
 
     it "destroys the requested maven_jnlp_family" do
-      pending "Broken example"
       MavenJnlp::MavenJnlpFamily.should_receive(:find).with("37").and_return(mock_maven_jnlp_family)
       mock_maven_jnlp_family.should_receive(:destroy)
       delete :destroy, :id => "37"
     end
   
     it "redirects to the maven_jnlp_maven_jnlp_families list" do
-      pending "Broken example"
-      MavenJnlp::MavenJnlpFamily.stub!(:find).and_return(mock_maven_jnlp_family(:destroy => true))
+      MavenJnlp::MavenJnlpFamily.should_receive(:find).and_return(mock_maven_jnlp_family(:destroy => true))
       delete :destroy, :id => "1"
       response.should redirect_to(maven_jnlp_maven_jnlp_families_url)
     end

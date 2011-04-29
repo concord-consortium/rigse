@@ -1,0 +1,12 @@
+= accordion_for(embeddable, offering_details_image_question(offering, embeddable), nil, {:show_hide_text => "show responses"}) do
+  - learners.sort_by{|learner| [learner.last_name, learner.first_name]}.each do |l|
+    - saveable = saveable_for_learner(embeddable, l)
+    - css_style = (saveable.answered? && saveable.answer) ? 'answered' : 'not_answered'
+    %div{:id => dom_id_for(embeddable, :saveable, :learner, l.id), :class => "#{css_style} learner_response image_question"}
+      %div{:class => "#{css_style} learner_response_name inline_block"}
+        = h(l.name)
+      %div{:class => "#{css_style} learner_response_content inline_block", :style => ""}
+        - if saveable.answered? && saveable.answer
+          %img{:src => dataservice_blob_raw_url(:id => saveable.answer.id, :token => saveable.answer.token)}
+        -else
+          = 'not answered'

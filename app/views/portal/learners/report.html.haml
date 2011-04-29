@@ -1,0 +1,8 @@
+- content_for :report_title do
+  - section = (@portal_learner.offering.clazz.section && @portal_learner.offering.clazz.section.length > 0) ? @portal_learner.offering.clazz.section : nil
+  - section = (section ? "(#{section})" : "")
+  = "Report for: #{@portal_learner.name}, #{@portal_learner.offering.clazz.name} #{section}"
+- content_for :report_summary do
+  = learner_report_summary(@portal_learner)
+
+= render :partial => '/portal/reports/report', :locals => {:report_context => @portal_learner, :offering => @portal_learner.offering, :learners => @portal_learner, :page_elements => @page_elements}

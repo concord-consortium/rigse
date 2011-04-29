@@ -1,24 +1,28 @@
 module JnlpHelper
   
+  def jnlp_adaptor
+    @_jnlp_adaptor ||= JnlpAdaptor.new(current_project)
+  end
+  
   def full_url_for_image(path)
     host = root_path(:only_path => false)[0..-2]
     host + path_to_image(path)
   end
   
   def resource_jars
-    @jnlp_adaptor.resource_jars
+    jnlp_adaptor.resource_jars
   end
 
   def linux_native_jars
-    @jnlp_adaptor.linux_native_jars
+    jnlp_adaptor.linux_native_jars
   end
 
   def macos_native_jars
-    @jnlp_adaptor.macos_native_jars
+    jnlp_adaptor.macos_native_jars
   end
   
   def windows_native_jars
-    @jnlp_adaptor.windows_native_jars
+    jnlp_adaptor.windows_native_jars
   end
 
   def system_properties(options={})
@@ -37,10 +41,9 @@ module JnlpHelper
     else
       additional_properties = [
         ['otrunk.view.mode', 'student'],
-        ['otrunk.view.no_user', 'true' ],
       ]
     end
-    @jnlp_adaptor.system_properties + additional_properties
+    jnlp_adaptor.system_properties + additional_properties
   end
   
   def jnlp_jar(xml, resource, check_for_main=true)
@@ -83,7 +86,7 @@ module JnlpHelper
   end
   
   def jnlp_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
@@ -96,15 +99,19 @@ module JnlpHelper
     }
   end
   
+  def jnlp_testing_adaptor
+    @_jnlp_testing_adaptor ||= JnlpTestingAdaptor.new
+  end
+  
   def jnlp_testing_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
-    jnlp_for_testing = @jnlp_testing_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
+    jnlp_for_testing = jnlp_testing_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
         jnlp_jar(xml, resource, false)
       end
-      @jnlp_testing_adaptor.resource_jars.each do |resource|
+      jnlp_testing_adaptor.resource_jars.each do |resource|
         jnlp_jar(xml, resource)
       end
       system_properties(options).each do |property|
@@ -112,18 +119,34 @@ module JnlpHelper
       end
       jnlp_os_specific_j2ses(xml, jnlp)
     }
+  end
+  
+  # There might be issues with filname lengths on IE 6 & 7
+  # see http://support.microsoft.com/kb/897168
+  def smoosh_file_name(_name,length=28,missing_char="_")
+    name = _name.strip.gsub(/[\s+|\/\(\)\:]/,missing_char)
+    left_trunc = right_trunc = length/2
+    name = "#{name[0,left_trunc]}#{missing_char}#{name[-right_trunc,right_trunc]}"
+    return name.strip.gsub(/_+/,missing_char)
   end
   
   def jnlp_headers(runnable)
     response.headers["Content-Type"] = "application/x-java-jnlp-file"
     response.headers["Cache-Control"] = "max-age=1"
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
-    response.headers["Content-Disposition"] = "inline; filename=RITES_#{runnable.class.name.underscore}_#{short_name(runnable.name)}.jnlp"
+    filename = smoosh_file_name("#{APP_CONFIG[:site_name]} #{runnable.class.name} #{short_name(runnable.name)}")
+    response.headers["Content-Disposition"] = "inline; filename=#{filename}.jnlp"
   end
+  
+  def config_headers(runnable)
+    response.headers["Content-Type"] = "application/xml"
+    response.headers["Cache-Control"] = "max-age=1"
+  end
+  
   
   def jnlp_information(xml)
     xml.information { 
-      xml.title APP_CONFIG[:site_name]
+      xml.title current_project.name
       xml.vendor "Concord Consortium"
       xml.homepage :href => APP_CONFIG[:site_url]
       xml.description APP_CONFIG[:description]
@@ -170,7 +193,7 @@ module JnlpHelper
   end
 
   def jnlp_installer_resources(xml, options = {})
-    jnlp = @jnlp_adaptor.jnlp
+    jnlp = jnlp_adaptor.jnlp
     # from jnlpwrapper.concord.org
     #<jar href="org/concord/utilities/response-cache/response-cache.jar" version="0.1.0-20090728.205151-9"/>
     #<jar href="org/concord/jnlp2shell/jnlp2shell.jar" version="1.0-20090729.161746-166" main="true"/>
@@ -178,16 +201,20 @@ module JnlpHelper
     xml.resources {
       xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
       xml.jar :href=> "org/concord/utilities/response-cache/response-cache.jar", :version=> "0.1.0-20090728.205151-9"
-      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20090729.161746-166", :main =>"true"
+      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20091102.180724-197", :main =>"true"
       system_properties(options).each do |property|
         xml.property(:name => property[0], :value => property[1])
       end
       xml.property :name=> "vendor", :value => jnlp_installer_vendor
       xml.property :name=> "product_name", :value => jnlp_installer_project
       xml.property :name=> "product_version", :value => jnlp_installer_version
-      xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
-      xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
-      xml.property :name=> "resource_loc", :value => "resources" # do we do this? Not sure
+      # after conversation w/ scott & stephen, dont think we need this.
+      # xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
+      # xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
+      
+      # Someday we might want to cache some resources, but right now, we don't
+      # xml.property :name=> "resource_loc", :value => "resources"
+
       xml.property :name=> "cache_loc", :value => "jars"
       xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
       xml.property :name=> "jnlp2shell.read_only", :value => "true"
@@ -208,6 +235,20 @@ module JnlpHelper
       linux_native_jars.each do |resource|
         xml.nativelib :href => resource[0], :version => resource[1]
       end
+    }
+  end
+  
+  def jnlp_mac_java_config(xml)
+    jnlp = jnlp_adaptor.jnlp
+    # Force Mac OS X to use Java 1.5 so that sensors are ensured to work
+    xml.resources(:os => "Mac OS X", :arch => "ppc i386") {
+      xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m"
+    }
+    xml.resources(:os => "Mac OS X", :arch => "x86_64") {
+      xml.j2se :version => "1.5", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
+    } 
+    xml.resources(:os => "Mac OS X") {
+      xml.j2se :version => "1.6", :"max-heap-size" => "#{jnlp.max_heap_size}m", :"initial-heap-size" => "32m", :"java-vm-args" => "-d32"
     }
   end
 

@@ -14,7 +14,7 @@
 
 - for investigation in investigations
   %div{ :id => dom_id_for(investigation), :class => 'runnable' }
-    = accordion_for(investigation, (preview_button_for(investigation) + link_to_container(investigation, :hide_componenent_name => true)), :investigation) do  
+    = accordion_for(investigation, (preview_button_for(investigation) + name_for_component(investigation, :hide_componenent_name => true)), :investigation) do  
       %div.action_menu
         %div.action_menu_header_left   
           = link_to_container(investigation)

@@ -1,0 +1,19 @@
+--- 
+- name: Physical Science
+  updated_at: 2010-05-17 21:50:21 Z
+  uuid: 30ea867c-61fe-11df-a821-001ff3caa767
+  id: 1
+  key: PS
+  created_at: 2010-05-17 21:50:21 Z
+- name: Earth and Space Science
+  updated_at: 2010-05-17 21:50:21 Z
+  uuid: 30f9f094-61fe-11df-a821-001ff3caa767
+  id: 2
+  key: ESS
+  created_at: 2010-05-17 21:50:21 Z
+- name: Life Science
+  updated_at: 2010-05-17 21:50:21 Z
+  uuid: 30fae9ea-61fe-11df-a821-001ff3caa767
+  id: 3
+  key: LS
+  created_at: 2010-05-17 21:50:21 Z

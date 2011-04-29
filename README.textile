@@ -1,10 +1,12 @@
-h1. RITES Investigations Portal and Authoring System
+h1. CC Rails Portal Activity Authoring, Deployment, and Reporting System
 
 h2. Setup
 
 h3. Prerequisites
 
-Working git, ruby or jruby, and rubgems.
+Working git, ruby or jruby, and rubygems, wget
+Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
+TODO: understand why running capistrano requires haml...
 
 h3. Install
 
@@ -12,35 +14,110 @@ The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need 
 server and a mysql username/password with enough permissions to create and drop the 
 database you intend to use with RITES.
 
+h4. RVM, Bundler, & Gem Dependencies
+
+* "Maintaining gem dependencies":doc/gem-dependencies.textile
+
+h4. Updating to a newer codebase.
+
+* Example of "updating an older instance to to newer code":doc/updating_an_older_instance.md
+
+h4. Core Extensions
+
+* "Extensions to core classes applied at application startup":doc/core-extensions.textile
+
+h4. Setting up a Hudson CI project
+
+* "Setting up a Hudson CI project":doc/hudson-ci.textile
+
+h4. GIT
+
+In the example below we use the xproject theme and also as the name of the directory and 
+the prefix of the names for the databases that will be created in mysql.
+
 <pre><code>
   # If you are a committer in this repo:
-  git clone git@github.com:stepheneb/rigse.git rites
+  git clone git@github.com:stepheneb/rigse.git xproject
 
   # else
-  git clone git://github.com/stepheneb/rigse.git rites
+  git clone git://github.com/stepheneb/rigse.git xproject
 
-  cd rites
+  cd xproject
 
-  # follow instructions for installing necessary gem prerequisites
-  # until config/setup.rb completes successfully
-  jruby config/setup.rb
+  # setup rvm with a gemset named xproject
+  rvm use 1.8.7
+  rvm gemset create xproject
 
-  # finish installing necessary gems for rails application
-  jruby -S rake gems:install
+  # make .rvmrc so rvm will use this ruby gemset combo automatically
+  echo "rvm use 1.8.7@xproject" > .rvmrc
+
+  # test out .rvmrc and start using the gemset
+  cd ..;cd xproject
+
+  # install bundler
+  gem install bundler
+
+  # install the necessary gems
+  bundle install
+
+  # automatic setup of config/settings.yml and config/database.yml
+  ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
+
+  # The options -y -q -f to setup mean: 
+  #   answer 'yes' to accept default values
+  #   use 'quieter' console output
+  #   force updates of the existing settings.yml and databse.yml if they exist
 
   # setup database
-  RAILS_ENV=production jruby -S rake db:migrate:reset
+  # if this fails it is probably due to a bad mysql gem install, check out this page for help
+  #  https://rvm.beginrescueend.com/integration/databases/
+  RAILS_ENV=production rake db:create
+  RAILS_ENV=production rake db:migrate:reset
 
   # setup application resources
-  RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+  # this can take 5 minutes or so and requires answering some questions  
+  RAILS_ENV=production rake app:setup:new_app
 
-  # save a copy of the development database to make subsequent clean starts much quicker
-  # Saves database to: db/development_data.sql
-  # can be reloaded with: rake db:load
-  jruby -S rake db:dump
+  # save a copy of the development database to make subsequent clean starts much quicker (bypassing rake app:setup:new_app)
+  #  Saves database to: db/development_data.sql
+  #  can be reloaded later with: rake db:load
+  #  note: in default setup created by config.rb above the development and production database is the same
+  rake db:dump
   
   # start server
-  jruby -J-server script/server -e production
+  ruby script/server -e production
+</code></pre>
+
+Prepare a database for use when running the tests:
+<pre><code>
+  rake db:test:prepare
+</code></pre>
+
+Run the rspec tests:
+<pre><code>
+  rake spec
+</code></pre>
+
+Run the cucumber tests
+<pre><code>
+  rake cucumber
+</code></pre>
+
+All these tests should pass.
+
+h3. Roll your own theme:
+
+For now the best thing to do is to copy an existing set of themes. eg:
+
+<pre><code>
+  cp ./config/themes/<old_theme_name>/settings.sample.yml ./config/themes/<new_theme_name>
+  cp -r ./themes/<old_theme_name> ./themes/<new_theme_name>
+  cp -r ./public/stylesheets/themes/<old_theme_name> ./public/stylesheets/themes/<new_theme_name>
+  cp -r ./public/stylesheets/sass/themes/<old_theme_name> ./public/stylesheets/sass/themes/<new_theme_name>
+  # edit the assets file to package your style sheets. copy an example.
+  vim ./config/asset_packages.yml
+  # then pass arguments to setup.
+  ruby ./config/setup.rb -t <new_theme_name>
 </code></pre>
 
 h3. when deploying to a new server
@@ -62,12 +139,24 @@ h3. when deploying to a new server
 
 _there's a bunch more that needs to go here_
 
+h3. Setting up administrative users
+
+from the command line:
+<pre><code>
+script/console
+username = User.find_by_login('username')
+username.add_role('admin')
+username.save
+</code></pre>
+
 h2. Copying the production database to a development environment
 
-If you have ssh access to the RITES production server you can get a copy of the production database on
+If you have ssh access to a portal instance running on a server you can get a copy of the database on
 your local development instance with the following steps:
+
+In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject_dev*.
 <pre><code>
-    cap production db:fetch_remote_db
+    cap <stage> db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
 </code></pre>
 
@@ -81,9 +170,9 @@ If the codebase on your development system has moved forward you may need to run
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>  cap production db:copy_remote_site_keys</code></pre>
+<pre><code>  cap <stage> db:fetch_remote_site_keys</code></pre>
 
-Recreating a new RITES application from scratch from an existing application.
+Recreating a new portal instance from scratch from an existing application.
 <pre><code>
     rake db:drop:all
     git clean -fXd
@@ -98,7 +187,6 @@ The '-fxd' parameters to to git clean:
 # X: Remove only files ignored by git.
 # f: force removal
 
-
 h3. Setting up a local JNLP Web Start servlet
 
 You can also setup a local jnlp web start server for a development environment with less dependence on outside services.
@@ -106,6 +194,30 @@ You can also setup a local jnlp web start server for a development environment w
 * "Setup a Full SAIL Stack on Mac OS 10.5":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5* has several sections with useful information:
 
 # "Install Jnlp Servlet and build associated WAR file with jnlp and jars":https://confluence.concord.org/display/CSP/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-4InstallJnlpServletandbuildassociatedWARfilewithjnlpandjars
+
+h2. NCES District and School Tables
+
+When a rails-portal instance is created two tables containing data for schools and districts in the US are created from data supplied by the "National Center for Education Statistics (NCES)":http://nces.ed.gov/.
+
+NCES maintains a database about US districts and schools called the "Common Core of Data":http://nces.ed.gov/ccd
+
+The rake task: <code>portal:setup:create_districts_and_schools_from_nces_data</code> downloads 2006 NCES CCD data files from NCES website and imports data from these data files into the following models:
+
+* <code>Portal::Nces06District</code>
+* <code>Portal::Nces06School</code>
+
+Only data from states and provinces identified in the <code>config/settings.yml</code> for the portal instance are imported.
+
+The NCES district and school models are used to provide data from which districts and schools actively using the portal are be created.
+
+The <code>Portal::Nces06District</code> includes about 50 different fields of data for each district.
+
+The <code>Portal::Nces06School</code> includes about 500 different fields of data for each school.
+
+h3. PDF documentation for the NCES data schemas
+
+* "NCES Common Core of Data Public Elementary/Secondary School Universe Survey: School Year 2006–07, Version 1b":http://nces.ed.gov/ccd/pdf/psu061bgen.pdf
+* "NCES Common Core of Data Local Education Agency Universe Survey: School Year 2006–07":http://nces.ed.gov/ccd/pdf/pau061bgen.pdf
 
 h2. Testing
 
@@ -172,7 +284,13 @@ h3. Running the feature tests with cucumber
 <pre><code>  LD_LIBRARY_PATH=/opt/local/lib jruby -S</code></pre>
 
 *Running all the feature tests:*
-<pre><code>  rake:features</code></pre>  
+<pre><code>  rake cucumber</code></pre>  
+
+*Running all the feature tests using the ci_reporter gem that's used on the hudson CI system:*
+<pre><code>  rake hudson:cucumber</code></pre>  
+
+*Running a single feature:*
+<pre><code>  rake cucumber FEATURE=features/student_can_not_see_deactivated_offerings.feature</code></pre>  
 
 h2. Understanding the Codebase
 
@@ -210,7 +328,7 @@ h3. Some video walk-throughs
 * "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
 * "PageElement View partials":http://screencast.com/t/800TVxOC
 * "HAML, Compass and SASS":http://screencast.com/t/68yJOeCRcN
-* "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
+* "Javascript use in Portal":http://screencast.com/t/z7Vkt32iTp
 
 ---
 
@@ -267,9 +385,9 @@ Brief introduction to the technologies generally, and how we use them specifical
 
 ---
 
-h3. Javascript use in Rites
+h3. Javascript use in Portal
 
-screencast: "Javascript use in Rites":http://screencast.com/t/z7Vkt32iTp
+screencast: "Javascript use in Portal":http://screencast.com/t/z7Vkt32iTp
 
 Javascript librararies we are using, and what things we have written by ourselves;
 Stuff we did:
@@ -347,44 +465,60 @@ h3. Miscellaneous recipes
 *Set the gse_key field for existing GradeSpanExpectations*
 * <code>cap convert:set_gse_keys</code>
 
-h2. Updating the RITES staging server.
+h2. Updating a staging server.
 
-Once the master branch has been deployed to the dev site, tested
+Once a development branch has been deployed to a development server, tested
 and found reliable enough to deploy to staging here's how to do it.
+
+Our convention is to create dev, staging, and production branches in the git repository following that use the same name.
+
+For example the _xproject_ family have the following capistrano stages and branches in teh git repository:
+
+* _xproject_dev__
+* _xproject_staging__
+* _xproject_production__
+
+In the code below _<stage>_ I will assume that we are using the _xproject_ series of stages and branches.
 
 If you don't already have a local branch of staging
 <pre><code>
-  git branch --track staging origin/staging
+  git branch --track xproject_staging origin/xproject_staging
 </code></pre>
 
 
-Switch to the staging branch and merge from master
+Switch to the staging branch and merge from xproject_dev
 <pre><code>    
-  git co staging
-  git merge master
+  git co xproject_staging
+  git merge xproject_dev
 </code></pre>
 
 Push your copy of the staging branch to the gihub repository:
-<pre><code>  git push origin staging</code></pre>
+<pre><code>  git push origin xproject_staging</code></pre>
 
 Dump the production database to this file <code>db/production_data.sql</code> on the production server, 
 download it to the local folder <code>db/production_data.sql</code>, the cleans up the production db/ folder.
-<pre><code>  cap production db:fetch_remote_db</code></pre>
+<pre><code>  cap xproject_production db:fetch_remote_db</code></pre>
 
-Push the production database from the local <code>db/production_data.sql</code> to the staging server, the import
+Push the production database from the local <code>db/production_data.sql</code> to the staging server, then import
 the data into the database on staging, then cleanup.
-<pre><code>  cap staging db:push_remote_db</code></pre>
+<pre><code>  cap xproject_staging db:push_remote_db</code></pre>
 
 Run any migrations on the staging server:
-<pre><code>  cap staging deploy:migrate</code></pre>
+<pre><code>  cap xproject_staging deploy:migrate</code></pre>
+
+There may be rake tasks that need to be run to update or fix data in the database.
+
+These should have corresponding capistrano tasks.
+
+Here's an older example:
 
 If the ITSI importers have been updated and you want to run them again:
 <pre><code>    
-  cap staging import:erase_and_import_itsi_activities
-  cap staging import:erase_and_import_ccp_itsi_units
+  cap xproject_staging import:erase_and_import_itsi_activities
+  cap xproject_staging import:erase_and_import_ccp_itsi_units
 </code></pre>
 
-Test the staging server: "http://rites-investigations.staging.concord.org/":http://rites-investigations.staging.concord.org/
+Test the staging server: "http://xproject.staging.concord.org/":http://xproject.staging.concord.org/
 
 If the authors confirm that there are no blockers then let people know when the
 update will take place and perform these tasks on the production server.
@@ -536,11 +670,24 @@ h3. Exception Notifier
 You don't want your applications to crash and burn so Exception Notifier is already installed to let 
 you know when everything goes to shit.
 
+config/initializers/exception_notifier.rb does the setup. Currently it reads 
+"admin_email" from config/settings.yml and use it as the destination address.
+The setup can be modified to include multiple email addresses.
+See the homepage readme of exception notifier.
+
+h4. Bug
+
+It seems rails 2.3.3 and 2.3.4 fails to deliver emails when someone passes
+multiple destination addresses as an array, which exception notifier does.
+config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
+
+The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
+
 h2. CSS
 
 h3. Asset Packager
 
-RITES Authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
+Portal authoring and portal site uses: "Asset Packager docs":http://synthesis.sbecker.net/pages/asset_packager
 
 cap deploy will trigger the asset_packager to run.
 you can also run locally by hand: rake asset:packager:build_all
@@ -552,15 +699,27 @@ load times and saves you bandwidth.
 
 h2. Routing
 
-
 h2. Application Settings
 
-h3. Settings YAML
+
+
+h2. Settings YAML
 
 There is a settings.yml file that contains site-wide stuff. The site name, url and admin email are all used
 in the RESTful Auth mailers, so you don't need to worry about editing them.
 
 h3. Database YAML
+
+
+h2. Technical debt.
+
+Here is a brief list of things which need to be looked into:
+
+* the embeddables should be dryed up with some mixin / super class.
+* not all embeddables are using send_update_events, which is causing stale pages.
+* ocassionally browser rendering gets wonky and raw html and or javascript get displayed in the page.
+* transition to unobtrusive JS.
+* send_update_events _might_ not do what we want it to do, tests should be written for it.
 
 
 h2. Misc 

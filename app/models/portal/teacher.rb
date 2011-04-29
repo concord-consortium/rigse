@@ -1,13 +1,13 @@
 class Portal::Teacher < ActiveRecord::Base
   set_table_name :portal_teachers
-  
+
   acts_as_replicatable
-  
+
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
-  belongs_to :domain
-  
+  belongs_to :domain, :class_name => 'RiGse::Domain'
+
   has_many :offerings, :as => :runnable, :class_name => "Portal::Offering"
-  
+
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
 
@@ -16,26 +16,36 @@ class Portal::Teacher < ActiveRecord::Base
   #
   # And now (20090813) it appears to be working so I've commented it out.
   # It's presence was generating duplicate school_membership models when a Teacher registered.
-  #
-  # has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
-  # has_many :schools, :through => :school_memberships, :class_name => "Portal::School", :uniq => true
-  
+
+
+  has_many :school_memberships, :as => :member, :class_name => "Portal::SchoolMembership"
+  has_many :schools, :through => :school_memberships, :class_name => "Portal::School", :uniq => true
+
   has_many :subjects, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
-  
+
   # Used to be that clazzes has a teacher_id field, now we use a mapping table like students
   # to support common case of multiple teachers per class
   # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
   has_many :teacher_clazzes, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz", :source => :clazz
-  
+
   [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
-  
+
   validates_presence_of :user,  :message => "user association not specified"
-  
+
+  # Added to force Teachers to belong to at least one school, virtual or otherwise.
+  # There should be no Teachers without schools, but if there are any that predate this change,
+  # it could cause problems, so it's disabled until we discuss it further. -- Cantina-CMH 6/9/10
+  #validates_presence_of :schools, :message => "association cannot be empty"
+
   def name
     user ? user.name : 'unnamed teacher'
   end
-        
+
+  def list_name
+    user ? "#{user.last_name}, #{user.first_name[0, 1].upcase}. (#{user.login})" : "unnamed teacher"
+  end
+
   include Changeable
 
   class <<self
@@ -43,32 +53,32 @@ class Portal::Teacher < ActiveRecord::Base
       "Teacher"
     end
   end
-  
+
   ##
   ##
   ##
   def school_ids
     schools.map { |s| s.id }
   end
-  
+
   def school_ids=(ids)
     self.schools = ids.map { |i| Portal::School.find(i)}
   end
-  
+
   ##
   ##
   ##
   def children
     clazzes
   end
-  
+
   ##
   ## sort of a hack
   ##
   def parent
     nil
   end
-  
+
   def students
     students = clazzes.map { |c| c.students }
     students.flatten.compact
@@ -76,15 +86,19 @@ class Portal::Teacher < ActiveRecord::Base
   def has_clazz?(clazz)
     self.clazzes.detect { |cl| cl.id == clazz.id }
   end
-  
+
   def add_clazz(clazz)
     unless self.has_clazz?(clazz)
       self.clazzes << clazz
     end
   end
-  
+
+  def remove_clazz(clazz)
+    self.clazzes.delete clazz
+  end
+
   def school
     return schools.first
   end
-  
+
 end

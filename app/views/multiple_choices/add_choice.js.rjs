@@ -1,1 +1,0 @@
-page.insert_html :bottom, 'choices', @html_fragment

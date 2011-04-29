@@ -1,6 +1,6 @@
 require 'rake'
 
-namespace :rigse do
+namespace :app do
   namespace :convert do
 
     desc 'Add the author role to all users who have authored an Investigation'
@@ -52,7 +52,7 @@ namespace :rigse do
     #######################################################################
     desc "Assign Vernier go!Link as default vendor_interface for users without a vendor_interface."
     task :assign_vernier_golink_to_users => :environment do
-      interface = VendorInterface.find_by_short_name('vernier_goio')
+      interface = Probe::VendorInterface.find_by_short_name('vernier_goio')
       User.find(:all).each do |u|
         unless u.vendor_interface
           u.vendor_interface = interface
@@ -70,22 +70,22 @@ namespace :rigse do
       end
     end
 
-    desc 'Data Collectors with a static graph_type to a static attribute; DataCollectors with a graph_type_id of nil to Sensor'
+    desc 'Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor'
     task :data_collectors_with_invalid_graph_types => :environment do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task will search for all Data Collectors with a graph_type_id == 3 (Static)
 which was used to indicate a static graph type, and set the graph_type_id to 1 
 (Sensor) and set the new boolean attribute static to true.
 
 In addition it will set the graph_type_id to 1 if the existing graph_type_id is nil.
-These DataCollectors appeared to be created by the ITSI importer.
+These Embeddable::DataCollectors appeared to be created by the ITSI importer.
 
 There is no way for this transformation to tell whether the original graph was a 
 sensor or prediction graph_type so it sets the type to 1 (Sensor).
 
-HEREDOC
-      old_style_static_graphs = DataCollector.find_all_by_graph_type_id(3)
+      HEREDOC
+      old_style_static_graphs = Embeddable::DataCollector.find_all_by_graph_type_id(3)
       puts "converting #{old_style_static_graphs.length} old style static graphs and changing type to Sensor"
       attributes = { :graph_type_id => 1, :static => true }
       old_style_static_graphs.each do |dc| 
@@ -93,8 +93,8 @@ HEREDOC
         print '.'; STDOUT.flush
       end
       puts
-      nil_graph_types = DataCollector.find_all_by_graph_type_id(nil)
-      puts "changing type of #{nil_graph_types.length} DataCollectors with nil graph_type_ids to Sensor"
+      nil_graph_types = Embeddable::DataCollector.find_all_by_graph_type_id(nil)
+      puts "changing type of #{nil_graph_types.length} Embeddable::DataCollectors with nil graph_type_ids to Sensor"
       attributes = { :graph_type_id => 1, :static => false }
       nil_graph_types.each do |dc| 
         dc.update_attributes(attributes)
@@ -103,11 +103,11 @@ HEREDOC
       puts
     end
 
-    desc 'copy truncated Xhtml from Xhtml#content, OpenResponse and MultipleChoice#prompt into name'
+    desc 'copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name'
     task :copy_truncated_xhtml_into_name => :environment do
-      models = [Xhtml, OpenResponse, MultipleChoice]
+      models = [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice]
       puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
-      [Xhtml, OpenResponse, MultipleChoice].each do |klass|
+      [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice].each do |klass|
         puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute\n"
         klass.find_in_batches(:batch_size => 100) do |group|
           group.each { |x| x.save! }
@@ -203,6 +203,206 @@ HEREDOC
     task :convert_clazzes_to_multi_teacher => :environment do
       MultiteacherClazzes.make_all_multi_teacher
     end
+
+    desc "Fixup inner pages so they have a satic area (run migrations first)"
+    task :add_static_page_to_inner_pages => :environment do
+      innerPageElements = PageElement.all.select { |pe| pe.embeddable_type == "Embeddable::InnerPage" }
+      innerPages = innerPageElements.map { |pe| pe.embeddable }
+      innerPages.each do |ip|
+        if ip.static_page.nil?
+          ip.static_page = Page.new
+          ip.static_page.user = ip.user
+          ip.save
+        end
+      end
+    end
+    
+    # Feb 3, 2010
+    desc "Extract and process learner responses from existing OTrunk bundles"
+    task :extract_learner_responses_from_existing_bundles => :environment do
+      bl_count = Dataservice::BundleLogger.count
+      bc_count = Dataservice::BundleContent.count
+      puts "Extracting learner responses from #{bc_count} existing OTrunk bundles belonging to #{bl_count} learners."
+      Dataservice::BundleLogger.find_in_batches(:batch_size => 10) do |bundle_logger|
+        bundle_logger.each { |bl| bl.extract_saveables }
+        print '.'; STDOUT.flush
+      end
+      puts
+    end
+
+    desc "Erase all learner responses and reset the tables"
+    task :erase_all_learner_responses_and_reset_the_tables => :environment do
+      puts "Erase all saveable learner responses and reset the tables"
+      saveable_models = Dir["app/models/saveable/**/*.rb"].collect { |m| m[/app\/models\/(.+?).rb/, 1] }.collect { |m| m.camelize.constantize }
+      saveable_models.each do |model|
+        if model.respond_to?(:table_name)
+          ActiveRecord::Base.connection.delete("TRUNCATE `#{model.table_name}`")
+          puts "deleted: all from #{model}"
+        end
+      end
+      puts
+    end
+
+    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/(?:embeddable__)?multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
+    desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
+    task :convert_choice_answers_to_local_ids => :environment do
+      include ApplicationHelper
+      unchanged = {}
+      changed = {}
+      problems = {}
+      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |batch|
+        print '.'; STDOUT.flush
+        batch.each do |bundle_content|
+          new_otml = bundle_content.otml.gsub(MULTI_CHOICE) {
+            retval = ""
+            begin
+              m_choice = Embeddable::MultipleChoice.find($2.to_i)
+              if m_choice
+                choice = m_choice.choices[$3.to_i]
+                if choice
+                  retval = "<object refid=\"#{$1}!/#{ot_local_id_for(choice)}\"#{$4}>"
+                else
+                  raise "Couldn't find choice #{$3} in Multiple Choice #{$2}"
+                end
+              else
+                raise "Couldn't find Multiple Choice #{$2}"
+              end
+            rescue => e
+              problems[bundle_content.id] ||= []
+              problems[bundle_content.id] << "#{e} (#{$&})"
+              retval = $&  
+            end
+            retval
+          }
+          if new_otml != bundle_content.otml
+            changed[bundle_content.id] = true
+            bundle_content.otml = new_otml
+            # Now convert the otml into actual bundle content
+            bundle_content.body = bundle_content.convert_otml_to_body
+            bundle_content.save
+          else
+            unchanged[bundle_content.id] = true
+          end
+
+        end # end batch.each
+      end # end find_in_batches
+      puts "Finished fixing multiple choice references."
+      puts "#{changed.size} bundles changed, #{unchanged.size} were unchanged."
+      puts "The following #{problems.size} bundles had problems: "
+      problems.entries.sort.each do |entry|
+        puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
+        puts Dataservice::BundleContent.find(entry[0], :select => 'bundle_logger_id, created_at').description
+        entry[1].each do |prob|
+          puts "    #{prob}"
+        end
+      end
+    end # end task
+    
+    # seb: 20100513
+    desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
+    task :populate_new_district_and_school_attributes_with_data_from_nces_tables => :environment do
+      puts "\nUpdating #{Portal::District.count} Portal::District models with state, leaid, and zipcode data from the Portal::Nces06District models"
+      Portal::District.find_in_batches(:batch_size => 500) do |portal_districts|
+        portal_districts.each do |portal_district|
+          nces_district = Portal::Nces06District.find(:first, :conditions => { :id => portal_district.nces_district_id }, :select => "id, LEAID, LZIP, LSTATE")
+          portal_district.state   = nces_district.LSTATE
+          portal_district.leaid   = nces_district.LEAID
+          portal_district.zipcode = nces_district.LZIP
+          portal_district.save!
+        end
+        print '.'; STDOUT.flush
+      end
+
+      puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
+      Portal::School.find_in_batches(:batch_size => 500) do |portal_schools|
+        portal_schools.each do |portal_school|
+          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, LEAID, MZIP, MSTATE")
+          portal_school.state           = nces_school.MSTATE
+          portal_school.leaid_schoolnum = nces_school.LEAID
+          portal_school.zipcode         = nces_school.MZIP
+          portal_school.save!
+        end
+        print '.'; STDOUT.flush
+      end
+    end
+
+  end
+
+  namespace :report do
+    # NSP: 20100826
+    desc "report on activities without position attributes"
+    task :activity_positon_bug_report, :file_name, :needs => :environment do |t,args|
+      args.with_defaults(:file_name => 'position_bug_activity_report.csv')
+      file_name = args.file_name
+      suspect_activities = Activity.find(:all, :conditions => "position is null and investigation_id is not null")
+      good_activities =  Activity.find(:all, :conditions => "position is not null and investigation_id is not null")
+      puts "#{suspect_activities.size} without positions & #{good_activities.size} with good positions" 
+      bad_hash = suspect_activities.map do |a|
+        {
+          :id => a.id,
+          :inv_id => a.investigation.id,
+          :investigation => a.investigation.name,
+          :act_size => a.investigation.activities.size,
+          :z => "[ #{a.investigation.activities.map{ |iact| iact.id}.join(",")} ]",
+          :published => (a.investigation.published? ? "public" : "draft"),
+          :offerings => a.investigation.offerings.size,
+          :updated => (a.updated_at.strftime("%F"))
+        }
+      end
+      bad_hash = bad_hash.sort_by {|a| [a[:published], a[:inv_id], a[:id] ]}
+      File.open(file_name,'w') do |file|
+        bad_hash.each do |a|
+          line = %/ "#{a[:investigation]}", "#{a[:published]}", "#{a[:act_size]}", "#{a[:updated]}", "#{a[:id]}", "#{a[:z]}"/
+          file.puts(line)
+        end
+      end
+      puts "report results should be in #{file_name}"
+    end
+  end
+
+  namespace :fixup do
+    desc "reset all activity position information"
+    task :reset_activity_positions => :environment do
+      # We actually want to reset the position attribute on ALL activities
+      all_invs = Investigation.all
+      puts "fixing up #{all_invs.length} investigations"
+      all_invs.sort_by { |inv| inv.id }.each do |inv|
+        inv.reload # force the default ordering of activities
+        act_order = inv.activities.map{ |a| a.id}.join(",")
+        puts "working with #{inv.id} #{inv.name}"
+        position = 1
+        inv.activities.each do |act|
+          if (act.position != position)
+            puts "    fix: (#{act.position}) ==> (#{position})"
+          end
+          act.update_attributes!(:position => position)
+          position = position + 1
+        end
+        inv.reload
+        new_order = inv.activities.map{ |a| a.id}.join(",")
+        raise "Non-matching activity order" unless (new_order == act_order)
+        predicted_position = 1
+        inv.activities.each do |act|
+          raise "Activity has wrong position: #{act.position} != #{predicted_position}" unless (act.position == predicted_position)
+          predicted_position = predicted_position + 1
+        end
+        puts "  reset position information for #{position - 1} activities in #{inv.name}:"
+        puts "     PRE: #{act_order}"
+        puts "    POST: #{new_order}"
+        puts
+      end
+    end
+
+    desc "delete orphaned teachers, clazzes, students, and learners"
+    task :delete_orphaned_items => :environment do
+      Portal::Teacher.all.select  {|t| t.user.nil? }.each    {|t| t.delete }
+      Portal::Student.all.select  {|s| s.user.nil? }.each    {|s| s.delete }
+      Portal::Clazz.all.select    {|c| c.teacher.nil? }.each {|c| c.delete }
+      Portal::Learner.all.select  {|l| l.student.nil?}.each  {|l| l.delete }
+      Portal::Offering.all.select {|o| o.clazz.nil?}.each    {|o| o.delete }
+      Portal::Offering.all.select {|o| o.runnable.nil?}.each {|o| o.delete }
+    end
+
 
   end
 end

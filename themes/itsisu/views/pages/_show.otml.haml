@@ -1,0 +1,87 @@
+- content_for("page_#{dom_id_for(page)}".to_sym) do
+  %OTCompoundDoc{ :name => page.name, :local_id => dom_id_for(page) }
+    %bodyText 
+      - if teacher_mode && should_show_teacher_notes?(page)
+        %object{ :refid => ot_refid_for(page, :tab_container) }/
+      - else
+        %object{ :refid => ot_refid_for(page, :tab_content) }/
+
+- content_for(:library) do
+  - page.page_elements.each do |element|
+    - if element.is_enabled
+      = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => page }
+      - if (should_show_snapshot_button?(element.embeddable))
+        %OTSnapshotAlbum{:local_id => ot_local_id_for(element.embeddable, "album"), :limitEntries => "true", :limit => 4}
+        %OTSnapshotButton{:local_id => ot_local_id_for(element.embeddable, "snapshot_button"), :target => ot_refid_for(element.embeddable), :snapshotAlbum => ot_refid_for(element.embeddable, "album")}
+
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
+    %bodyText
+      - if for_teacher_only?(page)
+        - if teacher_mode
+          #content.teacher_mode
+            - if page.section
+              %p.page_title= "#{h(page.section.name)}"
+
+            - page.page_elements.each do |element|
+              - if element.is_enabled
+                .element
+                  %object{ :refid => ot_refid_for(element.embeddable) }/
+                  - if (should_show_snapshot_button?(element.embeddable))
+                    .snapshot_buttons
+                      %object{ :refid => ot_refid_for(element.embeddable, "snapshot_button") }/
+                      %object{ :refid => ot_refid_for(element.embeddable, "album") }/
+      - else
+        #content
+          - if page.section
+            %p.page_title= "#{h(page.section.name)}"
+
+          - page.page_elements.each do |element|
+            - if element.is_enabled
+              .element
+                = yield "element_#{dom_id_for(element.embeddable)}".to_sym
+                %object{ :refid => ot_refid_for(element.embeddable) }/
+                - if (should_show_snapshot_button?(element.embeddable))
+                  .snapshot_buttons
+                    %object{ :refid => ot_refid_for(element.embeddable, "snapshot_button") }/
+                    %object{ :refid => ot_refid_for(element.embeddable, "album") }/
+
+  %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
+    %bodyText
+      %br
+      %table.teacher_mode{:width=>"90%", :valign=>"top"}
+        - if should_show_teacher_note? page, :investigation
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize} notes:"
+            %td
+              .activity_teacher_note= page.section.investigation.teacher_note_otml
+
+        - if should_show_teacher_note? page, :activity
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "Activity notes:"
+            %td
+              .activity_teacher_note= page.section.activity.teacher_note_otml
+
+        - if should_show_teacher_note? page, :section
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3= "Section notes:"
+            %td
+              .section_teacher_note= page.section.teacher_note_otml
+        - if page.has_good_teacher_note?
+          %tr{:valign=>"top"}
+            %td{:width=>"25%"}
+              %h3="Page notes (#{page.name}):"
+            %td
+              .page_teacher_note= page.teacher_note_otml
+
+
+
+  %OTTabContainer{:local_id => ot_local_id_for(page, :tab_container), :name => page.name}
+    %tabs
+      %entry{:key => page.name}
+        %object{ :refid => ot_refid_for(page, :tab_content) }/
+      %entry{:key => "Teacher notes"}
+        %object{ :refid => ot_refid_for(page, :teacher_notes) }/
+

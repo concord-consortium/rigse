@@ -1,0 +1,15 @@
+--- 
+development: &id003
+  a: abc
+  b: 123
+  c:
+    - foo
+    - baz
+    - bar
+
+production: &id003
+  :b: 789
+  c:
+    - foo
+    - baz
+    - bar

@@ -1,43 +1,33 @@
-@import app_colors.sass
-.dropdown
-  :z-index 1000
-  :display block
-  :position fixed
-  :left -1000px
-  :top 0px
-  :clear left
-  :float none
-  :background-color white
-  :font-size 10px
-  :line-height 1.5em
-  :max-height 400px
-  :overflow-y auto
-  :overflow-x hidden
-  :margin 0px
-  :padding 0.5em
-  :-moz-border-radius-bottomright .5em
-  :-webkit-border-bottom-right-radius .5em
-  :-moz-border-radius-bottomleft .5em
-  :-webkit-border-bottom-left-radius .5em
-  .big
-    :font-size 1.2em
-  ul
-    :margin inherit
-    :list-style-type none
-    :width 100%
-    :font-weight normal
-  li
-    +color_mixer(!very_dark_blue,!almost_white)
-    :list-style-type none
-    :width 100%
-    :white-space nowrap
-    :margin-right 1em
-    :padding-right 2em
-    :padding-top 6px
-  a
-    :margin-left 5px
-    :display block
+@import app_colors
 
+.dropdown
+  z-index: 1000
+  display: block
+  position: fixed
+  left: -1000px
+  top: 0
+  clear: left
+  float: none
+  background: transparent
+  font-size: 10px
+  overflow-x: hidden
+  .big
+    font-size: 1.2em
+  ul
+    background-color: white
+    list-style-type: none
+    font-weight: normal
+    border: 1px #bddfdf solid
+    margin-left: 0
+  li
+    background: #fef7e0
+    list-style-type: none
+    padding: 0.5em
+  a
+    display: block
   a.rollover
-    :clear left !important
-    
+    clear: left !important
+  hr
+    border: none !important
+    height: 1px !important
+    padding: 0 !important

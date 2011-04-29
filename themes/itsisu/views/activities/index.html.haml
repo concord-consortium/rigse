@@ -1,0 +1,6 @@
+-#-locals = {:domain_id => @domain_id, :grade_span => @grade_span, :name => @name, :activities => @activities, :paginated_objects => @paginated_objects}  
+-#= render :partial => 'search_form', :locals => locals         
+-#= observe_form 'activity_search_form', :url => list_filter_activity_url(:index=>"yes"),:before => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency => 1, :update => {:success => 'offering_list'}
+#offering_list.item_collection
+  =render :partial=>"runnable_list"
+  -#=render :partial=>"runnable_list", :locals=> locals

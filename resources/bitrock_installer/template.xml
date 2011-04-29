@@ -1,6 +1,6 @@
 <project>
   <shortName>#{shortname}</shortName>
-  <fullName>RITES Runtime</fullName>
+  <fullName>RITES Investigation Software</fullName>
   <version>#{version}</version>
   <installerFilename></installerFilename>
   <preBuildActionList>
@@ -206,6 +206,17 @@
           <destination>${installdir}</destination>
           <name>programfilesosx</name>
           <platforms>osx</platforms>
+        </folder>
+        <folder>
+            <description>Program Files</description>
+            <destination>${installdir}/properties</destination>
+            <name>properties</name>
+            <platforms>all</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>properties/jnlp_url.properties</origin>
+                </distributionFile>
+            </distributionFileList>                      
         </folder>
       </folderList>
       <startMenuShortcutList>

@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @sound_grapher.uuid}
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles(:title => @sound_grapher.name)
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = Embeddable::SoundGrapher.display_name + ': ' + @sound_grapher.name
+              %object{ :refid => ot_refid_for(@sound_grapher) }
+      %library
+        =yield :layout

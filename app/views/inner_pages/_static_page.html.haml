@@ -1,5 +1,0 @@
-- if params['print']
-  = render :partial=> 'pages/print', :locals=>{:page => page, :inner_page=>inner_page,:teacher_mode => params['teacher_mode'],:hide_title=>true}
-- else
-  = render :partial=> 'inner_pages/static_page_header', :locals=>{:page => page, :inner_page=>inner_page}
-  = render :partial=> 'pages/show', :locals=>{:page => page, :inner_page=>inner_page}

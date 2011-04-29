@@ -1,78 +1,33 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
-describe Dataservice::ConsoleContentsController do
-  describe "route generation" do
-    it "maps #index" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "index").should == "/dataservice_console_contents"
+describe Dataservice::BundleContentsController do
+  describe "routing" do
+    it "recognizes and generates #index" do
+      { :get => "dataservice/console_contents" }.should route_to(:controller => "dataservice/console_contents", :action => "index")
     end
 
-    it "maps #new" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "new").should == "/dataservice_console_contents/new"
+    it "recognizes and generates #new" do
+      { :get => "dataservice/console_contents/new" }.should route_to(:controller => "dataservice/console_contents", :action => "new")
     end
 
-    it "maps #show" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "show", :id => "1").should == "/dataservice_console_contents/1"
+    it "recognizes and generates #show" do
+      { :get => "dataservice/console_contents/1" }.should route_to(:controller => "dataservice/console_contents", :action => "show", :id => "1")
     end
 
-    it "maps #edit" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "edit", :id => "1").should == "/dataservice_console_contents/1/edit"
+    it "recognizes and generates #edit" do
+      { :get => "dataservice/console_contents/1/edit" }.should route_to(:controller => "dataservice/console_contents", :action => "edit", :id => "1")
     end
 
-    it "maps #create" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "create").should == {:path => "/dataservice_console_contents", :method => :post}
+    it "recognizes and generates #create" do
+      { :post => "dataservice/console_contents" }.should route_to(:controller => "dataservice/console_contents", :action => "create") 
     end
 
-    it "maps #update" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "update", :id => "1").should == {:path =>"/dataservice_console_contents/1", :method => :put}
+    it "recognizes and generates #update" do
+      { :put => "dataservice/console_contents/1" }.should route_to(:controller => "dataservice/console_contents", :action => "update", :id => "1") 
     end
 
-    it "maps #destroy" do
-      pending "Broken example"
-      route_for(:controller => "dataservice_console_contents", :action => "destroy", :id => "1").should == {:path =>"/dataservice_console_contents/1", :method => :delete}
-    end
-  end
-
-  describe "route recognition" do
-    
-    it "generates params for #index" do
-      pending "Broken example"
-      params_from(:get, "/dataservice_console_contents").should == {:controller => "dataservice_console_contents", :action => "index"}
-    end
-
-    it "generates params for #new" do
-      pending "Broken example"
-      params_from(:get, "/dataservice_console_contents/new").should == {:controller => "dataservice_console_contents", :action => "new"}
-    end
-
-    it "generates params for #create" do
-      pending "Broken example"
-      params_from(:post, "/dataservice_console_contents").should == {:controller => "dataservice_console_contents", :action => "create"}
-    end
-
-    it "generates params for #show" do
-      pending "Broken example"
-      params_from(:get, "/dataservice_console_contents/1").should == {:controller => "dataservice_console_contents", :action => "show", :id => "1"}
-    end
-
-    it "generates params for #edit" do
-      pending "Broken example"
-      params_from(:get, "/dataservice_console_contents/1/edit").should == {:controller => "dataservice_console_contents", :action => "edit", :id => "1"}
-    end
-
-    it "generates params for #update" do
-      pending "Broken example"
-      params_from(:put, "/dataservice_console_contents/1").should == {:controller => "dataservice_console_contents", :action => "update", :id => "1"}
-    end
-
-    it "generates params for #destroy" do
-      pending "Broken example"
-      params_from(:delete, "/dataservice_console_contents/1").should == {:controller => "dataservice_console_contents", :action => "destroy", :id => "1"}
+    it "recognizes and generates #destroy" do
+      { :delete => "dataservice/console_contents/1" }.should route_to(:controller => "dataservice/console_contents", :action => "destroy", :id => "1") 
     end
   end
 end

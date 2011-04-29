@@ -1,0 +1,7 @@
+- field_set_tag 'content' do
+  = f.text_area :content, :id => dom_id_for(diy_section, :item, :content, :textarea), :class => 'tinymce_textarea'
+- if diy_section.has_question
+  %h3 default response:
+  - field_set_tag 'Default response' do
+    = f.text_field :default_response, :size => 80, :id => dom_id_for(diy_section, :item, :default_response_field)
+  %br

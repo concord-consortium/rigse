@@ -1,78 +1,83 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/../spec_controller_helper')
+require 'spec_helper'
 
 describe Dataservice::ConsoleLoggersController do
 
+  def mock_console_content(stubs={})
+    stubs[:eportfolio] = Dataservice::ConsoleContent::EMPTY_EPORTFOLIO_BUNDLE
+    @mock_console_content ||= mock_model(Dataservice::ConsoleContent, stubs)
+  end
+
   def mock_console_logger(stubs={})
+    stubs[:last_console_content] = mock_console_content
     @mock_console_logger ||= mock_model(Dataservice::ConsoleLogger, stubs)
   end
 
   describe "GET index" do
     it "assigns all dataservice_console_loggers as @dataservice_console_loggers" do
-      pending "Broken example"
-      Dataservice::ConsoleLogger.stub!(:find).with(:all).and_return([mock_console_logger])
+      Dataservice::ConsoleLogger.should_receive(:find).with(:all, hash_including(will_paginate_params(:limit=>5))).and_return([mock_console_logger])
+      login_admin
       get :index
       assigns[:dataservice_console_loggers].should == [mock_console_logger]
     end
   end
 
   describe "GET show" do
-    it "assigns the requested console_logger as @console_logger" do
-      pending "Broken example"
-      Dataservice::ConsoleLogger.stub!(:find).with("37").and_return(mock_console_logger)
+    it "assigns the requested console_logger as @dataservice_console_logger" do
+      Dataservice::ConsoleLogger.should_receive(:find).with("37").and_return(mock_console_logger)
+      login_admin
       get :show, :id => "37"
-      assigns[:console_logger].should equal(mock_console_logger)
+      assigns[:dataservice_console_logger].should equal(mock_console_logger)
     end
   end
 
   describe "GET new" do
-    it "assigns a new console_logger as @console_logger" do
-      pending "Broken example"
-      Dataservice::ConsoleLogger.stub!(:new).and_return(mock_console_logger)
+    it "assigns a new console_logger as @dataservice_console_logger" do
+      Dataservice::ConsoleLogger.should_receive(:new).and_return(mock_console_logger)
+      login_admin
       get :new
-      assigns[:console_logger].should equal(mock_console_logger)
+      assigns[:dataservice_console_logger].should equal(mock_console_logger)
     end
   end
 
   describe "GET edit" do
-    it "assigns the requested console_logger as @console_logger" do
-      pending "Broken example"
-      Dataservice::ConsoleLogger.stub!(:find).with("37").and_return(mock_console_logger)
+    it "assigns the requested console_logger as @dataservice_console_logger" do
+      Dataservice::ConsoleLogger.should_receive(:find).with("37").and_return(mock_console_logger)
+      login_admin
       get :edit, :id => "37"
-      assigns[:console_logger].should equal(mock_console_logger)
+      assigns[:dataservice_console_logger].should equal(mock_console_logger)
     end
   end
 
   describe "POST create" do
 
     describe "with valid params" do
-      it "assigns a newly created console_logger as @console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:new).with({'these' => 'params'}).and_return(mock_console_logger(:save => true))
-        post :create, :console_logger => {:these => 'params'}
-        assigns[:console_logger].should equal(mock_console_logger)
+      it "assigns a newly created console_logger as @dataservice_console_logger" do
+        Dataservice::ConsoleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_console_logger(:save => true))
+        login_admin
+        post :create, :dataservice_console_logger => {:these => 'params'}
+        assigns[:dataservice_console_logger].should equal(mock_console_logger)
       end
 
       it "redirects to the created console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:new).and_return(mock_console_logger(:save => true))
-        post :create, :console_logger => {}
+        Dataservice::ConsoleLogger.should_receive(:new).and_return(mock_console_logger(:save => true))
+        login_admin
+        post :create, :dataservice_console_logger => {}
         response.should redirect_to(dataservice_console_logger_url(mock_console_logger))
       end
     end
 
     describe "with invalid params" do
-      it "assigns a newly created but unsaved console_logger as @console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:new).with({'these' => 'params'}).and_return(mock_console_logger(:save => false))
-        post :create, :console_logger => {:these => 'params'}
-        assigns[:console_logger].should equal(mock_console_logger)
+      it "assigns a newly created but unsaved console_logger as @dataservice_console_logger" do
+        Dataservice::ConsoleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_console_logger(:save => false))
+        login_admin
+        post :create, :dataservice_console_logger => {:these => 'params'}
+        assigns[:dataservice_console_logger].should equal(mock_console_logger)
       end
 
       it "re-renders the 'new' template" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:new).and_return(mock_console_logger(:save => false))
-        post :create, :console_logger => {}
+        Dataservice::ConsoleLogger.should_receive(:new).and_return(mock_console_logger(:save => false))
+        login_admin
+        post :create, :dataservice_console_logger => {}
         response.should render_template('new')
       end
     end
@@ -83,22 +88,22 @@ describe Dataservice::ConsoleLoggersController do
 
     describe "with valid params" do
       it "updates the requested console_logger" do
-        pending "Broken example"
         Dataservice::ConsoleLogger.should_receive(:find).with("37").and_return(mock_console_logger)
         mock_console_logger.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :console_logger => {:these => 'params'}
+        login_admin
+        put :update, :id => "37", :dataservice_console_logger => {:these => 'params'}
       end
 
-      it "assigns the requested console_logger as @console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:find).and_return(mock_console_logger(:update_attributes => true))
+      it "assigns the requested console_logger as @dataservice_console_logger" do
+        Dataservice::ConsoleLogger.should_receive(:find).and_return(mock_console_logger(:update_attributes => true))
+        login_admin
         put :update, :id => "1"
-        assigns[:console_logger].should equal(mock_console_logger)
+        assigns[:dataservice_console_logger].should equal(mock_console_logger)
       end
 
       it "redirects to the console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:find).and_return(mock_console_logger(:update_attributes => true))
+        Dataservice::ConsoleLogger.should_receive(:find).and_return(mock_console_logger(:update_attributes => true))
+        login_admin
         put :update, :id => "1"
         response.should redirect_to(dataservice_console_logger_url(mock_console_logger))
       end
@@ -106,22 +111,22 @@ describe Dataservice::ConsoleLoggersController do
 
     describe "with invalid params" do
       it "updates the requested console_logger" do
-        pending "Broken example"
         Dataservice::ConsoleLogger.should_receive(:find).with("37").and_return(mock_console_logger)
         mock_console_logger.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :console_logger => {:these => 'params'}
+        login_admin
+        put :update, :id => "37", :dataservice_console_logger => {:these => 'params'}
       end
 
-      it "assigns the console_logger as @console_logger" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:find).and_return(mock_console_logger(:update_attributes => false))
+      it "assigns the console_logger as @dataservice_console_logger" do
+        Dataservice::ConsoleLogger.should_receive(:find).and_return(mock_console_logger(:update_attributes => false))
+        login_admin
         put :update, :id => "1"
-        assigns[:console_logger].should equal(mock_console_logger)
+        assigns[:dataservice_console_logger].should equal(mock_console_logger)
       end
 
       it "re-renders the 'edit' template" do
-        pending "Broken example"
-        Dataservice::ConsoleLogger.stub!(:find).and_return(mock_console_logger(:update_attributes => false))
+        Dataservice::ConsoleLogger.should_receive(:find).and_return(mock_console_logger(:update_attributes => false))
+        login_admin
         put :update, :id => "1"
         response.should render_template('edit')
       end
@@ -131,15 +136,15 @@ describe Dataservice::ConsoleLoggersController do
 
   describe "DELETE destroy" do
     it "destroys the requested console_logger" do
-      pending "Broken example"
       Dataservice::ConsoleLogger.should_receive(:find).with("37").and_return(mock_console_logger)
       mock_console_logger.should_receive(:destroy)
+      login_admin
       delete :destroy, :id => "37"
     end
 
     it "redirects to the dataservice_console_loggers list" do
-      pending "Broken example"
-      Dataservice::ConsoleLogger.stub!(:find).and_return(mock_console_logger(:destroy => true))
+      Dataservice::ConsoleLogger.should_receive(:find).and_return(mock_console_logger(:destroy => true))
+      login_admin
       delete :destroy, :id => "1"
       response.should redirect_to(dataservice_console_loggers_url)
     end

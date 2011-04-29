@@ -1,0 +1,3 @@
+%OTOrganism{ :local_id => ot_local_id_for(biologica_organism), :name => biologica_organism.name, :sex => biologica_organism.sex, :allowFatalCharacteristic => biologica_organism.fatal_characteristics.to_s, :alleles => biologica_organism.alleles, :strain => biologica_organism.strain, :chromosomesColor => biologica_organism.chromosomes_color}
+  %world
+    = render_scoped_reference(biologica_organism.world)

@@ -1,0 +1,26 @@
+= title_tag "Answer Your Security Questions"
+- form_tag(check_password_questions_path(@user)) do
+  %div{:id => dom_id_for(@user, :security_questions, :form), :class => "action_menu"}
+    .action_menu
+      .action_menu_header_left
+        .padded_content
+          %h3 reset your password
+
+    %fieldset
+      %legend= "Security Questions"
+      In order to reset your password, you need to answer your security questions.
+      %p
+        %ul.quiet_list
+          - @user.security_questions.each_with_index do |q, i|
+            - field_prefix = "security_questions[question#{i}]"
+            = hidden_field_tag field_prefix + "[id]", q.id
+            %li= label_tag field_prefix + "[answer]", q.question, :class => "aligned"
+            %li= text_field_tag field_prefix + "[answer]", params[field_prefix + "[answer]"].to_s, :live => false, :class => "aligned"
+        .aligned
+          %ul.quiet_list
+            %li= submit_tag "Submit"
+
+  / hidden_field_tag :user_id, @user.id
+
+
+

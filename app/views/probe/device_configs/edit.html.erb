@@ -1,0 +1,12 @@
+<h1>Editing device_config</h1>
+
+<% form_for(@device_config) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @device_config %> |
+<%= link_to 'Back', probe_device_configs_path %>

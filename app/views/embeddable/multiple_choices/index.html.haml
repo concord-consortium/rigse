@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @multiple_choices, :collection_class => Embeddable::MultipleChoice }
+- @multiple_choices.each do |multiple_choice|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => multiple_choice}

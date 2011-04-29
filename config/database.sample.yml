@@ -1,7 +1,7 @@
 --- 
 development: 
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: rites_development
   password: *****
@@ -9,7 +9,7 @@ development:
 
 test: &test_settings
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: rites_test
   password: *****
@@ -20,7 +20,7 @@ cucumber:
 
 staging: 
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: rites_staging
   password: 
@@ -28,7 +28,7 @@ staging:
 
 production: 
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: rites_production
   password: *****
@@ -37,7 +37,7 @@ production:
 # Optionally used for importing of ITSI activities
 itsi: 
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: production_itsi_prod
   password: *****
@@ -47,7 +47,7 @@ itsi:
 # Optionally used with the itsi database for importing ITSI units
 ccportal:
   encoding: utf8
-  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
+  adapter: mysql
   username: root
   database: ccportal
   password: *****

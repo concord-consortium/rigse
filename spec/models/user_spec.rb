@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe User do
   fixtures :users
@@ -275,6 +275,27 @@ describe User do
       User.update_all :activation_code => 'foo-bar', :activated_at => nil
       @user.reload.unsuspend!
       @user.should be_pending
+    end
+  end
+  
+  # Security questions, currently for Students only
+  
+  describe "security questions" do
+    before(:each) do
+      @user = users(:quentin)
+    end
+    
+    it "updates security questions" do
+      questions = Array.new(3) { |i| SecurityQuestion.new({ :question => "test #{i}", :answer => "test" }) }
+      
+      @user.security_questions.should be_empty
+      
+      @user.update_security_questions!(questions)
+      
+      @user.security_questions.size.should == 3
+      questions.each do |v|
+        @user.security_questions.select { |q| q.question == v.question && q.answer == v.answer }.size.should == 1
+      end
     end
   end
 

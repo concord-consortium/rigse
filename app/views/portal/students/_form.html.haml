@@ -1,21 +1,21 @@
 - form_for portal_student do |f|
   = error_messages_for 'user'
-  = error_messages_for 'portal_student'
+  = error_messages_for 'portal_student', :object_name => 'student'
   - field_set_tag 'name' do
     .aligned
       %ul
         %li
           = label_tag :user, 'First Name: ', :class=>"right"
           = text_field :user, :first_name, {:live => false}
+          - if portal_clazz
+            = hidden_field :clazz, :id, {:value => portal_clazz.id}
         %li  
           = label_tag :user, 'Last Name: ', :class=>"right"
           = text_field :user, :last_name, {:live => false}
-        - unless signup
+        -# unless signup
           %li 
             = label_tag :portal_student, 'grade level: ', :class=>"right" 
             = f.collection_select(:grade_level_id, (current_user.portal_teacher ? current_user.portal_teacher.schools.collect{|s| s.grade_levels}.flatten.uniq : []), :id, :name, options ={:prompt => "-Select a grade level"}, :class =>"string")
-            - if portal_clazz
-              = hidden_field :clazz, :id, {:value => portal_clazz.id}
   - field_set_tag 'password' do
     .aligned
       %ul
@@ -23,12 +23,21 @@
           = label_tag :user, 'Password: ', :class=>"right"
           = password_field :user, :password, {:live => false} 
         %li
-          = label_tag :user, 'Again : ', :class=>"right"
+          = label_tag :user, 'Password Again : ', :class=>"right"
           = password_field :user, :password_confirmation, {:live => false}
         
-        - if signup
-          %li
-            = label_tag :clazz, 'Class Word: ', :class=>"right"
-            = text_field :clazz, :class_word, {:live => false}
+        - if signup 
+          - if current_project.allow_default_class
+            = hidden_field :clazz, :class_word, {:value => Portal::Clazz.default_class.class_word}
+          - else
+            %li
+              = label_tag :clazz, 'Class Word: ', :class=>"right"
+              %p= "Not case sensitive"
+              - value = portal_clazz ? portal_clazz.class_word : 'class word'
+              = text_field :clazz, :class_word, {:live => false}
+            
+          - if current_project.use_student_security_questions
+            = render :partial => "security_questions/header"
+            = render :partial => "security_questions/fields"
       
   = f.submit 'Submit'

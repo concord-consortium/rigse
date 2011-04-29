@@ -19,18 +19,15 @@ describe Dataservice::BundleContentsController do
     end
 
     it "recognizes and generates #create" do
-      pending "Broken example"
-      { :post => "/dataservice_bundle_contents" }.should route_to(:controller => "dataservice/bundle_contents", :action => "create") 
+      { :post => "dataservice/bundle_contents" }.should route_to(:controller => "dataservice/bundle_contents", :action => "create") 
     end
 
     it "recognizes and generates #update" do
-      pending "Broken example"
-      { :put => "/dataservice_bundle_contents/1" }.should route_to(:controller => "dataservice/bundle_contents", :action => "update", :id => "1") 
+      { :put => "dataservice/bundle_contents/1" }.should route_to(:controller => "dataservice/bundle_contents", :action => "update", :id => "1") 
     end
 
     it "recognizes and generates #destroy" do
-      pending "Broken example"
-      { :delete => "/dataservice_bundle_contents/1" }.should route_to(:controller => "dataservice/bundle_contents", :action => "destroy", :id => "1") 
+      { :delete => "dataservice/bundle_contents/1" }.should route_to(:controller => "dataservice/bundle_contents", :action => "destroy", :id => "1") 
     end
   end
 end

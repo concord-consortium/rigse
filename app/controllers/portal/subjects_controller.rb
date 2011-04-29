@@ -1,4 +1,8 @@
 class Portal::SubjectsController < ApplicationController
+  
+  include RestrictedPortalController
+  public
+  
   # GET /portal_subjects
   # GET /portal_subjects.xml
   def index

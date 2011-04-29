@@ -1,0 +1,10 @@
+%OTQuestion{:local_id => ot_local_id_for(multiple_choice)}
+  %prompt
+    %OTCompoundDoc
+      %bodyText= multiple_choice.prompt
+  %input
+    %OTChoice{ :name => 'Multiple choice', :alignContent => '0' }
+      %choices
+        - multiple_choice.choices.each_with_index do |choice, i|
+          %OTCompoundDoc{:name => "#{i+1}. #{h(choice.choice)}", :local_id => ot_local_id_for(choice)}
+            %bodyText=h(choice.choice)

@@ -1,15 +1,7 @@
 class Portal::DistrictsController < ApplicationController
   
+  include RestrictedPortalController
   before_filter :admin_only
-  
-  protected  
-
-  def admin_only
-    unless current_user.has_role?('admin')
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
-    end
-  end
   
   public
   
@@ -119,6 +111,7 @@ class Portal::DistrictsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(portal_districts_url) }
+      format.js {}
       format.xml  { head :ok }
     end
   end

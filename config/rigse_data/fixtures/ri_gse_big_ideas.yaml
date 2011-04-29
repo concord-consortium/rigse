@@ -1,0 +1,349 @@
+--- 
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 32798222-61fe-11df-a821-001ff3caa767
+  id: 1
+  description: Collect data
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327a018e-61fe-11df-a821-001ff3caa767
+  id: 2
+  description: Communicate understanding & ideas
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327a7c4a-61fe-11df-a821-001ff3caa767
+  id: 3
+  description: Design, conduct, & critique investigations
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327b09c6-61fe-11df-a821-001ff3caa767
+  id: 4
+  description: Represent, analyze, & interpret data
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327b81bc-61fe-11df-a821-001ff3caa767
+  id: 5
+  description: Experimental design
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327bf8fe-61fe-11df-a821-001ff3caa767
+  id: 6
+  description: Observe
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327c7284-61fe-11df-a821-001ff3caa767
+  id: 7
+  description: Predict
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327cea98-61fe-11df-a821-001ff3caa767
+  id: 8
+  description: Question and hypothesize
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327d607c-61fe-11df-a821-001ff3caa767
+  id: 9
+  description: Use evidence to draw conclusions
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327dd890-61fe-11df-a821-001ff3caa767
+  id: 10
+  description: Use tools, & techniques
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327e9a96-61fe-11df-a821-001ff3caa767
+  id: 11
+  description: Accumulation of science knowledge (evidence & reasoning, looking at work of others)
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327f1cdc-61fe-11df-a821-001ff3caa767
+  id: 12
+  description: Attitudes and dispositions of science (avoiding bias, divergent ideas, healthy skepticism)
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 327f97e8-61fe-11df-a821-001ff3caa767
+  id: 13
+  description: History of Science
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 328014c0-61fe-11df-a821-001ff3caa767
+  id: 14
+  description: Science/Tech/ Society
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3280912a-61fe-11df-a821-001ff3caa767
+  id: 15
+  description: Scientific Theories
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 328150ba-61fe-11df-a821-001ff3caa767
+  id: 16
+  description: Cycles
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3281cc34-61fe-11df-a821-001ff3caa767
+  id: 17
+  description: Energy Transfer
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 32824786-61fe-11df-a821-001ff3caa767
+  id: 18
+  description: Equilibrium
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3282c0a8-61fe-11df-a821-001ff3caa767
+  id: 19
+  description: Interactions
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 32833e2a-61fe-11df-a821-001ff3caa767
+  id: 20
+  description: Interdependence
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3283b9a4-61fe-11df-a821-001ff3caa767
+  id: 21
+  description: Order & Organization
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 328472ea-61fe-11df-a821-001ff3caa767
+  id: 22
+  description: "Evidence provided through\xE2\x80\xA6"
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3284f328-61fe-11df-a821-001ff3caa767
+  id: 23
+  description: "Explanations provided through\xE2\x80\xA6"
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 328576ae-61fe-11df-a821-001ff3caa767
+  id: 24
+  description: Relative distance
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3285fc96-61fe-11df-a821-001ff3caa767
+  id: 25
+  description: Relative sizes
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3286c14e-61fe-11df-a821-001ff3caa767
+  id: 26
+  description: Constancy and Change
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 32874a42-61fe-11df-a821-001ff3caa767
+  id: 27
+  description: Cycles
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 3287cd5a-61fe-11df-a821-001ff3caa767
+  id: 28
+  description: Evolutionary Change
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:24 Z
+  uuid: 32888a42-61fe-11df-a821-001ff3caa767
+  id: 29
+  description: Natural World
+  unifying_theme_id: 1
+  created_at: 2010-05-17 21:50:24 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f21ce0-61fe-11df-a821-001ff3caa767
+  id: 30
+  description: Collect data
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f2944a-61fe-11df-a821-001ff3caa767
+  id: 31
+  description: Communicate understanding & ideas
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f30574-61fe-11df-a821-001ff3caa767
+  id: 32
+  description: Design, conduct, & critique investigations
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f3833c-61fe-11df-a821-001ff3caa767
+  id: 33
+  description: Represent, analyze, & interpret data
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f406b8-61fe-11df-a821-001ff3caa767
+  id: 34
+  description: Experimental design
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f49088-61fe-11df-a821-001ff3caa767
+  id: 35
+  description: Observe
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f51260-61fe-11df-a821-001ff3caa767
+  id: 36
+  description: Predict
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f5941a-61fe-11df-a821-001ff3caa767
+  id: 37
+  description: Question and hypothesize
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f61548-61fe-11df-a821-001ff3caa767
+  id: 38
+  description: Use evidence to draw conclusions
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f6961c-61fe-11df-a821-001ff3caa767
+  id: 39
+  description: Use tools, & techniques
+  unifying_theme_id: 3
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f75642-61fe-11df-a821-001ff3caa767
+  id: 40
+  description: Accumulation of science knowledge (evidence & reasoning, looking at work of others)
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f7ceec-61fe-11df-a821-001ff3caa767
+  id: 41
+  description: Attitudes and dispositions of science (avoiding bias, divergent ideas, healthy skepticism)
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f84804-61fe-11df-a821-001ff3caa767
+  id: 42
+  description: History of Science
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f8c720-61fe-11df-a821-001ff3caa767
+  id: 43
+  description: Science/Tech/ Society
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33f942ea-61fe-11df-a821-001ff3caa767
+  id: 44
+  description: Scientific Theories
+  unifying_theme_id: 5
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fa04e6-61fe-11df-a821-001ff3caa767
+  id: 45
+  description: Cycles
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fa8182-61fe-11df-a821-001ff3caa767
+  id: 46
+  description: Energy Transfer
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fafcac-61fe-11df-a821-001ff3caa767
+  id: 47
+  description: Equilibrium
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fb7a7e-61fe-11df-a821-001ff3caa767
+  id: 48
+  description: Interactions
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fbf332-61fe-11df-a821-001ff3caa767
+  id: 49
+  description: Interdependence
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fc6b5a-61fe-11df-a821-001ff3caa767
+  id: 50
+  description: Order & Organization
+  unifying_theme_id: 2
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fd2a9a-61fe-11df-a821-001ff3caa767
+  id: 51
+  description: "Evidence provided through\xE2\x80\xA6"
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fdaa24-61fe-11df-a821-001ff3caa767
+  id: 52
+  description: "Explanations provided through\xE2\x80\xA6"
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33fe2b66-61fe-11df-a821-001ff3caa767
+  id: 53
+  description: Relative distance
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33feabb8-61fe-11df-a821-001ff3caa767
+  id: 54
+  description: Relative sizes
+  unifying_theme_id: 6
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33ff6a9e-61fe-11df-a821-001ff3caa767
+  id: 55
+  description: Constancy and Change
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33ffed3e-61fe-11df-a821-001ff3caa767
+  id: 56
+  description: Cycles
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 34006c82-61fe-11df-a821-001ff3caa767
+  id: 57
+  description: Evolutionary Change
+  unifying_theme_id: 4
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 34012604-61fe-11df-a821-001ff3caa767
+  id: 58
+  description: Natural World
+  unifying_theme_id: 1
+  created_at: 2010-05-17 21:50:26 Z

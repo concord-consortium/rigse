@@ -1,0 +1,6 @@
+%div{:id => dom_id_for(@portal_learner, :item), :class => 'item'}
+  %h3= "Multiple Choice Report for: #{@portal_learner.name}"
+  %div{:id => dom_id_for(@portal_learner, :details), :class => 'content'}
+    = accordion_for(@portal_learner, report_details_for_learner(@portal_learner, { :type => :multiple_choices, :correctable => true })) do  
+      = render :partial => 'saveable/multiple_choices/show', :collection => @portal_learner.multiple_choices, :as => :multiple_choice
+    

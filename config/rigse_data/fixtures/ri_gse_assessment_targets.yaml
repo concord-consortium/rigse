@@ -1,0 +1,617 @@
+--- 
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 1
+  uuid: 3148bcf6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 1
+  description: Collect and organize data about physical properties in order to classify objects or draw conclusions about objects and their characteristic properties (e.g., temperature, color, size, shape, weight, texture, flexibility).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 1
+  uuid: 314a8374-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 2
+  description: Investigate the relationships among mass, volume and density.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 1
+  uuid: 314c3750-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 3
+  description: Use physical and chemical properties as determined through an investigation to identify a substance.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 2
+  uuid: 3160b284-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 4
+  description: Make a prediction about what might happen to the state of common materials when heated or cooled or categorize materials as solid, liquid, or gas.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 2
+  uuid: 316208c8-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 5
+  description: Given data about characteristic properties of matter (e.g., melting and boiling points, density, solubility) identify, compare, or classify different substances.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 2
+  uuid: 3163fbe2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 6
+  description: Scientific thought about atoms has changed over time. Using information (narratives or models of atoms) provided, cite evidence that has changed our understanding of the atom and the development of atomic theory.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 3
+  uuid: 31753e98-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 7
+  description: Use measures of weight (data) to demonstrate that the whole equals the sum of its parts.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 3
+  uuid: 3176945a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 8
+  description: Collect data or use data provided to infer or predict that the total amount of mass in a closed system stays the same, regardless of how substances interact (conservation of matter).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 3
+  uuid: 317874a0-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 9
+  description: Explain how properties of elements and the location of elements on the periodic table are related.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 4
+  uuid: 319e3eba-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 10
+  description: Represent or explain the relationship between or among energy, molecular motion, temperature, and states of matter.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 4
+  uuid: 31a00786-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 11
+  description: Model and explain the structure of an atom or explain how an atoms electron configuration, particularly the outermost electron(s), determines how that atom can interact with other atoms.
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 5
+  uuid: 31af9a66-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 8
+  id: 12
+  description: Given graphic or written information, classify matter as atom/molecule or element/compound (Not the structure of an atom).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 4
+  uuid: 31b823e8-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 13
+  description: "Given a specific example or illustration (e.g., simple closed circuit, rubbing hands together), predict the observable effects of energy (i.e., light bulb lights, a bell rings, hands warm up(e.g., a test item might ask, what will happen when\xE2\x80\xA6)."
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 6
+  uuid: 31b974a0-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 14
+  description: Given a real-world example, show that within a system, energy transforms from one form to another (i.e., chemical, heat, electrical, gravitational, light, sound, mechanical).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 5
+  uuid: 31bb5662-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 15
+  description: Demonstrate how transformations of energy produce some energy in the form of heat and therefore the efficiency of the system is reduced (chemical, biological, and physical systems).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:22 Z
+  number: 5
+  uuid: 31d45d24-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 16
+  description: Use observations of light in relation to other objects/substances to describe the properties of light (can be reflected, refracted, or absorbed).
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 7
+  uuid: 31d5c0e2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 17
+  description: Use data to draw conclusions about how heat can be transferred (convection, conduction, radiation).
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 6
+  uuid: 31d82936-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 18
+  description: Using information provided about chemical changes, draw conclusions about and explain the energy flow in a given chemical reaction (e.g., exothermic reactions, endothermic reactions).
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 6
+  uuid: 320448fe-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 19
+  description: Experiment, observe, or predict how heat might move from one object to another.
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 7
+  uuid: 32062548-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 9
+  id: 20
+  description: Explain relationships between and among electric charges, magnetic fields, electromagnetic forces, and atomic particles.
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 7
+  uuid: 3211b660-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 21
+  description: Use data to predict how a change in force (greater/less) might affect the position, direction of motion, or speed of an object (e.g., ramps and balls).
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 8
+  uuid: 321370b8-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 22
+  description: Use data to determine or predict the overall (net effect of multiple forces (e.g., friction, gravitational, magnetic) on the position, speed, and direction ofmotion of objects.
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 8
+  uuid: 3215a874-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 23
+  description: Given information (e.g., graphs, data, diagrams), use the relationships between or among force, mass, velocity, momentum, and acceleration to predict and explain the motion of objects.
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 8
+  uuid: 322b3752-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 24
+  description: Use observations of magnets in relation to other objects to describe the properties of magnetism (i.e., attract or repel certain objects or has no effect)
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 9
+  uuid: 322ed268-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 25
+  description: Apply the concepts of inertia, motion, and momentum to predict and explain situations involving forces and motion, including stationary objects and collisions.
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:23 Z
+  number: 10
+  uuid: 32392740-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 10
+  id: 26
+  description: Explain the effects on wavelength and frequency as electromagnetic waves interact with matter (e.g., light diffraction, blue sky).
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:24 Z
+  number: 1
+  uuid: 328ba2fe-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 27
+  description: Given certain earth materials (soils, rocks or minerals) use physical properties to sort, classify, and describe them.
+  created_at: 2010-05-17 21:50:24 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 1
+  uuid: 330ddc10-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 28
+  description: Use geological evidence provided to support the idea that the Earths crust/lithosphere is composed of plates that move.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 1
+  uuid: 3310842e-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 29
+  description: Provided with geologic data (including movement of plates) on a given locale, predict the likelihood for an earth event (e.g., volcanoes, mountain ranges, islands, earthquakes).
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 2
+  uuid: 33255534-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 30
+  description: Use results from an experiment to draw conclusions about how water interacts with earth materials (e.g., percolation, erosion, frost heaves).
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 2
+  uuid: 3326ff06-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 31
+  description: Explain the processes that cause the cycling of water into and out of the atmosphere and their connections to our planets weather patterns.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 2
+  uuid: 3328b7a6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 32
+  description: Trace the development of the theory of plate tectonics or provide supporting geologic/geographic evidence that supports the validity of the theory of plate tectonics.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 3
+  uuid: 33368cd2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 33
+  description: "Explain how the use of scientific tools helps to extend senses and gather data about weather. (i.e., weather/wind vane: direction; wind sock: wind intensity; anemometer: speed; thermometer: temperature; meter sticks/rulers: snow depth; rain gauges: rain a"
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 3
+  uuid: 333802ba-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 34
+  description: "Explain how earth events (abruptly and over time) can bring about changes in Earths surface: landforms, ocean floor, rock features, or climate."
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 3
+  uuid: 333971d6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 35
+  description: Explain how internal and external sources of heat (energy) fuel geologic processes (e.g., rock cycle, plate tectonics, sea floor spreading).
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 4
+  uuid: 3365ccd6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 36
+  description: Explain how wind, water, or ice shape and reshape the earth.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 4
+  uuid: 33678ea4-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 37
+  description: Explain the role of differential heating or convection in ocean currents, winds, weather and weather patterns, atmosphere, or climate.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 4
+  uuid: 336a2a9c-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 38
+  description: Relate how geologic time is determined using various dating methods (e.g. radioactive decay, rock sequences, fossil records).
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 5
+  uuid: 337d2f98-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 39
+  description: Based on data collected from daily weather observations, describe weather changes or weather patterns.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 5
+  uuid: 337e7e02-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 40
+  description: Using data about a rocks physical characteristics make and support an inference about the rocks history and connection to rock cycle.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 6
+  uuid: 338b7828-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 5
+  id: 41
+  description: Given information about earth materials explain how their characteristics lend themselves to specific uses
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 6
+  uuid: 3391de66-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 6
+  id: 42
+  description: Compare and contrast planets based on data provided about size, composition, location, orbital movement, atmosphere, or surface features (includes moons).
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:25 Z
+  number: 7
+  uuid: 339a6658-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 6
+  id: 43
+  description: Explain how technological advances have allowed scientists to re-evaluate or extend existing ideas about the solar system.
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 8
+  uuid: 33a10abc-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 6
+  id: 44
+  description: ""
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 5
+  uuid: 33c0a12e-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 7
+  id: 45
+  description: Explain how scientific theories about the structure of the universe have been advanced through the use of sophisticated technology (e.g., space probes; visual, radio and x-ray telescopes).
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 6
+  uuid: 33c5e47c-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 7
+  id: 46
+  description: Provide scientific evidence that supports or refutes the Big Bang theory of how the universe was formed
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 7
+  uuid: 33c7eff6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 7
+  id: 47
+  description: Based on the nature of electromagnetic waves, explain the movement and location of objects in the universe or their composition (e.g., red shift, blue shift, line spectra)
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 1
+  uuid: 3402d4ea-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 48
+  description: Sort/classify different living things using similar and different characteristics. Describe why organisms belong to each group or cite evidence about how they are alike or not alike.
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 1
+  uuid: 3404b29c-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 49
+  description: Using data and observations about the biodiversity of an ecosystem make predictions or draw conclusions about how the diversity contributes to the stability of the ecosystem.
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 1
+  uuid: 3406c6a4-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 50
+  description: Use data and observation to make connections between, to explain, or to justify how specific cell organelles produce/regulate what the cell needs or what a unicellular or multi-cellular organism needs for survival (e.g., protein synthesis, DNA replication
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 2
+  uuid: 3432fc4c-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 51
+  description: Identify the basic needs of plants and animals in order to stay alive. (i.e., water, air, food, space).
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 2
+  uuid: 34345f4c-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 52
+  description: Describe or compare how different organisms have mechanisms that work in a coordinated way to obtain energy, grow, move, respond, provide defense, enable reproduction, or maintain internal balance (e.g., cells, tissues, organs and systems).
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:26 Z
+  number: 2
+  uuid: 34366ab2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 53
+  description: Explain or justify with evidence how the alteration of the DNA sequence may produce new gene combinations that make little difference, enhance capabilities, or can be harmful to the organism (e.g., selective breeding, genetic engineering, mutations).
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 3
+  uuid: 344a0ad6-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 54
+  description: Predict, sequence or compare the life stages of organisms plants and animals (e.g., put images of life stages of an organism in order, predict the next stage in sequence, compare two organisms).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 3
+  uuid: 344b7894-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 55
+  description: Compare and contrast sexual reproduction with asexual reproduction.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 4
+  uuid: 345b5d04-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 56
+  description: Identify and explain how the physical structures of an organism (plants or animals) allow it to survive in its habitat/environment (e.g., roots for water; nose to smell fire).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 4
+  uuid: 345d13e2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 1
+  id: 57
+  description: Explain relationships between or among the structure and function of the cells, tissues, organs, and organ systems in an organism.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 5
+  uuid: 346c7012-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 58
+  description: Recognize that energy is needed for all organisms to stay alive and grow or identify where a plant or animal gets its energy.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 5
+  uuid: 346df194-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 59
+  description: Using data and observations, predict outcomes when abiotic/biotic factors are changed in an ecosystem.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 3
+  uuid: 346fff70-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 60
+  description: Using data from a specific ecosystem, explain relationships or make predictions about how environmental disturbance (human impact or natural events) affects the flow of energy or cycling of matter in an ecosystem.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 6
+  uuid: 349d3e9a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 61
+  description: Describe ways plants and animals depend on each other (e.g., shelter, nesting, food).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 6
+  uuid: 349ecec2-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 62
+  description: Given a scenario trace the flow of energy through an ecosystem, beginning with the sun, through organisms in the food web, and into the environment (includes photosynthesis and respiration).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 4
+  uuid: 34a0783a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 63
+  description: Trace the cycling of matter (e.g., carbon cycle) and the flow of energy in a living system from its source through its transformation in cellular, biochemical processes (e.g., photosynthesis, cellular respiration, fermentation).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 7
+  uuid: 34b5999a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 64
+  description: Given an ecosystem, trace how matter cycles among and between organisms and the physical environment (includes water, oxygen, food web, decomposition, recycling but not carbon cycle or nitrogen cycle).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 5
+  uuid: 34b715cc-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 2
+  id: 65
+  description: Explain or evaluate potential bias in how evidence is interpreted in reports concerning a particular environmental factor that impacts the biology of humans.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 7
+  uuid: 34c38c8a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 3
+  id: 66
+  description: Using information (data or scenario), explain how changes in the environment can cause organisms to respond (e.g., survive there and reproduce, move away, die).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 8
+  uuid: 34c64b96-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 3
+  id: 67
+  description: Use a model, classification system, or dichotomous key to illustrate, compare, or interpret possible relationships among groups of organisms (e.g., internal and external structures, anatomical features).
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:27 Z
+  number: 6
+  uuid: 34c9409e-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 3
+  id: 68
+  description: Explain how evidence from technological advances supports or refutes the genetic relationships among groups of organisms (e.g., DNA analysis, protein analysis.
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 9
+  uuid: 34ddcf00-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 3
+  id: 69
+  description: Cite examples supporting the concept that certain traits of organisms may provide a survival advantage in a specific environment and therefore, an increased likelihood to produce offspring.
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 7
+  uuid: 34df277e-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 3
+  id: 70
+  description: Given a scenario, provide evidence that demonstrates how sexual reproduction results in a great variety of possible gene combinations and contributes to natural selection (e.g., Darwins finches, isolation of a species, Tay Sachs disease).
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 8
+  uuid: 350970ec-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 71
+  description: Identify what the physical structures of humans do (e.g., sense organs eyes, ears, skin, etc.) or compare physical structures of humans to similar structures of animals.
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 10
+  uuid: 350ae698-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 72
+  description: Use data and observations to support the concept that environmental or biological factors affect human body systems (biotic & abiotic).
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 9
+  uuid: 350c889a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 73
+  description: Use evidence to make and support conclusions about the ways that humans or other organisms are affected by environmental factors or heredity (e.g., pathogens, diseases, medical advances, pollution, mutations).
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: K-4
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 9
+  uuid: 3521e334-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 74
+  description: Distinguish between characteristics of humans that are inherited from parents (i.e., hair color, height, skin color, eye color) and others that are learned (e.g., riding a bike, singing a song, playing a game, reading)
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 11
+  uuid: 35233748-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 75
+  description: Using data provided, select evidence that supports the concept that genetic information is passed on from both parents to offspring.
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 10
+  uuid: 35254952-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 76
+  description: Explain how the immune system, endocrine system, or nervous system works and draw conclusions about how systems interact to maintain homeostasis in the human body.
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-8
+  updated_at: 2010-05-17 21:50:28 Z
+  number: 12
+  uuid: 3538641a-61fe-11df-a821-001ff3caa767
+  knowledge_statement_id: 4
+  id: 77
+  description: "Describe the major changes that occur over time in human development from single cell through embryonic development to new born (i.e., trimesters: 1st group of cells, 2nd - organs form, 3rd - organs mature."
+  created_at: 2010-05-17 21:50:28 Z

@@ -1,0 +1,3 @@
+%div{:id => dom_id_for(image_question, :details), :class => 'content'}
+  = wrap_edit_link_around_content(image_question, options={:complete => mce_init_string}) do
+    = image_question.description

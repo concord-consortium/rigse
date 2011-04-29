@@ -1,0 +1,18 @@
+<h1>Listing knowledge_statements</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% for knowledge_statement in @knowledge_statements %>
+  <tr>
+    <td><%= link_to 'Show', knowledge_statement %></td>
+    <td><%= link_to 'Edit', edit_ri_gse_knowledge_statement_path(knowledge_statement) %></td>
+    <!-- <td><%= link_to 'Destroy', knowledge_statement, :confirm => 'Are you sure?', :method => :delete %></td> -->
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New knowledge_statement', new_ri_gse_knowledge_statement_path %>

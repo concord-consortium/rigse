@@ -1,0 +1,26 @@
+- form_for(@activity) do |f|
+  %h3 Activity Name
+  = f.text_field(:name, :size => '72')
+  - if current_user.has_role?('admin','manager')
+    %h3 grade level:
+    = grade_level_select
+    %h3 subject area:
+    = subject_area_select
+    %h3 unit:
+    = unit_select
+    %h3 public:
+    = f.select :publication_status, Activity.publication_states.map {|s| s.to_s} 
+  %h3 description
+  -#= f.hidden_field :redirect, activity_template_edit(@activity)
+  = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
+  %p
+  = f.submit "save"
+- @activity.sections.each do |section|
+  = template_container_for(section, :no_edit => true) do
+    %div.template_view_container{:id => dom_id_for(section, :template_view_container)}
+      %label
+        %input{:type => "checkbox", :name => "enable section", :class=> "template_enable_check"}
+        %span{:class => "template_section_title"}
+          = section.name
+      - section.pages.each do |page|
+        = render :partial => 'pages/template_edit', :locals => {:page => page }

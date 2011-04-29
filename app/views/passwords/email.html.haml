@@ -1,0 +1,20 @@
+= title_tag "Forgot Your Password?"
+- form_for @password, :url => { :action => "create_by_email" } do |f|
+  %div{:id => dom_id_for(@password ,:form), :class =>"action_menu"}
+    .action_menu
+      .action_menu_header_left
+        .padded_content
+          %h3 request an email reminder.
+
+    %fieldset
+      %legend Enter Your Email Address
+      %ul.quiet_list
+        %li= f.label :email, "Email Address", :class=>"aligned"
+        %li= f.text_field :email, :live => false, :class=>"aligned"
+      .aligned
+        %ul.quiet_list
+          %li= f.submit "Submit"
+    = f.error_messages
+
+
+

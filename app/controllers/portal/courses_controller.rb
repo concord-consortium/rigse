@@ -1,4 +1,12 @@
 class Portal::CoursesController < ApplicationController
+  
+  # TODO:  There need to be a lot more 
+  # controller filters here...
+  # this only protects management actions:
+  include RestrictedPortalController
+  
+  
+  public 
   # GET /portal_courses
   # GET /portal_courses.xml
   def index

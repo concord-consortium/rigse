@@ -7,7 +7,7 @@
 ##
 
 Factory.sequence(:login) do |n| 
-  "login_#{n}"
+  "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
 end
 
 ##
@@ -20,7 +20,9 @@ Factory.define :user do |f|
   f.email  { |u| "#{u.login}@concord.org"}
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
+  f.skip_notifications true
   f.roles  { [ Factory.next(:member_role)] }
+  f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end
 
 
@@ -33,6 +35,7 @@ Factory.sequence :admin_user do |n|
     admin = Factory(:user,
     {
       :login => 'admin',
+      # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'admin',
       :site_admin => 1,
       :roles => [Factory.next(:member_role),Factory.next(:admin_role)]
@@ -45,20 +48,50 @@ Factory.sequence :admin_user do |n|
 end
 
 ##
+## Singleton Factory Pattern for Researcher user.
+##
+Factory.sequence :researcher_user do |n| 
+  researcher = User.find_by_login('researcher') 
+  unless researcher
+    researcher = Factory(:user,
+    {
+      :login => 'researcher',
+      # :password =>'password',  # all passwords are 'password' (defined in user factory)
+      :first_name => 'researcher',
+      :site_admin => 0,
+      :roles => [Factory.next(:member_role),Factory.next(:researcher_role)]
+    })
+    researcher.register
+    researcher.activate
+    researcher.save!
+  end
+  researcher
+end
+
+##
 ## Singleton Factory Pattern for Anonymous user.
 ##
-Factory.sequence :anonymous_user do |n| 
-  anon = User.find_by_login('anonymous') 
-  unless anon
-    anon = Factory(:user,
-    {
-      :login => 'anonymous',
-      :first_name => 'anonymous',
-      :roles => [Factory.next(:guest_role)]
-    })
-    anon.register
-    anon.activate
-    anon.save!
+Factory.sequence :anonymous_user do |n|
+  anon = nil
+  begin
+    anon = User.find_by_login('anonymous')
+    unless anon
+      anon = Factory(:user,
+      {
+        :login => 'anonymous',
+        :first_name => 'anonymous',
+        :roles => [Factory.next(:guest_role)]
+      })
+      anon.register
+      anon.activate
+      # clear any previous Anonymous user still cached as a class variable in the User class
+      User.anonymous(true)
+      anon.save!
+    end
+    anon
+  rescue
+    nil
   end
-  anon
 end
+
+Factory.next(:anonymous_user)

@@ -1,0 +1,19 @@
+/ %h2 BEGIN: Custom code for ITSI-SU
+/ required locals: is_being_edited
+- if portal_clazz.is_teacher? current_user
+  -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
+  = hidden_field_tag 'portal_clazz_id', :portal_clazz.id
+  %h2
+    assigned activities (
+    %span#total-selected="#{portal_clazz.offerings.size}"
+    )
+  -#- runnables = portal_clazz.offerings.map { |o| o.runnable }
+  = render :partial => 'portal/offerings/runnable_list', :locals => {:activities => Activity.published, :portal_clazz => portal_clazz, :is_being_edited => is_being_edited}
+  ( Checked Activities are assigned to this class. )
+  %h4 Published Activities:
+  = render :partial => 'portal/offerings/runnable_list', :locals => {:activities => Activity.published, :portal_clazz => portal_clazz, :is_being_edited => is_being_edited}
+  %h4 Activities you have authored:
+  = render :partial => 'portal/offerings/runnable_list', :locals => {:activities => current_user.activities, :portal_clazz => portal_clazz, :is_being_edited => is_being_edited}
+- else
+  - portal_clazz.offerings.each do |offering|
+    = render :partial => 'shared/offering_for_student', :locals => {:offering => offering}

@@ -1,0 +1,9 @@
+= edit_menu_for(model_type, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(model_type, :item, :name_field)
+  - field_set_tag 'otrunk object class' do
+    = f.text_field :otrunk_object_class, :id => dom_id_for(model_type, :item, :otrunk_object_class), :size => 80
+  - field_set_tag 'otrunk view class' do
+    = f.text_field :otrunk_view_class, :id => dom_id_for(model_type, :item, :otrunk_view_class), :size => 80
+= f.submit "save"

@@ -1,4 +1,12 @@
 %h3
   Success!
 %p
-  Your username is <b>#{@portal_student.user.login}</b>. You will need to #{link_to 'log in', login_path} with this username and the password you provided in order to access your class.
+  Your username is:
+  %span{:style=>"padding: 0 10px; font-size: 20px;"}
+    %b
+      = @portal_student.user.login
+%p
+  %b
+    Write down your username in a safe place!
+    You will need to login with this username and the password you provided in order to access your class.
+%p= render :partial => 'sessions/new'

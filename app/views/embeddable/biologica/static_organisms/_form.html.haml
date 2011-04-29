@@ -1,0 +1,8 @@
+= edit_menu_for(biologica_static_organism, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(biologica_static_organism, :item, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(biologica_static_organism, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
+  - field_set_tag 'organism' do
+    = f.select :organism_id, Embeddable::Biologica::Organism.by_scope(@scope).collect { |org| [ "#{org.name}: #{org.id}", org.id ] }, { :prompt => true }, {:id => dom_id_for(biologica_static_organism, :item, :organism_select)}

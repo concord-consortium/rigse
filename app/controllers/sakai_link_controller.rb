@@ -96,11 +96,15 @@ class SakaiLinkController < ApplicationController
          # logger.warn("wsdl for #{url}: #{driver.methods.join(',')}")
         DRIVERS[url] = driver
         logger.info("INFO: Registered sakai host: #{url}")
+      rescue Errno::ECONNREFUSED, HTTPClient::BadResponseError, SocketError
+        DRIVERS.delete(url)
+        logger.warn("WARN: Could not connect to sakai host: #{url}")
+      rescue OpenSSL::SSL::SSLError
+        DRIVERS.delete(url)
+        logger.warn("WARN: Sakai hostname did not match with the server certificate: #{url}")
       rescue WSDL::XMLSchema::Parser::UnknownElementError
         DRIVERS.delete(url)
         logger.warn("WARN: Could not register sakai Host: #{url}: WSDL Parse error")
-      rescue Errno::ECONNREFUSED
-        logger.warn("WARN: Could not connect to sakai host: #{url}")
       end
     end
   end

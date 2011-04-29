@@ -1,27 +1,31 @@
 --- 
 javascripts: 
 - base: 
-  - prototype
-  - prototype-ui/prototype-ui
   - effects
   - dragdrop
   - controls
-  - scriptaculous
   - misc/resizable
-  - livepipe/livepipe
-  - livepipe/window
   - flotr/excanvas
   - flotr/flotr
   - canvas2image
   - application
+  - dropdown
   - cookie
   - accordion
   - item_selectable
   - live_validation
-  
+  - please_wait
+  - report_filter
+  - template_toggle 
+  - unit_bins
+  - pagination
+  - workgroup
+
 stylesheets: 
 - base: 
   - app
+  - authoring
+  - template_edit
   - accordion
   - window/window
   - window/rites
@@ -30,9 +34,13 @@ stylesheets:
   - notes
   - drop_down
   - data_table
+  - reports
+  - workgroup
 
 - default:
   - app
+  - authoring
+  - template_edit
   - accordion
   - window/window
   - window/rites
@@ -41,17 +49,49 @@ stylesheets:
   - notes
   - drop_down
   - data_table
+  - reports
   
-- itsisu:
-  - themes/itsisu/itsisu
-  - themes/itsisu/action_menu_tab
-  - themes/itsisu/drop_down
-  - themes/itsisu/accordion
+- rites:
+  - app
+  - authoring
+  - accordion
+  - please_wait
   - window/window
-  - window/itsisu
+  - window/rites
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+  
+- investigations:
+  - themes/investigations/investigations
+  - themes/investigations/action_menu_tab
+  - themes/investigations/drop_down
+  - themes/investigations/accordion
+  - window/window
+  - window/rites
   - live_validation
   - notes
   - data_table
+  - reports
+
+- itsisu:
+  - app
+  - authoring
+  - template_edit
+  - themes/itsisu/itsisu
+  - accordion
+  - window/window
+  - window/rites
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
+  - bin
 
 - smartgraphs:
   - themes/smartgraphs/smartgraphs
@@ -63,4 +103,86 @@ stylesheets:
   - live_validation
   - notes
   - data_table
+  - reports
+
+- sglight:
+  - themes/sglight/sglight
+  - themes/sglight/action_menu_tab
+  - themes/sglight/drop_down
+  - themes/sglight/accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - notes
+  - data_table
+  - reports
+
+- sparks:
+  - app
+  - accordion
+  - please_wait
+  - window/window
+  - window/rites
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+
+- has:
+  - app
+  - accordion
+  - please_wait
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+  - workgroup
+
+- xproject:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
+
+- genomedynamics:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - action_menu_tab
+  - notes
+  - drop_down
+  - data_table
+  - reports
+  - themes/genomedynamics/genomedynamics
+  
+- geniverse:
+  - app
+  - accordion
+  - window/window
+  - window/rites
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+  - themes/geniverse/geniverse
+  - themes/geniverse/action_menu_tab
+  - themes/geniverse/drop_down
+  - themes/geniverse/accordion
 

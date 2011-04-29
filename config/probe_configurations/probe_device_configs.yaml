@@ -1,0 +1,106 @@
+--- 
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 1
+  uuid: d3d1838c-1820-11de-860a-001ec94098a1
+  id: 1
+  config_string: _auto_
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 2
+  uuid: d3db8120-1820-11de-860a-001ec94098a1
+  id: 2
+  config_string: _auto_
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 3
+  uuid: d3dbf1a0-1820-11de-860a-001ec94098a1
+  id: 3
+  config_string: _auto_
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 4
+  uuid: d3dc5956-1820-11de-860a-001ec94098a1
+  id: 4
+  config_string: /dev/tty.PascoAirLink
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 4
+  uuid: d3dc8764-1820-11de-860a-001ec94098a1
+  id: 5
+  config_string: /dev/tty.PascoAirLink1
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 5
+  uuid: d3dcefce-1820-11de-860a-001ec94098a1
+  id: 6
+  config_string: none
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 6
+  uuid: d3de58a0-1820-11de-860a-001ec94098a1
+  id: 7
+  config_string: none
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 7
+  uuid: d3dec222-1820-11de-860a-001ec94098a1
+  id: 8
+  config_string: none
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 8
+  uuid: d3df2e38-1820-11de-860a-001ec94098a1
+  id: 9
+  config_string: _auto_
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-05-15 17:18:53 Z
+  vendor_interface_id: 9
+  uuid: d3dfbe02-1820-11de-860a-001ec94098a1
+  id: 10
+  config_string: _auto_
+  user_id: 9
+  created_at: 2009-05-15 13:18:53 Z
+- updated_at: 2009-08-28 19:11:44 Z
+  vendor_interface_id: 10
+  uuid: e26884a4-93fe-11de-9836-001ff3caa767
+  id: 11
+  config_string: none
+  user_id: 9
+  created_at: 2009-08-28 19:11:44 Z
+- updated_at: 2009-08-28 19:11:44 Z
+  vendor_interface_id: 11
+  uuid: e26893ea-93fe-11de-9836-001ff3caa767
+  id: 12
+  config_string: none
+  user_id: 9
+  created_at: 2009-08-28 19:11:44 Z
+- updated_at: 2009-08-28 19:11:44 Z
+  vendor_interface_id: 12
+  uuid: e268a1dc-93fe-11de-9836-001ff3caa767
+  id: 13
+  config_string: none
+  user_id: 9
+  created_at: 2009-08-28 19:11:44 Z
+- updated_at: 2009-08-28 19:11:44 Z
+  vendor_interface_id: 13
+  uuid: e268aede-93fe-11de-9836-001ff3caa767
+  id: 14
+  config_string: none
+  user_id: 9
+  created_at: 2009-08-28 19:11:44 Z
+- updated_at: 2009-08-28 19:11:44 Z
+  vendor_interface_id: 14
+  uuid: e268bf3c-93fe-11de-9836-001ff3caa767
+  id: 15
+  config_string: none
+  user_id: 9
+  created_at: 2009-08-28 19:11:44 Z

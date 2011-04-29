@@ -1,0 +1,10 @@
+%OTText{ :local_id => ot_local_id_for( video_player, :name ), :rows => '2', :columns => '40' }
+  %text= video_player.name
+%OTCompoundDoc{:local_id => ot_local_id_for(video_player)}
+  %bodyText
+    %a{:href => video_player.video_url}
+      -if video_player.has_image?
+        = image_tag(video_player.image_url, :alt => video_player.name)
+        %br
+      = video_player.name
+    = video_player.description

@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @smartgraph_range_questions, :collection_class => Embeddable::Smartgraph::RangeQuestion }        
+- @smartgraph_range_questions.each do |smartgraph_range_question|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => smartgraph_range_question}

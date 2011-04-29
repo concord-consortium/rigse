@@ -1,3 +1,3 @@
-Factory.define :inner_page do |f|
+Factory.define :inner_page, :class=> Embeddable::InnerPage do |f|
 end
 

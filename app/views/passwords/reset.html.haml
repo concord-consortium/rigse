@@ -1,13 +1,15 @@
-= title "Reset Your Password"
+= title_tag "Reset Your Password"
 - form_for :user, :url => { :action => 'update_after_forgetting' } do |f|
   %div{:id => dom_id_for(@user,:form), :class =>"action_menu"}       
     .action_menu
       .action_menu_header_left
         .padded_content
+          - if params[:user_errors]
+            %ul
+              - params[:user_errors].each do |msg|
+                %li= msg
           %h3 Please enter a new password and confirm it.
-      .action_menu_header_right
-        %ul.menu
-          %li= f.submit "Submit"
+
     %fieldset
       %legend= "Password for #{@user.login}"
       %ul.quiet_list
@@ -15,6 +17,9 @@
         %li= f.password_field :password, :live => false, :class=>"aligned"
         %li= f.label :password_confirmation, "confirm password",:class=>"aligned"
         %li= f.password_field :password_confirmation, :live => false, :class=>"aligned"
+      .aligned
+        %ul.quiet_list
+          %li= submit_tag "Submit"
 
     = f.error_messages
   = hidden_field_tag :reset_code, params[:reset_code]

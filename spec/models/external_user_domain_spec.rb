@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe ExternalUserDomain do
 
@@ -16,8 +16,8 @@ describe ExternalUserDomain do
     external_logins = ["bubba","b_u_bba","bubba","_bubba","bubba_"]
     external_logins.each do |external_login|
       internal_login = ExternalUserDomain.external_login_to_login(external_login)
-      internal_login.should_not eql external_login
-      ExternalUserDomain.login_to_external_login(internal_login).should eql external_login
+      internal_login.should_not eql(external_login)
+      ExternalUserDomain.login_to_external_login(internal_login).should eql(external_login)
     end
   end
   # possibly useful tests later if the code is refactored to use instance models ...
@@ -75,7 +75,7 @@ describe ExternalUserDomain do
   #    }
   #    user = ExternalUserDomain.create_user_with_external_login(params)
   #    found_user = ExternalUserDomain.find_user_by_external_login('boo')
-  #    found_user.should eql user
+  #    found_user.should eql(user)
   # end
   
 end

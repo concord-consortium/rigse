@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @biologica_meiosis_views, :collection_class => Embeddable::Biologica::MeiosisView}        
+- @biologica_meiosis_views.each do |meiosis_view|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => meiosis_view}

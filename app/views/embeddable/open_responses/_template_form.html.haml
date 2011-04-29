@@ -1,0 +1,7 @@
+
+- field_set_tag 'Prompt' do
+  = f.text_area :prompt, :id => dom_id_for(open_response, :item, :prompt, :textarea), :class => 'tinymce_textarea'
+  %h3 default response:
+  - field_set_tag 'Default response' do
+    = f.text_field :default_response, :size => 80, :id => dom_id_for(open_response, :item, :default_response_field)
+  %br

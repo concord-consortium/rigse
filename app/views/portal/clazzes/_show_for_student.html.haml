@@ -4,7 +4,9 @@
   %div{:id => dom_id_for(portal_clazz, :item), :class => 'item'}
     .action_menu
       .action_menu_header_left
-        = "#{portal_clazz.name} (#{portal_clazz.section})"
+        = "#{portal_clazz.name}"
+        - if portal_clazz.section.to_s.length > 0
+          = " (#{portal_clazz.section})"
       .action_menu_header_right
         = portal_clazz.teachers.size > 0 ? portal_clazz.teachers.map{ |t| t.name}.join(', ') : 'no teachers'
-    = render :partial => 'shared/offering_for_student', :collection => portal_clazz.offerings, :as => :offering
+    = render :partial => 'shared/offerings_for_student', :locals => { :offerings => portal_clazz.active_offerings }

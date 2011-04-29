@@ -1,13 +1,20 @@
 require 'highline/import'
+require 'fileutils'
 
 namespace :build do
   namespace :installer do
-    def bitrocket_installer_dir
-      "#{RAILS_ROOT}/resources/bitrock_installer"
+    
+    def check_dir_exists(dir)
+      FileUtils::mkdir(dir) unless File.exists?(dir)
+      dir
     end
+    
+    def bitrocket_installer_dir
+      check_dir_exists("#{RAILS_ROOT}/resources/bitrock_installer")
+     end
 
     def installer_dest
-      "#{RAILS_ROOT}/public/installers/"
+      check_dir_exists("#{RAILS_ROOT}/public/installers/")
     end
 
     def installer_config_xml
@@ -39,17 +46,22 @@ namespace :build do
       end
     end
     
-    def remove_emf_launcher_args
+    def remove_otrunk_properties
+      # <property value="true" name="otrunk.view.export_image"/>
+      # <property value="true" name="otrunk.view.status"/>
+      # <property value="student" name="otrunk.view.mode"/>
+      # <property value="true" name="otrunk.view.no_user"/>
       jardir = "#{bitrocket_installer_dir}/jars"
       jnlp_file_name = %x[find #{jardir} -name \*.jnlp].chomp
       jnlp_data = File.open(jnlp_file_name).read
+      regex = /<property.*name="otrunk.*"[^\/]*\/>/i
+      jnlp_data.gsub!(regex,"")
       regex = /<application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>(.*)<\/application-desc>/m
       jnlp_data.gsub!(regex,"<application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'><argument></argument></application-desc>")
       File.open(jnlp_file_name, "w") do |f|
         f.write(jnlp_data)
       end
     end
-    
     def load_yaml(filename) 
       file_txt = ""
       File.open(filename, "r") do |f|
@@ -62,7 +74,6 @@ namespace :build do
       File.open(config_file, "w") { |f|
         f.write(YAML::dump(config))
       }
-
       write_file_with_template_replacements("#{bitrocket_installer_dir}/rites.xml","#{bitrocket_installer_dir}/template.xml",config)
       write_file_with_template_replacements("#{bitrocket_installer_dir}/jnlps.conf","#{bitrocket_installer_dir}/template.jnlps.conf",config)
     end
@@ -143,11 +154,11 @@ namespace :build do
     
     
     desc 'cache jars'
-    task :cache_jars => [:clean,:bump_release] do
+    task :cache_jars => [:clean, :bump_release] do
       puts "Caching jar resources"
       %x[mkdir -p #{bitrocket_installer_dir}/jars/]
       %x[cd #{bitrocket_installer_dir}; ./scripts/cache-jars.sh ]
-      remove_emf_launcher_args
+      remove_otrunk_properties
     end
       
   

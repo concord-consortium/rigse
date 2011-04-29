@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @sound_graphers, :collection_class =>Embeddable::SoundGrapher}        
+- @sound_graphers.each do |sound_grapher|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => sound_grapher}

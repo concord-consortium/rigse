@@ -1,14 +1,15 @@
-= title "Portal: Sign up!"
+= title_tag "Portal: Sign up!"
 - @user.password = @user.password_confirmation = nil
 - form_for @user do |form|
-  %div{:id => dom_id_for(@user, :form), :class =>"action_menu"}       
+  %div{:id => dom_id_for(@user, :form), :class =>"action_menu"}
     .action_menu
       .action_menu_header_left
         .padded_content
           %h3 Signup
       .action_menu_header_right
         %ul.menu
-          %li= submit_tag 'Sign up'          
+          %li= submit_tag 'Sign up'
   = form.error_messages
   = render :partial => 'form', :locals => { :f => form }
   = render :partial => 'password', :locals => { :f => form }
+  = render :partial => 'source', :locals => { :user => @user }

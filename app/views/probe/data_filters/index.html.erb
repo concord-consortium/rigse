@@ -1,0 +1,18 @@
+<h1>Listing data_filters</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% @data_filters.each do |data_filter| %>
+  <tr>
+    <td><%= link_to 'Show', data_filter %></td>
+    <td><%= link_to 'Edit', edit_probe_data_filter_path(data_filter) %></td>
+    <td><%= link_to 'Destroy', data_filter, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New data_filter', new_probe_data_filter_path %>

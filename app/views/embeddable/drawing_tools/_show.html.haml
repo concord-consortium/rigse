@@ -1,0 +1,17 @@
+%div{:id => dom_id_for(drawing_tool, :details), :class => 'content'}
+  -#= wrap_edit_link_around_content(drawing_tool, options={:complete => mce_init_string}) do
+  -#%div{:id =>dom_id_for(drawing_tool, :pallet),:style => dt_pallet_style }
+  -if drawing_tool.background_image_url
+    %img.draw_tool_bg{:src=>drawing_tool.background_image_url}
+  - else
+    .draw_tool_bg
+
+
+-#:javascript
+  -#$$('.draw_tool_image').each( function(dti) {
+    -#Event.observe(dti,'load',function(image) {
+      -#dti.up().setStyle({
+        -#height: dti.getHeight() + 'px'
+      -#});
+    -#});
+  -#});

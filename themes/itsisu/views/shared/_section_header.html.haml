@@ -3,12 +3,16 @@
     /%li= run_link_for(@section)
     /%li= print_link_for(@section)
     - if (section.changeable?(current_user))
-      %li= duplicate_link_for(@section,:text=> "copy section #{section.name}")
-    %li#copy_link.copy_paste_disabled copy (disabled)
+      %li= duplicate_link_for(@section,:text=> "Duplicate: #{section.name}")
+    %li#copy_link.copy_paste_disabled Copy (disabled)
     /%li= toggle_all('pages')
     - if (section.changeable?(current_user))
       %li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
 
+#add_menu.dropdown
+  %ul
+    %li= link_to "Add new page", add_page_section_path(section)
+    
 - if (teacher_only? section)
   - view_class = "action_menu teacher_only"
 - else
@@ -24,9 +28,11 @@
         %h3= section.name
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => section}
-    = dropdown_button "actions.png", :title => "actions for this page"
+    = dropdown_button "actions.png", :title => "actions for this section"
     - if (section.changeable?(current_user))
-      = link_button "add.png", add_page_section_path(section)
+      = dropdown_button "add.png"
+    - else
+      = link_button "add_disabled.png", "#", :title => "can't add to this section"
     = render :partial => "shared/dot_pager", :locals => {:node => section}
     = delete_button_for section 
     

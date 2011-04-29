@@ -1,0 +1,31 @@
+---
+development: &id003
+  :active_school_levels:
+    - "4"
+  :active_grades:
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  :use_gse: false
+  :help_email: skim@concord.org
+  :theme: sparks
+  :runnables_use: browser
+  :runnable_mime_type: run_sparks_html
+  :top_level_container_name: page
+  :site_school: SPARKS-school
+  :description: ""
+  :site_district: SPARKS-district
+  :site_name: SPARKS Assessments (development)
+  :site_url: http://localhost:3000
+  :default_admin_user:
+    :first_name: Seong
+    :login: skim
+    :last_name: Kim
+    :email: skim@concord.org
+  :states_and_provinces:
+  - VA
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003

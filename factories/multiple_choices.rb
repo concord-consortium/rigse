@@ -1,3 +1,3 @@
-Factory.define :multiple_choice do |f|
+Factory.define :multiple_choice, :class=> Embeddable::MultipleChoice do |f|
 end
 

@@ -75,7 +75,11 @@ class ExternalUserDomain < ActiveRecord::Base
     
     ## Look in config/rinet_data.yml for external_domain_url
     def select_external_domain_by_server_url(server_url)
-      @@external_domain_selection = ExternalUserDomain::URL_MAP[server_url]
+      @@external_domain_selection = ExternalUserDomain::URL_MAP[server_url.last == '/' ? server_url : "#{server_url}/"]
+    end
+    
+    def display_name
+      "External User Domain"
     end
     
   end

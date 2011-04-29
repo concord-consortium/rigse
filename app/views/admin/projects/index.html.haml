@@ -1,2 +1,3 @@
-= render :partial => 'shared/collection_menu', :locals => { :collection => @admin_projects, :collection_class => Admin::Project }
+- unless @manager_role
+  = render :partial => 'shared/collection_menu', :locals => { :collection => @admin_projects, :collection_class => Admin::Project }
 = render :partial => 'show', :collection => @admin_projects, :as => :admin_project

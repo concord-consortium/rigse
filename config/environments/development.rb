@@ -18,6 +18,18 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+# FIXME: this should work:
+#
+#   config.gem "ffi-ncurses ", :version => "= 0.3.2.1"
+#
+# but the gem is not found in jruby for some reason ???
+#
+# Adding this to environment.rb is a hack that works for now:
+#
+#   $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
+#
+
+
 # see http://nhw.pl/wp/2009/01/07/reloading-your-plugin-in-development-mode
 # ActiveSupport::Dependencies.explicitly_unloadable_constants << 'Portal'
 # ActiveSupport::Dependencies.explicitly_unloadable_constants << 'User'

@@ -1,7 +1,10 @@
--if (offering.runnable)
+-if offering.runnable
   .item
     %ul.quiet_list
       %li
-        = run_link_for(offering,nil,{:link_text=>"run #{offering.name}"})
+        = run_link_for(offering)
       %li
         .tiny= offering.description
+
+
+-#%li= link_to "View #{offering.name}", offering.runnable, :target => '_blank'

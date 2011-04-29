@@ -1,0 +1,18 @@
+.ContentFlow .globalCaption {
+  margin: 0 auto;
+}
+
+.ContentFlow .scrollbar {
+  margin: 0px auto 0;
+}
+
+.ContentFlow .flow .item {
+  clear: none;
+  border-style: none;
+  border-width: 0px;
+  background-color: #ffffff;
+}
+
+.ContentFlow {
+  background-color: #ffffff;
+}

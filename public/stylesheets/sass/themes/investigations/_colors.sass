@@ -1,0 +1,68 @@
+$has_green: #aaf53d
+$has_light_green: #7ab02c
+$has_brown: #bef56e
+$has_dark_brown: #5a9800
+$light_green: $has_light_green
+$almost_white: #f2f8fc
+$container_box_color: #cbe1f2
+$container_box_hover_color: #bcd6ea
+$teacher_only_color: #eedddd
+$selected_color: #ffffa0
+$black: black
+$almost_black: #101010
+
+$has_content_text_color: $has_light_green
+
+$dev_note_color: $has_brown
+$legend_color: $has_brown
+$dark_red: $has_brown
+$very_dark: $black
+
+$text_input_color: $almost_white
+$input_border_color: $black
+$input_color: $black
+$input_focus_color: $almost_white
+
+=delete_links
+  a.delete:link
+    color: $dark_red
+  a.delete:active
+    color: $dark_red
+  a.delete:visited
+    color: $dark_red
+  a.delete:hover
+    color: white
+    background-color: $dark_red
+
+=color_mixer($fg, $bg, $link)
+  color: $fg
+  background-color: $bg
+  .selected
+    color: $bg !important
+    background-color: $fg !important
+  a
+    font-weight: bold
+    padding: 0px
+    background-color: transparent
+    color: $link
+  a:hover
+    color: $bg
+    background-color: $link
+
+=left_nav_colors
+  +color_mixer($has_dark_brown, white, $has_dark_brown)
+  a
+    text-decoration: none
+  +delete_links
+
+=content_area_colors
+  +color_mixer($black, white, $has_dark_brown)
+  +delete_links
+
+=top_nav_colors
+  +color_mixer($has_light_green, $has_dark_brown, $almost_white)
+  +delete_links
+
+=bottom_nav_colors
+  +color_mixer($black, $has_dark_brown, $almost_black)
+  +delete_links

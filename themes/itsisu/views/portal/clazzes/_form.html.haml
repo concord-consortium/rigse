@@ -1,0 +1,57 @@
+.content
+  = f.error_messages
+  %h2 Edit a class
+  %p
+    = label_tag :name, 'Name: ', :class=>"right"
+    = f.text_field :name, :size => 35
+    %br
+    %span.form-field-info
+      Examples: Honors Physics - Period 3, Biology - Period 5V
+  - if action_name == "new"
+    %p
+      - schools = []
+      - if current_user.portal_teacher
+        - schools = current_user.portal_teacher.schools
+      - if schools.empty?
+        - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+      = label_tag :school, 'School: ', :class=>"right"
+      = f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
+  %p 
+    = label_tag :semester, 'Semester: ', :class=>"right"
+    = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
+  
+  %p    
+    = label_tag :class_word, 'Class Word: ', :class=>"right"
+    = f.text_field :class_word, :size => 35
+    %br
+    %span.form-field-info
+      Used by your students to sign up in this class. It must be unique in the system. Examples: pickle, plasma</span></p> 
+  -#- if action_name == "edit"
+    -#%p
+      -#= label_tag :teachers, 'Add or remove', :class=>"right"
+      -#%div{:style => "width: 400px; margin: 0 0 0 30%;"}
+        -#= render :partial => 'portal/teachers/list_for_clazz', :locals => {:portal_clazz => portal_clazz}
+  -#%p
+    -#= label_tag :description, 'Description: ', :class=>"right"
+    -#= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
+  %p
+    = label_tag :grade_levels, 'Grade Levels: ', :class=>"right"
+    - row_length = 8
+    %table{:style => "display: inline-block;"}
+      - 0.upto((APP_CONFIG[:active_grades].size / row_length).floor) do |row|
+        %tr
+          - APP_CONFIG[:active_grades][row * row_length, row_length].each_with_index do |name, i|
+            - tag_name = "portal_clazz[grade_levels][#{name}]"
+            %td
+              = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
+            %td{:style => "padding: 0 10px 0 3px;"}
+              -# = label_tag tag_name, name.titleize
+              = label_tag tag_name, name
+    = f.hidden_field :teacher_id
+  %p
+    =submit_tag "Save this Class"
+  
+    / .aligned
+    /   = f.submit 'Submit'
+  - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
+    = render :partial => 'portal/offerings/tagged_list_for_clazz', :locals => {:portal_clazz => @portal_clazz, :is_being_edited => true}

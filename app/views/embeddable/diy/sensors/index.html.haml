@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @diy_sensors, :collection_class => Embeddable::NLogoModel }        
+- @diy_sensors.each do |diy_sensor|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => diy_sensor}

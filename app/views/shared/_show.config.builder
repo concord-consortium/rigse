@@ -1,3 +1,4 @@
+config_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
   xml.object("class" => "net.sf.sail.emf.launch.HttpCookieServiceImpl") {
@@ -6,10 +7,6 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
         xml.void("method" => "setProperty") {
           xml.string("*.concord.org")
           xml.string("#{session_options[:key]}=#{session_id}; path=#{session_options[:path]}")
-        }
-        xml.void("method" => "setProperty") {
-          xml.string("*")
-          xml.string("another_fake_session_key")
         }
       }
     }
@@ -35,7 +32,7 @@ xml.java(:class => "java.beans.XMLDecoder", :version => "1.4.0") {
       xml.object(:class => "java.util.Properties") { 
         xml.void(:method => "setProperty") { 
           xml.string "sds_time"
-          xml.string ((Time.now.to_f * 1000).to_i)
+          xml.string((Time.now.to_f * 1000).to_i)
         }
         xml.void(:method => "setProperty") { 
           xml.string "sailotrunk.hidetree"

@@ -1,3 +1,3 @@
-Factory.define :probe_type do |f|
+Factory.define :probe_type, :class => Probe::ProbeType do |f|
 end
 

@@ -1,7 +1,8 @@
 class PagesController < ApplicationController
+  toggle_controller_for :pages
   helper :all
   
-  before_filter :find_entities, :except => ['create','new','index','delete_element','add_element']
+  before_filter :find_entities, :except => [:create,:new,:index,:delete_element,:add_element]
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
@@ -65,10 +66,39 @@ class PagesController < ApplicationController
   def index
     # @activity = Activity.find(params['section_id'])
     # @pages = @activity.pages
-    @pages = Page.find(:all)
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @page }
+    # @pages = Page.find(:all)
+    
+    @include_drafts = param_find(:include_drafts)
+    @name = param_find(:name)
+    
+    pagination = params[:page]
+    if (pagination)
+       @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+    
+    @pages = Page.search_list({
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => @include_drafts, 
+      :paginate => true, 
+      :page => pagination
+    })
+
+    if params[:mine_only]
+      @pages = @pages.reject { |i| i.user.id != current_user.id }
+    end
+
+    @paginated_objects = @pages
+    
+    if request.xhr?
+      render :partial => 'pages/runnable_list', :locals => {:pages => @pages, :paginated_objects => @pages}
+    else
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @page }
+      end
     end
   end
 
@@ -82,6 +112,7 @@ class PagesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
+<<<<<<< HEAD
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
       format.otml do 
@@ -89,11 +120,23 @@ class PagesController < ApplicationController
         @ot_docroot_id = @page.uuid
         render :layout => "layouts/page"  # page.otml.haml
       end
+=======
+      format.run_sparks_html   { render :show, :layout => "layouts/run" }
+      format.run_html   { render :show, :layout => "layouts/run" }
+      format.jnlp       { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
+      format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
+      format.otml       { render :layout => "layouts/page" } # page.otml.haml
+>>>>>>> itsisu-staging
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode} }
-      format.xml  { render :xml => @page }
+      format.xml        { render :xml => @page }
     end
   end
 
+
+
+  def template_edit
+    @teacher_mode = params[:teacher_mode] || @page.teacher_only
+  end
 
   # GET /page/1/preview
   # GET /page/1.xml
@@ -182,15 +225,15 @@ class PagesController < ApplicationController
 
     # dynamically instantiate the component based on its type.
     component_class = params['class_name'].constantize
-    if component_class == DataCollector
+    if component_class == Embeddable::DataCollector
       if probe_type_id = session[:last_saved_probe_type_id]
-        probe_type = ProbeType.find(probe_type_id)
-        @component = DataCollector.new
+        probe_type = Probe::ProbeType.find(probe_type_id)
+        @component = Embeddable::DataCollector.new
         @component.probe_type = probe_type
         @component.name = "Data Collector"
         @component.save
       else
-        @component = DataCollector.create(:name => "Data Collector")
+        @component = Embeddable::DataCollector.create(:name => "Data Collector")
       end
       session[:last_saved_probe_type_id] = @component.probe_type_id
     else
@@ -229,18 +272,18 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
+    @copy = @page.clone :include => {:page_elements => :embeddable}
     @copy.name = "" #force numbering by default
     @copy.save
     flash[:notice] ="Copied #{@page.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
 
 
   def paste_link
     # render :partial => 'pages/paste_link', :locals => {:params => params}
     # render :text => paste_link_for(page_paste_acceptable_types,params)
-    render :partial => 'shared/paste_link', :locals =>{:types => Page::paste_acceptable_types,:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => Page.paste_acceptable_types,:params => params}
   end
   
   #
@@ -248,12 +291,14 @@ class PagesController < ApplicationController
   #
   def paste
     if @page.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize # I dont think pluralize is right -- though its working NP Jan '10
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)      
       if (@original) 
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
+        # let some embeddables define their own means to save
+        if @original.respond_to? :duplicate
+          @component = @original.duplicate
+        else
+          @component = @original.clone
+        end
         if (@component)
           @container = params['container'] || 'elements_container'
           @component.name = "copy of #{@component.name}"
@@ -261,6 +306,8 @@ class PagesController < ApplicationController
           @component.pages << @page
           @component.save
           @element = @page.element_for(@component)
+          @element.user = @component.user
+          @element.save
         end
       end
       render :update do |page|

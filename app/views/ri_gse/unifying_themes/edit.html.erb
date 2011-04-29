@@ -1,0 +1,12 @@
+<h1>Editing unifying_theme</h1>
+
+<% form_for(@unifying_theme) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @unifying_theme %> |
+<%= link_to 'Back', ri_gse_unifying_themes_path %>

@@ -1,0 +1,37 @@
+%div{:id => dom_id_for(@offering, :report), :class => 'item'}
+  %h3= "Multiple Choice Report for: #{@offering.name}"
+  %div{:id => dom_id_for(@offering, :details), :class => 'content'}
+    = accordion_for(@offering, offering_mc_report_summary(@offering, :type => Embeddable::MultipleChoice)) do
+      - @offering_report.activities.each_with_index do |activity,activity_num|
+      - next if activity.respondables(Saveable::MultipleChoice).empty?
+        %div
+          %span{:style => 'font-weight: bold;'}= "Activity #{activity_num + 1}"
+          = " &ndash; #{activity.activity.name}"
+        %div{:style => 'padding-left: 10px;'}
+          - activity.sections.each_with_index do |section,section_num|
+            - next if section.respondables(Saveable::MultipleChoice).empty?
+            %div
+              %span{:style => 'font-weight: bold;'}= "Section #{section_num + 1}"
+              = " &ndash; #{section.section.name}"
+            %div{:style => 'padding-left: 20px;'}
+              - section.pages.each_with_index do |page,page_num|
+                - respondables = page.respondables(Saveable::MultipleChoice)
+                - next if page.respondables(Saveable::MultipleChoice).empty?
+                %div
+                  %span{:style => 'font-weight: bold;'}= "Page #{page_num + 1}"
+                  = " &ndash; #{page.page.name}"
+                %div{:style => 'padding-left: 30px;'}
+                  - page.page.multiple_choices.each do |multiple_choice|
+                    %div
+                      = accordion_for(multiple_choice, offering_details_multiple_choice(@offering, multiple_choice)) do
+                        - responses = respondables.find_all { |respondable| respondable.embeddable_id == multiple_choice.id && respondable.answered }
+                        - responses.each do |response|
+                          - css_style = response.answered ? 'answered' : 'not_answered'
+                          - css_style << (response.respondable.answered_correctly? ? ' correct' : ' incorrect')
+                          - answer = response.respondable.answer
+                          %div{:id => dom_id_for(response), :style => "clear: right;", :class => css_style}
+                            %item{:class => css_style}
+                              = response.learner.name
+                            %item{:style => "float: right;", :class => css_style}
+                              = response.respondable.answer
+                                    

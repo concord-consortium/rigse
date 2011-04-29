@@ -1,0 +1,32 @@
+%div{:class =>"item", :id=>dom_id_for(grade_span_expectation)}
+  - assessment_target = grade_span_expectation.assessment_target
+  = name_for_gse(grade_span_expectation)  
+  %div{:class =>"content", :id=>dom_id_for(grade_span_expectation,:details)}
+    %dl
+      - if assessment_target.knowledge_statement
+        %dt RiGse::Domain
+        %dd
+          = h(assessment_target.knowledge_statement.domain.name)
+          %dt Knowledge Statement
+          %dd
+          = h(assessment_target.knowledge_statement.description)
+      %dt Description
+      %dd
+        = h(assessment_target.description)
+      %dt Expectations:
+      %dd
+        - for expectation in grade_span_expectation.expectations do
+          = h(expectation.expectation_stem.description)
+          %ul
+            - for expectation_indicator in expectation.expectation_indicators do
+              %li= h(expectation_indicator.description)      
+      - themes = assessment_target.unifying_themes
+      - more_than_one = themes.length > 1
+      %dt= "Unifying #{more_than_one ? 'Themes' : 'Theme' } and related Big Ideas"
+      %dd
+        %ul
+          - themes.each do |theme|
+            %li
+              = "Big Ideas in #{theme.name}"
+              %p
+                = theme.big_ideas.collect { |big_idea| big_idea.description }.join('; ')

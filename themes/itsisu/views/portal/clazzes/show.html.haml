@@ -1,0 +1,6 @@
+= render :partial =>'portal/clazzes/show', :locals => {:portal_clazz => @portal_clazz}
+%h4= "Asigned activities (#{@portal_clazz.offerings.size})"
+= render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
+
+- if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
+  = render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}

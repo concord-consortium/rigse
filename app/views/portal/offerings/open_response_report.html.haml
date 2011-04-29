@@ -1,0 +1,27 @@
+%div{:id => dom_id_for(@offering, :report), :class => 'item'}
+  %h3= "Open Response Report for: #{@offering.name}"
+  %div{:id => dom_id_for(@offering, :details), :class => 'content'}
+    = accordion_for(@offering, offering_report_summary(@offering_report, :type => Embeddable::OpenResponse)) do
+      - @offering_report.activities.each_with_index do |activity,activity_num|
+        - next if activity.respondables(Saveable::OpenResponse).empty?
+        %ul
+          %li= "Activity #{activity_num + 1}: #{activity.activity.name}"
+          - activity.sections.each_with_index do |section,section_num|
+            - next if section.respondables(Saveable::OpenResponse).empty?
+            %ul
+              %li= "Section #{section_num + 1}: #{section.section.name}"
+              - section.pages.each_with_index do |page,page_num|
+                - respondables = page.respondables(Saveable::OpenResponse)
+                - next if respondables.empty?
+                %ul
+                  %li= "Page #{page_num + 1}: #{page.page.name}"
+                  - page.page.open_responses.each do |open_response|
+                    %ul
+                      = accordion_for(open_response, offering_details_open_response(@offering, open_response)) do
+                        - responses = respondables.find_all { |respondable| respondable.embeddable_id == open_response.id && respondable.answered }
+                        - responses.each do |response|
+                          - answer = response.respondable.answer
+                          %div{:id => dom_id_for(response), :class => 'content' }
+                            %p= response.learner.name
+                            %p= answer
+                

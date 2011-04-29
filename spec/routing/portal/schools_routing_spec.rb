@@ -1,77 +1,37 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
-describe Portal::SchoolsController do
-  describe "route generation" do
-    it "maps #index" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "index").should == "/portal_schools"
+describe  Portal::SchoolsController do
+  describe "routing" do
+    it "recognizes and generates #index" do
+      { :get => "portal/schools" }.should route_to(:controller => "portal/schools", :action => "index")
     end
 
-    it "maps #new" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "new").should == "/portal_schools/new"
+    it "recognizes and generates #new" do
+      { :get => "portal/schools/new" }.should route_to(:controller => "portal/schools", :action => "new")
     end
 
-    it "maps #show" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "show", :id => "1").should == "/portal_schools/1"
+    it "recognizes and generates #show" do
+      { :get => "portal/schools/1" }.should route_to(:controller => "portal/schools", :action => "show", :id => "1")
     end
 
-    it "maps #edit" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "edit", :id => "1").should == "/portal_schools/1/edit"
+    it "recognizes and generates #edit" do
+      { :get => "portal/schools/1/edit" }.should route_to(:controller => "portal/schools", :action => "edit", :id => "1")
     end
 
-    it "maps #create" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "create").should == {:path => "/portal_schools", :method => :post}
+    it "recognizes and generates #create" do
+      { :post => "portal/schools" }.should route_to(:controller => "portal/schools", :action => "create") 
     end
 
-    it "maps #update" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "update", :id => "1").should == {:path =>"/portal_schools/1", :method => :put}
+    it "recognizes and generates #update" do
+      { :put => "portal/schools/1" }.should route_to(:controller => "portal/schools", :action => "update", :id => "1") 
     end
 
-    it "maps #destroy" do
-      pending "Broken example"
-      route_for(:controller => "portal_schools", :action => "destroy", :id => "1").should == {:path =>"/portal_schools/1", :method => :delete}
-    end
-  end
-
-  describe "route recognition" do
-    it "generates params for #index" do
-      pending "Broken example"
-      params_from(:get, "/portal_schools").should == {:controller => "portal_schools", :action => "index"}
-    end
-
-    it "generates params for #new" do
-      pending "Broken example"
-      params_from(:get, "/portal_schools/new").should == {:controller => "portal_schools", :action => "new"}
-    end
-
-    it "generates params for #create" do
-      pending "Broken example"
-      params_from(:post, "/portal_schools").should == {:controller => "portal_schools", :action => "create"}
-    end
-
-    it "generates params for #show" do
-      pending "Broken example"
-      params_from(:get, "/portal_schools/1").should == {:controller => "portal_schools", :action => "show", :id => "1"}
-    end
-
-    it "generates params for #edit" do
-      pending "Broken example"
-      params_from(:get, "/portal_schools/1/edit").should == {:controller => "portal_schools", :action => "edit", :id => "1"}
-    end
-
-    it "generates params for #update" do
-      pending "Broken example"
-      params_from(:put, "/portal_schools/1").should == {:controller => "portal_schools", :action => "update", :id => "1"}
-    end
-
-    it "generates params for #destroy" do
-      pending "Broken example"
-      params_from(:delete, "/portal_schools/1").should == {:controller => "portal_schools", :action => "destroy", :id => "1"}
+# TODO: Totally not restful.  We should change
+# all routes to use :delete, and then modify
+# the delete_button in application controller
+# to use :method => :delete
+    it "recognizes and generates #destroy" do
+      { :post => "portal/schools/1/destroy" }.should route_to(:controller => "portal/schools", :action => "destroy", :id => "1") 
     end
   end
 end

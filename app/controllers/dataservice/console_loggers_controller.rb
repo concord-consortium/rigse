@@ -1,15 +1,7 @@
 class Dataservice::ConsoleLoggersController < ApplicationController
 
-  before_filter :admin_only
-  
-  protected  
-
-  def admin_only
-    unless current_user.has_role?('admin') || request.format == :bundle
-      flash[:notice] = "Please log in as an administrator" 
-      redirect_to(:home)
-    end
-  end
+  # restrict access to admins or bundle formatted requests 
+  include RestrictedBundleController
   
   public
 
@@ -59,7 +51,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
   # POST /dataservice/console_loggers
   # POST /dataservice/console_loggers.xml
   def create
-    @dataservice_console_logger = Dataservice::ConsoleLogger.new(params[:console_logger])
+    @dataservice_console_logger = Dataservice::ConsoleLogger.new(params[:dataservice_console_logger])
 
     respond_to do |format|
       if @dataservice_console_logger.save
@@ -79,7 +71,7 @@ class Dataservice::ConsoleLoggersController < ApplicationController
     @dataservice_console_logger = Dataservice::ConsoleLogger.find(params[:id])
 
     respond_to do |format|
-      if @dataservice_console_logger.update_attributes(params[:console_logger])
+      if @dataservice_console_logger.update_attributes(params[:dataservice_console_logger])
         flash[:notice] = 'Dataservice::ConsoleLogger was successfully updated.'
         format.html { redirect_to(@dataservice_console_logger) }
         format.xml  { head :ok }

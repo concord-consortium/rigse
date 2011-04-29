@@ -1,0 +1,2 @@
+- remote_form_for(smartgraph_range_question, :update => dom_id_for(smartgraph_range_question, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+  = render :partial => "embeddable/smartgraph/range_questions/form", :locals => { :smartgraph_range_question => smartgraph_range_question, :f => f  }

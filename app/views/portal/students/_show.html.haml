@@ -1,7 +1,7 @@
 - unless current_user.anonymous? 
-  Select a RITES Investigation to run from the list below:
+  %h3 Classes and Offerings:
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
 
   %p
-    Or enter a new class word to join another class.
+    %h3 Enter a new class word to join another class:
     = render :partial => 'portal/students/register', :locals => { :portal_student => portal_student }

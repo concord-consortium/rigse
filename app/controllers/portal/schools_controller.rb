@@ -1,4 +1,9 @@
 class Portal::SchoolsController < ApplicationController
+  
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_schools
   # GET /portal_schools.xml
   def index
@@ -108,6 +113,7 @@ class Portal::SchoolsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(portal_schools_url) }
+      format.js {} # will render destroy.rjs
       format.xml  { head :ok }
     end
   end

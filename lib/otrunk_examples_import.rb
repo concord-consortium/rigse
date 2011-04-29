@@ -9,16 +9,28 @@ class OtrunkExampleImport
   ViewEntry = Array.struct :fq_view_classname, :fq_object_classname
 
   class OtFile
-    attr_accessor :path, :name, :category, :last_modified, :body, :doc, :imports, :view_entries
+    attr_accessor :path, :name, :category, :last_modified, :file_size, :imports, :view_entries
     def initialize(path)
       @path = path
       @name = File.basename(path)
       @category =  File.basename(File.dirname(@path))
       @last_modified =  File.ctime(@path)
-      @body = File.read(path)
-      @doc = Hpricot::XML(@body)
-      @imports = @doc.search("import").collect { |e| e['class'] }
-      @view_entries = @doc.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
+      # @body = File.read(path)
+      @file_size = File.stat(path).size
+      # if @file_size < 200000
+      #   @doc = Hpricot::XML(File.read(path))
+      #   @imports = @doc.search("import").collect { |e| e['class'] }
+      #   @view_entries = @doc.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
+      # end
+      doc_local_var = doc
+      # if @file_size < 200000
+        @imports = doc_local_var.search("import").collect { |e| e['class'] }
+        @view_entries = doc_local_var.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
+      # end
+    end
+    
+    def doc
+      Hpricot::XML(File.read(path))
     end
   end
 
@@ -95,8 +107,12 @@ class OtrunkExampleImport
     def initialize(dir='.')
       @otml_files, @otml_imports, @otml_view_entries, @otml_launch_files  = [], [], [], []
       @imports, @view_entries, @projects, @internal_archives, @categories = [], [], [], [], []
+      count = 1
       files = Dir["#{dir}/**/*.launch"]
+      puts "\n\nprocessing #{files.length} Eclipse launch files ..."
       files.each do |f|
+        puts "#{count}: #{f}"
+        count += 1
         @otml_launch_files << OtLaunchFile.new(f)
         @projects += (@otml_launch_files[-1].projects || [])
         @internal_archives += (@otml_launch_files[-1].internal_archives || [])
@@ -104,12 +120,23 @@ class OtrunkExampleImport
       end
       @projects.uniq!
       @internal_archives.uniq!
+      count = 1
       files = Dir["#{dir}/**/*.otml"]
-      files.each do |f|
-        @otml_files << OtFile.new(f)
-        @imports += @otml_files[-1].imports
-        @view_entries += @otml_files[-1].view_entries
-        @categories += [@otml_files[-1].category]
+      puts "\n\nprocessing #{files.length} otml files ..."
+      files.in_groups(10, false) do |file_group|
+        file_group.each do |f|
+          puts "#{count}: #{File.stat(f).size/1024}k: #{f}"
+          otf  = OtFile.new(f)
+          unless otf.imports.empty?
+            @otml_files << otf
+            @imports += @otml_files[-1].imports
+            @view_entries += @otml_files[-1].view_entries
+            @categories += [@otml_files[-1].category]
+          else
+            puts "*** skipped because there were no imports in the file"
+          end 
+          count += 1
+        end
       end
       @imports.uniq!
       @view_entries.uniq!
@@ -121,6 +148,7 @@ class OtrunkExampleImport
         @otml_view_entries << OtViewEntry.new(ve, @otml_files.reject {|f| (f.view_entries & @view_entries).empty?})
       end
 
+      puts "\n\n"
       artifact_types = %w{otml_files otml_imports otml_view_entries otml_launch_files projects internal_archives}
       artifact_types.each { |artifact_type| puts sprintf("%-20s %-s", "#{artifact_type}:", "#{self.send(artifact_type).length}") }
     end

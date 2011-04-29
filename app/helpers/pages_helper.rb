@@ -28,5 +28,9 @@ module PagesHelper
     end
     return false
   end
-
+  
+  def should_show_snapshot_button?(embeddable)
+    return embeddable.respond_to? :snapshotable?
+  end
+  
 end

@@ -1,0 +1,6 @@
+= edit_menu_for(image_question, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(image_question, :item, :name_field)
+  - field_set_tag 'prompt' do
+    = f.text_area :prompt, :id => dom_id_for(image_question, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'

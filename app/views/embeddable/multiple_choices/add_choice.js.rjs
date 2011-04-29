@@ -1,0 +1,1 @@
+page.insert_html :bottom, dom_id_for(@question, :edit_choices), @html_fragment

@@ -81,7 +81,7 @@ module TruncatableXhtml
   end
   
   ##
-  ## Two good places to look for XhtmlContent
+  ## Two good places to look for Embeddable::XhtmlContent
   ##
   DEFAULT_TABLES = [
     "content",
@@ -98,7 +98,9 @@ module TruncatableXhtml
     /(&nbsp;)+/ => " "}
     
   ## for ITSI carolyn might want everything 
-  # REPLACEMENT_MAP = {}
+  if (APP_CONFIG[:dont_sanitize_xhtml])
+    REPLACEMENT_MAP = {}
+  end
   
   ##
   ## These methods are added to the class when 
@@ -148,7 +150,6 @@ module TruncatableXhtml
   ## remove any HTML patterns that we don't want.
   ##
   def replace_offensive_html
-    logger.debug "calling replace_offensive_html"
     html_tables.each do |tablename|
       if self.respond_to? tablename
         html_replacements.each_pair do |replacable,replacement|

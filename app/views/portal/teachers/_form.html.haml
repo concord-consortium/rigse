@@ -1,6 +1,6 @@
 - form_for portal_teacher do |f|
   = error_messages_for 'user'
-  = error_messages_for 'teacher'
+  = error_messages_for 'portal_teacher', :object_name => 'teacher'
   - field_set_tag 'personal info' do
     .aligned
       %ul
@@ -21,15 +21,21 @@
       %ul
         %li
           = label_tag :school, 'School: ', :class=>"right"
-          = select_tag('school[id]', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ))
-        %li
-          = label_tag :grade, 'Grade: ', :class=>"right"
-          = select_tag('grade[id]', options_for_select(portal_grades.map { |g| [g.name,g.id] }, default_grade_id ) )
-        %li
-          = label_tag :domain, 'Domain: ', :class=>"right"
-          = select_tag('domain[id]', options_for_select(domains.map { |d| [d.name, d.id] } ) )
-        
+          - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
+          = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
+        -# dont select either grades or domains for teachers.
+          - if portal_grades.size > 0
+            %li
+              = label_tag :grade, 'Grade: ', :class=>"right"
+              = select_tag('grade[id]', options_for_select(portal_grades.map { |g| [g.name,g.id] }, default_grade_id ) )
+          - if domains.size > 0
+            %li
+              = label_tag :domain, 'Domain: ', :class=>"right"
+              = select_tag('domain[id]', options_for_select(domains.map { |d| [d.name, d.id] } ) )
+
   = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+
+  = render :partial => 'users/source', :locals => { :user => portal_teacher.user }
 
   .aligned
     = f.submit 'Submit'

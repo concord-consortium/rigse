@@ -1,28 +1,41 @@
-/ requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
-- portal_clazz_id ||= nil 
+- # requires: grade_span, portal_clazz_id, domain_id
+- # optional: hide_drafts_checkbox
+- # (next line is a hack, so that portal_clazz_id is defined)
+- portal_clazz_id ||= nil
 
-.action_menu
+%h3
   #search_title
-    ="Search #{top_level_container_name.humanize.pluralize}"
-  .progress_container
-    #search_spinner.tiny{:style=>'display: none;'}
-      searching ...
-      = image_tag "ajax-loader.gif"
+    = "Search #{Investigation.display_name.pluralize}"
+    - unless local_assigns[:investigations_only]
+      = " & #{ResourcePage.display_name.pluralize}"
 
-
-%form{ :id => 'investigation_search_form'}
+- # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
+%form{:method => 'get',  :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
   = hidden_field_tag 'portal_clazz_id', portal_clazz_id
+  - if local_assigns[:investigations_only]
+    = hidden_field_tag 'investigations_only', true
+  = hidden_field_tag 'page', params[:page]
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'grade: ', :class=>"right"
-        = select(nil,  :grade_span, GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
+        = label_tag :filter, 'Grade: ', :class=>"right"
+        = select(nil,  :grade_span, RiGse::GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'domain: ', :class=>"right"          
-        = select(nil,  :domain_id, Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
+        = label_tag :filter, 'Domain: ', :class=>"right"
+        = select(nil,  :domain_id, RiGse::Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'matching: ', :class=>"right"
-        = text_field_tag :name
+        = label_tag :filter, 'Matching: ', :class=>"right"
+        = text_field_tag :name, name
+      %td{:style=>"padding: 0.5em; text-align: right"}
+        - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
+          = label_tag :include_drafts, 'drafts too: ', :class=>"right"
+          = check_box_tag :include_drafts, 'include drafts', session[:include_drafts]
+    %tr
       %td{:style=>"padding: 0.5em;"}
-        = label_tag :filter, 'drafts too: ', :class=>"right"
-        = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
+        = label_tag :sort_order, 'sort: ', :class => 'right'
+        = sort_dropdown(@sort_order)
+      %td{:style=>"padding: 0.5em;"}
+      %td{:style=>"padding: 0.5em;"}
+      %td{:style=>"padding: 0.5em; text-align: right"}
+        = label_tag :include_usage_count, 'show count: ', :class=>"right"
+        = check_box_tag :include_usage_count, true, session[:include_usage_count]

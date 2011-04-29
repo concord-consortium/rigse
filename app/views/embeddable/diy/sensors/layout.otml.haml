@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @sensor.uuid}
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles(:title => h(diy_@sensor.name))
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = h(Embeddable::NLogoModel.display_name + ': ' + @diy_sensor.name)
+              %object{ :refid => ot_refid_for(@diy_sensor) }
+      %library
+        =yield :layout

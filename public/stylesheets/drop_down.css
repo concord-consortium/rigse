@@ -1,58 +1,44 @@
+/* line 3, sass/drop_down.sass */
 .dropdown {
   z-index: 1000;
   display: block;
-  position: fixed;
+  position: absolute;
   left: -1000px;
   top: 0px;
   clear: left;
   float: none;
-  background-color: white;
+  background: transparent;
   font-size: 10px;
-  line-height: 1.5em;
-  max-height: 400px;
-  overflow-y: auto;
   overflow-x: hidden;
-  margin: 0px;
+}
+/* line 14, sass/drop_down.sass */
+.dropdown .big {
+  font-size: 1.2em;
+}
+/* line 16, sass/drop_down.sass */
+.dropdown ul {
+  background-color: white;
+  list-style-type: none;
+  font-weight: normal;
+  border: 1px #bddfdf solid;
+}
+/* line 21, sass/drop_down.sass */
+.dropdown li {
+  background: #fef7e0;
+  list-style-type: none;
   padding: 0.5em;
-  -moz-border-radius-bottomright: .5em;
-  -webkit-border-bottom-right-radius: .5em;
-  -moz-border-radius-bottomleft: .5em;
-  -webkit-border-bottom-left-radius: .5em; }
-  .dropdown .big {
-    font-size: 1.2em; }
-  .dropdown ul {
-    margin: inherit;
-    list-style-type: none;
-    width: 100%;
-    font-weight: normal; }
-  .dropdown li {
-    color: #00233a;
-    background-color: #f2f8fc;
-    list-style-type: none;
-    width: 100%;
-    white-space: nowrap;
-    margin-right: 1em;
-    padding-right: 2em;
-    padding-top: 6px; }
-    .dropdown li .selected {
-      color: #f2f8fc !important;
-      background-color: #00233a !important; }
-    .dropdown li a {
-      font-weight: bold;
-      padding: 0px;
-      text-decoration: none;
-      background-color: transparent; }
-    .dropdown li a:link {
-      color: #00233a; }
-    .dropdown li a:visited {
-      color: #00233a; }
-    .dropdown li a:active {
-      color: #00233a; }
-    .dropdown li a:hover {
-      color: #f2f8fc;
-      background-color: #00233a; }
-  .dropdown a {
-    margin-left: 5px;
-    display: block; }
-  .dropdown a.rollover {
-    clear: left !important; }
+}
+/* line 25, sass/drop_down.sass */
+.dropdown a {
+  display: block;
+}
+/* line 27, sass/drop_down.sass */
+.dropdown a.rollover {
+  clear: left !important;
+}
+/* line 29, sass/drop_down.sass */
+.dropdown hr {
+  border: none !important;
+  height: 1px !important;
+  padding: 0 !important;
+}

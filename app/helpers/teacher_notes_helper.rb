@@ -1,7 +1,7 @@
 module TeacherNotesHelper
   def domain_select(note)
     collection_select :teacher_note, :domain_ids,
-      Domain.find(:all),
+      RiGse::Domain.find(:all),
       :id, 
       :name,
       {},
@@ -10,11 +10,11 @@ module TeacherNotesHelper
   end
 
   def grade_spans
-    GradeSpanExpectation.grade_spans
+    RiGse::GradeSpanExpectation.grade_spans
   end
   
   def domains
-    Domain.find(:all)
+    RiGse::Domain.find(:all)
   end
     
 end

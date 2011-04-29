@@ -1,0 +1,9 @@
+- content_for("model_#{dom_id_for(model)}".to_sym) do
+  %OTCompoundDoc
+    %bodyText
+      #content
+        %h3= h(model.name)
+        %object{:refid => ot_refid_for(model) }/
+
+- content_for(:library) do
+  = '<' + model.otrunk_object_class_short +  ' local_id="' + ot_local_id_for(model) + '" authoredDataURL="' + model.url + '"/>'

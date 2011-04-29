@@ -1,0 +1,14 @@
+/ we COULD (should?) hide the listing until all the javascript has been evaluated.
+-#%div.template_listing{:style => "display: none;"}
+-#= template_container_for(page) do
+- page.page_elements.each_with_index do |element,i|
+  - component = element.embeddable
+  -#- # TODO: we should still render disabled pieces, but render them small like ...
+  -#- dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
+  -#%div{:id => dom_id_for(element, :template_container), :class => dom_class }
+  = template_container_for(element) do
+    -#%div.template_view_title{:id => dom_id_for(element, :template_view_title)}
+    %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
+      = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
+    %div.template_edit_container{:id =>dom_id_for(element, :edit_container)}
+      = render_template_edit_partial_for(component)

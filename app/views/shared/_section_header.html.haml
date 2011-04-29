@@ -10,7 +10,11 @@
       %li= edit_link_for(@section)
       %li#paste_link= paste_link_for(['page'],{:container_id => @container_id}) # see pages_helper.rb
 
-- if (teacher_only? section)
+#add_menu.dropdown
+  %ul
+    %li= link_to "add new page", add_page_section_path(section)
+
+- if (for_teacher_only? section)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"
@@ -23,14 +27,12 @@
     = render :partial => "shared/notes_menu", :locals => {:authorable => section}
     = dropdown_button "actions.png", :title => "actions for this section"
     - if (section.changeable?(current_user))
-      = link_button "add.png", add_page_section_path(section)
+      = dropdown_button "add.png"
     - else
-      = link_button "add_disabled.png", "#", :title => "can't add pages"
-    = render :partial => "shared/dot_pager", :locals => {:node => section}    
-    - if (section.changeable?(current_user))      
+      = link_button "disabled.png", "#", :title => "can't add pages"
+    = render :partial => "shared/dot_pager", :locals => {:node => section}
+    - if (section.changeable?(current_user))
       - if (section.activity)
         = delete_button_for(section, :redirect => url_for(section.activity))
       - else
         = delete_button_for(activity)
-    - if (section.activity)
-      = link_button "up.png", section.activity, :title => 'go to activity'  

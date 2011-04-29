@@ -1,0 +1,21 @@
+= edit_menu_for(biologica_pedigree, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(biologica_pedigree, :item, :name_field)
+  - field_set_tag 'description' do
+    = f.text_area :description, :id => dom_id_for(biologica_pedigree, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
+  - field_set_tag 'starting organisms' do
+    = "<select name='pedigree[organism_ids][]' multiple='true' size='5'>"
+    = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_pedigree.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
+    = "</select>"
+  - field_set_tag 'options' do
+    = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_pedigree, :item, :width_field)) + " "
+    = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_pedigree, :item, :height_field)) + "<br/>"
+    = "Crossover Enabled: " + f.check_box(:crossover_enabled, :id => dom_id_for(biologica_pedigree, :item, :crossover_enabled_check_box)) + "<br/>"
+    = "Sex Text Visible: " + f.check_box(:sex_text_visible, :id => dom_id_for(biologica_pedigree, :item, :sex_text_visible_check_box)) + "<br/>"
+    = "Top Controls Visible: " + f.check_box(:top_controls_visible, :id => dom_id_for(biologica_pedigree, :item, :top_controls_visible_check_box)) + "<br/>"
+    = "Reset Button Visible: " + f.check_box(:reset_button_visible, :id => dom_id_for(biologica_pedigree, :item, :reset_button_visible_check_box)) + "<br/>"
+    = "Use Organism Images: " + f.check_box(:organism_images_visible, :id => dom_id_for(biologica_pedigree, :item, :organism_images_visible_check_box)) + " "
+    = "Image Size: " + f.select(:organism_image_size, Embeddable::Biologica::Pedigree.available_image_sizes, { :prompt => true } , {:id => dom_id_for(biologica_pedigree, :item, :organism_image_size_select)}) + "<br/>"
+    = "Min # Children: " + f.text_field(:minimum_number_children, :id => dom_id_for(biologica_pedigree, :item, :min_children_field)) + " "
+    = "Max # Children: " + f.text_field(:maximum_number_children, :id => dom_id_for(biologica_pedigree, :item, :max_children_field)) + "<br/>"

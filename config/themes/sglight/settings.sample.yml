@@ -1,0 +1,38 @@
+---
+development: &id003
+  :active_school_levels:
+    - "2"
+    - "3"
+    - "4"
+  :active_grades:
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  :use_gse: false
+  :help_email: stephen.bannasch@gmail.com
+  :theme: sglight
+  :runnables_use: browser
+  :runnable_mime_type: run_html
+  :top_level_container_name: page
+  :site_school: Lightweight Smart Graphs-school
+  :description: ""
+  :site_district: Lightweight Smart Graphs-district
+  :site_name: Lightweight Smart Graphs
+  :site_url: http://localhost:3000
+  :enable_default_users: true
+  :include_otrunk_examples: false
+  :default_admin_user:
+    :first_name: Stephen
+    :last_name: Bannasch
+    :login: stephen
+    :email: stephen.bannasch@gmail.com
+  :states_and_provinces:
+  - MA
+test: *id003
+production: *id003
+staging: *id003
+cucumber: *id003

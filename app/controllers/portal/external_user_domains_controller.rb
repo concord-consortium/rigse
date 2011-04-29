@@ -1,8 +1,13 @@
 class Portal::ExternalUserDomainsController < ApplicationController
+  
+  include RestrictedPortalController
+  before_filter :admin_only
+  public
+  
   # GET /portal_external_user_domains
   # GET /portal_external_user_domains.xml
   def index
-    @portal_external_user_domains = Portal::ExternalUserDomain.all
+    @portal_external_user_domains = ExternalUserDomain.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,8 +18,9 @@ class Portal::ExternalUserDomainsController < ApplicationController
   # GET /portal_external_user_domains/1
   # GET /portal_external_user_domains/1.xml
   def show
-    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
-
+    # TODO: refactor models so that externaluserdomain is in portal namespace?
+    # @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    @external_user_domain = ExternalUserDomain.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @external_user_domain }
@@ -24,8 +30,9 @@ class Portal::ExternalUserDomainsController < ApplicationController
   # GET /portal_external_user_domains/new
   # GET /portal_external_user_domains/new.xml
   def new
-    @external_user_domain = Portal::ExternalUserDomain.new
-
+    # TODO: refactor models so that externaluserdomain is in portal namespace?
+    # @external_user_domain = Portal::ExternalUserDomain.new
+    @external_user_domain = ExternalUserDomain.new
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @external_user_domain }
@@ -34,14 +41,17 @@ class Portal::ExternalUserDomainsController < ApplicationController
 
   # GET /portal_external_user_domains/1/edit
   def edit
-    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    # TODO: refactor models so that externaluserdomain is in portal namespace?
+    # @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    @external_user_domain = ExternalUserDomain.find(params[:id])
   end
 
   # POST /portal_external_user_domains
   # POST /portal_external_user_domains.xml
   def create
-    @external_user_domain = Portal::ExternalUserDomain.new(params[:external_user_domain])
-
+    # TODO: refactor models so that externaluserdomain is in portal namespace?    
+    # @external_user_domain = Portal::ExternalUserDomain.new(params[:external_user_domain])
+    @external_user_domain = ExternalUserDomain.new(params[:external_user_domain])
     respond_to do |format|
       if @external_user_domain.save
         flash[:notice] = 'Portal::ExternalUserDomain was successfully created.'
@@ -57,8 +67,9 @@ class Portal::ExternalUserDomainsController < ApplicationController
   # PUT /portal_external_user_domains/1
   # PUT /portal_external_user_domains/1.xml
   def update
-    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
-
+    # TODO: refactor models so that externaluserdomain is in portal namespace?
+    # @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    @external_user_domain = ExternalUserDomain.find(params[:id])
     respond_to do |format|
       if @external_user_domain.update_attributes(params[:external_user_domain])
         flash[:notice] = 'Portal::ExternalUserDomain was successfully updated.'
@@ -74,7 +85,9 @@ class Portal::ExternalUserDomainsController < ApplicationController
   # DELETE /portal_external_user_domains/1
   # DELETE /portal_external_user_domains/1.xml
   def destroy
-    @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    # TODO: refactor models so that externaluserdomain is in portal namespace?
+    # @external_user_domain = Portal::ExternalUserDomain.find(params[:id])
+    @external_user_domain = ExternalUserDomain.find(params[:id])
     @external_user_domain.destroy
 
     respond_to do |format|

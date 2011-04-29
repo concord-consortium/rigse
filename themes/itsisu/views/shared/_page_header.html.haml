@@ -1,17 +1,17 @@
 #add_menu.dropdown
   %ul
-    - hide_types = [BiologicaWorld, BiologicaOrganism, BiologicaStaticOrganism, BiologicaChromosome, BiologicaChromosomeZoom, BiologicaBreedOffspring, BiologicaPedigree, BiologicaMultipleOrganism, BiologicaMeiosisView]
-    - Page::element_types.sort {|a,b| a.display_name <=> b.display_name }.each do |type|
+    - hide_types = [Embeddable::Biologica::World, Embeddable::Biologica::Organism, Embeddable::Biologica::StaticOrganism, Embeddable::Biologica::Chromosome, Embeddable::Biologica::ChromosomeZoom, Embeddable::Biologica::BreedOffspring, Embeddable::Biologica::Pedigree, Embeddable::Biologica::MultipleOrganism, Embeddable::Biologica::MeiosisView]
+    - Page.element_types.sort {|a,b| a.display_name <=> b.display_name }.each do |type|
     - next if hide_types.include? type
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #actions_menu.dropdown
   %ul
     - if (page.changeable?(current_user))
       / %li= link_to 'edit page details', edit_page_url(page)
-      %li= duplicate_link_for(page,:text=> "copy page #{page.name}")
+      %li= duplicate_link_for(page,:text=> "Duplicate: #{page.name}")
     %li#copy_link.copy_paste_disabled copy (disabled)
     - if (page.changeable?(current_user))
-      %li#paste_link= paste_link_for(Page::paste_acceptable_types,{:container_id => @container_id})
+      %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id})
     /%li= run_link_for(page)
     /%li= print_link_for(page)
     /%li= toggle_all('elements')

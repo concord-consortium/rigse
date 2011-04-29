@@ -1,0 +1,18 @@
+%div{:id => dom_id_for(video_player, :details), :class => 'content'}
+  = wrap_edit_link_around_content(video_player, options={:complete => mce_init_string}) do
+    -if video_player.video_url
+      %a{:href => video_player.video_url, :target => 'video_window'}
+        -if video_player.has_image?
+          .thumbnail
+            = image_tag(video_player.image_url, :alt => video_player.name)
+          %br
+        = video_player.name
+    
+    -else
+      -if video_player.has_image?
+        .thumbnail
+          = image_tag(video_player.image_url, :alt => video_player.name)
+        %br
+      = video_player.name
+      
+    = video_player.description

@@ -2,6 +2,7 @@
 # Setup a teacher with courses.
 #
 Given /a rinet teacher/i do
+  pending
   @rinet_login = "bowb_dobs"
   @rites_login = ExternalUserDomain.external_login_to_login(@rinet_login)
   @user = Factory(:user, {
@@ -14,7 +15,7 @@ Given /a rinet teacher/i do
   })
   @school = Factory(:nces_portal_school)
   @school.add_member(@teacher)
-  @course_names = ["physics", "geometry", "chemestry"]
+  @course_names = ["physics", "geometry", "chemistry"]
   @clazzes = []
   @course_names.each do |c_name| 
     course = Factory(:portal_course, {

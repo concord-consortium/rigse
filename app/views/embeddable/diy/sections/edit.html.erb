@@ -1,0 +1,12 @@
+<h1>Editing section</h1>
+
+<% form_for(@diy_section) do |f| %>
+  <%= f.error_messages %>
+  <%= render :partial => "remote_form", :locals => {:diy_section => @diy_section} %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @diy_section %> |
+<%= link_to 'Back', embeddable_sections_path %>

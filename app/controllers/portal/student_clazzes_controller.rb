@@ -1,4 +1,8 @@
 class Portal::StudentClazzesController < ApplicationController
+
+  include RestrictedPortalController
+  public
+  
   # GET /portal_student_clazzes
   # GET /portal_student_clazzes.xml
   def index
@@ -75,11 +79,14 @@ class Portal::StudentClazzesController < ApplicationController
   # DELETE /portal_student_clazzes/1.xml
   def destroy
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
+    @dom_id = @template.dom_id_for(@portal_student_clazz)
+    @clazz = @portal_student_clazz.clazz
+    @portal_student_clazz.destroy
+    @clazz.reload
     respond_to do |format|
       format.html { redirect_to(portal_student_clazzes_url) }
       format.xml  { head :ok }
       format.js
     end
-    @portal_student_clazz.destroy
   end
 end

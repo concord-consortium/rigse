@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @biologica_static_organism.uuid}
+  =ot_imports
+  %objects
+    %OTSystem{:local_id => 'system'}
+      =ot_bundles(:title => h(@biologica_static_organism.name))
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = h(Embeddable::Biologica::StaticOrganism.display_name + ': ' + @biologica_static_organism.name)
+              %object{ :refid => ot_refid_for(@biologica_static_organism) }
+      %library
+        =yield :layout

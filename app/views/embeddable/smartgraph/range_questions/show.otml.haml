@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@smartgraph_range_question.uuid
+- content_for(:smartgraph_range_question_object_id) do
+  =dom_id_for(@smartgraph_range_question)
+= render :partial => "show", :locals => { :smartgraph_range_question => @smartgraph_range_question }

@@ -1,77 +1,33 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
-describe Portal::GradeLevelsController do
-  describe "route generation" do
-    it "maps #index" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "index").should == "/portal_grade_levels"
+describe  Portal::GradeLevelsController do
+  describe "routing" do
+    it "recognizes and generates #index" do
+      { :get => "portal/grade_levels" }.should route_to(:controller => "portal/grade_levels", :action => "index")
     end
 
-    it "maps #new" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "new").should == "/portal_grade_levels/new"
+    it "recognizes and generates #new" do
+      { :get => "portal/grade_levels/new" }.should route_to(:controller => "portal/grade_levels", :action => "new")
     end
 
-    it "maps #show" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "show", :id => "1").should == "/portal_grade_levels/1"
+    it "recognizes and generates #show" do
+      { :get => "portal/grade_levels/1" }.should route_to(:controller => "portal/grade_levels", :action => "show", :id => "1")
     end
 
-    it "maps #edit" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "edit", :id => "1").should == "/portal_grade_levels/1/edit"
+    it "recognizes and generates #edit" do
+      { :get => "portal/grade_levels/1/edit" }.should route_to(:controller => "portal/grade_levels", :action => "edit", :id => "1")
     end
 
-    it "maps #create" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "create").should == {:path => "/portal_grade_levels", :method => :post}
+    it "recognizes and generates #create" do
+      { :post => "portal/grade_levels" }.should route_to(:controller => "portal/grade_levels", :action => "create") 
     end
 
-    it "maps #update" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "update", :id => "1").should == {:path =>"/portal_grade_levels/1", :method => :put}
+    it "recognizes and generates #update" do
+      { :put => "portal/grade_levels/1" }.should route_to(:controller => "portal/grade_levels", :action => "update", :id => "1") 
     end
 
-    it "maps #destroy" do
-      pending "Broken example"
-      route_for(:controller => "portal_grade_levels", :action => "destroy", :id => "1").should == {:path =>"/portal_grade_levels/1", :method => :delete}
-    end
-  end
-
-  describe "route recognition" do
-    it "generates params for #index" do
-      pending "Broken example"
-      params_from(:get, "/portal_grade_levels").should == {:controller => "portal_grade_levels", :action => "index"}
-    end
-
-    it "generates params for #new" do
-      pending "Broken example"
-      params_from(:get, "/portal_grade_levels/new").should == {:controller => "portal_grade_levels", :action => "new"}
-    end
-
-    it "generates params for #create" do
-      pending "Broken example"
-      params_from(:post, "/portal_grade_levels").should == {:controller => "portal_grade_levels", :action => "create"}
-    end
-
-    it "generates params for #show" do
-      pending "Broken example"
-      params_from(:get, "/portal_grade_levels/1").should == {:controller => "portal_grade_levels", :action => "show", :id => "1"}
-    end
-
-    it "generates params for #edit" do
-      pending "Broken example"
-      params_from(:get, "/portal_grade_levels/1/edit").should == {:controller => "portal_grade_levels", :action => "edit", :id => "1"}
-    end
-
-    it "generates params for #update" do
-      pending "Broken example"
-      params_from(:put, "/portal_grade_levels/1").should == {:controller => "portal_grade_levels", :action => "update", :id => "1"}
-    end
-
-    it "generates params for #destroy" do
-      pending "Broken example"
-      params_from(:delete, "/portal_grade_levels/1").should == {:controller => "portal_grade_levels", :action => "destroy", :id => "1"}
+    it "recognizes and generates #destroy" do
+      { :delete => "portal/grade_levels/1" }.should route_to(:controller => "portal/grade_levels", :action => "destroy", :id => "1") 
     end
   end
 end

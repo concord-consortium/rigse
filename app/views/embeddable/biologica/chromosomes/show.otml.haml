@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@biologica_chromosome.uuid
+- content_for(:chromosome_object_id) do
+  =dom_id_for(@biologica_chromosome)
+= render :partial => "show", :locals => { :biologica_chromosome=> @biologica_chromosome }

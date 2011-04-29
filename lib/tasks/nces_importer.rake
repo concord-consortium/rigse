@@ -14,12 +14,12 @@ namespace :portal do
     # 
     desc 'Download NCES CCD data files from NCES website'
     task :download_nces_data do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 Download District and School NCES Common Core of Data files from the 
 NCES website: http://nces.ed.gov/ccd/data/zip/
 
-HEREDOC
+      HEREDOC
       FileUtils.mkdir_p(nces_dir) unless File.exists?(nces_dir)
       Dir.chdir(nces_dir) do
         files = [
@@ -34,7 +34,7 @@ HEREDOC
         ]
         files.each do |url_str|
           if File.exists?(File.basename(url_str))
-            puts "  data file exists: #{File.basename(url_str)}"
+            puts "  data file already exists: #{File.basename(url_str)}"
           else
             cmd = "wget -q -nc #{url_str}"
             puts cmd
@@ -47,6 +47,7 @@ HEREDOC
           end
         end
       end
+      puts
     end
 
     # 
@@ -101,7 +102,8 @@ HEREDOC
     task :create_districts_and_schools_from_nces_data => :environment do
       states_and_provinces = APP_CONFIG[:states_and_provinces]
       active_school_levels = APP_CONFIG[:active_school_levels]
-      puts <<HEREDOC
+
+      puts <<-HEREDOC
 
 Creating districts and schools from NCES records for States listed in settings.yml
 
@@ -123,36 +125,60 @@ The following codes were calculated from the school's corresponding GSLO and GSH
   3 = High (low grade = 07 through 12; high grade = 12 only
   4 = Other (any other configuration not falling within the above three categories, including ungraded)
 
-HEREDOC
+      HEREDOC
+      
+      portal_school_field_names = [:name, :uuid, :state, :leaid_schoolnum, :zipcode, :district_id, :nces_school_id]
+      portal_district_field_names = [:name, :uuid, :state, :leaid, :zipcode, :nces_district_id]
+      import_options = { :validate => false }
+
       states_and_provinces.each do |state|
-        puts "processing NCES districts in #{state}"
-        nces_districts = Portal::Nces06District.find_all_by_MSTATE(state)
-        nces_districts.each do |nces_district|
-          nces_schools = nces_district.nces_schools
-          nces_school_levels = nces_schools.collect { |s| s.LEVEL }
-          if (nces_school_levels & active_school_levels).empty?
-            puts "\nskipping district: #{nces_district.capitalized_name}"
-            puts "  district schools levels: #{nces_school_levels.join(', ')}"
-          else
-            if district = nces_district.district
-              puts "\nexisting district: #{district.name}"
-            else
-              puts "\ncreating district: #{nces_district.capitalized_name}"
-              district = nces_district.create_district(:name => nces_district.capitalized_name)
+        count = 0
+        school_values = []
+        district_values = []
+        state_province_str = "#{state}, #{StatesAndProvinces::STATES_AND_PROVINCES[state]}"
+        nces_districts = Portal::Nces06District.find(:all, :conditions => { :MSTATE => state }, :select => "id, NAME, LEAID, LZIP, LSTATE")
+        if nces_districts.empty?
+          puts "\n*** No NCES districts found in state/province: #{state_province_str}"
+        else
+          puts "\n*** Processing #{nces_districts.length} NCES districts in: #{state_province_str}"
+          count = 0
+          nces_districts.each do |nces_district|
+            nces_schools = Portal::Nces06School.find(:all, :conditions => { :nces_district_id => nces_district.id }, :select => "LEVEL")
+            nces_school_levels = nces_schools.collect { |s| s.LEVEL }
+            count += 1
+            if count % 25 == 0
+              print '.'
+              STDOUT.flush
             end
-            if nces_schools = nces_district.nces_schools
+            if (nces_school_levels & active_school_levels).empty?
+              # puts "\nskipping district: #{nces_district.capitalized_name}"
+              # puts "  district schools levels: #{nces_school_levels.join(', ')}"
+            else
+              # new_districts << Portal::District.new(:name => nces_district.capitalized_name, :nces_district_id => nces_district.id)
+              district_values << [nces_district.capitalized_name, UUIDTools::UUID.timestamp_create.to_s, nces_district.LSTATE, nces_district.LEAID, nces_district.LZIP, nces_district.id]
+            end
+          end
+          # portal_districts = Portal::District.import(new_districts, :synchronize => new_districts)
+          Portal::District.import(portal_district_field_names, district_values, import_options)
+          portal_districts = Portal::District.find(:all, :conditions => { :state => state }, :select => "id, nces_district_id, state")
+          puts "\ncreated #{portal_districts.length} districts"
+          count = 0
+          portal_districts.each do |portal_district|
+            nces_schools = Portal::Nces06School.find(:all, :conditions => { :nces_district_id => portal_district.nces_district_id }, :select => "id, nces_district_id, NCESSCH, LZIP,SCHNAM, LEVEL")
+            nces_school_levels = nces_schools.collect { |s| s.LEVEL }
+            if count % 10 == 0
+              print '.'
+              STDOUT.flush
+            end
+            unless (nces_school_levels & active_school_levels).empty?          
               nces_schools.each do |nces_school|
-                if school = nces_school.school
-                  puts "\nexisting school: level: #{nces_school.LEVEL}, name: #{school.name}"
-                else
-                  if active_school_levels.include?(nces_school.LEVEL)
-                    puts "  creating school -- level: #{nces_school.LEVEL}, name: #{nces_school.capitalized_name}"
-                    school = nces_school.create_school(:name => nces_school.capitalized_name, :district_id => district.id)
-                  end
-                end
+                school_values << [nces_school.capitalized_name, UUIDTools::UUID.timestamp_create.to_s, portal_district.state, nces_school.NCESSCH, nces_school.LZIP,  portal_district.id, nces_school.id]
               end
             end
           end
+          Portal::School.import(portal_school_field_names, school_values, import_options)
+          portal_schools = Portal::School.find(:all, :conditions => { :state => state }, :select => "id")
+          puts "\ncreated #{portal_schools.length} schools"
         end
       end
     end

@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :test do
 
     def instance_to_fixture(object, name_attr)
@@ -20,7 +20,7 @@ namespace :rigse do
           quentin.encrypt_password
           aaron   = User.new(:login => 'aaron', :email => 'aaron@example.com', :password => "monkey", :password_confirmation => "monkey")
           aaron.encrypt_password
-          users_yaml = <<HEREDOC
+          users_yaml = <<-HEREDOC
 
 quentin:
   id:                        1
@@ -66,7 +66,7 @@ old_password_holder:
   activated_at:              <%= 5.days.ago.to_s :db %>
   state:                     active
 
-HEREDOC
+          HEREDOC
           f.write users_yaml
         end
       end

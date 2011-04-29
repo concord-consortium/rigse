@@ -6,12 +6,16 @@
     %li= print_link_for(@investigation)
     %li= print_link_for(@investigation, {:teacher_mode => true}) 
     %li= toggle_all('activities')
-    - unless(current_user.anonymous?)
+    - if (investigation.duplicateable?(current_user))
       %li= duplicate_link_for(@investigation)
     - if (investigation.changeable?(current_user))
       %li= edit_link_for(@investigation)
     
       %li#paste_link= paste_link_for(['activity'],{:container_id => @container_id}) # see pages_helper.rb
+
+#add_menu.dropdown
+  %ul
+    %li= link_to "add new activity", add_activity_investigation_path(@investigation)
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
     .action_menu_header_left
@@ -22,7 +26,7 @@
       = render :partial => "shared/notes_menu", :locals => {:authorable => investigation}
       = dropdown_button "actions.png", :title => "actions for this investigation"
       - if (investigation.changeable?(current_user))
-        = remote_link_button "add.png", :url => add_activity_investigation_path(investigation), :title => "add new activity"
+        = dropdown_button "add.png"
         = delete_button_for(investigation)
       - else
-        = link_button "add_disabled.png", "#", :title => "can't add activities"
+        = link_button "disabled.png", "#", :title => "can't add activities"

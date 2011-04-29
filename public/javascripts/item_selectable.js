@@ -1,6 +1,7 @@
 var selected_class = 'item_selected';
 var unselected_class = 'item_selectable';
 var rites_document = {};
+var last_rites_document = {}
 
 var is_selected = function(element) { return element.hasClassName(selected_class)}
 var selected = function(toggle_element)         { return (readCookie(id_for_toggle(toggle_element)) == "true");    }
@@ -36,8 +37,13 @@ var item_select = function(event) {
     selected.removeClassName(unselected_class);
     rites_document.selected_type=type;
     rites_document.selected_id=id;
+    if (rites_document.selected_type != last_rites_document.selected_type || 
+        rites_document.selected_id != last_rites_document.selected_id) {
+          update_links();
+          last_rites_document.selected_id = rites_document.selected_id;
+          last_rites_document.selected_type = rites_document.selected_type;
+    }
   }
-  update_links();
 }
 
 var item_deselect = function() {
@@ -53,7 +59,7 @@ var item_deselect = function() {
 var update_links = function() {
   if(rites_document && $('copy_link')) {
     if(rites_document.selected_type !=null) {
-      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">copy #{type} #{name}</a>');
+      var template = new Template('<a href="#" class="rollover"><img src="/images/paste-in.png"></a><a href="#">Copy #{name}</a>');
       // var template = new Template('<a>copy #{type}:#{id}</a>');
       $('copy_link').addClassName('copy_paste_enabled');
       $('copy_link').removeClassName('copy_paste_disabled');
@@ -71,7 +77,7 @@ var update_links = function() {
       $('copy_link').addClassName('copy_paste_disabled');
       $('copy_link').removeClassName('copy_paste_enabled');      
       $('copy_link').stopObserving();  
-      $('copy_link').update('copy (nothing selected)');
+      $('copy_link').update('Copy (nothing selected)');
     }
   }
 }

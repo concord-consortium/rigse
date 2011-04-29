@@ -1,0 +1,11 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(dataservice_blob), :class => "container_element" }
+  = show_menu_for(dataservice_blob, options)
+
+  %div{:id => dom_id_for(dataservice_blob, :item), :class => 'item'}
+    %div{:id => dom_id_for(dataservice_blob, :details), :class => 'content'}
+      = wrap_edit_link_around_content(dataservice_blob, options={:complete => mce_init_string}) do
+        = dataservice_blob.html_content(dataservice_blob_raw_url(:id => dataservice_blob.id, :token => dataservice_blob.token))
+        %p
+          %ul.menu_v
+    

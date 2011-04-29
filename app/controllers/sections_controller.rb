@@ -1,25 +1,21 @@
 class SectionsController < ApplicationController
-  
+  toggle_controller_for :sections
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
-  
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
   protected 
-  
   def can_create
     if (current_user.anonymous?)
       flash[:error] = "Anonymous users can not create sections"
       redirect_back_or sections_path
     end
   end
-  
   def render_scope
     @render_scope = @section
   end
-  
   def find_entities
     if (params[:id])
       @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
@@ -57,9 +53,37 @@ class SectionsController < ApplicationController
   ##
   ##
   def index
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @section }
+    @include_drafts = param_find(:include_drafts)
+    @name = param_find(:name)
+
+    pagination = params[:page]
+    if (pagination)
+       @include_drafts = param_find(:include_drafts)
+    else
+      @include_drafts = param_find(:include_drafts,true)
+    end
+
+    @sections = Section.search_list({
+      :name => @name, 
+      :portal_clazz_id => @portal_clazz_id,
+      :include_drafts => @include_drafts, 
+      :paginate => true, 
+      :page => pagination
+    })
+
+    if params[:mine_only]
+      @sections = @sections.reject { |i| i.user.id != current_user.id }
+    end
+
+    @paginated_objects = @sections
+    
+    if request.xhr?
+      render :partial => 'sections/runnable_list', :locals => {:sections => @sections, :paginated_objects => @sections}
+    else
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @section }
+      end
     end
   end
 
@@ -105,7 +129,7 @@ class SectionsController < ApplicationController
       format.js {
         @page = Page.create
         @page.user = current_user
-        @xhtml = Xhtml.create
+        @xhtml = Embeddable::Xhtml.create
         @xhtml.user = current_user
         @xhtml.save!
         @xhtml.pages << @page
@@ -200,20 +224,20 @@ class SectionsController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
+    @copy = @section.clone :include => {:pages => {:page_elements => :embeddable}}
     @copy.name = "copy of #{@section.name}"
     @copy.save
     @copy.deep_set_user current_user
     @activity = @copy.activity
     flash[:notice] ="Copied #{@section.name}"
-    redirect_to url_for @copy
+    redirect_to url_for(@copy)
   end
   
   #
   # Construct a link suitable for a 'paste' action in this controller.
   #
   def paste_link
-    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:parmas => params}
+    render :partial => 'shared/paste_link', :locals =>{:types => ['page'],:params => params}
   end
 
   #
@@ -221,22 +245,19 @@ class SectionsController < ApplicationController
   # 
   def paste
     if @section.changeable?(current_user)
-      clipboard_data_type = params[:clipboard_data_type] || cookies[:clipboard_data_type]
-      clipboard_data_id = params[:clipboard_data_id] || cookies[:clipboard_data_id]
-      klass = clipboard_data_type.pluralize.classify.constantize
-      @original = klass.find(clipboard_data_id)
+      @original = clipboard_object(params)
       if @original
         @container = params[:container] || 'section_pages_list'
         if @original.class == Page
           @component = @original.duplicate
         else
-          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
-          if (@component)
-            # @component.original = @original
-            @component.name = "copy of #{@component.name}"
-            @component.section = @section
-            @component.save
-          end
+          @component = @original.clone :include =>  {:page_elements => :embeddable}
+          @component.name = "copy of #{@original.name}"
+        end
+        if (@component)
+          # @component.original = @original
+          @component.section = @section
+          @component.save
         end
         @component.deep_set_user current_user
       end

@@ -1,6 +1,6 @@
 require 'rake'
 
-namespace :rigse do
+namespace :app do
   namespace :convert do
     desc 'run deep_set_user on each owned investigation using the current owner of the investigation)'
     task :run_deep_set_user_on_all_investigations => :environment do

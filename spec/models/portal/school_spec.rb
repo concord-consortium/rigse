@@ -38,12 +38,12 @@ describe Portal::School do
     teacher = Factory(:portal_teacher)
     school.add_member(teacher)
     school.reload
-    school.members.size.should eql 1
+    school.members.size.should eql(1)
     school.add_member(teacher)
     
-    school.members.size.should eql 1
+    school.members.size.should eql(1)
     school.reload
-    school.members.size.should eql 1
+    school.members.size.should eql(1)
   end
   
   
@@ -63,7 +63,7 @@ describe Portal::School do
       it "finds and return the first school that is associated with the NCES school if one exists" do
         found = Portal::School.find_by_state_and_nces_local_id('RI', 39123)
         found.should_not be_nil
-        found.should eql @school
+        found.should eql(@school)
       end
       it "returns nil if there is no matching school" do
         found = Portal::School.find_by_state_and_nces_local_id('MA', 39123)
@@ -74,7 +74,7 @@ describe Portal::School do
       it "finds and returns the first school that is associated with the NCES school name." do
         found = Portal::School.find_by_state_and_school_name('RI', "Woonsocket High School")
         found.should_not be_nil
-        found.should eql @school
+        found.should eql(@school)
       end
       it "if there is no matching school, it should return nil" do
         found = Portal::School.find_by_state_and_school_name('RI', "Amherst Regional High School")

@@ -1,0 +1,16 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      = "#{current_project.name}: Technical Documentation"
+    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
+    %meta{ :name => "distribution", :content => "all" }
+    %meta{ :name => "robots", :content => "all" }
+    %meta{ :name => "resource-type", :content => "document" }
+    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
+
+    = stylesheet_link_tag "readme"
+    
+  %body
+    = yield :layout

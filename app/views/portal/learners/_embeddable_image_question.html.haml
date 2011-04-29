@@ -1,0 +1,13 @@
+%div{:class => 'question_container'}
+  %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
+    %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - saveable = saveable_for_learner(embeddable, learner)
+      - css_style = saveable.answered? ? 'answered' : 'not_answered'
+      %item{:style => 'display: block;'}
+        %strong
+          = embeddable.prompt
+      %item{:class => css_style, :style => 'display: block;'}
+        - if saveable.answered? && saveable.answer
+          %img{:src => dataservice_blob_raw_url(:id => saveable.answer.id, :token => saveable.answer.token)}
+        - else
+          = 'not answered'

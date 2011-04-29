@@ -1,3 +1,3 @@
-Factory.define :xhtml do |f|
+Factory.define :xhtml, :class => Embeddable::Xhtml do |f|
 end
 

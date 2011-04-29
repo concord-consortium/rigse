@@ -1,5 +1,7 @@
 class PageElementsController < ApplicationController
+  toggle_controller_for :page_elements
 
+  public
   # DELETE /page_elements/1
   # DELETE /page_elements/1.xml
   def destroy
@@ -11,5 +13,6 @@ class PageElementsController < ApplicationController
       format.js
     end
   end
-  
+
+
 end

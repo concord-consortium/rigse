@@ -1,0 +1,967 @@
+--- 
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (K-2) INQ - 1
+  uuid: 314e27ea-61fe-11df-a821-001ff3caa767
+  id: 1
+  assessment_target_id: 1
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (3-4) INQ - 1
+  uuid: 315333ac-61fe-11df-a821-001ff3caa767
+  id: 2
+  assessment_target_id: 1
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (5-6) INQ - 1
+  uuid: 3155a9de-61fe-11df-a821-001ff3caa767
+  id: 3
+  assessment_target_id: 2
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (7-8) INQ - 1
+  uuid: 31584856-61fe-11df-a821-001ff3caa767
+  id: 4
+  assessment_target_id: 2
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (9-11) INQ - 1
+  uuid: 315a996c-61fe-11df-a821-001ff3caa767
+  id: 5
+  assessment_target_id: 3
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (Ext) INQ - 1
+  uuid: 315d25ba-61fe-11df-a821-001ff3caa767
+  id: 6
+  assessment_target_id: 3
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (K-2) POC - 2
+  uuid: 31661bb6-61fe-11df-a821-001ff3caa767
+  id: 7
+  assessment_target_id: 4
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (3-4) POC - 2
+  uuid: 3169c360-61fe-11df-a821-001ff3caa767
+  id: 8
+  assessment_target_id: 4
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (5-6) INQ+POC - 2
+  uuid: 316cb32c-61fe-11df-a821-001ff3caa767
+  id: 9
+  assessment_target_id: 5
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (7-8) INQ+POC - 2
+  uuid: 316f33fe-61fe-11df-a821-001ff3caa767
+  id: 10
+  assessment_target_id: 5
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (9-11) NOS+MAS - 2
+  uuid: 3172eb2a-61fe-11df-a821-001ff3caa767
+  id: 11
+  assessment_target_id: 6
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (K-2) SAE - 3
+  uuid: 317a7ffc-61fe-11df-a821-001ff3caa767
+  id: 12
+  assessment_target_id: 7
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (3-4) SAE - 3
+  uuid: 317d1e42-61fe-11df-a821-001ff3caa767
+  id: 13
+  assessment_target_id: 7
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (5-6) SAE+INQ - 3
+  uuid: 31801eb2-61fe-11df-a821-001ff3caa767
+  id: 14
+  assessment_target_id: 8
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (7-8) SAE+INQ - 3
+  uuid: 3198edfc-61fe-11df-a821-001ff3caa767
+  id: 15
+  assessment_target_id: 8
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:28 Z
+  gse_key: PS1 (9-11) POC - 3
+  uuid: 319afea8-61fe-11df-a821-001ff3caa767
+  id: 16
+  assessment_target_id: 9
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (5-6) SAE+MAS - 4
+  uuid: 31a22ab6-61fe-11df-a821-001ff3caa767
+  id: 17
+  assessment_target_id: 10
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (7-8) SAE+MAS - 4
+  uuid: 31a625d0-61fe-11df-a821-001ff3caa767
+  id: 18
+  assessment_target_id: 10
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (9-11) FAF+MAS - 4
+  uuid: 31a93f40-61fe-11df-a821-001ff3caa767
+  id: 19
+  assessment_target_id: 11
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (Ext) FAF+MAS - 4
+  uuid: 31ac8218-61fe-11df-a821-001ff3caa767
+  id: 20
+  assessment_target_id: 11
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (5-6) MAS - 5
+  uuid: 31b10428-61fe-11df-a821-001ff3caa767
+  id: 21
+  assessment_target_id: 12
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS1 (7-8) MAS - 5
+  uuid: 31b3a0e8-61fe-11df-a821-001ff3caa767
+  id: 22
+  assessment_target_id: 12
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (K-2) SAE - 4
+  uuid: 31bd5d0e-61fe-11df-a821-001ff3caa767
+  id: 23
+  assessment_target_id: 13
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (3-4) SAE - 4
+  uuid: 31c0e668-61fe-11df-a821-001ff3caa767
+  id: 24
+  assessment_target_id: 13
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (5-6) SAE+POC - 6
+  uuid: 31c4dc28-61fe-11df-a821-001ff3caa767
+  id: 25
+  assessment_target_id: 14
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (7-8) SAE+POC - 6
+  uuid: 31c88cf6-61fe-11df-a821-001ff3caa767
+  id: 26
+  assessment_target_id: 14
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (9-11) SAE+POC - 5
+  uuid: 31cc4b2a-61fe-11df-a821-001ff3caa767
+  id: 27
+  assessment_target_id: 15
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (Ext) SAE+POC - 5
+  uuid: 31d07b32-61fe-11df-a821-001ff3caa767
+  id: 28
+  assessment_target_id: 15
+  created_at: 2010-05-17 21:50:22 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (K-2) SAE - 5
+  uuid: 31da2f92-61fe-11df-a821-001ff3caa767
+  id: 29
+  assessment_target_id: 16
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (3-4) SAE - 5
+  uuid: 31dc5ea2-61fe-11df-a821-001ff3caa767
+  id: 30
+  assessment_target_id: 16
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (5-6) SAE+INQ+POC - 7
+  uuid: 31df517a-61fe-11df-a821-001ff3caa767
+  id: 31
+  assessment_target_id: 17
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (7-8) SAE+INQ+POC - 7
+  uuid: 31e2053c-61fe-11df-a821-001ff3caa767
+  id: 32
+  assessment_target_id: 17
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (9-11) SAE+INQ - 6
+  uuid: 31e4aa8a-61fe-11df-a821-001ff3caa767
+  id: 33
+  assessment_target_id: 18
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (Ext) SAE+INQ - 6
+  uuid: 32008aa2-61fe-11df-a821-001ff3caa767
+  id: 34
+  assessment_target_id: 18
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (K-2) SAE+INQ - 6
+  uuid: 3207a68e-61fe-11df-a821-001ff3caa767
+  id: 35
+  assessment_target_id: 19
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (3-4) SAE+INQ - 6
+  uuid: 320a61da-61fe-11df-a821-001ff3caa767
+  id: 36
+  assessment_target_id: 19
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS2 (9-11) SAE - 7
+  uuid: 320d09ee-61fe-11df-a821-001ff3caa767
+  id: 37
+  assessment_target_id: 20
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (K-2) SAE+INQ - 7
+  uuid: 3217e8dc-61fe-11df-a821-001ff3caa767
+  id: 38
+  assessment_target_id: 21
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (3-4) SAE+INQ - 7
+  uuid: 321b063e-61fe-11df-a821-001ff3caa767
+  id: 39
+  assessment_target_id: 21
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (5-6) INQ+POC - 8
+  uuid: 321d8a8a-61fe-11df-a821-001ff3caa767
+  id: 40
+  assessment_target_id: 22
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (7-8) INQ+POC - 8
+  uuid: 32202eb6-61fe-11df-a821-001ff3caa767
+  id: 41
+  assessment_target_id: 22
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (9-11) INQ+POC - 8
+  uuid: 32247930-61fe-11df-a821-001ff3caa767
+  id: 42
+  assessment_target_id: 23
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (Ext) INQ+POC - 8
+  uuid: 32277cca-61fe-11df-a821-001ff3caa767
+  id: 43
+  assessment_target_id: 23
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (K-2) SAE+INQ - 8
+  uuid: 32305fc0-61fe-11df-a821-001ff3caa767
+  id: 44
+  assessment_target_id: 24
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (3-4) SAE+INQ - 8
+  uuid: 323301f8-61fe-11df-a821-001ff3caa767
+  id: 45
+  assessment_target_id: 24
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (9-11) POC - 9
+  uuid: 32360042-61fe-11df-a821-001ff3caa767
+  id: 46
+  assessment_target_id: 25
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: PS3 (9-11) SAE - 10
+  uuid: 323aa44e-61fe-11df-a821-001ff3caa767
+  id: 47
+  assessment_target_id: 26
+  created_at: 2010-05-17 21:50:23 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) INQ - 1
+  uuid: 33135ab4-61fe-11df-a821-001ff3caa767
+  id: 48
+  assessment_target_id: 27
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) INQ - 1
+  uuid: 3317df8a-61fe-11df-a821-001ff3caa767
+  id: 49
+  assessment_target_id: 27
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (5-6) INQ+POC - 1
+  uuid: 331c18c0-61fe-11df-a821-001ff3caa767
+  id: 50
+  assessment_target_id: 28
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (7-8) INQ+POC - 1
+  uuid: 331fbb60-61fe-11df-a821-001ff3caa767
+  id: 51
+  assessment_target_id: 28
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (9-11) INQ+POC - 1
+  uuid: 33222b84-61fe-11df-a821-001ff3caa767
+  id: 52
+  assessment_target_id: 29
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) INQ - 2
+  uuid: 332a7190-61fe-11df-a821-001ff3caa767
+  id: 53
+  assessment_target_id: 30
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) INQ - 2
+  uuid: 332ca44c-61fe-11df-a821-001ff3caa767
+  id: 54
+  assessment_target_id: 30
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (5-6) SAE - 2
+  uuid: 332ebdcc-61fe-11df-a821-001ff3caa767
+  id: 55
+  assessment_target_id: 31
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (7-8) SAE - 2
+  uuid: 3331b19e-61fe-11df-a821-001ff3caa767
+  id: 56
+  assessment_target_id: 31
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (9-11) NOS - 2
+  uuid: 3333b250-61fe-11df-a821-001ff3caa767
+  id: 57
+  assessment_target_id: 32
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) NOS - 3
+  uuid: 333d85c8-61fe-11df-a821-001ff3caa767
+  id: 58
+  assessment_target_id: 33
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) NOS - 3
+  uuid: 33407f62-61fe-11df-a821-001ff3caa767
+  id: 59
+  assessment_target_id: 33
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (5-6) POC - 3
+  uuid: 335b400e-61fe-11df-a821-001ff3caa767
+  id: 60
+  assessment_target_id: 34
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (7-8) POC - 3
+  uuid: 335d6ea6-61fe-11df-a821-001ff3caa767
+  id: 61
+  assessment_target_id: 34
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (9-11) SAE+POC - 3
+  uuid: 336083f2-61fe-11df-a821-001ff3caa767
+  id: 62
+  assessment_target_id: 35
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) SAE+INQ - 4
+  uuid: 336cc2fc-61fe-11df-a821-001ff3caa767
+  id: 63
+  assessment_target_id: 36
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) SAE+INQ - 4
+  uuid: 336ed6dc-61fe-11df-a821-001ff3caa767
+  id: 64
+  assessment_target_id: 36
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (5-6) SAE+POC - 4
+  uuid: 3371d6fc-61fe-11df-a821-001ff3caa767
+  id: 65
+  assessment_target_id: 37
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (7-8) SAE+POC - 4
+  uuid: 3375f8fe-61fe-11df-a821-001ff3caa767
+  id: 66
+  assessment_target_id: 37
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (9-11) INQ+POC+MAS - 4
+  uuid: 33791d18-61fe-11df-a821-001ff3caa767
+  id: 67
+  assessment_target_id: 38
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) POC - 5
+  uuid: 33807324-61fe-11df-a821-001ff3caa767
+  id: 68
+  assessment_target_id: 39
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) POC - 5
+  uuid: 33838d70-61fe-11df-a821-001ff3caa767
+  id: 69
+  assessment_target_id: 39
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (5-6) INQ+POC - 5
+  uuid: 33868516-61fe-11df-a821-001ff3caa767
+  id: 70
+  assessment_target_id: 40
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (7-8) INQ+POC - 5
+  uuid: 3388fbc0-61fe-11df-a821-001ff3caa767
+  id: 71
+  assessment_target_id: 40
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (K-2) FAF - 6
+  uuid: 338cba08-61fe-11df-a821-001ff3caa767
+  id: 72
+  assessment_target_id: 41
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS1 (3-4) FAF - 6
+  uuid: 338f3fb2-61fe-11df-a821-001ff3caa767
+  id: 73
+  assessment_target_id: 41
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (5-6) MAS - 6
+  uuid: 3393a69c-61fe-11df-a821-001ff3caa767
+  id: 74
+  assessment_target_id: 42
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (7-8) MAS - 6
+  uuid: 3396b2ce-61fe-11df-a821-001ff3caa767
+  id: 75
+  assessment_target_id: 42
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (5-6) NOS - 7
+  uuid: 339bd3ee-61fe-11df-a821-001ff3caa767
+  id: 76
+  assessment_target_id: 43
+  created_at: 2010-05-17 21:50:25 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (7-8) NOS - 7
+  uuid: 339e5d9e-61fe-11df-a821-001ff3caa767
+  id: 77
+  assessment_target_id: 43
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (5-6) SAE+POC - 8
+  uuid: 33a2f2a0-61fe-11df-a821-001ff3caa767
+  id: 78
+  assessment_target_id: 44
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS2 (7-8) SAE+POC - 8
+  uuid: 33a6993c-61fe-11df-a821-001ff3caa767
+  id: 79
+  assessment_target_id: 44
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: ESS3 (9-11) NOS - 5
+  uuid: 33c243c6-61fe-11df-a821-001ff3caa767
+  id: 80
+  assessment_target_id: 45
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (K-2) INQ+POC - 1
+  uuid: 34098966-61fe-11df-a821-001ff3caa767
+  id: 81
+  assessment_target_id: 48
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (3-4) INQ+POC - 1
+  uuid: 340c813e-61fe-11df-a821-001ff3caa767
+  id: 82
+  assessment_target_id: 48
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (5-6) SAE+INQ - 1
+  uuid: 34101df8-61fe-11df-a821-001ff3caa767
+  id: 83
+  assessment_target_id: 49
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (7-8) SAE+INQ - 1
+  uuid: 3429c672-61fe-11df-a821-001ff3caa767
+  id: 84
+  assessment_target_id: 49
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (9-11) FAF+SAE+INQ - 1
+  uuid: 342c5fae-61fe-11df-a821-001ff3caa767
+  id: 85
+  assessment_target_id: 50
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (Ext) FAF+SAE+INQ - 1
+  uuid: 342fa902-61fe-11df-a821-001ff3caa767
+  id: 86
+  assessment_target_id: 50
+  created_at: 2010-05-17 21:50:26 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (K-2) SAE - 2
+  uuid: 34389224-61fe-11df-a821-001ff3caa767
+  id: 87
+  assessment_target_id: 51
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (3-4) SAE - 2
+  uuid: 343ae81c-61fe-11df-a821-001ff3caa767
+  id: 88
+  assessment_target_id: 51
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (5-6) FAF+SAE - 2
+  uuid: 343d0cf0-61fe-11df-a821-001ff3caa767
+  id: 89
+  assessment_target_id: 52
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (7-8) FAF+SAE - 2
+  uuid: 343f38b8-61fe-11df-a821-001ff3caa767
+  id: 90
+  assessment_target_id: 52
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (9-11) FAF+POC - 2
+  uuid: 344280e0-61fe-11df-a821-001ff3caa767
+  id: 91
+  assessment_target_id: 53
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (Ext) FAF+POC - 2
+  uuid: 34464522-61fe-11df-a821-001ff3caa767
+  id: 92
+  assessment_target_id: 53
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (K-2) POC - 3
+  uuid: 344d23d8-61fe-11df-a821-001ff3caa767
+  id: 93
+  assessment_target_id: 54
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (3-4) POC - 3
+  uuid: 34505364-61fe-11df-a821-001ff3caa767
+  id: 94
+  assessment_target_id: 54
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (5-6) POC - 3
+  uuid: 3453745e-61fe-11df-a821-001ff3caa767
+  id: 95
+  assessment_target_id: 55
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (7-8) POC - 3
+  uuid: 3456b47a-61fe-11df-a821-001ff3caa767
+  id: 96
+  assessment_target_id: 55
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (K-2) FAF - 4
+  uuid: 345ebc7e-61fe-11df-a821-001ff3caa767
+  id: 97
+  assessment_target_id: 56
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (3-4) FAF - 4
+  uuid: 3461351c-61fe-11df-a821-001ff3caa767
+  id: 98
+  assessment_target_id: 56
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (5-6) FAF - 4
+  uuid: 3465b9d4-61fe-11df-a821-001ff3caa767
+  id: 99
+  assessment_target_id: 57
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS1 (7-8) FAF - 4
+  uuid: 34690a12-61fe-11df-a821-001ff3caa767
+  id: 100
+  assessment_target_id: 57
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (K-2) SAE - 5
+  uuid: 34721468-61fe-11df-a821-001ff3caa767
+  id: 101
+  assessment_target_id: 58
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (3-4) SAE - 5
+  uuid: 3475038a-61fe-11df-a821-001ff3caa767
+  id: 102
+  assessment_target_id: 58
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (5-6) SAE+INQ - 5
+  uuid: 347736b4-61fe-11df-a821-001ff3caa767
+  id: 103
+  assessment_target_id: 59
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (7-8) SAE+INQ - 5
+  uuid: 34928a9a-61fe-11df-a821-001ff3caa767
+  id: 104
+  assessment_target_id: 59
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (9-11) SAE+INQ - 3
+  uuid: 34967c0e-61fe-11df-a821-001ff3caa767
+  id: 105
+  assessment_target_id: 60
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (Ext) SAE+INQ - 3
+  uuid: 3499af3c-61fe-11df-a821-001ff3caa767
+  id: 106
+  assessment_target_id: 60
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (K-2) SAE - 6
+  uuid: 34a2b47e-61fe-11df-a821-001ff3caa767
+  id: 107
+  assessment_target_id: 61
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (3-4) SAE - 6
+  uuid: 34a6085e-61fe-11df-a821-001ff3caa767
+  id: 108
+  assessment_target_id: 61
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (5-6) SAE - 6
+  uuid: 34a95bb2-61fe-11df-a821-001ff3caa767
+  id: 109
+  assessment_target_id: 62
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (7-8) SAE - 6
+  uuid: 34ac4c6e-61fe-11df-a821-001ff3caa767
+  id: 110
+  assessment_target_id: 62
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (9-11) SAE+POC - 4
+  uuid: 34afa080-61fe-11df-a821-001ff3caa767
+  id: 111
+  assessment_target_id: 63
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (Ext) SAE+POC - 4
+  uuid: 34b2bad6-61fe-11df-a821-001ff3caa767
+  id: 112
+  assessment_target_id: 63
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (5-6) SAE - 7
+  uuid: 34b8bfd0-61fe-11df-a821-001ff3caa767
+  id: 113
+  assessment_target_id: 64
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (7-8) SAE - 7
+  uuid: 34bc0276-61fe-11df-a821-001ff3caa767
+  id: 114
+  assessment_target_id: 64
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS2 (9-11) NOS - 5
+  uuid: 34bfb0ec-61fe-11df-a821-001ff3caa767
+  id: 115
+  assessment_target_id: 65
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (K-2) SAE - 7
+  uuid: 34caf5c4-61fe-11df-a821-001ff3caa767
+  id: 116
+  assessment_target_id: 66
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (3-4) SAE - 7
+  uuid: 34cd8636-61fe-11df-a821-001ff3caa767
+  id: 117
+  assessment_target_id: 66
+  created_at: 2010-05-17 21:50:27 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (5-6) FAF+MAS - 8
+  uuid: 34d06ef0-61fe-11df-a821-001ff3caa767
+  id: 118
+  assessment_target_id: 67
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (7-8) FAF+MAS - 8
+  uuid: 34d4d076-61fe-11df-a821-001ff3caa767
+  id: 119
+  assessment_target_id: 67
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (9-11) NOS - 6
+  uuid: 34d83054-61fe-11df-a821-001ff3caa767
+  id: 120
+  assessment_target_id: 68
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (Ext) NOS - 6
+  uuid: 34dae916-61fe-11df-a821-001ff3caa767
+  id: 121
+  assessment_target_id: 68
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (5-6) POC - 9
+  uuid: 34e141e4-61fe-11df-a821-001ff3caa767
+  id: 122
+  assessment_target_id: 69
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (7-8) POC - 9
+  uuid: 34e51c4c-61fe-11df-a821-001ff3caa767
+  id: 123
+  assessment_target_id: 69
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (9-11) INQ+POC - 7
+  uuid: 3501aee8-61fe-11df-a821-001ff3caa767
+  id: 124
+  assessment_target_id: 70
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS3 (Ext) INQ+POC - 7
+  uuid: 3504fc7e-61fe-11df-a821-001ff3caa767
+  id: 125
+  assessment_target_id: 70
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (K-2) FAF - 8
+  uuid: 350ec24a-61fe-11df-a821-001ff3caa767
+  id: 126
+  assessment_target_id: 71
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (3-4) FAF - 8
+  uuid: 3512b13e-61fe-11df-a821-001ff3caa767
+  id: 127
+  assessment_target_id: 71
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (5-6) INQ - 10
+  uuid: 35159732-61fe-11df-a821-001ff3caa767
+  id: 128
+  assessment_target_id: 72
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (7-8) INQ - 10
+  uuid: 3518515c-61fe-11df-a821-001ff3caa767
+  id: 129
+  assessment_target_id: 72
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (9-11) INQ+NOS - 9
+  uuid: 351b0c26-61fe-11df-a821-001ff3caa767
+  id: 130
+  assessment_target_id: 73
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (Ext) INQ+NOS - 9
+  uuid: 351f11b8-61fe-11df-a821-001ff3caa767
+  id: 131
+  assessment_target_id: 73
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: K-2
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (K-2) POC - 9
+  uuid: 35274bb2-61fe-11df-a821-001ff3caa767
+  id: 132
+  assessment_target_id: 74
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 3-4
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (3-4) POC - 9
+  uuid: 352aae38-61fe-11df-a821-001ff3caa767
+  id: 133
+  assessment_target_id: 74
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 5-6
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (5-6) INQ+POC - 11
+  uuid: 352d6330-61fe-11df-a821-001ff3caa767
+  id: 134
+  assessment_target_id: 75
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (7-8) INQ+POC - 11
+  uuid: 35302c32-61fe-11df-a821-001ff3caa767
+  id: 135
+  assessment_target_id: 75
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 9-11
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (9-11) FAF+SAE - 10
+  uuid: 35332874-61fe-11df-a821-001ff3caa767
+  id: 136
+  assessment_target_id: 76
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: Ext
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (Ext) FAF+SAE - 10
+  uuid: 3535aa7c-61fe-11df-a821-001ff3caa767
+  id: 137
+  assessment_target_id: 76
+  created_at: 2010-05-17 21:50:28 Z
+- grade_span: 7-8
+  updated_at: 2010-05-17 21:50:29 Z
+  gse_key: LS4 (7-8) POC - 12
+  uuid: 353b132c-61fe-11df-a821-001ff3caa767
+  id: 138
+  assessment_target_id: 77
+  created_at: 2010-05-17 21:50:28 Z

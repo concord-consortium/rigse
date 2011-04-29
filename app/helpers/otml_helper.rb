@@ -1,7 +1,11 @@
-  module OtmlHelper
+module OtmlHelper
 
+  def net_logo_package_name
+    jnlp_adaptor.net_logo_package_name
+  end
+  
   def ot_menu_display_name(object)
-    if teacher_only?(object) 
+    if for_teacher_only?(object) 
       return "+ #{object.name}"
     end
     return object.name
@@ -12,9 +16,9 @@
       '${' + object + '}'
     else
       if prefixes.empty?
-        '${' + dom_id_for(object) + '}'
+        '${' + ot_dom_id_for(object) + '}'
       else
-        '${' + dom_id_for(object, prefixes) + '}'
+        '${' + ot_dom_id_for(object, prefixes) + '}'
       end
     end
   end
@@ -24,15 +28,23 @@
       object
     else
       if prefixes.empty?
-        dom_id_for(object)
+        ot_dom_id_for(object)
       else
-        dom_id_for(object, prefixes)
+        ot_dom_id_for(object, prefixes)
       end
     end
   end
   
+  def ot_dom_id_for(component, *optional_prefixes)
+    optional_prefixes.flatten!
+    prefix = ''
+    optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
+    class_name = component.class.name.split('::').last.underscore
+    "#{prefix}#{class_name}_#{component.id}"
+  end
+  
   def data_filter_inports
-    DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+    Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
   end
   
   def imports
@@ -62,12 +74,14 @@
       org.concord.otrunk.ui.swing.OTChoiceViewConfig
       org.concord.otrunk.ui.OTCurriculumUnit
       org.concord.otrunk.ui.OTText
-      org.concord.otrunk.ui.OTUDLContainer
+      org.concord.otrunk.ui.OTRITESContainer
       org.concord.otrunk.ui.OTSection
       org.concord.otrunk.ui.menu.OTMenu
       org.concord.otrunk.ui.menu.OTMenuRule
       org.concord.otrunk.ui.menu.OTNavBar
       org.concord.otrunk.ui.question.OTQuestion
+      org.concord.otrunk.ui.snapshot.OTSnapshotAlbum
+      org.concord.otrunk.ui.snapshot.OTSnapshotButton
       org.concord.otrunk.view.OTFolderObject
       org.concord.otrunk.view.OTViewBundle
       org.concord.otrunk.view.OTViewChild
@@ -78,7 +92,6 @@
       org.concord.otrunk.view.document.OTDocumentViewConfig
       org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig
       org.concord.otrunkmw.OTModelerPage
-      org.concord.otrunknl41.OTNLogoModel
       org.concord.sensor.state.OTZeroSensor
       org.concord.sensor.state.OTDeviceConfig
       org.concord.sensor.state.OTExperimentRequest
@@ -112,7 +125,13 @@
       org.concord.otrunk.script.ui.OTScriptObject
       org.concord.otrunk.script.ui.OTScriptVariableView
       org.concord.smartgraph.OTSmartGraphTool
-    } + data_filter_inports + (@otrunk_imports || []).uniq
+      org.concord.multimedia.state.OTSoundGrapherModel
+    } + data_filter_inports + (@otrunk_imports || [])
+    imports <<  "org.concord.#{net_logo_package_name}.OTNLogoModel"
+    Diy::ModelType.all.each do |mt|
+      imports << mt.otrunk_object_class
+    end
+    return imports.uniq
   end
   
   def ot_imports
@@ -126,7 +145,7 @@
   end
 
   def view_entries
-    [
+    v_entries = [
       ['text_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['question_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
       ['choice_radio_button_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceRadioButtonView'],
@@ -139,7 +158,7 @@
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
       ['data_table_view', 'org.concord.data.state.OTDataTable', 'org.concord.data.state.OTDataTableView'],
-      ['udl_container', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerView'],
+      ['rites_container', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerView'],
       ['curriculum_unit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitView'],
       ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
       ['menu_page_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageView'],
@@ -150,7 +169,7 @@
       ['tab_container_view','org.concord.otrunk.ui.OTTabContainer', 'org.concord.otrunk.ui.swing.OTTabContainerView'],
       ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageView'],
-      ['n_logo_model', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelView'],
+      ['n_logo_model', "org.concord.#{net_logo_package_name}.OTNLogoModel", "org.concord.#{net_logo_package_name}.OTNLogoModelView"],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismView'],
@@ -161,13 +180,20 @@
       ['biologica_multiple_organism','org.concord.otrunk.biologica.OTMultipleOrganism','org.concord.otrunk.biologica.ui.OTMultipleOrganismView'],
       ['biologica_family','org.concord.otrunk.biologica.OTFamily','org.concord.otrunk.ui.swing.OTNullView'],
       ['biologica_sex','org.concord.otrunk.biologica.OTSex','org.concord.otrunk.biologica.ui.OTSexView'],
+      ['snapshot_album_view', 'org.concord.otrunk.ui.snapshot.OTSnapshotAlbum', 'org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView'],
+      ['snapshot_button_view' ,'org.concord.otrunk.ui.snapshot.OTSnapshotButton', 'org.concord.otrunk.ui.snapshot.OTSnapshotButtonView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonView'],
       ['lab_book_view' ,'org.concord.otrunk.labbook.OTLabbook', 'org.concord.otrunk.labbook.ui.OTLabbookView'],
-      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView'],
+      ['lab_book_entry_chooser', 'org.concord.otrunk.labbook.OTLabbookEntryChooser', 'org.concord.otrunk.labbook.ui.OTLabbookEntryChooserView'],
       ['smart_graph_tool_view', 'org.concord.smartgraph.OTSmartGraphTool', 'org.concord.smartgraph.OTSmartGraphToolHiddenView'],
       ['script_button_view', 'org.concord.otrunk.script.ui.OTScriptButton', 'org.concord.otrunk.script.ui.OTScriptButtonView'],
-      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView']
-    ] + (@otrunk_view_entries || []).uniq
+      ['script_object_view', 'org.concord.otrunk.script.ui.OTScriptObject', 'org.concord.otrunk.script.ui.OTScriptObjectView'],
+      ['sound_grapher_view', 'org.concord.multimedia.state.OTSoundGrapherModel', 'org.concord.multimedia.state.ui.OTSoundGrapherModelView']
+    ] + (@otrunk_view_entries || [])
+    Diy::ModelType.all.each do |mt|
+      v_entries << [mt.name, mt.otrunk_object_class, mt.otrunk_view_class]
+    end
+    return v_entries.uniq
   end
   
   def authoring_view_entries
@@ -185,7 +211,7 @@
 #      ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
 #      ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
       ['data_table_edit_view', 'org.concord.data.state.OTDataTable', 'org.concord.otrunk.ui.swing.OTDataTableEditView'],
-      ['udl_container_edit_view', 'org.concord.otrunk.ui.OTUDLContainer', 'org.concord.otrunk.ui.OTUDLContainerEditView'],
+      ['udl_container_edit_view', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerEditView'],
       ['curriculum_unit_edit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitEditView'],
 #      ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
       ['menu_page_edit_view', 'org.concord.otrunk.ui.menu.OTMenu', 'org.concord.otrunk.ui.menu.OTMenuPageEditView'],
@@ -195,7 +221,7 @@
 #      ['card_container_view', 'org.concord.otrunk.ui.OTCardContainer', 'org.concord.otrunk.ui.swing.OTCardContainerView'],
 #      ['nav_bar', 'org.concord.otrunk.ui.menu.OTNavBar', 'org.concord.otrunk.ui.menu.OTNavBarView'],
       ['modeler_page_edit_view', 'org.concord.otrunkmw.OTModelerPage', 'org.concord.otrunkmw.OTModelerPageEditView'],
-      ['n_logo_model_edit_view', 'org.concord.otrunknl41.OTNLogoModel', 'org.concord.otrunknl41.OTNLogoModelEditView'],
+      ['n_logo_model_edit_view', "org.concord.#{net_logo_package_name}.OTNLogoModel", "org.concord.#{net_logo_package_name}.OTNLogoModelEditView"],
       ['biologica_world', 'org.concord.otrunk.biologica.OTWorld', 'org.concord.otrunk.biologica.OTWorldEditView'],
       ['biologica_organism', 'org.concord.otrunk.biologica.OTOrganism', 'org.concord.otrunk.biologica.OTOrganismEditView'],
       ['biologica_static_organism', 'org.concord.otrunk.biologica.OTStaticOrganism', 'org.concord.otrunk.biologica.ui.OTStaticOrganismEditView'],
@@ -213,7 +239,7 @@
 
   def ot_view_bundle(options={})
     @left_nav_panel_width =  options[:left_nav_panel_width] || 0
-    title = options[:title] || 'RITES sample'
+    title = "#{APP_CONFIG[:theme].capitalize}: " + options[:title] ||  "sample"
     use_scroll_pane = (options[:use_scroll_pane] || false).to_s
     authoring = options[:authoring] || false
     if authoring
@@ -248,13 +274,17 @@
   def ot_interface_manager(use_current_user = false)
     old_format = @template_format
     @template_format = :otml
-    # Now that we're using the HttpCookieService, current_user.vendor_interface should be correct, even when requesting from the java client
+    # Now that we're using the HttpCookieService, current_user.vendor_interface 
+    # should be correct, even when requesting from the java client
     vendor_interface = nil
-    # allow switching between using the current user and not. This way the cached otml can always have Go!Link, but the dynamic otml can use the current user's device.
+    # allow switching between using the current user and not. This way 
+    # the cached otml can always have Go!Link, but the dynamic 
+    # otml can use the current user's device.
+    # debugger
     if use_current_user
       vendor_interface = current_user.vendor_interface
     else
-      vendor_interface = VendorInterface.find(6)
+      vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
     result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
     @template_format = old_format
@@ -299,6 +329,10 @@
   def generate_otml_datastore(data_collector)
     capture_haml do
       haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+        haml_tag :channelDescriptions do
+          haml_tag :OTDataChannelDescription
+          haml_tag :OTDataChannelDescription
+        end
         if data_collector.data_store_values && data_collector.data_store_values.length > 0
           haml_tag :values do
             data_collector.data_store_values.each do |value|
@@ -350,28 +384,20 @@
     end
   end
   
-  def top_container
-    container = nil
-    if defined? @page
-      container = @page
-      while (! container.parent.nil?)
-        container = container.parent  
-      end
-    end
-    return container
+  def preview_warning
+    APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
   
-  def ot_docroot_id
-    if (defined? @ot_docroot_id) && (@ot_docroot_id)
-      return @ot_docroot_id
+  def otml_css_path(base="stylesheets",name="otml")
+    theme = APP_CONFIG[:theme]
+    file = "#{name}.css"
+    default_path = File.join(base,file)
+    if theme
+      themed_path = File.join(base,'themes', theme, file)
+      if File.exists? File.join(RAILS_ROOT,'public',themed_path)
+        return "/#{themed_path}"
+      end
     end
-    top = top_container
-    if (top && (top.respond_to? :uuid))
-      @ot_docroot_id = top.uuid
-    end
-    return @ot_docroot_id
+    return "/#{default_path}"
   end
-
 end
-
-

@@ -1,0 +1,3 @@
+-#= render :partial => 'shared/collection_menu', :locals => { :collection => @sections, :collection_class => Embeddable::OpenResponse }        
+- @diy_sections.each do |diy_section|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => diy_section}

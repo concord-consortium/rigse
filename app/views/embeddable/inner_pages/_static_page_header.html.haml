@@ -1,0 +1,21 @@
+%div{:id=>dom_id_for(page, :add_menu), :class=>'dropdown'}
+  %ul
+    - hide_types = [Embeddable::InnerPage, Embeddable::Biologica::World, Embeddable::Biologica::Organism, Embeddable::Biologica::StaticOrganism, Embeddable::Biologica::Chromosome, Embeddable::Biologica::ChromosomeZoom, Embeddable::Biologica::BreedOffspring, Embeddable::Biologica::Pedigree, Embeddable::Biologica::MultipleOrganism, Embeddable::Biologica::MeiosisView]
+    - Page.element_types.each do |type|
+      - next if hide_types.include? type
+      %li= link_to_remote "#{type.display_name}", |
+      :update =>dom_id_for(inner_page, :static_page_area), |
+      :url => add_element_embeddable_inner_page_path(:class_name => type.name, :id=>inner_page.id, :page_id => page.id, :static => true), |
+      :html => {:class=>'action'}, :complete => mce_init_string |
+- if (for_teacher_only? page)
+  - view_class = "action_menu teacher_only"
+- else
+  - view_class = "action_menu"
+
+      
+%div{:id => dom_id_for(page,:item), :class =>view_class}
+  .action_menu_header_left
+    Static area
+  .action_menu_header_right
+    - if (page.changeable?(current_user))
+      = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'Add content for the static page'

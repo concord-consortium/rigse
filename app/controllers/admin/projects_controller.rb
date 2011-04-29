@@ -1,8 +1,9 @@
 class Admin::ProjectsController < ApplicationController
   
-  before_filter :admin_only
+  before_filter :admin_only, :except => [:index, :edit, :update]
+  before_filter :admin_or_manager, :only => [:index, :edit, :update]
   # before_filter :setup_object, :except => [:index]
-  before_filter :render_scope, :only => [:show]
+  # before_filter :render_scope, :only => [:show]
 
   # editing / modifying / deleting require editable-ness
   # before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
@@ -11,11 +12,22 @@ class Admin::ProjectsController < ApplicationController
   # in_place_edit_for :activity, :name
   # in_place_edit_for :activity, :description
   
-  protected  
+  protected 
 
   def admin_only
     unless current_user.has_role?('admin')
       flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def admin_or_manager
+    if current_user.has_role?('admin')
+      @admin_role = true
+    elsif current_user.has_role?('manager')
+      @manager_role = true
+    else
+      flash[:notice] = "Please log in as an administrator or manager" 
       redirect_to(:home)
     end
   end
@@ -25,8 +37,13 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects
   # GET /admin/projects.xml
   def index
-    @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
     default_project = Admin::Project.default_project
+    
+    if @manager_role
+      @admin_projects = [default_project].paginate
+    else
+      @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
+    end
 
     # If default_project is in collection to be displayed then put it first.
     unless @admin_projects.length == 1 || @admin_projects[0].default_project?
@@ -67,6 +84,21 @@ class Admin::ProjectsController < ApplicationController
   # GET /admin/projects/1/edit
   def edit
     @admin_project = Admin::Project.find(params[:id])
+    
+    # Pull in the current theme default home page content, if it isn't set in the project.
+    # This feels hackish, but there is no way to do this without fudging the controller_path if the
+    # _project_info partial contains a nested render without a path, which it does (_project_summary).
+    # This may need to be revisited if any of these internals change. -- Cantina-CMH 6/17/10
+    if @admin_project.home_page_content.nil? || @admin_project.home_page_content.empty?
+      saved_path = self.class.instance_variable_get(:@controller_path)
+      self.class.instance_variable_set(:@controller_path, "home")
+      render_to_string :partial => "home/project_info"
+      self.class.instance_variable_set(:@controller_path, saved_path)
+      
+      @admin_project.home_page_content = @template.instance_variable_get(:@content_for_project_info)
+      @template.instance_variable_set(:@content_for_project_info, nil)
+    end
+    
     if request.xhr?
       render :partial => 'remote_form', :locals => { :admin_project => @admin_project }
     end
@@ -76,14 +108,13 @@ class Admin::ProjectsController < ApplicationController
   # POST /admin/projects.xml
   def create
     @admin_project = Admin::Project.new(params[:admin_project])
-
     respond_to do |format|
       if @admin_project.save
         flash[:notice] = 'Admin::Project was successfully created.'
         format.html { redirect_to(@admin_project) }
         format.xml  { render :xml => @admin_project, :status => :created, :location => @admin_project }
       else
-        format.html { render :action => "new" }
+        format.html { redirect_to(new_admin_project_url) }
         format.xml  { render :xml => @admin_project.errors, :status => :unprocessable_entity }
       end
     end
@@ -117,7 +148,7 @@ class Admin::ProjectsController < ApplicationController
     @project.destroy
 
     respond_to do |format|
-      format.html { redirect_to(projects_url) }
+      format.html { redirect_to(admin_projects_url) }
       format.xml  { head :ok }
     end
   end

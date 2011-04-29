@@ -1,0 +1,37 @@
+/ %h2 BEGIN: Custom code for ITSI-SU
+/ required locals: is_being_edited
+- if portal_clazz.is_teacher? current_user
+  -# %form{ :id => 'activity_offers_form', :method=>"post", :action=>"/class/edit/#{portal_clazz.id}/process/"}
+  = hidden_field_tag 'portal_clazz_id', portal_clazz.id
+  %h2 
+    Activities (total selected:
+    - offering_size = portal_clazz.offerings ? portal_clazz.offerings.size : 0
+    %span#total-selected="#{offering_size}"
+    )
+  - bins = Activity.list_bins({:portal_clazz => portal_clazz})
+  - bin_keys = bins.keys.sort
+  %table.activity-chart{ :border =>"0", :cellspacing=>"0", :cellpadding => "0", :width=> "100%"}
+    %tr
+      %td#activity-chart-navigation{:width => "225"}
+        %ul
+          - bin_keys.sort.each_with_index do |bin_key,count|
+            - _tag = bins[bin_key]
+            -#%li#middleschoolearthscience-control.unit-navigation.level1{:onclick => "show_section('#middleschoolearthscience', this);"}
+            %li.bin_button{:class => "unit-navigation level#{_tag[:order]}", :onclick => "show_section('#{bin_key}', this);"}
+              ="#{_tag[:name]} ("
+              %span.tag_count
+                =_tag[:off_count]
+              ="/ #{_tag[:count]})"
+      %td#activity-chart-panels
+        - bin_keys.each do |bin_key|
+          - _tag = bins[bin_key]
+          %div.show_section{:id => bin_key, :style=>"display: none;"}
+            - units = _tag[:units]
+            - units.keys.sort.each do |unit_key|
+              - unit = units[unit_key]
+              %h2="#{unit[:name]} (#{unit[:count]})"
+              - unit[:activities].each do |runnable|
+                -#- Activity.published.each do |runnable|
+                - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+                - offering_id = offering.nil? ? false : offering.id
+                = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}

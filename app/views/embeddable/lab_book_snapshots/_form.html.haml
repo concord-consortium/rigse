@@ -1,0 +1,7 @@
+= edit_menu_for(lab_book_snapshot, f)
+.content
+  - field_set_tag 'name' do
+    = f.text_field :name, :id => dom_id_for(lab_book_snapshot, :item, :name_field)
+  - field_set_tag 'target' do
+    = f.select(:targeted_id, lab_book_snapshot.other_elements_on_page.collect {|e| [e.name,Embeddable::LabBookSnapshot.encode(e)] },  { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(lab_book_snapshot, :select_target_element)})
+  

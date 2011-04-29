@@ -1,10 +1,6 @@
-- options = { :omit_delete => true, :hide_componenent_name => true }
+- options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
 %div{:id => dom_id_for(dataservice_console_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_console_content, :details), :class => 'content'}
-    %ul.menu_h
-      %li
-        ConsoleLogger: 
-        = link_to(dataservice_console_content.console_logger.id, dataservice_console_content.console_logger)
     = accordion_for(dataservice_console_content, "Session console:#{dataservice_console_content.id} (#{dataservice_console_content.position})",'body') do
       %pre= h(dataservice_console_content.body)
     

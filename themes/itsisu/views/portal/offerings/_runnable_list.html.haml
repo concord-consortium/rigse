@@ -1,0 +1,121 @@
+/ required locals: activities, portal_clazz, is_being_edited
+/ TODO: Update the input DOM element that makes the AJAX request
+- if is_being_edited
+  :javascript
+    $(document).updateOfferings = function(input, portal_clazz_id, activity_id, offering_id, runnable_type) {
+      // TODO: remove console logging statements
+      var ajaxUpdater;
+      var new_checked_state = input.checked;
+      if(new_checked_state){
+        // User wants to make a new offering
+        ajaxUpdater = new Ajax.Request('/portal/classes/' + portal_clazz_id + '/add_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // Find all input elements for the same activity and update them all
+              $$('input[name="'+input.name+'"]').each(function(inputElement) {
+                if(inputElement.value == input.value){
+                  inputElement.writeAttribute("checked", true);
+                  inputElement.writeAttribute("onclick", "updateOfferings(this, "+portal_clazz_id+", "+activity_id+", "+transport.responseText+", '"+runnable_type+"')");
+                }
+              });
+              // TODO: flash a success message from here
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (uncheck them)
+            // TODO: flash a failure message from here
+          }
+        );
+      } else{
+        // User wants to remove an offering
+        ajaxUpdater = new Ajax.Updater('flash', 
+          '/portal/classes/' + portal_clazz_id + '/remove_offering',
+          {
+            parameters: {
+              id: portal_clazz_id,
+              runnable_id: activity_id,
+              offering_id: offering_id,
+              runnable_type: runnable_type
+            },
+            asynchronous:true, evalScripts:true,
+            onSuccess: function(transport) {
+              // TODO: find all input elements for the same activity and update them all (uncheck them and set offering id to -1)
+              $$('input[name="'+input.name+'"]').each(function(inputElement) {
+                if(inputElement.value == input.value){
+                  inputElement.writeAttribute("checked", null);
+                  inputElement.writeAttribute("onclick", "updateOfferings(this, "+portal_clazz_id+", "+activity_id+", -1, '"+runnable_type+"')");
+                }
+              });
+            }
+            // TODO: on failure find all input elements for the same activity and update them all (check them)
+          }
+        );
+      }
+      return false;
+    };
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name=> 'activity'
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        / -if current_user.has_role? "author"
+        %li= link_to "create new activity", new_activity_path
+
+- for activity in activities
+  %div{ :id => dom_id_for(activity), :class => 'runnable' }
+    / = accordion_for(activity, preview_button_for(activity) + link_to_container(activity, :hide_componenent_name => true), :activity) do  
+    - activity_matched_offerings = activity.offerings.select {|offer| portal_clazz.offerings.include?(offer)}
+    - offering_id = -1
+    - assigned = (activity_matched_offerings.length > 0)
+    - if assigned
+      - offering_id = activity_matched_offerings[0].id
+    %strong Assigned to this class?
+    - if is_being_edited
+      %input{:type => "checkbox",
+        :checked => assigned,
+        :disabled => !is_being_edited,
+        :onclick => "updateOfferings(this, #{portal_clazz.id}, #{activity.id}, #{offering_id}, '#{activity.type}')",
+        :value => "#{activity.id}",
+        :name => "activity_id"}
+    - else
+      %input{:type => "checkbox",
+        :checked => assigned,
+        :disabled => !is_being_edited,
+        :value => "#{activity.id}",
+        :name => "activity_id"}
+    %div.action_menu
+      %div.action_menu_header_left   
+        = link_to_container(activity)
+        %br
+        %span.author
+          = activity.user.name
+        %span.details
+          - pedigree_info_for(activity)
+          %bt
+          - descendant_info_for(activity)
+      %div.action_menu_header_right   
+        %ul.menu
+          %li= preview_button_for(activity)
+          - unless(current_user.anonymous?)
+            %li.menu=link_to 'copy', duplicate_activity_url(activity)
+          - if (activity.changeable?(current_user))
+            %li.menu=link_to 'delete', activity, :class => 'delete', :confirm => "Are you sure you want to delete activity #{activity.id}", :method => :delete 
+    %div{:id => dom_id_for(activity, :details), :class => 'tiny'}
+      %p=activity.description
+      %p
+        %i= updated_time_text(activity)
+      %p
+        %i
+          Used in: #{activity.offerings.length} classes.
+
+  =draggable_element dom_id_for(activity), :revert => true , :scroll => 'window'
+

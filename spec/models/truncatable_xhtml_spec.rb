@@ -4,7 +4,7 @@
 #   /&nbsp;/
 # ]
 
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe TruncatableXhtml do
 
@@ -29,21 +29,21 @@ describe TruncatableXhtml do
   describe "replace xhtml entities" do 
     it "should replace unwanted entities when present" do
       @replacement_examples.each_pair do |original, expected|
-        xhtml = Xhtml.create({
+        xhtml = Embeddable::Xhtml.create({
          :name =>"testing",
          :content => original
         })
-        xhtml.replace_offensive_html.content.should_not eql original
-        xhtml.replace_offensive_html.content.should eql expected
+        xhtml.replace_offensive_html.content.should_not eql(original)
+        xhtml.replace_offensive_html.content.should eql(expected)
       end
     end
     it "should leave non offending xhtml alone" do
       @non_replacement_examples.each do |content|
-        xhtml = Xhtml.create({
+        xhtml = Embeddable::Xhtml.create({
          :name => "testing",
          :content => content
         })
-        xhtml.replace_offensive_html.content.should eql content
+        xhtml.replace_offensive_html.content.should eql(content)
       end
     end
   end

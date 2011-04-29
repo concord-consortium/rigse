@@ -1,0 +1,23 @@
+= render :partial => 'pages/show', :locals => {:teacher_mode => teacher_mode}, :collection => activity.pages, :as => :page
+
+- content_for("activity_#{dom_id_for(activity)}".to_sym) do
+  %OTCompoundDoc
+    %bodyText
+      - if for_teacher_only?(activity)
+        - if teacher_mode
+          #content.teacher_mode
+            %h3= h(activity.name)
+      - else
+        #content
+          %h3= h(activity.name)
+      - activity.sections.each do |section|
+        - next unless section.is_enabled?
+        - section.pages.each do |page|
+          - next unless page.is_enabled?
+          - if page.has_enabled_elements?
+            %object{:refid => ot_refid_for(page) }/
+            %br/
+
+- content_for(:library) do
+  - activity.pages.each do |page|
+    = yield "page_#{dom_id_for(page)}".to_sym

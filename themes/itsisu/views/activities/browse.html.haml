@@ -1,0 +1,25 @@
+-if current_user_can_author
+  %li= link_to "create #{Activity.display_name}", new_activity_path
+
+#itsi_su_bin
+  %table
+    %tr
+      %td{:width=>'25%',:align=>'left'}
+        %ul
+          -@key_strings.each do |key|
+            - style = style_for_activity_key(key)
+            -if key == @selection
+              %li.bin_name.selection{:style=>style}= link_to(key,:action=>:browse,:selection=>key)
+            -else
+              %li.bin_name{:style=>style}= link_to(key,:action=>:browse,:selection=>key)
+      %td.bin_content{:style => style_for_activity_key(@selection), :align=>'left'}
+        - if @selection and @search_results[@selection]
+          - @units.sort.uniq.each do |unit|
+            - if @search_results[@selection][unit]
+              %h3=unit
+              - @search_results[@selection][unit].each do |activity|
+                %div{:style => 'clear: left;'}
+                  = preview_button_for(activity)
+                  = run_button_for(activity)
+                  = link_to(activity.name,activity)
+

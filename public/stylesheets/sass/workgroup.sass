@@ -1,0 +1,106 @@
+=round-corners($amount: 5px)
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+
+#workgroup_panel
+  width: 400px
+
+#learners_container
+  display: block
+  width: 400px
+  margin: 10px
+  padding: 10px
+  border: 1px solid
+
+.learner
+  margin-top: 1em
+
+#add_group
+  display: block
+  margin: 10px
+  padding: 10px
+  width: 400px
+  border: 1px solid
+  select
+    display: inline-block
+    margin: 1em
+    clear: none
+  button
+    display: inline-block
+    clear: none
+
+#lightbox_hood
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0.5
+  background-color: black
+  z-index: 5000
+
+#lightbox_content
+  position: fixed
+  float: none
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  opacity: 1
+  background: none
+  z-index: 5001
+
+#workgroup_header
+  display: block
+  width: 100%
+  margin: 4px
+  padding: 1px
+  text-align: right
+  height: 22px
+
+#workgroup_root
+  width: 500px
+  margin-top: 5em
+  margin-left: auto
+  margin-right: auto
+  margin-bottom: 5em
+  padding: 2em
+  opacity: 1
+  background-color: #f3f2ed
+  +round-corners
+
+#workgroup_templates
+  display: none
+
+.learner
+  width: 90%
+  vertical-align: baseline
+  margin-bottom: 1em
+  margin-top: 1em
+  .name_field
+    margin-right: 1em
+  input
+    display: inline-block
+  button
+    display: inline-block
+  .pending
+    text-align: right
+    float: right
+    display: inline-block
+  .delete
+    color: red
+    cursor: pointer
+  .fail
+    font-size: 0.8em
+    color: red
+
+#run_button
+  display: inline-block
+
+#show_workgroups
+  display: inline-block
+
+.wg_important
+  color: red
+  font-weight: bold

@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @n_logo_models, :collection_class => Embeddable::NLogoModel }        
+- @n_logo_models.each do |n_logo_model|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => n_logo_model}

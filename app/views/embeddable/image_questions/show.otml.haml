@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@image_question.uuid
+- content_for(:image_question_object_id) do
+  =dom_id_for(@image_question)
+= render :partial => "show", :locals => { :image_question => @image_question }

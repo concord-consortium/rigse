@@ -1,0 +1,38 @@
+/ required locals: pages
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name => "Page"
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        -if current_user.has_role? "author"
+          %li= link_to "create #{Page.display_name}", new_page_path
+
+- pages.each do |page|
+  %div{ :id => dom_id_for(page), :class => 'runnable' }
+    = accordion_for(page, (preview_button_for(page) + name_for_component(page, :hide_componenent_name => true)), :page) do
+      %div.action_menu
+        %div.action_menu_header_left
+          = link_to_container(page)
+          %span.author
+            = page.user.name
+        %div.action_menu_header_right
+          %ul.menu
+            - unless(current_user.anonymous?)
+              %li.menu=link_to 'duplicate', duplicate_page_url(page)
+            - if (page.changeable?(current_user))
+              %li.menu=link_to 'delete', page, :class => 'delete', :confirm => "Are you sure you want to delete #{Page.display_name} #{page.id}", :method => :delete
+      %div{:id => dom_id_for(page, :details), :class => 'tiny'}
+        %p=page.description
+        %p
+          %i= updated_time_text(page)
+        %p
+          %i
+            Used in: #{page.offerings.length} classes.
+
+  =draggable_element dom_id_for(page), :revert => true , :scroll => 'window'
+

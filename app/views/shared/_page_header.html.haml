@@ -1,11 +1,11 @@
 #add_menu.dropdown
   %ul
-    - Page::element_types.each do |type|
+    - Page.element_types.each do |type|
       %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => page.id),:html => {:class=>'action'}, :complete => mce_init_string
 #actions_menu.dropdown
   %ul
     %li#copy_link copy (disabled)
-    %li#paste_link= paste_link_for(Page::paste_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
+
     %li= run_link_for(page)
     %li= print_link_for(page)
     %li= print_link_for(page,{:teacher_mode => true})
@@ -14,8 +14,9 @@
     - if (page.changeable?(current_user))
       %li= link_to 'edit page details', edit_page_url(page)
       %li= link_to 'duplicate', duplicate_page_url(page)
-
-- if (teacher_only? page)
+      %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see lib/clipboard.rb
+ 
+- if (for_teacher_only? page)
   - view_class = "action_menu teacher_only"
 - else
   - view_class = "action_menu"
@@ -32,12 +33,10 @@
     - if (page.changeable?(current_user))
       = dropdown_button "add.png", :title => 'add content to this page'
     - else
-      = link_button "add_disabled.png", "#", :title => "can't add content"
+      = link_button "disabled.png", "#", :title => "can't add content"
     = render :partial => "shared/dot_pager", :locals => {:node => page}
     - if (page.changeable?(current_user))
       - if (page.section)
         = delete_button_for(page, :redirect => url_for(page.section))
       - else
         = delete_button_for(page)
-    - if (page.section)
-      = link_button "up.png", page.section, :title => 'go to section'

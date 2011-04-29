@@ -1,0 +1,24 @@
+/ TODO: possible refactoring to make more clazzes specific.
+/ Clazz navigation: top_node could be course, teacher, student ...
+%br
+#clazzes_nav
+  - top_container_id = dom_id_for(top_node, :nav_list)
+  - top_controller ||= top_node.class.name.tableize
+  - sub_controller ||= top_node.clazzes[0] ? top_node.clazzes[0].class.name.tableize : nil
+  - if top_node.clazzes.size > 0
+    %strong Classes:
+  %ul{:id=>top_container_id}
+    - top_node.clazzes.each do |clazz|
+      %li{:id=>dom_id_for(clazz,:nav_item)}
+        -if clazz.section
+          - link_text = "#{clazz.name}(#{clazz.section})"
+        -else 
+          - link_text = clazz.name
+        -if (selects.include? clazz)
+          = link_to link_text,clazz, :class=> 'selected'
+        -else
+          = link_to link_text, clazz
+    - if current_user.portal_teacher
+      - if current_user.portal_teacher.school
+        - if current_user.portal_teacher.school.virtual?
+          %li= link_to "create new class", new_portal_clazz_url

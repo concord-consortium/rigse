@@ -1,18 +1,18 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 
 describe GseParser do
   before(:all) do
     @parser = GseParser.new(:verbose => false)
     @parser.process_rigse_data
-    @domains = Domain.find(:all)
-    @big_ideas = BigIdea.find(:all)
-    @knowledge_statements = KnowledgeStatement.find(:all)
-    @grade_span_expectations = GradeSpanExpectation.find(:all)
-    @expectation_stems = ExpectationStem.find(:all)
-    @expectations = Expectation.find(:all)
-    @unifying_themes = UnifyingTheme.find(:all)
-    @assessment_targets = AssessmentTarget.find(:all)
+    @domains = RiGse::Domain.find(:all)
+    @big_ideas = RiGse::BigIdea.find(:all)
+    @knowledge_statements = RiGse::KnowledgeStatement.find(:all)
+    @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all)
+    @expectation_stems = RiGse::ExpectationStem.find(:all)
+    @expectations = RiGse::Expectation.find(:all)
+    @unifying_themes = RiGse::UnifyingTheme.find(:all)
+    @assessment_targets = RiGse::AssessmentTarget.find(:all)
   end
 
   it "should parse assesment targets" do
@@ -49,7 +49,7 @@ describe GseParser do
 
   it "should create big ideas that that relate to a unifying theme " do
     @big_ideas.each do |big|
-      big.unifying_theme.should be_a_kind_of(UnifyingTheme)
+      big.unifying_theme.should be_a_kind_of(RiGse::UnifyingTheme)
     end
   end
 
@@ -73,13 +73,13 @@ describe GseParser do
 
   it "should create knowledge statements that have domains" do
     @knowledge_statements.each do |ks|
-      ks.domain.should be_a_kind_of(Domain)
+      ks.domain.should be_a_kind_of(RiGse::Domain)
     end
   end
 
   it "should create grade span expectations that have an assessment target" do
     @grade_span_expectations.each do |gse|
-      gse.assessment_target.should be_a_kind_of(AssessmentTarget)
+      gse.assessment_target.should be_a_kind_of(RiGse::AssessmentTarget)
     end
   end
 
@@ -89,7 +89,7 @@ describe GseParser do
       if expectation_stems.length > 0
         expectations = expectation_stems[0].expectations
         if expectations.length > 0
-          expectations[0].should be_a_kind_of(Expectation)
+          expectations[0].should be_a_kind_of(RiGse::Expectation)
         end
       end
     end
@@ -98,14 +98,14 @@ describe GseParser do
   it "should create expectation stems that have expectations" do
     @expectation_stems.each do |es|
       ex = es.expectations
-      ex[0].should be_a_kind_of(Expectation) if ex.length > 0
+      ex[0].should be_a_kind_of(RiGse::Expectation) if ex.length > 0
     end
   end
 
   it "should create expectations that have an expectation stem" do
     @expectations.each do |ex|
       es = ex.expectation_stem
-      es.should be_a_kind_of(ExpectationStem)
+      es.should be_a_kind_of(RiGse::ExpectationStem)
     end
   end
 

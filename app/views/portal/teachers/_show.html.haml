@@ -1,3 +1,9 @@
 %h3= "Welcome, #{teacher.name}"
-Your classes are listed in the left-hand column on this page. 
-To view a class, to see a list of students in the class, or to assign investigations to the class, click on the class name. 
+%p
+  To get started, 
+  =link_to("create a class",new_portal_clazz_path) + "."
+  Once you have created your class(es) you will be able to assign Investigations to your students.
+
+%p
+  Your classes will be listed in the left-hand column on this page. Click on the class name to assign Investiations.
+

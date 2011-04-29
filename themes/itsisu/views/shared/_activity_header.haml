@@ -5,11 +5,16 @@
     /%li= print_link_for(@activity)
     /%li= toggle_all('sections')
     - if (activity.changeable?(current_user))
-      %li= duplicate_link_for(@activity,:text=> "copy activity #{@activity.name}")
-      / %li=edit_link_for(@activity)      
+      %li= duplicate_link_for(@activity,:text=> "duplicate: #{@activity.name}")
+      %li=edit_link_for(@activity)      
     - if (activity.changeable?(current_user))
       %li#copy_link.copy_paste_disabled copy (disabled)
     %li#paste_link= paste_link_for(['section'],{:container_id => @container_id}) # see pages_helper.rb
+
+#add_menu.dropdown
+  %ul
+    %li= link_to "Add new section", add_section_activity_path(activity)
+
       
 - if (teacher_only? activity)
   - view_class = "action_menu teacher_only"
@@ -22,10 +27,10 @@
       = render :partial=>'shared/in_place_fields', :locals => {:item=>activity}
   .action_menu_header_right
     = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
-    = dropdown_button "actions.png", :title => "actions for this page"
+    = dropdown_button "actions.png", :title => "actions for this activitiy"
     - if (activity.changeable?(current_user))
-      = link_button "add.png", add_section_activity_path(activity)
+      = dropdown_button "add.png"
     - else
-      = link_button "add_disabled.png", "#", :title => "can't add activities"
+      = link_button "add_disabled.png", "#", :title => "can't add to this activity"
     = render :partial => "shared/dot_pager", :locals => {:node => activity}
     = delete_button_for activity

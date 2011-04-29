@@ -1,0 +1,25 @@
+
+- if portal_clazz.is_teacher? current_user
+  - if current_user.portal_teacher.school.virtual?
+    .action_menu
+      %p
+        %strong="Class word: #{portal_clazz.class_word}"
+  %br
+  .action_menu
+    .action_menu_left
+      %p
+        %strong="Assignments:" 
+        (drag items from the search area below to add)
+  #clazz_offerings.drop_target
+    = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering
+  %br
+  = render :partial => "shared/runnable_list", :locals => {:portal_clazz_id => portal_clazz.id, :is_teacher => true, :domain_id => @domain_id, :grade_span => @grade_span}
+
+
+
+  = drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'}, :before => "element.hide();", :with => "{runnable_id: decode_model(element).id, runnable_type: decode_model(element).type, dragged_dom_id: element.id, dropped_dom_id: 'clazz_offerings'}"
+  = drop_receiving_element 'offering_list',  :hoverclass=> 'drop_target_selected', :accept => 'offering', :url=> {:action=>'remove_offering'}, :before => "element.hide();", :with => "{offering_id: decode_model(element).id, dragged_dom_id: element.id, dropped_dom_id: 'offering_list'}"
+- else
+  - portal_clazz.offerings.each do |offering|
+    = render :partial => 'shared/offering_for_student', :locals => {:offering => offering}
+

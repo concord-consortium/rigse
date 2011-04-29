@@ -1,11 +1,19 @@
 = render :partial => 'activities/show', :locals => {:teacher_mode => teacher_mode}, :collection => investigation.activities, :as => :activity
 
 - content_for(:investigation) do
-  %OTUDLContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
+  %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
     %title
+      -# render a preview_warning message by default.
+      -# dynamic_otml will remove the element.
+      %OTCompoundDoc{:local_id => 'preview_warning'}
+        %bodyText
+          .warning
+            = render :partial => "preview_warning"
+          
       %OTCompoundDoc
         %bodyText
-          - if teacher_only?(investigation)
+
+          - if for_teacher_only?(investigation)
             - if teacher_mode
               #content.teacher_mode
                 %h3= h(investigation.name)
@@ -22,21 +30,21 @@
       %OTCardContainer{ :local_id => ot_local_id_for(investigation, :activity_card_container), :contentsMayScroll => 'false', :loadViewOnlyOnDemand => 'true', :closeViewOnExit => 'true' }
         %cards
           - investigation.activities.each do |activity|
-            - unless ((teacher_only?(activity)) && (!teacher_mode))
-              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => activity.name}
+            - unless ((for_teacher_only?(activity)) && (!teacher_mode))
+              %OTSection{ :local_id => ot_local_id_for(activity, :activity_section), :name => h(activity.name)}
                 %content
                   %OTCardContainer{ :local_id => ot_local_id_for(activity, :section_card_container), :contentsMayScroll => 'false' }
                     %cards
                       - activity.sections.each do |section|
-                        - unless ((teacher_only?(section)) && (!teacher_mode))
+                        - unless ((for_teacher_only?(section)) && (!teacher_mode))
                           =yield "section_#{dom_id_for(section)}".to_sym
                     %currentCard
-                      - if (activity.sections.first && (!teacher_only?(activity.sections.first))) || teacher_mode
+                      - if (activity.sections.first && (!for_teacher_only?(activity.sections.first))) || teacher_mode
                         -if (activity.sections.first)
                           %object{ :refid => ot_refid_for(activity.sections.first) }/
                     %viewedCards
         %currentCard
-          - if (investigation.activities.first && (!teacher_only?(investigation.activities.first))) || teacher_mode
+          - if (investigation.activities.first && (!for_teacher_only?(investigation.activities.first))) || teacher_mode
             %object{ :refid => ot_refid_for(investigation.activities.first, :activity_section) }/
         %viewedCards
 

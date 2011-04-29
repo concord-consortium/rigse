@@ -1,0 +1,3 @@
+- portal_clazzes.each do |portal_clazz|
+  = render :partial => 'portal/clazzes/show', :locals => { :portal_clazz => portal_clazz }
+  = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering

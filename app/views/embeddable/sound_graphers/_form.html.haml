@@ -1,0 +1,4 @@
+= edit_menu_for(sound_grapher, f)
+.content
+  - field_set_tag 'sound grapher name' do
+    = f.text_field :name, :id => dom_id_for(sound_grapher, :item, :name_field)

@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe MavenJnlp::VersionedJnlp do
   before(:each) do
-    @versioned_jnlp_url = mock_maven_jnlp_versioned_jnlp_url
-    @icon = mock_maven_jnlp_icon
+    generate_jnlps_with_mocks
+    
     @new_valid_versioned_jnlp = MavenJnlp::VersionedJnlp.new(
       :name => "all-otrunk-snapshot-0.1.0-20090724.190238.jnlp",
       :main_class => "net.sf.sail.emf.launch.EMFLauncher3",
@@ -23,8 +23,8 @@ describe MavenJnlp::VersionedJnlp do
       :codebase => "http://jnlp.concord.org/dev",
       :include_pack_gzip => nil
     )
-    @new_valid_versioned_jnlp.versioned_jnlp_url = @versioned_jnlp_url
-    @new_valid_versioned_jnlp.icon = @icon
+    @new_valid_versioned_jnlp.versioned_jnlp_url = @mock_maven_jnlp_versioned_jnlp_url
+    @new_valid_versioned_jnlp.icon = @mock_maven_jnlp_icon
   end
 
   it "should create a new instance given valid attributes" do

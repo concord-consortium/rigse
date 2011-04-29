@@ -1,0 +1,67 @@
+#actions_menu.dropdown
+  %ul
+    %li#copy_link copy (disabled)
+
+    %li= run_link_for(page)
+    %li= print_link_for(page)
+    %li= print_link_for(page,{:teacher_mode => true})
+    %li= toggle_all('elements')
+    %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
+    - if (page.changeable?(current_user))
+      %li= link_to 'edit page details', edit_page_url(page)
+      %li= link_to 'duplicate', duplicate_page_url(page)
+      %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
+      
+- if (teacher_only? page)
+  - view_class = "action_menu teacher_only"
+- else
+  - view_class = "action_menu"
+
+
+#add_menu.dropdown
+  %ul
+    - [Embeddable::Xhtml, Embeddable::OpenResponse].each do |type|
+      %li= link_to_remote "#{type.display_name}", :url => url_for(:action => 'add_element', :class_name => type.name, :page_id => page.id),:html => {:class=>'action'}, :complete => mce_init_string
+- if (page.changeable?(current_user))
+  #actions_menu.dropdown
+    %ul
+      %li#copy_link copy (disabled)
+
+      %li= run_link_for(page)
+      %li= print_link_for(page)
+      %li= print_link_for(page,{:teacher_mode => true})
+      %li= toggle_all('elements')
+      %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
+      - if (page.changeable?(current_user))
+        %li= link_to 'edit page details', edit_page_url(page)
+        %li= link_to 'duplicate', duplicate_page_url(page)
+        / %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
+      
+  - if (teacher_only? page)
+    - view_class = "action_menu teacher_only"
+  - else
+    - view_class = "action_menu"
+
+
+      
+%div{:id => dom_id_for(page,:item), :class =>view_class}
+  .action_menu_header_left
+    .padded_content
+    .padded_content
+      = render :partial=>'shared/in_place_fields', :locals => {:item=>page}
+  .action_menu_header_right
+    = render :partial => "shared/notes_menu", :locals => {:authorable => page}
+    - if (page.changeable?(current_user))
+      = dropdown_button "actions.png", :title => "actions for this page"
+      = dropdown_button "add.png", :title => 'add content to this page'
+    - else
+      = link_button "actions_disabled.png", "#", :title => "no actions for this page"
+      = link_button "add_disabled.png", "#", :title => "can't add content"
+    = render :partial => "shared/dot_pager", :locals => {:node => page}
+    - if (page.changeable?(current_user))
+      - if (page.section)
+        = delete_button_for(page, :redirect => url_for(page.section))
+      - else
+        = delete_button_for(page)
+    - if (page.section)
+      = link_button "up.png", page.section, :title => 'go to section'

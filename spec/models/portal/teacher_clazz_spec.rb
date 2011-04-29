@@ -11,7 +11,7 @@ describe Portal::TeacherClazz do
       clazz = Factory :portal_clazz
       teacher.add_clazz(clazz)
       teacher.reload
-      teacher.clazzes.should include clazz
+      teacher.clazzes.should include(clazz)
     end
     it "there should be no double enrollment if a teacher adds a class twice" do
       teacher = Factory :portal_teacher, {:clazzes => []}
@@ -20,7 +20,7 @@ describe Portal::TeacherClazz do
       teacher.add_clazz(clazz)
       teacher.add_clazz(clazz)
       teacher.reload
-      teacher.clazzes.should include clazz
+      teacher.clazzes.should include(clazz)
       teacher.clazzes.should have(1).things
     end
     
@@ -33,10 +33,10 @@ describe Portal::TeacherClazz do
       teacher.reload
       second_teacher.reload
       clazz.reload
-      teacher.clazzes.should include clazz
-      second_teacher.clazzes.should include clazz
-      clazz.teachers.should include teacher
-      clazz.teachers.should include second_teacher
+      teacher.clazzes.should include(clazz)
+      second_teacher.clazzes.should include(clazz)
+      clazz.teachers.should include(teacher)
+      clazz.teachers.should include(second_teacher)
     end
     
     it "clazzes which have multiple teachers are owned by both teachers" do
@@ -49,12 +49,20 @@ describe Portal::TeacherClazz do
       second_teacher.reload
       clazz.reload
       clazz.should be_virtual
-      clazz.should be_changeable teacher.user
-      clazz.should be_changeable second_teacher.user
-      clazz.should be_changeable teacher
-      clazz.should be_changeable second_teacher
+      clazz.should be_changeable(teacher.user)
+      clazz.should be_changeable(second_teacher.user)
+      clazz.should be_changeable(teacher)
+      clazz.should be_changeable(second_teacher)
     end
     
+    it "should remove this teacher from the specified class" do
+      clazz = Factory :portal_clazz
+      teacher = Factory :portal_teacher, {:clazzes => [clazz]}
+      teacher.clazzes.should include(clazz)
+      teacher.remove_clazz(clazz)
+      teacher.reload
+      teacher.clazzes.should_not include(clazz)
+    end
   end
   
   describe "preserving leagacy one to many mapping for teachers <= clazzes" do
@@ -63,7 +71,7 @@ describe Portal::TeacherClazz do
       clazz = Factory :portal_clazz
       clazz.teacher = teacher
       teacher.reload
-      teacher.clazzes.should include clazz
+      teacher.clazzes.should include(clazz)
     end
     
     it "clazz.teacher=@teacher assignment shouldn't make a duplicate teacher entry" do
@@ -73,7 +81,7 @@ describe Portal::TeacherClazz do
       clazz.teacher = teacher
       clazz.teacher = teacher
       teacher.reload
-      teacher.clazzes.should include clazz
+      teacher.clazzes.should include(clazz)
       teacher.clazzes.should have(1).things
     end
     

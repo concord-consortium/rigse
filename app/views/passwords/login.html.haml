@@ -1,0 +1,28 @@
+= title_tag "Forgot Your Password?"
+- form_tag({ :action => "create_by_login" }) do
+  %div{:id => dom_id_for(@user, :form), :class =>"action_menu"}
+    .action_menu
+      .action_menu_header_left
+        .padded_content
+          %h3 reset your password
+
+    %fieldset
+      %legend Enter Your Username
+      %ul.quiet_list
+        %li= label_tag :login, "Username", :class => "aligned"
+        %li= text_field_tag :login, "", :live => false, :class => "aligned"
+      .aligned
+        %ul.quiet_list
+          %li= submit_tag "Submit"
+
+    %p
+      Forgot your username?
+    %p
+      Students, ask your teacher for help.
+      %br
+      Teachers,
+      = link_to "click here", forgot_password_email_path
+      to enter your email address.
+
+
+

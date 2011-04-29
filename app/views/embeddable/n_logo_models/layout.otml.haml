@@ -1,0 +1,16 @@
+!!! XML
+= render :partial => "otml/character_entities"
+%otrunk{ :id => @n_logo_model.uuid}
+  =ot_imports
+  %objects
+    %OTSystem
+      =ot_bundles(:title => h(@n_logo_model.name))
+      %root
+        %OTCompoundDoc
+          %bodyText
+            #content
+              %h3
+                = h(Embeddable::NLogoModel.display_name + ': ' + @n_logo_model.name)
+              %object{ :refid => ot_refid_for(@n_logo_model) }
+      %library
+        =yield :layout

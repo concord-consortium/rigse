@@ -1,10 +1,10 @@
 #main
-  %h3= "#{APP_CONFIG[:site_name]}: Technical Help"
+  %h3= "#{current_project.name}: Technical Help"
   .padded_content
     %p 
       Please download the installer for your operating system
       %strong= "( #{@os} )"
       before running an investigation:
       %ul
-        %ul=link_to('download the osx installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-osx-installer.dmg")
-        %ul=link_to('download the windows installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-windows-installer.exe")
+        %ul=link_to('download the Mac OS X installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-osx-installer.dmg")
+        %ul=link_to('download the Windows installer', "/installers/#{jnlp_installer_project}-#{jnlp_installer_version}-windows-installer.exe")

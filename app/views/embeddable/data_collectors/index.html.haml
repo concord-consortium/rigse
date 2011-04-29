@@ -1,0 +1,3 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @data_collectors, :collection_class => Embeddable::DataCollector }        
+- @data_collectors.each do |data_collector|
+  = render :partial => 'shared/embeddable_container', :locals=> {:component => data_collector}

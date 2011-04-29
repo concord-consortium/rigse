@@ -1,6 +1,0 @@
-%select{:name=> :grade_span_expectation, :size=>5}
-  - @grade_span_expectations.each do |gse|
-    %option{:value => gse.id, :onClick => "$('gse_discription').innerHTML='#{gse.gse_key} : #{gse.description}'"}= gse.gse_key
-%hr
-#gse_discription
-  nothing here.

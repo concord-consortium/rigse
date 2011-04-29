@@ -1,0 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@diy_section.uuid
+- content_for(:diy_section_object_id) do
+  =dom_id_for(@diy_section)
+= render :partial => "show", :locals => { :diy_section => @diy_section }

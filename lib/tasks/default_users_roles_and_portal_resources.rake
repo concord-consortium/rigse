@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :setup do
 
     require 'fileutils'
@@ -15,14 +15,14 @@ namespace :rigse do
     end
     
     def display_user(user)
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
        login: #{user.login}
        email: #{user.email}
   first_name: #{user.first_name}
    last_name: #{user.last_name}
 
-HEREDOC
+      HEREDOC
     end
   
     def edit_user(user)
@@ -46,7 +46,7 @@ HEREDOC
       # some constants that should probably be moved to settings.yml
       DEFAULT_CLASS_NAME = 'Fun with Investigations'
       
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 This task creates six roles (if they don't already exist):
 
@@ -63,7 +63,7 @@ It creates one user with an admin role.
   Edit the values in this file if you want to specify a different default admin user.
 
 In addition it creates seven more default users with these login names and the 
-default password: 'password'. You can change the dfault password if you wish.
+default password: 'password'. You can change the default password if you wish.
 
   manager
   researcher
@@ -86,7 +86,7 @@ will be teaching a course named 'Fun with Investigations' and a class in that co
 A student named: 'Student User' will be created and will be a learner in the default class: '#{DEFAULT_CLASS_NAME}'.
 
 First creating admin user account for: #{APP_CONFIG[:admin_email]} from site parameters in config/settings.yml:
-HEREDOC
+      HEREDOC
 
       roles_in_order = [
         admin_role = Role.find_or_create_by_title('admin'),
@@ -111,46 +111,43 @@ HEREDOC
       default_admin_user_settings = APP_CONFIG[:default_admin_user]
 
       default_user_list = [
-        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings['login'], 
-          :first_name => default_admin_user_settings['first_name'], 
-          :last_name =>  default_admin_user_settings['last_name'],
-          :email =>      default_admin_user_settings['email'], 
-          :password => "password", :password_confirmation => "password"),
+        admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login], 
+          :first_name => default_admin_user_settings[:first_name], 
+          :last_name =>  default_admin_user_settings[:last_name],
+          :email =>      default_admin_user_settings[:email], 
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         manager_user = User.find_or_create_by_login(:login => 'manager', 
           :first_name => 'Manager', :last_name => 'User', 
           :email => 'manager@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         researcher_user = User.find_or_create_by_login(:login => 'researcher', 
           :first_name => 'Researcher', :last_name => 'User', 
           :email => 'researcher@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         author_user = User.find_or_create_by_login(:login => 'author', 
           :first_name => 'Author', :last_name => 'User', 
           :email => 'author@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         member_user = User.find_or_create_by_login(:login => 'member', 
           :first_name => 'Member', :last_name => 'User', 
           :email => 'member@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-        anonymous_user = User.find_or_create_by_login(:login => "anonymous", 
-          :first_name => "Anonymous", :last_name => "User",
-          :email => "anonymous@concord.org", 
-          :password => "password", :password_confirmation => "password"),
+        anonymous_user = User.anonymous,
 
         teacher_user = User.find_or_create_by_login(:login => 'teacher', 
           :first_name => 'Valerie', :last_name => 'Frizzle', 
           :email => 'teacher@concord.org', 
-          :password => "password", :password_confirmation => "password"),
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
         student_user = User.find_or_create_by_login(:login => 'student', 
           :first_name => 'Jackie', :last_name => 'Demeter', 
           :email => 'student@concord.org', 
-          :password => "password", :password_confirmation => "password")
+          :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
       ]
 
       edit_user_list = default_user_list - [anonymous_user]
@@ -204,6 +201,7 @@ HEREDOC
       
       manager_user.add_role('manager')
       researcher_user.add_role('researcher')
+      teacher_user.add_role('member')
       member_user.add_role('member')
       anonymous_user.add_role('guest')
     end
@@ -224,7 +222,7 @@ HEREDOC
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
       
-      default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
+      default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -271,7 +269,7 @@ HEREDOC
       end
       default_school_teacher.grades << grade_9
       
-      site_school.members << default_school_teacher
+      site_school.portal_teachers << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
 
@@ -292,7 +290,8 @@ HEREDOC
         default_course_class.update_attributes!(attributes)
       end
       default_course_class.status = 'open'
-      default_course_class.save
+      default_course_class.teacher = default_school_teacher
+      default_course_class.save!
       
       # default offering
       attributes = {
@@ -316,7 +315,7 @@ HEREDOC
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
-      site_school.members << default_student
+      site_school.add_member(default_student)
       #
       # default_student = student_user.student || student_user.student.create!
       # 
@@ -391,8 +390,8 @@ HEREDOC
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
-      Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
-      Rake::Task['rigse:setup:create_additional_users'].invoke
+      Rake::Task['app:setup:default_users_roles_and_portal_resources'].invoke
+      Rake::Task['app:setup:create_additional_users'].invoke
     end
 
     

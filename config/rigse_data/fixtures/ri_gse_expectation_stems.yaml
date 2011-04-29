@@ -1,0 +1,226 @@
+--- 
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 314f4be8-61fe-11df-a821-001ff3caa767
+  id: 1
+  description: "Students demonstrate an understanding of characteristic properties of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 3166f0a4-61fe-11df-a821-001ff3caa767
+  id: 2
+  description: "Students demonstrate an understanding of states of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 317b392e-61fe-11df-a821-001ff3caa767
+  id: 3
+  description: "Students demonstrate an understanding of conservation of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a35fe4-61fe-11df-a821-001ff3caa767
+  id: 4
+  description: "Students demonstrate anunderstanding of states of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31a9eb34-61fe-11df-a821-001ff3caa767
+  id: 5
+  description: "Students demonstrate an understanding of the structure of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31b1a0ae-61fe-11df-a821-001ff3caa767
+  id: 6
+  description: "Students demonstrate anunderstanding of the structure of matter by "
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31bdf462-61fe-11df-a821-001ff3caa767
+  id: 7
+  description: Students demonstrate an understanding of energy by
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:22 Z
+  uuid: 31c58bdc-61fe-11df-a821-001ff3caa767
+  id: 8
+  description: Students demonstrate anunderstanding of energy by
+  created_at: 2010-05-17 21:50:22 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31dffe86-61fe-11df-a821-001ff3caa767
+  id: 9
+  description: Students demonstrate an understanding of heat energy by
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 31e5467a-61fe-11df-a821-001ff3caa767
+  id: 10
+  description: "Students demonstrate an understanding of physical, chemical, and nuclear changes by "
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 320db2a4-61fe-11df-a821-001ff3caa767
+  id: 11
+  description: Students demonstrate an understanding of electromagnetism by
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 3218b096-61fe-11df-a821-001ff3caa767
+  id: 12
+  description: Students demonstrate an understanding of motion by
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 321e2148-61fe-11df-a821-001ff3caa767
+  id: 13
+  description: Students demonstrate anunderstanding of motion by
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32251c82-61fe-11df-a821-001ff3caa767
+  id: 14
+  description: Students demonstrate an understanding of forces and motion by
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 32310560-61fe-11df-a821-001ff3caa767
+  id: 15
+  description: "Students demonstrate an understanding of (magnetic) force by "
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:23 Z
+  uuid: 323b485e-61fe-11df-a821-001ff3caa767
+  id: 16
+  description: "Students demonstrate an understanding of waves by "
+  created_at: 2010-05-17 21:50:23 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 33144668-61fe-11df-a821-001ff3caa767
+  id: 17
+  description: "Students demonstrate an understanding of earth materials by "
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 331cd7d8-61fe-11df-a821-001ff3caa767
+  id: 18
+  description: "Students demonstrate an understanding of processes and change over time within earth systems by "
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 333e68f8-61fe-11df-a821-001ff3caa767
+  id: 19
+  description: Students demonstrate an understanding of how the use of scientific tools helps to extend senses and gather data by
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3379bfc0-61fe-11df-a821-001ff3caa767
+  id: 20
+  description: "Students demonstrate an understanding of processes and change over time by "
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 338d51a2-61fe-11df-a821-001ff3caa767
+  id: 21
+  description: Students demonstrate an understanding of properties of earth materials by
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 3394583a-61fe-11df-a821-001ff3caa767
+  id: 22
+  description: "Students demonstrate an understanding of characteristics of the solar system by "
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:25 Z
+  uuid: 339c6a98-61fe-11df-a821-001ff3caa767
+  id: 23
+  description: Students demonstrate an understanding of how technological advances have allowed scientists to re-evaluate or extend existing ideas about the solar system by
+  created_at: 2010-05-17 21:50:25 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33a3c2de-61fe-11df-a821-001ff3caa767
+  id: 24
+  description: "Students demonstrate an understanding of temporal or positional relationships between or among the Earth, sun, and moon by "
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 33c30c02-61fe-11df-a821-001ff3caa767
+  id: 25
+  description: Students demonstrate an understanding of the origins and evolution of galaxies and the universe by
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 340a2966-61fe-11df-a821-001ff3caa767
+  id: 26
+  description: "Students demonstrate an understanding of classification of organisms by "
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 3427b8fa-61fe-11df-a821-001ff3caa767
+  id: 27
+  description: Students demonstrate understanding of biodiversity by
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 342d099a-61fe-11df-a821-001ff3caa767
+  id: 28
+  description: Students demonstrate understanding of structure and function-survival requirements by
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:26 Z
+  uuid: 34305b5e-61fe-11df-a821-001ff3caa767
+  id: 29
+  description: Students demonstrate understanding of structure and function-survival requirements by 1aa describing how the malfunction of cell organelles can lead to disease (e.g. leaky lysosomes and rheumatoid arthritis) 1bb identify various specialized cells and comm
+  created_at: 2010-05-17 21:50:26 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34431d70-61fe-11df-a821-001ff3caa767
+  id: 30
+  description: "Students demonstrate an understanding of the molecular basis for heredity by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 344dcda6-61fe-11df-a821-001ff3caa767
+  id: 31
+  description: "Students demonstrate an understanding of reproduction by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 346677a2-61fe-11df-a821-001ff3caa767
+  id: 32
+  description: Students demonstrate understanding of differentiation by
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3472eb04-61fe-11df-a821-001ff3caa767
+  id: 33
+  description: "Students demonstrate an understanding of energy flow in an ecosystem by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 3477e10e-61fe-11df-a821-001ff3caa767
+  id: 34
+  description: "Students demonstrate an understanding of equilibrium in an ecosystem by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34a3849e-61fe-11df-a821-001ff3caa767
+  id: 35
+  description: "Students demonstrate an understanding of food webs in an ecosystem by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34b03ea0-61fe-11df-a821-001ff3caa767
+  id: 36
+  description: "Students demonstrate an understanding of matter and energy flow in an ecosystem by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34b969f8-61fe-11df-a821-001ff3caa767
+  id: 37
+  description: "Students demonstrate an understanding of recycling in an ecosystem by "
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:27 Z
+  uuid: 34c05a88-61fe-11df-a821-001ff3caa767
+  id: 38
+  description: Students will evaluate potential bias from a variety of media sources in how information is interpreted by
+  created_at: 2010-05-17 21:50:27 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34d8dd9c-61fe-11df-a821-001ff3caa767
+  id: 39
+  description: "Students will demonstrate their understanding of the degree of genetic relationships among organisms by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e1f990-61fe-11df-a821-001ff3caa767
+  id: 40
+  description: "Students demonstrate an understanding of Natural Selection/evolution by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 34e5c8a4-61fe-11df-a821-001ff3caa767
+  id: 41
+  description: "Students demonstrate an understanding of Natural Selection/ evolution by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 350f8b8a-61fe-11df-a821-001ff3caa767
+  id: 42
+  description: "Students demonstrate an understanding of human body systems by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 351bb9dc-61fe-11df-a821-001ff3caa767
+  id: 43
+  description: "Students demonstrate an understanding of how humans are affected by environmental factors and/or heredity by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 35282b90-61fe-11df-a821-001ff3caa767
+  id: 44
+  description: "Students demonstrate an understanding of human heredity by "
+  created_at: 2010-05-17 21:50:28 Z
+- updated_at: 2010-05-17 21:50:28 Z
+  uuid: 353bb4da-61fe-11df-a821-001ff3caa767
+  id: 45
+  description: Students demonstrate an understanding of patterns of human development by
+  created_at: 2010-05-17 21:50:28 Z

@@ -1,0 +1,130 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      (using template)
+      = @page_title || current_project.name
+    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
+    %meta{ :name => "distribution", :content => "all" }
+    %meta{ :name => "robots", :content => "all" }
+    %meta{ :name => "resource-type", :content => "document" }
+    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
+
+    / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
+    / see the yaml file too: config/asset_packages.yml
+    = stylesheet_link_merged (APP_CONFIG[:theme]||'default').to_sym
+    = javascript_include_merged :base
+    / tiny_mce didn't play nice with the asset_packager..
+    = javascript_include_tag "tiny_mce/tiny_mce"
+    
+    / shouldn't probably do this here, do it on domloaded elsewhere..:
+    = javascript_tag mce_init_string
+    - if protect_against_forgery?
+      = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
+    - if (defined? @container_id) && @container_id
+      = javascript_tag "var container_id = #{@container_id};"
+    - if defined? @container_type && @container_type
+      = javascript_tag "var container_type = '#{@container_type}';"
+      
+    
+  %body
+    #launch_warning{:class=>"alert",:style=>"display: none;"}
+      .padded_content
+        = render :partial => "home/java_launch_info"
+        %p
+          %a
+            [Click anywhere to close this window.]
+        %p
+          Don't show again:
+          %input{:type=>'checkbox', :onclick=>"createCookie('launch_warning','true');"}
+            
+    #note{:style=>"display: none;"}
+    #waiter{:style=>"display: none;"}
+      please wait
+      = image_tag "ajax-loader.gif"
+    #body2
+      /
+        For non-visual user agents:
+      #top
+        %a.hidden.doNotPrint{ :href => "#main_content" }
+          Skip to main content.
+    #wrapper.wrapper
+
+    
+      = render :partial => 'shared/activity_trail'
+      #header
+        .left_content
+          =image_tag("itsi_su.png")
+        .right_content
+          / %h1=current_project.name
+          %h1= current_project.name || "ITSI-SU"
+          %h3 Innovative Technology in Science Inquiry (scale up)
+          %hr
+          .padded_content_right
+            Welcome
+            = "#{current_user.name}."
+            - unless current_user.anonymous?
+              = link_to 'Preferences', preferences_user_path(current_user)
+              \/
+              = link_to 'Log out', logout_path
+            - else
+              = link_to 'Log in', login_path
+              \/
+              = link_to 'Sign Up', pick_signup_path
+            - if @original_user.has_role?('admin', 'manager')
+              \/
+              = link_to 'Switch', switch_user_path(current_user)
+          
+
+
+      #left_nav.nav_menu
+        %ul
+          %li= link_to 'Home', home_path
+          %li= link_to 'About', about_path
+          - unless current_user.anonymous? || current_user.portal_student
+            %li= link_to "Search Activities", activities_path
+            %li= link_to "Browse Activities", browse_activities_path
+            -#- if @activity && @activity.id
+              -#%li
+                -#= render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :depth => 2, :selects => [@activity,@section,@page]}
+
+          - if current_user.has_role?('admin')
+            %li.trail= link_to 'Districts', portal_districts_path
+            %li.trail= link_to 'Schools', portal_schools_path
+            /%li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
+            %li.trail= link_to 'Users', users_path
+            %li.trail= link_to 'Projects', admin_projects_path
+          
+
+        - if @portal_school
+          = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
+        - elsif @portal_teacher && (@portal_teacher.user == current_user)
+          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
+        - elsif @portal_student && (@portal_student.user == current_user)
+          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
+        = yield :side_bar
+
+      #main_content.main_content_colors
+        #content_header.main_content_colors
+          = yield :content_header
+        #js_flash{:style=>"display: none;"}
+
+        #flash
+          .padded_contents
+            - flash.each_pair do |key, message|
+              %div{:class=>"flash flash_#{key}"}= message 
+        = yield :layout
+
+      #footer
+        .padded_content
+          #footer_left
+            Questions/Feedback:
+            = mail_to("npaessel@concord.org", "Send us an email", :subject => "itsi question", :encode => "javascript")
+          #footer_right
+      #under_footer
+        = render :partial=>'project/legal'
+
+        - if current_user.has_role?('admin')
+          = display_system_info
+          

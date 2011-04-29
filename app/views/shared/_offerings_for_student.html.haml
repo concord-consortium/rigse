@@ -1,0 +1,7 @@
+- if offerings.size > 0
+  = render :partial => 'shared/offering_for_student', :collection => offerings, :as => :offering
+- else
+  .item
+    %ul.quiet_list
+      %li
+        .tiny= "No offerings available."

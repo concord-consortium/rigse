@@ -1,0 +1,3 @@
+- if portal_learner && portal_learner.student
+  %div{:id => dom_id_for(portal_learner, :item), :class => 'item'}
+    = menu_for_learner(portal_learner)

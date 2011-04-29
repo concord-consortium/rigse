@@ -3,7 +3,7 @@ namespace :db do
   task :dump => :environment do
     db_config = ActiveRecord::Base.configurations[RAILS_ENV]
     case db_config["adapter"]
-    when 'mysql'
+    when 'mysql', 'mysql2'
       # make sure we can connect to the db...
       ActiveRecord::Base.establish_connection(db_config)
       File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
@@ -15,7 +15,7 @@ namespace :db do
           cmd << " -u #{db_config["username"]}"
         end
         if db_config["password"]
-          cmd << " -p#{db_config["password"]}"
+          cmd << " -p'#{db_config["password"]}'"
         end
         cmd << " #{db_config["database"]}"
         # puts "Fetching database\n#{cmd}"
@@ -50,7 +50,7 @@ namespace :db do
     RemoveTables.up
     
     case db_config["adapter"]
-    when /mysql/
+    when 'mysql', 'mysql2'
       cmd = "mysql"
       if db_config["host"]
         cmd << " -h #{db_config["host"]}"
@@ -59,7 +59,7 @@ namespace :db do
         cmd << " -u #{db_config["username"]}"
       end
       if db_config["password"]
-        cmd << " -p#{db_config["password"]}"
+        cmd << " -p'#{db_config["password"]}'"
       end
       cmd << " #{db_config["database"]} < db/#{RAILS_ENV}_data.sql"
       # puts "Fetching database\n#{cmd}"

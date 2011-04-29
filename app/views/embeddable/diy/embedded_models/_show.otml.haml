@@ -1,0 +1,6 @@
+- content_for(:library) do
+  - model_opts = {:local_id => ot_local_id_for(diy_embedded_model), :authoredDataURL => diy_embedded_model.url, :name => diy_embedded_model.name}
+  - if diy_embedded_model.sizeable
+    - model_opts[:objectHeight] = diy_embedded_model.height if diy_embedded_model.height
+    - model_opts[:objectWidth] = diy_embedded_model.width if diy_embedded_model.width
+  - haml_tag(diy_embedded_model.otrunk_object_class_short, model_opts)

@@ -1,0 +1,57 @@
+%div{:id=>dom_id_for(page, :add_menu), :class=>"dropdown"}
+  %ul
+    - hide_types = [Embeddable::InnerPage, Embeddable::Biologica::World, Embeddable::Biologica::Organism, Embeddable::Biologica::StaticOrganism, Embeddable::Biologica::Chromosome, Embeddable::Biologica::ChromosomeZoom, Embeddable::Biologica::BreedOffspring, Embeddable::Biologica::Pedigree, Embeddable::Biologica::MultipleOrganism, Embeddable::Biologica::MeiosisView]
+    - Page.element_types.each do |type|
+      - next if hide_types.include? type
+      %li= link_to_remote "#{type.display_name}", |
+      :update =>dom_id_for(inner_page, :inner_page_area), |
+      :url => add_element_embeddable_inner_page_path(:class_name => type.name, :id=>inner_page.id, :page_id => page.id), |
+      :html => {:class=>'action'}, :complete => mce_init_string |
+
+/ The action for the inner pages is temporarily disabled... 
+/
+/ #inner_page_actions_menu.dropdown
+/   %ul
+/     %li#copy_link copy (disabled)
+/     %li#paste_link= paste_link_for(Page.paste_acceptable_types,{:container_id => @container_id}) # see pages_helper.rb
+/     %li= run_link_for(page)
+/     %li= print_link_for(page)
+/     %li= toggle_all('elements')
+/     %li= link_to toggle_link_title('preview', 'edit'), preview_page_path(page)
+/     - if (page.changeable?(current_user))
+/       %li= link_to 'edit page details', edit_page_url(page)
+/       %li= link_to 'duplicate', duplicate_page_url(page)
+
+- if (for_teacher_only? page)
+  - view_class = "action_menu teacher_only"
+- else
+  - view_class = "action_menu"
+
+      
+%div{:id => dom_id_for(page,:item), :class =>view_class}
+  .action_menu_header_left
+    = "- #{page.name} -"
+  .action_menu_header_right
+    / see above; these actions are disabled for now..
+    / = dropdown_button "actions.png", :name=> 'inner_page_actions', :title => 'add content to this page'
+    - if (page.changeable?(current_user))
+      = dropdown_button "add.png", :content_id=>dom_id_for(page, :add_menu),:name=> dom_id_for(page, :add_menu), :title => 'add content to this page'
+    - if (page.previous)
+      = remote_link_button "previous_node.png", :url => set_page_embeddable_inner_page_path(:page_id =>page.previous, :id=>inner_page.id), :title => "go to previous page", :update => dom_id_for(inner_page, :inner_page_area)
+    - else
+      .rollover= image_tag("disabled.png")
+    / - if page.parent
+    /   - page.parent.pages.each do |p|
+    /     - if (p.id == page.id)
+    /       = link_button "this_node.png", "#", :title => "you are here"
+    /     - else
+    /       = link_button "other_node.png", p, :title => "go to #{p.name}"
+    - if (page.next)
+      = remote_link_button "next_node.png", :url => set_page_embeddable_inner_page_path(:page_id => page.next,:id=>inner_page.id), :title => 'next page', :update => dom_id_for(inner_page, :inner_page_area)
+    - else
+      .rollover= image_tag("disabled.png")
+    - if (page.changeable?(current_user))
+      = remote_link_button "delete.png", :confirm => "Inner page #{page.name}?", :url => delete_page_embeddable_inner_page_path(:page_id =>page, :id=>inner_page.id), :title => "delete page", :update => dom_id_for(inner_page, :inner_page_area)
+    - if (page.section)
+      = link_button "up.png", page.section, :title => 'go to section'
+

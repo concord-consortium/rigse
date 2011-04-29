@@ -3,7 +3,7 @@
 
 / - field_set_tag 'Current GSE' do
 /   #current_gse_description
-/     = render :partial => 'grade_span_expectations/grade_span_expectation', :locals => { :grade_span_expectation => @investigation.grade_span_expectation }
+/     = render :partial => 'ri_gse/grade_span_expectations/grade_span_expectation', :locals => { :grade_span_expectation => @investigation.grade_span_expectation }
 / 
 / = observe_field :grade_span, :url => { :action => "gse_select" }, :with => 'grade_span', :update => {:success => 'gse_select'}
 / 
