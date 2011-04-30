@@ -119,6 +119,11 @@ Before do
   User.anonymous(true)
 end
 
+Before("@assessment") do
+  # need this for a specific test
+  APP_CONFIG[:theme] = 'assessment'
+end
+
 After do
   begin
     $rspec_mocks.verify_all

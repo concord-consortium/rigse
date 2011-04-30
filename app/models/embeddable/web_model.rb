@@ -2,7 +2,7 @@ class Embeddable::WebModel < ActiveRecord::Base
   set_table_name "embeddable_web_models"
 
   belongs_to :user
-  belongs_to :web_model, :class_name => "WebModel", :foreign_key => "web_model_id"
+  belongs_to :web_model, :class_name => "::WebModel", :foreign_key => "web_model_id"
 
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
@@ -10,7 +10,7 @@ class Embeddable::WebModel < ActiveRecord::Base
   validates_presence_of :web_model
 
   default_value_for :web_model do
-    WebModel.find(:first)
+    ::WebModel.find(:first)
   end
 
   include Changeable
