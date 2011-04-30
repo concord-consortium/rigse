@@ -20,6 +20,7 @@ Feature: An author creates an investigation
     And I save the investigation
     Then I should see "Investigation was successfully created."
 
+  @wip
   @javascript
   Scenario: Author creates investigation with web models, open responses, and multiple choices
     When I go to the create investigation page
