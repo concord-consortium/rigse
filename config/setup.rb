@@ -203,7 +203,6 @@ if @options[:force] && File.exists?(@settings_config_path)
   FileUtils.rm(@settings_config_path)
 end
 
-puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
   raise "\n\n*** missing theme: #{@theme_settings_config_sample_path}\n\n" unless File.exists?(@theme_settings_config_sample_path)
@@ -1163,7 +1162,6 @@ end
 #
 # ==================================================================
 
-
 unless @options[:quiet]
   puts <<-HEREDOC
 
@@ -1204,7 +1202,7 @@ puts <<-HEREDOC
 
   JRuby:
     RAILS_ENV=production jruby -S rake db:migrate:reset
-    RAILS_ENV=production jruby -S app:setup:new_app
+    RAILS_ENV=production jruby -S rake app:setup:new_app
 
 
 HEREDOC
