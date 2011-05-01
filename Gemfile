@@ -1,4 +1,4 @@
-source :gemcutter
+source "http://rubygems.org"
 
 #### COMMON
   platforms :ruby do
@@ -13,6 +13,7 @@ source :gemcutter
     gem "rake",                            ">=0.8.7"
     gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
     gem "jruby-openssl",                   ">=0.6"
+    gem "ffi-ncurses",                      "~>0.3.3"
   end
 
   gem "mongrel",              "~>1.1.5"
