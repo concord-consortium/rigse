@@ -178,9 +178,6 @@ end
 
 optparse.parse!
 
-# FIXME: see comment about this hack in config/environments/development.rb
-$: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
-
 require 'highline/import'
 
 # ==================================================================
