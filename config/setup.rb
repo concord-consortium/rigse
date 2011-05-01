@@ -1081,17 +1081,11 @@ body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{@options[:app_name]} without the protocol: (example: #{@mailer_config_sample[:host]})
-
 If you do not have a working SMTP server select the test deliver method instead of the
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can
 easily see then as the are generated with this command:
 
   tail -f -n 100 #{@dev_log_path}
-
-You will also need to specify:
-
-  the hostname of the #{@options[:app_name]} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
@@ -1115,8 +1109,6 @@ Here are the current settings in config/mailer.yml:
     @mailer_config[:delivery_type] =            ask("    delivery type: ", delivery_types) { |q|
       q.default = "test"
     }
-
-    @mailer_config[:host] =                     ask("    #{@options[:app_name]} hostname: ") { |q| q.default = @mailer_config[:host] }
 
     @mailer_config[:smtp][:address] =           ask("    SMTP address: ") { |q|
       q.default = @mailer_config[:smtp][:address]
