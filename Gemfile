@@ -3,7 +3,7 @@ source :gemcutter
 #### COMMON
   platforms :ruby do
     if ENV['RB_MYSQL2']
-      gem "mysql2"
+      gem "mysql2",             "0.2.7"
     else
       gem "mysql",              "~>2.7"
     end
