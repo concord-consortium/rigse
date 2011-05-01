@@ -37,7 +37,7 @@ development: &id003
       :path: /dev2/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev2/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - all-otrunk-snapshot
   :default_maven_jnlp:
@@ -87,7 +87,7 @@ production:
       :path: /dev2/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev2/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - all-otrunk-snapshot
   :default_maven_jnlp:
