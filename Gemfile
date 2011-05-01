@@ -1,7 +1,21 @@
-source :gemcutter
+source "http://rubygems.org"
 
 #### COMMON
-  gem "mysql",                "~>2.7"
+  platforms :ruby do
+    if ENV['RB_MYSQL2']
+      gem "mysql2",             "0.2.7"
+    else
+      gem "mysql",              "~>2.7"
+    end
+  end
+
+  platforms :jruby do
+    gem "rake",                            ">=0.8.7"
+    gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
+    gem "jruby-openssl",                   ">=0.6"
+    gem "ffi-ncurses",                      "~>0.3.3"
+  end
+
   gem "mongrel",              "~>1.1.5"
   gem "rails",                "2.3.11"
   gem "arrayfields"
@@ -20,11 +34,9 @@ source :gemcutter
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass",              "0.8.17"
   gem "jnlp",                 "0.6.2"
-  # use https://github.com/zdennis/activerecord-import istead of ar-extensions
-  # activerecord-import ONLY WORKS WITH RAILS 3!
-  # gem "activerecord-import", ">= 0.2.0"
-  # use ghazel's version which fixes the to_a log messages and adds mysql2 support
-  git "git://github.com/ghazel/ar-extensions.git" do
+  # use a merge of ghazel and tracksimple ar-extensions forks
+  # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
+  git "git://github.com/concord-consortium/ar-extensions.git" do
     gem "ar-extensions",        "~> 0.9.3"
   end
   gem "fastercsv",            "   1.5.0"
@@ -48,7 +60,7 @@ group :test do
   #gem "gherkin",           "~>2.3"
   gem "cucumber",          "~>0.10.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber"))
   gem "cucumber-rails",    "~>0.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber-rails"))
-  gem "database_cleaner",  "~>0.5.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/database_cleaner"))
+  gem "database_cleaner",  "~>0.6.6" #unless File.directory?(File.join(Rails.root, "vendor/plugins/database_cleaner"))
   gem "capybara",          "~>0.4" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
   gem "rspec",             "~>1.3.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec"))
   gem "rspec-rails",       "~>1.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec-rails"))
