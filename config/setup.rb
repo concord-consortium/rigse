@@ -147,6 +147,7 @@ optparse = OptionParser.new do |opts|
   @options[:db_name_prefix] = default_db_name_prefix
   opts.on( '-D', '--database DATABASE',
     "prefix to add to the names for the development, test, and production databases, default: '#{default_db_name_prefix}'" ) do |db_name_prefix|
+    default_db_name_prefix = nil
     @options[:db_name_prefix] = db_name_prefix
   end
 
