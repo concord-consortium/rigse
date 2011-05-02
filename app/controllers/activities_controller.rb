@@ -164,7 +164,6 @@ class ActivitiesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.xml
   def new
-    @new = true
     @activity = Activity.new
     @activity.user = current_user
     respond_to do |format|
