@@ -57,6 +57,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     def custom_set?(method_sym)
       customizable_fields.detect{|e| method_sym.to_s =~ /^#{e.to_s}=$/}      
     end
+    
+    def display_name
+      "Sensor"
+    end
   end
 
   def respond_to?(method, *args, &block)
