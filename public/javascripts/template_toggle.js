@@ -7,6 +7,7 @@
   var disable_button_class = '.template_disable_button';
   var enable_button_class = '.template_enable_button';
   var enable_check_class = '.template_enable_check';
+  var enable_element_check_class = '.element_enable_check';
   var disabled_section_class = '.disabled_section';
   var enabled_section_class = '.enabled_section';
   var template_container_class = '.template_container';
@@ -75,9 +76,6 @@
     if (!!_save_button) {
       _save_button.show();
     }
-    
-    var title = container.down(title_container_class);
-    title.removeClassName('disabled');
   };
   
   var handle_enable_check_evt = function(evt) {
@@ -97,15 +95,44 @@
     viewContainer.select(template_container_class).each(function(elm){
       elm.hide();
     });
-    var title = container.down(title_container_class);
-    title.addClassName('disabled');
+  };
+  
+  var handle_enable_element_check_evt = function(evt) {
+    var checkbox = evt.srcElement;
+    var container = checkbox.up(template_container_class);
+    console.log(container.identify())
+    if (checkbox.checked) {
+      enable_element(container);
+      server_enable(container);
+    } else {
+      disable_element(container);
+      server_disable(container);
+    }
+  };
+  
+  var enable_element = function(container) {
+    viewContainer = container.down(view_container_class);
+    viewContainer.show();
+    var edit_button = container.down(edit_class);
+    if (!!edit_button) {
+      edit_button.show();
+    }
+  };
+  
+  var disable_element = function(container) {
+    close_editor(container);
+    viewContainer = container.down(view_container_class);
+    viewContainer.hide();
+    var edit_button = container.down(edit_class);
+    if (!!edit_button) {
+      edit_button.hide();
+    }
   };
 
   var handle_open_editor_evt = function(evt) {
     var edit_button = evt.element();
     var container = edit_button.up(template_container_class);
-    open_editor(container)
-    return false;
+    open_editor(container);
   };
   
   var open_editor = function(container) {
@@ -118,10 +145,14 @@
     edit_container.show();
     view_container.hide();
   };
-
-  var close_editor = function(evt) {
+  
+  var handle_close_editor_evt = function(evt) {
     var save_button = evt.element();
     var container = save_button.up(template_container_class);
+    close_editor(container);
+  };
+
+  var close_editor = function(container) {
     var edit_button = container.down(edit_class);
     var edit_container = container.down(edit_container_class);
     var view_container = container.down(view_container_class);
@@ -202,6 +233,10 @@
     $$(enable_check_class).each(function(elm) {
       elm.observe('click', handle_enable_check_evt);
     });
+    
+    $$(enable_element_check_class).each(function(elm) {
+      elm.observe('click', handle_enable_element_check_evt);
+    });
 
     // initial visibility of buttons:
     $$(template_container_class).each(function(selected){
@@ -253,7 +288,17 @@
         elm.down(enable_check_class).checked = false;
       }
     });
-
+    
+    // disable initially disabled page elements
+    $$(enable_element_check_class).each(function(check) {
+      var container = check.up(template_container_class);
+      if (container.hasClassName('disabled_section')){
+        disable_element(container);
+        check.checked = false;
+      } else {
+        check.checked = true;
+      }
+    });
 
     // cancel the double-click behavior of editable_block
     // TODO: (?) dont put the editable behavior inline? Use unobtrusive jquery?

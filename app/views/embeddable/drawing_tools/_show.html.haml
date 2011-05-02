@@ -1,10 +1,10 @@
 %div{:id => dom_id_for(drawing_tool, :details), :class => 'content'}
   -#= wrap_edit_link_around_content(drawing_tool, options={:complete => mce_init_string}) do
   -#%div{:id =>dom_id_for(drawing_tool, :pallet),:style => dt_pallet_style }
-  -if drawing_tool.background_image_url
+  -if drawing_tool.background_image_url && drawing_tool.background_image_url.length > 0
     %img.draw_tool_bg{:src=>drawing_tool.background_image_url}
   - else
-    .draw_tool_bg
+    %img.draw_tool_bg{:src => "/images/otrunk_objects/draw_tool.gif"}
 
 
 -#:javascript

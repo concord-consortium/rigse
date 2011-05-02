@@ -7,6 +7,11 @@
   -#- dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
   -#%div{:id => dom_id_for(element, :template_container), :class => dom_class }
   = template_container_for(element) do
+    - unless element.embeddable.kind_of? Embeddable::Diy::Section
+      %label
+        %input{:type => "checkbox", :name => "enable element", :class=> "element_enable_check"}
+        %span{:class => "template_section_title"}
+          = element.embeddable.class.display_name
     -#%div.template_view_title{:id => dom_id_for(element, :template_view_title)}
     %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
       = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
