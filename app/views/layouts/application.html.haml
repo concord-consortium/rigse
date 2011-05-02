@@ -37,7 +37,7 @@
       / For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
-    #wrapper.wrapper
+    #wrapper{ :class => @wide_content_layout ? "wide" : nil}
       = render :partial => 'shared/project_header'
       #primary{ :class => @wide_content_layout ? "wide" : nil}
         #content.main_content_colors
