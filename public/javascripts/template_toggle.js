@@ -113,20 +113,26 @@
   var enable_element = function(container) {
     viewContainer = container.down(view_container_class);
     viewContainer.show();
+    var edit_button = container.down(edit_class);
+    if (!!edit_button) {
+      edit_button.show();
+    }
   };
   
   var disable_element = function(container) {
+    close_editor(container);
     viewContainer = container.down(view_container_class);
-    editContainer = container.down(edit_container_class);
     viewContainer.hide();
-    editContainer.hide();
+    var edit_button = container.down(edit_class);
+    if (!!edit_button) {
+      edit_button.hide();
+    }
   };
 
   var handle_open_editor_evt = function(evt) {
     var edit_button = evt.element();
     var container = edit_button.up(template_container_class);
-    open_editor(container)
-    return false;
+    open_editor(container);
   };
   
   var open_editor = function(container) {
@@ -139,10 +145,14 @@
     edit_container.show();
     view_container.hide();
   };
-
-  var close_editor = function(evt) {
+  
+  var handle_close_editor_evt = function(evt) {
     var save_button = evt.element();
     var container = save_button.up(template_container_class);
+    close_editor(container);
+  };
+
+  var close_editor = function(container) {
     var edit_button = container.down(edit_class);
     var edit_container = container.down(edit_container_class);
     var view_container = container.down(view_container_class);
