@@ -38,7 +38,7 @@ class Embeddable::OpenResponse < Embeddable::Embeddable
   send_update_events_to :investigations
   
   def self.display_name
-    "Open Response"
+    "Open Response Question"
   end
 
 end
