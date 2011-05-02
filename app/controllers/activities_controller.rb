@@ -1,4 +1,8 @@
 class ActivitiesController < ApplicationController
+  # unfortunately theme support doesn't correctly handle automatically finding layouts with the
+  # same name as the controller, so we need to explicitly specify it here
+  layout 'activities'
+
   toggle_controller_for :activities
   # GET /pages
   # GET /pages.xml
@@ -135,14 +139,7 @@ class ActivitiesController < ApplicationController
  
   def template_edit
     @teacher_mode = params[:teacher_mode] || false
-    respond_to do |format|
-      format.html   { render :template_edit, :layout => "layouts/template-edit" }
-    end
   end
-  # def template_edit
-  #   @teacher_mode = params[:teacher_mode] || @activity.teacher_only
-  #   #render :layout => 'template'
-  # end
 
   # GET /pages/1
   # GET /pages/1.xml
