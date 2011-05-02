@@ -607,14 +607,19 @@ class ItsiImporter
       end
     end
 
+    def enable_section_for(emb)
+      emb.pages.first.is_enabled = true
+      emb.pages.first.section.is_enabled = true
+      emb.pages.first.save
+      emb.pages.first.section.save
+    end
+
     def set_embeddable(embeddable,symbol,value)
       begin
         embeddable.send(symbol, value)
         embeddable.enable
+        enable_section_for(embeddable)
         embeddable.save
-        # enable the page and section if we are here
-        embeddable.pages.first.is_enabled = true
-        embeddable.pages.first.section.is_enabled = true
       rescue NoMethodError => e
         @errors << e
         errror("No method #{symbol} in #{embeddable.class.name}")

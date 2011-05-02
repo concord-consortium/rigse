@@ -150,6 +150,7 @@ describe ItsiImporter do
       embeddable = mock 
       embeddable.should_receive(:prototype_data_collector=).with(prototype_data_collector)
       embeddable.should_receive(:enable)
+      ItsiImporter.should_receive(:enable_section_for).with(embeddable)
       embeddable.should_receive(:save)
       ItsiImporter.set_embeddable(embeddable,:prototype_data_collector=,prototype_data_collector)
     end
@@ -214,6 +215,7 @@ describe ItsiImporter do
           :diy_attribute => true
         ]
       }
+      ItsiImporter.stub!(:enable_section_for)
     end
     it "should send the name of the section to get the content" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
@@ -275,6 +277,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      ItsiImporter.should_receive(:enable_section_for).with(@embeddable)
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -293,6 +296,7 @@ describe ItsiImporter do
       }
       @itsi_model = mock
       @model = mock
+      ItsiImporter.stub!(:enable_section_for)
       Itsi::Model.stub!(:find).and_return @itsi_model
     end
     it "should set diy_model= on the embeddable" do
@@ -321,6 +325,7 @@ describe ItsiImporter do
       @itsi_model = mock
       @model = mock
       Itsi::Model.stub!(:find).and_return @itsi_model
+      ItsiImporter.stub!(:enable_section_for)
     end
     it "should set diy_model= on the embeddable" do
       Diy::Model.should_receive(:from_external_portal).with(@itsi_model).and_return(@model)
