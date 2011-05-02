@@ -75,9 +75,6 @@
     if (!!_save_button) {
       _save_button.show();
     }
-    
-    var title = container.down(title_container_class);
-    title.removeClassName('disabled');
   };
   
   var handle_enable_check_evt = function(evt) {
@@ -97,8 +94,6 @@
     viewContainer.select(template_container_class).each(function(elm){
       elm.hide();
     });
-    var title = container.down(title_container_class);
-    title.addClassName('disabled');
   };
 
   var handle_open_editor_evt = function(evt) {
