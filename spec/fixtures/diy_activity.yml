@@ -1,0 +1,172 @@
+--- !ruby/object:Itsi::Activity 
+attributes: 
+  archived: "0"
+  collectdata3_model_active: "0"
+  collectdata1_calibration_id: 
+  user_id: "13"
+  model_id: "1"
+  materials: |
+    * Temperature sensor
+    * Plastic bowl or cup 
+    * Refrigerator with freezer compartment
+    * Water
+    * Measuring spoons
+    * Measuring cup
+    * Table salt
+
+  proced_drawing_response: "0"
+  further_model_id: "597"
+  proced_text_response: "0"
+  collectdata3_calibration_id: 
+  safety: There are no special safety concerns in this activity.
+  collectdata2: "Repeat the entire experiment, except this time put the ice into *salt water*. Use the following proportions to make a concentration about the same as seawater: 1 teaspoon (5 ml, 6 g) salt to 3/4 cup (5.7 fl oz, 170 ml) water. If you wish, you can make a more concentrated salt solution to have a more dramatic effect.\r\n\
+    \r\n\
+    Remove one ice cube from the tray. \r\n\
+    \r\n\
+    Put the ice cube into the bowl of salt water.\r\n\
+    \r\n\
+    Immediately put the temperature sensor into the bowl. \r\n\
+    \r\n\
+    Record the temperature until the ice cube melts completely. "
+  public: "1"
+  collectdata3: "Repeat the entire experiment, except this time freeze the temperature sensor into the *center* of the ice cube. This will probably take overnight. \r\n\
+    \r\n\
+    When you remove the ice cube from the freezer, start recording temperature as soon as possible.\r\n\
+    \r\n\
+    Put the ice cube into the bowl and add just enough water to float the ice cube. \r\n\
+    \r\n\
+    Record the temperature until the ice cube melts completely. \r\n\
+    \r\n "
+  description: |
+    In this activity, students will monitor the temperature of a melting ice cube.
+    
+
+  collectdata3_probetype_id: "1"
+  conclusion: "Explain your results in terms of the energy it takes to heat up water and to change water from a solid to a liquid state. "
+  analysis: |
+    Review your graphs and previous responses to help answer the following questions. 
+    
+    1. Does the melting curve match what you predicted?
+    2. Compare the temperature graphs for:
+    ** water temperature as the ice melts
+    ** salt water temperature as the ice melts
+    ** ice temperature as the ice melts
+    
+    3. Explain each part of the graph: 
+    ** When the ice is first put into the water
+    ** While the ice is melting
+    ** After the ice melts completely
+    
+    4. Is the temperature of the ice the same as the temperature of the water around it? 
+    5. Is the ice ever colder than 0 C? 
+    6. What effect does adding salt have? 
+
+  collectdata2_drawing_response: "0"
+  further_probe_multi: "0"
+  career_stem2: ""
+  collectdata3_calibration_active: 
+  probe_type_id: "1"
+  further: |
+    The model below shows a hot liquid next to a cold solid, separated by a wall. The color represents kinetic energy or temperature: red is more energy, white is less energy.
+    
+    Run the model and write down the differences between a liquid and a solid. 
+    
+    Then remove the barrier and watch what happens to the solid. At what point would you say the solid has turned into a liquid -- that is, melted? Why? 
+
+  analysis_text_response: "1"
+  textile: "1"
+  collectdata2_probe_active: "1"
+  further_drawing_response: "0"
+  collectdata2_calibration_active: 
+  collectdata3_text_response: "0"
+  collectdata2_text_response: "0"
+  conclusion_drawing_response: "0"
+  introduction_text_response: "1"
+  collectdata_text_response: "0"
+  career_stem_text_response: "0"
+  furtherprobe_calibration_id: 
+  furtherprobe_calibration_active: 
+  introduction: "In this activity, students will monitor the temperature of a melting ice cube.\r\n\
+    \r\n\
+    <b>What is the temperature of ice as it melts?</b>\r\n\
+    \r\n\
+    !ftp://ftp.concord.org/private/itsisu2010/activityimages/activityimages_final/hs/phasechange/ice_stevendepolo.jpg!\r\n\
+    \r\n\
+    What is the temperature of ice? Can it be colder than 0 \xC3\xA2\xE2\x80\x9E\xC6\x92? Can it be warmer than 0 \xC3\xA2\xE2\x80\x9E\xC6\x92? "
+  uuid: 1605106a-599e-11df-9687-001ec94098a1
+  collectdata_model_active: "0"
+  prediction_text_response: "1"
+  collectdata2_model_id: "1"
+  predict: "Suppose you put a temperature sensor in a small cup of water and set the cup in a freezer until the water was frozen solid with the sensor frozen into it.  Suppose the freezer compartment is well below freezing, say about -5 \xC3\xA2\xE2\x80\x9E\xC6\x92.\r\n\
+    \r\n\
+    You would then monitor the temperature through the following steps:\r\n\
+    * Take the ice and sensor out of the freezer and start recording temperature.\r\n\
+    * Record temperature until the ice is entirely melted.\r\n\
+    \r\n\
+    Draw how you think this temperature graph would look. Label all of the events along the way. If there are steps in the graph, label what happens at each step. Note that 0 \xC3\xA2\xE2\x80\x9E\xC6\x92 is the freezing point of water, and draw your graph values accordingly.\r\n\
+    \r\n\
+    If the ice is placed in water, what happens to the temperature of the *water* as the ice melts? Will it be the same as the inside of the ice?\r\n\
+    \r\n\
+    If you add salt to the water, does this change the temperature of the water and the ice as it melts? \r\n\
+    \r\n"
+  sds_offering_id: "12540"
+  prediction_graph_response: "1"
+  conclusion_text_response: "1"
+  prediction_drawing_response: "0"
+  custom_otml: 
+  collectdata3_probe_multi: "0"
+  name: Melting Ice
+  career_stem: ""
+  parent_version: "1"
+  parent_id: "117"
+  draft: 
+  collectdata_drawing_response: "0"
+  collectdata: "Remove one ice cube from the tray. \r\n\
+    \r\n\
+    Put the ice cube into the bowl and add just enough water to float the ice cube.\r\n\
+    \r\n\
+    Immediately put the temperature sensor into the bowl. \r\n\
+    \r\n\
+    Record the temperature until the ice cube melts completely. \r\n\
+    \r\n "
+  collectdata2_calibration_id: 
+  analysis_drawing_response: "0"
+  further_probe_active: "0"
+  further_probetype_id: "1"
+  version: "24"
+  collectdata2_model_active: "0"
+  collectdata3_probe_active: "1"
+  collectdata_graph_response: "0"
+  image_url: 
+  content_digest: rhx/0deU1DYFastPigi1fQ==
+  collectdata_probe_active: "1"
+  previous_user_id: 
+  short_name: melting_ice
+  introduction_drawing_response: "0"
+  collectdata3_drawing_response: "0"
+  career_stem2_text_response: "0"
+  proced: |
+    1. Make some ice cubes in the freezer compartment of a refrigerator, using the ice cube tray. This will allow you to do the first part of the experiment. 
+    
+    2. Have the small bowl ready for adding the ice cube and water. Set up the temperature sensor to record for at least 20 minutes.
+    
+    3. When the first two experiments are finished, set up the temperature sensor in the freezer compartment and freeze the sensor tip into the center of an ice cube. This will allow you to do the third part of the experiment. 
+
+  collectdata3_model_id: "1"
+  collectdata2_probetype_id: "1"
+  standards: |
+    Physical Science - Properties and Changes of Matter 	
+    A substance has characteristic properties, such as density, a boiling point, and solubility, all of which are independent of the amount of the sample. A mixture of substances often can be separated into the original substances using one or more of the characteristic properties.
+    
+    Physical Science - Transfer of Energy	
+    Energy is a property of many substances and is associated with heat, light, electricity, mechanical motion, sound, nuclei and the nature of a chemical. Energy is transferred in many ways.
+
+  further_text_response: "1"
+  nobundles: 
+  collectdata1_calibration_active: 
+  id: "1465"
+  collectdata2_probe_multi: "0"
+  further_model_active: "1"
+  collectdata_probe_multi: "0"
+attributes_cache: {}
+

@@ -123,6 +123,7 @@ class ItsiImporter
   ACTIVITY_TEMPLATE_UUID = "7d7f511d-45c6-4002-a5d8-6d6d63a7f12d"
   SECTIONS_MAP = [
     { :key => :introduction,
+      :enabled => true,
       :name => "Introduction",
       :page_desc => "ITSI Activities start with a Discovery Question.",
       :embeddable_elements => [
@@ -131,6 +132,7 @@ class ItsiImporter
       ]
     },
     { :key => :standards,
+      :enabled => false,
       :name => "Standards woo",
       :page_desc => "What standards does this ITSI Activity cover?",
       :embeddable_elements => [
@@ -139,6 +141,7 @@ class ItsiImporter
       :is_enabled => false
     },
     { :key => :career_stem,
+      :enabled => false,
       :name => "Career STEM Question wee",
       :page_desc => "Career STEM Question",
       :embeddable_elements => [
@@ -147,6 +150,7 @@ class ItsiImporter
       :enabled => false
     },
     { :key => :materials,
+      :enabled => false,
       :name => "Materials",
       :page_desc => "What materials does this ITSI Activity require?",
       :embeddable_elements => [
@@ -154,6 +158,7 @@ class ItsiImporter
       ]
     },
     { :key => :safety,
+      :enabled => false,
       :name => "Safety",
       :page_desc => "Are there any safety considerations to be aware of in this ITSI Activity?",
       :embeddable_elements => [
@@ -161,6 +166,7 @@ class ItsiImporter
       ]
     },
     { :key => :proced,
+      :enabled => false,
       :name => "Procedure",
       :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
       :embeddable_elements => [
@@ -168,46 +174,75 @@ class ItsiImporter
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
+    { :key => :predict,
+      :enabled => false,
+      :name => "Prediction I",
+      :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+      :embeddable_elements => [
+        {:key => :main_content,     :diy_attribute => true },
+        {:key => :prediction_graph, :diy_attribute => true }, # doesn't exist in DIY
+        {:key => :prediction_draw,  :diy_attribute => true }, # doesn't exist in DIY
+        {:key => :prediction_text,  :diy_attribute => true }, # doesn't exist in DIY
+      ]
+    },
     { :key => :collectdata,
+      :enabled => false,
       :name => "Collect Data I",
       :page_desc => "The learner conducts experiments using probes and models.",
       :embeddable_elements => [
         {:key => :main_content,     :diy_attribute => true  },
-        {:key => :prediction_graph, :diy_attribute => true  },
-        {:key => :prediction_draw,  :diy_attribute => true  },
-        {:key => :prediction_text,  :diy_attribute => true  },
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
+    { :key => :prediction2,
+      :enabled => false,
+      :name => "Prediction II",
+      :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+      :embeddable_elements => [
+        {:key => :main_content,     :diy_attribute => false },
+        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
+      ]
+    },
     { :key => :collectdata2,
+      :enabled => false,
       :name => "Collect Data II",
       :page_desc => "The learner conducts experiments using probes and models.",
       :embeddable_elements => [
-        {:key => :main_content,     :diy_attribute => true },
-        {:key => :prediction_graph, :diy_attribute => true },
-        {:key => :prediction_draw,  :diy_attribute => false},
-        {:key => :prediction_text,  :diy_attribute => false}, # doesn't exist in DIY
-        {:key => :probetype_id,     :diy_attribute => true },
-        {:key => :model_id,         :diy_attribute => true },
-        {:key => :drawing_response,    :diy_attribute => true }
+        {:key => :main_content,       :diy_attribute => true },
+        {:key => :probetype_id,       :diy_attribute => true },
+        {:key => :model_id,           :diy_attribute => true },
+        {:key => :drawing_response,   :diy_attribute => true }
       ]
     },
+    { :key => :prediction3,
+      :enabled => false,
+      :name => "Prediction III",
+      :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+      :embeddable_elements => [
+        {:key => :main_content,     :diy_attribute => false },
+        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
+      ]
+    },
+
     { :key => :collectdata3,
+      :enabled => false,
       :name => "Collect Data III",
       :page_desc => "The learner conducts experiments using probes and models.",
       :embeddable_elements => [
         {:key => :main_content,     :diy_attribute => true },
-        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
-        {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
-        {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
-        {:key => :drawing_response,    :diy_attribute => true  }
+        {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
     { :key => :analysis,
+      :enabled => false,
       :name => "Analysis",
       :page_desc => "How can learners reflect and analyze the experiments they just completed?",
       :embeddable_elements => [
@@ -216,6 +251,7 @@ class ItsiImporter
       ]
     },
     { :key => :conclusion,
+      :enabled => false,
       :name => "Conclusion",
       :page_desc => "What are some reasonable conclusions a learner might come to after this ITSI Activity?",
       :embeddable_elements => [
@@ -224,6 +260,7 @@ class ItsiImporter
       ]
     },
     { :key => :career_stem2,
+      :enabled => true,
       :name => "Second Career STEM Question",
       :page_desc => "Second Career STEM Question",
       :embeddable_elements => [
@@ -231,6 +268,7 @@ class ItsiImporter
       ]
     },
     { :key => :further,
+      :enabled => false,
       :name => "Further Investigation",
       :page_desc => "Think about any further activities a learner might want to try.",
       :embeddable_elements => [
@@ -267,28 +305,31 @@ class ItsiImporter
         t.description = "Single-page Activity"
         t.user = ItsiImporter.find_or_create_itsi_import_user
       end
+      the_prediction_graph = nil
       SECTIONS_MAP.each do |section_def|
         section = Section.create!(:name => section_def[:name], :description => section_def[:name], :activity => act, :user => act.user)
         page = Page.create!(:name => section_def[:name], :description => section_def[:page_desc], :section => section, :user => act.user)
+        page.is_enabled = section_def[:enabled]
+        section.is_enabled = section_def[:enabled]
         section.pages << page
         act.sections << section
         components = section_def[:embeddable_elements]
-        prediction_graph = nil
         components.each do |comp|
           elem = comp[:key]
           page_elem = nil
           case elem
             when :main_content
+              #embeddable = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
               embeddable = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
             when :probetype_id
               probe_type = Probe::ProbeType.default
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
               embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
               # you must define prediction graph before the probe!
-              unless prediction_graph.nil?
-                embeddable.prediction_graph_source = prediction_graph
+              unless the_prediction_graph.nil?
+                embeddable.prediction_graph_source = the_prediction_graph
                 embeddable.save
-                prediction_graph = nil
+                the_prediction_graph = nil
               end
             when :model_id
               model = Diy::Model.first
@@ -307,7 +348,7 @@ class ItsiImporter
               probe_type = Probe::ProbeType.default
               prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
               embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_prediction, :user => act.user)
-              prediction_graph=embeddable
+              the_prediction_graph=embeddable
             when :prediction_text
               embeddable = Embeddable::OpenResponse.create(:name => "written prediction", :description => "written prediction")
             when :prediction_draw
@@ -515,11 +556,10 @@ class ItsiImporter
       # There are some exceptions for the subsection naming conventions in the diy models:
       case section_key
       when :predict
-        error "we shouldn't have a :predict section any more. Merged into collectdata"
-      when :collectdata
         attribs[:prediction_graph]     = :prediction_graph_response
         attribs[:prediction_text]      = :prediction_text_response
         attribs[:prediction_draw]      = :prediction_drawing_response
+      when :collectdata
         attribs[:probetype_id]         = :probe_type_id
         attribs[:model_id]             = :model_id
         attribs[:calibration_active]   = :collectdata1_calibration_active
@@ -572,6 +612,9 @@ class ItsiImporter
         embeddable.send(symbol, value)
         embeddable.enable
         embeddable.save
+        # enable the page and section if we are here
+        embeddable.pages.first.is_enabled = true
+        embeddable.pages.first.section.is_enabled = true
       rescue NoMethodError => e
         @errors << e
         errror("No method #{symbol} in #{embeddable.class.name}")
@@ -634,7 +677,7 @@ class ItsiImporter
             calibration = Probe::Calibration.find(calibration_id)
           end
           prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor'})
-          set_embeddable(embeddable, :prototype_data_collector=, prototype_data_collector)
+          set_embeddable(embeddable, :prototype=, prototype_data_collector)
         rescue ActiveRecord::RecordNotFound => e
           message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
           error message
@@ -665,20 +708,22 @@ class ItsiImporter
       graph_response = prediction_graph(diy_act,section_key)
       if graph_response
         probe_type_id = probetype_id(diy_act,section_key)
-        if probe_type_id
-          begin
-            # this is probably redundant, the make_activity sets the type
-            # and the save callbacks on DataCollectors will keep it updated
-            probe_type = Probe::ProbeType.find(probe_type_id)
-            set_embeddable(embeddable,:probe_type=,probe_type)
-          rescue ActiveRecord::RecordNotFound => e
-            log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
-            @errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
-          end
-        else
-          # TODO: What do we do with this?
-          error "prediction graph for non-existant probe: #{section_key}"
-        end
+        set_embeddable(embeddable,:graph_type=, 'Prediction')
+        # the rest is mute
+        #if probe_type_id
+          #begin
+            ## this is probably redundant, the make_activity sets the type
+            ## and the save callbacks on DataCollectors will keep it updated
+            #probe_type = Probe::ProbeType.find(probe_type_id)
+            #set_embeddable(embeddable,:probe_type=,probe_type)
+          #rescue ActiveRecord::RecordNotFound => e
+            #log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
+            #@errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
+          #end
+        #else
+          ## TODO: What do we do with this?
+          #error "prediction graph for non-existant probe: #{section_key}"
+        #end
       end
     end
 
