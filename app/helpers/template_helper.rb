@@ -14,8 +14,8 @@ module TemplateHelper
       haml_tag :div, :id=>id, :class => classes do
         haml_tag :div, :class => 'buttons' do
           haml_tag :div, :class => "template_wait"
-          haml_tag(:div, :class => "template_edit_button") unless opts[:no_edit]
         end
+        haml_tag(:a, "edit", :class => "template_edit_link", :href => "javascript:void(0)") unless opts[:no_edit]
         if block_given? 
           yield
         end
