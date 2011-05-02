@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110428170318) do
+ActiveRecord::Schema.define(:version => 20110429135111) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1936,7 +1936,7 @@ ActiveRecord::Schema.define(:version => 20110428170318) do
   create_table "ri_gse_assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
     t.integer  "number"
-    t.string   "description"
+    t.text     "description"
     t.string   "grade_span"
     t.string   "uuid",                   :limit => 36
     t.datetime "created_at"
@@ -1945,7 +1945,7 @@ ActiveRecord::Schema.define(:version => 20110428170318) do
 
   create_table "ri_gse_big_ideas", :force => true do |t|
     t.integer  "unifying_theme_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",              :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1961,7 +1961,7 @@ ActiveRecord::Schema.define(:version => 20110428170318) do
 
   create_table "ri_gse_expectation_indicators", :force => true do |t|
     t.integer  "expectation_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "ordinal"
     t.string   "uuid",           :limit => 36
     t.datetime "created_at"
@@ -1969,7 +1969,7 @@ ActiveRecord::Schema.define(:version => 20110428170318) do
   end
 
   create_table "ri_gse_expectation_stems", :force => true do |t|
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",        :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1995,7 +1995,7 @@ ActiveRecord::Schema.define(:version => 20110428170318) do
   create_table "ri_gse_knowledge_statements", :force => true do |t|
     t.integer  "domain_id"
     t.integer  "number"
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",        :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
