@@ -4,7 +4,7 @@ module ContainerController
   end
 
   module ClassMethods
-    def toggle_controller_for(toggle_model_name)
+    def toggle_controller_for(toggle_model_name, toggle_first_descendant = false)
       model_name = toggle_model_name.to_s.singularize
       class_name = model_name.camelcase
       eval_text = <<-DONE_EVAL
@@ -15,6 +15,13 @@ module ContainerController
           if #{model_name}.changeable?(current_user)
             #{model_name}.is_enabled=isit
             if #{model_name}.save
+              if #{toggle_first_descendant}
+                child= #{model_name}.children.first
+                if child
+                  child.is_enabled=isit
+                  child.save
+                end
+              end
               results = :ok
             end
           end
