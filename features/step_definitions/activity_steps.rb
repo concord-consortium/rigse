@@ -63,8 +63,16 @@ When /^I fill in the first templated activity section with "([^"]*)"$/ do |value
   page.execute_script("tinyMCE.editors[0].setContent('#{value}')")
 end
 
-Then /^I should see the wysiwyg editor$/ do 
+When /^I enable the "([^"]*)" section$/ do |section|
+  find(:xpath, "//span[contains(text(), '#{section}')]").click
+end
+
+Then /^I should see the wysiwyg editor(?: within the "([^\"]*)" section)$/ do |section|
   msg = "no wysiwyg editor found"
   # selenium requires element to be visible inorder to click on it
-  find(".mceEditor", :message => msg).click
+  if (section)
+    find(:css, "div.template_container:contains('#{section}') .mceEditor", :message => msg).click
+  else
+    find(".mceEditor", :message => msg).click
+  end
 end

@@ -79,7 +79,7 @@
   };
   
   var handle_enable_check_evt = function(evt) {
-    var checkbox = evt.srcElement;
+    var checkbox = evt.element();
     var container = checkbox.up(template_container_class);
     if (checkbox.checked) {
       enable_section(container);
@@ -98,7 +98,7 @@
   };
   
   var handle_enable_element_check_evt = function(evt) {
-    var checkbox = evt.srcElement;
+    var checkbox = evt.element();
     var container = checkbox.up(template_container_class);
     if (checkbox.checked) {
       enable_element(container);
