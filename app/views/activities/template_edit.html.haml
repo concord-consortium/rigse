@@ -3,6 +3,9 @@
   = f.text_field(:name, :size => '72')
   %h3 publication status
   = f.select :publication_status, ["private", "published"]
+  - if current_user.has_role?('admin')
+    %h3 exemplar activity
+    = f.check_box :is_exemplar
   - if current_user.has_role?('admin','manager')
     %h3 grade level:
     = grade_level_select
