@@ -741,21 +741,6 @@ class ItsiImporter
       if graph_response
         probe_type_id = probetype_id(diy_act,section_key)
         set_embeddable(embeddable,:graph_type=, 'Prediction')
-        # the rest is mute
-        #if probe_type_id
-          #begin
-            ## this is probably redundant, the make_activity sets the type
-            ## and the save callbacks on DataCollectors will keep it updated
-            #probe_type = Probe::ProbeType.find(probe_type_id)
-            #set_embeddable(embeddable,:probe_type=,probe_type)
-          #rescue ActiveRecord::RecordNotFound => e
-            #log "#{e}. activity => #{diy_act.name} (#{diy_act.id})"
-            #@errors << ItsiImporter::ImporterException(message,{:activity => activity, :diy_act => diy_act, :root_cause => e})
-          #end
-        #else
-          ## TODO: What do we do with this?
-          #error "prediction graph for non-existant probe: #{section_key}"
-        #end
       end
     end
 
