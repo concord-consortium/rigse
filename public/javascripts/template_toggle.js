@@ -210,13 +210,13 @@
     });
 
     $$(save_class).each(function(element){
-        element.observe('click', close_editor);
+        element.observe('click', handle_close_editor_evt);
         disable_button(element);
     });
     $$(cancel_class).each(function(element){
         element.observe('click', function(evt) {
         evt.stop(); // don't submit form
-        close_editor(evt);
+        handle_close_editor_evt(evt);
         });
     });
     $$(edit_container_class).each(function(element){
