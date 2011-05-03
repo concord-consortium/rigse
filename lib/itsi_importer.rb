@@ -762,7 +762,7 @@ class ItsiImporter
     def process_text_response(embeddable,diy_act,section_def)
       value = attribute_for(diy_act,section_def[:key], :text_response)
       if value
-        embeddable.enable = true
+        embeddable.enable
         embeddable.prompt = ""
       end
       embeddable.save
