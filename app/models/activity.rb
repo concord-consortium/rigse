@@ -204,9 +204,9 @@ class Activity < ActiveRecord::Base
   end
   def self.gen_unique_name(name)  
     while self.name_is_taken(name)
-      number = name[/\d+$/]
+      number = name[/\d+/]
       if number
-        name = name.gsub(number,"#{number.to_i +1}")
+        name = name.sub(number,"#{(number.to_i) +1}")
       else
         name = "#{name} (2)"
       end
