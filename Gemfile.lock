@@ -220,3 +220,4 @@ DEPENDENCIES
   what_methods
   will_paginate (~> 2.3.6)
   wirble
+remove this line
