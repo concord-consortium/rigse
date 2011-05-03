@@ -668,7 +668,9 @@ class ItsiImporter
             begin
               self.send(method_symbol,embeddable,diy_act,section_def)
             rescue NoMethodError => e
-              error "Importer: no such method #{method_symbol}"
+              error "Importer: no such method #{method_symbol} for #{embeddable.class} in #{section_key}"
+              puts e.inspect
+              puts e.backtrace
             rescue ItsiImporter::ImporterException => e
               @errors << e
             end
