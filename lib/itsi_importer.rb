@@ -127,7 +127,9 @@ class ItsiImporter
       :name => "Introduction",
       :page_desc => "ITSI Activities start with a Discovery Question.",
       :embeddable_elements => [
-        {:key => :main_content, :diy_attribute => true},
+        {:key => :main_content,    :diy_attribute => true},
+        {:key => :text_response,   :diy_attribute => true},
+        {:key => :text_response,   :diy_attribute => false},
         {:key => :drawing_response,:diy_attribute => true}
       ]
     },
@@ -145,6 +147,8 @@ class ItsiImporter
       :page_desc => "Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
+        {:key => :text_response, :diy_attribute => true},
+        {:key => :text_response, :diy_attribute => false},
       ]
     },
     { :key => :materials,
@@ -168,7 +172,7 @@ class ItsiImporter
       :name => "Procedure",
       :page_desc => "What procedures should be performed to get ready for this ITSI Activity?.",
       :embeddable_elements => [
-        {:key => :main_content,  :diy_attribute => true },
+        {:key => :main_content,     :diy_attribute => true  },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
@@ -178,9 +182,9 @@ class ItsiImporter
       :page_desc => "Have the learner think about and predict the outcome of an experiment.",
       :embeddable_elements => [
         {:key => :main_content,     :diy_attribute => true },
-        {:key => :prediction_graph, :diy_attribute => true }, # doesn't exist in DIY
-        {:key => :prediction_draw,  :diy_attribute => true }, # doesn't exist in DIY
-        {:key => :prediction_text,  :diy_attribute => true }, # doesn't exist in DIY
+        {:key => :prediction_graph, :diy_attribute => true }, 
+        {:key => :prediction_draw,  :diy_attribute => true }, 
+        {:key => :prediction_text,  :diy_attribute => true }, 
       ]
     },
     { :key => :collectdata,
@@ -191,6 +195,8 @@ class ItsiImporter
         {:key => :main_content,     :diy_attribute => true  },
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => false },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
@@ -199,8 +205,8 @@ class ItsiImporter
       :name => "Prediction II",
       :page_desc => "Have the learner think about and predict the outcome of an experiment.",
       :embeddable_elements => [
-        {:key => :main_content,     :diy_attribute => false },
-        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :main_content,     :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_graph, :diy_attribute => true  },
         {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
       ]
@@ -213,6 +219,8 @@ class ItsiImporter
         {:key => :main_content,       :diy_attribute => true },
         {:key => :probetype_id,       :diy_attribute => true },
         {:key => :model_id,           :diy_attribute => true },
+        {:key => :text_response,      :diy_attribute => true },
+        {:key => :text_response,      :diy_attribute => false},
         {:key => :drawing_response,   :diy_attribute => true }
       ]
     },
@@ -236,6 +244,8 @@ class ItsiImporter
         {:key => :main_content,     :diy_attribute => true },
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => false  },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
@@ -244,8 +254,14 @@ class ItsiImporter
       :name => "Analysis",
       :page_desc => "How can learners reflect and analyze the experiments they just completed?",
       :embeddable_elements => [
-        {:key => :main_content,  :diy_attribute => true },
-        {:key => :drawing_response, :diy_attribute => true  },
+        {:key => :main_content,      :diy_attribute => true },
+        {:key => :text_response,     :diy_attribute => true  },
+        {:key => :drawing_response,  :diy_attribute => true  },
+        {:key => :text_response,     :diy_attribute => false },
+        {:key => :text_response,     :diy_attribute => false },
+        {:key => :text_response,     :diy_attribute => false },
+        {:key => :text_response,     :diy_attribute => false },
+        {:key => :text_response,     :diy_attribute => false },
       ]
     },
     { :key => :conclusion,
@@ -253,7 +269,8 @@ class ItsiImporter
       :name => "Conclusion",
       :page_desc => "What are some reasonable conclusions a learner might come to after this ITSI Activity?",
       :embeddable_elements => [
-        {:key => :main_content,  :diy_attribute => true },
+        {:key => :main_content,     :diy_attribute => true },
+        {:key => :text_response,    :diy_attribute => true  },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     },
@@ -263,6 +280,19 @@ class ItsiImporter
       :page_desc => "Second Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
+        {:key => :text_response, :diy_attribute => true  },
+        {:key => :text_response, :diy_attribute => false  },
+      ]
+    },
+    { :key => :prediction4,
+      :enabled => false,
+      :name => "Prediction IV",
+      :page_desc => "Have the learner think about and predict the outcome of an experiment.",
+      :embeddable_elements => [
+        {:key => :main_content,     :diy_attribute => false },
+        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
+        {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
       ]
     },
     { :key => :further,
@@ -271,11 +301,10 @@ class ItsiImporter
       :page_desc => "Think about any further activities a learner might want to try.",
       :embeddable_elements => [
         {:key => :main_content,     :diy_attribute => true  },
-        {:key => :prediction_graph, :diy_attribute => false }, # doesn't exist in DIY
-        {:key => :prediction_draw,  :diy_attribute => false }, # doesn't exist in DIY
-        {:key => :prediction_text,  :diy_attribute => false }, # doesn't exist in DIY
         {:key => :probetype_id,     :diy_attribute => true  },
         {:key => :model_id,         :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => true  },
+        {:key => :text_response,    :diy_attribute => false  },
         {:key => :drawing_response, :diy_attribute => true  }
       ]
     }
@@ -337,9 +366,7 @@ class ItsiImporter
               end
               embeddable = Embeddable::Diy::EmbeddedModel.create!(:diy_model => model, :user => act.user)
             when :text_response
-              log ":text_repsonse is handled by has_question of main_content"
-              # Is handled by has_question attribute of main_content?
-              # embeddable = Embeddable::OpenResponse.create(:name => "written response", :description => "written response")
+              embeddable = Embeddable::OpenResponse.create!(:name => "written response", :description => "written response")
             when :drawing_response
               embeddable = Embeddable::DrawingTool.create(:name => "drawing response", :description => "drawing response", :user => act.user)
             when :prediction_graph
@@ -562,7 +589,8 @@ class ItsiImporter
         attribs[:model_id]             = :model_id
         attribs[:calibration_active]   = :collectdata1_calibration_active
         attribs[:calibration_id]       = :collectdata1_calibration_id
-        attribs[:graph_response]       = :collectdata_graph_response
+      when :prediction2
+        attribs[:prediction_graph]     = :collectdata_graph_response
       when :further
         attribs[:calibration_active]   = :furtherprobe_calibration_active
         attribs[:calibration_id]       = :furtherprobe_calibration_id
@@ -632,7 +660,7 @@ class ItsiImporter
         embeddable = element[:embeddable]
         type_key = element[:key]
         working_chunk = "#{section_key} #{type_key}"
-        #log "processing #{working_chunk}"
+        log "processing #{working_chunk}"
         if diy_attribute
           if embeddable
             type_key_string = type_key.to_s
@@ -663,7 +691,6 @@ class ItsiImporter
         end
         embeddable.content = content
         embeddable.enable
-        embeddable.has_question = attribute_for(diy_act,section_def[:key],:text_response)
         embeddable.save
     end
 
@@ -731,10 +758,13 @@ class ItsiImporter
     end
 
     def process_text_response(embeddable,diy_act,section_def)
-      log ":text_response is handled by has_question attribute on main_content"
-      #value = attribute_for(diy_act,section_def[:key], :text_response)
-      #embeddable.enable if value
-      #embeddable.save
+      log "process_text_response: #{section_def[:key]}"
+      value = attribute_for(diy_act,section_def[:key], :text_response)
+      if value
+        embeddable.enable = true
+        embeddable.prompt = ""
+      end
+      embeddable.save
     end
 
     def process_drawing_response(embeddable,diy_act,section_def)
@@ -745,7 +775,10 @@ class ItsiImporter
 
     def process_prediction_text(embeddable,diy_act,section_def)
       value = attribute_for(diy_act,section_def[:key],:prediction_text)
-      embeddable.enable if value
+      if value
+        embeddable.enable
+        embeddable.prompt = ""
+      end
       embeddable.save
     end
 

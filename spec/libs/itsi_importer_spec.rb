@@ -81,7 +81,7 @@ describe ItsiImporter do
       :further_probe_active            => [:probe_active,       :further],
       :further_probetype_id            => [:probetype_id,       :further],
       :further_probe_multi             => [:probe_multi,        :further],
-      :collectdata_graph_response      => [:graph_response,     :collectdata],
+      :collectdata_graph_response      => [:prediction_graph,   :prediction2],
       :collectdata1_calibration_active => [:calibration_active, :collectdata],
       :collectdata1_calibration_id     => [:calibration_id,     :collectdata],
       :collectdata2_calibration_active => [:calibration_active, :collectdata2],
@@ -219,30 +219,24 @@ describe ItsiImporter do
     end
     it "should send the name of the section to get the content" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return false
       @diy_act.should_receive(:textile).and_return false
       @embeddable.should_receive(:content=).with(@introduction_text)
-      @embeddable.should_receive(:has_question=).with false
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should send the name of the section to get the textile content if textile is setup" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return false
       @diy_act.should_receive(:textile).and_return true
       @embeddable.should_receive(:content=).with(@processed_text)
-      @embeddable.should_receive(:has_question=).with false
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should set the embeddables 'has question' to true when text_response is true" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return true
       @diy_act.should_receive(:textile).and_return false
       @embeddable.should_receive(:content=).with(@introduction_text)
-      @embeddable.should_receive(:has_question=).with true
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
@@ -518,7 +512,7 @@ describe ItsiImporter do
       expected_calls = ItsiImporter::SECTIONS_MAP.size
       ItsiImporter::SECTIONS_MAP.each do |section_map|
         key = section_map[:key]
-        if (section_map[:embeddable_elements].select { |e| e[:diy_attribute]}.size > 0)
+        if (section_map[:embeddable_elements].any? { |e| e[:diy_attribute] and e[:key] == :main_content})
           @itsi_activity.should_receive(key).and_return("some text")
         end
         section_map[:embeddable_elements].each do |element|
@@ -530,8 +524,6 @@ describe ItsiImporter do
               attribute = :probe_active
             elsif attribute == :probetype_id
               attribute = :probe_active
-            elsif attribute == :main_content
-              attribute = :text_response
             end
             attribute_key = ItsiImporter.attribute_name_for(key,attribute)
             if attribute_key
