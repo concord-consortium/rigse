@@ -604,11 +604,6 @@ describe ItsiImporter do
       end
     end
     describe "importing phase change / melting ice (fixture)" do
-      before(:all) do
-        fixture_file = File.join(RAILS_ROOT,'spec','fixtures','diy_activity.yml')
-        attribs = YAML::load(File.open(fixture_file))
-        #@diy_act = mock(attribs.ivars["attributes"])
-      end
       it "should have a prediction section"
       it "the prediction section should predict the collect data sensor"
       it "should have a model in the further section"
