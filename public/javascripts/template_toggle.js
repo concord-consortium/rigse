@@ -100,7 +100,6 @@
   var handle_enable_element_check_evt = function(evt) {
     var checkbox = evt.srcElement;
     var container = checkbox.up(template_container_class);
-    console.log(container.identify())
     if (checkbox.checked) {
       enable_element(container);
       server_enable(container);
@@ -276,7 +275,6 @@
     $$("textarea").each(function(elm) {
       if (elm.id.indexOf('section') > -1 && elm.innerHTML == ""){
         var container = elm.up(template_container_class);
-        console.log(container)
         open_editor(container);
       }
     });
