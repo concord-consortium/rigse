@@ -137,8 +137,7 @@ class ItsiImporter
       :page_desc => "What standards does this ITSI Activity cover?",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-      ],
-      :is_enabled => false
+      ]
     },
     { :key => :career_stem,
       :enabled => false,
@@ -146,8 +145,7 @@ class ItsiImporter
       :page_desc => "Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content, :diy_attribute => true},
-      ],
-      :enabled => false
+      ]
     },
     { :key => :materials,
       :enabled => false,
