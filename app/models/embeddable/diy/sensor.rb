@@ -112,7 +112,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   end
   
   def display_name
-    "Sensor"
+    if self.graph_type == "Prediction" 
+      return "Prediction Graph"
+    end
+    return "Sensor"
   end
   
   def update_prediction_graph
