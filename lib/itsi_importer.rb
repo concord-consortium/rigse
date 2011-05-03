@@ -634,18 +634,22 @@ class ItsiImporter
     end
 
     def enable_section_for(emb)
-      emb.pages.first.is_enabled = true
-      emb.pages.first.section.is_enabled = true
-      emb.pages.first.save
-      emb.pages.first.section.save
+      emb.pages.each do |p| 
+        p.is_enabled = true 
+        p.save
+        if p.section
+          p.section.is_enabled = true
+          p.section.save
+        end
+      end
+      emb.enable
+      emb.save
     end
 
     def set_embeddable(embeddable,symbol,value)
       begin
         embeddable.send(symbol, value)
-        embeddable.enable
         enable_section_for(embeddable)
-        embeddable.save
       rescue NoMethodError => e
         @errors << e
         errror("No method #{symbol} in #{embeddable.class.name}")
@@ -692,8 +696,9 @@ class ItsiImporter
           content = diy_act.send(section_def[:key].to_sym)
         end
         embeddable.content = content
-        embeddable.enable
-        embeddable.save
+        if content && (!content.empty?)
+          enable_section_for(embeddable)
+        end
     end
 
 
@@ -712,7 +717,6 @@ class ItsiImporter
           set_embeddable(embeddable, :prototype=, prototype_data_collector)
         rescue ActiveRecord::RecordNotFound => e
           message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
-          error message
           @errors << ItsiImporter::ImporterException.new(message,{:diy_act => diy_act, :root_cause => e})
         end
       end
@@ -726,12 +730,12 @@ class ItsiImporter
           diy_model = Itsi::Model.find(model_id)
           if diy_model
             model = Diy::Model.from_external_portal(diy_model)
+            set_embeddable(embeddable,:diy_model=,model)
           end
         rescue => e
           log "#{e}. activity => #{diy_act.name} #{diy_act.id}"
           @errors << BadModel.new({:diy_activity => diy_act, :model_id => model_id })
         end
-        set_embeddable(embeddable,:diy_model=,model)
       end
     end
 
@@ -749,14 +753,13 @@ class ItsiImporter
       if value
         embeddable.enable
         embeddable.prompt = ""
+        enable_section_for(embeddable)
       end
-      embeddable.save
     end
 
     def process_drawing_response(embeddable,diy_act,section_def)
       value = attribute_for(diy_act,section_def[:key], :drawing_response)
-      embeddable.enable if value
-      embeddable.save
+      enable_section_for(embeddable) if value
     end
 
     def process_prediction_text(embeddable,diy_act,section_def)
@@ -764,14 +767,13 @@ class ItsiImporter
       if value
         embeddable.enable
         embeddable.prompt = ""
+        enable_section_for(embeddable) if value
       end
-      embeddable.save
     end
 
     def process_prediction_draw(embeddable,diy_act,section_def)
       value = attribute_for(diy_act,section_def[:key], :prediction_draw)
-      embeddable.enable if value
-      embeddable.save
+      enable_section_for(embeddable) if value
     end
 
 

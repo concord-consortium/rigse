@@ -150,10 +150,12 @@ describe ItsiImporter do
       embeddable = mock 
       embeddable.should_receive(:prototype_data_collector=).with(prototype_data_collector)
       embeddable.should_receive(:enable)
-      ItsiImporter.should_receive(:enable_section_for).with(embeddable)
+      embeddable.should_receive(:pages).and_return([])
+      #ItsiImporter.should_receive(:enable_section_for).with(embeddable)
       embeddable.should_receive(:save)
       ItsiImporter.set_embeddable(embeddable,:prototype_data_collector=,prototype_data_collector)
     end
+
   end
 
   describe "process_diy_activity_section(activity,diy_act,section_def)" do
@@ -215,7 +217,7 @@ describe ItsiImporter do
           :diy_attribute => true
         ]
       }
-      ItsiImporter.stub!(:enable_section_for)
+      #ItsiImporter.stub!(:enable_section_for)
     end
     it "should send the name of the section to get the content" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
@@ -223,6 +225,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:content=).with(@introduction_text)
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should send the name of the section to get the textile content if textile is setup" do
@@ -231,6 +234,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:content=).with(@processed_text)
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should set the embeddables 'has question' to true when text_response is true" do
@@ -239,6 +243,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:content=).with(@introduction_text)
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
   end
@@ -271,7 +276,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
-      ItsiImporter.should_receive(:enable_section_for).with(@embeddable)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -290,7 +295,7 @@ describe ItsiImporter do
       }
       @itsi_model = mock
       @model = mock
-      ItsiImporter.stub!(:enable_section_for)
+      #ItsiImporter.stub!(:enable_section_for)
       Itsi::Model.stub!(:find).and_return @itsi_model
     end
     it "should set diy_model= on the embeddable" do
@@ -300,6 +305,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:diy_model=).with @model
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_model_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -319,7 +325,7 @@ describe ItsiImporter do
       @itsi_model = mock
       @model = mock
       Itsi::Model.stub!(:find).and_return @itsi_model
-      ItsiImporter.stub!(:enable_section_for)
+      #ItsiImporter.stub!(:enable_section_for)
     end
     it "should set diy_model= on the embeddable" do
       Diy::Model.should_receive(:from_external_portal).with(@itsi_model).and_return(@model)
@@ -328,6 +334,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:diy_model=).with @model
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_model_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -471,7 +478,7 @@ describe ItsiImporter do
       page = section.pages.first
       page.name.should == map_entry[:name]
       page.should have(map_entry[:embeddable_elements].size).page_elements
-      page.page_elements.select{ |e| e.is_enabled}.should have(2).enabled
+      page.page_elements.select{ |e| e.is_enabled}.should have(3).enabled
     end
 
   end
