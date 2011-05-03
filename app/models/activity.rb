@@ -215,12 +215,56 @@ class Activity < ActiveRecord::Base
   end
 
   def duplicate(new_owner)
-    @return_actvitiy = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
-    @return_actvitiy.user = new_owner
-    @return_actvitiy.name = Activity.gen_unique_name(self.name)
-    @return_actvitiy.deep_set_user(new_owner)
-    @return_actvitiy.publication_status = :draft
-    return @return_actvitiy
+    @return_activity = self.clone  :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @return_activity.user = new_owner
+    @return_activity.name = Activity.gen_unique_name(self.name)
+    @return_activity.deep_set_user(new_owner)
+    @return_activity.publication_status = :draft
+    @return_activity.save # have to save before modifying predictions
+    @return_activity.re_associate_prediction_graphs
+    return @return_activity
   end
   alias copy duplicate
+
+  # attempt to re-link prediction graph sources
+  def re_associate_prediction_graphs
+    the_predictor = nil
+    changed = 0
+    self.graphs_and_predictors.each do |graphlike|
+      if graphlike.graph_type == "Prediction"
+        if graphlike.prediction_graph_destinations.size == 0
+          the_predictor = graphlike
+        end
+      elsif graphlike.graph_type == "Sensor" && the_predictor
+        if graphlike.prediction_graph_source.nil?
+          graphlike.prediction_graph_source = the_predictor
+          graphlike.save
+          changed = changed + 1
+         the_predictor = nil
+        end
+      end
+    end
+    if changed > 0
+      message  = "re-associated #{changed} graphables"
+      logger.warn message
+      self.reload
+    end
+  end
+
+  # returns an ordered list of graphables.
+  def graphs_and_predictors
+    ordered_embeddables.select { |e| e.kind_of?(Embeddable::Diy::Sensor) || e.kind_of? (Embeddable::DataCollector) }
+  end
+
+  # retuns a list of embeddables ordered by their 
+  # position in the activity
+  def ordered_embeddables
+    self.sections.map { |section|
+      section.pages.map { |page|
+        page.page_elements.map { |elem|
+          elem.embeddable
+        }
+      }
+    }.flatten.uniq
+  end
 end

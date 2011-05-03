@@ -24,7 +24,7 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   # for the prediction graph
   after_save :update_prediction_graph 
   include Snapshotable
-
+  uncloneable_attributes :prediction_graph_id, :prediction_graph_source
   class << self
     # fields we will accept customizations on
     def customizable_fields
