@@ -22,6 +22,7 @@ body
   +main_font
   background:
     color: $xproject_light_brown
+  color: #333
   margin: 10px
     bottom: 0px
   background-position: right top
@@ -80,28 +81,37 @@ pre
 .wrapper
   border: 2px solid $xproject_dark_green
   background-color: white
+  border-radius: 0.5em
   -moz-border-radius: 0.5em
   -webkit-border-radius: 0.5em
 
 #wrapper
+  background-color: #fff
+  background-image: none !important
   +container
   padding: 10px
   // that's the blueprint default...
 
 #header
   +column(24, true)
-  padding: 0px
-  margin: 0px
+  padding: 0
+  margin: 0
   height: auto
-  background-color: white
+  background-color: #139b97
   background-image: none
-  color: $xproject_brown
+  color: #fff
+  -border-top-left-radius: 0.5em
+  -border-top-right-radius: 0.5em
+  -moz-border-radius-topleft: 0.5em
+  -moz-border-radius-topright: 0.5em
+  -webkit-border-top-left-radius: 0.5em
+  -webkit-border-top-right-radius: 0.5em
   a
-    color: $xproject_dark_green
+    color: #fff
     background-color: transparent
     font-weight: bold
   a:hover
-    color: $xproject_brown
+    color: #00f
     background-color: white
   .left_content
     +column(24, true)
@@ -112,11 +122,15 @@ pre
     float: none
     clear: none
     img
+      border: solid 5px #fff
       float: left
       clear: none
+      margin-left: 10px
   .right_content
     +column(24, true)
+    padding-right: 10px
     text-align: right
+    width: 940px
 
 .nav_menu
   display: block
@@ -158,7 +172,7 @@ pre
   +column(24, true)
   +top_nav_colors
   overflow: hidden
-  padding: 0.5em 0px
+  padding: 0.5em 0 0
   li.trail
     a
       color: black
@@ -192,6 +206,8 @@ pre
   +column($main_content_columns, true)
   min-height: 600px
   height: auto !important
+  h1
+    margin-bottom: 20px
 
 #footer
   +column(24, true)
@@ -355,6 +371,7 @@ ul.menu
     background-color: transparent
 
 .content
+  color: #333
   font-size: 1em
   white-space: normal
   border:
@@ -629,4 +646,4 @@ input[type=password]
       text-align: center
 
 strong
-  color: #44badd
+  font-weight: bold
