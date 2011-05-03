@@ -79,7 +79,7 @@
   };
   
   var handle_enable_check_evt = function(evt) {
-    var checkbox = evt.srcElement;
+    var checkbox = evt.element();
     var container = checkbox.up(template_container_class);
     if (checkbox.checked) {
       enable_section(container);
@@ -98,7 +98,7 @@
   };
   
   var handle_enable_element_check_evt = function(evt) {
-    var checkbox = evt.srcElement;
+    var checkbox = evt.element();
     var container = checkbox.up(template_container_class);
     if (checkbox.checked) {
       enable_element(container);
@@ -210,13 +210,13 @@
     });
 
     $$(save_class).each(function(element){
-        element.observe('click', close_editor);
+        element.observe('click', handle_close_editor_evt);
         disable_button(element);
     });
     $$(cancel_class).each(function(element){
         element.observe('click', function(evt) {
         evt.stop(); // don't submit form
-        close_editor(evt);
+        handle_close_editor_evt(evt);
         });
     });
     $$(edit_container_class).each(function(element){
@@ -237,11 +237,6 @@
       elm.observe('click', handle_enable_element_check_evt);
     });
 
-    // initial visibility of buttons:
-    $$(template_container_class).each(function(selected){
-      selected.removeClassName('over');
-      selected.down('.buttons').hide();
-    });
     $$('body').each(function(container) {
       container.observe('mouseover', function(evt) {
         var elm = evt.element();
@@ -254,12 +249,7 @@
         if (elm.hasClassName('over')) {
           return;
         }
-        $$(template_container_class).each(function(selected){
-          selected.removeClassName('over');
-          selected.down('.buttons').hide();
-        });
         elm.addClassName('over');
-        elm.down('.buttons').show();
       });
     });
     

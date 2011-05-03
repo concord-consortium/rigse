@@ -660,7 +660,7 @@ class ItsiImporter
         embeddable = element[:embeddable]
         type_key = element[:key]
         working_chunk = "#{section_key} #{type_key}"
-        log "processing #{working_chunk}"
+        #log "processing #{working_chunk}"
         if diy_attribute
           if embeddable
             type_key_string = type_key.to_s
@@ -668,7 +668,9 @@ class ItsiImporter
             begin
               self.send(method_symbol,embeddable,diy_act,section_def)
             rescue NoMethodError => e
-              error "Importer: no such method #{method_symbol}"
+              error "Importer: no such method #{method_symbol} for #{embeddable.class} in #{section_key}"
+              puts e.inspect
+              puts e.backtrace
             rescue ItsiImporter::ImporterException => e
               @errors << e
             end
@@ -758,10 +760,9 @@ class ItsiImporter
     end
 
     def process_text_response(embeddable,diy_act,section_def)
-      log "process_text_response: #{section_def[:key]}"
       value = attribute_for(diy_act,section_def[:key], :text_response)
       if value
-        embeddable.enable = true
+        embeddable.enable
         embeddable.prompt = ""
       end
       embeddable.save
