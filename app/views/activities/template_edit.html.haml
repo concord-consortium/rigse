@@ -10,8 +10,6 @@
     = subject_area_select
     %h3 unit:
     = unit_select
-    %h3 public:
-    = f.select :publication_status, Activity.publication_states.map {|s| s.to_s} 
   %h3 description
   -#= f.hidden_field :redirect, activity_template_edit(@activity)
   = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
