@@ -47,4 +47,14 @@ Feature: Activities can be created using the itsisu theme
     When I login with username: teacher password: teacher
     And I am on the activities page
     And I follow "Make your own version of this activity"
-    Then I should be on the activity page for "copy of first_activity"
+    Then I should be on the activity page for "first_activity (2)"
+
+  @selenium
+  Scenario: teacher creates an activity by copying an existing one twice
+    When I login with username: teacher password: teacher
+    And I am on the activities page
+    And I follow "Make your own version of this activity"
+    Then I should be on the activity page for "first_activity (2)"
+    When I am on the activities page
+    And I follow "Make your own version of this activity"
+    Then I should be on the activity page for "first_activity (3)"
