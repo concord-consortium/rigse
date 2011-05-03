@@ -137,7 +137,7 @@ module TagDefaults
           unit = key[2]
           key_string = "#{grade_level}#{subject}".gsub(/\s+/,"").downcase
           # hacky ordering of grade levels
-          order = 4
+          order = 5
           case key_string
           when /^elem/i
             order = 1
@@ -145,8 +145,16 @@ module TagDefaults
             order = 2
           when /^high/i
             order = 3
+          when /^math/i
+            order = 4
+          when /^testselem/i    # throwing tests at end -- not sure where they should go
+            order = 7
+          when /^testsmidd/i
+            order = 8
+          when /^testshigh/i
+            order = 9
           end
-          keystring = "#{order}#{keystring}"
+          key_string = "#{order}#{key_string}"
           unless results[key_string]
             results[key_string] = {
               :order => order,
