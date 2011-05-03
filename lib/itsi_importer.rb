@@ -660,7 +660,7 @@ class ItsiImporter
         embeddable = element[:embeddable]
         type_key = element[:key]
         working_chunk = "#{section_key} #{type_key}"
-        log "processing #{working_chunk}"
+        #log "processing #{working_chunk}"
         if diy_attribute
           if embeddable
             type_key_string = type_key.to_s
@@ -758,7 +758,6 @@ class ItsiImporter
     end
 
     def process_text_response(embeddable,diy_act,section_def)
-      log "process_text_response: #{section_def[:key]}"
       value = attribute_for(diy_act,section_def[:key], :text_response)
       if value
         embeddable.enable = true
