@@ -318,7 +318,7 @@ class ItsiImporter
           case elem
             when :main_content
               #embeddable = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
-              embeddable = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => section_def[:page_desc], :has_question => false, :user => act.user)
+              embeddable = Embeddable::Diy::Section.create!(:name => section_def[:name], :content => "", :has_question => false, :user => act.user)
             when :probetype_id
               probe_type = Probe::ProbeType.default
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
