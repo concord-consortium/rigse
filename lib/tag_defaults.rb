@@ -98,8 +98,8 @@ module TagDefaults
         users_key_map = users_own.map do |a|
           # todo
           grade_level = "My #{self.name.humanize.pluralize}"
-          subject_area = a.subject_area_list.first || "no subject area"
-          unit = a.unit_list.first || "no unit"
+          subject_area = ""
+          unit = ""
           key = [grade_level,subject_area,unit]
           {
             :activity => a,
@@ -115,9 +115,9 @@ module TagDefaults
         others_key_map = other_activities.map do |a|
           # todo
           grade_level = "Other #{self.name.humanize.pluralize}"
-          subject_area = a.subject_area_list.first || "no subject area"
-          unit = a.unit_list.first || "no unit"
-          key = [grade_level,subject_area,unit]
+          subject_area = ""
+          author = a.user.name
+          key = [grade_level,subject_area,author]
           {
             :activity => a,
             :keys => [key]
