@@ -62,3 +62,9 @@ end
 When /^I fill in the first templated activity section with "([^"]*)"$/ do |value|
   page.execute_script("tinyMCE.editors[0].setContent('#{value}')")
 end
+
+Then /^I should see the wysiwyg editor$/ do 
+  msg = "no wysiwyg editor found"
+  # selenium requires element to be visible inorder to click on it
+  find(".mceEditor", :message => msg).click
+end
