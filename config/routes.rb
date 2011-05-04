@@ -439,6 +439,7 @@ ActionController::Routing::Routes.draw do |map|
   map.doc    '/doc/:document', :controller => 'home', :action => 'doc', :requirements => { :document => /\S+/ }
   map.home   '/home', :controller => 'home', :action => 'index'
   map.about  '/about', :controller => 'home', :action => 'about'
+  map.test_exception '/test_exception', :controller => 'home', :action => 'test_exception'
   map.root :controller => 'home', :action => 'index'
   map.requirements '/requirements', :controller => 'home', :action => 'requirements'
 
