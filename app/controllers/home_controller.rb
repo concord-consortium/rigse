@@ -28,4 +28,8 @@ class HomeController < ApplicationController
   def missing_installer
     @os = params['os']
   end
+
+  def test_exception
+    raise 'This is a test. This is only a test.'
+  end
 end
