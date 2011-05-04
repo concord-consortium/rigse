@@ -28,6 +28,15 @@ Feature: Sections of activities can be edited using the itsisu theme
     Then I should see "Hello World"
     
   @selenium
+  Scenario: teacher previews edited section
+    When I login with username: teacher password: teacher
+    And I am on the template edit page for "first_activity"    
+    And I fill in the first templated activity section with "Hello World"
+    And I click ".template_save_button"
+    And I click "#activity_submit"
+    Then I should see "Hello World"
+
+  @selenium
   Scenario: teacher enables section
     When I login with username: teacher password: teacher
     And I am on the template edit page for "first_activity" 

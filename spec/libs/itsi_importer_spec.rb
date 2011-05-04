@@ -397,11 +397,28 @@ describe ItsiImporter do
         section.name.should == ItsiImporter::SECTIONS_MAP[index][:name]
       end
     end
-    it "by default all sections should be disabled" do
-      @activity.page_elements.each do |pe|
-        pe.is_enabled.should be_false
+    it "by default all sections should be disabled except Introduction and Second Career STEM Question" do
+      @activity.sections.each do |s|
+        if s.name == 'Introduction' || s.name == 'Second Career STEM Question'
+          s.is_enabled.should be_true
+        else
+          s.is_enabled.should be_false
+        end
       end
     end
+    
+    it "by default the first sub section should be enabled and the rest disabled" do
+      @activity.sections.each do |section|
+        section.page_elements.each_with_index do |pe, index|
+          if index == 0
+            pe.is_enabled.should be_true
+          else
+            pe.is_enabled.should be_false
+          end
+        end
+      end
+    end
+    
     describe "sensors created by the template" do
       before(:each) do
         @act = ItsiImporter.make_activity

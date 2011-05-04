@@ -381,7 +381,8 @@ class ItsiImporter
           end
           if ! embeddable.nil?
             embeddable.pages << page
-            embeddable.disable
+            # leave the main_content enabled since there is no UI to enable or disable it
+            embeddable.disable unless elem == :main_content
             # store this for later use...
             comp[:embeddable] = embeddable
           end
