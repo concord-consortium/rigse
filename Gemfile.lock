@@ -189,6 +189,7 @@ DEPENDENCIES
   factory_girl (= 1.2.3)
   fakeweb (~> 1.2.8)
   fastercsv (= 1.5.0)
+  ffi-ncurses (~> 0.3.3)
   grit (~> 2.0.0)
   haml (~> 3.0.25)
   highline
