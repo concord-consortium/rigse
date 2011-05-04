@@ -111,7 +111,7 @@ pre
     background-color: transparent
     font-weight: bold
   a:hover
-    color: #00f
+    color: #f90
     background-color: white
   .left_content
     +column(24, true)
@@ -219,6 +219,7 @@ pre
   -moz-border-radius-bottomleft: 0.5em
   -webkit-border-bottom-left-radius: 0.5em
   #footer_left
+    color: black
     +column(12)
     a
       color: black
@@ -228,6 +229,7 @@ pre
     float: right
 
 #under_footer
+  background: #fff
   +column(25, true)
   text-align: center
   padding: 2px 0px
@@ -647,3 +649,13 @@ input[type=password]
 
 strong
   font-weight: bold
+  
+// custom form styles
+#content-upper
+  background: #fff
+.login-area fieldset
+  border: none
+.login-area h2
+  padding: 0 0 10px
+a.more, ul.more a
+  padding-right: 10px !important
