@@ -14,16 +14,16 @@ Feature: Activities should be sorted in bins in itsisu theme
       | teacher_c     | teacher         | Teacher    | C         |
 		
 		And the following activities exist:
-        | name                       | user          | publication_status | is_exemplar | grade_level_list  | subject_area_list |
-        | exemplar_activity          | itest         | published          | true        | Middle School     | Physics           |
-        | draft_exemplar_activity    | itest         | private            | true        | Middle School     | Physics           |
-        | my_published_activity      | teacher       | published          | false       | Middle School     | Physics           |
-        | my_published_activity_b    | teacher       | published          | false       | Middle School     | Chemistry         |
-        | my_draft_activity          | teacher       | private            | false       | Middle School     | Physics           |
-        | other_published_activity   | teacher_b     | published          | false       | Middle School     | Physics           |
-        | other_published_activity_b | teacher_b     | published          | false       | Middle School     | Chemistry         |
-        | other_draft_activity       | teacher_b     | private            | false       | Middle School     | Physics           |
-        | other_published_activity_c | teacher_c     | published          | false       | Middle School     | Physics           |
+        | name                       | user          | publication_status | is_exemplar | grade_level_list  | subject_area_list | unit_list |
+        | exemplar_activity          | itest         | published          | true        | Middle School     | Physics           | Sound     |
+        | draft_exemplar_activity    | itest         | private            | true        | Middle School     | Physics           | Sound     |
+        | my_published_activity      | teacher       | published          | false       | Middle School     | Physics           | Sound     |
+        | my_published_activity_b    | teacher       | published          | false       | Middle School     | Chemistry         | Crystals  |
+        | my_draft_activity          | teacher       | private            | false       | Middle School     | Physics           | Sound     |
+        | other_published_activity   | teacher_b     | published          | false       | Middle School     | Physics           | Sound     |
+        | other_published_activity_b | teacher_b     | published          | false       | Middle School     | Chemistry         | Crystals  |
+        | other_draft_activity       | teacher_b     | private            | false       | Middle School     | Physics           | Sound     |
+        | other_published_activity_c | teacher_c     | published          | false       | Middle School     | Physics           | Sound     |
   
   Scenario: teacher sees their activities on the activities page
     When I login with username: teacher password: teacher
@@ -39,6 +39,6 @@ Feature: Activities should be sorted in bins in itsisu theme
     And I should see "Teacher C" within "#5otheractivities"
     And I should see "other_published_activity_c" within "#5otheractivities"
     And I should not see "other_draft_activity"
-  #  And I should see "Middle School Physics"
-  #  And I should see "exemplar_activity"  within "#middleschoolphysics"   # these don't work because 'bin_keys' never gets set on activities
-  #  And I should not see "draft_exemplar_activity"
+    And I should see "Middle School Physics"
+    And I should see "exemplar_activity" within "#2middleschoolphysics"
+    And I should not see "draft_exemplar_activity"

@@ -40,7 +40,7 @@ module ActivityHelper
     #end
   end
 
-  def subject_area_select(activity = :acvtivity)
+  def subject_area_select(activity = :activity)
     count = Activity.subject_area_counts
     select(activity, :subject_area_list, count.map{ |c| [ c.name, c.name] })
     #haml_tag(:p) do
