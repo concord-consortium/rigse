@@ -230,21 +230,22 @@ class Investigation < ActiveRecord::Base
 
   def deep_xml
     self.to_xml(
+      
       :include => {
         :teacher_notes=>{
           :except => [:id,:authored_entity_id, :authored_entity_type]
         },
         :activities => {
-          :exlclude => [:id,:investigation_id],
+          :except => [:id,:investigation_id],
           :include => {
             :sections => {
-              :exlclude => [:id,:activity_id],
+              :except => [:id,:activity_id],
               :include => {
                 :teacher_notes=>{
                   :except => [:id,:authored_entity_id, :authored_entity_type]
                 },
                 :pages => {
-                  :exlclude => [:id,:section_id],
+                  :except => [:id,:section_id],
                   :include => {
                     :teacher_notes=>{
                       :except => [:id,:authored_entity_id, :authored_entity_type]
@@ -253,7 +254,8 @@ class Investigation < ActiveRecord::Base
                       :except => [:id,:page_id],
                       :include => {
                         :embeddable => {
-                          :except => [:id,:embeddable_type,:embeddable_id]
+                          :exclude => [:id,:embeddable_id],
+                          # :include => [:choices]
                         }
                       }
                     }

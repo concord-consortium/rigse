@@ -95,4 +95,8 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     self.save
     choice
   end
+  
+  # def to_xml(options)
+  #   super(:include => [:choices])
+  # end
 end
