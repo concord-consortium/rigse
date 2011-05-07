@@ -3,6 +3,12 @@
 <% form_for(@device_config) do |f| %>
   <%= f.error_messages %>
 
+  <%= f.label :vendor_interface_id %>
+  <%= f.select(:vendor_interface_id, Probe::VendorInterface.all.collect {|vi| [ vi.name, vi.id ] }, {:include_blank => 'None'}) %>
+
+  <%= f.label :config_string %>
+  <%= f.text_field :config_string %>
+
   <p>
     <%= f.submit 'Update' %>
   </p>
