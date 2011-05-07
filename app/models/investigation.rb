@@ -251,11 +251,10 @@ class Investigation < ActiveRecord::Base
                       :except => [:id,:authored_entity_id, :authored_entity_type]
                     },
                     :page_elements => {
-                      :except => [:id,:page_id],
+                      :except => [:id,:page_id, :embeddable_id],
                       :include => {
                         :embeddable => {
-                          :exclude => [:id,:embeddable_id],
-                          # :include => [:choices]
+                          :exclude => [:id],
                         }
                       }
                     }

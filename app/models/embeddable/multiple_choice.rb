@@ -96,7 +96,7 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
     choice
   end
   
-  # def to_xml(options)
-  #   super(:include => [:choices])
-  # end
+  def to_xml(options)
+    super(options.merge({:include => [:choices]}))
+  end
 end
