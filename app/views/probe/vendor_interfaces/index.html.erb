@@ -6,6 +6,7 @@
 
 <% @vendor_interfaces.each do |vendor_interface| %>
   <tr>
+	<td><%= vendor_interface.name%></td>
     <td><%= link_to 'Show', vendor_interface %></td>
     <td><%= link_to 'Edit', edit_probe_vendor_interface_path(vendor_interface) %></td>
     <td><%= link_to 'Destroy', vendor_interface, :confirm => 'Are you sure?', :method => :delete %></td>

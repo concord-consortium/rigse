@@ -6,8 +6,9 @@
 
 <% @probe_types.each do |probe_type| %>
   <tr>
+    <td><%= probe_type.name %></td>
     <td><%= link_to 'Show', probe_type %></td>
-    <td><%= link_to 'Edit', edit_probe_type_path(probe_type) %></td>
+    <td><%= link_to 'Edit', edit_probe_probe_type_path(probe_type) %></td>
     <td><%= link_to 'Destroy', probe_type, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -15,4 +16,4 @@
 
 <br />
 
-<%= link_to 'New probe_type', new_probe_type_path %>
+<%= link_to 'New probe_type', new_probe_probe_type_path %>
