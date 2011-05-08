@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
       @scope = default
       if container_type = params[:scope_type]
         @scope = container_type.constantize.find(params[:scope_id])
-      elsif container_type = params[:container_type]
+      elsif (container_type = params[:container_type]) && params[:container_id]
         @scope = container_type.constantize.find(params[:container_id])
       end
       @scope
