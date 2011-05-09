@@ -445,6 +445,7 @@ class ItsiImporter
     def import_from_cc_portal
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
+      units = ccp_itsi_project.units
       puts "importing #{units.length} ITSISU Units ..."
       reset_errors
       units.each do |ccp_itsi_unit|
@@ -585,7 +586,7 @@ class ItsiImporter
         rescue AASM::InvalidTransition
           c += 1
           if c > 2
-            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid)
+            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid, :user_login => diy_user.login)
           else
             retry
           end
