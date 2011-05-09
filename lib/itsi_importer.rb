@@ -586,7 +586,7 @@ class ItsiImporter
         rescue AASM::InvalidTransition
           c += 1
           if c > 2
-            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid, :user_login => diy_user.login)
+            self.fail(BadUser.new(:user_id => diy_user.id, :user_uuid => diy_user.uuid, :user_login => diy_user.login),"Can't register and activate user")
           else
             retry
           end
