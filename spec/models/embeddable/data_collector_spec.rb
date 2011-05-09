@@ -73,6 +73,7 @@ describe Embeddable::DataCollector do
       it "should create a  datacollector with the given calibration." do
         @fake_probe_a = mock_probe_type
         @fake_calibration = mock_model(Probe::Calibration, :probe_type_id => @fake_probe_a.id)
+        Probe::Calibration.stub(:find => @fake_calibration)
         prototypes = mock(:find => nil)
         Embeddable::DataCollector.stub(:prototypes => prototypes)
         proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :calibration => @fake_calibration, :graph_type => 'Sensor'})
