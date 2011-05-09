@@ -438,15 +438,13 @@ class ItsiImporter
       end
     end
 
-    def reject_cc_portal_unit?(unit)
-      return unit.unit_name.match(/Test/)
+    def reject_cc_portal_activity?(activity)
+      return activity.level.level_name.match(/Test/)
     end
 
     def import_from_cc_portal
       raise "need an 'ccportal' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['ccportal']
       ccp_itsi_project = Ccportal::Project.find_by_project_name('ITSISU')
-      #units = ccp_itsi_project.units.reject { |u| u.name =~ SKIP_UNIT_REGEX }
-      units = ccp_itsi_project.units.reject  { |u| reject_cc_portal_unit?(u) }
       puts "importing #{units.length} ITSISU Units ..."
       reset_errors
       units.each do |ccp_itsi_unit|
@@ -460,6 +458,7 @@ class ItsiImporter
       name = "#{prefix} #{ccp_itsi_unit.unit_name}".strip
       log "creating: #{name}: "
       ccp_itsi_unit.activities.each do |ccp_itsi_activity|
+        next if reject_cc_portal_activity?(ccp_itsi_activity)
         foreign_key = ccp_itsi_activity.diy_identifier
         activity = create_activity_from_itsi_activity(foreign_key, nil, prefix) # nil user will import the DIY user and associate the activity with that user
         if activity
