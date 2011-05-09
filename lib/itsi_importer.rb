@@ -90,7 +90,7 @@ class ItsiImporter
       self.name = activity.id
     end
     def errors
-      self.exceptions.map { |e| e.message}
+      self.exceptions.map { |e| e.message + " options: #{e.options}" }
     end
     def report
       case self.status
@@ -585,7 +585,7 @@ class ItsiImporter
         rescue AASM::InvalidTransition
           c += 1
           if c > 2
-            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid, :activity => activity)
+            @errors << BadUser(:user_id => diy_user.id, :user_uuid => diy_user.uuid)
           else
             retry
           end
