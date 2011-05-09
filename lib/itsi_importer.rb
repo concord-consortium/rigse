@@ -90,7 +90,7 @@ class ItsiImporter
       self.name = activity.id
     end
     def errors
-      self.exceptions.map { |e| e.message + " options: #{e.options}" }
+      self.exceptions.map { |e| e.message + " options: " + (e.is_a?(ImporterException) ? e.options.inspect : "undef") }
     end
     def report
       case self.status

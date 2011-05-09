@@ -598,19 +598,16 @@ describe ItsiImporter do
     describe "importing units from the portal" do
       before(:each) do
         @unit_a = mock(:unit_name => 'unit a')
-        @unit_b = mock(:unit_name => 'unit b')
-        @unit_c = mock(:unit_name => 'unit c')
-        @unit_d = mock(:unit_name => 'Tests')
-        @project= mock(:units => [@unit_a,@unit_b, @unit_c, @unit_d])
-        Ccportal::Project = mock(:find_by_project_name => @project)
+        @act_a = mock(:diy_identifier => 1)
+        @act_a.stub_chain(:level, :level_name).and_return("Tests")
+        @act_b = mock(:diy_identifier => 2)
+        @act_b.stub_chain(:level, :level_name).and_return("Middle School")
       end
       it "should skip iporting certain units whose name starts with Test" do
-        meth_sym = :create_activities_from_ccp_itsi_unit
-        ItsiImporter.should_receive(meth_sym).with(@unit_a, "").and_return(true)
-        ItsiImporter.should_receive(meth_sym).with(@unit_b, "").and_return(true)
-        ItsiImporter.should_receive(meth_sym).with(@unit_c, "").and_return(true)
-        ItsiImporter.should_not_receive(meth_sym).with(@unit_d, "").and_return(true)
-        ItsiImporter.import_from_cc_portal
+        @unit_a.should_receive(:activities).and_return([@act_a, @act_b])
+        ItsiImporter.should_not_receive(:create_activity_from_itsi_activity).with(1,nil,"")
+        ItsiImporter.should_receive(:create_activity_from_itsi_activity).with(2,nil,"").and_return(nil)
+        ItsiImporter.create_activities_from_ccp_itsi_unit(@unit_a)
       end
     end
 
