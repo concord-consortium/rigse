@@ -416,6 +416,28 @@ class ItsiImporter
       act.destroy
     end
 
+    # NOTE: this doesn't correctly set the x and y axis ranges, units, title, and y axis label for the calibrations
+    # however there are only a handful, so for now you need to manually tweak them
+    def setup_prototype_data_collectors
+      types = Probe::ProbeType.find :all
+      types.each do |probe_type|
+        prototype = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Sensor'})
+        prototype.name = probe_type.name
+        prototype.save
+      end
+      calibrations = Probe::Calibration.find :all
+      calibrations.each do |calibration|
+        prototype = Embeddable::DataCollector.get_prototype({:probe_type => calibration.probe_type, :calibration => calibration, :graph_type => 'Sensor'})
+        prototype.name = calibration.name
+        prototype.save
+      end
+      DIY_HACK_CALIBRATIONS.each do |id, options|
+        prototype = Embeddable::DataCollector.get_prototype({:probe_type => Probe::ProbeType.find(7), :graph_type => 'Sensor', :extra_options => options.clone})
+        prototype.name = options[:name]
+        prototype.save
+      end
+    end
+
     def reject_cc_portal_unit?(unit)
       return unit.unit_name.match(/Test/)
     end
@@ -703,16 +725,46 @@ class ItsiImporter
     end
 
 
+    # there are some calibrations in the DIY that aren't really calibrations, they were just
+    # used to set the x and y axis range.
+    DIY_HACK_CALIBRATIONS = {
+      8 => {
+        :name => "Motion Sensor: track and ramp",
+        :y_axis_min => 0,
+        :y_axis_max => 5,
+        :x_axis_min => 0,
+        :x_axis_max => 60,
+      },
+      9 => {
+        :name => "Motion Sensor: dropping objects",
+        :y_axis_min => 0,
+        :y_axis_max => 3,
+        :x_axis_min => 0,
+        :x_axis_max => 10,
+      },
+      10 => {
+        :name => "Motion Sensor: up and down",
+        :y_axis_min => -1,
+        :y_axis_max => 1,
+        :x_axis_min => 0,
+        :x_axis_max => 60,
+      },
+    }
+    
     def process_probetype_id(embeddable,diy_act,section_def)
       section_key = section_def[:key]
       probe_type_id=probetype_id(diy_act,section_key)
       if probe_type_id
         begin
           probe_type = Probe::ProbeType.find(probe_type_id)
+          # this might not find the probe type, some probes are in the DIY but haven't been added 
+          # to the rails-portal, this can be fixed by updating the rails-portal list
           calibration_id = calibration_id(diy_act,section_key)
           calibration = nil
+          extra_options = nil
           if calibration_id
-            calibration = Probe::Calibration.find(calibration_id)
+            extra_options = DIY_HACK_CALIBRATIONS[calibration_id]
+            calibration = Probe::Calibration.find(calibration_id) unless extra_options
           end
           prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor'})
           set_embeddable(embeddable, :prototype=, prototype_data_collector)

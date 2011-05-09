@@ -24,6 +24,12 @@ describe ItsiImporter do
     it "should always create an activity with the appropriate sections"
   end
 
+  describe "setup_prototype_data_collectors" do
+    it "should run without error" do
+      ItsiImporter.setup_prototype_data_collectors
+    end
+  end
+
   describe "delete_itsi_activity_template" do
     it "should delete the activity marked as the itsi activity template"
   end
@@ -264,15 +270,27 @@ describe ItsiImporter do
       Probe::ProbeType.stub!(:find).and_return @probe_type
       @data_collector = mock
       Embeddable::DataCollector.stub!(:get_prototype).and_return(@data_collector)
+    end
+    it "should set the probe_prototype on the embeddable" do
       @calibration = mock
       @calibration.stub!(:id).and_return(3)
       Probe::Calibration.stub!(:find).and_return(@calibration)
-    end
-    it "should set the probe_prototype on the embeddable" do
       @diy_act.should_receive(:collectdata_probe_active).and_return true
       @diy_act.should_receive(:probe_type_id).and_return 1
       @diy_act.should_receive(:collectdata1_calibration_active).and_return true
       @diy_act.should_receive(:collectdata1_calibration_id).and_return 3
+      @embeddable.should_receive(:prototype=).with @data_collector
+      @embeddable.should_receive(:enable)
+      @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
+      ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
+    end
+    it "should handle fake calibrations" do
+      Probe::Calibration.should_not_receive(:find)
+      @diy_act.should_receive(:collectdata_probe_active).and_return true
+      @diy_act.should_receive(:probe_type_id).and_return 7
+      @diy_act.should_receive(:collectdata1_calibration_active).and_return true
+      @diy_act.should_receive(:collectdata1_calibration_id).and_return 8
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)

@@ -51,7 +51,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
   send_update_events_to :investigations
 
   def handle_probe_type_change
-    self.calibration = nil
+    if(calibration && (calibration.probe_type_id != probe_type_id))
+      calibrtaion = nil
+    end
+
     fields = {
       :name         => proc { |p| "#{p.name} Data Collector"},
       :title        => proc { |p| "#{p.name} Data Collector"},
@@ -111,6 +114,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
       conds[:probe_type_id] = opts[:probe_type].id if opts[:probe_type]
       conds[:calibration_id] = opts[:calibration].id if opts[:calibration]
       conds[:graph_type_id] = self.graph_type_id_for(opts[:graph_type]) if opts[:graph_type]
+      extra_options = opts[:extra_options] || {}
+      conds.merge!(extra_options)
 
       found = self.prototypes.find(:first, :conditions => conds)
       return found if found
@@ -123,6 +128,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
       if opts[:calibration]
         made.calibration_id = opts[:calibration].id
       end
+      made.update_attributes(extra_options)
       made.save!
       return made
     end

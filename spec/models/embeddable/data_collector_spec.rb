@@ -69,6 +69,29 @@ describe Embeddable::DataCollector do
         proto.probe_type.should == @fake_probe_a
         proto.name.should match @fake_probe_a.name
       end
+
+      it "should create a  datacollector with the given calibration." do
+        @fake_probe_a = mock_probe_type
+        @fake_calibration = mock_model(Probe::Calibration, :probe_type_id => @fake_probe_a.id)
+        prototypes = mock(:find => nil)
+        Embeddable::DataCollector.stub(:prototypes => prototypes)
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :calibration => @fake_calibration, :graph_type => 'Sensor'})
+        proto.probe_type.should == @fake_probe_a
+        proto.calibration.should == @fake_calibration
+        proto.name.should match @fake_probe_a.name
+      end
+
+      it "should create a datacollector with the extra options" do
+        @fake_probe_a = mock_probe_type
+        extra_options = {:name => "Fake Name", :y_axis_min => -10, :y_axis_max => 999}
+        prototypes = mock(:find => nil)
+        Embeddable::DataCollector.stub(:prototypes => prototypes)
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @fake_probe_a, :extra_options => extra_options.clone, :graph_type => 'Sensor'})
+        proto.probe_type.should == @fake_probe_a
+        proto.name.should == extra_options[:name]
+        proto.y_axis_min.should == extra_options[:y_axis_min]
+        proto.y_axis_max.should == extra_options[:y_axis_max]
+      end
     end
 
   end
@@ -182,7 +205,7 @@ describe Embeddable::DataCollector do
   describe "updating the associated prediction graph on save" do
     before(:each) do
       @error_message = "bad bad bad"
-      @predict = mock (:errors => mock(:full_messages => @error_message))
+      @predict = mock(:errors => mock(:full_messages => @error_message))
       @graph = Factory(:data_collector)
       @graph.stub!(:prediction_graph_source).and_return(@predict)
     end
