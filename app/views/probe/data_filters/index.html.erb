@@ -6,6 +6,7 @@
 
 <% @data_filters.each do |data_filter| %>
   <tr>
+    <td><%= data_filter.name %></td>
     <td><%= link_to 'Show', data_filter %></td>
     <td><%= link_to 'Edit', edit_probe_data_filter_path(data_filter) %></td>
     <td><%= link_to 'Destroy', data_filter, :confirm => 'Are you sure?', :method => :delete %></td>

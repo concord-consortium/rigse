@@ -12,16 +12,14 @@ describe TemplateHelper do
   describe 'a basic template_container' do
     it 'should render with edit button' do
       container = helper.template_container_for(@section)
-      container.should have_tag("div[class=?]", "buttons") do
-        with_tag("div[class=?]", "template_edit_button")
-      end
+      container.should have_tag("a[class=?]", "template_edit_link")
     end
   end
 
   describe "edit button" do
     it "should not show if no_edit is true" do
      container = helper.template_container_for(@section, :no_edit => true)
-     container.should_not have_tag("div[class=?]", "template_edit_button")
+     container.should_not have_tag("a[class=?]", "template_edit_link")
     end
   end
   

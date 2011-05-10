@@ -37,9 +37,9 @@
       / For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
-    #wrapper.wrapper
+    #wrapper{ :class => @wide_content_layout ? "wide" : nil}
       = render :partial => 'shared/project_header'
-      #primary
+      #primary{ :class => @wide_content_layout ? "wide" : nil}
         #content.main_content_colors
           #content_header.main_content_colors
             = yield :content_header
@@ -50,19 +50,21 @@
                 %div{:class=>"flash flash_#{key}"}= message
           = yield :layout
 
-      #secondary
-        - if @investigation
-          / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
-          = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
-        - elsif @activity
-          = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@section,@page]}
-        - elsif @portal_school
-          = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
-        - elsif @portal_teacher && (@portal_teacher.user == current_user)
-          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
-        - elsif @portal_student && (@portal_student.user == current_user)
-          = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
-        = yield :side_bar
+
+      - unless @wide_content_layout
+        #secondary
+          - if @investigation
+            / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
+            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
+          - elsif @activity
+            = render :partial => 'shared/accordian_nav'
+          - elsif @portal_school
+            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
+          - elsif @portal_teacher && (@portal_teacher.user == current_user)
+            = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
+          - elsif @portal_student && (@portal_student.user == current_user)
+            = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
+          = yield :side_bar
 
       = render :partial => 'shared/footer'
       #under_footer

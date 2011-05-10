@@ -50,14 +50,29 @@ Given /^the following activities with multiple choices exist:$/ do |activity_tab
 end
 
 When /^I edit the first section$/ do
-  # need to use javascript here to make them visible so selenium will allow clicking on them
-  page.execute_script("$$('.template_container').each(function(item) { item.down('.buttons').show()})")
   # all sections are currently enabled at start. If we make them disabled by default, we need to
   # uncomment the following line:
   # find(".template_container .template_enable_check").click    
-  find(".template_container .template_container .template_edit_button").click
+  
+  # when sections start out blank, there won't be any edit link showing, and this
+  # will fail. At that time, we can simply skip clicking on an edit link
+  find(".template_container .template_container .template_edit_link").click
 end
 
 When /^I fill in the first templated activity section with "([^"]*)"$/ do |value|
   page.execute_script("tinyMCE.editors[0].setContent('#{value}')")
+end
+
+When /^I enable the "([^"]*)" section$/ do |section|
+  find(:xpath, "//span[contains(text(), '#{section}')]").click
+end
+
+Then /^I should see the wysiwyg editor(?: within the "([^\"]*)" section)$/ do |section|
+  msg = "no wysiwyg editor found"
+  # selenium requires element to be visible inorder to click on it
+  if (section)
+    find(:css, "div.template_container:contains('#{section}') .mceEditor", :message => msg).click
+  else
+    find(".mceEditor", :message => msg).click
+  end
 end

@@ -24,7 +24,7 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   # for the prediction graph
   after_save :update_prediction_graph 
   include Snapshotable
-
+  uncloneable_attributes :prediction_graph_id, :prediction_graph_source
   class << self
     # fields we will accept customizations on
     def customizable_fields
@@ -56,6 +56,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     # should instances try and use customizations for this method?
     def custom_set?(method_sym)
       customizable_fields.detect{|e| method_sym.to_s =~ /^#{e.to_s}=$/}      
+    end
+    
+    def display_name
+      "Sensor"
     end
   end
 
@@ -108,7 +112,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
   end
   
   def display_name
-    "Sensor"
+    if self.graph_type == "Prediction" 
+      return "Prediction Graph"
+    end
+    return "Sensor"
   end
   
   def update_prediction_graph

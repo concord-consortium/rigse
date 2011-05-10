@@ -116,6 +116,10 @@ Then /^I should see the button "([^"]*)"$/ do |locator|
   find(:xpath, XPath::HTML.button(locator), :message => msg)
 end
 
+Then /^the "([^\"]*)" field should have "([^\"]*)" selected$/ do |label, value|
+  page.should have_select(label, :selected => value)
+end
+
 When /^(?:|I )click "([^"]*)"$/ do |selector|
   find(selector).click
 end

@@ -18,7 +18,7 @@ class Embeddable::Diy::EmbeddedModel < Embeddable::Embeddable
   end
   
   def self.display_name
-    self.name 
+    "Model"
   end
   
 end

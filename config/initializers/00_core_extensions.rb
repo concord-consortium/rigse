@@ -85,3 +85,40 @@ module DeepCloneable
   end
 end
 
+module ActiveRecord
+  class Base
+ 
+    def self.child_from_hash(field_name, child_hash, my_hash)
+      association = reflect_on_association(field_name.to_sym )
+      if association.options[:polymorphic]
+        my_hash[association.options[:foreign_type]].constantize.from_hash child_hash
+      else
+        association.klass.from_hash child_hash
+      end
+    end
+ 
+    def self.from_hash( hash )
+      h = hash.dup
+      h.each do |key,value|
+        case value.class.to_s
+        when 'Array'
+          h[key].map! { |e| child_from_hash(key, e, h) }
+        when /\AHash(WithIndifferentAccess)?\Z/
+          h[key] = child_from_hash(key, value, h)
+        end
+      end
+      create h
+    end
+ 
+    # The xml has a surrounding class tag (e.g. ship-to),
+    # but the hash has no counterpart (e.g. 'ship_to' => {} )
+    def self.from_xml( xml )
+      from_hash begin
+        Hash.from_xml(xml)[to_s.demodulize.underscore]
+      rescue ; {} end
+    end
+ 
+  end # class Base
+end # module ActiveRecord
+
+

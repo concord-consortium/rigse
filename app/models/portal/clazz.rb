@@ -284,7 +284,7 @@ class Portal::Clazz < ActiveRecord::Base
   end
 
   def offerings_by_unit
-    self.offerings.group_by do |offering|
+    self.offerings.select{ |o| o.active }.group_by do |offering|
       if offering.runnable.respond_to?(:units) && offering.runnable.units.size > 0
         offering.runnable.units.first.name
       else

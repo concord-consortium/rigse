@@ -24,6 +24,12 @@ describe ItsiImporter do
     it "should always create an activity with the appropriate sections"
   end
 
+  describe "setup_prototype_data_collectors" do
+    it "should run without error" do
+      ItsiImporter.setup_prototype_data_collectors
+    end
+  end
+
   describe "delete_itsi_activity_template" do
     it "should delete the activity marked as the itsi activity template"
   end
@@ -44,8 +50,9 @@ describe ItsiImporter do
     expectations = {
       :probe_type_id                   => [:probetype_id,       :collectdata],
       :introduction_text_response      => [:text_response,      :introduction],
-      :prediction_text_response        => [:prediction_text,    :collectdata],
-      :prediction_graph_response       => [:prediction_graph,   :collectdata],
+      :prediction_text_response        => [:prediction_text,    :predict],
+      :prediction_graph_response       => [:prediction_graph,   :predict],
+      :prediction_drawing_response     => [:drawing_response,   :prediction],
       :proced_text_response            => [:text_response,      :proced],
       :proced_drawing_response         => [:drawing_response,   :proced],
       :collectdata_text_response       => [:text_response,      :collectdata],
@@ -75,13 +82,12 @@ describe ItsiImporter do
       :collectdata3_drawing_response   => [:drawing_response,   :collectdata3],
       :further_drawing_response        => [:drawing_response,   :further],
       :introduction_drawing_response   => [:drawing_response,   :introduction],
-      :prediction_drawing_response     => [:drawing_response,   :prediction],
       :analysis_drawing_response       => [:drawing_response,   :analysis],
       :conclusion_drawing_response     => [:drawing_response,   :conclusion],
       :further_probe_active            => [:probe_active,       :further],
       :further_probetype_id            => [:probetype_id,       :further],
       :further_probe_multi             => [:probe_multi,        :further],
-      :collectdata_graph_response      => [:graph_response,     :collectdata],
+      :collectdata_graph_response      => [:prediction_graph,   :prediction2],
       :collectdata1_calibration_active => [:calibration_active, :collectdata],
       :collectdata1_calibration_id     => [:calibration_id,     :collectdata],
       :collectdata2_calibration_active => [:calibration_active, :collectdata2],
@@ -122,7 +128,7 @@ describe ItsiImporter do
     it "should return the the prediction_graph for a given section" do
       @diy_act = mock()
       @diy_act.should_receive(:prediction_graph_response).and_return(true)
-      ItsiImporter.prediction_graph(@diy_act,:collectdata).should be_true
+      ItsiImporter.prediction_graph(@diy_act,:predict).should be_true
     end
     it "should return nil when the section doesn't have a prediction graph" do
       @diy_act = mock()
@@ -150,9 +156,12 @@ describe ItsiImporter do
       embeddable = mock 
       embeddable.should_receive(:prototype_data_collector=).with(prototype_data_collector)
       embeddable.should_receive(:enable)
+      embeddable.should_receive(:pages).and_return([])
+      #ItsiImporter.should_receive(:enable_section_for).with(embeddable)
       embeddable.should_receive(:save)
       ItsiImporter.set_embeddable(embeddable,:prototype_data_collector=,prototype_data_collector)
     end
+
   end
 
   describe "process_diy_activity_section(activity,diy_act,section_def)" do
@@ -214,35 +223,33 @@ describe ItsiImporter do
           :diy_attribute => true
         ]
       }
+      #ItsiImporter.stub!(:enable_section_for)
     end
     it "should send the name of the section to get the content" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return false
       @diy_act.should_receive(:textile).and_return false
       @embeddable.should_receive(:content=).with(@introduction_text)
-      @embeddable.should_receive(:has_question=).with false
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should send the name of the section to get the textile content if textile is setup" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return false
       @diy_act.should_receive(:textile).and_return true
       @embeddable.should_receive(:content=).with(@processed_text)
-      @embeddable.should_receive(:has_question=).with false
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
     it "should set the embeddables 'has question' to true when text_response is true" do
       @diy_act.should_receive(:introduction).and_return @introduction_text
-      @diy_act.should_receive(:introduction_text_response).and_return true
       @diy_act.should_receive(:textile).and_return false
       @embeddable.should_receive(:content=).with(@introduction_text)
-      @embeddable.should_receive(:has_question=).with true
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_main_content(@embeddable,@diy_act,@section_def)
     end
   end
@@ -263,18 +270,31 @@ describe ItsiImporter do
       Probe::ProbeType.stub!(:find).and_return @probe_type
       @data_collector = mock
       Embeddable::DataCollector.stub!(:get_prototype).and_return(@data_collector)
+    end
+    it "should set the probe_prototype on the embeddable" do
       @calibration = mock
       @calibration.stub!(:id).and_return(3)
       Probe::Calibration.stub!(:find).and_return(@calibration)
-    end
-    it "should set the probe_prototype on the embeddable" do
       @diy_act.should_receive(:collectdata_probe_active).and_return true
       @diy_act.should_receive(:probe_type_id).and_return 1
       @diy_act.should_receive(:collectdata1_calibration_active).and_return true
       @diy_act.should_receive(:collectdata1_calibration_id).and_return 3
-      @embeddable.should_receive(:prototype_data_collector=).with @data_collector
+      @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
+      ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
+    end
+    it "should handle fake calibrations" do
+      Probe::Calibration.should_not_receive(:find)
+      @diy_act.should_receive(:collectdata_probe_active).and_return true
+      @diy_act.should_receive(:probe_type_id).and_return 7
+      @diy_act.should_receive(:collectdata1_calibration_active).and_return true
+      @diy_act.should_receive(:collectdata1_calibration_id).and_return 8
+      @embeddable.should_receive(:prototype=).with @data_collector
+      @embeddable.should_receive(:enable)
+      @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -293,6 +313,7 @@ describe ItsiImporter do
       }
       @itsi_model = mock
       @model = mock
+      #ItsiImporter.stub!(:enable_section_for)
       Itsi::Model.stub!(:find).and_return @itsi_model
     end
     it "should set diy_model= on the embeddable" do
@@ -302,6 +323,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:diy_model=).with @model
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_model_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -321,6 +343,7 @@ describe ItsiImporter do
       @itsi_model = mock
       @model = mock
       Itsi::Model.stub!(:find).and_return @itsi_model
+      #ItsiImporter.stub!(:enable_section_for)
     end
     it "should set diy_model= on the embeddable" do
       Diy::Model.should_receive(:from_external_portal).with(@itsi_model).and_return(@model)
@@ -329,6 +352,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:diy_model=).with @model
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_model_id(@embeddable,@diy_act,@section_def)
     end
   end
@@ -391,21 +415,44 @@ describe ItsiImporter do
         section.name.should == ItsiImporter::SECTIONS_MAP[index][:name]
       end
     end
-    it "by default all sections should be disabled" do
-      @activity.page_elements.each do |pe|
-        pe.is_enabled.should be_false
+    it "by default all sections should be disabled except Introduction and Second Career STEM Question" do
+      @activity.sections.each do |s|
+        if s.name == 'Introduction' || s.name == 'Second Career STEM Question'
+          s.is_enabled.should be_true
+        else
+          s.is_enabled.should be_false
+        end
       end
     end
+    
+    it "by default the first sub section should be enabled and the rest disabled" do
+      @activity.sections.each do |section|
+        section.page_elements.each_with_index do |pe, index|
+          if index == 0
+            pe.is_enabled.should be_true
+          else
+            pe.is_enabled.should be_false
+          end
+        end
+      end
+    end
+    
     describe "sensors created by the template" do
+      before(:each) do
+        @act = ItsiImporter.make_activity
+      end
       it "should have all prediction sources set" do
-        sections = ItsiImporter::SECTIONS_MAP.select {|e| [:collectdata, :collectdata2, :collectdata3, :further].include? e[:key] }
+        sections = ItsiImporter::SECTIONS_MAP.select {|e| [
+          :collectdata, :collectdata2, :collectdata3, :further].include? e[:key] }
         sections.each do |section|
           elements = section[:embeddable_elements]
           prediction_graph = elements.find { |e| e[:key] === :prediction_graph}
           probetype = elements.find { |e| e[:key] === :probetype_id}
-          predict_emb = prediction_graph[:embeddable]
+          #predict_emb = prediction_graph[:embeddable]
           probe_emb = probetype[:embeddable]
-          probe_emb.prediction_graph_source.should == predict_emb
+          # TODO: a better test would assert the prediction graph came
+          # before..
+          probe_emb.prediction_graph_source.should_not be_nil
         end
       end
     end
@@ -418,20 +465,17 @@ describe ItsiImporter do
       @activity = ItsiImporter.make_activity
       @diy_rich_text= "Collect Data Rich Text from DIY"
       @diy_act = mock_model(Itsi::Activity,
-          :collectdata                  => @diy_rich_text,
-          :textile                      => true,
-          :collectdata_text_response    => true,
-          :prediction_drawing_response  => true,
-          :prediction_text_response     => true,
-          :prediction_graph_response    => true,
-          :collectdata_probe_active     => true,
-          :collectdata_model_active     => false,
-          :collectdata_drawing_response => false,
-          :probe_type_id                => 1,
-          :update_attribute             => true,
-          :uuid                         => '5693A069-B829-47BF-9BF0-30FBFDA9F7E2',
-          :puiblic                      => true,
-          :probe_type_id                => nil)
+          :collectdata                     => @diy_rich_text,
+          :textile                         => true,
+          :collectdata_text_response       => true,
+          :collectdata_probe_active        => true,
+          :collectdata1_calibration_active => false,
+          :collectdata_model_active        => false,
+          :collectdata_drawing_response    => false,
+          :probe_type_id                   => 1,
+          :update_attribute                => true,
+          :uuid                            => '5693A069-B829-47BF-9BF0-30FBFDA9F7E2',
+          :puiblic                         => true)
       @section_key = :collectdata
       @section_name = "Collect Data"
       @section_description = "go out there and get me some data!"
@@ -459,13 +503,6 @@ describe ItsiImporter do
     end
 
     it "should create appropriate embeddedables" do
-      # respond with these answers:
-      #@diy_act.should_receive(:collectdata_drawing_response).and_return(true)
-      #@diy_act.should_receive(:collectdata1_calibration_active).and_return(true)
-      #@diy_act.should_receive(:collectdata1_calibration_id).and_return(1)
-      #@diy_act.should_receive(:collectdata_probe_active ).and_return(true)
-      #@diy_act.should_receive(:probe_type_id).and_return(1)
-
       call_process_diy_activity_section(:collectdata)
       map_entry = ItsiImporter::SECTIONS_MAP.find  {|sm| sm[:key] == :collectdata }
       map_index = ItsiImporter::SECTIONS_MAP.index {|sm| sm[:key] == :collectdata }
@@ -517,7 +554,9 @@ describe ItsiImporter do
       expected_calls = ItsiImporter::SECTIONS_MAP.size
       ItsiImporter::SECTIONS_MAP.each do |section_map|
         key = section_map[:key]
-        @itsi_activity.should_receive(key).and_return("some text")
+        if (section_map[:embeddable_elements].any? { |e| e[:diy_attribute] and e[:key] == :main_content})
+          @itsi_activity.should_receive(key).and_return("some text")
+        end
         section_map[:embeddable_elements].each do |element|
           if element[:diy_attribute]
             attribute = element[:key]
@@ -527,8 +566,6 @@ describe ItsiImporter do
               attribute = :probe_active
             elsif attribute == :probetype_id
               attribute = :probe_active
-            elsif attribute == :main_content
-              attribute = :text_response
             end
             attribute_key = ItsiImporter.attribute_name_for(key,attribute)
             if attribute_key
@@ -561,19 +598,16 @@ describe ItsiImporter do
     describe "importing units from the portal" do
       before(:each) do
         @unit_a = mock(:unit_name => 'unit a')
-        @unit_b = mock(:unit_name => 'unit b')
-        @unit_c = mock(:unit_name => 'unit c')
-        @unit_d = mock(:unit_name => 'Tests')
-        @project= mock(:units => [@unit_a,@unit_b, @unit_c, @unit_d])
-        Ccportal::Project = mock(:find_by_project_name => @project)
+        @act_a = mock(:diy_identifier => 1)
+        @act_a.stub_chain(:level, :level_name).and_return("Tests")
+        @act_b = mock(:diy_identifier => 2)
+        @act_b.stub_chain(:level, :level_name).and_return("Middle School")
       end
       it "should skip iporting certain units whose name starts with Test" do
-        meth_sym = :create_activities_from_ccp_itsi_unit
-        ItsiImporter.should_receive(meth_sym).with(@unit_a, "").and_return(true)
-        ItsiImporter.should_receive(meth_sym).with(@unit_b, "").and_return(true)
-        ItsiImporter.should_receive(meth_sym).with(@unit_c, "").and_return(true)
-        ItsiImporter.should_not_receive(meth_sym).with(@unit_d, "").and_return(true)
-        ItsiImporter.import_from_cc_portal
+        @unit_a.should_receive(:activities).and_return([@act_a, @act_b])
+        ItsiImporter.should_not_receive(:create_activity_from_itsi_activity).with(1,nil,"")
+        ItsiImporter.should_receive(:create_activity_from_itsi_activity).with(2,nil,"").and_return(nil)
+        ItsiImporter.create_activities_from_ccp_itsi_unit(@unit_a)
       end
     end
 
@@ -600,20 +634,11 @@ describe ItsiImporter do
         ItsiImporter.remove_existing_activity(@activity_with_offerings)
       end
     end
-    #end
-    #describe "reporting on an import do" do
-      #it "should create a report buffer"
-      #it "should report the total number of itsi activities in the diy"
-      #it "should report on how many itsi activities are going to be imported"
-      #it "should report on itsi activities have been imported in the past"
-      #it "should report on itsi models that have been imported in the past"
-      #it "should report any error with model types"
-      #it "should report any errors with models"
-      #it "should report any errors with activities"
-      #it "should log any exception"
-      #it "should report on any activities that were not imported"
-      ## DIY
-    #end
+    describe "importing phase change / melting ice (fixture)" do
+      it "should have a prediction section"
+      it "the prediction section should predict the collect data sensor"
+      it "should have a model in the further section"
+    end
   end
 end
 
@@ -631,4 +656,6 @@ describe ItsiImporter::ActivityImportRecord do
     end
   end
 end
+
+
 

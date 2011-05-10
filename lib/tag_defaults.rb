@@ -92,14 +92,14 @@ module TagDefaults
       # Add exemplar activities
       activities = opts[:activities] || self.published_exemplars # self should be publishable
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
-      # Add unpublished activities of the user:
       if user
+        # Add unpublished activities of the user:
         users_own = self.find(:all, :conditions => {:user_id => user.id});
         users_key_map = users_own.map do |a|
           # todo
           grade_level = "My #{self.name.humanize.pluralize}"
-          subject_area = a.subject_area_list.first || "no subject area"
-          unit = a.unit_list.first || "no unit"
+          subject_area = ""
+          unit = ""
           key = [grade_level,subject_area,unit]
           {
             :activity => a,
@@ -107,23 +107,24 @@ module TagDefaults
           }
         end
         key_map = key_map + users_key_map
-      end
-      # Add published activities by others (non-exemplars)
-      if (user.portal_teacher || user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author"))
-        other_activities = self.published_non_exemplars
-        other_activities.reject! { |activity| activity.user == user }
-        others_key_map = other_activities.map do |a|
-          # todo
-          grade_level = "Other #{self.name.humanize.pluralize}"
-          subject_area = a.subject_area_list.first || "no subject area"
-          unit = a.unit_list.first || "no unit"
-          key = [grade_level,subject_area,unit]
-          {
-            :activity => a,
-            :keys => [key]
-          }
+
+        # Add published activities by others (non-exemplars)
+        if (user.portal_teacher || user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author"))
+          other_activities = self.published_non_exemplars
+          other_activities.reject! { |activity| activity.user == user }
+          others_key_map = other_activities.map do |a|
+            # todo
+            grade_level = "Other #{self.name.humanize.pluralize}"
+            subject_area = ""
+            author = a.user.name
+            key = [grade_level,subject_area,author]
+            {
+              :activity => a,
+              :keys => [key]
+            }
+          end
+          key_map = key_map + others_key_map
         end
-        key_map = key_map + others_key_map
       end
 
       results = {}
@@ -137,7 +138,7 @@ module TagDefaults
           unit = key[2]
           key_string = "#{grade_level}#{subject}".gsub(/\s+/,"").downcase
           # hacky ordering of grade levels
-          order = 4
+          order = 5
           case key_string
           when /^elem/i
             order = 1
@@ -145,8 +146,16 @@ module TagDefaults
             order = 2
           when /^high/i
             order = 3
+          when /^math/i
+            order = 4
+          when /^testselem/i    # throwing tests at end -- not sure where they should go
+            order = 7
+          when /^testsmidd/i
+            order = 8
+          when /^testshigh/i
+            order = 9
           end
-          keystring = "#{order}#{keystring}"
+          key_string = "#{order}#{key_string}"
           unless results[key_string]
             results[key_string] = {
               :order => order,

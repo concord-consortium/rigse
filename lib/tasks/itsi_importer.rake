@@ -10,6 +10,13 @@ namespace :app do
       raise "need an 'itsi' specification in database.yml to run this task" unless ITSI_ASSET_URL
     end
 
+    desc "create prototype data collectors"
+    task :create_itsi_prototype_data_collectors => :environment do
+      ItsiImporter.setup_prototype_data_collectors
+      puts "This will not correctly configure the calibrations from ITSI, currently you must manually update those prototype datacollectors"
+      puts "  to have the correct y axis range, y axis lable, graph title, and units"
+    end
+
     desc "create ITSI Activity template"
     task :create_itsi_activity_template => :environment do
       @itsi_activity_template = ItsiImporter.find_or_create_itsi_activity_template

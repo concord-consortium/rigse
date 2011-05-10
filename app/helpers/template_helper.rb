@@ -12,9 +12,9 @@ module TemplateHelper
     id = dom_id_for(container,prefix)
     capture_haml do
       haml_tag :div, :id=>id, :class => classes do
-        haml_tag :div, :class => 'buttons' do
-          haml_tag :div, :class => "template_wait"
-          haml_tag(:div, :class => "template_edit_button") unless opts[:no_edit]
+        haml_tag(:div, :style => "float: right;") do
+          haml_tag(:div, "saving", :class => "template_wait")
+          haml_tag(:a, "edit", :class => "template_edit_link", :href => "javascript:void(0)") unless opts[:no_edit]
         end
         if block_given? 
           yield

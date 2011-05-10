@@ -201,5 +201,66 @@ describe Activity do
       @a_b.all_descendants.should_not include(@a_a_a)
     end
   end
-  
+
+  describe "re_associate_prediction_graphs" do
+    before(:each) do
+      @pages = []
+      @sections = []
+      @page_elements = []
+      @embeddables = []
+      @prediction_a = Embeddable::DataCollector.create(:graph_type => "Prediction")
+      @prediction_b = Embeddable::DataCollector.create(:graph_type => "Prediction")
+      @unassinged_graph = Embeddable::DataCollector.create
+      @unassinged_graph.stub!(:prediction_graph_source => nil)
+      @assinged_graph = Embeddable::DataCollector.create
+      @assinged_graph.stub!(:prediction_graph_source => @prediction_b)
+      @graphs = [@prediction_a, @unassinged_graph,@prediction_b,@assinged_graph]
+      1.upto(4) do |i|
+        @page_elements = []
+        1.upto(5) do |j|
+          embeddable = mock(:number => i)
+          # put some sensors on page 2 & 3
+          if i == 2
+            if j == 1 
+              embeddable = @prediction_a
+            elsif j == 2
+              embeddable = @unassinged_graph
+            end
+          elsif i == 3
+            if j == 1
+              embeddable = @prediction_b
+            elsif j == 2
+              embeddable = @assinged_graph
+            end
+          end
+          @page_elements << mock( :embeddable => embeddable)
+          @embeddables << embeddable
+        end
+        page = mock(:page_elements => @page_elements)
+        @pages << page
+        @sections << mock(:pages => [page])
+      end
+      @act = Factory(:activity)
+      @act.stub!(:sections => @sections)
+    end
+
+    it "should set the prediction_graph_source for @unassinged_graph" do
+      @unassinged_graph.should_receive(:prediction_graph_source=).with(@prediction_a)
+      @act.re_associate_prediction_graphs
+    end
+    it "should not set the prediction_graph_source for @assigned_graph" do
+      @assigned_graph.should_not_receive(:prediction_graph_source=)
+      @act.re_associate_prediction_graphs
+    end
+
+    it "graphs_and_predictors should only return graphs and predictors" do
+      @act.graphs_and_predictors.should == @graphs
+    end
+
+    it "ordered_embeddables should return the embeddables in the correct order" do
+      @act.ordered_embeddables.should == @embeddables
+    end
+
+  end
+
 end
