@@ -93,6 +93,15 @@ describe Embeddable::DataCollector do
         proto.y_axis_min.should == extra_options[:y_axis_min]
         proto.y_axis_max.should == extra_options[:y_axis_max]
       end
+
+      it "should find existing datacollector with the extra options" do
+        @dc1 = Embeddable::DataCollector.create(:name => "Basic Probe", :probe_type_id => 1, :is_prototype =>true, :graph_type_id=>1)
+        @dc2 = Embeddable::DataCollector.create(:name => "Customized Probe", :y_axis_min => -10.0, :y_axis_max => 999.0, :probe_type_id => 1, :is_prototype =>true, :graph_type_id=>1)
+        @probe_type = Probe::ProbeType.find 1
+        extra_options = {:name => "Customized Probe", :y_axis_min => -10, :y_axis_max => 999}
+        proto = Embeddable::DataCollector.get_prototype({:probe_type => @probe_type, :extra_options => extra_options.clone, :graph_type => 'Sensor'})
+        proto.should == @dc2
+      end
     end
 
   end

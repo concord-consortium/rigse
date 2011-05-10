@@ -766,7 +766,8 @@ class ItsiImporter
             extra_options = DIY_HACK_CALIBRATIONS[calibration_id]
             calibration = Probe::Calibration.find(calibration_id) unless extra_options
           end
-          prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor'})
+          prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor',
+            :extra_options => extra_options})
           set_embeddable(embeddable, :prototype=, prototype_data_collector)
         rescue ActiveRecord::RecordNotFound => e
           message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
