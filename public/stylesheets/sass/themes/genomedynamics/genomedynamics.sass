@@ -89,7 +89,7 @@ pre
   background-color: #fff
   background-image: none !important
   +container
-  padding: 10px
+  padding: 10px 10px 0
   // that's the blueprint default...
 
 #header
@@ -213,17 +213,19 @@ pre
   background-image: none
   +column(24, true)
   +bottom_nav_colors
-  padding: 0.5em 0px
-  margin: 0em
+  height: 15px
+  min-height: 15px
+  padding: 6px 0
+  margin: 10px 0 0
   -moz-border-radius-bottomright: 0.5em
   -webkit-border-bottom-right-radius: 0.5em
   -moz-border-radius-bottomleft: 0.5em
   -webkit-border-bottom-left-radius: 0.5em
   #footer_left
-    color: black
+    color: white
     +column(12)
     a
-      color: black
+      color: white
   #footer_right
     text-align: right
     +column(12, true)
@@ -665,3 +667,7 @@ a.more, ul.more a
 
 #investigation_search_form
   clear: both
+  
+// custom action menu styles
+.action_menu
+  background: #139b97
