@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta content='text/xhtml; charset=utf-8' http-equiv='content-type' />
+    <title>
+      testing student workgroup selection FOODS
+    </title>
+    <meta content='no' http-equiv='imagetoolbar' />
+    <meta content='all' name='distribution' />
+    <meta content='all' name='robots' />
+    <meta content='document' name='resource-type' />
+    <meta content='true' name='MSSmartTagsPreventParsing' />
+    <link href='/images/favicon.ico' rel='shortcut icon' />
+    <link href='/stylesheets/app.css' media='screen' rel='stylesheet' type='text/css' />
+    <link href='/stylesheets/action_menu_tab.css' media='screen' rel='stylesheet' type='text/css' />
+    <link href='/stylesheets/workgroup.css' media='screen' rel='stylesheet' type='text/css' />
+    <script src='https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js' type='text/javascript'></script>
+    <script src='/javascripts/workgroup.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div id='note' style='display: none;'></div>
+    <div id='waiter' style='display: none;'>
+      please wait
+    </div>
+    <div id='page'></div>
+    <div class='wrapper' id='wrapper'>
+      <div id='primary'>
+        <div class='main_content_colors' id='content'>
+          <div class='main_content_colors' id='content_header'>
+            <div class='trigger padded_content'>
+              <a class='saves_learner_data'>RUN ME</a>
+            </div>
+            <div id='lightbox_hood' style='display: none;'></div>
+            <div id='lightbox_content' style='display: none;'>
+              <div id='workgroup_root'>
+                <div id='workgroup_header'>
+                  <a href='#' id='cancel_button'>
+                    cancel
+                  </a>
+                </div>
+                <div class='padded_content'>
+                  <div style='display: block; border: 1px solid black;'>
+                    <button id='run_button'>
+                      run
+                    </button>
+                    <span id='run_message'>
+                      the activity now
+                    </span>
+                    <span>
+                      , or
+                    </span>
+                    <button id='show_workgroups'>
+                      add collaborators
+                    </button>
+                  </div>
+                  <br />
+                  <div id='workgroup_panel' style='display: none'>
+                    <div id='add_group' style='display: none;'>
+                      <h3>add colaborators</h3>
+                      <select id='learners_dropdown'></select>
+                      <button id='add_button'>
+                        add
+                      </button>
+                    </div>
+                    <div id='load_wait' style='display: none;'>
+                      <img src='/images/wait_long.gif' style='border: none;' />
+                      loading collaborator list. Please wait.
+                    </div>
+                    <div id='load_error' style='display: none;'>
+                      error loading calaborator list. (try again?)
+                    </div>
+                    <div id='learners_container' style='display: none;'>
+                      <h3>existing colaborators:</h3>
+                      <div id='learners_list'></div>
+                    </div>
+                  </div>
+                  <div id='workgroup_templates'>
+                    templates:
+                    <div class='learner' id='learner_template'>
+                      <a class='delete rollover'>
+                        <img alt='remove this student' src='/images/delete.png' />
+                      </a>
+                      <span class='name_field'>
+                        Name Text
+                      </span>
+                      <div class='pending'>
+                        <input class='password_field' name='password_field' type='password' value='' />
+                        <button class='login_button'>
+                          ok
+                        </button>
+                      </div>
+                      <span class='wait'>
+                        <img src='/images/wait_long.gif' style='border: none;' />
+                      </span>
+                      <span class='complete'></span>
+                      <div class='fail'>
+                        sorry. your password is wrong.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='secondary'></div>
+      <div id='under_footer'></div>
+      <script type='text/javascript'>
+        //<![CDATA[
+          document.observe('dom:loaded', function() { EnableWorkgroups('a.saves_learner_data');});
+        //]]>
+      </script>
+    </div>
+  </body>
+</html>

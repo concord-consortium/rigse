@@ -1,7 +1,12 @@
 require 'spec_helper'
 
 describe Dataservice::BundleContent do
+
+  after(:each) do
+     Delorean.back_to_the_present
+  end
   before(:each) do
+    Delorean.time_travel_to "1 month ago"
     @valid_attributes = {
       :id => 1,
       :bundle_logger_id => 1,
@@ -15,7 +20,7 @@ describe Dataservice::BundleContent do
       :empty => false,
       :uuid => "value for uuid"
     }
-    
+
     @valid_attributes_with_blob = {
       :bundle_logger_id => 1,
       :position => 2,
@@ -35,10 +40,9 @@ describe Dataservice::BundleContent do
   it "should create a new instance given valid attributes" do
     Dataservice::BundleContent.create!(@valid_attributes)
   end
-  
+
   it "should extract blobs into separate model objects" do
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
-    puts "There are #{bundle_content.blobs.size} blobs"
     bundle_content.blobs.size.should eql(1)
     bundle_content.reload
     setup_expected(bundle_content.blobs.first)
@@ -46,7 +50,33 @@ describe Dataservice::BundleContent do
     bundle_content.body.should eql(@expected_body)
     bundle_content.original_body.should eql(@valid_attributes_with_blob[:body])
   end
-  
+
+  it "after multiple-processing passes, the blob count should be constant" do
+    bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.save
+    bundle_content.blobs.size.should eql(1)
+    bundle_content.process_blobs
+    bundle_content.processed=false
+    bundle_content.process_blobs
+    bundle_content.process_bundle
+    bundle_content.processed=false
+    bundle_content.process_bundle
+    bundle_content.save
+    bundle_content.blobs.size.should eql(1)
+  end
+
+  it "when a body with no learner data is added, the bundle count doesn't change" do
+    # not a sock-entry body
+    bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
+    bundle_content.body="<gah>BAD BAD</gah>"
+    bundle_content.save!
+    bundle_content.reload
+    bundle_content.blobs.size.should eql(1)
+  end
+
+  # TODO, not supported really, but we should expect more blobs if
+  # we updated the body with new learner data (?)
+
   # this has to be called after the blob extraction has happened, so we know what url to look for
   def setup_expected(blob)
     @blob_url = "http://localhost/dataservice/blobs/#{blob.id}.blob/#{blob.token}"
@@ -158,6 +188,144 @@ describe Dataservice::BundleContent do
           <launchProperties key="sds_time" value="1275665709053"/>
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
-    
+
+    end
+
+    describe "process_bunde" do
+      before(:each) do
+        @bundle = Dataservice::BundleContent.new()
+      end
+
+      it "should set processed to true" do
+        @bundle.body = ""
+        @bundle.processed.should be_false
+        #@bundle.should_receive(:processed).with(true)
+        @bundle.process_bundle
+        @bundle.processed.should be_true
+      end
+
+      it "should set empty to true with a blank body" do
+        @bundle.body = ""
+        @bundle.process_bundle
+        @bundle.empty.should be_true
+      end
+
+      it "should set empty to true with a nil body" do
+        @bundle.body = nil
+        @bundle.process_bundle
+        @bundle.empty.should be_true
+      end
+
+      it "should not set empt? if there is a body" do
+        @bundle.body = "testing"
+        @bundle.process_bundle
+        @bundle.empty.should be_false
+      end
+
+      it "should not set valid_xml if the xml is invalid" do
+        @bundle.body = "testing"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_false
+      end
+
+      it "should set valid_xml if the xml is valid" do
+        # TODO: this probably should be better aproximation of the
+        # actual sockentry protocols (which NP doesn't know very well)
+        @bundle.body="<sessionBundles>FAKE IT.</sessionBundles>"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_true
+      end
+
+      it "should have an otml property if the xml is valid"  do
+        # IMORTANT: this learner_otml is seriously FAKE. (np)
+        @learner_otml = "<OTText>Hello World</OTText>"
+        @ziped_otml = Dataservice::BundleContent.b64gzip_pack(@learner_otml)
+        @learner_socks = "<ot.learner.data><sockEntries value=\"#{@ziped_otml}\"/></ot.learner.data>"
+        @bundle.body="<sessionBundles>#{@learner_socks}</sessionBundles>"
+        @bundle.process_bundle
+        @bundle.otml.should_not be_empty
+      end
+
+      it "should not have an otml property if the xml is invalid" do
+        @bundle.body="<INVALIDXML>"
+        @bundle.process_bundle
+        @bundle.valid_xml.should be_false
+        @bundle.otml.should be_empty
+      end
+
+    end
+
+    describe "should run its callbacks" do
+      before(:each) do
+        @bundle = Dataservice::BundleContent.new(:body => "hi!")
+      end
+
+      it "should process bundles before save" do
+        @bundle.should_receive(:process_bundle)
+        @bundle.run_callbacks(:before_save)
+      end
+
+      it "should call process blobs after processing bundle" do
+        @bundle.should_receive(:process_blobs)
+        @bundle.process_bundle
+      end
+    end
+
+    describe "collaborations and collaborators" do
+      before(:each) do
+        @bundle = Factory(:dataservice_bundle_content)
+        @student_a = Factory(:portal_student)
+        @student_b = Factory(:portal_student)
+        @student_c = Factory(:portal_student)
+      end
+      describe "basic associations" do
+        it "should allow for collaborators" do
+          @bundle.collaborators << @student_a
+          @bundle.collaborators << @student_b
+          @bundle.collaborators << @student_c
+          @bundle.save
+          @bundle.reload
+          @bundle.should have(3).collaborators
+          @bundle.collaborators.each do |s|
+            s.collaborative_bundles.should_not be_nil
+            s.collaborative_bundles.should include @bundle
+          end
+        end
+      end
+
+      describe "copying data" do
+        before(:each) do
+          @main_student = Factory(:portal_student)
+          @clazz = mock_model(Portal::Clazz)
+          @offering = mock_model(Portal::Offering, :clazz => @clazz)
+          @learner = mock_model(Portal::Learner, 
+                                :portal_student => @main_student, 
+                                :offering =>@offering)
+          @learner_a = mock_model(Portal::Learner)
+          @contents_a = []
+          @bundle_logger = mock_model(Dataservice::BundleLogger, {
+            :learner => @learner,
+            :bundle_contents => @contents_a
+          })
+          @bundle.bundle_logger = @bundle_logger
+        end
+        it "should copy the bundle contents" do
+          @bundle.collaborators << @student_a
+          @offering.should_receive(:find_or_create_learner).with(@student_a).and_return(@learner_a)
+          @learner_a.should_receive(:bundle_logger).and_return(@bundle_logger)
+          @bundle.copy_to_collaborators
+          @contents_a.should have(1).bundle_content
+        end
+      end
+    end
+      
+    describe "observers" do
+      it " should run the after_save actions" do
+        @bundle_content = Factory(:dataservice_bundle_content)
+        @obs = Dataservice::BundleContentObserver.instance
+        @obs.should_receive(:process_saveables)
+        @obs.should_receive(:copy_to_collaborators)
+        @bundle_content.save!
+      end
     end
 end

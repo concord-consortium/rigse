@@ -5,6 +5,10 @@ puts "loading test environment"
 # your test database is "scratch space" for the test suite and is wiped
 # and recreated between test runs.  Don't rely on the data there!
 
+# enable this to block all requests which is useful to track down unnecessary ones
+# require 'fakeweb'
+# FakeWeb.allow_net_connect = false
+
 # Log error messages when you accidentally call methods on nil.
 config.whiny_nils = true
 

@@ -25,11 +25,8 @@ describe Investigation do
       @dest_investigation.reload
     end
 
-    before(:all) do
-      duplicate_investigation
-    end
-
     before(:each) do
+      duplicate_investigation
     end
 
     describe "original investigation should" do

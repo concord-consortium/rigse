@@ -1,8 +1,15 @@
 = edit_menu_for(data_table,f)
 = observe_form(dom_id_for(data_table, :edit), :function => pack_field_params)
 .content
-  - field_set_tag 'name' do
+  - field_set_tag 'table properties' do
+    = f.label "name"
     = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
+    = f.label "visible rows"
+    = f.text_field :visible_rows, :size => 5
+    = f.label "width"
+    = f.text_field :width, :size => 5
+    = f.label "precision"
+    = f.text_field :precision, :size => 5
   - field_set_tag 'linked datacollector' do
     %p
       Link contents with a Graph in this Investigation:
@@ -17,5 +24,3 @@
         = data_table_heading_tag(heading)
     = f.hidden_field :column_names, :id => 'column_names'
     = f.hidden_field :column_count, :id => 'column_count'
-  - field_set_tag 'Visible Rows' do
-    = f.text_field :visible_rows, :size => 5

@@ -29,7 +29,8 @@ class Embeddable::DataTable < ActiveRecord::Base
   default_value_for :headings, ['column a','column b','column c']
   default_value_for :column_count, 3
   default_value_for :visible_rows, 9
-
+  default_value_for :precision, 2
+  default_value_for :width, 1200
   send_update_events_to :investigations
 
   def self.record_delimiter

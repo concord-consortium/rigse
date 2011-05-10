@@ -4,11 +4,12 @@ describe PasswordsController do
   integrate_views
   
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    generate_portal_resources_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
+    # stub the current project because project_header uses it
+    controller.stub(:before_render) {
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
   end
-  
+
   describe "Reset password by login" do
     before(:each) do
       @user = Factory.create(:user, :login => "forgetful_jones", :password => "password", :password_confirmation => "password", :email => "valid@test.com")

@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe Dataservice::ConsoleContentsController do
 
-  before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    logout_user
-  end
-
   def mock_console_content(stubs={})
     @mock_console_content ||= mock_model(Dataservice::ConsoleContent, stubs)
   end

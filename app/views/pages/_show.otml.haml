@@ -12,7 +12,7 @@
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
-      - if for_teacher_only(page)
+      - if for_teacher_only?(page)
         - if teacher_mode
           #content.teacher_mode
             - if page.section
@@ -38,7 +38,7 @@
         - if should_show_teacher_note? page, :investigation
           %tr{:valign=>"top"}
             %td{:width=>"25%"}
-              %h3= "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize.pluralize} notes:"
+              %h3= "#{top_level_container_name.humanize.pluralize} notes:"
             %td
               .activity_teacher_note= page.section.investigation.teacher_note_otml
 

@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/sparks.dev.concord.org"
-set :branch, "sparks"
+set :branch, "sparks-dev"
 
 #############################################################
 #  Servers

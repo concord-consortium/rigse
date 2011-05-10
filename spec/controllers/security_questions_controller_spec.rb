@@ -4,12 +4,12 @@ describe SecurityQuestionsController do
   integrate_views
   
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    generate_portal_resources_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
-    
     @student = Factory.create(:portal_student, :user => Factory.create(:user))
     stub_current_user @student.user
+
+    controller.stub(:before_render) {
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
   end
   
   describe "GET edit" do

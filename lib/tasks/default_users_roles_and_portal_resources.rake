@@ -413,6 +413,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     #   { "role"=>"admin", 
     #     "first_name"=>"Stephen", 
     #     "last_name"=>"Bannasch", 
+    #     "login" => "stephen",
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
     # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
@@ -430,13 +431,14 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         puts "\nCreating additional users ...\n\n"
         pw = User.make_token
         additional_users.each do |user_config|
-          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['email']}"
+          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['login']}, #{user_config[1]['email']}"
           if u = User.find_by_email(user_config[1]['email'])
             puts "  *** user: #{u.name} already exists ...\n"
           else
             u = User.create(:login => user_config[0], 
               :first_name => user_config[1]['first_name'], 
               :last_name => user_config[1]['last_name'], 
+              :login => user_config[1]['login'], 
               :email => user_config[1]['email'], 
               :password => pw, 
               :password_confirmation => pw)
@@ -456,6 +458,5 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         # puts "#{path} not found"
       end
     end
-
   end
 end

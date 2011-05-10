@@ -5,7 +5,8 @@ class Portal::ClazzesController < ApplicationController
   # this only protects management actions:
   include RestrictedPortalController
 
-  before_filter :teacher_admin_or_config, :only => [:class_list]
+  before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
+  before_filter :student_teacher_admin_or_config, :only => [:show]
 
   def current_clazz
     Portal::Clazz.find(params[:id])
@@ -29,6 +30,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
+    @offerings = substitute_default_class_offerings(@portal_clazz.active_offerings)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @portal_clazz }
@@ -222,7 +224,24 @@ class Portal::ClazzesController < ApplicationController
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
       if @offering
-        @offering.save
+        if @portal_clazz.default_class == true
+          if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
+            @offering.default_offering = true
+            @offering.save
+          else
+            error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
+            @offering.destroy
+            render :update do |page|
+              page << "var element = $('#{dom_id}');"
+              page << "element.show();"
+              page << "$('flash').update('#{error_msg}');"
+              page << "alert('#{error_msg}');"
+            end
+            return
+          end
+        else
+          @offering.save
+        end
         @portal_clazz.reload
       end
       render :update do |page|
@@ -358,5 +377,21 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'report'}
     end
+  end
+
+  def substitute_default_class_offerings(clazz_offerings)
+    return clazz_offerings if @portal_clazz.default_class
+    offerings = clazz_offerings.clone
+    offerings.each do |offering|
+      all_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type(offering.runnable.id, offering.runnable_type)
+      default_offerings = all_offerings.select {|x| x.default_offering == true && x.runnable.id == offering.runnable.id}
+      default_offerings.each do |doff|
+        if doff.runnable.id == offering.runnable.id
+          offerings.delete offering
+          offerings << doff
+        end
+      end
+    end
+    offerings
   end
 end

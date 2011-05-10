@@ -60,6 +60,8 @@ module InPlaceMacrosHelper
     js_options['callback']   = "function(form) { return #{options[:with]} }" if options[:with]
     js_options['clickToEditText'] = %('#{options[:click_to_edit_text]}') if options[:click_to_edit_text]
     js_options['textBetweenControls'] = %('#{options[:text_between_controls]}') if options[:text_between_controls]
+    js_options['highlightColor'] = %('#8CBBB8')
+    js_options['highlightEndColor'] = %('#F4B626')
     function << (', ' + options_for_javascript(js_options)) unless js_options.empty?
     
     function << ')'

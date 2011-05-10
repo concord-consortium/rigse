@@ -5,7 +5,7 @@ def inspect_course(c)
 end
 
 describe Portal::Course do
-  before(:all) do
+  before(:each) do
     @course_number = "COURZ_1"
     @school = Factory(:portal_school)
     @course_with_number = Factory(:portal_course, 

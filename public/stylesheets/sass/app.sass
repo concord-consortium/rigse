@@ -1,975 +1,1053 @@
 /* browser reset
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form
-  :margin 0
-  :padding 0
-  :border 0
+  margin: 0
+  padding: 0
+  border: 0
 
 html, input, textarea, select
-  :font-size 100%
+  font-size: 100%
 
 /*keep ie happy
 
 body
-  :font 75%/1.5 Arial, Helvetica, sans-serif
+  font: 75% / 1.5 Arial, Helvetica, sans-serif
 
 h1, h2, h3, h4, h5, h6
-  :font-weight normal
-  :margin 0 0 .25em 0
+  font-weight: normal
+  margin: 0 0 0.25em 0
 
 h1
-  :font-size 2em
+  font-size: 2em
 
 /* 24px
 
 h2
-  :font-size 1.833em
-  :color #ee864e
+  font-size: 1.833em
+  color: #ee864e
 
 /* 20px
 
 h3
-  :font-size 1.165em
-  :font-weight bold
-  :padding-top 3px
-  :line-height 1.3
+  font-size: 1.165em
+  font-weight: bold
+  padding-top: 3px
+  line-height: 1.3
 
 /* 14px
 
 h4
-  :font-size 1.165em
-  :color #ef864e
+  font-size: 1.165em
+  color: #ef864e
 
 /* 14px
 
 h5
-  :font-size 1em
-  :font-weight bold
-  :text-transform uppercase
+  font-size: 1em
+  font-weight: bold
+  text-transform: uppercase
 
 /* 12px;
 
 h6
-  :font-size .917em
+  font-size: 0.917em
 
 /* 11px;
 
 li h3
-  :display inline
-  :padding 0
+  display: inline
+  padding: 0
 
 p
-  :margin-bottom 1em
+  margin-bottom: 1em
 
 input, textarea
-  :border 1px solid #242323
+  border: 1px solid #242323
 
 abbr, acronym
-  :border-bottom 1px dotted #999
-  :cursor help
+  border-bottom: 1px dotted #999999
+  cursor: help
 
 ul, ol
-  :margin 0 0 1em 3em
+  margin: 0 0 1em 3em
 
 table
-  :border-collapse collapse
-  :margin 1em 0
+  border-collapse: collapse
+  margin: 1em 0
 
 body
   background:
-    :color #fee9aa
-    :image url(/images/new/bg-body.png)
-    :repeat repeat-x
-  :color #3f3f3f
+    color: #fee9aa
+    image: url(/images/new/bg-body.png)
+    repeat: repeat-x
+  color: #3f3f3f
+  body#tinymce
+    background: #fff
 
 .hidden
-  :display none
+  display: none
 
 #page
-  :min-width 860px
+  min-width: 860px
 
 #wrapper
-  :background #f3f2ed url(/images/new/bg-content.gif) 0 0 repeat-y
-  :height auto
-  :margin 0 auto
-  :min-height 600px
-  :position relative
-  :width 860px
+  background: #f3f2ed url(/images/new/bg-content.gif) 0 0 repeat-y
+  height: auto
+  margin: 0 auto
+  min-height: 600px
+  position: relative
+  width: 860px
 
 /* HEADER
 #header
-  :background transparent
-  :height 179px
-  :margin 0
+  background: transparent
+  height: 179px
+  margin: 0
 
 #userlinks
-  :background url(/images/new/bg-userlinks.png) repeat-y right top
-  :max-height 40px
-  :min-height 24px
-  :padding-left 100px
-  :position absolute
-  :right 0
-  :text-align right
-  :top 0
+  background: url(/images/new/bg-userlinks.png) repeat-y right top
+  max-height: 40px
+  min-height: 24px
+  padding-left: 100px
+  position: absolute
+  right: 0
+  text-align: right
+  top: 0
   p
-    :clear none
-    :color #fff
-    :display inline
-    :float left
-    :margin 3px 13px 0 0
-    :padding 0
-    :position relative
-    :text-align right
+    clear: none
+    color: white
+    display: inline
+    float: left
+    margin: 3px 13px 0 0
+    padding: 0
+    position: relative
+    text-align: right
   ul
-    :clear none
-    :color #fff
-    :display inline
-    :float left
-    :margin 3px 0 0 0
-    :padding 0
-    :position relative
-    :text-align right
+    clear: none
+    color: white
+    display: inline
+    float: left
+    margin: 3px 0 0 0
+    padding: 0
+    position: relative
+    text-align: right
   li
-    :border none 
-    :display inline
-    :list-style none
-    :padding 0
-    :text-align right
-    :text-transform uppercase
+    border: none
+    display: inline
+    list-style: none
+    padding: 0
+    text-align: right
+    text-transform: uppercase
     a
-      :color #fff
-      :font-weight bold
-      :padding 0 8px
-      :text-decoration none
+      color: white
+      font-weight: bold
+      padding: 0 8px
+      text-decoration: none
   li + li
-    :border-left solid 1px #fff
+    border-left: solid 1px white
 
 #lead
-  :border-bottom 1px solid #a1d2d1
-  :clear both
-  :float left
-  :line-height 1.833
-  :margin-bottom 1.833em
+  border-bottom: 1px solid #a1d2d1
+  clear: both
+  float: left
+  line-height: 1.833
+  margin-bottom: 1.833em
   &.project-header
-    :border none
-    :margin 0
-    :padding 0
-    :width 860px
+    border: none
+    margin: 0
+    padding: 0
+    width: 860px
+
 #_toggle_portal__offering_1
-  :margin 2px 2px 0 0
-  
+  margin: 2px 2px 0 0
+
 .project-header h1
   background:
-    :color white
-    :image url(/images/new/banners/jax.png)
-    :repeat no-repeat
-  :height 172px
-  :margin 0
-  :text-indent -999em
+    color: white
+    image: url(/images/new/banners/empty.png)
+    repeat: no-repeat
+  height: 172px
+  margin: 0
+  text-indent: -999em
+  &.itsisu
+    background: white url(/images/new/banners/itsisu.png) 0 0 no-repeat
+  &.geniverse
+    background: white url(/images/new/banners/geniverse.png) 0 0 no-repeat
+  &.has
+    background: white url(/images/new/banners/has.png) 0 0 no-repeat
   &.loops
-    :background white url('/images/new/banners/loops.png') 0 0 no-repeat
+    background: white url(/images/new/banners/loops.png) 0 0 no-repeat
+  &.smartgraphs
+    background: white url(/images/new/banners/smartgraphs.png) 0 0 no-repeat
+  &.rites
+    background: white url(/images/new/banners/rites.png) 0 0 no-repeat
+  &.sparks
+    background: white url(/images/new/banners/sparks.png) 0 0 no-repeat
+  &.visual
+    background: white url(/images/new/banners/visual.png) 0 0 no-repeat
   a
-    :background transparent
-    :display block
-    :height 172px
-    :width 100%
+    background: transparent
+    display: block
+    height: 172px
+    width: 100%
 
 /* HORIZONTAL NAVIGATION
 #nav_top
-  :background #f8ac1a
-  :clear both
-  :height 26px
-  :position relative
-  :text-align left
+  background: #f8ac1a
+  clear: both
+  height: 26px
+  position: relative
+  text-align: left
   a
-    :color #416962
+    color: #416962
   ul
-    :float left
-    :list-style none
-    :height 26px
-    :margin 4px 0 0 0
-    :padding 0
-    :width 50%
+    float: left
+    list-style: none
+    height: 26px
+    margin: 4px 0 0 0
+    padding: 0
+    width: 50%
   li
-    :border none
-    :color #555
-    :display inline
-    :font-size 1em
-    :font-weight bold
-    :margin 0
-    :padding 0 10px 0
-    :text-transform uppercase
+    border: none
+    color: #555555
+    display: inline
+    font-size: 1em
+    font-weight: bold
+    margin: 0
+    padding: 0 10px 0
+    text-transform: uppercase
     &#main-site
-      :background transparent url(/images/new/main-site.png) no-repeat
-      :border-right none
-      :height 42px
-      :margin-top -10px
-      :padding 0 5px 0 0
-      :position absolute
-      :right 0
-      :text-indent -999em
-      :top 0
-      :width 354px
+      background: transparent url(/images/new/main-site.png) no-repeat
+      border-right: none
+      height: 42px
+      margin-top: -10px
+      padding: 0 5px 0 0
+      position: absolute
+      right: 0
+      text-indent: -999em
+      top: 0
+      width: 354px
       a
-        :display block
-        :height 42px
-        :width 349px
+        display: block
+        height: 42px
+        width: 349px
   li + li
-    :border-left solid 1px #416962
+    border-left: solid 1px #416962
   li#home
-    :border none
+    border: none
   .menu_h_right
-    :float right
-    :text-align right
-    :width 50%
+    float: right
+    text-align: right
+    width: 50%
     ul
-      :float right
-      :width 100%
+      float: right
+      width: 100%
 
 /* SHARE AND PRINT LINKS
 .page-utility
-  :list-style-type none
-  :margin 0
-  :padding 0
-  :position absolute
-  :top 1.5em
-  :right 1em
+  list-style-type: none
+  margin: 0
+  padding: 0
+  position: absolute
+  top: 1.5em
+  right: 1em
   li
-    :float right
-    :width 56px
+    float: right
+    width: 56px
 
 .send-to-friend
-  :margin-right 21px
+  margin-right: 21px
 
 .page-utility a
-  :background transparent url(/images/new/bg-sprite-btns.png) 0 0 no-repeat
-  :display block
-  :height 16px
-  :overflow hidden
-  :text-indent -999em
-  :width 56px
+  background: transparent url(/images/new/bg-sprite-btns.png) 0 0 no-repeat
+  display: block
+  height: 16px
+  overflow: hidden
+  text-indent: -999em
+  width: 56px
   &:hover
-    :background-position 0 -16px
+    background-position: 0 -16px
 
 .share-it
-  :position relative
+  position: relative
 
 .page-utility
   a.addthis_button
-    :background-position -112px 0
-    :width 52px
+    background-position: -112px 0
+    width: 52px
     &:hover, &:focus
-      :background-position -112px -16px
+      background-position: -112px -16px
   .print-this-page a
-    :background-position -56px 0
+    background-position: -56px 0
     &:hover, &:focus
-      :background-position -56px -16px
+      background-position: -56px -16px
 
 /* MAIN CONTENT - two columns, #primary on right, #secondary on left
 #content
-  :overflow hidden
-  :overflow-y visible
-  :padding-top 40px
-  :padding-right 30px
-  :position relative
+  font-size: 110%
+  overflow: hidden
+  overflow-y: visible
+  padding-top: 40px
+  padding-right: 30px
+  //:position relative
 
 /* ------- #primary -------
 
 #primary
-  :display inline
-  :float left
-  :margin 0 0 0 228px
-  :min-height 350px
-  :padding 0
-  :width 632px
+  display: inline
+  float: left
+  margin: 0 0 0 228px
+  min-height: 350px
+  padding: 0
+  width: 632px
+
+#primary.wide
+  margin: 0 0 0 0
+  width: 100%
 
 /* login form
 
 #content-upper
-  :background #f3f2ed
-  :float left
-  :margin 0 0 30px
-  :padding 22px 40px 0 40px
-  :width 100%
+  background: #f3f2ed
+  float: left
+  margin: 0 0 30px
+  padding: 22px 40px 0 40px
+  width: 100%
 
 .login-area
-  :border solid 2px #aaa
-  :margin-left -30px
-  :padding 15px 20px 5px
-  :width 540px
+  background: #ffffff
+  border: solid 2px #aaaaaa
+  margin-left: -30px
+  padding: 15px 20px 5px
+  width: 540px
   /* CSS3
-  :border-radius 8px
-  :-moz-border-radius 8px
-  :-webkit-border-radius 8px
+  border-radius: 8px
+  -moz-border-radius: 8px
+  -webkit-border-radius: 8px
   .graphic-input li
-    :width 180px
+    width: 180px
+
 .login-area
   li
-    :margin-bottom 4px
+    margin-bottom: 4px
   ul.graphic-input
-    :margin-bottom 6px
+    margin-bottom: 6px
   h2
-    :background transparent url(/images/new/headers-sprite.png) 0 -75px no-repeat
-    :overflow hidden
-    :height 13px
-    :text-indent -9999px
-    :width 119px
+    background: transparent url(/images/new/headers-sprite.png) 0 -75px no-repeat
+    overflow: hidden
+    height: 13px
+    text-indent: -9999px
+    width: 119px
   h3
-    :color #999
-    :font-family Arial, Helvetica, sans-serif
-    :margin -4px 0 0 0
-    :padding 0
+    color: #999999
+    font-family: Arial, Helvetica, sans-serif
+    margin: -4px 0 0 0
+    padding: 0
   input[type='submit'], button, ul.menu li a#printable-view
     &.button
-      :background transparent url(/images/new/bg-sprite-btns.png) -130px -69px no-repeat
-      :float left
-      :height 26px
-      :margin-left -6px
-      :margin-right 14px
-      :text-indent -999em
-      :width 64px
+      background: transparent url(/images/new/bg-sprite-btns.png) -130px -69px no-repeat
+      float: left
+      height: 26px
+      margin-left: -6px
+      margin-right: 14px
+      text-indent: -999em
+      width: 64px
     &:hover, &.over
-      :background-position -130px -95px
+      background-position: -130px -95px
+
 #project-signin
-  :border-right solid 1px rgb(161, 211, 208)
-  :margin-bottom 20px
+  border-right: solid 1px rgb(161, 211, 208)
+  margin-bottom: 20px
+
 .forgot
-  :font-size .9em
-  :margin-left 93px
-  :padding-top 5px
+  font-size: 0.9em
+  margin-left: 93px
+  padding-top: 5px
 
 p.note
-  :border-top solid 1px #ddd
-  :clear both
-  :font-size .9em
-  :margin-top 170px !important
-  :padding-top 10px
+  border-top: solid 1px #dddddd
+  clear: both
+  font-size: 0.9em
+  margin-top: 170px !important
+  padding-top: 10px
 
 .col
-  :float left
-  :width 50%
-  :margin-right 1.8%
+  float: left
+  width: 50%
+  margin-right: 1.8%
 
 .col2
-  :float left
-  :margin-left 4.8%
-  :width 43%
+  float: left
+  margin-left: 4.8%
+  width: 43%
   p
-    :color #999
+    color: #999999
 
 #content-lower
-  :background-color #fffae6
-  :clear both
-  :margin-left -29px
+  background-color: #fffae6
+  clear: both
+  margin-left: -29px
   /* -30px
-  :margin-bottom -14px
+  margin-bottom: -14px
   /* keep the last paragraph from messing with the margin
-  :padding 39px 40px 0 30px
-  :width 623px
+  padding: 39px 40px 0 30px
+  width: 623px
   /*630
 
-/* LEGACY CODE?  
+/* LEGACY CODE?
 .toggle
   .future_state
-    :font-size 1em
+    font-size: 1em
   .current_state
-    :font-size 1em
-    :display none
+    font-size: 1em
+    display: none
 
 .component_title
-  :font-size 1em
+  font-size: 1em
 
 .important
-  :font-size 1.2em
-  :color = #a80011
-  :margin 1em
+  font-size: 1.2em
+  color: #a80011
+  margin: 1em
   a
-    :color = #a80011 !important
-    :text-decoration underline !important
+    color: #a80011 !important
+    text-decoration: underline !important
+
 .discouraged
-  :opacity 0.5
+  opacity: 0.5
 
 .in_place_editor_field
-  :display inline-block
-  :min-width 5em !important
-  :width auto !important
-  :min-height 1em
-  :height auto !important
-  :padding 1px
-  :margin 0px
+  display: inline-block
+  min-width: 5em !important
+  width: auto !important
+  min-height: 1em
+  height: auto !important
+  padding: 1px
+  margin: 0px
 
 .item_collection
-  :background-color white
-  :padding 0.5em 0em 
+  background-color: white
+  padding: 0.5em 0em
 
 .container_element
-  :background-color #fff
-  :padding 2px
-  :margin-bottom 5px
+  background-color: white
+  padding: 2px
+  margin-bottom: 5px
   &:hover
-    :background-color #fff
+    background-color: white
   .action_menu
-    :font-size 10px
-    :border-bottom 1px solid
-    :opacity .8
+    border-bottom: 1px solid
+    opacity: 0.8
     &:hover
-      :opacity 1
+      opacity: 1
 
 .item
-  :background-color white
-  :padding 0.5em
-  :padding-top 0
-  :padding-bottom 0
+  background-color: white
+  padding: 0.5em
+  padding-top: 0
+  padding-bottom: 0
   .action_menu
-    :padding 0
+    padding: 0
   .action_menu_header_left
-    :font-size 12px
-    :font-weight bold
+    font-size: 12px
+    font-weight: bold
   .action_menu_header_right
-    :margin-right 0 !important
-    :padding-right 0 !important
+    margin-right: 0 !important
+    padding-right: 0 !important
   ul.tiny
-    :background-color #eee
-    :margin-left 0
+    background-color: #eeeeee
+    margin-left: 0
     li
-      :background-color #eee
-      :list-style disc !important
-      :margin-left 20px
-      :padding 2px
+      background-color: #eeeeee
+      list-style: disc !important
+      margin-left: 20px
+      padding: 2px
   &.item_selected
-    :border-bottom
-      :width 2px
-      :style solid
-      :color= #3a878b
+    background-color: #f3f2ed
+    border-bottom:
+      width: 2px
+      style: solid
+      color: #3a878b
   &.item_selectable
-    :border-bottom
-      :width 2px
-      :style solid
-      :color= #bddfdf
+    border-bottom:
+      width: 2px
+      style: solid
+      color: #bddfdf
     &:hover
-      :border
-        :width 2px
-        :color= #f4b626
+      border:
+        width: 2px
+        color: #f4b626
 
 /* ------- edit, copy, delete etc buttons -------
 
 .list
   a
-    :border solid 1px #479492
-    :font-size 0.75em
-    :margin 0 2px 0 0
-    :padding 2px 5px
+    border: solid 1px #479492
+    font-size: 0.75em
+    margin: 0 2px 0 0
+    padding: 2px 5px
     /* CSS3
-    :border-radius 3px
-    :-moz-border-radius 3px
-    :-webkit-border-radius 3px
+    border-radius: 3px
+    -moz-border-radius: 3px
+    -webkit-border-radius: 3px
     &:link, &:visited
-      :background transparent
-      :color #479492
+      background: transparent
+      color: #479492
     &:hover
-      :background #479492
-      :color #fff
+      background: #479492
+      color: white
     &:active
-      :background transparent
-      :color #479492
+      background: transparent
+      color: #479492
   select
-    :clear both
-    :display block
-    :margin-bottom -10px
+    clear: both
+    display: block
+    margin-bottom: -10px
+
 #section_pages_list
-  :margin-left 0
+  margin-left: 0
   li
-    :list-style none
+    list-style: none
 
 /* ------- #secondary -------
 
 #secondary
-  :background #fbf4db
-  :display inline
-  :float left
-  :margin-top -10px
-  :margin-left -860px
-  :padding-top 10px
-  :width 200px
+  background: #fbf4db
+  display: inline
+  float: left
+  margin-top: -10px
+  margin-left: -860px
+  padding-top: 10px
+  width: 200px
   h2
-    :color #555
-    :font bold 1.3em Arial, Helvetica, sans-serif !important
-    :margin 10px 0 10px 20px
+    color: #555555
+    font: bold 1.3em Arial, Helvetica, sans-serif !important
+    margin: 10px 0 10px 20px
   ul
-    :border-top solid 1px #a1d3d0
-    :list-style none
-    :margin 0
-    :padding 0
+    border-top: solid 1px #a1d3d0
+    list-style: none
+    margin: 0
+    padding: 0
   li
-    :background #f3f2ed
-    :border-bottom solid 1px #a1d3d0
-    :color #ee864e
-    :font-size 1.3em
-    :list-style none
-    :margin 0
-    :padding 0
+    background: #f3f2ed
+    border-bottom: solid 1px #a1d3d0
+    color: #ee864e
+    font-size: 1.3em
+    list-style: none
+    margin: 0
+    padding: 0
     strong
-      :display block
-      :font-weight normal
-      :padding 5px 20px
+      display: block
+      font-weight: normal
+      padding: 5px 20px
     a
-      :background #fbf4db
-      :color #555
-      :display block
-      :margin 0
-      :padding 5px 20px
+      background: #fbf4db
+      color: #555555
+      display: block
+      margin: 0
+      padding: 5px 20px
     a.selected
-      :background #fff
-      :color #ee864e
+      background: white
+      color: #ee864e
   ul.create
-    :border-top none
+    border-top: none
   .create_link
-    :margin 10px 0 0 20px
+    margin: 10px 0 0 20px
 
 .user-info-box
-  :background #fff
-  :margin 10px 10px 20px
-  :padding 10px
+  background: white
+  margin: 10px 10px 20px
+  padding: 10px
   /* CSS3
-  :border-radius 12px
-  :-moz-border-radius 12px
-  :-webkit-border-radius 12px
+  border-radius: 12px
+  -moz-border-radius: 12px
+  -webkit-border-radius: 12px
 
 /* TYPE AND LINKS
 a
-  :color #479492
-  :text-decoration none
+  color: #479492
+  text-decoration: none
   &:visited
-    :color #479492
-    :text-decoration none
+    color: #479492
+    text-decoration: none
   &:hover, &:focus
-    :color #da5936
+    color: #da5936
 
 h2 a, h3 a
-  :font-family arial, helvetica, sans-serif
+  font-family: arial, helvetica, sans-serif
 
 a img
-  :border 0
+  border: 0
 
 blockquote
-  :background-color #fff
-  :border 1px solid #479492
-  :border-width 1px 0
-  :color #da5936
-  :font 1.5em/1.25 Georgia, Times, serif
-  :margin 20px 0
-  :padding 1.1em 25px 1.2em 25px
+  background-color: white
+  border: 1px solid #479492
+  border-width: 1px 0
+  color: #da5936
+  font: 1.5em / 1.25 Georgia, Times, serif
+  margin: 20px 0
+  padding: 1.1em 25px 1.2em 25px
   *, p
-    :margin 0
-    :padding 0
+    margin: 0
+    padding: 0
 
 div.hr
-  :background #A1D2D1
-  :clear both
-  :height 1px
-  :margin 20px 0
+  background: #a1d2d1
+  clear: both
+  height: 1px
+  margin: 20px 0
   hr
-    :display none
+    display: none
 
 .copyright
-  :letter-spacing .1em
+  letter-spacing: 0.1em
 
 code
-  :font-size 1.2em
+  font-size: 1.2em
 
 dl
-  :margin 1em 0
+  margin: 1em 0
 
 /* GENERIC TABLE STYLES
 table
   &.tablesorter
     th, td
-      :border solid 1px #a8d6d5 !important
-      :color #555
-      :padding 5px
+      border: solid 1px #a8d6d5 !important
+      color: #555555
+      padding: 5px
   &.yui-dt-table
     th, td
-      :border solid 1px #a8d6d5 !important
-      :color #555
-      :padding 5px
+      border: solid 1px #a8d6d5 !important
+      color: #555555
+      padding: 5px
   &.roster-table
     th, td
-      :border solid 1px #a8d6d5 !important
-      :color #555
-      :padding 5px
+      border: solid 1px #a8d6d5 !important
+      color: #555555
+      padding: 5px
   &.tablesorter th, &.yui-dt-table th, &.roster-table th
-    :background #a0d1d0 url(/images/new/bg-thead.png) left bottom repeat-x !important
-    :border-bottom 1px solid #b9dedd !important
-    :color #222
-    :font-size 1em
-    :text-align left
+    background: #a0d1d0 url(/images/new/bg-thead.png) left bottom repeat-x !important
+    border-bottom: 1px solid #b9dedd !important
+    color: #222222
+    font-size: 1em
+    text-align: left
   &.yui-dt-table th a, &.roster-table th a
-    :color #222 !important
+    color: #222222 !important
   &.tablesorter thead th, &.yui-dt-table thead th, &.roster-table th
-    :border-right-color #fff !important
+    border-right-color: white !important
   &.tablesorter thead th.last, &.yui-dt-table thead th.last, &.roster-table th.last
-    :border-right-color #a8d6d5 !important
+    border-right-color: #a8d6d5 !important
   &.tablesorter td, &.yui-dt-table td, &.roster-table td
-    :background-color #f7f2df !important
-    :vertical-align top
+    background-color: #f7f2df !important
+    vertical-align: top
   &.tablesorter .odd td, &.yui-dt-table .odd td, &.roster-table .odd td
-    :background-color #fff
+    background-color: white
   &.tablesorter tfoot td, &.yui-dt-table tfoot td, &.roster-table tfoot td
-    :background #f7f2df
+    background: #f7f2df
 
 html body #content table.roster-table
-  :width 545px !important
+  width: 545px !important
 
 /* GENERAL FORM STYLES
 form
   ul
-    :list-style none
-    :margin 0
+    list-style: none
+    margin: 0
   li
-    :margin-bottom 1.65em
+    margin-bottom: 1.65em
+
 fieldset
-  :clear both !important
-  :display block !important
+  clear: both !important
+  display: block !important
+
 legend
-  :clear both
-  :color #222
-  :display block
-  :font-size 1.1em
-  :font-weight bold
-  :margin 1em 0 0 0 !important
-  :padding 1em 0 0 0 !important
+  clear: both
+  color: #222222
+  display: block
+  font-size: 1.1em
+  font-weight: bold
+  margin: 1em 0 0 0 !important
+  padding: 1em 0 1em 0 !important
 
 form#project-signin legend
-  :display none
+  display: none
 
 label
-  :font-weight bold
+  font-weight: bold
 
 select, textarea, label, button
-  :display block
+  display: block
 
 input, textarea
-  :border 1px solid #a1d2d1
-  :padding .3em 5px
+  border: 1px solid #a1d2d1
+  padding: 0.3em 5px
 
 input
   &.text:focus, &[type='text']:focus
-    :border-color #da5936
+    border-color: #da5936
 
 textarea
   &:focus
-    :border-color #da5936
-  :font 1em Arial, Helvetica, sans-serif
-  :padding 1px 2px
-  :width 400px
+    border-color: #da5936
+  font: 1em Arial, Helvetica, sans-serif
+  padding: 1px 2px
+  width: 400px
 
 #wrapper input[type=hidden]
-  :border none
+  border: none
 
 button
-  :background-color #57a19f
-  :color #fff
-  :cursor pointer
-  :font-size 1.2em
-  :text-align center
+  background-color: #57a19f
+  color: white
+  cursor: pointer
+  font-size: 1.2em
+  text-align: center
 
 input
   &[type=button], &.button, &[type='submit']
-    :background-color #57a19f
-    :color #fff
-    :cursor pointer
-    :font-size 1.2em
-    :text-align center
+    background-color: #57a19f
+    color: white
+    cursor: pointer
+    font-size: 1.2em
+    text-align: center
 
 button
-  :background #f3951d
-  :border 0 solid #f3951d
-  :color #FFF
-  :font 12px/1 Arial, Helvetica, sans-serif
-  :padding 4px 14px
+  background: #f3951d
+  border: 0 solid #f3951d
+  color: white
+  font: 12px / 1 Arial, Helvetica, sans-serif
+  padding: 4px 14px
   /* CSS 3
-  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
-  :border-radius 12px
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  border-radius: 12px
   /* Opera 10.5, IE 9
-  :-moz-border-radius 12px
+  -moz-border-radius: 12px
   /* FF1+
-  :-webkit-border-radius 12px
+  -webkit-border-radius: 12px
   /* Saf3+, Chrome
 
 input
   &[type=button], &.button, &[type=submit]
-    :background #f3951d
-    :border 0 solid #f3951d
-    :color #FFF
-    :font 12px/1 Arial, Helvetica, sans-serif
-    :padding 4px 14px
+    background: #f3951d
+    border: 0 solid #f3951d
+    color: white
+    font: 12px / 1 Arial, Helvetica, sans-serif
+    padding: 4px 14px
     /* CSS 3
-    :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-    :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
-    :border-radius 12px
+    background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+    background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
+    border-radius: 12px
     /* Opera 10.5, IE 9
-    :-moz-border-radius 12px
+    -moz-border-radius: 12px
     /* FF1+
-    :-webkit-border-radius 12px
+    -webkit-border-radius: 12px
     /* Saf3+, Chrome
 
 a.button
-  :background #f3951d
-  :border 0 solid #f3951d
-  :color #FFF
-  :font 12px/1 Arial, Helvetica, sans-serif
-  :padding 4px 14px
+  background: #f3951d
+  border: 0 solid #f3951d
+  color: white
+  font: 12px / 1 Arial, Helvetica, sans-serif
+  padding: 4px 14px
   /* CSS 3
-  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
-  :border-radius 12px
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  border-radius: 12px
   /* Opera 10.5, IE 9
-  :-moz-border-radius 12px
+  -moz-border-radius: 12px
   /* FF1+
-  :-webkit-border-radius 12px
+  -webkit-border-radius: 12px
   /* Saf3+, Chrome
 
 button:hover
-  :background #f3951d
+  background: #f3951d
   /* CSS 3
-  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
 
 input
   &[type=button]:hover, &.button.over, &[type=submit]:hover
-    :background #f3951d
+    background: #f3951d
     /* CSS 3
-    :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-    :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+    background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+    background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
 
 a.button:hover, button.over
-  :background #f3951d
+  background: #f3951d
   /* CSS 3
-  :background -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
-  :background -moz-linear-gradient(top, #f3951d, #dd6e0d)
+  background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
+  background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
 
 p select
-  :display inline
-  :margin 0 2px
+  display: inline
+  margin: 0 2px
 
 a.more, ul.more a
-  :background transparent url(/images/new/icon-arrow-more.gif) right center no-repeat
-  :padding-right 10px
+  background: transparent url(/images/new/icon-arrow-more.gif) right center no-repeat
+  padding-right: 10px
 
 h1
-  :color #ee864e
-  :font-family Arial, Helvetica, sans-serif
+  color: #ee864e
+  font-family: Arial, Helvetica, sans-serif
 
 h2, h3
-  :font-family Arial, Helvetica, sans-serif
+  font-family: Arial, Helvetica, sans-serif
 
 .tab
   h2, h3
-    :clear both
+    clear: both
   .col .lead
-    :background-color #feefc1
-    :border-radius 8px
+    background-color: #feefc1
+    border-radius: 8px
     /* Opera 10.5, IE 9
-    :margin 1.5em 0
-    :padding 30px 24px 12px 24px
+    margin: 1.5em 0
+    padding: 30px 24px 12px 24px
     /* CSS3
-    :-moz-border-radius 8px
+    -moz-border-radius: 8px
     /* FF1+
-    :-webkit-border-radius 8px
+    -webkit-border-radius: 8px
     /* Saf3+, Chrome
 
 .tags
-  :background-color #feefc1
-  :border-radius 8px
+  background-color: #feefc1
+  border-radius: 8px
   /* Opera 10.5, IE 9
-  :margin 1.5em 0
-  :padding 30px 24px 12px 24px
+  margin: 1.5em 0
+  padding: 30px 24px 12px 24px
   /* CSS3
-  :-moz-border-radius 8px
+  -moz-border-radius: 8px
   /* FF1+
-  :-webkit-border-radius 8px
+  -webkit-border-radius: 8px
   /* Saf3+, Chrome
 
 #project-signin fieldset ul.graphic-input li input
-  :background transparent url(/images/new/bg-sprite-btns.png) -32px -39px no-repeat !important
-  :border none !important
-  :color #888
-  :font 11px arial, helvetica, sans-serif
-  :margin-left -8px
-  :min-height 13px
-  :padding 7px 0 6px 11px
-  :position relative
+  background: transparent url(/images/new/bg-sprite-btns.png) -32px -39px no-repeat !important
+  border: none !important
+  color: #888888
+  font: 11px arial, helvetica, sans-serif
+  margin-left: -8px
+  min-height: 13px
+  padding: 7px 0 6px 11px
+  position: relative
   /* ie
-  :width 144px
+  width: 144px
 
 *+html #page #wrapper .graphic-input input
-  :float left
+  float: left
 
 #page #wrapper
   .login-area .graphic-input input
-    :width 164px
+    width: 164px
   .graphic-input input:focus
-    :outline-width 0
+    outline-width: 0
 
 /* class="graphic-input" can be on the li to change only one or on any outer elment to change many.
 
 .graphic-input
-  :position relative
+  position: relative
   label.textfield
-    :color #ccc
-    :left 10px
-    :position absolute
-    :top 2px
+    color: #cccccc
+    left: 10px
+    position: absolute
+    top: 2px
   label.right
-    :display inline
+    display: inline
 
 #page #wrapper .graphic-input
-  :display block
+  display: block
 
 .graphic-input li
-  :background url(/images/new/bg-sprite-btns.png) right -39px no-repeat
-  :position relative
-.graphic-input li.remember 
-  :background transparent
+  background: url(/images/new/bg-sprite-btns.png) right -39px no-repeat
+  position: relative
+
+.graphic-input li.remember
+  background: transparent
   input#remember_me
-    :display inline
-    :float left
-    :width 25px
+    background-image: none !important
+    display: inline
+    float: left
+    width: 25px
   label
-    :font-size .9em
-    :font-weight normal
+    font-size: 0.9em
+    font-weight: normal
 
 #page
   #header li.graphic-input
-    :background url(/images/new/bg-sprite-btns.png) right -39px no-repeat
-    :display block
-    :padding-right 8px
-    :width 153px
+    background: url(/images/new/bg-sprite-btns.png) right -39px no-repeat
+    display: block
+    padding-right: 8px
+    width: 153px
   #wrapper #secondary .graphic-input
-    :background url(/images/new/bg-sprite-btns.png) right -39px no-repeat
-    :margin-left 3px
-    :width 166px
+    background: url(/images/new/bg-sprite-btns.png) right -39px no-repeat
+    margin-left: 3px
+    width: 166px
 
 #left-col
-  :float left
-  :width 300px
+  float: left
+  width: 300px
+
 #right-col
-  :clear right
-  :float left
-  :width 250px
+  clear: right
+  float: left
+  width: 250px
   img
-    :border solid 1px #999
-    :float right
-    :margin 12px 0 0 10px
+    border: solid 1px #999999
+    float: right
+    margin: 12px 0 0 10px
+
 .menu_h
-  :clear both
+  clear: both
   li
-    :float left
-    :margin-right 10px
+    float: left
+    margin-right: 10px
 
 /* HOME SCREEN SECTIONS
 div.section
-  :border-bottom solid 1px #ccc
-  :margin 0 auto 10px
-  :padding 0 0 10px
-  :position relative
+  border-bottom: solid 1px #cccccc
+  margin: 0 auto 10px
+  padding: 0 0 10px
+  position: relative
   h3
-    :color #257270
-    :font-weight normal
-    :margin-bottom 10px
+    color: #257270
+    font-weight: normal
+    margin-bottom: 10px
   p.add-new
-    :top 5px
-    :font-size .9em
-    :padding 0
-    :position absolute
-    :right 10px
+    top: 5px
+    font-size: 0.9em
+    padding: 0
+    position: absolute
+    right: 10px
   select
-    :color #333
-    :margin-left 0
-    
+    color: #333333
+    margin-left: 0
+
 /* CLASS LISTINGS
 .component_title
-  :clear both
-  :font-weight bold
-  :width 100%
+  clear: both
+  font-weight: bold
+  width: 100%
+
+#search_spinner
+  img
+    margin-right: 20px
+
 #search-investigations
-  :background #fff
-  :border solid 1px #ddd
-  :margin-bottom 20px
-  :padding 10px
+  background: white
+  border: solid 1px #dddddd
+  margin-bottom: 20px
+  padding: 10px
   select
-    :margin-left 0
+    margin-left: 0
   table
-    :margin 0
-    :padding 0
-    
+    margin: 0
+    padding: 0
+
 #element_nav_menu, #page_nav_menu, #section_nav_menu
-  :display none
-  
+  display: none
+
 ul.quiet_list
-  :margin-left 0
-  :padding-left 0
+  margin-left: 0
+  padding-left: 0
+  list-style: none
   .item .action_menu
-    :padding 5px 10px
+    padding: 5px 10px
   .item .action_menu .action_menu_header_left a
-    :color #000
+    color: black
   .item .tiny .menu_h
-    :margin 0 0 5px 10px
-    :padding 5px 0
+    margin: 0 0 5px 10px
+    padding: 5px 0
     li
-    :list-style none
-    :margin-right 15px
+    list-style: none
+    margin-right: 15px
 
 .menu_h
-  :margin 0 0 5px 10px
-  :padding 5px 0
+  margin: 0 0 5px 10px
+  padding: 5px 0
   li
-    :list-style none
-    :margin-right 15px
-    
+    list-style: none
+    margin-right: 15px
+
+.tiny
+  margin: 0px 0px 5px 5px
+  font-size: 0.85em
+  li
+    margin-right: 5px
+  p
+    margin: 0.2em
+  
 .data_collector
-  :display block
-  :width  100%
-  :height 400px
+  display: block
+  width: 100%
+  height: 400px
+  
+/* INVESTIGATIONS PREVIEW LIST
+.preview_list
+  list-style: none
+  padding: 0
+  li
+    background: #fff
+    border-bottom: dotted 1px #ccc
+    min-height: 45px
+    padding: 15px 10px 10px
+    a
+      padding-left: 30px
+    .investigation_preview
+      a
+        padding-left: 0
+    .details
+      padding-left: 25px
+  li.even
+    background: #f9f9f6
+
 
 /* FOOTER
 #footer
-  :background transparent url(/images/new/bg-footer.png) center bottom no-repeat
-  :clear both
-  :height 235px
-  :min-height 235px
-  :position relative
+  background: transparent url(/images/new/bg-footer.png) center bottom no-repeat
+  clear: both
+  height: 235px
+  min-height: 235px
+  position: relative
   p
-    :font-size .9em
-    :margin .3em 0 0
-  ul, p
-    :color #a0a0a0
-    :font .9em georgia, times, serif
-    :margin-bottom 0
-    :margin-left 300px
-  li
-    :display inline
-    a
-      :color #727272
-      :margin-right 10px
-      &:hover, &:focus
-        :color #3e3e3e
+    color: #a0a0a0
+    font: 0.9em georgia, times, serif
+    margin-bottom: 0
+    margin-left: 300px
   .footer-inner
-    :bottom 5px
-    :display block
-    :left 0
-    :margin 0 0 0 -40px
-    :position absolute
-    :width 800px
+    bottom: 17px
+    display: block
+    left: -40px
+    margin: 0
+    position: absolute
+    width: 800px
   #share-it
-    :float right
-    :margin -26px 123px 0 0
-    :width 125px
+    float: right
+    margin: -26px 123px 0 0
+    width: 125px
+
 #under_footer
-  :display none
+  background-color: #fee9aa
+  text-align: center
+  margin: 5px 0px
+  padding: 2px 0px
 
 .attached_file
   border: 1px solid
   margin: 2px
-  padding: 5px  
+  padding: 5px
+
+.button
+  background: transparent
+  a, a:visited, a:active
+    font-weight: normal
+    text-align: center
+    padding: 3px 7px
+    /* CSS3
+    border-radius: 8px
+    -moz-border-radius: 8px
+    -webkit-border-radius: 8px
+    background-color: #bcd6ea
+    color: #111111
+  a:hover
+    background-color: #111111
+    color: #bcd6ea

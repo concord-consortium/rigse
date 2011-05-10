@@ -9,7 +9,6 @@ ITSI-SU requires that teachers self-register.
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Anonymous user signs up as teacher
     Given I am an anonymous user
     When I go to the pick signup page
@@ -25,7 +24,7 @@ ITSI-SU requires that teachers self-register.
 
     And I select a school from the list of schools
     And I press "Submit"
-    Then I should see " Thanks for signing up!"
+    Then I should see "Thanks for signing up!"
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
@@ -34,7 +33,7 @@ ITSI-SU requires that teachers self-register.
     When I fill in the following:
       | login    | login    |
       | password | password |
-    And I press "Submit"
+    And I press "Login"
     Then I should see "Logged in successfully"
     And I should not see "Sorry, there was an error creating your account"
 
@@ -57,3 +56,4 @@ ITSI-SU requires that teachers self-register.
     And I select a school from the list of schools
     And I press "Submit"
     Then I should see " Thanks for signing up!"
+    And I should not see "Sorry, there was an error creating your account"

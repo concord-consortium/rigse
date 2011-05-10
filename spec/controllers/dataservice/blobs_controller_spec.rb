@@ -3,8 +3,6 @@ require 'spec_helper'
 describe Dataservice::BlobsController do
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    logout_user
     login_admin
   end
   

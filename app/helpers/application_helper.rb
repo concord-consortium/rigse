@@ -3,6 +3,9 @@ include JnlpHelper
 include Clipboard
 
 module ApplicationHelper
+  def current_project
+    @_project ||= Admin::Project.default_project
+  end
 
   def top_level_container_name
     APP_CONFIG[:top_level_container_name] || "investigation"
@@ -26,7 +29,14 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    id = component.id.nil? ? Time.now.to_i : component.id
+    if component.is_a?(ActiveRecord::Base)
+      id = component.id || Time.now.to_i
+    else
+      # this will be a temporary id, so it seems unlikely that these type of ids
+      # should be really be generated, however there are some parts of the code
+      # calling dom_id_for and passing a form object for example
+      id = component.object_id
+    end
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
@@ -101,18 +111,18 @@ module ApplicationHelper
   end
 
   def maven_jnlp_info
-    name = @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = @jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = @jnlp_adaptor.jnlp.versioned_jnlp_url.url
+    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
+    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
+    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
     link = "<a href='#{url}'>#{version}</a>"
     info = [name, link]
-    if @project.snapshot_enabled
+    if current_project.snapshot_enabled
       info << "(snapshot)"
     else
       info << "(frozen)"
     end
 
-    # if @jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
+    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
     #   info << "(snapshot)"
     # else
     #   info << "(frozen)"
@@ -190,20 +200,28 @@ module ApplicationHelper
     end
   end
 
-  def render_show_partial_for(component,teacher_mode=false)
+  def render_partial_for(component,_opts={})
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
-    partial = "#{class_name.pluralize}/show"
-    # if component.respond_to? :print_partial_name
-    #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
-    # end
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+
+    opts = {
+      :teacher_mode => false,
+      :substitute    => nil,
+      :partial      => 'show'
+    }
+    opts.merge!(_opts)
+    teacher_mode = opts[:teacher_mode]
+    substitute = opts[:substitute]
+    partial = "#{class_name.pluralize}/#{opts[:partial]}"
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
   end
 
-  def render_edit_partial_for(component)
-    class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
+  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
+    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  end
+
+  def render_edit_partial_for(component,opts={})
+    render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
   end
 
   def wrap_edit_link_around_content(component, options={})
@@ -256,7 +274,7 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
+  def edit_menu_for(component, form, options={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -267,10 +285,10 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            if (component.changeable?(current_user))
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
-            end
+            #if (component.changeable?(current_user))
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless options[:omit_cancel]
+            #end
           end
         end
       end
@@ -384,7 +402,7 @@ module ApplicationHelper
     name = component.name
     link_text = params.delete(:link_text) || "edit "
     url = polymorphic_url(component, :action => :edit, :params => params)
-    edit_button_for(component) +
+    link_button("edit.png", url) +
     link_to(link_text, url,
         :title => "edit the #{component_display_name}: '#{name}'")
   end
@@ -863,19 +881,13 @@ module ApplicationHelper
     if is_page_element
       component = component.embeddable
     end
-    view_class = for_teacher_only(component) ? "teacher_only action_menu" : "action_menu"
+    view_class = for_teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
     capture_haml do
       haml_tag :div, :class => view_class do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
-          # haml_tag(:div, {:class => 'text_button'}) { haml_concat toggle_more(component) }
-          if is_page_element
-            restrict_to 'admin' do
-              haml_concat(dropdown_button("actions.png", :name_postfix => component.id, :title => "actions for this page"))
-            end
-          end
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
@@ -999,7 +1011,7 @@ module ApplicationHelper
 
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
-    if (for_teacher_only(component))
+    if (for_teacher_only?(component))
       style_classes << 'teacher_only' # funny, just adding a style text
     end
     return style_classes
@@ -1060,9 +1072,9 @@ module ApplicationHelper
   # cascading logic.
   # TODO: generic container-based method-forwarding mechanism
   #
-  def for_teacher_only(thing)
-    if thing.respond_to? :teacher_only?
-      return true if thing.teacher_only?
+  def for_teacher_only?(thing)
+    if (thing.respond_to?("teacher_only?") && thing.teacher_only?)
+      return true;
     end
     if thing.respond_to? :parent
       while thing = thing.parent
@@ -1103,7 +1115,6 @@ module ApplicationHelper
   def students_in_class(all_students)
     all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
-
 
 #            Welcome
 #            = "#{current_user.name}."
@@ -1196,4 +1207,19 @@ module ApplicationHelper
       end
     end
   end
+  
+  def settings_for(key)
+    Admin::Project.settings_for(key)
+  end
+
+  # this appears to not be used in master right now
+  def current_user_can_author
+    return true if current_user.has_role? "author" 
+    if settings_for(:teachers_can_author)
+      return true unless current_user.portal_teacher.nil?
+    end
+    # TODO add aditional can-author conditions
+    return false
+  end
+
 end

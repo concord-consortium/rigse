@@ -6,7 +6,6 @@ Feature: Teacher can deactivate investigations from a class
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Teacher can see if student has performed work on an investigation
     Given the following teachers exist:
       | login         | password        |
@@ -14,7 +13,7 @@ Feature: Teacher can deactivate investigations from a class
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name                | user      |
       | Test Investigation  | teacher   |
     When I assign the investigation "Test Investigation" to the class "My Class"
@@ -43,7 +42,7 @@ Feature: Teacher can deactivate investigations from a class
     And the following classes exist:
       | name      | teacher     |
       | My Class  | teacher     |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name                | user      |
       | Test Investigation  | teacher   |
     When I assign the investigation "Test Investigation" to the class "My Class"
