@@ -325,6 +325,20 @@ class ItsiImporter
       user
     end
 
+    def template_default_model
+      model = Diy::Model.first
+      return model if model
+
+      # make the real MW model type so we don't have a bogus model type in the system
+      model_type = Diy::ModelType.create!(:name => "Molecular Workbench", :diy_id => 1, :otrunk_view_class => "org.concord.otrunkmw.OTModelerPageView", 
+        :otrunk_object_class => "org.concord.otrunkmw.OTModelerPage", :authorable => true, 
+        :credits => "Powered by the <a href='http://mw.concord.org/modeler/index.html'>Molecular Workbench</a> software.",
+        :url => "http://mw.concord.org/modeler/index.html",
+        :description => "A Molecular Workbench activity page.")
+
+      # this is a bogus model, but we need some way to identify when the user hasn't selected a model 
+      model = Diy::Model.create!(:model_type => model_type, :diy_id => 99999, :name => "prototype" )
+    end
 
     def make_activity
       act = Activity.create do |t|
@@ -359,12 +373,7 @@ class ItsiImporter
                 the_prediction_graph = nil
               end
             when :model_id
-              model = Diy::Model.first
-              if (model.nil?)
-                model_type = Diy::ModelType.create!(:name => "prototype", :diy_id => 99999, :otrunk_view_class => "OTBlah", :otrunk_object_class => "OTBlahView")
-                model = Diy::Model.create!(:model_type => model_type, :diy_id => 99999, :name => "prototype" )
-              end
-              embeddable = Embeddable::Diy::EmbeddedModel.create!(:diy_model => model, :user => act.user)
+              embeddable = Embeddable::Diy::EmbeddedModel.create!(:diy_model => template_default_model, :user => act.user)
             when :text_response
               embeddable = Embeddable::OpenResponse.create!(:name => "written response", :description => "written response")
             when :drawing_response
