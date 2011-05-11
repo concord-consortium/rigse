@@ -3,18 +3,23 @@ class UsersController < ApplicationController
   #access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
   #access_rule 'admin || manager || researcher', :only => [:index, :account_report]
   include RestrictedController
-  before_filter :manager,
+  before_filter :changeable_filter,
     :only => [
       :show,
       :edit,
       :update,
-      :destroy
     ]
+  before_filter :manager, :only => [:destroy]
   before_filter :manager_or_researcher,
     :only => [
       :index,
       :account_report
     ]
+
+  def changeable_filter
+    @user = User.find(params[:id])
+    redirect_home unless @user.changeable?(current_user)
+  end
 
   def index
     if params[:mine_only]
@@ -72,7 +77,7 @@ class UsersController < ApplicationController
   def switch
     # @original_user is setup in app/controllers/application_controller.rb
     unless @original_user.has_role?('admin', 'manager')
-      redirect_to('/home')
+      redirect_to home_path
     else
       if request.get?
         @user = User.find(params[:id])
@@ -123,7 +128,7 @@ class UsersController < ApplicationController
         elsif params[:commit] =~ /#{@original_user.name}/
           self.current_user=(@original_user)
         end
-        redirect_to('/home')
+        redirect_to home_path
       end
     end
   end
@@ -260,7 +265,7 @@ class UsersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
 end

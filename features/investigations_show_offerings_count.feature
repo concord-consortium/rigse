@@ -6,16 +6,16 @@ Feature: Investigations show the offerings count
   Background:
     Given The default project and jnlp resources exist using factories
     Given the following teachers exist:
-      | login         | password        |
-      | teacher       | teacher         |
+      | login   | password |
+      | teacher | teacher  |
     And the following classes exist:
-      | name      | teacher     |
-      | My Class  | teacher     |
+      | name     | teacher |
+      | My Class | teacher |
     And I login with username: teacher password: teacher
 
   @selenium
   Scenario: The investigations list can show the offerings count
-    Given the following investigations exist:
+    Given the following empty investigations exist:
       | name    | user      | offerings_count | created_at                      | publication_status  |
       | Newest  | teacher   | 5               | Wed Jan 26 12:00:00 -0500 2011  | published           |
       | Medium  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
@@ -27,7 +27,7 @@ Feature: Investigations show the offerings count
 
   @selenium
   Scenario: The investigations list offering count shows on all pages
-    Given the following investigations exist:
+    Given the following empty investigations exist:
       | name | user    | offerings_count | created_at                     | publication_status |
       | 1    | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |
       | 2    | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | published          |

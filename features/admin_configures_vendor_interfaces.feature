@@ -6,7 +6,6 @@ Feature: The Project administrator disables certain vendor interfaces
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: The project administrator removes some probe interfaces
     Given the following users exist:
       | login        | password            | roles                |
@@ -55,7 +54,6 @@ Feature: The Project administrator disables certain vendor interfaces
       | Texas Instruments| false   |
       | pasco bluetooth  | true    |
 
-  @selenium
   Scenario: The student user can only select configured interfaces
     Given the following users exist:
       | login        | password            | roles                |
@@ -76,7 +74,7 @@ Feature: The Project administrator disables certain vendor interfaces
     When I login with username: student_login password: student_password
     When I follow "Preferences"
     Then I should see "User Preferences"
-    And I should see "Selected Probeware Interface"
+    And I should see "Probeware Interface"
     Then I should have the following selection options:
       | option           |
       | pasco usb        |

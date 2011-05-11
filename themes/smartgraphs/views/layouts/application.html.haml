@@ -2,7 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %title
-      = @page_title || APP_CONFIG[:site_name]
+      = @page_title || current_project.name
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
@@ -46,7 +46,7 @@
       #header
         .left_content
           / =image_tag("smartgraphs-logo-150.gif")
-          / %h1=APP_CONFIG[:site_name]
+          / %h1=current_project.name
           %h1 SmartGraphs
         .right_content
           .padded_content_right

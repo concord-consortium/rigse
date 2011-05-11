@@ -81,6 +81,13 @@ describe RunnablesHelper do
       helper.run_link_for(offering).should == "<a href=\"/resource_pages/#{offering.runnable.id}\" target=\"_blank\">View The Pajama Jammy Jam</a>"
     end
 
+    it "should render a link for an External Activity" do
+      ext_act = stub_model(ExternalActivity, :name => "Fetching Wood")
+      helper.run_link_for(ext_act).should be_link_like("http://test.host/external_activities/#{ext_act.id}.run_external_html",
+                                                       "run_link rollover",
+                                                       "/images/run.png")
+    end
+
     it "should render a link for a Page as a JNLP launchable" do
       page = stub_model(Page, :name => "Fun With Hippos")
       helper.run_link_for(page).should be_link_like("http://test.host/pages/#{page.id}.jnlp",

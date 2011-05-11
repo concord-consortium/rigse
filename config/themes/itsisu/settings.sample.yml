@@ -11,7 +11,7 @@ production: &prod
   :maven_jnlp_servers:
   - :name: concord
     :host: http://jnlp.concord.org
-    :path: /dev2/org/concord/maven-jnlp/
+    :path: /dev3/org/concord/maven-jnlp/
   :active_grades:
     - 6
     - 7

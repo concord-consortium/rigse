@@ -75,19 +75,17 @@ class Admin::Project < ActiveRecord::Base
   end
 
   def generate_default_maven_jnlp
-    if USING_JNLPS
-      default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
-      default_maven_jnlp[:server] = self.maven_jnlp_server.name
-      default_maven_jnlp[:family] = self.maven_jnlp_family.name
-      if self.snapshot_enabled
-        default_maven_jnlp[:version] = 'snapshot'
-      else
-        default_maven_jnlp[:version] = self.jnlp_version_str
-      end
-      default_maven_jnlp
+    return nil if !USING_JNLPS || self.maven_jnlp_server.nil?
+
+    default_maven_jnlp =  APP_CONFIG[:default_maven_jnlp]
+    default_maven_jnlp[:server] = self.maven_jnlp_server.name
+    default_maven_jnlp[:family] = self.maven_jnlp_family.name
+    if self.snapshot_enabled
+      default_maven_jnlp[:version] = 'snapshot'
     else
-      nil
+      default_maven_jnlp[:version] = self.jnlp_version_str
     end
+    default_maven_jnlp
   end
   
   
@@ -173,20 +171,15 @@ class Admin::Project < ActiveRecord::Base
       project.save!
       active_grades = APP_CONFIG[:active_grades]
       if ActiveRecord::Base.connection.table_exists?('portal_grades')
-        active_grades.each do |grade_name|
-          grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
-          unless grade
-            grade = Portal::Grade.create(:name => grade_name, :active => true)
-            puts "created grade #{grade.name}, active: #{grade.active}"
-          end
-        end
+        # active_grades.each do |grade_name|
+        #   grade = Portal::Grade.find_or_create_by_name(:name => grade_name);
+        #   unless grade
+        #     grade = Portal::Grade.create(:name => grade_name, :active => true)
+        #     puts "created grade #{grade.name}, active: #{grade.active}"
+        #   end
+        # end
         Portal::Grade.find(:all).each do |grade|
-          if (active_grades & [grade.name]).empty?
-            grade.active = false
-            puts "deactivated grade #{grade.name}, active: #{grade.active}"
-          else
-            grade.active = true
-          end
+          grade.active = active_grades.include?(grade.name)
           grade.save!
         end
       end
@@ -215,6 +208,25 @@ class Admin::Project < ActiveRecord::Base
       [server, family, version]
     end
 
+    def notify_missing_setting(symbol)
+      logger.warn("undefined configuartion setting in config/setttings.yml: #{symbol.to_s}")
+    end
+    
+    def settings_for(symbol)
+      value = APP_CONFIG[symbol]
+      if value.nil? 
+        notify_missing_setting(symbol)
+      end
+      return APP_CONFIG[symbol]
+    end
+
+    def require_activity_descriptions
+      return settings_for(:require_activity_descriptions)
+    end
+
+    def unique_activity_names
+      return settings_for(:unique_activity_names)
+    end
   end
   
   def default_project?

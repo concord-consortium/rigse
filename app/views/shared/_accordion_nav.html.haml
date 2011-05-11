@@ -12,7 +12,7 @@
             = link_to activity.name,activity, :class=> 'selected'
           -else
             =link_to activity.name, activity
-        
+
         %div{:class => "accordion_toggle_closed accordion_toggle"}
         -section_list_name = dom_id_for(activity, :accordion_section_list)
         .accordion_content{:style=>'display: none;'}

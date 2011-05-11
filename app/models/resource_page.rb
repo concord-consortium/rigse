@@ -51,7 +51,7 @@ class ResourcePage < ActiveRecord::Base
     end
 
     def display_name
-      "Resource"
+      "Resource Page"
     end
 
     def search_list(options)
@@ -113,6 +113,11 @@ class ResourcePage < ActiveRecord::Base
   end
 
   def student_views_count
-    student_views.sum('count')
+    # with the mysql2 adapter this sum('count') returns a float for some reason
+    student_views.sum('count').to_i
+  end
+  
+  def run_format
+    nil
   end
 end

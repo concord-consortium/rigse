@@ -1,6 +1,6 @@
 class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   set_table_name "maven_jnlp_versioned_jnlps"
-  
+
   belongs_to :versioned_jnlp_url, :class_name => "MavenJnlp::VersionedJnlpUrl"
   has_one :maven_jnlp_family, :through => :versioned_jnlp_url, :class_name => "MavenJnlp::MavenJnlpFamily"
 
@@ -11,13 +11,13 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   has_and_belongs_to_many :native_libraries, :class_name => "MavenJnlp::NativeLibrary"
 
   acts_as_replicatable
-  
+
   include Changeable
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{uuid name codebase href title vendor homepage description}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -35,15 +35,15 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
       files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yml"]
       FileUtils.rm(files, :force => true)
     end
-    
+
     def jnlp_object_name
       'jnlp_object'
     end
-    
+
   end
-  
-  validates_presence_of :versioned_jnlp_url, :message => "association not specified" 
-  
+
+  validates_presence_of :versioned_jnlp_url, :message => "association not specified"
+
   after_create :parse_jnlp_object
 
   def jnlp_object_cache_dir
@@ -53,7 +53,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   def jnlp_object_dir_path
     File.join(jnlp_object_cache_dir, self.maven_jnlp_family.maven_jnlp_server.name, self.maven_jnlp_family.name)
   end
-  
+
   def jnlp_object_path_prefix
     File.join(jnlp_object_dir_path, 'jnlp_object')
   end
@@ -66,66 +66,66 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   def require_resources
     @required_resources = jnlp_object.require_resources unless @required_resources
   end
-  
-  def ot_class_info1(otclass) 
+
+  def ot_class_info1(otclass)
     begin
-      java_import otclass 
-      name = otclass[/\.([^.]*$)/, 1] 
-      puts "fqdn: #{otclass}" 
-      puts "name: #{name}" 
-      puts 
-      ot_klazz = Kernel.const_get(name) 
-      ot_klazz.java_class.declared_instance_methods.each do |meth| 
-        puts "method name: #{meth.name}" 
-        puts "method arity: #{meth.arity}" 
-        return_type = meth.return_type 
-        if return_type 
-          puts "return_type: #{return_type}" 
-        else 
-          puts "return_type: void" 
-        end 
-        if meth.arity > 0 
-          parameter_types = meth.parameter_types 
-          if parameter_types 
-            puts "parameter_types: #{parameter_types}" 
-          end 
-        end 
-        puts 
+      java_import otclass
+      name = otclass[/\.([^.]*$)/, 1]
+      puts "fqdn: #{otclass}"
+      puts "name: #{name}"
+      puts
+      ot_klazz = Kernel.const_get(name)
+      ot_klazz.java_class.declared_instance_methods.each do |meth|
+        puts "method name: #{meth.name}"
+        puts "method arity: #{meth.arity}"
+        return_type = meth.return_type
+        if return_type
+          puts "return_type: #{return_type}"
+        else
+          puts "return_type: void"
+        end
+        if meth.arity > 0
+          parameter_types = meth.parameter_types
+          if parameter_types
+            puts "parameter_types: #{parameter_types}"
+          end
+        end
+        puts
       end
-    rescue NameError 
-      puts "#{otclass} not found" 
-    end 
-    puts 
+    rescue NameError
+      puts "#{otclass} not found"
+    end
+    puts
   end
 
-  def ot_class_info2(otclass_str) 
-    begin 
-      otclass_ruby = eval(otclass_str) 
-      otclass = ReflectiveOTClassFactory.singleton.registerClass(otclass_ruby.java_class); 
-      ReflectiveOTClassFactory.singleton.processAllNewlyRegisteredClasses(); 
-      name = otclass_ruby.java_class.simple_name 
-      puts "fqdn: #{otclass_str}" 
-      puts "name: #{name}" 
-      puts 
-      otclass.oTAllClassProperties.each do |prop| 
-        puts "prop name: #{prop.name}" 
-        type = prop.type 
-        if type 
-          puts "prop type: #{type.instanceClass.name}" 
-        else 
-          puts "prop type: void" 
-        end 
-      end 
-    rescue NameError 
-      puts "#{otclass_str} not found" 
-    end 
-    puts 
+  def ot_class_info2(otclass_str)
+    begin
+      otclass_ruby = eval(otclass_str)
+      otclass = ReflectiveOTClassFactory.singleton.registerClass(otclass_ruby.java_class);
+      ReflectiveOTClassFactory.singleton.processAllNewlyRegisteredClasses();
+      name = otclass_ruby.java_class.simple_name
+      puts "fqdn: #{otclass_str}"
+      puts "name: #{name}"
+      puts
+      otclass.oTAllClassProperties.each do |prop|
+        puts "prop name: #{prop.name}"
+        type = prop.type
+        if type
+          puts "prop type: #{type.instanceClass.name}"
+        else
+          puts "prop type: void"
+        end
+      end
+    rescue NameError
+      puts "#{otclass_str} not found"
+    end
+    puts
   end
 
   def jnlp_object
     @jnlp_object || load_jnlp_object
   end
-  
+
   # if an argument error is generated by the yaml load of the cached
   # jnlp_object then delete the cached yaml object and retry
   def load_jnlp_object
@@ -159,17 +159,17 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     end
     @jnlp_object
   end
-  
+
   def jnlp_object_path
     "#{self.jnlp_object_path_prefix}_#{id}.yaml"
   end
 
   def parse_jnlp_object
-    # jnlp_object = Jnlp::Jnlp.new(jnlp.versioned_jnlp_url.url)    
-    self.name                     = jnlp_object.name
-    self.main_class               = jnlp_object.main_class
-    self.argument                 = jnlp_object.argument
-    self.offline_allowed          = jnlp_object.offline_allowed
+    # jnlp_object = Jnlp::Jnlp.new(jnlp.versioned_jnlp_url.url)
+    self.name                               = jnlp_object.name
+    self.main_class                         = jnlp_object.main_class
+    self.argument                           = jnlp_object.argument
+    self.offline_allowed                    = jnlp_object.offline_allowed
     self.local_resource_signatures_verified = jnlp_object.local_resource_signatures_verified
     self.include_pack_gzip        = jnlp_object.include_pack_gz
     self.spec                     = jnlp_object.spec
@@ -187,7 +187,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
       icon = MavenJnlp::Icon.find_or_create_by_href_and_height_and_width(:href => icon_object.href, :height => icon_object.height, :width => icon_object.width)
       self.icon = icon
     end
-    
+
     jnlp_object.jars.each do |jar_object|
       attributes =  MavenJnlp::VersionedJnlp.resource_attributes(jar_object)
       unless jar = MavenJnlp::Jar.find(:first, :conditions => attributes)
@@ -201,7 +201,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
       unless native_library = MavenJnlp::NativeLibrary.find(:first, :conditions => attributes)
         native_library = MavenJnlp::NativeLibrary.create!(attributes)
       end
-      self.native_libraries << native_library      
+      self.native_libraries << native_library
     end
 
     jnlp_object.properties.each do |property_object|

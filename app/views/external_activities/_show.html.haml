@@ -1,0 +1,6 @@
+.item_collection
+  %ul#elements_container.menu
+    - page.page_elements.each_with_index do |element,i|
+      = render :partial => 'external_activities/element_container', :locals => {:element => element, :component => element.embeddable, :page_element => element, :page => page }
+  - if (page.changeable?(current_user))
+    =sortable_element :elements_container,  :url=> {:action => 'sort_elements', :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint => :vertical, :scroll => "window"

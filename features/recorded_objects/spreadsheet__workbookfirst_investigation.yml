@@ -1193,7 +1193,7 @@ worksheets:
   - !seq:Spreadsheet::Row 
     - learner_id
     - Intro to bugs
-    - RITES Investigations-school
+    - Test School
     - user_id
     - student_a
     - Doe, Jack
@@ -1212,7 +1212,7 @@ worksheets:
   - !seq:Spreadsheet::Row 
     - learner_id
     - Intro to bugs
-    - RITES Investigations-school
+    - Test School
     - user_id
     - student_b
     - Smith, Jill
@@ -1224,6 +1224,7 @@ worksheets:
     - 50%
     - 2
     - 100%
+    - not answered
     - a
     - b
     - b

@@ -2,7 +2,7 @@ class Probe::ProbeTypesController < ApplicationController
   # GET /Probe/probe_types
   # GET /Probe/probe_types.xml
   def index
-    @probe_types = Probe::ProbeType.all
+    @probe_types = Probe::ProbeType.all :order => 'ptype'
 
     respond_to do |format|
       format.html # index.html.erb
@@ -60,7 +60,7 @@ class Probe::ProbeTypesController < ApplicationController
     @probe_type = Probe::ProbeType.find(params[:id])
 
     respond_to do |format|
-      if @probe_type.update_attributes(params[:probe_type])
+      if @probe_type.update_attributes(params[:probe_probe_type])
         flash[:notice] = 'Probe::ProbeType.was successfully updated.'
         format.html { redirect_to(@probe_type) }
         format.xml  { head :ok }

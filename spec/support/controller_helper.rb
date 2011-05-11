@@ -9,6 +9,23 @@
 #
 suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
 
+# This modification allows stubing helper methods when using integrate views
+# the template object isn't ready until the render method is called, so this code
+# adds a hook to be run before render is run.
+class ApplicationController
+  def before_render; end
+  def render(options=nil, extra_options={}, &bloc)
+    before_render
+    super
+  end
+
+  # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
+  # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
+  # when rails copies the instance variables from the controller to view.  This copying happens
+  # sometime during the render method (after before_render)
+  @@protected_instance_variables = %w(@mock_proxy)
+end
+
 #
 # Factory Generators
 #
@@ -25,7 +42,7 @@ def generate_default_project_and_jnlps_with_factories
     server, family, version = Admin::Project.default_jnlp_info
     @maven_jnlp_server = Factory.next(:default_maven_jnlp_maven_jnlp_server)
     @maven_jnlp_family = @maven_jnlp_server.maven_jnlp_families.find_by_name(family)
-    if version == "snapshot" 
+    if version == "snapshot"
       @versioned_jnlp_url = @maven_jnlp_family.snapshot_jnlp_url
     else
       @versioned_jnlp_url = @maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(version)
@@ -40,7 +57,7 @@ end
 
 def generate_default_users_with_factories
   @anon_user =  User.anonymous
-  @admin_user = Factory.next :admin_user 
+  @admin_user = Factory.next :admin_user
 end
 
 def generate_default_school_resources_with_factories
@@ -71,7 +88,7 @@ def generate_jnlps_with_mocks
   server, family, version = Admin::Project.default_jnlp_info
 
   @mock_maven_jnlp_icon ||= mock_model(MavenJnlp::Icon)
-  
+
   @mock_maven_jnlp_jar = mock_model(MavenJnlp::Jar,
     :href => 'org/telscenter/sail-otrunk/sail-otrunk.jar',
     :name => 'sail-otrunk',
@@ -122,7 +139,7 @@ def generate_jnlps_with_mocks
     :name => 'gui-testing',
     :snapshot_version => version,
     :url => 'http://jnlp.concord.org/dev/org/concord/maven-jnlp/all-otrunk-snapshot/',
-    :update_snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url, 
+    :update_snapshot_jnlp_url => @mock_maven_jnlp_versioned_jnlp_url,
     :snapshot_jnlp_url        => @mock_maven_jnlp_versioned_jnlp_url,
     :versioned_jnlp_urls => @versioned_jnlp_urls)
 
@@ -131,7 +148,7 @@ def generate_jnlps_with_mocks
     :path => server[:path],
     :name => server[:name],
     :maven_jnlp_family => @mock_maven_jnlp_family)
-  
+
   @mock_maven_jnlp_family.stub!(:maven_jnlp_server).and_return(@mock_maven_jnlp_server)
 end
 
@@ -145,7 +162,7 @@ def generate_default_project_and_jnlps_with_mocks
     :url =>  project_url,
     :home_page_content => nil,
     :use_student_security_questions => false,
-    :jnlp_version_str =>  version, 
+    :jnlp_version_str =>  version,
     :snapshot_enabled => false,
     :enable_default_users  => APP_CONFIG[:enable_default_users],
     :states_and_provinces  => APP_CONFIG[:states_and_provinces],
@@ -197,12 +214,12 @@ def generate_otrunk_example_with_mocks
 end
 
 # >> User.anonymous
-# => #<User id: 1, login: "anonymous", identity_url: nil, first_name: "Anonymous", last_name: "User", 
-#     email: "anonymous@concord.org", crypted_password: "c6dc287d3ec67838c8ad87760d1967099c101989", 
-#     salt: "c61a47e536e388ceb5e417fed9e74e1c890b2f2b", remember_token: nil, activation_code: nil, 
-#     state: "active", remember_token_expires_at: nil, activated_at: "2009-07-23 04:09:33", 
-#     deleted_at: nil, uuid: "d65bd9c4-264c-11de-ae9c-0014c2c34555", created_at: "2009-04-11 03:57:12", 
-#     updated_at: "2009-07-23 04:09:33", vendor_interface_id: 6, default_user: false, site_admin: false, 
+# => #<User id: 1, login: "anonymous", identity_url: nil, first_name: "Anonymous", last_name: "User",
+#     email: "anonymous@concord.org", crypted_password: "c6dc287d3ec67838c8ad87760d1967099c101989",
+#     salt: "c61a47e536e388ceb5e417fed9e74e1c890b2f2b", remember_token: nil, activation_code: nil,
+#     state: "active", remember_token_expires_at: nil, activated_at: "2009-07-23 04:09:33",
+#     deleted_at: nil, uuid: "d65bd9c4-264c-11de-ae9c-0014c2c34555", created_at: "2009-04-11 03:57:12",
+#     updated_at: "2009-07-23 04:09:33", vendor_interface_id: 6, default_user: false, site_admin: false,
 #     type: "User", external_user_domain_id: nil>
 def mock_anonymous_user
   if @anonymous_user
@@ -214,7 +231,7 @@ def mock_anonymous_user
     @anonymous_user.stub!(:portal_teacher).and_return(nil)
     @anonymous_user.stub!(:portal_student).and_return(nil)
     @anonymous_user.stub!(:has_role?).and_return(nil)
-    @anonymous_user.stub!(:has_role?).with("guest").and_return(true)    
+    @anonymous_user.stub!(:has_role?).with("guest").and_return(true)
     @anonymous_user.stub!(:roles).and_return([@guest_role])
     @anonymous_user.stub!(:forget_me).and_return(nil)
     @anonymous_user.stub!(:anonymous?).and_return(true)
@@ -274,10 +291,10 @@ def mock_researcher_user
 end
 
 def mock_probe_vendor_interface
-  unless @probe_vendor_interface 
+  unless @probe_vendor_interface
     @probe_vendor_interface = mock_model(Probe::VendorInterface,
       :name => "Vernier Go! Link",
-      :short_name => "vernier_goio", 
+      :short_name => "vernier_goio",
       :communication_protocol => "usb",
       :device_id => 10
     )
@@ -319,7 +336,7 @@ def stub_current_user(user_sym)
   else
     @logged_in_user = instance_variable_get("@#{user_sym.to_s}")
   end
-  
+
   @controller.stub!(:current_user).and_return(@logged_in_user)
   @logged_in_user
 end

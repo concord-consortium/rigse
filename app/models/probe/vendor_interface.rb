@@ -22,6 +22,13 @@ class Probe::VendorInterface < ActiveRecord::Base
     end
   end
 
+  def name_with_driver
+    if driver_short_name
+      name + " (driver: #{driver_short_name})"
+    else
+      name
+    end
+  end
  
 end
 

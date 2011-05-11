@@ -1,152 +1,150 @@
-!answered_color = #ffffff
-!not_answered_color = #cccccc 
-!correct_color = #ddffdd
-!incorrect_color = #ffdddd
+$answered_color: white
+$not_answered_color: #cccccc
+$correct_color: #ddffdd
+$incorrect_color: #ffdddd
 
 .answered
-  :background-color= !answered_color
+  background-color: $answered_color
+
 .not_answered
-  :background-color= !not_answered_color
+  background-color: $not_answered_color
 
 .table
-  :width 100%
-  :display table
-  :border-collapse collapse
+  width: 100%
+  display: table
+  border-collapse: collapse
 
 .row
-  :display table-row
-  :width 100%
+  display: table-row
+  width: 100%
 
 .cell
-  :display table-cell
-  
+  display: table-cell
+
 .cellheader
-  :font-weight bold
+  font-weight: bold
 
 .optionlabel
-  :padding-left 10px
-  :width 310px
+  padding-left: 10px
+  width: 310px
 
 .optionbar
-  :width 300px
-  :padding-right 10px
-  :padding-bottom 2px
-  :vertical-align middle
-  :border-left 1px solid black
+  width: 300px
+  padding-right: 10px
+  padding-bottom: 2px
+  vertical-align: middle
+  border-left: 1px solid black
 
 .optionbarbar
-  :display block
-  :height 100%
-  :border 1px solid black
-  :margin-left 1px
+  display: block
+  height: 100%
+  border: 1px solid black
+  margin-left: 1px
+
 .optionbarbar.correct
-  :background-color= !correct_color
+  background-color: $correct_color
+
 .optionbarbar.incorrect
-  :background-color= !incorrect_color
-  
+  background-color: $incorrect_color
+
 .optionpercent
-  :border-left 2px solid black
-  :padding-right 2px
-  :padding-left 2px
-  :text-align right
+  border-left: 2px solid black
+  padding-right: 2px
+  padding-left: 2px
+  text-align: right
 
 .optioncount
-  :border-left 1px solid black
-  :padding-left 2px
-  :text-align right
+  border-left: 1px solid black
+  padding-left: 2px
+  text-align: right
 
 .report_embeddable
   .accordion_container
-    :overflow visible
+    overflow: visible
     .accordion_name
-      :display inline-block
-      :display -moz-inline-block
-      :width 100%
-      :float none
+      display: inline-block
+      display: -moz-inline-block
+      width: 100%
+      float: none
     .accordion_content
-      :clear both
-      :overflow visible
+      clear: both
+      overflow: visible
     .empty_break
-      :clear both
+      clear: both
   img
-    :max-width 680px
+    max-width: 680px
   .learner_response
-    :margin-top 2px
-    :padding 2px
-    :border 1px solid black
-    :width 680px
+    margin-top: 2px
+    padding: 2px
+    border: 1px solid black
+    width: 680px
   .learner_response.correct
-    :background-color= !correct_color
+    background-color: $correct_color
   .learner_response.incorrect
-    :background-color= !incorrect_color
-
+    background-color: $incorrect_color
   .learner_response_name
-    :font-weight bold
-    :width 200px
-    :vertical-align top
-
+    font-weight: bold
+    width: 200px
+    vertical-align: top
   .learner_response_content
-    :width 460px
-    :vertical-align top
+    width: 460px
+    vertical-align: top
     img
-      :max-width 460px
-  
+      max-width: 460px
+
 .inline_block
-  :display -moz-inline-block
-  :display inline-block
-  
+  display: -moz-inline-block
+  display: inline-block
+
 .offering_print_all
-  :float right
-  :font-size 1.5em
-  :margin-top 5px
+  float: right
+  font-size: 1.5em
+  margin-top: 5px
 
 .item
   .chosen_answer
-    :font-weight bold
+    font-weight: bold
   .chosen_answer.correct
-    :background-color= !correct_color
+    background-color: $correct_color
   .chosen_answer.incorrect
-    :background-color= !incorrect_color
-  
+    background-color: $incorrect_color
+
 @media print
   .item
     .incorrect
-      :text-decoration line-through
+      text-decoration: line-through
     .correct
-      :font-style oblique
-  
+      font-style: oblique
   .optionlabel.incorrect
-    :text-decoration line-through
+    text-decoration: line-through
   .optionlabel.correct
-    :font-style oblique
-        
+    font-style: oblique
   .filter_checkbox,.filter_selection_control,.print_control,#header,#footer,#under_footer
-    :display none
+    display: none
   .report_embeddable
-    :overflow visible
+    overflow: visible
     .learner_response
-      :page-break-inside avoid      
+      page-break-inside: avoid
     .learner_response_content.incorrect
-      :text-decoration line-through
+      text-decoration: line-through
     .learner_response_content.correct
-      :font-style oblique
+      font-style: oblique
     .item
-      :border none
+      border: none
     .ContentFlow
-      :display none
-      :overflow visible
+      display: none
+      overflow: visible
     .accordion_container
-      :overflow visible
-      :border none
-      :border-bottom 2px solid black
-      :page-break-inside avoid
+      overflow: visible
+      border: none
+      border-bottom: 2px solid black
+      page-break-inside: avoid
       .action_menu
-        :overflow visible
+        overflow: visible
       .accordion_toggle
-        :display none
+        display: none
       .accordion_content
-        :overflow visible
-        
+        overflow: visible
   #wrapper
     overflow: visible
 
@@ -157,5 +155,7 @@
   height: auto
   background-color: white
   border: 1px solid #89b4b7
-  margin: 2px
+  margin: 10px 2px
   padding: 2px
+.accordion_container
+  margin: 10px 2px

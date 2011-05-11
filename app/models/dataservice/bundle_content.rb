@@ -5,6 +5,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
   has_many :blobs, :class_name => "Dataservice::Blob", :foreign_key => "bundle_content_id"
 
+  has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "bundle_content_id"
+  has_many :collaborators, :through => :collaborations, :class_name => "Portal::Student", :source => :student
+
   acts_as_list :scope => :bundle_logger_id
 
   acts_as_replicatable
@@ -13,18 +16,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   include SailBundleContent
   
-  def before_create
-    process_bundle
-  end
-  
-  def after_create
-    process_blobs
-  end
-
-  def before_save
-    process_bundle unless processed
-  end
-  
+  before_save :process_bundle
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
@@ -34,6 +26,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@searchable_attributes = %w{body otml uuid}
   
   class <<self
+
 
     def searchable_attributes
       @@searchable_attributes
@@ -52,6 +45,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     def b64gzip_pack(content)
       gzip_string_io = StringIO.new()
       gzip = Zlib::GzipWriter.new(gzip_string_io)
+
+      # use a fixed modified time so b64gzip_pack always returns the same string with the same input
+      #  the gzip spec (http://www.gzip.org/zlib/rfc-gzip.html) says when gzipping a string mtime defaults to the current time
+      #  so if mtime isn't fixed then calls to this method will return different strings depending when it is called
+      gzip.mtime=1
       gzip.write(content)
       gzip.close
       gzip_string_io.rewind
@@ -74,16 +72,29 @@ class Dataservice::BundleContent < ActiveRecord::Base
     login = user.login
     "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
-  
-  def process_bundle
+ 
+  def record_bundle_processing
+    self.updated_at = Time.now
     self.processed = true
+  end
+
+  def process_bundle
+    # this method shouldn't be called multiple times,
+    # but even if it is, no harm should come
+    # return true if self.processed
+    self.record_bundle_processing
     self.valid_xml = valid_xml?
-    if valid_xml
+    # see SailBundleContent mixin for valid_xml? and EMPTY_BUNDLE
+    # Calculate self.empty even when the xml is missing or invalid
+    self.empty = self.body.nil? || self.body.empty? || self.body == EMPTY_BUNDLE
+    if self.valid_xml
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
     end
+    self.process_blobs
+    true # don't stop the callback chain.
   end
-    
+  
   def extract_otml
     if body[/ot.learner.data/]
       otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
@@ -111,19 +122,22 @@ class Dataservice::BundleContent < ActiveRecord::Base
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def process_blobs
+    # return true unless self.valid_xml
+    # we want to give other callbacks a chance to run
     return false unless self.valid_xml
     ## extract blobs from the otml and convert the changed otml back to bundle format
     blobs_present = extract_blobs
     if blobs_present
       convert_otml_to_body
-      self.save!
+      #self.save!
     end
     return blobs_present
+    # above would stop other callbacks from happening
+    # return true 
   end
   
   def extract_blobs(host = nil)
     return false if ! self.otml
-    
     changed = false
       
     if ! host
@@ -148,7 +162,13 @@ class Dataservice::BundleContent < ActiveRecord::Base
       # find all the unprocessed blobs, and extract them and create Blob objects for them
       text.gsub!(@@blob_content_regexp) {|match|
         changed = true
-        blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+        _content = self.class.b64gzip_unpack($1.gsub!(/\s/, ""))
+        # the following find is probably of limited use, and is expensive:
+        # blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, self.class.b64gzip_unpack($1.gsub!(/\s/, "")))
+
+        # sometimes we don't have a valid id, but thats OK, we build our list here:
+        blob = Dataservice::Blob.create(:bundle_content_id => self.id, :content => _content)
+        self.blobs << blob
         match = @@url_resolver.getUrl("dataservice_blob_raw_url", {:id => blob.id, :token => blob.token, :host => host, :format => "blob", :only_path => false})
         match
       }
@@ -292,5 +312,23 @@ class Dataservice::BundleContent < ActiveRecord::Base
     This session bundle comes from learner data created on #{self.created_at} by '#{learner_name}' in '#{teacher_name}'s 
     class using: '#{runnable_name}' in the '#{school_name}' school.
     HEREDOC
+  end
+
+  def copy_to_collaborators
+    return unless self.collaborators.size > 0
+    return unless self.bundle_logger
+    return unless self.bundle_logger.learner
+    return unless self.bundle_logger.learner.offering
+    self.collaborators.each do |student|
+      slearner = self.bundle_logger.learner.offering.find_or_create_learner(student)
+      new_bundle_logger = slearner.bundle_logger
+      new_attributes = self.attributes.merge({
+        :processed => false,
+        :bundle_logger => new_bundle_logger
+      })
+      bundle_content =Dataservice::BundleContent.create(new_attributes)
+      bundle_logger.bundle_contents << bundle_content
+      bundle_logger.reload
+    end
   end
 end

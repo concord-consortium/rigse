@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :setup do
 
     require 'fileutils'
@@ -222,7 +222,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       teacher_user = User.find_by_login('teacher')
       student_user = User.find_by_login('student')
       
-      default_investigation = DefaultInvestigation.create_default_investigation_for_user(author_user)
+      default_investigation = DefaultRunnable.create_default_runnable_for_user(author_user)
 
       grades_in_order = [
         grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
@@ -269,7 +269,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_school_teacher.grades << grade_9
       
-      site_school.members << default_school_teacher
+      site_school.portal_teachers << default_school_teacher
       
       # default_school_teacher.courses << site_school_default_course
 
@@ -291,6 +291,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_course_class.status = 'open'
       default_course_class.teacher = default_school_teacher
+      default_course_class.save!
       
       # default offering
       attributes = {
@@ -314,7 +315,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
       default_student.student_clazzes.delete_all
       default_student.clazzes << default_course_class
-      site_school.members << default_student
+      site_school.add_member(default_student)
       #
       # default_student = student_user.student || student_user.student.create!
       # 
@@ -389,8 +390,8 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       # the autogenerating primary key index ... not certain about other databases
       puts
       puts "deleted: #{ActiveRecord::Base.connection.delete("TRUNCATE `#{User.table_name}`")} from User"
-      Rake::Task['rigse:setup:default_users_roles_and_portal_resources'].invoke
-      Rake::Task['rigse:setup:create_additional_users'].invoke
+      Rake::Task['app:setup:default_users_roles_and_portal_resources'].invoke
+      Rake::Task['app:setup:create_additional_users'].invoke
     end
 
     
@@ -412,6 +413,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     #   { "role"=>"admin", 
     #     "first_name"=>"Stephen", 
     #     "last_name"=>"Bannasch", 
+    #     "login" => "stephen",
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
     # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
@@ -429,13 +431,14 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         puts "\nCreating additional users ...\n\n"
         pw = User.make_token
         additional_users.each do |user_config|
-          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['email']}"
+          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['login']}, #{user_config[1]['email']}"
           if u = User.find_by_email(user_config[1]['email'])
             puts "  *** user: #{u.name} already exists ...\n"
           else
             u = User.create(:login => user_config[0], 
               :first_name => user_config[1]['first_name'], 
               :last_name => user_config[1]['last_name'], 
+              :login => user_config[1]['login'], 
               :email => user_config[1]['email'], 
               :password => pw, 
               :password_confirmation => pw)
@@ -455,6 +458,5 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         # puts "#{path} not found"
       end
     end
-
   end
 end

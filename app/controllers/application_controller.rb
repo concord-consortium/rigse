@@ -18,11 +18,14 @@ class ApplicationController < ActionController::Base
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   before_filter :setup_container
-  before_filter :setup_project
 
   include AuthenticatedSystem
   include RoleRequirementSystem
@@ -44,12 +47,8 @@ class ApplicationController < ActionController::Base
     @container_id =  request.symbolized_path_parameters[:id]
   end
 
-  def setup_project
-    @project = Admin::Project.default_project
-    if USING_JNLPS
-      @jnlp_adaptor = JnlpAdaptor.new(@project)
-      @jnlp_testing_adaptor = JnlpTestingAdaptor.new
-    end
+  def current_project
+    @_project ||= Admin::Project.default_project
   end
 
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
@@ -81,7 +80,7 @@ class ApplicationController < ActionController::Base
       @scope = default
       if container_type = params[:scope_type]
         @scope = container_type.constantize.find(params[:scope_id])
-      elsif container_type = params[:container_type]
+      elsif (container_type = params[:container_type]) && params[:container_id]
         @scope = container_type.constantize.find(params[:container_id])
       end
       @scope

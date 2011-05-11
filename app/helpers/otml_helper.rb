@@ -1,7 +1,7 @@
 module OtmlHelper
 
   def net_logo_package_name
-    @jnlp_adaptor.net_logo_package_name
+    jnlp_adaptor.net_logo_package_name
   end
   
   def ot_menu_display_name(object)

@@ -13,7 +13,7 @@
   .action_menu
     .action_menu_header
       .action_menu_header_left
-        %p= page_entries_info investigations, :entry_name=>top_level_container_name
+        %p= page_entries_info investigations, :entry_name=>"Investigation"
         %p.paginator
           = will_paginate investigations
       .action_menu_header_right
@@ -24,7 +24,7 @@
             %li.menu=link_to 'Usage Report', investigation_usage_report_url
             %li.menu=link_to 'Details Report', investigation_details_report_url
           -if current_user.has_role? "author"
-            %li= link_to "create #{top_level_container_name}", new_investigation_path
+            %li= link_to "create #{Investigation.display_name}", new_investigation_path
 
   - investigations.each do |investigation|
     %div{ :id => dom_id_for(investigation), :class => 'runnable' }
@@ -51,7 +51,7 @@
                 %li.menu=link_to 'duplicate', duplicate_investigation_url(investigation)
               - if (investigation.changeable?(current_user))
                 %li.menu=link_to 'edit', investigation
-                %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete #{top_level_container_name} #{investigation.id}", :method => :delete 
+                %li.menu=link_to 'delete', investigation, :class => 'delete', :confirm => "Are you sure you want to delete Investigation #{investigation.id}", :method => :delete 
         %div{:id => dom_id_for(investigation, :details), :class => 'tiny'}
           %p=investigation.description
           %p

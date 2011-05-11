@@ -7,8 +7,9 @@ module RunnablesHelper
     "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
   end
 
-  def run_url_for(component, params = {}, format = :jnlp)
-    format = APP_CONFIG[:runnable_mime_type] if NOT_USING_JNLPS
+  def run_url_for(component, params = {}, format = nil)
+    runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
+    format ||= runnable.run_format
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
@@ -19,8 +20,12 @@ module RunnablesHelper
   end
 
   def x_button_for(component, verb, image = verb, params = {}, run_as = "Java Web Start application")
+    classes = "run_link rollover"
+    if component.is_a? Portal::Offering
+      classes << ' offering'
+    end
     link_button("#{image}.png",  run_url_for(component, params),
-                :class => "run_link rollover",
+                :class => classes,
                 :title => title_text(component, verb, run_as))
   end
 
@@ -32,34 +37,19 @@ module RunnablesHelper
     link_text << " as #{as_name}" if as_name
 
     html_options={}
-
-    if NOT_USING_JNLPS
+    if component.is_a? Portal::Offering
+      html_options[:class] = 'offering'
+    end
+    if component.is_a? JnlpLaunchable
       html_options[:popup] = true
     else
       html_options[:title] = title
     end
+
     if params[:no_button]
       link_to(link_text, url, html_options)
     else
       x_button_for(component, verb) + link_to(link_text, url, html_options)
-    end
-  end
-
-  def button_and_link_for(component, as_name = nil, params = {}, run_or_preview = :run)
-    url = polymorphic_url(component, :format => :jnlp, :params => params)
-
-    if run_or_preview == :preview
-      link_text = link_text_for "preview ", as_name, params
-      preview_button_for(component) +
-        link_to(link_text, url,
-                :class => "run_link",
-                :title => title_text(component, "preview"))
-    else
-      link_text = link_text_for "run ", as_name, params
-      run_button_for(component) +
-        link_to(link_text, url,
-                :class => 'run_link',
-                :title => title_text(component, "run"))
     end
   end
 
@@ -69,17 +59,6 @@ module RunnablesHelper
 
   def teacher_preview_button_for(component)
     x_button_for(component, "preview", "teacher_preview", {:teacher_mode => true}, "Teacher")
-  end
-
-  def link_text_for(text, as_name = nil, params = {})
-    params.update(current_user.extra_params)
-    link_text = params.delete(:link_text) || text
-
-    if as_name
-      link_text << " as #{as_name}"
-    end
-
-    link_text
   end
 
   def preview_link_for(component, as_name = nil, params = {})

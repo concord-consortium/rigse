@@ -106,6 +106,7 @@ class ActivitiesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
+      format.run_html   { render :show, :layout => "layouts/run" }
       format.jnlp   { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @activity, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
       format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @activity, :teacher_mode => @teacher_mode} }

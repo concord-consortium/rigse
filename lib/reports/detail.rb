@@ -97,8 +97,9 @@ class Reports::Detail < Reports::Excel
         inv.activities.student_only.each do |a|
           # <=================================================>
           reportables = a.reportable_elements.map {|re| re[:embeddable]}
-          #answers = reportables.map{|r| @report_utils[l.offering].saveable(l,r)}
-          answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
+          answers = reportables.map{|r| @report_utils[l.offering].saveable(l,r)}
+          #Bellow is bad, it gets the answers in the wrong order!
+          #answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
           answered_answers = answers.select{|s| s.answered? }
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty

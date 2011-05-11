@@ -5,8 +5,10 @@ describe InvestigationsController do
   integrate_views
 
   before(:each) do
-    generate_default_project_and_jnlps_with_mocks
-    Admin::Project.stub!(:default_project).and_return(@mock_project)
+    controller.stub(:before_render) {
+      response.template.stub(:net_logo_package_name).and_return("blah")
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
     @admin_user.add_role("admin")
@@ -17,6 +19,7 @@ describe InvestigationsController do
       :name => "test investigation",
       :description => "new decription"
     })
+
     Investigation.stub!(:find).and_return(@investigation)
     Investigation.stub!(:published).and_return([@investigation])
   end
@@ -61,21 +64,23 @@ describe InvestigationsController do
       response.sending_file?.should be_true
       response.content_type.should eql "application/vnd.ms.excel"
     end
+
     it 'should return an XLS file for the global Details Report' do
       get :details_report
       response.sending_file?.should be_true
       response.content_type.should eql "application/vnd.ms.excel"
     end
+
     it 'should return an XLS file for the specific Usage Report' do
       get :usage_report, :id => @investigation.id
       response.sending_file?.should be_true
       response.content_type.should eql "application/vnd.ms.excel"
     end
+
     it 'should return an XLS file for the specific Details Report' do
       get :details_report, :id => @investigation.id
       response.sending_file?.should be_true
       response.content_type.should eql "application/vnd.ms.excel"
     end
   end
-
 end

@@ -1,7 +1,8 @@
 class Investigation < ActiveRecord::Base
-  
+  include JnlpLaunchable
+
   # cattr_accessor :publication_states
-  
+
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :activities, :order => :position, :dependent => :destroy do
@@ -11,10 +12,10 @@ class Investigation < ActiveRecord::Base
   end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
-  
+
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
-  @@embeddable_klasses = [ 
+  @@embeddable_klasses = [
     Embeddable::Xhtml,
     Embeddable::OpenResponse,
     Embeddable::MultipleChoice,
@@ -36,52 +37,53 @@ class Investigation < ActiveRecord::Base
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
     Embeddable::Smartgraph::RangeQuestion ]
-    
+
   @@embeddable_klasses.each do |klass|
     eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
       INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
-      INNER JOIN pages ON page_elements.page_id = pages.id 
+      INNER JOIN pages ON page_elements.page_id = pages.id
       INNER JOIN sections ON pages.section_id = sections.id
       INNER JOIN activities ON sections.activity_id = activities.id
       WHERE activities.investigation_id = \#\{id\}'"
   end
-  
+
   has_many :page_elements,
     :finder_sql => 'SELECT page_elements.* FROM page_elements
-    INNER JOIN pages ON page_elements.page_id = pages.id 
+    INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
-    
+
   has_many :sections,
     :finder_sql => 'SELECT sections.* FROM sections
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
-    
+
   has_many :student_sections, :class_name => Section.to_s,
     :finder_sql => 'SELECT sections.* FROM sections
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
     WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0'
-    
+
   has_many :pages,
     :finder_sql => 'SELECT pages.* FROM pages
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
     WHERE activities.investigation_id = #{id}'
-    
+
   has_many :student_pages, :class_name => Page.to_s,
     :finder_sql => 'SELECT pages.* FROM pages
     INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
     WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
-  
+
   acts_as_replicatable
 
   include Publishable
-  # for convinience (will not work in find_by_* &etc.)
+
+  # for convenience (will not work in find_by_* &etc.)
   [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
-  
+
   #
   # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
   # Investigation.with_gse.grade('9-11') == good
@@ -90,53 +92,52 @@ class Investigation < ActiveRecord::Base
   named_scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
-  
-  named_scope :domain, lambda { |domain_id| 
+
+  named_scope :domain, lambda { |domain_id|
     {
       :conditions => ['ri_gse_knowledge_statements.domain_id = ?', domain_id]
     }
   }
-  
+
   named_scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
       :conditions => ['ri_gse_grade_span_expectations.grade_span LIKE ?', gs ]
     }
   }
-  
+
   named_scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
-  
+
   named_scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
-  include Noteable # convinience methods for notes...
-  
+  include Noteable # convenience methods for notes...
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name description publication_status}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
     def display_name
-      name = APP_CONFIG[:top_level_container_name] || "Investigation"
-      name.humanize
+      self.to_s
     end
-    
+
     def saveable_types
       [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]
     end
-    
+
     def reportable_types
       [ Embeddable::OpenResponse, Embeddable::MultipleChoice, Embeddable::ImageQuestion ]
     end
-    
+
     def find_by_grade_span_and_domain_id(grade_span,domain_id)
       @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all, :include =>:knowledge_statements, :conditions => ['grade_span LIKE ?', grade_span])
       @investigations = @grade_span_expectations.map { |gse| gse.investigations }.flatten.compact
@@ -160,7 +161,7 @@ class Investigation < ActiveRecord::Base
           else
             investigations = Investigation.published.like(name).with_gse.grade(grade_span)
           end
-        else 
+        else
           if (options[:include_drafts])
             investigations = Investigation.like(name)
           else
@@ -178,61 +179,61 @@ class Investigation < ActiveRecord::Base
       if portal_clazz
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
-      
+
       unless options[:sort_order].blank?
         investigations = investigations.ordered_by(options[:sort_order])
       end
-      
+
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
       else
         investigations
       end
-    end  
-    
+    end
+
   end
-  
+
   def saveable_types
     self.class.saveable_types
   end
-  
+
   def reportable_types
     self.class.reportable_types
   end
-  
+
   # Enables a teacher note to call the investigation method of an
   # authored_entity to find the relavent investigation
   def investigation
     self
   end
-  
+
   def after_save
     if self.user
-      self.user.add_role('author') 
+      self.user.add_role('author')
     end
   end
-  
+
   def left_nav_panel_width
      300
   end
-  
+
   def parent
     return nil
   end
-  
+
   def children
     return activities
   end
-  
+
   include TreeNode
-  
-  
+
+
   def deep_xml
     self.to_xml(
       :include => {
         :teacher_notes=>{
           :except => [:id,:authored_entity_id, :authored_entity_type]
-        }, 
+        },
         :activities => {
           :exlclude => [:id,:investigation_id],
           :include => {
@@ -266,8 +267,8 @@ class Investigation < ActiveRecord::Base
     )
   end
 
-  
-  
+
+
   def duplicate(new_owner)
     @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => {:pages => {:page_elements => :embeddable}}}}
     @return_investigation.user = new_owner
@@ -277,11 +278,11 @@ class Investigation < ActiveRecord::Base
     @return_investigation.offerings_count = 0
     return @return_investigation
   end
-  
+
   def duplicateable?(user)
     user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author") || user.has_role?("researcher")
   end
-  
+
   def print_listing
     listing = []
     self.activities.each do |a|

@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :activities
   has_many :sections
   has_many :pages
+  has_many :external_activities
   has_many :security_questions
 
   has_many :data_collectors, :class_name => 'Embeddable::DataCollector'
@@ -77,6 +78,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
+  validates_presence_of     :password, :on => :update, :if => :updating_password?
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
@@ -85,6 +87,8 @@ class User < ActiveRecord::Base
   has_one :portal_student, :class_name => "Portal::Student"
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
+
+  attr_accessor :updating_password
 
   acts_as_replicatable
 
@@ -233,10 +237,13 @@ class User < ActiveRecord::Base
     if @@anonymous_user
       @@anonymous_user
     else
-      anonymous_user = User.find_or_create_by_login(:login => "anonymous",
-        :first_name => "Anonymous", :last_name => "User",
-        :email => "anonymous@concord.org",
-        :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
+      anonymous_user = User.find_or_create_by_login(
+        :login                 => "anonymous",
+        :first_name            => "Anonymous",
+        :last_name             => "User",
+        :email                 => "anonymous@concord.org",
+        :password              => "password",
+        :password_confirmation => "password"){|u| u.skip_notifications = true}
       anonymous_user.add_role('guest')
       @@anonymous_user = anonymous_user
     end
@@ -275,6 +282,10 @@ class User < ActiveRecord::Base
       self.security_questions << q
       q.save
     end
+  end
+
+  def updating_password?
+    updating_password
   end
 
   protected

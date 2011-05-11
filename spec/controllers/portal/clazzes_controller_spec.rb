@@ -16,9 +16,6 @@ describe Portal::ClazzesController do
     Portal::Semester.destroy_all
     User.destroy_all
 
-    generate_default_project_and_jnlps_with_mocks
-    generate_portal_resources_with_mocks
-
     @mock_semester = Factory.create(:portal_semester, :name => "Fall")
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
 
@@ -37,6 +34,13 @@ describe Portal::ClazzesController do
     @mock_clazz_name = "Random Test Class"
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
+
+    @controller.stub(:before_render) {
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
+    @mock_project = mock_model(Admin::Project, :name => "Test Project")
+    @mock_project.stub(:enable_grade_levels?).and_return(true)
+    Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
   # def login_as(user_sym)
@@ -56,8 +60,6 @@ describe Portal::ClazzesController do
   before(:each) do
     setup_for_repeated_tests
     stub_current_user :admin_user # Make admin our default test user
-
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "GET show" do
@@ -66,8 +68,16 @@ describe Portal::ClazzesController do
       assigns[:portal_clazz].should == @mock_clazz
     end
 
+    it "doesn't show class to unauthorized teacheruser" do
+      stub_current_user :unauthorized_teacher_user
+      get :show, { :id => @mock_clazz.id }
+
+      response.should_not be_success
+      response.should redirect_to("/home")
+    end
+
     it "shows the full class summary, with edit button if current user is authorized" do
-      [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      [:admin_user, :authorized_teacher_user].each do |user|
         setup_for_repeated_tests
         stub_current_user user
 
@@ -76,12 +86,7 @@ describe Portal::ClazzesController do
         # All users should see the full class details summary
         with_tag("div#details_portal__clazz_#{@mock_clazz.id}") do
           with_tag('div.action_menu') do
-            if user == :unauthorized_teacher_user
-              # Unauthorized users should not see an "edit" link in the class details section
-              without_tag('a', :text => 'edit')
-            else
-              with_tag('a', :text => 'edit')
-            end
+            with_tag('a', :text => 'edit class information')
           end
         end
       end
@@ -104,8 +109,17 @@ describe Portal::ClazzesController do
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
+    it "doesn't show the details of a class to unauthorized teachers" do
+      stub_current_user :unauthorized_teacher_user
+      teachers = [@authorized_teacher, @random_teacher]
+      @mock_clazz.teachers = teachers
+
+      xml_http_request :post, :edit, :id => @mock_clazz.id
+      response.should_not be_success
+    end
+
     it "shows the details of all teachers assigned to the requested class with removal links" do
-      [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      [:admin_user, :authorized_teacher_user].each do |user|
         setup_for_repeated_tests
         stub_current_user user
 
@@ -144,24 +158,6 @@ describe Portal::ClazzesController do
               with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
                 with_tag("img[src*='delete.png']")
               end
-            end
-          end
-        end
-      end
-
-      it "the user is not allowed to edit this class in the first place" do
-        stub_current_user :unauthorized_teacher_user
-
-        teachers = [@authorized_teacher, @random_teacher]
-        @mock_clazz.teachers = teachers
-
-        xml_http_request :post, :edit, :id => @mock_clazz.id
-
-        # Perhaps the entire page shouldn't display, but at the very least, none of the teachers should have removal links
-        with_tag("div#teachers_listing") do
-          teachers.each do |teacher|
-            with_tag("tr#portal__teacher_#{teacher.id}") do
-              with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_UNAUTHORIZED)
             end
           end
         end

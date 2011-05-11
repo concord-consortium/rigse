@@ -6,7 +6,6 @@ describe Portal::TeachersController do
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-    Admin::Project.should_receive(:default_project).and_return(@mock_project)
   end
 
   describe "POST create" do
@@ -65,9 +64,10 @@ describe Portal::TeachersController do
       
       assert_equal User.count(:all), current_user_count, "TeachersController#create erroneously created a User when given invalid POST data"
       assert_equal Portal::Teacher.count(:all), current_teacher_count, "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
-      assert_not_nil flash[:error]
+      #assert_not_nil flash.now[:error]
       assert_nil flash[:notice]
       @response.body.should include("must select a school")
+      @response.body.should include("Sorry")
     end
   end
   

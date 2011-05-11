@@ -1,5 +1,4 @@
 class HomeController < ApplicationController
-
   def readme
     @document = FormattedDoc.new('README.textile')
     render :action => "formatted_doc", :layout => "technical_doc"
@@ -28,5 +27,9 @@ class HomeController < ApplicationController
 
   def missing_installer
     @os = params['os']
+  end
+
+  def test_exception
+    raise 'This is a test. This is only a test.'
   end
 end

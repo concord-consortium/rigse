@@ -53,7 +53,7 @@ development: &id003
     :server: concord
     :family: has-otrunk
   :valid_sakai_instances:
-
+  :use_adhoc_workgroups: true
 test: *id003
 production: *id003
 staging: *id003

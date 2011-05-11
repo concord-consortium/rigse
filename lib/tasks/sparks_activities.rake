@@ -1,4 +1,4 @@
-namespace :rigse do
+namespace :app do
   namespace :import do
     
     require 'fileutils'

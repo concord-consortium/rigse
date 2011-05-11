@@ -1,5 +1,5 @@
 namespace :hudson do
-  
+
   def cucumber_report_path
     "hudson/reports/features/"
   end
@@ -15,8 +15,13 @@ namespace :hudson do
   end
 
   if defined? Cucumber
-    Cucumber::Rake::Task.new({:cucumber  => [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']}) do |t|
-      t.cucumber_opts = %{--profile default  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+    prerequisites = [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']
+    cucumber_opts = %{--profile default --tags ~@dialog  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+    Cucumber::Rake::Task.new({:cucumber  => prerequisites}) do |t|
+      t.cucumber_opts = cucumber_opts
+    end
+    Cucumber::Rake::Task.new({:cucumber_selenium_only  => prerequisites}) do |t|
+      t.cucumber_opts = cucumber_opts + " --tags @selenium"
     end
   end
 
@@ -29,7 +34,7 @@ namespace :hudson do
     rm_rf cucumber_report_path
     mkdir_p cucumber_report_path
   end
-  
+
   desc "Run the cucumber and RSpec tests, but don't fail until both suites have run."
   task :everything do
     tasks = {"cucumber" => ["hudson:cucumber"], "test" => ["hudson:spec"] }
@@ -50,7 +55,7 @@ namespace :hudson do
     end
     raise "Test failures" if exceptions.size > 0
   end
-  
+
   desc "run the RSpec tests"
   task :spec => ["hudson:setup:rspec", :spec_report_setup, 'db:migrate', 'db:test:prepare', 'rake:spec']
 
