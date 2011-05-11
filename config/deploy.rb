@@ -283,37 +283,37 @@ namespace :import do
   desc 'import grade span expectations from files in config/rigse_data/'
   task :import_gses_from_file, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:setup:import_gses_from_file --trace"
+      "rake RAILS_ENV=#{rails_env} app:setup:import_gses_from_file --trace"
   end
 
   desc 'erase and import ITSI activities from the ITSI DIY'
   task :erase_and_import_itsi_activities, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_itsi_activities --trace"
+      "rake RAILS_ENV=#{rails_env} app:import:erase_and_import_itsi_activities --trace"
   end
 
   desc 'erase and import ITSI Activities from the ITSI DIY collected as Units from the CCPortal'
   task :erase_and_import_ccp_itsi_units, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:import:erase_and_import_ccp_itsi_units --trace"
+      "rake RAILS_ENV=#{rails_env} app:import:erase_and_import_ccp_itsi_units --trace"
   end
 
   desc "generate names for existing MavenJnlpServers that don't have them"
   task :generate_names_for_maven_jnlp_servers, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_names_for_maven_jnlp_servers --trace"
+      "rake RAILS_ENV=#{rails_env} app:jnlp:generate_names_for_maven_jnlp_servers --trace"
   end
 
   desc "generate MavenJnlp resources from jnlp servers in settings.yml"
   task :generate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:generate_maven_jnlp_resources --trace"
+      "rake RAILS_ENV=#{rails_env} app:jnlp:generate_maven_jnlp_resources --trace"
   end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
   task :generate_otrunk_examples_rails_models, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:import:generate_otrunk_examples_rails_models --trace"
+      "rake RAILS_ENV=#{rails_env} app:import:generate_otrunk_examples_rails_models --trace"
   end
 
   desc"Create git clone of otrunk-examples in <shared_path>/public/otrunk-examples"
@@ -345,14 +345,14 @@ namespace :import do
   desc "Import RINET data"
   task :import_rinet_data, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-    "rake RAILS_ENV=#{rails_env} rigse:import:rinet --trace"
+    "rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
   end
 
   # 01/27/2010
   desc "create or update a git svn clone of sparks-content"
   task :create_or_update_sparks_content, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-    "rake RAILS_ENV=#{rails_env} rigse:import:create_or_update_sparks_content --trace"
+    "rake RAILS_ENV=#{rails_env} app:import:create_or_update_sparks_content --trace"
   end
 
 end
@@ -366,13 +366,13 @@ namespace :delete do
   desc "delete all the MavenJnlp resources"
   task :maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_maven_jnlp_resources --trace"
+      "rake RAILS_ENV=#{rails_env} app:jnlp:delete_maven_jnlp_resources --trace"
   end
 
   desc"Delete the otrunk-example models (Rails models)."
   task :otrunk_example_models, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:import:delete_otrunk_example_models --trace"
+      "rake RAILS_ENV=#{rails_env} app:import:delete_otrunk_example_models --trace"
   end
 
 end
@@ -511,7 +511,7 @@ namespace :convert do
   desc "Delete_and_regenerate_maven_jnlp_resources"
   task :delete_and_regenerate_maven_jnlp_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} rigse:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
+      "ANSWER_YES=true rake RAILS_ENV=#{rails_env} app:jnlp:delete_and_regenerate_maven_jnlp_resources --trace"
   end
 
   # Wed Jan 6 2010
@@ -552,7 +552,7 @@ namespace :convert do
   desc "Erase the marshalled jnlps stored in the jnlp object directory by the jnlp gem: config/jnlp_objects"
   task :empty_jnlp_object_cache, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} rigse:jnlp:empty_jnlp_object_cache --trace"
+      "rake RAILS_ENV=#{rails_env} app:jnlp:empty_jnlp_object_cache --trace"
   end
 
   # seb: 20101019
