@@ -5,6 +5,7 @@
   id: 1
   device_id: 30
   short_name: fourier_ecolog
+  driver_short_name: 
   description: The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via USB.
   image: SensorImages/EcoLogXL_sm.png
 - name: Data Harvest Easysense Q
@@ -13,6 +14,7 @@
   id: 2
   device_id: 40
   short_name: dataharvest_easysense_q
+  driver_short_name: 
   description: The Data Harvest EasySense Q is a USB interface with six sensor ports that works with all the Data Harvest sensors.
   image: SensorImages/EasysenseQ_sm.png
 - name: Pasco Science Workshop 500
@@ -21,6 +23,7 @@
   id: 3
   device_id: 60
   short_name: pasco_sw500
+  driver_short_name: 
   description: The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port. To connect this interface to a cmputer that does not have a serial port a serial-to-usb converter must be used.
   image: SensorImages/Pasco500_sm.png
 - name: Pasco Airlink SI
@@ -29,6 +32,7 @@
   id: 4
   device_id: 61
   short_name: pasco_airlink
+  driver_short_name: 
   description: The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking.
   image: SensorImages/pasportairlinksi_sm.png
 - name: Texas Instruments CBL2
@@ -37,6 +41,7 @@
   id: 5
   device_id: 20
   short_name: ti_cbl2
+  driver_short_name: 
   description: The Texas Instruments CBL2 is a USB interface that works with TI CBL sensors.
   image: SensorImages/CBL2_sm.png
 - name: Vernier Go! Link
@@ -45,6 +50,7 @@
   id: 6
   device_id: 10
   short_name: vernier_goio
+  driver_short_name: JNI
   description: The Vernier Go!Link is a USB interface with one sensor port. It works with Vernier analog sensors. The Go!Temp and Go!Motion sensors have Go!Link interfaces integrated into the sensor.
   image: SensorImages/VernierGoLink_sm.png
 - name: Simulated Data
@@ -53,6 +59,7 @@
   id: 7
   device_id: 0
   short_name: pseudo_interface
+  driver_short_name: 
   description: The Simulated Data interface will generate sin wave data with any specified sensor. Use this interface when you have no probeware to attach to your computer but you still want to test your activity.
   image: SensorImages/psuedo_interface.jpg
 - name: Vernier LabPro
@@ -61,6 +68,7 @@
   id: 8
   device_id: 11
   short_name: vernier_labpro
+  driver_short_name: 
   description: The Vernier LabPro is a USB interface with four sensor ports that works with all Vernier sensors.
   image: SensorImages/labpro_sm.jpg
 - name: Vernier LabQuest
@@ -69,6 +77,7 @@
   id: 9
   device_id: 12
   short_name: vernier_labquest
+  driver_short_name: 
   description: The Vernier LabQuest is a USB interface with four sensor ports. Both analog and digital Vernier sensors may be used. It also has built-in air temperature microphone, and sound sensors.
   image: SensorImages/labquest_sm.jpg
 - name: Pasco USBLink
@@ -77,6 +86,7 @@
   id: 10
   device_id: 62
   short_name: pasco_usblink
+  driver_short_name: 
   description: The Pasco USBLink in a simple USB interface that can measure data from one PASPORT sensor at a time.
   image: SensorImages/PascoUSBLink.jpg
 - name: Pasco PowerLink
@@ -85,6 +95,7 @@
   id: 11
   device_id: 62
   short_name: pasco_powerlink
+  driver_short_name: 
   description: The Pasco PowerLink is a USB interface that includes two ports for collecting data from PASPORT sensors.
   image: SensorImages/PascoPowerLink.jpg
 - name: Pasco Xplorer GLX
@@ -93,6 +104,7 @@
   id: 12
   device_id: 62
   short_name: pasco_xplorer_glx
+  driver_short_name: 
   description: The Pasco Xplorer GLX is a USB interface with four ports for collecting data from PASPORT sensors as well as four built-in ports for collecting data from simpler voltage, sound-level and temperature sensors.
   image: SensorImages/PascoXplorerGLX.png
 - name: Pasco Spark
@@ -101,6 +113,7 @@
   id: 13
   device_id: 62
   short_name: pasco_spark
+  driver_short_name: 
   description: The Pasco Spark is a USB interface that has two ports for PASPORT sensors as well as built-in ports for collecting data from simpler voltage and temperature sensors.
   image: SensorImages/PascoSpark.png
 - name: Vernier Go! Link
@@ -109,5 +122,6 @@
   id: 14
   device_id: 13
   short_name: vernier_goio
+  driver_short_name: JNA
   description: The Vernier Go!Link is a USB interface with one sensor port. It works with Vernier analog sensors. The Go!Temp and Go!Motion sensors have Go!Link interfaces integrated into the sensor.
   image: SensorImages/VernierGoLink_sm.png

@@ -51,5 +51,5 @@
         - Probe::VendorInterface.find(:all).each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid
-          %label{:for => domid}= "#{interface.name}" 
+          %label{:for => domid}= interface.name_with_driver
           %br

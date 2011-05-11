@@ -164,3 +164,14 @@
   min: 0.0
   step_size: 0.1
   ptype: 26
+- name: EKG
+  uuid: f1eeba28-7b7a-11e0-9cce-9027e4e96711
+  port: 0
+  period: 0.01
+  max: 4.0
+  id: 17
+  display_precision: -1
+  unit: mV
+  min: -0.5
+  step_size: 0.1
+  ptype: 29
