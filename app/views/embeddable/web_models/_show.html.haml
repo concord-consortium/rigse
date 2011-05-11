@@ -1,6 +1,11 @@
 %div{:id => dom_id_for(web_model, :details), :class => 'content'}
   = wrap_edit_link_around_content(web_model, options={:complete => mce_init_string}) do
-    = image_tag(web_model.image_url)
-    %p
-      Web model location: 
-      = link_to web_model.url
+    - if web_model.use_custom_url
+      %p
+        Custom web model location: 
+        = link_to web_model.web_content_url
+    - else
+      = image_tag(web_model.image_url)
+      %p
+        Web model location: 
+        = link_to web_model.url

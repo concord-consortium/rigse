@@ -1,4 +1,10 @@
 = edit_menu_for(web_model, f)
 .content
-  - field_set_tag 'model' do
+  - field_set_tag 'Select an existing Web Model' do
     = f.collection_select(:web_model_id, WebModel.all.sort{|a,b| a.name <=> b.name}, :id, :name_with_id)
+  - field_set_tag 'Or use a custom Web Model' do
+    Enable custom Web Model:
+    = f.check_box(:use_custom_url)
+    %br
+    Url: 
+    = f.text_field(:web_content_url, :size => 80)
