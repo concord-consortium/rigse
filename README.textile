@@ -8,7 +8,7 @@ Working git, ruby or jruby, and rubgems, wget
 Gems: capistrano, capistrano-ext, ruby-debug (oddly, haml too, when deploying ...)
 TODO: understand why running capistrano requires haml...
 
-h3. Install
+Rails version 3 has been released but currently this application is still using Rails 2.3.11. The older "Rails Guides for v2.3.8":http://guides.rubyonrails.org/v2.3.8/ is available and is quite useful for getting a good background on this version of Rails.
 
 The latest setup scripts have been tested with 1.4.0RC1 of JRuby, you will need a running mysql
 server and a mysql username/password with enough permissions to create and drop the 
