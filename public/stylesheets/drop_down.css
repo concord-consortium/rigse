@@ -16,7 +16,8 @@
     list-style-type: none;
     font-weight: normal;
     border: 1px #bddfdf solid;
-    margin-left: 0; }
+    margin-left: 0;
+    padding-left: 0; }
   .dropdown li {
     background: #fef7e0;
     list-style-type: none;
