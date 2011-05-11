@@ -32,4 +32,4 @@ Feature: An author edits a data collector
     Given I created a data collector
     When I visit /embeddable/data_collectors
     And I follow "edit graph"
-    Then I should see "Major options"
+    Then I should see "Major Options"
