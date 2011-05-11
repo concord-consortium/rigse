@@ -33,7 +33,7 @@ development: &non_production_settings
   :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
   :default_maven_jnlp:
     :server: concord
     :family: all-otrunk-snapshot
@@ -71,7 +71,7 @@ staging:
   :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - "all-otrunk-snapshot"
   :default_maven_jnlp:
@@ -107,7 +107,7 @@ production:
   :maven_jnlp_servers:
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - "all-otrunk-snapshot"
   :default_maven_jnlp:

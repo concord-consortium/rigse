@@ -38,6 +38,14 @@
                   - else
                     disabled.
                 (This option will allow students to register without a class word.)
+              %li
+                Grade Levels for Classes:
+                %b
+                  - if admin_project.enable_grade_levels?
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow teachers to select grade levels during class creation.)
             
           - field_set_tag 'Maven Jnlp' do
             %p

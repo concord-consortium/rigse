@@ -32,6 +32,12 @@
             = f.check_box :allow_default_class
             %br
             (This option will allow students to reset their own passwords.)
+          %li
+            %b
+            = f.label :enable_grade_levels, "Enable Grade Levels for Classes:", :style => "display:inline;"
+            = f.check_box :enable_grade_levels
+            %br
+            (This option will allow teachers to select grade levels during class creation.)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
@@ -45,5 +51,5 @@
         - Probe::VendorInterface.find(:all).each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid
-          %label{:for => domid}= "#{interface.name}" 
+          %label{:for => domid}= interface.name_with_driver
           %br

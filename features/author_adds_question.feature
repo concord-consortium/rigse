@@ -11,7 +11,7 @@ Feature: An author adds multiple choice questions
     Given the following users exist:
       | login  | password | roles          |
       | author | author   | member, author |
-    Given the following investigation exists:
+    Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
 
@@ -33,7 +33,7 @@ Feature: An author adds multiple choice questions
     Given the following users exist:
       | login  | password | roles  |
       | author | author   | author |
-    Given the following investigation exists:
+    Given the following simple investigations exist:
       | name              | description           | user   |
       | testing fast cars | how fast can cars go? | author |
 

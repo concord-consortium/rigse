@@ -11,7 +11,7 @@
           = label_tag :class_word, 'Class Word: ', :class=>"right"
           %p= "Class words are not case sensitive"
           = f.text_field :class_word, :size => 24
-        - if action_name == "new"
+        - if action_name != "edit"
           %li
             - schools = []
             - if current_user.portal_teacher
@@ -23,19 +23,20 @@
         %li
           = label_tag :semester, 'Semester: ', :class=>"right"
           = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
-        %li
-          = label_tag :grade_levels, 'Grade Levels: ', :class=>"right"
-          - row_length = 4
-          %table{:style => "display: inline-block;"}
-            - 0.upto((APP_CONFIG[:active_grades].size / row_length).floor) do |row|
-              %tr
-                - APP_CONFIG[:active_grades][row * row_length, row_length].each_with_index do |name, i|
-                  - tag_name = "portal_clazz[grade_levels][#{name}]"
-                  %td
-                    = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
-                  %td{:style => "padding: 0 10px 0 3px;"}
-                    -# = label_tag tag_name, name.titleize
-                    = label_tag tag_name, name
+        - if Admin::Project.default_project.enable_grade_levels?
+          %li
+            = label_tag :grade_levels, 'Grade Levels: ', :class=>"right"
+            - row_length = 4
+            %table{:style => "display: inline-block;"}
+              - 0.upto((APP_CONFIG[:active_grades].size / row_length).floor) do |row|
+                %tr
+                  - APP_CONFIG[:active_grades][row * row_length, row_length].each_with_index do |name, i|
+                    - tag_name = "portal_clazz[grade_levels][#{name}]"
+                    %td
+                      = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
+                    %td{:style => "padding: 0 10px 0 3px;"}
+                      -# = label_tag tag_name, name.titleize
+                      = label_tag tag_name, name
         - if action_name == "edit"
           %li
             = label_tag :teachers, 'Add or remove', :class=>"right"

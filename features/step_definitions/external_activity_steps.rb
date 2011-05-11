@@ -8,31 +8,6 @@ Given /^the following external activity exists:$/ do |activity_table|
   end
 end
 
-Given /^the external activity "([^"]*)" is assigned to the class "([^"]*)"$/ do |activity_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  activity = ExternalActivity.find_by_name(activity_name)
-  Factory.create(:portal_offering, {
-    :runnable => activity,
-    :clazz => clazz
-  })
-end
-  
-When /^I assign the external activity "([^"]*)" to the class "([^"]*)"$/ do |activity_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  activity = ExternalActivity.find_by_name(activity_name)
-  Factory.create(:portal_offering, {
-    :runnable => activity,
-    :clazz => clazz
-  })
-end
-
-# this is the interactive version of the step above
-When /^I assign the external activity "([^"]*)"$/ do |activity_name|
-  activity = ExternalActivity.find_by_name activity_name
-  runnable_element = find("#external_activity_#{activity.id}")
-  assign_runnable(runnable_element)
-end
-
 When /^I drag the external activity "([^"]*)" to "([^"]*)"$/ do |activity_name, to|
   activity = ExternalActivity.find_by_name activity_name
   selector = find("#external_activity_#{activity.id}")
