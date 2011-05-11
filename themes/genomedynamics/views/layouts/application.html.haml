@@ -90,15 +90,14 @@
           - if current_user.has_role?('admin') || current_user.portal_teacher
             %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
               
-          %ul.menu_h_right
-
-            - if current_user.has_role?('admin', 'manager')
-              %li.trail= link_to 'Districts', portal_districts_path
-              %li.trail= link_to 'Schools', portal_schools_path
-              - if APP_CONFIG[:use_gse]
-                %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
-              %li.trail= link_to 'Users', users_path
-              %li.trail= link_to 'Projects', admin_projects_path
+        %ul.menu_h_right
+          - if current_user.has_role?('admin', 'manager')
+            %li.trail= link_to 'Districts', portal_districts_path
+            %li.trail= link_to 'Schools', portal_schools_path
+            - if APP_CONFIG[:use_gse]
+              %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
+            %li.trail= link_to 'Users', users_path
+            %li.trail= link_to 'Projects', admin_projects_path
 
       #content_container      
         #left_nav.nav_menu
