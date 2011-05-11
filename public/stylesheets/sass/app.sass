@@ -81,9 +81,8 @@ body
     image: url(/images/new/bg-body.png)
     repeat: repeat-x
   color: #3f3f3f
-body#tinymce
-  background-color: #fff !important
-  background-image: none !important
+  body#tinymce
+    background: #fff
 
 .hidden
   display: none
@@ -306,7 +305,7 @@ body#tinymce
   margin: 0 0 0 0
   width: 100%
 
-/* login and sign up forms
+/* login form
 
 #content-upper
   background: #f3f2ed
@@ -359,24 +358,6 @@ body#tinymce
 #project-signin
   border-right: solid 1px rgb(161, 211, 208)
   margin-bottom: 20px
-  
-#project-signin, #new_portal_teacher, #new_portal_student
-  legend
-    display: none
-  fieldset
-    border: none
-    font-weight: bold
-    ul.graphic-input li input
-      background: transparent url(/images/new/bg-sprite-btns.png) -32px -39px no-repeat !important
-      border: none !important
-      color: #888888
-      font: 11px arial, helvetica, sans-serif
-      margin-left: -8px
-      min-height: 13px
-      padding: 7px 0 6px 11px
-      position: relative
-      /* ie
-      width: 144px
 
 .forgot
   font-size: 0.9em
@@ -669,37 +650,27 @@ html body #content table.roster-table
 
 /* GENERAL FORM STYLES
 form
-  padding: 5px
   ul
     list-style: none
     margin: 0
   li
     margin-bottom: 1.65em
-  .item
-    .action_menu
-      background: #bddfdf !important
-      border-bottom: none
-      padding: 5px
-  fieldset
-    border: solid 1px #ccc
-    clear: both !important
-    color: #222222
-    display: block !important
-    font-size: 1em
-    margin-bottom: 0.5em
-    padding: 0 10px 10px
-    legend
-      background: transparent
-      display: block
-      font-weight: bold
-      margin-left: 1em 0 0 10px
-      padding: 5px !important
-  label, input, select
-    display: inline
-    font-weight: normal
-  .menu_v
-    clear: both
-    margin-left: 10px
+
+fieldset
+  clear: both !important
+  display: block !important
+
+legend
+  clear: both
+  color: #222222
+  display: block
+  font-size: 1.1em
+  font-weight: bold
+  margin: 1em 0 0 0 !important
+  padding: 1em 0 1em 0 !important
+
+form#project-signin legend
+  display: none
 
 label
   font-weight: bold
@@ -808,10 +779,6 @@ a.button:hover, button.over
   background: -webkit-gradient(linear, left top, left bottom, from(#f3951d), to(#dd6e0d))
   background: -moz-linear-gradient(top, #f3951d, #dd6e0d)
 
-.container_element
-  .action_menu
-    padding: 5px
-
 p select
   display: inline
   margin: 0 2px
@@ -853,6 +820,18 @@ h2, h3
   /* FF1+
   -webkit-border-radius: 8px
   /* Saf3+, Chrome
+
+#project-signin fieldset ul.graphic-input li input
+  background: transparent url(/images/new/bg-sprite-btns.png) -32px -39px no-repeat !important
+  border: none !important
+  color: #888888
+  font: 11px arial, helvetica, sans-serif
+  margin-left: -8px
+  min-height: 13px
+  padding: 7px 0 6px 11px
+  position: relative
+  /* ie
+  width: 144px
 
 *+html #page #wrapper .graphic-input input
   float: left
@@ -1049,8 +1028,8 @@ ul.quiet_list
 #under_footer
   background-color: #fee9aa
   text-align: center
-  margin: 5px 0
-  padding: 2px 0
+  margin: 5px 0px
+  padding: 2px 0px
 
 .attached_file
   border: 1px solid
