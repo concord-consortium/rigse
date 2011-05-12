@@ -1,17 +1,10 @@
 class Embeddable::Diy::Sensor < Embeddable::Embeddable
-  FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in Dit Sensor"
-  PREDICTION_FIELDS = [
-    :probe_type, :calibration, :y_axis_min, :y_axis_max, :x_axis_min, 
-    :x_axis_max, :x_axis_label, :x_axis_units, :y_axis_label, :y_axis_units, 
-    :draw_marks, :connect_points, :autoscale_enabled, :ruler_enabled, :show_tare
-  ]
 # AR Attributes
 # caption, has_prediction
   set_table_name "embeddable_diy_sensors"
   belongs_to :user
   belongs_to :prototype, :class_name => "Embeddable::DataCollector"
   validates_presence_of :prototype
-  serialize :customizations, Hash
   belongs_to :prediction_graph_source,
     :class_name => "Embeddable::Diy::Sensor",
     :foreign_key => "prediction_graph_id"
@@ -20,113 +13,75 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     :class_name => "Embeddable::Diy::Sensor",
     :foreign_key => "prediction_graph_id"
   
-  # manually update the axis and other info
-  # for the prediction graph
-  after_save :update_prediction_graph 
   include Snapshotable
   uncloneable_attributes :prediction_graph_id, :prediction_graph_source
-  class << self
-    # fields we will accept customizations on
-    def customizable_fields
-      %w[
-        y_axis_min
-        y_axis_max
-        x_axis_min
-        x_axis_max
-        multiple_graphable_enabled
-        ].map{ |e| e.to_sym}
-        # Other fields we might want to be able to override
-        #x_axis_label
-        #x_axis_units
-        #y_axis_label
-        #y_axis_units
-        #draw_marks
-        #connect_points
-        #autoscale_enabled
-        #ruler_enabled
-        #show_tare
-        #single_value
-    end
-    
-    # should instances try and use customizations for this method?
-    def custom_get?(method_sym)
-      customizable_fields.detect{|e| method_sym.to_s =~ /^#{e.to_s}$/}      
-    end
-
-    # should instances try and use customizations for this method?
-    def custom_set?(method_sym)
-      customizable_fields.detect{|e| method_sym.to_s =~ /^#{e.to_s}=$/}      
-    end
-    
-    def display_name
-      "Sensor"
-    end
+  def self.display_name
+    "Sensor"
   end
 
-  def respond_to?(method, *args, &block)
-    return true if Embeddable::Diy::Sensor.custom_set?(method)
-    return true if Embeddable::Diy::Sensor.custom_get?(method)
-    return true if super
-    return true if self.prototype.respond_to?(method, *args, &block)
-  end
-
-  def method_missing(method, *args, &block)
-    if Embeddable::Diy::Sensor.custom_set?(method)
-      # remove the trailing '=' from method_name to get field name
-      field = method.to_s.chop.to_sym
-      results = self.set(field, *args)
-    elsif Embeddable::Diy::Sensor.custom_get?(method)
-      field = method
-      results = self.get(field)
-    else
-      begin
-        # check active record first!
-        results = super
-      rescue(NoMethodError)
-        results = self.prototype.send(method, *args, &block)
-      end
-      results
-    end
-  end
-
-  def get(field)
-    if (self.customizations && self.customizations.has_key?(field))
-      return self.customizations[field]
-    end
-    return self.prototype.send(field)
-  end
-  
-  def set(field,*args)
-    self.customizations = {} if self.customizations.nil?
-    self.customizations[field] = args[0]
-  end
-
-  # remove customizations for field
-  def remove(field)
-    self.customizations.delete(field) if self.customizations.has_key?
-  end
-
-  # remove all customizations
-  def remove_customizations
-    self.customizations = {}
-  end
-  
+  # not sure about this one
   def display_name
     if self.graph_type == "Prediction" 
       return "Prediction Graph"
     end
     return "Sensor"
   end
-  
-  def update_prediction_graph
-    prediction = self.prediction_graph_source
-    return unless prediction
-    Embeddable::Diy::Sensor::PREDICTION_FIELDS.each do |key|
-      prediction.send("#{key.to_s}=".to_sym, self.send(key))
+
+  # we specify this ourself since some of the code is going to use us to generate an refering id
+  #  and other parts of the code will use our data_collector
+  def ot_dom_id
+    "diy_sensor_#{id}"
+  end
+
+  def data_collector
+    return @data_collector if @data_collector
+    if graph_type == "Prediction"
+      delegate = prediction_graph_destinations.first.data_collector
+    else
+      delegate = prototype
+    end    
+    @data_collector = DataCollector.new(self, delegate)
+  end
+
+  # this might be cleaner if we could extend or clone Embeddable::DataCollector somehow
+  class DataCollector
+    def initialize(sensor, delegate)
+      @sensor = sensor
+      @delegate = delegate
     end
-    unless prediction.save
-      Rails.logger.warn(Embeddable::Diy::Sensor::FAIL_UPDATE_PREDICTION)
-      Rails.logger.warn(prediction.errors.full_messages)
+
+    # use the id of the sensor object not the prototype
+    delegate :id, :user, :user_id, :uuid, :multiple_graphable_enabled, :graph_type, :ot_dom_id, :to => :@sensor
+
+    def save
+      raise "This is a dynamic 'view' of a DataCollector and shouldn't be saved"
+    end
+    
+    def save! 
+      save 
+    end
+
+    def prediction_graph_source
+      if @sensor.prediction_graph_source 
+        @sensor.prediction_graph_source.data_collector 
+      else
+        nil
+      end
+    end
+
+    def prediction_graph_destinations
+      @sensor.prediction_graph_destinations.map{|target| target.data_collector}
+    end
+
+    # we only respond to methods defined on the Embeddable::DataCollector
+    def respond_to?(method, *args, &block)
+      return true if super
+      @delegate.respond_to?(method, *args, &block)
+    end
+
+    def method_missing(method, *args, &block)
+      @delegate.send(method, *args, &block)
     end
   end
+
 end

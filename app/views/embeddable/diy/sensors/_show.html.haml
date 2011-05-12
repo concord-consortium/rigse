@@ -3,5 +3,5 @@
     %p Prediction graph
 
   - else
-    %p= diy_sensor.name
-  = render :partial => "embeddable/data_collectors/show", :locals => {:data_collector => diy_sensor}
+    %p= diy_sensor.data_collector.name
+  = render :partial => "embeddable/data_collectors/show", :locals => {:data_collector => diy_sensor.data_collector}

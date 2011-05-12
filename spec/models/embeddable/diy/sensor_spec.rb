@@ -36,80 +36,16 @@ describe Embeddable::Diy::Sensor do
       test_case.should have(1).pages
       @backed_proto.should have(0).pages
     end
-
-    it "should proxy for things like 'name', 'description', &etc." do
-      test_case = create(@valid_attributes)
-      test_case.description.should_not be_nil 
-      test_case.description.should == @backed_proto.description
-      test_case.name.should_not be_nil 
-      test_case.name.should == @backed_proto.name
-    end
-
-    it "should respond_to? for proxied attributes" do
-      test_case = create(@valid_attributes)
-      test_case.should respond_to :description
-      test_case.should respond_to :name
-    end
-
-  end
-  
-  describe "simple serialized fields" do
-    it "accept arbitrary asignment into the customizations field" do
-      cust = {
-        :one => 1,
-        :two => "two",
-        :three => :four }
-      bad = { :bad => :values }
-      test_case = create(@valid_attributes.update(:customizations => cust))
-      test_case.should be_valid
-      test_case.id.should_not be_nil 
-      test_case.reload
-      test_case.customizations.should == cust
-      test_case.customizations.should_not == bad
-    end
   end
 
-  describe "method_missing serilialization" do
-    it "should let customizations be saved in customization field" do
-      test_case = create(@valid_attributes)
-      test_case.x_axis_max = 100
-      test_case.customizations.should_not be_nil
-      test_case.save
-      test_case.reload
-      test_case.customizations.should have_key :x_axis_max
-    end
-
-   it "should allow customizable fields to be addressed as properties" do
-      test_case = create(@valid_attributes)
-      test_case.x_axis_min = 0
-      test_case.x_axis_max = 100
-      test_case.save
-      test_case.reload
-      test_case.x_axis_min.should == 0
-      test_case.x_axis_max.should == 100
-    end
-
-  end
-  describe "updating the associated prediction graph on save" do
-    before(:each) do
-      @error_message = "bad bad bad"
-      @predict = mock (:errors => mock(:full_messages => @error_message))
-      @sensor = create(@valid_attributes)
-      @sensor.stub!(:prediction_graph_source).and_return(@predict)
-    end
-    it "should invoke 'update attrbutes' on the prediction graph" do
-      Embeddable::Diy::Sensor::PREDICTION_FIELDS.each { |key| @predict.should_receive "#{key.to_s}=".to_sym }
-      @predict.should_receive(:save).and_return(true)
-      @sensor.title = "some new title"
+  describe "updating associated prediction graph" do
+    it "should update the prediction y axis label after prototype is changed" do
+      @predict = create(:prototype => Factory(:data_collector), :graph_type => 'Prediction')
+      @sensor = create(:prototype => Factory(:data_collector, :probe_type => Factory(:probe_type, :name => "My Sensor")), :graph_type => 'Sensor')
+      @sensor.prediction_graph_source = @predict
       @sensor.save
-    end
-    it "should warn log valdation errors" do
-      Embeddable::Diy::Sensor::PREDICTION_FIELDS.each { |key| @predict.should_receive "#{key.to_s}=".to_sym }
-      @predict.should_receive(:save).and_return(false)
-      Rails.logger.should_receive(:warn).with(Embeddable::Diy::Sensor::FAIL_UPDATE_PREDICTION)
-      Rails.logger.should_receive(:warn).with(@error_message)
-      @sensor.title = "some new title"
-      @sensor.save
+      @predict.data_collector.y_axis_label.should == "My Sensor"
+      @predict.data_collector.title.should == "My Sensor Data Collector"
     end
   end
 end
