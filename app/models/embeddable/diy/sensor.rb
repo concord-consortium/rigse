@@ -62,7 +62,10 @@ class Embeddable::Diy::Sensor < Embeddable::Embeddable
     end
 
     def prediction_graph_source
-      if @sensor.prediction_graph_source 
+      prediction = @sensor.prediction_graph_source
+      # FIXME this needs to figure out if the found page_elements will be rendered when this data_collector is rendered
+      #  because in theory it could be rendered independently then this isn't an easy problem to solve
+      if prediction and prediction.page_elements.any? { |pe| pe.is_enabled?}
         @sensor.prediction_graph_source.data_collector 
       else
         nil

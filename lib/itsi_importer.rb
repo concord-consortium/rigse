@@ -778,6 +778,7 @@ class ItsiImporter
           set_embeddable(embeddable, :prototype=, prototype_data_collector)
 
           embeddable.multiple_graphable_enabled = attribute_for(diy_act,section_key, :probe_multi)
+          embeddable.save!
         rescue ActiveRecord::RecordNotFound => e
           message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
           @errors << ItsiImporter::ImporterException.new(message,{:diy_act => diy_act, :root_cause => e})
