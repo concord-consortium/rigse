@@ -14,3 +14,6 @@ rake app:import:force_create_itsi_activity_template
 
 ssh -N -L 3355:localhost:3306 moleman.concord.org # this requires a password if you keys are setup right
 rake --trace app:import:re_import_ccp_itsi_units_to_itsi_su
+
+# need to run this to make grades and school
+rake app:setup:default_portal_resources
