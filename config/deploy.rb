@@ -572,6 +572,12 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
+  # NP 20110512
+  desc "create an investigation to test all know probe_type / calibration combinations"
+  task :create_probe_testing_investigation, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+        "rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
+  end
 end
 
 

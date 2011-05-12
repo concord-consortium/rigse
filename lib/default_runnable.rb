@@ -48,7 +48,58 @@ class DefaultRunnable
       investigation
     end
 
+    def recreate_sensor_testing_investigation_for_user(user)
+      name = "Sensor Testing"
+      uuid = "576EE406-DCCF-4A5D-AE62-41DB3A098F4D"
+      description = "An activity with one data collector for each type of sensor"
+      @@prediction_graph = nil
+      old = Investigation.find_by_uuid(uuid)
+      if old
+        old.offerings.each {|o| o.delete }
+        old.destroy
+      end
+      puts "creating '#{name}' for user '#{user.login}'"
+      investigation = Investigation.create( :name => name, :description => description, :uuid => uuid)
+      counter = 1
+      Probe::ProbeType.all.sort{ |a,b| a.name.downcase <=> b.name.downcase}.each do |type|
+        description = "activity for testing #{type.name} data collection"
+        activity = Activity.create( :name => type.name, :description => description )
+        investigation.activities << activity
+        type.calibrations.sort{ |a,b| a.name.downcase <=> b.name.downcase}.each do |calibration|
+          section = DefaultRunnable.add_section_to_activity(activity, calibration.name, calibration.description)
+          data_collector_for(section,type,calibration)
+          counter = counter + 1
+        end
+        # and add one without a calibration
+        section = DefaultRunnable.add_section_to_activity(activity, "(no calibration)", "probe #{type.name} with no calibration")
+        data_collector_for(section,type,nil)
+        counter = counter + 1
+      end
+      investigation.deep_set_user(user)
+      investigation
+    end
 
+    def data_collector_for(section,type,calibration)
+      if calibration
+        calibration_name = calibration.name
+        calibration_desc = calibration.description
+      else
+        calibration_name = "no calibration"
+        calibration_desc = "without any calibration"
+      end
+      name = "#{type.name}- #{calibration_name}"
+      description = "<h3>#{type.name} (id:#{type.id})"
+      description << "- #{calibration_name} </h3>"
+      description << "<p>probe #{type.name}<br/>#{calibration_desc}</p>"
+      description << "<hr/>"
+      page,xhtml = DefaultRunnable.add_page_to_section(section,name,description)
+      data_collector = Embeddable::DataCollector.create(
+        :name => name,
+        :probe_type => type,
+        :calibration => calibration
+      )
+      data_collector.pages << page
+    end
 
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?
