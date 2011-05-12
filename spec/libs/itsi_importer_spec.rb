@@ -283,6 +283,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:save!)
       @embeddable.should_receive(:multiple_graphable_enabled=)
       @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
