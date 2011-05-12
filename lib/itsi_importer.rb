@@ -365,7 +365,7 @@ class ItsiImporter
             when :probetype_id
               probe_type = Probe::ProbeType.default
               prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => nil, :graph_type => 'Sensor'})
-              embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user)
+              embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_data_collector, :user => act.user, :graph_type => 'Sensor')
               # you must define prediction graph before the probe!
               unless the_prediction_graph.nil?
                 embeddable.prediction_graph_source = the_prediction_graph
@@ -381,7 +381,7 @@ class ItsiImporter
             when :prediction_graph
               probe_type = Probe::ProbeType.default
               prototype_prediction = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :graph_type => 'Prediction'})
-              embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_prediction, :user => act.user)
+              embeddable = Embeddable::Diy::Sensor.create!(:prototype => prototype_prediction, :user => act.user, :graph_type => 'Prediction')
               the_prediction_graph=embeddable
             when :prediction_text
               embeddable = Embeddable::OpenResponse.create(:name => "written prediction", :description => "written prediction")
@@ -766,8 +766,6 @@ class ItsiImporter
       if probe_type_id
         begin
           probe_type = Probe::ProbeType.find(probe_type_id)
-          # this might not find the probe type, some probes are in the DIY but haven't been added 
-          # to the rails-portal, this can be fixed by updating the rails-portal list
           calibration_id = calibration_id(diy_act,section_key)
           calibration = nil
           extra_options = nil
@@ -778,6 +776,9 @@ class ItsiImporter
           prototype_data_collector = Embeddable::DataCollector.get_prototype({:probe_type => probe_type, :calibration => calibration, :graph_type => 'Sensor',
             :extra_options => extra_options})
           set_embeddable(embeddable, :prototype=, prototype_data_collector)
+
+          embeddable.multiple_graphable_enabled = attribute_for(diy_act,section_key, :probe_multi)
+          embeddable.save!
         rescue ActiveRecord::RecordNotFound => e
           message = "#{e}. activity => #{diy_act.name} (#{diy_act.id}) probe_type.id => #{probe_type_id}"
           @errors << ItsiImporter::ImporterException.new(message,{:diy_act => diy_act, :root_cause => e})

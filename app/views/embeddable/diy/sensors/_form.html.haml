@@ -4,14 +4,6 @@
   - else
     - field_set_tag 'Sensor' do
       = f.collection_select(:prototype_id, Embeddable::DataCollector.prototypes.select{|p| p.graph_type == diy_sensor.graph_type}, :id, :name)
-    - field_set_tag 'Customizations' do
-      = f.label 'enable customizations'
-      = check_box_tag :customize, :class => 'customize_button'
-      .customizations
-        - diy_sensor.class.customizable_fields.each do |field|
-          - if field.to_s =~ /_enabled/
-            = f.label field.to_s.humanize
-            = f.check_box field
-          - else
-            = f.label field.to_s.humanize
-            = f.text_field field, :size => 20
+      = f.label :multiple_graphable_enabled
+      = f.check_box :multiple_graphable_enabled
+ 

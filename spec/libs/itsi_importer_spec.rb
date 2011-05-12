@@ -275,6 +275,7 @@ describe ItsiImporter do
       @calibration = mock
       @calibration.stub!(:id).and_return(3)
       Probe::Calibration.stub!(:find).and_return(@calibration)
+      @diy_act.should_receive(:collectdata_probe_multi).and_return false
       @diy_act.should_receive(:collectdata_probe_active).and_return true
       @diy_act.should_receive(:probe_type_id).and_return 1
       @diy_act.should_receive(:collectdata1_calibration_active).and_return true
@@ -282,11 +283,13 @@ describe ItsiImporter do
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:multiple_graphable_enabled=)
       @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
     end
     it "should handle fake calibrations" do
       Probe::Calibration.should_not_receive(:find)
+      @diy_act.should_receive(:collectdata_probe_multi).and_return false
       @diy_act.should_receive(:collectdata_probe_active).and_return true
       @diy_act.should_receive(:probe_type_id).and_return 7
       @diy_act.should_receive(:collectdata1_calibration_active).and_return true
@@ -294,6 +297,7 @@ describe ItsiImporter do
       @embeddable.should_receive(:prototype=).with @data_collector
       @embeddable.should_receive(:enable)
       @embeddable.should_receive(:save)
+      @embeddable.should_receive(:multiple_graphable_enabled=)
       @embeddable.should_receive(:pages).and_return([])
       ItsiImporter.process_probetype_id(@embeddable,@diy_act,@section_def)
     end
@@ -469,6 +473,7 @@ describe ItsiImporter do
           :textile                         => true,
           :collectdata_text_response       => true,
           :collectdata_probe_active        => true,
+          :collectdata_probe_multi         => true,
           :collectdata1_calibration_active => false,
           :collectdata_model_active        => false,
           :collectdata_drawing_response    => false,

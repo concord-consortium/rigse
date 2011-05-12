@@ -52,7 +52,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   def handle_probe_type_change
     if(calibration && (calibration.probe_type_id != probe_type_id))
-      calibrtaion = nil
+      calibration = nil
     end
 
     fields = {

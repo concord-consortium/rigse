@@ -39,8 +39,15 @@ module OtmlHelper
     optional_prefixes.flatten!
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
-    class_name = component.class.name.split('::').last.underscore
-    "#{prefix}#{class_name}_#{component.id}"
+    # let the component handle this if it wants to
+    # this is useful if a embeddable is actually rendering to a different object
+    if component.respond_to? :ot_dom_id
+      dom_id = component.ot_dom_id
+    else
+      class_name = component.class.name.split('::').last.underscore
+      dom_id = "#{class_name}_#{component.id}"
+    end
+    "#{prefix}#{dom_id}"
   end
   
   def data_filter_inports
