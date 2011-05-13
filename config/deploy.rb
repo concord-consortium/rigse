@@ -163,14 +163,14 @@ namespace :db do
   task :fetch_remote_attachments, :roles => :web do
     remote_dir  = "#{shared_path}/system/attachments/"
     local_dir   = "public/system/attachments/"
-    run_locally "rsync -avx --delete #{domain}:#{remote_dir} #{local_dir}"
+    run_locally "rsync -avx --delete #{fetch(:user)}@#{domain}:#{remote_dir} #{local_dir}"
   end
 
   desc "Pushes uploaded attachments to the remote server"
   task :push_local_attachments, :roles => :web do
     remote_dir  = "#{shared_path}/system/attachments/"
     local_dir   = "public/system/attachments/"
-    run_locally "rsync -avx --delete #{local_dir} #{domain}:#{remote_dir}"
+    run_locally "rsync -avx --delete #{local_dir} #{fetch(:user)}@#{domain}:#{remote_dir}"
   end
 
 end
