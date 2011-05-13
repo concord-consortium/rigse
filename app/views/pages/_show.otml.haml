@@ -13,26 +13,19 @@
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
     %bodyText
-      - if for_teacher_only?(page)
-        - if teacher_mode
-          #content.teacher_mode
-            - if page.section
-              %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
-
-            - page.page_elements.each do |element|
-              - if element.is_enabled
-                .element
-                  %object{ :refid => ot_refid_for(element.embeddable) }/
-      - else
-        #content
+      - if (for_teacher_only?(page) && teacher_mode) || (!for_teacher_only?(page))
+        #content{ :class => for_teacher_only?(page) ? 'teacher_mode' : nil}
           - if page.section
             %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})"
 
           - page.page_elements.each do |element|
             - if element.is_enabled
               .element
-                = yield "element_#{dom_id_for(element.embeddable)}".to_sym
-                %object{ :refid => ot_refid_for(element.embeddable) }/
+                -# allow embeddables to control how they are referenced from the document
+                - if object_reference = yield("element_#{dom_id_for(element.embeddable)}".to_sym)
+                  = object_reference
+                - else
+                  %object{ :refid => ot_refid_for(element.embeddable) }/
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
     %bodyText
