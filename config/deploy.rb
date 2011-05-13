@@ -580,6 +580,16 @@ namespace :convert do
   end
 end
 
+#
+# generake (hehe) cap task to run rake tasks.
+# found here: http://stackoverflow.com/questions/312214/how-do-i-run-a-rake-task-from-capistrano
+namespace :rake do  
+  desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
+  # run like: cap staging rake:invoke task=a_certain_task  
+  task :invoke do  
+    run("cd #{deploy_to}/current; /usr/bin/env rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
+  end  
+end
 
 #############################################################
 #  INSTALLER:  Help to create installers on various hosts
