@@ -2,7 +2,6 @@
 
 <table>
   <tr>
-    <th>Maven jnlp family</th>
     <th>Jnlp icon</th>
     <th>Uuid</th>
     <th>Name</th>
@@ -10,11 +9,9 @@
     <th>Argument</th>
     <th>Offline allowed</th>
     <th>Local resource signatures verified</th>
-    <th>Include pack gz</th>
     <th>Spec</th>
     <th>Codebase</th>
     <th>Href</th>
-    <th>J2se</th>
     <th>Max heap size</th>
     <th>Initial heap size</th>
     <th>Title</th>
@@ -23,9 +20,8 @@
     <th>Description</th>
   </tr>
 
-<% @versioned_jnlps.each do |versioned_jnlp| %>
+<% @maven_jnlp_versioned_jnlps.each do |versioned_jnlp| %>
   <tr>
-    <td><%=h versioned_jnlp.maven_jnlp_family_id %></td>
     <td><%=h versioned_jnlp.jnlp_icon_id %></td>
     <td><%=h versioned_jnlp.uuid %></td>
     <td><%=h versioned_jnlp.name %></td>
@@ -33,11 +29,9 @@
     <td><%=h versioned_jnlp.argument %></td>
     <td><%=h versioned_jnlp.offline_allowed %></td>
     <td><%=h versioned_jnlp.local_resource_signatures_verified %></td>
-    <td><%=h versioned_jnlp.include_pack_gz %></td>
     <td><%=h versioned_jnlp.spec %></td>
     <td><%=h versioned_jnlp.codebase %></td>
     <td><%=h versioned_jnlp.href %></td>
-    <td><%=h versioned_jnlp.j2se %></td>
     <td><%=h versioned_jnlp.max_heap_size %></td>
     <td><%=h versioned_jnlp.initial_heap_size %></td>
     <td><%=h versioned_jnlp.title %></td>
@@ -45,7 +39,7 @@
     <td><%=h versioned_jnlp.homepage %></td>
     <td><%=h versioned_jnlp.description %></td>
     <td><%= link_to 'Show', versioned_jnlp %></td>
-    <td><%= link_to 'Edit', edit_versioned_jnlp_path(versioned_jnlp) %></td>
+    <td><%= link_to 'Edit', edit_maven_jnlp_versioned_jnlp_path(versioned_jnlp) %></td>
     <td><%= link_to 'Destroy', versioned_jnlp, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -53,4 +47,4 @@
 
 <br />
 
-<%= link_to 'New versioned_jnlp', new_versioned_jnlp_path %>
+<%= link_to 'New versioned_jnlp', new_maven_jnlp_versioned_jnlp_path %>
