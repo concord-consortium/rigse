@@ -13,28 +13,4 @@
     - field_set_tag 'Activity Template' do
       = select_tag "activity_template", options_from_collection_for_select(Activity.templates, :id, :name)
 
-  - field_set_tag 'Tags' do
-    = tag_selector(@activity,"activity",:grade_level)
-    = tag_selector(@activity,"activity",:subject_area)
-    = tag_selector(@activity,"activity",:unit)
-   
-    %div.field_set
-      %label Publication status
-      %br
-      = f.select :publication_status, ["private", "published"]
-      
-    %div.field_set
-      %label Probes
-      %br
-      %ul.quiet
-        - @activity.probes.each do |probe|
-          %li="#{probe}"
-
-    %div.field_set
-      %label Models
-      %br
-      %ul.quiet
-        - @activity.models.each do |model|
-          %li="#{model}"
-        
 = javascript_tag("focus_first_field();");
