@@ -41,6 +41,8 @@ module JnlpHelper
     else
       additional_properties = [
         ['otrunk.view.mode', 'student'],
+        ['otrunk.view.no_user', 'true' ],
+        ['otrunk.view.user_data_warning', 'true']
       ]
     end
     jnlp_adaptor.system_properties + additional_properties
