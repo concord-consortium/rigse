@@ -17,6 +17,7 @@
   -#= f.hidden_field :redirect, activity_template_edit(@activity)
   = f.text_area(:description, :class => 'mceNoEditor',:cols => '72', :rows => '5')
   %p
+  = preview_link_for(@activity, nil, :no_button => true)
   = f.submit "save"
 - @activity.sections.each do |section|
   = template_container_for(section, :no_edit => true) do
