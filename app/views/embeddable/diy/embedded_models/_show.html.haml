@@ -1,19 +1,13 @@
 %div{:id => dom_id_for(diy_embedded_model, :details), :class => 'content'}
-  -# = wrap_edit_link_around_content(embedded_model, options={:complete => mce_init_string, :class => 'foobar edit'}) do
-  %p
-    -if diy_embedded_model.diy_model && diy_embedded_model.diy_model.image_url
-      =image_tag(diy_embedded_model.diy_model.image_url)
-      %p
-        Authored Data URL: 
-        =link_to diy_embedded_model.url
-    - elsif diy_embedded_model.url
-      %p
-        %b Model: 
-        =diy_embedded_model.name
-      %p
-        %b Authored Data URL: 
-        =link_to diy_embedded_model.url
-    -else
-      %p
-        (No authored data URL)
+  - if diy_embedded_model.diy_model
+    %b Model #{diy_embedded_model.diy_model.id}:
+    = diy_embedded_model.name
+
+    .model_image
+      - if ! diy_embedded_model.diy_model.image_url.blank?
+        =image_tag(diy_embedded_model.diy_model.image_url)
+      - else
+        (No Model Image)
+  -else
+    (No Model Selected)
 
