@@ -1,3 +1,12 @@
+- if data_collector.show_tare
+  - content_for("element_#{ot_dom_id_for(data_collector)}".to_sym) do
+    %object{ :refid => ot_refid_for(data_collector) }/
+    %br/
+    %object{ :refid => ot_refid_for(data_collector, :zero_button) }/
+
+  %OTButton{ :text => "Zero #{data_collector.y_axis_label}", :local_id => ot_local_id_for(data_collector, :zero_button),
+       :action => ot_refid_for(data_collector, :zero_action)}/
+
 %OTDataCollector{ :local_id                   => ot_local_id_for(data_collector),
                   :name                       => h(data_collector.name),
                   :title                      => data_collector.title,
