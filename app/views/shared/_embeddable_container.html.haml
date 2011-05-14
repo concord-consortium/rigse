@@ -1,4 +1,4 @@
-- options = { :complete => mce_init_string }
+- options = { :complete => mce_init_string }.merge(local_assigns[:overrides] || {})
 - if defined? page_element
   - view_class = for_teacher_only?(page_element) ? "teacher_only container_element" : "container_element"
   %div{ :id => dom_id_for(page_element, :item), :class => view_class }

@@ -458,5 +458,16 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
         # puts "#{path} not found"
       end
     end
+
+    desc "create an investigation to test all know probe_type / calibration combinations"
+    task "create_probe_testing_investigation" => :environment do
+      author_user = User.find_by_login("author")
+      if author_user
+        DefaultRunnable.recreate_sensor_testing_investigation_for_user(author_user)
+      else
+        puts "You must have created the default author user first"
+        puts "try running the default_users_roles task"
+      end
+    end
   end
 end
