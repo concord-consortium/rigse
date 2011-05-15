@@ -1,5 +1,5 @@
 - form_for(@activity) do |f|
-  %h3 Activity Name
+  %h3 Activity #{@activity.id} Name
   = f.text_field(:name, :size => '72')
   %h3 publication status
   = f.select :publication_status, ["private", "published"]
