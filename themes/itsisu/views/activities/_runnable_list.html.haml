@@ -44,6 +44,7 @@
 
                   .title
                     = runnable.name
+                    = "[#{runnable.id}]"
                     = runnable.published? ? "" : "(private)"
                   .description{:id=> dom_id_for(runnable,:description), :style => "display: none;"}
                     = runnable.description
