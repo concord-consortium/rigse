@@ -48,4 +48,17 @@ module ActivityHelper
     #end
   end
 
+  def activity_sensor_and_model_summary(activity)
+    summary = activity.probe_and_model_summary
+    labels = { :probes => "Sensor", :models => "Model"}
+    sarray = []
+    summary.each{ |key, values|
+      next if values.blank?
+      label = labels[key]
+      label = label.pluralize if values.size > 1
+      sarray << ("#{label}: #{values.join(', ')}")
+    }
+    return "" if sarray.empty?
+    "(#{sarray.join('; ')})"
+  end
 end

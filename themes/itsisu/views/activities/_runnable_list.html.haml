@@ -23,23 +23,29 @@
           - units = _tag[:units]
           - units.keys.sort.each do |unit_key|
             - unit = units[unit_key]
-            %h2="#{unit[:name]} (#{unit[:count]})"
-            - unit[:activities].each do |runnable|
-              .activity-title
-                - if runnable.changeable? current_user
-                  %a{:href => template_edit_activity_path(runnable)}
-                    %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
-                %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
-                  %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
-                %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:description)}').toggle(); return false;", :title => "View activity description"}
-                  %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
-                %a{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
-                  %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
-                %a#try_button_1435.waiter{:href =>polymorphic_url(runnable, :format => :jnlp, :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
-                  %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
-                %a#run_button_.waiter{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
-                  %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
-                =runnable.name
-                = runnable.published? ? "" : "(private)"
-                .activity_description{:id=> dom_id_for(runnable,:description), :style => "display: none;"}
-                  =runnable.description
+            .unit
+              %h2="#{unit[:name]} (#{unit[:count]})"
+              - unit[:activities].each do |runnable|
+                .activity
+                  .actions
+                    - if runnable.changeable? current_user
+                      %a{:href => template_edit_activity_path(runnable)}
+                        %img{:alt => "edit", :src => "/images/diy_icons/edit.png", :title => "edit this activity"}/
+                    %a{:href => duplicate_activity_url(runnable), :title => "Make your own version of this activity"}
+                      %img{:alt => "copy", :src => "/images/diy_icons/page_white_copy.png", :title => "Make your own version of this activity"}/
+                    %a{:href => "#", :onclick => "$('#{dom_id_for(runnable,:description)}').toggle(); return false;", :title => "View activity description"}
+                      %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
+                    %a{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
+                      %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
+                    %a#try_button_1435.waiter{:href =>polymorphic_url(runnable, :format => :jnlp, :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
+                      %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
+                    %a#run_button_.waiter{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
+                      %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
+
+                  .title
+                    = runnable.name
+                    = runnable.published? ? "" : "(private)"
+                  .description{:id=> dom_id_for(runnable,:description), :style => "display: none;"}
+                    = runnable.description
+                  .info
+                    = activity_sensor_and_model_summary(runnable)
