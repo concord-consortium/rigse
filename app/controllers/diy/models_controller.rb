@@ -80,15 +80,24 @@ class Diy::ModelsController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
+    cancel = params[:commit] == "Cancel"
     @model = Diy::Model.find(params[:id])
-    respond_to do |format|
-      if @model.update_attributes(params[:diy_model])
-        flash[:notice] = 'Model was successfully updated.'
-        format.html { redirect_to(@model) }
-        format.xml  { head :ok }
+    if request.xhr?
+      if cancel || @model.update_attributes(params[:diy_model])
+        render :partial => 'show', :locals => { :model => @model }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @model.errors, :status => :unprocessable_entity }
+        render :xml => @model.errors, :status => :unprocessable_entity
+      end
+    else
+      respond_to do |format|
+        if @model.update_attributes(params[:diy_model])
+          flash[:notice] = 'Model was successfully updated.'
+          format.html { redirect_to(@model) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @model.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
