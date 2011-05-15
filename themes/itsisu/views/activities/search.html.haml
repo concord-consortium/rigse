@@ -1,0 +1,4 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @activities, :collection_class => Activity }
+
+- @activities.each do |runnable|
+  = render :partial => 'list_item', :locals => {:runnable => runnable}
