@@ -40,6 +40,8 @@ class Activity < ActiveRecord::Base
     Embeddable::Biologica::Pedigree,
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
+    Embeddable::Diy::EmbeddedModel,
+    Embeddable::Diy::Sensor,
     Embeddable::Smartgraph::RangeQuestion].each do |klass|
       eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
       :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
@@ -48,6 +50,32 @@ class Activity < ActiveRecord::Base
       INNER JOIN sections ON pages.section_id = sections.id
       WHERE sections.activity_id = \#\{id\}'"
   end
+
+  has_many :enabled_diy_models, :class_name => 'Diy::Model',
+    :finder_sql => 'SELECT diy_models.* FROM diy_models
+    INNER JOIN embeddable_diy_models ON diy_models.id = embeddable_diy_models.diy_model_id
+    INNER JOIN page_elements ON embeddable_diy_models.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::Diy::EmbeddedModel"
+    INNER JOIN pages ON page_elements.page_id = pages.id
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true'
+
+  has_many :enabled_diy_model_types, :class_name => 'Diy::ModelType',
+    :finder_sql => 'SELECT diy_model_types.* FROM diy_model_types
+    INNER JOIN diy_models ON diy_model_types.id = diy_models.model_type_id
+    INNER JOIN embeddable_diy_models ON diy_models.id = embeddable_diy_models.diy_model_id
+    INNER JOIN page_elements ON embeddable_diy_models.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::Diy::EmbeddedModel"
+    INNER JOIN pages ON page_elements.page_id = pages.id
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true'
+
+  has_many :enabled_probes, :class_name => 'Probe::ProbeType',
+    :finder_sql => 'SELECT probe_probe_types.* FROM probe_probe_types
+    INNER JOIN embeddable_data_collectors ON probe_probe_types.id = embeddable_data_collectors.probe_type_id
+    INNER JOIN embeddable_diy_sensors ON embeddable_data_collectors.id = embeddable_diy_sensors.prototype_id
+    INNER JOIN page_elements ON embeddable_diy_sensors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::Diy::Sensor"
+    INNER JOIN pages ON page_elements.page_id = pages.id
+    INNER JOIN sections ON pages.section_id = sections.id
+    WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true'
 
   has_many :page_elements,
     :finder_sql => 'SELECT page_elements.* FROM page_elements
@@ -266,5 +294,11 @@ class Activity < ActiveRecord::Base
         }
       }
     }.flatten.uniq
+  end
+
+  def probe_and_model_summary
+    probes = enabled_probes.uniq.map{|p| p.name }
+    models = enabled_diy_model_types.uniq.map{|m| m.name }
+    { :probes => probes, :models => models}
   end
 end

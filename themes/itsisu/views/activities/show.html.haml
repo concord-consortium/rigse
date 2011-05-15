@@ -1,4 +1,4 @@
-%h3=@activity.name
+%h3 #{@activity.name} [#{@activity.id}]
 %p=@activity.description
 - if @activity.changeable?(current_user)
   = link_to 'edit', template_edit_activity_path(@activity)

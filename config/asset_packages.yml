@@ -82,7 +82,6 @@ stylesheets:
   - app
   - authoring
   - template_edit
-  - themes/itsisu/itsisu
   - accordion
   - window/window
   - window/rites
