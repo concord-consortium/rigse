@@ -93,8 +93,9 @@ module TagDefaults
       activities = opts[:activities] || self.published_exemplars # self should be publishable
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       if user
-        # Add unpublished activities of the user:
-        users_own = self.find(:all, :conditions => {:user_id => user.id});
+        # Add all un archived activities of the user:
+        # this is using the ar extensions
+        users_own = self.find(:all, :conditions => {:user_id => user.id, :publication_status => ['published', 'private']});
         users_key_map = users_own.map do |a|
           # todo
           grade_level = "My #{self.name.humanize.pluralize}"

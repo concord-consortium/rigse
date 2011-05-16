@@ -117,6 +117,7 @@ class Activity < ActiveRecord::Base
   named_scope :templates, :conditions => {:is_template => true}
   named_scope :published_exemplars, :conditions => {:publication_status => "published", :is_exemplar => true}
   named_scope :published_non_exemplars, :conditions => {:publication_status => "published", :is_exemplar => false}
+  named_scope :unarchived, :conditions => ["#{self.table_name}.publication_status <> 'archived'"]
   
   class <<self
     def searchable_attributes
@@ -129,11 +130,7 @@ class Activity < ActiveRecord::Base
 
     def search_list(options)
       name = options[:name]
-      if (options[:include_drafts])
-        activities = Activity.like(name)
-      else
-        activities = Activity.published.like(name)
-      end
+      activities = Activity.unarchived.like(name)
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
       if portal_clazz

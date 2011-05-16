@@ -1,8 +1,8 @@
-%h3 #{@activity.name} [#{@activity.id}]
+%h2 #{@activity.name} [#{@activity.id}] (#{@activity.publication_status})
 %p=@activity.description
 - if @activity.changeable?(current_user)
   = link_to 'edit', template_edit_activity_path(@activity)
-  = run_link_for(@activity)
+  = preview_link_for(@activity,  nil, :no_button => true)
 - @activity.sections.each do |section|
   - next unless section.is_enabled?
   %h4=section.name

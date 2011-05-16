@@ -2,7 +2,7 @@
   %h3 Activity #{@activity.id} Name
   = f.text_field(:name, :size => '72')
   %h3 publication status
-  = f.select :publication_status, ["private", "published"]
+  = f.select :publication_status, activity_status_options
   - if current_user.has_role?('admin','manager')
     %h3 exemplar activity
     = f.check_box :is_exemplar
