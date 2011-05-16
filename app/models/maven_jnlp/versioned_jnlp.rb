@@ -32,7 +32,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     end
 
     def delete_all_cached_jnlp_objects
-      files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yml"]
+      files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yaml"]
       FileUtils.rm(files, :force => true)
     end
 
