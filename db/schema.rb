@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110429135111) do
+ActiveRecord::Schema.define(:version => 20110514044443) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
-    t.boolean  "enable_teacher_favorites",                     :default => false
     t.boolean  "enable_grade_levels",                          :default => false
   end
 
@@ -553,17 +552,6 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.datetime "updated_at"
   end
 
-  create_table "embeddable_web_models", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "web_model_id"
-    t.string   "uuid",         :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "embeddable_web_models", ["user_id"], :name => "index_embeddable_web_models_on_user_id"
-  add_index "embeddable_web_models", ["web_model_id"], :name => "index_embeddable_web_models_on_web_model_id"
-
   create_table "embeddable_xhtmls", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",        :limit => 36
@@ -583,9 +571,8 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",          :default => 0
+    t.integer  "offerings_count",    :default => 0
     t.string   "save_path"
-    t.boolean  "append_learner_id_to_url"
   end
 
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
@@ -595,14 +582,6 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.text     "description"
     t.string   "server_url"
     t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "favorites", :force => true do |t|
-    t.integer  "portal_teacher_id"
-    t.integer  "favoritable_id"
-    t.string   "favoritable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -748,15 +727,6 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.integer "versioned_jnlp_id"
   end
 
-  create_table "notifications_assessment_import_infos", :force => true do |t|
-    t.string   "database"
-    t.integer  "last_seq"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "notifications_assessment_import_infos", ["database"], :name => "index_notifications_assessment_import_infos_on_database"
-
   create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
     t.integer "otml_category_id"
     t.integer "otrunk_import_id"
@@ -848,8 +818,8 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -880,7 +850,7 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -1838,6 +1808,7 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.integer  "device_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "driver_short_name"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -1861,6 +1832,7 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.text     "content"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
@@ -2136,21 +2108,5 @@ ActiveRecord::Schema.define(:version => 20110429135111) do
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
-
-  create_table "web_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "url"
-    t.string   "image_url"
-    t.string   "publication_status"
-    t.string   "uuid",               :limit => 36
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "web_models", ["name"], :name => "index_web_models_on_name"
-  add_index "web_models", ["publication_status"], :name => "index_web_models_on_publication_status"
-  add_index "web_models", ["user_id"], :name => "index_web_models_on_user_id"
 
 end
