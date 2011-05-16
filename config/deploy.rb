@@ -112,6 +112,7 @@ namespace :db do
   task :remote_db_upload, :roles => :db, :only => { :primary => true } do
     ssh_compression = ssh_options[:compression]
     ssh_options[:compression] = true
+    `gzip -f db/production_data.sql` unless File.exists?("db/production_data.sql.gz")
     upload("db/production_data.sql.gz", "#{deploy_to}/#{current_dir}/db/production_data.sql.gz", :via => :scp)
     ssh_options[:compression] = ssh_compression
     remote_db_uncompress
