@@ -46,6 +46,10 @@ class ResourcePage < ActiveRecord::Base
   self.extend SearchableModel
   @@searchable_attributes = %w{name description content publication_status}
   class <<self
+    def can_be_created_by?(user)
+      user.has_role?('admin', 'manager', 'researcher', 'author') || user.portal_teacher
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end
