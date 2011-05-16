@@ -101,8 +101,8 @@ class Portal::School < ActiveRecord::Base
       found_instance = find(:first, :conditions=> {:nces_school_id => nces_school.id})
       unless found_instance
         attributes = {
-          :name => nces_school.SCHNAM,
-          :description => "imported from nces data",
+          :name => nces_school.capitalized_name,
+          :description => nces_school.description,
           :nces_school_id => nces_school.id,
           :district => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
         }
