@@ -1,2 +1,6 @@
+- if current_user.has_role?('admin','manager')
+  - content_for(:side_bar) do
+    %a{:href=>'/activities?search='}
+      All Activity List
 #offering_list.item_collection
   = render :partial=>"runnable_list"
