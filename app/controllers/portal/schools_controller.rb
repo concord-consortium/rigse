@@ -1,7 +1,28 @@
 class Portal::SchoolsController < ApplicationController
   
-  include RestrictedPortalController
-  before_filter :admin_only
+  before_filter :admin_only, :except => [:index, :edit, :update]
+  before_filter :admin_or_manager, :only => [:index, :edit, :update]
+
+  protected 
+
+  def admin_only
+    unless current_user.has_role?('admin')
+      flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def admin_or_manager
+    if current_user.has_role?('admin')
+      @admin_role = true
+    elsif current_user.has_role?('manager')
+      @manager_role = true
+    else
+      flash[:notice] = "Please log in as an administrator or manager" 
+      redirect_to(:home)
+    end
+  end
+  
   public
   
   # GET /portal_schools
