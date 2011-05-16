@@ -23,6 +23,7 @@ body
   background:
     color: $xproject_light_brown
   color: #333
+  line-height: 150%
   margin: 10px
     bottom: 0px
   background-position: right top
@@ -91,14 +92,20 @@ pre
   +container
   padding: 10px 10px 0
   // that's the blueprint default...
+  
+#userlinks
+  background: #139B97
+  color: #fff
+  right: 15px
+  top: 15px
 
-#header
+//#header
+.project-header h1.genomedynamics
+  background: #139b97 url(/themes/genomedynamics/images/jackson-logo.gif) 10px center no-repeat
   +column(24, true)
   padding: 0
   margin: 0
-  height: auto
-  background-color: #139b97
-  background-image: none
+  height: 132px
   color: #fff
   -border-top-left-radius: 0.5em
   -border-top-right-radius: 0.5em
@@ -106,13 +113,6 @@ pre
   -moz-border-radius-topright: 0.5em
   -webkit-border-top-left-radius: 0.5em
   -webkit-border-top-right-radius: 0.5em
-  a
-    color: #fff
-    background-color: transparent
-    font-weight: bold
-  a:hover
-    color: #f90
-    background-color: white
   .left_content
     +column(24, true)
     #xproject_nav
@@ -219,28 +219,45 @@ pre
   height: auto !important
   h1
     margin-bottom: 20px
+#primary h1
+  margin-bottom: 20px
 
 #footer
   background-image: none
   +column(24, true)
   +bottom_nav_colors
-  height: 15px
-  min-height: 15px
+  height: auto
+  min-height: 50px
   padding: 6px 0
+  position: relative
   margin: 10px 0 0
   -moz-border-radius-bottomright: 0.5em
   -webkit-border-bottom-right-radius: 0.5em
   -moz-border-radius-bottomleft: 0.5em
   -webkit-border-bottom-left-radius: 0.5em
-  #footer_left
-    color: white
-    +column(12)
-    a
+  p
+    font-family: arial, helvetica, sans-serif
+  .footer-inner
+    bottom: auto
+    left: 0
+    position: relative
+    .legal
+      background: #139b97
+      color: #fff
+      margin: 0
+      padding: 5px 0 0 10px
+      text-align: left
+    #footer_left
       color: white
-  #footer_right
-    text-align: right
-    +column(12, true)
-    float: right
+      +column(12)
+      margin-left: 0
+      padding: 0 0 0 10px
+      a
+        color: white
+    #footer_right
+      text-align: right
+      +column(12, true)
+      float: right
 
 #under_footer
   background: #fff
@@ -315,9 +332,6 @@ ul.menu
   letter-spacing: 0.1em
   color: $legend_color
 
-.component_title
-  font-size: 1em
-
 .in_place_editor_field
   display: inline
   min-width: 5em
@@ -343,6 +357,13 @@ ul.menu
     opacity: 0.8
     &:hover
       opacity: 1
+    .component_title
+      font-size: 1em
+.action_menu .pagination
+  a
+    color: #fff !important
+.item .action_menu .action_menu_activity_title span, .item .action_menu .action_menu_activity_title span.component_title, .item .action_menu .action_menu_activity_options
+  font-size: 12px !important
 
 .item
   background-color: white
@@ -660,7 +681,10 @@ input[type=password]
       border: 1px solid #444444
       margin-left: -15px
       text-align: center
-
+    .create_link
+      background: transparent
+      border: none
+      margin-bottom: 20px
 strong
   font-weight: bold
   
@@ -682,3 +706,4 @@ a.more, ul.more a
 // custom action menu styles
 .action_menu
   background: #139b97
+  color: #fff

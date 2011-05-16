@@ -163,14 +163,14 @@ namespace :db do
   task :fetch_remote_attachments, :roles => :web do
     remote_dir  = "#{shared_path}/system/attachments/"
     local_dir   = "public/system/attachments/"
-    run_locally "rsync -avx --delete #{domain}:#{remote_dir} #{local_dir}"
+    run_locally "rsync -avx --delete #{fetch(:user)}@#{domain}:#{remote_dir} #{local_dir}"
   end
 
   desc "Pushes uploaded attachments to the remote server"
   task :push_local_attachments, :roles => :web do
     remote_dir  = "#{shared_path}/system/attachments/"
     local_dir   = "public/system/attachments/"
-    run_locally "rsync -avx --delete #{local_dir} #{domain}:#{remote_dir}"
+    run_locally "rsync -avx --delete #{local_dir} #{fetch(:user)}@#{domain}:#{remote_dir}"
   end
 
 end
@@ -572,8 +572,24 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
+  # NP 20110512
+  desc "create an investigation to test all know probe_type / calibration combinations"
+  task :create_probe_testing_investigation, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && " +
+        "rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
+  end
 end
 
+#
+# generake (hehe) cap task to run rake tasks.
+# found here: http://stackoverflow.com/questions/312214/how-do-i-run-a-rake-task-from-capistrano
+namespace :rake do  
+  desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
+  # run like: cap staging rake:invoke task=a_certain_task  
+  task :invoke do  
+    run("cd #{deploy_to}/current; /usr/bin/env rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
+  end  
+end
 
 #############################################################
 #  INSTALLER:  Help to create installers on various hosts

@@ -556,7 +556,8 @@ describe Portal::ClazzesController do
     end
 
     # Is this a reasonable requirement? Revisit. -- Cantina-CMH
-    it "should not let me create a class with no grade levels" do
+    # Admin::Project.default_project.enable_grade_levels?
+    it "should not let me create a class with no grade levels when grade levels are enabled" do
       stub_current_user :authorized_teacher_user
 
       current_count = Portal::Clazz.count(:all)
@@ -567,6 +568,20 @@ describe Portal::ClazzesController do
 
       assert flash[:error]
       Portal::Clazz.count(:all).should == current_count
+    end
+
+    # Is this a reasonable requirement? Revisit. -- Cantina-CMH
+    it "should let me create a class with no grade levels when grade levels are disabled" do
+      @mock_project.stub(:enable_grade_levels?).and_return(false)
+      @post_params[:portal_clazz].delete(:grade_levels)
+
+      stub_current_user :authorized_teacher_user
+
+      current_count = Portal::Clazz.count(:all)
+
+      post :create, @post_params
+
+      Portal::Clazz.count(:all).should == (current_count + 1)
     end
   end
 end

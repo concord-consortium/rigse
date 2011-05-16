@@ -1,8 +1,12 @@
-- content_for("element_#{dom_id_for(data_table)}".to_sym) do
+- content_for("element_#{ot_dom_id_for(data_table)}".to_sym) do
   = data_table_title(data_table)
+  %object{ :refid => ot_refid_for(data_table) }/
 
 - content_for(:library) do
   - if ! data_table.data_collector.nil?
+    -# FIXME: this unnecessarily puts object tags in the library for things that are already in the library
+    -#  the render_scoped_reference method is used elsewhere where the object tag is needed if the target is in scope
+    -#  but in this case that is unnecessary
     = render_scoped_reference(data_table.data_collector)
 
 %OTDataTable{ :local_id => ot_local_id_for(data_table), :name => h(data_table.name), :showLastRowForAddingNew => 'true', :visibleRows => data_table.visible_rows, :precision => data_table.precision, :width => data_table.width }

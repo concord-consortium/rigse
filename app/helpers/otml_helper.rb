@@ -294,7 +294,7 @@ module OtmlHelper
     probe_type = data_collector.probe_type
     capture_haml do
       haml_tag :OTSensorDataProxy, :local_id => ot_local_id_for(data_collector, :data_proxy) do
-         haml_tag :request do
+        haml_tag :request do
            haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
              haml_tag :sensorRequests do
                haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
@@ -302,6 +302,11 @@ module OtmlHelper
                 :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
                 :displayPrecision => "#{data_collector.probe_type.display_precision}"
             end
+          end
+        end
+        if data_collector.show_tare
+          haml_tag :zeroSensor do
+            haml_tag :OTZeroSensor, :sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action)
           end
         end
       end
