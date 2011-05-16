@@ -32,7 +32,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     end
 
     def delete_all_cached_jnlp_objects
-      files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yaml"]
+      files  = Dir["#{MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir}/**/#{jnlp_object_name}*.yml"]
       FileUtils.rm(files, :force => true)
     end
 
@@ -161,7 +161,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
 
   def jnlp_object_path
-    "#{self.jnlp_object_path_prefix}_#{id}.yaml"
+    "#{self.jnlp_object_path_prefix}_#{self.versioned_jnlp_url.version_str}.yml"
   end
 
   def parse_jnlp_object
