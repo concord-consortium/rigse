@@ -579,9 +579,9 @@ namespace :convert do
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
   # https://github.com/stepheneb/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
-  desc "*** WARNING *** Delete all districts, schools, teachers, students, offerings, etc except for the virtual site district and school"
-  task :delete_all_schools, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} app:schools:delete_all_schools --trace"
+  desc "*** WARNING *** Delete all real districts, schools, teachers, students, offerings, etc except for the virtual site district and school"
+  task :delete_all_real_schools, :roles => :app do
+    run "cd #{deploy_to}/#{current_dir} && rake RAILS_ENV=#{rails_env} app:schools:delete_all_real_schools --trace"
   end
 
 end
