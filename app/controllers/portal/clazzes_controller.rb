@@ -81,7 +81,7 @@ class Portal::ClazzesController < ApplicationController
       okToCreate = false
     end
 
-    if okToCreate
+    if okToCreate and Admin::Project.default_project.enable_grade_levels?
       grade_levels.each do |name, v|
         grade = Portal::Grade.find_by_name(name)
         @portal_clazz.grades << grade if grade
