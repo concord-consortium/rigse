@@ -1,6 +1,6 @@
 %li#home.trail= link_to 'Home', home_path
 %li.trail= link_to 'About', about_path
-- if current_user.has_role?('admin', 'manager', 'researcher', 'author') || current_user.portal_teacher
+- if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'guest') || current_user.portal_teacher
   %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
 - if current_user.has_role?('admin')
   %li.trail= link_to(top_level_container_name.humanize.pluralize, investigations_path)
