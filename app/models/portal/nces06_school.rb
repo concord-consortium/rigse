@@ -23,6 +23,27 @@ class Portal::Nces06School < ActiveRecord::Base
     self.SCHNAM.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
   end
   
+  def address
+    "#{self.MSTREE}, #{self.MCITY}, #{self.MSTATE}, #{self.MZIP}"
+  end
+
+  def geographic_location
+    "latitude: #{self.LATCOD}, longitude: #{self.LONCOD}"
+  end
+  
+  def description
+    <<-HEREDOC
+In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
+#{self.geographic_location} with the following telephone number: #{self.PHONE}. 
+
+#{self.capitalized_name} had #{self.FTE} FTE-equivalent teachers and #{self.MEMBER} students of which #{self.TOTFRL} 
+were eligible for either free or reduced-price lunch.
+
+Students were distributed among the following groups: American Indian/Alaska Native: #{self.AM}, 
+Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLACK}, and White: #{self.WHITE}.
+    HEREDOC
+  end
+
   # School level.  The following codes were calculated from the school's corresponding GSLO and GSHI values: 
   #   1 = Primary (low grade = PK through 03; high grade = PK through 08)
   #   2 = Middle (low grade = 04 through 07; high grade = 04 through 09)
