@@ -2,6 +2,8 @@ require 'uri'
 class ExternalActivity < ActiveRecord::Base
   belongs_to :user
 
+  belongs_to :investigation
+
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   has_many :teacher_notes, :as => :authored_entity

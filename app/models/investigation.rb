@@ -4,6 +4,9 @@ class Investigation < ActiveRecord::Base
   # cattr_accessor :publication_states
 
   belongs_to :user
+  
+  has_one :external_activity
+  
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :activities, :order => :position, :dependent => :destroy do
     def student_only
@@ -127,7 +130,7 @@ class Investigation < ActiveRecord::Base
     end
 
     def display_name
-      self.to_s
+      "Assessment"
     end
 
     def saveable_types

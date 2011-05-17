@@ -306,6 +306,7 @@ class InvestigationsController < AuthoringController
       options = {
         :name => @investigation.name,
         :description => @investigation.description,
+        :publication_status => @investigation.publication_status,
         :user => @investigation.user
       }
       activity = Activity.create!(options)
@@ -319,7 +320,7 @@ class InvestigationsController < AuthoringController
       [@investigation, activity, section, @page].each {|o| o.save! }
 
       # also create an ExternalActivity which maps this investigation in the sc-runtime
-      ExternalActivity.create!(options.merge({:append_learner_id_to_url => true, :url => "/sc-runtime/##{activity.id}" }))
+      @investigation.external_activity = ExternalActivity.create!(options.merge({:append_learner_id_to_url => true, :url => "/sc-runtime/##{activity.id}" }))
       success = true
     rescue => e
       puts "Error creating: #{e}\n#{e.backtrace.join("\n")}"
@@ -394,6 +395,10 @@ class InvestigationsController < AuthoringController
           format.xml  { render :xml => @investigation.errors, :status => :unprocessable_entity }
         end
       end
+    end
+    if @investigation.external_activity
+      @investigation.external_activity.publication_status = @investigation.publication_status
+      @investigation.external_activity.save!
     end
   end
 
