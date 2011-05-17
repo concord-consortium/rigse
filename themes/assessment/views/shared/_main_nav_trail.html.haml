@@ -3,7 +3,7 @@
 / - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
 /   %li.trail=link_to("Activities", external_activities_path)
 %li.trail= link_to "#{ExternalActivity.display_name.pluralize}", external_activities_path
-- if current_user.has_role?('admin') || current_user.portal_teacher
+- if current_user.has_role?('admin', 'manager') || current_user.portal_teacher
   %li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
-- if current_user.has_role?('admin')
+- if current_user.has_role?('admin', 'manager')
   %li.trail= link_to "#{WebModel.display_name.pluralize}", web_models_path
