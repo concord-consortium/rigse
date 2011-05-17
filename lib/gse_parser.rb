@@ -300,7 +300,7 @@ class GseParser
   #
   def parse_grade_span_expectation(text, assessment_target)
     gse = nil
-    regex = /.*?\(\s?(Ext|[K|0-9].{1,5}[K|0-9])\s?\).{0,5}[0-9](.+)/mi
+    regex = /.*?\(\s?(Ext\.?|[K|0-9].{1,5}[K|0-9])\s?\).{0,5}[0-9](.+)/mi
     matches = text.match(regex)
     if (matches)
       (grade_span,body) = matches.captures
