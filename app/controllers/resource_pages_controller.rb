@@ -1,6 +1,5 @@
 class ResourcePagesController < ApplicationController
-  before_filter :login_required
-  before_filter :teacher_required, :except => [:show]
+  before_filter :teacher_required, :except => [:show, :index]
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
 
   def index

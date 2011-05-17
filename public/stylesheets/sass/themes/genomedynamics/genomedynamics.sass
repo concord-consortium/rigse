@@ -675,16 +675,20 @@ input[type=password]
   width: 200px
 
 #clazzes_nav
-  ul
-    .create_link
-      background-color: #cccccc
-      border: 1px solid #444444
-      margin-left: -15px
-      text-align: center
-    .create_link
-      background: transparent
-      border: none
-      margin-bottom: 20px
+  width: 200px
+  .padded_content
+    width: 190px
+    ul
+      width: 190px
+      li
+        width: 190px
+        a
+          padding: 5px 20px
+          width: 150px
+      .create_link
+        margin-bottom: 20px
+        margin-left: -15px
+        text-align: center
 strong
   font-weight: bold
   
@@ -707,3 +711,6 @@ a.more, ul.more a
 .action_menu
   background: #139b97
   color: #fff
+  .action_menu_header_right a
+    color: #fff
+    font-weight: normal
