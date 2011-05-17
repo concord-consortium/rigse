@@ -304,6 +304,7 @@ class GseParser
     matches = text.match(regex)
     if (matches)
       (grade_span,body) = matches.captures
+      grade_span.gsub!(".","") # Ext. has a dot in it.. *sigh*
       clean_text(body)
       (stem_string,body) = body.split("…")
       if body
