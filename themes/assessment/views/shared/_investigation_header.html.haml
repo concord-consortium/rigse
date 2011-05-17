@@ -1,14 +1,9 @@
-#actions_menu.dropdown
-  %ul
-    - if (investigation.changeable?(current_user))
-      %li= edit_link_for(@investigation)
 
-#add_menu.dropdown
-  %ul
-    %li= link_to "add new activity", add_activity_investigation_path(@investigation)
 %div{:id => dom_id_for(investigation,:item), :class =>"action_menu"}
   .action_menu
     .action_menu_header_right
+      - if (investigation.changeable?(current_user))
+        = edit_link_for(@investigation, :link_text => '')
       - if (investigation.changeable?(current_user) && investigation.activities.size == 0)
         = dropdown_button "add.png"
       - else

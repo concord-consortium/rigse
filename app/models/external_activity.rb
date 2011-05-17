@@ -30,13 +30,20 @@ class ExternalActivity < ActiveRecord::Base
     :conditions =>{:publication_status => "published"}
   }
 
+  named_scope :published_or_mine, lambda { |user|
+    {
+     :conditions => ["#{self.table_name}.publication_status = ? OR #{self.table_name}.user_id = ?", 'published', user.id]
+    }
+  }
+
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
 
     def display_name
-      "External Activity"
+      "Assessment"
     end
 
     def search_list(options)
@@ -44,8 +51,12 @@ class ExternalActivity < ActiveRecord::Base
       if (options[:include_drafts])
         external_activities = ExternalActivity.like(name)
       else
-        # external_activities = ExternalActivity.published.like(name)
-        external_activities = ExternalActivity.like(name)
+        if (options[:current_user])
+          external_activities = ExternalActivity.published_or_mine(options[:current_user]).like(name)
+        else
+          external_activities = ExternalActivity.published.like(name)
+        end
+        # external_activities = ExternalActivity.like(name)
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
