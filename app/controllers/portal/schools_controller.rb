@@ -1,7 +1,8 @@
 class Portal::SchoolsController < ApplicationController
   
-  before_filter :admin_only, :except => [:index, :edit, :update]
-  before_filter :admin_or_manager, :only => [:index, :edit, :update]
+  include RestrictedPortalController
+  # before_filter :admin_only, :except => [:index, :edit, :update]
+  # before_filter :admin_or_manager, :only => [:index, :edit, :update]
 
   protected 
 
