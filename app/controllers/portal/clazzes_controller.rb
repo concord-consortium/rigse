@@ -168,17 +168,20 @@ class Portal::ClazzesController < ApplicationController
         okToUpdate = true
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
-        if grade_levels
-          # This logic will attempt to prevent someone from removing all grade levels from a class.
-          grades_to_add = []
-          grade_levels.each do |name, v|
-            grade = Portal::Grade.find_by_name(name)
-            grades_to_add << grade if grade
+        
+        if Admin::Project.default_project.enable_grade_levels?
+          if grade_levels
+            # This logic will attempt to prevent someone from removing all grade levels from a class.
+            grades_to_add = []
+            grade_levels.each do |name, v|
+              grade = Portal::Grade.find_by_name(name)
+              grades_to_add << grade if grade
+            end
+            object_params[:grades] = grades_to_add if !grades_to_add.empty?
+          else
+            flash[:error] = "You need to select at least one grade level for this class."
+            okToUpdate = false
           end
-          object_params[:grades] = grades_to_add if !grades_to_add.empty?
-        else
-          flash[:error] = "You need to select at least one grade level for this class."
-          okToUpdate = false
         end
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
