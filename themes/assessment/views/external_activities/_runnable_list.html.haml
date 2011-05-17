@@ -1,0 +1,38 @@
+/ required locals: external_activities
+- paginated_objects ||= nil
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      - if paginated_objects
+        %p= page_entries_info paginated_objects, :entry_name => ExternalActivity.display_name
+        %p.paginator
+          = will_paginate paginated_objects
+    .action_menu_header_right
+      %ul.menu
+        -if current_user.does_not_have_role?("student", "anonymous")
+          %li= link_to "create #{Investigation.display_name}", new_investigation_path
+
+- external_activities.each do |external_activity|
+  %div{ :id => dom_id_for(external_activity), :class => 'runnable' }
+    = accordion_for(external_activity, (preview_button_for(external_activity) + name_for_component(external_activity, :hide_componenent_name => true)), :external_activity) do
+      %div.action_menu
+        %div.action_menu_header_left
+          = link_to_container(external_activity)
+          %span.author
+            = external_activity.user.name
+        %div.action_menu_header_right
+          %ul.menu
+            - unless(current_user.anonymous?)
+              %li.menu=link_to 'duplicate', duplicate_external_activity_url(external_activity)
+            - if (external_activity.changeable?(current_user))
+              %li.menu=link_to 'delete', external_activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{external_activity.id}", :method => :delete
+      %div{:id => dom_id_for(external_activity, :details), :class => 'tiny'}
+        %p=external_activity.description
+        %p
+          %i= updated_time_text(external_activity)
+        %p
+          %i
+            Used in: #{external_activity.offerings.length} classes.
+
+  =draggable_element dom_id_for(external_activity), :revert => true , :scroll => 'window'
+
