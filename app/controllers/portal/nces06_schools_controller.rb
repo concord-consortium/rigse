@@ -87,4 +87,9 @@ class Portal::Nces06SchoolsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def description
+    @nces06_school = Portal::Nces06School.find(params[:id])
+    render :layout => false
+  end
 end

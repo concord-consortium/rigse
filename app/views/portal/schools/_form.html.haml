@@ -2,11 +2,17 @@
   = edit_menu_for(portal_school, f, { :omit_cancel => true })
   .content
     %p
+      - field_set_tag 'NCES School' do
+        .aligned
+          %ul
+            %li
+              - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
+              = select(:nces_school, 'id', option_groups_from_collection_for_select(nces_districts, :nces_schools , :NAME, :id, :SCHNAM  ), {:prompt => "Select a school to create ..."})
+              = observe_field(:nces_school_id, :function => "new Ajax.Request('/portal/nces06_schools/'+value+'/description', { method: 'get', onCreate: function() { tinyMCE.get('portal_school_description').setContent('<p>loading new school description ...</p>') }, onSuccess: function(transport) { tinyMCE.get('portal_school_description').setContent(transport.responseText) } });" )
+      
+    %p
       - field_set_tag 'Name' do
         = f.text_field :name, :size => 60
-    %p
-      - field_set_tag 'NCES School' do
-        = select(:portal_school, "nces_school_id", Portal::Nces06School.all.collect {|nces| [ nces.SCHNAM, nces.id ] }, {:include_blank => 'None'})
     %p
       - field_set_tag 'District' do
         = select(:portal_school, "district_id", Portal::District.all.collect {|district| [ district.name, district.id ] }, {:include_blank => 'None'})
