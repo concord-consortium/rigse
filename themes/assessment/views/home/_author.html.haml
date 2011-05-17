@@ -1,0 +1,7 @@
+  
+- content_for(:authored_investigations) do
+  - field_set_tag "Assessment activities you've authored" do
+    %ul
+      - current_user.investigations.each do |inv|
+        %li
+          = link_to_container(inv)

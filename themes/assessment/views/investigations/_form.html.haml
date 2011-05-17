@@ -1,0 +1,38 @@
+= edit_menu_for(investigation, f)
+- field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
+  .aligned
+    %ol
+      %li
+        %label.right Name
+        = f.text_field :name
+      // without publication status options, projects won't be able to set investigations as active...
+      %li
+        %label.right Publication status
+        - if current_user.has_role?('admin','manager')
+          = f.select :publication_status, Investigation.publication_states.map {|s| s.to_s}
+        - else
+          - investigation.publication_status = 'private'
+          = investigation.publication_status
+      %li
+        %label Description
+        = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
+
+/ - field_set_tag 'Select GSE' do
+/   - field_set_tag 'filter' do
+/     #gse_filter
+/       %ul.menu_h
+/         %li
+/           grade span:
+/           = select_tag(:grade_span, options_for_select(RiGse::GradeSpanExpectation.grade_spans, @gse.grade_span))
+/         %li
+/           domain:
+/           = select_tag(:domain_id, options_for_select(domains.collect { |d| [d.name, d.id] }, @gse.domain.id))
+/         %li#gse_select
+/           = render :partial => 'gse_select', :locals => { :related_gses => @related_gses, :selected_gse => @gse }
+/       
+/       %p
+/       #gse_summary_container
+/         - if @gse
+/           = render :partial => 'ri_gse/grade_span_expectations/summary', :locals => { :grade_span_expectation => @gse }
+
+= javascript_tag("focus_first_field();");
