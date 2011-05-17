@@ -161,7 +161,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
 
   def jnlp_object_path
-    "#{self.jnlp_object_path_prefix}_#{id}.yaml"
+    "#{self.jnlp_object_path_prefix}_#{self.versioned_jnlp_url.version_str}.yml"
   end
 
   def parse_jnlp_object

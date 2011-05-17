@@ -20,7 +20,7 @@
           - page.page_elements.each do |element|
             .element
               -# allow embeddables to control how they are referenced from the document
-              - if object_reference = yield("element_#{dom_id_for(element.embeddable)}".to_sym)
+              - if object_reference = yield("element_#{ot_dom_id_for(element.embeddable)}".to_sym)
                 = object_reference
               - else
                 %object{ :refid => ot_refid_for(element.embeddable) }/
