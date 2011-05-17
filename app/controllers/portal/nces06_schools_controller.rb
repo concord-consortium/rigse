@@ -1,7 +1,7 @@
 class Portal::Nces06SchoolsController < ApplicationController
   
   include RestrictedPortalController
-  before_filter :admin_only
+  before_filter :admin_only, :except => [ :description ]
   public
   
   # GET /portal_nces06_schools
