@@ -68,7 +68,8 @@ class ExternalActivitiesController < ApplicationController
       :name => @name, 
       :description => @description, 
       :paginate => true, 
-      :page => pagination
+      :page => pagination,
+      :current_user => current_user
     })
     if params[:mine_only]
       @external_activities = @external_activities.reject { |i| i.user.id != current_user.id }
