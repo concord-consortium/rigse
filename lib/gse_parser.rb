@@ -305,8 +305,9 @@ class GseParser
     if (matches)
       (grade_span,body) = matches.captures
       grade_span.gsub!(".","") # Ext. has a dot in it.. *sigh*
+      old_body = body
       clean_text(body)
-      (stem_string,body) = body.split("…")
+      (stem_string,body) = body.split(/\.\.\.|…/)
       if body
         statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
         statement_strings.each { |s| clean_text(s) }
@@ -328,6 +329,8 @@ class GseParser
           ordinal = ordinal.next
           expectation
         }
+      else
+        logger.warn("couldnt find elipse (…) separating stem from body: #{old_body}")
       end
     else
       logger.warn "can't parse grade span expectation text = #{text}"
