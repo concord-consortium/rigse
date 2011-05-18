@@ -17,11 +17,3 @@
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'matching: ', :class=>"right"
         = text_field_tag :name, name
-      - if current_user.does_not_have_role?("student", "guest")
-        %td{:style=>"padding: 0.5em;"}
-          = label_tag :filter, 'include drafts: ', :class=>"right"
-          = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
-      - if current_user.has_role?("admin", "manager")
-        %td{:style=>"padding: 0.5em;"}
-          = label_tag :filter, 'include private: ', :class=>"right"
-          = check_box_tag 'include_private', 'include private', session[:include_private]
