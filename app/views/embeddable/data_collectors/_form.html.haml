@@ -1,5 +1,5 @@
 .item
-  = edit_menu_for(data_collector, f, {:omit_cancel => true}, scope)
+  = edit_menu_for(data_collector, f, {:omit_cancel => true})
   .content
     %p
       - field_set_tag 'Title' do
@@ -92,9 +92,11 @@
         %li
           = labeled_check_box(f, :show_tare)
     - if current_user.has_role?('admin')
+      = labeled_check_box(f, :is_prototype)
       - field_set_tag 'otml_root_content' do
         = f.text_area :otml_root_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
       - field_set_tag 'otml_library_content' do
         = f.text_area :otml_library_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'
 
-= observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_embeddable_data_collector_path(data_collector) + "?scope_id=#{scope.id}&scope_type=#{scope.class}"))
+- unless data_collector.new_record?
+  = observe_form(dom_id_for(data_collector, :edit), :url => (change_probe_type_embeddable_data_collector_path(data_collector) + "?scope_id=#{scope.id}&scope_type=#{scope.class}"))

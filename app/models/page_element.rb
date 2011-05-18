@@ -93,7 +93,7 @@ class PageElement < ActiveRecord::Base
   def reportable_elements
     return @reportable_elements if @reportable_elements
     @reportable_elements = []
-    unless teacher_only?
+    unless teacher_only? || !is_enabled?
       if embeddable.respond_to?(:reportable_elements)
         @reportable_elements = embeddable.reportable_elements
       elsif Investigation.reportable_types.include?(embeddable.class)

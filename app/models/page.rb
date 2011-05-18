@@ -263,7 +263,7 @@ class Page < ActiveRecord::Base
   def reportable_elements
     return @reportable_elements if @reportable_elements
     @reportable_elements = []
-    unless teacher_only?
+    unless teacher_only? || !is_enabled?
       @reportable_elements = page_elements.collect{|s| s.reportable_elements }.flatten
       @reportable_elements.each{|elem| elem[:page] = self}
     end
