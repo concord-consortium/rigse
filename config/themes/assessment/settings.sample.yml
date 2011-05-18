@@ -1,5 +1,6 @@
 ---
 development: &id003
+  :allow_drafts_in_assignments: false
   :active_school_levels:
     - "2"
     - "3"
