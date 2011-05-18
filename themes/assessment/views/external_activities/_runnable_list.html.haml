@@ -9,7 +9,7 @@
           = will_paginate paginated_objects
     .action_menu_header_right
       %ul.menu
-        -if current_user.does_not_have_role?("student", "anonymous")
+        -if current_user.does_not_have_role?("student", "guest")
           %li= link_to "create #{Investigation.display_name}", new_investigation_path
 
 - external_activities.each do |external_activity|
