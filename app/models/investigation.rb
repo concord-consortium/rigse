@@ -116,6 +116,12 @@ class Investigation < ActiveRecord::Base
     }
   }
 
+  named_scope :published_or_mine, lambda { |user|
+    {
+     :conditions => ["#{self.table_name}.publication_status = ? OR #{self.table_name}.user_id = ?", 'published', user.id]
+    }
+  }
+
   named_scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
@@ -172,8 +178,8 @@ class Investigation < ActiveRecord::Base
           end
         end
       else
-        if (options[:include_drafts])
-          investigations = Investigation.like(name)
+        if (options[:current_user])
+          investigations = Investigation.published_or_mine(options[:current_user]).like(name)
         else
           investigations = Investigation.published.like(name)
         end

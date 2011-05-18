@@ -119,7 +119,8 @@ class InvestigationsController < AuthoringController
       :domain_id => @domain_id,
       :sort_order => @sort_order,
       :paginate => true,
-      :page => pagination
+      :page => pagination,
+      :current_user => current_user
     }
     @investigations = Investigation.search_list(search_options)
 
