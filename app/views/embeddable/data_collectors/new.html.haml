@@ -1,3 +1,3 @@
 - form_for(@data_collector) do |f|
   .item
-    = render :partial => 'form', :locals => { :data_collector => @data_collector, :f => f }
+    = render :partial => 'form', :locals => { :data_collector => @data_collector, :f => f, :scope => @data_collector }
