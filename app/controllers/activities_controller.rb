@@ -72,7 +72,7 @@ class ActivitiesController < ApplicationController
 
   def index
     @include_drafts = params[:include_drafts]
-    @name = param_find(:name)
+    @name = param_find(:search)
     pagenation = params[:page]
     if (pagenation)
       @include_drafts = param_find(:include_drafts)
@@ -94,7 +94,11 @@ class ActivitiesController < ApplicationController
     else
       respond_to do |format|
         format.html do
-          render 'index'
+          if params[:search]
+            render 'search'
+          else
+            render 'index'
+          end
         end
         format.js
       end

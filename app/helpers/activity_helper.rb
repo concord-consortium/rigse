@@ -61,4 +61,10 @@ module ActivityHelper
     return "" if sarray.empty?
     "(#{sarray.join('; ')})"
   end
+  
+  def activity_status_options
+    status_options = ["private", "published"]
+    status_options << "archived" if current_user.has_role?('admin')
+    status_options
+  end
 end
