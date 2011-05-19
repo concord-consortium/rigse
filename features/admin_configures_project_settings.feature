@@ -59,3 +59,15 @@ Feature: Admin configures project settings
     When I login with username: teacher password: teacher
     And I am on the clazz create page
     Then I should see "Grade Levels:"
+
+  @selenium
+  Scenario: Admin modifies css for otml
+    Given The default project and jnlp resources exist using factories
+    And I login as an admin
+    And am on the admin projects page
+    Then I should see the sites name
+    When I follow "edit project"
+    Then I should see "Custom stylesheet for OTML:"
+    When I fill in "admin_project[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
+    And I press "Save"
+    Then I should see ".testing_css_class_here"

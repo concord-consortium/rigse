@@ -1,8 +1,19 @@
 - locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => "", :hide_print => true}
 - locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
 
-= render :partial => 'investigations/search_form', :locals => locals
+= render :partial => 'resource_pages/search_form', :locals => locals
+
 .tiny To add assignments to your class, drag the resource pages below to your class assignments list above. If there are no resource pages listed below, select and/or enter some search options in the form above.
-= observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();", :update => {:success => 'offering_list'}
-- ["ResourcePage", "ExternalActivity", "Page"].each do |klass|
-  = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }
+= observe_form 'resource_page_search_form', :url => list_filter_resource_page_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();", :update => {:success => 'offering_list'}
+
+.action_menu
+  .progress_container
+    #search_spinner{:style=>'display: none;'}
+      = image_tag "ajax-loader.gif"
+      ( searching )
+
+#offering_list.drop_target
+  - locals[:paginate] = true
+  - locals[:user] = current_user
+  - locals[:resource_pages] = ResourcePage.search_list(locals)
+  = render :partial => 'resource_pages/runnable_list', :locals => locals
