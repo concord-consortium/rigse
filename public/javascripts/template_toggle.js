@@ -160,6 +160,18 @@
     view_container.show();
   };
 
+  var template_has_open_editors = function(){
+    var edit_containers = $$('.template_container.template_section:not(.disabled_section) .template_edit_container')
+    return edit_containers.findAll(function(e){return e.visible()}).size() > 0;
+  }
+
+  window.template_handle_onsubmit = function(){
+    if(template_has_open_editors()){
+      alert('You need to save open editors first'); 
+      return false;
+    } 
+    return true;
+  }
 
   window.template_save_loading = function(container){
     var el = $(container).up('.template_container');

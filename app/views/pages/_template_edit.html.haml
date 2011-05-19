@@ -6,7 +6,7 @@
   -#- # TODO: we should still render disabled pieces, but render them small like ...
   -#- dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
   -#%div{:id => dom_id_for(element, :template_container), :class => dom_class }
-  = template_container_for(element) do
+  = template_container_for(element, :type => 'template_page_element') do
     - unless element.embeddable.kind_of? Embeddable::Diy::Section
       %label
         %input{:type => "checkbox", :name => "enable element", :class=> "element_enable_check"}
