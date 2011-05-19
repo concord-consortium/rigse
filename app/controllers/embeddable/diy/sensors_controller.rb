@@ -80,7 +80,7 @@ class Embeddable::Diy::SensorsController < ApplicationController
     else
       respond_to do |format|
         if @diy_sensor.save
-          flash[:notice] = 'Embeddable::Siy::diy_sensor.was successfully created.'
+          flash[:notice] = 'Embeddable::Diy::diy_sensor.was successfully created.'
           format.html { redirect_to(@diy_sensor) }
           format.xml  { render :xml => @diy_sensor, :status => :created, :location => @diy_sensor }
         else
