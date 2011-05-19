@@ -288,16 +288,6 @@
       }
     });
 
-    // cancel the double-click behavior of editable_block
-    // TODO: (?) dont put the editable behavior inline? Use unobtrusive jquery?
-    $$('.editable_block').each(function(element) {
-      var parent = element.up(view_container_class);
-      element.childElements().each(function(child) {
-        parent.insert(child.remove());
-      });
-      element.remove();
-    });
-
     // when all the above javascript has beeb evluated, show the elements:
     $$('.template_listing').each(function(elm) {
       elm.show();

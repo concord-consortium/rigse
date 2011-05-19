@@ -234,7 +234,19 @@ module ApplicationHelper
     render_partial_for(component, {:partial => "template_edit_form"}.merge!(opts))
   end
 
+  def inside_template_edit?
+    params[:inside_template_edit] or (self.instance_variable_defined?(:@inside_template_edit) and @inside_template_edit)
+  end
+
   def wrap_edit_link_around_content(component, options={})
+    # there used to be some client side javascript to unwrap these components when inside of the template edit.
+    # but that wasn't working correctly.  Also that code wasn't running when the content was updated with ajax.
+    # The approach below just cuts off the extra unnecessary wrapping. 
+    if inside_template_edit?
+      yield
+      return
+    end
+
     url      = options[:url]      || edit_url_for(component)
     update   = options[:update]   || dom_id_for(component, :item)
     method   = options[:method]   || :get

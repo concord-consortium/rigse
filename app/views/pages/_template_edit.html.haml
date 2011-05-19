@@ -16,4 +16,8 @@
     %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
       = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
     %div.template_edit_container{:id =>dom_id_for(element, :edit_container)}
-      = render_template_edit_partial_for(component)
+      - template_form(component) do |f|
+        = hidden_field_tag 'inside_template_edit', true
+        = f.submit("Save", :class=> "template_save_button")
+        %a.template_cancel_link{:href => "javascript:void(0)"} Cancel
+        = render_partial_for(component, :partial => "form", :locals => {:f => f})
