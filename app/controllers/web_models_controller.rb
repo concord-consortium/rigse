@@ -1,7 +1,7 @@
 class WebModelsController < ApplicationController
   include RestrictedController
 
-  before_filter :admin_only
+  before_filter :manager
 
   before_filter :setup_object, :except => [:index]
 
