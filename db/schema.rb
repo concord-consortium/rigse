@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110514044443) do
+ActiveRecord::Schema.define(:version => 20110518223557) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20110514044443) do
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                          :default => false
+    t.text     "custom_css"
   end
 
   create_table "attached_files", :force => true do |t|

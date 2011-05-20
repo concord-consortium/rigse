@@ -42,6 +42,8 @@ development: &non_production_settings
   :tiny_mce:
     :buttons1:
       - bold,italic,underline
+      - formatselect
+      - styleselect
       - sup,sub
       - bullist,numlist
       - link,image

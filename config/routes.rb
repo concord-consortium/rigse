@@ -442,7 +442,7 @@ ActionController::Routing::Routes.draw do |map|
   map.test_exception '/test_exception', :controller => 'home', :action => 'test_exception'
   map.root :controller => 'home', :action => 'index'
   map.requirements '/requirements', :controller => 'home', :action => 'requirements'
-
+  map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   # map. ':controller/:action/:id.:format'
