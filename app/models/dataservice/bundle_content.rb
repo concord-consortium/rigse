@@ -91,7 +91,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
       self.otml = extract_otml
       self.empty = true unless self.otml && self.otml.length > 0
     end
-    self.process_blobs
+    self.process_blobs unless self.empty
     true # don't stop the callback chain.
   end
   
@@ -193,7 +193,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   def extract_saveables
-    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
+    return unless self.otml && self.otml.size > 17
+    # raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
     extractor = Otrunk::ObjectExtractor.new(self.otml)
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)

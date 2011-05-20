@@ -18,7 +18,7 @@ module SailBundleContent
   end
 
   def valid_xml?
-    body[VALID_CLOSING_ELEMENT_INDEX..-1] == VALID_CLOSING_ELEMENT
+    body[VALID_CLOSING_ELEMENT_INDEX..-1] == VALID_CLOSING_ELEMENT || body == EMPTY_BUNDLE
   end
 
   def empty?
