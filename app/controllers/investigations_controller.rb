@@ -279,7 +279,7 @@ class InvestigationsController < AuthoringController
     @investigation.user = current_user
     respond_to do |format|
       if @investigation.save
-        flash[:notice] = 'Investigation was successfully created.'
+        flash[:notice] = "#{Investigation.display_name} was successfully created."
         format.html { redirect_to(@investigation) }
         format.xml  { render :xml => @investigation, :status => :created, :location => @investigation }
       else
@@ -329,7 +329,7 @@ class InvestigationsController < AuthoringController
     end
     respond_to do |format|
       if success
-        flash[:notice] = 'Investigation was successfully created.'
+        flash[:notice] = "#{Investigation.display_name} was successfully created."
         format.html { redirect_to(@page) }
         format.xml  { render :xml => @investigation, :status => :created, :location => @investigation }
       else
@@ -388,7 +388,7 @@ class InvestigationsController < AuthoringController
     else
       respond_to do |format|
         if @investigation.update_attributes(params[:investigation])
-          flash[:notice] = 'Investigation was successfully updated.'
+          flash[:notice] = "#{Investigation.display_name} was successfully updated."
           format.html { redirect_to(@investigation) }
           format.xml  { head :ok }
         else
