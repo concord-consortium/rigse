@@ -7,5 +7,4 @@ end
 xml << render( :partial => 'shared/sail', :locals => {
   :otml_url => otml_url, 
   :properties => { 'sailotrunk.hidetree' => 'false' },
-  :session_id => session_id,
 })
