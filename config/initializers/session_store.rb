@@ -7,6 +7,9 @@
 ActionController::Base.session = {
   :key => '_bort_session',
   :secret      => 'a3e2a51a371bb964a4250c21f8d083f9ddb224d455171dcba55518e74af43366e52e3f239773f90aed0ab6caf6554f051504ce7232599d066150dbabff0f1654',
+  # allow session to be loaded from params. This is used so java
+  # connections can use the same session, specifically the config file
+  :cookie_only => false 
 }
 
 # Use the database for sessions instead of the cookie-based default,
