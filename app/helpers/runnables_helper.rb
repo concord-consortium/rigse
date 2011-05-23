@@ -8,8 +8,7 @@ module RunnablesHelper
   end
 
   def run_url_for(component, params = {}, format = nil)
-    runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
-    format ||= runnable.run_format
+    format ||= component.run_format
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
