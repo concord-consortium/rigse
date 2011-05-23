@@ -1,0 +1,28 @@
+%h1 Listing probe_types
+
+%table
+  %tr
+    %th Name
+    %th ptype
+    %th display precision
+    %th unit
+    %th max
+    %th min
+    %th Step Size
+
+  - @probe_types.each do |probe_type|
+    %tr
+      %td= probe_type.name
+      %td= probe_type.ptype
+      %td= probe_type.display_precision
+      %td= probe_type.unit
+      %td= probe_type.max
+      %td= probe_type.min
+      %td= probe_type.step_size
+      %td= link_to 'Show', probe_type
+      %td= link_to 'Edit', edit_probe_probe_type_path(probe_type)
+      %td= link_to 'Destroy', probe_type, :confirm => 'Are you sure?', :method => :delete
+
+%br/
+
+= link_to 'New probe_type', new_probe_probe_type_path
