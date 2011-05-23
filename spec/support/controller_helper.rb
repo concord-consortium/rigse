@@ -168,7 +168,8 @@ def generate_default_project_and_jnlps_with_mocks
     :states_and_provinces  => APP_CONFIG[:states_and_provinces],
     :maven_jnlp_server => @mock_maven_jnlp_server,
     :maven_jnlp_family => @mock_maven_jnlp_family,
-    :using_custom_css? => false)
+    :using_custom_css? => false,
+    :use_bitmap_snapshots? => false)
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)

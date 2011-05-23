@@ -91,6 +91,9 @@ class Portal::Offering < ActiveRecord::Base
     learners.empty?
   end
 
+  def run_format
+    runnable.run_format
+  end
 
   # def saveable_count
   #   @saveable_count ||= begin
