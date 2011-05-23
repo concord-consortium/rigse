@@ -61,6 +61,10 @@ Given /^there is an image question with the prompt "([^"]*)"$/ do |prompt|
   image_question = Embeddable::ImageQuestion.find_or_create_by_prompt(prompt)
 end
 
+Given /^I created a data collector$/ do
+  Embeddable::DataCollector.create(:user_id => User.find_by_login(@cuke_current_username).id)
+end
+
 When /^I add a "([^"]*)" to the page$/ do |embeddable|
   # this requires a javascript enabled driver
   # this simulates roughly what happens when the mouse is moved over the plus icon

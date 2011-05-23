@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512065421) do
+ActiveRecord::Schema.define(:version => 20110518223557) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20110512065421) do
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                          :default => false
+    t.text     "custom_css"
   end
 
   create_table "ancestries", :force => true do |t|
@@ -228,7 +229,7 @@ ActiveRecord::Schema.define(:version => 20110512065421) do
     t.integer  "height"
     t.integer  "width"
     t.integer  "version"
-    t.datetime "updated_at",         :default => '2011-05-07 20:14:40'
+    t.datetime "updated_at",         :default => '2011-05-12 10:23:34'
   end
 
   add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
@@ -1914,6 +1915,7 @@ ActiveRecord::Schema.define(:version => 20110512065421) do
     t.integer  "device_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "driver_short_name"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -1937,6 +1939,7 @@ ActiveRecord::Schema.define(:version => 20110512065421) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.text     "content"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|

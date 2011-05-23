@@ -8,8 +8,7 @@ module RunnablesHelper
   end
 
   def run_url_for(component, params = {}, format = nil)
-    runnable = component.kind_of?(Portal::Offering) ? component.runnable : component
-    format ||= runnable.run_format
+    format ||= component.run_format
 
     params.update(current_user.extra_params)
     polymorphic_url(component, :format => format, :params => params)
@@ -67,7 +66,7 @@ module RunnablesHelper
 
   def offering_link_for(offering, as_name = nil, params = {})
     if offering.resource_page?
-      link_to "View #{offering.name}", offering.runnable, :target => '_blank'
+      link_to "View #{offering.name}", offering.runnable
     else
       x_link_for(offering, "run", as_name, params)
     end

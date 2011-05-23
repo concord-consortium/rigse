@@ -1,1 +1,5 @@
+- content_for(:otrunk_doc_id) do
+  =@raw_otml.uuid
+- content_for(:raw_otml_object_id) do
+  =dom_id_for(@raw_otml)
 = render :partial => "show", :locals => { :raw_otml => @raw_otml }
