@@ -56,7 +56,8 @@ xml.otrunk(:id => "11111111-2222-3333-4444-555555555555") {
       }
 
       xml.root { 
-        xml.object :refid => "#{runnable.uuid}!/system/root"
+        root_object_local_id ||= 'system/root'
+        xml.object :refid => "#{runnable.uuid}!/#{root_object_local_id}"
       }
     }
   }
