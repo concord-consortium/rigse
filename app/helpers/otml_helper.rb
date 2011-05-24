@@ -285,7 +285,8 @@ module OtmlHelper
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
         haml_concat ot_script_engine_bundle
-        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
+        use_bitmap = Admin::Project.default_project.use_bitmap_snapshots? ? 'false' : 'true'
+        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle', :scaleDrawTools => use_bitmap }
       end
     end
   end

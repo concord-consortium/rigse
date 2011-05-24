@@ -107,6 +107,7 @@ describe RunnablesHelper do
       investigation = stub_model(Investigation)
       offering.stub!(:runnable).and_return(investigation)
       offering.stub!(:resource_page?).and_return false
+      offering.stub!(:run_format).and_return :jnlp
       helper.run_link_for(offering).should be_link_like("http://test.host/portal/offerings/#{offering.id}.jnlp",
                                                              "run_link rollover",
                                                              "/images/run.png")

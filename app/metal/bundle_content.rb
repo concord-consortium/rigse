@@ -12,6 +12,9 @@ class BundleContent
   POST_BODY = 'rack.input'.freeze unless defined?(POST_BODY)
   
   def self.call(env)
+    # uncomment this line to let the data_service/bundle_content controller handle this post
+    # return [404, { 'Content-Type' => 'text/html' }, ['Not Found']]
+
     bundle_logger_id = env[PATH_INFO][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
     if env[REQUEST_METHOD] == POST && bundle_logger_id && bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
       body = env[POST_BODY].read
