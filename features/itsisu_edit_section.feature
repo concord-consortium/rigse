@@ -43,3 +43,11 @@ Feature: Sections of activities can be edited using the itsisu theme
     And I am on the template edit page for "first_activity" 
     And I enable the "Materials" section
     Then I should see the wysiwyg editor within the "Materials" section
+
+  @selenium
+  Scenario: teacher edits section and tries to save activity
+    When I login with username: teacher password: teacher
+    And I am on the template edit page for "first_activity" 
+    And I fill in the first templated activity section with "Hello World"
+    And I click "#activity_submit"
+    Then I should see and dismiss an alert with "You need to save open editors first"

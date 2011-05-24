@@ -123,3 +123,10 @@ end
 When /^(?:|I )click "([^"]*)"$/ do |selector|
   find(selector).click
 end
+
+Then /^I should see and dismiss an alert with "([^\"]*)"$/ do | text |
+  a = page.driver.browser.switch_to.alert
+  alert_text = a.text
+  a.accept
+  alert_text.should == text
+end
