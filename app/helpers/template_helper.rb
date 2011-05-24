@@ -3,8 +3,10 @@ module TemplateHelper
   #- dom_class = element.is_enabled? ? "template_container" : "template_container disabled_section"
   #%div{:id => dom_id_for(element, :template_container), :class => dom_class }
   def template_container_for(container, opts={})
-    css_class = [opts[:css_class] || 'template_container']
+    css_class = ['template_container']
+    css_class << opts[:type] if opts[:type]
     prefix = opts[:prefix] || 'template_container'
+    
     unless container.is_enabled
       css_class << 'disabled_section'
     end

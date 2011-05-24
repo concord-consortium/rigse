@@ -1,4 +1,4 @@
-- form_for(@activity) do |f|
+- form_for(@activity, :html => {:onsubmit => "return template_handle_onsubmit()"}) do |f|
   %h3 Activity #{@activity.id} Name
   = f.text_field(:name, :size => '72')
   %h3 publication status
@@ -20,7 +20,7 @@
   = preview_link_for(@activity, nil, :no_button => true)
   = f.submit "save"
 - @activity.sections.each do |section|
-  = template_container_for(section, :no_edit => true) do
+  = template_container_for(section, :type => 'template_section', :no_edit => true) do
     %div.template_view_container{:id => dom_id_for(section, :template_view_container)}
       %label
         %input{:type => "checkbox", :name => "enable section", :class=> "template_enable_check"}

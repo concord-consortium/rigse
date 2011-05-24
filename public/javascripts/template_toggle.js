@@ -160,6 +160,18 @@
     view_container.show();
   };
 
+  var template_has_open_editors = function(){
+    var edit_containers = $$('.template_container.template_section:not(.disabled_section) .template_edit_container')
+    return edit_containers.findAll(function(e){return e.visible()}).size() > 0;
+  }
+
+  window.template_handle_onsubmit = function(){
+    if(template_has_open_editors()){
+      alert('You need to save open editors first'); 
+      return false;
+    } 
+    return true;
+  }
 
   window.template_save_loading = function(container){
     var el = $(container).up('.template_container');
@@ -286,16 +298,6 @@
       } else {
         check.checked = true;
       }
-    });
-
-    // cancel the double-click behavior of editable_block
-    // TODO: (?) dont put the editable behavior inline? Use unobtrusive jquery?
-    $$('.editable_block').each(function(element) {
-      var parent = element.up(view_container_class);
-      element.childElements().each(function(child) {
-        parent.insert(child.remove());
-      });
-      element.remove();
     });
 
     // when all the above javascript has beeb evluated, show the elements:

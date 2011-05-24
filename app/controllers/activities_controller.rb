@@ -143,6 +143,7 @@ class ActivitiesController < ApplicationController
  
   def template_edit
     @teacher_mode = params[:teacher_mode] || false
+    @inside_template_edit = true
   end
 
   # GET /pages/1

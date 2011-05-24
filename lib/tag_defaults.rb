@@ -141,7 +141,9 @@ module TagDefaults
           # hacky ordering of grade levels
           order = 5
           case key_string
-          when /^elem/i
+          when /^elementary3\-4/i
+            order = 0
+          when /^elementary5\-6/i
             order = 1
           when /^midd/i
             order = 2
