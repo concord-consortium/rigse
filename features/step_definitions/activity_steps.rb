@@ -76,3 +76,9 @@ Then /^I should see the wysiwyg editor(?: within the "([^\"]*)" section)$/ do |s
     find(".mceEditor", :message => msg).click
   end
 end
+
+Then /^I click "([^\"]*)" within the "([^\"]*)" section$/ do |selector, section|
+  with_scope("div.template_container:contains('#{section}')") do
+    find(selector).click
+  end
+end
