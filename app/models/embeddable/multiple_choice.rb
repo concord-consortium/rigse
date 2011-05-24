@@ -57,6 +57,8 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   after_create :create_default_choices
   
   def create_default_choices
+    return if choices.size > 0
+
     Embeddable::MultipleChoiceChoice.create(:choice => 'a', :multiple_choice => self)
     Embeddable::MultipleChoiceChoice.create(:choice => 'b', :multiple_choice => self)
     Embeddable::MultipleChoiceChoice.create(:choice => 'c', :multiple_choice => self)
