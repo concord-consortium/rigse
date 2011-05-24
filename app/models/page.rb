@@ -1,5 +1,6 @@
 class Page < ActiveRecord::Base
   include JnlpLaunchable
+  include TagDefaults
   include Clipboard
 
   belongs_to :user
@@ -80,6 +81,7 @@ class Page < ActiveRecord::Base
 
   acts_as_replicatable
   acts_as_list :scope => :section
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
 
   named_scope :like, lambda { |name|
     name = "%#{name}%"
