@@ -24,9 +24,9 @@ source :gemcutter
   # activerecord-import ONLY WORKS WITH RAILS 3!
   # gem "activerecord-import", ">= 0.2.0"
   # use ghazel's version which fixes the to_a log messages and adds mysql2 support
-  git "git://github.com/ghazel/ar-extensions.git" do
+  #git "git://github.com/ghazel/ar-extensions.git" do
     gem "ar-extensions",        "~> 0.9.3"
-  end
+  #end
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
