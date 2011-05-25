@@ -18,8 +18,9 @@
     = runnable.name
     = runnable.published? ? "" : "(#{runnable.publication_status})"
     = "[#{runnable.id}]"
-  .info
-    = activity_sensor_and_model_summary(runnable)
+  - if runnable.is_a? Activity
+    .info
+      = activity_sensor_and_model_summary(runnable)
   %div{:id => dom_id_for(runnable, :details), :style => "display: none;"}
     .description
       = runnable.description

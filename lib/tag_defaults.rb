@@ -128,11 +128,18 @@ module TagDefaults
         end
       end
 
+      # Add tests
+      key_map = key_map + Page.published.map {|p| 
+        keys = p.bin_keys
+        {:activity => p, :keys => p.bin_keys, :test => true}
+      }
+
       results = {}
       key_counter = 0
       key_map.each do |key_map|
         keys = key_map[:keys]
         act  = key_map[:activity]
+        test = key_map[:test]
         keys.each do |key|
           grade_level = key[0]
           subject = key[1]
@@ -170,8 +177,12 @@ module TagDefaults
             }
           end
           results[key_string][:activities] << act
-          results[key_string][:units][unit] ||= {:activities => [], :count => 0, :name => unit}
-          results[key_string][:units][unit][:activities] << act
+          results[key_string][:units][unit] ||= {:activities => [], :tests => [], :count => 0, :name => unit}
+          if test
+            results[key_string][:units][unit][:tests] << act
+          else
+            results[key_string][:units][unit][:activities] << act
+          end
         end
       end
 
@@ -185,6 +196,15 @@ module TagDefaults
         record[:units].each_key do |unit_key|
           unit = record[:units][unit_key]
           unit[:activities].sort!{ |a,b| a.name <=> b.name }
+          # add pretest to the beginning
+          # add posttest to the end
+          unit[:tests].each{ |test| 
+            if test.name =~ /^pre/i
+              unit[:activities].insert(0, test)
+            else
+              unit[:activities] << test
+            end
+          }
           unit[:count] = unit[:activities].size
         end
       end

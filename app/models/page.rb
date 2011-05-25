@@ -89,6 +89,7 @@ class Page < ActiveRecord::Base
      :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]
     }
   }
+  named_scope :published, :conditions => {:publication_status => "published"}
 
   include Changeable
   # validates_presence_of :name, :on => :create, :message => "can't be blank"
@@ -275,4 +276,9 @@ class Page < ActiveRecord::Base
     end
     return @reportable_elements
   end
+  
+  def print_listing
+    [{name => self}]
+  end
+  
 end
