@@ -76,7 +76,7 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
       "responseTemplate" => "/activity/#{@activity.id}/response-template/#{dom_id_for(q)}",
       "hideSubmitButton" => false,
       "isFinalStep" => false,
-      "nextButtonShouldSubmit" => false
+      "nextButtonShouldSubmit" => true
     }
 
     if q.kind_of? Embeddable::MultipleChoice
@@ -91,6 +91,9 @@ Example json: https://github.com/concord-consortium/NSDL-Smartgraphs/blob/master
   numSteps = source["steps"].size
   numSteps.times do |i|
     step = source["steps"][i]
+    if i > 0
+      step["previousBranch"] = source["steps"][i-1]["url"]
+    end
     if i == (numSteps-1)
       step["defaultBranch"] = "/activity/#{@activity.id}/page/1/step/final-step"
     else
