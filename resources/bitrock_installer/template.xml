@@ -3,6 +3,7 @@
   <fullName>RITES Investigation Software</fullName>
   <version>#{version}</version>
   <installerFilename></installerFilename>
+  <requireInstallationByRootUser>1</requireInstallationByRootUser>
   <preBuildActionList>
     <!--         <runProgram>
     <explanation>Caching jnlp jars...</explanation>
@@ -78,6 +79,9 @@
         <platformTest>
           <type>windows-vista</type>
         </platformTest>
+        <platformTest>
+          <type>windows-7</type>
+        </platformTest>
       </ruleList>
     </setInstallerVariable>
     <setInstallerVariable>
@@ -117,6 +121,9 @@
       <ruleList>
         <platformTest>
           <type>windows-vista</type>
+        </platformTest>
+        <platformTest>
+          <type>windows-7</type>
         </platformTest>
       </ruleList>
     </setInstallerVariable>
