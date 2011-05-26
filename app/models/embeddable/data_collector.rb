@@ -1,4 +1,10 @@
 class Embeddable::DataCollector < ActiveRecord::Base
+
+  SENSOR        = "Sensor"
+  SENSOR_ID     = 1
+  PREDICTION    = "Prediction"
+  PREDICTION_ID = 2
+
   set_table_name "embeddable_data_collectors"
 
   belongs_to :user
@@ -17,7 +23,10 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
 
-  has_many :data_tables, :class_name => "Embeddable::DataTable"
+  # has_many :data_tables, :class_name => "Embeddable::DataTable"
+  belongs_to :data_table, 
+    :class_name => "Embeddable::DataTable",
+    :foreign_key => "data_table_id"
 
   # validates_associated :probe_type
   
@@ -97,6 +106,13 @@ class Embeddable::DataCollector < ActiveRecord::Base
     end
   end
   
+  def data_tables_in_activity_scope(scope)
+    if scope && scope.class != Embeddable::DataCollector
+      scope.activity.data_tables
+    else
+      []
+    end
+  end
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::DataCollector && scope.respond_to?(:activity)
       scope.activity.investigation.data_collectors
@@ -153,7 +169,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
   # end
 
   def self.graph_types
-    [["Sensor", 1], ["Prediction", 2]]
+    [[SENSOR, SENSOR_ID], [PREDICTION, PREDICTION_ID]]
   end
   
   def graph_type_id
@@ -164,6 +180,15 @@ class Embeddable::DataCollector < ActiveRecord::Base
     self[:graph_type_id] = gid
   end
 
+  def graph_type=(type)
+    case type
+    when PREDICTION
+      self.graph_type_id=(PREDICTION_ID)
+    when SENSOR
+      self.graph_type_id=(SENSOR_ID)
+    end
+  end
+  
   def graph_type
     Embeddable::DataCollector.graph_types[graph_type_id-1][0]
   end

@@ -322,16 +322,20 @@ module OtmlHelper
   # 
   def generate_otml_datastore(data_collector)
     capture_haml do
-      haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
-        haml_tag :channelDescriptions do
-          haml_tag :OTDataChannelDescription
-          haml_tag :OTDataChannelDescription
-        end
-        if data_collector.data_store_values && data_collector.data_store_values.length > 0
-          haml_tag :values do
-            data_collector.data_store_values.each do |value|
-              haml_tag(:float, :<) do
-                haml_concat(value)
+      if data_collector.data_table
+        haml_tag :object, :refid => ot_refid_for(data_collector.data_table, :data_store)
+      else
+        haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+          haml_tag :channelDescriptions do
+            haml_tag :OTDataChannelDescription
+            haml_tag :OTDataChannelDescription
+          end
+          if data_collector.data_store_values && data_collector.data_store_values.length > 0
+            haml_tag :values do
+              data_collector.data_store_values.each do |value|
+                haml_tag(:float, :<) do
+                  haml_concat(value)
+                end
               end
             end
           end
