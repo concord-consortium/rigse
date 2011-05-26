@@ -4,7 +4,11 @@ include Clipboard
 
 module RunnablesHelper
   def title_text(component, verb, run_as)
-    "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}. The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
+    text = "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}."
+    if component.is_a? JnlpLaunchable
+      text << " The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
+    end
+    text
   end
 
   def run_url_for(component, params = {}, format = nil)
@@ -19,28 +23,47 @@ module RunnablesHelper
     x_button_for(component, "run")
   end
 
-  def x_button_for(component, verb, image = verb, params = {}, run_as = "Java Web Start application")
+  def x_button_for(component, verb, image = verb, params = {}, run_as = nil)
+
+    unless run_as
+      run_as = case component
+      when JnlpLaunchable   then "Java Web Start application"
+      when ExternalActivity then "External Activity"
+      end
+    end
+
     classes = "run_link rollover"
     if component.is_a? Portal::Offering
       classes << ' offering'
     end
-    link_button("#{image}.png",  run_url_for(component, params),
-                :class => classes,
-                :title => title_text(component, verb, run_as))
+    options = {
+      :class => classes,
+      :title => title_text(component, verb, run_as)
+    }
+    if (component.is_a? JnlpLaunchable) || (component.is_a? ExternalActivity)
+      options[:popup] = true
+    end
+    link_button("#{image}.png",  run_url_for(component, params), options)
   end
 
   def x_link_for(component, verb, as_name = nil, params = {})
     link_text = params.delete(:link_text) || "#{verb} "
     url = run_url_for(component, params)
-    title = title_text(component, verb, "Java Web Start application")
+    
+    run_type = case component
+    when JnlpLaunchable   then "Java Web Start application"
+    when ExternalActivity then "External Activity"
+    end
+    
+    title = title_text(component, verb, run_type)
 
     link_text << " as #{as_name}" if as_name
 
     html_options={}
-    if component.is_a? Portal::Offering
+    case component
+    when Portal::Offering
       html_options[:class] = 'offering'
-    end
-    if component.is_a? JnlpLaunchable
+    when JnlpLaunchable, ExternalActivity
       html_options[:popup] = true
     else
       html_options[:title] = title
