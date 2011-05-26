@@ -3,9 +3,11 @@ require 'spec_helper'
 describe Embeddable::LabBookSnapshotsController do
   integrate_views
   it_should_behave_like 'an embeddable controller'
-  before(:each) do
+  before(:all) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
+  end
+  before(:each) do
     login_admin
     @mock_model = mock_model(Embeddable::LabBookSnapshot,
                             :target_element => nil,
