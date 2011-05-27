@@ -198,7 +198,7 @@ namespace :deploy do
 
   desc "setup a new version of rigse from-scratch using bundle exec rake task of similar name"
   task :setup_new_app do
-    run "cd #{deploy_to}/current; RAILS_ENV=production bundle exec rake rigse:setup:new_rites_app --trace"
+    run "cd #{deploy_to}/current; RAILS_ENV=production bundle exec rake app:setup:new_rites_app --trace"
   end
 
   desc "setup directory remote directory structure"
@@ -389,61 +389,61 @@ namespace :convert do
   desc 'wrap orphaned activities in a parent investigation'
   task :wrap_orphaned_activities_in_investigations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:make:investigations --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:make:investigations --trace"
   end
 
   desc 'set new grade_span_expectation attribute: gse_key'
   task :set_gse_keys, :roles => :db, :only => { :primary => true } do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:set_gse_keys --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:set_gse_keys --trace"
   end
 
   desc 'find page_elements whithout owners and reclaim them'
   task :reclaim_page_elements, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:reclaim_elements --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:reclaim_elements --trace"
   end
 
   desc 'transfer any Investigations owned by the anonymous user to the site admin user'
   task :transfer_investigations_owned_by_anonymous, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:transfer_investigations_owned_by_anonymous --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:transfer_investigations_owned_by_anonymous --trace"
   end
 
   desc 'deep set user ownership on all investigations'
   task :deep_set_user_on_all_investigations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:run_deep_set_user_on_all_investigations --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:run_deep_set_user_on_all_investigations --trace"
   end
 
   desc 'clean up teacher notes owned by the wrong user'
   task :clean_teacher_notes, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:clean_teacher_notes --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:clean_teacher_notes --trace"
   end
 
   desc 'add the author role to all users who have authored an Investigation'
   task :add_author_role_to_authors, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:add_author_role_to_authors --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:add_author_role_to_authors --trace"
   end
 
   desc "set publication_status to 'draft' for all Investigations without publication_status"
   task :set_publication_status_to_draft, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:pub_status --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:pub_status --trace"
   end
 
   desc "Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor"
   task :data_collectors_with_invalid_graph_types, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:data_collectors_with_invalid_graph_types --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:data_collectors_with_invalid_graph_types --trace"
   end
 
   desc "copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name"
   task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:copy_truncated_xhtml_into_name --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:copy_truncated_xhtml_into_name --trace"
   end
 
   desc "create default Project from config/settings.yml"
@@ -455,13 +455,13 @@ namespace :convert do
   desc "generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls"
   task :generate_date_str_for_versioned_jnlp_urls, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:generate_date_str_for_versioned_jnlp_urls --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:generate_date_str_for_versioned_jnlp_urls --trace"
   end
 
   desc "Create bundle and console loggers for learners"
   task :create_bundle_and_console_loggers_for_learners, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:create_bundle_and_console_loggers_for_learners --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:create_bundle_and_console_loggers_for_learners --trace"
   end
 
   # Tuesday, August 11, 2009
@@ -469,19 +469,19 @@ namespace :convert do
   desc "Find and report on invalid Dataservice::BundleContent objects"
   task :find_and_report_on_invalid_dataservice_bundle_content_objects, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:find_and_report_on_invalid_dataservice_bundle_content_objects --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:find_and_report_on_invalid_dataservice_bundle_content_objects --trace"
   end
 
   desc "Find and delete invalid Dataservice::BundleContent objects"
   task :find_and_delete_invalid_dataservice_bundle_content_objects, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:find_and_delete_invalid_dataservice_bundle_content_objects --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:find_and_delete_invalid_dataservice_bundle_content_objects --trace"
   end
 
   desc "generate otml, valid_xml, and empty attributes for BundleContent objects"
   task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects --trace"
   end
 
   # Thursday October 8, 2009
@@ -489,13 +489,13 @@ namespace :convert do
   desc "Create default users, roles, district, school, course, and class, and greade_levels"
   task :default_users_roles, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:setup:default_users_roles --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_users_roles --trace"
   end
 
   desc "Create default portal resources: district, school, course, and class, investigation and grades"
   task :default_portal_resources, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:setup:default_portal_resources --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:default_portal_resources --trace"
   end
 
   desc "Create districts and schools from NCES records for States listed in settings.yml"
@@ -508,7 +508,7 @@ namespace :convert do
   desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
   task :convert_clazzes_to_multi_teacher, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:convert_clazzes_to_multi_teacher --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:convert_clazzes_to_multi_teacher --trace"
   end
 
   # Wed Dec 23nd, 2009
@@ -522,34 +522,34 @@ namespace :convert do
   desc "Fixup inner pages: add static_page associations (run deploy:migrate first!)"
   task :add_static_pages_to_inner_pages, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:add_static_page_to_inner_pages --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:add_static_page_to_inner_pages --trace"
   end
 
   # Feb 3, 2010
   desc "Extract and process learner responses from existing OTrunk bundles"
   task :extract_learner_responses_from_existing_bundles, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:extract_learner_responses_from_existing_bundles --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:extract_learner_responses_from_existing_bundles --trace"
   end
 
   desc "Erase all learner responses and reset the tables"
   task :erase_all_learner_responses_and_reset_the_tables, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:erase_all_learner_responses_and_reset_the_tables --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:erase_all_learner_responses_and_reset_the_tables --trace"
   end
 
   #Feb 4, 2010
   desc "Convert all index-based MultipleChoice references in existing OTrunk bundles to local_id-based references."
   task :convert_choice_answers_to_local_ids, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:convert_choice_answers_to_local_ids --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:convert_choice_answers_to_local_ids --trace"
   end
 
   # seb: 20100513
   desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
   task :populate_new_district_and_school_attributes_with_data_from_nces_tables, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:convert:populate_new_district_and_school_attributes_with_data_from_nces_tables --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:populate_new_district_and_school_attributes_with_data_from_nces_tables --trace"
   end
 
   # seb: 20100513
@@ -563,7 +563,7 @@ namespace :convert do
   desc "Reset all activity position information"
   task :reset_activity_positions, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} rigse:fixup:reset_activity_positions --trace"
+      "bundle exec rake RAILS_ENV=#{rails_env} app:fixup:reset_activity_positions --trace"
   end
 
   # seb: 20110126
@@ -582,7 +582,6 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && " +
         "rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
   end
-
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
   # https://github.com/stepheneb/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
@@ -590,7 +589,6 @@ namespace :convert do
   task :delete_all_real_schools, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && bundle exec rake RAILS_ENV=#{rails_env} app:schools:delete_all_real_schools --trace"
   end
-
 end
 
 #
@@ -600,7 +598,8 @@ namespace :rake do
   desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
   # run like: cap staging rake:invoke task=a_certain_task  
   task :invoke do  
-    run("cd #{deploy_to}/current; /usr/bin/env bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
+    run("cd #{deploy_to}/current; bundle exec #{ENV['task']} RAILS_ENV=#{rails_env}")
+ rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
   end  
 end
 

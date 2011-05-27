@@ -409,7 +409,7 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.find(params[:id])
     if @investigation.changeable?(current_user)
       if @investigation.offerings && @investigation.offerings.size > 0
-        flash[:error] = "This investigation can't be destoyed, its in use by classes..."
+        flash[:error] = "This #{Investigation.display_name} can't be destoyed, its in use by classes..."
         @failed = true
       else
         @investigation.destroy
