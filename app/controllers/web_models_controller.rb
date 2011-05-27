@@ -38,6 +38,7 @@ class WebModelsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @web_model }
+      format.json { render :text => @web_model.to_json }
     end
   end
 
