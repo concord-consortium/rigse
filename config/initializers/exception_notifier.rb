@@ -1,2 +1,2 @@
-admin_email = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")[RAILS_ENV][:admin_email]
-ExceptionNotifier.exception_recipients = admin_email
+ExceptionNotifier.exception_recipients = APP_CONFIG[:admin_email]
+ExceptionNotifier.sender_address = %("Application Error" <#{APP_CONFIG[:help_email]}>)

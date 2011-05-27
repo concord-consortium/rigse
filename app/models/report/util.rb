@@ -83,6 +83,7 @@ class Report::Util
     @learners = @offering.learners
     @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
 
+    # assignable = offering.runnable
     @investigation = offering.runnable
     # HACK HACK Detect auto-mapped external activities which actually relate to investigations
     if offering.runnable.kind_of?(ExternalActivity) && offering.runnable.url =~ /\/sc-runtime\/#(\d+)/
@@ -101,6 +102,7 @@ class Report::Util
     @saveables_by_correct    = {}
     @saveables_by_answered   = {}
 
+    # reportables          = assignable.reportable_elements
     @activities = @investigation.activities.student_only
     @sections   = @investigation.student_sections
     @pages      = @investigation.student_pages
@@ -111,6 +113,7 @@ class Report::Util
     unless skip_filters
       results = @report_embeddable_filter.filter(results)
       allowed_embeddables = @report_embeddable_filter.embeddables
+      # reportables          = @offering.runnable.reportable_elements
       reportables          = @investigation.reportable_elements
       if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
         reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
@@ -124,6 +127,14 @@ class Report::Util
     activity_lambda = lambda { |e| e[:activity] }
     section_lambda  = lambda { |e| e[:section]  }
     page_lambda     = lambda { |e| e[:page]     }
+    # lambdas = []
+    # if assignable.is_a? Investigation
+    #   lambdas = [activity_lambda, section_lambda, page_lambda]
+    # elsif assignable.is_a? Activity
+    #   lambdas = [section_lambda, page_lambda]
+    # end
+    #   
+    # @page_elements  = reportables.extended_group_by(lambdas)
     @page_elements  = reportables.extended_group_by([activity_lambda, section_lambda, page_lambda])
 
     Investigation.saveable_types.each do |type|
@@ -132,9 +143,11 @@ class Report::Util
       @saveables_by_type[type.to_s] = all
     end
     # If an investigation has changed, and daveable elements have been removed (eek!)
+    # current =  @saveables.select { |s| assignable.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
     current =  @saveables.select { |s| @investigation.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
     old = @saveables - current
     if old.size > 0
+      # warning = "WARNING: missing #{old.size} removed reportables in report for #{assignable.name}"
       warning = "WARNING: missing #{old.size} removed reportables in report for #{@investigation.name}"
       puts warning
       Rails.logger.info(warning)

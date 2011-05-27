@@ -151,6 +151,12 @@ optparse = OptionParser.new do |opts|
     @options[:db_name_prefix] = db_name_prefix
   end
 
+  @options[:include_otrunk_examples] = false
+  opts.on( '--include-otrunk-examples',
+    "import and introspect content in otrunk-examples, this enables the raw_otml embeddable, default: false" ) do
+    @options[:include_otrunk_examples] = true
+  end
+
   @options[:quiet] = default_quiet
   opts.on( '-q', '--quiet',
     "display fewer console messages, default: #{default_quiet}" ) do
@@ -226,6 +232,12 @@ if @options[:states_provinces]
   # dup the values so yaml doesn't use anchor labels (&id001)-- it makes it harder to read
   @settings_config_sample['staging'][:states_and_provinces] = @options[:states_provinces].dup
   @settings_config_sample['development'][:states_and_provinces] = @options[:states_provinces].dup
+end
+
+if @options[:include_otrunk_examples]
+  @settings_config_sample['production'][:include_otrunk_examples]  = true
+  @settings_config_sample['staging'][:include_otrunk_examples]     = true
+  @settings_config_sample['development'][:include_otrunk_examples] = true
 end
 
 puts <<HEREDOC

@@ -1,0 +1,20 @@
+- page_embeddables.map{ |pe| pe[:embeddable] }.each do |embeddable|
+  %div{:id => dom_id_for(embeddable, :content), :style => 'position: relative;', :class => 'report_embeddable'}
+    - if show_selection_controls
+      %div{:style => 'position: absolute; left: -20px; top: 4px;'}
+        = check_box_tag "filter[#{embeddable.class}][]", embeddable.id, @filtered && offering.report_embeddable_filter.embeddables.include?(embeddable), :class => "filter_checkbox"
+    - report_type = "offerings"
+    - locals = {:embeddable => embeddable, :offering => offering }
+    - if learners.kind_of?(Array)
+      - locals[:learners] = learners
+    - else
+      - report_type = "learners"
+      - locals[:learner] = learners
+    - if embeddable.kind_of? Embeddable::MultipleChoice
+      = render :partial => "portal/#{report_type}/embeddable_multiple_choice", :locals => locals
+    - elsif embeddable.kind_of? Embeddable::OpenResponse
+      = render :partial => "portal/#{report_type}/embeddable_open_response", :locals => locals
+    - elsif embeddable.kind_of? Embeddable::ImageQuestion
+      = render :partial => "portal/#{report_type}/embeddable_image_question", :locals => locals
+    - else
+      = "Unknown type of embeddable: #{embeddable.class}"

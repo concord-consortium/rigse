@@ -55,6 +55,11 @@ module NavigationHelpers
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
     when /the clazz create page/
       new_portal_clazz_path
+    when /the user preferences page for the user "(.*)"/
+      user = User.find_by_login $1
+      preferences_user_path user
+    when /the requirements page/
+      "/requirements/"
     when /the edit web model page for "(.*)"/
       web_model = WebModel.find_by_name $1
       edit_web_model_path web_model

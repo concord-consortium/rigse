@@ -109,6 +109,9 @@ require 'spec/support/controller_helper'
 include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
 
+# so we can use things like dom_id_for
+include ApplicationHelper
+
 # Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
 # Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
 # Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber

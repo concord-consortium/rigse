@@ -32,6 +32,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # GET /Embeddable::Biologica/biologica_pedigrees/new.xml
   def new
     @biologica_pedigree = Embeddable::Biologica::Pedigree.new
+    modify_organism_ids
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
@@ -46,6 +47,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   def edit
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     @scope = get_scope(@biologica_pedigree)
+    modify_organism_ids
     if request.xhr?
       render :partial => 'remote_form', :locals => { :biologica_pedigree => @biologica_pedigree }
     else
@@ -62,6 +64,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   def create
     @biologica_pedigree = Embeddable::Biologica::Pedigree.new(params[:biologica_pedigree])
     cancel = params[:commit] == "Cancel"
+    modify_organism_ids
     if request.xhr?
       if cancel 
         redirect_to :index
@@ -88,6 +91,7 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
   # PUT /Embeddable::Biologica/biologica_pedigrees/1.xml
   def update
     cancel = params[:commit] == "Cancel"
+    modify_organism_ids
     @biologica_pedigree = Embeddable::Biologica::Pedigree.find(params[:id])
     if request.xhr?
       if cancel || @biologica_pedigree.update_attributes(params[:embeddable_biologica_pedigree])
@@ -125,4 +129,24 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
     end
     @biologica_pedigree.destroy    
   end
+
+  private
+
+  # HACK: NP 2011-05
+  # options_for_select is returning params like this:
+  # "organism_ids"=>["796,797"] notice that the array
+  # only has one string value(!) Can't figure out why.
+  def modify_organism_ids
+    return unless params[:embeddable_biologica_pedigree]
+    value = params[:embeddable_biologica_pedigree][:organism_ids]    
+    return if value.nil?
+    case value
+    when Array
+      value.map! { |v| v.kind_of?(String) ? v.split(",") : v }
+    when String
+      value = value.split(",")
+    end
+    value = [value]
+    params[:embeddable_biologica_pedigree][:organism_ids]=value.flatten.map.compact
+  end 
 end

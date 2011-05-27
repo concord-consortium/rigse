@@ -128,4 +128,7 @@ class Portal::Learner < ActiveRecord::Base
     # end
   end
 
+  def run_format
+    offering.runnable.run_format
+  end
 end

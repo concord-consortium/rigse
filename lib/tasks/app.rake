@@ -143,7 +143,7 @@ This task will:
         if APP_CONFIG[:include_otrunk_examples]
           Rake::Task['app:import:generate_otrunk_examples_rails_models'].invoke
         else
-          puts "\n\nskipping task: rake rigse:import:generate_otrunk_examples_rails_models\n\n"
+          puts "\n\nskipping task: rake app:import:generate_otrunk_examples_rails_models\n\n"
         end
         Rake::Task['app:convert:create_default_project_from_config_settings_yml'].invoke
         Rake::Task['portal:setup:download_nces_data'].invoke
@@ -171,23 +171,23 @@ Re-create the database from scratch and setup default users
 again by running these rake tasks in sequence again:
 
   RAILS_ENV=production #{jruby_system_command} rake db:migrate:reset
-  RAILS_ENV=production #{jruby_system_command} rake rigse:setup:new_app
+  RAILS_ENV=production #{jruby_system_command} rake app:setup:new_app
 
 
 If you have access to an ITSI database you can also import ITSI activities 
 into #{APP_CONFIG[:theme].upcase} by running this rake task:
 
-  #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
+  #{jruby_system_command} rake app:import:erase_and_import_itsi_activities
 
 * if you are developing locally and are using the same database for both development and production
   environments the ITSI import will run much faster in production mode:
 
-  RAILS_ENV=production #{jruby_system_command} rake rigse:import:erase_and_import_itsi_activities
+  RAILS_ENV=production #{jruby_system_command} rake app:import:erase_and_import_itsi_activities
 
 If you have access to a CCPortal database that indexes ITSI Activities into sequenced Units 
 you can also import these ITSI activities into #{APP_CONFIG[:theme].upcase} Investigations by running this rake task:
 
-  #{jruby_system_command} rake rigse:import:erase_and_import_ccp_itsi_units
+  #{jruby_system_command} rake app:import:erase_and_import_ccp_itsi_units
 
 If you have ssh access to the #{APP_CONFIG[:theme].upcase} production server you can get a copy of the production database on
 your local development instance with the following steps:
@@ -198,7 +198,7 @@ your local development instance with the following steps:
 If the codebase on your development system has moved ahead of production you may need to run additional tasks such as:
 
   RAILS_ENV=production #{jruby_system_command}  rake db:migrate
-  RAILS_ENV=production #{jruby_system_command}  rake rigse:setup:default_portal_resources
+  RAILS_ENV=production #{jruby_system_command}  rake app:setup:default_portal_resources
   RAILS_ENV=production #{jruby_system_command}  rake portal:setup:create_districts_and_schools_from_nces_data
 
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional 
@@ -207,7 +207,7 @@ and necessary default model initialization.
 In order for the same passwords to work you will also need to have the same keys in your local 
 config/initializers/site_keys.rb as on the server you copied the production data from.
 
-  cap production db:copy_remote_site_keys</code></pre>
+  cap production db:copy_remote_site_keys
 
 
         HEREDOC

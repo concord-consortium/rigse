@@ -2,8 +2,8 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/staging/genomedynamics"
-set :branch, "genomedynamics-staging"
+set :deploy_to, "/web/staging/genome-dynamics"
+set :branch, "genomedynamics-dev"
 
 #############################################################
 #  Servers

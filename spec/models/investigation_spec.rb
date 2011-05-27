@@ -304,7 +304,7 @@ describe Investigation do
   end
 
   describe "finding reportables within an investigation" do
-    before(:all) do
+    before(:each) do
       @investigation = Factory(:investigation)
       @activity = Factory(:activity)
       @section = Factory(:section)

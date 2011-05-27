@@ -30,7 +30,14 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    id = component.id.nil? ? Time.now.to_i : component.id
+    if component.is_a?(ActiveRecord::Base)
+      id = component.id || Time.now.to_i
+    else
+      # this will be a temporary id, so it seems unlikely that these type of ids
+      # should be really be generated, however there are some parts of the code
+      # calling dom_id_for and passing a form object for example
+      id = component.object_id
+    end
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
@@ -194,20 +201,28 @@ module ApplicationHelper
     end
   end
 
-  def render_show_partial_for(component,teacher_mode=false)
+  def render_partial_for(component,_opts={})
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
-    partial = "#{class_name.pluralize}/show"
-    # if component.respond_to? :print_partial_name
-    #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
-    # end
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+
+    opts = {
+      :teacher_mode => false,
+      :substitute    => nil,
+      :partial      => 'show'
+    }
+    opts.merge!(_opts)
+    teacher_mode = opts[:teacher_mode]
+    substitute = opts[:substitute]
+    partial = "#{class_name.pluralize}/#{opts[:partial]}"
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
   end
 
-  def render_edit_partial_for(component)
-    class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
+  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
+    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  end
+
+  def render_edit_partial_for(component,opts={})
+    render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
   end
 
   def wrap_edit_link_around_content(component, options={})
@@ -260,7 +275,7 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
+  def edit_menu_for(component, form, options={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
@@ -271,10 +286,10 @@ module ApplicationHelper
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            if (component.changeable?(current_user))
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
-            end
+            #if (component.changeable?(current_user))
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless options[:omit_cancel]
+            #end
           end
         end
       end
@@ -794,15 +809,15 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat report_link_for(learner, 'report', 'Report')
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
-          if USING_JNLPS && current_user.has_role?("admin")
+          if learner.offering.runnable.run_format == :jnlp
+            haml_concat link_to('Run', run_url_for(learner))
             haml_concat " | "
-            haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+            if current_user.has_role?("admin")
+              haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+              haml_concat " | "
+            end
           end
+          haml_concat report_link_for(learner, 'report', 'Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do
           haml_concat title_for_component(learner, options)
@@ -1199,10 +1214,11 @@ module ApplicationHelper
     Admin::Project.settings_for(key)
   end
 
+  # this appears to not be used in master right now
   def current_user_can_author
     return true if current_user.has_role? "author" 
     if settings_for(:teachers_can_author)
-      return true unless current_user.teacher.nil?
+      return true unless current_user.portal_teacher.nil?
     end
     # TODO add aditional can-author conditions
     return false

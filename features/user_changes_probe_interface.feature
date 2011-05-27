@@ -17,5 +17,3 @@ Feature: A user changes which probeware interface they are using
     And I press "Save"
     Then I should not see "Please log in as an administrator"
     And I should see "was successfully updated"
-
-

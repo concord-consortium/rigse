@@ -1,49 +1,37 @@
 --- 
-- otrunk_object_class: org.concord.data.state.OTLinearProducerFilter
-  name: Linear Filter
+- name: Linear Filter
   k0_active: true
-  updated_at: 2009-05-15 17:21:05 Z
-  k2_active: 
   k1_active: true
   uuid: c57e61ba-4174-11de-aad1-001ff3caa767
-  id: 1
-  description: "The Linear Filter applies a two-point linear transformation to the input data: Y = k0 + k1 * X."
-  k3_active: 
-  user_id: 9
-  created_at: 2009-05-15 13:21:05 Z
-- otrunk_object_class: org.concord.data.state.OTIntegratingProducerFilter
-  name: Integrating Filter
-  k0_active: 
-  updated_at: 2009-05-15 17:21:05 Z
   k2_active: 
+  id: 1
+  k3_active: 
+  description: "The Linear Filter applies a two-point linear transformation to the input data: Y = k0 + k1 * X."
+  otrunk_object_class: org.concord.data.state.OTLinearProducerFilter
+- name: Integrating Filter
+  k0_active: 
   k1_active: 
   uuid: c57f2ed8-4174-11de-aad1-001ff3caa767
-  id: 2
-  description: The Integrating Filter applies a simple integration filter to the input data. This filter takes no parameters.
-  k3_active: 
-  user_id: 9
-  created_at: 2009-05-15 13:21:05 Z
-- otrunk_object_class: org.concord.data.state.OTDifferentiatingProducerFilter
-  name: Differentiating Filter
-  k0_active: 
-  updated_at: 2009-05-15 17:21:05 Z
   k2_active: 
+  id: 2
+  k3_active: 
+  description: The Integrating Filter applies a simple integration filter to the input data. This filter takes no parameters.
+  otrunk_object_class: org.concord.data.state.OTIntegratingProducerFilter
+- name: Differentiating Filter
+  k0_active: 
   k1_active: 
   uuid: c57fd2d4-4174-11de-aad1-001ff3caa767
-  id: 3
-  description: "Take the derivative of the values.  "
-  k3_active: 
-  user_id: 9
-  created_at: 2009-05-15 13:21:05 Z
-- otrunk_object_class: org.concord.data.state.OTHoltsMethodSmoothing
-  name: Holts Smoothing Filter
-  k0_active: true
-  updated_at: 2009-05-15 17:21:05 Z
   k2_active: 
+  id: 3
+  k3_active: 
+  description: "Take the derivative of the values.  "
+  otrunk_object_class: org.concord.data.state.OTDifferentiatingProducerFilter
+- name: Holts Smoothing Filter
+  k0_active: true
   k1_active: true
   uuid: fb00c758-7b1f-11de-9134-001ff3caa767
+  k2_active: 
   id: 4
-  description: "Smooths the data. Default values for coefficients: k0 (level smoothing): 0.5, k1 (trend smoothing): 0.5. "
   k3_active: 
-  user_id: 9
-  created_at: 2009-05-15 13:21:05 Z
+  description: "Smooths the data. Default values for coefficients: k0 (level smoothing): 0.5, k1 (trend smoothing): 0.5. "
+  otrunk_object_class: org.concord.data.state.OTHoltsMethodSmoothing

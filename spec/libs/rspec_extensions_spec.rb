@@ -1,6 +1,14 @@
 require 'spec_helper.rb'
 
 describe "fails_in_themes" do
+  before (:all) do
+    @orig_theme = ApplicationController.get_theme
+  end
+
+  after (:all) do
+    ApplicationController.set_theme(@orig_theme)
+  end
+
   it "should fail when there's no body" do
     lambda {
       fails_in_themes

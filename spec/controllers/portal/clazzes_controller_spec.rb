@@ -38,6 +38,9 @@ describe Portal::ClazzesController do
     @controller.stub(:before_render) {
       response.template.stub_chain(:current_project, :name).and_return("Test Project")
     }
+    @mock_project = mock_model(Admin::Project, :name => "Test Project")
+    @mock_project.stub(:enable_grade_levels?).and_return(true)
+    Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
   # def login_as(user_sym)
@@ -86,7 +89,7 @@ describe Portal::ClazzesController do
         # All users should see the full class details summary
         with_tag("div#details_portal__clazz_#{@mock_clazz.id}") do
           with_tag('div.action_menu') do
-            with_tag('a', :text => 'edit')
+            with_tag('a', :text => 'edit class information')
           end
         end
       end
@@ -558,8 +561,7 @@ describe Portal::ClazzesController do
       end
     end
 
-    # Is this a reasonable requirement? Revisit. -- Cantina-CMH
-    it "should not let me create a class with no grade levels" do
+    it "should not let me create a class with no grade levels when grade levels are enabled" do
       stub_current_user :authorized_teacher_user
 
       current_count = Portal::Clazz.count(:all)
@@ -570,6 +572,69 @@ describe Portal::ClazzesController do
 
       assert flash[:error]
       Portal::Clazz.count(:all).should == current_count
+    end
+
+    it "should let me create a class with no grade levels when grade levels are disabled" do
+      @mock_project.stub(:enable_grade_levels?).and_return(false)
+      @post_params[:portal_clazz].delete(:grade_levels)
+
+      stub_current_user :authorized_teacher_user
+
+      current_count = Portal::Clazz.count(:all)
+
+      post :create, @post_params
+
+      Portal::Clazz.count(:all).should == (current_count + 1)
+    end
+  end
+  
+  describe "PUT update" do
+    before(:each) do
+      # Make sure we have the grade levels we want
+      0.upto(12) do |num|
+        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade.active = true
+        grade.save
+      end
+
+      setup_for_repeated_tests
+
+      @post_params = {
+        :id => @mock_clazz.id,
+        :portal_clazz => {
+          :name => "New Test Class",
+          :class_word => "1020304050",
+          :semester_id => @mock_semester.id,
+          :description => "Test!",
+          :teacher_id => @authorized_teacher.id,
+          :grade_levels => {
+            :"6" => "1",
+            :"7" => "1",
+            :"9" => "1"
+          }
+        }
+      }
+    end
+
+    it "should not let me update a class with no grade levels when grade levels are enabled" do
+      stub_current_user :authorized_teacher_user
+
+      @post_params[:portal_clazz][:grade_levels] = nil
+
+      put :update, @post_params
+
+      assert flash[:error]
+    end
+
+    it "should let me update a class with no grade levels when grade levels are disabled" do
+      @mock_project.stub(:enable_grade_levels?).and_return(false)
+      @post_params[:portal_clazz].delete(:grade_levels)
+
+      stub_current_user :authorized_teacher_user
+
+      put :update, @post_params
+
+      Portal::Clazz.find(@mock_clazz.id).name.should == 'New Test Class'
     end
   end
 end

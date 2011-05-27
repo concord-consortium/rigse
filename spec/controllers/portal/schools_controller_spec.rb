@@ -55,7 +55,7 @@ describe Portal::SchoolsController do
   
   describe "GET edit" do
     it "assigns the requested school as @portal_school" do
-      @school.should_receive(:changeable?).and_return(:true)
+      #@school.should_receive(:changeable?).and_return(:true)
       Portal::School.stub!(:find).with("37").and_return(@school)
       get :edit, :id => "37"
       assigns[:portal_school].should equal(@school)

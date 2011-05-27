@@ -77,6 +77,20 @@ describe Admin::Project do
       @new_valid_project.enabled_vendor_interfaces.should have(@num_interfaces -1).things
     end
     
+    describe "custom_css" do
+      before(:each) do
+        @css =  ".testing {position:relative; padding:5px;}"
+      end
+      it "it should allow for custom css" do
+        @new_valid_project.custom_css = @css
+        @new_valid_project.should be_valid
+        @new_valid_project.should be_using_custom_css 
+      end
+      it "not be using custom css by default" do
+        @new_valid_project.should_not be_using_custom_css
+      end
+    end
+    
   end
 
   describe "class methods" do

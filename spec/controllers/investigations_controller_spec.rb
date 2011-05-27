@@ -4,9 +4,14 @@ describe InvestigationsController do
   integrate_views
 
   before(:each) do
+    @current_project = mock(
+      :name => "test project",
+      :using_custom_css? => false,
+      :use_bitmap_snapshots? => false)
+    Admin::Project.stub!(:default_project).and_return(@current_project)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
-      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+      response.template.stub_chain(:current_project).and_return(@current_project);
     }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
