@@ -26,6 +26,7 @@ module ApplicationHelper
 
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
+    optional_prefixes.compact! unless optional_prefixes.empty?
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
