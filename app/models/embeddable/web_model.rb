@@ -21,6 +21,8 @@ class Embeddable::WebModel < ActiveRecord::Base
   self.extend SearchableModel
   @@searchable_attributes = %w{uuid}
 
+  include ActionView::Helpers
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -41,7 +43,7 @@ class Embeddable::WebModel < ActiveRecord::Base
   
   def image_url
     if use_custom_url?
-      ""
+      url_for('/images/custom_web_model.png')
     else
       self.web_model.image_url
     end

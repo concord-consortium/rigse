@@ -3,8 +3,8 @@
   - field_set_tag 'Select an existing Web Model' do
     = f.collection_select(:web_model_id, WebModel.all.sort{|a,b| a.name <=> b.name}, :id, :name_with_id)
     #web_model_desc  #{web_model.web_model.description}
-    #web_model_image #{image_tag(web_model.image_url)}
-    #web_model_url   #{link_to web_model.url}
+    #web_model_url   #{link_to web_model.web_model.url}
+    #web_model_image #{image_tag(web_model.web_model.image_url)}
     - ajax_str = "new Ajax.Request('/web_models/' + value + '.json', { method: 'get', onSuccess: function(transport) { var web_model = transport.responseJSON.web_model\; $('web_model_desc').update(web_model.description)\; $$('#web_model_image img').first().src = web_model.image_url\; var web_model_url = $$('#web_model_url a').first()\; web_model_url.href = web_model.url\; web_model_url.innerText = web_model.url\; var title = $('#{dom_id_for(web_model, :edit, :title)}')\; title.innerText = web_model.name } })"
     = observe_field(:embeddable_web_model_web_model_id, :function => ajax_str)
   - field_set_tag 'Or use a custom Web Model' do

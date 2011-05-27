@@ -4,6 +4,7 @@
       %p
         Custom web model location: 
         = link_to web_model.web_content_url
+        = image_tag(web_model.image_url)
     - else
       = web_model.description
       %p
