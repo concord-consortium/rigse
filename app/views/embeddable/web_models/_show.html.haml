@@ -10,3 +10,6 @@
         = image_tag(web_model.image_url)
         %br
         = link_to web_model.url
+
+:javascript
+  $('#{dom_id_for(web_model, :title)}').innerText = '#{web_model.name}';
