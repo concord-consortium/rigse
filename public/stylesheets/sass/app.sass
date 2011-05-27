@@ -468,18 +468,36 @@ p.note
   &.item_selected
     background-color: #f9eec1
     border-bottom:
-      width: 2px
-      style: solid
-      color: #3a878b
+      width: 1px
+      style: dashed
+      color: #53857C
   &.item_selectable
     border-bottom:
-      width: 2px
+      width: 1px
       style: solid
-      color: #bddfdf
+      color: #53857C
     &:hover
       border:
-        width: 2px
-        color: #f4b626
+        width: 1px
+        color: #53857C
+
+li.item_selected
+  margin-bottom: 10px
+  overflow: hidden
+li.item_selectable
+  margin-bottom: 10px
+  overflow: visible
+.item_selected .container_element
+  background-color: #f9eec1 !important
+  margin-bottom: 0
+  padding: 0
+.item_selectable .container_element
+  background-color: transparent !important
+  margin-bottom: 0
+  padding: 0
+
+.sortable.draggable, .sortable.sortable, .sortable.movable
+  cursor: move
 
 /* ------- edit, copy, delete etc buttons -------
 
