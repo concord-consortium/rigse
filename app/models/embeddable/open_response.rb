@@ -1,6 +1,13 @@
 class Embeddable::OpenResponse < ActiveRecord::Base
-  set_table_name "embeddable_open_responses"
 
+  MIN_FONT_SIZE = 9
+  MAX_FONT_SIZE = 24
+  MAX_ROWS      = 80
+  MIN_ROWS      = 1
+  MAX_COLUMNS   = 80
+  MIN_COLUMNS   = 10
+
+  set_table_name "embeddable_open_responses"
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
@@ -44,7 +51,22 @@ class Embeddable::OpenResponse < ActiveRecord::Base
   HEREDOC
   # as per RITES-260 "Open response text field should be empty"
   default_value_for :default_response, "" 
+  default_value_for :rows, 5
+  default_value_for :columns, 32
+  default_value_for :font_size, 12
+
+  validates_numericality_of :rows, 
+    :greater_than_or_equal_to => MIN_ROWS, 
+    :less_than_or_equal_to => MAX_ROWS
   
+  validates_numericality_of :columns, 
+    :greater_than_or_equal_to => MIN_COLUMNS, 
+    :less_than_or_equal_to => MAX_COLUMNS
+  
+  validates_numericality_of :font_size, 
+    :greater_than_or_equal_to => MIN_FONT_SIZE, 
+    :less_than_or_equal_to => MAX_FONT_SIZE
+
   send_update_events_to :investigations
   
   def self.display_name
