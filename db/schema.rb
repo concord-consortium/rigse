@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110525203328) do
+ActiveRecord::Schema.define(:version => 20110526202959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -497,6 +497,9 @@ ActiveRecord::Schema.define(:version => 20110525203328) do
     t.string   "uuid",             :limit => 36
     t.text     "prompt"
     t.string   "default_response"
+    t.integer  "rows",                           :default => 5
+    t.integer  "columns",                        :default => 32
+    t.integer  "font_size",                      :default => 12
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
