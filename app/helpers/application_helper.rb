@@ -265,7 +265,7 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_tag(:h3,{:class => 'menu'}) do
-            haml_concat title_for_component(component)
+            haml_concat title_for_component(component, :id_prefix => 'edit')
           end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
@@ -449,10 +449,11 @@ module ApplicationHelper
 
   def title_for_component(component, options={})
     title = name_for_component(component, options)
+    id = dom_id_for(component, options[:id_prefix], :title)
     if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
     else
-      "<span class='component_title'>#{title}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span>"
     end
   end
 
