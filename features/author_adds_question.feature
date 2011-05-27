@@ -49,7 +49,7 @@ Feature: An author adds multiple choice questions
     And I should see "a"
     And I should see "b"
     And I should see "c"
-    When I follow "delete" within "span.small_left_menu"
+    When I follow "delete" within "span.delete_link"
     And I press "Save"
     And I show the first page of the "testing fast cars" investigation
     Then I should see "Why do you think ..."
