@@ -40,7 +40,7 @@ namespace :hudson do
 
   desc "Run the cucumber and RSpec tests, but don't fail until both suites have run."
   task :everything do
-    tasks = {"cucumber" => ["hudson:cucumber"], "test" => ["hudson:spec"] }
+    tasks = {"cucumber" => ["hudson:cucumber_skip_theme_todo"], "test" => ["hudson:spec"] }
     exceptions = []
     tasks.each do |env,tasks|
       ENV['RAILS_ENV'] = env
