@@ -68,6 +68,7 @@ Feature: Investigations can be searched
     And I login with username: teacher password: teacher
 
   @selenium
+  @assessment-todo
   Scenario: Browsing public investigations
     When I sort investigations by "name ASC"
     Then There should be 20 investigations displayed
@@ -75,6 +76,7 @@ Feature: Investigations can be searched
     And  "a Investigation" should appear before "b Investigation"
 
   @selenium
+  @assessment-todo
   Scenario: Searching public investigations
     When I sort investigations by "name ASC"
     And I click on the next page of results
