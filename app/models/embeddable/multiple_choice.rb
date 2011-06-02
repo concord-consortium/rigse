@@ -59,9 +59,9 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   def create_default_choices
     return if choices.size > 0
 
-    Embeddable::MultipleChoiceChoice.create(:choice => 'a', :multiple_choice => self)
-    Embeddable::MultipleChoiceChoice.create(:choice => 'b', :multiple_choice => self)
-    Embeddable::MultipleChoiceChoice.create(:choice => 'c', :multiple_choice => self)
+    self.choices << Embeddable::MultipleChoiceChoice.new(:choice => 'a')
+    self.choices << Embeddable::MultipleChoiceChoice.new(:choice => 'b')
+    self.choices << Embeddable::MultipleChoiceChoice.new(:choice => 'c')
   end
   
   send_update_events_to :investigations
