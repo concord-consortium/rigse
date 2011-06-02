@@ -33,6 +33,7 @@ source "http://rubygems.org"
   gem "open4",                "~> 1.0"
   gem "compass",              "~> 0.11.1"
   gem "jnlp",                 "~> 0.7.1"
+  gem "activerecord-import",  "~> 0.2.7"
   # # use a merge of ghazel and tracksimple ar-extensions forks
   # # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   # # git "git://github.com/concord-consortium/ar-extensions.git" do
