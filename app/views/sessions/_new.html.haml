@@ -8,10 +8,10 @@
           %ul.graphic-input
             %li
               = label_tag 'login', 'Username', :class=>"right textfield "
-              = text_field_tag 'login', @login, :class=>'text', :onfocus=>'$("login").previous(0).setStyle({"display": "none"});', :onblur=>'$("login").previous(0).setStyle({"display": "block"});'
+              = text_field_tag 'login', @login, :class=>'text', :onfocus=>'$("login").previous(0).setStyle({"display": "none"});', :onblur=>'if ($("login").value == "") $("login").previous(0).setStyle({"display": "block"});'
             %li
               = label_tag :password, "Password", :class=>"right textfield"
-              = password_field_tag 'password', '', :class=>'text password', :onfocus=>'$("password").previous(0).setStyle({"display": "none"});', :onblur=>'$("password").previous(0).setStyle({"display": "block"});'
+              = password_field_tag 'password', '', :class=>'text password', :onfocus=>'$("password").previous(0).setStyle({"display": "none"});', :onblur=>'if ($("password").value == "") $("password").previous(0).setStyle({"display": "block"});'
             %li.remember
               = label_tag 'remember_me', 'Stay logged in', :class=>"right"
               = check_box_tag 'remember_me', '1'
