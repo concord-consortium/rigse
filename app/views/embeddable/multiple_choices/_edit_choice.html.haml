@@ -1,8 +1,13 @@
 %div{:id => dom_id_for(form), :class =>"item"}
-  %span
-    = form.label :choice, "choice:"
-    = form.text_field :choice
-  %span
-    = form.label :is_correct, "Correct:"
-    = form.check_box :is_correct
-  %span.small_left_menu= remove_link(form)
+  %ul.menu_h
+    %li
+      %span
+        = form.label :choice, "choice:"
+        = form.text_field :choice
+    %li
+      %span
+        = form.label :is_correct, "Correct:"
+        = form.check_box :is_correct
+    %li
+      %span.delete_link
+        = remove_link(form)

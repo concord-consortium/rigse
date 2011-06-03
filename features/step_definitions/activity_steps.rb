@@ -9,7 +9,7 @@ Given /^the following activities exist:$/ do |table|
 end
 
 When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
-  with_scope("span.small_left_menu") do
+  with_scope("span.delete_link") do
     click_link("delete")
   end
 end

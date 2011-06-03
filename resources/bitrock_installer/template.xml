@@ -68,6 +68,10 @@
           <negate>1</negate>
           <type>windows-vista</type>
         </platformTest>
+        <platformTest>
+          <negate>1</negate>
+          <type>windows-7</type>
+        </platformTest>
       </ruleList>
     </setInstallerVariable>
     <setInstallerVariable>
@@ -79,6 +83,17 @@
         <platformTest>
           <type>windows-vista</type>
         </platformTest>
+        <platformTest>
+          <type>windows-7</type>
+        </platformTest>
+      </ruleList>
+    </setInstallerVariable>
+    <setInstallerVariable>
+      <name>global_installdir</name>
+      <persist>1</persist>
+      <show>0</show>
+      <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
+      <ruleList>
         <platformTest>
           <type>windows-7</type>
         </platformTest>
@@ -110,6 +125,14 @@
         <platformTest>
           <negate>1</negate>
           <type>windows-vista</type>
+        </platformTest>
+        <platformTest>
+          <negate>1</negate>
+          <type>windows-vista</type>
+        </platformTest>
+        <platformTest>
+          <negate>1</negate>
+          <type>windows-7</type>
         </platformTest>
       </ruleList>
     </setInstallerVariable>

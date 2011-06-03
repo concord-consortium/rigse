@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110523140943) do
+ActiveRecord::Schema.define(:version => 20110526202959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -368,6 +368,7 @@ ActiveRecord::Schema.define(:version => 20110523140943) do
     t.boolean  "static"
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
+    t.integer  "data_table_id"
   end
 
   create_table "embeddable_data_tables", :force => true do |t|
@@ -384,6 +385,7 @@ ActiveRecord::Schema.define(:version => 20110523140943) do
     t.integer  "data_collector_id"
     t.integer  "precision",                       :default => 2
     t.integer  "width",                           :default => 1200
+    t.boolean  "is_numeric",                      :default => true
   end
 
   create_table "embeddable_drawing_tools", :force => true do |t|
@@ -495,6 +497,9 @@ ActiveRecord::Schema.define(:version => 20110523140943) do
     t.string   "uuid",             :limit => 36
     t.text     "prompt"
     t.string   "default_response"
+    t.integer  "rows",                           :default => 5
+    t.integer  "columns",                        :default => 32
+    t.integer  "font_size",                      :default => 12
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
