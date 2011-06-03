@@ -27,6 +27,8 @@ GEM
       activesupport (= 3.0.7)
       arel (~> 2.0.2)
       tzinfo (~> 0.3.23)
+    activerecord-import (0.2.7)
+      activerecord (~> 3.0.0)
     activeresource (3.0.7)
       activemodel (= 3.0.7)
       activesupport (= 3.0.7)
@@ -76,7 +78,7 @@ GEM
       nokogiri (>= 1.4.4)
       rack-test (>= 0.5.7)
     database_cleaner (0.6.7)
-    delorean (1.0.0)
+    delorean (1.0.1)
       chronic
     diff-lcs (1.1.2)
     email_spec (1.1.1)
@@ -228,6 +230,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth (~> 4.2.7)
   aasm (~> 2.2.0)
+  activerecord-import (~> 0.2.7)
   activerecord-jdbcmysql-adapter (~> 1.1)
   acts-as-taggable-on
   arrayfields
