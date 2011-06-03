@@ -25,7 +25,7 @@ source "http://rubygems.org"
   gem "will_paginate",        "~> 2.3.6"
   gem "haml",                 "~> 3.0.25"
   gem "RedCloth",             "~> 4.2.7"
-  gem "uuidtools",            "~> 2.0.0"
+  gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   gem "prawn",                "~> 0.4.1"
   gem "grit",                 "~> 2.0.0"
