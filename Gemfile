@@ -16,7 +16,6 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                      "~>0.3.3"
   end
 
-  gem "mongrel",              "~>1.1.5"
   gem "rails",                "2.3.11"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
