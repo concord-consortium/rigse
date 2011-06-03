@@ -79,7 +79,7 @@ GEM
     hirb (0.4.3)
     hpricot (0.6.164)
     httpclient (2.1.5.2)
-    jnlp (0.7.1)
+    jnlp (0.7.2)
       nokogiri (~> 1.4.4)
     json (1.5.1)
     json_pure (1.5.1)
@@ -187,7 +187,7 @@ DEPENDENCIES
   hirb
   hpricot (= 0.6.164)
   httpclient (~> 2.1.5.2)
-  jnlp (~> 0.7.1)
+  jnlp (~> 0.7.2)
   jruby-openssl (>= 0.6)
   launchy
   maruku (~> 0.6)
