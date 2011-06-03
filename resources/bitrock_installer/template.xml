@@ -83,6 +83,9 @@
         <platformTest>
           <type>windows-vista</type>
         </platformTest>
+        <platformTest>
+          <type>windows-7</type>
+        </platformTest>
       </ruleList>
     </setInstallerVariable>
     <setInstallerVariable>
