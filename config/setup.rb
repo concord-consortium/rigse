@@ -68,17 +68,15 @@ require rails_file_path(%w{ lib app_settings })
 require rails_file_path(%w{ lib states_and_provinces })
 
 # Some of the AppSettings module methods need the constant RAILS_ENV defined
-RAILS_ENV = 'development'
+RAILS_ENV = 'development' unless defined?(RAILS_ENV)
+
 include AppSettings
 
 @settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
 @settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
 
-if AppSettings.settings_exists?
-  @app_settings = AppSettings.load_app_settings
-else
-  @app_settings = @settings_config_sample[RAILS_ENV]
-end
+@app_settings = AppSettings.load_app_settings if AppSettings.settings_exists?
+@app_settings = @settings_config_sample[RAILS_ENV] unless @app_settings
 
 # ==================================================================
 #
