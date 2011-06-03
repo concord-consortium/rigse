@@ -403,7 +403,10 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       Portal::Offering.all.select {|o| o.runnable.nil?}.each {|o| o.delete }
     end
 
-
+    desc "move vernier_goio vendor interface users to new JNA driver"
+    task :use_jna_for_vernier_goio => :environment do
+      Fixups.switch_driver('vernier_goio','JNI','JNA')
+    end
   end
 end
 

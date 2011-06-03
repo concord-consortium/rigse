@@ -1,3 +1,4 @@
-%OTLabbookButton{ :local_id => ot_local_id_for(lab_book_snapshot), :name => lab_book_snapshot.name}
+- use_bitmap = current_project.use_bitmap_snapshots? ? 'true' : 'false'
+%OTLabbookButton{ :local_id => ot_local_id_for(lab_book_snapshot), :name => lab_book_snapshot.name, :useBitmap => use_bitmap }
   %target
     =render_scoped_reference(lab_book_snapshot.target_element)

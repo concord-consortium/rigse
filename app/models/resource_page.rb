@@ -36,7 +36,7 @@ class ResourcePage < ActiveRecord::Base
 
   named_scope :like, lambda { |name|
     name = "%#{name}%"
-    { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ?", name,name] }
+    { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ? OR resource_pages.content LIKE ?", name,name,name] }
   }
 
   named_scope :ordered_by, lambda { |order| { :order => order } }
@@ -44,8 +44,12 @@ class ResourcePage < ActiveRecord::Base
   accepts_nested_attributes_for :attached_files
 
   self.extend SearchableModel
-  @@searchable_attributes = %w{name description publication_status}
+  @@searchable_attributes = %w{name description content publication_status}
   class <<self
+    def can_be_created_by?(user)
+      user.has_role?('admin', 'manager', 'researcher', 'author') || user.portal_teacher
+    end
+
     def searchable_attributes
       @@searchable_attributes
     end

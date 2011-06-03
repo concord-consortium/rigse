@@ -6,5 +6,7 @@
     %div{:id => dom_id_for(admin_project, :details), :class => 'content'}
       = wrap_edit_link_around_content(admin_project, {:complete => mce_init_string}) do
         %h4= h(admin_project.name)
-        - field_set_tag 'Home Page Content' do
-          %p= admin_project.home_page_content
+        .form_like
+          - field_set_tag 'Home Page Content' do
+            %p= admin_project.home_page_content
+          = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

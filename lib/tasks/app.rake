@@ -207,7 +207,7 @@ and necessary default model initialization.
 In order for the same passwords to work you will also need to have the same keys in your local 
 config/initializers/site_keys.rb as on the server you copied the production data from.
 
-  cap production db:copy_remote_site_keys</code></pre>
+  cap production db:copy_remote_site_keys
 
 
         HEREDOC

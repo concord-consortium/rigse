@@ -202,47 +202,32 @@ body#tinymce
   a
     color: #416962
   ul
-    float: left
     list-style: none
     height: 26px
-    margin: 4px 0 0 0
+    margin: 0
     padding: 0
-    width: 50%
+  ul.menu_h
+    left: 0
+    position: absolute
+    top: 5px
+  ul.menu_h_right
+    position: absolute
+    right: 0
+    top: 5px
   li
     border: none
     color: #555555
     display: inline
     font-size: 1em
     font-weight: bold
+    height: 16px
     margin: 0
     padding: 0 10px 0
     text-transform: uppercase
-    &#main-site
-      background: transparent url(/images/new/main-site.png) no-repeat
-      border-right: none
-      height: 42px
-      margin-top: -10px
-      padding: 0 5px 0 0
-      position: absolute
-      right: 0
-      text-indent: -999em
-      top: 0
-      width: 354px
-      a
-        display: block
-        height: 42px
-        width: 349px
   li + li
     border-left: solid 1px #416962
   li#home
     border: none
-  .menu_h_right
-    float: right
-    text-align: right
-    width: 50%
-    ul
-      float: right
-      width: 100%
 
 /* SHARE AND PRINT LINKS
 .page-utility
@@ -482,20 +467,38 @@ p.note
       margin-left: 20px
       padding: 2px
   &.item_selected
-    background-color: #f3f2ed
+    background-color: #f9eec1
     border-bottom:
-      width: 2px
-      style: solid
-      color: #3a878b
+      width: 1px
+      style: dashed
+      color: #53857C
   &.item_selectable
     border-bottom:
-      width: 2px
+      width: 1px
       style: solid
-      color: #bddfdf
+      color: #53857C
     &:hover
       border:
-        width: 2px
-        color: #f4b626
+        width: 1px
+        color: #53857C
+
+li.item_selected
+  margin-bottom: 10px
+  overflow: hidden
+li.item_selectable
+  margin-bottom: 10px
+  overflow: visible
+.item_selected .container_element
+  background-color: #f9eec1 !important
+  margin-bottom: 0
+  padding: 0
+.item_selectable .container_element
+  background-color: transparent !important
+  margin-bottom: 0
+  padding: 0
+
+.sortable.draggable, .sortable.sortable, .sortable.movable
+  cursor: move
 
 /* ------- edit, copy, delete etc buttons -------
 
@@ -1076,3 +1079,18 @@ ul.quiet_list
 .teacher_only
   background-color: #eedddd !important
 
+.form_like
+  fieldset
+    border: solid 1px #ccc
+    clear: both !important
+    color: #222222
+    display: block !important
+    font-size: 1em
+    margin-bottom: 0.5em
+    padding: 0 10px 10px
+    legend
+      background: transparent
+      display: block
+      font-weight: bold
+      margin-left: 1em 0 0 10px
+      padding: 5px !important

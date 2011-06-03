@@ -285,7 +285,8 @@ module OtmlHelper
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
         haml_concat ot_script_engine_bundle
-        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
+        use_bitmap = Admin::Project.default_project.use_bitmap_snapshots? ? 'false' : 'true'
+        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle', :scaleDrawTools => use_bitmap }
       end
     end
   end
@@ -294,7 +295,7 @@ module OtmlHelper
     probe_type = data_collector.probe_type
     capture_haml do
       haml_tag :OTSensorDataProxy, :local_id => ot_local_id_for(data_collector, :data_proxy) do
-         haml_tag :request do
+        haml_tag :request do
            haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
              haml_tag :sensorRequests do
                haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
@@ -302,6 +303,11 @@ module OtmlHelper
                 :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
                 :displayPrecision => "#{data_collector.probe_type.display_precision}"
             end
+          end
+        end
+        if data_collector.show_tare
+          haml_tag :zeroSensor do
+            haml_tag :OTZeroSensor, :sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action)
           end
         end
       end
@@ -316,16 +322,20 @@ module OtmlHelper
   # 
   def generate_otml_datastore(data_collector)
     capture_haml do
-      haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
-        haml_tag :channelDescriptions do
-          haml_tag :OTDataChannelDescription
-          haml_tag :OTDataChannelDescription
-        end
-        if data_collector.data_store_values && data_collector.data_store_values.length > 0
-          haml_tag :values do
-            data_collector.data_store_values.each do |value|
-              haml_tag(:float, :<) do
-                haml_concat(value)
+      if data_collector.data_table
+        haml_tag :object, :refid => ot_refid_for(data_collector.data_table, :data_store)
+      else
+        haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+          haml_tag :channelDescriptions do
+            haml_tag :OTDataChannelDescription
+            haml_tag :OTDataChannelDescription
+          end
+          if data_collector.data_store_values && data_collector.data_store_values.length > 0
+            haml_tag :values do
+              data_collector.data_store_values.each do |value|
+                haml_tag(:float, :<) do
+                  haml_concat(value)
+                end
               end
             end
           end

@@ -12,7 +12,7 @@ describe Embeddable::ImageQuestion do
     }
   end
 
-  it "should create a new instance with default vlues" do
+  it "should create a new instance with default values" do
     image_question = Embeddable::ImageQuestion.new
     image_question.save 
     image_question.should be_valid
