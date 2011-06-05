@@ -13,4 +13,12 @@
     = unit_select(:page)
     %h3 publication status
     = f.select :publication_status, ['published', 'private', 'draft']
+    - field_set_tag 'Cohorts' do
+      .aligned
+        %ul
+          %li
+            - ['itsisu'].each do |cohort|
+              = check_box_tag "page[cohort_list][]", "#{cohort}", @page.cohort_list.include?(cohort),
+                :id => "page[cohort_list][#{cohort}]"
+              = label_tag "page[cohort_list][#{cohort}]", cohort
 = javascript_tag("focus_first_field();");

@@ -39,6 +39,10 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1/edit
   def edit
     @portal_teacher = Portal::Teacher.find(params[:id])
+
+    # TODO: We dont use domains or grades for teachers anymore.
+    load_domains_and_grades
+
     @user = @portal_teacher.user
   end
 

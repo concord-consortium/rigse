@@ -129,7 +129,20 @@ module TagDefaults
       end
 
       # Add tests
-      key_map = key_map + Page.published.map {|p| 
+      tests = Page.published
+      # filter based on cohorts
+      if user.has_role?("admin", "manager")
+        # no filtering
+      elsif user.portal_teacher
+        teacher_cohorts = user.portal_teacher.cohort_list
+        tests = tests.select { |test|
+          test.cohort_list.any? { |test_cohort| teacher_cohorts.include? test_cohort }
+        }
+      else
+        tests.delete_if { |test| test.cohort_list.size > 0 }
+      end
+      
+      key_map = key_map + tests.map {|p| 
         keys = p.bin_keys
         {:activity => p, :keys => p.bin_keys, :test => true}
       }
@@ -158,12 +171,6 @@ module TagDefaults
             order = 3
           when /^math/i
             order = 4
-          when /^testselem/i    # throwing tests at end -- not sure where they should go
-            order = 7
-          when /^testsmidd/i
-            order = 8
-          when /^testshigh/i
-            order = 9
           end
           key_string = "#{order}#{key_string}"
           unless results[key_string]

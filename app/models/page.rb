@@ -81,7 +81,7 @@ class Page < ActiveRecord::Base
 
   acts_as_replicatable
   acts_as_list :scope => :section
-  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags, :cohorts
 
   named_scope :like, lambda { |name|
     name = "%#{name}%"

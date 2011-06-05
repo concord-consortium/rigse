@@ -37,5 +37,15 @@
 
   = render :partial => 'users/source', :locals => { :user => portal_teacher.user }
 
+  - field_set_tag 'Cohorts' do
+    .aligned
+      %ul
+        %li
+          - ['itsisu'].each do |cohort|
+            = check_box_tag "teacher[cohort_list][]", "#{cohort}", portal_teacher.cohort_list.include?(cohort),
+              :id => "teacher[cohort_list][#{cohort}]"
+            = label_tag "teacher[cohort_list][#{cohort}]", cohort
+
+
   .aligned
     = f.submit 'Submit'
