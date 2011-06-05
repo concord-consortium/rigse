@@ -374,7 +374,9 @@ class InvestigationsController < AuthoringController
     @activity = Activity.new
     @activity.user = current_user
     @activity.investigation = @investigation
-    @activity.save
+    @activity.name = "New Activity"
+    @activity.description = "New Activity"
+    @activity.save!
     redirect_to edit_activity_path @activity
   end
 
