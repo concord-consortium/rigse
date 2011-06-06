@@ -1,8 +1,7 @@
 class Portal::SchoolsController < ApplicationController
   
   include RestrictedPortalController
-  # before_filter :admin_only, :except => [:index, :edit, :update]
-  # before_filter :admin_or_manager, :only => [:index, :edit, :update]
+  before_filter :admin_or_manager
 
   protected 
 
@@ -55,7 +54,15 @@ class Portal::SchoolsController < ApplicationController
   # GET /portal_schools/new.xml
   def new
     @portal_school = Portal::School.new
-    @nces_districts = Portal::Nces06District.find(:all, :order => :NAME, :include => :minimized_nces_schools)
+
+    if APP_CONFIG[:states_and_provinces]
+      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a.select { |s| APP_CONFIG[:states_and_provinces].any? { |i| i == s[0] } }
+    else
+      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
+    end
+    @states_and_provinces.collect! {|i| i.reverse}
+    @states_and_provinces.sort! { |a, b| a[1] <=> b[1] }
+    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_school }
