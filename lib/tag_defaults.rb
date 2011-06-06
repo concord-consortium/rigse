@@ -128,11 +128,31 @@ module TagDefaults
         end
       end
 
+      # Add tests
+      tests = Page.published
+      # filter based on cohorts
+      if user.has_role?("admin", "manager")
+        # no filtering
+      elsif user.portal_teacher
+        teacher_cohorts = user.portal_teacher.cohort_list
+        tests = tests.select { |test|
+          test.cohort_list.any? { |test_cohort| teacher_cohorts.include? test_cohort }
+        }
+      else
+        tests.delete_if { |test| test.cohort_list.size > 0 }
+      end
+      
+      key_map = key_map + tests.map {|p| 
+        keys = p.bin_keys
+        {:activity => p, :keys => p.bin_keys, :test => true}
+      }
+
       results = {}
       key_counter = 0
       key_map.each do |key_map|
         keys = key_map[:keys]
         act  = key_map[:activity]
+        test = key_map[:test]
         keys.each do |key|
           grade_level = key[0]
           subject = key[1]
@@ -151,12 +171,6 @@ module TagDefaults
             order = 3
           when /^math/i
             order = 4
-          when /^testselem/i    # throwing tests at end -- not sure where they should go
-            order = 7
-          when /^testsmidd/i
-            order = 8
-          when /^testshigh/i
-            order = 9
           end
           key_string = "#{order}#{key_string}"
           unless results[key_string]
@@ -170,8 +184,12 @@ module TagDefaults
             }
           end
           results[key_string][:activities] << act
-          results[key_string][:units][unit] ||= {:activities => [], :count => 0, :name => unit}
-          results[key_string][:units][unit][:activities] << act
+          results[key_string][:units][unit] ||= {:activities => [], :tests => [], :count => 0, :name => unit}
+          if test
+            results[key_string][:units][unit][:tests] << act
+          else
+            results[key_string][:units][unit][:activities] << act
+          end
         end
       end
 
@@ -185,6 +203,15 @@ module TagDefaults
         record[:units].each_key do |unit_key|
           unit = record[:units][unit_key]
           unit[:activities].sort!{ |a,b| a.name <=> b.name }
+          # add pretest to the beginning
+          # add posttest to the end
+          unit[:tests].each{ |test| 
+            if test.name =~ /^pre/i
+              unit[:activities].insert(0, test)
+            else
+              unit[:activities] << test
+            end
+          }
           unit[:count] = unit[:activities].size
         end
       end

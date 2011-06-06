@@ -26,6 +26,7 @@ module ApplicationHelper
 
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
+    optional_prefixes.compact! unless optional_prefixes.empty?
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
@@ -319,7 +320,7 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_tag(:h3,{:class => 'menu'}) do
-            haml_concat title_for_component(component,options)
+            haml_concat title_for_component(component, {:id_prefix => 'edit'}.merge(options))
           end
           pedigree_info_for(component)
           descendant_info_for(component)
@@ -505,10 +506,11 @@ module ApplicationHelper
 
   def title_for_component(component, options={})
     title = name_for_component(component, options)
+    id = dom_id_for(component, options[:id_prefix], :title)
     if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
     else
-      "<span class='component_title'>#{title}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span>"
     end
   end
 
@@ -848,15 +850,15 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat report_link_for(learner, 'report', 'Report')
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
-          if USING_JNLPS && current_user.has_role?("admin")
+          if learner.offering.runnable.run_format == :jnlp
+            haml_concat link_to('Run', run_url_for(learner))
             haml_concat " | "
-            haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+            if current_user.has_role?("admin")
+              haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+              haml_concat " | "
+            end
           end
+          haml_concat report_link_for(learner, 'report', 'Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do
           haml_concat title_for_component(learner, options)

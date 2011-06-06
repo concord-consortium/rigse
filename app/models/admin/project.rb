@@ -88,7 +88,10 @@ class Admin::Project < ActiveRecord::Base
     default_maven_jnlp
   end
   
-  
+  def using_custom_css?
+    return (! (self.custom_css.nil? || self.custom_css.strip.empty?))
+  end
+
   def display_type
     self.default_project? ? 'Default ' : ''
   end

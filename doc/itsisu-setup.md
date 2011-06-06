@@ -17,3 +17,9 @@ rake --trace app:import:re_import_ccp_itsi_units_to_itsi_su
 
 # need to run this to make grades and school
 rake app:setup:default_portal_resources
+
+#import pre and post tests
+xml = File.read("resources/itsisu_hs_pre_and_post_tests.xml")
+inv = Investigation.from_xml(xml)
+itest = User.find_by_login 'itest'
+inv.deep_set_user itest

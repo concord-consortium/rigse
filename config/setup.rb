@@ -68,17 +68,15 @@ require rails_file_path(%w{ lib app_settings })
 require rails_file_path(%w{ lib states_and_provinces })
 
 # Some of the AppSettings module methods need the constant RAILS_ENV defined
-RAILS_ENV = 'development'
+RAILS_ENV = 'development' unless defined?(RAILS_ENV)
+
 include AppSettings
 
 @settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
 @settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
 
-if AppSettings.settings_exists?
-  @app_settings = AppSettings.load_app_settings
-else
-  @app_settings = @settings_config_sample[RAILS_ENV]
-end
+@app_settings = AppSettings.load_app_settings if AppSettings.settings_exists?
+@app_settings = @settings_config_sample[RAILS_ENV] unless @app_settings
 
 # ==================================================================
 #
@@ -138,10 +136,23 @@ optparse = OptionParser.new do |opts|
     @options[:db_password] = db_password
   end
 
+  @options[:states_provinces] = nil
+  opts.on( '--states ',
+    "comma delimited list of 2 letter state/province abbreviations for creating NCES schools, use 'none' to create no NCES schools, default specified in config/themes/<theme>/settings.sample.yml" ) do |states_provinces|
+    @options[:states_provinces] = states_provinces
+  end
+
   @options[:db_name_prefix] = default_db_name_prefix
   opts.on( '-D', '--database DATABASE',
     "prefix to add to the names for the development, test, and production databases, default: '#{default_db_name_prefix}'" ) do |db_name_prefix|
+    default_db_name_prefix = nil
     @options[:db_name_prefix] = db_name_prefix
+  end
+
+  @options[:include_otrunk_examples] = false
+  opts.on( '--include-otrunk-examples',
+    "import and introspect content in otrunk-examples, this enables the raw_otml embeddable, default: false" ) do
+    @options[:include_otrunk_examples] = true
   end
 
   @options[:quiet] = default_quiet
@@ -172,9 +183,6 @@ end
 
 optparse.parse!
 
-# FIXME: see comment about this hack in config/environments/development.rb
-$: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
-
 require 'highline/import'
 
 # ==================================================================
@@ -199,7 +207,6 @@ if @options[:force] && File.exists?(@settings_config_path)
   FileUtils.rm(@settings_config_path)
 end
 
-puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
   raise "\n\n*** missing theme: #{@theme_settings_config_sample_path}\n\n" unless File.exists?(@theme_settings_config_sample_path)
@@ -216,9 +223,29 @@ if @options[:theme]
   end
 end
 
-puts "using site_url: #{@options[:site_url]} (use -s argument to specify alternate site url)\n"
+if @options[:states_provinces]
+  @options[:states_provinces] = @options[:states_provinces].split(',')
+  @options[:states_provinces] = [] if @options[:states_provinces].first == 'none'
+  @settings_config_sample['production'][:states_and_provinces] = @options[:states_provinces]
+  # dup the values so yaml doesn't use anchor labels (&id001)-- it makes it harder to read
+  @settings_config_sample['staging'][:states_and_provinces] = @options[:states_provinces].dup
+  @settings_config_sample['development'][:states_and_provinces] = @options[:states_provinces].dup
+end
 
-print "\nInitial setup of Rails Portal application named '#{@options[:app_name]}' ... "
+if @options[:include_otrunk_examples]
+  @settings_config_sample['production'][:include_otrunk_examples]  = true
+  @settings_config_sample['staging'][:include_otrunk_examples]     = true
+  @settings_config_sample['development'][:include_otrunk_examples] = true
+end
+
+puts <<HEREDOC
+
+Initial setup of Rails Portal application named '#{@options[:app_name]}' ...
+
+  using theme:    #{@options[:theme]} (use -t argument to specify alternate theme)
+  using site_url: #{@options[:site_url]} (use -s argument to specify alternate site url)
+
+HEREDOC
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
 @rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
@@ -807,7 +834,7 @@ It is currently #{include_otrunk_examples ? 'disabled' : 'enabled' }.
 end
 
 def get_states_and_provinces_settings(env)
-  states_and_provinces = (@settings_config[env][:states_and_provinces] || []).join(' ')
+  states_and_provinces = (@options[:states_provinces] || @settings_config[env][:states_and_provinces] || []).join(' ')
   puts <<-HEREDOC
 
 Detailed data are imported for the following US schools and district:
@@ -1064,17 +1091,11 @@ body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{@options[:app_name]} without the protocol: (example: #{@mailer_config_sample[:host]})
-
 If you do not have a working SMTP server select the test deliver method instead of the
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can
 easily see then as the are generated with this command:
 
   tail -f -n 100 #{@dev_log_path}
-
-You will also need to specify:
-
-  the hostname of the #{@options[:app_name]} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
@@ -1098,8 +1119,6 @@ Here are the current settings in config/mailer.yml:
     @mailer_config[:delivery_type] =            ask("    delivery type: ", delivery_types) { |q|
       q.default = "test"
     }
-
-    @mailer_config[:host] =                     ask("    #{@options[:app_name]} hostname: ") { |q| q.default = @mailer_config[:host] }
 
     @mailer_config[:smtp][:address] =           ask("    SMTP address: ") { |q|
       q.default = @mailer_config[:smtp][:address]
@@ -1145,7 +1164,6 @@ end
 #
 # ==================================================================
 
-
 unless @options[:quiet]
   puts <<-HEREDOC
 
@@ -1186,7 +1204,7 @@ puts <<-HEREDOC
 
   JRuby:
     RAILS_ENV=production jruby -S rake db:migrate:reset
-    RAILS_ENV=production jruby -S app:setup:new_app
+    RAILS_ENV=production jruby -S rake app:setup:new_app
 
 
 HEREDOC

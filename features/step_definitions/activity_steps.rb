@@ -22,7 +22,7 @@ Given /^the following templated activities exist:$/ do |table|
   end
 end
 When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
-  with_scope("span.small_left_menu") do
+  with_scope("span.delete_link") do
     click_link("delete")
   end
 end
@@ -74,5 +74,11 @@ Then /^I should see the wysiwyg editor(?: within the "([^\"]*)" section)$/ do |s
     find(:css, "div.template_container:contains('#{section}') .mceEditor", :message => msg).click
   else
     find(".mceEditor", :message => msg).click
+  end
+end
+
+Then /^I click "([^\"]*)" within the "([^\"]*)" section$/ do |selector, section|
+  with_scope("div.template_container:contains('#{section}')") do
+    find(selector).click
   end
 end

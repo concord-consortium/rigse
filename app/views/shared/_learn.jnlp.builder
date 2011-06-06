@@ -21,6 +21,6 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
   else
     xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n  "
   end
-  xml.argument polymorphic_url(learner, :format =>  :config, :session => session_options[:id])
+  xml.argument polymorphic_url(learner, :format =>  :config, session_options[:key] => session_options[:id])
   xml << "  </application-desc>\n"
 }

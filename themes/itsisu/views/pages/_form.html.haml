@@ -4,9 +4,21 @@
   = edit_menu_for(@page, f)
   - field_set_tag 'Page Name' do
     = f.text_field :name
-  / - field_set_tag 'Teacher only' do
-  /   = f.check_box :teacher_only 
-  /   (check here if this page is for teachers only)
-  / - field_set_tag 'Page Description' do
-  /   = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - if current_user.has_role?('admin','manager')
+    %h3 grade level:
+    = grade_level_select(:page)
+    %h3 subject area:
+    = subject_area_select(:page)
+    %h3 unit:
+    = unit_select(:page)
+    %h3 publication status
+    = f.select :publication_status, ['published', 'private', 'draft']
+    - field_set_tag 'Cohorts' do
+      .aligned
+        %ul
+          %li
+            - ['itsisu'].each do |cohort|
+              = check_box_tag "page[cohort_list][]", "#{cohort}", @page.cohort_list.include?(cohort),
+                :id => "page[cohort_list][#{cohort}]"
+              = label_tag "page[cohort_list][#{cohort}]", cohort
 = javascript_tag("focus_first_field();");

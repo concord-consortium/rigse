@@ -34,10 +34,10 @@ development: &id003
   :maven_jnlp_servers:
     - :host: http://jnlp.concord.org
       :name: concord-current-sig
-      :path: /dev2/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - all-otrunk-snapshot
   :default_maven_jnlp:
@@ -85,10 +85,10 @@ production:
   :maven_jnlp_servers:
     - :host: http://jnlp.concord.org
       :name: concord-current-sig
-      :path: /dev2/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
-      :path: /dev/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
   :maven_jnlp_families:
     - all-otrunk-snapshot
   :default_maven_jnlp:

@@ -1,7 +1,7 @@
 class Portal::SchoolsController < ApplicationController
   
   include RestrictedPortalController
-  before_filter :admin_only
+  before_filter :manager
   public
   
   # GET /portal_schools

@@ -78,7 +78,7 @@ describe RunnablesHelper do
       offering = mock_model(Portal::Offering, :name => "The Pajama Jammy Jam")
       offering.stub!(:runnable).and_return(stub_model(ResourcePage))
       offering.stub!(:resource_page?).and_return true
-      helper.run_link_for(offering).should == "<a href=\"/resource_pages/#{offering.runnable.id}\" target=\"_blank\">View The Pajama Jammy Jam</a>"
+      helper.run_link_for(offering).should == "<a href=\"/resource_pages/#{offering.runnable.id}\">View The Pajama Jammy Jam</a>"
     end
 
     it "should render a link for an External Activity" do
@@ -107,6 +107,7 @@ describe RunnablesHelper do
       investigation = stub_model(Investigation)
       offering.stub!(:runnable).and_return(investigation)
       offering.stub!(:resource_page?).and_return false
+      offering.stub!(:run_format).and_return :jnlp
       helper.run_link_for(offering).should be_link_like("http://test.host/portal/offerings/#{offering.id}.jnlp",
                                                              "run_link rollover",
                                                              "/images/run.png")

@@ -11,5 +11,5 @@
             %td
               %object{:refid => ot_refid_for(open_response, :response)}
 
-%OTText{ :local_id => ot_local_id_for(open_response, :response), :rows => '5', :columns => '35', :fontSize => '12', :name => "#{open_response.name}_field"}
+%OTText{ :local_id => ot_local_id_for(open_response, :response), :rows => open_response.rows, :columns => open_response.columns, :fontSize => open_response.font_size, :name => "#{open_response.name}_field"}
   %text= h(open_response.default_response)

@@ -1,49 +1,37 @@
 --- 
 - si: true
   name: Celsius
-  updated_at: 2009-05-15 17:20:07 Z
   quantity: temperature
   uuid: a3553014-4174-11de-aad1-001ff3caa767
   id: 1
-  description: Celsius is a unit of temperature.
   unit_symbol_text: degC
   base_unit: 
-  user_id: 9
   unit_symbol: C
-  created_at: 2009-05-15 13:20:07 Z
+  description: Celsius is a unit of temperature.
 - si: true
   name: meter
-  updated_at: 2009-05-15 17:20:08 Z
   quantity: length
   uuid: a3560020-4174-11de-aad1-001ff3caa767
   id: 2
-  description: Meters are a standard SI unit of length.
   unit_symbol_text: m
   base_unit: true
-  user_id: 9
   unit_symbol: m
-  created_at: 2009-05-15 13:20:08 Z
+  description: Meters are a standard SI unit of length.
 - si: true
   name: meters per second
-  updated_at: 2009-05-15 17:20:08 Z
   quantity: velocity
   uuid: a39ad2c2-4174-11de-aad1-001ff3caa767
   id: 3
-  description: Meters per second is a standard SI unit for velocity.
   unit_symbol_text: m/s
   base_unit: 
-  user_id: 9
   unit_symbol: m/s
-  created_at: 2009-05-15 13:20:08 Z
+  description: Meters per second is a standard SI unit for velocity.
 - si: 
   name: "revolutions per second "
-  updated_at: 2009-05-15 17:20:08 Z
   quantity: " rotational speed"
   uuid: a39e193c-4174-11de-aad1-001ff3caa767
   id: 4
-  description: "rotational speed -- not angular velocity which would be degrees or radians per second. "
   unit_symbol_text: S
   base_unit: 
-  user_id: 9
   unit_symbol: S
-  created_at: 2009-05-15 13:20:08 Z
+  description: "rotational speed -- not angular velocity which would be degrees or radians per second. "

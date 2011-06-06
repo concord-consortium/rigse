@@ -3,7 +3,7 @@
   - field_set_tag 'Name' do
     = f.text_field :name, :id => dom_id_for(model, :item, :name_field)
   - field_set_tag 'Authored Data URL' do
-    = f.text_field :url, :id => dom_id_for(model, :item, :url_field)
+    = f.text_field :url, :id => dom_id_for(model, :item, :url_field), :size => 86
   - field_set_tag 'Model Type' do
     = f.collection_select(:model_type_id, Diy::ModelType.all.sort{|a,b| a.id <=> b.id }, :id, :name_with_id)
   %br

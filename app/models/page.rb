@@ -1,5 +1,6 @@
 class Page < ActiveRecord::Base
   include JnlpLaunchable
+  include TagDefaults
   include Clipboard
 
   belongs_to :user
@@ -49,6 +50,10 @@ class Page < ActiveRecord::Base
     # BiologicaDna,
   ]
 
+  if APP_CONFIG[:include_otrunk_examples]
+    @@element_types << Embeddable::RawOtml
+  end
+  
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
   #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -76,6 +81,7 @@ class Page < ActiveRecord::Base
 
   acts_as_replicatable
   acts_as_list :scope => :section
+  acts_as_taggable_on :grade_levels, :subject_areas, :units, :tags, :cohorts
 
   named_scope :like, lambda { |name|
     name = "%#{name}%"
@@ -83,6 +89,7 @@ class Page < ActiveRecord::Base
      :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]
     }
   }
+  named_scope :published, :conditions => {:publication_status => "published"}
 
   include Changeable
   # validates_presence_of :name, :on => :create, :message => "can't be blank"
@@ -269,4 +276,9 @@ class Page < ActiveRecord::Base
     end
     return @reportable_elements
   end
+  
+  def print_listing
+    [{name => self}]
+  end
+  
 end

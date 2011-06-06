@@ -12,7 +12,7 @@ Feature: A teacher creates a resource page
       | teacher       | teacher         |
     And I login with username: teacher password: teacher
     When I go to the resource pages page
-    And I follow "Create a new resource"
+    And I follow "create Resource Page"
     Then I should see "New Resource"
     When I fill in the following:
       | resource_page[name] | Test Page |
