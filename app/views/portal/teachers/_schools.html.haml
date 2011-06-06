@@ -1,0 +1,11 @@
+-# Currently this only supports selecting a single school
+-#  the model objects support multiple schools for a teacher
+- if portal_teacher
+  - school = portal_teacher.schools.first
+  - field_set_tag 'school' do
+    .aligned
+      %ul
+        %li
+          = label_tag :school, 'School: ', :class=>"right"
+          - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
+          = select('school', 'id', option_groups_from_collection_for_select(districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school", :object => school})
