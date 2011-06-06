@@ -80,7 +80,7 @@ show_alert = function(elem, force) {
   };
 };
 
-// show/hide project sign in form labels on field blur/focus
+// show/hide project-signin form labels on field blur/focus
 document.observe("dom:loaded", function() {
 	if ($("project-signin")) {
 		// username field listeners
@@ -97,9 +97,12 @@ document.observe("dom:loaded", function() {
 		Event.observe('password', 'blur', function(event) {
 			if ($("password").value == "") $("password").previous(0).setStyle({"display": "block"});
 		});
-		// check for username value on page load
+		// check for username and password values on page load
 		if ($("login").value != '') {
 			$("login").previous(0).setStyle({"display": "none"});
+		}
+		if ($("password").value != '') {
+			$("password").previous(0).setStyle({"display": "none"});
 		}
 	}
 });
