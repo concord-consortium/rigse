@@ -57,6 +57,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @roles = Role.find(:all)
+    @portal_districts = Portal::District.find(:all, :order => :name)
     unless @user.changeable?(current_user)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
@@ -156,6 +157,12 @@ class UsersController < ApplicationController
             @user.portal_teacher.cohort_list = params[:teacher][:cohort_list]
             @user.portal_teacher.save
           end
+          if params[:school]
+            portal_school = Portal::School.find_by_id(params[:school][:id])
+            @user.portal_teacher.schools = [portal_school]
+            @user.portal_teacher.save
+          end
+          
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
