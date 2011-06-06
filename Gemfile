@@ -25,14 +25,14 @@ source "http://rubygems.org"
   gem "will_paginate",        "~> 2.3.6"
   gem "haml",                 "~> 3.0.25"
   gem "RedCloth",             "~> 4.2.7"
-  gem "uuidtools",            "~> 2.0.0"
+  gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   gem "prawn",                "~> 0.4.1"
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass",              "0.8.17"
-  gem "jnlp",                 "~> 0.7.1"
+  gem "jnlp",                 "~> 0.7.2"
   # use a merge of ghazel and tracksimple ar-extensions forks
   # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   git "git://github.com/concord-consortium/ar-extensions.git" do
