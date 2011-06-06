@@ -46,7 +46,14 @@
                   - else
                     disabled.
                 (This option will allow teachers to select grade levels during class creation.)
-          .form_like  
+              %li
+                Use Bitmaps in Labbook Exclusively:
+                %b
+                  - if admin_project.use_bitmap_snapshots?
+                    Yes
+                  - else
+                    No
+                (This option insures that all labbook entries are treated like simple images.)
             - field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:

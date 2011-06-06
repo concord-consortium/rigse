@@ -22,7 +22,7 @@ Given /^the following templated activities exist:$/ do |table|
   end
 end
 When /^I follow "([^"]*)" for the first multiple choice option$/ do |link|
-  with_scope("span.small_left_menu") do
+  with_scope("span.delete_link") do
     click_link("delete")
   end
 end

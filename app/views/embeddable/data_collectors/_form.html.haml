@@ -32,6 +32,10 @@
           = f.select(:prediction_graph_id, data_collector.other_data_collectors_in_activity_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
       %ul.menu_h
         %li
+          Include data from a data table in this Activity:
+          = f.select(:data_table_id, data_collector.data_tables_in_activity_scope(@scope).collect { |dt| [ "#{dt.name}: #{dt.id}", dt.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_data_table)})
+      %ul.menu_h
+        %li
           = labeled_check_box(f, :multiple_graphable_enabled, 'Enable multiple graphs:')
     - field_set_tag 'Y Axis' do
       %ul.menu_h

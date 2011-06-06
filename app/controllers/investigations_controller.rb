@@ -278,7 +278,7 @@ class InvestigationsController < AuthoringController
     @investigation.user = current_user
     respond_to do |format|
       if @investigation.save
-        flash[:notice] = 'Investigation was successfully created.'
+        flash[:notice] = "#{Investigation.display_name} was successfully created."
         format.html { redirect_to(@investigation) }
         format.xml  { render :xml => @investigation, :status => :created, :location => @investigation }
       else
@@ -337,7 +337,7 @@ class InvestigationsController < AuthoringController
     else
       respond_to do |format|
         if @investigation.update_attributes(params[:investigation])
-          flash[:notice] = 'Investigation was successfully updated.'
+          flash[:notice] = "#{Investigation.display_name} was successfully updated."
           format.html { redirect_to(@investigation) }
           format.xml  { head :ok }
         else
@@ -354,7 +354,7 @@ class InvestigationsController < AuthoringController
     @investigation = Investigation.find(params[:id])
     if @investigation.changeable?(current_user)
       if @investigation.offerings && @investigation.offerings.size > 0
-        flash[:error] = "This investigation can't be destoyed, its in use by classes..."
+        flash[:error] = "This #{Investigation.display_name} can't be destoyed, its in use by classes..."
         @failed = true
       else
         @investigation.destroy

@@ -2,11 +2,22 @@ class Embeddable::DataCollector < ActiveRecord::Base
   DEFAULT_NAME = "Data Graph"
   MISSING_PROBE_MESSAGE = "Unable to find default probes. try running"
   FAIL_UPDATE_PREDICTION = "Unable to update prediction graph in DataCollector"
+
+  SENSOR        = "Sensor"
+  SENSOR_ID     = 1
+  PREDICTION    = "Prediction"
+  PREDICTION_ID = 2
+
   set_table_name "embeddable_data_collectors"
 
   belongs_to :user
   belongs_to :probe_type, :class_name => 'Probe::ProbeType'
   belongs_to :calibration, :class_name => 'Probe::Calibration'
+  
+  has_many :page_elements, :as => :embeddable
+  has_many :pages, :through =>:page_elements
+  has_many :teacher_notes, :as => :authored_entity
+  
   belongs_to :prediction_graph_source,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
@@ -14,15 +25,16 @@ class Embeddable::DataCollector < ActiveRecord::Base
   has_many :prediction_graph_destinations,
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
-  has_many :page_elements, :as => :embeddable
-  has_many :pages, :through =>:page_elements
-  has_many :teacher_notes, :as => :authored_entity
   # diy_sensors is a simplified interface for a dataCollector.
   has_many :diy_sensors, :as => 'prototype'
 
-  has_many :data_tables, :class_name => "Embeddable::DataTable"
+  # has_many :data_tables, :class_name => "Embeddable::DataTable"
+  belongs_to :data_table, 
+    :class_name => "Embeddable::DataTable",
+    :foreign_key => "data_table_id"
 
   # validates_associated :probe_type
+  
   validates_presence_of :probe_type_id
   validate :associated_probe_type_must_exist
   
@@ -51,6 +63,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
   send_update_events_to :investigations
 
   def handle_probe_type_change
+    return unless probe_type
+    
     if(calibration && (calibration.probe_type_id != probe_type_id))
       calibration = nil
     end
@@ -141,7 +155,14 @@ class Embeddable::DataCollector < ActiveRecord::Base
       []
     end
   end
-
+  
+  def data_tables_in_activity_scope(scope)
+    if scope && scope.class != Embeddable::DataCollector
+      scope.activity.data_tables
+    else
+      []
+    end
+  end
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::DataCollector && scope.respond_to?(:activity)
       scope.activity.investigation.data_collectors
@@ -176,7 +197,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   # DISCUSS: Should we define constants or us AR records?
   def self.graph_types
-    [["Sensor", 1], ["Prediction", 2]]
+    [[SENSOR, SENSOR_ID], [PREDICTION, PREDICTION_ID]]
   end
 
   def self.graph_type_id_for(gtype)
@@ -191,12 +212,17 @@ class Embeddable::DataCollector < ActiveRecord::Base
     self[:graph_type_id] = gid
   end
 
+  def graph_type=(type)
+    case type
+    when PREDICTION
+      self.graph_type_id=(PREDICTION_ID)
+    when SENSOR
+      self.graph_type_id=(SENSOR_ID)
+    end
+  end
+  
   def graph_type
     Embeddable::DataCollector.graph_types[graph_type_id - 1][0]
-  end
-
-  def graph_type=(gtype)
-    self[:graph_type_id] = Embeddable::DataCollector.graph_type_id_for(gtype)
   end
 
   def y_axis_title

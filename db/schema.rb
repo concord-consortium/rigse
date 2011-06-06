@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110518223557) do
+ActiveRecord::Schema.define(:version => 20110526202959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20110518223557) do
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
+    t.boolean  "use_bitmap_snapshots",                         :default => false
   end
 
   create_table "ancestries", :force => true do |t|
@@ -428,6 +429,7 @@ ActiveRecord::Schema.define(:version => 20110518223557) do
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
     t.boolean  "is_prototype",                             :default => false
+    t.integer  "data_table_id"
   end
 
   add_index "embeddable_data_collectors", ["is_prototype"], :name => "index_embeddable_data_collectors_on_is_prototype"
@@ -446,6 +448,7 @@ ActiveRecord::Schema.define(:version => 20110518223557) do
     t.integer  "data_collector_id"
     t.integer  "precision",                       :default => 2
     t.integer  "width",                           :default => 1200
+    t.boolean  "is_numeric",                      :default => true
   end
 
   create_table "embeddable_diy_models", :force => true do |t|
@@ -598,6 +601,9 @@ ActiveRecord::Schema.define(:version => 20110518223557) do
     t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rows",                           :default => 5
+    t.integer  "columns",                        :default => 32
+    t.integer  "font_size",                      :default => 12
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
