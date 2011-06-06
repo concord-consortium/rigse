@@ -97,6 +97,7 @@ class Portal::TeachersController < ApplicationController
     @portal_teacher = Portal::Teacher.find(params[:id])
 
     respond_to do |format|
+      params[:teacher][:cohort_list] ||= [] if params[:update_teacher_cohort_list]
       if @portal_teacher.update_attributes(params[:teacher])
         flash[:notice] = 'Portal::Teacher was successfully updated.'
         format.html { redirect_to(@portal_teacher) }
