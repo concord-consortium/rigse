@@ -2,7 +2,7 @@
   .activity-title
     - description_id = dom_id_for(offering, :description);
     = info_button(description_id,"description for #{offering.name}")
-    = link_to image_tag("http://itsisu.portal.concord.org/images/icons/bullet_go.png"), polymorphic_url(offering, :format => :jnlp), {:class => 'waiter'}
+    = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => :jnlp), {:class => 'waiter'}
     = offering.name
   .activity_description{:id => description_id, :style=>"display: none;"}
     = offering.description
