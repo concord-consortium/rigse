@@ -1,11 +1,12 @@
-- field_set_tag 'Cohorts' do
-  .aligned
-    %ul
-      %li
-        -# send this so here so we can check for an empty array of cohorts
-        = hidden_field_tag "update_teacher_cohort_list"
-        - ['itsisu'].each do |cohort|
-          = check_box_tag "teacher[cohort_list][]", "#{cohort}", portal_teacher.cohort_list.include?(cohort),
-            :id => "teacher_cohort_list_#{cohort}"
-          = label_tag "teacher_cohort_list_#{cohort}", cohort
+- if portal_teacher and current_user.has_role?("admin", "manager")
+  - field_set_tag 'Cohorts' do
+    .aligned
+      %ul
+        %li
+          -# send this so here so we can check for an empty array of cohorts
+          = hidden_field_tag "update_teacher_cohort_list"
+          - ['itsisu'].each do |cohort|
+            = check_box_tag "teacher[cohort_list][]", "#{cohort}", portal_teacher.cohort_list.include?(cohort),
+              :id => "teacher_cohort_list_#{cohort}"
+            = label_tag "teacher_cohort_list_#{cohort}", cohort
 
