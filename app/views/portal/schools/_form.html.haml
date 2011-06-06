@@ -2,14 +2,26 @@
   = edit_menu_for(portal_school, f, { :omit_cancel => true })
   .content
     %p
-      - field_set_tag 'Name' do
-        = f.text_field :name, :size => 60
-    %p
-      - field_set_tag 'NCES School' do
-        = select(:portal_school, "nces_school_id", Portal::Nces06School.all.collect {|nces| [ nces.SCHNAM, nces.id ] }, {:include_blank => 'None'})
-    %p
+      - field_set_tag 'State or Province' do
+        .aligned
+          = select(:state_or_province, 'id', options_for_select(@states_and_provinces), {:prompt => "Select a state or province ..."})
+
+          = observe_field(:state_or_province_id, :function => "new Ajax.Request('/portal/nces06_districts.json?state_or_province='+value, { method: 'get', onCreate: function() {}, onSuccess: function(transport) { $('nces_district_id').innerHTML = '<option value>Select a district ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.NAME + '</option>' }) } });" )
+
+
       - field_set_tag 'District' do
-        = select(:portal_school, "district_id", Portal::District.all.collect {|district| [ district.name, district.id ] }, {:include_blank => 'None'})
-    %p
+        .aligned
+          = select(:nces_district, 'id', options_for_select([[]]), {:prompt => "Select a district ..."})
+
+          = observe_field(:nces_district_id, :function => "new Ajax.Request('/portal/nces06_schools.json?nces_district_id='+value, { method: 'get', onCreate: function() {}, onSuccess: function(transport) { $('nces_school_id').innerHTML = '<option value>Select a school ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.SCHNAM + '</option>' }) } });" )
+      
+      
+      - field_set_tag 'School' do
+        .aligned
+          = select(:nces_school, 'id', options_for_select([[]]), {:prompt => "Select a school ..."})
+
+          = observe_field(:nces_school_id, :function => "new Ajax.Request('/portal/nces06_schools/'+value+'/description', { method: 'get', onCreate: function() { $('school_description').innerHTML = '<p>loading school description ...</p>' }, onSuccess: function(transport) { $('school_description').innerHTML = transport.responseText } });" )
+          
       - field_set_tag 'Description' do
-        = f.text_area :description
+        .aligned
+          #school_description
