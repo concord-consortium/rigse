@@ -16,3 +16,21 @@ When /^I assign the page "([^"]*)" to the class "([^"]*)"$/ do |page_name, class
     :clazz => clazz
   })
 end
+
+#Table: | page   | multiple_choices |
+Given /^the following pages with multiple choices exist:$/ do |page_table|
+  page_table.hashes.each do |hash|
+    page = Page.find_or_create_by_name(hash['page'])
+    page.user = Factory(:user)
+    page.save.should be_true
+    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
+    mcs.each do |q|
+      q.pages << page
+    end
+    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
+    imgqs.each do |q|
+      q.pages << page
+    end
+    page.save
+  end
+end

@@ -109,3 +109,26 @@ Feature: Teacher views report
     Then I should not see "image_q"
     And I press "Show all"
     Then I should see "image_q"
+
+  Scenario: A teacher views a report of a page
+    Given the following pages with multiple choices exist:
+        | page          | multiple_choices | image_questions | user      |
+        | pre test page | a                | image_q         | teacher_a |
+    And the following assignments exist:
+        | type     | name            | class            |
+        | page     | pre test page   | Intro to bugs    |
+    And the following student answers:
+        | student   | class         | page          | question_prompt | answer |
+        | student_a | Intro to bugs | pre test page | a               | a      |
+        | student_a | Intro to bugs | pre test page | image_q         | Y      |
+        | student_b | Intro to bugs | pre test page | a               | b      |
+    When I login with username: teacher_a password: teacher_a
+    And go to the class page for "Intro to bugs"
+    And follow "Display a report" within ".action_menu_activity"
+    And I wait 2 seconds
+    Then I should see "image_q"
+    And I check "filter_Embeddable::MultipleChoice_"
+    And I press "Show selected"
+    Then I should not see "image_q"
+    And I press "Show all"
+    Then I should see "image_q"
