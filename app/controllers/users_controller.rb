@@ -150,6 +150,12 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.update_attributes(params[:user])
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+          if params[:update_teacher_cohort_list]
+            params[:teacher] ||= {}
+            params[:teacher][:cohort_list] ||= []
+            @user.portal_teacher.cohort_list = params[:teacher][:cohort_list]
+            @user.portal_teacher.save
+          end
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
