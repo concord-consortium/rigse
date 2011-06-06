@@ -8,4 +8,9 @@
         %li
           = label_tag :school, 'School: ', :class=>"right"
           - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
-          = select('school', 'id', option_groups_from_collection_for_select(districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school", :object => school})
+          - # Ugly bit of code, option_groups_from_collection_for_select generates a string which is passed to select
+          - #  so the actual select helper doesn't attempt to set the selected option.  However it will add the prompt
+          - #  if no selected option is passed.  So the last option to option_groups_from_collection_for_select is the
+          - #  selected key, and the :object param passed to the select method lets it know if it should include the
+          - #  the prompt
+          = select('school', 'id', option_groups_from_collection_for_select(districts, :schools , :name, :id, :name, (school ? school.id : nil)), {:prompt => "-Select your school", :object => school})
