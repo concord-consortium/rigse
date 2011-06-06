@@ -1,7 +1,7 @@
 class Portal::DistrictsController < ApplicationController
   
   include RestrictedPortalController
-  before_filter :admin_only
+  before_filter :manager
   
   public
   
