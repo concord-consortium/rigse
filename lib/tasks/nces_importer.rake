@@ -94,6 +94,35 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
       school_data_fpaths = school_data_fnames.collect { |f| File.join(nces_dir, f) }
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006, states_and_provinces)
       parser.load_db(district_data_fpaths, school_data_fpaths)
+      
+      # if there are any existing Portal Districts or Schools fix the foreign keys that
+      # reference the nces models by using the leaid and ncessch attributes.
+      
+      if Portal::District.real.count > 0
+        puts "Re-linking existing #{Portal::District.count} Portal::District models with new Portal::Nces06District models"
+        Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
+          portal_districts.each do |portal_district|
+            nces_district = Portal::Nces06District.find(:first, :conditions => { :LEAID => portal_district.leaid }, :select => "id, LEAID, LZIP, LSTATE")
+            portal_district.nces_district = nces_district
+            portal_district.save!
+          end
+          print '.'; STDOUT.flush
+        end
+      end
+
+      if Portal::School.real.count > 0
+        puts "\Re-linking existing #{Portal::School.count} Portal::School models with new Portal::Nces06School models"
+        Portal::School.real.find_in_batches(:batch_size => 500) do |portal_schools|
+          portal_schools.each do |portal_school|
+            nces_school = Portal::Nces06School.find(:first, :conditions => { :NCESSCH => portal_school.ncessch }, :select => "id, NCESSCH, MZIP, MSTATE")
+            portal_school.nces_school     = nces_school
+            portal_school.save!
+          end
+          print '.'; STDOUT.flush
+        end
+      end
+      puts
+      
     end
 
     #
