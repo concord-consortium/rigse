@@ -22,7 +22,7 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def capitalized_name
-    self.SCHNAM.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+    capitalized_words(self.SCHNAM.split)
   end
 
   def phone
@@ -30,13 +30,12 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def address
-    "#{self.MSTREE}, #{self.MCITY}, #{self.MSTATE}, #{self.MZIP}"
+    capitalized_words(self.MSTREE) + ', ' + capitalized_words(self.MCITY) + ", #{self.MSTATE} #{self.MZIP}" 
   end
 
   def geographic_location
     "latitude: #{self.LATCOD}, longitude: #{self.LONCOD}"
   end
-
 
   def student_teacher_ratio
     number_with_precision(self.MEMBER.to_f / self.FTE.to_f, :precision => 1)
@@ -49,7 +48,7 @@ class Portal::Nces06School < ActiveRecord::Base
   def description
     <<-HEREDOC
 <p>In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
-#{self.geographic_location} with the following telephone number: #{self.phone}.</p>
+#{self.geographic_location} with telephone: #{self.phone}.</p>
 
 <p>#{self.capitalized_name} had #{self.FTE} FTE-equivalent teachers and #{self.MEMBER} students of which #{self.percent_free_reduced_lunch} 
 were eligible for either free or reduced-price lunch. The effective student-teacher ratio was #{self.student_teacher_ratio} to 1.
@@ -112,5 +111,12 @@ Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLA
     # active_grades.min <= grades.max
     (active_grades & grades).size > 0
   end
+  
+  private
+  
+  def capitalized_words(words, delimiter=' ')
+    words.collect {|w| w.capitalize}.join(delimiter).gsub(/\b\w/) { $&.upcase }
+  end
+  
   
 end
