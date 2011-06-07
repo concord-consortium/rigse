@@ -115,7 +115,7 @@ Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLA
   private
   
   def capitalized_words(words, delimiter=' ')
-    words.collect {|w| w.capitalize}.join(delimiter).gsub(/\b\w/) { $&.upcase }
+    words.collect {|w| w.capitalize}.join(delimiter).gsub(/\b\w{1,2}\b/) { $&.upcase }
   end
   
   
