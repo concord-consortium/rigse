@@ -16,7 +16,6 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                      "~>0.3.3"
   end
 
-  gem "mongrel",              "~>1.1.5"
   gem "rails",                "2.3.11"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
@@ -25,15 +24,15 @@ source "http://rubygems.org"
   gem "aasm",                 "~> 2.0.2"
   gem "will_paginate",        "~> 2.3.6"
   gem "haml",                 "~> 3.0.25"
-  gem "RedCloth",             "~> 4.1.1"
-  gem "uuidtools",            "~> 2.0.0"
+  gem "RedCloth",             "~> 4.2.7"
+  gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   gem "prawn",                "~> 0.4.1"
   gem "grit",                 "~> 2.0.0"
   gem "open4",                "~> 0.9.6"
   gem "prawn-format",         "~> 0.1.1", :require => "prawn/format"
   gem "compass",              "0.8.17"
-  gem "jnlp",                 "0.6.2"
+  gem "jnlp",                 "~> 0.7.2"
   # use a merge of ghazel and tracksimple ar-extensions forks
   # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   git "git://github.com/concord-consortium/ar-extensions.git" do
@@ -45,8 +44,7 @@ source "http://rubygems.org"
   gem "syntax",               "~> 1.0"
   gem "paperclip"
   gem "acts-as-taggable-on"
-  gem "ruby-debug"
-  gem "nokogiri",             "~> 1.4.1"
+  gem "nokogiri",             "~> 1.4.4"
   gem "json",                 "   1.5.1"
 
 group :development do
@@ -54,6 +52,7 @@ group :development do
   gem "wirble"
   gem "what_methods"
   gem "hirb"
+  gem "ruby-debug",     :platforms => :mri_18
 end
 
 group :test do
