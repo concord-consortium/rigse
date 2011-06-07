@@ -6,14 +6,14 @@
         .aligned
           = select(:state_or_province, 'id', options_for_select(@states_and_provinces), {:prompt => "Select a state or province ..."})
 
-          = observe_field(:state_or_province_id, :function => "new Ajax.Request('/portal/nces06_districts.json?state_or_province='+value, { method: 'get', onCreate: function() {}, onSuccess: function(transport) { $('nces_district_id').innerHTML = '<option value>Select a district ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.NAME + '</option>' }) } });" )
+          = observe_field(:state_or_province_id, :function => "new Ajax.Request('/portal/nces06_districts.json?state_or_province='+value, { method: 'get', onCreate: function() { $('nces_district_id').innerHTML = '<option value>loading ...</option>'; $('nces_school_id').innerHTML = '<option value></option>', $('school_description').innerHTML = '<p></p>' }, onSuccess: function(transport) { $('nces_district_id').innerHTML = '<option value>Select a district ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.NAME + '</option>' }) } });" )
 
 
       - field_set_tag 'District' do
         .aligned
           = select(:nces_district, 'id', options_for_select([[]]), {:prompt => "Select a district ..."})
 
-          = observe_field(:nces_district_id, :function => "new Ajax.Request('/portal/nces06_schools.json?nces_district_id='+value, { method: 'get', onCreate: function() {}, onSuccess: function(transport) { $('nces_school_id').innerHTML = '<option value>Select a school ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.SCHNAM + '</option>' }) } });" )
+          = observe_field(:nces_district_id, :function => "new Ajax.Request('/portal/nces06_schools.json?nces_district_id='+value, { method: 'get', onCreate: function() { $('nces_school_id').innerHTML = '<option value>loading ...</option>'; $('school_description').innerHTML = '<p></p>' }, onSuccess: function(transport) { $('nces_school_id').innerHTML = '<option value>Select a school ...</option>' + transport.responseJSON.collect(function(s) { return '<option value=\"' + s.id + '\">' + s.SCHNAM + '</option>' }) } });" )
       
       
       - field_set_tag 'School' do
