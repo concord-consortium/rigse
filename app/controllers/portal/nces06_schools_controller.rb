@@ -115,4 +115,11 @@ class Portal::Nces06SchoolsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def description
+    @nces06_school = Portal::Nces06School.find(params[:id])
+    respond_to do |format|
+      format.json { render :json => @nces06_school.summary.to_json, :layout => false }
+    end
+  end
 end

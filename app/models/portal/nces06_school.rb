@@ -21,6 +21,10 @@ class Portal::Nces06School < ActiveRecord::Base
     end
   end
   
+  def portal_school_created?
+    self.school ? true : false
+  end
+
   def capitalized_name
     capitalized_words(self.SCHNAM.split)
   end
@@ -46,7 +50,9 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def description
-    <<-HEREDOC
+    content = <<-HEREDOC
+<h3>#{self.capitalized_name}</h3>
+
 <p>In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
 #{self.geographic_location} with telephone: #{self.phone}.</p>
 
@@ -57,8 +63,17 @@ were eligible for either free or reduced-price lunch. The effective student-teac
 <p>Students were distributed among the following groups: American Indian/Alaska Native: #{self.AM}, 
 Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLACK}, and White: #{self.WHITE}.</p>
     HEREDOC
+    content.delete("\n")
   end
 
+  def summary
+    { 
+      'name' => self.capitalized_name,
+      'school_created' => self.portal_school_created?,
+      'description' => self.description 
+    }
+  end
+  
   # School level.  The following codes were calculated from the school's corresponding GSLO and GSHI values: 
   #   1 = Primary (low grade = PK through 03; high grade = PK through 08)
   #   2 = Middle (low grade = 04 through 07; high grade = 04 through 09)
