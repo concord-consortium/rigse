@@ -72,18 +72,20 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
     
     desc 'Import NCES data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states'
     task :import_nces_from_files => :environment do
-      puts <<HEREDOC
+      puts <<-HEREDOC
 
 Import NCES District and School Common Core of Data from files: config/nces_data/*
 
-Import process uses APP_CONFIG[:states_and_provinces] if defined to filter on states.
+Import process uses APP_CONFIG[:states_and_provinces] if defined to filter on states and provinces.
 
   Example from file: config/settings.yml:
 
     states_and_provinces:
       - RI
 
-HEREDOC
+If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and provinces are imported into the NCES tables
+
+      HEREDOC
 
       states_and_provinces = APP_CONFIG[:states_and_provinces]
       district_data_fnames = %w{ag061b.dat}
