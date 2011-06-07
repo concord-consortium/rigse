@@ -9,6 +9,8 @@ class Portal::Nces06School < ActiveRecord::Base
 
   @@searchable_attributes = %w{NCESSCH LEAID SCHNO SCHNAM PHONE MSTREE MCITY MSTATE MZIP}
 
+  include ActionView::Helpers::NumberHelper
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -20,27 +22,40 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def capitalized_name
-    self.SCHNAM.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+    capitalized_words(self.SCHNAM.split)
+  end
+
+  def phone
+    number_to_phone(self.PHONE.to_i)
   end
   
   def address
-    "#{self.MSTREE}, #{self.MCITY}, #{self.MSTATE}, #{self.MZIP}"
+    capitalized_words(self.MSTREE) + ', ' + capitalized_words(self.MCITY) + ", #{self.MSTATE} #{self.MZIP}" 
   end
 
   def geographic_location
     "latitude: #{self.LATCOD}, longitude: #{self.LONCOD}"
   end
+
+  def student_teacher_ratio
+    number_with_precision(self.MEMBER.to_f / self.FTE.to_f, :precision => 1)
+  end
+
+  def percent_free_reduced_lunch
+    number_to_percentage(self.TOTFRL.to_f / self.MEMBER.to_f * 100, :precision => 1)
+  end
   
   def description
     <<-HEREDOC
-In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
-#{self.geographic_location} with the following telephone number: #{self.PHONE}. 
+<p>In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
+#{self.geographic_location} with telephone: #{self.phone}.</p>
 
-#{self.capitalized_name} had #{self.FTE} FTE-equivalent teachers and #{self.MEMBER} students of which #{self.TOTFRL} 
-were eligible for either free or reduced-price lunch.
+<p>#{self.capitalized_name} had #{self.FTE} FTE-equivalent teachers and #{self.MEMBER} students of which #{self.percent_free_reduced_lunch} 
+were eligible for either free or reduced-price lunch. The effective student-teacher ratio was #{self.student_teacher_ratio} to 1.
+</p>
 
-Students were distributed among the following groups: American Indian/Alaska Native: #{self.AM}, 
-Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLACK}, and White: #{self.WHITE}.
+<p>Students were distributed among the following groups: American Indian/Alaska Native: #{self.AM}, 
+Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLACK}, and White: #{self.WHITE}.</p>
     HEREDOC
   end
 
@@ -96,5 +111,12 @@ Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLA
     # active_grades.min <= grades.max
     (active_grades & grades).size > 0
   end
+  
+  private
+  
+  def capitalized_words(words, delimiter=' ')
+    words.collect {|w| w.capitalize}.join(delimiter).gsub(/\b\w/) { $&.upcase }
+  end
+  
   
 end
