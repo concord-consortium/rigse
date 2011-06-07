@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110526202959) do
+ActiveRecord::Schema.define(:version => 20110607050059) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1673,16 +1673,16 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
 
   create_table "portal_schools", :force => true do |t|
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
-    t.string   "state",           :limit => 2
-    t.string   "leaid_schoolnum", :limit => 12
-    t.string   "zipcode",         :limit => 5
+    t.string   "state",          :limit => 2
+    t.string   "zipcode",        :limit => 5
+    t.string   "ncessch",        :limit => 12
   end
 
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"

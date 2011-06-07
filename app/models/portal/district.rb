@@ -64,9 +64,12 @@ class Portal::District < ActiveRecord::Base
       found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
       unless found_instance
         attributes = {
-          :name => nces_district.NAME,
-          :description => "imported from nces data",
-          :nces_district_id => nces_district.id
+          :name             => nces_district.NAME,
+          :description      => "imported from nces data",
+          :nces_district_id => nces_district.id,
+          :state            => nces_district.LSTATE,
+          :leaid            => nces_district.LEAID,
+          :zipcode          => nces_district.LZIP
         }
         found_instance = self.create(attributes)
         found_instance.save!
