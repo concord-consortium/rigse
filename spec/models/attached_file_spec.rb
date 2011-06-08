@@ -4,6 +4,7 @@ describe AttachedFile do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @attached_file = AttachedFile.new
     end
     

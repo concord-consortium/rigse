@@ -4,6 +4,7 @@ describe ResourcePage do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @resource_page = ResourcePage.new
     end
     

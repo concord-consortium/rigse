@@ -1,6 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 describe AttachedFilesController do  
   before(:each) do
+    Paperclip.options[:log] = false
     @attached_file = Factory.create(:attached_file)
     AttachedFile.stub!(:find).and_return(@attached_file)
   end
