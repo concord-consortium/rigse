@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 # matchers for acts_as_list
 def be_before(expected)

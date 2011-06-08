@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe AttachedFilesController do  
   before(:each) do
     @attached_file = Factory.create(:attached_file)
