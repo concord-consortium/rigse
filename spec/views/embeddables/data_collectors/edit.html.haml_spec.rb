@@ -10,7 +10,7 @@ describe "/embeddable/data_collectors/edit.html.haml" do
     template.stub!(:current_user).and_return(power_user)
     assigns[:scope] = mock(
       :id => 1, 
-      :activity => mock (
+      :activity => mock(
         :data_collectors => [],
         :data_tables => []
     ))
