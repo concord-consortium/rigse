@@ -331,7 +331,7 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
   namespace :report do
     # NSP: 20100826
     desc "report on activities without position attributes"
-    task :activity_positon_bug_report, :file_name, :needs => :environment do |t,args|
+    task :activity_positon_bug_report, [:file_name] => :environment do |t,args|
       args.with_defaults(:file_name => 'position_bug_activity_report.csv')
       file_name = args.file_name
       suspect_activities = Activity.find(:all, :conditions => "position is null and investigation_id is not null")
