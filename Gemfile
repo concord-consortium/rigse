@@ -36,7 +36,7 @@ source "http://rubygems.org"
   # use a merge of ghazel and tracksimple ar-extensions forks
   # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   git "git://github.com/concord-consortium/ar-extensions.git" do
-    gem "ar-extensions",        "~> 0.9.3"
+    gem "ar-extensions",        "~> 0.9.4"
   end
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
