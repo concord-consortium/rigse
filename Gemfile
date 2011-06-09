@@ -16,7 +16,7 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                      "~>0.3.3"
   end
 
-  gem "rails",                "2.3.11"
+  gem "rails",                "2.3.12"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
