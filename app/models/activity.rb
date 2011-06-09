@@ -245,6 +245,7 @@ class Activity < ActiveRecord::Base
     @return_activity.name = Activity.gen_unique_name(self.name)
     @return_activity.deep_set_user(new_owner)
     @return_activity.publication_status = :draft
+    @return_activity.is_exemplar = false
     @return_activity.save # have to save before modifying predictions
     @return_activity.re_associate_prediction_graphs
     return @return_activity
