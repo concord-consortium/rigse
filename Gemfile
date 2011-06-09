@@ -45,6 +45,7 @@ source "http://rubygems.org"
   gem "paperclip"
   gem "acts-as-taggable-on"
   gem "nokogiri",             "~> 1.4.4"
+  gem 'rdoc',                 "~> 3.6.1"
 
 group :development do
   gem "highline"
