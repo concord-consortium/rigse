@@ -1,4 +1,4 @@
 = render :partial => 'shared/collection_menu', :locals => { :collection => @models, :collection_class => Diy::Model }
 - @models.each do |model|
   = render :partial => 'shared/embeddable_container', :locals=> {:component => model, 
-      :overrides => {:display_name => "Model #{model.id}: #{model.name}"}}
+      :overrides => {:display_name => "Model #{model.id}: #{model.name}", :link_title => true}}
