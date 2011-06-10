@@ -83,9 +83,13 @@ class DefaultRunnable
       if calibration
         calibration_name = calibration.name
         calibration_desc = calibration.description
+        unit = calibration.physical_unit.unit_symbol
+        y_axis_label = calibration.name
       else
         calibration_name = "no calibration"
         calibration_desc = "without any calibration"
+        unit = type.unit
+        y_axis_label = type.name
       end
       name = "#{type.name}- #{calibration_name}"
       description = "<h3>#{type.name} (id:#{type.id})"
@@ -96,7 +100,11 @@ class DefaultRunnable
       data_collector = Embeddable::DataCollector.create(
         :name => name,
         :probe_type => type,
-        :calibration => calibration
+        :calibration => calibration,
+        :y_axis_label => y_axis_label,
+        :y_axis_units => unit,
+        :y_axis_min => type.min,
+        :y_axis_max => type.max
       )
       data_collector.pages << page
     end
