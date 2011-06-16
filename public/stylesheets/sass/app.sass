@@ -444,6 +444,8 @@ p.note
     opacity: 0.8
     &:hover
       opacity: 1
+.item_selectable .container_element .action_menu, .item_selected .container_element .action_menu
+  border-bottom: none
 
 .item
   background-color: white
@@ -469,24 +471,24 @@ p.note
   &.item_selected
     background-color: #f9eec1
     border-bottom:
-      width: 1px
+      width: 3px
       style: dashed
       color: #53857C
   &.item_selectable
     border-bottom:
-      width: 1px
+      width: 3px
       style: solid
       color: #53857C
     &:hover
       border:
-        width: 1px
+        width: 3px
         color: #53857C
 
 li.item_selected
-  margin-bottom: 10px
+  margin-bottom: 0
   overflow: hidden
 li.item_selectable
-  margin-bottom: 10px
+  margin-bottom: 0
   overflow: visible
 .item_selected .container_element
   background-color: #f9eec1 !important
