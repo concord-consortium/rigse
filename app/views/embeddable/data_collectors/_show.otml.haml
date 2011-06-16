@@ -24,12 +24,7 @@
           :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
           - unless data_collector.static
             %dataProducer
-              = otml_for_time_limit_filter(data_collector.time_limit_status, data_collector.time_limit_seconds) do
-                - if (data_collector.calibration)
-                  = otml_for_calibration_filter(data_collector.calibration) do
-                    = ot_sensor_data_proxy(data_collector)
-                - else
-                  = ot_sensor_data_proxy(data_collector)
+              = render :partial => "data_producer", :locals => { :data_collector => data_collector }
           %dataStore
             = generate_otml_datastore(data_collector)
     - else

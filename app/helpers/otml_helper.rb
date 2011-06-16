@@ -290,29 +290,6 @@ module OtmlHelper
       end
     end
   end
-
-  def ot_sensor_data_proxy(data_collector)
-    probe_type = data_collector.probe_type
-    capture_haml do
-      haml_tag :OTSensorDataProxy, :local_id => ot_local_id_for(data_collector, :data_proxy) do
-        haml_tag :request do
-           haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
-             haml_tag :sensorRequests do
-               haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
-                :type => probe_type.ptype.to_s, :unit => probe_type.unit, :port => probe_type.port.to_s, 
-                :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
-                :displayPrecision => "#{data_collector.probe_type.display_precision}"
-            end
-          end
-        end
-        if data_collector.show_tare
-          haml_tag :zeroSensor do
-            haml_tag :OTZeroSensor, :sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action)
-          end
-        end
-      end
-    end
-  end
   
   # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
   #   - if data_collector.data_store_values.length > 0
@@ -344,44 +321,14 @@ module OtmlHelper
     end
   end
   
-  def otml_for_time_limit_filter(limit, seconds)
+  def otml_time_limit_seconds(seconds)
     if seconds
-      ms = (seconds * 1000).to_i
+      (seconds * 1000).to_i
     else
-      ms = 0
+      0
     end 
-    capture_haml do
-      if limit
-        haml_tag :OTTimeLimitDataProducerFilter, :sourceChannel => "1", :timeLimit => ms do
-          haml_tag :source do
-            if block_given? 
-              yield
-            end
-          end
-        end
-      else
-        if block_given? 
-          yield
-        end
-      end
-    end
   end
-
-  def otml_for_calibration_filter(calibration)
-    if filter = calibration.data_filter
-      capture_haml do
-        ot_name = filter.otrunk_object_class.split(".")[-1]
-        haml_tag ot_name.to_sym, :sourceChannel => "1" do
-          haml_tag :source do
-            if block_given? 
-              yield
-            end
-          end
-        end
-      end
-    end
-  end
-  
+    
   def preview_warning
     APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
