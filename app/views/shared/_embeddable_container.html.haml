@@ -3,11 +3,11 @@
   - view_class = for_teacher_only?(page_element) ? "teacher_only container_element" : "container_element"
   %div{ :id => dom_id_for(page_element, :item), :class => view_class }
     = show_menu_for(page_element, options)
-    %div{ :id => dom_id_for(component, :item), :class => 'item '} 
+    %div{ :id => dom_id_for(component, :item), :class => 'item item_selectable '} 
       = render_show_partial_for(component)
 - else
   - view_class = for_teacher_only?(component) ? "teacher_only container_element" : "container_element"
   %div{ :id => dom_id_for(component), :class => "container_element" }
     = show_menu_for(component, options)
-    %div{ :id => dom_id_for(component, :item), :class => 'item '}
+    %div{ :id => dom_id_for(component, :item), :class => 'item item_selectable '}
       = render_show_partial_for(component)
