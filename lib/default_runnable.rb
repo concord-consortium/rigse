@@ -75,6 +75,16 @@ class DefaultRunnable
         data_collector_for(section,type,nil)
         counter = counter + 1
       end
+
+      # add an example of a digital display
+      activity = Activity.create( :name => 'Digital Display', :description => 'Example of Digital Display' )
+      investigation.activities << activity
+      section = DefaultRunnable.add_section_to_activity(activity, "Digital Display", "Example of Digital Display")
+      dc = data_collector_for(section,Probe::ProbeType.find_by_name('Temperature'),nil)
+      dc.is_digital_display = true
+      dc.save
+      counter = counter + 1
+
       investigation.deep_set_user(user)
       investigation
     end
@@ -107,6 +117,7 @@ class DefaultRunnable
         :y_axis_max => type.max
       )
       data_collector.pages << page
+      data_collector
     end
 
     def add_page_to_section(section, name, html_content='', page_description='')
