@@ -11,7 +11,7 @@
   %OTDigitalDisplay{ :local_id                   => ot_local_id_for(data_collector),
                      :name                       => h(data_collector.name) }
     %dataProducer
-      = render :partial => "data_producer", :locals => { :data_collector => data_collector }
+      = render :partial => "embeddable/data_collectors/data_producer", :locals => { :data_collector => data_collector }
     %dataStore
       = generate_otml_datastore(data_collector)
 - else
@@ -32,7 +32,7 @@
             :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
             - unless data_collector.static
               %dataProducer
-                = render :partial => "data_producer", :locals => { :data_collector => data_collector }
+                = render :partial => "embeddable/data_collectors/data_producer", :locals => { :data_collector => data_collector }
             %dataStore
               = generate_otml_datastore(data_collector)
       - else
