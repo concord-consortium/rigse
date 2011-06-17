@@ -53,6 +53,7 @@ module OtmlHelper
       org.concord.data.state.OTDataField
       org.concord.data.state.OTDataStore
       org.concord.data.state.OTDataTable
+      org.concord.data.state.OTDigitalDisplay
       org.concord.data.state.OTTimeLimitDataProducerFilter
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
@@ -148,6 +149,7 @@ module OtmlHelper
       ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorView'],
       ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
       ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
+      ['digital_display_view', 'org.concord.data.state.OTDigitalDisplay', 'org.concord.data.state.OTDigitalDisplayView'],
       ['data_drawing_tool_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],

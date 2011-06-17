@@ -7,12 +7,17 @@
     - field_set_tag 'Major Options' do
       %ul.menu_h
         %li
+          Show digital display only (no graph):
+          = f.check_box :is_digital_display
+
+      %ul.menu_h
+        %li
           Probe type: 
           - all_probe_types = Probe::ProbeType.find(:all, :order => 'name ASC')
           - 
           = f.select(:probe_type_id, all_probe_types.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
           = observe_field dom_id_for(data_collector, :select_probe_type), :function => update_label_and_units_script(all_probe_types, 'embeddable_data_collector_y_axis_label', 'embeddable_data_collector_y_axis_units' )
-      
+
         %li
           Graph type: 
           = f.select(:graph_type_id, Embeddable::DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
