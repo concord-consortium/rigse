@@ -1,4 +1,4 @@
-require 'spec_helper.rb'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe "fails_in_themes" do
   before (:all) do

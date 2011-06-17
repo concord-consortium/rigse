@@ -7,12 +7,3 @@ Given /^the following page exists:$/ do |page_table|
     Factory :page, hash
   end
 end
-
-When /^I assign the page "([^"]*)" to the class "([^"]*)"$/ do |page_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  page = Page.find_by_name(page_name)
-  Factory.create(:portal_offering, {
-    :runnable => page,
-    :clazz => clazz
-  })
-end

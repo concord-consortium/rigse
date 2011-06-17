@@ -1,9 +1,10 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe ResourcePage do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @resource_page = ResourcePage.new
     end
     

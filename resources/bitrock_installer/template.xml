@@ -99,6 +99,17 @@
     <setInstallerVariable>
       <name>global_installdir</name>
       <persist>1</persist>
+      <show>0</show>
+      <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
+      <ruleList>
+        <platformTest>
+          <type>windows-7</type>
+        </platformTest>
+      </ruleList>
+    </setInstallerVariable>
+    <setInstallerVariable>
+      <name>global_installdir</name>
+      <persist>1</persist>
       <value>/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
       <ruleList>
         <platformTest>

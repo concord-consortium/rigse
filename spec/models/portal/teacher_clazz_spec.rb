@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 #
 #  Open question: should these spec tests be named for the models, or the join
