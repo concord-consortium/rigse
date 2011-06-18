@@ -366,7 +366,7 @@ Logged to: #{File.expand_path(@log_path)}
     # pass in a row that has a :SchoolNumber
     # These are raw or processed csv rows from:
     #   students, staff, courses, enrollments, staff_assignments
-    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
+    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM, GSLO, GSHI, PHONE, MEMBER, FTE, TOTFRL, AM, ASIAN, HISP, BLACK, WHITE, LATCOD, LONCOD, MCITY, MSTREE, MSTATE, MZIP")
     if nces_school
       # TODO, check to see if the  Portal::School.find_or_create_by_nces_school
       # method will automatically create the containing district if it

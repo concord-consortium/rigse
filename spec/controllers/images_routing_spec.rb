@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe ImagesController do
   describe "route generation" do
     it "should map #index" do

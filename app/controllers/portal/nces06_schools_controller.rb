@@ -1,17 +1,45 @@
 class Portal::Nces06SchoolsController < ApplicationController
   
+  before_filter :admin_or_manager, :except => [ :description, :index ]
   include RestrictedPortalController
-  before_filter :admin_only
+
+  protected
+
+  def admin_only
+    unless current_user.has_role?('admin')
+      flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def admin_or_manager
+    if current_user.has_role?('admin')
+      @admin_role = true
+    elsif current_user.has_role?('manager')
+      @manager_role = true
+    else
+      flash[:notice] = "Please log in as an administrator or manager" 
+      redirect_to(:home)
+    end
+  end
+
   public
   
   # GET /portal_nces06_schools
   # GET /portal_nces06_schools.xml
   def index
-    @nces06_schools = Portal::Nces06School.all
-
+    select = "id, SCHNAM"
+    if params[:state_or_province]
+      @nces06_schools = Portal::Nces06School.find(:all, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'SCHNAM')
+    elsif params[:nces_district_id]
+      @nces06_schools = Portal::Nces06School.find(:all, :conditions => ["nces_district_id = ?", params[:nces_district_id]], :select => select, :order => 'SCHNAM')
+    else
+      @nces06_schools = Portal::Nces06School.find(:all, :select => select, :order => 'SCHNAM')
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @nces06_schools }
+      format.json { render :json => @nces06_schools }
     end
   end
 
@@ -85,6 +113,13 @@ class Portal::Nces06SchoolsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(portal_nces06_schools_url) }
       format.xml  { head :ok }
+    end
+  end
+  
+  def description
+    @nces06_school = Portal::Nces06School.find(params[:id])
+    respond_to do |format|
+      format.json { render :json => @nces06_school.summary.to_json, :layout => false }
     end
   end
 end

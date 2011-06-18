@@ -51,112 +51,80 @@
     <logMessage>
       <text>basic log</text>
     </logMessage>
-    <setInstallerVariable>
-      <name>global_installdir</name>
-      <persist>1</persist>
-      <show>0</show>
-      <value>${env(SYSTEMDRIVE)}\Documents and Settings\All Users\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>windows</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-9x</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-vista</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-7</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>global_installdir</name>
-      <persist>1</persist>
-      <show>0</show>
-      <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>windows-vista</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>global_installdir</name>
-      <persist>1</persist>
-      <show>0</show>
-      <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>windows-7</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>global_installdir</name>
-      <persist>1</persist>
-      <value>/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>osx</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>local_installdir</name>
-      <persist>1</persist>
-      <show>0</show>
-      <value>${user_home_directory}\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>windows</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-9x</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-vista</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-vista</type>
-        </platformTest>
-        <platformTest>
-          <negate>1</negate>
-          <type>windows-7</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>local_installdir</name>
-      <persist>1</persist>
-      <show>0</show>
-      <value>${env(LOCALAPPDATA)}\${project.vendor}\${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>windows-vista</type>
-        </platformTest>
-        <platformTest>
-          <type>windows-7</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
-    <setInstallerVariable>
-      <name>local_installdir</name>
-      <persist>1</persist>
-      <value>${user_home_directory}/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
-      <ruleList>
-        <platformTest>
-          <type>osx</type>
-        </platformTest>
-      </ruleList>
-    </setInstallerVariable>
+    <if>
+      <conditionRuleEvaluationLogic>or</conditionRuleEvaluationLogic>
+      <conditionRuleList>
+        <platformTest type="windows-2000" />
+        <platformTest type="windows-xp"/>
+      </conditionRuleList>
+      <!-- Actions executed if the condition is true -->
+      <actionList>
+       <setInstallerVariable>
+           <name>global_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(SYSTEMDRIVE)}\Documents and Settings\All Users\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${user_home_directory}\Application Data\${project.vendor}\${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+      </actionList>
+      <!-- Actions executed if the condition is false -->
+      <elseActionList>
+      </elseActionList>
+    </if>
+    <if>
+      <conditionRuleEvaluationLogic>or</conditionRuleEvaluationLogic>
+      <conditionRuleList>
+        <platformTest type="windows-vista" />
+        <platformTest type="windows-7"/>
+      </conditionRuleList>
+      <!-- Actions executed if the condition is true -->
+      <actionList>
+       <setInstallerVariable>
+           <name>global_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(ProgramData)}\${project.vendor}\${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${env(LOCALAPPDATA)}\${project.vendor}\${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+      </actionList>
+      <!-- Actions executed if the condition is false -->
+      <elseActionList>
+      </elseActionList>
+    </if>
+    <if>
+      <conditionRuleEvaluationLogic>or</conditionRuleEvaluationLogic>
+      <conditionRuleList>
+        <platformTest type="osx" />
+      </conditionRuleList>
+      <!-- Actions executed if the condition is true -->
+      <actionList>
+       <setInstallerVariable>
+           <name>global_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+       <setInstallerVariable>
+           <name>local_installdir</name>
+           <persist>1</persist>
+           <show>0</show>
+           <value>${user_home_directory}/Library/Application Support/${project.vendor}/${product_shortname}-${product_version}</value>
+       </setInstallerVariable>
+      </actionList>
+      <!-- Actions executed if the condition is false -->
+      <elseActionList>
+      </elseActionList>
+    </if>
   </initializationActionList>
   <preInstallationActionList>
     <dirName>

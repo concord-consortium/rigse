@@ -51,7 +51,7 @@ class Portal::OfferingsController < ApplicationController
          else
            # session[:put_path] = nil
          end
-         redirect_to(@offering.runnable.url, 'popup' => true)
+         redirect_to(@offering.runnable.url)
        }
 
       format.jnlp {

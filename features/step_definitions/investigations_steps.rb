@@ -220,7 +220,7 @@ When /^I wait for all pending requests to complete/ do
   rescue Capybara::TimeoutError
     puts "PendingRequests was zero"
   end
-  page.wait_until { true == page.evaluate_script("PendingRequests == 0;")}
+  page.wait_until(5) { true == page.evaluate_script("PendingRequests == 0;")}
 end
 
 Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|

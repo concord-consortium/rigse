@@ -157,12 +157,12 @@
   uuid: 202ca3ea-4163-11de-aad1-001ff3caa767
   port: 0
   period: 0.1
-  max: 10.0
+  max: 3.2
   id: 16
-  display_precision: -1
+  display_precision: -2
   unit: G
-  min: 0.0
-  step_size: 0.1
+  min: -3.2
+  step_size: 0.02
   ptype: 26
 - name: EKG
   uuid: f1eeba28-7b7a-11e0-9cce-9027e4e96711
