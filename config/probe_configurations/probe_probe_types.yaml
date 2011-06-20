@@ -91,9 +91,9 @@
   uuid: 20286398-4163-11de-aad1-001ff3caa767
   port: 0
   period: 1.0
-  max: 500.0
+  max: 5000.0
   id: 9
-  display_precision: 2
+  display_precision: 1
   unit: ppm
   min: 0.0
   step_size: 20.0
