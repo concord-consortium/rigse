@@ -318,7 +318,7 @@ body#tinymce
   -moz-border-radius: 8px
   -webkit-border-radius: 8px
   .graphic-input li
-    width: 180px
+    width: 240px
 
 .login-area
   li
@@ -367,8 +367,7 @@ body#tinymce
       min-height: 13px
       padding: 7px 0 6px 11px
       position: relative
-      /* ie
-      width: 144px
+      width: 226px
 
 .forgot
   font-size: 0.9em
@@ -451,6 +450,8 @@ p.note
     opacity: 0.8
     &:hover
       opacity: 1
+.item_selectable .container_element .action_menu, .item_selected .container_element .action_menu
+  border-bottom: none
 
 .item
   background-color: white
@@ -476,18 +477,36 @@ p.note
   &.item_selected
     background-color: #f9eec1
     border-bottom:
-      width: 2px
-      style: solid
-      color: #3a878b
+      width: 3px
+      style: dashed
+      color: #53857C
   &.item_selectable
     border-bottom:
-      width: 2px
+      width: 3px
       style: solid
-      color: #bddfdf
+      color: #53857C
     &:hover
       border:
-        width: 2px
-        color: #f4b626
+        width: 3px
+        color: #53857C
+
+li.item_selected
+  margin-bottom: 0
+  overflow: hidden
+li.item_selectable
+  margin-bottom: 0
+  overflow: visible
+.item_selected .container_element
+  background-color: #f9eec1 !important
+  margin-bottom: 0
+  padding: 0
+.item_selectable .container_element
+  background-color: transparent !important
+  margin-bottom: 0
+  padding: 0
+
+.sortable.draggable, .sortable.sortable, .sortable.movable
+  cursor: move
 
 /* ------- edit, copy, delete etc buttons -------
 
@@ -861,9 +880,9 @@ h2, h3
   position: relative
   label.textfield
     color: #cccccc
-    left: 10px
+    right: 10px
     position: absolute
-    top: 2px
+    top: 3px
     z-index: 100
   label.right
     display: inline

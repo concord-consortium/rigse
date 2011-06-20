@@ -8,7 +8,7 @@ class Admin::ProjectObserver < ActiveRecord::Observer
       investigations_path = File.join(ActionController::Base.page_cache_directory, "investigations")
       cached_files = File.join(investigations_path,"*.otml")
       Dir.glob(cached_files).each do |otml_file|
-        File.delete(otml_file) if File.exists? (otml_file)
+        File.delete(otml_file) if File.exists?(otml_file)
       end
     end
   end

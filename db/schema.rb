@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110607050059) do
+ActiveRecord::Schema.define(:version => 20110616195327) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -369,6 +369,7 @@ ActiveRecord::Schema.define(:version => 20110607050059) do
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
     t.integer  "data_table_id"
+    t.boolean  "is_digital_display",                       :default => false
   end
 
   create_table "embeddable_data_tables", :force => true do |t|

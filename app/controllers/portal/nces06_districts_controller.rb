@@ -1,7 +1,7 @@
 class Portal::Nces06DistrictsController < ApplicationController
 
   before_filter :admin_or_manager, :except => [ :index ]
-  # include RestrictedPortalController
+  include RestrictedPortalController
 
   protected
 
