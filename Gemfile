@@ -47,6 +47,9 @@ source "http://rubygems.org"
   gem "nokogiri",             "~> 1.4.4"
   gem 'rdoc',                 "~> 3.6.1"
 
+  # needed for assessments
+  gem "json",                 "~> 1.5.1"
+
 group :development do
   gem "highline"
   gem "wirble"
