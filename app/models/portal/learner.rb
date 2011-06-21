@@ -113,6 +113,26 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
   
+  def most_recent_saveable_answered_date
+    runnable = self.offering.runnable
+    dates = []
+    runnable.saveable_types.inject(0) do |count, saveable_class|
+      saveable_association = saveable_class.to_s.demodulize.tableize
+      
+      # l.open_responses.collect { |s| s.answers.last.created_at }
+      answers = self.send(saveable_association).collect { |s| s.answers }.flatten
+      # answers = self.send(saveable_association).send(:answers)
+      if answers.length > 0
+        dates << answers.last.created_at
+      end
+    end
+    if dates.length > 0
+      dates.sort.last
+    else
+      nil
+    end
+  end
+  
   def refresh_saveable_response_objects
     # runnable = self.offering.runnable
     # runnable.saveable_types.each do |saveable_class|
