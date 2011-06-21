@@ -9,6 +9,8 @@ class ExternalActivity < ActiveRecord::Base
   has_many :teacher_notes, :as => :authored_entity
   has_many :author_notes, :as => :authored_entity
 
+  delegate :saveable_types, :reportable_types, :to => :investigation
+
   acts_as_replicatable
 
   include Changeable
