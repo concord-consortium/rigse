@@ -1,3 +1,9 @@
+@import compass/reset.sass
+@import blueprint.sass
+@import app_colors.sass
+@import app_fonts.sass
+@import app_metrics.sass
+
 /* browser reset
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form
@@ -73,7 +79,76 @@ ul, ol
 
 table
   border-collapse: collapse
-  margin: 1em 0
+  margin: 0.5em
+
+td, th
+  padding: 0.5em
+  border: 1px solid #CCC
+  height: 1.5em
+
+thead, tfoot
+  background-color: #DDD
+
+tr
+  &.rowodd
+  height: 1em
+  &.roweven
+    background-color: #F2F2F2
+
+td.timestyle
+  font-size: 0.8em
+  font-family: Lucida Grande, Microsoft Sans Serif, Arial, Helvetica, sans-serif
+
+.sortcol
+  cursor: pointer
+  padding-right: 20px
+  background-repeat: no-repeat
+  background-position: right center
+
+.sortasc
+  background-color: #DDFFAC
+  background-image: url(../images/tablesort/up.gif)
+
+.sortdesc
+  background-color: #B9DDFF
+  background-image: url(../images/tablesort/down.gif)
+
+.nosort
+  cursor: default
+
+.urg1, .urg2, .urg3, .urg4, .urg5
+  padding: 3px
+  text-align: center
+  border: 1px solid #333
+  width: 3em
+
+.urg1
+  background-color: #FFFACD
+
+.urg2
+  background-color: #FFD700
+
+.urg3
+  background-color: Orange
+
+.urg4
+  background-color: #FF6347
+
+.urg5
+  background-color: Red
+
+.scroll-table-head
+  width: 800px
+
+.scroll-table-body
+  width: 800px
+  height: 400px
+  td
+    padding-right: 20px
+    overflow: hidden
+
+
+
 
 body
   background:
@@ -1103,3 +1178,8 @@ ul.quiet_list
       font-weight: bold
       margin-left: 1em 0 0 10px
       padding: 5px !important
+
+.dev_note
+  font-size: 0.6em
+  color: $dev_note_color
+

@@ -7,6 +7,8 @@ javascripts:
   - misc/resizable
   - flotr/excanvas
   - flotr/flotr
+  - table/fastinit
+  - table/tablesort
   - canvas2image
   - application
   - dropdown
