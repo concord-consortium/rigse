@@ -407,6 +407,22 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     task :use_jna_for_vernier_goio => :environment do
       Fixups.switch_driver('vernier_goio','JNI','JNA')
     end
+
+    # seb 2011-06-21
+    desc "delete external_activities without investigations (assessment theme only)"
+    task :delete_external_activities_without_investigations => :environment do
+      external_activities = ExternalActivity.find(:all, :conditions => 'investigation_id is null')
+      external_activities.each do |external_activity|
+        puts "deleting ExternalActivity #{external_activity.id}: #{external_activity.name}, created by: #{external_activity.user.name}"
+        activity_id = external_activity.url[/\d+$/]
+        if activity_id && (activity = Activity.find(:first, :conditions => ['id = ?', activity_id]))
+          puts "  deleting associated Activity #{activity.id}: #{activity.name}, created by: #{activity.user.name}"
+          activity.destroy
+        end
+        external_activity.destroy
+      end
+    end
+
   end
 end
 
