@@ -823,7 +823,72 @@ module ApplicationHelper
           haml_concat title_for_component(learner, options)
           haml_tag :span, :class => 'tiny' do
             haml_concat sessions_learner_stat(learner)
+            haml_concat answered_learner_stat(learner)
           end
+        end
+      end
+    end
+  end
+
+  def table_header_for_learner
+    "<tr>
+      <th class='sortfirstasc text'>name</th>
+      <th class='number'>sessions</th>
+      <th class='number'>answered</th>
+      <th class='date'>last answer</th>
+      <th class='nosort'>report</th>
+    </tr>"
+  end
+
+  def answered_learner_stat(learner)
+    count = learner.saveable_answered
+    if count > 0
+      "#{count}"
+    else
+      ''
+    end
+  end
+
+  def learner_date_of_last_answer(learner)
+    count = learner.saveable_answered
+    # Mon, 18 Dec 1995 17:28:35 GMT
+    format = "%a, %d %b %Y %H:%M:%S %Z"
+  
+    # format = "%m/%d/%Y %I:%M%p %Z"
+    if count > 0
+      learner.most_recent_saveable_answered_date.getlocal.strftime(format)
+    else
+      ''
+    end
+  end
+
+  def table_row_for_learner(learner, opts = {})
+    options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true }
+    options.update(opts)
+    capture_haml do
+      haml_tag :tr do
+        haml_tag :td do
+          haml_concat title_for_component(learner, options)
+          if learner.offering.runnable.run_format == :jnlp
+            haml_concat link_to('Run', run_url_for(learner))
+            haml_concat " | "
+            if current_user.has_role?("admin")
+              haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+              haml_concat " | "
+            end
+          end
+        end
+        haml_tag :td do
+          haml_concat sessions_learner_stat(learner)
+        end
+        haml_tag :td do
+          haml_concat answered_learner_stat(learner)
+        end
+        haml_tag :td do
+          haml_concat learner_date_of_last_answer(learner)
+        end
+        haml_tag :td do
+          haml_concat report_link_for(learner, 'report', 'Report')
         end
       end
     end

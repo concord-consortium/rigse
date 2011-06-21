@@ -19,12 +19,17 @@
     - if offering.resource_page?
       = render :partial => 'resource_pages/accordion', :locals => { :resource_page => offering.runnable, :offering => offering }
     - else  
-      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>"Show Individual Reports"}) do
+      = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=> "Show Individual Reports (#{offering.learners.length})"}) do
         %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
           %div{:class => 'offering_print_all'}= link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
           %span.author= "Author: #{offering.runnable.user.name}"
           %p= "Description: #{offering.runnable.description}"
           %p= updated_time_text(offering.runnable)
           %p= pluralize(offering.learners.length, "student response")
-          = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
+          %table{:class => 'sortable'}
+            %thead
+              = table_header_for_learner
+            %tbody
+              = render :partial => 'portal/learners/show_table_row', :collection => offering.learners, :as => :portal_learner
+          / = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner
   = draggable_element dom_id_for(offering), :revert => true
