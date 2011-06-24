@@ -15,3 +15,5 @@
     %input{:id =>data_id(data_table), :type => :hidden, :name => :data, :value => data_table.data}
 - if (data_table.changeable? current_user)
   = watch_data_fields(data_table)
+-# TODO: disabled updating the data cells this way until it can be tested? 
+-# see PT: https://www.pivotaltracker.com/story/show/14994379
