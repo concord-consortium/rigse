@@ -338,7 +338,7 @@ describe SessionsController do
       it "should remove cookies" do
         controller.should_receive(:delete_cc_cookie)
         post :remote_logout
-        response.should be_success
+        response.should be_success, "Should successfully log out: #{response.inspect}"
         json_data = ActiveSupport::JSON.decode(response.body)
         json_data['message'].should_not be_nil
       end
