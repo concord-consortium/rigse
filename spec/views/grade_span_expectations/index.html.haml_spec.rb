@@ -1,4 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
+
 describe "/grade_span_expectations/index.html.haml" do
   
   before(:each) do

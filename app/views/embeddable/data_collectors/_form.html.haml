@@ -1,85 +1,86 @@
 .item
   = edit_menu_for(data_collector, f, {:omit_cancel => true}, scope)
   .content
-    %p
-      - field_set_tag 'Title' do
-        = f.text_field :title, :size => 60
+    - field_set_tag 'Title' do
+      = f.text_field :title, :size => 60
 
-    - field_set_tag 'Major options' do
-      %p
-        %ul.menu_h
-          %li
-            Probe type: 
-            - all_probe_types = Probe::ProbeType.find(:all, :order => 'name ASC')
-            - 
-            = f.select(:probe_type_id, all_probe_types.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
-            = observe_field dom_id_for(data_collector, :select_probe_type), :function => update_label_and_units_script(all_probe_types, 'embeddable_data_collector_y_axis_label', 'embeddable_data_collector_y_axis_units' )
-         
-          %li
-            Graph type: 
-            = f.select(:graph_type_id, Embeddable::DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
+    - field_set_tag 'Major Options' do
+      %ul.menu_h
+        %li
+          Show digital display only (no graph):
+          = f.check_box :is_digital_display
+
+      %ul.menu_h
+        %li
+          Probe type: 
+          - all_probe_types = Probe::ProbeType.find(:all, :order => 'name ASC')
+          - 
+          = f.select(:probe_type_id, all_probe_types.collect {|p| [ p.name, p.id ] }, {:prompt => false}, { :id => dom_id_for(data_collector, :select_probe_type)})
+          = observe_field dom_id_for(data_collector, :select_probe_type), :function => update_label_and_units_script(all_probe_types, 'embeddable_data_collector_y_axis_label', 'embeddable_data_collector_y_axis_units' )
+
+        %li
+          Graph type: 
+          = f.select(:graph_type_id, Embeddable::DataCollector.graph_types, {:prompt => true}, { :id => dom_id_for(data_collector, :select_graph_type)})
             
-          %li
-            Static: 
-            = f.check_box :static
+        %li
+          Static: 
+          = f.check_box :static
       
       - if data_collector.valid_calibrations.size > 0
-        %p
-          %ul.menu_h
-            %li
-              = "alternate probe calibration for #{data_collector.probe_type.name}"
-              = f.select(:calibration_id, data_collector.calibration_select, {:include_blank => "no custom calibration" }, { :id => dom_id_for(data_collector, :select_calibration)})
-      %p
         %ul.menu_h
           %li
-            Include data from another graph in this Activity:
-            = f.select(:prediction_graph_id, data_collector.other_data_collectors_in_activity_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
-      %p
-        %ul.menu_h
-          %li
-            = labeled_check_box(f, :multiple_graphable_enabled, 'Enable multiple graphs')
-    %p
-      - field_set_tag 'Y axis' do
-        %ul.menu_h
-          %li
-            Label:
-            = f.text_field :y_axis_label, :size => 30
-          %li
-            Units:
-            = f.text_field :y_axis_units, :size => 10
-        %ul.menu_v
-          %li
-            Max
-            = f.text_field :y_axis_max, :size => 10
-          %li
-            Min
-            = f.text_field :y_axis_min, :size => 10
-      - field_set_tag 'X axis' do
-        %ul.menu_h
-          %li
-            Label:
-            = f.text_field :x_axis_label, :size => 30
-          %li
-            Units:
-            = f.text_field :x_axis_units, :size => 10
-          %p
-            %ul.menu_h
-              %li
-                X Min
-                = f.text_field :x_axis_min, :size => 10
-              %li
-                X Max
-                = f.text_field :x_axis_max, :size => 10
-    %p
-      - field_set_tag 'Data Collection Time Limit' do
-        %ul.menu_h
-          %li
-            = labeled_check_box(f, :time_limit_status, 'Enabled: ')
-          %li
-            Time Limit (s):
-            = f.text_field :time_limit_seconds, :size => 10
+            = "alternate probe calibration for #{data_collector.probe_type.name}"
+            = f.select(:calibration_id, data_collector.calibration_select, {:include_blank => "no custom calibration" }, { :id => dom_id_for(data_collector, :select_calibration)})
+      %ul.menu_h
+        %li
+          Include data from another graph in this Activity:
+          = f.select(:prediction_graph_id, data_collector.other_data_collectors_in_activity_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_prediction_graph_source)})
+      %ul.menu_h
+        %li
+          Include data from a data table in this Activity:
+          = f.select(:data_table_id, data_collector.data_tables_in_activity_scope(@scope).collect { |dt| [ "#{dt.name}: #{dt.id}", dt.id ] }, { :prompt => true, :include_blank => "None" }, { :id => dom_id_for(data_collector, :select_data_table)})
+      %ul.menu_h
+        %li
+          = labeled_check_box(f, :multiple_graphable_enabled, 'Enable multiple graphs:')
+    - field_set_tag 'Y Axis' do
+      %ul.menu_h
+        %li
+          Label:
+          = f.text_field :y_axis_label, :size => 30
+        %li
+          Units:
+          = f.text_field :y_axis_units, :size => 10
+      %ul.menu_v
+        %li
+          Max:
+          = f.text_field :y_axis_max, :size => 10
+        %li
+          Min:
+          = f.text_field :y_axis_min, :size => 10
+    - field_set_tag 'X Axis' do
+      %ul.menu_h
+        %li
+          Label:
+          = f.text_field :x_axis_label, :size => 30
+        %li
+          Units:
+          = f.text_field :x_axis_units, :size => 10
+      %ul.menu_h
+        %li
+          X Min:
+          = f.text_field :x_axis_min, :size => 10
+        %li
+          X Max:
+          = f.text_field :x_axis_max, :size => 10
+    - field_set_tag 'Data Collection Time Limit' do
+      %ul.menu_h
+        %li
+          = labeled_check_box(f, :time_limit_status, 'Enabled: ')
+        %li
+          Time Limit (s):
+          = f.text_field :time_limit_seconds, :size => 10
     
-    - field_set_tag 'Minor options' do
+    - field_set_tag 'Minor Options' do
       %ul.menu_h
         %li
           = labeled_check_box(f, :draw_marks, 'Draw markers')
@@ -89,6 +90,8 @@
           = labeled_check_box(f, :autoscale_enabled)
         %li
           = labeled_check_box(f, :ruler_enabled)
+        %li
+          = labeled_check_box(f, :show_tare)
     - if current_user.has_role?('admin')
       - field_set_tag 'otml_root_content' do
         = f.text_area :otml_root_content, :id => dom_id_for(data_collector, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'

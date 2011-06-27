@@ -3,6 +3,27 @@
 <% form_for(@vendor_interface) do |f| %>
   <%= f.error_messages %>
 
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+
+  <%= f.label :device_id %>
+  <%= f.text_field :device_id %>
+
+  <%= f.label :driver_short_name %>
+  <%= f.text_field :driver_short_name %>
+
+  <%= f.label :communication_protocol %>
+  <%= f.text_field :communication_protocol %>
+
+  <%= f.label :short_name %>
+  <%= f.text_field :short_name %>
+
+  <%= f.label :description %>
+  <%= f.text_area :description, :class => 'mceNoEditor' %>
+
+  <%= f.label :image %>
+  <%= f.text_field :image %>
+
   <p>
     <%= f.submit 'Update' %>
   </p>

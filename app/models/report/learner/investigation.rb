@@ -1,4 +1,4 @@
-class Report::Offering::Investigation
+class Report::Learner::Investigation
   
   def initialize(offering)
   end

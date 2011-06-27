@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
   integrate_views
 
@@ -31,4 +30,25 @@ describe HomeController do
     @response.body.should include(content)
   end
 
+  describe "GET /stylesheets/project.css" do
+    before(:each) do
+      Admin::Project.stub(:default_project).and_return(@test_project)
+    end
+    describe "when a project is configured to use custom styles" do
+      it "should return the custom css" do
+        css_text = ".some_class { font-height: 10px; }"
+        @test_project.stub(:custom_css).and_return(css_text)
+        @test_project.stub(:using_custom_css?).and_return(true)
+        get :project_css
+        response.body.should include(css_text)
+      end
+    end
+    describe "when a project is not configuted to use custom styles" do
+      it "should return 404" do
+        @test_project.stub(:using_custom_css?).and_return(false)
+        get :project_css
+        response.should_not be_success
+      end
+    end
+  end
 end

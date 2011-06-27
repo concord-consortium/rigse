@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
+  validates_presence_of     :password, :on => :update, :if => :updating_password?
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
@@ -86,6 +87,8 @@ class User < ActiveRecord::Base
   has_one :portal_student, :class_name => "Portal::Student"
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
+
+  attr_accessor :updating_password
 
   acts_as_replicatable
 
@@ -279,6 +282,10 @@ class User < ActiveRecord::Base
       self.security_questions << q
       q.save
     end
+  end
+
+  def updating_password?
+    updating_password
   end
 
   protected

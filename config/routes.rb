@@ -175,7 +175,7 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :external_users
 
     portal.resources :nces06_districts
-    portal.resources :nces06_schools
+    portal.resources :nces06_schools, :member => { :description => :get }
     # portal.home 'readme', :controller => 'home', :action => 'readme'
     # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
@@ -444,9 +444,10 @@ ActionController::Routing::Routes.draw do |map|
   map.doc    '/doc/:document', :controller => 'home', :action => 'doc', :requirements => { :document => /\S+/ }
   map.home   '/home', :controller => 'home', :action => 'index'
   map.about  '/about', :controller => 'home', :action => 'about'
+  map.test_exception '/test_exception', :controller => 'home', :action => 'test_exception'
   map.root :controller => 'home', :action => 'index'
   map.requirements '/requirements', :controller => 'home', :action => 'requirements'
-
+  map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
   # map. ':controller/:action/:id.:format'

@@ -16,7 +16,7 @@ Feature: Investigations show drafts
 
   @selenium
   Scenario: The investigations list offering count shows on all pages
-    Given the following investigations exist:
+    Given the following empty investigations exist:
       | name            | user    | offerings_count | created_at                     | publication_status |
       | Investigation1  | teacher | 5               | Wed Jan 26 12:00:00 -0500 2011 | published          |
       | Investigation2  | teacher | 10              | Wed Jan 23 12:00:00 -0500 2011 | draft              |

@@ -121,7 +121,7 @@ class OtrunkExampleImport
       @projects.uniq!
       @internal_archives.uniq!
       count = 1
-      files = Dir["#{dir}/**/*.otml"]
+      files = Dir["#{dir}/**/*.otml"].find_all {|o| !(o =~ /rites/) }
       puts "\n\nprocessing #{files.length} otml files ..."
       files.in_groups(10, false) do |file_group|
         file_group.each do |f|

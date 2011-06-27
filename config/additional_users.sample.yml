@@ -2,5 +2,6 @@
 stephen: 
   first_name: Stephen
   last_name: Bannasch
+  login: stephen
   email: stephen.bannasch@gmail.com
   role: admin

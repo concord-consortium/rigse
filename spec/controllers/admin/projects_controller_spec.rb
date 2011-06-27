@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::ProjectsController do
 
@@ -110,7 +110,7 @@ describe Admin::ProjectsController do
 
       with_tag("*[name=?]", "admin_project[home_page_content]")
 
-      (project.attributes.keys - ["home_page_content"]).each do |attribute|
+      (project.attributes.keys - ["home_page_content","custom_css"]).each do |attribute|
         without_tag("*[name=?]", "admin_project[#{attribute}]")
       end
     end

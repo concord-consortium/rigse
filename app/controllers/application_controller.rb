@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -76,7 +80,7 @@ class ApplicationController < ActionController::Base
       @scope = default
       if container_type = params[:scope_type]
         @scope = container_type.constantize.find(params[:scope_id])
-      elsif container_type = params[:container_type]
+      elsif (container_type = params[:container_type]) && params[:container_id]
         @scope = container_type.constantize.find(params[:container_id])
       end
       @scope

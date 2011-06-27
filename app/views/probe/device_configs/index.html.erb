@@ -6,6 +6,8 @@
 
 <% @device_configs.each do |device_config| %>
   <tr>
+    <td><%= device_config.vendor_interface ? device_config.vendor_interface.name : "unset interface: #{device_config.vendor_interface_id}"%></td>
+    <td><%= device_config.config_string %></td>
     <td><%= link_to 'Show', device_config %></td>
     <td><%= link_to 'Edit', edit_probe_device_config_path(device_config) %></td>
     <td><%= link_to 'Destroy', device_config, :confirm => 'Are you sure?', :method => :delete %></td>

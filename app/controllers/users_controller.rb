@@ -265,7 +265,7 @@ class UsersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
 end

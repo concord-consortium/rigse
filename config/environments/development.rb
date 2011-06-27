@@ -41,15 +41,19 @@ config.action_mailer.raise_delivery_errors = false
 # config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
 
 unless RUBY_PLATFORM =~ /java/
-  # See: http://www.datanoise.com/ruby-debug/
-  require 'ruby-debug'
-  # Debugger.wait_connection = true
-  # Debugger.stop_on_connect = true
-  # Debugger.start_remote
-  Debugger.start
-  Debugger.settings[:autolist] = 1
-  Debugger.settings[:autoeval] = 1
-  Debugger.settings[:reload_source_on_change] = 1
+  begin
+    # See: http://www.datanoise.com/ruby-debug/
+    require 'ruby-debug'
+    # Debugger.wait_connection = true
+    # Debugger.stop_on_connect = true
+    # Debugger.start_remote
+    Debugger.start
+    Debugger.settings[:autolist] = 1
+    Debugger.settings[:autoeval] = 1
+    Debugger.settings[:reload_source_on_change] = 1
+  rescue LoadError
+    puts "*** ruby-debug gem not available ..."
+  end
 end
 
 # to help with development with engines (which are plugins)

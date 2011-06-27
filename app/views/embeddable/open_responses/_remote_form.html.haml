@@ -5,5 +5,17 @@
     /   = f.text_field :name, :size => 40
     - field_set_tag 'Prompt' do
       = f.text_area :prompt, :id => dom_id_for(open_response, :item, :prompt, :textarea), :class => 'tinymce_textarea'
+    %br
     - field_set_tag 'Default response' do
-      = f.text_field :default_response, :size => 80, :id => dom_id_for(open_response, :item, :default_response_field)
+      = f.text_area :default_response, :style => "font-size: #{open_response.font_size}px;", :rows => open_response.rows, :cols => open_response.columns, :value =>open_response.default_response, :class=> "mceNoEditor"
+    %br
+    - field_set_tag 'Text Area Rows' do
+      = f.text_field :rows, :size => 20, :id => dom_id_for(open_response, :item, :rows_field)
+    -# Disable these until someone wants them:
+    -# %br
+    -# - field_set_tag 'Text Area Columns' do
+    -#   = f.text_field :columns, :size => 20, :id => dom_id_for(open_response, :item, :columns_field)
+    -# %br
+    -# - field_set_tag 'Font size' do
+    -#   = f.text_field :font_size, :size => 20, :id => dom_id_for(open_response, :item, :font_size)
+
