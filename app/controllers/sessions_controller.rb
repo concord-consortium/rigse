@@ -126,7 +126,11 @@ class SessionsController < ApplicationController
 
   def delete_cc_cookie
     #cookies.delete CCCookieAuth.cookie_name.to_sym
-    cookies.delete CCCookieAuth.cookie_name.to_sym, :domain => cookie_domain
+    if cookies.kind_of? ActionController::CookieJar
+      cookies.delete(CCCookieAuth.cookie_name.to_sym, {:domain => cookie_domain})
+    else
+      cookies.delete CCCookieAuth.cookie_name.to_sym
+    end
   end
   
   def save_cc_cookie
