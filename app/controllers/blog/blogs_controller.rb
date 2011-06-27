@@ -3,18 +3,16 @@ require 'net/http'
 
 class Blog::BlogsController < ApplicationController
   def post_blog
-    user = current_user
-    blog_name = params[:blog_name]
+    blog_url = params[:blog_url]
     post_title = params[:post_title]
     post_content = params[:post_content]
-    @uri = URI.parse("http://geniverse.buddypress.staging.concord.org/#{blog_name}/xmlrpc.php")
 
     begin
-      user_id = _get_user_id(user.login)
+      @uri = URI.parse(blog_url)
+      user_id = _get_user_id(current_user.login)
 
       # render the content template
       content = _create_blog_post_xml(post_title, post_content, user_id)
-      puts "Command content:\n#{content}"
 
       # URI.parse("#{overlay_root}/#{runnable_id}")
       result = _post(content)
@@ -36,7 +34,6 @@ class Blog::BlogsController < ApplicationController
       req = Net::HTTP::Post.new(@uri.path)
       req.body = content
       response = conn.request(req)
-      puts "Request response: #{response.inspect}"
       if response.code.to_i < 200 || (response.code.to_i >= 400)
         raise "Error creating blog post!"
       end
@@ -47,9 +44,7 @@ class Blog::BlogsController < ApplicationController
 
   def _get_user_id(user_name)
     xml = _create_xml("username_exists", user_name)
-    puts "Student xml: #{xml}"
     result = _post(xml)
-    puts "User id result: #{result}"
     if result =~ /<string>([0-9]+?)<\/string>/
       return $1
     else
