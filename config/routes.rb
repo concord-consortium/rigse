@@ -180,7 +180,9 @@ ActionController::Routing::Routes.draw do |map|
     # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
 
-
+  map.namespace(:blog) do |blog|
+    blog.post_blog 'post_blog', :controller => 'blogs', :action => 'post_blog', :requirements => { :method => :post }
+  end
 
 
   # Restful Authentication Rewrites
