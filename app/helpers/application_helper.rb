@@ -507,11 +507,17 @@ module ApplicationHelper
   def title_for_component(component, options={})
     title = name_for_component(component, options)
     id = dom_id_for(component, options[:id_prefix], :title)
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
+    
+    if options[:link_title]
+      title_html = "<span id=#{id} class='component_title'>#{link_to(title, component)}</span>"
     else
-      "<span id=#{id} class='component_title'>#{title}</span>"
+      title_html = "<span id=#{id} class='component_title'>#{title}</span>"      
     end
+    
+    if RAILS_ENV == "development" || current_user.has_role?('admin')
+      title_html << "<span class='dev_note'> #{link_to(component.id, component)}</span>"
+    end
+    title_html
   end
 
   def name_for_component(component, options={})
@@ -931,6 +937,7 @@ module ApplicationHelper
           haml_concat title_for_component(component, options)
         end
         haml_tag :div, :class => 'action_menu_header_right' do
+          
           if (component.changeable?(current_user))
             begin
               if component.authorable_in_java?
