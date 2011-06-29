@@ -1,1 +1,1 @@
-{"login":"student","first":"Jackie","last":"Demeter"}
+{"teacher":false,"login":"student","class_words":["abc123"],"last":"Demeter","first":"Jackie"}
