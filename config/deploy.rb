@@ -49,10 +49,12 @@ set :deploy_to, "/web/rites.concord.org"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 ssh_options[:compression] = false
-set :use_sudo, true
+set :use_sudo, false
 set :scm_verbose, true
 set :rails_env, "production" 
-  
+
+set :user, "deploy"
+
 #############################################################
 #  Git
 #############################################################
@@ -140,6 +142,7 @@ namespace :db do
 end
 
 namespace :deploy do
+  
   #############################################################
   #  Passenger
   #############################################################
@@ -147,7 +150,7 @@ namespace :deploy do
   # Restart passenger on deploy
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    sudo "touch #{current_path}/tmp/restart.txt"
+    run "touch #{current_path}/tmp/restart.txt"
   end
   
   [:start, :stop].each do |t|
@@ -203,8 +206,8 @@ namespace :deploy do
   
   desc "set correct file permissions of the deployed files"
   task :set_permissions, :roles => :app do
-    sudo "chown -R apache.users #{deploy_to}"
-    sudo "chmod -R g+rw #{deploy_to}"
+    # sudo "chown -R apache.users #{deploy_to}"
+    # sudo "chmod -R g+rw #{deploy_to}"
   end
   
   desc "Create asset packages for production" 
