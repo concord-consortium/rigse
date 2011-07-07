@@ -73,7 +73,7 @@ class MultipleChoice < ActiveRecord::Base
     i = 0
     choices.each do |choice|
       return i if choice == right
-      i = 1 + 1
+      i = i + 1
     end
     return nil
   end

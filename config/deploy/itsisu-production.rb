@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/itsisu_units"
-set :branch, "itsisu-production"
+set :branch, "itsisu-units"
 
 #############################################################
 #  Servers
