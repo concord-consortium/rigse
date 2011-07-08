@@ -43,6 +43,8 @@ class ResourcePage < ActiveRecord::Base
 
   accepts_nested_attributes_for :attached_files
 
+  acts_as_taggable_on :cohorts
+
   self.extend SearchableModel
   @@searchable_attributes = %w{name description content publication_status}
   class <<self

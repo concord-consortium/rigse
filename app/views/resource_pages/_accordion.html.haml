@@ -31,6 +31,9 @@
         - resource_page.attached_files.each do |attached_file|
           %li= link_to attached_file.name, attached_file.attachment.url
 
+    - if current_user.has_role?("admin", "manager")
+      %p
+        %i= "Cohorts: #{resource_page.cohort_list.join(", ")}"
     %p
       %i= updated_time_text(resource_page)
     %p
