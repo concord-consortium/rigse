@@ -67,6 +67,7 @@ class ExternalActivitiesController < ApplicationController
     @external_activities = ExternalActivity.search_list({
       :name => @name, 
       :description => @description, 
+      :user => current_user,
       :paginate => true, 
       :page => pagination
     })

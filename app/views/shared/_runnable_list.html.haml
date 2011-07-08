@@ -1,4 +1,4 @@
-- locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :grade_span => grade_span, :name => "", :hide_print => true}
+- locals = {:portal_clazz_id => portal_clazz_id, :domain_id => domain_id, :user => current_user, :grade_span => grade_span, :name => "", :hide_print => true}
 - locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
 
 = render :partial => 'investigations/search_form', :locals => locals

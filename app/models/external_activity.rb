@@ -28,6 +28,12 @@ class ExternalActivity < ActiveRecord::Base
     :conditions =>{:publication_status => "published"}
   }
 
+  # special named scope for combining other named scopes in an OR fashion
+  # FIXME This is probably terribly inefficient
+  named_scope :match_any, lambda { |scopes| {
+    :conditions => scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")
+  }}
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -44,6 +50,17 @@ class ExternalActivity < ActiveRecord::Base
       else
         # external_activities = ExternalActivity.published.like(name)
         external_activities = ExternalActivity.like(name)
+      end
+
+      if t = options[:user].portal_teacher
+        finders = []
+        if t.cohort_list.size > 0
+          finders << ExternalActivity.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
+        end
+        # also match external activities with no tags
+        finders << ExternalActivity.tagged_with(Admin::Tag.find_all_by_scope("cohorts").collect{|t| t.tag }, :exclude => true, :on => :cohorts)
+
+        external_activities = external_activities.match_any(finders)
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
