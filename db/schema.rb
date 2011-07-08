@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110616195327) do
+ActiveRecord::Schema.define(:version => 20110708151553) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -56,6 +56,13 @@ ActiveRecord::Schema.define(:version => 20110616195327) do
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
+  end
+
+  create_table "admin_tags", :force => true do |t|
+    t.string   "scope"
+    t.string   "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "attached_files", :force => true do |t|
