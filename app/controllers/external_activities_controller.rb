@@ -126,6 +126,12 @@ class ExternalActivitiesController < ApplicationController
   def create
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_user
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
@@ -144,6 +150,13 @@ class ExternalActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @external_activity = ExternalActivity.find(params[:id])
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+      @external_activity.save
+    end
+
     if request.xhr?
       if cancel || @external_activity.update_attributes(params[:external_activity])
         render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }

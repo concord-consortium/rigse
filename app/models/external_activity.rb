@@ -7,6 +7,7 @@ class ExternalActivity < ActiveRecord::Base
   has_many :author_notes, :as => :authored_entity
 
   acts_as_replicatable
+  acts_as_taggable_on :cohorts
 
   include Changeable
 
