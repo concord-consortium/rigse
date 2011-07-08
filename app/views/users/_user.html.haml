@@ -19,3 +19,9 @@
       - user.roles.each do |r| 
         %li
           = r.title.capitalize
+      - if user.portal_teacher
+        %li
+          Cohorts: 
+        - user.portal_teacher.cohort_list.each do |c| 
+          %li
+            = c
