@@ -31,7 +31,7 @@ class ExternalActivity < ActiveRecord::Base
   # special named scope for combining other named scopes in an OR fashion
   # FIXME This is probably terribly inefficient
   named_scope :match_any, lambda { |scopes| {
-    :conditions => scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")
+    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
   }}
 
   class <<self
@@ -60,7 +60,12 @@ class ExternalActivity < ActiveRecord::Base
         # also match external activities with no tags
         finders << ExternalActivity.tagged_with(Admin::Tag.find_all_by_scope("cohorts").collect{|t| t.tag }, :exclude => true, :on => :cohorts)
 
-        external_activities = external_activities.match_any(finders)
+        # sometimes tagged_with will return an empty hash: {}
+        finders.delete({})
+
+        if finders.size > 0
+          external_activities = external_activities.match_any(finders)
+        end
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

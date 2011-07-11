@@ -44,7 +44,7 @@ class ResourcePage < ActiveRecord::Base
   # special named scope for combining other named scopes in an OR fashion
   # FIXME This is probably terribly inefficient
   named_scope :match_any, lambda { |scopes| {
-    :conditions => scopes.map{|s| "resource_pages.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")
+    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
   }}
 
   accepts_nested_attributes_for :attached_files
@@ -90,7 +90,12 @@ class ResourcePage < ActiveRecord::Base
         # also match external activities with no tags
         finders << ResourcePage.tagged_with(Admin::Tag.find_all_by_scope("cohorts").collect{|t| t.tag }, :exclude => true, :on => :cohorts)
 
-        resource_pages = resource_pages.match_any(finders)
+        # sometimes tagged_with will return an empty hash: {}
+        finders.delete({})
+
+        if finders.size > 0
+          resource_pages = resource_pages.match_any(finders)
+        end
       end
 
       if options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0)
