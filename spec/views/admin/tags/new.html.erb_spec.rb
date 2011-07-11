@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-describe "/admin_tags/new.html.erb" do
+describe "/admin/tags/new.html.haml" do
   include Admin::TagsHelper
 
   before(:each) do
-    assigns[:tags] = stub_model(Admin::Tag,
+    power_user = stub_model(User, :has_role? => true)
+    template.stub!(:current_user).and_return(power_user)
+    assigns[:admin_tag] = stub_model(Admin::Tag,
       :new_record? => true,
       :scope => "value for scope",
       :tag => "value for tag"
@@ -15,8 +17,8 @@ describe "/admin_tags/new.html.erb" do
     render
 
     response.should have_tag("form[action=?][method=post]", admin_tags_path) do
-      with_tag("input#tags_scope[name=?]", "tags[scope]")
-      with_tag("input#tags_tag[name=?]", "tags[tag]")
+      with_tag("input#admin_tag_scope[name=?]", "admin_tag[scope]")
+      with_tag("input#admin_tag_tag[name=?]", "admin_tag[tag]")
     end
   end
 end

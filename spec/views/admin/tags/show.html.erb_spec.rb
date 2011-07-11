@@ -1,11 +1,14 @@
 require 'spec_helper'
 
-describe "/admin_tags/show.html.erb" do
+describe "/admin/tags/show.html.haml" do
   include Admin::TagsHelper
   before(:each) do
-    assigns[:tags] = @tags = stub_model(Admin::Tag,
+    power_user = stub_model(User, :has_role? => true)
+    template.stub!(:current_user).and_return(power_user)
+    assigns[:admin_tag] = @admin_tag = stub_model(Admin::Tag,
       :scope => "value for scope",
-      :tag => "value for tag"
+      :tag => "value for tag",
+      :id => 42
     )
   end
 
