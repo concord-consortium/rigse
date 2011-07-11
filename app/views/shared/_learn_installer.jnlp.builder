@@ -11,6 +11,6 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
   jnlp_installer_resources(xml, {:learner => learner, :runnable => runnable, :wrapped_jnlp_url => wrapped_jnlp_url } )
 
   xml << "  <application-desc main-class='org.concord.LaunchJnlp'>\n  "
-  xml.argument polymorphic_url(learner, :format =>  :config, :session => session_options[:id])
+  xml.argument polymorphic_url(learner, :format =>  :config, session_options[:key] => session_options[:id])
   xml << "  </application-desc>\n"
 }
