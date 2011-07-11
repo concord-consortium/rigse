@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::TagController do
+describe Admin::TagsController do
 
   def mock_tags(stubs={})
     @mock_tags ||= mock_model(Admin::Tag, stubs)
