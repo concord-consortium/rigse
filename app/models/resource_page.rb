@@ -17,12 +17,7 @@ class ResourcePage < ActiveRecord::Base
   named_scope :draft_status, :conditions => { :publication_status => 'draft' }
   named_scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
   named_scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
-  named_scope :published_or_by_user, proc { |u|
-    { :conditions => ["resource_pages.user_id = ? OR resource_pages.publication_status = 'published'", u.nil? ? u : u.id] }
-  }
-  named_scope :not_private_or_by_user, proc { |u|
-    { :conditions => ["resource_pages.user_id = ? OR resource_pages.publication_status IN ('published', 'draft')", u.nil? ? u : u.id] }
-  }
+  named_scope :not_private, { :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')" }
 
   named_scope :visible_to_user, proc { |u| { :conditions =>
     [ "resource_pages.publication_status = 'published' OR
@@ -67,35 +62,40 @@ class ResourcePage < ActiveRecord::Base
     end
 
     def search_list(options)
-      resource_pages = ResourcePage.like(options[:name])
+      name = options[:name]
+      name_matches = ResourcePage.like(name)
+      is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
 
-      if options[:user] && options[:user].is_a?(User) && options[:user].has_role?('admin')
-        # admin users can see all ResourcePages
-        resource_pages = resource_pages.no_drafts unless options[:include_drafts]
+      resource_pages = nil
+
+      if options[:user]
+        by_user = name_matches.by_user(options[:user]) if options[:user]
+        if (t = options[:user].portal_teacher) && ! options[:user].has_role?('admin')
+          # if we're not an admin, filter by tags as well
+          matches_tags = nil
+          has_no_tags = nil
+          available_cohorts = Admin::Tag.find_all_by_scope("cohorts")
+          if available_cohorts.size > 0
+            has_no_tags = ResourcePage.tagged_with(available_cohorts.collect{|c| c.tag }, :exclude => true, :on => :cohorts)
+          end
+
+          if t.cohort_list.size > 0
+            # and match everything with the correct tags
+            matches_tags = ResourcePage.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
+          end
+
+          # sometimes tagged_with returns an empty hash
+          if has_no_tags && has_no_tags != {}
+            if matches_tags && matches_tags != {}
+              is_visible = is_visible.match_any([matches_tags, has_no_tags])
+            else
+              is_visible = is_visible.match_any([has_no_tags])
+            end
+          end
+        end
+        resource_pages = ResourcePage.match_any([is_visible, by_user])
       else
-        if options[:include_drafts]
-          # published, draft, and private by user
-          resource_pages = resource_pages.visible_to_user_with_drafts(options[:user])
-        else
-          # published and private by user
-          resource_pages = resource_pages.visible_to_user(options[:user])
-        end
-      end
-
-      if t = options[:user].portal_teacher
-        finders = []
-        if t.cohort_list.size > 0
-          finders << ResourcePage.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
-        end
-        # also match external activities with no tags
-        finders << ResourcePage.tagged_with(Admin::Tag.find_all_by_scope("cohorts").collect{|t| t.tag }, :exclude => true, :on => :cohorts)
-
-        # sometimes tagged_with will return an empty hash: {}
-        finders.delete({})
-
-        if finders.size > 0
-          resource_pages = resource_pages.match_any(finders)
-        end
+        resource_pages = is_visible
       end
 
       if options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0)

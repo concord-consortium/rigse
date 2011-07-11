@@ -4,6 +4,7 @@
 = render :partial => 'investigations/search_form', :locals => locals
 .tiny To add assignments to your class, drag the investigations below to your class assignments list above. If there are no investigations listed below, select and/or enter some search options in the form above.
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();", :update => {:success => 'offering_list'}
-= render_top_level_container_list_partial(locals)
-- ["ResourcePage", "ExternalActivity", "Page"].each do |klass|
-  = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }
+#assignable_list
+  = render_top_level_container_list_partial(locals)
+  - ["ResourcePage", "ExternalActivity", "Page"].each do |klass|
+    = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }
