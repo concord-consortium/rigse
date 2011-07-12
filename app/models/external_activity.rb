@@ -7,6 +7,7 @@ class ExternalActivity < ActiveRecord::Base
   has_many :author_notes, :as => :authored_entity
 
   acts_as_replicatable
+  acts_as_taggable_on :cohorts
 
   include Changeable
 
@@ -27,6 +28,19 @@ class ExternalActivity < ActiveRecord::Base
     :conditions =>{:publication_status => "published"}
   }
 
+  named_scope :not_private,
+  {
+    :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')"
+  }
+
+  named_scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
+
+  # special named scope for combining other named scopes in an OR fashion
+  # FIXME This is probably terribly inefficient
+  named_scope :match_any, lambda { |scopes| {
+    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
+  }}
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -38,11 +52,38 @@ class ExternalActivity < ActiveRecord::Base
 
     def search_list(options)
       name = options[:name]
-      if (options[:include_drafts])
-        external_activities = ExternalActivity.like(name)
+      name_matches = ExternalActivity.like(name)
+      is_visible = options[:include_drafts] ? name_matches.not_private : name_matches.published
+
+      external_activities = nil
+
+      if options[:user]
+        by_user = name_matches.by_user(options[:user]) if options[:user]
+        if (t = options[:user].portal_teacher) && ! options[:user].has_role?('admin')
+          # if we're not an admin, filter by tags as well
+          matches_tags = nil
+          has_no_tags = nil
+          available_cohorts = Admin::Tag.find_all_by_scope("cohorts")
+          if available_cohorts.size > 0
+            has_no_tags = ExternalActivity.tagged_with(available_cohorts.collect{|c| c.tag }, :exclude => true, :on => :cohorts)
+          end
+          if t.cohort_list.size > 0
+            # and match everything with the correct tags
+            matches_tags = ExternalActivity.tagged_with(t.cohort_list, :any => true, :on => :cohorts)
+          end
+
+          # sometimes tagged_with returns an empty hash
+          if has_no_tags && has_no_tags != {}
+            if matches_tags && matches_tags != {}
+              is_visible = is_visible.match_any([matches_tags, has_no_tags])
+            else
+              is_visible = is_visible.match_any([has_no_tags])
+            end
+          end
+        end
+        external_activities = ExternalActivity.match_any([is_visible, by_user])
       else
-        # external_activities = ExternalActivity.published.like(name)
-        external_activities = ExternalActivity.like(name)
+        external_activities = is_visible
       end
 
       portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil

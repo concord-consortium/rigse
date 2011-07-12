@@ -9,5 +9,6 @@
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   - field_set_tag 'Save Path' do
     = f.text_field :save_path
+  = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
 
 = javascript_tag("focus_first_field();");
