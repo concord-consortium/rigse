@@ -40,6 +40,6 @@ describe Portal::OfferingsController do
     @runnable.append_learner_id_to_url = true
     # @runnable.stub!(:append_learner_id_to_url).and_return(true)
     get :show, :id => @offering.id, :format => 'run_external_html'
-    response.should redirect_to(@runnable_opts[:url] + "?learner_id=#{@learner.id}")
+    response.should redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
   end
 end
