@@ -67,6 +67,9 @@ class ExternalActivitiesController < ApplicationController
     @external_activities = ExternalActivity.search_list({
       :name => @name, 
       :description => @description, 
+      # TODO Force showing drafts because right now there's not an authoring ui for publication status
+      # :include_drafts => @include_drafts,
+      :include_drafts => true,
       :user => current_user,
       :paginate => true, 
       :page => pagination
