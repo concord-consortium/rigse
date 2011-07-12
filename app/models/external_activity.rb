@@ -100,6 +100,13 @@ class ExternalActivity < ActiveRecord::Base
 
   end
 
+  def url(learner = nil)
+    if learner && append_learner_id_to_url
+      return read_attribute(:url) + "?learner_id=#{learner.id}"
+    end
+    return read_attribute(:url)
+  end
+
   ##
   ## Hackish stub: Noah Paessel
   ##
