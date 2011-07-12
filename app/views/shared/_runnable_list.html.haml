@@ -6,5 +6,5 @@
 = observe_form 'investigation_search_form', :url => list_filter_investigation_url, :frequency => 1, :before => "PendingStart();", :complete=> "PendingEnd();", :update => {:success => 'offering_list'}
 #assignable_list
   = render_top_level_container_list_partial(locals)
-  - ["ResourcePage", "ExternalActivity", "Page"].each do |klass|
+  - (["ResourcePage", "ExternalActivity", "Page"] - [top_level_container_name_as_class_string]).each do |klass|
     = render :partial => "shared/runnables_listing", :locals => { :runnables => klass.classify.constantize.search_list(locals), :klass => klass, :hide_print => true }

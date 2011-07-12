@@ -201,6 +201,12 @@ module ApplicationHelper
     end
   end
 
+  def top_level_container_name_as_class_string
+    container = top_level_container_name.pluralize
+    container_sym = top_level_container_name.pluralize.to_sym
+    container_class = top_level_container_name.classify
+  end
+
   def render_partial_for(component,_opts={})
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
