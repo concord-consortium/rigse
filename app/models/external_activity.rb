@@ -103,9 +103,9 @@ class ExternalActivity < ActiveRecord::Base
 
   def url(learner = nil)
     uri = URI.parse(read_attribute(:url))
-    if learner && append_learner_id_to_url
-      lid = (uri.query ? '&' : '') + "learner=#{learner.id}"
-      uri.query = "#{uri.query}#{lid}"
+    if learner
+      append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
+      append_query(uri, "c=#{learner.id}") if append_survey_monkey_uid
     end
     return uri.to_sc
   end
@@ -131,5 +131,12 @@ class ExternalActivity < ActiveRecord::Base
   
   def run_format
     :run_external_html
+  end
+
+  private
+
+  def append_query(uri, query_str)
+    queries = [uri.query, query_str]
+    uri.query = queries.compact.join("&")
   end
 end

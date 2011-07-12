@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110708151553) do
+ActiveRecord::Schema.define(:version => 20110712144435) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -590,6 +590,7 @@ ActiveRecord::Schema.define(:version => 20110708151553) do
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
     t.boolean  "popup"
+    t.boolean  "append_survey_monkey_uid"
   end
 
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"

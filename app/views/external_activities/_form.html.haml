@@ -14,6 +14,9 @@
     .config
       = f.check_box :append_learner_id_to_url
       Append the learner id to the url (e.g. http://foo.com/bar?learner=4)
+    .config
+      = f.check_box :append_survey_monkey_uid
+      Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
   - field_set_tag 'Save Path' do
     = f.text_field :save_path
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
