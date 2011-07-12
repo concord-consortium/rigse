@@ -589,6 +589,7 @@ ActiveRecord::Schema.define(:version => 20110708151553) do
     t.integer  "offerings_count",    :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
+    t.boolean  "popup"
   end
 
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
