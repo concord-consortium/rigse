@@ -161,7 +161,7 @@ end
 #end
 
 
-Then /^There should be (\d+) (investigations|assignables) displayed$/ do |count|
+Then /^There should be (\d+) (?:investigations|assignables) displayed$/ do |count|
   within("#offering_list") do
     page.all(".runnable").size.should == count.to_i
   end

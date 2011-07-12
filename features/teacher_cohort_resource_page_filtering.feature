@@ -37,7 +37,6 @@ Feature: Resource pages can be filtered by cohort
       | a experiment a | author   | experiment          |
       | a both a       | author   | control, experiment |
 
-  @selenium
   Scenario: Resource Pages are visible for the control cohort
     Given I login with username: teacher password: teacher
     When I am on the class page for "My Class"
@@ -58,7 +57,6 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: b experiment b |
       | Resource Page: a experiment a |
 
-  @selenium
   Scenario: Resource Pages are visible for the experiment cohort
     Given I login with username: bteacher password: teacher
     When I am on the class page for "My b Class"
@@ -79,7 +77,6 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: control     |
       | Resource Page: a control a |
 
-  @selenium
   Scenario: Resource Pages are visible for someone in both cohorts
     Given I login with username: cteacher password: teacher
     When I am on the class page for "My c Class"
@@ -98,7 +95,6 @@ Feature: Resource pages can be filtered by cohort
       | Resource Page: a experiment a |
       | Resource Page: a both a       |
 
-  @selenium
   Scenario: Resource Pages that are untagged are visible to a teacher in neithers
     Given I login with username: dteacher password: teacher
     When I am on the class page for "My d Class"

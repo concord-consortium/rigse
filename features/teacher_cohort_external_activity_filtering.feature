@@ -37,7 +37,6 @@ Feature: External activities can be filtered by cohort
       | a experiment a | author   | experiment          |
       | a both a       | author   | control, experiment |
 
-  @selenium
   Scenario: External Activities are visible for the control cohort
     Given I login with username: teacher password: teacher
     When I am on the class page for "My Class"
@@ -58,7 +57,6 @@ Feature: External activities can be filtered by cohort
       | External Activity: b experiment b |
       | External Activity: a experiment a |
 
-  @selenium
   Scenario: External Activities are visible for the experiment cohort
     Given I login with username: bteacher password: teacher
     When I am on the class page for "My b Class"
@@ -79,7 +77,6 @@ Feature: External activities can be filtered by cohort
       | External Activity: control     |
       | External Activity: a control a |
 
-  @selenium
   Scenario: External Activities are visible for someone in both cohorts
     Given I login with username: cteacher password: teacher
     When I am on the class page for "My c Class"
@@ -98,7 +95,6 @@ Feature: External activities can be filtered by cohort
       | External Activity: a experiment a |
       | External Activity: a both a       |
 
-  @selenium
   Scenario: External Activities that are untagged are visible to a teacher in neither cohort
     Given I login with username: dteacher password: teacher
     When I am on the class page for "My d Class"
