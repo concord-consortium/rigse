@@ -105,7 +105,7 @@ class ExternalActivity < ActiveRecord::Base
     uri = URI.parse(read_attribute(:url))
     if learner
       append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
-      append_query(uri, "c=#{learner.id}") if append_survey_monkey_uid
+      append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
     end
     return uri.to_sc
   end
