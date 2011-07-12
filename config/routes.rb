@@ -239,6 +239,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
+    admin.resources :tags
   end
 
   map.namespace(:maven_jnlp) do |maven_jnlp|

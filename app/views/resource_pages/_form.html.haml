@@ -20,6 +20,8 @@
 		%br/
 		= f.select :publication_status, ResourcePage.publication_states.map {|s| s.to_s}
 
+	= render :partial => 'shared/cohorts_edit', :locals => { :object => @resource_page }
+
 	%h2 Attachments
 	#attachments
 		= render :partial => @resource_page.attached_files

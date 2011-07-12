@@ -1,4 +1,4 @@
-Given /^the following resource pages exist:$/ do |table|
+Given /^the following resource page[s]? exist[s]?:$/ do |table|
   table.hashes.each do |hash|
     user_name = hash.delete('user')
     user = User.first(:conditions => { :login => user_name })

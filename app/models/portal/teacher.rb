@@ -2,6 +2,7 @@ class Portal::Teacher < ActiveRecord::Base
   set_table_name :portal_teachers
 
   acts_as_replicatable
+  acts_as_taggable_on :cohorts
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
   belongs_to :domain, :class_name => 'RiGse::Domain'
