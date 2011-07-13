@@ -4,12 +4,16 @@
     - field_set_tag 'Title' do
       = f.text_field :title, :size => 60
 
-    - field_set_tag 'Major Options' do
+    - field_set_tag 'Digital Display Options' do
       %ul.menu_h
         %li
           Show digital display only (no graph):
           = f.check_box :is_digital_display
+        %li
+          size:
+          = f.select(:dd_font_size, dd_font_size_select)
 
+    - field_set_tag 'Major Options' do
       %ul.menu_h
         %li
           Probe type: 
