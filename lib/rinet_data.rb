@@ -72,7 +72,7 @@ class RinetData
   attr_reader :parsed_data
   attr_accessor :log
 
-  @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
+  @@csv_files = %w{students staff courses enrollments staff_assignments }
 
   def initialize(options= {})
     @rinet_data_config = YAML.load_file("#{::Rails.root.to_s}/config/rinet_data.yml")[::Rails.env].symbolize_keys
@@ -229,8 +229,9 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def join_data
-    join_students_sakai
-    join_staff_sakai
+    puts "Skipping Sakai Steps"
+    #  join_students_sakai
+    #  join_staff_sakai
   end
 
   def update_models
@@ -316,50 +317,6 @@ Logged to: #{File.expand_path(@log_path)}
     end
   end
 
-  def join_students_sakai
-    student_sakai_map = {}
-    @parsed_data[:student_sakai].each do |auth_tokens|
-      student_sakai_map[auth_tokens[0]] = auth_tokens[1]
-    end
-
-    new_students = @parsed_data[:students]
-    @collection_length = new_students.length
-    @collection_index = 0
-    log_message("\n\nnprocessing: #{ @collection_length} student sakai associations: ")
-    new_students.each do |student|
-      log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['student-sakai associations', 6, 24]})
-      found = student_sakai_map[student[:SASID]]
-      if (found)
-        student[:login] = found
-      else
-        log_message("\nstudent not found in mapping file #{student[:Firstname]} #{student[:Lastname]} (look for #{student[:SASID]}  in #{student[:District]}/current/student_sakai.csv )\n", {:log_level => :error})
-      end
-      @collection_index += 1
-    end
-  end
-
-  def join_staff_sakai
-    staff_sakai_map = {}
-    @parsed_data[:staff_sakai].each do |auth_tokens|
-      staff_sakai_map[auth_tokens[0]] = auth_tokens[1]
-    end
-
-    new_teachers = @parsed_data[:staff]
-    @collection_length = new_teachers.length
-    @collection_index = 0
-    log_message("\n\nprocessing: #{ @collection_length} staff_member sakai associations: ")
-    new_teachers.each do |staff_member|
-      log_message("#{staff_member[:Lastname]}", {:log_level => :info, :info_in_columns => ['staff-sakai associations', 6, 24]})
-      found = staff_sakai_map[staff_member[:TeacherCertNum]]
-      if found
-        staff_member[:login] = found
-      else
-        log_message("\nteacher not found in mapping file #{staff_member[:Firstname]} #{staff_member[:Lastname]} (look for #{staff_member[:TeacherCertNum]} in #{staff_member[:District]}/current/staff_sakai.csv)\n", {:log_level => :error})
-      end
-      @collection_index += 1
-    end
-  end
-
   def school_for(row)
     ## try to find a cached AR entity for this school:
     found_school = @nces_schools[row[:SchoolNumber]]
@@ -419,99 +376,114 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
 
+  def firstname(row)
+    unless row[:firstname]
+      row[:firstname] = row[:Firstname].gsub(/\s+/, '')
+    end
+    return row[:firstname]
+  end
+
+  def lastname(row)
+    unless row[:lastname]
+      row[:lastname] = row[:Lastname].gsub(/\s+/, '')
+    end
+    return row[:lastname]
+  end
+  
+  def email(row)
+    if row[:email]
+      return row[:email]
+    end
+    if row[:EmailAddress] && row[:EmailAddress].length > 0
+      row[:email] = email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
+    else
+      login = User.suggest_login(firstname(row),lastname(row))
+      row[:email] = "#{login}@mailinator.com" 
+      # (temporary unique email address to pass valiadations)
+    end
+    return row[:email]
+  end
+
+  def find_user(row)
+    # first check by primary external id, then email address
+    external_id = row[:SASID] || row[:TeacherCertNum]
+    user = User.find_by_external_id(external_id) || User.find_by_email(email(row))
+    return user
+  end
+
+  def user_params_from_row(row)
+    rites_user_params = {
+      :first_name => firstname(row),
+      :last_name  => lastname(row),
+      :email => email(row)
+    }
+  end
+
+  def create_user(row)
+    password = row[:Password] || row[:Birthdate],
+    login = User.suggest_login(row[:Firstname],row[:Lastname])
+    # Some teachers had small < 6 char passwords, which will fail validation
+    while password.length < 6
+      password = password << "x"
+    end
+    create_params = {
+      :login    => login,
+      :password => password,
+      :password_confirmation => password
+    }
+    params = user_params_from_row(row).merge(create_params)
+    User.create(params)
+  end
+
   def create_or_update_user(row)
     # try to cache the data here in memory:
     unless row[:rites_user_id]
-      if row[:login]
-        if row[:EmailAddress] && row[:EmailAddress].length > 0
-          email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
+      begin
+        user = find_user(row) || create_user(row)
+        if user
+          user.update_attributes!(user_params_from_row(row))
         end
-        begin
-          sakai_login = row[:login]
-          rites_login = ExternalUserDomain.external_login_to_login(sakai_login)
-          password = row[:Password] || row[:Birthdate]
-          # crazy hack for password validation checks. (some teachers had small < 6 char passwords)
-          while password.length < 6
-            password = password << "x"
-          end
-          email = row[:email] ||
-            "#{rites_login}@mailinator.com" # (temporary unique email address to pass valiadations)
-
-          rites_user_params = {
-            :login  => rites_login,
-            :password => row[:Password] || row[:Birthdate],
-            :password_confirmation => row[:Password] || row[:Birthdate],
-            :first_name => row[:Firstname].gsub(/\s+/, ' '),
-            :last_name  => row[:Lastname],
-            :email => email
-          }
-          if User.login_exists?(rites_login)
-            user = User.find_by_login(rites_login)
-            user.update_attributes!(rites_user_params)
-          else
-            user = User.create!(rites_user_params)
-          end
-        rescue ExternalUserDomain::ExternalUserDomainError => e
-          message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
-          log_message(message, options={:log_level => :error})
-          return nil
-        rescue ActiveRecord::ActiveRecordError => e
-          message = "\nCould not create user: #{rites_user_params[:login]} because of field-validation errors:\n#{$!}\nexternal user details: #{rites_user_params.inspect}\n"
-          log_message(message, options={:log_level => :error})
-          return nil
-        end
-        row[:rites_user_id] = user.id
-        user.unsuspend! if user.state == 'suspended'
-        unless user.state == 'active'
-          user.register!
-          user.activate!
-        end
-        user.roles.clear
-      else
-        begin
-          user = nil
-          message = "\n"
-          beforeline = ""
-          if row[:SASID]
-            message << "No login found for #{row[:Firstname]} #{row[:Lastname]}, check student_sakai.csv for missing SASID: #{row[:SASID]}"
-            beforeline = "\n"
-          end
-          if row[:TeacherCertNum]
-            message << "#{beforeline}No login found for #{row[:Firstname]} #{row[:Lastname]}, check staff_sakai.csv for missing TeacherCertNum: #{row[:TeacherCertNum]}"
-          end
-          message << "\n"
-          if message.strip.empty?
-            raise(RinetData::RinetDataError, "no SASID and NO TeacherCertNum for row: #{row.join(', ')}\n")
-          else
-            log_message(message, {:log_level => :warn})
-          end
-        rescue RinetData::RinetDataError => e
-          log_message("\n#{e.message}\b", {:log_level => :error})
-        end
+      rescue ExternalUserDomain::ExternalUserDomainError => e
+        message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
+        log_message(message, options={:log_level => :error})
+        return nil
+      rescue ActiveRecord::ActiveRecordError => e
+        message = "\nCould not create user: #{row.inspect} because of field-validation errors:\n#{$!}\n"
+        log_message(message, options={:log_level => :error})
+        return nil
       end
+      row[:rites_user_id] = user.id
+      user.unsuspend! if user.state == 'suspended'
+      if user.state == 'pending'
+        user.activate!
+      elsif user.state != 'active'
+        user.register!
+        user.activate!
+      end
+      user.roles.clear
     end
     user
   end
 
-  def block_update_teachers
-    @new_teachers = @existing_teachers = []
-    @parsed_data[:staff].each do |row|
-      if ExternalUserDomain.login_does_not_exist?(row[:login])
-        @new_teachers << row
-      else
-        @existing_teachers << row
-      end
-    end
+  #
+  # NP: July 2011, doesn't seem like this method is called. 
+  # def block_update_teachers
+  #   @new_teachers = @existing_teachers = []
+  #   @parsed_data[:staff].each do |row|
+  #     if find_user(row)
+  #       @existing_teachers << row
+  #     else
+  #       @new_teachers << row
+  #     end
+  #   end
+  #   @existing_teachers, @new_teachers = @parsed_data[:staff].partition   {|row| find_user(row) }
 
-    @new_teachers = @parsed_data[:staff].select      {|row| ExternalUserDomain.login_does_not_exist?(row[:login])}
-    @existing_teachers = @parsed_data[:staff].select {|row| ExternalUserDomain.login_exists?(row[:login])}
-
-    puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
-    new_teachers.each do |teacher|
-      log_message("processing teacher #{teacher[:Lastname]}", '')
-      create_or_update_teacher(teacher)
-    end
-  end
+  #   puts "\n\nprocessing: #{new_teachers.length} teachers " if @verbose
+  #   new_teachers.each do |teacher|
+  #     log_message("processing teacher #{teacher[:Lastname]}", '')
+  #     create_or_update_teacher(teacher)
+  #   end
+  # end
 
   def update_teachers
     new_teachers = @parsed_data[:staff]
@@ -824,14 +796,15 @@ Logged to: #{File.expand_path(@log_path)}
   # TODO: Some report method
   def verify_users
     report "Imported ActiveRecord entities by district:"
-    @districts.each do |district|
-      begin
-        verify_user_imported(district)
-      rescue Exception => e
-        log_message("missing district data for: #{district}",{:log_level => 'error'})
-        log_message("#{e.message}",{:log_level => 'error'})
-      end
-    end
+    puts "skipping verification!"
+    # @districts.each do |district|
+    #   begin
+    #     verify_user_imported(district)
+    #   rescue Exception => e
+    #     log_message("missing district data for: #{district}",{:log_level => 'error'})
+    #     log_message("#{e.message}",{:log_level => 'error'})
+    #   end
+    # end
   end
 
   #
@@ -841,7 +814,7 @@ Logged to: #{File.expand_path(@log_path)}
   # => district 16: total import records: 2631, imported to AR: 1706, missing: 925
   def verify_user_imported(district=@districts.first)
     ["student","staff"].each do |type|
-      file_name = "#{@district_data_root_dir}/#{district}/current/#{type}_sakai.csv"
+      file_name = "#{@district_data_root_dir}/#{district}/current/#{type}.csv"
       missing = 0; found = 0; total = 0;
       open(file_name) do |fd|
         fd.each do |line|
