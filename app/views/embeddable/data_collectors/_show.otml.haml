@@ -9,7 +9,8 @@
 
 - if data_collector.is_digital_display
   %OTDigitalDisplay{ :local_id                   => ot_local_id_for(data_collector),
-                     :name                       => h(data_collector.name) }
+                     :name                       => h(data_collector.name),
+                     :fontSize                   => data_collector.dd_font_size}
     %dataProducer
       = render :partial => "embeddable/data_collectors/data_producer", :locals => { :data_collector => data_collector }
     %dataStore
