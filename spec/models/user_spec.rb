@@ -302,6 +302,25 @@ describe User do
     end
   end
 
+  describe "checking for logins" do
+    describe "when available" do
+      before(:each) do
+        User.should_receive(:login_exists?).with("hpotter").and_return(false)
+      end
+      it "should return the first initial and last name" do
+        User.suggest_login('Harry','Potter').should == "hpotter"
+      end
+    end
+    describe "when not available" do
+      it "should append a counter number to the default login" do
+        User.should_receive(:login_exists?).once.with("hpotter").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter1").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter2").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter3").ordered.and_return(false)
+        User.suggest_login('Harry','Potter').should == "hpotter3"
+      end
+    end
+  end
 protected
   def create_user(options = {})
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
