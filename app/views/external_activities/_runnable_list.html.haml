@@ -22,7 +22,7 @@
             = external_activity.user.name
         %div.action_menu_header_right
           %ul.menu
-            - unless(current_user.anonymous?)
+            - if current_user.has_role? "author"
               %li.menu=link_to 'duplicate', duplicate_external_activity_url(external_activity)
             - if (external_activity.changeable?(current_user))
               %li.menu=link_to 'edit', edit_external_activity_url(external_activity)
