@@ -7,6 +7,8 @@
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
   - field_set_tag 'External URL' do
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+  - field_set_tag 'Publication status' do
+    = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
   - field_set_tag 'Extra Options' do
     .config
       = f.check_box :popup
