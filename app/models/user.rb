@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
     end
 
     def suggest_login(first,last)
-      base = "#{first.first}#{last}".downcase
+      base = "#{first.first}#{last}".downcase.gsub(/[^a-z]/, "_")
       suggestion = base
       count = 0
       while(login_exists?(suggestion)) 
