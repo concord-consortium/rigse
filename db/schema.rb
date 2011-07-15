@@ -58,13 +58,6 @@ ActiveRecord::Schema.define(:version => 20110713185042) do
     t.boolean  "use_bitmap_snapshots",                         :default => false
   end
 
-  create_table "admin_tags", :force => true do |t|
-    t.string   "scope"
-    t.string   "tag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "attached_files", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -590,11 +583,8 @@ ActiveRecord::Schema.define(:version => 20110713185042) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",          :default => 0
+    t.integer  "offerings_count",    :default => 0
     t.string   "save_path"
-    t.boolean  "append_learner_id_to_url"
-    t.boolean  "popup"
-    t.boolean  "append_survey_monkey_uid"
   end
 
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
@@ -1846,21 +1836,6 @@ ActiveRecord::Schema.define(:version => 20110713185042) do
     t.boolean  "ignore"
   end
 
-  create_table "report_jobs", :force => true do |t|
-    t.datetime "requested_at"
-    t.datetime "started_at"
-    t.datetime "completed_at"
-    t.string   "url"
-    t.text     "error_message"
-    t.string   "status"
-    t.integer  "background_job_id"
-    t.integer  "owner_id"
-    t.string   "reportable_type"
-    t.integer  "reportable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "resource_pages", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -2110,23 +2085,6 @@ ActiveRecord::Schema.define(:version => 20110713185042) do
   end
 
   add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
-
-  create_table "taggings", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "taggable_id"
-    t.integer  "tagger_id"
-    t.string   "tagger_type"
-    t.string   "taggable_type"
-    t.string   "context"
-    t.datetime "created_at"
-  end
-
-  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
-
-  create_table "tags", :force => true do |t|
-    t.string "name"
-  end
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"
