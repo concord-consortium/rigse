@@ -50,6 +50,7 @@
 require 'fileutils'
 require 'arrayfields'
 
+
 class RinetData
 
   class RinetDataError < ArgumentError
@@ -74,6 +75,7 @@ class RinetData
   @@csv_files = %w{students staff courses enrollments staff_assignments }
 
   def initialize(options= {})
+    User.delete_observers
     @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
@@ -83,13 +85,13 @@ class RinetData
       :districts => @rinet_data_config[:districts],
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :log_level => Logger::WARN,
-      :drop_enrollments => false
+      :drop_enrollments => false,
+      :default_school => false
     }
 
     @rinet_data_options = defaults.merge(options)
     @rinet_data_options[:log_directory] ||= @rinet_data_options[:district_data_root_dir]
     @verbose = @rinet_data_options[:verbose]
-    # debugger
     @districts = @rinet_data_options[:districts]
     @district_data_root_dir = @rinet_data_options[:district_data_root_dir]
     @log_directory = @rinet_data_options[:log_directory]
@@ -99,7 +101,10 @@ class RinetData
     @errors = {:districts => {}}
     @last_log_level = nil
     @last_log_column = 0
-
+    @created_users = []
+    @updated_users = []
+    @error_users = []
+    @start_time = Time.now
     FileUtils.mkdir_p @log_directory
     @log = Logger.new(@log_path,'daily')
     @log.level = @rinet_data_options[:log_level]
@@ -146,7 +151,6 @@ Logging to: #{File.expand_path(@log_path)}
 
   def run_scheduled_job(opts = {})
     # disable observable behavior on useres for import task
-    User.delete_observers
 
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
@@ -238,6 +242,14 @@ Logged to: #{File.expand_path(@log_path)}
     update_students
     update_courses
     update_classes
+    puts "=== Created Users: #{@created_users.length} ==="
+    puts user_report(@created_users)
+    puts "=== Modifed Users: #{@updated_users.length} ==="
+    puts user_report(@updated_users)
+    puts "=== Errors:        #{@error_users.length} ==="
+    @error_users.each do |row|
+      puts row.inspect
+    end
   end
 
   def get_csv_files
@@ -272,7 +284,6 @@ Logged to: #{File.expand_path(@log_path)}
         # raise RinetGetFileError
       end
     end
-    # debugger
     current_path = "#{@district_data_root_dir}/#{district}/current"
     FileUtils.rm_f(current_path)
     FileUtils.ln_s(local_district_path, current_path, :force => true)
@@ -331,6 +342,26 @@ Logged to: #{File.expand_path(@log_path)}
       school = Portal::School.find_or_create_by_nces_school(nces_school)
       # cache the result
       @nces_schools[row[:SchoolNumber]] = school
+
+    # initialize RinetData with :default_school => "My School Name" 
+    # to force non-matched schools into a default school.
+    elsif @rinet_data_options[:default_school]
+      name = @rinet_data_options[:default_school]
+      log_message("using #{name} for: #{row[:SchoolNumber]} as specified in options.",{:log_level => :warn})
+      school = Portal::School.find_by_name(name)
+      if (school.nil?)
+        log_message("Creating school #{name}.",{:log_level => :warn})
+        school = Portal::School.create(:name => name)
+      end
+      if (school.district.nil?)
+        log_message("Creating district #{name}.",{:log_level => :warn})
+        school.district = Portal::District.create(:name => name)
+        school.save!
+        school.reload
+        if (school.district.nil?)
+          throw "couldn't create district #{name} for school #{name}!"
+        end
+      end
     else
       message = <<-HEREDOC
       could not find school for: #{row[:SchoolNumber]}
@@ -377,14 +408,14 @@ Logged to: #{File.expand_path(@log_path)}
 
   def firstname(row)
     unless row[:firstname]
-      row[:firstname] = row[:Firstname].gsub(/\s+/, '')
+      row[:firstname] = row[:Firstname] = row[:Firstname].strip
     end
     return row[:firstname]
   end
 
   def lastname(row)
     unless row[:lastname]
-      row[:lastname] = row[:Lastname].gsub(/\s+/, '')
+      row[:lastname] = row[:Lastname] = row[:Lastname].strip
     end
     return row[:lastname]
   end
@@ -419,7 +450,7 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def create_user(row)
-    password = row[:Password] || row[:Birthdate],
+    password = row[:Password] || row[:Birthdate]
     login = User.suggest_login(row[:Firstname],row[:Lastname])
     # Some teachers had small < 6 char passwords, which will fail validation
     while password.length < 6
@@ -442,22 +473,28 @@ Logged to: #{File.expand_path(@log_path)}
         if user
           user.update_attributes!(user_params_from_row(row))
         end
+        push_user_change(user,row)
       rescue ExternalUserDomain::ExternalUserDomainError => e
         message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
         log_message(message, options={:log_level => :error})
+        push_error_row(row)
         return nil
       rescue ActiveRecord::ActiveRecordError => e
         message = "\nCould not create user: #{row.inspect} because of field-validation errors:\n#{$!}\n"
         log_message(message, options={:log_level => :error})
+        push_error_row(row)
         return nil
       end
       row[:rites_user_id] = user.id
-      user.unsuspend! if user.state == 'suspended'
-      if user.state == 'pending'
-        user.activate!
-      elsif user.state != 'active'
-        user.register!
-        user.activate!
+      # user.unsuspend! if user.state == 'suspended'
+      # if user.state == 'pending'
+      #   user.activate!
+      # elsif user.state != 'active'
+      #   user.register!
+      #   user.activate!
+      # end
+      if user.state != 'active'
+        user.state = 'active'
       end
       user.roles.clear
     end
@@ -644,10 +681,10 @@ Logged to: #{File.expand_path(@log_path)}
 
   def create_or_update_class(member_relation_row)
     # use course hashmap to find our course
-    # debugger
     portal_course = cache_course_ar_map(member_relation_row[:CourseNumber],member_relation_row[:SchoolNumber])
     # unless portal_course is a Portal::Course
     unless portal_course.class == Portal::Course
+      debugger
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
@@ -837,6 +874,9 @@ Logged to: #{File.expand_path(@log_path)}
     unless (course_number && school_id)
       raise RinetDataError("must supply a course_number and a school")
     end
+    # TODO NP: sometimes we get keys which are strings. Force them to be trimmed
+    course_number.strip! if course_number.respond_to?(:strip!)
+    school_id.strip! if school_id.respond_to?(:strip!)
     unless @course_active_record_map[course_number]
       @course_active_record_map[course_number]={}
     end
@@ -846,4 +886,45 @@ Logged to: #{File.expand_path(@log_path)}
     value = @course_active_record_map[course_number][school_id]
     return value
   end
+
+
+  def created_user(user)
+    return user.created_at > @start_time
+  end
+  def updated_user(user)
+    return user.updated_at > @start_time
+  end
+  def push_user_change(user,row)
+    role = user.portal_teacher ? "teacher" : "student"
+    data = [
+      user.last_name,
+      user.first_name,
+      user.email,
+      role,
+      user.login,
+      user.external_id,
+      user.created_at,
+      user.updated_at,
+      user.state
+    ]
+    if created_user(user)
+      @created_users.push(data)
+    elsif updated_user(user)
+      @updated_users.push(data)
+    end
+  end
+
+  def push_error_row(row)
+    @error_users.push(row)
+  end
+
+  def user_report(user_record_array)
+    return_string = ""
+    user_record_array.sort{|a,b| a[0] <=> a[0]}.each do |row|
+      return_string += row.join(", ")
+      return_string += "\n"
+    end
+    return return_string
+  end
+
 end
