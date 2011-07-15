@@ -109,6 +109,17 @@ class User < ActiveRecord::Base
       User.count(:conditions => "`login` = '#{login}'") == 0
     end
 
+    def suggest_login(first,last)
+      base = "#{first.first}#{last}".downcase.gsub(/[^a-z]/, "_")
+      suggestion = base
+      count = 0
+      while(login_exists?(suggestion)) 
+        count = count + 1
+        suggestion = "#{base}#{count}"
+      end
+      return suggestion
+    end
+
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
