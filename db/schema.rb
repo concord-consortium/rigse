@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110712211804) do
+ActiveRecord::Schema.define(:version => 20110715140638) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20110712211804) do
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
+    t.boolean  "teachers_can_author",                          :default => true
   end
 
   create_table "admin_tags", :force => true do |t|

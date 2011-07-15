@@ -54,6 +54,16 @@
                   - else
                     No
                 (This option insures that all labbook entries are treated like simple images.)
+              %li
+                Teachers can author:
+                - if admin_project.teachers_can_author?
+                  %b
+                    Yes
+                  (Teachers are considered authors by default.)
+                - else
+                  %b
+                    No
+                  (Teachers are not considered authors by default and can only author when given the "author" role.)
             - field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:

@@ -44,6 +44,12 @@
             = f.check_box :use_bitmap_snapshots
             %br
             (This option insures that all labbook entries are treated like simple images.)
+          %li
+            %b
+            = f.label :teachers_can_author, "Teachers can author:", :style => "display:inline;"
+            = f.check_box :teachers_can_author
+            %br
+            (This option changes whether or not teachers are considered authors by default.)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
