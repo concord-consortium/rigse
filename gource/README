@@ -24,7 +24,7 @@ From the root directory of this Rails application
 To interactively play with a gource visualization (hiding the directories in vendor and public/javascript/):
 
   $ gource --user-image-dir .git/avatar/ --highlight-all-users --file-filter 'vendor|public\/javascripts\/.+\/.+' \
-    --title 'Investigations: http://github.com/stepheneb/rigse' --seconds-per-day 2 --auto-skip-seconds 0.2 \
+    --title 'Investigations: http://github.com/concord-consortium/rigse' --seconds-per-day 2 --auto-skip-seconds 0.2 \
     --background 000000 --disable-bloom -1280x720
 
 See: http://github.com/acaudwell/Gource/blob/master/README for more information about these parameters and the commands available while the rendering is running.
@@ -32,7 +32,7 @@ See: http://github.com/acaudwell/Gource/blob/master/README for more information 
 Generating an mpeg4 video of the gource output (ffmpeg required):
 
   $ gource --user-image-dir .git/avatar/ --highlight-all-users --file-filter 'vendor|public\/javascripts\/.+\/.+' \
-    --title 'Investigations: http://github.com/stepheneb/rigse' --disable-progress  --seconds-per-day 2 \
+    --title 'Investigations: http://github.com/concord-consortium/rigse' --disable-progress  --seconds-per-day 2 \
     --auto-skip-seconds 0.2 --background 000000 --disable-bloom --multi-sampling   -1280x720 --stop-at-end \
     --output-ppm-stream - | ffmpeg -vpre libx264-default -y -b 3000K -r 60 -f image2pipe -vcodec ppm \
     -i - -vcodec libx264 gource/investigations.mp4

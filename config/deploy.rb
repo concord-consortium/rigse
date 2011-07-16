@@ -79,7 +79,7 @@ end
 set(:scm_passphrase) do
   Capistrano::CLI.password_prompt( "Enter your git password: ")
 end
-set :repository, "git://github.com/stepheneb/rigse.git"
+set :repository, "git://github.com/concord-consortium/rigse.git"
 set :deploy_via, :remote_cache
 
 #############################################################
@@ -565,7 +565,7 @@ namespace :convert do
 
   # seb: 20110126
   # See commit: Add "offerings_count" cache counter to runnables
-  # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
+  # https://github.com/concord-consortium/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
   desc "Recalculate the 'offerings_count' field for runnable objects"
   task :reset_offering_counts, :roles => :app do
     # remove investigation cache files
@@ -581,7 +581,7 @@ namespace :convert do
   end
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
-  # https://github.com/stepheneb/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
+  # https://github.com/concord-consortium/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
   desc "*** WARNING *** Delete all real districts, schools, teachers, students, offerings, etc except for the virtual site district and school"
   task :delete_all_real_schools, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && bundle exec rake RAILS_ENV=#{rails_env} app:schools:delete_all_real_schools --trace"
