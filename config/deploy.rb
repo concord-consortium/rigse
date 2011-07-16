@@ -586,6 +586,13 @@ namespace :convert do
   task :delete_all_real_schools, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && bundle exec rake RAILS_ENV=#{rails_env} app:schools:delete_all_real_schools --trace"
   end
+
+  # seb: 20110715
+  # moved repo to https://github.com/concord-consortium/rigse
+  desc "change git remote url for origin to git://github.com/concord-consortium/rigse.git"
+  task :change_git_origin_url_to_concord_consortium, :roles => :app do
+    run("cd #{shared_path}/cached-copy; git remote set-url origin git://github.com/concord-consortium/rigse.git")
+  end
 end
 
 #
