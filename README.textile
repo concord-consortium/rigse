@@ -37,11 +37,11 @@ the prefix of the names for the databases that will be created in mysql.
 
 If you are a committer in this repo:
 
-bc. git clone git@github.com:stepheneb/rigse.git xproject
+bc. git clone git@github.com:concord-consortium/rigse.git xproject
 
 If you are not a committer:
 
-bc. git clone git://github.com/stepheneb/rigse.git xproject
+bc. git clone git://github.com/concord-consortium/rigse.git xproject
 
 Change to the project directory:
 

@@ -101,7 +101,7 @@ module ApplicationHelper
       branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
-      link = "<a title='#{message}' href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
+      link = "<a title='#{message}' href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
       name = last_commit.author.name
       date = last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
       short_message = truncate(last_commit.message, :length => 54)
@@ -138,7 +138,7 @@ module ApplicationHelper
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
         list << content_tag('li') { branch }
-        list << content_tag('li') { "<a title='href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
+        list << content_tag('li') { "<a title='href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
         list << content_tag('li') { last_commit.author.name }
         list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
         list << content_tag('li') { truncate(message, :length => 70) }

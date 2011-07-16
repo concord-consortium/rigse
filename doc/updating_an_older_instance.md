@@ -11,7 +11,7 @@ I didn't have an account on http://xproject.dev.concord.org/ so I first register
 
 I cloned and setup a new instance of the rails-portal:
 
-    git clone git@github.com:stepheneb/rigse.git xproject-git
+    git clone git@github.com:concord-consortium/rigse.git xproject-git
     cd xproject-git
     git submodule update --init
 
@@ -56,7 +56,7 @@ OK, now I've got the master branch but I just downloaded a db schema that was cr
 Login to http://xproject.dev.concord.org/ as an admin and open the deploy link in the footer to see the github page with the commit that was last deployed. In this case it was by Charlie on June 25 2010.
 
     Changes for story 'Add Grade Selection field to 'adding a new class' window'
-    https://github.com/stepheneb/rigse/commit/c0b47dcccb405adca10b1800c35b4125fd322d64
+    https://github.com/concord-consortium/rigse/commit/c0b47dcccb405adca10b1800c35b4125fd322d64
 
 And that commit is the tip of the xproject-dev branch
 
