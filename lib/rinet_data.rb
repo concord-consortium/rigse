@@ -86,7 +86,7 @@ class RinetData
       :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :log_level => Logger::WARN,
       :drop_enrollments => false,
-      :default_school => false
+      :default_school => "Summer Courses 2011"
     }
 
     @rinet_data_options = defaults.merge(options)
@@ -253,6 +253,8 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def get_csv_files
+    log_message("*** Skipping download of csv files... FIXME rinet_data.rb")
+    return
     begin
       Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
         @districts.each do |district|
@@ -408,14 +410,20 @@ Logged to: #{File.expand_path(@log_path)}
 
   def firstname(row)
     unless row[:firstname]
-      row[:firstname] = row[:Firstname] = row[:Firstname].strip
+      row[:firstname] = row[:Firstname] = row[:Firstname].strip.gsub(/\222/,"'") # apostrophy in some weird encoding.
+      if (row[:firstname].empty?)
+        row[:firstname] = 'firstname'
+      end
     end
     return row[:firstname]
   end
 
   def lastname(row)
     unless row[:lastname]
-      row[:lastname] = row[:Lastname] = row[:Lastname].strip
+      row[:lastname] = row[:Lastname] = row[:Lastname].strip.gsub(/\222/,"'") # apostrophy in some weird encoding.
+      if (row[:lastname].empty?)
+        row[:lastname] = 'lastname'
+      end
     end
     return row[:lastname]
   end
@@ -434,10 +442,16 @@ Logged to: #{File.expand_path(@log_path)}
     return row[:email]
   end
 
+  def external_id(row)
+    unless row[:external_id]
+      row[:external_id] = row[:SASID] || row[:TeacherCertNum]
+    end
+    return row[:external_id]
+  end
+
   def find_user(row)
     # first check by primary external id, then email address
-    external_id = row[:SASID] || row[:TeacherCertNum]
-    user = User.find_by_external_id(external_id) || User.find_by_email(email(row))
+    user = User.find_by_external_id(external_id(row)) || User.find_by_email(email(row))
     return user
   end
 
@@ -445,7 +459,8 @@ Logged to: #{File.expand_path(@log_path)}
     rites_user_params = {
       :first_name => firstname(row),
       :last_name  => lastname(row),
-      :email => email(row)
+      :email => email(row),
+      :external_id => external_id(row)
     }
   end
 
@@ -684,7 +699,6 @@ Logged to: #{File.expand_path(@log_path)}
     portal_course = cache_course_ar_map(member_relation_row[:CourseNumber],member_relation_row[:SchoolNumber])
     # unless portal_course is a Portal::Course
     unless portal_course.class == Portal::Course
-      debugger
       log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
       return
     end
@@ -889,13 +903,14 @@ Logged to: #{File.expand_path(@log_path)}
 
 
   def created_user(user)
-    return user.created_at > @start_time
+    return user.valid? && user.created_at > @start_time
   end
   def updated_user(user)
-    return user.updated_at > @start_time
+    return user.valid? && user.updated_at > @start_time
   end
   def push_user_change(user,row)
-    role = user.portal_teacher ? "teacher" : "student"
+    role = user.portal_teacher ? "teacher" : "unknown"
+    role = user.portal_student ? "student" : "unknown"
     data = [
       user.last_name,
       user.first_name,
