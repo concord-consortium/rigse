@@ -71,3 +71,9 @@ local_files
 .bundle/
 public/sparks-content/
 public/stylesheets/*.css
+resources/rinet_test_data/01/test/users_created.csv
+resources/rinet_test_data/01/test/users_error.csv
+resources/rinet_test_data/01/test/users_updated.csv
+resources/rinet_test_data/02/test/users_created.csv
+resources/rinet_test_data/02/test/users_error.csv
+resources/rinet_test_data/02/test/users_updated.csv
