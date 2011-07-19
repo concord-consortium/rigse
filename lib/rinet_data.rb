@@ -67,7 +67,6 @@ class RinetData
   end
 
 
-
   include RinetCsvFields  # definitions for the fields we use when parsing.
   attr_reader :parsed_data
   attr_accessor :log
@@ -178,6 +177,7 @@ Logging to: #{File.expand_path(@log_path)}
 
           log_message "\n (updating models for district #{district}...)\n"
           update_models
+          import_report(district)
 
           district_summary = <<-HEREDOC
 
@@ -232,7 +232,7 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def join_data
-    puts "Skipping Sakai Steps"
+    log_message("Skipin Sakai table join..", {:log_level => 'info'})
     #  join_students_sakai
     #  join_staff_sakai
   end
@@ -242,14 +242,27 @@ Logged to: #{File.expand_path(@log_path)}
     update_students
     update_courses
     update_classes
-    puts "=== Created Users: #{@created_users.length} ==="
-    puts user_report(@created_users)
-    puts "=== Modifed Users: #{@updated_users.length} ==="
-    puts user_report(@updated_users)
-    puts "=== Errors:        #{@error_users.length} ==="
+  end
+
+  def import_report(district)
+    report_path = File.join(@log_directory, district, "current")
+    FileUtils.mkdir_p(report_path)
+    created_path = File.join(report_path, "users_created.csv")
+    updated_path = File.join(report_path, "users_updated.csv")
+    errors_pah   = File.join(report_path, "users_error.dump.rb")
+
+    data = user_report(@created_users)
+    File.open(created_path, 'w') {|f| f.write(data) }
+
+    data = user_report(@updated_users)
+    File.open(updated_path, 'w') {|f| f.write(data) }
+    
+    data = ""
     @error_users.each do |row|
-      puts row.inspect
+      data << row.inspect
+      data << "\n"
     end
+    File.open(errors_pah, 'w') {|f| f.write(data) }
   end
 
   def get_csv_files
@@ -511,7 +524,8 @@ Logged to: #{File.expand_path(@log_path)}
       if user.state != 'active'
         user.state = 'active'
       end
-      user.roles.clear
+      # TODO: Check this NP July 2011: Not sure why we would delete roles?
+      # user.roles.clear
     end
     user
   end
@@ -846,7 +860,7 @@ Logged to: #{File.expand_path(@log_path)}
   # TODO: Some report method
   def verify_users
     report "Imported ActiveRecord entities by district:"
-    puts "skipping verification!"
+    log_message("skipping verification", {:log_level => 'warn'})
     # @districts.each do |district|
     #   begin
     #     verify_user_imported(district)
