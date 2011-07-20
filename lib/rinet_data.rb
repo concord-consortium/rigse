@@ -862,7 +862,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def cache_course_ar_map(course_number,school_id,value=nil)
     unless (course_number && school_id)
-      raise RinetDataError("must supply a course_number and a school")
+      raise RinetDataError.new("must supply a course_number and a school")
     end
     unless @course_active_record_map[course_number]
       @course_active_record_map[course_number]={}
