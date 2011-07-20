@@ -523,6 +523,7 @@ Logged to: #{File.expand_path(@log_path)}
       # end
       if user.state != 'active'
         user.state = 'active'
+        user.save
       end
       # TODO: Check this NP July 2011: Not sure why we would delete roles?
       # user.roles.clear
