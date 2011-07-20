@@ -900,7 +900,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def cache_course_ar_map(course_number,school_id,value=nil)
     unless (course_number && school_id)
-      raise RinetDataError("must supply a course_number and a school")
+      raise RinetDataError.new("must supply a course_number and a school")
     end
     # TODO NP: sometimes we get keys which are strings. Force them to be trimmed
     course_number.strip! if course_number.respond_to?(:strip!)
