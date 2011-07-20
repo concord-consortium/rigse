@@ -642,6 +642,20 @@ namespace :installer do
 
 end
 
+namespace 'account_data' do
+  desc 'upload_csv_for_district: copy the local csv import files to remote for district (set district=whatever)'
+    task 'upload_csv_for_district' do
+      district = ENV['district']
+      if district
+        domain = ENV['domain'] || 'rinet_sakai'
+        district_root = File.join('rinet_data','districts',domain, 'csv')
+        from_dir = File.join('rinet_data','districts',domain, 'csv',district)
+        to_dir   = File.join(deploy_to,current_dir,'rinet_data','districts',domain, 'csv')
+        upload(from_dir, to_dir, :via => :scp, :recursive => true)
+      end
+    end
+  end
+
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'
 after 'deploy:update_code', 'deploy:shared_symlinks'
