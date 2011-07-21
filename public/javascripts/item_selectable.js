@@ -35,6 +35,16 @@ var item_select = function(event) {
     });
     selected.addClassName(selected_class);
     selected.removeClassName(unselected_class);
+    // add/remove class for parent LI too if one exists
+	if (selected.up('li')) {
+		selected.up('li').addClassName(selected_class);
+		selected.up('li').removeClassName(unselected_class);
+	}
+	// make sure child element's class changes too if LI itself is selected
+	if (selected.down('.item')) {
+		selected.down('.item').addClassName(selected_class);
+		selected.down('.item').removeClassName(unselected_class);
+	}
     rites_document.selected_type=type;
     rites_document.selected_id=id;
     if (rites_document.selected_type != last_rites_document.selected_type || 
@@ -50,6 +60,16 @@ var item_deselect = function() {
   $$("." + selected_class).each(function(element){
     element.removeClassName(selected_class);
     element.addClassName(unselected_class);
+    // add/remove class for parent LI too if one exists
+	if (element.up('li')) {
+		element.up('li').removeClassName(selected_class);
+		element.up('li').addClassName(unselected_class);
+	}
+	// make sure child element's class changes too if LI itself is selected
+	if (element.down('.item')) {
+		element.down('.item').addClassName(selected_class);
+		element.down('.item').removeClassName(unselected_class);
+	}
     rites_document.selected_type=null;
     rites_document.selected_id=null;
     rites_document.selected_name="unknown"

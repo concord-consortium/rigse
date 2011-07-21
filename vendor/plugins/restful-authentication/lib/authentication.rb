@@ -12,7 +12,7 @@ module Authentication
   self.name_regex        = /\A[^[:cntrl:]\\<>\/&]*\z/              # Unicode, permissive
   self.bad_name_message  = "avoid non-printing characters and \\&gt;&lt;&amp;/ please.".freeze
 
-  self.email_name_regex  = '[\w\.%\+\-]+'.freeze
+  self.email_name_regex  = '[\w\.%\+\-\']+'.freeze
   self.domain_head_regex = '(?:[A-Z0-9\-]+\.)+'.freeze
   self.domain_tld_regex  = '(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)'.freeze
   self.email_regex       = /\A#{email_name_regex}@#{domain_head_regex}#{domain_tld_regex}\z/i

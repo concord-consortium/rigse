@@ -1,8 +1,15 @@
-require "spec_helper"
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe PasswordsController do
   integrate_views
   
+  before(:each) do
+    # stub the current project because project_header uses it
+    controller.stub(:before_render) {
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+    }
+  end
+
   describe "Reset password by login" do
     before(:each) do
       @user = Factory.create(:user, :login => "forgetful_jones", :password => "password", :password_confirmation => "password", :email => "valid@test.com")

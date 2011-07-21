@@ -16,13 +16,13 @@
 
 #lead.project-header
   %h1{:class => current_theme}
-    %a{ :href => "/" }= "#{APP_CONFIG[:site_name]}"
+    %a{ :href => "/" }= "#{current_project.name}"
 
 #nav_top
   %span.hidden.doNotPrint
     Navigation:
   %ul.menu_h
     = render :partial => 'shared/main_nav_trail'
-  .menu_h_right
+  %ul.menu_h_right
     = render :partial => 'shared/admin_nav_trail'
 

@@ -109,6 +109,9 @@ require 'spec/support/controller_helper'
 include AuthenticatedSystem
 ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
 
+# so we can use things like dom_id_for
+include ApplicationHelper
+
 # Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
 # Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
 # Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
@@ -124,6 +127,15 @@ After do
     $rspec_mocks.verify_all
   ensure
     $rspec_mocks.reset_all
+  end
+end
+
+# this is to add backwards compatibility so the cucumber-rails code works with our current version
+# of capybara.  A better solution is to upgrade cucumber-rails but currently it doesn't support
+# our version of rails (2.3.11)
+class Capybara::Driver::RackTest::Node
+  def node
+    native
   end
 end
 

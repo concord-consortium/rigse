@@ -5,11 +5,14 @@
 # Make sure the secret is at least 30 characters and all random, 
 # no regular words or you'll be exposed to dictionary attacks.
 ActionController::Base.session = {
-  :key         => '_rites_portal_session',
-  :secret      => '924cdf373582bbc17ac32060921e6f028a996bb85bbb4b4d7d8cb8c98ef18615a793e676e511e0143708ee7c243c89605bcfdfaa339ed649e58e2fbd6498e117'
+  :key => '_bort_session',
+  :secret      => 'a3e2a51a371bb964a4250c21f8d083f9ddb224d455171dcba55518e74af43366e52e3f239773f90aed0ab6caf6554f051504ce7232599d066150dbabff0f1654',
+  # allow session to be loaded from params. This is used so java
+  # connections can use the same session, specifically the config file
+  :cookie_only => false 
 }
 
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rake db:sessions:create")
-# ActionController::Base.session_store = :active_record_store
+ActionController::Base.session_store = :active_record_store

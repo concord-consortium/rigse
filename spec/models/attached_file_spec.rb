@@ -1,9 +1,10 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe AttachedFile do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @attached_file = AttachedFile.new
     end
     

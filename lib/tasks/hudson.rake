@@ -15,8 +15,16 @@ namespace :hudson do
   end
 
   if defined? Cucumber
-    Cucumber::Rake::Task.new({:cucumber  => [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']}) do |t|
-      t.cucumber_opts = %{--profile default --tags ~@dialog  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+    task_dependencies = [:cucumber_report_setup, 'db:migrate', 'db:test:prepare']
+    opts = %{--profile default --tags ~@dialog  --format junit --out #{cucumber_report_path} --format html --out #{cucumber_report_path}report.html}
+    Cucumber::Rake::Task.new({:cucumber  => task_dependencies}) do |t|
+      t.cucumber_opts = opts
+    end
+    Cucumber::Rake::Task.new({:cucumber_selenium_only  => task_dependencies}) do |t|
+         t.cucumber_opts = opts + " --tags @selenium"
+    end
+    Cucumber::Rake::Task.new({:cucumber_skip_theme_todo  => task_dependencies}) do |t|
+      t.cucumber_opts = opts + " --tags ~@#{ENV['THEME']}-todo"
     end
   end
 

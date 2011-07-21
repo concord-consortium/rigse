@@ -67,6 +67,8 @@ class ExternalActivitiesController < ApplicationController
     @external_activities = ExternalActivity.search_list({
       :name => @name, 
       :description => @description, 
+      :include_drafts => @include_drafts,
+      :user => current_user,
       :paginate => true, 
       :page => pagination
     })
@@ -97,7 +99,7 @@ class ExternalActivitiesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-      format.run_external_html   { redirect_to(@external_activity.url, 'popup' => true) }
+      format.run_external_html   { redirect_to(@external_activity.url) }
       format.xml  { render :xml => @external_activity }
     end
   end
@@ -126,6 +128,12 @@ class ExternalActivitiesController < ApplicationController
   def create
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_user
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
@@ -144,6 +152,13 @@ class ExternalActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @external_activity = ExternalActivity.find(params[:id])
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+      @external_activity.save
+    end
+
     if request.xhr?
       if cancel || @external_activity.update_attributes(params[:external_activity])
         render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }
@@ -184,10 +199,13 @@ class ExternalActivitiesController < ApplicationController
   ##
   def duplicate
     @original = ExternalActivity.find(params['id'])
-    @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
     @external_activity.name = "copy of #{@external_activity.name}"
-    @external_activity.deep_set_user current_user
+    @external_activity.user = current_user
     @external_activity.save
+
+    (@external_activity.teacher_notes + @external_activity.author_notes).each {|tn| n.user = current_user; n.save }
+
     flash[:notice] ="Copied #{@original.name}"
     redirect_to url_for(@external_activity)
   end

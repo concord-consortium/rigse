@@ -6,14 +6,13 @@ Feature: A teacher creates a resource page
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: The teacher creates a resource page
     Given the following teachers exist:
       | login         | password        |
       | teacher       | teacher         |
     And I login with username: teacher password: teacher
     When I go to the resource pages page
-    And I follow "Create a new resource"
+    And I follow "create Resource Page"
     Then I should see "New Resource"
     When I fill in the following:
       | resource_page[name] | Test Page |
@@ -21,7 +20,6 @@ Feature: A teacher creates a resource page
     Then I should see "Resource Page was successfully created."
 
 
-  @selenium
   Scenario: The teacher can view public and draft resource pages, and only their private ones
     Given the following teachers exist:
       | login         | password        |
@@ -45,7 +43,6 @@ Feature: A teacher creates a resource page
     Then I should see "draft page A"
     And I should see "draft page B"
 
-  @selenium
   Scenario: The teacher can see their resource pages on the homepage
     Given the following teachers exist:
       | login         | password        |
@@ -61,24 +58,29 @@ Feature: A teacher creates a resource page
     And I should see "private page A"
     Then I should see "draft page A"
 
-  @selenium
   Scenario: The teacher can search for resource pages
     Given the following teachers exist:
       | login         | password        |
       | teacherA      | teacher         |
+      | teacherB      | teacher         |
     And the following resource pages exist:
       | name            | publication_status  | user      |
-      | Testing Page    | published           | teacherA  |
-      | Testing Page 2  | draft               | teacherA  |
+      | 1Testing Page   | published           | teacherA  |
+      | 2Testing Page   | draft               | teacherA  |
       | Demo Page       | published           | teacherA  |
+      | BTesting Page   | draft               | teacherB  |
+      | BDemo Page      | published           | teacherB  |
 
     And I login with username: teacherA password: teacher
     When I search for a resource page named "Testing"
-    Then I should see "Testing Page"
+    Then I should see "1Testing Page"
+    And I should see "2Testing Page"
     And I should not see "Demo Page"
-    And I should not see "Testing Page 2"
+    And I should not see "BDemo Page"
+    And I should not see "BTesting Page"
     When I search for a resource page including drafts named "Testing"
-    Then I should see "Testing Page"
-    And I should see "Testing Page 2"
+    Then I should see "1Testing Page"
+    And I should see "2Testing Page"
+    And I should see "BTesting Page"
     And I should not see "Demo Page"
-
+    And I should not see "BDemo Page"

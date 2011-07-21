@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe SessionsController do
 
   fixtures        :users
@@ -18,6 +17,7 @@ describe SessionsController do
     @user  = mock_user
     @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
+    controller.stub!(:cookies).and_return(@login_params)
   end
   
   describe "on successful login," do
@@ -141,7 +141,7 @@ describe SessionsController do
     end
       
     it "should not check for security questions if the user is not a student" do
-      @controller.stub!(:cookies).and_return({})
+      #@controller.stub!(:cookies).and_return({})
       @user.stub!(:remember_me) 
       @user.stub!(:refresh_token) 
       @user.stub!(:forget_me)

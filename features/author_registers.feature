@@ -1,3 +1,4 @@
+@wip
 Feature: An author registers to use the portal
 
   As a potential student
@@ -7,7 +8,6 @@ Feature: An author registers to use the portal
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @selenium
   Scenario: Anaonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
@@ -22,7 +22,7 @@ Feature: An author registers to use the portal
       | user_password_confirmation | password            |
 
     And I press "Sign up"
-    Then I should see " Thanks for signing up!"
+    Then I should see "Thanks for signing up!"
     And "example@example.com" should receive an email
     When I open the email
     Then I should see "Please activate your new account" in the email subject
@@ -53,3 +53,4 @@ Feature: An author registers to use the portal
 
     And I press "Sign up"
     Then I should see " Thanks for signing up!"
+    And I should not see "Sorry, there was an error creating your account"

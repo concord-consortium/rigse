@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/smartgraphs.dev.concord.org"
-set :branch, "smartgraphs-dev"
+set :branch, "master"
 
 #############################################################
 #  Servers

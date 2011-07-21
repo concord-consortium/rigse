@@ -228,4 +228,14 @@ HEREDOC
     return @reportable_elements
   end
 
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
+  end
+
 end

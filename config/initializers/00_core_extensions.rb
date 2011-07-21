@@ -61,3 +61,63 @@ module ActionView
   end
 end
 
+# Sproutcore wants urls with fragment then query, whereas default URI ouputs query then fragment
+module URI
+  class Generic
+    def to_sc
+      str = ''
+      if @scheme
+        str << @scheme
+        str << ':'
+      end
+
+      if @opaque
+        str << @opaque
+
+        if @fragment
+          str << '#'
+          str << @fragment
+        end
+      else
+        if @registry
+          str << @registry
+        else
+          if @host
+            str << '//'
+          end
+          if self.userinfo
+            str << self.userinfo
+            str << '@'
+          end
+          if @host
+            str << @host
+          end
+          if @port && @port != self.default_port
+            str << ':'
+            str << @port.to_s
+          end
+        end
+
+        str << sc_path_query
+      end
+
+      str
+    end
+
+    def sc_path_query
+      str = @path
+
+      if @fragment
+        str << '#'
+        str << @fragment
+      end
+
+      if @query
+        str += '?' + @query
+      end
+      str
+    end
+
+  end
+end
+

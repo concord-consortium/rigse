@@ -3,18 +3,23 @@ class UsersController < ApplicationController
   #access_rule 'admin', :only => [:index, :show, :new, :edit, :update, :destroy]
   #access_rule 'admin || manager || researcher', :only => [:index, :account_report]
   include RestrictedController
-  before_filter :manager,
+  before_filter :changeable_filter,
     :only => [
       :show,
       :edit,
       :update,
-      :destroy
     ]
+  before_filter :manager, :only => [:destroy]
   before_filter :manager_or_researcher,
     :only => [
       :index,
       :account_report
     ]
+
+  def changeable_filter
+    @user = User.find(params[:id])
+    redirect_home unless @user.changeable?(current_user)
+  end
 
   def index
     if params[:mine_only]
@@ -145,6 +150,14 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.update_attributes(params[:user])
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+
+          # set the cohort tags if we have a teacher
+          if @user.portal_teacher && params[:update_cohorts]
+            cohorts = params[:cohorts] ? params[:cohorts] : []
+            @user.portal_teacher.cohort_list = cohorts
+            @user.portal_teacher.save
+          end
+
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
@@ -260,7 +273,7 @@ class UsersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
 end

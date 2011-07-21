@@ -1,4 +1,4 @@
-Given /^the following resource pages exist:$/ do |table|
+Given /^the following resource page[s]? exist[s]?:$/ do |table|
   table.hashes.each do |hash|
     user_name = hash.delete('user')
     user = User.first(:conditions => { :login => user_name })
@@ -48,15 +48,6 @@ Given /^all resource pages are assigned to classes$/ do
       :clazz => clazzes.rand
     })
   end
-end
-
-When /^I assign the resource page "([^"]*)" to the class "([^"]*)"$/ do |page_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  resource_page = ResourcePage.find_by_name(page_name)
-  Factory.create(:portal_offering, {
-    :runnable => resource_page,
-    :clazz => clazz
-  })
 end
 
 When /^I open the accordion for the resource "([^"]*)"$/ do |resource_name|
