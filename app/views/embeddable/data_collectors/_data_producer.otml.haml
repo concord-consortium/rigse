@@ -16,8 +16,8 @@
           %OTZeroSensor{:sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action) }
 
 - otml_for_time_limit_filter = capture_haml do
-  - if (data_collector.calibration && (filter = data_collector.calibration.data_filter))
-    - haml_tag filter.otml_tag_symbol, {:sourceChannel => "1" } do
+  - if ((calibration = data_collector.calibration) && calibration.data_filter)
+    - haml_tag calibration.otml_filter_tag_symbol, calibration.otml_filter_tag_attributes.merge({:sourceChannel => "1" }) do
       %source
         = ot_sensor_data_proxy
   - else

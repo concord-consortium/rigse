@@ -15,8 +15,4 @@ class Probe::DataFilter < ActiveRecord::Base
       @@searchable_attributes
     end
   end
-
-  def otml_tag_symbol
-    self.otrunk_object_class.split(".")[-1].to_sym
-  end
 end
