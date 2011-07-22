@@ -53,6 +53,9 @@ group :development do
   gem "what_methods"
   gem "hirb"
   gem "ruby-debug",     :platforms => :mri_18
+  gem "awesome_print"
+  gem "interactive_editor"
+  gem "pry"
 end
 
 group :test do
