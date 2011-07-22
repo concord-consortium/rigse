@@ -1,4 +1,5 @@
-def find_or_create_offering(runnable,clazz,type="Investigation")
+def find_or_create_offering(runnable,clazz)
+    type = runnable.class.to_s
     create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
     offering = Portal::Offering.find(:first, :conditions=> create_hash)
     unless offering
@@ -6,6 +7,28 @@ def find_or_create_offering(runnable,clazz,type="Investigation")
       offering.save
     end
     offering
+end
+
+def login_as(username, password)
+  visit "/login"
+  within("#project-signin") do
+    fill_in("login", :with => username)
+    fill_in("password", :with => password)
+    click_button("Login")
+    @cuke_current_username = username
+    #click_button("Submit")
+  end
+end
+
+# scroll_into_view is a hack so an element is scrolled into view in selenium in IE
+# after the following change to selenium is released then scroll_into_view shouldn't be necessary anymore
+#  http://code.google.com/p/selenium/source/detail?r=11244
+#  http://code.google.com/p/selenium/issues/detail?id=848
+# if function is running outside of selenium it is basically a no op
+def scroll_into_view(selector)
+  el = find(selector)
+  # only do this if the native element is a selenium element
+  el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
 end
 
 Given /the following users[(?exist):\s]*$/i do |users_table|
@@ -29,6 +52,11 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
       # assume this user is already created...
     end
   end
+end
+
+Given /^(?:|I )login as an admin$/ do
+  admin = Factory.next(:admin_user)
+  login_as(admin.login, 'password')
 end
 
 Given /^there are (\d+) (.+)$/ do |number, model_name|
@@ -61,12 +89,17 @@ Then /^I should see the sites name$/ do
   end
 end
 
-When /^I debug$/ do
+When /^(?:|I )debug$/ do
   debugger
+  # this 0 is here so the debugger stop in a nice place instead of cucumber code
   0
 end
 
-When /^I wait "(.*)" seconds$/ do |seconds|
+When /^I wait "(.*)" second(?:|s)$/ do |seconds|
+  sleep(seconds.to_i)
+end
+
+When /^I wait (\d+) second(?:|s)$/ do |seconds|
   sleep(seconds.to_i)
 end
 
@@ -76,4 +109,9 @@ end
 
 Then /^the location should be "([^"]*)"$/ do |location|
   current_url.should == location
+end
+
+Then /^I should see the button "([^"]*)"$/ do |locator| 
+  msg = "no button '#{locator}' found"
+  find(:xpath, XPath::HTML.button(locator), :message => msg)
 end

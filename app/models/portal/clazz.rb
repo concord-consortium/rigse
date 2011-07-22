@@ -7,18 +7,19 @@ class Portal::Clazz < ActiveRecord::Base
   belongs_to :semester, :class_name => "Portal::Semester", :foreign_key => "semester_id"
   # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
 
-  has_many :offerings, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
+  has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id"
   has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :conditions => { :active => true }
 
   has_many :student_clazzes, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
 
-  has_many :teacher_clazzes, :class_name => "Portal::TeacherClazz", :foreign_key => "clazz_id"
+  has_many :teacher_clazzes, :dependent => :destroy, :class_name => "Portal::TeacherClazz", :foreign_key => "clazz_id"
   has_many :teachers, :through => :teacher_clazzes, :class_name => "Portal::Teacher"
 
-  has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
+  has_many :grade_levels, :dependent => :destroy, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
-
+  
+  before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
 
@@ -37,8 +38,6 @@ class Portal::Clazz < ActiveRecord::Base
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
 
-
-
   self.extend SearchableModel
 
   @@searchable_attributes = %w{name description}
@@ -49,7 +48,7 @@ class Portal::Clazz < ActiveRecord::Base
     end
 
     def find_or_create_default_class
-      clazz = find :all, :conditions => ['default_class = ?', true || 1]
+      clazz = find :first, :conditions => ['default_class = ?', true || 1]
       if clazz.blank?
         clazz = Portal::Clazz.create :name => "Default Class", :default_class => true, :class_word => "default"
       end
@@ -278,5 +277,9 @@ class Portal::Clazz < ActiveRecord::Base
 
   def refresh_saveable_response_objects
     self.offerings.each { |o| o.refresh_saveable_response_objects }
+  end
+  
+  def class_word_lowercase
+    self.class_word.downcase! if self.class_word
   end
 end

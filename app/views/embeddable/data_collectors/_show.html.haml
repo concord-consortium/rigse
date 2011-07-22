@@ -1,37 +1,41 @@
 %div{:id => dom_id_for(data_collector, :details), :class => 'content'}
   = wrap_edit_link_around_content(data_collector, options={:complete => mce_init_string}) do
-    %div{:id => dom_id_for(data_collector, :graph), :class => 'data_collector'}
-      :javascript
+    - if (data_collector.is_digital_display)
+      %div{:id => dom_id_for(data_collector, :graph), :class => 'digital_display', :style => "font-size:#{data_collector.dd_font_size}px;"}
+        23
+    - else
+      %div{:id => dom_id_for(data_collector, :graph), :class => 'data_collector'}
+        :javascript
 
-        #{generate_javascript_datastore(data_collector)}
+          #{generate_javascript_datastore(data_collector)}
 
-        Flotr.draw(
-          $('#{dom_id_for(data_collector, :graph)}'),
-          [ { 
-            data: default_data_#{data_collector.id},
-            label: '#{data_collector.y_axis_title }',
-            lines: {show: #{data_collector.connect_points}, fill: false},
-            points: {show: #{data_collector.draw_marks}}
-          } ],
-          { 
-            mouse:{
-                    track: #{data_collector.ruler_enabled},
-                    lineColor: 'purple',
-                    relative: true,
-                    position: 'ne',
-                    sensibility: 1, // => The smaller this value, the more precise you've to point
-                    trackDecimals: 2,
-                    trackFormatter: function(obj){ return 'x = ' + obj.x +', y = ' + obj.y; }
-                  },
-                  crosshair:{
-                    mode: 'xy'
-                  },
-            HtmlText: false,
-            legend: {show: true, max: #{data_collector.y_axis_max}},
-            title: '#{data_collector.title}',
-            xaxis: { min: #{data_collector.x_axis_min}, max: #{data_collector.x_axis_max}, 
-              title: '#{data_collector.x_axis_title }' },
-            yaxis: { min: #{data_collector.y_axis_min}, max: #{data_collector.y_axis_max}, 
-              title: '#{data_collector.y_axis_title }' }
-          }
-        );
+          Flotr.draw(
+            $('#{dom_id_for(data_collector, :graph)}'),
+            [ { 
+              data: default_data_#{data_collector.id},
+              label: '#{data_collector.y_axis_title }',
+              lines: {show: #{data_collector.connect_points}, fill: false},
+              points: {show: #{data_collector.draw_marks}}
+            } ],
+            { 
+              mouse:{
+                      track: #{data_collector.ruler_enabled},
+                      lineColor: 'purple',
+                      relative: true,
+                      position: 'ne',
+                      sensibility: 1, // => The smaller this value, the more precise you've to point
+                      trackDecimals: 2,
+                      trackFormatter: function(obj){ return 'x = ' + obj.x +', y = ' + obj.y; }
+                    },
+                    crosshair:{
+                      mode: 'xy'
+                    },
+              HtmlText: false,
+              legend: {show: true, max: #{data_collector.y_axis_max}},
+              title: '#{data_collector.title}',
+              xaxis: { min: #{data_collector.x_axis_min}, max: #{data_collector.x_axis_max}, 
+                title: '#{data_collector.x_axis_title }' },
+              yaxis: { min: #{data_collector.y_axis_min}, max: #{data_collector.y_axis_max}, 
+                title: '#{data_collector.y_axis_title }' }
+            }
+          );

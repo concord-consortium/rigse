@@ -4,11 +4,18 @@ class Portal::LearnersController < ApplicationController
   
   include RestrictedPortalController
   
-  before_filter :admin_or_config, :except => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report]
   before_filter :teacher_admin_or_config, :only => [:report, :open_response_report, :multiple_choice_report]
+  before_filter :learner_teacher_admin, :only => [:show]
   
   def current_clazz
     Portal::Learner.find(params[:id]).offering.clazz
+  end
+  
+  def learner_teacher_admin
+    redirect_home unless (Portal::Learner.find(params[:id]).student.user == current_user) || 
+      current_clazz.is_teacher?(current_user) ||
+      current_user.has_role?('admin')
   end
   
   public
@@ -76,12 +83,27 @@ class Portal::LearnersController < ApplicationController
     
     respond_to do |format|
       format.html # show.html.erb
-      format.config { render :partial => 'shared/learn', 
-        :locals => { :runnable => @portal_learner.offering.runnable, 
-                     :console_logger => @portal_learner.console_logger, 
-                     :bundle_logger => @portal_learner.bundle_logger,
-                     :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }            
-      
+      format.jnlp { render :partial => 'shared/learn',
+        :locals => { :runnable => @portal_learner.offering.runnable, :learner => @portal_learner } }
+      format.config { 
+        # if this isn't the learner then it is launched read only
+        properties = {}
+        if Portal::Learner.find(params[:id]).student.user == current_user
+          bundle_post_url = dataservice_bundle_logger_bundle_contents_url(@portal_learner.bundle_logger, :format => :bundle)
+        else
+          bundle_post_url = nil
+          properties['otrunk.view.user_data_warning'] = 'true'
+        end
+        render :partial => 'shared/sail',
+          :locals => { 
+            :otml_url => polymorphic_url(@portal_learner.offering.runnable, :format => :dynamic_otml),
+            :session_id => (params[:session] || request.env["rack.session.options"][:id]),
+            :console_post_url => dataservice_console_logger_console_contents_url(@portal_learner.console_logger, :format => :bundle),
+            :bundle_url => dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle),
+            :bundle_post_url => bundle_post_url,
+            :properties => properties
+          }
+      }
       format.xml  { render :xml => @portal_learner }
     end
   end

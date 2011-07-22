@@ -1,9 +1,47 @@
-# This is a slightly different method than the one in the authoring_steps.rb file
-# This one uses factories, whereas the other builds a valid Investigation from scratch
-Given /^the following investigations exist:$/ do |table|
+Given /^the following empty investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
     Factory.create(:investigation, hash.merge('user' => user))
+  end
+end
+
+Given /^the following simple investigations exist:$/ do |investigation_table|
+  investigation_table.hashes.each do |hash|
+    user = User.first(:conditions => { :login => hash.delete('user') })
+    hash[:user_id] = user.id
+    investigation = Investigation.create(hash)
+    activity = Activity.create(hash)
+    section = Section.create(hash)
+    page = Page.create(hash)
+    section.pages << page
+    activity.sections << section
+    investigation.activities << activity
+    investigation.save
+  end
+end
+
+#Table: | investigation | activity | section   | page   | multiple_choices |
+Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
+  investigation_table.hashes.each do |hash|
+    investigation = Investigation.find_or_create_by_name(hash['investigation'])
+    investigation.user = Factory(:user)
+    investigation.save
+    # ITSISU requires descriptions on activities
+    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    section = Section.find_or_create_by_name(hash['section'])
+    page = Page.find_or_create_by_name(hash['page'])
+    mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
+    mcs.each do |q|
+      q.pages << page
+    end
+    imgqs = hash['image_questions'].split(",").map{ |q| Embeddable::ImageQuestion.find_by_prompt(q.strip) }
+    imgqs.each do |q|
+      q.pages << page
+    end
+    page.save
+    section.pages << page
+    activity.sections << section
+    investigation.activities << activity
   end
 end
 
@@ -38,15 +76,6 @@ end
 
 When /^I show offerings count on the investigations page$/ do 
   visit "/investigations?include_usage_count=true"
-end
-
-When /^I assign the investigation "([^"]*)" to the class "([^"]*)"$/ do |investigation_name, class_name|
-  clazz = Portal::Clazz.find_by_name(class_name)
-  investigation = Investigation.find_by_name(investigation_name)
-  Factory.create(:portal_offering, {
-    :runnable => investigation,
-    :clazz => clazz
-  })
 end
 
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
@@ -132,15 +161,27 @@ end
 #end
 
 
-Then /^There should be (\d+) investigations displayed$/ do |count|
+Then /^There should be (\d+) (?:investigations|assignables) displayed$/ do |count|
   within("#offering_list") do
     page.all(".runnable").size.should == count.to_i
   end
 end
 
-Then /^"([^"]*)" should not be displayed in the investigations list$/ do |not_expected|
+Then /^"([^"]*)" should not be displayed in the (?:investigations|assignables) list$/ do |not_expected|
   within("#offering_list") do 
     page.should have_no_content(not_expected)
+  end
+end
+
+Then /the following should (not )?be displayed in the (?:investigations|assignables) list:$/ do |nomatch, table|
+  within('#assignable_list') do
+    table.hashes.each do |hash|
+      if nomatch == "not "
+        page.should have_no_content(hash[:name])
+      else
+        page.should have_content(hash[:name])
+      end
+    end
   end
 end
 
@@ -191,6 +232,31 @@ When /^I wait for all pending requests to complete/ do
   rescue Capybara::TimeoutError
     puts "PendingRequests was zero"
   end
-  page.wait_until { true == page.evaluate_script("PendingRequests == 0;")}
+  page.wait_until(5) { true == page.evaluate_script("PendingRequests == 0;")}
 end
 
+Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|
+  investigation = Investigation.find_by_name inv_name
+  investigation.should be
+end
+
+Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
+  investigation = Investigation.find_by_name inv_name
+  investigation.offerings_count.should == count.to_i
+end
+
+When /^I duplicate the investigation$/ do
+  # this requires a javascript enabled driver
+  # this simulates roughly what happens when the mouse is moved over the plus icon
+
+  # this first part is what happens in the onmouseover event on the gear icon
+  # it is necessary to call first because it positions the menu relative to the gear icon
+  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # aren't really moving the mouse.
+  page.execute_script("dropdown_for('button_actions_menu','actions_menu')")
+
+  # now that the menu is positioned we can just manually show it
+  page.execute_script("$('actions_menu').show()")
+  click_link("duplicate")
+  page.execute_script("$('actions_menu').hide()")
+end

@@ -6,9 +6,9 @@ class Portal::Offering < ActiveRecord::Base
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
 
-  has_one :report_embeddable_filter, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
+  has_one :report_embeddable_filter, :dependent => :destroy, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
 
-  has_many :learners, :class_name => "Portal::Learner", :foreign_key => "offering_id"
+  has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id"
 
   [:name, :description].each { |m| delegate m, :to => :runnable }
 
@@ -91,6 +91,9 @@ class Portal::Offering < ActiveRecord::Base
     learners.empty?
   end
 
+  def run_format
+    runnable.run_format
+  end
 
   # def saveable_count
   #   @saveable_count ||= begin

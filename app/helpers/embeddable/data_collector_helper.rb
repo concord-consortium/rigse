@@ -21,4 +21,10 @@ module Embeddable::DataCollectorHelper
     out << "$('#{unit_field_id}').value = probe_to_unit[value]; $('#{label_field_id}').value = probe_to_axis[value];"
     return out
   end
+
+  def dd_font_size_select
+    Embeddable::DataCollector.dd_font_sizes.keys.sort {|a,b| a.to_s <=> b.to_s }.map do |e|
+      [e, Embeddable::DataCollector.dd_font_sizes[e]]
+    end
+  end
 end

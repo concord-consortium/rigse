@@ -74,7 +74,7 @@ shared_examples_for 'an embeddable controller' do
           with_tag('security')
           with_tag('resources')
           with_tag('application-desc') do
-            with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, :session => @session_options[:id]))
+            with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id]))
           end
         end
       end
@@ -202,7 +202,7 @@ shared_examples_for 'an embeddable controller' do
             with_tag('security')
             with_tag('resources')
             with_tag('application-desc') do
-              with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, :session => @session_options[:id], :action => 'edit'))
+              with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id], :action => 'edit'))
             end
           end
         end

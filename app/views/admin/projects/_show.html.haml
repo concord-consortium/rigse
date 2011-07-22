@@ -38,13 +38,44 @@
                   - else
                     disabled.
                 (This option will allow students to register without a class word.)
-            
-          - field_set_tag 'Maven Jnlp' do
-            %p
-              Maven Jnlp Server: 
-              = admin_project.maven_jnlp_server.name
-              %ul.menu_h
-                -  maven_jnlp_info.each do |elem|
-                  %li= elem
-          - field_set_tag 'Project Description' do
-            %p= admin_project.description
+              %li
+                Grade Levels for Classes:
+                %b
+                  - if admin_project.enable_grade_levels?
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow teachers to select grade levels during class creation.)
+              %li
+                Use Bitmaps in Labbook Exclusively:
+                %b
+                  - if admin_project.use_bitmap_snapshots?
+                    Yes
+                  - else
+                    No
+                (This option insures that all labbook entries are treated like simple images.)
+              %li
+                Teachers can author:
+                - if admin_project.teachers_can_author?
+                  %b
+                    Yes
+                  (Teachers are considered authors by default.)
+                - else
+                  %b
+                    No
+                  (Teachers are not considered authors by default and can only author when given the "author" role.)
+            - field_set_tag 'Maven Jnlp' do
+              %p
+                Maven Jnlp Server:
+                - if admin_project.maven_jnlp_server
+                  = admin_project.maven_jnlp_server.name
+                  %ul.menu_h
+                    -  maven_jnlp_info.each do |elem|
+                      %li= elem
+                - else
+                  no server configured
+            - field_set_tag 'Project Description' do
+              %p= admin_project.description
+            - field_set_tag 'Home Page Content' do
+              %p= admin_project.home_page_content
+            = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

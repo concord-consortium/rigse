@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Clazz do
   describe "finding or creating clazzes based on course, section, and start" do
@@ -125,6 +125,20 @@ describe Portal::Clazz do
     end
     
     it "should require at least one teacher" do
+    end
+  end
+
+  describe ".default_class" do
+    it "should return a portal clazz with default_class true" do
+      default_class = Portal::Clazz.default_class
+      default_class.should be_an_instance_of Portal::Clazz
+      default_class.default_class.should be_true
+    end
+
+    it "should return the same portal clazz on second call" do
+      default_clazz = Portal::Clazz.default_class
+      default_clazz.should be_an_instance_of Portal::Clazz
+      Portal::Clazz.default_class.should == default_clazz
     end
   end
 end

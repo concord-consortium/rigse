@@ -22,6 +22,8 @@ body
   +main_font
   background:
     color: $xproject_light_brown
+  color: #333
+  line-height: 150%
   margin: 10px
     bottom: 0px
   background-position: right top
@@ -80,29 +82,37 @@ pre
 .wrapper
   border: 2px solid $xproject_dark_green
   background-color: white
+  border-radius: 0.5em
   -moz-border-radius: 0.5em
   -webkit-border-radius: 0.5em
 
 #wrapper
+  background-color: #fff
+  background-image: none !important
   +container
-  padding: 10px
+  padding: 10px 10px 0
   // that's the blueprint default...
+  
+#userlinks
+  background: #139B97
+  color: #fff
+  right: 15px
+  top: 15px
 
-#header
+//#header
+.project-header h1.genomedynamics
+  background: #139b97 url(/themes/genomedynamics/images/jackson-logo.gif) 10px center no-repeat
   +column(24, true)
-  padding: 0px
-  margin: 0px
-  height: auto
-  background-color: white
-  background-image: none
-  color: $xproject_brown
-  a
-    color: $xproject_dark_green
-    background-color: transparent
-    font-weight: bold
-  a:hover
-    color: $xproject_brown
-    background-color: white
+  padding: 0
+  margin: 0
+  height: 132px
+  color: #fff
+  -border-top-left-radius: 0.5em
+  -border-top-right-radius: 0.5em
+  -moz-border-radius-topleft: 0.5em
+  -moz-border-radius-topright: 0.5em
+  -webkit-border-top-left-radius: 0.5em
+  -webkit-border-top-right-radius: 0.5em
   .left_content
     +column(24, true)
     #xproject_nav
@@ -112,11 +122,15 @@ pre
     float: none
     clear: none
     img
+      border: solid 5px #fff
       float: left
       clear: none
+      margin-left: 10px
   .right_content
     +column(24, true)
+    padding-right: 10px
     text-align: right
+    width: 940px
 
 .nav_menu
   display: block
@@ -158,10 +172,21 @@ pre
   +column(24, true)
   +top_nav_colors
   overflow: hidden
-  padding: 0.5em 0px
+  padding: 0.5em 0 0
+  position: relative
   li.trail
     a
       color: black
+  ul.menu_h
+    left: 0
+    height: 26px
+    position: absolute
+    top: 9px
+  ul.menu_h_right
+    height: 26px
+    position: absolute
+    right: 0
+    top: 9px
 
 .main_content_colors
   +content_area_colors
@@ -192,26 +217,50 @@ pre
   +column($main_content_columns, true)
   min-height: 600px
   height: auto !important
+  h1
+    margin-bottom: 20px
+#primary h1
+  margin-bottom: 20px
 
 #footer
+  background-image: none
   +column(24, true)
   +bottom_nav_colors
-  padding: 0.5em 0px
-  margin: 0em
+  height: auto
+  min-height: 50px
+  padding: 6px 0
+  position: relative
+  margin: 10px 0 0
   -moz-border-radius-bottomright: 0.5em
   -webkit-border-bottom-right-radius: 0.5em
   -moz-border-radius-bottomleft: 0.5em
   -webkit-border-bottom-left-radius: 0.5em
-  #footer_left
-    +column(12)
-    a
-      color: black
-  #footer_right
-    text-align: right
-    +column(12, true)
-    float: right
+  p
+    font-family: arial, helvetica, sans-serif
+  .footer-inner
+    bottom: auto
+    left: 0
+    position: relative
+    .legal
+      background: #139b97
+      color: #fff
+      margin: 0
+      padding: 5px 0 0 10px
+      text-align: left
+    #footer_left
+      color: white
+      +column(12)
+      margin-left: 0
+      padding: 0 0 0 10px
+      a
+        color: white
+    #footer_right
+      text-align: right
+      +column(12, true)
+      float: right
 
 #under_footer
+  background: #fff
   +column(25, true)
   text-align: center
   padding: 2px 0px
@@ -279,12 +328,9 @@ ul.menu
   background-color: $teacher_only_color !important
 
 .legend
-  font-size: 0.8em
+  font-size: 0.95em
   letter-spacing: 0.1em
   color: $legend_color
-
-.component_title
-  font-size: 1em
 
 .in_place_editor_field
   display: inline
@@ -311,6 +357,13 @@ ul.menu
     opacity: 0.8
     &:hover
       opacity: 1
+    .component_title
+      font-size: 1em
+.action_menu .pagination
+  a
+    color: #fff !important
+.item .action_menu .action_menu_activity_title span, .item .action_menu .action_menu_activity_title span.component_title, .item .action_menu .action_menu_activity_options
+  font-size: 12px !important
 
 .item
   background-color: white
@@ -340,7 +393,7 @@ ul.menu
         color: $light_green
 
 .mceContentBody
-  font-size: 0.8em
+  font-size: 0.95em
   white-space: normal
   border:
     width: 0px
@@ -355,6 +408,7 @@ ul.menu
     background-color: transparent
 
 .content
+  color: #333
   font-size: 1em
   white-space: normal
   border:
@@ -443,7 +497,7 @@ li.tiny
     left: 0.5em
 
 .tiny
-  font-size: 0.8em
+  font-size: 0.95em
   p
     margin: 0.2em
 
@@ -619,14 +673,53 @@ input[type=password]
   display: block
   overflow: hidden
   width: 200px
+  
+#secondary
+  background: #eee
+  li a
+    background: #eee
 
 #clazzes_nav
-  ul
-    .create_link
-      background-color: #cccccc
-      border: 1px solid #444444
-      margin-left: -15px
-      text-align: center
-
+  width: 200px
+  .padded_content
+    width: 190px
+    ul
+      width: 190px
+      li
+        width: 190px
+        a
+          padding: 5px 20px
+          width: 150px
+      .create_link
+        margin-bottom: 20px
+        margin-left: -15px
+        text-align: center
 strong
-  color: #44badd
+  font-weight: bold
+  
+// custom form styles
+#content-upper
+  background: #fff
+.login-area fieldset
+  border: none
+.login-area h2
+  padding: 0 0 10px
+a.more, ul.more a
+  padding-right: 10px !important
+.col2 h3
+  letter-spacing: 1px
+
+#investigation_search_form
+  clear: both
+  
+// custom action menu styles
+.action_menu
+  background: #139b97
+  color: #fff
+  .action_menu_header_right a
+    color: #fff
+    font-weight: normal
+    
+// custom accordion styles
+.accordion_container .accordion_name
+  width: 80% !important

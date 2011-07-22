@@ -1,12 +1,17 @@
-require 'spec_helper'
-#include ApplicationHelper
+require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelper
 
 describe InvestigationsController do
   integrate_views
 
   before(:each) do
+    @current_project = mock(
+      :name => "test project",
+      :using_custom_css? => false,
+      :use_bitmap_snapshots? => false)
+    Admin::Project.stub!(:default_project).and_return(@current_project)
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
+      response.template.stub_chain(:current_project).and_return(@current_project);
     }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
@@ -40,7 +45,6 @@ describe InvestigationsController do
     #@response.body.should_not include(duplicate_link_for(@investigation))
     assert_select("a[href=?]", duplicate_investigation_url(@investigation), { :text => "duplicate", :count => 0 })
   end
-
 
   it "should render prievew warning in OTML" do
     get :show, :id => @investigation.id, :format => 'otml'

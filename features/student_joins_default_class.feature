@@ -13,7 +13,6 @@ Feature: Student joins default class
       | name          | teacher |
       | Default Class | teacher |
 
-  @selenium
   Scenario: Register as a student with no class word
     Given the option to allow default classes is enabled
     When I go to the pick signup page

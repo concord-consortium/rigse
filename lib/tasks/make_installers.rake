@@ -27,6 +27,7 @@ namespace :build do
     
     def bitrocket_builder_path
       app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app"
+      app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Professional 7.2.0/bin/Builder.app"
       app_path + "/Contents/MacOS/installbuilder.sh"
     end
   

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110328200017) do
+ActiveRecord::Schema.define(:version => 20110715140638) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -53,6 +53,17 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.text     "home_page_content"
     t.boolean  "use_student_security_questions",               :default => false
     t.boolean  "allow_default_class"
+    t.boolean  "enable_grade_levels",                          :default => false
+    t.text     "custom_css"
+    t.boolean  "use_bitmap_snapshots",                         :default => false
+    t.boolean  "teachers_can_author",                          :default => true
+  end
+
+  create_table "admin_tags", :force => true do |t|
+    t.string   "scope"
+    t.string   "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "attached_files", :force => true do |t|
@@ -365,6 +376,9 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.boolean  "static"
     t.boolean  "time_limit_status",                        :default => false
     t.float    "time_limit_seconds"
+    t.integer  "data_table_id"
+    t.boolean  "is_digital_display",                       :default => false
+    t.integer  "dd_font_size"
   end
 
   create_table "embeddable_data_tables", :force => true do |t|
@@ -381,6 +395,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.integer  "data_collector_id"
     t.integer  "precision",                       :default => 2
     t.integer  "width",                           :default => 1200
+    t.boolean  "is_numeric",                      :default => true
   end
 
   create_table "embeddable_drawing_tools", :force => true do |t|
@@ -492,6 +507,9 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rows",                           :default => 5
+    t.integer  "columns",                        :default => 32
+    t.integer  "font_size",                      :default => 12
   end
 
   create_table "embeddable_raw_otmls", :force => true do |t|
@@ -534,10 +552,13 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "embeddable_sound_graphers", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "max_frequency"
+    t.string   "max_sample_time"
+    t.string   "display_mode"
   end
 
   create_table "embeddable_video_players", :force => true do |t|
@@ -570,8 +591,11 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",    :default => 0
+    t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
+    t.boolean  "append_learner_id_to_url"
+    t.boolean  "popup"
+    t.boolean  "append_survey_monkey_uid"
   end
 
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
@@ -1641,16 +1665,16 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
 
   create_table "portal_schools", :force => true do |t|
-    t.string   "uuid",            :limit => 36
+    t.string   "uuid",           :limit => 36
     t.string   "name"
     t.text     "description"
     t.integer  "district_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nces_school_id"
-    t.string   "state",           :limit => 2
-    t.string   "leaid_schoolnum", :limit => 12
-    t.string   "zipcode",         :limit => 5
+    t.string   "state",          :limit => 2
+    t.string   "zipcode",        :limit => 5
+    t.string   "ncessch",        :limit => 12
   end
 
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
@@ -1807,6 +1831,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.integer  "device_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "driver_short_name"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -1830,6 +1855,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "offerings_count",    :default => 0
+    t.text     "content"
   end
 
   create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
@@ -1840,7 +1866,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   create_table "ri_gse_assessment_targets", :force => true do |t|
     t.integer  "knowledge_statement_id"
     t.integer  "number"
-    t.string   "description"
+    t.text     "description"
     t.string   "grade_span"
     t.string   "uuid",                   :limit => 36
     t.datetime "created_at"
@@ -1849,7 +1875,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "ri_gse_big_ideas", :force => true do |t|
     t.integer  "unifying_theme_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",              :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1865,7 +1891,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
 
   create_table "ri_gse_expectation_indicators", :force => true do |t|
     t.integer  "expectation_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "ordinal"
     t.string   "uuid",           :limit => 36
     t.datetime "created_at"
@@ -1873,7 +1899,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   end
 
   create_table "ri_gse_expectation_stems", :force => true do |t|
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",        :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1899,7 +1925,7 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   create_table "ri_gse_knowledge_statements", :force => true do |t|
     t.integer  "domain_id"
     t.integer  "number"
-    t.string   "description"
+    t.text     "description"
     t.string   "uuid",        :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -2070,6 +2096,23 @@ ActiveRecord::Schema.define(:version => 20110328200017) do
   end
 
   add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
+
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "taggable_type"
+    t.string   "context"
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"

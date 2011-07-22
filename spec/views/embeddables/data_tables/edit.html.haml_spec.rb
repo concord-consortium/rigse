@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe "/embeddable/data_tables/edit.html.haml" do
   include Embeddable::DataTableHelper
@@ -18,8 +18,4 @@ describe "/embeddable/data_tables/edit.html.haml" do
     end
   end
 
-  it "should have a way to select a linked data collector" do
-    render
-    response.should have_tag("select[name='embeddable_data_table[data_collector_id]']")
-  end
 end

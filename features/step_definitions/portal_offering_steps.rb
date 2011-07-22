@@ -11,3 +11,4 @@ Then /^the external activity offering "([^"]*)" in the class "([^"]*)" should no
   offering = Portal::Offering.find_by_runnable_id_and_clazz_id ea.id, clazz.id
   offering.default_offering.should == false
 end
+

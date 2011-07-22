@@ -107,7 +107,13 @@ namespace :db do
         tables.each do |tbl|
           puts "writing #{dir}/#{tbl}.yaml"
           File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = tbl.gsub(/^probe_/, "probe/").classify.constantize.find(:all).collect { |m| m.attributes }
+            attributes = tbl.gsub(/^probe_/, "probe/").classify.constantize.find(:all).collect { |m| 
+              attributes = m.attributes
+              attributes.delete('user_id')
+              attributes.delete('created_at')
+              attributes.delete('updated_at')
+              attributes
+            }
             f.write YAML.dump(attributes)
           end
         end

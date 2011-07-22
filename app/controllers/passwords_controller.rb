@@ -95,13 +95,14 @@ class PasswordsController < ApplicationController
     @user = Password.find_by_reset_code(params[:reset_code]).user
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
+    @user.updating_password = true
     @user.save
     if @user.errors.empty?
       flash[:notice] = "Password for #{@user.login} was successfully updated."
       redirect_to login_path
     else
       flash[:error] = 'Password could not be updated'
-      redirect_to :action => :reset, :reset_code => params[:reset_code]
+      redirect_to :action => :reset, :reset_code => params[:reset_code], :user_errors => @user.errors.full_messages
     end
   end
   

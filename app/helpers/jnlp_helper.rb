@@ -137,7 +137,7 @@ module JnlpHelper
   
   def jnlp_information(xml)
     xml.information { 
-      xml.title APP_CONFIG[:site_name]
+      xml.title current_project.name
       xml.vendor "Concord Consortium"
       xml.homepage :href => APP_CONFIG[:site_url]
       xml.description APP_CONFIG[:description]
@@ -191,8 +191,9 @@ module JnlpHelper
     #
     xml.resources {
       xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
-      xml.jar :href=> "org/concord/utilities/response-cache/response-cache.jar", :version=> "0.1.0-20090728.205151-9"
-      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20091102.180724-197", :main =>"true"
+      # do not use version attributes so we can totally avoid all the jnlp jar versioning issues
+      xml.jar :href=> "org/concord/utilities/response-cache/response-cache-0.1.0-20110101.051026-218.jar"
+      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell-1.0-20110601.192832-412.jar", :main =>"true"
       system_properties(options).each do |property|
         xml.property(:name => property[0], :value => property[1])
       end

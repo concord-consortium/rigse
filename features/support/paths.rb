@@ -13,8 +13,12 @@ module NavigationHelpers
 
     when /my home\s?page/
       '/home'
+    when /my preferences/
+      "/users/#{User.find_by_login(@cuke_current_username).id}/preferences"
     when /the pick signup page/
       '/pick_signup'
+    when /the student signup page/
+      '/portal/students/signup'
     when /to the link tool/
       '/linktool'
     when /the current project edit page/
@@ -38,6 +42,9 @@ module NavigationHelpers
         edit_portal_clazz_path(clazz)
     when /the investigations printable index page/
       "/investigations/printable_index"
+    when /the investigations page for "(.*)"/
+      inv = Investigation.find_by_name $1
+      investigation_path inv
     when /the investigations like "(.*)"/
       "/investigations?name=#{$1}"
     when /the resource pages printable index page/
@@ -46,9 +53,16 @@ module NavigationHelpers
       "/resource_pages?name=#{$1}"
     when /the resource page for "(.*)"/
       "/resource_pages/#{ResourcePage.find_by_name($1).id}"
+    when /the clazz create page/
+      new_portal_clazz_path
+    when /the user preferences page for the user "(.*)"/
+      user = User.find_by_login $1
+      preferences_user_path user
+    when /the requirements page/
+      "/requirements/"
+    # accept paths too:
     when /the route (.+)/
       $1
-    # accept paths too:
     when /\/[\S+\/]+/
       page_name
 

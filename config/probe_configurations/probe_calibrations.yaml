@@ -1,113 +1,99 @@
 --- 
 - name: "Probekit: TMP36-Temperature (Celsius)"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 1
   uuid: 51982a56-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 1
   k0: -50.0
   id: 1
   default_calibration: 
-  probe_type_id: 14
   k1: 100.0
-  description: "The Analog Devices TMP36 IC temperature sensor supplied in the ITSi Probekit has a nominal sensitivity of 10mV/\xC2\xB0C and an offset of 500 mV at 0 \xC2\xB0C. So the calibration function for a raw voltage input is: T = -50 + 100V, where T is temperature in Celsius and V is the voltage the sensor produces.\r\n"
   data_filter_id: 1
   k2: 
+  probe_type_id: 14
   k3: 
-  created_at: 2009-05-15 13:17:50 Z
+  description: "The Analog Devices TMP36 IC temperature sensor supplied in the ITSi Probekit has a nominal sensitivity of 10mV/\xC2\xB0C and an offset of 500 mV at 0 \xC2\xB0C. So the calibration function for a raw voltage input is: T = -50 + 100V, where T is temperature in Celsius and V is the voltage the sensor produces.\r\n"
 - name: "Probekit: Electric Motor-Distance (Meters)"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 2
   uuid: 5198ecb6-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 2
   k0: 
   id: 2
   default_calibration: 
-  probe_type_id: 14
   k1: 
-  description: The electric motor supplied in the ITSi Probekit outputs a voltage that is approximately proportional to velocity. Integrating these data transforms them into something proportional to distance.
   data_filter_id: 2
   k2: 
+  probe_type_id: 14
   k3: 
-  created_at: 2009-05-15 13:17:50 Z
+  description: The electric motor supplied in the ITSi Probekit outputs a voltage that is approximately proportional to velocity. Integrating these data transforms them into something proportional to distance.
 - name: "Probekit: motor-rotational speed (rps)"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 4
   uuid: 519987b6-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 4
   k0: -15.66
   id: 3
   default_calibration: 
-  probe_type_id: 14
   k1: 5.88
+  data_filter_id: 1
+  k2: 
+  probe_type_id: 14
+  k3: 
   description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
     \r\n\
     The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
-  data_filter_id: 1
-  k2: 
-  k3: 
-  created_at: 2009-05-15 13:17:50 Z
 - name: "Probekit: Thermocouple temperature difference"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 1
   uuid: 519a007e-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 1
   k0: -47.3
   id: 4
   default_calibration: 
-  probe_type_id: 14
   k1: 17.8
+  data_filter_id: 1
+  k2: 
+  probe_type_id: 14
+  k3: 
   description: |
     The thermocouple wires supplied in the ITSI Probekit are iron and constantin. Two junctions are made so that a voltage will be produced that is proportional to the *difference* in temperature between the two junctions. The circuit uses the I-Amp with an amplification of 1000, giving 52 mV per degree of temperature difference.
 
-  data_filter_id: 1
-  k2: 
-  k3: 
-  created_at: 2009-05-15 13:17:50 Z
 - name: "Probekit: motor-linear velocity-3 cm radius wheel"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 3
   uuid: 51a2b52a-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 3
   k0: -2.94
   id: 5
   default_calibration: 
-  probe_type_id: 14
   k1: 1.109
+  data_filter_id: 1
+  k2: 
+  probe_type_id: 14
+  k3: 
   description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
     \r\n\
     \r\n\
     This calibration is for a wheel attached to the motor shaft with a radius of 3 cm. The circumference is 18.85 cm, so that linear velocity calibration is V = -(2.66/.17)*.1885 + (1/.17)*.1885 V, where V (m/s) is the velocity of the wheel rolling along a surface.\r\n\
     \r\n\
     The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
-  data_filter_id: 1
-  k2: 
-  k3: 
-  created_at: 2009-05-15 13:17:50 Z
 - name: "Probekit: motor-linear velocity-6 cm radius wheel"
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 3
   uuid: 51a35d72-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 3
   k0: -5.9
   id: 6
   default_calibration: 
-  probe_type_id: 14
   k1: 2.22
+  data_filter_id: 1
+  k2: 
+  probe_type_id: 14
+  k3: 
   description: "The RF-500T-10750 motor supplied in the ITSi Probekit, combined with the Motor Speed Circuit produces about 170 mV per rps (revolution per second). The offset is about 2.66 V. So the calibration function for a raw voltage input is: S = -(2.66/.17) + (1/.17) V, where S is rotational speed in rps and V is the voltage the sensor produces.\r\n\
     \r\n\
     \r\n\
     This calibration is for a wheel attached to the motor shaft with a radius of 6 cm. The circumference is 37.7 cm, so that linear velocity calibration is V = -(2.66/.17)*.377 + (1/.17)*.377 V, where V (m/s) is the velocity of the wheel rolling along a surface.\r\n\
     \r\n\
     The Motor Speed Circuit uses an RC filter with a time constant of about 0.1 s. "
-  data_filter_id: 1
-  k2: 
-  k3: 
-  created_at: 2009-05-15 13:17:50 Z
 - name: "Velocity "
-  updated_at: 2009-05-15 17:17:50 Z
-  physical_unit_id: 3
   uuid: 51a3da04-4174-11de-aad1-001ff3caa767
+  physical_unit_id: 3
   k0: 
   id: 7
   default_calibration: 
-  probe_type_id: 7
   k1: 
-  description: Most motion probes report position, this uses the differentiating filter to report velocity.
   data_filter_id: 3
   k2: 
+  probe_type_id: 7
   k3: 
-  created_at: 2009-05-15 13:17:50 Z
+  description: Most motion probes report position, this uses the differentiating filter to report velocity.
