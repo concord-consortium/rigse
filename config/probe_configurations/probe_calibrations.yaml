@@ -97,3 +97,15 @@
   probe_type_id: 7
   k3: 
   description: Most motion probes report position, this uses the differentiating filter to report velocity.
+- name: "Magnetic Field (G)"
+  uuid: f5a81340-b49f-11e0-b78f-e80688fffebc
+  physical_unit_id: 5
+  k0: 0
+  id: 8
+  default_calibration: 
+  k1: 10
+  data_filter_id: 1
+  k2: 
+  probe_type_id: 16
+  k3: 
+  description: This calibration converts the default unit of the magnetic field sensor from mT to G
