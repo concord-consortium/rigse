@@ -44,6 +44,12 @@
             = f.check_box :use_bitmap_snapshots
             %br
             (This option insures that all labbook entries are treated like simple images.)
+          %li
+            %b
+            = f.label :opportunistic_installer, "Opportunistic Installer:", :style => "display:inline;"
+            = f.check_box :opportunistic_installer
+            %br
+            (This option changes the boot up process of the installer to automatically launch the non installer jnlp if no installation is found.)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
