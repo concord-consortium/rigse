@@ -11,9 +11,6 @@ class Admin::Tag < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Tag"
-    end
 
     def search_list(options)
       name = options[:scope]

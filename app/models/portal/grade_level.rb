@@ -20,8 +20,5 @@ class Portal::GradeLevel < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Grade Level"
-    end
   end
 end

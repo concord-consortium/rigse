@@ -34,9 +34,6 @@ class Embeddable::RawOtml < ActiveRecord::Base
   default_value_for :name, "Embeddable::RawOtml element"
   default_value_for :description, "A simple OTCompoundDoc example ..."
 
-  def self.display_name
-    "Raw Otml"
-  end
   
   def self.authorable_in_java?
     true

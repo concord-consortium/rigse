@@ -68,10 +68,6 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   
   send_update_events_to :investigations
 
-  def self.display_name
-    "Multiple Choice Question"
-  end
-
   def to_xml(options ={})
     options[:incude] = :choices
     super(options)

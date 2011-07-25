@@ -24,11 +24,6 @@ class Portal::Student < ActiveRecord::Base
   
   include Changeable
   
-  class <<self
-    def display_name
-      "Student"
-    end
-  end
  
   def self.generate_user_email
     hash = UUIDTools::UUID.timestamp_create.to_s
