@@ -1,7 +1,26 @@
-module LocalNames
+class LocalNames
 
   attr_accessor :local_names
   attr_accessor :yaml_file
+  attr_accessor :logger
+  attr_accessor :theme_name
+
+
+  # Lots of nay-saying about singleton patterns be-damned.
+  class << self
+    def instance(theme)
+      @instances = {} unless @instances
+      unless @instances[theme]
+        @instances[theme] = self.new(theme)
+      end
+      return @instances[theme]
+    end
+  end
+
+  def initialize(theme  = APP_CONFIG[:theme] || 'default')
+    self.theme_name = theme
+    self.logger = Rails.logger
+  end
 
   def load_names(path=File.join("config","local_names.yml"))
     self.yaml_file = File.join(RAILS_ROOT, path)
@@ -16,14 +35,14 @@ module LocalNames
   
   def parse_yaml(string)
     config = YAML::load(string)
-    names = config["names"]
+    names = config[theme_name]
     unless names
       logger.warn("No 'names' specified in #{self.yaml_file}")
       self.local_names = {}
       return
     end
     unless names.kind_of? Hash
-      logger.warn("'names' should be specified as Hash in #{self.yaml_file}")
+      logger.warn("no entry for #{self.theme_name} specified as Hash in #{self.yaml_file}")
       self.local_names = {}
       return
     end
@@ -45,4 +64,3 @@ module LocalNames
     return self.local_names[key] || self.local_names[key.downcase] || default
   end
 end
-
