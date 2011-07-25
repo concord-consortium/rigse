@@ -1,5 +1,57 @@
 ---
+default:
+  Activity : Activity
+  Page : Page
+  ExternalActivity : External Activity
+  ExternalUserDomain : External User Domain
+  ResourcePage : Resource Page
+  Section : Section
+  Admin::Project : Project
+  Admin::Tag : Tag
+  Dataservice::Blob : Blob
+  Dataservice::BundleContent : BundleContent
+  Dataservice::BundleLogger : BundleLogger
+  Dataservice::ConsoleContent : ConsoleContent
+  Dataservice::ConsoleLogger : ConsoleLogger
+  Embeddable::Biologica::BreedOffspring : Biologica Breed Offspring
+  Embeddable::Biologica::Chromosome : Biologica Chromosome
+  Embeddable::Biologica::ChromosomeZoom : Biologica Chromosome Zoom
+  Embeddable::Biologica::MeiosisView : Biologica Meiosis View
+  Embeddable::Biologica::MultipleOrganism : Biologica Multiple Organism
+  Embeddable::Biologica::Organism : Biologica Organism
+  Embeddable::Biologica::Pedigree : Biologica Pedigree
+  Embeddable::Biologica::StaticOrganism : Biologica Static Organism View
+  Embeddable::Biologica::World : Biologica World
+  Embeddable::DataCollector : Graph
+  Embeddable::DataTable : Data Table
+  Embeddable::DrawingTool : Draw Tool
+  Embeddable::ImageQuestion : Image Question
+  Embeddable::InnerPage : Inner Page
+  Embeddable::LabBookSnapshot : Snapshot Button
+  Embeddable::MultipleChoice : Multiple Choice Question
+  Embeddable::MwModelerPage : Molecular Workbench Model
+  Embeddable::NLogoModel : Net Logo Model
+  Embeddable::OpenResponse : Open Response
+  Embeddable::RawOtml : Raw Otml
+  Embeddable::Smartgraph::RangeQuestion : Smartgraph Range Question
+  Embeddable::SoundGrapher : Sound Grapher
+  Embeddable::VideoPlayer : VideoPlayer
+  Embeddable::Xhtml : Text
+  Portal::Clazz : Class
+  Portal::Course : Course
+  Portal::District : District
+  Portal::Grade : Grade
+  Portal::GradeLevel : Grade Level
+  Portal::Learner : Learner
+  Portal::Nces06District : NCES District
+  Portal::Nces06School : NCES School
+  Portal::Offering : Offering
+  Portal::School : School
+  Portal::Semester : Semester
+  Portal::Student : Student
+  Portal::Subject : Subject
+  Portal::Teacher : Teacher
+
 smartgraphs:
   ExternalActivity : Activity
   ResourcePage : Resource
-
