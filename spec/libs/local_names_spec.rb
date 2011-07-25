@@ -6,6 +6,7 @@ return <<YAML
 my_theme:
   Hash : this is a Hash
   someString : a string replacement
+  String : this is a String
 YAML
 end
 
@@ -53,6 +54,16 @@ describe LocalNames do
       @instance.local_names.should_not be_nil
     end
     describe "Asking for local names" do
+      describe "When a local replacement has been defined" do
+        it "should use the replacement for an instance" do
+          @instance.local_name_for({}).should == "this is a Hash"
+          @instance.local_name_for("someString").should == "a string replacement"
+        end
+        it "should use the plreacement for the class" do
+          @instance.local_name_for(Hash).should == "this is a Hash"
+          @instance.local_name_for(String).should == "this is a String"
+        end
+      end
       describe "When a local replacement has been defined" do
         it "should use the replacement" do
           @instance.local_name_for({}).should == "this is a Hash"

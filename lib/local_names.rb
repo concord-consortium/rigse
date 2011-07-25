@@ -54,6 +54,8 @@ class LocalNames
     # self.local_names ||= {}
     key = "default_key"
     case thing
+    when Class
+      key = thing.name
     when String
       # use the string itself as the key
       key = thing
