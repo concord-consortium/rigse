@@ -121,3 +121,17 @@ module URI
   end
 end
 
+# Define Object#dipsplay_name
+# See:
+#    lib/local_names.rb,
+#    spec/libs/local_names_spec.rb,
+#    spec/core_extensions/object_extensions_spec.rb
+module DiplayNameMethod
+  def display_name
+    LocalNames.instance.local_name_for(self)
+  end
+end
+
+# include #display_name everywhere
+Object.send(:include, LocalNames::DiplayNameMethod)
+
