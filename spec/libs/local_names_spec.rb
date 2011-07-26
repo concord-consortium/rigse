@@ -3,10 +3,14 @@ require File.expand_path('../../spec_helper', __FILE__)
 def valid_yaml
 return <<YAML
 ---
+default :
+  String : this is a String
+  local_only: in default
 my_theme:
   Hash : this is a Hash
   someString : a string replacement
-  String : this is a String
+  local_only: in my_theme
+  a::key::with::modules: even works with keys with ::'s
 YAML
 end
 
@@ -38,7 +42,8 @@ describe LocalNames do
       end
       it "should not cause an error, but should produce a warning message" do
         @mock_file.should_receive(:read).and_return(invalid_yaml)
-        @logger.should_receive(:warn)
+        # once for the default theme..
+        @logger.should_receive(:warn).twice
         @instance.load_names
       end
     end
@@ -68,6 +73,16 @@ describe LocalNames do
         it "should use the replacement" do
           @instance.local_name_for({}).should == "this is a Hash"
           @instance.local_name_for("someString").should == "a string replacement"
+        end
+      end
+      describe "When a theme overrides a default value" do
+        it "should use the theme's" do
+          @instance.local_name_for("local_only").should == "in my_theme"
+        end
+      end
+      describe "When the key name includes :: module separators" do
+        it "should still work" do
+          @instance.local_name_for("a::key::with::modules").should == "even works with keys with ::'s"
         end
       end
       describe "When no local replacement has been defined" do
