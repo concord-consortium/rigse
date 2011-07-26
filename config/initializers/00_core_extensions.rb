@@ -1,3 +1,5 @@
+
+require 'lib/local_names'
 # Recursively converts the keys in a Hash to symbols.
 # Also converts the keys in any Array elements which are 
 # Hashes to symbols.
