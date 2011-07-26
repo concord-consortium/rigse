@@ -64,15 +64,9 @@ describe LocalNames do
           @instance.local_name_for({}).should == "this is a Hash"
           @instance.local_name_for("someString").should == "a string replacement"
         end
-        it "should use the plreacement for the class" do
+        it "should use the replacement for the class" do
           @instance.local_name_for(Hash).should == "this is a Hash"
           @instance.local_name_for(String).should == "this is a String"
-        end
-      end
-      describe "When a local replacement has been defined" do
-        it "should use the replacement" do
-          @instance.local_name_for({}).should == "this is a Hash"
-          @instance.local_name_for("someString").should == "a string replacement"
         end
       end
       describe "When a theme overrides a default value" do
@@ -94,6 +88,10 @@ describe LocalNames do
         describe "When the caller doesn't specify a default" do
           it "should use the titlecased human readable class name" do
             @instance.local_name_for(@instance).should == "Local Names"
+          end
+          it "should ommit the module names" do
+            @instance.local_name_for(Embeddable::Xhtml).should == "Xhtml"
+            @instance.local_name_for(Portal::GradeLevel).should == "Grade Level"
           end
         end
       end

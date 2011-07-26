@@ -59,7 +59,7 @@ class LocalNames
     case thing
     when Class
       key = thing.name
-      computed_value = key.underscore.humanize.titlecase
+      computed_value = key.demodulize.underscore.humanize.titlecase
     when String
       # use the string itself as the key
       key = thing
@@ -67,7 +67,7 @@ class LocalNames
     else
       # try to use the class name as the string
       key = thing.class.name
-      computed_value = key.underscore.humanize.titlecase
+      computed_value = key.demodulize.underscore.humanize.titlecase
     end
     # Preffer to send the matching replacenet, followed by when_none, finally, just send key
     return self.local_names[key] || self.local_names[key.downcase] || when_none || computed_value
