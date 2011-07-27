@@ -3,7 +3,7 @@
 #############################################################
 
 set :deploy_to, "/web/production/geniverse.portal"
-set :branch, "geniverse-dev"
+set :branch, "geniverse-production"
 
 set :user, "geniverse"
 
