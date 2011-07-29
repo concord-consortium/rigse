@@ -8,3 +8,6 @@
   -#%li.trail= link_to "#{ResourcePage.display_name.pluralize}", resource_pages_path
 - if current_user.has_role?('guest')
   %li.trail= link_to "Activity Previews", activities_path
+- if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
+  %li.trail=link_to 'CareerSight', 'http://careersight.concord.org', :target => '_blank'
+  %li.trail=link_to 'ProbeSight', 'http://probesight.concord.org', :target => '_blank'
