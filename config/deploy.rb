@@ -79,7 +79,7 @@ end
 set(:scm_passphrase) do
   Capistrano::CLI.password_prompt( "Enter your git password: ")
 end
-set :repository, "git://github.com/stepheneb/rigse.git"
+set :repository, "git://github.com/concord-consortium/rigse.git"
 set :deploy_via, :remote_cache
 
 #############################################################
