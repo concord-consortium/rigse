@@ -3,6 +3,7 @@
 %br
 #clazzes_nav
   .padded_content
+    %h2= top_node.school.name
     %h2 Classes:
     - top_container_id = dom_id_for(top_node, :nav_list)
     - top_controller ||= top_node.class.name.tableize
