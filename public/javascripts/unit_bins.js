@@ -129,8 +129,8 @@
       }
       return false;
     };
-    var last_panel = $$(".show_section").last();
-    var last_button = $$('.bin_button').last();
+    var last_panel = $$(".show_section").first();
+    var last_button = $$('.bin_button').first();
     if (last_panel && last_button) {
       show_section(last_panel,last_button);
     }
