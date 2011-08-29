@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
+require 'rails/all'
 
-module Xproject-git
+module RailsPortal
   class Application < Rails::Application
   
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
