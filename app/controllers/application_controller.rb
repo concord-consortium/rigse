@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include Clipboard
 
+  # protect_from_forgery
   self.allow_forgery_protection = false
 
   theme :get_theme
@@ -122,4 +123,5 @@ class ApplicationController < ActionController::Base
     redirect_to path
   end
 
+end
 end
