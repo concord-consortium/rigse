@@ -16,7 +16,6 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                     "~> 0.3.3"
   end
 
-  # gem "mongrel",              "~> 1.1.5"
   gem "rails",                "~> 3.0.10"
   gem "arrayfields"
   gem "httpclient",           "~> 2.2"
@@ -31,8 +30,8 @@ source "http://rubygems.org"
   gem "prawn-format",         "~> 0.2.3", :require => "prawn/format"
   gem "grit",                 "~> 2.4"
   gem "open4",                "~> 1.0"
-  gem "compass",              "~> 0.11.15"
-  gem "jnlp",                 "~> 0.7.2"
+  gem "compass",              "~> 0.11.5"
+  gem "jnlp",                 "~> 0.7.3"
   # # use a merge of ghazel and tracksimple ar-extensions forks
   # # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   # # git "git://github.com/concord-consortium/ar-extensions.git" do
