@@ -1,455 +1,742 @@
-ActionController::Routing::Routes.draw do |map|
-  map.namespace(:saveable) do |saveable|
-    saveable.namespace(:sparks) do |sparks|
-      sparks.resources :measuring_resistances
-      sparks.resources :measuring_resistance_reports
+RailsPortal::Application.routes.draw do
+  namespace :saveable do
+      namespace :sparks do
+          resources :measuring_resistances
+          resources :measuring_resistance_reports
     end
   end
 
-
-#
-# ********* New scoped routing for page-embeddables, probes, and RI GSEs  *********
-#
-#            delete the older routes by hand!
-#
-
-
-  map.namespace(:probe) do |probe|
-    probe.resources :vendor_interfaces
-    probe.resources :probe_types
-    probe.resources :physical_units
-    probe.resources :device_configs
-    probe.resources :data_filters
-    probe.resources :calibrations
+  namespace :probe do
+      resources :vendor_interfaces
+      resources :probe_types
+      resources :physical_units
+      resources :device_configs
+      resources :data_filters
+      resources :calibrations
   end
 
-  map.namespace(:ri_gse) do |ri_gse|
-    ri_gse.resources :assessment_targets, :knowledge_statements, :domains
-    ri_gse.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
-    ri_gse.resources :grade_span_expectations, 
-      :collection => { 
-        :select_js => :post,
-        :summary => :post,
-        :reparse_gses => :put,
-        :select => :get },
-      :member => { :print => :get }
-  end
-
-  map.namespace(:embeddable) do |embeddable|
-
-    embeddable.namespace(:smartgraph) do |smartgraph|
-      smartgraph.resources :range_questions
+  namespace :ri_gse do
+      resources :assessment_targets
+      resources :knowledge_statements
+      resources :domains
+      resources :big_ideas
+      resources :unifying_themes
+      resources :expectations
+      resources :expectation_stems
+      resources :grade_span_expectations do
+        collection do
+    get :select
+    post :summary
+    post :select_js
+    put :reparse_gses
     end
-
-    embeddable.namespace(:biologica) do |biologica|
-      biologica.resources :chromosome_zooms, :member => { :destroy => :post }
-      biologica.resources :multiple_organisms, :member => { :destroy => :post }
-      biologica.resources :breed_offsprings, :member => { :destroy => :post }
-      biologica.resources :meiosis_views, :member => { :destroy => :post }
-      biologica.resources :chromosomes, :member => { :destroy => :post }
-      biologica.resources :pedigrees, :member => { :destroy => :post }
-      biologica.resources :static_organisms, :member => { :destroy => :post }
-      biologica.resources :organisms, :member => { :destroy => :post }
-      biologica.resources :worlds, :member => { :destroy => :post }
+        member do
+    get :print
     end
-
-    embeddable.resources :inner_pages, :member => {
-      :destroy => :post,
-      :add_page => :post,
-      :add_element => :post,
-      :set_page => :post,
-      :sort_pages => :post,
-      :delete_page => :post
-    }
-
-    embeddable.resources :lab_book_snapshots, :member => { :destroy => :post }
-
-    embeddable.resources :raw_otmls, :member => { :destroy => :post }
-
-    embeddable.resources :n_logo_models, :member => { :destroy => :post }
-    embeddable.resources :mw_modeler_pages, :member => { :destroy => :post }
-
-    embeddable.resources :data_tables, :member => {
-      :print => :get,
-      :destroy => :post,
-      :update_cell_data => :post
-    }
-
-    embeddable.resources :multiple_choices, :member => {
-      :print => :get,
-      :destroy => :post,
-      :add_choice => :post
-    }
-
-    embeddable.resources :drawing_tools, :member => {
-      :print => :get,
-      :destroy => :post
-    }
-
-    embeddable.resources :xhtmls, :member => {
-      :print => :get,
-      :destroy => :post
-    }
-
-    embeddable.resources :open_responses, :member  => {
-      :print => :get,
-      :destroy => :post
-    }
-
-    embeddable.resources :data_collectors, :member => {
-      :print => :get,
-      :destroy => :post,
-      :change_probe_type => :put
-    }
-
-    embeddable.resources :sound_graphers, :member => {
-      :destroy => :post
-    }
-
-    embeddable.resources :image_questions, :member => {
-      :destroy => :post
-    }
-    embeddable.resources :video_players, :member => {
-      :destroy => :post
-    }
-  end
-
-# ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********
-
-  map.namespace(:smartgraph) do |smartgraph|
-    smartgraph.resources :range_questions
-  end
-
-  map.namespace(:portal) do |portal|
-    portal.resources :clazzes, :as => 'classes', :member => {
-        :add_offering => [:get,:post],
-        :add_student => [:get, :post],
-        :remove_offering => [:get, :post],
-        :edit_offerings => [:get,:post],
-        :add_teacher => [:post],
-        :remove_teacher => [:delete],
-        :class_list => :get
-    }
-    portal.resources :clazzes do |clazz|
-      clazz.resources :student_clazzes
+    
     end
-    portal.resources :courses
-    portal.resources :districts, :member => { :destroy => :post }
-    portal.resources :grades
-    portal.resources :grade_levels
-    portal.resources :learners,  :member => {
-      :report => :get,
-      :open_response_report => :get,
-      :multiple_choice_report => :get,
-      :bundle_report => :get
-    }
-    portal.resources :offerings, :member => {
-      :report => :get,
-      :open_response_report => :get,
-      :multiple_choice_report => :get,
-      :separated_report => :get,
-      :report_embeddable_filter => :post,
-      :activate => :get,
-      :deactivate => :get,
-      :learners => :get,
-      :check_learner_auth => :post,
-      :start => :post
-    }, :collection => { :data_test => [:get,:post] }
-
-    # TODO: Totally not restful.  We should change
-    # all routes to use :delete, and then modify
-    # the delete_button in application controller
-    # to use :method => :delete
-    portal.resources :schools, :member => { :destroy => :post }
-    portal.resources :school_memberships
-    portal.resources :semesters
-    portal.resources :students, :collection => {
-      :signup => [:get],
-      :register => [:get, :post]
-    }
-    portal.resources :student_clazzes, :as => 'student_classes'
-    portal.resources :subjects
-    portal.resources :teachers
-
-    portal.resources :external_user_domains
-    portal.resources :external_users
-
-    portal.resources :nces06_districts
-    portal.resources :nces06_schools, :member => { :description => :get }
-    # portal.home 'readme', :controller => 'home', :action => 'readme'
-    # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
 
-
-
-
-  # Restful Authentication Rewrites
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.linktool '/linktool', :controller => 'sakai_link', :action => 'index'
-  map.fake_verification '/sakai-axis/SakaiSigning.jws', :controller => 'sakai_link', :action => 'fake_verification'
-  map.register '/register', :controller => 'users', :action => 'create'
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
-  map.forgot_password '/forgot_password', :controller => 'passwords', :action => 'login'
-  map.forgot_password_email '/forgot_password/email', :controller => 'passwords', :action => 'email'
-  map.change_password '/change_password/:reset_code', :controller => 'passwords', :action => 'reset'
-  map.password_questions '/password/:user_id/questions', :controller => 'passwords', :action => 'questions'
-  map.check_password_questions '/password/:user_id/check_questions', :controller => 'passwords', :action => 'check_questions'
-  map.open_id_complete '/opensession', :controller => "sessions", :action => "create", :requirements => { :method => :get }
-  map.open_id_create '/opencreate', :controller => "users", :action => "create", :requirements => { :method => :get }
-
-  # Restful Authentication Resources
-  map.resources :users, :member => {
-      :preferences => [:get, :put],
-      :switch => [:get, :put],
-      :interface => :get,
-      :suspend   => :put,
-      :unsuspend => :put,
-      :purge     => :delete } do |users|
-    users.resource :security_questions, :only => [ :edit, :update ]
-  end
-  map.users_account_report '/users/reports/account_report', :controller => 'users', :action => 'account_report', :method => :get
-
-  map.resources :passwords
-  map.resource :session
-
-  map.resources :external_user_domains do |external_user_domain|
-    external_user_domain.resources :external_users
-    external_user_domain.resources :external_sessions
-  end
-
-# ----------------------------------------------
-
-  map.namespace(:dataservice) do |dataservice|
-    dataservice.resources :blobs
-    dataservice.resources :bundle_contents
-    dataservice.resources :bundle_loggers do |bundle_logger|
-      bundle_logger.resources :bundle_contents
+  namespace :embeddable do
+      namespace :smartgraph do
+          resources :range_questions
     end
-    dataservice.resources :console_contents
-    dataservice.resources :console_loggers do |console_logger|
-      console_logger.resources :console_contents
+      namespace :biologica do
+          resources :chromosome_zooms do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :multiple_organisms do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :breed_offsprings do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :meiosis_views do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :chromosomes do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :pedigrees do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :static_organisms do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :organisms do
+      
+            member do
+      post :destroy
+      end
+      
+      end
+          resources :worlds do
+      
+            member do
+      post :destroy
+      end
+      
+      end
     end
-
+      resources :inner_pages do
+    
+        member do
+    post :sort_pages
+    post :delete_page
+    post :add_page
+    post :add_element
+    post :destroy
+    post :set_page
+    end
+    
+    end
+      resources :lab_book_snapshots do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :raw_otmls do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :n_logo_models do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :mw_modeler_pages do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :data_tables do
+    
+        member do
+    post :update_cell_data
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :multiple_choices do
+    
+        member do
+    post :add_choice
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :drawing_tools do
+    
+        member do
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :xhtmls do
+    
+        member do
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :open_responses do
+    
+        member do
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :data_collectors do
+    
+        member do
+    put :change_probe_type
+    post :destroy
+    get :print
+    end
+    
+    end
+      resources :sound_graphers do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :image_questions do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :video_players do
+    
+        member do
+    post :destroy
+    end
+    
+    end
   end
 
-  # FIXME not sure how to map this within the dataservice namespace above...
-  map.dataservice_blob_raw "dataservice/blobs/:id.blob/:token", :controller => "dataservice/blobs", :action => "show", :format => "blob", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
-
-  map.namespace(:admin) do |admin|
-    admin.resources :projects, :member => { :update_form => :put }
-    admin.resources :tags
+  namespace :smartgraph do
+      resources :range_questions
   end
 
-  map.namespace(:maven_jnlp) do |maven_jnlp|
-    maven_jnlp.resources :native_libraries
-    maven_jnlp.resources :jars
-    maven_jnlp.resources :properties
-    maven_jnlp.resources :versioned_jnlps
-    maven_jnlp.resources :versioned_jnlp_urls
-    maven_jnlp.resources :icons
-    maven_jnlp.resources :maven_jnlp_families
-    maven_jnlp.resources :maven_jnlp_servers
+  namespace :portal do
+      resources :clazzes do
+    
+        member do
+    post :add_teacher
+    delete :remove_teacher
+    get :add_offering
+    post :add_offering
+    get :class_list
+    get :add_student
+    post :add_student
+    get :remove_offering
+    post :remove_offering
+    get :edit_offerings
+    post :edit_offerings
+    end
+    
+    end
+      resources :clazzes do
+    
+    
+          resources :student_clazzes
+    end
+      resources :courses
+      resources :districts do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :grades
+      resources :grade_levels
+      resources :learners do
+    
+        member do
+    get :open_response_report
+    get :multiple_choice_report
+    get :report
+    get :bundle_report
+    end
+    
+    end
+      resources :offerings do
+        collection do
+    get :data_test
+    post :data_test
+    end
+        member do
+    get :deactivate
+    get :activate
+    get :open_response_report
+    post :check_learner_auth
+    post :start
+    get :multiple_choice_report
+    get :report
+    get :separated_report
+    post :report_embeddable_filter
+    get :learners
+    end
+    
+    end
+      resources :schools do
+    
+        member do
+    post :destroy
+    end
+    
+    end
+      resources :school_memberships
+      resources :semesters
+      resources :students do
+        collection do
+    get :signup
+    get :register
+    post :register
+    end
+    
+    
+    end
+      resources :student_clazzes
+      resources :subjects
+      resources :teachers
+      resources :external_user_domains
+      resources :external_users
+      resources :nces06_districts
+      resources :nces06_schools do
+    
+        member do
+    get :description
+    end
+    
+    end
   end
 
-
-  map.namespace(:otrunk_example) do |otrunk_example|
-    otrunk_example.resources :otrunk_imports
-    otrunk_example.resources :otml_categories
-    otrunk_example.resources :otml_files
-    otrunk_example.resources :otrunk_view_entries
-  end
-
-  map.resources :teacher_notes
-  map.resources :author_notes
-
-
-#
-# ********* Start of Page embeddable objects *********
-#
-
-  map.resources :lab_book_snapshots, :member => { :destroy => :post }
-
-  map.resources :inner_pages, :member => {
-    :destroy => :post,
-    :add_page => :post,
-    :add_element => :post,
-    :set_page => :post,
-    :sort_pages => :post,
-    :delete_page => :post
-  }
-
-  map.resources :biologica_chromosome_zooms, :member => { :destroy => :post }
-  map.resources :biologica_multiple_organisms, :member => { :destroy => :post }
-  map.resources :biologica_breed_offsprings, :member => { :destroy => :post }
-  map.resources :biologica_meiosis_views, :member => { :destroy => :post }
-  map.resources :biologica_chromosomes, :member => { :destroy => :post }
-  map.resources :biologica_pedigrees, :member => { :destroy => :post }
-  map.resources :biologica_static_organisms, :member => { :destroy => :post }
-  map.resources :biologica_organisms, :member => { :destroy => :post }
-  map.resources :biologica_worlds, :member => { :destroy => :post }
-
-  map.resources :raw_otmls, :member => { :destroy => :post }
-
-  map.resources :n_logo_models, :member => { :destroy => :post }
-  map.resources :mw_modeler_pages, :member => { :destroy => :post }
-
-  map.resources :data_tables, :member => {
-    :print => :get,
-    :destroy => :post,
-    :update_cell_data => :post
-  }
-
-  map.resources :multiple_choices, :member => {
-    :print => :get,
-    :destroy => :post,
-    :add_choice => :post
-  }
-
-  map.resources :drawing_tools, :member => {
-    :print => :get,
-    :destroy => :post
-  }
-
-  map.resources :xhtmls, :member => {
-    :print => :get,
-    :destroy => :post
-  }
-
-  map.resources :open_responses, :member  => {
-    :print => :get,
-    :destroy => :post
-  }
-
-  map.resources :data_collectors, :member => {
-    :print => :get,
-    :destroy => :post,
-    :change_probe_type => :put
-  }
-
-  map.resources :sections, :member => {
-    :destroy => :post,
-    :add_page => [:post, :get],
-    :sort_pages => :post,
-    :delete_page => :post,
-    :print => :get,
-    :duplicate => :get,
-    :details_report => :get,
-    :usage_report => :get,
-  }, :collection => {
-    :printable_index => :get
-  }
-
-  map.resources :pages, :member => {
-    :destroy => :post,
-    :add_element => :post,
-    :sort_elements => :post,
-    :delete_element => :post,
-    :paste  => :post,
-    :paste_link => :post,
-    :preview => :get,
-    :print => :get,
-    :duplicate => :get
-  }
-  map.list_filter_page '/page/list/filter', :controller => 'pages', :action => 'index', :method => :post
-
-  # seb: are these nested routes needed or used anywhere ??
-  map.resources :pages do |page|
-    page.resources :xhtmls
-    page.resources :open_responses
-    page.resources :data_collectors
-  end
-
-  map.resources :page_elements, :member => {
-    :destroy => :post
-  }
-
-  map.resources :investigations, :member => {
-    :add_activity => [:post,:get],
-    :sort_activities => :post,
-    :delete_activity => :post,
-    :print => :get,
-    :duplicate => :get,
-    :details_report => :get,
-    :usage_report => :get,
-    :export => :get,
-    :destroy => :post,
-  }, :collection => {
-    :printable_index => :get
-  }
-  map.investigation_preview_list '/investigations/list/preview/', :controller => 'investigations', :action => 'preview_index', :method => :get
-  map.list_filter_investigation '/investigations/list/filter', :controller => 'investigations', :action => 'index', :method => :get
-  map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
-  map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+  match '/logout' => 'sessions#destroy', :as => :logout
+  match '/login' => 'sessions#new', :as => :login
+  match '/linktool' => 'sakai_link#index', :as => :linktool
+  match '/sakai-axis/SakaiSigning.jws' => 'sakai_link#fake_verification', :as => :fake_verification
+  match '/register' => 'users#create', :as => :register
+  match '/signup' => 'users#new', :as => :signup
+  match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => 
+  match '/forgot_password' => 'passwords#login', :as => :forgot_password
+  match '/forgot_password/email' => 'passwords#email', :as => :forgot_password_email
+  match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password
+  match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions
+  match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
+  match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => :get }
+  match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => :get }
+  resources :users do
   
-  map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
-  map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
+    member do
+  delete :purge
+  put :suspend
+  put :unsuspend
+  get :interface
+  get :switch
+  put :switch
+  get :preferences
+  put :preferences
+  end
+      resource :security_questions, :only => [:edit, :update]
+  end
+
+  match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
+  resources :passwords
+  resource :session
+  resources :external_user_domains do
   
-  map.resources :activities, :member => {
-    :add_section => [:post,:get],
-    :sort_sections => :post,
-    :delete_section => :post,
-    :print => :get,
-    :duplicate => :get,
-    :export => :get,
-    :destroy => :post
-  }
-  map.list_filter_activity '/activity/list/filter', :controller => 'activities', :action => 'index', :method => :post
-  #map.investigation_teacher_otml '/investigations/teacher/:id.otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :otml
-  #map.investigation_teacher_dynamic_otml '/investigations/teacher/:id.dynamic_otml', :controller => 'investigations', :action => 'teacher', :method => :get, :format => :dynamic_otml
+  
+      resources :external_users
+    resources :external_sessions
+  end
 
+  namespace :dataservice do
+      resources :blobs
+      resources :bundle_contents
+      resources :bundle_loggers do
+    
+    
+          resources :bundle_contents
+    end
+      resources :console_contents
+      resources :console_loggers do
+    
+    
+          resources :console_contents
+    end
+  end
 
-  map.resources :activities do |activity|
-    activity.resources :sections do |section|
-      section.resources :pages do |page|
-        page.resources :page_elements
+  match 'dataservice/blobs/:id.blob/:token' => 'dataservice/blobs#show', :as => :dataservice_blob_raw, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }, :format => 'blob'
+  namespace :admin do
+      resources :projects do
+    
+        member do
+    put :update_form
+    end
+    
+    end
+      resources :tags
+  end
+
+  namespace :maven_jnlp do
+      resources :native_libraries
+      resources :jars
+      resources :properties
+      resources :versioned_jnlps
+      resources :versioned_jnlp_urls
+      resources :icons
+      resources :maven_jnlp_families
+      resources :maven_jnlp_servers
+  end
+
+  namespace :otrunk_example do
+      resources :otrunk_imports
+      resources :otml_categories
+      resources :otml_files
+      resources :otrunk_view_entries
+  end
+
+  resources :teacher_notes
+  resources :author_notes
+  resources :lab_book_snapshots do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :inner_pages do
+  
+    member do
+  post :sort_pages
+  post :delete_page
+  post :add_page
+  post :add_element
+  post :destroy
+  post :set_page
+  end
+  
+  end
+
+  resources :biologica_chromosome_zooms do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_multiple_organisms do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_breed_offsprings do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_meiosis_views do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_chromosomes do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_pedigrees do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_static_organisms do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_organisms do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :biologica_worlds do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :raw_otmls do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :n_logo_models do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :mw_modeler_pages do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :data_tables do
+  
+    member do
+  post :update_cell_data
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :multiple_choices do
+  
+    member do
+  post :add_choice
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :drawing_tools do
+  
+    member do
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :xhtmls do
+  
+    member do
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :open_responses do
+  
+    member do
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :data_collectors do
+  
+    member do
+  put :change_probe_type
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :sections do
+    collection do
+  get :printable_index
+  end
+    member do
+  post :sort_pages
+  get :duplicate
+  post :delete_page
+  get :details_report
+  post :add_page
+  get :add_page
+  get :usage_report
+  post :destroy
+  get :print
+  end
+  
+  end
+
+  resources :pages do
+  
+    member do
+  post :sort_elements
+  get :duplicate
+  post :delete_element
+  post :paste_link
+  get :preview
+  post :add_element
+  post :destroy
+  get :print
+  post :paste
+  end
+  
+  end
+
+  match '/page/list/filter' => 'pages#index', :as => :list_filter_page, :method => :post
+  resources :pages do
+  
+  
+      resources :xhtmls
+    resources :open_responses
+    resources :data_collectors
+  end
+
+  resources :page_elements do
+  
+    member do
+  post :destroy
+  end
+  
+  end
+
+  resources :investigations do
+    collection do
+  get :printable_index
+  end
+    member do
+  get :duplicate
+  get :details_report
+  post :add_activity
+  get :add_activity
+  get :usage_report
+  post :sort_activities
+  post :destroy
+  get :print
+  post :delete_activity
+  get :export
+  end
+  
+  end
+
+  match '/investigations/list/preview/' => 'investigations#preview_index', :as => :investigation_preview_list, :method => :get
+  match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
+  match '/investigations/teacher/:id.otml' => 'investigations#teacher', :as => :investigation_teacher_otml, :method => :get, :format => :otml
+  match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
+  match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
+  match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
+  resources :activities do
+  
+    member do
+  get :duplicate
+  post :add_section
+  get :add_section
+  post :sort_sections
+  post :destroy
+  get :print
+  post :delete_section
+  get :export
+  end
+  
+  end
+
+  match '/activity/list/filter' => 'activities#index', :as => :list_filter_activity, :method => :post
+  resources :activities do
+  
+  
+      resources :sections do
+    
+    
+          resources :pages do
+      
+      
+              resources :page_elements
       end
     end
   end
 
-  map.resources :external_activities, :member => {
-    :duplicate => :get,
-    :destroy => :post
-  }
-  map.list_filter_external_activity '/external_activity/list/filter', :controller => 'external_activities', :action => 'index', :method => :post
+  resources :external_activities do
+  
+    member do
+  get :duplicate
+  post :destroy
+  end
+  
+  end
 
-  map.resources :assessment_targets, :knowledge_statements, :domains
-  map.resources :big_ideas, :unifying_themes, :expectations, :expectation_stems
-  map.resources :grade_span_expectations, :collection => {
-    :select_js => :post,
-    :summary => :post,
-    :reparse_gses => :put,
-    :select => :get
-  }, :member => {
-    :print => :get
-  }
+  match '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity, :method => :post
+  resources :assessment_targets
+  resources :knowledge_statements
+  resources :domains
+  resources :big_ideas
+  resources :unifying_themes
+  resources :expectations
+  resources :expectation_stems
+  resources :grade_span_expectations do
+    collection do
+  get :select
+  post :summary
+  post :select_js
+  put :reparse_gses
+  end
+    member do
+  get :print
+  end
+  
+  end
 
-  map.list_filter_resource_page '/resource_pages/list/filter', :controller => 'resource_pages', :action => 'index', :method => :post
-  map.resources :resource_pages, :collection => {
-    :printable_index => :get
-  }
-  map.resources :attached_files
+  match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
+  resources :resource_pages do
+    collection do
+  get :printable_index
+  end
+  
+  
+  end
 
-  # not being used, but being tested
-  map.resources :images
-
-  # Home Controller
-  map.installer '/missing_installer/:os', :controller => 'home', :action => 'missing_installer', :os => "osx"
-  map.readme '/readme', :controller => 'home', :action => 'readme'
-  map.doc    '/doc/:document', :controller => 'home', :action => 'doc', :requirements => { :document => /\S+/ }
-  map.home   '/home', :controller => 'home', :action => 'index'
-  map.about  '/about', :controller => 'home', :action => 'about'
-  map.test_exception '/test_exception', :controller => 'home', :action => 'test_exception'
-  map.root :controller => 'home', :action => 'index'
-  map.requirements '/requirements', :controller => 'home', :action => 'requirements'
-  map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
-  map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
-  map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
-  # map. ':controller/:action/:id.:format'
-
-  # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  # map.connect ':controller/:action/:id.:format'
-
+  resources :attached_files
+  resources :images
+  match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
+  match '/readme' => 'home#readme', :as => :readme
+  match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
+  match '/home' => 'home#index', :as => :home
+  match '/about' => 'home#about', :as => :about
+  match '/test_exception' => 'home#test_exception', :as => :test_exception
+  match '/' => 'home#index'
+  match '/requirements' => 'home#requirements', :as => :requirements
+  match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
+  match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
+  match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
+  match '/:controller(/:action(/:id))'
 end
