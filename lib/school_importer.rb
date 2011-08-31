@@ -16,7 +16,7 @@ class SchoolImporter
   attr_accessor :districts
 
   CVS_COLUMNS = [:district_name, :school_name]        # format of import CSV data
-  BASE_DIR = "#{RAILS_ROOT}"                          # where to look for the file
+  BASE_DIR = "#{::Rails.root.to_s}"                          # where to look for the file
   DEFAULT_FILENAME = "resources/CohortSchools2010.csv"# a sample file
 
   def self.run(filename=DEFAULT_FILENAME, delete_others=false)

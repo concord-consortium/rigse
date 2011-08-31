@@ -35,7 +35,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
     end
 
     def jnlp_object_cache_dir
-      File.join(RAILS_ROOT, 'config', 'jnlp_objects')
+      File.join(::Rails.root.to_s, 'config', 'jnlp_objects')
     end
 
     def delete_all_cached_maven_jnlp_resources
@@ -87,7 +87,7 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
     end
   end
 
-  # example: <RAILS_ROOT>/config/jnlp_objects/concord/maven_jnlp_server_object_1.yml
+  # example: <::Rails.root.to_s>/config/jnlp_objects/concord/maven_jnlp_server_object_1.yml
   def maven_jnlp_server_object_path
     "#{self.maven_jnlp_server_object_path_prefix}.yml"
   end
@@ -118,12 +118,12 @@ class MavenJnlp::MavenJnlpServer < ActiveRecord::Base
     FileUtils.rm(maven_jnlp_server_object_path, :force => true)
   end
 
-  # example: <RAILS_ROOT>/config/jnlp_objects/concord/maven_jnlp_server_object
+  # example: <::Rails.root.to_s>/config/jnlp_objects/concord/maven_jnlp_server_object
   def  maven_jnlp_server_object_path_prefix
     File.join(maven_jnlp_server_object_dir_path, MavenJnlp::MavenJnlpServer.maven_jnlp_object_name)
   end
 
-  # example: <RAILS_ROOT>/config/jnlp_objects/concord
+  # example: <::Rails.root.to_s>/config/jnlp_objects/concord
   def maven_jnlp_server_object_dir_path
     File.join(MavenJnlp::MavenJnlpServer.jnlp_object_cache_dir, self.name)
   end
