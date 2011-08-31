@@ -51,7 +51,7 @@ module RailsPortal
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
   
     # Add additional load paths for your own custom dirs
-    # config.load_paths += %W( #{RAILS_ROOT}/extras )
+    # config.load_paths += %W( #{::Rails.root.to_s}/extras )
   
     # Force all environments to use the same logger level
     # (by default production uses :info, the others :debug)
@@ -63,7 +63,7 @@ module RailsPortal
     config.time_zone = 'UTC'
   
     # Set the default location for page caching
-    config.action_controller.page_cache_directory = RAILS_ROOT + '/public'
+    config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
   
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -97,7 +97,7 @@ module RailsPortal
     # config.after_initialize do
     #   opts = config.has_many_polymorphs_options
     #   opts[:file_pattern] = Array(opts[:file_pattern])
-    #   opts[:file_pattern] << "#{RAILS_ROOT}/app/models/**/*.rb"
+    #   opts[:file_pattern] << "#{::Rails.root.to_s}/app/models/**/*.rb"
     #   config.has_many_polymorphs_options = opts
     # end
   
