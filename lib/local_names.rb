@@ -23,7 +23,7 @@ class LocalNames
   end
 
   def load_names(path=File.join("config","local_names.yml"))
-    self.yaml_file = File.join(RAILS_ROOT, path)
+    self.yaml_file = File.join(::Rails.root.to_s, path)
     config_data = []
     begin
       config_data = File.open(self.yaml_file, "r").read

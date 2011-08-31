@@ -168,14 +168,14 @@ module JnlpHelper
   # IMPORTANT: should match <project><name>XXXX</name></project> value
   # from bitrock installer
   def jnlp_installer_project
-    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
     config['shortname'] || "RITES"
   end
   
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
-    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
     config['version'] || "200912.2"
   end
   

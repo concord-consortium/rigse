@@ -30,7 +30,7 @@ Spork.prefork do
   require 'factory_girl'
   @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
 
-  if ActiveRecord::Migrator.new(:up, RAILS_ROOT + "/db/migrate").pending_migrations.empty?
+  if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.empty?
     if Probe::ProbeType.count == 0
       puts
       puts "*** Probe configuration models need to be loaded into the test database to run the tests"
@@ -53,7 +53,7 @@ Spork.prefork do
   Spec::Runner.configure do |config|
     config.use_transactional_fixtures = true
     config.use_instantiated_fixtures  = false
-    config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
+    config.fixture_path = ::Rails.root.to_s + '/spec/fixtures/'
   end
 
   # FIXME Somehow using webrat kills calling .id on ActiveRecord objects...

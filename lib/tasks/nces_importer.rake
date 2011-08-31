@@ -4,7 +4,7 @@ require 'fileutils'
 namespace :portal do
   namespace :setup do
     
-    nces_dir = File.join(RAILS_ROOT, 'config', 'nces_data')
+    nces_dir = File.join(::Rails.root.to_s, 'config', 'nces_data')
     school_layout_file = File.join(nces_dir, 'psu061blay.txt')
     district_layout_file = File.join(nces_dir, 'pau061blay.txt')
 
