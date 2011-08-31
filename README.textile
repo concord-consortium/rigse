@@ -114,6 +114,7 @@ After getting the server running it's good to confirm that all the tests pass be
 
 Prepare a database for use when running the tests:
 
+bc. RAILS_ENV=test rake db:create
 bc. rake db:test:prepare
 
 Run the rspec unit tests:
