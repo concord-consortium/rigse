@@ -34,7 +34,7 @@ module RinetDataExampleHelpers
     defaults = {
       :districts => ["01"],
       :verbose => false,
-      :district_data_root_dir => "#{RAILS_ROOT}/resources/rinet_test_data/",
+      :district_data_root_dir => "#{::Rails.root.to_s}/resources/rinet_test_data/",
       :skip_get_csv_files => true
     }
     rinet_data_options = defaults.merge(opts)
@@ -65,7 +65,7 @@ describe RinetData do
       @failed_connection_log = /.*get_csv_files failed.*/i
       @no_file_message = /.*no such file.*/i
       @no_file_log = /.*download.*failed.*/i
-      @district_data_root_dir = "#{RAILS_ROOT}/rinet_data/test/districts/csv"
+      @district_data_root_dir = "#{::Rails.root.to_s}/rinet_data/test/districts/csv"
     end
 
     before(:each) do

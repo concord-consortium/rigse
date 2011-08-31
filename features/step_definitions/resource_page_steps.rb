@@ -12,7 +12,7 @@ end
 
 Given /^the resource page "([^"]*)" has an attachment named "([^"]*)"$/ do |resource_name, attachment_name|
   resource = ResourcePage.find_by_name resource_name
-  resource.new_attached_files = {'name' => attachment_name, 'attachment' => File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')}
+  resource.new_attached_files = {'name' => attachment_name, 'attachment' => File.new(::Rails.root.to_s + '/spec/fixtures/images/rails.png')}
   resource.save
 end
 

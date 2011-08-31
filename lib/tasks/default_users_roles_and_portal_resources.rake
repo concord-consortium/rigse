@@ -416,7 +416,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     #     "login" => "stephen",
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
-    # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
+    # File.open(File.join(::Rails.root.to_s, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
     # 
     # The additional users will be created but each one will need to go to the
     # forgot password link to actually get a working password:
@@ -426,7 +426,7 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     desc "Create additional users from additional_users.yml file."
     task :create_additional_users => :environment do
       begin
-        path = File.join(RAILS_ROOT, %w{config additional_users.yml})
+        path = File.join(::Rails.root.to_s, %w{config additional_users.yml})
         additional_users = YAML::load(IO.read(path))
         puts "\nCreating additional users ...\n\n"
         pw = User.make_token

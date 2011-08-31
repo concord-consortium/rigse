@@ -24,11 +24,11 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     end
 
     def jnlp_object_cache_dir
-      File.join(RAILS_ROOT, 'config', 'jnlp_objects')
+      File.join(::Rails.root.to_s, 'config', 'jnlp_objects')
     end
 
     def jnlp_cache_dir
-      File.join(RAILS_ROOT, 'public', 'jnlp')
+      File.join(::Rails.root.to_s, 'public', 'jnlp')
     end
 
     def delete_all_cached_jnlp_objects

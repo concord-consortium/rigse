@@ -10,11 +10,11 @@ namespace :build do
     end
     
     def bitrocket_installer_dir
-      check_dir_exists("#{RAILS_ROOT}/resources/bitrock_installer")
+      check_dir_exists("#{::Rails.root.to_s}/resources/bitrock_installer")
      end
 
     def installer_dest
-      check_dir_exists("#{RAILS_ROOT}/public/installers/")
+      check_dir_exists("#{::Rails.root.to_s}/public/installers/")
     end
 
     def installer_config_xml
@@ -71,7 +71,7 @@ namespace :build do
       return YAML::load(file_txt)
     end
  
-    def write_config(config, config_file="#{RAILS_ROOT}/config/installer.yml")
+    def write_config(config, config_file="#{::Rails.root.to_s}/config/installer.yml")
       File.open(config_file, "w") { |f|
         f.write(YAML::dump(config))
       }

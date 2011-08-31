@@ -25,7 +25,7 @@ describe AttachedFile do
     
     it "should upload a file" do
       a = build_attached_file({
-        :attachment => File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')
+        :attachment => File.new(::Rails.root.to_s + '/spec/fixtures/images/rails.png')
       })
       a.should be_valid
       a.save

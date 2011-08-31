@@ -3,7 +3,7 @@ require 'pathname'
 
 module AppSettings
 
-  APP_SETTINGS_PATH = "#{RAILS_ROOT}/config/settings.yml"
+  APP_SETTINGS_PATH = "#{::Rails.root.to_s}/config/settings.yml"
 
   def settings_exists?(path=APP_SETTINGS_PATH)
     File.exists?(path) && File.stat(path).size > 0

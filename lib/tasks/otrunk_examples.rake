@@ -41,7 +41,7 @@ namespace :app do
     end
 
     def ot_introspect_object_path
-      File.join(RAILS_ROOT, 'lib', 'otrunk', 'ot_introspect.yaml')
+      File.join(::Rails.root.to_s, 'lib', 'otrunk', 'ot_introspect.yaml')
     end
     
     def git_update_otrunk_examples
