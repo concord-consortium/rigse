@@ -52,7 +52,8 @@ module RailsPortal
   
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{::Rails.root.to_s}/extras )
-  
+    config.autoload_paths += Dir["#{config.root}/lib/**/"] # include all subdirectories
+    # config.autoload_paths += Dir["#{config.root}/lib/*"]  # dont include subdirectories yet..
     # Force all environments to use the same logger level
     # (by default production uses :info, the others :debug)
     # config.log_level = :debug
