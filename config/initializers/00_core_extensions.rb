@@ -135,5 +135,5 @@ module DisplayNameMethod
 end
 
 # include #display_name everywhere
-Object.send(:include, LocalNames::DiplayNameMethod)
+Object.send(:include, ::DisplayNameMethod)
 
