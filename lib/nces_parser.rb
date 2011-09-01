@@ -85,7 +85,7 @@ private
   
   def _get_school_layout(layout_file)
     columns = []
-    open(layout_file) do |file|
+    File.open(layout_file, "r:iso-8859-1") do |file|
       count = 0
       line = ''
       while (line = file.gets) && count < 2 do #fast forward until real data begins
@@ -128,7 +128,7 @@ private
 
   def _get_district_layout(layout_file)
     columns = []
-    open(layout_file) do |file|
+    File.open(layout_file, "r:iso-8859-1") do |file|
       count = 0
       line = ''
       while (line = file.gets) && count < 2 do #fast forward until real data begins
