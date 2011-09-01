@@ -18,7 +18,7 @@ class OtrunkExampleImport
       # @body = File.read(path)
       @file_size = File.stat(path).size
       # if @file_size < 200000
-      #   @doc = Hpricot::XML(File.read(path))
+      #   @doc = Nokogiri::XML(File.read(path))
       #   @imports = @doc.search("import").collect { |e| e['class'] }
       #   @view_entries = @doc.search("OTViewEntry").collect {|ve| ViewEntry.new([ve['viewClass'], ve['objectClass']])}
       # end
@@ -30,7 +30,7 @@ class OtrunkExampleImport
     end
     
     def doc
-      Hpricot::XML(File.read(path))
+      Nokogiri::XML(File.read(path))
     end
   end
 
@@ -65,7 +65,7 @@ class OtrunkExampleImport
       @path = path
       @name = File.basename(@path).chomp('.launch')
       @body = File.read(@path)
-      @doc = Hpricot::XML(@body)
+      @doc = Nokogiri::XML(@body)
       @launch_type = @doc.search("launchConfiguration").attr(:type).split('.')[-1]
       list_entry_values = @doc.search("listAttribute[@key='org.eclipse.jdt.launching.CLASSPATH']/listEntry").collect {|le| le['value']}
       project_attr = @doc.search("stringAttribute[@key='org.eclipse.jdt.launching.PROJECT_ATTR']")
@@ -80,11 +80,11 @@ class OtrunkExampleImport
       @projects = []
       @valid = true
       list_entry_values.each do |val|
-        value = Hpricot::XML(val)
+        value = Nokogiri::XML(val)
         if project = value.search("runtimeClasspathEntry")[0]['projectName']
           path = @projects_dir + project
           if File.exists?("#{path}/.classpath")
-            classpath = Hpricot.XML(open("#{path}/.classpath"))
+            classpath = Nokogiri.XML(open("#{path}/.classpath"))
             output = classpath.at("classpathentry[@kind=output]")['path']
             @projects <<  "#{path}/#{output}"
           else

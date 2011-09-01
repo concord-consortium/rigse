@@ -135,7 +135,7 @@ class GseParser
   # table_heading_regex to seperate 
   #
   def parse(path)
-    doc = Hpricot(open(path))
+    doc = Nokogiri(open(path))
     table_number = 0
 
     (doc/:table).each do | table |

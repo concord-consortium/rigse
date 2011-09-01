@@ -43,7 +43,7 @@ module TruncatableXhtml
   def extract_text_from_elements(xhtml)
     return '' if xhtml.empty?
     begin
-      doc = Hpricot.XML(xhtml)
+      doc = Nokogiri.XML(xhtml)
       text_contents = []
       doc.children.each do |child| 
         child.traverse_text do |text_element| 

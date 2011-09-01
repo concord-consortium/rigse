@@ -106,7 +106,7 @@ namespace :app do
       otml_files = Dir["#{otrunk_examples_dir}/**/*.otml"].find_all {|o| !(o =~ /rites/) }
       otml_files.each do |f| 
         puts "#{File::stat(f).size}: #{f}"
-        doc = Hpricot.XML(open(f)) 
+        doc = Nokogiri.XML(open(f)) 
         otrunk_imports << doc.search("//import").collect {|i| i['class']} 
       end 
       otrunk_imports.flatten!.uniq!

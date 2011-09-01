@@ -99,7 +99,7 @@ class Embeddable::RawOtmlsController < ApplicationController
         render :xml => @raw_otml.errors, :status => :unprocessable_entity
       end
     elsif request.symbolized_path_parameters[:format] == 'otml'
-      otml_content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
+      otml_content = (Nokogiri.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
       @raw_otml.update_attributes(:otml_content => otml_content)
       render :nothing => true
     else
