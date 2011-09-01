@@ -1,4 +1,5 @@
 RailsPortal::Application.routes.draw do
+
   namespace :saveable do
       namespace :sparks do
           resources :measuring_resistances
@@ -325,14 +326,14 @@ RailsPortal::Application.routes.draw do
   match '/sakai-axis/SakaiSigning.jws' => 'sakai_link#fake_verification', :as => :fake_verification
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
-  match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => 
+  match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil
   match '/forgot_password' => 'passwords#login', :as => :forgot_password
   match '/forgot_password/email' => 'passwords#email', :as => :forgot_password_email
   match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password
   match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions
   match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
-  match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => :get }
-  match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => :get }
+  match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
+  match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
   resources :users do
   
     member do
