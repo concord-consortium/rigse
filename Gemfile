@@ -23,6 +23,7 @@ source "http://rubygems.org"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 2.3.15"
   gem "haml",                 "~> 3.1.1"
+  gem "sass",                 "~> 3.1.7"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
