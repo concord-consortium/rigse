@@ -12,7 +12,7 @@
 development: 
   host: portfolio.ri.net
   username: concord
-  password: *****
+  password: '*****'
   external_domain_url: http://moleman.concord.org/
   districts:
     - "06"
@@ -24,7 +24,7 @@ development:
 test: &test_settings
   host: portfolio.ri.net
   username: concord
-  password: *****
+  password: '*****'
   external_domain_url: http://moleman.concord.org/
   districts:
     - "06"
@@ -39,7 +39,7 @@ cucumber:
 staging: 
   host: portfolio.ri.net
   username: concord
-  password: *****
+  password: '*****'
   external_domain_url: http://test.portfolio.ri.net/
   districts:
     - "06"
@@ -51,7 +51,7 @@ staging:
 production: 
   host: portfolio.ri.net
   username: concord
-  password: *****
+  password: '*****'
   external_domain_url: http://portfolio.ri.net/
   districts:
     - "06"

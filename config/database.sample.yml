@@ -4,7 +4,7 @@ development:
   adapter: mysql
   username: root
   database: rites_development
-  password: *****
+  password: '*****'
   pool: 5
 
 test: &test_settings
@@ -12,7 +12,7 @@ test: &test_settings
   adapter: mysql
   username: root
   database: rites_test
-  password: *****
+  password: '*****'
   pool: 5
 
 cucumber:
@@ -31,7 +31,7 @@ production:
   adapter: mysql
   username: root
   database: rites_production
-  password: *****
+  password: '*****'
   pool: 5
 
 # Optionally used for importing of ITSI activities
@@ -40,7 +40,7 @@ itsi:
   adapter: mysql
   username: root
   database: production_itsi_prod
-  password: *****
+  password: '*****'
   pool: 5
   asset_url: http://itsidiy.concord.org
 
@@ -50,5 +50,5 @@ ccportal:
   adapter: mysql
   username: root
   database: ccportal
-  password: *****
+  password: '*****'
   pool: 5

@@ -2,11 +2,13 @@ require 'rubygems'
 require "bundler/setup"
 
 require 'fileutils'
-require 'yaml'
 require 'erb'
 require 'optparse'
 require 'pathname'
 require 'ostruct'
+
+require 'yaml'
+YAML::ENGINE.yamler = "psych"
 
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
