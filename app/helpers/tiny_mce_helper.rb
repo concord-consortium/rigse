@@ -39,7 +39,7 @@ HEREDOC
 
   def default_mce_buttons(n)
     case(n)
-    when 1:
+    when 1
       "bold,italic,underline,|,sup,sub,|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall,|,justifyleft,justifycenter,justifyright"
     else 
       ""
