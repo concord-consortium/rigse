@@ -740,4 +740,7 @@ RailsPortal::Application.routes.draw do
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/:controller(/:action(/:id))'
+  
+  root :to => 'home#index'
+
 end

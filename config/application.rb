@@ -2,6 +2,9 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'acts-as-taggable-on'
 require 'paperclip'
+require 'grit'
+require 'jnlp'
+require 'open-uri'
 
 module RailsPortal
   class Application < Rails::Application
