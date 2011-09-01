@@ -45,6 +45,7 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
+  gem 'themes_for_rails',     :require => 'themes_for_rails'
 
 group :development do
   gem "highline"

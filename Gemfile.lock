@@ -230,6 +230,9 @@ GEM
       ruby-ole (>= 1.0)
     syntax (1.0.0)
     term-ansicolor (1.0.6)
+    themes_for_rails (0.4.2)
+      rails (~> 3.0.0)
+      themes_for_rails
     thor (0.14.6)
     treetop (1.4.10)
       polyglot
@@ -295,6 +298,7 @@ DEPENDENCIES
   spork (~> 0.8)
   spreadsheet
   syntax (~> 1.0)
+  themes_for_rails
   uuidtools (~> 2.1.2)
   what_methods
   will_paginate (~> 2.3.15)
