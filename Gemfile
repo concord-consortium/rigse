@@ -48,6 +48,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.9.4"
   gem 'themes_for_rails',     "~> 0.4.2"
   gem 'soap4r-ruby1.9',       "~> 2.0.3"
+  gem 'default_value_for'
 
 group :development do
   gem "highline"
