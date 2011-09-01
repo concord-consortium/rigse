@@ -131,7 +131,6 @@ module TruncatableXhtml
     ## add before_save hooks
     clazz.class_eval {
       def before_save
-        self.old_before_save
         if (self.respond_to? 'name')
           self.html_tables.each do |tablename|
             if self.respond_to? tablename
