@@ -42,7 +42,7 @@ source "http://rubygems.org"
   gem "maruku",               "~> 0.6"
   gem "syntax",               "~> 1.0"
   gem "paperclip"
-  gem "acts-as-taggable-on"
+  gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
 
