@@ -147,7 +147,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
 
   def update_jnlp_object
-    @jnlp_object = Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
+    @jnlp_object = ::Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
     @jnlp_object.local_cache_dir = MavenJnlp::VersionedJnlp.jnlp_object_cache_dir
     save_jnlp_object
   end
