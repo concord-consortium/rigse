@@ -1,16 +1,15 @@
-require 'rubygems'
-require "bundler/setup"
-
-require 'fileutils'
-require 'yaml'
-require 'erb'
-require 'optparse'
-require 'pathname'
-
+# require 'rubygems'
+# require "bundler/setup"
+# require 'fileutils'
+# require 'yaml'
+# require 'erb'
+# require 'optparse'
+# require 'pathname'
+Bundler.require(:default)
 JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
-
+$LOAD_PATH.unshift(File.join(RAILS_ROOT,"lib"))
 # ==================================================================
 #
 #   General utility methods
