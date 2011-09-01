@@ -18,8 +18,10 @@ module RailsPortal
     #   use Rack::MethodOverride
     #   use Rack::Head
     #   run ActionController::Dispatcher.new
+    config.autoload_paths += %W(#{config.root}/lib) # include lib directory
+    config.autoload_paths += %W(#{config.root}/lib/**/") # include all subdirectories
     
-    config.middleware.insert_before(:"ActionController::ParamsParser", "Rack::ExpandB64Gzip")
+    config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
     
     
     # Settings in config/environments/* take precedence over those specified here.
@@ -52,8 +54,6 @@ module RailsPortal
   
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{::Rails.root.to_s}/extras )
-    config.autoload_paths += %W(#{config.root}/lib) # include lib directory
-    config.autoload_paths += %W(#{config.root}/lib/**/") # include all subdirectories
     # Force all environments to use the same logger level
     # (by default production uses :info, the others :debug)
     # config.log_level = :debug
