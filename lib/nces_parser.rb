@@ -1,6 +1,3 @@
-# gem 'ar-extensions', '>= 0.9.1'
-require 'ar-extensions'
-
 class NcesParser
   
   def initialize(district_layout_file, school_layout_file, year, states_and_provinces=nil)
