@@ -128,12 +128,12 @@ end
 #    lib/local_names.rb,
 #    spec/libs/local_names_spec.rb,
 #    spec/core_extensions/object_extensions_spec.rb
-module DiplayNameMethod
+module DisplayNameMethod
   def display_name
     LocalNames.instance.local_name_for(self)
   end
 end
 
 # include #display_name everywhere
-Object.send(:include, LocalNames::DiplayNameMethod)
+Object.send(:include, DisplayNameMethod)
 
