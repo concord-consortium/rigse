@@ -3,7 +3,7 @@ GEM
   specs:
     Ascii85 (1.0.1)
     RedCloth (4.2.8)
-    aasm (2.2.0)
+    aasm (2.2.1)
     abstract (1.0.0)
     actionmailer (3.0.10)
       actionpack (= 3.0.10)
