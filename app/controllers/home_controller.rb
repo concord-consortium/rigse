@@ -1,5 +1,9 @@
 class HomeController < ApplicationController
   caches_page   :project_css
+  
+  def index
+  end
+  
   def readme
     @document = FormattedDoc.new('README.textile')
     render :action => "formatted_doc", :layout => "technical_doc"
