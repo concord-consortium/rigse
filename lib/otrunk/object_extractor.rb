@@ -1,8 +1,8 @@
 class Otrunk::ObjectExtractor
-  require 'hpricot'
+  require 'nokogiri'
   
   def initialize(otml)
-    @otml = Hpricot::XML(otml)
+    @otml = Nokogiri::XML(otml)
     @doc_id = @otml.at("otrunk[@id]").get_attribute("id")
   end
   
@@ -15,7 +15,7 @@ class Otrunk::ObjectExtractor
     prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
     
     # we should now have nil or an element
-    return '' unless prop.kind_of?(Hpricot::Elem)
+    return '' unless prop.kind_of?(Nokogiri::Elem)
     return (prop.nil? ? '' : prop.inner_text.strip)
   end
   
@@ -29,7 +29,7 @@ class Otrunk::ObjectExtractor
     prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
     
     # we should now have nil or an element
-    return [] if prop.nil? || ! prop.kind_of?(Hpricot::Elem)
+    return [] if prop.nil? || ! prop.kind_of?(Nokogiri::Elem)
     resolved_children = resolve_elements(prop.children)
     if property =~ /\[(.*)\]$/
       return [resolved_children[$1.to_i]]
