@@ -115,9 +115,6 @@ class Admin::Project < ActiveRecord::Base
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
 
-    def display_name
-      "Project"
-    end
     
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"

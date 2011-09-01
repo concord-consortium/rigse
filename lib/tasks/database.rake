@@ -32,7 +32,7 @@ namespace :db do
     end
   end
   
-  require 'activerecord'
+  require 'active_record'
   class RemoveTables < ActiveRecord::Migration
     def self.up
       ActiveRecord::Base.connection.tables.each do |table|

@@ -19,6 +19,8 @@
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
 
+    = csrf_meta_tag
+
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?

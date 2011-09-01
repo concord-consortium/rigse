@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe "/ri_gse/grade_span_expectations/show.html.haml" do
   

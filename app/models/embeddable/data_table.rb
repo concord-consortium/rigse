@@ -92,9 +92,6 @@ class Embeddable::DataTable < ActiveRecord::Base
     return ""
   end
 
-  def self.display_name
-    "Data Table"
-  end
 
   def investigations
     invs = []

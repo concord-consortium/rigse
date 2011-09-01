@@ -130,7 +130,6 @@ module TruncatableXhtml
     
     ## add before_save hooks
     clazz.class_eval {
-      alias old_before_save before_save
       def before_save
         self.old_before_save
         if (self.respond_to? 'name')
@@ -142,6 +141,7 @@ module TruncatableXhtml
           end
         end
         self.replace_offensive_html
+        super
       end
     }
   end

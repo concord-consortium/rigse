@@ -1,9 +1,10 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe ResourcePage do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @resource_page = ResourcePage.new
     end
     
@@ -34,7 +35,7 @@ describe ResourcePage do
   describe "after creation" do
     before do 
       @resource_page = create_resource_page
-      @attachment = File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')
+      @attachment = File.new(::Rails.root.to_s + '/spec/fixtures/images/rails.png')
     end
     
     it "should allow a new file to be attached" do

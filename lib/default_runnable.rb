@@ -75,6 +75,16 @@ class DefaultRunnable
         data_collector_for(section,type,nil)
         counter = counter + 1
       end
+
+      # add an example of a digital display
+      activity = Activity.create( :name => 'Digital Display', :description => 'Example of Digital Display' )
+      investigation.activities << activity
+      section = DefaultRunnable.add_section_to_activity(activity, "Digital Display", "Example of Digital Display")
+      dc = data_collector_for(section,Probe::ProbeType.find_by_name('Temperature'),nil)
+      dc.is_digital_display = true
+      dc.save
+      counter = counter + 1
+
       investigation.deep_set_user(user)
       investigation
     end
@@ -83,9 +93,13 @@ class DefaultRunnable
       if calibration
         calibration_name = calibration.name
         calibration_desc = calibration.description
+        unit = calibration.physical_unit.unit_symbol
+        y_axis_label = calibration.name
       else
         calibration_name = "no calibration"
         calibration_desc = "without any calibration"
+        unit = type.unit
+        y_axis_label = type.name
       end
       name = "#{type.name}- #{calibration_name}"
       description = "<h3>#{type.name} (id:#{type.id})"
@@ -96,9 +110,14 @@ class DefaultRunnable
       data_collector = Embeddable::DataCollector.create(
         :name => name,
         :probe_type => type,
-        :calibration => calibration
+        :calibration => calibration,
+        :y_axis_label => y_axis_label,
+        :y_axis_units => unit,
+        :y_axis_min => type.min,
+        :y_axis_max => type.max
       )
       data_collector.pages << page
+      data_collector
     end
 
     def add_page_to_section(section, name, html_content='', page_description='')

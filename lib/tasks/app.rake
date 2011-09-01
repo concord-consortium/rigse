@@ -27,7 +27,7 @@ namespace :app do
     require 'fileutils'
 
     def rails_file_path(*args)
-      File.join([RAILS_ROOT] + args)
+      File.join([::Rails.root.to_s] + args)
     end
 
 

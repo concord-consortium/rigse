@@ -25,9 +25,6 @@ class Dataservice::Blob < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Dataservice::Blob"
-    end
   end
 
   def name

@@ -5,11 +5,11 @@ namespace :app do
     # require 'otrunk_examples_import'
     autoload :OtrunkExampleImport, "otrunk_examples_import"
     def otrunk_lib_dir
-      @otrunk_lib_dir || @otrunk_lib_dir = File.join(RAILS_ROOT, 'lib', 'otrunk')
+      @otrunk_lib_dir || @otrunk_lib_dir = File.join(::Rails.root.to_s, 'lib', 'otrunk')
     end
 
     def otrunk_examples_dir
-      @otrunk_examples_dir || @otrunk_examples_dir = File.join(RAILS_ROOT, 'public', 'otrunk-examples')
+      @otrunk_examples_dir || @otrunk_examples_dir = File.join(::Rails.root.to_s, 'public', 'otrunk-examples')
     end
 
     def otrunk_model_classes_path
@@ -41,7 +41,7 @@ namespace :app do
     end
 
     def ot_introspect_object_path
-      File.join(RAILS_ROOT, 'lib', 'otrunk', 'ot_introspect.yaml')
+      File.join(::Rails.root.to_s, 'lib', 'otrunk', 'ot_introspect.yaml')
     end
     
     def git_update_otrunk_examples

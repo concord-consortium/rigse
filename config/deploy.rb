@@ -79,7 +79,7 @@ end
 set(:scm_passphrase) do
   Capistrano::CLI.password_prompt( "Enter your git password: ")
 end
-set :repository, "git://github.com/stepheneb/rigse.git"
+set :repository, "git://github.com/concord-consortium/rigse.git"
 set :deploy_via, :remote_cache
 
 #############################################################
@@ -565,7 +565,7 @@ namespace :convert do
 
   # seb: 20110126
   # See commit: Add "offerings_count" cache counter to runnables
-  # https://github.com/stepheneb/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
+  # https://github.com/concord-consortium/rigse/commit/dadea520e3cda26a721e01428527a86222143c68
   desc "Recalculate the 'offerings_count' field for runnable objects"
   task :reset_offering_counts, :roles => :app do
     # remove investigation cache files
@@ -581,10 +581,17 @@ namespace :convert do
   end
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
-  # https://github.com/stepheneb/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
+  # https://github.com/concord-consortium/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a
   desc "*** WARNING *** Delete all real districts, schools, teachers, students, offerings, etc except for the virtual site district and school"
   task :delete_all_real_schools, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && bundle exec rake RAILS_ENV=#{rails_env} app:schools:delete_all_real_schools --trace"
+  end
+
+  # seb: 20110715
+  # moved repo to https://github.com/concord-consortium/rigse
+  desc "change git remote url for origin to git://github.com/concord-consortium/rigse.git"
+  task :change_git_origin_url_to_concord_consortium, :roles => :app do
+    run("cd #{shared_path}/cached-copy; git remote set-url origin git://github.com/concord-consortium/rigse.git")
   end
 end
 
@@ -595,7 +602,7 @@ namespace :rake do
   desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
   # run like: cap staging rake:invoke task=a_certain_task  
   task :invoke do  
-    run("cd #{deploy_to}/current; bundle exec #{ENV['task']} RAILS_ENV=#{rails_env}")
+    run("cd #{deploy_to}/current; bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}")
  rake #{ENV['task']} RAILS_ENV=#{rails_env}")  
   end  
 end
@@ -634,6 +641,20 @@ namespace :installer do
   end
 
 end
+
+namespace 'account_data' do
+  desc 'upload_csv_for_district: copy the local csv import files to remote for district (set district=whatever)'
+    task 'upload_csv_for_district' do
+      district = ENV['district']
+      if district
+        domain = ENV['domain'] || 'rinet_sakai'
+        district_root = File.join('rinet_data','districts',domain, 'csv')
+        from_dir = File.join('rinet_data','districts',domain, 'csv',district)
+        to_dir   = File.join(deploy_to,current_dir,'rinet_data','districts',domain, 'csv')
+        upload(from_dir, to_dir, :via => :scp, :recursive => true)
+      end
+    end
+  end
 
 before 'deploy:restart', 'deploy:set_permissions'
 before 'deploy:update_code', 'deploy:make_directory_structure'

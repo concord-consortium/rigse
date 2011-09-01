@@ -168,14 +168,14 @@ module JnlpHelper
   # IMPORTANT: should match <project><name>XXXX</name></project> value
   # from bitrock installer
   def jnlp_installer_project
-    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
     config['shortname'] || "RITES"
   end
   
   # IMPORTANT: should match <project><version>XXXX</version></project> value
   # from bitrock installer config file: eg: projects/rites/rites.xml
   def jnlp_installer_version
-    config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+    config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
     config['version'] || "200912.2"
   end
   
@@ -183,46 +183,6 @@ module JnlpHelper
     "#{APP_CONFIG[:site_url]}/missing_installer/#{os}"
   end
 
-  def jnlp_installer_resources(xml, options = {})
-    jnlp = jnlp_adaptor.jnlp
-    # from jnlpwrapper.concord.org
-    #<jar href="org/concord/utilities/response-cache/response-cache.jar" version="0.1.0-20090728.205151-9"/>
-    #<jar href="org/concord/jnlp2shell/jnlp2shell.jar" version="1.0-20090729.161746-166" main="true"/>
-    #
-    xml.resources {
-      xml.j2se :version => jnlp.j2se_version, 'max-heap-size' => "#{jnlp.max_heap_size}m", 'initial-heap-size' => "#{jnlp.initial_heap_size}m"
-      xml.jar :href=> "org/concord/utilities/response-cache/response-cache.jar", :version=> "0.1.0-20090728.205151-9"
-      # xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20091102.180724-197", :main =>"true"
-      # jnlp2shell__V1.0-20110601.192832-412.jar
-      xml.jar :href=> "org/concord/jnlp2shell/jnlp2shell.jar", :version=> "1.0-20110601.192832-412", :main =>"true"
-      system_properties(options).each do |property|
-        xml.property(:name => property[0], :value => property[1])
-      end
-      xml.property :name=> "vendor", :value => jnlp_installer_vendor
-      xml.property :name=> "product_name", :value => jnlp_installer_project
-      xml.property :name=> "product_version", :value => jnlp_installer_version
-      # after conversation w/ scott & stephen, dont think we need this.
-      # xml.property :name=> "wrapped_jnlp", :value => options[:wrapped_jnlp_url]
-      # xml.property :name=> "mangle_wrapped_jnlp", :value => "false"
-      
-      # Someday we might want to cache some resources, but right now, we don't
-      # xml.property :name=> "resource_loc", :value => "resources"
-
-      xml.property :name=> "cache_loc", :value => "jars"
-      xml.property :name=> "jnlp2shell.compact_paths", :value => "true"
-      xml.property :name=> "jnlp2shell.read_only", :value => "true"
-    }
-    xml.resources(:os => "Linux") { 
-      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("linux")
-    }
-    xml.resources(:os => "Mac OS X") { 
-      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("osx")
-    }
-    xml.resources(:os => "Windows") { 
-      xml.property :name=> "not_found_url", :value => jnlp_installer_not_found_url("windows")
-    }
-  end
-  
   def jnlp_resources_linux(xml)
     xml.resources(:os => "Linux") { 
       linux_native_jars.each do |resource|

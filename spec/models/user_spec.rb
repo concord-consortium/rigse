@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe User do
   fixtures :users
@@ -107,7 +107,10 @@ describe User do
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
-     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'tick\'@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
+     # Update: just saw a tick in the wild, modified validations
+     # see commit: 1e9d396b0     
+     # 'tick\'@gmail.com' now allowed.
+     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
     ].each do |email_str|
       it "'#{email_str}'" do
         lambda do

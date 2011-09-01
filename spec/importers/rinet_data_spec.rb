@@ -1,48 +1,40 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 module RinetDataExampleHelpers
 
-  def be_more_than(expected)
-    simple_matcher do |given, matcher|
-      matcher.description = "more than #{expected.size}"
-      matcher.failure_message = "expected #{given.size} to be more than #{expected.size}"
-      matcher.negative_failure_message = "expected #{given.size} not to be more than #{expected.size}"
-      (given.size > expected.size)
-    end
+  Spec::Matchers.define :be_more_than do |expected|
+    match                          { |given| given.size > expected.size }
+    failure_message_for_should     { |given| "expected #{given.size} to be more than #{expected.size}" }
+    failure_message_for_should_not { |given| "expected #{given.size} not to be more than #{expected.size}" }
+    description                    { "more than #{expected.size}" }
   end
 
-  def be_less_than(expected)
-    simple_matcher do |given, matcher|
-      matcher.description = "less than #{expected.size}"
-      matcher.failure_message = "expected #{given.size} to be less than #{expected.size}"
-      matcher.negative_failure_message = "expected #{given.size} not to be less than #{expected.size}"
-      (given.size < expected.size)
-    end
+  Spec::Matchers.define :be_less_than do |expected|
+    match                          { |given| given.size < expected.size }
+    failure_message_for_should     { |given| "expected #{given.size} to be less than #{expected.size}" }
+    failure_message_for_should_not { |given| "expected #{given.size} not to be less than #{expected.size}" }
+    description                    { "less than #{expected.size}" }
   end
 
-  def have_nces_class
-    simple_matcher do |given, matcher|
-      matcher.description = "#{given.inspect} should be in 'real'(nces) school"
-      matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
-      matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
-      given.clazzes.detect { |c| c.real? }
-    end
+  Spec::Matchers.define :have_nces_class do
+    match                          { |given| given.clazzes.detect { |c| c.real? } }
+    failure_message_for_should     { |given| "expected #{given.inspect} to be in a 'real' school" }
+    failure_message_for_should_not { |given| "expected #{given.inspect} not to be in a 'real' school" }
+    description                    { "#{given.inspect} should be in 'real'(nces) school" }
   end
 
-  def be_in_nces_school
-    simple_matcher do |given, matcher|
-      matcher.description = "#{given.inspect} should be in 'real'(nces) school"
-      matcher.failure_message = "expected #{given.inspect} to be in a 'real' school"
-      matcher.negative_failure_message = "expected #{given.inspect} not to be in a 'real' school"
-      given.schools.detect { |s| s.real? }
-    end
+  Spec::Matchers.define :be_in_nces_school do
+    match                          { |given| given.schools.detect { |s| s.real? } }
+    failure_message_for_should     { |given| "expected #{given.inspect} to be in a 'real' school" }
+    failure_message_for_should_not { |given| "expected #{given.inspect} not to be in a 'real' school" }
+    description                    { "#{given.inspect} should be in 'real'(nces) school" }
   end
 
   def run_importer(opts = {})
     defaults = {
       :districts => ["01"],
       :verbose => false,
-      :district_data_root_dir => "#{RAILS_ROOT}/resources/rinet_test_data/",
+      :district_data_root_dir => "#{::Rails.root.to_s}/resources/rinet_test_data/",
       :skip_get_csv_files => true
     }
     rinet_data_options = defaults.merge(opts)
@@ -58,10 +50,10 @@ describe RinetData do
 
   # make test schools
   before (:all) do
-    @nces_school = Factory(:portal_nces06_school, {:SEASCH => '07113'})
-    @nces_school_01 = Factory(:portal_nces06_school, {:SEASCH => '01'})
-    @nces_school_02 = Factory(:portal_nces06_school, {:SEASCH => '02'})
-    @nces_school_03 = Factory(:portal_nces06_school, {:SEASCH => '03'})
+    @nces_school    = Factory(:portal_nces06_school, :SEASCH => '07113')
+    @nces_school_01 = Factory(:portal_nces06_school, :SEASCH => '01')
+    @nces_school_02 = Factory(:portal_nces06_school, :SEASCH => '02')
+    @nces_school_03 = Factory(:portal_nces06_school, :SEASCH => '03')
   end
 
   ## This example group assumes that Net::SFTP is used to download RINET data.
@@ -73,7 +65,7 @@ describe RinetData do
       @failed_connection_log = /.*get_csv_files failed.*/i
       @no_file_message = /.*no such file.*/i
       @no_file_log = /.*download.*failed.*/i
-      @district_data_root_dir = "#{RAILS_ROOT}/rinet_data/test/districts/csv"
+      @district_data_root_dir = "#{::Rails.root.to_s}/rinet_data/test/districts/csv"
     end
 
     before(:each) do
@@ -125,8 +117,8 @@ describe RinetData do
       @initial_users = User.find(:all)
       @initial_teachers = Portal::Teacher.find(:all)
       @initial_students = Portal::Student.find(:all)
-      @initial_courses = Portal::Course.find(:all)
-      @initial_clazzes = Portal::Clazz.find(:all)
+      @initial_courses  = Portal::Course.find(:all)
+      @initial_clazzes  = Portal::Clazz.find(:all)
       run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
 

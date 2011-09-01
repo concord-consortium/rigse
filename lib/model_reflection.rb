@@ -4,7 +4,7 @@ module ModelReflection
   # returns an array of classes that inherit from ActiveRecord::Base
   #
   def find_models(klass=ActiveRecord::Base)
-    Dir.chdir(File.join(RAILS_ROOT, 'app', 'models')) do
+    Dir.chdir(File.join(::Rails.root.to_s, 'app', 'models')) do
       model_names = Dir.glob('*.rb').collect { |rb| rb[/(.*).rb/, 1].camelize } - %w{SunflowerModel SunflowerMystriUser}
       models = model_names.collect  { |m| m.constantize }
       if klass

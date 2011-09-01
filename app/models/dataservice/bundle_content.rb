@@ -32,9 +32,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Dataservice::BundleContent"
-    end
     
     def b64gzip_unpack(b64gzip_content)
       s = StringIO.new(B64::B64.decode(b64gzip_content))

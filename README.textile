@@ -37,11 +37,11 @@ the prefix of the names for the databases that will be created in mysql.
 
 If you are a committer in this repo:
 
-bc. git clone git@github.com:stepheneb/rigse.git xproject
+bc. git clone git@github.com:concord-consortium/rigse.git xproject
 
 If you are not a committer:
 
-bc. git clone git://github.com/stepheneb/rigse.git xproject
+bc. git clone git://github.com/concord-consortium/rigse.git xproject
 
 Change to the project directory:
 
@@ -88,10 +88,10 @@ The options @-y -q -f@ to setup mean:
 
 Setup database.
 
-If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help
+If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help. You might get a warning if the databases already exist.
 
-bc. RAILS_ENV=production rake db:create
-RAILS_ENV=production rake db:migrate:reset
+bc. RAILS_ENV=production rake db:create:all
+bc. RAILS_ENV=production rake db:migrate:reset
 
 Setup application resources
 
@@ -758,3 +758,21 @@ h2. Credits
 Bort put together by people at "Fudge":http://www.fudgestudios.com/ 
 
 !http://clients.fudgestudios.com/chester.jpg!
+
+h2. Copy & Paste Guide:
+
+bc. git clone git@github.com:concord-consortium/rigse.git ./xproject
+bc. cd xproject
+bc. echo 'rvm use 1.8.7@xproject-portal --create' > .rvmrc;
+bc. cd ..
+bc. cd xproject
+bc. gem install bundler
+bc. bundle install
+bc. ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject --states none -y -q -f
+bc. RAILS_ENV=production rake db:create:all
+bc. RAILS_ENV=production rake db:migrate:reset
+bc. RAILS_ENV=production rake app:setup:new_app
+bc. rake db:test:prepare
+bc. 
+bc. rake db:dump
+bc. ruby script/server -e production

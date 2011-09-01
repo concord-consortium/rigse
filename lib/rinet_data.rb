@@ -22,7 +22,7 @@
 #   :skip_get_csv_files => false
 #   :log_level => Logger::WARN
 #   :districts => @rinet_data_config[:districts]
-#   :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+#   :district_data_root_dir => "#{::Rails.root.to_s}/rinet_data/districts/#{@external_domain_suffix}/csv"
 #
 # You can customize the operation, here's an example:
 #
@@ -74,14 +74,14 @@ class RinetData
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
 
   def initialize(options= {})
-    @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
+    @rinet_data_config = YAML.load_file("#{::Rails.root.to_s}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
 
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
-      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
+      :district_data_root_dir => "#{::Rails.root.to_s}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :log_level => Logger::WARN,
       :drop_enrollments => false
     }
@@ -366,7 +366,7 @@ Logged to: #{File.expand_path(@log_path)}
     # pass in a row that has a :SchoolNumber
     # These are raw or processed csv rows from:
     #   students, staff, courses, enrollments, staff_assignments
-    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
+    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM, GSLO, GSHI, PHONE, MEMBER, FTE, TOTFRL, AM, ASIAN, HISP, BLACK, WHITE, LATCOD, LONCOD, MCITY, MSTREE, MSTATE, MZIP")
     if nces_school
       # TODO, check to see if the  Portal::School.find_or_create_by_nces_school
       # method will automatically create the containing district if it
@@ -862,7 +862,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def cache_course_ar_map(course_number,school_id,value=nil)
     unless (course_number && school_id)
-      raise RinetDataError("must supply a course_number and a school")
+      raise RinetDataError.new("must supply a course_number and a school")
     end
     unless @course_active_record_map[course_number]
       @course_active_record_map[course_number]={}

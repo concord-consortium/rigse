@@ -42,9 +42,6 @@ class Embeddable::Biologica::MeiosisView < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Biologica Meiosis View"
-  end
 
   def investigations
     invs = []

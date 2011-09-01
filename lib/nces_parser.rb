@@ -321,7 +321,7 @@ private
 
   def _get_file_path(migration_file_name)
     timestamp = Time.now.gmtime.strftime('%Y%m%d%H%M%S')
-    File.join(RAILS_ROOT, 'db', 'migrate', "#{timestamp}_#{migration_file_name}")
+    File.join(::Rails.root.to_s, 'db', 'migrate', "#{timestamp}_#{migration_file_name}")
   end
 
   def _getIndexesText

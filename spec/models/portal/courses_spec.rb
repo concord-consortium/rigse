@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
 
 def inspect_course(c)
   # puts "curse: #{c.course_number} #{c.name} school: #{c.school.id} <br/>\n"

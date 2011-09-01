@@ -17,4 +17,5 @@
       = render :partial => 'form', :locals => { :f => form }
       - if current_user.has_role?("admin", "manager")
         = render :partial => 'roles', :locals => { :f => form, :roles => @roles }
+      = render :partial => 'shared/cohorts_edit', :locals => { :object => @user.portal_teacher }
       = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }

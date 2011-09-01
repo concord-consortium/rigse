@@ -26,16 +26,16 @@ class GseParser
 
   def pre_parse
     remove_old_data #should delete old stuff
-    @domains = make_domains(File.join([RAILS_ROOT] + %w{config rigse_data domains.yml}))
-    make_themes(File.join([RAILS_ROOT] + %w{config rigse_data themes.yml}))
+    @domains = make_domains(File.join([::Rails.root.to_s] + %w{config rigse_data domains.yml}))
+    make_themes(File.join([::Rails.root.to_s] + %w{config rigse_data themes.yml}))
     @assessment_target_regex = build_assessment_target_regex(@domains.keys)
   end
   
   def process_rigse_data
     pre_parse
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
-    parse(File.join([RAILS_ROOT] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
+    parse(File.join([::Rails.root.to_s] + %w{config rigse_data science_gses PS_RI_K-12.xhtml}))
+    parse(File.join([::Rails.root.to_s] + %w{config rigse_data science_gses ESS_RI_K-12.xhtml}))
+    parse(File.join([::Rails.root.to_s] + %w{config rigse_data science_gses LS_RI_K-12.xhtml}))
     RiGse::GradeSpanExpectation.all.each { |gse|  gse.set_gse_key }
   end
 

@@ -150,6 +150,14 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.update_attributes(params[:user])
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+
+          # set the cohort tags if we have a teacher
+          if @user.portal_teacher && params[:update_cohorts]
+            cohorts = params[:cohorts] ? params[:cohorts] : []
+            @user.portal_teacher.cohort_list = cohorts
+            @user.portal_teacher.save
+          end
+
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
