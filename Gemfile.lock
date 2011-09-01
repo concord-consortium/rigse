@@ -227,6 +227,7 @@ GEM
       rubyzip
     sexp_processor (3.0.6)
     slop (1.9.1)
+    soap4r-ruby1.9 (2.0.3)
     spoon (0.0.1)
     spork (0.8.5)
     spreadsheet (0.6.5.7)
@@ -299,10 +300,11 @@ DEPENDENCIES
   rspec-rails (~> 2.6)
   ruby-debug
   ruby-debug19
+  soap4r-ruby1.9 (~> 2.0.3)
   spork (~> 0.8)
   spreadsheet
   syntax (~> 1.0)
-  themes_for_rails
+  themes_for_rails (~> 0.4.2)
   uuidtools (~> 2.1.2)
   what_methods
   will_paginate (~> 2.3.15)

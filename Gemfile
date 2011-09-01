@@ -46,7 +46,8 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
-  gem 'themes_for_rails'
+  gem 'themes_for_rails',     "~> 0.4.2"
+  gem 'soap4r-ruby1.9',       "~> 2.0.3"
 
 group :development do
   gem "highline"
