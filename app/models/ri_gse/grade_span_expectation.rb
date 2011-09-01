@@ -26,7 +26,7 @@ class RiGse::GradeSpanExpectation < ActiveRecord::Base
   
   
   # brittle;,because we must know too much about table names ...
-  named_scope :grade_and_domain, lambda { |gs,domain_id|
+  scope :grade_and_domain, lambda { |gs,domain_id|
     {
       :joins => "JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)",
       :conditions => ['ri_gse_knowledge_statements.domain_id = ? and ri_gse_grade_span_expectations.grade_span LIKE ?', domain_id, gs ]

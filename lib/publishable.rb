@@ -34,7 +34,7 @@ module Publishable
         transitions :to => :draft, :from => [:published]
       end
 
-      named_scope :published,
+      scope :published,
       {
         :conditions =>{:publication_status => "published"}
       }

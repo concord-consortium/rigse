@@ -12,33 +12,33 @@ class ResourcePage < ActiveRecord::Base
 
   validates_presence_of :user_id, :name, :publication_status
 
-  named_scope :published, :conditions => { :publication_status => 'published' }
-  named_scope :private_status, :conditions => { :publication_status => 'private' }
-  named_scope :draft_status, :conditions => { :publication_status => 'draft' }
-  named_scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
-  named_scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
-  named_scope :not_private, { :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')" }
+  scope :published, :conditions => { :publication_status => 'published' }
+  scope :private_status, :conditions => { :publication_status => 'private' }
+  scope :draft_status, :conditions => { :publication_status => 'draft' }
+  scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
+  scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
+  scope :not_private, { :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')" }
 
-  named_scope :visible_to_user, proc { |u| { :conditions =>
+  scope :visible_to_user, proc { |u| { :conditions =>
     [ "resource_pages.publication_status = 'published' OR
       (resource_pages.publication_status = 'private' AND resource_pages.user_id = ?)", u.nil? ? u : u.id ]
   }}
-  named_scope :visible_to_user_with_drafts, proc { |u| { :conditions =>
+  scope :visible_to_user_with_drafts, proc { |u| { :conditions =>
     [ "resource_pages.publication_status IN ('published', 'draft') OR
       (resource_pages.publication_status = 'private' AND resource_pages.user_id = ?)", u.nil? ? u : u.id ]
   }}
-  named_scope :no_drafts, :conditions => "resource_pages.publication_status NOT IN ('draft')"
+  scope :no_drafts, :conditions => "resource_pages.publication_status NOT IN ('draft')"
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     { :conditions => ["resource_pages.name LIKE ? OR resource_pages.description LIKE ? OR resource_pages.content LIKE ?", name,name,name] }
   }
 
-  named_scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| { :order => order } }
 
   # special named scope for combining other named scopes in an OR fashion
   # FIXME This is probably terribly inefficient
-  named_scope :match_any, lambda { |scopes| {
+  scope :match_any, lambda { |scopes| {
     :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
   }}
 

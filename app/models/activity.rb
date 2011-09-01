@@ -64,14 +64,14 @@ class Activity < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
     }
   }
 
-  named_scope :published,
+  scope :published,
   {
     :conditions =>{:publication_status => "published"}
   }

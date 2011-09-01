@@ -6,8 +6,8 @@ class Portal::District < ActiveRecord::Base
   has_many :schools, :dependent => :destroy, :class_name => "Portal::School", :foreign_key => "district_id", :order => "name"
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
   
-  named_scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools, :order => "name" }  
-  named_scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools, :order => "name" }  
+  scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools, :order => "name" }  
+  scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools, :order => "name" }  
   
   include Changeable
 

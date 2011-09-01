@@ -11,16 +11,16 @@ class PageElement < ActiveRecord::Base
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}'
   
-  # TODO the old named_scope (now page_by_investigation) didn't include elements in inner pages.
+  # TODO the old scope (now page_by_investigation) didn't include elements in inner pages.
   # this method combines elements in pages, with elements in innerpages
-  # it may or may not be possible to integrate them into one named_scope
+  # it may or may not be possible to integrate them into one scope
   def self.by_investigation(investigation)
     page_page_elements = PageElement.page_by_investigation(investigation)
     inner_page_page_elements = PageElement.inner_page_by_investigation(investigation)
     return (page_page_elements + inner_page_page_elements).compact.uniq
   end
   
-  named_scope :page_by_investigation, lambda {|investigation|
+  scope :page_by_investigation, lambda {|investigation|
     { :select => 'page_elements.*, pages.position as page_position, sections.id as section_id, sections.position as section_position, activities.id as activity_id, activities.position as activity_position',
       :joins => 'INNER JOIN pages ON page_elements.page_id = pages.id 
       INNER JOIN sections ON pages.section_id = sections.id
@@ -35,12 +35,12 @@ class PageElement < ActiveRecord::Base
   end
   
   # to be used with the by_investigation scope only
-  named_scope :student_only, lambda {
+  scope :student_only, lambda {
     { :conditions => {'pages.teacher_only' => false, 'sections.teacher_only' => false, 'activities.teacher_only' => false }
     }
   }
   
-  named_scope :by_type, lambda {|types|
+  scope :by_type, lambda {|types|
     { :conditions => {'embeddable_type' => types},
       :order => 'position asc'
     }

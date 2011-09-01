@@ -17,28 +17,28 @@ class ExternalActivity < ActiveRecord::Base
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
     }
   }
 
-  named_scope :published,
+  scope :published,
   {
     :conditions =>{:publication_status => "published"}
   }
 
-  named_scope :not_private,
+  scope :not_private,
   {
     :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')"
   }
 
-  named_scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
+  scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
   # special named scope for combining other named scopes in an OR fashion
   # FIXME This is probably terribly inefficient
-  named_scope :match_any, lambda { |scopes| {
+  scope :match_any, lambda { |scopes| {
     :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
   }}
 

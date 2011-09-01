@@ -19,11 +19,11 @@ class User < ActiveRecord::Base
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
-  named_scope :active, { :conditions => { :state => 'active' } }
-  named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
-  named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
-  named_scope :default, { :conditions => { :default_user => true } }
-  named_scope :with_role, lambda { | role_name |
+  scope :active, { :conditions => { :state => 'active' } }
+  scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
+  scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
+  scope :default, { :conditions => { :default_user => true } }
+  scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
   }
   has_settings

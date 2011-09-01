@@ -81,7 +81,7 @@ class Page < ActiveRecord::Base
   acts_as_replicatable
   acts_as_list :scope => :section
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]

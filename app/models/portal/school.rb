@@ -38,8 +38,8 @@ class Portal::School < ActiveRecord::Base
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
   has_many :portal_teachers, :through => :members, :source => "teacher"
   alias :teachers :portal_teachers
-  named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
-  named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
+  scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
+  scope :virtual, { :conditions => 'nces_school_id is NULL' }  
 
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }
