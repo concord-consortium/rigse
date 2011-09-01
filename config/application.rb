@@ -3,6 +3,8 @@ require 'rails/all'
 
 module RailsPortal
   class Application < Rails::Application
+    
+    Bundler.require(:default, Rails.env) if defined?(Bundler)
   
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
     #   $ rake middleware
