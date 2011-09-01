@@ -1,4 +1,4 @@
-gem 'ar-extensions', '>= 0.9.1'
+# gem 'ar-extensions', '>= 0.9.1'
 require 'ar-extensions'
 
 class NcesParser
