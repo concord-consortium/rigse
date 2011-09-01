@@ -71,5 +71,4 @@ local_files
 .bundle/
 public/sparks-content/
 public/stylesheets/*.css
-config.ru
 bin/
