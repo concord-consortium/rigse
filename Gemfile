@@ -28,6 +28,7 @@ source "http://rubygems.org"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
   gem "prawn",                "~> 0.12.0"
   gem "prawn-format",         "~> 0.2.3", :require => "prawn/format"
+  gem 'prawn_rails',          "~> 0.0.6"
   gem "grit",                 "~> 2.4"
   gem "open4",                "~> 1.0"
   gem "compass",              "~> 0.11.5"

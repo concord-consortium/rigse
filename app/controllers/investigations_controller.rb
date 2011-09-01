@@ -8,7 +8,6 @@ class InvestigationsController < AuthoringController
 
   include RestrictedController
   #access_rule 'researcher', :only => [:usage_report, :details_report]
-  prawnto :prawn=>{ :page_layout=>:landscape }
 
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]

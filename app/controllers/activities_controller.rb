@@ -1,9 +1,7 @@
 class ActivitiesController < ApplicationController
   # GET /pages
   # GET /pages.xml
-  prawnto :prawn=>{
-    :page_layout=>:landscape,
-  }
+
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
