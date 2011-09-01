@@ -38,6 +38,7 @@ source "http://rubygems.org"
   # # git "git://github.com/concord-consortium/ar-extensions.git" do
   # #   gem "ar-extensions",        "~> 0.9.3"
   # # end
+  gem "activerecord-import",  "~> 0.2.8"
   gem "fastercsv",            "~> 1.5"
   gem "net-sftp",             "~> 2.0",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
