@@ -1,4 +1,5 @@
 require 'themes_for_rails'
+require 'haml'
 
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
