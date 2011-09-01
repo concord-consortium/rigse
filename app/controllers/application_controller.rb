@@ -1,7 +1,8 @@
+require 'themes_for_rails'
+
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include Clipboard
-  include 'themes_for_rails'
 
   # protect_from_forgery
   self.allow_forgery_protection = false
