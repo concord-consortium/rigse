@@ -73,3 +73,4 @@ public/sparks-content/
 public/stylesheets/*.css
 bin/
 .rspec
+*.orig
