@@ -72,3 +72,4 @@ local_files
 public/sparks-content/
 public/stylesheets/*.css
 bin/
+.rspec
