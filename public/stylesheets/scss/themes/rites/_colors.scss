@@ -1,0 +1,82 @@
+// RIPES colors
+$very_dark_blue: #00233a;
+$rieps_brown: #a86922;
+$rieps_logo_background: $rieps_brown;
+$dark_blue_gray: #4f758d;
+
+$almost_white: #f2f8fc;
+$light_blue: #bcd6ea;
+$rieps_content_text_color: $light_blue;
+
+$dev_note_color: gray;
+$legend_color: #4f758d;
+
+$very_dark: #202e37;
+$dark_red: #9b3243;
+
+$light_brown: #dcbc96;
+
+$container_box_color: #cbe1f2;
+$container_box_hover_color: #bcd6ea;
+
+$teacher_only_color: #eedddd;
+
+$answered_color: $rieps_content_text_color;
+$not_answered_color: #cccccc;
+$correct_color: #ddffdd;
+$incorrect_color: #ffdddd;
+
+$selected_color: #ffffa0;
+
+$text_input_color: $very_dark_blue;
+$input_border_color: $very_dark_blue;
+$input_color: $light_blue;
+$input_focus_color: $light_brown;
+
+@mixin delete_links {
+  a.delete:link {
+    color: $dark_red; }
+  a.delete:active {
+    color: $dark_red; }
+  a.delete:visited {
+    color: $dark_red; }
+  a.delete:hover {
+    color: white;
+    background-color: $dark_red; } }
+
+@mixin color_mixer($fg, $bg) {
+  color: $fg;
+  background-color: $bg;
+  .selected {
+    color: $bg !important;
+    background-color: $fg !important; }
+  a {
+    font-weight: bold;
+    padding: 0px;
+    text-decoration: none;
+    background-color: transparent; }
+  a:link {
+    color: $fg; }
+  a:visited {
+    color: $fg; }
+  a:active {
+    color: $fg; }
+  a:hover {
+    color: $bg;
+    background-color: $fg; } }
+
+@mixin page_white {
+  @include color_mixer($rieps_brown, white);
+  @include delete_links; }
+
+@mixin left_nav_colors {
+  @include color_mixer($very_dark_blue, $rieps_content_text_color);
+  @include delete_links; }
+
+@mixin content_area_colors {
+  @include color_mixer($very_dark_blue, $almost_white);
+  @include delete_links; }
+
+@mixin top_and_bottom_nav_colors {
+  @include color_mixer($rieps_content_text_color, $very_dark_blue);
+  @include delete_links; }

@@ -1,0 +1,63 @@
+@import "compass/reset";
+@import "blueprint";
+
+@include blueprint-typography;
+
+#wrapper {
+  margin: 1em;
+  display: block;
+  float: left; }
+
+.menu {
+  font: {
+    weight: bold; }; }
+
+.activity {
+  page-break-after: always; }
+
+.page {
+  display: block;
+  float: left;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  .page_content {
+    display: block;
+    width: 70%;
+    float: left;
+    margin: 1em;
+    .item {
+      display: block;
+      float: left;
+      width: 100%;
+      clear: both;
+      margin: 2em;
+      page-break-inside: avoid; }
+    .data_collector {
+      display: block;
+      float: left;
+      clear: both;
+      width: 400px;
+      height: 200px; } }
+  .teacher_content {
+    display: block;
+    float: right;
+    padding: 1em;
+    width: 20%;
+    border: {
+      left: 1px dotted; };
+    .teacher_notes {
+      .teacher_note {
+        font: {
+          size: 0.9em; }; } } } }
+
+img {
+  float: left;
+  margin: 1em; }
+
+input {
+  border: dotted;
+  border-width: 1px; }
+
+textarea {
+  min-height: 170px; }

@@ -1,0 +1,29 @@
+@import "app_colors";
+
+#note {
+  z-index: 20;
+  font-size: 9pt;
+  margin: 1em;
+  padding: 4em;
+  @include content_area_colors;
+  text-align: left;
+  position: fixed;
+  margin-left: 25%;
+  width: 50%;
+  z-index: 20;
+  height: auto;
+  border: 2px solid; }
+
+.alert {
+  z-index: 20;
+  font-size: 9pt;
+  margin: 1em;
+  padding: 4em;
+  @include content_area_colors;
+  text-align: left;
+  position: fixed;
+  margin-left: 25%;
+  width: 50%;
+  z-index: 20;
+  height: auto;
+  border: 2px solid; }
