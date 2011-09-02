@@ -24,8 +24,6 @@ production: &prod
     :version: snapshot
     :server: concord
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-    - https://portfolio.ri.net/
   :site_school: ITSISU school
   :maven_jnlp_families:
     - all-otrunk-snapshot

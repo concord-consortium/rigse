@@ -43,7 +43,6 @@ development: &id003
     :version: snapshot
     :server: concord
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
 
 test: *id003
 production: *id003

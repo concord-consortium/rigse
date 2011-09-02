@@ -41,11 +41,6 @@ development: &id003
     :version: snapshot
     :server: concord
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-    - http://test.porfolio.ri.net/
-    - http://portfolio.ri.net
-    - https://test.portfolio.ri.net/
-    - https://portfolio.ri.net/
 
 test: *id003
 staging: *id003
@@ -93,10 +88,4 @@ production:
     :version: 0.1.0-20090724.190238
     :server: concord
     :family: all-otrunk-snapshot
-  :valid_sakai_instances:
-    - http://moleman.concord.org/
-    - http://test.porfolio.ri.net/
-    - http://portfolio.ri.net
-    - https://test.portfolio.ri.net/
-    - https://portfolio.ri.net/
 

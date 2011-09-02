@@ -552,20 +552,6 @@ def check_for_config_settings_yml
           @settings_config[env][:default_maven_jnlp] = default_maven_jnlp
         end
 
-        unless @settings_config[env][:valid_sakai_instances] || not_using_rites_theme?
-          unless @options[:quiet]
-            puts <<-HEREDOC
-
-  The valid_sakai_instances parameter does not yet exist in the #{env} section of settings.yml
-
-  Copying the values in the sample: #{@settings_config_sample[env][:valid_sakai_instances].join(', ')} into settings.yml.
-
-            HEREDOC
-          end
-          @settings_config[env][:valid_sakai_instances] = @settings_config_sample[env][:valid_sakai_instances]
-        end
-
-
         unless @settings_config[env][:theme]
           unless @options[:quiet]
             puts <<-HEREDOC
@@ -788,7 +774,7 @@ def update_config_rinet_data_yml
 Updating the RINET CSV Account import configuration file: config/rinet_data.yml
 
 Specify values for the host, username and password for the RINET SFTP
-site to download Sakai account data in CSV format.
+site to download import account data in CSV format.
 
 Here are the current settings in config/rinet_data.yml:
 
@@ -906,17 +892,6 @@ School level.  The following codes are used for active school levels:
   @settings_config[env][:active_school_levels] =  active_school_levels.split
 end
 
-def get_valid_sakai_instances(env)
-  puts <<-HEREDOC
-
-Specify the sakai server urls from which it is ok to receive linktool requests.
-Delimit multiple items with spaces.
-
-  HEREDOC
-  sakai_instances = (@settings_config[env][:valid_sakai_instances] || []).join(' ')
-  sakai_instances =  ask("   valid_sakai_instances: ") { |q| q.default = sakai_instances }
-  @settings_config[env][:valid_sakai_instances] = sakai_instances.split
-end
 
 def get_maven_jnlp_settings(env)
   puts <<-HEREDOC
@@ -1026,14 +1001,9 @@ Any full member can become part of the site school and district.
       get_active_grades_settings(env)
 
       #
-      # ---- valid_sakai_instances ----
+      # ---- valid_school_levels  ----
       #
       get_active_school_levels(env)
-
-      #
-      # ---- valid_sakai_instances ----
-      #
-      get_valid_sakai_instances(env)
 
       #
       # ---- enable_default_users ----

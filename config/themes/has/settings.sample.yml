@@ -52,7 +52,6 @@ development: &id003
     :version: 0.1.0-20100824.215501
     :server: concord
     :family: has-otrunk
-  :valid_sakai_instances:
   :use_adhoc_workgroups: true
 test: *id003
 production: *id003

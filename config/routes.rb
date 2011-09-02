@@ -322,8 +322,6 @@ RailsPortal::Application.routes.draw do
 
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
-  match '/linktool' => 'sakai_link#index', :as => :linktool
-  match '/sakai-axis/SakaiSigning.jws' => 'sakai_link#fake_verification', :as => :fake_verification
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
   match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil
