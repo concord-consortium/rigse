@@ -28,8 +28,7 @@ module RailsPortal
     config.autoload_paths += %W(#{config.root}/lib/**/") # include all subdirectories
     
     config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
-    
-    
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -38,15 +37,7 @@ module RailsPortal
     # Skip frameworks you're not going to use. To use Rails without a database
     # you must remove the Active Record framework.
     # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
-  
-    # Specify gems that this application depends on. 
-    # They can then be installed with "rake gems:install" on new installations.
-    # You have to specify the <tt>:lib</tt> option for libraries, where the Gem name (<em>sqlite3-ruby</em>) differs from the file itself (_sqlite3_)
-    # config.gem "bj"
-    # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
-    # config.gem "sqlite3-ruby", :lib => "sqlite3"
-    # config.gem "aws-s3", :lib => "aws/s3"
-  
+
     # FIXME: see comment about this hack in config/environments/development.rb
     $: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
     # config.gem "ffi-ncurses ", :version => "= 0.3.3"
