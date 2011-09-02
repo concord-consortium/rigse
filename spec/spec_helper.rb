@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] ||= 'test'
 
 require 'rubygems'
 require 'spork'
+require 'spork/ext/ruby-debug'
 
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
@@ -16,13 +17,13 @@ Spork.prefork do
   # log all rails logger calls to STDOUT
   ActiveRecord::Base.logger = Logger.new(STDOUT)
 
-  require 'spec/autorun'
-  require 'spec/rails'
-  require 'spec/mocks'
+  require 'rspec'
+  require 'rspec/rails'
+  require 'rspec/mocks'
 
   # *** customizations ***
 
-  require 'remarkable_rails'
+  require 'remarkable_activerecord'
 
   include AuthenticatedTestHelper
   include AuthenticatedSystem
@@ -50,7 +51,7 @@ Spork.prefork do
 
   # *** end of customizations ***
 
-  Spec::Runner.configure do |config|
+  RSpec.configure do |config|
     config.use_transactional_fixtures = true
     config.use_instantiated_fixtures  = false
     config.fixture_path = ::Rails.root.to_s + '/spec/fixtures/'
