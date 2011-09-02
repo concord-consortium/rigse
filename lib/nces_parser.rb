@@ -48,7 +48,7 @@ class NcesParser
       puts
       puts "Loading district data:"
       district_data_files.each do |fpath|
-        open(fpath) do |file|
+        open(fpath, "r:iso-8859-1") do |file|
           _parse_file_using_import(file, @district_layout, @district_model)
         end
       end
@@ -56,7 +56,7 @@ class NcesParser
       puts
       puts "Loading school data:"
       school_data_files.each do |fpath|
-        open(fpath) do |file|
+        open(fpath, "r:iso-8859-1") do |file|
           _parse_file_using_import(file, @school_layout, @school_model)
         end
       end
