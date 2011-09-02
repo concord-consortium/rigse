@@ -1,3 +1,8 @@
+require "bundler/capistrano"
+require 'capistrano/ext/multistage'
+require 'haml'
+require File.expand_path('../../lib/yaml_editor', __FILE__)
+
 set :stages, %w(
   rites-dev rites-staging rites-production
   itsisu-dev itsisu-staging itsisu-production
@@ -10,12 +15,7 @@ set :stages, %w(
   fall2009 jnlp-staging seymour
   sparks-dev sparks-staging sparks-production)
 set :default_stage, "development"
-# require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
-require 'capistrano/ext/multistage'
-require 'haml'
 
-require 'lib/yaml_editor'
-require "bundler/capistrano"
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
