@@ -231,7 +231,6 @@ GEM
       rubyzip
     sexp_processor (3.0.6)
     slop (1.9.1)
-    soap4r-ruby1.9 (2.0.3)
     spoon (0.0.1)
     spork (0.8.5)
     spreadsheet (0.6.5.7)
@@ -307,7 +306,6 @@ DEPENDENCIES
   ruby-debug
   ruby-debug19
   sass (~> 3.1.7)
-  soap4r-ruby1.9 (~> 2.0.3)
   spork (~> 0.8)
   spreadsheet
   syntax (~> 1.0)
