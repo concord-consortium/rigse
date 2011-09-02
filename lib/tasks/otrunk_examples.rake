@@ -134,7 +134,8 @@ namespace :app do
       otml_files_otrunk_imports = ActiveRecord::Base.connection.select_value("SELECT count(*) AS count_all FROM `otml_files_otrunk_imports`")
       puts "otml_files_otrunk_imports joins: #{otml_files_otrunk_imports}"
       otml_categories_otrunk_imports = ActiveRecord::Base.connection.select_value("SELECT count(*) AS count_all FROM `otml_categories_otrunk_imports`")
-      puts "otml_categories_otrunk_imports joins: #{otml_categories_otrunk_imports}"      
+      puts "otml_categories_otrunk_imports joins: #{otml_categories_otrunk_imports}"
+      puts
     end
   end
 end
