@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::LabBookSnapshotsController do
-  integrate_views
+  render_views
   it_should_behave_like 'an embeddable controller'
   before(:all) do
     generate_default_project_and_jnlps_with_mocks

@@ -1,6 +1,6 @@
 require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
-  integrate_views
+  render_views
 
   before(:each) do
     @test_project = mock("project")

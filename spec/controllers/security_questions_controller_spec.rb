@@ -1,7 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe SecurityQuestionsController do
-  integrate_views
+  render_views
   
   before(:each) do
     @student = Factory.create(:portal_student, :user => Factory.create(:user))

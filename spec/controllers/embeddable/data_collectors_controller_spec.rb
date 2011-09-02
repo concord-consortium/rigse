@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::DataCollectorsController do
-  integrate_views
+  render_views
 
   describe "using its own datastore" do
     # @see ./spec/support/embeddable_controller_helper.rb

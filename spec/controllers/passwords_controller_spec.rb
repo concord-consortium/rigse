@@ -1,7 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe PasswordsController do
-  integrate_views
+  render_views
   
   before(:each) do
     # stub the current project because project_header uses it

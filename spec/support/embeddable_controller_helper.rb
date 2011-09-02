@@ -1,5 +1,5 @@
 shared_examples_for 'an embeddable controller' do
-  integrate_views
+  render_views
 
   controller_class_lambda = lambda { self.send(:described_class) }
   model_class_lambda      = lambda { controller_class_lambda.call.name[/(.*)Controller/, 1].singularize.constantize }

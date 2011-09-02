@@ -28,7 +28,7 @@ describe Admin::ProjectsController do
   end
 
   describe "GET index for managers" do
-    integrate_views
+    render_views
 
     it "only allows managers to edit the current project and only shows them the information they can change" do
       project = Factory.create(:admin_project)
@@ -92,7 +92,7 @@ describe Admin::ProjectsController do
   end
 
   describe "GET edit for managers" do
-    integrate_views
+    render_views
 
     it "renders the _form_for_managers partial" do
       project = Factory.create(:admin_project)

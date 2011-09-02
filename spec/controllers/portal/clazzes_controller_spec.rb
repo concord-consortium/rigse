@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::ClazzesController do
-  integrate_views
+  render_views
 
   def setup_for_repeated_tests
     @controller = Portal::ClazzesController.new

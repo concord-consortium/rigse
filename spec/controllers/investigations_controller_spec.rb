@@ -1,7 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelper
 
 describe InvestigationsController do
-  integrate_views
+  render_views
 
   before(:each) do
     @current_project = mock(

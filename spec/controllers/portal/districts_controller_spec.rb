@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::DistrictsController do
-  integrate_views  
+  render_views  
   def mock_district(_stubs={})
     stubs = {
       :name => 'default district', 

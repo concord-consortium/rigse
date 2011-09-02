@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::SchoolsController do
-  # integrate_views
+  # render_views
 
   def mock_school(_stubs={})
     clazzes = mock(:active => [], :length => 0, :size => 0)
@@ -160,7 +160,7 @@ describe Portal::SchoolsController do
   end
   
   describe "DELETE destroy" do
-    integrate_views
+    render_views
 
     before(:each) do
       @school.stub!(:id => 1)

@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::TeachersController do
-  integrate_views
+  render_views
   
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
