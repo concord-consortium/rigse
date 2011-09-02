@@ -73,13 +73,13 @@ group :test do
   gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
   gem "fakeweb",           "~> 1.3"
-  gem "remarkable_rails",  "~> 3.1.13", :require => nil
+  gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   # If you update the version of ci_reporter
   # please make sure to update the --require path in Hudson
   gem "ci_reporter",       "~> 1.6.5"
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
-  gem "spork",              "~> 0.8"
+  gem "spork",              "~> 0.9.0.rc"
   gem "delorean",           "~> 1.1"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
