@@ -65,12 +65,12 @@ class Admin::Project < ActiveRecord::Base
 
   def update_app_settings
     new_app_settings = load_all_app_settings
-    new_app_settings[RAILS_ENV][:site_name] = self.name
-    new_app_settings[RAILS_ENV][:site_url] = self.url
-    new_app_settings[RAILS_ENV][:enable_default_users] = self.enable_default_users
-    new_app_settings[RAILS_ENV][:description] = self.description
-    new_app_settings[RAILS_ENV][:states_and_provinces] = self.states_and_provinces
-    new_app_settings[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
+    new_app_settings[::Rails.env][:site_name] = self.name
+    new_app_settings[::Rails.env][:site_url] = self.url
+    new_app_settings[::Rails.env][:enable_default_users] = self.enable_default_users
+    new_app_settings[::Rails.env][:description] = self.description
+    new_app_settings[::Rails.env][:states_and_provinces] = self.states_and_provinces
+    new_app_settings[::Rails.env][:default_maven_jnlp] = generate_default_maven_jnlp
     save_app_settings(new_app_settings)
   end
 

@@ -1,6 +1,6 @@
-if File.exists?("#{::Rails.root.to_s}/config/mailer.yml") || ENV['RAILS_ENV'] == "test" || ENV['RAILS_ENV'] == "cucumber"
+if File.exists?("#{::Rails.root.to_s}/config/mailer.yml") || ::Rails.env == "test" || ::Rails.env == "cucumber"
   require "action_mailer"
-  if ENV['RAILS_ENV'] == "test" || ENV['RAILS_ENV'] == "cucumber"
+  if ::Rails.env == "test" || ::Rails.env == "cucumber"
     puts "Overriding ActionMailer config and setting test mode"
     ActionMailer::Base.delivery_method = :test
   else

@@ -9,7 +9,7 @@ module AppSettings
     File.exists?(path) && File.stat(path).size > 0
   end
 
-  def load_app_settings(env=RAILS_ENV)
+  def load_app_settings(env=::Rails.env)
     load_all_app_settings[env]
   end
 

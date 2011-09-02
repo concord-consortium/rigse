@@ -71,7 +71,7 @@ Generating: #{families} MavenJnlp families from this jnlp server specification:
 
         HEREDOC
 
-        if RAILS_ENV != 'development' || wrapped_agree("Do you want to do this? (y/n) ")
+        if ::Rails.env != 'development' || wrapped_agree("Do you want to do this? (y/n) ")
           mj_server.create_maven_jnlp_families
         end
         puts

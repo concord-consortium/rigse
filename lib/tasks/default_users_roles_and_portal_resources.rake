@@ -7,7 +7,7 @@ namespace :app do
     autoload :Highline, 'highline'
     
     def agree_check_in_development_mode
-      if RAILS_ENV == 'development'
+      if ::Rails.env == 'development'
         HighLine.new.agree("Accept defaults? (y/n) ")
       else
         true

@@ -15,7 +15,10 @@ RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 $LOAD_PATH.unshift(File.join(RAILS_ROOT,"lib"))
 
-Rails = OpenStruct.new( "root" => RAILS_ROOT)
+RAILS_ENV = 'development' unless defined?(RAILS_ENV)
+
+# Mock just a bit of the Rails3 Rails object for lib/app_settings.rb
+Rails = OpenStruct.new( "root" => RAILS_ROOT, "env" => RAILS_ENV)
 
 # ==================================================================
 #
@@ -73,9 +76,6 @@ require rails_file_path(%w{ lib local_names })
 require rails_file_path(%w{ config initializers 00_core_extensions })
 require rails_file_path(%w{ lib app_settings })
 require rails_file_path(%w{ lib states_and_provinces })
-
-# Some of the AppSettings module methods need the constant RAILS_ENV defined
-RAILS_ENV = 'development' unless defined?(RAILS_ENV)
 
 include AppSettings
 

@@ -1,4 +1,4 @@
-#if defined?(Spork) && RAILS_ENV == 'test'
+#if defined?(Spork) && ::Rails.env == 'test'
   #Spork.trap_class_method(Factory, :find_definitions)
   #class Rails::Initializer
     #def after_initialize_with_trap

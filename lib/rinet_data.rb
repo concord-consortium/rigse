@@ -74,7 +74,7 @@ class RinetData
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
 
   def initialize(options= {})
-    @rinet_data_config = YAML.load_file("#{::Rails.root.to_s}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
+    @rinet_data_config = YAML.load_file("#{::Rails.root.to_s}/config/rinet_data.yml")[::Rails.env].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
 

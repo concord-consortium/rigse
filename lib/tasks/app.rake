@@ -43,15 +43,15 @@ namespace :app do
     
     #######################################################################
     #
-    # Raise an error unless the RAILS_ENV is development,
+    # Raise an error unless the Rails.env is development,
     # unless the user REALLY wants to run in another mode.
     #
     #######################################################################
-    desc "Raise an error unless the RAILS_ENV is development"
+    desc "Raise an error unless the Rails.env is development"
     task :development_environment_only => :environment  do
-      unless RAILS_ENV == 'development'
+      unless ::Rails.env == 'development'
         puts "\nNormally you will only be running this task in development mode.\n"
-        puts "You are running in #{RAILS_ENV} mode.\n"
+        puts "You are running in #{::Rails.env} mode.\n"
         unless HighLine.new.agree("Are you sure you want to do this?  (y/n) ")
           raise "task stopped by user"
         end
@@ -105,7 +105,7 @@ REST_AUTH_DIGEST_STRETCHES = 10
     desc "setup a new app instance, run: ruby config/setup.rb first"
     task :new_app => :environment do
 
-      db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+      db_config = ActiveRecord::Base.configurations[::Rails.env]
 
       # Rake::Task['app:setup:development_environment_only'].invoke
       
@@ -126,7 +126,7 @@ This task will:
 11. create default portal resources: district, school, class, investigation and offering
   
       HEREDOC
-      if RAILS_ENV != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
+      if ::Rails.env != 'development' || HighLine.new.agree("Do you want to do this?  (y/n) ")
         # Rake::Task['gems:install'].invoke
         Rake::Task['app:setup:default_users_roles'].invoke
         Rake::Task['app:setup:create_additional_users'].invoke
@@ -224,7 +224,7 @@ config/initializers/site_keys.rb as on the server you copied the production data
     # desc "force setup a new rigse instance, with no prompting! Danger!"
     # task :force_new_rigse_from_scratch => :environment do
     #   
-    #   db_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    #   db_config = ActiveRecord::Base.configurations[::Rails.env]
     # 
     #   puts <<-HEREDOC
     #   This task will drop your existing rigse database: #{db_config['database']}, rebuild it from scratch, 
