@@ -1,7 +1,6 @@
 require 'open-uri'
 require 'yaml'
 require 'spreadsheet'
-require 'hpricot'
 
 ####################################################################
 # GseParser --

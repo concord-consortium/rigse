@@ -1,5 +1,4 @@
 class OtrunkExampleImport
-  require 'hpricot'
   require 'open-uri'
   require 'fileutils'
 

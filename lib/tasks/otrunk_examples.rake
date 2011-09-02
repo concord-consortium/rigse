@@ -100,7 +100,6 @@ namespace :app do
     
     desc "create or update: #{otrunk_model_classes_path}"
     task :create_or_update_otrunk_model_classes => :create_or_update_otrunk_examples do
-      require 'hpricot'
       puts "\nupdating #{otrunk_model_classes_path} ..."
       otrunk_imports = []
       otml_files = Dir["#{otrunk_examples_dir}/**/*.otml"].find_all {|o| !(o =~ /rites/) }

@@ -5,8 +5,7 @@ namespace :app do
     #
     desc 'import grade span expectations from file config/rigse_data/*'
     task :import_gses_from_file => :environment do
-      require 'hpricot'
-      
+            
       # save the investigations that have related gses, along 
       # with the assessment_target_id and grade_span of the gse
       investigations_with_gses = Investigation.find(:all).find_all {|i| i.grade_span_expectation_id != nil}
