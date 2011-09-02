@@ -54,6 +54,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
     # task: portal:setup:generate_nces_tables_migration
     # Generate migration file for nces tables
     #
+    # FIXME: This is broken, but may not be needed
     desc 'Generate migration file for nces tables'
     task :generate_nces_tables_migration => :environment do
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006)
@@ -64,6 +65,11 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
     # task: portal:setup:generate_nces_indexes_migration
     # Generate migration file for nces indexes
     # 
+    # FIXME: This task currently fails with
+    #   "\xC2" from ASCII-8BIT to UTF-8
+    #   lib/nces_parser.rb:313:in `write'
+    # This may be fixable in a manner similar to https://github.com/concord-consortium/rigse/commit/4d78fc4ee
+    
     desc 'Generate migration file for nces indexes'
     task :generate_nces_indexes_migration => :environment do
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006)
