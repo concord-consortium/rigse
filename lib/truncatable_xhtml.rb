@@ -118,6 +118,18 @@ module TruncatableXhtml
         replaceables
       end
     end
+    def truncate_xhtml
+      if (self.respond_to? 'name')
+        self.html_tables.each do |tablename|
+          if self.respond_to? tablename
+            truncated_xhtml = truncate_from_xhtml(self.send(tablename))
+            self.name = truncated_xhtml unless truncated_xhtml.empty?
+          end
+        end
+      end
+      self.replace_offensive_html
+      super
+    end
   end
   
   
@@ -127,22 +139,11 @@ module TruncatableXhtml
   def self.included(clazz)
     clazz.extend(ClassMethods)
     clazz.has_html_tables
+    clazz.send :before_save, :truncate_xhtml
     
     ## add before_save hooks
-    clazz.class_eval {
-      def before_save
-        if (self.respond_to? 'name')
-          self.html_tables.each do |tablename|
-            if self.respond_to? tablename
-              truncated_xhtml = truncate_from_xhtml(self.send(tablename))
-              self.name = truncated_xhtml unless truncated_xhtml.empty?
-            end
-          end
-        end
-        self.replace_offensive_html
-        super
-      end
-    }
+    clazz.class_eval do
+    end
   end
   
   ##
