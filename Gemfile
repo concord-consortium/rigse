@@ -50,6 +50,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.9.4"
   gem 'themes_for_rails',     "~> 0.4.2"
   gem 'default_value_for'
+  gem 'exception_notification', "~> 2.5.2"
 
 group :development do
   gem "highline"
