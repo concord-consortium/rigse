@@ -9,9 +9,10 @@ class TeacherNote < ActiveRecord::Base
   acts_as_replicatable
   include Changeable
   
+  after_update :inform_investigation
+
   # send_update_events_to :investigation
-  # 
-  def after_update
+  def inform_investigation
     self.authored_entity.investigation.touch
   end
 

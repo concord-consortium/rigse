@@ -6,7 +6,9 @@ class Embeddable::RawOtml < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
 
-  def after_create
+  after_create :initialize_otml_content_with_local_id
+
+  def initialize_otml_content_with_local_id
     self.otml_content = <<-HEREDOC
 <OTCompoundDoc local_id='raw_otml_#{self.id}'>
   <bodyText>

@@ -50,19 +50,23 @@ class Embeddable::DataCollector < ActiveRecord::Base
 
   serialize :data_store_values
   
-  def before_save
-    if self.title
-      self.name = self.title
-    end
-  end
-  
-  def before_validation
+  before_validation :set_default_probe_type_attributes
+
+  def set_default_probe_type_attributes
     default_pt = Embeddable::DataCollector.default_probe_type
     self.probe_type_id = default_pt.id unless self.probe_type_id
     self.name = title unless self.title.nil? || self.title.empty?
     self.name = default_pt.name if self.name.nil? || self.name.empty?
     self.title = self.name if self.title.nil? || self.title.empty?
     self.y_axis_label = default_pt.name unless self.y_axis_label
+  end
+
+  before_save :copy_title_to_name
+  
+  def copy_title_to_name
+    if self.title
+      self.name = self.title
+    end
   end
   
   acts_as_replicatable

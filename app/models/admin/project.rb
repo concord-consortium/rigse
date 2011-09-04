@@ -46,13 +46,17 @@ class Admin::Project < ActiveRecord::Base
     end
   end
 
-  def before_save
+  before_save :update_jnlp_version_str_if_snapshot
+  
+  def update_jnlp_version_str_if_snapshot
     if snapshot_enabled
       self.jnlp_version_str = maven_jnlp_family.snapshot_version
     end
   end
   
-  def after_save
+  after_save :update_app_saettings
+  
+  def update_app_saettings
     if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
       update_app_settings
     end

@@ -18,7 +18,9 @@ class MavenJnlp::VersionedJnlpUrl < ActiveRecord::Base
     end
   end
 
-  def before_save
+  before_save :update_date_str
+
+  def update_date_str
     self.date_str = version_str[/-(.*)/, 1]
   end
 

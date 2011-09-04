@@ -204,7 +204,9 @@ class Investigation < ActiveRecord::Base
     self
   end
 
-  def after_save
+  after_save :add_author_role_to_use
+  
+  def add_author_role_to_use
     if self.user
       self.user.add_role('author')
     end

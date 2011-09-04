@@ -5,8 +5,12 @@ class Embeddable::Embeddable < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
   
-  def before_save
-    self.name = self.title
+  before_save :copy_title_to_name
+  
+  def copy_title_to_name
+    if self.title
+      self.name = self.title
+    end
   end
   
   acts_as_replicatable
