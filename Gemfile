@@ -49,7 +49,7 @@ source "http://rubygems.org"
   gem "nokogiri",             "~> 1.5.0"
   gem 'rdoc',                 "~> 3.9.4"
   gem 'themes_for_rails',     "~> 0.4.2"
-  gem 'default_value_for'
+  gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
 
 group :development do
