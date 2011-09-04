@@ -34,7 +34,6 @@ class ApplicationController < ActionController::Base
   include RoleRequirementSystem
 
   helper :all # include all helpers, all the time
-  filter_parameter_logging :password, :password_confirmation
 
   before_filter :check_user
   before_filter :original_user

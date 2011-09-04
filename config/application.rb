@@ -8,6 +8,8 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 module RailsPortal
   class Application < Rails::Application
     
+    config.filter_parameters << :password << :password_confirmation
+    
     Bundler.require(:default, Rails.env) if defined?(Bundler)
   
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
