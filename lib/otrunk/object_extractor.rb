@@ -3,7 +3,7 @@ class Otrunk::ObjectExtractor
   
   def initialize(otml)
     @otml = Nokogiri::XML(otml)
-    @doc_id = @otml.at("otrunk[@id]").get_attribute("id")
+    @doc_id = @otml.at("otrunk[@id]")[:id]
   end
   
   def get_text_property(element, property)
