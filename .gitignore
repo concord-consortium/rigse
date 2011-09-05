@@ -74,5 +74,5 @@ public/stylesheets/*.css
 bin/
 .rspec
 *.orig
-gource/*.mp4
-gource/*.webm
+doc/gource/*.mp4
+doc/gource/*.webm
