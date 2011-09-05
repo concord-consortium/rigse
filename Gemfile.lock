@@ -50,7 +50,7 @@ GEM
       net-ssh-gateway (>= 1.1.0)
     capistrano-ext (1.2.1)
       capistrano (>= 1.0.0)
-    capybara (1.0.1)
+    capybara (1.1.1)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -112,7 +112,8 @@ GEM
     jnlp (0.7.3)
       nokogiri (>= 1.4.4, <= 1.5)
     json (1.5.3)
-    json_pure (1.5.3)
+    json_pure (1.5.4)
+      spruz (~> 0.2.8)
     launchy (2.0.5)
       addressable (~> 2.2.6)
     linecache (0.46)
@@ -232,6 +233,7 @@ GEM
     spork (0.9.0.rc9)
     spreadsheet (0.6.5.7)
       ruby-ole (>= 1.0)
+    spruz (0.2.13)
     syntax (1.0.0)
     term-ansicolor (1.0.6)
     themes_for_rails (0.4.2)
@@ -262,7 +264,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   capistrano-ext
-  capybara (~> 1.0.1)
+  capybara (~> 1.1.1)
   ci_reporter (~> 1.6.5)
   compass (~> 0.11.5)
   cucumber (~> 1.0.2)
