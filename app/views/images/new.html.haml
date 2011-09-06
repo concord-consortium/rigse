@@ -1,5 +1,5 @@
 = error_messages_for :image
 
-- form_for(:image, :url => formatted_images_path(:format => 'js'), :html => { :multipart => true, :target => 'upload_frame'}) do |form|
+= form_for(:image, :url => formatted_images_path(:format => 'js'), :html => { :multipart => true, :target => 'upload_frame'}) do |form|
   = render(:partial => '/images/form', :object => form)
 %iframe#upload_frame{:name=>"upload_frame", :style=>"width:1px;height:1px;border:0px", :src=>"about:blank"}

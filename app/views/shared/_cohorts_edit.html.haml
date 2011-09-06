@@ -1,6 +1,6 @@
 -# Expects locals: object
 - if object && object.respond_to?("cohort_list") && current_user.has_role?("admin", "manager")
-  - field_set_tag 'Cohorts' do
+  = field_set_tag 'Cohorts' do
     .aligned
       = hidden_field_tag :update_cohorts, "true"
       %ul.menu_h

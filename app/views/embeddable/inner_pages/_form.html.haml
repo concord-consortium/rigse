@@ -1,6 +1,6 @@
 = edit_menu_for(inner_page, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(inner_page, :item, :name_field)
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(inner_page, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'

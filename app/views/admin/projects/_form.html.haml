@@ -57,7 +57,7 @@
             %br
             (This option changes the boot up process of the installer to automatically launch the non installer jnlp if no installation is found.)
 
-      - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
+      = field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }
       %p
         %b
@@ -67,7 +67,7 @@
         = render :partial => "home_page_content_field", :locals => { :admin_project => admin_project, :f => f }
       %p
         = render :partial => "custom_css_field", :locals => { :admin_project => admin_project, :f => f }
-      - field_set_tag '<b>Vendor Interfaces</b>' do
+      = field_set_tag '<b>Vendor Interfaces</b>' do
         - Probe::VendorInterface.find(:all).each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid

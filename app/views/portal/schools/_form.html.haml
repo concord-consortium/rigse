@@ -2,7 +2,7 @@
   = edit_menu_for(portal_school, f, { :omit_cancel => true })
   .content
     %p
-      - field_set_tag 'State or Province' do
+      = field_set_tag 'State or Province' do
         .aligned
           = select(:state_or_province, 'id', options_for_select(@states_and_provinces), {:prompt => "Select a state or province ..."})
 
@@ -24,7 +24,7 @@
               });
             });
 
-      - field_set_tag 'District' do
+      = field_set_tag 'District' do
         .aligned
           = select(:nces_district, 'id', options_for_select([[]]), {:prompt => "Select a district ..."})
 
@@ -45,7 +45,7 @@
               });
             });
       
-      - field_set_tag 'School' do
+      = field_set_tag 'School' do
         .aligned
           = select(:nces_school, 'id', options_for_select([[]]), {:prompt => "Select a school ..."})
 
@@ -64,7 +64,7 @@
               });
             });
           
-      - field_set_tag 'Description' do
+      = field_set_tag 'Description' do
         .aligned
           #portal_school_exists
           #school_description

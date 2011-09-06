@@ -1,6 +1,6 @@
 = edit_menu_for(n_logo_model, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(n_logo_model, :item, :name_field)
-  - field_set_tag 'authored_data_url' do
+  = field_set_tag 'authored_data_url' do
     = f.text_field :authored_data_url, :id => dom_id_for(n_logo_model, :item, :authored_data_url), :size => 80

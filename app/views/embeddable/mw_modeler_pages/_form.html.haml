@@ -1,7 +1,7 @@
 = edit_menu_for(mw_modeler_page, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(mw_modeler_page, :item, :name_field)
 
-  - field_set_tag 'authored_data_url' do
+  = field_set_tag 'authored_data_url' do
     = f.text_field :authored_data_url, :id => dom_id_for(mw_modeler_page, :item, :authored_data_url), :size => 80

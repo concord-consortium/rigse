@@ -1,7 +1,7 @@
 = edit_menu_for(data_table,f)
 = observe_form(dom_id_for(data_table, :edit), :function => pack_field_params)
 .content
-  - field_set_tag 'table properties' do
+  = field_set_tag 'table properties' do
     = f.label "name"
     = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
     %br
@@ -17,7 +17,7 @@
     = f.label "precision"
     = f.text_field :precision, :size => 5
     %br
-  - field_set_tag 'column labels' do
+  = field_set_tag 'column labels' do
     .action_menu
       .action_menu_header_right
         %ul

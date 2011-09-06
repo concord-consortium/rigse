@@ -1,12 +1,12 @@
-- form_for(@page) do |f|
+= form_for(@page) do |f|
   = f.error_messages
   = f.hidden_field 'section_id', :value =>@page.section.id
   = edit_menu_for(@page, f)
-  - field_set_tag 'Page Name' do
+  = field_set_tag 'Page Name' do
     = f.text_field :name
-  / - field_set_tag 'Teacher only' do
+  / = field_set_tag 'Teacher only' do
   /   = f.check_box :teacher_only 
   /   (check here if this page is for teachers only)
-  / - field_set_tag 'Page Description' do
+  / = field_set_tag 'Page Description' do
   /   = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
 = javascript_tag("focus_first_field();");

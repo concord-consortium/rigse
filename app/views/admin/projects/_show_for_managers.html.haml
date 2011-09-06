@@ -7,6 +7,6 @@
       = wrap_edit_link_around_content(admin_project, {:complete => mce_init_string}) do
         %h4= h(admin_project.name)
         .form_like
-          - field_set_tag 'Home Page Content' do
+          = field_set_tag 'Home Page Content' do
             %p= admin_project.home_page_content
           = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

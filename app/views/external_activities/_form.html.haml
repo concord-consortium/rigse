@@ -1,15 +1,15 @@
-- form_for(@external_activity) do |f|
+= form_for(@external_activity) do |f|
   = f.error_messages
   = edit_menu_for(@external_activity, f)
-  - field_set_tag 'Activity Name' do
+  = field_set_tag 'Activity Name' do
     = f.text_field :name
-  - field_set_tag 'Activity Description' do
+  = field_set_tag 'Activity Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  - field_set_tag 'External URL' do
+  = field_set_tag 'External URL' do
     = f.text_area :url, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  - field_set_tag 'Publication status' do
+  = field_set_tag 'Publication status' do
     = f.select :publication_status, ExternalActivity.publication_states.map {|s| s.to_s}
-  - field_set_tag 'Extra Options' do
+  = field_set_tag 'Extra Options' do
     .config
       = f.check_box :popup
       Open the url in a new window
@@ -19,7 +19,7 @@
     .config
       = f.check_box :append_survey_monkey_uid
       Append a unique Survey Monkey user id to the url (e.g. http://www.surveymonkey.com/s/H2Y9H27?c=00001)
-  - field_set_tag 'Save Path' do
+  = field_set_tag 'Save Path' do
     = f.text_field :save_path
   = render :partial => 'shared/cohorts_edit', :locals => { :object => @external_activity }
 

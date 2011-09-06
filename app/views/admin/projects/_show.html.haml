@@ -75,7 +75,7 @@
                     No
                   (The installer launcher will show the user a dialog and open the a page where the user can download the installer)
                   
-            - field_set_tag 'Maven Jnlp' do
+            = field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:
                 - if admin_project.maven_jnlp_server
@@ -85,8 +85,8 @@
                       %li= elem
                 - else
                   no server configured
-            - field_set_tag 'Project Description' do
+            = field_set_tag 'Project Description' do
               %p= admin_project.description
-            - field_set_tag 'Home Page Content' do
+            = field_set_tag 'Home Page Content' do
               %p= admin_project.home_page_content
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

@@ -1,16 +1,16 @@
-- form_for(@activity) do |f|
+= form_for(@activity) do |f|
   = f.error_messages
   = edit_menu_for(@activity, f)  
   - if @activity.investigation
     = f.hidden_field 'investigation_id', :value =>@activity.investigation.id
-  / - field_set_tag 'Teacher only' do
+  / = field_set_tag 'Teacher only' do
   /   = f.check_box :teacher_only 
   /   (check here if this activity is for teachers only)
-  - field_set_tag 'Activity Name' do
+  = field_set_tag 'Activity Name' do
     = f.text_field :name
-  - field_set_tag 'Activity Description' do
+  = field_set_tag 'Activity Description' do
     = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-  - field_set_tag 'Tags' do
+  = field_set_tag 'Tags' do
     %label.right Publication status
   = f.select :publication_status, @activity.available_states(current_user).map {|s| s.to_s}
 = javascript_tag("focus_first_field();");

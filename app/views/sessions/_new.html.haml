@@ -1,8 +1,8 @@
 #content-upper
   .cols.login-area
     .col
-      - form_tag session_path, :id=>"project-signin" do
-        - field_set_tag "Project Sign In" do
+      = form_tag session_path, :id=>"project-signin" do
+        = field_set_tag "Project Sign In" do
           %h2
             Project Sign In
           %ul.graphic-input

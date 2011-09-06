@@ -1,6 +1,6 @@
 .content
   %h3= "Author notes for: #{author_note.authored_entity.name}"
-  - field_set_tag 'Body' do
+  = field_set_tag 'Body' do
     = f.text_area :body, :id => dom_id_for(author_note, :form, :body_field), :style=>'width: 100%;'
   = f.hidden_field :authored_entity_type
   = f.hidden_field :authored_entity_id
