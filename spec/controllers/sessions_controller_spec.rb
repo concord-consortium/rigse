@@ -65,7 +65,7 @@ describe SessionsController do
 
             it "greets me nicely"            do 
               do_create
-              response.flash[:notice].should =~ /success/i   
+              request.flash[:notice].should =~ /success/i   
             end
 
             it "sets/resets/expires cookie"  do 
