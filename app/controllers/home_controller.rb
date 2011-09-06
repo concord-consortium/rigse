@@ -10,8 +10,8 @@ class HomeController < ApplicationController
   end
 
   def doc
-    if document_path = params[:document]
-      @document = FormattedDoc.new(File.join('doc', File.basename(document_path)))
+    if document_path = params[:document].gsub(/\.\.\//, '')
+      @document = FormattedDoc.new(File.join('doc', document_path))
       render :action => "formatted_doc", :layout => "technical_doc"
     end
   end
