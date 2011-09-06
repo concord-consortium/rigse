@@ -7,6 +7,9 @@ require 'spreadsheet'
 ####################################################################
 class GseParser
   
+  ELIPSIS = "\u2026"
+  EMDASH  = "\u2014"
+
   attr_accessor :logger
   
   def initialize(options={})
@@ -39,10 +42,11 @@ class GseParser
   end
 
   #
-  def clean_text(text) 
+  def clean_text(text)
+    text = text.encode("utf-8", "iso-8859-1")
     if(text)
-      # remove all non-ascii ecept elipses, which I like
-      text.gsub!(/[^\x20-\x7E|…]/,"")
+      # remove all non-ascii except elipses, which I like
+      text.gsub!(/[^\x20-\x7E|#{ELIPSIS}]/, "")
       text.gsub!("\n"," ")
       text.gsub!("\t"," ")
       text.gsub!(/\?+/,"")
@@ -108,7 +112,7 @@ class GseParser
     spreadsheet = Spreadsheet.open path_to_xls
     sheet = spreadsheet.worksheet 'Science'
     domain_regex = @domains.keys.join("|")
-    regex = /(#{domain_regex})(\d+)\(([K|0-9]\s*[-|–]\s*[K|0-9]+)\)\s*[-|–]\s*([0-9]+)([a-b])(.+)/
+    regex = /(#{domain_regex})(\d+)\(([K|0-9]\s*[-|#{EMDASH}]\s*[K|0-9]+)\)\s*[-|#{EMDASH}]\s*([0-9]+)([a-b])(.+)/
     sheet.each do |row| 
       if (row[1])
         begin
@@ -138,7 +142,7 @@ class GseParser
     table_number = 0
 
     (doc/:table).each do | table |
-      table_number = table.attributes['class'].gsub("Table","") 
+      table_number = table[:class].gsub("Table","") 
       case table_number.to_i(10)
       when 1
         import_enduring_knowledge table
@@ -306,7 +310,7 @@ class GseParser
       grade_span.gsub!(".","") # Ext. has a dot in it.. *sigh*
       old_body = body
       clean_text(body)
-      (stem_string,body) = body.split(/\.\.\.|…/)
+      (stem_string,body) = body.split(/\.\.\.|#{ELIPSIS}/)
       if body
         statement_strings = body.split(/[0-9]{1,2}[a-z]{1,4}/)
         statement_strings.each { |s| clean_text(s) }
@@ -329,7 +333,7 @@ class GseParser
           expectation
         }
       else
-        logger.warn("couldnt find elipse (…) separating stem from body: #{old_body}")
+        logger.warn("couldnt find elipse (#{ELIPSIS}) separating stem from body: #{old_body}")
       end
     else
       logger.warn "can't parse grade span expectation text = #{text}"
@@ -341,7 +345,7 @@ class GseParser
     rows = table.search(:tr)
     heading = rows[0].at(:td).inner_text.strip
     unless heading =~ /^#{@domains.keys.join('|')}/
-      table_number = table.attributes['class'].gsub("Table", "")
+      table_number = table[:class].gsub("Table", "")
       logger.info("Not a GSES table: table \##{table_number}")
       return false
     end
