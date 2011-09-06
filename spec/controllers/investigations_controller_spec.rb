@@ -10,8 +10,8 @@ describe InvestigationsController do
       :use_bitmap_snapshots? => false)
     Admin::Project.stub!(:default_project).and_return(@current_project)
     controller.stub(:before_render) {
-      response.template.stub(:net_logo_package_name).and_return("blah")
-      response.template.stub_chain(:current_project).and_return(@current_project);
+      controller.template.stub(:net_logo_package_name).and_return("blah")
+      controller.template.stub_chain(:current_project).and_return(@current_project);
     }
 
     @admin_user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })

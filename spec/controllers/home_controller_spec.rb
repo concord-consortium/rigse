@@ -5,7 +5,7 @@ describe HomeController do
   before(:each) do
     @test_project = mock("project")
     controller.stub(:before_render) {
-      response.template.stub(:current_project).and_return(@test_project)
+      controller.template.stub(:current_project).and_return(@test_project)
     }
   end
 

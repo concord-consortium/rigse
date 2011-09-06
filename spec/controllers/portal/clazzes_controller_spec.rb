@@ -36,7 +36,7 @@ describe Portal::ClazzesController do
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
 
     @controller.stub(:before_render) {
-      response.template.stub_chain(:current_project, :name).and_return("Test Project")
+      controller.template.stub_chain(:current_project, :name).and_return("Test Project")
     }
     @mock_project = mock_model(Admin::Project, :name => "Test Project")
     @mock_project.stub(:enable_grade_levels?).and_return(true)
