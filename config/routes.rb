@@ -731,6 +731,7 @@ RailsPortal::Application.routes.draw do
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
   match '/home' => 'home#index', :as => :home
   match '/about' => 'home#about', :as => :about
+  match '/report' => 'home#report', :as => :report
   match '/test_exception' => 'home#test_exception', :as => :test_exception
   match '/' => 'home#index'
   match '/requirements' => 'home#requirements', :as => :requirements
