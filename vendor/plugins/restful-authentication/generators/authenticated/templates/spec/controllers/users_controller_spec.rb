@@ -31,32 +31,32 @@ describe <%= model_controller_class_name %>Controller do
   it 'requires login on signup' do
     lambda do
       create_<%= file_name %>(:login => nil)
-      assigns[:<%= file_name %>].errors.on(:login).should_not be_nil
       response.should be_success
+      assigns[:<%= file_name %>].errors[:login].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
   
   it 'requires password on signup' do
     lambda do
       create_<%= file_name %>(:password => nil)
-      assigns[:<%= file_name %>].errors.on(:password).should_not be_nil
       response.should be_success
+      assigns[:<%= file_name %>].errors[:password].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
   
   it 'requires password confirmation on signup' do
     lambda do
       create_<%= file_name %>(:password_confirmation => nil)
-      assigns[:<%= file_name %>].errors.on(:password_confirmation).should_not be_nil
       response.should be_success
+      assigns[:<%= file_name %>].errors[:password_confirmation].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
 
   it 'requires email on signup' do
     lambda do
       create_<%= file_name %>(:email => nil)
-      assigns[:<%= file_name %>].errors.on(:email).should_not be_nil
       response.should be_success
+      assigns[:<%= file_name %>].errors[:email].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
   

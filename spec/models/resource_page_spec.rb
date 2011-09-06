@@ -16,7 +16,7 @@ describe ResourcePage do
       %w( user_id name ).each do |attribute|      
         r = build_resource_page(attribute.to_sym => nil)
         r.should_not be_valid
-        r.errors.on(attribute.to_sym).should_not be_nil
+        r.errors[attribute.to_sym].should_not be_nil
       end
 
       r = build_resource_page

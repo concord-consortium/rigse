@@ -41,7 +41,7 @@ describe <%= class_name %> do
   it 'requires login' do
     lambda do
       u = create_<%= file_name %>(:login => nil)
-      u.errors.on(:login).should_not be_nil
+      u.errors[:login].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
 
@@ -51,7 +51,7 @@ describe <%= class_name %> do
       it "'#{login_str}'" do
         lambda do
           u = create_<%= file_name %>(:login => login_str)
-          u.errors.on(:login).should     be_nil
+          u.errors[:login].should     be_nil
         end.should change(<%= class_name %>, :count).by(1)
       end
     end
@@ -63,7 +63,7 @@ describe <%= class_name %> do
       it "'#{login_str}'" do
         lambda do
           u = create_<%= file_name %>(:login => login_str)
-          u.errors.on(:login).should_not be_nil
+          u.errors[:login].should_not be_nil
         end.should_not change(<%= class_name %>, :count)
       end
     end
@@ -72,21 +72,21 @@ describe <%= class_name %> do
   it 'requires password' do
     lambda do
       u = create_<%= file_name %>(:password => nil)
-      u.errors.on(:password).should_not be_nil
+      u.errors[:password].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
 
   it 'requires password confirmation' do
     lambda do
       u = create_<%= file_name %>(:password_confirmation => nil)
-      u.errors.on(:password_confirmation).should_not be_nil
+      u.errors[:password_confirmation].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
 
   it 'requires email' do
     lambda do
       u = create_<%= file_name %>(:email => nil)
-      u.errors.on(:email).should_not be_nil
+      u.errors[:email].should_not be_nil
     end.should_not change(<%= class_name %>, :count)
   end
 
@@ -99,7 +99,7 @@ describe <%= class_name %> do
       it "'#{email_str}'" do
         lambda do
           u = create_<%= file_name %>(:email => email_str)
-          u.errors.on(:email).should     be_nil
+          u.errors[:email].should     be_nil
         end.should change(<%= class_name %>, :count).by(1)
       end
     end
@@ -114,7 +114,7 @@ describe <%= class_name %> do
       it "'#{email_str}'" do
         lambda do
           u = create_<%= file_name %>(:email => email_str)
-          u.errors.on(:email).should_not be_nil
+          u.errors[:email].should_not be_nil
         end.should_not change(<%= class_name %>, :count)
       end
     end
@@ -127,7 +127,7 @@ describe <%= class_name %> do
       it "'#{name_str}'" do
         lambda do
           u = create_<%= file_name %>(:name => name_str)
-          u.errors.on(:name).should     be_nil
+          u.errors[:name].should     be_nil
         end.should change(<%= class_name %>, :count).by(1)
       end
     end
@@ -139,7 +139,7 @@ describe <%= class_name %> do
       it "'#{name_str}'" do
         lambda do
           u = create_<%= file_name %>(:name => name_str)
-          u.errors.on(:name).should_not be_nil
+          u.errors[:name].should_not be_nil
         end.should_not change(<%= class_name %>, :count)
       end
     end
