@@ -196,7 +196,7 @@ alter to suit. There are additional security minutae in @notes/README-Tradeoffs@
     class UserObserver < ActiveRecord::Observer
       def after_create(user)
         user.reload
-        UserMailer.deliver_signup_notification(user)
+        UserMailer.signup_notification.deliver(user)
       end
       def after_save(user)
         user.reload
