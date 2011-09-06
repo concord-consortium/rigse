@@ -5,7 +5,7 @@ describe "/dataservice/blobs/index.html.haml" do
 
   before(:each) do
     # cut off the show_menu_for helper which traverses lots of other code
-    template.stub!(:show_menu_for).and_return("show menu")
+    view.stub!(:show_menu_for).and_return("show menu")
 
     # the changeable? => true prevents a current_user lookup, but will test if editing links correctly wrap the passed block
     collection = WillPaginate::Collection.create(1,10) do |coll|

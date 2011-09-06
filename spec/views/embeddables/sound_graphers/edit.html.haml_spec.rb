@@ -4,7 +4,7 @@ describe "/embeddable/sound_graphers/edit.html.haml" do
 
   before(:each) do
     # cut off the edit_menu_for helper which traverses lots of other code
-    template.stub!(:edit_menu_for).and_return("edit menu")
+    view.stub!(:edit_menu_for).and_return("edit menu")
     @display_mode = Embeddable::SoundGrapher.valid_display_modes.first
     @max_frequency = Embeddable::SoundGrapher.valid_max_frequencies.first
     @max_sample_time = Embeddable::SoundGrapher.valid_max_sample_times.first

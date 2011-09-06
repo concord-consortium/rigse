@@ -5,7 +5,7 @@ describe "/embeddable/data_tables/edit.html.haml" do
 
   before(:each) do
     # cut off the edit_menu_for helper which traverses lots of other code
-    template.stub!(:edit_menu_for).and_return("edit menu")
+    view.stub!(:edit_menu_for).and_return("edit menu")
     assigns[:data_table] = @data_table = stub_model(Embeddable::DataTable,
       :new_record? => false, :id => 1, :name => "Data Table", :description => "Desc", :column_count => 4, :visible_rows => 9, :column_names => 'One,Two,Three,Four', :column_data => '', :data_collector_id => nil
     )

@@ -12,7 +12,7 @@ describe "/security_questions/_fields.html.haml" do
   
   it "should display the options" do  
      render :partial => "/security_questions/fields"
-     response.should have_tag('select') do
+     rendered.should have_tag('select') do
        with_tag('option', :text => 'Why?')
        with_tag('option', :text => 'What?')
      end

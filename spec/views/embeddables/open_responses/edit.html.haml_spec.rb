@@ -4,8 +4,8 @@ describe "/embeddable/open_responses/edit.html.haml" do
 
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    template.stub!(:edit_menu_for).and_return("edit menu")
-    template.stub!(:current_user).and_return(power_user)
+    view.stub!(:edit_menu_for).and_return("edit menu")
+    view.stub!(:current_user).and_return(power_user)
     assigns[:open_response] = @open_response = stub_model(Embeddable::OpenResponse,
       :new_record? => false, 
       :id => 1,
