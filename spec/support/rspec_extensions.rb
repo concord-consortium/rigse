@@ -4,7 +4,7 @@ module Spec
       # wrapping mocks only works with the rspec mock framework right now...
       def fails_in_themes(themes = {})
         $previous_mockspace = $rspec_mocks
-        $rspec_mocks = Spec::Mocks::Space.new
+        $rspec_mocks = RSpec::Mocks::Space.new
         if block_given?
           error = nil
           begin
@@ -17,8 +17,8 @@ module Spec
 
           if style = themes[ApplicationController.get_theme]
             # expect this to fail
-            raise Spec::Example::PendingExampleFixedError.new("Expected to fail. No Error was raised.") if error.nil?
-            raise Spec::Example::ExamplePendingError.new("Need to determine if failure is expected under theme: #{ApplicationController.get_theme}") if style == :todo
+            raise RSpec::Example::PendingExampleFixedError.new("Expected to fail. No Error was raised.") if error.nil?
+            raise RSpec::Example::ExamplePendingError.new("Need to determine if failure is expected under theme: #{ApplicationController.get_theme}") if style == :todo
           else
             # otherwise pass any exceptions upstream
             raise error unless error.nil?

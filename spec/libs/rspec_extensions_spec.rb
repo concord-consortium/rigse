@@ -29,7 +29,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :todo }) do
           true.should be_true
         end
-      }.should raise_error(Spec::Example::PendingExampleFixedError)
+      }.should raise_error(RSpec::Example::PendingExampleFixedError)
     end
 
     it "should fail when the body passes in the current theme, and the current theme is in :expected mode" do
@@ -38,7 +38,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :expected }) do
           true.should be_true
         end
-      }.should raise_error(Spec::Example::PendingExampleFixedError)
+      }.should raise_error(RSpec::Example::PendingExampleFixedError)
     end
   end
 
@@ -49,7 +49,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :todo }) do
           true.should be_false
         end
-      }.should raise_error(Spec::Expectations::ExpectationNotMetError)
+      }.should raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     it "should be pending when the body fails in the current theme, and the current theme is set to :todo mode" do
@@ -58,7 +58,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :todo }) do
           true.should be_false
         end
-      }.should raise_error(Spec::Example::ExamplePendingError)
+      }.should raise_error(RSpec::Example::ExamplePendingError)
     end
 
     it "should pass when the body fails in the current theme, and the current theme is set to :expected mode" do
@@ -85,7 +85,7 @@ describe "fails_in_themes" do
           true.should be_false
         end
         ApplicationController.rspec_verify
-      }.should raise_error(Spec::Mocks::MockExpectationError)
+      }.should raise_error(RSpec::Mocks::MockExpectationError)
     end
   end
 end

@@ -60,7 +60,7 @@ end
 When /^(?:|I )should have the following selection options:$/ do |selection_table|
   within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
-      if defined?(Spec::Rails::Matchers)
+      if defined?(RSpec::Rails::Matchers)
         page.should have_content(hash[:option])
       else
         assert page.has_content?(hash[:option])
@@ -72,7 +72,7 @@ end
 Then /^I should not see the following selection options:$/ do |selection_table|
   within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
-      if defined?(Spec::Rails::Matchers)
+      if defined?(RSpec::Rails::Matchers)
         page.should_not have_content(hash[:option])
       else
         assert(! page.has_content?(hash[:option]))

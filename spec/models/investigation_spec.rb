@@ -2,14 +2,14 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 # matchers for acts_as_list
 
-Spec::Matchers.define :be_before do |expected|
+RSpec::Matchers.define :be_before do |expected|
   match                          { |given| given.position < expected.position }
   failure_message_for_should     { |given| "expected #{given.inspect} to be before #{expected.inspect}" }
   failure_message_for_should_not { |given| "expected #{given.inspect} not to be before #{expected.inspect}" }
   description                    { "be before #{expected.position}" }
 end
 
-Spec::Matchers.define :be_after do |expected|
+RSpec::Matchers.define :be_after do |expected|
   match                          { |given| given.position > expected.position }
   failure_message_for_should     { |given| "expected #{given.inspect} to be after #{expected.inspect}" }
   failure_message_for_should_not { |given| "expected #{given.inspect} not to be after #{expected.inspect}" }

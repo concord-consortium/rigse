@@ -9,7 +9,7 @@ namespace :hudson do
   end
 
   if defined? Spec
-    Spec::Rake::SpecTask.new do |t|
+    RSpec::Rake::SpecTask.new do |t|
       t.spec_opts = %{--profile default  --format CI::Reporter::RSpec --format html:#{rspec_report_path}report.html}
     end
   end

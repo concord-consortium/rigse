@@ -2,28 +2,28 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module RinetDataExampleHelpers
 
-  Spec::Matchers.define :be_more_than do |expected|
+  RSpec::Matchers.define :be_more_than do |expected|
     match                          { |given| given.size > expected.size }
     failure_message_for_should     { |given| "expected #{given.size} to be more than #{expected.size}" }
     failure_message_for_should_not { |given| "expected #{given.size} not to be more than #{expected.size}" }
     description                    { "more than #{expected.size}" }
   end
 
-  Spec::Matchers.define :be_less_than do |expected|
+  RSpec::Matchers.define :be_less_than do |expected|
     match                          { |given| given.size < expected.size }
     failure_message_for_should     { |given| "expected #{given.size} to be less than #{expected.size}" }
     failure_message_for_should_not { |given| "expected #{given.size} not to be less than #{expected.size}" }
     description                    { "less than #{expected.size}" }
   end
 
-  Spec::Matchers.define :have_nces_class do
+  RSpec::Matchers.define :have_nces_class do
     match                          { |given| given.clazzes.detect { |c| c.real? } }
     failure_message_for_should     { |given| "expected #{given.inspect} to be in a 'real' school" }
     failure_message_for_should_not { |given| "expected #{given.inspect} not to be in a 'real' school" }
     description                    { "#{given.inspect} should be in 'real'(nces) school" }
   end
 
-  Spec::Matchers.define :be_in_nces_school do
+  RSpec::Matchers.define :be_in_nces_school do
     match                          { |given| given.schools.detect { |s| s.real? } }
     failure_message_for_should     { |given| "expected #{given.inspect} to be in a 'real' school" }
     failure_message_for_should_not { |given| "expected #{given.inspect} not to be in a 'real' school" }
