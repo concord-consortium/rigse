@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110724025253) do
+ActiveRecord::Schema.define(:version => 20110906204154) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -230,10 +230,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
   end
 
   create_table "embeddable_biologica_chromosome_zooms_organisms", :id => false, :force => true do |t|
-    t.integer  "chromosome_zoom_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "chromosome_zoom_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_chromosomes", :force => true do |t|
@@ -279,10 +277,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
   end
 
   create_table "embeddable_biologica_multiple_organisms_organisms", :id => false, :force => true do |t|
-    t.integer  "multiple_organism_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "multiple_organism_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_organisms", :force => true do |t|
@@ -301,10 +297,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
   end
 
   create_table "embeddable_biologica_organisms_pedigrees", :id => false, :force => true do |t|
-    t.integer  "pedigree_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "pedigree_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_pedigrees", :force => true do |t|
@@ -844,8 +838,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -876,7 +870,7 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
@@ -894,10 +888,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
   add_index "portal_courses", ["school_id"], :name => "index_portal_courses_on_school_id"
 
   create_table "portal_courses_grade_levels", :id => false, :force => true do |t|
-    t.integer  "grade_level_id"
-    t.integer  "course_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "grade_level_id"
+    t.integer "course_id"
   end
 
   create_table "portal_districts", :force => true do |t|
@@ -926,10 +918,8 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
   end
 
   create_table "portal_grade_levels_teachers", :id => false, :force => true do |t|
-    t.integer  "grade_level_id"
-    t.integer  "teacher_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "grade_level_id"
+    t.integer "teacher_id"
   end
 
   create_table "portal_grades", :force => true do |t|
