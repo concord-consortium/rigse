@@ -30,12 +30,12 @@ describe Embeddable::LabBookSnapshotsController do
     it "the LabbookBundle should not scale drawTools" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag('OTLabbookBundle', :with => {:scaleDrawTools => 'false'})
+        response.should have_selector('OTLabbookBundle', :with => {:scaleDrawTools => 'false'})
     end
     it "the OTLabbookButton should useBitmaps" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag('OTLabbookButton', :with => {:useBitmap => 'true'})
+        response.should have_selector('OTLabbookButton', :with => {:useBitmap => 'true'})
     end
   end
 
@@ -46,13 +46,13 @@ describe Embeddable::LabBookSnapshotsController do
     it "the LabbookBundle should not scale drawTools" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag('OTLabbookBundle', :with => {:scaleDrawTools => 'true'})
+        response.should have_selector('OTLabbookBundle', :with => {:scaleDrawTools => 'true'})
     end
     it "the OTLabbookButton should useBitmaps" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
         response.should render_template(:show)
-        response.should have_tag('OTLabbookButton', :with => {:useBitmap => 'false'})
+        response.should have_selector('OTLabbookButton', :with => {:useBitmap => 'false'})
     end
   end
 

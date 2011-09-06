@@ -52,17 +52,17 @@ describe "/embeddable/data_collectors/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    response.should have_tag("form[action=#{embeddable_data_collector_path(@data_collector)}][method=post]") do
+    response.should have_selector("form[action=#{embeddable_data_collector_path(@data_collector)}][method=post]") do
     end
   end
 
   it "should have a way to select a linked data collector" do
     render
-    response.should have_tag("select[name='embeddable_data_collector[data_table_id]']")
+    response.should have_selector("select[name='embeddable_data_collector[data_table_id]']")
   end
   it "should have a way to select the font size for the digital display" do
     render
-    response.should have_tag("select[name='embeddable_data_collector[dd_font_size]']") do
+    response.should have_selector("select[name='embeddable_data_collector[dd_font_size]']") do
       with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:small]}']")
       with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:medium]}']")
       with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:large]}']")

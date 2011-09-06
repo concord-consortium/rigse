@@ -21,7 +21,7 @@ describe "/admin/tags/index.html.haml" do
   it "renders a list of admin_tags" do
     pending "Make this test compatible with pagination"
     render
-    response.should have_tag("tr>td", "value for scope".to_s, 2)
-    response.should have_tag("tr>td", "value for tag".to_s, 2)
+    response.should have_selector("tr>td", "value for scope".to_s, 2)
+    response.should have_selector("tr>td", "value for tag".to_s, 2)
   end
 end

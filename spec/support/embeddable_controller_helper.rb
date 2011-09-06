@@ -69,7 +69,7 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_show.jnlp.builder")
-        response.should have_tag('jnlp') do
+        response.should have_selector('jnlp') do
           with_tag('information')
           with_tag('security')
           with_tag('resources')
@@ -88,7 +88,7 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'config'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_show.config.builder")
-        response.should have_tag('java') do
+        response.should have_selector('java') do
           with_tag('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
             with_tag('void[property=?]', 'properties') do
               with_tag('object[class=?]', 'java.util.Properties') do
@@ -109,7 +109,7 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'dynamic_otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should have_tag('otrunk') do
+        response.should have_selector('otrunk') do
           with_tag('imports')
           with_tag('objects') do
             with_tag('OTSystem') do
@@ -141,7 +141,7 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template(:show)
-        response.should have_tag('otrunk') do
+        response.should have_selector('otrunk') do
           with_tag('imports')
           with_tag('objects') do
             with_tag('OTSystem') do
@@ -197,7 +197,7 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'jnlp'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.jnlp.builder")
-          response.should have_tag('jnlp') do
+          response.should have_selector('jnlp') do
             with_tag('information')
             with_tag('security')
             with_tag('resources')
@@ -216,7 +216,7 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'config', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.config.builder")
-          response.should have_tag('java') do
+          response.should have_selector('java') do
             with_tag('object') do
               with_tag('void') do
                 with_tag('object') do
@@ -238,7 +238,7 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'dynamic_otml', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.dynamic_otml.builder")
-          response.should have_tag('otrunk') do
+          response.should have_selector('otrunk') do
             with_tag('imports')
             with_tag('objects') do
               with_tag('OTSystem') do
@@ -263,7 +263,7 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'otml'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template(:edit)
-          response.should have_tag('otrunk') do
+          response.should have_selector('otrunk') do
             with_tag('imports')
             with_tag('objects') do
               with_tag('OTSystem') do

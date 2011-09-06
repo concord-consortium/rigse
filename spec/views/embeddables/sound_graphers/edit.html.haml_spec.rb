@@ -22,17 +22,17 @@ describe "/embeddable/sound_graphers/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    response.should have_tag("input[type=text][name='embeddable_sound_grapher[name]'][value='#{@name}']")
-    response.should have_tag("select[name='embeddable_sound_grapher[display_mode]']") do
+    response.should have_selector("input[type=text][name='embeddable_sound_grapher[name]'][value='#{@name}']")
+    response.should have_selector("select[name='embeddable_sound_grapher[display_mode]']") do
       with_tag("option[value='#{@display_mode}']")
     end
-    response.should have_tag("select[name='embeddable_sound_grapher[max_frequency]']") do
+    response.should have_selector("select[name='embeddable_sound_grapher[max_frequency]']") do
       with_tag("option[value='#{@max_frequency}']")
     end
-    response.should have_tag("select[name='embeddable_sound_grapher[max_sample_time]']") do
+    response.should have_selector("select[name='embeddable_sound_grapher[max_sample_time]']") do
       with_tag("option[value='#{@max_sample_time}']")
     end
-    response.should have_tag("form[action=#{embeddable_sound_grapher_path(@sound_grapher)}][method=post]") do
+    response.should have_selector("form[action=#{embeddable_sound_grapher_path(@sound_grapher)}][method=post]") do
     end
   end
 

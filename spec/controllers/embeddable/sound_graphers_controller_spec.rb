@@ -39,7 +39,7 @@ describe Embeddable::SoundGraphersController do
     # :maxSampleTime => sound_grapher.max_sample_time 
     it "renders the otml view" do
       get :show, :id => "37", :format => 'otml'
-      response.should have_tag("OTSoundGrapherModel[displayMode='#{@display_mode}'][maxFrequency='#{@max_frequency}'][maxSampleTime='#{@max_sample_time}']")
+      response.should have_selector("OTSoundGrapherModel[displayMode='#{@display_mode}'][maxFrequency='#{@max_frequency}'][maxSampleTime='#{@max_sample_time}']")
     end
   end
 end

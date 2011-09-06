@@ -45,7 +45,7 @@ describe Embeddable::DataCollectorsController do
       it "should get its data from the data_tables dataStore" do
         Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag('dataStore') do
+        response.should have_selector('dataStore') do
           with_tag("object[refid*=?]", /data_store_data_table/)
         end
       end
@@ -58,7 +58,7 @@ describe Embeddable::DataCollectorsController do
       it "should get its data from the data_tables dataStore" do
         Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag('dataStore') do
+        response.should have_selector('dataStore') do
           # <OTDataStore local_id='data_store_data_collector_3046' numberChannels='2'>
           with_tag("OTDataStore[local_id*=?]", /data_store_data_collector_/ )
         end
@@ -81,7 +81,7 @@ describe Embeddable::DataCollectorsController do
     describe "the generated otml" do
       it "should include OTDigitalDisplay tag" do
         get :show, :id => "37", :format => 'otml'
-        response.should have_tag("OTDigitalDisplay[fontSize='#{@font_size}']")
+        response.should have_selector("OTDigitalDisplay[fontSize='#{@font_size}']")
       end
     end
   end

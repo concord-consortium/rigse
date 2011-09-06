@@ -14,7 +14,7 @@ describe "/dataservice/blobs/edit.html.haml" do
   it "renders the edit blob form" do
     render
 
-    response.should have_tag("form[action=#{dataservice_blob_path(@dataservice_blob)}][method=post]") do
+    response.should have_selector("form[action=#{dataservice_blob_path(@dataservice_blob)}][method=post]") do
     end
   end
 end
