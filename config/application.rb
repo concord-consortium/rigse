@@ -5,10 +5,13 @@ require 'rails/all'
 module RailsPortal
   class Application < Rails::Application
     
-    config.filter_parameters << :password << :password_confirmation
-    
     Bundler.require(:default, Rails.env) if defined?(Bundler)
   
+    config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
+    config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
+
+    config.filter_parameters << :password << :password_confirmation
+    
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
     #   $ rake middleware
     #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
@@ -23,8 +26,6 @@ module RailsPortal
     #   use Rack::MethodOverride
     #   use Rack::Head
     #   run ActionController::Dispatcher.new
-    config.autoload_paths += %W(#{config.root}/lib) # include lib directory
-    config.autoload_paths += %W(#{config.root}/lib/**/") # include all subdirectories
     
     config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
 
