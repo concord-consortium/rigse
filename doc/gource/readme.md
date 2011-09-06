@@ -1,10 +1,10 @@
-## Gource Visualization of Work on the Application
+## Gource visualization of work on the application
 
 Here's a 4 /12 minute [Gource](https://github.com/acaudwell/Gource) visualization of 2 1/2 years of commits (5777) to this codebase.
 
-- [Jan 27, 2009 ... Sep 3, 2011](http://www.youtube.com/watch?v=AFrLpHRRgv8)
+### [Jan 27, 2009 ... Sep 3, 2011](http://www.youtube.com/watch?v=AFrLpHRRgv8)
 
-<iframe width="560" height="345" src="http://www.youtube.com/embed/AFrLpHRRgv8" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="345" src="http://www.youtube.com/embed/AFrLpHRRgv8?enablejsapi=0" frameborder="0">placeholder</iframe>
 
 What's happening in the visualization ...
 
@@ -56,3 +56,4 @@ Generating an mpeg4 video of the gource output (ffmpeg required):
 Generating an webm video of the gource output (ffmpeg required):
 
     $ ./doc/gource/generate-webm.sh
+
