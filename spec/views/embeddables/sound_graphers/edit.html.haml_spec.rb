@@ -22,17 +22,17 @@ describe "/embeddable/sound_graphers/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    response.should have_selector("input[type=text][name='embeddable_sound_grapher[name]'][value='#{@name}']")
-    response.should have_selector("select[name='embeddable_sound_grapher[display_mode]']") do
-      with_tag("option[value='#{@display_mode}']")
+    assert_select("input[type=text][name='embeddable_sound_grapher[name]'][value='#{@name}']")
+    assert_select("select[name='embeddable_sound_grapher[display_mode]']") do
+      assert_select("option[value='#{@display_mode}']")
     end
-    response.should have_selector("select[name='embeddable_sound_grapher[max_frequency]']") do
-      with_tag("option[value='#{@max_frequency}']")
+    assert_select("select[name='embeddable_sound_grapher[max_frequency]']") do
+      assert_select("option[value='#{@max_frequency}']")
     end
-    response.should have_selector("select[name='embeddable_sound_grapher[max_sample_time]']") do
-      with_tag("option[value='#{@max_sample_time}']")
+    assert_select("select[name='embeddable_sound_grapher[max_sample_time]']") do
+      assert_select("option[value='#{@max_sample_time}']")
     end
-    response.should have_selector("form[action=#{embeddable_sound_grapher_path(@sound_grapher)}][method=post]") do
+    assert_select("form[action=#{embeddable_sound_grapher_path(@sound_grapher)}][method=post]") do
     end
   end
 

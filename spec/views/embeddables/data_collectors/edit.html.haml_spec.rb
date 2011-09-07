@@ -62,10 +62,10 @@ describe "/embeddable/data_collectors/edit.html.haml" do
   end
   it "should have a way to select the font size for the digital display" do
     render
-    response.should have_selector("select[name='embeddable_data_collector[dd_font_size]']") do
-      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:small]}']")
-      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:medium]}']")
-      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:large]}']")
+    assert_select("select[name='embeddable_data_collector[dd_font_size]']") do
+      assert_select("option[value='#{Embeddable::DataCollector.dd_font_sizes[:small]}']")
+      assert_select("option[value='#{Embeddable::DataCollector.dd_font_sizes[:medium]}']")
+      assert_select("option[value='#{Embeddable::DataCollector.dd_font_sizes[:large]}']")
     end
   end
 end

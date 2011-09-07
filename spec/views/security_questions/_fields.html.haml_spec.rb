@@ -12,9 +12,9 @@ describe "/security_questions/_fields.html.haml" do
   
   it "should display the options" do  
      render :partial => "/security_questions/fields"
-     rendered.should have_tag('select') do
-       with_tag('option', :text => 'Why?')
-       with_tag('option', :text => 'What?')
+     assert_select('select') do
+       assert_select('option', :text => 'Why?')
+       assert_select('option', :text => 'What?')
      end
   end
   

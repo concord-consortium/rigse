@@ -107,11 +107,11 @@ describe Admin::ProjectsController do
 
       assert_response :success
       assert_template :partial => "_form_for_managers"
-
-      with_tag("*[name=?]", "admin_project[home_page_content]")
+      
+      response.body.should have_selector("*[name='admin_project[home_page_content]']")
 
       (project.attributes.keys - ["home_page_content","custom_css"]).each do |attribute|
-        without_tag("*[name=?]", "admin_project[#{attribute}]")
+        response.body.should_not have_selector("*[name='admin_project[#{attribute}]']")
       end
     end
   end

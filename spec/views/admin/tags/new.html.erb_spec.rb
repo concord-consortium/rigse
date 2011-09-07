@@ -16,9 +16,9 @@ describe "/admin/tags/new.html.haml" do
   it "renders new tags form" do
     render
 
-    response.should have_selector("form[action=?][method=post]", admin_tags_path) do
-      with_tag("input#admin_tag_scope[name=?]", "admin_tag[scope]")
-      with_tag("input#admin_tag_tag[name=?]", "admin_tag[tag]")
+    assert_select("form[action=?][method=post]", admin_tags_path) do
+      assert_select("input#admin_tag_scope[name=?]", "admin_tag[scope]")
+      assert_select("input#admin_tag_tag[name=?]", "admin_tag[tag]")
     end
   end
 end

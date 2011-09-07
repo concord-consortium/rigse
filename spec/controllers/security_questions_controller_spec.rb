@@ -20,10 +20,10 @@ describe SecurityQuestionsController do
       get :edit
       
       @student.user.security_questions.each_with_index do |q, i|
-        with_tag("select[name=?]", "security_questions[question#{i}][question_idx]") do
-          with_tag("option[value='current']", :text => q.question_idx)
+        assert_select("select[name=?]", "security_questions[question#{i}][question_idx]") do
+          assert_select("option[value='current']", :text => q.question_idx)
         end
-        with_tag("input[name=?][value=?]", "security_questions[question#{i}][answer]", q.answer)
+        assert_select("input[name=?][value=?]", "security_questions[question#{i}][answer]", q.answer)
       end
     end
   end

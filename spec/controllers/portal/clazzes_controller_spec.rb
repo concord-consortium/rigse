@@ -84,9 +84,9 @@ describe Portal::ClazzesController do
         get :show, { :id => @mock_clazz.id }
 
         # All users should see the full class details summary
-        with_tag("div#details_portal__clazz_#{@mock_clazz.id}") do
-          with_tag('div.action_menu') do
-            with_tag('a', :text => 'edit class information')
+        assert_select("div#details_portal__clazz_#{@mock_clazz.id}") do
+          assert_select('div.action_menu') do
+            assert_select('a', :text => 'edit class information')
           end
         end
       end
@@ -98,10 +98,10 @@ describe Portal::ClazzesController do
 
       get :show, :id => @mock_clazz.id
 
-      with_tag("div.block_list") do
-        with_tag("ul") do
+      assert_select("div.block_list") do
+        assert_select("ul") do
           teachers.each do |teacher|
-            with_tag("li", :text => /#{teacher.name}/)
+            assert_select("li", :text => /#{teacher.name}/)
           end
         end
       end
@@ -129,10 +129,10 @@ describe Portal::ClazzesController do
         xml_http_request :post, :edit, :id => @mock_clazz.id
 
         # All users should see the list of current teachers
-        with_tag("div#teachers_listing") do
+        assert_select("div#teachers_listing") do
           teachers.each do |teacher|
-            with_tag("tr#portal__teacher_#{teacher.id}") do |e|
-              with_tag("img[src*='delete']")
+            assert_select("tr#portal__teacher_#{teacher.id}") do |e|
+              assert_select("img[src*='delete']")
             end
           end
         end
@@ -152,11 +152,11 @@ describe Portal::ClazzesController do
 
         xml_http_request :post, :edit, :id => @mock_clazz.id
 
-        with_tag("div#teachers_listing") do
+        assert_select("div#teachers_listing") do
           teachers.each do |teacher|
-            with_tag("tr#portal__teacher_#{teacher.id}") do
-              with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
-                with_tag("img[src*='delete.png']")
+            assert_select("tr#portal__teacher_#{teacher.id}") do
+              assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
+                assert_select("img[src*='delete.png']")
               end
             end
           end
@@ -171,9 +171,9 @@ describe Portal::ClazzesController do
         xml_http_request :post, :edit, :id => @mock_clazz.id
 
         # There should be only one teacher listed, and it should not be enabled
-        with_tag("div#teachers_listing") do
-          with_tag("tr#portal__teacher_#{teachers.first.id}") do
-            with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
+        assert_select("div#teachers_listing") do
+          assert_select("tr#portal__teacher_#{teachers.first.id}") do
+            assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
           end
         end
       end
@@ -188,14 +188,14 @@ describe Portal::ClazzesController do
       #   xml_http_request :post, :edit, :id => @mock_clazz.id
       #
       #   # Only the current user's teacher should be disabled; all others should be enabled
-      #   with_tag("div#teachers_listing") do
+      #   assert_select("div#teachers_listing") do
       #     teachers.each do |teacher|
-      #       with_tag("tr#portal__teacher_#{teacher.id}") do
+      #       assert_select("tr#portal__teacher_#{teacher.id}") do
       #         if teacher.user == @logged_in_user
-      #           with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
+      #           assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_CURRENT_USER)
       #         else
-      #           with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
-      #             with_tag("img[src*='delete.png']")
+      #           assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do
+      #             assert_select("img[src*='delete.png']")
       #           end
       #         end
       #       end
@@ -213,11 +213,11 @@ describe Portal::ClazzesController do
 
         # The current user's teacher should produce a different warning message on click; all
         # others should use the default confirm text. All users' delete links should be enabled.
-        with_tag("div#teachers_listing") do
+        assert_select("div#teachers_listing") do
           teachers.each do |teacher|
-            with_tag("tr#portal__teacher_#{teacher.id}") do
-              with_tag("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do |elem|
-                with_tag("img[src*='delete.png']")
+            assert_select("tr#portal__teacher_#{teacher.id}") do
+              assert_select("a.rollover[onclick*=?]", remove_teacher_portal_clazz_path(@mock_clazz.id, :teacher_id => teacher.id)) do |elem|
+                assert_select("img[src*='delete.png']")
 
                 warning_str = Portal::Clazz.WARNING_REMOVE_TEACHER_CURRENT_USER(@mock_clazz.name).gsub(/(\\|<\/|\r\n|[\n\r"'])/) do
                   ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP[$1]
@@ -256,11 +256,11 @@ describe Portal::ClazzesController do
           # Unauthorized users should not see the "add teacher" dropdown
           without_tag("select#teacher_id_selector[name=teacher_id]")
         else
-          with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
+          assert_select("select#teacher_id_selector[name=teacher_id]") do |elem|
             without_tag("option[value=?]", @authorized_teacher.id) # cannot add teachers who are already assigned to this class
 
             @mock_clazz.school.portal_teachers.reject { |t| t.id == @authorized_teacher.id }.each do |t|
-              with_tag("option[value=?]", t.id)
+              assert_select("option[value=?]", t.id)
             end
           end
         end
@@ -333,8 +333,8 @@ describe Portal::ClazzesController do
 
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
-      with_tag("tr#portal__teacher_#{@random_teacher.id}") do
-        with_tag("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
+      assert_select("tr#portal__teacher_#{@random_teacher.id}") do
+        assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
       end
     end
 
@@ -354,8 +354,8 @@ describe Portal::ClazzesController do
 
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
-      with_tag("tr#portal__teacher_#{@unauthorized_teacher.id}")
-      with_tag("tr#portal__teacher_#{@random_teacher.id}")
+      assert_select("tr#portal__teacher_#{@unauthorized_teacher.id}")
+      assert_select("tr#portal__teacher_#{@random_teacher.id}")
       without_tag("tr#portal__teacher_#{@authorized_teacher.id}")
     end
 
@@ -384,9 +384,9 @@ describe Portal::ClazzesController do
 
       get :new
 
-      with_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
+      assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
         @logged_in_user.portal_teacher.schools.each do |school|
-          with_tag("option[value='#{school.id}']", :text => school.name)
+          assert_select("option[value='#{school.id}']", :text => school.name)
         end
       end
     end
@@ -397,7 +397,7 @@ describe Portal::ClazzesController do
       get :new
 
       APP_CONFIG[:active_grades].each do |name|
-        with_tag("input[type='checkbox'][name=?]", "portal_clazz[grade_levels][#{name}]")
+        assert_select("input[type='checkbox'][name=?]", "portal_clazz[grade_levels][#{name}]")
       end
     end
 
@@ -408,10 +408,10 @@ describe Portal::ClazzesController do
 
         get :new
 
-        with_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
+        assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
           school = Portal::School.find_by_name(APP_CONFIG[:site_school])
-          with_tag("option[value='#{school.id}']", :text => school.name)
-          with_tag("option", :count => 1)
+          assert_select("option[value='#{school.id}']", :text => school.name)
+          assert_select("option", :count => 1)
         end
       end
     end
@@ -427,11 +427,11 @@ describe Portal::ClazzesController do
     #
     #   get :new
     #
-    #   with_tag("select#teacher_id_selector[name=teacher_id]") do |elem|
+    #   assert_select("select#teacher_id_selector[name=teacher_id]") do |elem|
     #     without_tag("option[value=?]", @logged_in_user.portal_teacher.id) # cannot add teachers who are already assigned to this class
     #
     #     @logged_in_user.portal_teacher.school.portal_teachers.reject { |t| t.id == @logged_in_user.portal_teacher.id }.each do |t|
-    #       with_tag("option[value=?]", t.id)
+    #       assert_select("option[value=?]", t.id)
     #     end
     #   end
     # end
