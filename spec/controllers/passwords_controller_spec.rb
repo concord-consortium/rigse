@@ -6,7 +6,7 @@ describe PasswordsController do
   before(:each) do
     # stub the current project because project_header uses it
     controller.stub(:before_render) {
-      controller.template.stub_chain(:current_project, :name).and_return("Test Project")
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
     }
   end
 

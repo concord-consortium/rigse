@@ -8,7 +8,7 @@ describe SecurityQuestionsController do
     stub_current_user @student.user
 
     controller.stub(:before_render) {
-      controller.template.stub_chain(:current_project, :name).and_return("Test Project")
+      response.template.stub_chain(:current_project, :name).and_return("Test Project")
     }
   end
   
