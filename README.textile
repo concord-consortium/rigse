@@ -64,9 +64,9 @@ Install "bundler":http://gembundler.com/
 
 bc. gem install bundler
 
-Install the rest of the necessary gems:
+Install the precise versions of the required gems and put the executables in bin/
 
-bc. bundle install
+bc. bundle install --binstubs
 
 Automatic setup of application settings in the config directory, for example: settings.yml and database.yml
 
@@ -90,23 +90,27 @@ Setup database.
 
 If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help. You might get a warning if the databases already exist.
 
-bc. RAILS_ENV=production rake db:create:all
-bc. RAILS_ENV=production rake db:migrate:reset
+bc. RAILS_ENV=production bin/rake db:create:all
+bc. RAILS_ENV=production bin/rake db:migrate:reset
 
 Setup application resources
 
-bc. RAILS_ENV=production rake app:setup:new_app
+bc. RAILS_ENV=production bin/rake app:setup:new_app
 
 Save a copy of the development database to make subsequent clean starts much quicker (bypassing rake app:setup:new_app)
 * Saves database to: db/development_data.sql
 * can be reloaded later with: rake db:load
 * note: in default setup created by config.rb above the development and production database is the same
 
-bc. rake db:dump
+bc. bin/rake db:dump
+
+Compile the stylesheets from SCSS to CSS for serving to clients
+
+bc. bin/rake compass:compile
 
 Start server and open http://localhost:3000
 
-bc. ruby script/server -e production
+bc. rails s -eproduction
 
 You can read this documentation at: http://localhost:3000/readme
 
