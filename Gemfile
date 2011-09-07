@@ -10,7 +10,6 @@ source "http://rubygems.org"
   end
 
   platforms :jruby do
-    gem "rake",                            ">= 0.9.2"
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
     gem "jruby-openssl",                   "~> 0.7.4"
     gem "ffi-ncurses",                     "~> 0.3.3"
@@ -54,6 +53,7 @@ source "http://rubygems.org"
   gem 'exception_notification', "~> 2.5.2"
 
 group :development do
+  gem "rake",                 "~> 0.9.2"
   gem "highline"
   gem "wirble"
   gem "what_methods"
