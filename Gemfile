@@ -51,6 +51,7 @@ source "http://rubygems.org"
   gem 'themes_for_rails',     "~> 0.4.2"
   gem 'default_value_for',    "~> 1.0.5"
   gem 'exception_notification', "~> 2.5.2"
+  gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 
 group :development do
   gem "rake",                 "~> 0.9.2"
