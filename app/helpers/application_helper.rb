@@ -51,28 +51,21 @@ module ApplicationHelper
   end
 
   def display_system_info
-    list1 =
-      content_tag('ul', :class => 'tiny menu_h') do
-        list = ''
-        # grit (git gem) throws strange errors when running rspec tests
-        # using command-R in textmate, so here's the hack to fix
-        # that for now
-        unless RUNNING_TESTS
-          git_repo_info.collect { |info| list << content_tag('li') { info } }
-          if USING_JNLPS
-            list << content_tag('li') { '|' }
-            maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
-          end
-        end
-        list
-      end
-    # list2 =
-    #   content_tag('ul', :class => 'tiny menu_h') do
-    #     list = ''
-    #     maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
-    #     list
-    #   end
-    # "#{list1}\n<br />#{list2}"
+    commit = git_repo_info
+    jnlp = maven_jnlp_info
+    info = <<-HEREDOC
+<ul class="tiny menu_h">
+  <li>#{commit[:branch]}</li>
+  <li><a href="#{commit[:href]}">#{commit[:short_id]}</a></li>
+  <li>#{commit[:author]}</li>
+  <li>#{commit[:date]}</li>
+  <li>#{commit[:short_message]}</li>
+  <li>|</li>
+  <li>#{jnlp[:name]}</li>
+  <li><a href="#{jnlp[:href]}">#{jnlp[:version]}</a></li>
+  <li>#{jnlp[:snapshot]}</li>
+</ul>
+    HEREDOC
   end
 
   def git_repo_info
@@ -100,34 +93,27 @@ module ApplicationHelper
     if head
       branch = head.name
       last_commit = repo.commits(branch).first
-      message = last_commit.message
-      link = "<a title='#{message}' href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
-      name = last_commit.author.name
-      date = last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
-      short_message = truncate(last_commit.message, :length => 54)
-      [branch, link, name, date, short_message]
+      {
+        :branch => branch,
+        :last_commit => repo.commits(branch).first,
+        :short_message => truncate(last_commit.message, :length => 54),
+        :href => "http://github.com/concord-consortium/rigse/commit/#{last_commit.id}",
+        :short_id => truncate(last_commit.id, :length => 16),
+        :name => last_commit.author.name,
+        :date => last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
+      }
     else
-      []
+      {}
     end
   end
 
   def maven_jnlp_info
-    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
-    link = "<a href='#{url}'>#{version}</a>"
-    info = [name, link]
-    if current_project.snapshot_enabled
-      info << "(snapshot)"
-    else
-      info << "(frozen)"
-    end
-
-    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
-    #   info << "(snapshot)"
-    # else
-    #   info << "(frozen)"
-    # end
+    {
+      :name => jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name,
+      :version => jnlp_adaptor.jnlp.versioned_jnlp_url.version_str,
+      :href => jnlp_adaptor.jnlp.versioned_jnlp_url.url,
+      :snapshot => current_project.snapshot_enabled ? "(snapshot)" : "(frozen)"
+    }
   end
 
   def display_repo_info
