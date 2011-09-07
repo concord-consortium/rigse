@@ -48,8 +48,17 @@ RailsPortal::Application.configure do
   config.active_support.deprecation = :notify
 
   config.middleware.use ExceptionNotifier,
-    :email_prefix => "[#{APP_CONFIG[:site_name} Exception] ",
-    :sender_address => %("Application Error" <#{APP_CONFIG[:help_email]}>),
-    :exception_recipients => APP_CONFIG[:admin_email]
-    
+    :email_prefix => "[Rails Portal Exception] ",
+    :sender_address => %("Application Error" <rails-portal@concord.org>),
+    :exception_recipients => "stephen@concord.org"
+
+  # FIXME: APP_CONFIG is undefined at this point in the startup
+  # ... and annoyingly starting the server with the debugger enabled
+  # ... hasn't enabled the debugger yet ...
+  #
+  # config.middleware.use ExceptionNotifier,
+  #   :email_prefix => "[#{::APP_CONFIG[:site_name]} Exception] ",
+  #   :sender_address => %("Application Error" <#{::APP_CONFIG[:help_email]}>),
+  #   :exception_recipients => ::APP_CONFIG[:admin_email]
+
 end
