@@ -838,8 +838,8 @@ ActiveRecord::Schema.define(:version => 20110906204154) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -870,7 +870,7 @@ ActiveRecord::Schema.define(:version => 20110906204154) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
