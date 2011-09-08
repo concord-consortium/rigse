@@ -43,6 +43,30 @@ module OtmlHelper
     "#{prefix}#{class_name}_#{component.id}"
   end
   
+  def yield_object_or_reference(embeddable)
+    content = ''
+    #
+    # FIXME: the following test shouldn't be needed
+    # Rails 3 should be returning an empty string if the block being yielded to can't be found
+    # See: http://asciicasts.com/episodes/227-upgrading-to-rails-3-part-3
+    # But instead Rails returns:
+    #   ActionView::Template::Error (no block given (yield)):
+    # which caused caused by a more basic Ruby error:
+    #   LocalJumpError Exception: no block given (yield)
+    #
+    # In fact I'm not sure when this condition IS true??
+    #
+    if block_given?
+      content_generator = "element_#{ot_dom_id_for(embeddable)}".to_sym
+      Raise "*** FIXME: OtmlHelper#yield_object_or_reference ***"
+      content = yield(content_generator)
+    end
+    if content.length == 0
+      content = "<object refid=\"#{ot_refid_for(embeddable)}\"/>"
+    end
+    content.html_safe
+  end
+  
   def data_filter_inports
     Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
   end

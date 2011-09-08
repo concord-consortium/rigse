@@ -1,7 +1,7 @@
 %OTQuestion{:local_id => ot_local_id_for(open_response)}
   %prompt
     %OTCompoundDoc
-      %bodyText= open_response.prompt
+      %bodyText= open_response.prompt.html_safe
   %input
     %OTCompoundDoc
       %bodyText
