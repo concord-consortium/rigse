@@ -104,10 +104,6 @@ Save a copy of the development database to make subsequent clean starts much qui
 
 bc. bin/rake db:dump
 
-Compile the stylesheets from SCSS to CSS for serving to clients
-
-bc. bin/rake compass:compile
-
 Start server and open http://localhost:3000
 
 bc. rails s -eproduction
