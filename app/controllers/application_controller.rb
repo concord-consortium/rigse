@@ -1,5 +1,6 @@
 require 'themes_for_rails'
 require 'haml'
+require 'will_paginate/array'
 
 class ApplicationController < ActionController::Base
   include Clipboard
