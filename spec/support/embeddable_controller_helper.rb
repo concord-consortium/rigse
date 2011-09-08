@@ -69,12 +69,12 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_show.jnlp.builder")
-        response.should have_selector('jnlp') do
-          with_tag('information')
-          with_tag('security')
-          with_tag('resources')
-          with_tag('application-desc') do
-            with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id]))
+        assert_select('jnlp') do
+          assert_select('information')
+          assert_select('security')
+          assert_select('resources')
+          assert_select('application-desc') do
+            assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id]))
           end
         end
       end
@@ -88,12 +88,12 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'config'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template("shared/_show.config.builder")
-        response.should have_selector('java') do
-          with_tag('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
-            with_tag('void[property=?]', 'properties') do
-              with_tag('object[class=?]', 'java.util.Properties') do
-                with_tag('void[method=?]', 'setProperty') do
-                  with_tag('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false))
+        assert_select('java') do
+          assert_select('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
+            assert_select('void[property=?]', 'properties') do
+              assert_select('object[class=?]', 'java.util.Properties') do
+                assert_select('void[method=?]', 'setProperty') do
+                  assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false))
                 end
               end
             end
@@ -109,23 +109,23 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'dynamic_otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should have_selector('otrunk') do
-          with_tag('imports')
-          with_tag('objects') do
-            with_tag('OTSystem') do
-              with_tag('includes') do
-                with_tag('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false))
+        assert_select('otrunk') do
+          assert_select('imports')
+          assert_select('objects') do
+            assert_select('OTSystem') do
+              assert_select('includes') do
+                assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false))
               end
-              with_tag('bundles') do
-                with_tag('OTInterfaceManager[local_id=?]', 'interface_manager') do
-                  with_tag('deviceConfigs') do
-                    with_tag('OTDeviceConfig')
+              assert_select('bundles') do
+                assert_select('OTInterfaceManager[local_id=?]', 'interface_manager') do
+                  assert_select('deviceConfigs') do
+                    assert_select('OTDeviceConfig')
                   end
                 end
               end
-              with_tag('overlays')
-              with_tag('root') do
-                with_tag('object')
+              assert_select('overlays')
+              assert_select('root') do
+                assert_select('object')
               end
             end
           end
@@ -141,34 +141,36 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template(:show)
-        response.should have_selector('otrunk') do
-          with_tag('imports')
-          with_tag('objects') do
-            with_tag('OTSystem') do
-              with_tag('bundles') do
-                with_tag('OTViewBundle') do
-                  with_tag('frame')
-                  with_tag('modes')
-                  with_tag('views')
+        puts "================"
+        puts response.body
+        assert_select('otrunk') do
+          assert_select('imports')
+          assert_select('objects') do
+            assert_select('OTSystem') do
+              assert_select('bundles') do
+                assert_select('OTViewBundle') do
+                  assert_select('frame')
+                  assert_select('modes')
+                  assert_select('views')
                 end
-                with_tag('OTInterfaceManager[local_id=?]', 'interface_manager') do
-                  with_tag('deviceConfigs') do
-                    with_tag('OTDeviceConfig')
+                assert_select('OTInterfaceManager[local_id=?]', 'interface_manager') do
+                  assert_select('deviceConfigs') do
+                    assert_select('OTDeviceConfig')
                   end
                 end
-                with_tag('OTScriptEngineBundle[local_id=?]', 'script_engine_bundle') do
-                  with_tag('engines') do
-                    with_tag('OTScriptEngineEntry')
+                assert_select('OTScriptEngineBundle[local_id=?]', 'script_engine_bundle') do
+                  assert_select('engines') do
+                    assert_select('OTScriptEngineEntry')
                   end
                 end
-                with_tag('OTLabbookBundle')
+                assert_select('OTLabbookBundle')
               end
-              with_tag('root') do
-                with_tag('OTCompoundDoc') do
-                  with_tag('bodyText')
+              assert_select('root') do
+                assert_select('OTCompoundDoc') do
+                  assert_select('bodyText')
                 end
               end
-              with_tag('library') do
+              assert_select('library') do
                 with_tags_like_an_otml(@model_ivar_name)
                end
             end
@@ -197,12 +199,12 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'jnlp'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.jnlp.builder")
-          response.should have_selector('jnlp') do
-            with_tag('information')
-            with_tag('security')
-            with_tag('resources')
-            with_tag('application-desc') do
-              with_tag('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id], :action => 'edit'))
+          assert_select('jnlp') do
+            assert_select('information')
+            assert_select('security')
+            assert_select('resources')
+            assert_select('application-desc') do
+              assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id], :action => 'edit'))
             end
           end
         end
@@ -216,12 +218,12 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'config', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.config.builder")
-          response.should have_selector('java') do
-            with_tag('object') do
-              with_tag('void') do
-                with_tag('object') do
-                  with_tag('void') do
-                    with_tag('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false, :action => 'edit'))
+          assert_select('java') do
+            assert_select('object') do
+              assert_select('void') do
+                assert_select('object') do
+                  assert_select('void') do
+                    assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml, :teacher_mode => false, :action => 'edit'))
                   end
                 end
               end
@@ -238,17 +240,17 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'dynamic_otml', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template("shared/_edit.dynamic_otml.builder")
-          response.should have_selector('otrunk') do
-            with_tag('imports')
-            with_tag('objects') do
-              with_tag('OTSystem') do
-                with_tag('includes') do
-                  # with_tag('OTInclude')
-                  with_tag('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false, :action => 'edit'))
+          assert_select('otrunk') do
+            assert_select('imports')
+            assert_select('objects') do
+              assert_select('OTSystem') do
+                assert_select('includes') do
+                  # assert_select('OTInclude')
+                  assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml, :teacher_mode => false, :action => 'edit'))
                 end
-                with_tag('bundles')
-                with_tag('overlays')
-                with_tag('root')
+                assert_select('bundles')
+                assert_select('overlays')
+                assert_select('root')
               end
             end
           end
@@ -263,13 +265,13 @@ shared_examples_for 'an embeddable controller' do
           get :edit, :id => "37", :format => 'otml'
           assigns[@model_ivar_name].should equal(@model_ivar)
           response.should render_template(:edit)
-          response.should have_selector('otrunk') do
-            with_tag('imports')
-            with_tag('objects') do
-              with_tag('OTSystem') do
-                with_tag('bundles')
-                with_tag('root')
-                with_tag('library') do
+          assert_select('otrunk') do
+            assert_select('imports')
+            assert_select('objects') do
+              assert_select('OTSystem') do
+                assert_select('bundles')
+                assert_select('root')
+                assert_select('library') do
                   with_tags_like_an_otml(@model_ivar_name)
                 end
               end
