@@ -26,6 +26,9 @@ source "http://rubygems.org"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
   gem "spreadsheet"  #see http://spreadsheet.rubyforge.org/
+
+  # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
+  gem "ruby-ole",             "~> 1.2.11.2"
   
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
