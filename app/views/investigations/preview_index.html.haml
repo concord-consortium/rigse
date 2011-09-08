@@ -3,7 +3,7 @@
     .action_menu_header
       .action_menu_header_left
         - if @investigations
-          %p= page_entries_info @investigations, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
+          %p= page_entries_info @investigations, :model=>TOP_LEVEL_CONTAINER_NAME_PLURAL
           %p.paginator
             = will_paginate @investigations
       .action_menu_header_right
