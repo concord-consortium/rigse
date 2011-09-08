@@ -5,27 +5,27 @@ describe Embeddable::Smartgraph::RangeQuestionsController do
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_smartgraph_range_question
-    with_tag('OTQuestion') do
-      with_tag('prompt') do
-        with_tag('OTCompoundDoc') do
-          with_tag('bodyText')
+    assert_select('OTQuestion') do
+      assert_select('prompt') do
+        assert_select('OTCompoundDoc') do
+          assert_select('bodyText')
         end
       end
-      with_tag('input') do
-        with_tag('OTCompoundDoc') do
-          with_tag('documentRefs') do
-            with_tag('OTText')
-            with_tag('OTScriptButton') do
-              with_tag('script') do
-                with_tag('OTJRuby') do
-                  with_tag('script')
+      assert_select('input') do
+        assert_select('OTCompoundDoc') do
+          assert_select('documentRefs') do
+            assert_select('OTText')
+            assert_select('OTScriptButton') do
+              assert_select('script') do
+                assert_select('OTJRuby') do
+                  assert_select('script')
                 end
               end
-              with_tag('scriptVariables') do
-                with_tag('OTScriptVariableRealObject') do
-                  with_tag('reference') do
-                    with_tag('OTSmartGraphTool') do
-                      with_tag('dataCollector')
+              assert_select('scriptVariables') do
+                assert_select('OTScriptVariableRealObject') do
+                  assert_select('reference') do
+                    assert_select('OTSmartGraphTool') do
+                      assert_select('dataCollector')
                     end
                   end
                 end

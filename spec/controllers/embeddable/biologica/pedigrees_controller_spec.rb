@@ -5,8 +5,8 @@ describe Embeddable::Biologica::PedigreesController do
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_pedigree
-    with_tag('OTPedigree') do
-      with_tag('organisms')
+    assert_select('OTPedigree') do
+      assert_select('organisms')
     end
   end
 

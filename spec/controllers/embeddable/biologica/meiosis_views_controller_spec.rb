@@ -5,18 +5,18 @@ describe Embeddable::Biologica::MeiosisViewsController do
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_meiosis_view
-    with_tag('OTSex') do
-      with_tag('fatherOrganism') do
-        with_tag('OTOrganism') do
-          with_tag('world') do
-            with_tag('OTWorld')
+    assert_select('OTSex') do
+      assert_select('fatherOrganism') do
+        assert_select('OTOrganism') do
+          assert_select('world') do
+            assert_select('OTWorld')
           end
         end
       end
-      with_tag('motherOrganism') do
-        with_tag('OTOrganism') do
-          with_tag('world') do
-            with_tag('OTWorld')
+      assert_select('motherOrganism') do
+        assert_select('OTOrganism') do
+          assert_select('world') do
+            assert_select('OTWorld')
           end
         end
       end

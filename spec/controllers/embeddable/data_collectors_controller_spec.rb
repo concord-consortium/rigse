@@ -7,17 +7,17 @@ describe Embeddable::DataCollectorsController do
     # @see ./spec/support/embeddable_controller_helper.rb
     it_should_behave_like 'an embeddable controller'
     def with_tags_like_an_otml_data_collector
-      with_tag('OTDataCollector') do
-        with_tag('source') do
-          with_tag('OTDataGraphable') do
-            with_tag('dataProducer')
+      assert_select('OTDataCollector') do
+        assert_select('source') do
+          assert_select('OTDataGraphable') do
+            assert_select('dataProducer')
           end
         end
-        with_tag('xDataAxis') do
-          with_tag('OTDataAxis')
+        assert_select('xDataAxis') do
+          assert_select('OTDataAxis')
         end
-        with_tag('yDataAxis') do
-          with_tag('OTDataAxis')
+        assert_select('yDataAxis') do
+          assert_select('OTDataAxis')
         end
       end
     end
@@ -46,7 +46,7 @@ describe Embeddable::DataCollectorsController do
         Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
         response.should have_selector('dataStore') do
-          with_tag("object[refid*=?]", /data_store_data_table/)
+          assert_select("object[refid*=?]", /data_store_data_table/)
         end
       end
     end
@@ -60,7 +60,7 @@ describe Embeddable::DataCollectorsController do
         get :show, :id => "37", :format => 'otml'
         response.should have_selector('dataStore') do
           # <OTDataStore local_id='data_store_data_collector_3046' numberChannels='2'>
-          with_tag("OTDataStore[local_id*=?]", /data_store_data_collector_/ )
+          assert_select("OTDataStore[local_id*=?]", /data_store_data_collector_/ )
         end
       end
     end

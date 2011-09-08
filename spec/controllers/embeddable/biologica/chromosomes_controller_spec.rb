@@ -5,11 +5,11 @@ describe Embeddable::Biologica::ChromosomesController do
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_chromosome
-    with_tag('OTChromosome') do
-      with_tag('organism') do
-        with_tag('OTOrganism') do
-          with_tag('world') do
-            with_tag('OTWorld')
+    assert_select('OTChromosome') do
+      assert_select('organism') do
+        assert_select('OTOrganism') do
+          assert_select('world') do
+            assert_select('OTWorld')
           end
         end
       end

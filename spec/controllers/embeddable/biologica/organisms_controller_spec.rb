@@ -5,9 +5,9 @@ describe Embeddable::Biologica::OrganismsController do
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_organism
-    with_tag('OTOrganism') do
-      with_tag('world') do
-        with_tag('OTWorld')
+    assert_select('OTOrganism') do
+      assert_select('world') do
+        assert_select('OTWorld')
       end
     end
   end
