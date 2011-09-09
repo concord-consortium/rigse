@@ -55,7 +55,7 @@ rvm gemset create xproject
 
 Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
 
-bc. echo "rvm use 1.8.7@xproject" > .rvmrc
+bc. echo "rvm use 1.9.2-p290@xproject" > .rvmrc
 
 Test out the @.rvmrc@ file and start using the gemset
 
