@@ -141,8 +141,6 @@ shared_examples_for 'an embeddable controller' do
         get :show, :id => "37", :format => 'otml'
         assigns[@model_ivar_name].should equal(@model_ivar)
         response.should render_template(:show)
-        puts "================"
-        puts response.body
         assert_select('otrunk') do
           assert_select('imports')
           assert_select('objects') do
