@@ -21,7 +21,7 @@ source "http://rubygems.org"
   gem "capistrano-ext",                 :require => "capistrano"
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 2.3.15"
-  gem "haml",                 "~> 3.1.1"
+  gem "haml",           :git => "git://github.com/stepheneb/haml.git", :branch => "xml-mime-type"
   gem "sass",                 "~> 3.1.7"
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
@@ -92,5 +92,4 @@ group :test, :development do
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
   # gem "ZenTest",                  "= 4.1.4"
   # gem "autotest-rails",           "= 4.1.0"
-
 end
