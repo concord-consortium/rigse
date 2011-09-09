@@ -21,10 +21,8 @@ end
 
 Given /^I am an anonymous user$/ do
   User.anonymous(true)
-  get '/sessions/destroy'
-  response.should redirect_to('/')
-  follow_redirect!
-  true #  for now ...
+  visit('/sessions/destroy')
+  URI.parse(current_url).path.should == '/'
 end
 
 
