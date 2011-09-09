@@ -166,7 +166,7 @@ h2. Copying the production database to a development environment
 If you have ssh access to a portal instance running on a server you can get a copy of the database on
 your local development instance with the following steps:
 
-In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject_dev*.
+In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject-dev*.
 <pre><code>
     cap <stage> db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
