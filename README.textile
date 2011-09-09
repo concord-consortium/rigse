@@ -47,9 +47,10 @@ Change to the project directory:
 
 bc. cd xproject
 
-Setup rvm to use Ruby 1.8.7 and a gemset named xproject
+Setup rvm to use Ruby 1.9.2-p290 and a gemset named xproject
+(p290 is used to get libyaml installed by rvm)
 
-bc. rvm use 1.8.7
+bc. rvm use 1.9.2-p290
 rvm gemset create xproject
 
 Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
