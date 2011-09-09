@@ -36,7 +36,11 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
           if File.exists?(File.basename(url_str))
             puts "  data file already exists: #{File.basename(url_str)}"
           else
-            cmd = "wget -q -nc #{url_str}"
+            if system("which -s curl")
+              cmd = "curl -s -O #{url_str}"
+            else
+              cmd = "wget -q -nc #{url_str}"
+            end
             puts cmd
             system(cmd)
             if url_str =~ /\.zip\z/
