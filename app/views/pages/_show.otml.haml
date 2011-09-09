@@ -20,7 +20,11 @@
           - page.page_elements.each do |element|
             .element
               -# allow embeddables to control how they are referenced from the document
-              = yield_object_or_reference(element.embeddable)
+              - embeddable_doc_ref_symbol = "element_#{ot_dom_id_for(element.embeddable)}".to_sym
+              - if content_for?(embeddable_doc_ref_symbol)
+                yield(embeddable_doc_ref_symbol)
+              - else
+                %object{ :refid => ot_refid_for(element.embeddable) }
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
     %bodyText
