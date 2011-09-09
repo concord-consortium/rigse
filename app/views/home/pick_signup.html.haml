@@ -1,9 +1,9 @@
 = field_set_tag "Sign Up" do
   %p
-    = button_to 'Sign up as a teacher', :new_portal_teacher
+    = button_to 'Sign up as a teacher', :new_portal_teacher, {:method => :get}
 
   %p
-    = button_to 'Sign up as a student', :signup_portal_students
+    = button_to 'Sign up as a student', :signup_portal_students, {:method => :get}
 
   -#%p
     -#Otherwise if you are an author sign up as a member.
