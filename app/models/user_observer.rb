@@ -2,7 +2,7 @@ class UserObserver < ActiveRecord::Observer
   def after_create(user)
     return if user.skip_notifications
     user.reload
-    UserMailer.signup_notification.deliver(user)
+    UserMailer.signup_notification(user).deliver
   end
 
   def after_save(user)
