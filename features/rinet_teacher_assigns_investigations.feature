@@ -4,7 +4,7 @@ Feature: Rites Teachers selects offerings to assign to their classes
   So that my students can have rich learning experiences
 
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   Scenario: Rinet Teachers can view their classes
     Given I am a Rinet teacher

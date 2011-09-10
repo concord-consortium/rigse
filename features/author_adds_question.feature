@@ -4,7 +4,7 @@ Feature: An author adds multiple choice questions
   So that I can understand what my students are learning.
 
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   @selenium
   Scenario: The author adds a multiple choice question to an investigation
