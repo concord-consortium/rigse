@@ -115,3 +115,7 @@ Then /^I should see the button "([^"]*)"$/ do |locator|
   msg = "no button '#{locator}' found"
   find(:xpath, XPath::HTML.button(locator), :message => msg)
 end
+
+Then /^(?:|I )should wait ([0-9]+) seconds/ do |seconds|
+  sleep(seconds.to_i)
+end
