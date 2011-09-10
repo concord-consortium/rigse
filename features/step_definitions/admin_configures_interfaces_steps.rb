@@ -21,7 +21,7 @@ end
 
 Given /^I am an anonymous user$/ do
   User.anonymous(true)
-  visit('/sessions/destroy')
+  visit('/logout')
   URI.parse(current_url).path.should == '/'
 end
 
