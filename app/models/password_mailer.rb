@@ -1,22 +1,24 @@
 class PasswordMailer < ActionMailer::Base
+  default :from => "Admin <#{APP_CONFIG[:help_email]}"
+  
   def forgot_password(password)
-    setup_email(password.user)
-    @subject << 'You have requested to change your password'
-    @body[:url] = "#{APP_CONFIG[:site_url]}/change_password/#{password.reset_code}"
+    @user = password.user
+    @url = "#{APP_CONFIG[:site_url]}/change_password/#{password.reset_code}"
+    finish_email(password.user, 'You have requested to change your password')
   end
 
   def reset_password(user)
-    setup_email(user)
-    @subject << 'Your password has been reset.'
+    @user = user
+    finish_email(user, 'Your password has been reset.')
   end
 
   protected
   
-  def setup_email(user)
-    @recipients = "#{user.email}"
-    @from = APP_CONFIG[:help_email]
-    @subject = "[#{APP_CONFIG[:site_name]}] "
-    @sent_on = Time.now
-    @body[:user] = user
+  def finish_email(user, subject)
+    # CHECKME: is this theme stuff necessary here?
+    self.theme_name = (APP_CONFIG[:theme]||'default')
+    mail(:to => "#{user.name} <#{user.email}>",
+         :subject => "[#{APP_CONFIG[:site_name]}] #{subject}",
+         :date => Time.now)
   end
 end
