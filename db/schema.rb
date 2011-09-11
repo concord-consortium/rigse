@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110906204154) do
+ActiveRecord::Schema.define(:version => 20110911172449) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20110906204154) do
     t.boolean  "use_bitmap_snapshots",                         :default => false
     t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
+    t.boolean  "enable_member_registration",                   :default => false
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -838,8 +839,8 @@ ActiveRecord::Schema.define(:version => 20110906204154) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
+    t.string   "publication_status"
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"
@@ -870,7 +871,7 @@ ActiveRecord::Schema.define(:version => 20110906204154) do
     t.boolean  "default_class",               :default => false
   end
 
-  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word", :unique => true
+  add_index "portal_clazzes", ["class_word"], :name => "index_portal_clazzes_on_class_word"
 
   create_table "portal_courses", :force => true do |t|
     t.string   "uuid",          :limit => 36
