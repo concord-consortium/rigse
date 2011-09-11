@@ -202,7 +202,7 @@ class User < ActiveRecord::Base
   end
 
   def set_role_ids(role_ids)
-    all_roles = Role.find(:all)
+    all_roles = Role.all
     all_roles.each do |role|
       if role_ids.find { |id| id.to_i == role.id }
         add_role(role.title)

@@ -15,7 +15,7 @@ describe RiGse::KnowledgeStatementsController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @knowledge_statements" do
-      RiGse::KnowledgeStatement.should_receive(:find).with(:all).and_return([mock_knowledge_statement])
+      RiGse::KnowledgeStatement.should_receive(:all).and_return([mock_knowledge_statement])
       get :index
       assigns[:knowledge_statements].should == [mock_knowledge_statement]
     end
@@ -24,7 +24,7 @@ describe RiGse::KnowledgeStatementsController do
   
       it "should render all knowledge_statements as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::KnowledgeStatement.should_receive(:find).with(:all).and_return(knowledge_statements = mock("Array of KnowledgeStatements"))
+        RiGse::KnowledgeStatement.should_receive(:all).and_return(knowledge_statements = mock("Array of KnowledgeStatements"))
         knowledge_statements.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

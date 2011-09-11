@@ -1,7 +1,7 @@
 module TeacherNotesHelper
   def domain_select(note)
     collection_select :teacher_note, :domain_ids,
-      RiGse::Domain.find(:all),
+      RiGse::Domain.all,
       :id, 
       :name,
       {},
@@ -14,7 +14,7 @@ module TeacherNotesHelper
   end
   
   def domains
-    RiGse::Domain.find(:all)
+    RiGse::Domain.all
   end
     
 end

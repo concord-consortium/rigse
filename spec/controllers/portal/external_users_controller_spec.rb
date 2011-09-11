@@ -16,7 +16,7 @@ describe Portal::ExternalUsersController do
    
    describe "GET index" do
      it "assigns all portal_external_users as @portal_external_users" do
-       ExternalUser.stub!(:find).with(:all).and_return([mock_external_user])
+       ExternalUser.stub!(:all).and_return([mock_external_user])
        get :index
        assigns[:portal_external_users].should == [mock_external_user]
      end

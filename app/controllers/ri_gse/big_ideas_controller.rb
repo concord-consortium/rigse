@@ -2,7 +2,7 @@ class RiGse::BigIdeasController < ApplicationController
   # GET /RiGse/big_ideas
   # GET /RiGse/big_ideas.xml
   def index
-    @big_ideas = RiGse::BigIdea.find(:all)
+    @big_ideas = RiGse::BigIdea.all
 
     respond_to do |format|
       format.html # index.html.erb

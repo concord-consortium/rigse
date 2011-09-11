@@ -40,7 +40,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/new
   # GET /portal_clazzes/new.xml
   def new
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
@@ -57,7 +57,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1/edit
   def edit
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
     end
@@ -66,7 +66,7 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes
   # POST /portal_clazzes.xml
   def create
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
 
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
@@ -145,7 +145,7 @@ class Portal::ClazzesController < ApplicationController
   # PUT /portal_clazzes/1
   # PUT /portal_clazzes/1.xml
   def update
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.find(params[:id])
 
     if request.xhr?

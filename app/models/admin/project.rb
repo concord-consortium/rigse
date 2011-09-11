@@ -27,7 +27,7 @@ class Admin::Project < ActiveRecord::Base
   validate :states_and_provinces_array_members_must_match_list
   
   default_value_for :enabled_vendor_interfaces do
-    Probe::VendorInterface.find(:all)
+    Probe::VendorInterface.all
   end
   
   if USING_JNLPS
@@ -182,7 +182,7 @@ class Admin::Project < ActiveRecord::Base
         #     puts "created grade #{grade.name}, active: #{grade.active}"
         #   end
         # end
-        Portal::Grade.find(:all).each do |grade|
+        Portal::Grade.all.each do |grade|
           grade.active = active_grades.include?(grade.name)
           grade.save!
         end
@@ -256,8 +256,8 @@ Dataservice::BundleContent: #{Dataservice::BundleContent.count}
 Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
 Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
-There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
-There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
+There are #{Portal::Clazz.all.select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
+There are #{Portal::Learner.all.select {|i| i.student == nil}.size} Learners which are no longer associated with Students
 
 If these numbers are large you may want to consider cleaning up the database.
 

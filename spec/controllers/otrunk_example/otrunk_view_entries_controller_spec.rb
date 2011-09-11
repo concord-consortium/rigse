@@ -16,7 +16,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
   describe "GET index" do
 
     it "exposes all otrunk_example_otrunk_view_entries as @otrunk_example_otrunk_view_entries" do
-      OtrunkExample::OtrunkViewEntry.should_receive(:find).with(:all).and_return([mock_otrunk_view_entry])
+      OtrunkExample::OtrunkViewEntry.should_receive(:all).and_return([mock_otrunk_view_entry])
       get :index
       assigns[:otrunk_example_otrunk_view_entries].should == [mock_otrunk_view_entry]
     end
@@ -24,7 +24,7 @@ describe OtrunkExample::OtrunkViewEntriesController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otrunk_view_entries as xml" do
-        OtrunkExample::OtrunkViewEntry.should_receive(:find).with(:all).and_return(otrunk_view_entries = mock("Array of OtrunkExample::OtrunkViewEntries"))
+        OtrunkExample::OtrunkViewEntry.should_receive(:all).and_return(otrunk_view_entries = mock("Array of OtrunkExample::OtrunkViewEntries"))
         otrunk_view_entries.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

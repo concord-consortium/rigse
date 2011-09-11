@@ -18,7 +18,7 @@ class Ccportal::Activity < Ccportal::Ccportal
   @@activities = nil #cache
   
   def self.findAll
-    @@activities = @@activities.nil? ? self.find(:all) : @@activities
+    @@activities = @@activities.nil? ? self.all : @@activities
   end
 
   def self.findAllByClassId(classId)

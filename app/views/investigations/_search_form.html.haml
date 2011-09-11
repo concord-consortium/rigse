@@ -22,7 +22,7 @@
         = select(nil,  :grade_span, RiGse::GradeSpanExpectation.grade_spans, { :selected => grade_span, :include_blank => "all grade spans" })
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'Domain: ', :class=>"right"
-        = select(nil,  :domain_id, RiGse::Domain.find(:all).collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
+        = select(nil,  :domain_id, RiGse::Domain.all.collect { |d| [d.name,d.id] }, { :selected => domain_id.to_i, :include_blank => "all domains" })
       %td{:style=>"padding: 0.5em;"}
         = label_tag :filter, 'Matching: ', :class=>"right"
         = text_field_tag :name, name

@@ -14,7 +14,7 @@ describe Dataservice::BlobsController do
     it "assigns all dataservice_blobs as @dataservice_blobs" do
       pending
       # this tests the default controller, but now we're setting @dataservice_blobs to be a search collection
-      # Dataservice::Blob.stub(:find).with(:all).and_return([mock_blob])
+      # Dataservice::Blob.stub(:all).and_return([mock_blob])
       # get :index
       # assigns[:dataservice_blobs].should == [mock_blob]
     end

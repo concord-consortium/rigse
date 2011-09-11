@@ -15,7 +15,7 @@ describe RiGse::UnifyingThemesController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @unifying_themes" do
-      RiGse::UnifyingTheme.should_receive(:find).with(:all).and_return([mock_unifying_theme])
+      RiGse::UnifyingTheme.should_receive(:all).and_return([mock_unifying_theme])
       get :index
       assigns[:unifying_themes].should == [mock_unifying_theme]
     end
@@ -24,7 +24,7 @@ describe RiGse::UnifyingThemesController do
   
       it "should render all unifying_themes as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::UnifyingTheme.should_receive(:find).with(:all).and_return(unifying_themes = mock("Array of UnifyingThemes"))
+        RiGse::UnifyingTheme.should_receive(:all).and_return(unifying_themes = mock("Array of UnifyingThemes"))
         unifying_themes.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

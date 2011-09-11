@@ -68,7 +68,7 @@
       %p
         = render :partial => "custom_css_field", :locals => { :admin_project => admin_project, :f => f }
       = field_set_tag '<b>Vendor Interfaces</b>' do
-        - Probe::VendorInterface.find(:all).each do |interface|
+        - Probe::VendorInterface.all.each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")
           = check_box_tag "admin_project[enabled_vendor_interface_ids][]", "#{interface.id}", admin_project.enabled_vendor_interfaces.include?(interface), :id=>domid
           %label{:for => domid}= interface.name_with_driver

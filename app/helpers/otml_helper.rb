@@ -68,7 +68,7 @@ module OtmlHelper
   end
   
   def data_filter_inports
-    Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+    Probe::DataFilter.all.collect { |df| df.otrunk_object_class }
   end
   
   def imports

@@ -24,7 +24,7 @@ describe RiGse::GradeSpanExpectationsController do
   
       it "should render all grade_span_expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::GradeSpanExpectation.should_receive(:find).with(:all).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
+        RiGse::GradeSpanExpectation.should_receive(:all).and_return(grade_span_expectations = mock("Array of GradeSpanExpectations"))
         grade_span_expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

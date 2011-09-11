@@ -15,7 +15,7 @@ describe RiGse::ExpectationsController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @expectations" do
-      RiGse::Expectation.should_receive(:find).with(:all).and_return([mock_expectation])
+      RiGse::Expectation.should_receive(:all).and_return([mock_expectation])
       get :index
       assigns[:expectations].should == [mock_expectation]
     end
@@ -24,7 +24,7 @@ describe RiGse::ExpectationsController do
   
       it "should render all expectations as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::Expectation.should_receive(:find).with(:all).and_return(expectations = mock("Array of Expectations"))
+        RiGse::Expectation.should_receive(:all).and_return(expectations = mock("Array of Expectations"))
         expectations.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

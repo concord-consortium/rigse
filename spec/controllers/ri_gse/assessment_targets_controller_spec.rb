@@ -24,7 +24,7 @@ describe RiGse::AssessmentTargetsController do
   
       it "should render all assessment_targets as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::AssessmentTarget.should_receive(:find).with(:all).and_return(assessment_targets = mock("Array of AssessmentTargets"))
+        RiGse::AssessmentTarget.should_receive(:all).and_return(assessment_targets = mock("Array of AssessmentTargets"))
         assessment_targets.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

@@ -16,7 +16,7 @@ describe Portal::GradesController do
 
   describe "GET index" do
     it "assigns all portal_grades as @portal_grades" do
-      Portal::Grade.stub!(:find).with(:all).and_return([mock_grade])
+      Portal::Grade.stub!(:all).and_return([mock_grade])
       get :index
       assigns[:portal_grades].should == [mock_grade]
     end

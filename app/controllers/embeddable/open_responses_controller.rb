@@ -2,7 +2,7 @@ class Embeddable::OpenResponsesController < ApplicationController
   # GET /Embeddable/open_responses
   # GET /Embeddable/open_responses.xml
   def index
-    # @open_responses = Embeddable::OpenResponse.find(:all)
+    # @open_responses = Embeddable::OpenResponse.all
     # @paginated_objects = @open_responses
 
     @open_responses = Embeddable::OpenResponse.search(params[:search], params[:page], nil)

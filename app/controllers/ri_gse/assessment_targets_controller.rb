@@ -10,7 +10,7 @@ class RiGse::AssessmentTargetsController < ApplicationController
         @assessment_targets = RiGse::AssessmentTarget.search(params[:search], params[:page], nil)
       end
       format.xml  do
-        @assessment_targets = RiGse::AssessmentTarget.find(:all)
+        @assessment_targets = RiGse::AssessmentTarget.all
         render :xml => @assessment_targets
       end
     end
