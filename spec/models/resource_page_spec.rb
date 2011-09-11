@@ -2,6 +2,12 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 describe ResourcePage do
   
+  before(:each) do
+    generate_default_users_with_factories
+      # @anon_user
+      # @admin_user
+  end
+  
   describe "being created" do
     before do
       Paperclip.options[:log] = false
@@ -65,7 +71,29 @@ describe ResourcePage do
       end
     end
   end
+  
+  describe "searching" do
+    
+    it "should be searchable" do
+      params = {
+        :name => "abc",
+        :user => @admin_user
+      }
+      ResourcePage.search_list(params)
+    end
+    
+  end
 
+  # @resource_pages = ResourcePage.search_list({
+  #   :name => @name,
+  #   :user => current_user,
+  #   :portal_clazz_id => @portal_clazz_id,
+  #   :include_drafts => @include_drafts,
+  #   :sort_order => @sort_order,
+  #   :paginate => true,
+  #   :page => params[:page]
+  # })
+  
 protected
 
   def build_resource_page(options = {})
