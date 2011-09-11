@@ -20,29 +20,6 @@ Spork.prefork do
   include AuthenticatedTestHelper
   include AuthenticatedSystem
 
-  require 'factory_girl'
-  @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
-
-  if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.empty?
-    if Probe::ProbeType.count == 0
-      puts
-      puts "*** Probe configuration models need to be loaded into the test database to run the tests"
-      puts "*** run: rake db:test:prepare"
-      puts
-      exit
-    end
-  else
-    puts
-    puts "*** pending migrations need to be applied to run the tests"
-    puts "*** run: rake db:test:prepare"
-    puts
-    exit
-  end
-
-  # Requires supporting ruby files with custom matchers and macros, etc,
-  # in spec/support/ and its subdirectories.
-  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-
   RSpec.configure do |config|
     # == Mock Framework
     #
@@ -64,5 +41,28 @@ Spork.prefork do
 end
 
 Spork.each_run do
+  # Requires supporting ruby files with custom matchers and macros, etc,
+  # in spec/support/ and its subdirectories.
+  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+  if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.empty?
+    if Probe::ProbeType.count == 0
+      puts
+      puts "*** Probe configuration models need to be loaded into the test database to run the tests"
+      puts "*** run: rake db:test:prepare"
+      puts
+      exit
+    end
+  else
+    puts
+    puts "*** pending migrations need to be applied to run the tests"
+    puts "*** run: rake db:test:prepare"
+    puts
+    exit
+  end
+
+  require 'factory_girl'
+  
+  # I don't think this is necessary anymore with the latest factory_girl
+  @factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
 end
