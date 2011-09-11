@@ -262,39 +262,34 @@ end
 describe SessionsController do
   describe "route generation" do
     it "should route the new sessions action correctly" do
-      route_for(:controller => 'sessions', :action => 'new').should == "/login"
+      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
     end
     it "should route the create sessions correctly" do
-      route_for(:controller => 'sessions', :action => 'create').should == {:path => "/session", :method => :post}
+      { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
     end
     it "should route the destroy sessions action correctly" do
-      route_for(:controller => 'sessions', :action => 'destroy').should == "/logout"
+      { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   
   describe "route recognition" do
     it "should generate params from GET /login correctly" do
-      params_from(:get, '/login').should == {:controller => 'sessions', :action => 'new'}
+      { :get => "/login" }.should route_to(:controller => "sessions", :action => "new")
     end
     it "should generate params from POST /session correctly" do
-      params_from(:post, '/session').should == {:controller => 'sessions', :action => 'create'}
+      { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
     end
     it "should generate params from DELETE /session correctly" do
-      params_from(:delete, '/logout').should == {:controller => 'sessions', :action => 'destroy'}
+      { :get => "/logout" }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   
   describe "named routing" do
-    before(:each) do
-      #get :new #FIXME: error
+    it "should route login_path() correctly" do
+      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
     end
-    it "should route session_path() correctly" do
-      pending "Broken example"
-      session_path().should == "/session"
-    end
-    it "should route new_session_path() correctly" do
-      pending "Broken example"
-      new_session_path().should == "/session/new"
+    it "should route logout_path() correctly" do
+      { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   
