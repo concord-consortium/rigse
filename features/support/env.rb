@@ -89,12 +89,6 @@ Spork.each_run do
   require 'rspec/mocks'
   require 'rspec/expectations'
 
-  # use factory girl:
-  # require 'factory_girl'
-  # Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
-  
-  # require File.expand_path('../../../spec/support/controller_helper.rb', __FILE__)
-  
   # Make visible for testing
   include AuthenticatedSystem
   ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
