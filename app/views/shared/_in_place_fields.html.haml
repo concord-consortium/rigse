@@ -1,6 +1,6 @@
 - if (item.changeable?(current_user))
   - name =  (defined? item.class.display_name) ? item.class.display_name : item.class.name.humanize
-  %h3= "#{name}: #{in_place_editor_field item.class.name.underscore.to_sym, 'name'}"
+  %h3= "#{name}: #{in_place_editor_field item.class.name.underscore.to_sym, 'name'}".html_safe
   .tiny=in_place_editor_field item.class.name.underscore.to_sym, 'description', {},{:rows=>3, :cols=>80}
 - else
   %h3= item.name
