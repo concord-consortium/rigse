@@ -7,7 +7,7 @@ class DefaultRunnable
         runnable = create_default_investigation_for_user(user, name, logging)
       else
         unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
-          runnable = TOP_LEVEL_CONTAINER_CLASS.create do |i|
+          runnable = TOP_LEVEL_CONTAINER_NAME.camelize.constantize.create do |i|
             i.name = name
             i.user = user
             i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
