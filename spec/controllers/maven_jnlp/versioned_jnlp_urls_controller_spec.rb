@@ -14,7 +14,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_versioned_jnlp_urls as @maven_jnlp_versioned_jnlp_urls" do
-      MavenJnlp::VersionedJnlpUrl.should_receive(:find).with(:all).and_return([mock_versioned_jnlp_url])
+      MavenJnlp::VersionedJnlpUrl.should_receive(:all).and_return([mock_versioned_jnlp_url])
       get :index
       assigns[:maven_jnlp_versioned_jnlp_urls].should == [mock_versioned_jnlp_url]
     end
@@ -22,7 +22,7 @@ describe MavenJnlp::VersionedJnlpUrlsController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_versioned_jnlp_urls as xml" do
-        MavenJnlp::VersionedJnlpUrl.should_receive(:find).with(:all).and_return(versioned_jnlp_urls = mock("Array of MavenJnlp::VersionedJnlpUrls"))
+        MavenJnlp::VersionedJnlpUrl.should_receive(:all).and_return(versioned_jnlp_urls = mock("Array of MavenJnlp::VersionedJnlpUrls"))
         versioned_jnlp_urls.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

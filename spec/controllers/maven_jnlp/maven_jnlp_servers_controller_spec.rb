@@ -15,7 +15,7 @@ describe MavenJnlp::MavenJnlpServersController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_maven_jnlp_servers as @maven_jnlp_maven_jnlp_servers" do
-      MavenJnlp::MavenJnlpServer.should_receive(:find).with(:all).and_return([mock_maven_jnlp_server])
+      MavenJnlp::MavenJnlpServer.should_receive(:all).and_return([mock_maven_jnlp_server])
       get :index
       assigns[:maven_jnlp_maven_jnlp_servers].should == [mock_maven_jnlp_server]
     end
@@ -23,7 +23,7 @@ describe MavenJnlp::MavenJnlpServersController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_maven_jnlp_servers as xml" do
-        MavenJnlp::MavenJnlpServer.should_receive(:find).with(:all).and_return(maven_jnlp_servers = mock("Array of MavenJnlp::MavenJnlpServers"))
+        MavenJnlp::MavenJnlpServer.should_receive(:all).and_return(maven_jnlp_servers = mock("Array of MavenJnlp::MavenJnlpServers"))
         maven_jnlp_servers.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

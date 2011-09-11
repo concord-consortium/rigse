@@ -14,7 +14,7 @@ describe MavenJnlp::PropertiesController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_properties as @maven_jnlp_properties" do
-      MavenJnlp::Property.should_receive(:find).with(:all).and_return([mock_property])
+      MavenJnlp::Property.should_receive(:all).and_return([mock_property])
       get :index
       assigns[:maven_jnlp_properties].should == [mock_property]
     end
@@ -22,7 +22,7 @@ describe MavenJnlp::PropertiesController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_properties as xml" do
-        MavenJnlp::Property.should_receive(:find).with(:all).and_return(properties = mock("Array of MavenJnlp::Properties"))
+        MavenJnlp::Property.should_receive(:all).and_return(properties = mock("Array of MavenJnlp::Properties"))
         properties.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

@@ -14,16 +14,16 @@ describe MavenJnlp::JarsController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_jars as @maven_jnlp_jars" do
-      MavenJnlp::Jar.should_receive(:find).with(:all).and_return([mock_jar])
+      MavenJnlp::Jar.should_receive(:all).and_return(@versioned_jars)
       get :index
-      assigns[:maven_jnlp_jars].should == [mock_jar]
+      assigns[:maven_jnlp_jars].should == @versioned_jars
     end
 
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_jars as xml" do
-        MavenJnlp::Jar.should_receive(:find).with(:all).and_return(jars = mock("Array of MavenJnlp::Jars"))
-        jars.should_receive(:to_xml).and_return("generated XML")
+        MavenJnlp::Jar.should_receive(:all).and_return(@versioned_jars)
+        @versioned_jars.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"
       end
