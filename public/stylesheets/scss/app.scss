@@ -64,6 +64,10 @@ p {
 input, textarea {
   border: 1px solid #242323; }
 
+.fieldWithErrors {
+  input {
+    border-color: #855734; } }
+
 abbr, acronym {
   border-bottom: 1px dotted #999999;
   cursor: help; }
