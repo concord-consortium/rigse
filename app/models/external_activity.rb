@@ -36,11 +36,11 @@ class ExternalActivity < ActiveRecord::Base
 
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
-  # special named scope for combining other named scopes in an OR fashion
-  # FIXME This is probably terribly inefficient
-  scope :match_any, lambda { |scopes| {
-    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
-  }}
+  # FIXME: See comments in app/models/resource_page.rb
+  scope :match_any, lambda { |scopes| 
+    conditions = "(#{scopes.map { |scope| "#{self.table_name}.id IN (#{scope.select('id').to_sql})" }.join(" OR ")})"
+    where(conditions)
+  }
 
   class <<self
     def searchable_attributes

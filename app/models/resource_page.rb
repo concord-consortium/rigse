@@ -36,11 +36,54 @@ class ResourcePage < ActiveRecord::Base
 
   scope :ordered_by, lambda { |order| { :order => order } }
 
-  # special named scope for combining other named scopes in an OR fashion
-  # FIXME This is probably terribly inefficient
-  scope :match_any, lambda { |scopes| {
-    :conditions => "(#{scopes.map{|s| "#{self.table_name}.id IN (#{s.send(:construct_finder_sql,{:select => :id})})" }.join(" OR ")})"
-  }}
+  # Special :match_any scope for combining other named scopes in an OR fashion
+  #
+  # FIXME This is probably terribly inefficient and can probably be done more
+  # cleanly in the new Rails 3 ActiveRecord::Relation and Arel features.
+  #
+  # In addition it should probably be folded into an updated SearchableModel
+  #
+  # Resources:
+  #   http://guides.rubyonrails.org/active_record_querying.html
+  #   http://m.onkey.org/active-record-query-interface
+  #   http://asciicasts.com/episodes/202-active-record-queries-in-rails-3
+  #   http://erniemiller.org/2010/05/11/activerecord-relation-vs-arel/
+  #   http://erniemiller.org/2010/03/28/advanced-activerecord-3-queries-with-arel/
+  #
+  # The basic query conditions look like this: 
+  #
+  #   (resource_pages.id IN () OR resource_pages.id IN ())
+  #
+  # An additional set of SQL constraints is generated and placed inside 
+  # each IN() clause with this statement:
+  #
+  #   scope.select('id').to_sql
+  #
+  # For example this query: 
+  #
+  #   ResourcePage.search_list( { :name => "abc", :user => @admin_user })
+  #
+  # results in this sql:
+  #
+  #   SELECT `resource_pages`.* FROM `resource_pages` 
+  #   WHERE (
+  #     (
+  #       resource_pages.id IN (
+  #         SELECT id FROM `resource_pages` 
+  #         WHERE `resource_pages`.`publication_status` = 'published' 
+  #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
+  #       ) OR resource_pages.id IN (
+  #         SELECT id FROM `resource_pages` WHERE `resource_pages`.`user_id` = 22 
+  #         AND (resource_pages.name LIKE '%abc%' OR resource_pages.description LIKE '%abc%' OR resource_pages.content LIKE '%abc%')
+  #       )
+  #     )
+  #   )
+  #
+
+  scope :match_any, lambda { |scopes| 
+    conditions = "(#{scopes.map { |scope| "#{self.table_name}.id IN (#{scope.select('id').to_sql})" }.join(" OR ")})"
+    where(conditions)
+  }
 
   accepts_nested_attributes_for :attached_files
 
