@@ -14,7 +14,7 @@ describe "/admin/tags/show.html.haml" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should have_text(/value\ for\ scope/)
-    rendered.should have_text(/value\ for\ tag/)
+    rendered.should == (/value\ for\ scope/)
+    rendered.should == (/value\ for\ tag/)
   end
 end

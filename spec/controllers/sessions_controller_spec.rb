@@ -235,7 +235,7 @@ describe SessionsController do
     it "doesn't send password back" do
       @login_params[:password] = 'FROBNOZZ'
       do_create
-      response.should_not have_text(/FROBNOZZ/i)
+      response.should_not == /FROBNOZZ/i
     end
   end
 
