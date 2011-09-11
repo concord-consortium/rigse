@@ -226,7 +226,7 @@ RailsPortal::Application.routes.draw do
   end
 
   namespace :portal do
-      resources :clazzes do
+      resources :clazzes, :path => :classes do
     
         member do
     post :add_teacher
@@ -243,7 +243,7 @@ RailsPortal::Application.routes.draw do
     end
     
     end
-      resources :clazzes do
+      resources :clazzes, :path => :classes do
     
     
           resources :student_clazzes
