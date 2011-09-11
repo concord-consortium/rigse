@@ -5,6 +5,7 @@
   %p
     = button_to 'Sign up as a student', :signup_portal_students, {:method => :get}
 
-  -#%p
-    -#Otherwise if you are an author sign up as a member.
-    -#= button_to 'Sign up as a member', :signup
+  - if Admin::Project.default_project.enable_member_registration?
+    %p
+      Otherwise if you are an author sign up as a member.
+      = button_to 'Sign up as a member', :signup
