@@ -86,7 +86,7 @@ group :test, :development do
   gem "ci_reporter",       "~> 1.6.5"
   gem "launchy",           "~> 2.0.5"
   # TODO: Use spork or not?
-  gem "spork",              "~> 0.9.0.rc"
+  gem "spork",              "~> 0.9.0.rc9"
   gem "delorean",           "~> 1.1"
   # See: http://wiki.github.com/dchelimsky/rspec/spork-autospec-pure-bdd-joy
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
