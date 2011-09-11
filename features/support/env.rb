@@ -7,23 +7,16 @@
 require 'rubygems'
 require 'spork'
 
-require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
-
-require 'rspec'
-require 'rspec/mocks'
-require 'rspec/expectations'
-
-require 'capybara'
-
-require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
-require 'cucumber/rails/capybara/select_dates_and_times'
-
-require 'email_spec'
-require 'email_spec/cucumber'
+require 'spork/ext/ruby-debug'
 
 Spork.prefork do
   require 'cucumber/rails'
 
+  require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+  require 'cucumber/rails/capybara/select_dates_and_times'
+
+  require 'email_spec'
+  require 'email_spec/cucumber'
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
   # order to ease the transition to Capybara we set the default here. If you'd
@@ -34,6 +27,7 @@ Spork.prefork do
 end
  
 Spork.each_run do
+  RailsPortal::Application.reload_routes!
   require 'hirb'
   Hirb.enable :pager=>false
   Hirb.enable :formatter=>false
