@@ -1,5 +1,7 @@
 Given /^the most basic default project$/ do
   Factory.create(:admin_project_no_jnlps)
+  Factory.next :anonymous_user
+  Factory.next :admin_user
 end
 
 #

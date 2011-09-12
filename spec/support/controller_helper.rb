@@ -60,7 +60,7 @@ def generate_default_project_and_jnlps_with_factories
 end
 
 def generate_default_users_with_factories
-  @anon_user =  User.anonymous
+  @anon_user =  Factory.next :anonymous_user
   @admin_user = Factory.next :admin_user
 end
 
