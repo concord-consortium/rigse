@@ -82,6 +82,10 @@ Spork.each_run do
   require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
   require 'rspec/mocks'
   require 'rspec/expectations'
+  
+  World(RSpec::Rails::Mocks)
+  World(RSpec::Mocks::ExampleMethods)
+  include RSpec::Mocks::Methods
 
   # Make visible for testing
   include AuthenticatedSystem
