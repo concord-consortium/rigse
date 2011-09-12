@@ -933,7 +933,7 @@ module ApplicationHelper
       :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
     }
     options = defaults.merge(options)
-    link_to(options[:text], options[:url], options)
+    link_to(options[:text], options[:url], options.except(:text, :url))
   end
 
   def dropdown_button(image,options={})
