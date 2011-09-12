@@ -19,10 +19,10 @@ describe "/embeddable/open_responses/show.html.haml" do
 
   it "should have a rows field" do
     render
-    response.should have_selector("textarea[rows=?]", @open_response.rows)
+    response.should have_selector("textarea[rows='#{@open_response.rows.to_s}']")
   end
   it "should have a columns field" do
     render
-    response.should have_selector("textarea[cols=?]", @open_response.columns)
+    response.should have_selector("textarea[cols='#{@open_response.columns.to_s}']")
   end
 end

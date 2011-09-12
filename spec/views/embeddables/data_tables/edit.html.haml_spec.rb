@@ -14,7 +14,7 @@ describe "/embeddable/data_tables/edit.html.haml" do
   it "renders the edit form" do
     render
 
-    response.should have_selector("form[action=#{embeddable_data_table_path(@data_table)}][method=post]") do
+    response.should have_selector("form[action='#{embeddable_data_table_path(@data_table)}'][method=post]") do
     end
   end
 

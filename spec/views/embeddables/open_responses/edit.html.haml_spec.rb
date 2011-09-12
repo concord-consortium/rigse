@@ -19,7 +19,7 @@ describe "/embeddable/open_responses/edit.html.haml" do
 
   it "renders the edit form" do
     render
-    response.should have_selector("form[action=#{embeddable_open_response_path(@open_response)}][method=post]")
+    response.should have_selector("form[action='#{embeddable_open_response_path(@open_response)}'][method=post]")
   end
   it "should have a prompt tag" do
     render
