@@ -18,7 +18,7 @@ module JsHelper
     out = ''
     out << form.hidden_field(:_destroy)
     out << link_to_function("delete", "$('#{dom_id_for(form)}').hide(); $(this).previous().value = '1'", :class=>'delete')
-    out
+    out.html_safe
   end
 
   def add_to_list(pattern)
