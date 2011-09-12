@@ -40,7 +40,7 @@
         %source
           %OTDataGraphable{ :local_id => ot_local_id_for(data_collector, :source, :data_graphable),
             :controllable => (!data_collector.static).to_s,
-            :name => h(truncate(data_collector.name, 12)), :connectPoints => data_collector.connect_points.to_s,
+            :name => h(truncate(data_collector.name, :length => 12)), :connectPoints => data_collector.connect_points.to_s,
             :drawMarks => data_collector.draw_marks.to_s, :color => "0xff0000",
             :xColumn => "0", :lineWidth => "2.0", :visible => "true" }
             %dataStore

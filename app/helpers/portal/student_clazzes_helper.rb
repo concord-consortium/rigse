@@ -16,7 +16,7 @@ module Portal::StudentClazzesHelper
     if (existing_students && existing_students.size > 0)
       default_value = "Add a registered #{current_project.name} student"        
       options = [[default_value,default_value]]
-      options = options + (existing_students.map { |s| [ truncate("#{s.last_name}, #{s.first_name} (#{s.login})",30), s.id ] })
+      options = options + (existing_students.map { |s| [ truncate("#{s.last_name}, #{s.first_name} (#{s.login})", :length => 30), s.id ] })
       select_opts = options_for_select(options, :selected => default_value)
       return <<-EOF
           #{span_tag}
