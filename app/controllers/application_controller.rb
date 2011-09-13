@@ -92,6 +92,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def valid_uuid(value)
+    value.is_a?(String) && value.length == 36
+  end
+
   private
 
   # setup the portal_teacher and student instance variables

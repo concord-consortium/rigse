@@ -1215,10 +1215,6 @@ module ApplicationHelper
     Admin::Project.settings_for(key)
   end
 
-  def valid_uuid(value)
-    value.is_a?(String) && value.length == 36
-  end
-
   # this appears to not be used in master right now
   def current_user_can_author
     return true if current_user.has_role? "author" 
