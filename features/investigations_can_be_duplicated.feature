@@ -26,14 +26,14 @@ Feature: Investigations can be duplicated
 
   @javascript @wip
   Scenario: Authors can duplicate an investigations
-    Given I login with username: author2 password: author
+    Given I login with username: author password: author
     And I am on the investigations page for "Newest"
     When I duplicate the investigation
     Then the investigation "copy of Newest" should have been created
 
-  @javascript @wip
+  @javascript
   Scenario: Members who are not authors cannot duplicate an investigations
-    Given I login with username: author2 password: author
+    Given I login with username: member password: member
     And I am on the investigations page for "Newest"
     Then I cannot duplicate the investigation
 

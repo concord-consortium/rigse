@@ -245,7 +245,7 @@ Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do 
   investigation.offerings_count.should == count.to_i
 end
 
-When /^I duplicate the investigation$/ do
+def show_actions_menu
   # this requires a javascript enabled driver
   # this simulates roughly what happens when the mouse is moved over the plus icon
 
@@ -257,6 +257,15 @@ When /^I duplicate the investigation$/ do
 
   # now that the menu is positioned we can just manually show it
   page.execute_script("$('actions_menu').show()")
+end
+
+When /^I duplicate the investigation$/ do
+  show_actions_menu
   click_link("duplicate")
   page.execute_script("$('actions_menu').hide()")
+end
+
+Then /^I cannot duplicate the investigation$/ do
+  show_actions_menu
+  page.should have_no_content('duplicate')
 end
