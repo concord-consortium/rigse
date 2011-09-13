@@ -11,8 +11,20 @@ end
 When /^I drag the external activity "([^"]*)" to "([^"]*)"$/ do |activity_name, to|
   activity = ExternalActivity.find_by_name activity_name
   selector = find("#external_activity_#{activity.id}")
-  drop = find(to)
-  selector.drag_to(drop)
+  
+  # NP 2011-09
+  # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
+  # simulate the drag event like this:
+  #
+  # drop = find(to)
+  # selector.drag_to(drop)
+  
+  # Alternate hack: invoke drop callback directly.
+  script =<<-EOF
+    Droppables.drops[0].onDrop($('external_activity_#{activity.id}'));
+  EOF
+  page.execute_script(script)
+
 end
 
 Then /^the learner count for the external activity "([^"]*)" in the class "(.*)" should be "(\d+)"$/ do |ea_name, class_name, learner_count|
