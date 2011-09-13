@@ -7,8 +7,13 @@ describe InvestigationsController do
     @current_project = mock(
       :name => "test project",
       :using_custom_css? => false,
-      :use_bitmap_snapshots? => false)
+      :use_bitmap_snapshots? => false,
+      :maven_jnlp_family => nil,
+      :snapshot_enabled => false)
     Admin::Project.stub!(:default_project).and_return(@current_project)
+    
+    # this part is broken when the monkey patched application controller was removed
+    # spec/support/controller_helper.rb
     controller.stub(:before_render) {
       response.template.stub(:net_logo_package_name).and_return("blah")
       response.template.stub_chain(:current_project).and_return(@current_project);
