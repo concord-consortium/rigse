@@ -76,3 +76,4 @@ bin/
 *.orig
 doc/gource/*.mp4
 doc/gource/*.webm
+*.tmproj
