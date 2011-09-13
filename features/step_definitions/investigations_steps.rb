@@ -69,9 +69,15 @@ end
 
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
   investigation = Investigation.find_by_name investigation_name
-  selector = find("#investigation_#{investigation.id}")
+  selector_id = "#investigation_#{investigation.id}"
+  selector = find(selector_id)
   drop = find(to)
-  selector.drag_to(drop)
+  # NP 2011-09 see support/drag_and_drop.rb
+  # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
+  # use the actual dragging code which we replaced
+  #
+  # selector.drag_to(drop)
+  fake_drop(selector_id,to)
 end
 
 When /^I show offerings count on the investigations page$/ do 
@@ -139,8 +145,15 @@ When /^I drag the investigation "([^"]*)" in the class "(.*)" to "([^"]*)"$/ do 
     :clazz_id => clazz.id
   })
   selector = "#portal__offering_#{offering.id}"
-  find(selector).drag_to(find(to))
+  # NP 2011-09 see support/drag_and_drop.rb
+  # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
+  # use the actual dragging code which we replaced
+  #
+  # find(selector).drag_to(find(to))
+  
+  fake_drop(selector,to)
 end
+
 
 Then /^the investigation "([^"]*)" in the class "(.*)" should be active$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)

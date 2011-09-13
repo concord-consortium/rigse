@@ -10,21 +10,16 @@ end
 
 When /^I drag the external activity "([^"]*)" to "([^"]*)"$/ do |activity_name, to|
   activity = ExternalActivity.find_by_name activity_name
-  selector = find("#external_activity_#{activity.id}")
-  
-  # NP 2011-09
+  selector_id = "#external_activity_#{activity.id}"
+  selector = find(selector_id)
+  # NP 2011-09 see support/drag_and_drop.rb
+  #
   # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
-  # simulate the drag event like this:
+  # use the actual dragging code which we replaced
   #
   # drop = find(to)
   # selector.drag_to(drop)
-  
-  # Alternate hack: invoke drop callback directly.
-  script =<<-EOF
-    Droppables.drops[0].onDrop($('external_activity_#{activity.id}'));
-  EOF
-  page.execute_script(script)
-
+  fake_drop("external_activity_#{activity.id}",to)
 end
 
 Then /^the learner count for the external activity "([^"]*)" in the class "(.*)" should be "(\d+)"$/ do |ea_name, class_name, learner_count|
