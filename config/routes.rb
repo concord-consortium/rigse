@@ -1,322 +1,297 @@
 RailsPortal::Application.routes.draw do
 
   namespace :saveable do
-      namespace :sparks do
-          resources :measuring_resistances
-          resources :measuring_resistance_reports
+    namespace :sparks do
+      resources :measuring_resistances
+      resources :measuring_resistance_reports
     end
   end
 
   namespace :probe do
-      resources :vendor_interfaces
-      resources :probe_types
-      resources :physical_units
-      resources :device_configs
-      resources :data_filters
-      resources :calibrations
+    resources :vendor_interfaces
+    resources :probe_types
+    resources :physical_units
+    resources :device_configs
+    resources :data_filters
+    resources :calibrations
   end
 
   namespace :ri_gse do
-      resources :assessment_targets
-      resources :knowledge_statements
-      resources :domains
-      resources :big_ideas
-      resources :unifying_themes
-      resources :expectations
-      resources :expectation_stems
-      resources :grade_span_expectations do
-        collection do
-    get :select
-    post :summary
-    post :select_js
-    put :reparse_gses
-    end
-        member do
-    get :print
-    end
-    
+    resources :assessment_targets
+    resources :knowledge_statements
+    resources :domains
+    resources :big_ideas
+    resources :unifying_themes
+    resources :expectations
+    resources :expectation_stems
+    resources :grade_span_expectations do
+      collection do
+        get :select
+        post :summary
+        post :select_js
+        put :reparse_gses
+      end
+      member do
+        get :print
+      end
     end
   end
 
   namespace :embeddable do
-      namespace :smartgraph do
-          resources :range_questions
+    namespace :smartgraph do
+      resources :range_questions
     end
-      namespace :biologica do
-          resources :chromosome_zooms do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :multiple_organisms do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :breed_offsprings do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :meiosis_views do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :chromosomes do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :pedigrees do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :static_organisms do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :organisms do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-          resources :worlds do
-      
-            member do
-      post :destroy
-      end
-      
-      end
-    end
-      resources :inner_pages do
-    
+    namespace :biologica do
+      resources :chromosome_zooms do
+
         member do
-    post :sort_pages
-    post :delete_page
-    post :add_page
-    post :add_element
-    post :destroy
-    post :set_page
-    end
-    
-    end
-      resources :lab_book_snapshots do
-    
+          post :destroy
+        end
+
+      end
+      resources :multiple_organisms do
+
         member do
-    post :destroy
-    end
-    
-    end
-      resources :raw_otmls do
-    
+          post :destroy
+        end
+
+      end
+      resources :breed_offsprings do
+
         member do
-    post :destroy
-    end
-    
-    end
-      resources :n_logo_models do
-    
+          post :destroy
+        end
+
+      end
+      resources :meiosis_views do
+
         member do
-    post :destroy
-    end
-    
-    end
-      resources :mw_modeler_pages do
-    
+          post :destroy
+        end
+
+      end
+      resources :chromosomes do
+
         member do
-    post :destroy
-    end
-    
-    end
-      resources :data_tables do
-    
+          post :destroy
+        end
+
+      end
+      resources :pedigrees do
+
         member do
-    post :update_cell_data
-    post :destroy
-    get :print
-    end
-    
-    end
-      resources :multiple_choices do
-    
+          post :destroy
+        end
+
+      end
+      resources :static_organisms do
+
         member do
-    post :add_choice
-    post :destroy
-    get :print
-    end
-    
-    end
-      resources :drawing_tools do
-    
+          post :destroy
+        end
+
+      end
+      resources :organisms do
+
         member do
-    post :destroy
-    get :print
-    end
-    
-    end
-      resources :xhtmls do
-    
+          post :destroy
+        end
+
+      end
+      resources :worlds do
+
         member do
-    post :destroy
-    get :print
+          post :destroy
+        end
+
+      end
     end
-    
+    resources :inner_pages do
+      member do
+        post :sort_pages
+        post :delete_page
+        post :add_page
+        post :add_element
+        post :destroy
+        post :set_page
+      end
     end
-      resources :open_responses do
-    
-        member do
-    post :destroy
-    get :print
+    resources :lab_book_snapshots do
+      member do
+        post :destroy
+      end
     end
-    
+    resources :raw_otmls do
+      member do
+        post :destroy
+      end
     end
-      resources :data_collectors do
-    
-        member do
-    put :change_probe_type
-    post :destroy
-    get :print
+    resources :n_logo_models do
+      member do
+        post :destroy
+      end
     end
-    
+    resources :mw_modeler_pages do
+      member do
+        post :destroy
+      end
     end
-      resources :sound_graphers do
-    
-        member do
-    post :destroy
+    resources :data_tables do
+      member do
+        post :update_cell_data
+        post :destroy
+        get :print
+      end
     end
-    
+    resources :multiple_choices do
+      member do
+        post :add_choice
+        post :destroy
+        get :print
+      end
     end
-      resources :image_questions do
-    
-        member do
-    post :destroy
+    resources :drawing_tools do
+      member do
+        post :destroy
+        get :print
+      end
     end
-    
+    resources :xhtmls do
+      member do
+        post :destroy
+        get :print
+      end
     end
-      resources :video_players do
-    
-        member do
-    post :destroy
+    resources :open_responses do
+      member do
+        post :destroy
+        get :print
+      end
     end
-    
+    resources :data_collectors do
+      member do
+        put :change_probe_type
+        post :destroy
+        get :print
+      end
+    end
+    resources :sound_graphers do
+      member do
+        post :destroy
+      end
+    end
+    resources :image_questions do
+      member do
+        post :destroy
+      end
+    end
+    resources :video_players do
+      member do
+        post :destroy
+      end
     end
   end
 
   namespace :smartgraph do
-      resources :range_questions
+    resources :range_questions
   end
 
   namespace :portal do
-      resources :clazzes, :path => :classes do
-    
-        member do
-    post :add_teacher
-    delete :remove_teacher
-    get :add_offering
-    post :add_offering
-    get :class_list
-    get :add_student
-    post :add_student
-    get :remove_offering
-    post :remove_offering
-    get :edit_offerings
-    post :edit_offerings
+
+    resources :clazzes, :path => :classes do
+      member do
+        post :add_teacher
+        delete :remove_teacher
+        get :add_offering
+        post :add_offering
+        get :class_list
+        get :add_student
+        post :add_student
+        get :remove_offering
+        post :remove_offering
+        get :edit_offerings
+        post :edit_offerings
+      end
     end
-    
-    end
-      resources :clazzes, :path => :classes do
-    
-    
-          resources :student_clazzes
-    end
-      resources :courses
-      resources :districts do
-    
-        member do
-    post :destroy
-    end
-    
-    end
-      resources :grades
-      resources :grade_levels
-      resources :learners do
-    
-        member do
-    get :open_response_report
-    get :multiple_choice_report
-    get :report
-    get :bundle_report
-    end
-    
-    end
-      resources :offerings do
-        collection do
-    get :data_test
-    post :data_test
-    end
-        member do
-    get :deactivate
-    get :activate
-    get :open_response_report
-    post :check_learner_auth
-    post :start
-    get :multiple_choice_report
-    get :report
-    get :separated_report
-    post :report_embeddable_filter
-    get :learners
-    end
-    
-    end
-      resources :schools do
-    
-        member do
-    post :destroy
-    end
-    
-    end
-      resources :school_memberships
-      resources :semesters
-      resources :students do
-        collection do
-    get :signup
-    get :register
-    post :register
-    end
-    
-    
-    end
+
+    resources :clazzes, :path => :classes do
       resources :student_clazzes
-      resources :subjects
-      resources :teachers
-      resources :external_user_domains
-      resources :external_users
-      resources :nces06_districts
-      resources :nces06_schools do
-    
-        member do
-    get :description
     end
-    
+
+    resources :courses
+
+    resources :districts do
+      member do
+        post :destroy
+      end
+    end
+
+    resources :grades
+
+    resources :grade_levels
+
+    resources :learners do
+      member do
+        get :open_response_report
+        get :multiple_choice_report
+        get :report
+        get :bundle_report
+      end
+    end
+
+    resources :offerings do
+      collection do
+        get :data_test
+        post :data_test
+      end
+      member do
+        get :deactivate
+        get :activate
+        get :open_response_report
+        post :check_learner_auth
+        post :start
+        get :multiple_choice_report
+        get :report
+        get :separated_report
+        post :report_embeddable_filter
+        get :learners
+      end
+    end
+
+    resources :schools do
+      member do
+        post :destroy
+      end
+    end
+
+    resources :school_memberships
+
+    resources :semesters
+
+    resources :students do
+      collection do
+        get :signup
+        get :register
+        post :register
+      end
+    end
+
+    resources :student_clazzes
+
+    resources :subjects
+
+    resources :teachers
+
+    resources :external_user_domains
+
+    resources :external_users
+
+    resources :nces06_districts
+
+    resources :nces06_schools do
+      member do
+        get :description
+      end
     end
   end
 
@@ -332,321 +307,267 @@ RailsPortal::Application.routes.draw do
   match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
   match '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
   match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
+
   resources :users do
-  
     member do
-  delete :purge
-  put :suspend
-  put :unsuspend
-  get :interface
-  get :switch
-  put :switch
-  get :preferences
-  put :preferences
-  end
-      resource :security_questions, :only => [:edit, :update]
+      delete :purge
+      put :suspend
+      put :unsuspend
+      get :interface
+      get :switch
+      put :switch
+      get :preferences
+      put :preferences
+    end
+    resource :security_questions, :only => [:edit, :update]
   end
 
   match '/users/reports/account_report' => 'users#account_report', :as => :users_account_report, :method => :get
   resources :passwords
   resource :session
+
   resources :external_user_domains do
-  
-  
-      resources :external_users
+    resources :external_users
     resources :external_sessions
   end
 
   namespace :dataservice do
-      resources :blobs
+    resources :blobs
+    resources :bundle_contents
+    resources :console_contents
+    resources :bundle_loggers do
       resources :bundle_contents
-      resources :bundle_loggers do
-    
-    
-          resources :bundle_contents
     end
+    resources :console_loggers do
       resources :console_contents
-      resources :console_loggers do
-    
-    
-          resources :console_contents
     end
   end
 
   match 'dataservice/blobs/:id.blob/:token' => 'dataservice/blobs#show', :as => :dataservice_blob_raw, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }, :format => 'blob'
+
   namespace :admin do
-      resources :projects do
-    
-        member do
-    put :update_form
+    resources :projects do
+      member do
+        put :update_form
+      end
     end
-    
-    end
-      resources :tags
+    resources :tags
   end
 
   namespace :maven_jnlp do
-      resources :native_libraries
-      resources :jars
-      resources :properties
-      resources :versioned_jnlps
-      resources :versioned_jnlp_urls
-      resources :icons
-      resources :maven_jnlp_families
-      resources :maven_jnlp_servers
+    resources :native_libraries
+    resources :jars
+    resources :properties
+    resources :versioned_jnlps
+    resources :versioned_jnlp_urls
+    resources :icons
+    resources :maven_jnlp_families
+    resources :maven_jnlp_servers
   end
 
   namespace :otrunk_example do
-      resources :otrunk_imports
-      resources :otml_categories
-      resources :otml_files
-      resources :otrunk_view_entries
+    resources :otrunk_imports
+    resources :otml_categories
+    resources :otml_files
+    resources :otrunk_view_entries
   end
 
   resources :teacher_notes
   resources :author_notes
   resources :lab_book_snapshots do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :inner_pages do
-  
     member do
-  post :sort_pages
-  post :delete_page
-  post :add_page
-  post :add_element
-  post :destroy
-  post :set_page
-  end
-  
+      post :sort_pages
+      post :delete_page
+      post :add_page
+      post :add_element
+      post :destroy
+      post :set_page
+    end
   end
 
   resources :biologica_chromosome_zooms do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_multiple_organisms do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_breed_offsprings do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_meiosis_views do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_chromosomes do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_pedigrees do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_static_organisms do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_organisms do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :biologica_worlds do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :raw_otmls do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :n_logo_models do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :mw_modeler_pages do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :data_tables do
-  
     member do
-  post :update_cell_data
-  post :destroy
-  get :print
-  end
-  
+      post :update_cell_data
+      post :destroy
+      get :print
+    end
   end
 
   resources :multiple_choices do
-  
     member do
-  post :add_choice
-  post :destroy
-  get :print
-  end
-  
+      post :add_choice
+      post :destroy
+      get :print
+    end
   end
 
   resources :drawing_tools do
-  
     member do
-  post :destroy
-  get :print
-  end
-  
+      post :destroy
+      get :print
+    end
   end
 
   resources :xhtmls do
-  
     member do
-  post :destroy
-  get :print
-  end
-  
+      post :destroy
+      get :print
+    end
   end
 
   resources :open_responses do
-  
     member do
-  post :destroy
-  get :print
-  end
-  
+      post :destroy
+      get :print
+    end
   end
 
   resources :data_collectors do
-  
     member do
-  put :change_probe_type
-  post :destroy
-  get :print
-  end
-  
+      put :change_probe_type
+      post :destroy
+      get :print
+    end
   end
 
   resources :sections do
     collection do
-  get :printable_index
-  end
+      get :printable_index
+    end
     member do
-  post :sort_pages
-  get :duplicate
-  post :delete_page
-  get :details_report
-  post :add_page
-  get :add_page
-  get :usage_report
-  post :destroy
-  get :print
-  end
-  
+      post :sort_pages
+      get :duplicate
+      post :delete_page
+      get :details_report
+      post :add_page
+      get :add_page
+      get :usage_report
+      post :destroy
+      get :print
+    end
   end
 
   resources :pages do
-  
     member do
-  post :sort_elements
-  get :duplicate
-  post :delete_element
-  post :paste_link
-  get :preview
-  post :add_element
-  post :destroy
-  get :print
-  post :paste
-  end
-  
+      post :sort_elements
+      get :duplicate
+      post :delete_element
+      post :paste_link
+      get :preview
+      post :add_element
+      post :destroy
+      get :print
+      post :paste
+    end
   end
 
   match '/page/list/filter' => 'pages#index', :as => :list_filter_page, :method => :post
   resources :pages do
-  
-  
-      resources :xhtmls
+    resources :xhtmls
     resources :open_responses
     resources :data_collectors
   end
 
   resources :page_elements do
-  
     member do
-  post :destroy
-  end
-  
+      post :destroy
+    end
   end
 
   resources :investigations do
     collection do
-  get :printable_index
-  end
+      get :printable_index
+    end
     member do
-  get :duplicate
-  get :details_report
-  post :add_activity
-  get :add_activity
-  get :usage_report
-  post :sort_activities
-  post :destroy
-  get :print
-  post :delete_activity
-  get :export
-  end
-  
+      get :duplicate
+      get :details_report
+      post :add_activity
+      get :add_activity
+      get :usage_report
+      post :sort_activities
+      post :destroy
+      get :print
+      post :delete_activity
+      get :export
+    end
   end
 
   match '/investigations/list/preview/' => 'investigations#preview_index', :as => :investigation_preview_list, :method => :get
@@ -656,45 +577,37 @@ RailsPortal::Application.routes.draw do
   match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
   match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
   resources :activities do
-  
     member do
-  get :duplicate
-  post :add_section
-  get :add_section
-  post :sort_sections
-  post :destroy
-  get :print
-  post :delete_section
-  get :export
-  end
-  
+      get :duplicate
+      post :add_section
+      get :add_section
+      post :sort_sections
+      post :destroy
+      get :print
+      post :delete_section
+      get :export
+    end
   end
 
   match '/activity/list/filter' => 'activities#index', :as => :list_filter_activity, :method => :post
   resources :activities do
-  
-  
-      resources :sections do
-    
-    
-          resources :pages do
-      
-      
-              resources :page_elements
+
+    resources :sections do
+      resources :pages do
+        resources :page_elements
       end
     end
   end
 
   resources :external_activities do
-  
     member do
-  get :duplicate
-  post :destroy
-  end
-  
+      get :duplicate
+      post :destroy
+    end
   end
 
   match '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity, :method => :post
+
   resources :assessment_targets
   resources :knowledge_statements
   resources :domains
@@ -702,30 +615,29 @@ RailsPortal::Application.routes.draw do
   resources :unifying_themes
   resources :expectations
   resources :expectation_stems
+
   resources :grade_span_expectations do
     collection do
-  get :select
-  post :summary
-  post :select_js
-  put :reparse_gses
-  end
+      get :select
+      post :summary
+      post :select_js
+      put :reparse_gses
+    end
     member do
-  get :print
-  end
-  
+      get :print
+    end
   end
 
   match '/resource_pages/list/filter' => 'resource_pages#index', :as => :list_filter_resource_page, :method => :post
   resources :resource_pages do
     collection do
-  get :printable_index
-  end
-  
-  
+      get :printable_index
+    end
   end
 
   resources :attached_files
   resources :images
+
   match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
   match '/readme' => 'home#readme', :as => :readme
   match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
@@ -739,7 +651,7 @@ RailsPortal::Application.routes.draw do
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
   match '/:controller(/:action(/:id))'
-  
+
   root :to => 'home#index'
 
 end
