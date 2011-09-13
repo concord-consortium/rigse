@@ -268,7 +268,7 @@ module ApplicationHelper
           yield
         end
       end
-    end
+    end.gsub(/\&apos;/, '&#39;')
   end
 
   def edit_button_for(component, options={}, scope=false)
