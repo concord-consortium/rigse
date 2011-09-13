@@ -273,6 +273,7 @@ RailsPortal::Application.routes.draw do
         get :signup
         get :register
         post :register
+        post :confirm
       end
     end
 
