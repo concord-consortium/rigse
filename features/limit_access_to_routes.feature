@@ -51,7 +51,7 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /portal/clazzes               |
+      | /portal/classes               |
       | /portal/courses               |
       | /portal/school_memberships    |
       | /portal/schools               |
@@ -81,7 +81,7 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /portal/clazzes               |
+      | /portal/classes               |
       | /portal/courses               |
       | /portal/school_memberships    |
       | /portal/schools               |
