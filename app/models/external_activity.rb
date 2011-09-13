@@ -37,8 +37,9 @@ class ExternalActivity < ActiveRecord::Base
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
   # FIXME: See comments in app/models/resource_page.rb
-  scope :match_any, lambda { |scopes| 
-    conditions = "(#{scopes.map { |scope| "#{self.table_name}.id IN (#{scope.select('id').to_sql})" }.join(" OR ")})"
+  scope :match_any, lambda { |scopes|
+    table_name_dot_id = "#{self.table_name}.id"
+    conditions = "(#{scopes.map { |scope| "#{table_name_dot_id} IN (#{scope.select(table_name_dot_id).to_sql})" }.join(" OR ")})"
     where(conditions)
   }
 

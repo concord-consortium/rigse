@@ -74,13 +74,30 @@ describe ResourcePage do
   
   describe "searching" do
     
-    it "should be searchable" do
+    it "should be searchable with a few terms by an admin" do
       params = {
         :name => "abc",
         :user => @admin_user
       }
       ResourcePage.search_list(params)
     end
+    
+    # This test doesn't expose possible bugs in more complicated searches.
+    # To push this search feature further we actually need the kind of 
+    # resources setup in the teacher_cohort_external_activity_filtering.feature.
+    it "should be searchable with many terms by an admin" do
+      params = {
+        :name => "abc",
+        :user => @admin_user,
+        :portal_clazz_id => 1, 
+        :domain_id => 1, 
+        :grade_span => 1,
+        :hide_print => true,
+        :hide_drafts_checkbox => true
+      }
+      ResourcePage.search_list(params)
+    end
+    
     
   end
 
