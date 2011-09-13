@@ -40,7 +40,7 @@ class ExternalActivitiesController < ApplicationController
   
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @external_activity = ExternalActivity.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @external_activity = ExternalActivity.find(params[:id])

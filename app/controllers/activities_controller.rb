@@ -42,7 +42,7 @@ class ActivitiesController < ApplicationController
 
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @activity = Activity.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @activity = Activity.find(params[:id])

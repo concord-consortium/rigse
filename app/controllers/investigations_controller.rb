@@ -56,7 +56,7 @@ class InvestigationsController < AuthoringController
 
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @investigation = Investigation.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @investigation = Investigation.find(params[:id])
