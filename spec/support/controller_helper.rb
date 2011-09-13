@@ -67,7 +67,8 @@ end
 def generate_default_school_resources_with_factories
   @portal_school = Factory(:portal_school)
   @portal_district = @portal_school.district
-  @portal_grade = Factory(:portal_grade)
+  @portal_grade_level = Factory(:portal_grade_level)
+  @portal_grade = @portal_grade_level.grade
   @rigse_domain = Factory(:rigse_domain)
 end
 
