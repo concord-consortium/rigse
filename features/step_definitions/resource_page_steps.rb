@@ -53,7 +53,10 @@ end
 When /^I open the accordion for the resource "([^"]*)"$/ do |resource_name|
   resource = ResourcePage.find_by_name resource_name
   selector = "#resource_page_toggle_resource_page_#{resource.id}"
-  find(selector).click
+  # need to check if the accordion is already open so we don't close it
+  if(!find("#resource_page_content_resource_page_#{resource.id}").visible?)
+    find(selector).click
+  end
 end
 
 When /^I follow "([^"]*)" for the resource page "([^"]*)"$/ do |link_name, resource_page_name|
