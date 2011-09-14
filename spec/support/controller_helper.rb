@@ -352,3 +352,9 @@ def will_paginate_params(opts = {})
   { :limit => opts[:limit] || 30, :offset => opts[:offset] || 0, :include=>opts[:include] || {} }
 end
 
+def xml_http_html_request(request_method, action, parameters = nil, session = nil, flash = nil)
+  # set the request type so the response type is set tot html by rails
+  # otherwise the testing code tries to handle the response as javascript
+  request.env['HTTP_ACCEPT'] = Mime::HTML
+  xml_http_request request_method, action, parameters, session, flash
+end

@@ -116,19 +116,23 @@ describe Portal::ClazzesController do
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
-      xml_http_request :post, :edit, :id => @mock_clazz.id
+      xml_http_html_request :post, :edit, :id => @mock_clazz.id
+      
       response.should_not be_success
     end
 
-    it "shows the details of all teachers assigned to the requested class with removal links" do
-      [:admin_user, :authorized_teacher_user].each do |user|
+    [:admin_user, :authorized_teacher_user].each do |user|
+      it "shows the details of all teachers assigned to the requested class with removal links to #{user}" do
         setup_for_repeated_tests
         stub_current_user user
 
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
+        
+        
+        xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
-        xml_http_request :post, :edit, :id => @mock_clazz.id
+        response.content_type.should == "text/html"
 
         # All users should see the list of current teachers
         assert_select("div#teachers_listing") do
@@ -152,7 +156,7 @@ describe Portal::ClazzesController do
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
 
-        xml_http_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         assert_select("div#teachers_listing") do
           teachers.each do |teacher|
@@ -170,7 +174,7 @@ describe Portal::ClazzesController do
         teachers = [@authorized_teacher]
         @mock_clazz.teachers = teachers
 
-        xml_http_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         # There should be only one teacher listed, and it should not be enabled
         assert_select("div#teachers_listing") do
@@ -211,7 +215,7 @@ describe Portal::ClazzesController do
         teachers = [@authorized_teacher, @random_teacher]
         @mock_clazz.teachers = teachers
 
-        xml_http_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         # The current user's teacher should produce a different warning message on click; all
         # others should use the default confirm text. All users' delete links should be enabled.
@@ -252,7 +256,7 @@ describe Portal::ClazzesController do
           @mock_clazz.school.portal_teachers << teacher
         end
 
-        xml_http_request :post, :edit, :id => @mock_clazz.id
+        xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         if user == :unauthorized_teacher_user
           # Unauthorized users should not see the "add teacher" dropdown
