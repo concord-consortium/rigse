@@ -16,8 +16,8 @@ class Wordpress
     end
   end
 
-  def post_blog(post_title, post_content)
-    user_id = get_user_id(current_user.login)
+  def post_blog(user, post_title, post_content)
+    user_id = get_user_id(user.login)
 
     # render the content template
     content = _create_blog_post_xml(post_title, post_content, user_id)

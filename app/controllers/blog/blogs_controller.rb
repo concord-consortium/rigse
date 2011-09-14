@@ -11,7 +11,7 @@ class Blog::BlogsController < ApplicationController
     begin
       wp = Wordpress.new(blog_url)
 
-      result = wp.post_blog(post_title, post_content)
+      result = wp.post_blog(current_user, post_title, post_content)
 
       render :text => "OK!\n#{result}"
     rescue => e
