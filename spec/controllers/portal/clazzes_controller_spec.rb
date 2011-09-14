@@ -643,4 +643,20 @@ describe Portal::ClazzesController do
       Portal::Clazz.find(@mock_clazz.id).name.should == 'New Test Class'
     end
   end
+  
+  describe "POST add_offering" do
+    it "should run without error" do
+      setup_for_repeated_tests
+      page = Factory.create(:page)
+      post_params = {
+        :runnable_id => page.id, 
+        :runnable_type => "page", 
+        :dragged_dom_id => "page_#{page.id}", 
+        :dropped_dom_id => "clazz_offerings",
+        :id => @mock_clazz.id
+      }
+      
+      post :add_offering, post_params
+    end
+  end
 end

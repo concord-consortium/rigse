@@ -264,4 +264,8 @@ class Page < ActiveRecord::Base
     end
     return @reportable_elements
   end
+  
+  def print_listing
+    []
+  end
 end
