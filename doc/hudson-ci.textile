@@ -157,7 +157,8 @@ There are no rpm packages for centos available for FF6, so "download the binary 
 * symlink the startup script
 * uninstall the rpm version of firefox 3
 
-pre.. 
+
+<pre><code>
   wget http://3347-mozilla.voxcdn.com/pub/mozilla.org/firefox/releases/6.0.2/linux-i686/en-US/firefox-6.0.2.tar.bz2bzip2 -d ./firefox-6.0.2.tar.bz2
   tar -xvf ./firefox-6.0.2.tar
   sudo mv ./firefox /usr/local/lib/firefox-6.0.2
@@ -166,5 +167,60 @@ pre..
   /usr/local/bin/firefox
   sudo yum erase 'firefox'
   sudo ln -s /usr/local/bin/firefox /usr/bin/firefox
+</code></pre>
 
 
+h4. Configuring mutliple firefoxes for selenium tests:
+
+h5. MutliFirefoxes 1: profiles
+The key here is to create Firefox profiles following the "example here":http://odyniec.net/blog/2010/02/running-multiple-versions-of-firefox-in-ubuntu-9-10/
+
+You will have to create these profiles as the maven user, which might be tricky.
+
+<pre><code>
+  firefox -no-remote -CreateProfile ff3
+  firefox6 -no-remote -CreatePrfile ff6
+</code></pre>
+
+This will results in @~maven/.mozilla/firefox/profiles.ini@ looking  like this:
+
+<pre><code>
+  [General]
+  StartWithLastProfile=1
+
+  [Profile0]
+  Name=ff3
+  IsRelative=1
+  Path=bjvuhvyg.ff3
+
+  [Profile1]
+  Name=ff6
+  IsRelative=1
+  Path=zo26n413.ff6
+</code></pre>
+
+h5. MultiFirefoxes 2: capybara.rb and Hudson configs
+
+You will have to export @SELENIUM_CONFIG=ff6@ in the hudson configuration
+
+contents of @/home/maven/.capybara.rb@:
+
+<pre><code>
+case ENV['SELENIUM_CONFIG']
+when 'saucelabs-ie'
+    Capybara.server_port = ENV['RAILS_PORT'].to_i
+    Capybara.app_host = "http://app#{Capybara.server_port}.test.dev.concord.org"
+    selenium_remote :url => "http://ccdev:aebecf9c-b426-44f8-9726-6eb747a7340e@ondemand.saucelabs.com:80/wd/hub",
+      :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.internet_explorer(:platform => "WINDOWS")
+when 'ff6'
+  puts "----- using Firefox 6 profile ---- "
+  Selenium::WebDriver::Firefox.path= '/usr/local/bin/firefox6'
+  Capybara.register_driver :selenium do |app|
+    Capybara::Selenium::Driver.new(app, :profile => 'ff6')
+  end
+ 
+else
+    # by default don't customize anything, this ought to keep the current capybara tests running as before
+  #
+end
+</code></pre>
