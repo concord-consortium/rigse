@@ -88,5 +88,5 @@
             = field_set_tag 'Project Description' do
               %p= admin_project.description
             = field_set_tag 'Home Page Content' do
-              %p= admin_project.home_page_content
+              %p= admin_project.home_page_content.html_safe
             = render :partial => 'custom_css', :locals => { :admin_project => admin_project }
