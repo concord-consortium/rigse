@@ -148,7 +148,7 @@ describe Portal::ClazzesController do
     it "should not allow me to modify the requested class's school" do
       xml_http_request :post, :edit, :id => @mock_clazz.id
 
-      without_tag("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]")
+      assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]", false)
     end
 
     describe "conditions for a user trying to remove a teacher from a class" do
@@ -246,8 +246,13 @@ describe Portal::ClazzesController do
       end
     end
 
-    it "populates the list of available teachers for ADD functionality if current user is authorized" do
-      [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
+      if user == :unauthorized_teacher_user
+        does_this = "does not populate the list of available teachers for ADD functionality if current user is unauthorized"
+      else
+        does_this = "populates the list of available teachers for ADD functionality if current user is a #{user}"
+      end
+      it does_this do
         setup_for_repeated_tests
         stub_current_user user
 
@@ -259,14 +264,15 @@ describe Portal::ClazzesController do
         xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
         if user == :unauthorized_teacher_user
-          # Unauthorized users should not see the "add teacher" dropdown
-          without_tag("select#teacher_id_selector[name=teacher_id]")
+          assert_select("select#teacher_id_selector[name=teacher_id]", false, 
+            "Unauthorized users should not see the 'add teacher' dropdown")
         else
           assert_select("select#teacher_id_selector[name=teacher_id]") do |elem|
-            without_tag("option[value=?]", @authorized_teacher.id) # cannot add teachers who are already assigned to this class
+            assert_select("option[value=#{@authorized_teacher.id}]", false,
+              "cannot add teachers who are already assigned to this class")
 
             @mock_clazz.school.portal_teachers.reject { |t| t.id == @authorized_teacher.id }.each do |t|
-              assert_select("option[value=?]", t.id)
+              assert_select("option[value='#{t.id}']")
             end
           end
         end
@@ -362,7 +368,7 @@ describe Portal::ClazzesController do
 
       assert_select("tr#portal__teacher_#{@unauthorized_teacher.id}")
       assert_select("tr#portal__teacher_#{@random_teacher.id}")
-      without_tag("tr#portal__teacher_#{@authorized_teacher.id}")
+      assert_select("tr#portal__teacher_#{@authorized_teacher.id}", false)
     end
 
     it "will redirect the user to their home page if they remove themselves from a class" do
