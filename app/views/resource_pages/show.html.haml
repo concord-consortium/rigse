@@ -1,15 +1,15 @@
 %h1= @resource_page.name
 
 #description
-	= @resource_page.description.html_safe unless @resource_page.description.nil?
+  = @resource_page.description.html_safe unless @resource_page.description.nil?
 
 #content
-	= @resource_page.content.html_safe unless @resource_page.content.nil?
+  = @resource_page.content.html_safe unless @resource_page.content.nil?
 
 - if @resource_page.has_attached_files?
-	%h2 Attachments
-	#attachments
-		= render :partial => @resource_page.attached_files
-			
+  %h2 Attachments
+  #attachments
+    = render :partial => @resource_page.attached_files
+      
 - if logged_in? && @resource_page.changeable?(current_user)
-	%p= link_to 'Edit this page', edit_resource_page_path(@resource_page)
+  %p= link_to 'Edit this page', edit_resource_page_path(@resource_page)
