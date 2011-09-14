@@ -36,7 +36,7 @@ class Portal::School < ActiveRecord::Base
   #
   
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
-  has_many :portal_teachers, :through => :members, :source => "teacher"
+  has_many :portal_teachers, :through => :members, :source => 'member', :source_type => "Portal::Teacher"
   alias :teachers :portal_teachers
   scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
   scope :virtual, { :conditions => 'nces_school_id is NULL' }  

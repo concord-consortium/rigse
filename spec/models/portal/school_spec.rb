@@ -45,7 +45,36 @@ describe Portal::School do
     school.reload
     school.members.size.should eql(1)
   end
-  
+
+  describe "#portal_teachers" do
+    it "should be writable" do
+      school = Factory(:portal_school)
+      school.members.should be_empty
+      teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"))
+
+      school.portal_teachers << teacher
+
+      school.members.size.should == 1
+      school.portal_teachers.size.should == 1
+      school.reload
+      school.members.size.should == 1
+      school.portal_teachers.size.should == 1
+    end
+
+    it "should only return teachers" do
+      school = Factory(:portal_school)
+      school.members.should be_empty
+      teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [school])
+
+      # we actually don't add students to schools anymore but in case we start doing it again
+      student = Factory.create(:portal_student)
+      Portal::SchoolMembership.create(:school => school, :member => student)
+
+      school.reload
+      school.members.size.should == 2
+      school.portal_teachers.size.should == 1
+    end
+  end
   
   describe "ways to find schools" do
     before(:each) do
