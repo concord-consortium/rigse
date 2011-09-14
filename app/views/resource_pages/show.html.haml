@@ -1,10 +1,10 @@
 %h1= @resource_page.name
 
 #description
-	= @resource_page.description
+	= @resource_page.description.html_safe unless @resource_page.description.nil?
 
 #content
-	= @resource_page.content.html_safe
+	= @resource_page.content.html_safe unless @resource_page.content.nil?
 
 - if @resource_page.has_attached_files?
 	%h2 Attachments
