@@ -82,6 +82,7 @@ h5. Running Cucumber and RSpec tests
 rm -f rerun.txt
 RAILS_ENV=cucumber rake hudson:cucumber --trace
 
+
 #
 # The rake task is not generating both junit and html output
 # so run the spec tests manually.
@@ -133,3 +134,37 @@ Additional test report features: @Publish test attachments@
 |hudson/reports/specs|report.html|RSpec Report|true|
 
 Copy files back to the master: @hudson/reports/**@
+
+h5. Setting up firefox for headless selenium testing
+
+* Hudson is on otto.concord.org
+* It uses firefox for selenium testing.
+* It uses a headless server called "Xvfb":http://en.wikipedia.org/wiki/Xvfb
+
+In order to update the version of firefox on otto, I had to forward X11 packets through ssh.
+This wasn't very hard. You can use xclock to ensure that X11 is forwarding OK.
+ 
+For me it was as easy as @ssh -X otto.concord.org@
+When you are logged into otto, type @echo $DISPLAY@ and you should see @localhost:10.0@ or something very similar.
+
+Running @clock &@ on otto should start X11 on your mac, and display a clock.
+
+Then you can test firefox out by running @firefox@ from otto.
+
+There are no rpm packages for centos available for FF6, so "download the binary distro":http://3347-mozilla.voxcdn.com/pub/mozilla.org/firefox/releases/6.0.2/linux-i686/en-US/firefox-6.0.2.tar.bz2
+
+* unpacked it into @/usr/local/lib/firefox-6.0.2/@
+* symlink the startup script
+* uninstall the rpm version of firefox 3
+
+pre.. 
+  wget http://3347-mozilla.voxcdn.com/pub/mozilla.org/firefox/releases/6.0.2/linux-i686/en-US/firefox-6.0.2.tar.bz2bzip2 -d ./firefox-6.0.2.tar.bz2
+  tar -xvf ./firefox-6.0.2.tar
+  sudo mv ./firefox /usr/local/lib/firefox-6.0.2
+  sudo cp /usr/local/lib/firefox-6.0.2/firefox /usr/local/bin/firefox
+  #check that it works
+  /usr/local/bin/firefox
+  sudo yum erase 'firefox'
+  sudo ln -s /usr/local/bin/firefox /usr/bin/firefox
+
+
