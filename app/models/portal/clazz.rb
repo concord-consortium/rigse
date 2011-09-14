@@ -37,6 +37,12 @@ class Portal::Clazz < ActiveRecord::Base
   def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
   end
+  
+  def before_create
+    teacher = Portal::Teacher.find_by_id(self.teacher_id)
+    wp = Wordpress.new('http://geniverse.dev.concord.org/journal/') #FIXME
+    result = wp.create_class_blog(self.class_word, teacher.user, self.name)
+  end
 
   self.extend SearchableModel
 

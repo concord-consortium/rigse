@@ -1,7 +1,11 @@
 require 'builder'
 require 'net/http'
+require 'uri'
 
 class Wordpress
+  RPC_ADMIN = "rpc-admin"
+  RPC_ADMIN_PASS = "password"
+  
   def initialize(blog_url)
     @uri = URI.parse(blog_url)
   end
@@ -23,6 +27,15 @@ class Wordpress
     content = _create_blog_post_xml(post_title, post_content, user_id)
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
+    result = _post(content)
+
+    return result
+  end
+  
+  def create_class_blog(class_word, teacher, class_name)
+    # render the content template
+    content = _create_create_class_blog_xml(class_word, teacher, class_name)
+    debugger
     result = _post(content)
 
     return result
@@ -56,10 +69,18 @@ class Wordpress
     }
     return _create_xml("wp_insert_post", data)
   end
-
+  
+  def _create_create_class_blog_xml(class_word, teacher, class_name)
+    data = {
+      "domain" => @uri.host,
+      "path" => "/" + class_word,
+      "title" => "#{teacher.first_name} #{teacher.last_name}'s #{class_name} Class"
+    }
+    return _create_xml("create_empty_blog", data)
+  end
 
   # data can either be a hash or a single value
-  def _create_xml(method_name, data, admin_username = "rpc-admin", admin_password = "password")
+  def _create_xml(method_name, data, admin_username = RPC_ADMIN, admin_password = RPC_ADMIN_PASS)
     output = ""
     xml = Builder::XmlMarkup.new(:target => output, :indent => 1)
     xml.instruct!
