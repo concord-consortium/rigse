@@ -17,7 +17,11 @@ describe InvestigationsController do
   it "should handle the show method without error" do
     get :show, :id => @investigation.id
   end
-
+  
+  it "should handle the duplicate metod without error" do
+    get :duplicate, :id => @investigation.id
+  end
+  
   describe "Researcher Reports" do
     before(:each) do
       controller.should_receive(:send_data) { | data, options | 

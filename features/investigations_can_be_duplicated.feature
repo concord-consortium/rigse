@@ -24,7 +24,7 @@ Feature: Investigations can be duplicated
     Then the investigation "copy of Newest" should have been created
     And the investigation "copy of Newest" should have an offerings count of 0
 
-  @javascript @wip
+  @javascript
   Scenario: Authors can duplicate an investigations
     Given I login with username: author password: author
     And I am on the investigations page for "Newest"
