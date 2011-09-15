@@ -1,2 +1,2 @@
-- remote_form_for(biologica_organism, :update => dom_id_for(biologica_organism, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(biologica_organism, :update => dom_id_for(biologica_organism, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => "form", :locals => { :biologica_organism=> biologica_organism, :f => f  }

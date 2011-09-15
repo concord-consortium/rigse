@@ -1,4 +1,4 @@
-- remote_form_for(open_response, :update => dom_id_for(open_response, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(open_response, :update => dom_id_for(open_response, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = edit_menu_for(open_response, f)
   .content
     / = field_set_tag 'Name' do

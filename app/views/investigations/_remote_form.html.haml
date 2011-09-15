@@ -1,4 +1,4 @@
-- remote_form_for(investigation, :update => dom_id_for(investigation, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(investigation, :update => dom_id_for(investigation, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => 'investigations/form', :locals => {:investigation=>investigation,:f => f, :selected_gse => selected_gse, :related_gses => @related_gses}
 
 = field_set_tag 'Current GSE' do

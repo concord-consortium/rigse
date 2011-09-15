@@ -1,4 +1,4 @@
-- remote_form_for(multiple_choice, :update => dom_id_for(multiple_choice, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(multiple_choice, :update => dom_id_for(multiple_choice, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = edit_menu_for(multiple_choice, f)
   .content
     / = field_set_tag 'name' do

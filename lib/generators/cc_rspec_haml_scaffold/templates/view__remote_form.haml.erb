@@ -1,2 +1,2 @@
-- remote_form_for(<%= local_singular_name %>, :update => dom_id_for(<%= local_singular_name %>)) do |f|
+= remote_form_for(<%= local_singular_name %>, :update => dom_id_for(<%= local_singular_name %>)) do |f|
   = render :partial => "form", :locals => { :<%= local_singular_name %> => <%= local_singular_name %>, :f => f  }

@@ -1,4 +1,4 @@
-- remote_form_for(drawing_tool, :update => dom_id_for(drawing_tool, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(drawing_tool, :update => dom_id_for(drawing_tool, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = edit_menu_for(drawing_tool, f)
   .content
     / = field_set_tag 'name' do

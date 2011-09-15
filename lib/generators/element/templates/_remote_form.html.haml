@@ -1,2 +1,2 @@
-- remote_form_for(<%= singular_name %>, :update => dom_id_for(<%= singular_name %>, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(<%= singular_name %>, :update => dom_id_for(<%= singular_name %>, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => "embeddable/<%= plural_name %>/form", :locals => { :<%= singular_name %> => <%= singular_name %>, :f => f  }
