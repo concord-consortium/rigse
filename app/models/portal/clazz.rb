@@ -40,7 +40,7 @@ class Portal::Clazz < ActiveRecord::Base
   
   def before_create
     teacher = Portal::Teacher.find_by_id(self.teacher_id)
-    wp = Wordpress.new('http://geniverse.dev.concord.org/journal/') #FIXME
+    wp = Wordpress.new('http://geniverse.dev.concord.org/journal/xmlrpc.php') #FIXME
     result = wp.create_class_blog(self.class_word, teacher.user, self.name)
   end
 
