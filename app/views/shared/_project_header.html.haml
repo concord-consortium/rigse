@@ -13,7 +13,8 @@
       %li.last= link_to 'Switch', switch_user_path(current_user)
 
       = render :partial => 'shared/activity_trail'
-
+-# the following div fixes a layout bug which hid the #userlinks div in IE7
+%div
 #lead.project-header
   %h1{:class => current_theme}
     %a{ :href => "/" }= "#{current_project.name}"
