@@ -15,7 +15,7 @@ describe Admin::ProjectsController do
 
   describe "GET index" do
     it "assigns all admin_projects as @admin_projects" do
-      Admin::Project.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_project])
+      Admin::Project.should_receive(:search).with(nil, nil, nil).and_return([mock_project])
       get :index
       assigns[:admin_projects].should == [mock_project]
     end
