@@ -123,3 +123,7 @@ end
 Then /^(?:|I )should wait ([0-9]+) seconds/ do |seconds|
   sleep(seconds.to_i)
 end
+
+Given /^PENDING/ do
+  pending
+end

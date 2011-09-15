@@ -120,6 +120,7 @@ Feature: Investigations can be reported on
     And "student_a" should have 2 answers for "first investigation" in "Intro to Bugs"
 
   Scenario: Comprehensive report tests for two investigations and two students
+    Given PENDING: Need to update the data the result is compared against
     Given the following student answers:
        | student   | class            | investigation        | question_prompt | answer |
        | student_a | Intro to bugs    | first investigation  | a               | a      |
