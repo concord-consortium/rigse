@@ -3,12 +3,13 @@ require 'net/http'
 require 'uri'
 
 class Wordpress
-  RPC_ADMIN = "rpc-admin"
-  RPC_ADMIN_PASS = "password"
-  BLOG_OWNER_EMAIL = "sfentress@concord.org"
   
-  def initialize(blog_url)
-    @uri = URI.parse(blog_url)
+  def initialize()
+    project = Admin::Project.default_project
+    @url = project.word_press_url
+    @rpc_admin = project.rpc_admin_login
+    @rpc_email = project.rpc_admin_email
+    @rpc_password = project.rpc_admin_password
   end
 
   def get_user_id(user_name)
@@ -21,14 +22,14 @@ class Wordpress
     end
   end
 
-  def post_blog(user, post_title, post_content)
+  def post_blog(blog, user, post_title, post_content)
     user_id = get_user_id(user.login)
 
     # render the content template
     content = _create_blog_post_xml(post_title, post_content, user_id)
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
-    result = _post(content)
+    result = _post(content, blog)
 
     return result
   end
@@ -37,9 +38,10 @@ class Wordpress
     # render the content template
     content = _create_create_class_blog_xml(class_word, teacher, class_name)
     result = _post(content)
+    
     if result.body =~ /Site already exists/
       raise "Error creating class blog with id '#{class_word}': Site already exists"
-    elsif !(result.body  =~ /<int>([0-9]+?)<\/int>/)
+    elsif result.body  =~ /fault/ || !(result.body  =~ /<int>([0-9]+?)<\/int>/)
       raise "Error creating class blog"
     else
       return $1
@@ -66,13 +68,14 @@ class Wordpress
     return URI.escape(str, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
   end
 
-  def _post(content)
-    http = Net::HTTP.new(@uri.host, @uri.port)
-    if @uri.port == 443
+  def _post(content, blog = "")
+    uri = URI.parse(@url + blog + "/xmlrpc.php")
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.port == 443
       http.use_ssl = true
     end
     http.start() do |conn|
-      req = Net::HTTP::Post.new(@uri.path)
+      req = Net::HTTP::Post.new(uri.path)
       req.body = content
       response = conn.request(req)
       if response.code.to_i < 200 || (response.code.to_i >= 400)
@@ -94,17 +97,18 @@ class Wordpress
   end
   
   def _create_create_class_blog_xml(class_word, teacher, class_name)
+    uri = URI.parse(@url)
     data = {
-      "domain" => @uri.host,
-      "path" => "/journal/" + class_word,
+      "domain" => uri.host,
+      "path" => uri.path + class_word,
       "title" => "#{teacher.first_name} #{teacher.last_name}'s #{class_name.capitalize.to_s} Class",
-      "user_id" => BLOG_OWNER_EMAIL
+      "user_id" => @rpc_email
     }
     return _create_xml("ms.CreateBlog", false, data)
   end
 
   # data can either be a hash or a single value
-  def _create_xml(method_name, isExtApi, data, admin_username = RPC_ADMIN, admin_password = RPC_ADMIN_PASS)
+  def _create_xml(method_name, isExtApi, data)
     output = ""
     xml = Builder::XmlMarkup.new(:target => output, :indent => 1)
     xml.instruct!
@@ -113,12 +117,12 @@ class Wordpress
       xml.params {
         xml.param {
           xml.value {
-            xml.string admin_username
+            xml.string @rpc_admin
           }
         }
         xml.param {
           xml.value {
-            xml.string admin_password
+            xml.string @rpc_password
           }
         }
         if isExtApi

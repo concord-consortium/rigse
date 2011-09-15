@@ -4,14 +4,14 @@ require 'lib/wordpress'
 
 class Blog::BlogsController < ApplicationController
   def post_blog
-    blog_url = params[:blog_url]
+    blog_name = params[:blog_name] + "/"
     post_title = params[:post_title]
     post_content = params[:post_content]
 
     begin
-      wp = Wordpress.new(blog_url)
+      wp = Wordpress.new
 
-      result = wp.post_blog(current_user, post_title, post_content)
+      result = wp.post_blog(blog_name, current_user, post_title, post_content)
 
       render :text => "OK!\n#{result}"
     rescue => e
