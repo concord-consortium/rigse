@@ -17,6 +17,7 @@ class SessionsController < ApplicationController
   def destroy
     logout_killing_session!
     delete_cc_cookie
+    delete_blog_cookie
     flash[:notice] = "You have been logged out."
     redirect_back_or_default(root_path)
   end
@@ -55,6 +56,7 @@ class SessionsController < ApplicationController
     if user
       self.current_user = user
       save_cc_cookie
+      save_blog_cookie
       values = {:login => user.login, :first => user.first_name, :last => user.last_name}
       render :json => values
     else
@@ -95,6 +97,7 @@ class SessionsController < ApplicationController
     new_cookie_flag = (params[:remember_me] == "1")
     handle_remember_cookie! new_cookie_flag
     save_cc_cookie
+    save_blog_cookie
     flash[:notice] = "Logged in successfully"
     redirect_to(root_path) unless !check_student_security_questions_ok
   end
@@ -132,11 +135,44 @@ class SessionsController < ApplicationController
       cookies.delete CCCookieAuth.cookie_name.to_sym
     end
   end
-  
+
+  def delete_blog_cookie
+    #cookies.delete CCCookieAuth.cookie_name.to_sym
+    # cookies match: wordpress_* and wordpress_logged_in_*
+    cookies.each do |key, val|
+      if key.to_s =~ /^wordpress_/
+        if cookies.kind_of? ActionController::CookieJar
+          cookies.delete(key, {:domain => cookie_domain})
+        else
+          cookies.delete key
+        end
+      end
+    end
+  end
+
   def save_cc_cookie
     token = CCCookieAuth.make_auth_token(current_user.login, request.remote_ip)
     #cookies[CCCookieAuth.cookie_name.to_sym] = token
     cookies[CCCookieAuth.cookie_name.to_sym] = {:value => token, :domain => cookie_domain }
   end
 
+  def save_blog_cookie
+    begin
+      # log in to the blog
+      blog_url = "http://#{request.host}/journal"  # FIXME This should get pulled in from elsewhere
+      resp = Wordpress.new(blog_url + "/?_login=4838e49368").log_in_user(current_user.login, params[:password])
+
+      # capture the cookies set by the blog
+      # and set those cookies in our current domain
+      #   cookies match: wordpress_* and wordpress_logged_in_*
+      resp['Set-Cookie'].split(/[,;] |\n/).each do |token|
+        k,v = token.split("=")
+        if k.to_s =~ /^wordpress_/
+          cookies[k.to_sym] = {:value => v, :domain => cookie_domain }
+        end
+      end
+    rescue => e
+      # FIXME How do we handle a login failure?
+    end
+  end
 end

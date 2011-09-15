@@ -13,7 +13,7 @@ class Wordpress
   def get_user_id(user_name)
     xml = _create_xml("username_exists", user_name)
     result = _post(xml)
-    if result =~ /<string>([0-9]+?)<\/string>/
+    if result.body =~ /<string>([0-9]+?)<\/string>/
       return $1
     else
       raise "Couldn't find user's id number"
@@ -41,7 +41,25 @@ class Wordpress
     return result
   end
 
+  def log_in_user(user_login, password)
+    args = []
+    args << "log=#{_escape(user_login)}"
+    args << "pwd=#{_escape(password)}"
+    args << "wp-submit=#{_escape("Login »")}"
+    args << "sidebarlogin_posted=1"
+    args << "testcookie=1"
+
+    result = _post(args.join("&"))
+
+    return result
+  end
+
   private
+
+  require 'uri'
+  def _escape(str)
+    return URI.escape(str, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+  end
 
   def _post(content)
     http = Net::HTTP.new(@uri.host, @uri.port)
@@ -55,7 +73,7 @@ class Wordpress
       if response.code.to_i < 200 || (response.code.to_i >= 400)
         raise "Error creating blog post!"
       end
-      return response.body
+      return response
     end
   end
 
