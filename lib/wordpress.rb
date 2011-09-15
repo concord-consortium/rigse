@@ -36,10 +36,12 @@ class Wordpress
     # render the content template
     content = _create_create_class_blog_xml(class_word, teacher, class_name)
     result = _post(content)
-    if result =~ /fault/
-      raise "Error creating class blog with id: #{class_word}"
-    else  
-      return result
+    if result.body =~ /Site already exists/
+      raise "Error creating class blog with id '#{class_word}': Site already exists"
+    elsif !(result.body  =~ /<int>([0-9]+?)<\/int>/)
+      raise "Error creating class blog"
+    else
+      return $1
     end
   end
 
