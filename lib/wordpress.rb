@@ -5,6 +5,7 @@ require 'uri'
 class Wordpress
   RPC_ADMIN = "rpc-admin"
   RPC_ADMIN_PASS = "password"
+  BLOG_OWNER_EMAIL = "sfentress@concord.org"
   
   def initialize(blog_url)
     @uri = URI.parse(blog_url)
@@ -96,8 +97,8 @@ class Wordpress
     data = {
       "domain" => @uri.host,
       "path" => "/journal/" + class_word,
-      "title" => "#{teacher.first_name} #{teacher.last_name}'s #{class_name} Class",
-      "user_id" => "sfentress@concord.org"
+      "title" => "#{teacher.first_name} #{teacher.last_name}'s #{class_name.capitalize.to_s} Class",
+      "user_id" => BLOG_OWNER_EMAIL
     }
     return _create_xml("ms.CreateBlog", false, data)
   end
