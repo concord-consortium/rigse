@@ -159,8 +159,7 @@ class SessionsController < ApplicationController
   def save_blog_cookie
     begin
       # log in to the blog
-      blog_url = "http://#{request.host}/journal"  # FIXME This should get pulled in from elsewhere
-      resp = Wordpress.new(blog_url + "/?_login=4838e49368").log_in_user(current_user.login, params[:password])
+      resp = Wordpress.new.log_in_user(current_user.login, params[:password])
 
       # capture the cookies set by the blog
       # and set those cookies in our current domain

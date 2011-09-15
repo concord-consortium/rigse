@@ -56,7 +56,7 @@ class Wordpress
     args << "sidebarlogin_posted=1"
     args << "testcookie=1"
 
-    result = _post(args.join("&"))
+    result = _post(args.join("&"), "", "/?_login=4838e49368")
 
     return result
   end
@@ -68,8 +68,8 @@ class Wordpress
     return URI.escape(str, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
   end
 
-  def _post(content, blog = "")
-    uri = URI.parse(@url + blog + "/xmlrpc.php")
+  def _post(content, blog = "", action = "/xmlrpc.php")
+    uri = URI.parse(@url + blog + action)
     http = Net::HTTP.new(uri.host, uri.port)
     if uri.port == 443
       http.use_ssl = true
