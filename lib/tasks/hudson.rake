@@ -21,7 +21,7 @@ namespace :hudson do
       t.cucumber_opts = opts
     end
     Cucumber::Rake::Task.new({:cucumber_selenium_only  => task_dependencies}) do |t|
-         t.cucumber_opts = opts + " --tags @selenium --tags @javascript"
+         t.cucumber_opts = opts + " --tags @selenium,@javascript"
     end
     Cucumber::Rake::Task.new({:cucumber_except_selenium  => task_dependencies}) do |t|
          t.cucumber_opts = opts + " --tags ~@selenium --tags ~@javascript"
