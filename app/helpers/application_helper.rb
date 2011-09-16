@@ -1,7 +1,3 @@
-include OtmlHelper
-include JnlpHelper
-include Clipboard
-
 module ApplicationHelper
   def current_project
     @_project ||= Admin::Project.default_project

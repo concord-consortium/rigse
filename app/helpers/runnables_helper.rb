@@ -1,7 +1,3 @@
-include OtmlHelper
-include JnlpHelper
-include Clipboard
-
 module RunnablesHelper
   def title_text(component, verb, run_as)
     text = "#{verb.capitalize} the #{component.class.display_name}: '#{component.name}' as a #{run_as}."
