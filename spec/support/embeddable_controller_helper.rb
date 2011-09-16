@@ -68,7 +68,7 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'jnlp'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show.jnlp.builder")
+        response.should render_template("shared/_show")
         assert_select('jnlp') do
           assert_select('information')
           assert_select('security')
@@ -87,7 +87,7 @@ shared_examples_for 'an embeddable controller' do
         @model_class.stub!(:find).with("37").and_return(@model_ivar)
         get :show, :id => "37", :format => 'config'
         assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show.config.builder")
+        response.should render_template("shared/_show")
         assert_select('java') do
           assert_select('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
             assert_select('void[property=?]', 'properties') do
