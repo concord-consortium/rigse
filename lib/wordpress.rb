@@ -10,20 +10,11 @@ class Wordpress
     @rpc_admin = project.rpc_admin_login
     @rpc_email = project.rpc_admin_email
     @rpc_password = project.rpc_admin_password
-  end
-
-  def get_user_id(user_name)
-    xml = _create_xml("username_exists", user_name)
-    result = _post(xml)
-    if result.body =~ /<string>([0-9]+?)<\/string>/
-      return $1
-    else
-      raise "Couldn't find user's id number"
-    end
+    raise "Can't talk to wordpress: No WP settings" if !has_valid_wp_settings?
   end
 
   def post_blog(blog, user, post_title, post_content)
-    user_id = get_user_id(user.login)
+    user_id = _get_user_id(user.login)
 
     # render the content template
     content = _create_blog_post_xml(post_title, post_content, user_id)
@@ -60,10 +51,15 @@ class Wordpress
 
     return result
   end
+  
+  def has_valid_wp_settings?
+    return !(@url.nil? || @rpc_admin.nil? || @rpc_email.nil? || @rpc_password.nil?)
+  end
 
   private
 
   require 'uri'
+  
   def _escape(str)
     return URI.escape(str, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
   end
@@ -85,6 +81,15 @@ class Wordpress
     end
   end
 
+  def _get_user_id(user_name)
+    xml = _create_xml("username_exists", true, user_name)
+    result = _post(xml)
+    if result.body =~ /<string>([0-9]+?)<\/string>/
+      return $1
+    else
+      raise "Couldn't find user's id number"
+    end
+  end
 
   def _create_blog_post_xml(post_title, post_content, user_id)
     data = {

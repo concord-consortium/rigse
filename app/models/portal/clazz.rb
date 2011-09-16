@@ -42,8 +42,11 @@ class Portal::Clazz < ActiveRecord::Base
   def create_class_blog
     teacher = Portal::Teacher.find_by_id(self.teacher_id)
     if teacher
-      wp = Wordpress.new
-      result = wp.create_class_blog(self.class_word, teacher.user, self.name)
+      begin
+        wp = Wordpress.new
+        wp.create_class_blog(self.class_word, teacher.user, self.name)
+      rescue
+      end
     end
   end
 
