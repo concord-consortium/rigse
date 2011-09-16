@@ -89,7 +89,6 @@ end
 
 def find_bloblinks_in_spreadheet(spreadsheet,num)
   structure = YAML::dump(spreadsheet)
-  puts structure
   regexp = /@?"?url"?:\s*#{FAKE_BLOBS_URL}\/(\d+)\.blob/
   lines = structure.lines.select{ |l| l =~ regexp}
   if num

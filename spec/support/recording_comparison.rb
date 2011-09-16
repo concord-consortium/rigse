@@ -45,11 +45,9 @@ class RecordingComparison
     yaml_alias_regex  = /(\*|\&)(\w+)/
     returnv << string.gsub(yaml_alias_regex) do
       unless replacements[$2]
-        puts "no match"
         counter = counter + 1
         replacements[$2] = counter
       end
-      puts replacements
     end
     returnv
   end
