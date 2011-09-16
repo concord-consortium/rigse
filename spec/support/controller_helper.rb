@@ -1,5 +1,4 @@
 
-
 # In order to run the user specs the encrypted passwords
 # for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
 # need to be created with a REST_AUTH_SITE_KEY used for testing.
@@ -182,6 +181,10 @@ def generate_default_project_and_jnlps_with_mocks
   mock_anonymous_user
   mock_admin_user
   mock_researcher_user
+  
+  # we have to do this because we can't easily stub helper methods so instead we are stubbing one level lower
+  mock_jnlp_adapter = JnlpAdaptor.new(@mock_project)
+  JnlpAdaptor.stub(:new).and_return(mock_jnlp_adapter)
   @mock_project
 end
 
