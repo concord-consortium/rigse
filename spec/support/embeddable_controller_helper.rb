@@ -196,7 +196,7 @@ shared_examples_for 'an embeddable controller' do
           @model_class.stub!(:find).with("37").and_return(@model_ivar)
           get :edit, :id => "37", :format => 'jnlp'
           assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.jnlp.builder")
+          response.should render_template("shared/_edit")
           assert_select('jnlp') do
             assert_select('information')
             assert_select('security')
@@ -215,7 +215,7 @@ shared_examples_for 'an embeddable controller' do
           @model_class.stub!(:find).with("37").and_return(@model_ivar)
           get :edit, :id => "37", :format => 'config', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.config.builder")
+          response.should render_template("shared/_edit")
           assert_select('java') do
             assert_select('object') do
               assert_select('void') do
@@ -237,7 +237,7 @@ shared_examples_for 'an embeddable controller' do
           @model_class.stub!(:find).with("37").and_return(@model_ivar)
           get :edit, :id => "37", :format => 'dynamic_otml', :session => '6ee4ff32b48026db6f3758da9f090150'
           assigns[@model_ivar_name].should equal(@model_ivar)
-          response.should render_template("shared/_edit.dynamic_otml.builder")
+          response.should render_template("shared/_edit")
           assert_select('otrunk') do
             assert_select('imports')
             assert_select('objects') do
