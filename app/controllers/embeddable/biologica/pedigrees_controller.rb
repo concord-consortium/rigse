@@ -147,6 +147,6 @@ class Embeddable::Biologica::PedigreesController < ApplicationController
       value = value.split(",")
     end
     value = [value]
-    params[:embeddable_biologica_pedigree][:organism_ids]=value.flatten.map.compact
+    params[:embeddable_biologica_pedigree][:organism_ids]=value.flatten.compact
   end 
 end
