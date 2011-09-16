@@ -8,7 +8,7 @@ describe Dataservice::ConsoleContentsController do
 
   describe "GET index" do
     it "assigns all dataservice_console_contents as @dataservice_console_contents" do
-      Dataservice::ConsoleContent.should_receive(:find).with(:all, hash_including(will_paginate_params(:limit=>5))).and_return([mock_console_content])
+      Dataservice::ConsoleContent.should_receive(:search).with(nil, nil, nil).and_return([mock_console_content])
       login_admin
       get :index
       assigns[:dataservice_console_contents].should == [mock_console_content]

@@ -14,7 +14,7 @@ describe Dataservice::BundleLoggersController do
 
   describe "GET index" do
     it "assigns all dataservice_bundle_loggers as @dataservice_bundle_loggers" do
-      Dataservice::BundleLogger.should_receive(:find).with(:all, hash_including(will_paginate_params(:limit=>5))).and_return([mock_bundle_logger])
+      Dataservice::BundleLogger.should_receive(:search).with(nil, nil, nil).and_return([mock_bundle_logger])
       login_admin
       get :index
       assigns[:dataservice_bundle_loggers].should == [mock_bundle_logger]
