@@ -8,7 +8,7 @@ describe Admin::TagsController do
 
   describe "GET index" do
     it "assigns all admin_tags as @admin_tags" do
-      Admin::Tag.stub(:find).with(:all, {:offset=>0, :limit=>30, :include=>{}, :conditions=>["(admin_tags.scope like ? or admin_tags.tag like ?)", "%%", "%%"]}).and_return([mock_tags])
+      Admin::Tag.stub(:search).with(nil, nil, nil).and_return([mock_tags])
       get :index
       assigns[:admin_tags].should == [mock_tags]
     end
