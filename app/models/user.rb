@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'lib/wordpress'
 
 class User < ActiveRecord::Base
   NO_EMAIL_STRING='no-email-'
@@ -58,6 +59,10 @@ class User < ActiveRecord::Base
     self.email? && self.email.strip!
     self
   end
+
+  before_create  :create_blog_user
+  before_update  :update_blog_user
+  before_destroy :destroy_blog_user
 
   # Validations
 
@@ -286,6 +291,30 @@ class User < ActiveRecord::Base
 
   def updating_password?
     updating_password
+  end
+
+  def create_blog_user
+    begin
+      wp = Wordpress.new
+      wp.create_user(self)
+    rescue
+    end
+  end
+
+  def update_blog_user
+    begin
+      wp = Wordpress.new
+      wp.update_user(self)
+    rescue
+    end
+  end
+
+  def destroy_blog_user
+    begin
+      wp = Wordpress.new
+      wp.destroy_user(self)
+    rescue
+    end
   end
 
   protected

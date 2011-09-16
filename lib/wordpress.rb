@@ -1,9 +1,10 @@
 require 'builder'
 require 'net/http'
 require 'uri'
+require 'uuidtools'
 
 class Wordpress
-  
+
   def initialize()
     project = Admin::Project.default_project
     @url = project.word_press_url
@@ -24,12 +25,12 @@ class Wordpress
 
     return result
   end
-  
+
   def create_class_blog(class_word, teacher, class_name)
     # render the content template
     content = _create_create_class_blog_xml(class_word, teacher, class_name)
     result = _post(content)
-    
+
     if result.body =~ /Site already exists/
       raise "Error creating class blog with id '#{class_word}': Site already exists"
     elsif result.body  =~ /fault/ || !(result.body  =~ /<int>([0-9]+?)<\/int>/)
@@ -51,15 +52,32 @@ class Wordpress
 
     return result
   end
-  
+
+  def create_user(user)
+    content = _create_user_xml(user, false)
+    result = _post(content)
+    return result
+  end
+
+  def update_user(user)
+    content = _create_user_xml(user, true)
+    result = _post(content)
+    return result
+  end
+
+  def destroy_user(user)
+    # just set the user's password to gibberish
+    user.password = user.password_confirmation = UUIDTools::UUID.timestamp_create.hexdigest
+    update_user(user)
+  end
+
+
   def has_valid_wp_settings?
     return !(@url.nil? || @rpc_admin.nil? || @rpc_email.nil? || @rpc_password.nil?)
   end
 
   private
 
-  require 'uri'
-  
   def _escape(str)
     return URI.escape(str, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
   end
@@ -100,7 +118,7 @@ class Wordpress
     }
     return _create_xml("wp_insert_post", true, data)
   end
-  
+
   def _create_create_class_blog_xml(class_word, teacher, class_name)
     uri = URI.parse(@url)
     data = {
@@ -110,6 +128,24 @@ class Wordpress
       "user_id" => @rpc_email
     }
     return _create_xml("ms.CreateBlog", false, data)
+  end
+
+  def _create_user_xml(user, update = false)
+    data = {
+      "user_login" => user.login,
+      "first_name" => user.first_name,
+      "last_name" => user.last_name,
+      "user_email" => user.email
+    }
+
+    # if the password_confirmation exists, we'll assume the password is changing and set it in the data
+    data["user_pass"] = user.password_confirmation if user.password_confirmation
+    data["ID"] = _get_user_id(user.login) if update
+
+    # use wp_update_user so that we can pass in a plaintext password on updating.
+    # wp_insert_user only accepts plaintext passwords on creation.
+    method = update ? "wp_update_user" : "wp_insert_user"
+    return _create_xml(method, true, data)
   end
 
   # data can either be a hash or a single value
@@ -160,7 +196,7 @@ class Wordpress
     }
     return output
   end
-  
+
   def _create_key_value_xml_struct(output, data)
     xml = Builder::XmlMarkup.new(:target => output, :indent => 1)
     xml.struct {
