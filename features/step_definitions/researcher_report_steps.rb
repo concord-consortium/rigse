@@ -22,29 +22,6 @@ def learner_for(student_name,offering)
   learner   = offering.find_or_create_learner(student)
 end
 
-def filename_for_recorded(thing,name)
-  thing_name  = thing.class.name.underscore.gsub("::","__").gsub("/","__")
-  thing_name << name.gsub(/\s+/,"_")
-  thing_name << ".yml"
-  return Rails.root.join('features','recorded_objects',thing_name)
-end
-
-def record_data_for(thing,name)
-  filename = filename_for_recorded(thing,name)
-  if File.exists?(filename)
-    puts "Recording for #{ thing.class.name } : #{name} exists. delete #{filename} to force new recording"
-  else
-    File.open(filename, "w") do |out|
-      YAML.dump(thing, out)
-    end
-  end
-end
-
-def recorded_data_for(thing,name)
-  serialized = nil
-  File.open(filename_for_recorded(thing,name)) {|f| serialized = f.read}
-  serialized
-end
 
 def add_response(learner,prompt_text,answer_text)
   prompts = {}
@@ -112,7 +89,8 @@ end
 
 def find_bloblinks_in_spreadheet(spreadsheet,num)
   structure = YAML::dump(spreadsheet)
-  regexp = /"@url": #{FAKE_BLOBS_URL}\/(\d+)\.blob/
+  puts structure
+  regexp = /@?"?url"?:\s*#{FAKE_BLOBS_URL}\/(\d+)\.blob/
   lines = structure.lines.select{ |l| l =~ regexp}
   if num
     num = num.to_i
@@ -177,7 +155,8 @@ Given /^a recording of a report for "([^"]*)"$/ do |name|
   buffer = StringIO.new
   spreadsheet = Spreadsheet::Workbook.new
   modified_report_for(investigation).run_report(buffer,spreadsheet)
-  record_data_for(spreadsheet,name)
+  recorded_sheet = RecordingComparison.new(spreadsheet,name)
+  recorded_sheet.record_data
 end
 
 Then /^the report [^"]* "([^"]*)" should match recorded data$/ do |investigation_name|
@@ -185,8 +164,8 @@ Then /^the report [^"]* "([^"]*)" should match recorded data$/ do |investigation
   buffer = StringIO.new
   spreadsheet = Spreadsheet::Workbook.new
   modified_report_for(investigation).run_report(buffer,spreadsheet)
-  recorded_data = recorded_data_for(spreadsheet,investigation_name)
-  recorded_data.should == YAML::dump(spreadsheet)
+  compared_sheet = RecordingComparison.new(spreadsheet,investigation_name)
+  compared_sheet.should_match_recorded
 end
 
 Then /^the report generated for "([^"]*)" should have \((\d+)\) links to blobs$/ do |investigation_name, num_blobs|
