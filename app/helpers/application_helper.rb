@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Clipboard
+  
   def current_project
     @_project ||= Admin::Project.default_project
   end
