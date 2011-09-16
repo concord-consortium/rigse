@@ -286,8 +286,6 @@ module OtmlHelper
   end
 
   def ot_interface_manager(use_current_user = false)
-    old_format = @template_format
-    @template_format = :otml
     # Now that we're using the HttpCookieService, current_user.vendor_interface 
     # should be correct, even when requesting from the java client
     vendor_interface = nil
@@ -300,8 +298,10 @@ module OtmlHelper
     else
       vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
-    result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
-    @template_format = old_format
+    # note the .otml on the end of the name, this makes this work even when the current 'format' is dynamic_otml
+    # this approach only works will single levels of format changes, for nested partials look at:
+    # http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
+    result = render :partial => "otml/ot_interface_manager.otml", :locals => { :vendor_interface => vendor_interface }
     return result
   end
 
