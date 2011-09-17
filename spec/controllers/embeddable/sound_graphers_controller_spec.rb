@@ -9,12 +9,11 @@ describe Embeddable::SoundGraphersController do
   end
 
   describe "render appropriate otml for a soundgraph" do
-    before(:all) do
-      generate_default_project_and_jnlps_with_mocks
-      generate_portal_resources_with_mocks
-    end
+    render_views 
     
     before(:each) do
+      generate_default_project_and_jnlps_with_mocks
+      generate_portal_resources_with_mocks
       @display_mode = Embeddable::SoundGrapher.valid_display_modes.first
       @max_frequency = Embeddable::SoundGrapher.valid_max_frequencies.first
       @max_sample_time = Embeddable::SoundGrapher.valid_max_sample_times.first
@@ -39,7 +38,8 @@ describe Embeddable::SoundGraphersController do
     # :maxSampleTime => sound_grapher.max_sample_time 
     it "renders the otml view" do
       get :show, :id => "37", :format => 'otml'
-      response.should have_selector("OTSoundGrapherModel[displayMode='#{@display_mode}'][maxFrequency='#{@max_frequency}'][maxSampleTime='#{@max_sample_time}']")
+      response.should render_template(:show)
+      assert_select("OTSoundGrapherModel[displayMode='#{@display_mode}'][maxFrequency='#{@max_frequency}'][maxSampleTime='#{@max_sample_time}']")
     end
   end
 end
