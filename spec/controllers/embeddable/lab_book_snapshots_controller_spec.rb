@@ -3,11 +3,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Embeddable::LabBookSnapshotsController do
   render_views
   it_should_behave_like 'an embeddable controller'
-  before(:all) do
+  before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
-  end
-  before(:each) do
     login_admin
     @mock_model = mock_model(Embeddable::LabBookSnapshot,
                             :target_element => nil,
@@ -30,12 +28,12 @@ describe Embeddable::LabBookSnapshotsController do
     it "the LabbookBundle should not scale drawTools" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector('OTLabbookBundle', :with => {:scaleDrawTools => 'false'})
+        assert_select('OTLabbookBundle[scaleDrawTools=false]')
     end
     it "the OTLabbookButton should useBitmaps" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector('OTLabbookButton', :with => {:useBitmap => 'true'})
+        assert_select('OTLabbookButton[useBitmap=true]')
     end
   end
 
@@ -46,13 +44,13 @@ describe Embeddable::LabBookSnapshotsController do
     it "the LabbookBundle should not scale drawTools" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector('OTLabbookBundle', :with => {:scaleDrawTools => 'true'})
+        assert_select('OTLabbookBundle[scaleDrawTools=true]')
     end
     it "the OTLabbookButton should useBitmaps" do
         Embeddable::LabBookSnapshot.should_receive(:find).with("37").and_return(@mock_model)
         get :show, :id => "37", :format => 'otml'
         response.should render_template(:show)
-        response.should have_selector('OTLabbookButton', :with => {:useBitmap => 'false'})
+        assert_select('OTLabbookButton[useBitmap=false]')
     end
   end
 
