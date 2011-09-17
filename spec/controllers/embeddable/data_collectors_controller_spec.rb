@@ -24,11 +24,9 @@ describe Embeddable::DataCollectorsController do
   end
 
   describe "the data store for a prediction graph" do
-    before(:all) do
+    before(:each) do
       generate_default_project_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-    end
-    before(:each) do
       @mock_table = mock_model(Embeddable::DataTable,
         :is_numeric? => true,
         :precision => 2,
@@ -45,7 +43,7 @@ describe Embeddable::DataCollectorsController do
       it "should get its data from the data_tables dataStore" do
         Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector('dataStore') do
+        assert_select('dataStore') do
           assert_select("object[refid*=?]", /data_store_data_table/)
         end
       end
@@ -58,7 +56,7 @@ describe Embeddable::DataCollectorsController do
       it "should get its data from the data_tables dataStore" do
         Embeddable::DataCollector.should_receive(:find).with("37").and_return(@graph)
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector('dataStore') do
+        assert_select('dataStore') do
           # <OTDataStore local_id='data_store_data_collector_3046' numberChannels='2'>
           assert_select("OTDataStore[local_id*=?]", /data_store_data_collector_/ )
         end
@@ -67,11 +65,9 @@ describe Embeddable::DataCollectorsController do
   end
 
   describe "digital display only" do
-    before(:all) do
+    before(:each) do
       generate_default_project_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
-    end
-    before(:each) do
       @font_size = 23
       @graph = Embeddable::DataCollector.create(
         :is_digital_display => true,
@@ -81,7 +77,7 @@ describe Embeddable::DataCollectorsController do
     describe "the generated otml" do
       it "should include OTDigitalDisplay tag" do
         get :show, :id => "37", :format => 'otml'
-        response.should have_selector("OTDigitalDisplay[fontSize='#{@font_size}']")
+        assert_select("OTDigitalDisplay[fontSize='#{@font_size}']")
       end
     end
   end
