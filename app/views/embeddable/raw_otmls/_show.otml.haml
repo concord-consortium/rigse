@@ -7,4 +7,4 @@
 - @otrunk_edit_view_entries ||= []
 - @otrunk_edit_view_entries = @otrunk_edit_view_entries + raw_otml.otrunk_edit_view_entries
 
-= raw_otml.otml_content
+= raw_otml.otml_content.html_safe unless raw_otml.otml_content.nil?

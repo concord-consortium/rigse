@@ -6,6 +6,6 @@
     %OTSystem{:local_id => 'system'}
       =ot_bundles(:title => h(@raw_otml.name), :authoring => @authoring)
       %root
-        = @raw_otml.otml_content
+        = @raw_otml.otml_content.html_safe unless @raw_otml.otml_content.nil?
       %library
         =yield :layout
