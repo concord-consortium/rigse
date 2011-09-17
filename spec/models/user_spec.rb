@@ -47,7 +47,7 @@ describe User do
       it "'#{login_str}'" do
         lambda do
           u = create_user(:login => login_str)
-          u.errors[:login].should     be_nil
+          u.errors[:login].should == []
         end.should change(User, :count).by(1)
       end
     end
@@ -96,7 +96,7 @@ describe User do
       it "'#{email_str}'" do
         lambda do
           u = create_user(:email => email_str)
-          u.errors[:email].should     be_nil
+          u.errors[:email].should == []
         end.should change(User, :count).by(1)
       end
     end
@@ -128,7 +128,7 @@ describe User do
       it "'#{name_str}'" do
         lambda do
           u = create_user(:first_name => name_str)
-          u.errors[:first_name].should     be_nil
+          u.errors[:first_name].should == []
         end.should change(User, :count).by(1)
       end
     end
