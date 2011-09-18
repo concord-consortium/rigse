@@ -74,7 +74,8 @@ shared_examples_for 'an embeddable controller' do
           assert_select('security')
           assert_select('resources')
           assert_select('application-desc') do
-            assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id]))
+            assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, 
+                Rails.application.config.session_options[:key] => @session_options[:id]))
           end
         end
       end
@@ -202,7 +203,8 @@ shared_examples_for 'an embeddable controller' do
             assert_select('security')
             assert_select('resources')
             assert_select('application-desc') do
-              assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, @session_options[:key] => @session_options[:id], :action => 'edit'))
+              assert_select('argument', controller.polymorphic_url(@model_ivar, :format => :config, :teacher_mode => false, 
+                Rails.application.config.session_options[:key] => @session_options[:id], :action => 'edit'))
             end
           end
         end

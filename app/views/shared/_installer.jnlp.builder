@@ -15,7 +15,7 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://jnlp.concord.org/dev3") {
   jnlp_mac_java_config(xml)
 
   opportunistic_installer = current_project.opportunistic_installer?
-  url_options = {session_options[:key] => session_options[:id]}
+  url_options = {Rails.application.config.session_options[:key] => session_options[:id]}
   if(local_assigns[:learner])
     url_target = learner
   else
