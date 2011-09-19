@@ -225,13 +225,13 @@ class Wordpress
               xml.array {
                 xml.data {
                   data.each do |param|
-                    xml.value {
-                      if param.is_a? Hash
-                        _create_key_value_xml_struct(output, param)
-                      else
-                        _create_value_xml_struct(output, param)
-                      end
-                    }
+                    if param.is_a? Hash
+                      xml.value {
+                          _create_key_value_xml_struct(output, param)
+                      }
+                    else
+                      _create_value_xml_struct(output, param)
+                    end
                   end
                 }
               }
