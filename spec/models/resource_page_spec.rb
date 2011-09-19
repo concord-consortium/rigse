@@ -86,12 +86,11 @@ describe ResourcePage do
     # To push this search feature further we actually need the kind of 
     # resources setup in the teacher_cohort_external_activity_filtering.feature.
     it "should be searchable with many terms by an admin" do
+      Portal::Clazz.stub!(:find).and_return(Factory.build :portal_clazz)
       params = {
         :name => "abc",
         :user => @admin_user,
         :portal_clazz_id => 1, 
-        :domain_id => 1, 
-        :grade_span => 1,
         :hide_print => true,
         :hide_drafts_checkbox => true
       }
