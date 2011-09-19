@@ -71,6 +71,17 @@ class Wordpress
     update_user(user)
   end
 
+  def add_user_to_clazz(user, clazz)
+    content = _create_add_user_to_blog_xml(user, clazz)
+    result = _post(content)
+    return result
+  end
+
+  def remove_user_from_clazz(user, clazz)
+    content = _create_remove_user_from_blog_xml(user, clazz)
+    result = _post(content)
+    return result
+  end
 
   def has_valid_wp_settings?
     return !(@url.nil? || @rpc_admin.nil? || @rpc_email.nil? || @rpc_password.nil?)
@@ -107,6 +118,39 @@ class Wordpress
     else
       raise "Couldn't find user's id number"
     end
+  end
+
+  def _get_blog_id(domain, path)
+    xml = _create_xml("get_blog_id", true, [domain, path])
+    result = _post(xml)
+    if result.body =~ /<string>([0-9]+?)<\/string>/
+      return $1
+    else
+      raise "Couldn't find blog's id number"
+    end
+  end
+
+  def _create_remove_user_from_blog_xml(user, clazz)
+    uri = URI.parse(@url)
+    domain = uri.host
+    path = uri.path + clazz.class_word
+
+    blog_id = _get_blog_id(domain, path)
+    user_id = _get_user_id(user.login)
+
+    return _create_xml("remove_user_from_blog", true, [user_id, blog_id])
+  end
+
+  def _create_add_user_to_blog_xml(user, clazz)
+    uri = URI.parse(@url)
+    domain = uri.host
+    path = uri.path + clazz.class_word
+
+    blog_id = _get_blog_id(domain, path)
+    user_id = _get_user_id(user.login)
+
+    role = "author"
+    return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end
 
   def _create_blog_post_xml(post_title, post_content, user_id)

@@ -14,4 +14,23 @@ class Portal::StudentClazz < ActiveRecord::Base
   #   self.id = sc.id
   # end
 
+  # also link/unlink the student to/from the class's wordpress blog
+  after_create :add_to_blog
+  before_destroy :remove_from_blog
+
+  def add_to_blog
+    begin
+      wp = Wordpress.new
+      wp.add_user_to_clazz(self.student, self.clazz)
+    rescue
+    end
+  end
+
+  def remove_from_blog
+    begin
+      wp = Wordpress.new
+      wp.remove_user_from_clazz(self.student, self.clazz)
+    rescue
+    end
+  end
 end

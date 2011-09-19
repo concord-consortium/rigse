@@ -17,15 +17,25 @@ describe Wordpress do
     @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
     @normal_user = Factory.create(:user, :login => "normal_user", :first_name => "normal", :last_name => "user")
     @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [@mock_school])
-    
+    @portal_student = Factory.create(:portal_student, :user => Factory.create(:user, :login => "portal_student"))
+
+    course = Factory(:portal_course)
+    @clazz = Factory(:portal_clazz, {
+      :section => "section",
+      :start_time => DateTime.parse('2011-09-19'),
+      :course => course
+    })
+
     @http_mock = mock(Net::HTTP)
     @http_post_mock_1 = mock(Net::HTTP::Post)
     @http_post_mock_2 = mock(Net::HTTP::Post)
+    @http_post_mock_3 = mock(Net::HTTP::Post)
 
     @user_id_response = mock(Net::HTTPOK, :code => 200, :body => "<string>200</string>")
     @user_id_error_response = mock(Net::HTTPOK, :code => 200, :body => "<string></string>")
     @content_post_response = mock(Net::HTTPOK, :code => 200, :body => "<string>384</string>")
     @blog_post_response = mock(Net::HTTPOK, :code => 200, :body => "<int>600</int>")
+    @blog_id_response = mock(Net::HTTPOK, :code => 200, :body => "<string>213</string>")
 
     @wp = Wordpress.new
   end
@@ -323,5 +333,106 @@ describe Wordpress do
     @http_mock.should_receive(:request).twice.and_return(@user_id_response, @content_post_response)
 
     @normal_user.destroy
+  end
+
+  it 'should create the right xml for adding a student to a class' do
+    Net::HTTP.should_receive(:new).exactly(3).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(3).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(3).times.and_return(@http_post_mock_1, @http_post_mock_2, @http_post_mock_3)
+    @http_post_mock_1.should_receive(:body=).once
+    @http_post_mock_2.should_receive(:body=).once
+    @http_post_mock_3.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>add_user_to_blog</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+<value>
+ <string>200</string>
+</value>
+<value>
+ <string>213</string>
+</value>
+<value>
+ <string>author</string>
+</value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_mock.should_receive(:request).exactly(3).times.and_return(@user_id_response, @blog_id_response, @content_post_response)
+
+    @portal_student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
+  end
+
+  it 'should create the right xml for removing a student from a class' do
+    student_clazz = @portal_student.student_clazzes.create!(:clazz_id => @clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
+
+    Net::HTTP.should_receive(:new).exactly(3).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(3).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(3).times.and_return(@http_post_mock_1, @http_post_mock_2, @http_post_mock_3)
+    @http_post_mock_1.should_receive(:body=).once
+    @http_post_mock_2.should_receive(:body=).once
+    @http_post_mock_3.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>remove_user_from_blog</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+<value>
+ <string>213</string>
+</value>
+<value>
+ <string>200</string>
+</value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_mock.should_receive(:request).exactly(3).times.and_return(@user_id_response, @blog_id_response, @content_post_response)
+
+    student_clazz.destroy
   end
 end
