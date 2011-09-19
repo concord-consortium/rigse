@@ -227,7 +227,7 @@ describe SessionsController do
     end
 
     it "doesn't log me in"          do
-      pending "Broken example"
+      # pending "Broken example"
       do_create
       controller.send(:logged_in?).should == false
     end

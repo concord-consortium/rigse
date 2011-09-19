@@ -57,4 +57,15 @@ class SessionsController < ApplicationController
     return true
   end
 
+  protected
+  # authenticated system does this by default: 
+  #def logged_in?
+  #  !!current_user
+  #end
+  #
+  # but out current_user will be 'anonymous'
+  # because we always have a current_user
+  def logged_in?
+    return (!(current_user.nil? || current_user == User.anonymous))
+  end
 end
