@@ -49,6 +49,7 @@
 
 require 'fileutils'
 require 'arrayfields'
+require 'csv'
 
 class RinetData
 
@@ -305,7 +306,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def add_csv_row(key,line)
     # if row.respond_to? fields
-    FasterCSV.parse(line) do |row|
+    CSV.parse(line) do |row|
       if row.class == Array
         row.fields = FIELD_DEFINITIONS[key]
         @parsed_data[key] << row
@@ -754,7 +755,7 @@ Logged to: #{File.expand_path(@log_path)}
   def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
     students_file_name = "#{@district_data_root_dir}/#{district}/current/students.csv"
     student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
-    student_rows = FasterCSV.read(students_file_name)
+    student_rows = CSV.read(students_file_name)
     login = ""
     while login == ""
       student_row = student_rows[(rand * student_rows.length-1).round]
@@ -779,7 +780,7 @@ Logged to: #{File.expand_path(@log_path)}
   ##
   def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
     staff_file_name = "#{@district_data_root_dir}/#{district}/current/staff.csv"
-    staf_rows = FasterCSV.read(staff_file_name)
+    staf_rows = CSV.read(staff_file_name)
     login = nil
     while login.nil?
       staff_row = staf_rows[(rand * staf_rows.length-1).round]

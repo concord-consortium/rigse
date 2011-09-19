@@ -43,7 +43,7 @@ source "http://rubygems.org"
   # #   gem "ar-extensions",        "~> 0.9.3"
   # # end
   gem "activerecord-import",  "~> 0.2.8"
-  gem "fastercsv",            "~> 1.5"
+  # gem "fastercsv",            "~> 1.5"
   gem "net-sftp",             "~> 2.0",   :require => "net/sftp"
   gem "maruku",               "~> 0.6"
   gem "syntax",               "~> 1.0"
