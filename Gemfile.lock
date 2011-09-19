@@ -6,8 +6,8 @@ GIT
 
 GIT
   remote: git://github.com/stepheneb/haml.git
-  revision: ba561a822569a4982f445e0aeda3c0d0a6484cea
-  branch: xml-mime-type
+  revision: fa0e7db4a9dd47d1f841498d965400a4eadb9cb8
+  branch: xml-mime-type-and-ie8-keycode-fix
   specs:
     haml (3.1.3)
 
