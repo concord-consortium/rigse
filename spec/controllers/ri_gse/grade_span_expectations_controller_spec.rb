@@ -15,7 +15,7 @@ describe RiGse::GradeSpanExpectationsController do
   describe "responding to GET index" do
 
     it "should expose a paginated array of @grade_span_expectations" do
-      RiGse::GradeSpanExpectation.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_grade_span_expectation])
+      RiGse::GradeSpanExpectation.should_receive(:search).and_return([mock_grade_span_expectation])
       get :index
       assigns[:grade_span_expectations].should == [mock_grade_span_expectation]
     end
