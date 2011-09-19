@@ -40,7 +40,9 @@ describe PasswordsController do
 
     it "will send an email reset notification for non-students with email" do
 
-      PasswordMailer.should_receive(:deliver_forgot_password)
+      message = mock("message")
+      message.should_receive(:deliver)
+      PasswordMailer.should_receive(:forgot_password).and_return(message)
 
       post :create_by_login, @params
 
@@ -52,7 +54,7 @@ describe PasswordsController do
       @forgetful_user.portal_student = Factory.create(:portal_student)
       Array.new(3) { |i| SecurityQuestion.create({ :question => "test #{i}", :answer => "test" }) }.each { |q| @forgetful_user.security_questions << q }
 
-      PasswordMailer.should_not_receive(:deliver_forgot_password)
+      PasswordMailer.should_not_receive(:forgot_password)
 
       post :create_by_login, @params
 
@@ -129,7 +131,9 @@ describe PasswordsController do
     end
 
     it "will send an email reset notification for email addresses" do
-      PasswordMailer.should_receive(:deliver_forgot_password)
+      message = mock("message")
+      message.should_receive(:deliver)
+      PasswordMailer.should_receive(:forgot_password).and_return(message)
 
       post :create_by_email, @params
 
@@ -138,7 +142,7 @@ describe PasswordsController do
 
     it "will produce an error message for an unknown email address" do
       @params[:password][:email] = "bad_____email_____1234567@test.com"
-      PasswordMailer.should_not_receive(:deliver_forgot_password)
+      PasswordMailer.should_not_receive(:forgot_password)
 
       post :create_by_email, @params
 
