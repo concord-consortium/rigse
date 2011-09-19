@@ -17,6 +17,7 @@ Spork.prefork do
   require 'remarkable_activerecord'
   # we have to include our extensions in the rspec configuration block
   require File.expand_path("../support/rspec_extensions", __FILE__)
+  require File.expand_path("../support/authenticated_test_helper", __FILE__)
   include AuthenticatedTestHelper
   include AuthenticatedSystem
 
