@@ -1,7 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::DistrictsController do
-  render_views  
   def mock_district(_stubs={})
     stubs = {
       :name => 'default district', 
@@ -25,7 +24,7 @@ describe Portal::DistrictsController do
 
   describe "GET index" do
     it "assigns all portal_districts as @portal_districts" do
-      Portal::District.stub!(:find).with(:all, hash_including(will_paginate_params)).and_return([@district])
+      Portal::District.stub!(:search).and_return([@district])
       get :index
       assigns[:portal_districts].should include @district
     end
