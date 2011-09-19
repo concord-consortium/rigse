@@ -11,3 +11,5 @@
 - if current_user.has_role?('admin', 'manager', 'researcher', 'author', 'member') || current_user.portal_teacher
   %li.trail=link_to 'CareerSight', 'http://careersight.concord.org', :target => '_blank'
   %li.trail=link_to 'ProbeSight', 'http://probesight.concord.org', :target => '_blank'
+- if current_user.portal_teacher && current_user.portal_teacher.cohort_list.include?("itsisu")
+  %li= link_to 'Elgg', 'http://itsisu.elgg.concord.org/'
