@@ -29,7 +29,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :todo }) do
           true.should be_true
         end
-      }.should raise_error(RSpec::Example::PendingExampleFixedError)
+      }.should raise_error(RSpec::Core::PendingExampleFixedError)
     end
 
     it "should fail when the body passes in the current theme, and the current theme is in :expected mode" do
@@ -38,7 +38,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :expected }) do
           true.should be_true
         end
-      }.should raise_error(RSpec::Example::PendingExampleFixedError)
+      }.should raise_error(RSpec::Core::PendingExampleFixedError)
     end
   end
 
@@ -58,7 +58,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :todo }) do
           true.should be_false
         end
-      }.should raise_error(RSpec::Example::ExamplePendingError)
+      }.should raise_error(RSpec::Core::Pending::PendingDeclaredInExample)
     end
 
     it "should pass when the body fails in the current theme, and the current theme is set to :expected mode" do

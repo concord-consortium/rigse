@@ -9,14 +9,14 @@ Spork.prefork do
   #   rails generate rspec:install
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
-
   require 'rspec/rails'
   require 'rspec/mocks'
   
   # *** customizations ***
 
   require 'remarkable_activerecord'
-
+  # we have to include our extensions in the rspec configuration block
+  require File.expand_path("../support/rspec_extensions", __FILE__)
   include AuthenticatedTestHelper
   include AuthenticatedSystem
 
@@ -37,6 +37,8 @@ Spork.prefork do
     # examples within a transaction, remove the following line or assign false
     # instead of true.
     config.use_transactional_fixtures = true
+
+    config.include FailsInThemes
   end
 end
 
