@@ -15,7 +15,7 @@ describe RiGse::AssessmentTargetsController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @assessment_targets" do
-      RiGse::AssessmentTarget.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_assessment_target])
+      RiGse::AssessmentTarget.should_receive(:search).and_return([mock_assessment_target])
       get :index
       assigns[:assessment_targets].should == [mock_assessment_target]
     end
