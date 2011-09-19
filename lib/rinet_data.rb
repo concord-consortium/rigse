@@ -262,9 +262,9 @@ Logged to: #{File.expand_path(@log_path)}
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      log_message("Downloading: #{remote_path} and saving to: \n  #{local_path}", {:log_level => :info})
       begin
         sftp.download!(remote_path, local_path)
+        log_message("Downloaded: #{remote_path} and saved to: \n  #{local_path}", {:log_level => :info})
       rescue RuntimeError => e
         message = "\nDownload: #{remote_path} failed: \n#{e.class}: #{e.message}\n"
         log_message(message, {:log_level => :error})
