@@ -6,10 +6,8 @@ describe SecurityQuestionsController do
   before(:each) do
     @student = Factory.create(:portal_student, :user => Factory.create(:user))
     stub_current_user @student.user
-
-    controller.stub(:before_render) {
-      response.template.stub_chain(:current_project, :name).and_return("Test Project")
-    }
+    @test_project = mock("project",:name=> "Test Project")
+    Admin::Project.stub(:default_project).and_return(@test_project)
   end
   
   describe "GET edit" do
