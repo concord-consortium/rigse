@@ -100,7 +100,7 @@ class Wordpress
   end
 
   def _get_user_id(user_name)
-    xml = _create_xml("username_exists", true, user_name)
+    xml = _create_xml("username_exists", true, [user_name])
     result = _post(xml)
     if result.body =~ /<string>([0-9]+?)<\/string>/
       return $1
@@ -116,7 +116,7 @@ class Wordpress
       "post_status" => "publish",
       "post_author" => user_id
     }
-    return _create_xml("wp_insert_post", true, data)
+    return _create_xml("wp_insert_post", true, [data])
   end
 
   def _create_create_class_blog_xml(class_word, teacher, class_name)
@@ -145,11 +145,13 @@ class Wordpress
     # use wp_update_user so that we can pass in a plaintext password on updating.
     # wp_insert_user only accepts plaintext passwords on creation.
     method = update ? "wp_update_user" : "wp_insert_user"
-    return _create_xml(method, true, data)
+    return _create_xml(method, true, [data])
   end
 
-  # data can either be a hash or a single value
-  def _create_xml(method_name, isExtApi, data)
+  # data must be an array
+  def _create_xml(method_name, isExtApi, data = [])
+    raise "Invalid data! Needs to be an array" if isExtApi && !data.is_a?(Array)
+
     output = ""
     xml = Builder::XmlMarkup.new(:target => output, :indent => 1)
     xml.instruct!
@@ -175,20 +177,22 @@ class Wordpress
         end
         xml.param {
           xml.value {
-            if data.is_a? Hash
-              if isExtApi
-                xml.array {
-                  xml.data {
+            if isExtApi
+              xml.array {
+                xml.data {
+                  data.each do |param|
                     xml.value {
-                      _create_key_value_xml_struct(output, data)
+                      if param.is_a? Hash
+                        _create_key_value_xml_struct(output, param)
+                      else
+                        _create_value_xml_struct(output, param)
+                      end
                     }
-                  }
+                  end
                 }
-              else
-                _create_key_value_xml_struct(output, data)
-              end
+              }
             else
-              xml.string data
+              _create_key_value_xml_struct(output, data)
             end
           }
         }
@@ -203,14 +207,19 @@ class Wordpress
       data.each do |key, value|
         xml.member {
           xml.name key
-          xml.value {
-            if value.is_a? Fixnum
-              xml.int value
-            else
-              xml.string value
-            end
-          }
+          _create_value_xml_struct(output, value)
         }
+      end
+    }
+  end
+
+  def _create_value_xml_struct(output, value)
+    xml = Builder::XmlMarkup.new(:target => output, :indent => 1)
+    xml.value {
+      if value.is_a? Fixnum
+        xml.int value
+      else
+        xml.string value
       end
     }
   end
