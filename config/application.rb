@@ -12,6 +12,9 @@ module RailsPortal
 
     config.filter_parameters << :password << :password_confirmation
     
+    # Subvert the cookies_only=true session policy for requests ending in ".config"
+    config.middleware.insert_before("ActionDispatch::Cookies", "Rack::ConfigSessionCookies")
+
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
     #   $ rake middleware
     #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
@@ -87,15 +90,7 @@ module RailsPortal
           puts "see config/initializers/observers.rb for more information."
         end
     end
-  
-  
-    # config.after_initialize do
-    #   opts = config.has_many_polymorphs_options
-    #   opts[:file_pattern] = Array(opts[:file_pattern])
-    #   opts[:file_pattern] << "#{::Rails.root.to_s}/app/models/**/*.rb"
-    #   config.has_many_polymorphs_options = opts
-    # end
-  
+
   end
   
   # ANONYMOUS_USER = User.find_by_login('anonymous')
