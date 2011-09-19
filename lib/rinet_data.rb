@@ -147,7 +147,7 @@ Logging to: #{File.expand_path(@log_path)}
 
   def run_scheduled_job(opts = {})
     # disable observable behavior on useres for import task
-    User.delete_observers
+    Rails.configuration.active_record.observers = []
 
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]

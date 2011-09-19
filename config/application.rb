@@ -77,10 +77,8 @@ module RailsPortal
     if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
       puts "Didn't start observers because you are running: rake db:migrate"
     else
-      config.after_initialize do
         begin
-          ActiveRecord::Base.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer"
-          ActiveRecord::Base.instantiate_observers
+          config.active_record.observers = :user_observer, :investigation_observer, :"dataservice/bundle_content_observer", :"admin/project_observer"
           puts "Started observers"
         rescue
           # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
@@ -88,7 +86,6 @@ module RailsPortal
           puts "This might be because you have not setup the appropriate database tables yet... "
           puts "see config/initializers/observers.rb for more information."
         end
-      end
     end
   
   
