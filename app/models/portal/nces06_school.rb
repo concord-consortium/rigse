@@ -31,7 +31,7 @@ class Portal::Nces06School < ActiveRecord::Base
   end
   
   def address
-    capitalized_words(self.MSTREE) + ', ' + capitalized_words(self.MCITY) + ", #{self.MSTATE} #{self.MZIP}" 
+    capitalized_words(self.MSTREE.split) + ', ' + capitalized_words(self.MCITY.split) + ", #{self.MSTATE} #{self.MZIP}" 
   end
 
   def geographic_location
