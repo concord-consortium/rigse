@@ -44,7 +44,7 @@ describe Portal::SchoolsController do
 
   describe "GET index" do
     it "assigns all portal_schools as @portal_schools" do
-      Portal::School.stub!(:find).with(:all, hash_including(will_paginate_params)).and_return([@school])
+      Portal::School.stub!(:search).with(nil,nil,nil).and_return([@school])
       get :index
       assigns[:portal_schools].should == [@school]
     end
@@ -180,12 +180,12 @@ describe Portal::SchoolsController do
     it "renders the rjs template" do
       xhr :post, :destroy, :id => "1"
       response.should render_template('destroy')
-      response.should have_rjs
+      assert_select_rjs
     end
 
     it "the rjs response should remove a dom elemet" do
       xhr :post, :destroy, :id => "1"
-      response.should have_rjs(:remove)
+      assert_select_rjs(:remove)
     end
   end
 
