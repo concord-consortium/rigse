@@ -37,14 +37,14 @@
     #wrapper.wrapper
       = render :partial => 'shared/project_header'
       #report_content.main_content_colors
-        = yield :content_header
+        = content_for :content_header
         #js_flash{:style=>"display: none;"}
 
         #flash
           .padded_contents
             - flash.each_pair do |key, message|
               %div{:class=>"flash flash_#{key}"}= message 
-        = yield :layout
+        = content_for :layout
       = render :partial => 'shared/footer'
       #under_footer
         - if current_user.has_role?('admin')

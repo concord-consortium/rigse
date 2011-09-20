@@ -13,4 +13,4 @@
                 = Embeddable::Smartgraph::RangeQuestion.display_name + ': ' + @smartgraph_range_question.name
               %object{ :refid => ot_refid_for(@smartgraph_range_question) }
       %library
-        =yield :layout
+        = content_for :layout

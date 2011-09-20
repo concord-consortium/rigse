@@ -7,4 +7,4 @@
     = current_project.home_page_content.html_safe unless current_project.home_page_content.nil?
   - else
     - render_project_info
-    = yield :project_info
+    = content_for :project_info

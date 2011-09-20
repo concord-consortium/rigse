@@ -1,5 +1,5 @@
 - if data_collector.show_tare
-  - content_for("element_#{ot_dom_id_for(data_collector)}".to_sym) do
+  - content_for(ot_dom_id_for(data_collector, :element)) do
     %object{ :refid => ot_refid_for(data_collector) }/
     %br/
     %object{ :refid => ot_refid_for(data_collector, :zero_button) }/

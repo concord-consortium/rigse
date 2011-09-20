@@ -2,7 +2,7 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %title
-      = yield :printing_title
+      = content_for :printing_title
     = stylesheet_link_tag 'print', :media => :print
     = stylesheet_link_tag 'print', :media => :screen
 
@@ -19,7 +19,7 @@
 
   %body
     #wrapper
-      = yield :layout
+      = content_for :layout
 
   :javascript
     document.observe("dom:loaded", function() {  

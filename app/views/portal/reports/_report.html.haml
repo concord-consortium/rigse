@@ -18,5 +18,5 @@
           = link_to 'print all users', polymorphic_url(offering, :action => 'separated_report'), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
     %div{:id => dom_id_for(offering, :details), :class => 'content'}
       %div{:style => 'font-weight: bold', :class => 'inline-block'}
-        = yield :report_summary
+        = content_for :report_summary
       = render :partial => '/portal/reports/container_heading', :locals => { :indent => 0, :map => page_elements, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}

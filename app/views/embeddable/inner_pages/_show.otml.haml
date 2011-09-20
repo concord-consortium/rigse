@@ -21,7 +21,7 @@
   %OTCardContainer{ :local_id => ot_local_id_for(inner_page, :page_card_container), :contentsMayScroll => 'true' }
     %cards
       - inner_page.sub_pages.each do |page|
-        =yield "page_#{dom_id_for(page)}".to_sym
+        = content_for dom_id_for(page, :page)
     %currentCard
       - if inner_page.sub_pages.first
         %object{ :refid => ot_refid_for(inner_page.sub_pages.first, :content) }/

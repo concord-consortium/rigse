@@ -13,4 +13,4 @@
                 = h(Embeddable::MwModelerPage.display_name + ': ' + @mw_modeler_page.name)
               %object{ :refid => ot_refid_for(@mw_modeler_page) }
       %library
-        =yield :layout
+        = content_for :layout

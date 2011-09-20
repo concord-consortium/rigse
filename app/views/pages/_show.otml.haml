@@ -1,4 +1,4 @@
-- content_for("page_#{dom_id_for(page)}".to_sym) do
+- content_for dom_id_for(page, :page) do
   %OTCompoundDoc{ :name => page.name }
     %bodyText
       - if teacher_mode && should_show_teacher_notes?(page)
@@ -20,11 +20,11 @@
           - page.page_elements.each do |element|
             .element
               -# allow embeddables to control how they are referenced from the document
-              - embeddable_doc_ref_symbol = "element_#{ot_dom_id_for(element.embeddable)}".to_sym
-              - if content_for?(embeddable_doc_ref_symbol)
-                yield(embeddable_doc_ref_symbol)
+              - embeddable_doc_ref = ot_dom_id_for(element.embeddable, :element)
+              - if content_for? embeddable_doc_ref
+                = content_for embeddable_doc_ref
               - else
-                %object{ :refid => ot_refid_for(element.embeddable) }
+                %object{ :refid => ot_refid_for(element.embeddable) }/
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :teacher_notes) }
     %bodyText

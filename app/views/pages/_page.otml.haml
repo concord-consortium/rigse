@@ -4,4 +4,4 @@
       #content
         %h1 
           = "#{APP_CONFIG[:theme].upcase} Page"
-        =yield :page_elements
+        = content_for :page_elements

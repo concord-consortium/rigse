@@ -13,4 +13,4 @@
                 = Smartgraph::Response.display_name + ': ' + @response.name
               %object{ :refid => ot_refid_for(@response) }
       %library
-        =yield :layout
+        = content_for :layout

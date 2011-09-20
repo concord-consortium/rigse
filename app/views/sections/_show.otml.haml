@@ -1,6 +1,6 @@
 = render :partial => 'pages/show', :locals => {:teacher_mode => teacher_mode}, :collection => section.pages, :as => :page
 
-- content_for("section_#{dom_id_for(section)}".to_sym) do
+- content_for dom_id_for(section, :section) do
   %OTSection{ :name => ot_menu_display_name(section)   }
     %header
     %content
@@ -20,9 +20,7 @@
     %cards
       - section.pages.each do |page|
         - unless ((for_teacher_only?(page)) && (!teacher_mode))
-          - page_doc_ref_symbol = "page_#{dom_id_for(page)}".to_sym
-          - if content_for?(page_doc_ref_symbol)
-            = yield(page_doc_ref_symbol)
+          = content_for dom_id_for(page, :page)
     %currentCard
       - if section.pages.first
         - unless ((for_teacher_only?(section.pages.first)) && (!teacher_mode))
