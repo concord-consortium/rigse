@@ -6,6 +6,7 @@
       = wrap_edit_link_around_content(portal_school, options={:complete => mce_init_string}) do
         %h4= h(portal_school.name)
         %p= h(portal_school.description)
-        = render :partial => 'shared/classes_for_school', :locals => { :portal_clazzes => portal_school.clazzes.active } 
-        
+        - if local_assigns[:show_classes]
+          = render :partial => 'shared/classes_for_school', :locals => { :portal_clazzes => portal_school.clazzes.active }
+
 
