@@ -1185,7 +1185,7 @@ module ApplicationHelper
       :login => "Login",
       :signup => "Sign up",
       :logout => "Logout",
-      :prefs => "Preferencees",
+      :prefs => "Preferences",
       :help => "Help",
       :guest => false,
       :name_method => "name"
