@@ -22,7 +22,7 @@ describe GseParser do
   end
 
   it "should parse grade span expectation texts" do
-    sample_text = 'Example Extension(s) PS2 (Ext)- 5 Students demonstrate an understanding of energy by\u2026 5aa Identifying, measuring, calculating an'
+    sample_text = "Example Extension(s) PS2 (Ext)- 5 Students demonstrate an understanding of energy by\u2026 5aa Identifying, measuring, calculating an"
     @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
     # sample_text = 'PS1 (K-2) POC -2 Students demonstrate an understanding of states of matter by \u2026 2a describing properties of solids and liquids. 2b identifying and comparing solids and liquids. 2c making logical predictions about the changes in the state of matter when adding or taking away heat (e.g., ice melting, water freezing).'
     # @parser.parse_grade_span_expectation(sample_text,@assessment_targets[0]).should_not be_nil
