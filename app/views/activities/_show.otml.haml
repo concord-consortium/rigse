@@ -24,9 +24,9 @@
         %cards
           - activity.sections.each do |section|
             - unless ((for_teacher_only?(section)) && (!teacher_mode))
-              - embeddable_doc_ref_symbol = "section_#{ot_dom_id_for(section)}".to_sym
-              - if content_for?(embeddable_doc_ref_symbol)
-                yield(embeddable_doc_ref_symbol)
+              - section_doc_ref_symbol = "section_#{dom_id_for(section)}".to_sym
+              - if content_for?(section_doc_ref_symbol)
+                = yield(section_doc_ref_symbol)
         %currentCard
           - if activity.sections.first
             - unless ((for_teacher_only?(activity.sections.first)) && (!teacher_mode))

@@ -20,9 +20,9 @@
     %cards
       - section.pages.each do |page|
         - unless ((for_teacher_only?(page)) && (!teacher_mode))
-          - embeddable_doc_ref_symbol = "page_#{ot_dom_id_for(page)}".to_sym
-          - if content_for?(embeddable_doc_ref_symbol)
-            yield(embeddable_doc_ref_symbol)
+          - page_doc_ref_symbol = "page_#{dom_id_for(page)}".to_sym
+          - if content_for?(page_doc_ref_symbol)
+            = yield(page_doc_ref_symbol)
     %currentCard
       - if section.pages.first
         - unless ((for_teacher_only?(section.pages.first)) && (!teacher_mode))
