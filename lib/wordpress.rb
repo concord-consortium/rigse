@@ -164,12 +164,13 @@ class Wordpress
   end
 
   def _create_create_class_blog_xml(class_word, teacher, class_name)
+    user_id = _get_user_id(teacher.login)
     uri = URI.parse(@url)
     data = {
       "domain" => uri.host,
       "path" => uri.path + class_word,
       "title" => "#{teacher.first_name} #{teacher.last_name}'s #{class_name.capitalize.to_s} Class",
-      "user_id" => @rpc_email
+      "user_id" => user_id
     }
     return _create_xml("ms.CreateBlog", false, data)
   end
