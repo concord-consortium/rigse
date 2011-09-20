@@ -40,6 +40,10 @@ describe Portal::ClazzesController do
     }
     @mock_project = mock_model(Admin::Project, :name => "Test Project")
     @mock_project.stub(:enable_grade_levels?).and_return(true)
+    @mock_project.stub(:word_press_url).and_return(nil)
+    @mock_project.stub(:rpc_admin_login).and_return(nil)
+    @mock_project.stub(:rpc_admin_email).and_return(nil)
+    @mock_project.stub(:rpc_admin_password).and_return(nil)
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 

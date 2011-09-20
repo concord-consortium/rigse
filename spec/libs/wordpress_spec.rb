@@ -110,10 +110,11 @@ describe Wordpress do
   end
 
   it 'should create the right xml for blog creation' do
-    Net::HTTP.should_receive(:new).once.and_return(@http_mock)
-    @http_mock.should_receive(:start).once.and_yield(@http_mock)
-    Net::HTTP::Post.should_receive(:new).once.and_return(@http_post_mock_1)
-    @http_post_mock_1.should_receive(:body=).once.with(%!<?xml version="1.0" encoding="UTF-8"?>
+    Net::HTTP.should_receive(:new).twice.and_return(@http_mock)
+    @http_mock.should_receive(:start).twice.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).twice.and_return(@http_post_mock_1, @http_post_mock_2)
+    @http_post_mock_1.should_receive(:body=).once
+    @http_post_mock_2.should_receive(:body=).once.with(%!<?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
  <methodName>ms.CreateBlog</methodName>
  <params>
@@ -145,7 +146,7 @@ describe Wordpress do
  <member>
   <name>user_id</name>
 <value>
- <string>email</string>
+ <string>200</string>
 </value>
  </member>
  <member>
@@ -160,7 +161,7 @@ describe Wordpress do
  </params>
 </methodCall>
 !)
-    @http_mock.should_receive(:request).once.and_return(@blog_post_response)
+    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @blog_post_response)
 
     @wp.create_class_blog("class word", @authorized_teacher, "class name")
   end
