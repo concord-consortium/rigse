@@ -21,7 +21,7 @@ class Portal::StudentClazz < ActiveRecord::Base
   def add_to_blog
     begin
       wp = Wordpress.new
-      wp.add_user_to_clazz(self.student, self.clazz)
+      wp.add_user_to_clazz(self.student, self.clazz, "author")
     rescue
     end
   end

@@ -71,8 +71,8 @@ class Wordpress
     update_user(user)
   end
 
-  def add_user_to_clazz(user, clazz)
-    content = _create_add_user_to_blog_xml(user, clazz)
+  def add_user_to_clazz(user, clazz, role = "author")
+    content = _create_add_user_to_blog_xml(user, clazz, role)
     result = _post(content)
     return result
   end
@@ -141,7 +141,7 @@ class Wordpress
     return _create_xml("remove_user_from_blog", true, [user_id, blog_id])
   end
 
-  def _create_add_user_to_blog_xml(user, clazz)
+  def _create_add_user_to_blog_xml(user, clazz, role)
     uri = URI.parse(@url)
     domain = uri.host
     path = uri.path + clazz.class_word
@@ -149,7 +149,6 @@ class Wordpress
     blog_id = _get_blog_id(domain, path)
     user_id = _get_user_id(user.login)
 
-    role = "author"
     return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end
 
