@@ -32,6 +32,7 @@ describe Portal::ExternalUsersController do
    
    describe "GET new" do
      it "assigns a new external_user as @portal_external_user" do
+       pending "There is no 'new' template, perhaps the whole new route should be removed?"
        ExternalUser.stub!(:new).and_return(mock_external_user)
        get :new
        assigns[:portal_external_user].should equal(mock_external_user)
@@ -73,6 +74,7 @@ describe Portal::ExternalUsersController do
        end
    
        it "re-renders the 'new' template" do
+         pending "There is no 'new' template, perhaps the whole new route should be removed?"
          ExternalUser.should_receive(:new).and_return(mock_external_user(:save => false))
          post :create, :portal_external_user => {}
          response.should render_template('new')
