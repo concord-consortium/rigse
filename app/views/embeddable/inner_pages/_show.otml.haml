@@ -13,7 +13,9 @@
               %object{ :refid => ot_refid_for(inner_page, :menu) }/    
         -if inner_page.static_page
           %td{:width => "50%",:valign => "top"}
-            =yield "page_#{dom_id_for(inner_page.static_page)}".to_sym
+            - embeddable_doc_ref_symbol = "page_#{ot_dom_id_for(inner_page.static_page)}".to_sym
+            - if content_for?(embeddable_doc_ref_symbol)
+              yield(embeddable_doc_ref_symbol)
 
 - content_for(:library) do
   %OTCardContainer{ :local_id => ot_local_id_for(inner_page, :page_card_container), :contentsMayScroll => 'true' }
