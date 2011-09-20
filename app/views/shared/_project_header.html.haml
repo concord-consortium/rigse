@@ -4,6 +4,7 @@
     = "#{current_user.name}."
   %ul
     - unless current_user.anonymous?
+      %li= link_to 'Help', '/help'
       %li= link_to 'Preferences', preferences_user_path(current_user)
       %li.last= link_to 'Logout', logout_path
     - else
