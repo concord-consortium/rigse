@@ -1185,7 +1185,8 @@ module ApplicationHelper
       :login => "Login",
       :signup => "Sign up",
       :logout => "Logout",
-      :prefs => "Preferences",
+      :prefs => "Preferencees",
+      :help => "Help",
       :guest => false,
       :name_method => "name"
     }
@@ -1200,6 +1201,8 @@ module ApplicationHelper
       message += link_to opts[:signup], pick_signup_path
     else
       message += "#{opts[:welcome]} #{current_user.send(opts[:name_method])} &nbsp;"
+      message += link_to opts[:help], '/help'
+      message += " / "
       message += link_to opts[:prefs],  preferences_user_path(current_user)
       message += " / "
       message += link_to opts[:logout], logout_path
