@@ -31,19 +31,20 @@ describe Wordpress do
     @http_post_mock_2 = mock(Net::HTTP::Post)
     @http_post_mock_3 = mock(Net::HTTP::Post)
 
-    @user_id_response = mock(Net::HTTPOK, :code => 200, :body => "<string>200</string>")
-    @user_id_error_response = mock(Net::HTTPOK, :code => 200, :body => "<string></string>")
-    @content_post_response = mock(Net::HTTPOK, :code => 200, :body => "<string>384</string>")
-    @blog_post_response = mock(Net::HTTPOK, :code => 200, :body => "<int>600</int>")
-    @blog_id_response = mock(Net::HTTPOK, :code => 200, :body => "<string>213</string>")
+    @user_id_response          = mock(Net::HTTPOK, :code => 200, :body => "<string>200</string>")
+    @user_id_error_response    = mock(Net::HTTPOK, :code => 200, :body => "<string></string>")
+    @content_post_response     = mock(Net::HTTPOK, :code => 200, :body => "<string>384</string>")
+    @blog_create_post_response = mock(Net::HTTPOK, :code => 200, :body => "<int>600</int>")
+    @blog_id_response          = mock(Net::HTTPOK, :code => 200, :body => "<string>213</string>")
+    @tags_response             = mock(Net::HTTPOK, :code => 200, :body => "<string>746</string>")
 
     @wp = Wordpress.new
   end
 
   it 'should create the right xml for blog posting' do
-    Net::HTTP.should_receive(:new).twice.and_return(@http_mock)
-    @http_mock.should_receive(:start).twice.and_yield(@http_mock)
-    Net::HTTP::Post.should_receive(:new).twice.and_return(@http_post_mock_1, @http_post_mock_2)
+    Net::HTTP.should_receive(:new).exactly(3).times.and_return(@http_mock)
+    @http_mock.should_receive(:start).exactly(3).times.and_yield(@http_mock)
+    Net::HTTP::Post.should_receive(:new).exactly(3).times.and_return(@http_post_mock_1, @http_post_mock_2, @http_post_mock_3)
     @http_post_mock_1.should_receive(:body=).once
     @http_post_mock_2.should_receive(:body=).once.with(
 %!<?xml version="1.0" encoding="UTF-8"?>
@@ -104,9 +105,46 @@ describe Wordpress do
  </params>
 </methodCall>
 !)
-    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @content_post_response)
+    @http_post_mock_3.should_receive(:body=).once.with(
+%!<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+ <methodName>extapi.callWpMethod</methodName>
+ <params>
+  <param>
+   <value>
+    <string>login</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>password</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>wp_set_post_tags</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <array>
+     <data>
+<value>
+ <string>384</string>
+</value>
+<value>
+ <string>tag1,tag2,tag3</string>
+</value>
+     </data>
+    </array>
+   </value>
+  </param>
+ </params>
+</methodCall>
+!)
+    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @content_post_response, @tags_response)
 
-    @wp.post_blog("blog", @normal_user, "my title", "my content");
+    @wp.post_blog("blog", @normal_user, "my title", "my content", "tag1,tag2,tag3");
   end
 
   it 'should create the right xml for blog creation' do
@@ -161,7 +199,7 @@ describe Wordpress do
  </params>
 </methodCall>
 !)
-    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @blog_post_response)
+    @http_mock.should_receive(:request).twice.and_return(@user_id_response, @blog_create_post_response)
 
     @wp.create_class_blog("class word", @authorized_teacher, "class name")
   end

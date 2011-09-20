@@ -14,7 +14,7 @@ class Wordpress
     raise "Can't talk to wordpress: No WP settings" if !has_valid_wp_settings?
   end
 
-  def post_blog(blog, user, post_title, post_content)
+  def post_blog(blog, user, post_title, post_content, post_tags = "")
     user_id = _get_user_id(user.login)
 
     # render the content template
@@ -22,6 +22,13 @@ class Wordpress
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
     result = _post(content, blog)
+
+    # get the post id from the response
+    if !post_tags.nil? && post_tags.length > 0 && result.body =~ %r!<string>([0-9]+)</string>!
+      post_id = $1
+      content = _create_post_tags_xml(post_id, post_tags)
+      r2 = _post(content, blog)
+    end
 
     return result
   end
@@ -161,6 +168,11 @@ class Wordpress
     }
     return _create_xml("wp_insert_post", true, [data])
   end
+
+  def _create_post_tags_xml(post_id, post_tags)
+    return _create_xml("wp_set_post_tags", true, [post_id, post_tags])
+  end
+
 
   def _create_create_class_blog_xml(class_word, teacher, class_name)
     user_id = _get_user_id(teacher.login)
