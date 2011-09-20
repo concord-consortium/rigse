@@ -35,15 +35,17 @@ describe Dataservice::BundleContent do
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
     }
+    # disable the after_save there is observer_spec to test that specific call
+    # we might want to try out the no_peeping_toms gem to handle this 
+    # https://github.com/patmaddox/no-peeping-toms
+    Dataservice::BundleContentObserver.instance.should_receive(:after_save).any_number_of_times
   end
 
   it "should create a new instance given valid attributes" do
-    Dataservice::BundleContentObserver.instance.should_receive(:after_save)
     Dataservice::BundleContent.create!(@valid_attributes)
   end
 
   it "should extract blobs into separate model objects" do
-    Dataservice::BundleContentObserver.instance.should_receive(:after_save)
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
     bundle_content.blobs.size.should eql(1)
     bundle_content.reload
@@ -54,7 +56,6 @@ describe Dataservice::BundleContent do
   end
 
   it "after multiple-processing passes, the blob count should be constant" do
-    Dataservice::BundleContentObserver.instance.should_receive(:after_save).exactly(3).times
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
     bundle_content.save
     bundle_content.blobs.size.should eql(1)
@@ -70,7 +71,6 @@ describe Dataservice::BundleContent do
 
   it "when a body with no learner data is added, the bundle count doesn't change" do
     # not a sock-entry body
-    Dataservice::BundleContentObserver.instance.should_receive(:after_save).exactly(2).times
     bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)
     bundle_content.body="<gah>BAD BAD</gah>"
     bundle_content.save!
@@ -265,9 +265,9 @@ describe Dataservice::BundleContent do
       end
 
       it "should process bundles before save" do
-        pending("run_callbacks changed")
         @bundle.should_receive(:process_bundle)
-        @bundle.run_callbacks(:before_save)
+        # this runs the save callbacks and the return value of false causes it to skip the after_save callbacks
+        @bundle.run_callbacks(:save) { false }
       end
 
       it "should call process blobs after processing bundle" do
@@ -321,16 +321,6 @@ describe Dataservice::BundleContent do
           @bundle.copy_to_collaborators
           @contents_a.should have(1).bundle_content
         end
-      end
-    end
-      
-    describe "observers" do
-      it " should run the after_save actions" do
-        pending("delayed_job gets in the way here")
-        @bundle_content = Factory.build(:dataservice_bundle_content)
-        @bundle_content.should_receive(:extract_savables)
-        @bundle_content.should_receive(:copy_to_collaborators)
-        @bundle_content.save!
       end
     end
 end
