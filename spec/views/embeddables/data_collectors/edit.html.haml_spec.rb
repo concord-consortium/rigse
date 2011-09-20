@@ -8,12 +8,6 @@ describe "/embeddable/data_collectors/edit.html.haml" do
     power_user = stub_model(User, :has_role? => true)
     view.stub!(:edit_menu_for).and_return("edit menu")
     view.stub!(:current_user).and_return(power_user)
-    assigns[:scope] = mock(
-      :id => 1, 
-      :activity => mock(
-        :data_collectors => [],
-        :data_tables => []
-    ))
     assigns[:data_collector] = @data_collector = stub_model(Embeddable::DataCollector,
       :new_record? => false, 
       :id => 1, 
@@ -48,12 +42,12 @@ describe "/embeddable/data_collectors/edit.html.haml" do
       :calibration_id =>nil,
       :dd_font_size => Embeddable::DataCollector.dd_font_sizes[:small],
       :user => power_user)
+      @scope =  @data_collector
   end
 
   it "renders the edit form" do
     render
-    response.should have_selector("form[action=#{embeddable_data_collector_path(@data_collector)}][method=post]") do
-    end
+    response.should have_selector("form[action='#{embeddable_data_collector_path(@data_collector)}'][method='post']")
   end
 
   it "should have a way to select a linked data collector" do
