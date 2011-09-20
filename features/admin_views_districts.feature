@@ -10,7 +10,7 @@ Feature: Admin views districts
     And follow "Districts"
 
   Scenario: admin see a list of districts
-    Then I should see "Cross Project Portal-district"
+    Then I should see the default district
     And I should see "create District"
     
   Scenario: admin creates a new district
