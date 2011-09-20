@@ -25,3 +25,4 @@ Feature: Admin views districts
     Given there is an active class named "sample class" within a district
     When I follow "Districts"
     Then I should not see "sample class"
+    And I should not see "active classes"

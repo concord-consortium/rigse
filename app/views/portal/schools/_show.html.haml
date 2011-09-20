@@ -1,4 +1,6 @@
-- display_name = "#{portal_school.name} active classes: #{portal_school.clazzes.active.length}"
+- display_name = "#{portal_school.name}"
+- if local_assigns[:show_classes]
+  - display_name += " active classes: #{portal_school.clazzes.active.length}"
 - options = { :hide_componenent_name => true, :display_name => display_name }
 = accordion_for(portal_school, show_menu_for(portal_school, options)) do
   %div{:id => dom_id_for(portal_school, :item), :class => 'item'}
