@@ -13,11 +13,11 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",               :limit => 36
     t.string   "name"
-    t.text     "description"
+    t.string   "uuid",               :limit => 36
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "description"
     t.boolean  "is_template"
     t.integer  "position"
     t.integer  "investigation_id"
@@ -230,7 +230,7 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
     t.integer  "height"
     t.integer  "width"
     t.integer  "version"
-    t.datetime "updated_at",         :default => '2011-05-12 10:23:34'
+    t.datetime "updated_at",         :default => '2011-04-27 13:56:12'
   end
 
   add_index "diy_models", ["diy_id"], :name => "index_diy_models_on_diy_id"
@@ -398,25 +398,25 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   create_table "embeddable_data_collectors", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "probe_type_id"
     t.integer  "user_id"
     t.string   "uuid",                       :limit => 36
-    t.string   "title"
     t.float    "y_axis_min",                               :default => 0.0
     t.float    "y_axis_max",                               :default => 5.0
     t.float    "x_axis_min",                               :default => 0.0
     t.float    "x_axis_max",                               :default => 60.0
-    t.string   "x_axis_label",                             :default => "Time"
-    t.string   "x_axis_units",                             :default => "s"
+    t.string   "title"
+    t.string   "x_axis_label"
+    t.string   "x_axis_units"
     t.string   "y_axis_label"
     t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",               :default => false
-    t.boolean  "draw_marks",                               :default => false
-    t.boolean  "connect_points",                           :default => true
-    t.boolean  "autoscale_enabled",                        :default => false
-    t.boolean  "ruler_enabled",                            :default => false
-    t.boolean  "show_tare",                                :default => false
-    t.boolean  "single_value",                             :default => false
+    t.boolean  "multiple_graphable_enabled"
+    t.boolean  "draw_marks"
+    t.boolean  "connect_points"
+    t.boolean  "autoscale_enabled"
+    t.boolean  "ruler_enabled"
+    t.boolean  "show_tare"
+    t.boolean  "single_value"
+    t.integer  "probe_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "graph_type_id"
@@ -484,12 +484,14 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
     t.integer  "prototype_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "prediction_graph_source"
     t.integer  "prediction_graph_id"
     t.boolean  "multiple_graphable_enabled"
     t.string   "graph_type"
   end
 
   add_index "embeddable_diy_sensors", ["prediction_graph_id"], :name => "index_embeddable_diy_sensors_on_prediction_graph_id"
+  add_index "embeddable_diy_sensors", ["prediction_graph_source"], :name => "index_embeddable_diy_sensors_on_prediction_graph_source"
   add_index "embeddable_diy_sensors", ["prototype_id"], :name => "index_embeddable_diy_sensors_on_prototype_id"
 
   create_table "embeddable_drawing_tools", :force => true do |t|
@@ -593,14 +595,14 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "prompt"
-    t.string   "default_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.string   "uuid",             :limit => 36
+    t.text     "prompt"
+    t.string   "default_response"
     t.integer  "rows",                           :default => 5
     t.integer  "columns",                        :default => 32
     t.integer  "font_size",                      :default => 12
@@ -664,13 +666,11 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   end
 
   create_table "embeddable_xhtmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "name"
+    t.text    "description"
+    t.integer "user_id"
+    t.string  "uuid",        :limit => 36
+    t.text    "content"
   end
 
   create_table "external_activities", :force => true do |t|
@@ -906,12 +906,12 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   add_index "otrunk_example_otrunk_view_entries", ["fq_classname"], :name => "index_otrunk_example_otrunk_view_entries_on_fq_classname", :unique => true
 
   create_table "page_elements", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_id"
+    t.integer  "position"
+    t.integer  "embeddable_id"
+    t.string   "embeddable_type"
     t.integer  "user_id"
     t.boolean  "is_enabled",      :default => true
   end
@@ -921,14 +921,14 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   add_index "page_elements", ["position"], :name => "index_page_elements_on_position"
 
   create_table "pages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "section_id"
+    t.string   "uuid",               :limit => 36
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
     t.integer  "offerings_count",                  :default => 0
@@ -1841,34 +1841,30 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
   create_table "probe_calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description"
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer "data_filter_id"
+    t.integer "probe_type_id"
+    t.boolean "default_calibration"
+    t.integer "physical_unit_id"
+    t.string  "name"
+    t.text    "description"
+    t.float   "k0"
+    t.float   "k1"
+    t.float   "k2"
+    t.float   "k3"
+    t.string  "uuid"
+    t.integer "user_id"
   end
 
   create_table "probe_data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description"
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.text    "description"
+    t.string  "otrunk_object_class"
+    t.boolean "k0_active"
+    t.boolean "k1_active"
+    t.boolean "k2_active"
+    t.boolean "k3_active"
+    t.string  "uuid"
   end
 
   create_table "probe_device_configs", :force => true do |t|
@@ -1881,47 +1877,41 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   end
 
   create_table "probe_physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description"
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "quantity"
+    t.string  "unit_symbol"
+    t.string  "unit_symbol_text"
+    t.text    "description"
+    t.boolean "si"
+    t.boolean "base_unit"
+    t.string  "uuid"
   end
 
   create_table "probe_probe_types", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
-    t.string   "uuid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.string  "name"
+    t.integer "ptype"
+    t.float   "step_size"
+    t.integer "display_precision"
+    t.integer "port"
+    t.string  "unit"
+    t.float   "min"
+    t.float   "max"
+    t.float   "period"
+    t.string  "uuid"
   end
 
   create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description"
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "driver_short_name"
+    t.integer "user_id"
+    t.string  "name"
+    t.string  "short_name"
+    t.text    "description"
+    t.string  "communication_protocol"
+    t.string  "image"
+    t.string  "uuid"
+    t.integer "device_id"
+    t.string  "driver_short_name"
   end
 
   create_table "properties_versioned_jnlps", :id => false, :force => true do |t|
@@ -2131,14 +2121,14 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
   end
 
   create_table "sections", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",               :limit => 36
-    t.string   "name"
-    t.text     "description"
-    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "position"
+    t.integer  "activity_id"
+    t.string   "uuid",               :limit => 36
     t.boolean  "teacher_only",                     :default => false
     t.string   "publication_status"
     t.boolean  "is_enabled",                       :default => true
@@ -2217,6 +2207,7 @@ ActiveRecord::Schema.define(:version => 20110526202959) do
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
+    t.string   "identity_url"
     t.string   "first_name",                :limit => 100, :default => ""
     t.string   "last_name",                 :limit => 100, :default => ""
     t.string   "email",                     :limit => 100
