@@ -196,6 +196,8 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extract_multiple_choices(extractor)
     extract_image_questions(extractor)
   end
+  handle_asynchronously :extract_saveables
+  
   
   def extract_open_responses(extractor = Otrunk::ObjectExtractor.new(self.otml))
     learner = self.bundle_logger.learner
@@ -328,4 +330,5 @@ class Dataservice::BundleContent < ActiveRecord::Base
       bundle_logger.reload
     end
   end
+  handle_asynchronously :copy_to_collaborators
 end
