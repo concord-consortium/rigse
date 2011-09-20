@@ -1,3 +1,5 @@
+require 'cgi'
+
 class SessionsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   
@@ -167,7 +169,7 @@ class SessionsController < ApplicationController
       resp['Set-Cookie'].split(/[,;] |\n/).each do |token|
         k,v = token.split("=")
         if k.to_s =~ /^wordpress_/
-          cookies[k.to_sym] = {:value => v, :domain => cookie_domain }
+          cookies[k.to_sym] = {:value => CGI::unescape(v), :domain => cookie_domain }
         end
       end
     rescue => e
