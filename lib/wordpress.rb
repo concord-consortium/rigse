@@ -157,9 +157,9 @@ class Wordpress
       "post_title" => post_title,
       "post_content" => post_content,
       "post_status" => "publish",
-      "post_author" => user_id,
-      "tags_input" => post_tags
+      "post_author" => user_id
     }
+    data["tags_input"] = post_tags if !post_tags.nil? && post_tags.length > 0
     return _create_xml("wp_insert_post", true, [data])
   end
 
