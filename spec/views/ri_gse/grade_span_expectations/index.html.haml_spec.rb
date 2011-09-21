@@ -1,6 +1,6 @@
-require File.expand_path('../../../spec_helper', __FILE__)
+require File.expand_path('../../../../spec_helper', __FILE__)
 
-describe "/grade_span_expectations/index.html.haml" do
+describe "/ri_gse/grade_span_expectations/index.html.haml" do
   
   before(:each) do
     target = mock('target', :number => 1, :description => "nothing here", :knowledge_statement => nil, :unifying_themes => [])
@@ -17,12 +17,14 @@ describe "/grade_span_expectations/index.html.haml" do
       mock_model(RiGse::GradeSpanExpectation,canned_responses),
       mock_model(RiGse::GradeSpanExpectation,canned_responses)
     ];
-    RiGse::GradeSpanExpectation.stub!(:paginate).and_return(@gses.paginate)
-    assigns[:grade_span_expectations] = @gses.paginate
+    # do this so will_paginate handles this array, there is probably a better approach
+    @gses.stub(:total_pages).and_return(1)
+    RiGse::GradeSpanExpectation.stub!(:paginate).and_return(@gses)
+    assign(:grade_span_expectations, @gses)
   end
 
   it "should render list of grade_span_expectations" do
-    render "/ri_gse/grade_span_expectations/index.html.haml"
+    render
     # TODO: Assert something about what we just rendered!
   end
 end
