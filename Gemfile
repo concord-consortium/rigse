@@ -1,3 +1,6 @@
+require "yaml"
+YAML::ENGINE.yamler= "psych"
+
 source "http://rubygems.org"
 
 #### COMMON
