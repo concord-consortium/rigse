@@ -41,7 +41,6 @@ describe Dataservice::BundleLogger do
     end
     it "should find the first and only content if there is only one valid bundle_conent" do
       @bundle_logger.bundle_contents << @good_bundle_content_1
-      debugger
       @bundle_logger.last_non_empty_bundle_content.should == @good_bundle_content_1
     end
     it "should find the third content if there are 3 valid bundle_conents" do
