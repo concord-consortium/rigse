@@ -57,8 +57,6 @@ source "http://rubygems.org"
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
   gem 'dynamic_form',         "~> 1.1.4"
 
-  gem 'delayed_job',           "~> 2.1.4"
-
 group :development do
   gem "rake",                 "~> 0.9.2"
   gem "highline"
