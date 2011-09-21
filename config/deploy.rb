@@ -13,7 +13,9 @@ set :stages, %w(
   xproject-dev
   genomedynamics-dev genomedynamics-staging genomedynamics-production
   fall2009 jnlp-staging seymour
-  sparks-dev sparks-staging sparks-production)
+  sparks-dev sparks-staging sparks-production
+  xproject3-dev)
+
 set :default_stage, "development"
 
 def render(file,opts={})
