@@ -58,6 +58,7 @@ source "http://rubygems.org"
   gem 'dynamic_form',         "~> 1.1.4"
 
   gem 'delayed_job',           "~> 2.1.4"
+  gem 'workless'
 
 group :development do
   gem "rake",                 "~> 0.9.2"
