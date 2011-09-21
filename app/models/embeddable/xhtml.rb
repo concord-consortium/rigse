@@ -31,9 +31,6 @@ class Embeddable::Xhtml < ActiveRecord::Base
 
   send_update_events_to :investigations
   
-  def self.display_name
-    "Text"
-  end
   
   def investigations
     invs = []

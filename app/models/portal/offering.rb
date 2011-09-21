@@ -55,9 +55,6 @@ class Portal::Offering < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Offering"
-    end
   end
 
   def refresh_saveable_response_objects

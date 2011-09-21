@@ -60,6 +60,12 @@ class ResourcePagesController < ApplicationController
 
   def create
     @resource_page = current_user.resource_pages.new(params[:resource_page])
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @resource_page.cohort_list = (params[:cohorts] || [])
+    end
+
     unless @resource_page.save
       render :action => 'new' and return
     end
@@ -73,6 +79,12 @@ class ResourcePagesController < ApplicationController
   end
 
   def update
+    if params[:update_cohorts]
+      # set the cohort tags
+      @resource_page.cohort_list = (params[:cohorts] || [])
+      @resource_page.save
+    end
+
     unless @resource_page.update_attributes(params[:resource_page].merge({:new_attached_files => params[:attached_files]}))
       render :action => 'edit' and return
     end

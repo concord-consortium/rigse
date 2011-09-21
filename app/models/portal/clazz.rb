@@ -59,9 +59,6 @@ class Portal::Clazz < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Class"
-    end
 
     def has_offering
       Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}

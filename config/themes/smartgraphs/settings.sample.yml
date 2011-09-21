@@ -21,13 +21,16 @@ development: &id003
   :site_name: SmartGraphs
   :site_url: http://smartgraphs.dev.concord.org
   :enable_default_users: true
+  :runnable_mime_type: run_external_html
+  :default_maven_jnlp: 
+  :runnables_use: browser
   :default_admin_user:
     :first_name: Aaron
     :last_name: Unger
     :login: aunger
     :email: aunger@concord.org
   :states_and_provinces:
-  - MA PA
+  - MA
 test: *id003
 production: *id003
 staging: *id003

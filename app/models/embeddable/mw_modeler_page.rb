@@ -26,9 +26,6 @@ class Embeddable::MwModelerPage < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Molecular Workbench Model"
-  end
 
   def investigations
     invs = []

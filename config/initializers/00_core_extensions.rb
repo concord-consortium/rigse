@@ -1,3 +1,5 @@
+
+require 'lib/local_names'
 # Recursively converts the keys in a Hash to symbols.
 # Also converts the keys in any Array elements which are 
 # Hashes to symbols.
@@ -60,4 +62,78 @@ module ActionView
     end
   end
 end
+
+# Sproutcore wants urls with fragment then query, whereas default URI ouputs query then fragment
+module URI
+  class Generic
+    def to_sc
+      str = ''
+      if @scheme
+        str << @scheme
+        str << ':'
+      end
+
+      if @opaque
+        str << @opaque
+
+        if @fragment
+          str << '#'
+          str << @fragment
+        end
+      else
+        if @registry
+          str << @registry
+        else
+          if @host
+            str << '//'
+          end
+          if self.userinfo
+            str << self.userinfo
+            str << '@'
+          end
+          if @host
+            str << @host
+          end
+          if @port && @port != self.default_port
+            str << ':'
+            str << @port.to_s
+          end
+        end
+
+        str << sc_path_query
+      end
+
+      str
+    end
+
+    def sc_path_query
+      str = @path
+
+      if @fragment
+        str << '#'
+        str << @fragment
+      end
+
+      if @query
+        str += '?' + @query
+      end
+      str
+    end
+
+  end
+end
+
+# Define Object#dipsplay_name
+# See:
+#    lib/local_names.rb,
+#    spec/libs/local_names_spec.rb,
+#    spec/core_extensions/object_extensions_spec.rb
+module DisplayNameMethod
+  def display_name
+    LocalNames.instance.local_name_for(self)
+  end
+end
+
+# include #display_name everywhere
+Object.send(:include, DisplayNameMethod)
 

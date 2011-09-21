@@ -78,9 +78,6 @@ class ExternalUserDomain < ActiveRecord::Base
       @@external_domain_selection = ExternalUserDomain::URL_MAP[server_url.last == '/' ? server_url : "#{server_url}/"]
     end
     
-    def display_name
-      "External User Domain"
-    end
     
   end
 end

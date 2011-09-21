@@ -23,7 +23,6 @@ class Embeddable::SoundGrapher < ActiveRecord::Base
   validates_inclusion_of :max_sample_time, :in => self.valid_max_sample_times
 
   acts_as_replicatable
-  send_update_events_to :investigations
 
   include Changeable
 
@@ -48,9 +47,6 @@ class Embeddable::SoundGrapher < ActiveRecord::Base
   default_value_for :max_frequency, self.valid_max_frequencies.first
   default_value_for :max_sample_time, self.valid_max_sample_times.first
 
-  def self.display_name
-    "Sound Grapher"
-  end
 
 
 end

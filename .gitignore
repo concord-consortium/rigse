@@ -71,6 +71,5 @@ local_files
 .bundle/
 public/sparks-content/
 public/stylesheets/*.css
-users_created.csv
-users_error*
-users_updated.csv
+config.ru
+bin/

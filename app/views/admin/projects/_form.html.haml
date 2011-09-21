@@ -46,6 +46,12 @@
             (This option insures that all labbook entries are treated like simple images.)
           %li
             %b
+            = f.label :teachers_can_author, "Teachers can author:", :style => "display:inline;"
+            = f.check_box :teachers_can_author
+            %br
+            (This option changes whether or not teachers are considered authors by default.)
+          %li
+            %b
             = f.label :opportunistic_installer, "Opportunistic Installer:", :style => "display:inline;"
             = f.check_box :opportunistic_installer
             %br

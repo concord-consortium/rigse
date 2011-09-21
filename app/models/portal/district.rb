@@ -19,9 +19,6 @@ class Portal::District < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
-    def display_name
-      "District"
-    end
     
     ##
     ## Given an NCES local district id that matches the STID field in an NCES district
