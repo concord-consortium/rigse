@@ -3,7 +3,11 @@
 
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
-require 'rspec/core/rake_task'
+
+begin
+  require "rspec/core/rake_task"
+rescue LoadError
+end
 
 include Rake::DSL
 
