@@ -18,17 +18,10 @@ class Wordpress
     user_id = _get_user_id(user.login)
 
     # render the content template
-    content = _create_blog_post_xml(post_title, post_content, user_id)
+    content = _create_blog_post_xml(post_title, post_content, user_id, post_tags)
 
     # URI.parse("#{overlay_root}/#{runnable_id}")
     result = _post(content, blog)
-
-    # get the post id from the response
-    if !post_tags.nil? && post_tags.length > 0 && result.body =~ %r!<string>([0-9]+)</string>!
-      post_id = $1
-      content = _create_post_tags_xml(post_id, post_tags)
-      r2 = _post(content, blog)
-    end
 
     return result
   end
@@ -159,20 +152,16 @@ class Wordpress
     return _create_xml("add_user_to_blog", true, [blog_id, user_id, role])
   end
 
-  def _create_blog_post_xml(post_title, post_content, user_id)
+  def _create_blog_post_xml(post_title, post_content, user_id, post_tags)
     data = {
       "post_title" => post_title,
       "post_content" => post_content,
       "post_status" => "publish",
-      "post_author" => user_id
+      "post_author" => user_id,
+      "tags_input" => post_tags
     }
     return _create_xml("wp_insert_post", true, [data])
   end
-
-  def _create_post_tags_xml(post_id, post_tags)
-    return _create_xml("wp_set_post_tags", true, [post_id, post_tags])
-  end
-
 
   def _create_create_class_blog_xml(class_word, teacher, class_name)
     user_id = _get_user_id(teacher.login)
