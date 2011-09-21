@@ -3,6 +3,9 @@ Factory.define :dataservice_bundle_content, :class => Dataservice::BundleContent
   ziped_otml = Dataservice::BundleContent.b64gzip_pack(learner_otml)
   learner_socks = "<ot.learner.data><sockEntries value=\"#{ziped_otml}\"/></ot.learner.data>"
   f.body "<sessionBundles>#{learner_socks}</sessionBundles>"
+end
+
+Factory.define :full_dataservice_bundle_content, :parent => :dataservice_bundle_content do |f|
   f.association :bundle_logger, :factory => :dataservice_bundle_logger
 end
 

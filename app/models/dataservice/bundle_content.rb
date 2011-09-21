@@ -189,8 +189,12 @@ class Dataservice::BundleContent < ActiveRecord::Base
     return nil
   end
   
+  def otml_empty?
+    !self.otml || self.otml.size <= 17
+  end
+  
   def extract_saveables
-    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
+    raise "BundleContent ##{self.id}: otml is empty!" if otml_empty?
     extractor = Otrunk::ObjectExtractor.new(self.otml)
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)
