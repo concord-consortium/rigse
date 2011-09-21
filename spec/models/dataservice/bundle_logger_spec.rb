@@ -13,10 +13,18 @@ describe Dataservice::BundleLogger do
 
   describe "last_non_empty_bundle_content finder sql" do
     before(:each) do
+      # disable the after_save there is observer_spec to test that specific call
+      # we might want to try out the no_peeping_toms gem to handle this 
+      # https://github.com/patmaddox/no-peeping-toms
+      # disabling this also allows us to make invalid bundles for testing
+      Dataservice::BundleContentObserver.instance.should_receive(:after_save).any_number_of_times
+
       @bundle_logger = Dataservice::BundleLogger.create(@valid_attributes)
       @good_bundle_content_1 = Factory(:dataservice_bundle_content)
       @good_bundle_content_2 = Factory(:dataservice_bundle_content)
       @good_bundle_content_3 = Factory(:dataservice_bundle_content)
+
+      # these won't succeed with synchronous bundle processing
       @bad_null_body_content = Dataservice::BundleContent.create()
       @bad_invalid_xml_content = Factory(:dataservice_bundle_content, :body=>"goo")
     end
@@ -33,6 +41,7 @@ describe Dataservice::BundleLogger do
     end
     it "should find the first and only content if there is only one valid bundle_conent" do
       @bundle_logger.bundle_contents << @good_bundle_content_1
+      debugger
       @bundle_logger.last_non_empty_bundle_content.should == @good_bundle_content_1
     end
     it "should find the third content if there are 3 valid bundle_conents" do
