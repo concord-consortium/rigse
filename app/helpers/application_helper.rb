@@ -450,11 +450,11 @@ module ApplicationHelper
         options[:redirect] ||= url_for model.parent
       end
       if options[:redirect]
-        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
+        url = url_for(:controller => controller, :id => model.id, :action => :destroy, :redirect=>options[:redirect])
       else
-        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+        url = url_for(:controller => controller, :id => model.id, :action => :destroy)
       end
-      remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
+      remote_link_button "delete.png", :method => :delete, :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
     end
   end
 

@@ -26,12 +26,8 @@ describe  Portal::SchoolsController do
       { :put => "portal/schools/1" }.should route_to(:controller => "portal/schools", :action => "update", :id => "1") 
     end
 
-# TODO: Totally not restful.  We should change
-# all routes to use :delete, and then modify
-# the delete_button in application controller
-# to use :method => :delete
     it "recognizes and generates #destroy" do
-      { :post => "portal/schools/1/destroy" }.should route_to(:controller => "portal/schools", :action => "destroy", :id => "1") 
+      { :delete => "portal/schools/1" }.should route_to(:controller => "portal/schools", :action => "destroy", :id => "1") 
     end
   end
 end

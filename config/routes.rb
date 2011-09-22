@@ -42,69 +42,15 @@ RailsPortal::Application.routes.draw do
       resources :range_questions
     end
     namespace :biologica do
-      resources :chromosome_zooms do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :multiple_organisms do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :breed_offsprings do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :meiosis_views do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :chromosomes do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :pedigrees do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :static_organisms do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :organisms do
-
-        member do
-          post :destroy
-        end
-
-      end
-      resources :worlds do
-
-        member do
-          post :destroy
-        end
-
-      end
+      resources :chromosome_zooms
+      resources :multiple_organisms
+      resources :breed_offsprings
+      resources :meiosis_views
+      resources :chromosomes
+      resources :pedigrees
+      resources :static_organisms
+      resources :organisms
+      resources :worlds
     end
     resources :inner_pages do
       member do
@@ -112,84 +58,49 @@ RailsPortal::Application.routes.draw do
         post :delete_page
         post :add_page
         post :add_element
-        post :destroy
         post :set_page
       end
     end
-    resources :lab_book_snapshots do
-      member do
-        post :destroy
-      end
-    end
-    resources :raw_otmls do
-      member do
-        post :destroy
-      end
-    end
-    resources :n_logo_models do
-      member do
-        post :destroy
-      end
-    end
-    resources :mw_modeler_pages do
-      member do
-        post :destroy
-      end
-    end
+    resources :lab_book_snapshots
+    resources :raw_otmls
+    resources :n_logo_models
+    resources :mw_modeler_pages
     resources :data_tables do
       member do
         post :update_cell_data
-        post :destroy
         get :print
       end
     end
     resources :multiple_choices do
       member do
         post :add_choice
-        post :destroy
         get :print
       end
     end
     resources :drawing_tools do
       member do
-        post :destroy
         get :print
       end
     end
     resources :xhtmls do
       member do
-        post :destroy
         get :print
       end
     end
     resources :open_responses do
       member do
-        post :destroy
         get :print
       end
     end
     resources :data_collectors do
       member do
         put :change_probe_type
-        post :destroy
         get :print
       end
     end
-    resources :sound_graphers do
-      member do
-        post :destroy
-      end
-    end
-    resources :image_questions do
-      member do
-        post :destroy
-      end
-    end
-    resources :video_players do
-      member do
-        post :destroy
-      end
-    end
+    resources :sound_graphers
+    resources :image_questions
+    resources :video_players
   end
 
   namespace :smartgraph do
@@ -220,11 +131,7 @@ RailsPortal::Application.routes.draw do
 
     resources :courses
 
-    resources :districts do
-      member do
-        post :destroy
-      end
-    end
+    resources :districts
 
     resources :grades
 
@@ -258,11 +165,7 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    resources :schools do
-      member do
-        post :destroy
-      end
-    end
+    resources :schools
 
     resources :school_memberships
 
@@ -375,11 +278,7 @@ RailsPortal::Application.routes.draw do
 
   resources :teacher_notes
   resources :author_notes
-  resources :lab_book_snapshots do
-    member do
-      post :destroy
-    end
-  end
+  resources :lab_book_snapshots
 
   resources :inner_pages do
     member do
@@ -387,87 +286,37 @@ RailsPortal::Application.routes.draw do
       post :delete_page
       post :add_page
       post :add_element
-      post :destroy
       post :set_page
     end
   end
 
-  resources :biologica_chromosome_zooms do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_chromosome_zooms
 
-  resources :biologica_multiple_organisms do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_multiple_organisms
 
-  resources :biologica_breed_offsprings do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_breed_offsprings
 
-  resources :biologica_meiosis_views do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_meiosis_views
 
-  resources :biologica_chromosomes do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_chromosomes
 
-  resources :biologica_pedigrees do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_pedigrees
 
-  resources :biologica_static_organisms do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_static_organisms
 
-  resources :biologica_organisms do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_organisms
 
-  resources :biologica_worlds do
-    member do
-      post :destroy
-    end
-  end
+  resources :biologica_worlds
 
-  resources :raw_otmls do
-    member do
-      post :destroy
-    end
-  end
+  resources :raw_otmls
 
-  resources :n_logo_models do
-    member do
-      post :destroy
-    end
-  end
+  resources :n_logo_models
 
-  resources :mw_modeler_pages do
-    member do
-      post :destroy
-    end
-  end
+  resources :mw_modeler_pages
 
   resources :data_tables do
     member do
       post :update_cell_data
-      post :destroy
       get :print
     end
   end
@@ -475,28 +324,24 @@ RailsPortal::Application.routes.draw do
   resources :multiple_choices do
     member do
       post :add_choice
-      post :destroy
       get :print
     end
   end
 
   resources :drawing_tools do
     member do
-      post :destroy
       get :print
     end
   end
 
   resources :xhtmls do
     member do
-      post :destroy
       get :print
     end
   end
 
   resources :open_responses do
     member do
-      post :destroy
       get :print
     end
   end
@@ -504,7 +349,6 @@ RailsPortal::Application.routes.draw do
   resources :data_collectors do
     member do
       put :change_probe_type
-      post :destroy
       get :print
     end
   end
@@ -521,7 +365,6 @@ RailsPortal::Application.routes.draw do
       post :add_page
       get :add_page
       get :usage_report
-      post :destroy
       get :print
     end
   end
@@ -534,7 +377,6 @@ RailsPortal::Application.routes.draw do
       post :paste_link
       get :preview
       post :add_element
-      post :destroy
       get :print
       post :paste
     end
@@ -547,11 +389,7 @@ RailsPortal::Application.routes.draw do
     resources :data_collectors
   end
 
-  resources :page_elements do
-    member do
-      post :destroy
-    end
-  end
+  resources :page_elements
 
   resources :investigations do
     collection do
@@ -564,7 +402,6 @@ RailsPortal::Application.routes.draw do
       get :add_activity
       get :usage_report
       post :sort_activities
-      post :destroy
       get :print
       post :delete_activity
       get :export
@@ -583,7 +420,6 @@ RailsPortal::Application.routes.draw do
       post :add_section
       get :add_section
       post :sort_sections
-      post :destroy
       get :print
       post :delete_section
       get :export
@@ -603,7 +439,6 @@ RailsPortal::Application.routes.draw do
   resources :external_activities do
     member do
       get :duplicate
-      post :destroy
     end
   end
 
