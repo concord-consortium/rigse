@@ -77,13 +77,10 @@ describe RinetData do
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
       #pending "Broken example"
       Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'random message'))
-      @rinet_data.should_receive('log_message') do |a, b|
+      @rinet_data.should_receive(:log_message) do |a, b|
         a.should =~ @failed_connection_log
       end
-      begin
-        @rinet_data.get_csv_files
-      rescue
-      end
+      lambda { @rinet_data.get_csv_files }.should raise_error
     end
 
     it "should be resilient in the event that a local/remote directory/file does not exist" do
