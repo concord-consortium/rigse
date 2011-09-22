@@ -127,3 +127,11 @@ end
 Given /^PENDING/ do
   pending
 end
+
+When /^(?:|I )accept the dialog$/ do 
+  page.driver.browser.switch_to.alert.accept
+end
+
+When /^(?:|I )dismiss the dialog$/ do 
+  page.driver.browser.switch_to.alert.dismiss
+end

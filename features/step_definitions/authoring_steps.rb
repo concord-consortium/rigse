@@ -8,6 +8,12 @@ When /^(?:|I )follow xpath "([^\"]*)"$/ do |xpath|
   node.click
 end
 
+When /show the first section of the "(.*)" investigation$/ do |investigation_name|
+  investigation = Investigation.find_by_name(investigation_name)
+  section = investigation.sections.first
+  visit section_path(section)
+end
+
 When /show the first page of the "(.*)" investigation$/ do |investigation_name|
   investigation = Investigation.find_by_name(investigation_name)
   page = investigation.pages.first
