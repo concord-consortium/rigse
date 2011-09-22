@@ -147,15 +147,17 @@ Logging to: #{File.expand_path(@log_path)}
     @nces_schools = {}
   end
 
+  def skip_get_csv_files
+    return @rinet_data_options[:skip_get_csv_files]
+  end
 
   def run_scheduled_job(opts = {})
     # disable observable behavior on useres for import task
 
     start_time = Time.now
-    if @rinet_data_options[:skip_get_csv_files]
+    if skip_get_csv_files
       log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
     else
-      log_message "\n (getting csv files ...)\n"
       get_csv_files
     end
 
@@ -201,7 +203,7 @@ Logging to: #{File.expand_path(@log_path)}
       rescue RuntimeError => e
         log_message "Runtime exception for district #{district}", {:log_level => 'error'}
         log_message e.message, {:log_level => 'error'}
-        log_message e.backtrace, {:log_level => 'debug'}
+        log_message e.backtrace.join("\n    "), {:log_level => 'debug'}
       end
 
 
@@ -266,8 +268,6 @@ Logged to: #{File.expand_path(@log_path)}
   end
 
   def get_csv_files
-    log_message("*** Skipping download of csv files... FIXME rinet_data.rb")
-    return
     begin
       Net::SFTP.start(@rinet_data_config[:host], @rinet_data_config[:username] , :password => @rinet_data_config[:password]) do |sftp|
         @districts.each do |district|
@@ -276,7 +276,7 @@ Logged to: #{File.expand_path(@log_path)}
       end
     rescue Exception => e
       log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
-      raise
+      raise e
     end
   end
 
@@ -334,7 +334,7 @@ Logged to: #{File.expand_path(@log_path)}
     # if row.respond_to? fields
     FasterCSV.parse(line) do |row|
       if row.class == Array
-        row.fields = FIELD_DEFINITIONS[key]
+        row.fields = csv_field_columns[key]
         @parsed_data[key] << row
       else
         log_message("couldn't add row data for #{key}: #{line}", {:log_level => :error})
@@ -445,8 +445,8 @@ Logged to: #{File.expand_path(@log_path)}
     if row[:email]
       return row[:email]
     end
-    if row[:EmailAddress] && row[:EmailAddress].length > 0
-      row[:email] = email = row[:EmailAddress].gsub(/\s+/,"").size > 4 ? row[:EmailAddress].gsub(/\s+/,"") : nil
+    if row[:EmailAddress] && ( row[:EmailAddress].gsub(/\s+/,"").size > 4 )
+      row[:email] = email = row[:EmailAddress].gsub(/\s+/,"")
     else
       login = User.suggest_login(firstname(row),lastname(row))
       row[:email] = "#{login}@mailinator.com" 
@@ -477,8 +477,9 @@ Logged to: #{File.expand_path(@log_path)}
     }
   end
 
+
   def create_user(row)
-    password = row[:Password] || row[:Birthdate]
+    password = row[:Password] || row[:Birthdate] || ""
     login = User.suggest_login(row[:Firstname],row[:Lastname])
     # Some teachers had small < 6 char passwords, which will fail validation
     while password.length < 6
@@ -796,7 +797,7 @@ Logged to: #{File.expand_path(@log_path)}
     login = ""
     while login == ""
       student_row = student_rows[(rand * student_rows.length-1).round]
-      student_row.fields = FIELD_DEFINITIONS[:students]
+      student_row.fields = csv_field_columns[:students]
       sassid = student_row[:SASID]
       password = student_row[:Birthdate]
       open(student_sakai_file_name) do |fd|
@@ -821,7 +822,7 @@ Logged to: #{File.expand_path(@log_path)}
     login = nil
     while login.nil?
       staff_row = staf_rows[(rand * staf_rows.length-1).round]
-      staff_row.fields = FIELD_DEFINITIONS[:staff]
+      staff_row.fields = csv_field_columns[:staff]
       cert_no = staff_row[:TeacherCertNum]
       password = staff_row[:Password]
       login = find_staff_login(district,cert_no)
@@ -841,9 +842,6 @@ Logged to: #{File.expand_path(@log_path)}
     nil
   end
 
-  #
-  # TODO: What? email send to log?
-  #
   def report(message)
     log_message(message, {:log_level => :error})
     @report.info(message)
@@ -951,7 +949,7 @@ Logged to: #{File.expand_path(@log_path)}
   def user_report(user_record_array)
     return_string = ""
     user_record_array.sort{|a,b| a[0] <=> a[0]}.each do |row|
-      return_string += row.join(", ")
+      return_string += row.join(",")
       return_string += "\n"
     end
     return return_string
