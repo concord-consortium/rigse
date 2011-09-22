@@ -1,6 +1,6 @@
-Feature: An author deletes a page from a section
+Feature: An author deletes parts of an investigation
   As a Investigations author
-  I want to delete a page from a section
+  I want to delete parts of my investigation
   So that I can revise my investigation
 
   Background:
@@ -21,4 +21,16 @@ Feature: An author deletes a page from a section
     When I follow "delete"
     And accept the dialog
     Then I should not see "Page: testing fast cars"
-    
+
+    @selenium
+    Scenario: The author deletes a element from a page
+      Given the following users exist:
+        | login  | password | roles          |
+        | author | author   | member, author |
+      And the author "author" created an investigation named "Test" with text and a open response question
+      And I login with username: author password: author
+      And I show the first page of the "Test" investigation
+      Then I should see "Text: "
+      When I follow "delete text"
+      And accept the dialog
+      Then I should not see "Text: "

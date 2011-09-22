@@ -20,6 +20,22 @@ Given /^the following simple investigations exist:$/ do |investigation_table|
   end
 end
 
+Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text and a open response question$/ do |author, name|
+  user = User.first(:conditions => { :login => author })
+  hash = {:user_id => user.id, :name => name}
+  investigation = Investigation.create(hash)
+  activity = Activity.create(hash)
+  section = Section.create(hash)
+  page = Page.create(hash)
+  section.pages << page
+  activity.sections << section
+  investigation.activities << activity
+  page.add_embeddable(Embeddable::Xhtml.create(hash))
+  page.add_embeddable(Embeddable::OpenResponse.create(hash))
+  page.save
+  investigation.save
+end
+
 #Table: | investigation | activity | section   | page   | multiple_choices |
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
