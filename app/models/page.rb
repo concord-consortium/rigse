@@ -177,6 +177,10 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_embeddable(embeddable)
+    page_elements << PageElement.create(:user => user, :embeddable => embeddable)
+  end
+  
   def add_element(element)
     element.pages << self
     element.save
