@@ -1,7 +1,7 @@
 namespace :app do
   namespace :import do
     desc "import SIS student"
-    task :sis_import > :environment do
+    task :sis_import => :environment do
       SisImporter::SisImporter.new({:verbose => true, :log_level => Logger::ERROR}).run_scheduled_job
     end
   end
