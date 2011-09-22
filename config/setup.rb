@@ -204,8 +204,8 @@ if @options[:force] && File.exists?(@db_config_path)
   FileUtils.rm(@db_config_path)
 end
 @db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
-@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
-@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
+@sis_import_data_config_path        = rails_file_path(%w{config sis_import_data.yml})
+@sis_import_data_config_sample_path = rails_file_path(%w{config sis_import_data.sample.yml})
 @mailer_config_path            = rails_file_path(%w{config mailer.yml})
 @mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
 
@@ -255,7 +255,7 @@ Initial setup of Rails Portal application named '#{@options[:app_name]}' ...
 HEREDOC
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
-@rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
+@sis_import_data_config_sample      = YAML::load_file(@sis_import_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
 
 if @options[:site_url]
@@ -266,7 +266,7 @@ end
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
-@new_rinet_data_yml_created = false
+@new_sis_import_data_yml_created = false
 @new_mailer_yml_created = false
 @new_sds_yml_created = false
 
@@ -383,17 +383,17 @@ def create_new_mailer_yml
   File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
 end
 
-def create_new_rinet_data_yml
-  @rinet_data_config = @rinet_data_config_sample
+def create_new_sis_import_data_yml
+  @sis_import_data_config = @sis_import_data_config_sample
   unless @options[:quiet]
     puts <<-HEREDOC
 
-       creating: #{@rinet_data_config_path}
-  from template: #{@rinet_data_config_sample_path}
+       creating: #{@sis_import_data_config_path}
+  from template: #{@sis_import_data_config_sample_path}
 
     HEREDOC
   end
-  File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+  File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
 end
 
 # ==================================================================
@@ -600,10 +600,10 @@ def check_for_config_mailer_yml
 end
 
 #
-# check for config/rinet_data.yml
+# check for config/sis_import_data.yml
 #
-def check_for_config_rinet_data_yml
-  unless file_exists_and_is_not_empty?(@rinet_data_config_path)
+def check_for_config_sis_import_data_yml
+  unless file_exists_and_is_not_empty?(@sis_import_data_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -611,8 +611,8 @@ def check_for_config_rinet_data_yml
 
       HEREDOC
     end
-    create_new_rinet_data_yml
-    @new_rinet_data_yml_created = true
+    create_new_sis_import_data_yml
+    @new_sis_import_data_yml_created = true
   end
 end
 
@@ -762,48 +762,48 @@ specify the values for the mysql database name, host, username, password.
 end
 
 #
-# update config/rinet_data.yml
+# update config/sis_import_data.yml
 #
-def update_config_rinet_data_yml
-  @rinet_data_config = YAML::load_file(@rinet_data_config_path)
+def update_config_sis_import_data_yml
+  @sis_import_data_config = YAML::load_file(@sis_import_data_config_path)
 
   unless @options[:quiet]
     puts <<-HEREDOC
 ----------------------------------------
 
-Updating the RINET CSV Account import configuration file: config/rinet_data.yml
+Updating the RINET CSV Account import configuration file: config/sis_import_data.yml
 
 Specify values for the host, username and password for the RINET SFTP
 site to download import account data in CSV format.
 
-Here are the current settings in config/rinet_data.yml:
+Here are the current settings in config/sis_import_data.yml:
 
-#{@rinet_data_config.to_yaml}
+#{@sis_import_data_config.to_yaml}
     HEREDOC
   end
   if @options[:answer_yes] || agree("Accept defaults? (y/n) ")
-    File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
   else
-    create_new_rinet_data_yml unless @new_rinet_data_yml_created
+    create_new_sis_import_data_yml unless @new_sis_import_data_yml_created
 
     %w{development test staging production}.each do |env|
-      puts "\nSetting parameters for the #{env} rinet_data:\n"
-      @rinet_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @rinet_data_config[env]['host'] }
-      @rinet_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @rinet_data_config[env]['username'] }
-      @rinet_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_config[env]['password'] }
+      puts "\nSetting parameters for the #{env} sis_import_data:\n"
+      @sis_import_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @sis_import_data_config[env]['host'] }
+      @sis_import_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @sis_import_data_config[env]['username'] }
+      @sis_import_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @sis_import_data_config[env]['password'] }
       puts
     end
 
     unless @options[:quiet]
       puts <<-HEREDOC
 
-    Here is the updated rinet_data configuration:
-    #{@rinet_data_config.to_yaml}
+    Here is the updated sis_import_data configuration:
+    #{@sis_import_data_config.to_yaml}
       HEREDOC
     end
 
-    if agree("OK to save to config/rinet_data.yml? (y/n): ")
-      File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    if agree("OK to save to config/sis_import_data.yml? (y/n): ")
+      File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
     end
   end
 end
@@ -1151,13 +1151,13 @@ end
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
-check_for_config_rinet_data_yml
+check_for_config_sis_import_data_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-update_config_rinet_data_yml
+update_config_sis_import_data_yml
 update_config_mailer_yml
 if @options[:quiet]
   puts "done.\n\nTo finish (if you are building from scratch):\n\n"
