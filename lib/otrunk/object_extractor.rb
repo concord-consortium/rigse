@@ -11,12 +11,10 @@ class Otrunk::ObjectExtractor
     
     return element.get_attribute(property) if element.has_attribute?(property)
     
-    prop = element.children_of_type(property)
-    prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
-    
-    # we should now have nil or an element
-    return '' unless prop.kind_of?(Nokogiri::Elem)
-    return (prop.nil? ? '' : prop.inner_text.strip)
+    prop = element.xpath("./#{property}/text()")
+    return '' if prop.nil?
+    prop = prop[0] if prop.size > 1
+    prop.text
   end
   
   # returns an array of zero or more elements or attributes
@@ -25,11 +23,13 @@ class Otrunk::ObjectExtractor
     
     return [element.get_attribute(property)] if element.has_attribute?(property)
     
-    prop = element.children_of_type(property)
-    prop = prop[0] if prop.size > 0  # shouldn't ever be more than one...
+    prop = element.xpath("./#{property}")
+    return [] if prop.nil?
+    prop = prop[0] # shouldn't ever be more than one...
     
-    # we should now have nil or an element
-    return [] if prop.nil? || ! prop.kind_of?(Nokogiri::Elem)
+    # we should now have an element
+    return [] if ! prop.kind_of?(Nokogiri::XML::Element)
+    
     resolved_children = resolve_elements(prop.children)
     if property =~ /\[(.*)\]$/
       return [resolved_children[$1.to_i]]
