@@ -1,23 +1,23 @@
 # Latest data descriptions can be found here:
 # RITES SIS Integration 2011 - Google Docs http://bit.ly/rfPdJ5
+# TODO: Use yaml for defining a set of field definitions
+# TODO: Use a namespace 
+# TODO: convert to a class
 
 module RinetCsvFields
-  FIELD_DEFINITIONS = {
-    # Birthdate         student’s birth date (yyyy-mm-dd)   Y
-    # AdvisorID         advisor’s certification number   
-    # SASID             state assigned student ID   Y
-    # SchoolNumber      5 digit school ID assigned by state   Y
-    # District          2 digit district ID assigned by state   Y
-    # ClassYear         year student will graduate (YYYY)    
-    # HomeroomNumber    student’s HR   
-    # BeginEnrollDate   enrollment date (yyyy-mm-dd)   
-    # EndEnrollDate     withdrawal date (yyyy-mm-dd)   
-    # LASID             local student ID   
-    # IEP               does student have an IEP (Y/N)   
-    # LEP               special ed student? (Y/N)    
-    # CounselorID       counselors’ certificate number   
-    # HomeroomTeacher   HR teacher’s certificate number
-    :students => [
+
+  def csv_field_columns
+    {
+      :students          => students_columns,
+      :staff             => staff_columns,
+      :courses           => courses_columns,
+      :enrollments       => enrollments_columns,
+      :staff_assignments => staff_assignments_columns
+    }
+  end
+
+  def students_columns
+     @students ||= [
       :Lastname ,
       :Firstname,
       :EmailAddress,
@@ -30,41 +30,27 @@ module RinetCsvFields
       :BeginEnrollDate,
       :EndEnrollDate,
       :LASID
-    ],
+    ]
+  end
 
-    # District            2 digit district ID assigned by state   Y
-    # SchoolNumber        5 digit school ID assigned by state   Y
-    # Password            Initial password for teacher  Y
-    # TeacherCertNum      cert number assigned by RIDE  Y
-    # StaffType           type of staff, usually Teacher   
-    # LocalStaffID        local staff/faculty ID
-    :staff => [
-        :Lastname,
-        :Firstname,
-        :EmailAddress,
-        :Phone,
-        :Extention,
-        :District,
-        :SchoolNumber,
-        :Password,
-        :TeacherCertNum,
-        :StaffType,
-        :LocalStaffID
-    ],
+  def staff_columns
+    @staff ||= [
+      :Lastname,
+      :Firstname,
+      :EmailAddress,
+      :Phone,
+      :Extention,
+      :District,
+      :SchoolNumber,
+      :Password,
+      :TeacherCertNum,
+      :StaffType,
+      :LocalStaffID
+    ]
+  end
 
-    # CourseNumber        course identifier   Y
-    # CourseSection       section identifier  Y
-    # Term                term the course takes place in  Y
-    # Title               course title  Y
-    # Description         brief course description   
-    # StartDate           Date course starts (yyyy-mm-dd)   Y
-    # EndDate             Date course ends (yyyy-mm-dd)   Y
-    # SchoolNumber        5 digit school ID assigned by state   Y
-    # District            2 digit district ID assigned by state   Y
-    # Status              0=active course, 1=not active    
-    # CourseAbbreviation  Title to use in the user interface  Y
-    # Department          DepartmentID
-    :courses => [
+  def courses_columns
+    @courses ||= [
       :CourseNumber,
       :CourseSection,
       :Term,
@@ -77,17 +63,11 @@ module RinetCsvFields
       :Status,
       :CourseAbbreviation,
       :Department
-    ],
+    ]
+  end
 
-    # SASID               state assigned student ID   Y
-    # CourseNumber        course identifier   Y
-    # CourseSection       section identifier  Y
-    # Term                term the course takes place in  Y
-    # District            2 digit district ID assigned by state   Y
-    # StartDate           Date course starts (yyyy-mm-dd)   Y
-    # SchoolNumber        5 digit school ID assigned by state   Y
-    # Status              0=active course, 1=not active
-    :enrollments => [
+  def enrollments_columns
+    @ernollments ||= [
       :SASID,
       :CourseNumber,
       :CourseSection,
@@ -96,16 +76,11 @@ module RinetCsvFields
       :StartDate,
       :SchoolNumber,
       :Status
-    ],
+    ]
+  end
 
-    # TeacherCertNum      cert number assigned by RIDE    Y
-    # CourseNumber        course identifier   Y
-    # CourseSection       section identifier  Y
-    # Term                term the course takes place in  Y
-    # District            2 digit district ID assigned by state   Y
-    # StartDate           Date course starts (yyyy-mm-dd)   Y
-    # SchoolNumber        5 digit school ID assigned by state   Y
-    :staff_assignments => [
+  def staff_assignments_columns
+    @staff_assignments ||= [
       :TeacherCertNum,
       :CourseNumber,
       :CourseSection,
@@ -113,28 +88,6 @@ module RinetCsvFields
       :District,
       :StartDate,
       :SchoolNumber
-    ],
-
-    
-    ###############################################
-    # NP: July 2011, Sakai removed permenantly.
-    # 
-    ###############################################
-    # # TeacherCertNum      cert number assigned by RIDE    Y
-    # # SakaiLogin          Sakai Login generated by RINET
-    # :staff_sakai => [
-    #   :TeacherCertNum,
-    #   :SakaiLogin
-    # ],
-
-    # # SASID               state assigned student ID   Y
-    # # SakaiLogin          Sakai Login generated by RINET
-    # :student_sakai => [
-    #   :SASID,
-    #   :SakaiLogin
-    # ]
-  }
+    ]
+  end
 end
-
-
-
