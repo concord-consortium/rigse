@@ -1,3 +1,5 @@
-teacher,d,rcooney@cpsed.net,6173333333, x,02,02,bailey,04,AP,002504
-teacher,e,jpotemri@cpsed.net,6173333333, x,02,02,bolts10,05,AP,004227
-teacher,f,lwagner@cpsed.net,6173333333, x,02,02,cruises,06,AP,004003
+#"LAST","FIRST","EMAIL","PHONE","EXT","DISTRICT","SCHOOL_ID","PASS","CERTNO","TYPE","LSID"
+#
+"teacher","d","rcooney@cpsed.net","6173333333","x","02","02","bailey","T04","AP","002504"
+"teacher","e","jpotemri@cpsed.net","6173333333","x","02","02","bolts10","T05","AP","004227"
+"teacher","f","lwagner@cpsed.net","6173333333","x","02","02","cruises","T06","AP","004003"
