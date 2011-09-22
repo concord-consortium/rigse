@@ -322,6 +322,11 @@ Logged to: #{File.expand_path(@log_path)}
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path).each do |line|
+          # ignore comments(!)
+          # comments are not valid in CSV but helps in testing
+          next if line =~/^#/
+          # ignore blank lines
+          next if line =~/^\s+$/
           status_update(40)
           add_csv_row(key,line)
         end
