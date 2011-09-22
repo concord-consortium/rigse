@@ -315,9 +315,10 @@ describe RinetData do
       teacher_e = user_e.portal_teacher
       teacher_d.should_not be_nil
       teacher_e.should_not be_nil
-      art_d = teacher_d.clazzes.detect { |c| c.name = "ART"}
-      art_e = teacher_e.clazzes.detect { |c| c.name = "ART"}
+      art_d = teacher_d.clazzes.detect { |c| c.name == "ART"}
+      art_e = teacher_e.clazzes.detect { |c| c.name == "ART"}
 
+      # because they are in different schools, they shouldn't have the same ID
       art_d.course.id.should_not == art_e.course.id
       art_d.course.course_number.should == art_e.course.course_number
       art_d.course.school.should_not == art_e.course.school
