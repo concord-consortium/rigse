@@ -132,7 +132,7 @@ describe RinetData do
 
     it "should have parsed data" do
       @rinet_data_importer.parsed_data.should_not be_nil
-      %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}.each do |data_file|
+      %w{students staff courses enrollments staff_assignments}.each do |data_file|
         @rinet_data_importer.parsed_data[data_file.to_sym].should_not be_nil
       end
     end
@@ -142,23 +142,25 @@ describe RinetData do
         @rinet_data_importer.add_csv_row(:students,"")
       end
       it "should tolerate csv input with blank fields" do
-        csv_student_with_blank_fields = "Garcia,Raquel, ,,,1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,,10316"
+        csv_student_with_blank_fields = "Garcia,Raquel,"",,"",1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,"",10316"
         @rinet_data_importer.add_csv_row(:students,csv_student_with_blank_fields)
       end
 
       it "should tolerate csv input with missing fields" do
-        csv_student_with_missing_commas = "Garcia,,,,1000139715,"
+        csv_student_with_missing_commas = "Garcia,"",,"",1000139715,"
         @rinet_data_importer.add_csv_row(:students,csv_student_with_missing_commas)
       end
 
-      # try creating a student with a bad login
+      # try creating a student with a bad SASID
       it "should not throw an error failing validations for users" do
         student_row = {
           :Firstname => "bad",
           :Lastname => "student",
           :EmailAddress => "",
-          :login => "",
-          :SASID => '0078',
+          :SASID => "",
+          # Another possible validation error might be this:
+          #password = row[:Password] || row[:Birthdate]
+          #:Birthdate => ""
           :SchoolNumber => '07113' # real school
         }
         @rinet_data_importer.create_or_update_student(student_row)
