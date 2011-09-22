@@ -21,8 +21,6 @@ GEM
       activesupport (= 2.3.12)
     activesupport (2.3.12)
     acts-as-taggable-on (2.0.6)
-    ar-extensions (0.9.5)
-      activerecord (~> 2.1)
     arrayfields (4.7.4)
     builder (3.0.0)
     capistrano (2.6.0)

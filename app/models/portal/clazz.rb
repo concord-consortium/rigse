@@ -19,6 +19,7 @@ class Portal::Clazz < ActiveRecord::Base
   has_many :grade_levels, :dependent => :destroy, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   
+  before_create :create_class_blog
   before_validation :class_word_lowercase
   validates_presence_of :class_word
   validates_uniqueness_of :class_word
@@ -36,6 +37,16 @@ class Portal::Clazz < ActiveRecord::Base
   end
   def self.CONFIRM_REMOVE_TEACHER(teacher_name, clazz_name)
     "This action will remove the teacher: '#{teacher_name}' from the class: #{clazz_name}. \nAre you sure you want to do this?"
+  end
+
+  def create_class_blog
+    if self.teacher
+      begin
+        wp = Wordpress.new
+        wp.create_class_blog(self.class_word, self.teacher.user, self.name)
+      rescue
+      end
+    end
   end
 
   self.extend SearchableModel

@@ -64,6 +64,21 @@
                       %li= elem
                 - else
                   no server configured
+            - field_set_tag 'Geniverse Blog Integration' do
+              %ul.menu_v
+                %li
+                  Wordpress blog site URL:
+                  = admin_project.word_press_url
+                %li
+                  RPC Admin login:
+                  = admin_project.rpc_admin_login
+                %li
+                  RPC Admin email:
+                  = admin_project.rpc_admin_email
+                %li
+                  RPC Admin password:
+                  %i
+                    hidden
             - field_set_tag 'Project Description' do
               %p= admin_project.description
             - field_set_tag 'Home Page Content' do
