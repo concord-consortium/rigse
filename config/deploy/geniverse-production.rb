@@ -11,6 +11,6 @@ set :user, "geniverse"
 #  Servers
 #############################################################
 
-set :domain, "geniverse.portal.concord.org"
+set :domain, "geniverse.concord.org"
 server domain, :app, :web
 role :db, domain, :primary => true
