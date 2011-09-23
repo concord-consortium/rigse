@@ -35,9 +35,7 @@ module RunnablesHelper
       :class => classes,
       :title => title_text(component, verb, run_as)
     }
-    if component.is_a?(JnlpLaunchable)
-      options[:popup] = true
-    elsif component.is_a?(ExternalActivity)
+    if component.is_a?(ExternalActivity)
       options[:popup] = component.popup
     elsif component.is_a?(Portal::Offering) && component.runnable.is_a?(ExternalActivity)
       options[:popup] = component.runnable.popup
@@ -65,8 +63,6 @@ module RunnablesHelper
       html_options[:popup] = component.runnable.popup if component.runnable.kind_of?(ExternalActivity)
     when ExternalActivity
       html_options[:popup] = component.popup
-    when JnlpLaunchable
-      html_options[:popup] = true
     else
       html_options[:title] = title
     end

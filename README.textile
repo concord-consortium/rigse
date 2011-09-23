@@ -92,7 +92,7 @@ Setup database.
 If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help. You might get a warning if the databases already exist.
 
 bc. RAILS_ENV=production bin/rake db:create:all
-RAILS_ENV=production bin/rake db:migrate:reset
+bc. RAILS_ENV=production bin/rake db:migrate:reset
 
 Setup application resources
 
