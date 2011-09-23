@@ -31,17 +31,17 @@ module SisImporter::SisImporterExampleHelpers
   end
 
   def working_test_directory
-    "#{RAILS_ROOT}/sis_import_data/test"
+    File.join(RAILS_ROOT, 'sis_import_data', 'test')
   end
 
   def sis_test_data_dir
-    "#{RAILS_ROOT}/resources/sis_import_test_data"
+    File.join(RAILS_ROOT,'resources', 'sis_import_test_data')
   end
 
   def copy_test_data
-    %x[rm -rf #{working_test_directory}]
-    %x[mkdir -p #{RAILS_ROOT}/sis_import_data/test]
-    %x[cp -r #{sis_test_data_dir}/* #{working_test_directory}]
+    FileUtils.rm_rf(working_test_directory)
+    FileUtils.mkdir_p(working_test_directory)
+    FileUtils.cp_r(Dir.glob(File.join(sis_test_data_dir,"*")), working_test_directory)
   end
 
   def run_importer(opts = {})
