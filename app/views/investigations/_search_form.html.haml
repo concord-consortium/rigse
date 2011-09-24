@@ -1,7 +1,5 @@
 - # requires: grade_span, portal_clazz_id, domain_id
 - # optional: hide_drafts_checkbox
-- # (next line is a hack, so that portal_clazz_id is defined)
-- portal_clazz_id ||= nil
 
 %h3
   #search_title
@@ -11,7 +9,7 @@
 
 - # TODO: There is probably a cleaner method to avoid sumbissions on enter / return key:form
 %form{:method => 'get',  :id => 'investigation_search_form', :onkeypress => 'return event.keyCode!=13;'}
-  = hidden_field_tag 'portal_clazz_id', portal_clazz_id
+  = hidden_field_tag 'portal_clazz_id', local_assigns[:portal_clazz_id]
   - if local_assigns[:investigations_only]
     = hidden_field_tag 'investigations_only', true
   = hidden_field_tag 'page', params[:page]
@@ -27,7 +25,7 @@
         = label_tag :filter, 'Matching: ', :class=>"right"
         = text_field_tag :name, name
       %td{:style=>"padding: 0.5em; text-align: right"}
-        - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
+        - unless local_assigns[:hide_drafts_checkbox]
           = label_tag :include_drafts, 'drafts too: ', :class=>"right"
           = check_box_tag :include_drafts, 'include drafts', session[:include_drafts]
     %tr

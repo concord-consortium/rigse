@@ -26,9 +26,9 @@
     = javascript_tag mce_init_string
     - if protect_against_forgery?
       = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
-    - if (defined? @container_id) && @container_id
+    - if @container_id
       = javascript_tag "var container_id = #{@container_id};"
-    - if defined? @container_type && @container_type
+    - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
   %body
 

@@ -9,7 +9,7 @@
     .action_menu_header_right
       %ul
         - if portal_clazz.changeable?(current_user)     
-          - if (defined? teacher_list) && teacher_list.size > -1
+          - if (local_assigns.has_key? :teacher_list) && teacher_list.size > -1
             %li 
               %span{:id => 'link_text'} 
               = link_to_remote "Add ", :url => {:action=>'add_teacher', :id => portal_clazz}, :with => "'teacher_id='+$('teacher_id_selector').value"

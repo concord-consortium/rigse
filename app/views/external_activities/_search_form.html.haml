@@ -1,5 +1,4 @@
-/ requires: grade_span, portal_clazz_id, domain_id (next line is a hack, so that portal_clazz_id is defined)
-- portal_clazz_id ||= nil
+/ requires: grade_span, portal_clazz_id, domain_id 
 
 .action_menu
   #search_title
@@ -11,7 +10,7 @@
 
 
 %form{ :id => 'external_activity_search_form'}
-  = hidden_field_tag 'portal_clazz_id', portal_clazz_id
+  = hidden_field_tag 'portal_clazz_id', local_assigns[:portal_clazz_id]
   %table{:width => "100%"}
     %tr
       %td{:style=>"padding: 0.5em;"}

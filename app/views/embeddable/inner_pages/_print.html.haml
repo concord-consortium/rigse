@@ -2,8 +2,8 @@
   %tr{:valign=>"top"}
     %td
       %div{ :id => dom_id_for(inner_page, :static_page_area)}
-        = render :partial=> 'pages/print', :locals=>{:page => inner_page.static_page, :teacher_mode=> defined? teacher_mode ? teacher_mode : false}
+        = render :partial=> 'pages/print', :locals=>{:page => inner_page.static_page, :teacher_mode=> local_assigns[:teacher_mode]}
     %td
       %div{ :id => dom_id_for(inner_page, :inner_page_area)}
         - inner_page.sub_pages.each do |sub_page|
-          = render :partial=> 'pages/print', :locals=>{:page => sub_page, :teacher_mode=> defined? teacher_mode ? teacher_mode : false}
+          = render :partial=> 'pages/print', :locals=>{:page => sub_page, :teacher_mode=> local_assigns[:teacher_mode]}
