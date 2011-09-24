@@ -16,7 +16,7 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)
-  if defined? data_test && data_test
+  if local_assigns[:data_test]
     xml << "  <application-desc main-class='org.concord.testing.gui.AutomatedDataEditor'>\n  "
   else
     xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n  "

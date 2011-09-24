@@ -13,7 +13,11 @@ Spork.prefork do
   require 'rspec/mocks'
   
   # *** customizations ***
-
+  
+  # Add this to load Capybara integration:
+  require 'capybara/rspec'
+  require 'capybara/rails'
+  
   require 'remarkable_activerecord'
   # we have to include our extensions in the rspec configuration block
   require File.expand_path("../support/rspec_extensions", __FILE__)
