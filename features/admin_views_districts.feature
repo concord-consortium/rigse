@@ -22,7 +22,7 @@ Feature: Admin views districts
     Then I should see "Test District"
 
   Scenario: admin does not see the classes inside the district because doing that clobbers the server
-    Given there is an active class named "sample class" within a district
+    Given there is an active class named "sample class" with a district
     When I follow "Districts"
     Then I should not see "sample class"
     And I should not see "active classes"

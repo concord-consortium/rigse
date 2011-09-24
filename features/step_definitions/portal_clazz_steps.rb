@@ -11,7 +11,7 @@ Given /^the default class is created$/ do
   Portal::Clazz.default_class
 end
 
-Given /^there is an active class named "([^"]*)" within a district$/ do |class_name|
+Given /^there is an active class named "([^"]*)" with a district$/ do |class_name|
   offering = Factory(:portal_offering)
   clazz = offering.clazz
   clazz.name = class_name
