@@ -1,6 +1,6 @@
 namespace :app do
   
-  JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
+  JRUBY = defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
 
   def jruby_system_command
     JRUBY ? "jruby -S" : ""

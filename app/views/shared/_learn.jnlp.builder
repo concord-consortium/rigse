@@ -7,7 +7,7 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
     xml << "    <all-permissions />"
   }
   jnlp_mac_java_config(xml)
-  if defined? data_test && data_test
+  if local_assigns[:data_test]
     jnlp_testing_resources(xml, { :learner => learner, :runnable => runnable })
   else
     jnlp_resources(xml, { :learner => learner, :runnable => runnable })

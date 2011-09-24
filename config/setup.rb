@@ -10,7 +10,7 @@ require 'ostruct'
 require 'yaml'
 YAML::ENGINE.yamler = "psych"
 
-JRUBY = defined? RUBY_ENGINE && RUBY_ENGINE == 'jruby'
+JRUBY = defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
 RAILS_ROOT = File.dirname(File.dirname(File.expand_path(__FILE__)))
 APP_DIR_NAME = File.basename(RAILS_ROOT)
 $LOAD_PATH.unshift(File.join(RAILS_ROOT,"lib"))
