@@ -68,34 +68,19 @@ RailsPortal::Application.routes.draw do
     resources :data_tables do
       member do
         post :update_cell_data
-        get :print
       end
     end
     resources :multiple_choices do
       member do
         post :add_choice
-        get :print
       end
     end
-    resources :drawing_tools do
-      member do
-        get :print
-      end
-    end
-    resources :xhtmls do
-      member do
-        get :print
-      end
-    end
-    resources :open_responses do
-      member do
-        get :print
-      end
-    end
+    resources :drawing_tools
+    resources :xhtmls
+    resources :open_responses
     resources :data_collectors do
       member do
         put :change_probe_type
-        get :print
       end
     end
     resources :sound_graphers

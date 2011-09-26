@@ -31,15 +31,6 @@ class Embeddable::OpenResponsesController < ApplicationController
     end
   end
 
-  # GET /Embeddable/open_responses/1/print
-  def print
-    @open_response = Embeddable::OpenResponse.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @open_response }
-    end
-  end
-
   # GET /Embeddable/open_responses/new
   # GET /Embeddable/open_responses/new.xml
   def new

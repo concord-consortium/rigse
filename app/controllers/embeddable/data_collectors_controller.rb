@@ -48,15 +48,6 @@ class Embeddable::DataCollectorsController < ApplicationController
     end
   end
 
-  # GET /Embeddable/data_collectors/1/print
-  def print
-    @data_collector = Embeddable::DataCollector.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @data_collector }
-    end
-  end
-
   # GET /Embeddable/data_collectors/new
   # GET /Embeddable/data_collectors/new.xml
   def new
