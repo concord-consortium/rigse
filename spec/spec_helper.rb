@@ -15,6 +15,12 @@ Spork.prefork do
   # *** customizations ***
   
   # Add this to load Capybara integration:
+  # The Capybara DSL is automatically mixed in to specs running in 
+  # spec/requests, spec/integration or spec/acceptance.
+  #
+  # You can use the Capybara DSL in any rspec test if you add: 
+  #  ',:type => :request'  to the describe invocation ...
+  #
   require 'capybara/rspec'
   require 'capybara/rails'
   
