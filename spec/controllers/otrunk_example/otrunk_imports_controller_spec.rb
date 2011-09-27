@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe OtrunkExample::OtrunkImportsController do
 
@@ -16,7 +16,7 @@ describe OtrunkExample::OtrunkImportsController do
   describe "GET index" do
 
     it "exposes all otrunk_example_otrunk_imports as @otrunk_example_otrunk_imports" do
-      OtrunkExample::OtrunkImport.should_receive(:find).with(:all).and_return([mock_otrunk_import])
+      OtrunkExample::OtrunkImport.should_receive(:all).and_return([mock_otrunk_import])
       get :index
       assigns[:otrunk_example_otrunk_imports].should == [mock_otrunk_import]
     end
@@ -24,7 +24,7 @@ describe OtrunkExample::OtrunkImportsController do
     describe "with mime type of xml" do
   
       it "renders all otrunk_example_otrunk_imports as xml" do
-        OtrunkExample::OtrunkImport.should_receive(:find).with(:all).and_return(otrunk_imports = mock("Array of OtrunkExample::OtrunkImports"))
+        OtrunkExample::OtrunkImport.should_receive(:all).and_return(otrunk_imports = mock("Array of OtrunkExample::OtrunkImports"))
         otrunk_imports.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

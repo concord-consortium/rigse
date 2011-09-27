@@ -1,7 +1,11 @@
+require 'themes_for_rails'
+require 'haml'
+require 'will_paginate/array'
+
 class ApplicationController < ActionController::Base
-  include ExceptionNotifiable
   include Clipboard
 
+  # protect_from_forgery
   self.allow_forgery_protection = false
 
   theme :get_theme
@@ -18,6 +22,10 @@ class ApplicationController < ActionController::Base
     @@theme ||= ( APP_CONFIG[:theme] || 'default' )
   end
 
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -27,7 +35,6 @@ class ApplicationController < ActionController::Base
   include RoleRequirementSystem
 
   helper :all # include all helpers, all the time
-  filter_parameter_logging :password, :password_confirmation
 
   before_filter :check_user
   before_filter :original_user
@@ -49,7 +56,7 @@ class ApplicationController < ActionController::Base
 
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
-    render :file => File.join(RAILS_ROOT, 'public', '404.html'), :status => 404
+    render :file => File.join(::Rails.root.to_s, 'public', '404.html'), :status => 404
   end
 
 
@@ -76,13 +83,17 @@ class ApplicationController < ActionController::Base
       @scope = default
       if container_type = params[:scope_type]
         @scope = container_type.constantize.find(params[:scope_id])
-      elsif container_type = params[:container_type]
+      elsif (container_type = params[:container_type]) && params[:container_id]
         @scope = container_type.constantize.find(params[:container_id])
       end
       @scope
     rescue ActiveRecord::RecordNotFound
       nil
     end
+  end
+
+  def valid_uuid(value)
+    value.is_a?(String) && value.length == 36
   end
 
   private

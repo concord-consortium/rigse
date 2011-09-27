@@ -12,7 +12,7 @@ class PasswordsController < ApplicationController
     @password.user = User.find_by_email(@password.email)
     
     if @password.save
-      PasswordMailer.deliver_forgot_password(@password)
+      PasswordMailer.forgot_password(@password).deliver
       flash[:notice] = "A link to change your password has been sent to #{@password.email}."
       redirect_to :action => :email
     else
@@ -41,7 +41,7 @@ class PasswordsController < ApplicationController
     elsif user.email
       @password = Password.new(:user => user, :email => user.email)
       if @password.save
-        PasswordMailer.deliver_forgot_password(@password)
+        PasswordMailer.forgot_password(@password).deliver
         flash[:notice] = "A link to change your password has been sent to #{@password.email}."
         redirect_to root_path
         return
@@ -95,13 +95,14 @@ class PasswordsController < ApplicationController
     @user = Password.find_by_reset_code(params[:reset_code]).user
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
+    @user.updating_password = true
     @user.save
     if @user.errors.empty?
       flash[:notice] = "Password for #{@user.login} was successfully updated."
       redirect_to login_path
     else
       flash[:error] = 'Password could not be updated'
-      redirect_to :action => :reset, :reset_code => params[:reset_code]
+      redirect_to :action => :reset, :reset_code => params[:reset_code], :user_errors => @user.errors.full_messages
     end
   end
   

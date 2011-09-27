@@ -1,5 +1,7 @@
 Given /^the most basic default project$/ do
   Factory.create(:admin_project_no_jnlps)
+  Factory.next :anonymous_user
+  Factory.next :admin_user
 end
 
 #
@@ -44,4 +46,8 @@ end
 Then /^adhoc workgroups are set based on settings.yml$/ do
   settings = AppSettings.load_app_settings
   APP_CONFIG[:use_adhoc_workgroups] = settings[:use_adhoc_workgroups]
+end
+
+Then /^I should see the default district$/ do
+  page.should have_xpath('//*', :text => "#{APP_CONFIG[:site_name]}-district")
 end

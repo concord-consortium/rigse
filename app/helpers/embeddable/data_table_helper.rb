@@ -88,7 +88,7 @@ module Embeddable::DataTableHelper
   def watch_data_fields(data_table)
     observe_form(form_id(data_table), 
       :before => pack_cells(data_table),
-      :url => { :controller => :data_tables, :action => :update_cell_data, :id => data_table.id}, 
+      :url => { :controller => "embeddable/data_tables", :action => :update_cell_data, :id => data_table.id}, 
       :with => "'data=' + $('#{data_id(data_table)}').value")
   end
 end

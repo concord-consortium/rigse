@@ -49,6 +49,10 @@ class Page < ActiveRecord::Base
     # BiologicaDna,
   ]
 
+  if APP_CONFIG[:include_otrunk_examples]
+    @@element_types << Embeddable::RawOtml
+  end
+  
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
   #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -77,7 +81,7 @@ class Page < ActiveRecord::Base
   acts_as_replicatable
   acts_as_list :scope => :section
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]
@@ -112,9 +116,6 @@ class Page < ActiveRecord::Base
       @@element_types
     end
 
-    def display_name
-      "Page"
-    end
 
     def search_list(options)
       name = options[:name]
@@ -176,6 +177,10 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def add_embeddable(embeddable)
+    page_elements << PageElement.create(:user => user, :embeddable => embeddable)
+  end
+  
   def add_element(element)
     element.pages << self
     element.save
@@ -262,5 +267,9 @@ class Page < ActiveRecord::Base
       @reportable_elements.each{|elem| elem[:page] = self}
     end
     return @reportable_elements
+  end
+  
+  def print_listing
+    []
   end
 end

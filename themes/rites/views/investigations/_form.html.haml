@@ -1,5 +1,5 @@
 = edit_menu_for(investigation, f)
-- field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
+= field_set_tag "#{TOP_LEVEL_CONTAINER_NAME_PLURAL.humanize} details" do
   .aligned
     %ol
       %li
@@ -12,8 +12,8 @@
         %label Description
         = f.text_area :description, :id => 'description_field', :rows => 4, :cols => 60, :class => 'mceNoEditor'
 
-- field_set_tag 'Select GSE' do
-  - field_set_tag 'filter' do
+= field_set_tag 'Select GSE' do
+  = field_set_tag 'filter' do
     #gse_filter
       %ul.menu_h
         %li

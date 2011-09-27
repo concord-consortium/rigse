@@ -35,43 +35,97 @@ h4. GIT
 In the example below we use the xproject theme and also as the name of the directory and 
 the prefix of the names for the databases that will be created in mysql.
 
-<pre><code>
-  # If you are a committer in this repo:
-  git clone git@github.com:stepheneb/rigse.git xproject
+If you are a committer in this repo:
 
-  # else
-  git clone git://github.com/stepheneb/rigse.git xproject
+bc. git clone git@github.com:concord-consortium/rigse.git xproject
 
-  cd xproject
+If you are not a committer:
 
-  # follow instructions for installing necessary gem prerequisites
-  # until config/setup.rb completes successfully
-  
-  ruby config/setup.rb -n Cross Project Portal -D xproject -u <dbuser> -p <password> -t xproject -y -q -f
+bc. git clone git://github.com/concord-consortium/rigse.git xproject
 
-  # The options -y -q -f to setup mean: 
-  #   answer 'yes' to accept default values
-  #   use 'quieter' console output
-  #   force updates of the existing settings.yml and databse.yml if they exist
+Change to the project directory:
 
-  # finish installing necessary gems for rails application
-  rake gems:install
-  RAILS_ENV=cucumber rake gems:install
+bc. cd xproject
 
-  # setup database
-  RAILS_ENV=production rake db:migrate:reset
+Setup rvm to use Ruby 1.9.2-p290 and a gemset named xproject
+(p290 is used to get libyaml installed by rvm)
 
-  # setup application resources
-  RAILS_ENV=production rake rigse:setup:new_rites_app
+bc. rvm use 1.9.2-p290
+rvm gemset create xproject
 
-  # save a copy of the development database to make subsequent clean starts much quicker
-  # Saves database to: db/development_data.sql
-  # can be reloaded later with: rake db:load
-  rake db:dump
-  
-  # start server
-  ruby script/server -e production
-</code></pre>
+Make an @.rvmrc@ file so rvm will use this ruby gemset combo automatically when you change to this directory:
+
+bc. echo "rvm use 1.9.2-p290@xproject" > .rvmrc
+
+Test out the @.rvmrc@ file and start using the gemset
+
+bc. cd ..;cd xproject
+
+Install "bundler":http://gembundler.com/
+
+bc. gem install bundler
+
+Install the precise versions of the required gems and put the executables in bin/
+
+bc. bundle install --binstubs
+
+Automatic setup of application settings in the config directory, for example: settings.yml and database.yml
+
+bc. ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject --states none -y -q -f
+
+The option @--states none@ means that only a single virtual district and school will be created.
+
+If you leave this option out the default is to create portals instances for all the districts and schools in Massachusetts.
+
+You can also supply a comma-delimited list of two character abbreviations for states or provinces:
+
+bc. --states RI,CT
+
+The options @-y -q -f@ to setup mean: 
+
+* @-y@ automatically answer 'yes' to accept default values
+* @-q@  use 'quieter' console output
+* @-f@ force an update of the existing settings.yml and database.yml if they exist
+
+Setup database.
+
+If this fails it is probably due to a bad mysql gem install, check out the "RVM page on database integration":https://rvm.beginrescueend.com/integration/databases/ for help. You might get a warning if the databases already exist.
+
+bc. RAILS_ENV=production bin/rake db:create:all
+bc. RAILS_ENV=production bin/rake db:migrate:reset
+
+Setup application resources
+
+bc. RAILS_ENV=production bin/rake app:setup:new_app
+
+Save a copy of the development database to make subsequent clean starts much quicker (bypassing rake app:setup:new_app)
+* Saves database to: db/development_data.sql
+* can be reloaded later with: rake db:load
+* note: in default setup created by config.rb above the development and production database is the same
+
+bc. bin/rake db:dump
+
+Start server and open http://localhost:3000
+
+bc. rails s -eproduction
+
+You can read this documentation at: http://localhost:3000/readme
+
+After getting the server running it's good to confirm that all the tests pass before changing any code.
+
+Prepare a database for use when running the tests:
+
+bc. rake db:test:prepare
+
+Run the rspec unit tests:
+
+bc. rake spec
+
+Run the cucumber integration tests:
+
+bc. rake cucumber
+
+All these tests should pass. If you add features make sure and add tests for these new features.
 
 h3. Roll your own theme:
 
@@ -112,7 +166,7 @@ h2. Copying the production database to a development environment
 If you have ssh access to a portal instance running on a server you can get a copy of the database on
 your local development instance with the following steps:
 
-In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject_dev*.
+In the code below _stage_ means a capistrano stage that identifies a remote server. For example *xproject-dev*.
 <pre><code>
     cap <stage> db:fetch_remote_db
     RAILS_ENV=production jruby -S rake db:load
@@ -128,7 +182,7 @@ If the codebase on your development system has moved forward you may need to run
 The task: default_users_roles_and_portal_resources is last on that list because code changes may have added additional and necessary default model initialization.
 
 In order for the same passwords to work you will also need to have the same keys in your local config/initializers/site_keys.rb as on the server you copied the production data from.
-<pre><code>  cap <stage> db:copy_remote_site_keys</code></pre>
+<pre><code>  cap <stage> db:fetch_remote_site_keys</code></pre>
 
 Recreating a new portal instance from scratch from an existing application.
 <pre><code>
@@ -641,6 +695,16 @@ config/initializers/fix_mailer_on_rails_2.3.4.rb fixes the problem.
 
 The code is borrowed from "Dmitry Polushkin":https://rails.lighthouseapp.com/projects/8994/tickets/2340-action-mailer-cant-deliver-mail-via-smtp-on-ruby-191
 
+h2. Databases
+
+If you are using mysql 5.5 or later you'll need the mysql2 gem.  This will be enabled by bundlers Gemfile if you define the environment variable:
+RB_MYSQL2=true
+
+On OS X the mysql2 gem usually can't find the mysql client library that it needs to run.  The command below fixes that.  It assumes your mysql is installed in the default basedir of /usr/local/mysql/lib.  And it assumes you are using bundler.
+<code><pre>
+install_name_tool -change libmysqlclient.16.dylib /usr/local/mysql/lib/libmysqlclient.16.dylib `bundle show mysql2`/lib/mysql2/mysql2.bundle
+</code></pre>
+
 h2. CSS
 
 h3. Asset Packager
@@ -695,3 +759,23 @@ h2. Credits
 Bort put together by people at "Fudge":http://www.fudgestudios.com/ 
 
 !http://clients.fudgestudios.com/chester.jpg!
+
+h2. Copy & Paste Guide:
+
+<pre><code>
+git clone git@github.com:concord-consortium/rigse.git ./xproject
+cd xproject
+echo 'rvm use 1.8.7@xproject-portal --create' > .rvmrc;
+cd ..
+cd xproject
+gem install bundler
+bundle install
+ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject --states none -y -q -f
+RAILS_ENV=production rake db:create:all
+RAILS_ENV=production rake db:migrate:reset
+RAILS_ENV=production rake app:setup:new_app
+rake db:test:prepare
+
+rake db:dump
+ruby script/server -e production
+</code></pre>

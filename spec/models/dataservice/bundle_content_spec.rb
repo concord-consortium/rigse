@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Dataservice::BundleContent do
 
@@ -35,6 +35,10 @@ describe Dataservice::BundleContent do
           <launchProperties key="sailotrunk.otmlurl" value="http://has.staging.concord.org/investigations/7.dynamic_otml"/>
         </sessionBundles>'
     }
+    # disable the after_save there is observer_spec to test that specific call
+    # we might want to try out the no_peeping_toms gem to handle this 
+    # https://github.com/patmaddox/no-peeping-toms
+    Dataservice::BundleContentObserver.instance.should_receive(:after_save).any_number_of_times
   end
 
   it "should create a new instance given valid attributes" do
@@ -262,7 +266,8 @@ describe Dataservice::BundleContent do
 
       it "should process bundles before save" do
         @bundle.should_receive(:process_bundle)
-        @bundle.run_callbacks(:before_save)
+        # this runs the save callbacks and the return value of false causes it to skip the after_save callbacks
+        @bundle.run_callbacks(:save) { false }
       end
 
       it "should call process blobs after processing bundle" do
@@ -316,16 +321,6 @@ describe Dataservice::BundleContent do
           @bundle.copy_to_collaborators
           @contents_a.should have(1).bundle_content
         end
-      end
-    end
-      
-    describe "observers" do
-      it " should run the after_save actions" do
-        @bundle_content = Factory(:dataservice_bundle_content)
-        @obs = Dataservice::BundleContentObserver.instance
-        @obs.should_receive(:process_saveables)
-        @obs.should_receive(:copy_to_collaborators)
-        @bundle_content.save!
       end
     end
 end

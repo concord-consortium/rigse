@@ -1,11 +1,23 @@
 class Embeddable::RawOtml < ActiveRecord::Base
   set_table_name "embeddable_raw_otmls"
 
-  
   belongs_to :user
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
+
+  after_create :initialize_otml_content_with_local_id
+
+  def initialize_otml_content_with_local_id
+    self.otml_content = <<-HEREDOC
+<OTCompoundDoc local_id='raw_otml_#{self.id}'>
+  <bodyText>
+    <div id='content'>Put your content here. Make sure you keep this local id on your root object when you change it: local_id='raw_otml_#{self.id}'</div>
+  </bodyText>
+</OTCompoundDoc>
+    HEREDOC
+    self.save
+  end
   
   acts_as_replicatable
 
@@ -23,11 +35,7 @@ class Embeddable::RawOtml < ActiveRecord::Base
 
   default_value_for :name, "Embeddable::RawOtml element"
   default_value_for :description, "A simple OTCompoundDoc example ..."
-  default_value_for :otml_content, "<OTCompoundDoc>\n  <bodyText>\n    <div id='content'>Put your content here.</div>\n  </bodyText>\n</OTCompoundDoc>"
 
-  def self.display_name
-    "Raw Otml"
-  end
   
   def self.authorable_in_java?
     true

@@ -4,7 +4,7 @@ namespace :app do
     require 'fileutils'
 
     def sparks_content_dir
-      @sparks_content_dir || @sparks_content_dir = File.join(RAILS_ROOT, 'public', 'sparks-content')
+      @sparks_content_dir || @sparks_content_dir = File.join(::Rails.root.to_s, 'public', 'sparks-content')
     end
     
     def git_svn_update_sparks_content

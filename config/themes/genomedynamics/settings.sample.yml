@@ -34,7 +34,7 @@ development: &id003
   :maven_jnlp_servers:
     - :name: concord-current-sig
       :host: http://jnlp.concord.org
-      :path: /dev2/org/concord/maven-jnlp/
+      :path: /dev3/org/concord/maven-jnlp/
     - :name: concord
       :host: http://jnlp.concord.org
       :path: /dev/org/concord/maven-jnlp/

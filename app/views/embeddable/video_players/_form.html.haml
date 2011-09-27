@@ -1,14 +1,14 @@
 = edit_menu_for(video_player, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(video_player, :item, :name_field)
 
-  - field_set_tag 'video_url' do
+  = field_set_tag 'video_url' do
     = f.text_field :video_url, :id => dom_id_for(video_player, :item, :video_url_field)
 
-  - field_set_tag 'image_url' do
+  = field_set_tag 'image_url' do
     = f.text_field :image_url, :id => dom_id_for(video_player, :item, :image_url_field)
 
 
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(video_player, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'

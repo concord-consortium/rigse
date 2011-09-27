@@ -1,0 +1,20 @@
+%h1 Editing probe_type
+
+- labelled_form_for(@probe_type) do |f|
+  = f.error_messages
+
+  = f.text_field :name
+  = f.text_field :period
+  = f.text_field :display_precision
+  = f.text_field :unit
+  = f.text_field :max
+  = f.text_field :min
+  = f.text_field :step_size
+  = f.text_field :ptype
+
+  %p
+    = f.submit 'Update'
+
+= link_to 'Show', @probe_type
+|
+= link_to 'Back', probe_probe_types_path

@@ -1,0 +1,19 @@
+- options = { :complete => mce_init_string, :omit_delete => true }
+%div{ :id => dom_id_for(admin_tag), :class => "container_element" }
+  = show_menu_for(admin_tag, options)
+
+  %div{:id => dom_id_for(admin_tag, :item), :class => 'item'}
+    %div{:id => dom_id_for(admin_tag, :details), :class => 'content'}
+      = wrap_edit_link_around_content(admin_tag, options={:complete => mce_init_string}) do
+        %h4= h(admin_tag.name)
+        %p
+          %ul.menu_v
+            %li
+              Scope:
+              =h(admin_tag.scope)
+    
+            %li
+              Tag:
+              =h(admin_tag.tag)
+    
+    

@@ -88,13 +88,13 @@ class ModelCollection
     # 
     # [:grade_span, :domain].each { |m| delegate m, :to => :grade_span_expectation }
     # 
-    # named_scope :with_gse, {
+    # scope :with_gse, {
     #   :joins => "left outer JOIN grade_span_expectations on (grade_span_expectations.id = investigations.grade_span_expectation_id) 
     #      JOIN assessment_targets ON (assessment_targets.id = grade_span_expectations.assessment_target_id) 
     #      JOIN knowledge_statements ON (knowledge_statements.id = assessment_targets.knowledge_statement_id)"
     # }
     # 
-    # named_scope :domain, lambda { |domain_id| 
+    # scope :domain, lambda { |domain_id| 
     #   {
     #     :conditions =>[ 'knowledge_statements.domain_id = ?', domain_id]
     #   }

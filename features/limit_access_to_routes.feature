@@ -1,4 +1,3 @@
-@selenium
 Feature: Limit access to restricted routes
 
 Only logged in users with appropriate roles should be able to see and change resources in the portal.
@@ -14,9 +13,9 @@ In NO case should the system allow:
   So that we can protect our users data
 
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
-  Scenario Outline: Anonymous user cant access dataservice routes
+  Scenario Outline: Anonymous user can't access dataservice routes
     Given I am not logged in
     When I visit the route <route>
     Then I should be on my home page
@@ -25,8 +24,8 @@ In NO case should the system allow:
       | route                         |
       | /dataservice/bundle_contents  |
       | /dataservice/bundle_loggers   |
-      | /dataservice/console_loggers  |
       | /dataservice/console_contents |
+      | /dataservice/console_loggers  |
       | /dataservice/blobs            |
 
   Scenario Outline: Admin user can accesss dataservice routes
@@ -52,7 +51,7 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /portal/clazzes               |
+      | /portal/classes               |
       | /portal/courses               |
       | /portal/school_memberships    |
       | /portal/schools               |
@@ -82,7 +81,7 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /portal/clazzes               |
+      | /portal/classes               |
       | /portal/courses               |
       | /portal/school_memberships    |
       | /portal/schools               |

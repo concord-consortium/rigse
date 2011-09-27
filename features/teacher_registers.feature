@@ -56,3 +56,4 @@ ITSI-SU requires that teachers self-register.
     And I select a school from the list of schools
     And I press "Submit"
     Then I should see " Thanks for signing up!"
+    And I should not see "Sorry, there was an error creating your account"

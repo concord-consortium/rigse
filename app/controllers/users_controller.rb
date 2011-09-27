@@ -56,7 +56,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    @roles = Role.find(:all)
+    @roles = Role.all
     unless @user.changeable?(current_user)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def preferences
     @user = User.find(params[:id])
-    @roles = Role.find(:all)
+    @roles = Role.all
     unless @user.changeable?(current_user)
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url
@@ -81,7 +81,7 @@ class UsersController < ApplicationController
     else
       if request.get?
         @user = User.find(params[:id])
-        all_users = User.active.find(:all)
+        all_users = User.active.all
         all_users.delete(current_user)
         all_users.delete(User.anonymous)
         all_users.delete_if { |user| user.has_role?('admin') } unless @original_user.has_role?('admin')
@@ -150,6 +150,14 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.update_attributes(params[:user])
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+
+          # set the cohort tags if we have a teacher
+          if @user.portal_teacher && params[:update_cohorts]
+            cohorts = params[:cohorts] ? params[:cohorts] : []
+            @user.portal_teacher.cohort_list = cohorts
+            @user.portal_teacher.save
+          end
+
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
@@ -217,7 +225,7 @@ class UsersController < ApplicationController
             end
           else
             # @vendor_interface = current_user.vendor_interface
-            # @vendor_interfaces = Probe::VendorInterface.find(:all).map { |v| [v.name, v.id] }
+            # @vendor_interfaces = Probe::VendorInterface.all.map { |v| [v.name, v.id] }
             # session[:back_to] = request.env["HTTP_REFERER"]
             # render :action => "interface"
           end
@@ -265,7 +273,7 @@ class UsersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
 end

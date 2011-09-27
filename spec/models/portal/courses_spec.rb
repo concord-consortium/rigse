@@ -1,11 +1,11 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
 
 def inspect_course(c)
   # puts "curse: #{c.course_number} #{c.name} school: #{c.school.id} <br/>\n"
 end
 
 describe Portal::Course do
-  before(:all) do
+  before(:each) do
     @course_number = "COURZ_1"
     @school = Factory(:portal_school)
     @course_with_number = Factory(:portal_course, 

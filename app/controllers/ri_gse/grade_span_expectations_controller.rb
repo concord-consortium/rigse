@@ -25,11 +25,11 @@ class RiGse::GradeSpanExpectationsController < ApplicationController
         end
       end
       format.xml do
-        @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all)
+        @grade_span_expectations = RiGse::GradeSpanExpectation.all
         render :xml => @grade_span_expectations
       end
       format.pdf do
-        @grade_span_expectations = RiGse::GradeSpanExpectation.find(:all)        
+        @grade_span_expectations = RiGse::GradeSpanExpectation.all        
         @rendered_partial = render_to_string :partial => 'expectation_list.html.haml', 
           :locals => { :grade_span_expectations => @grade_span_expectations }
         @rendered_partial.gsub!(/&/, '&amp;')

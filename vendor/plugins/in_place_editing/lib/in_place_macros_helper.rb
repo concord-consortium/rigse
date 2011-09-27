@@ -60,8 +60,6 @@ module InPlaceMacrosHelper
     js_options['callback']   = "function(form) { return #{options[:with]} }" if options[:with]
     js_options['clickToEditText'] = %('#{options[:click_to_edit_text]}') if options[:click_to_edit_text]
     js_options['textBetweenControls'] = %('#{options[:text_between_controls]}') if options[:text_between_controls]
-    js_options['highlightColor'] = %('#8CBBB8')
-    js_options['highlightEndColor'] = %('#F4B626')
     function << (', ' + options_for_javascript(js_options)) unless js_options.empty?
     
     function << ')'
@@ -72,7 +70,7 @@ module InPlaceMacrosHelper
   # Renders the value of the specified object and method with in-place editing capabilities.
   def in_place_editor_field(object, method, tag_options = {}, in_place_editor_options = {})
     instance_tag = ::ActionView::Helpers::InstanceTag.new(object, method, self)
-    tag_options = {:tag => "div",
+    tag_options = {:tag => "span",
                    :id => "#{object}_#{method}_#{instance_tag.object.id}_in_place_editor",
                    :class => "in_place_editor_field"}.merge!(tag_options)
     in_place_editor_options[:url] = in_place_editor_options[:url] || url_for({ :action => "set_#{object}_#{method}", :id => instance_tag.object.id })

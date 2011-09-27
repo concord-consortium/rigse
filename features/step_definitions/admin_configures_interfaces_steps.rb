@@ -21,10 +21,8 @@ end
 
 Given /^I am an anonymous user$/ do
   User.anonymous(true)
-  get '/sessions/destroy'
-  response.should redirect_to('/')
-  follow_redirect!
-  true #  for now ...
+  visit('/logout')
+  URI.parse(current_url).path.should == '/'
 end
 
 
@@ -58,9 +56,9 @@ When /^I check in the following:$/ do |checkbox_table|
 end
 
 When /^(?:|I )should have the following selection options:$/ do |selection_table|
-  within_fieldset("Selected Probeware Interface") do
+  within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
-      if defined?(Spec::Rails::Matchers)
+      if defined?(RSpec::Rails::Matchers)
         page.should have_content(hash[:option])
       else
         assert page.has_content?(hash[:option])
@@ -70,9 +68,9 @@ When /^(?:|I )should have the following selection options:$/ do |selection_table
 end
 
 Then /^I should not see the following selection options:$/ do |selection_table|
-  within_fieldset("Selected Probeware Interface") do
+  within_fieldset("Probeware Interface") do
     selection_table.hashes.each do |hash|
-      if defined?(Spec::Rails::Matchers)
+      if defined?(RSpec::Rails::Matchers)
         page.should_not have_content(hash[:option])
       else
         assert(! page.has_content?(hash[:option]))

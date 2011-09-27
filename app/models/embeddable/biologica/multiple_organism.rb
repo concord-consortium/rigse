@@ -36,9 +36,6 @@ class Embeddable::Biologica::MultipleOrganism < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Biologica Multiple Organism"
-  end
 
   def investigations
     invs = []

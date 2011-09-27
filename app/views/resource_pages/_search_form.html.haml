@@ -24,7 +24,7 @@
         = label_tag :include_usage_count, 'show count: ', :class=>"right"
         = check_box_tag 'include_usage_count', 'true', @include_usage_count
       %td{:style=>"padding: 0.5em;"}
-        - unless (defined? hide_drafts_checkbox) && (hide_drafts_checkbox == true)
+        - unless local_assigns[:hide_drafts_checkbox]
           = label_tag :filter, 'drafts too: ', :class=>"right"
           = check_box_tag 'include_drafts', 'include drafts', session[:include_drafts]
 

@@ -22,7 +22,7 @@
 #   :skip_get_csv_files => false
 #   :log_level => Logger::WARN
 #   :districts => @rinet_data_config[:districts]
-#   :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv"
+#   :district_data_root_dir => "#{::Rails.root.to_s}/rinet_data/districts/#{@external_domain_suffix}/csv"
 #
 # You can customize the operation, here's an example:
 #
@@ -49,6 +49,7 @@
 
 require 'fileutils'
 require 'arrayfields'
+require 'csv'
 
 class RinetData
 
@@ -74,14 +75,14 @@ class RinetData
   @@csv_files = %w{students staff courses enrollments staff_assignments staff_sakai student_sakai}
 
   def initialize(options= {})
-    @rinet_data_config = YAML.load_file("#{RAILS_ROOT}/config/rinet_data.yml")[RAILS_ENV].symbolize_keys
+    @rinet_data_config = YAML.load_file("#{::Rails.root.to_s}/config/rinet_data.yml")[::Rails.env].symbolize_keys
     ExternalUserDomain.select_external_domain_by_server_url(@rinet_data_config[:external_domain_url])
     @external_domain_suffix = ExternalUserDomain.external_domain_suffix
 
     defaults = {
       :verbose => false,
       :districts => @rinet_data_config[:districts],
-      :district_data_root_dir => "#{RAILS_ROOT}/rinet_data/districts/#{@external_domain_suffix}/csv",
+      :district_data_root_dir => "#{::Rails.root.to_s}/rinet_data/districts/#{@external_domain_suffix}/csv",
       :log_level => Logger::WARN,
       :drop_enrollments => false
     }
@@ -146,7 +147,7 @@ Logging to: #{File.expand_path(@log_path)}
 
   def run_scheduled_job(opts = {})
     # disable observable behavior on useres for import task
-    User.delete_observers
+    Rails.configuration.active_record.observers = []
 
     start_time = Time.now
     if @rinet_data_options[:skip_get_csv_files]
@@ -261,9 +262,9 @@ Logged to: #{File.expand_path(@log_path)}
       # download a file or directory from the remote host
       remote_path = "#{district}/#{csv_file}.csv"
       local_path = "#{local_district_path}/#{csv_file}.csv"
-      log_message("Downloading: #{remote_path} and saving to: \n  #{local_path}", {:log_level => :info})
       begin
         sftp.download!(remote_path, local_path)
+        log_message("Downloaded: #{remote_path} and saved to: \n  #{local_path}", {:log_level => :info})
       rescue RuntimeError => e
         message = "\nDownload: #{remote_path} failed: \n#{e.class}: #{e.message}\n"
         log_message(message, {:log_level => :error})
@@ -305,7 +306,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def add_csv_row(key,line)
     # if row.respond_to? fields
-    FasterCSV.parse(line) do |row|
+    CSV.parse(line) do |row|
       if row.class == Array
         row.fields = FIELD_DEFINITIONS[key]
         @parsed_data[key] << row
@@ -366,7 +367,7 @@ Logged to: #{File.expand_path(@log_path)}
     # pass in a row that has a :SchoolNumber
     # These are raw or processed csv rows from:
     #   students, staff, courses, enrollments, staff_assignments
-    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, SCHNAM")
+    nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => row[:SchoolNumber]}, :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM, GSLO, GSHI, PHONE, MEMBER, FTE, TOTFRL, AM, ASIAN, HISP, BLACK, WHITE, LATCOD, LONCOD, MCITY, MSTREE, MSTATE, MZIP")
     if nces_school
       # TODO, check to see if the  Portal::School.find_or_create_by_nces_school
       # method will automatically create the containing district if it
@@ -754,7 +755,7 @@ Logged to: #{File.expand_path(@log_path)}
   def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
     students_file_name = "#{@district_data_root_dir}/#{district}/current/students.csv"
     student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
-    student_rows = FasterCSV.read(students_file_name)
+    student_rows = CSV.read(students_file_name)
     login = ""
     while login == ""
       student_row = student_rows[(rand * student_rows.length-1).round]
@@ -779,7 +780,7 @@ Logged to: #{File.expand_path(@log_path)}
   ##
   def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
     staff_file_name = "#{@district_data_root_dir}/#{district}/current/staff.csv"
-    staf_rows = FasterCSV.read(staff_file_name)
+    staf_rows = CSV.read(staff_file_name)
     login = nil
     while login.nil?
       staff_row = staf_rows[(rand * staf_rows.length-1).round]
@@ -862,7 +863,7 @@ Logged to: #{File.expand_path(@log_path)}
 
   def cache_course_ar_map(course_number,school_id,value=nil)
     unless (course_number && school_id)
-      raise RinetDataError("must supply a course_number and a school")
+      raise RinetDataError.new("must supply a course_number and a school")
     end
     unless @course_active_record_map[course_number]
       @course_active_record_map[course_number]={}

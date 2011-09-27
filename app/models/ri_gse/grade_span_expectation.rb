@@ -12,26 +12,27 @@ class RiGse::GradeSpanExpectation < ActiveRecord::Base
   belongs_to :assessment_target, :class_name => 'RiGse::AssessmentTarget'
   has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement', :through => :assessment_target
 
-  has_many :domains, :class_name => 'RiGse::Domain',
-    :finder_sql => 'SELECT ri_gse_domains.* FROM ri_gse_domains
-    INNER JOIN ri_gse_knowledge_statements ON ri_gse_knowledge_statements.domain_id = ri_gse_domains.id 
-    INNER JOIN ri_gse_assessment_targets ON ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id 
-    WHERE ri_gse_assessment_targets.id = #{assessment_target_id}'
+  DOMAINS = 'SELECT ri_gse_domains.* FROM ri_gse_domains
+  INNER JOIN ri_gse_knowledge_statements ON ri_gse_knowledge_statements.domain_id = ri_gse_domains.id 
+  INNER JOIN ri_gse_assessment_targets ON ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id 
+  WHERE ri_gse_assessment_targets.id = %{assessment_target_id}'
+  
+  has_many :domains, :class_name => 'RiGse::Domain', :finder_sql => proc { DOMAINS % { :assessment_target_id => assessment_target_id } }
 
   def domain
     domains.first
   end
   
   acts_as_replicatable
-  
-  
+
   # brittle;,because we must know too much about table names ...
-  named_scope :grade_and_domain, lambda { |gs,domain_id|
+  scope :grade_and_domain, lambda { |gs,domain_id|
     {
       :joins => "JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)",
       :conditions => ['ri_gse_knowledge_statements.domain_id = ? and ri_gse_grade_span_expectations.grade_span LIKE ?', domain_id, gs ]
     }
   }
+  
   # 
   #:default_scope :conditions => "grade_span LIKE '%9-11%'"  
   # above was causing errors on otto when running setup-from-scratch:

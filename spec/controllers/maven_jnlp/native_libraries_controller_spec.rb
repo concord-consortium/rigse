@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe MavenJnlp::NativeLibrariesController do
 
@@ -14,7 +14,7 @@ describe MavenJnlp::NativeLibrariesController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_native_libraries as @maven_jnlp_native_libraries" do
-      MavenJnlp::NativeLibrary.should_receive(:find).with(:all).and_return([mock_native_library])
+      MavenJnlp::NativeLibrary.should_receive(:all).and_return([mock_native_library])
       get :index
       assigns[:maven_jnlp_native_libraries].should == [mock_native_library]
     end
@@ -22,7 +22,7 @@ describe MavenJnlp::NativeLibrariesController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_native_libraries as xml" do
-        MavenJnlp::NativeLibrary.should_receive(:find).with(:all).and_return(native_libraries = mock("Array of MavenJnlp::NativeLibraries"))
+        MavenJnlp::NativeLibrary.should_receive(:all).and_return(native_libraries = mock("Array of MavenJnlp::NativeLibraries"))
         native_libraries.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

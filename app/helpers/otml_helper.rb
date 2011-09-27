@@ -42,9 +42,9 @@ module OtmlHelper
     class_name = component.class.name.split('::').last.underscore
     "#{prefix}#{class_name}_#{component.id}"
   end
-  
+
   def data_filter_inports
-    Probe::DataFilter.find(:all).collect { |df| df.otrunk_object_class }
+    Probe::DataFilter.all.collect { |df| df.otrunk_object_class }
   end
   
   def imports
@@ -53,6 +53,7 @@ module OtmlHelper
       org.concord.data.state.OTDataField
       org.concord.data.state.OTDataStore
       org.concord.data.state.OTDataTable
+      org.concord.data.state.OTDigitalDisplay
       org.concord.data.state.OTTimeLimitDataProducerFilter
       org.concord.datagraph.state.OTDataAxis
       org.concord.datagraph.state.OTDataCollector
@@ -148,6 +149,7 @@ module OtmlHelper
       ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorView'],
       ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
       ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
+      ['digital_display_view', 'org.concord.data.state.OTDigitalDisplay', 'org.concord.data.state.OTDigitalDisplayView'],
       ['data_drawing_tool_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
@@ -260,8 +262,6 @@ module OtmlHelper
   end
 
   def ot_interface_manager(use_current_user = false)
-    old_format = @template_format
-    @template_format = :otml
     # Now that we're using the HttpCookieService, current_user.vendor_interface 
     # should be correct, even when requesting from the java client
     vendor_interface = nil
@@ -274,8 +274,10 @@ module OtmlHelper
     else
       vendor_interface = Probe::VendorInterface.find_by_short_name("vernier_goio")
     end
-    result = render :partial => "otml/ot_interface_manager", :locals => { :vendor_interface => vendor_interface }
-    @template_format = old_format
+    # note the .otml on the end of the name, this makes this work even when the current 'format' is dynamic_otml
+    # this approach only works will single levels of format changes, for nested partials look at:
+    # http://stackoverflow.com/questions/339130/how-do-i-render-a-partial-of-a-different-format-in-rails
+    result = render :partial => "otml/ot_interface_manager.otml", :locals => { :vendor_interface => vendor_interface }
     return result
   end
 
@@ -285,25 +287,8 @@ module OtmlHelper
         haml_concat ot_view_bundle(options)
         haml_concat ot_interface_manager
         haml_concat ot_script_engine_bundle
-        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle'}
-      end
-    end
-  end
-
-  def ot_sensor_data_proxy(data_collector)
-    probe_type = data_collector.probe_type
-    capture_haml do
-      haml_tag :OTSensorDataProxy, :local_id => ot_local_id_for(data_collector, :data_proxy) do
-         haml_tag :request do
-           haml_tag :OTExperimentRequest, :period => probe_type.period.to_s do
-             haml_tag :sensorRequests do
-               haml_tag :OTSensorRequest, :stepSize => probe_type.step_size.to_s, 
-                :type => probe_type.ptype.to_s, :unit => probe_type.unit, :port => probe_type.port.to_s, 
-                :requiredMax => probe_type.max.to_s, :requiredMin => probe_type.min.to_s,
-                :displayPrecision => "#{data_collector.probe_type.display_precision}"
-            end
-          end
-        end
+        use_bitmap = Admin::Project.default_project.use_bitmap_snapshots? ? 'false' : 'true'
+        haml_tag :OTLabbookBundle, {:local_id => 'lab_book_bundle', :scaleDrawTools => use_bitmap }
       end
     end
   end
@@ -316,16 +301,20 @@ module OtmlHelper
   # 
   def generate_otml_datastore(data_collector)
     capture_haml do
-      haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
-        haml_tag :channelDescriptions do
-          haml_tag :OTDataChannelDescription
-          haml_tag :OTDataChannelDescription
-        end
-        if data_collector.data_store_values && data_collector.data_store_values.length > 0
-          haml_tag :values do
-            data_collector.data_store_values.each do |value|
-              haml_tag(:float, :<) do
-                haml_concat(value)
+      if data_collector.data_table
+        haml_tag :object, :refid => ot_refid_for(data_collector.data_table, :data_store)
+      else
+        haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
+          haml_tag :channelDescriptions do
+            haml_tag :OTDataChannelDescription
+            haml_tag :OTDataChannelDescription
+          end
+          if data_collector.data_store_values && data_collector.data_store_values.length > 0
+            haml_tag :values do
+              data_collector.data_store_values.each do |value|
+                haml_tag(:float, :<) do
+                  haml_concat(value)
+                end
               end
             end
           end
@@ -334,44 +323,14 @@ module OtmlHelper
     end
   end
   
-  def otml_for_time_limit_filter(limit, seconds)
+  def otml_time_limit_seconds(seconds)
     if seconds
-      ms = (seconds * 1000).to_i
+      (seconds * 1000).to_i
     else
-      ms = 0
+      0
     end 
-    capture_haml do
-      if limit
-        haml_tag :OTTimeLimitDataProducerFilter, :sourceChannel => "1", :timeLimit => ms do
-          haml_tag :source do
-            if block_given? 
-              yield
-            end
-          end
-        end
-      else
-        if block_given? 
-          yield
-        end
-      end
-    end
   end
-
-  def otml_for_calibration_filter(calibration)
-    if filter = calibration.data_filter
-      capture_haml do
-        ot_name = filter.otrunk_object_class.split(".")[-1]
-        haml_tag ot_name.to_sym, :sourceChannel => "1" do
-          haml_tag :source do
-            if block_given? 
-              yield
-            end
-          end
-        end
-      end
-    end
-  end
-  
+    
   def preview_warning
     APP_CONFIG[:otml_preview_message] || "Your data will not be saved"
   end
@@ -382,7 +341,7 @@ module OtmlHelper
     default_path = File.join(base,file)
     if theme
       themed_path = File.join(base,'themes', theme, file)
-      if File.exists? File.join(RAILS_ROOT,'public',themed_path)
+      if File.exists? File.join(::Rails.root.to_s,'public',themed_path)
         return "/#{themed_path}"
       end
     end

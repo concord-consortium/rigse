@@ -2,7 +2,7 @@ class RiGse::KnowledgeStatementsController < ApplicationController
   # GET /RiGse/knowledge_statements
   # GET /RiGse/knowledge_statements.xml
   def index
-    @knowledge_statements = RiGse::KnowledgeStatement.find(:all)
+    @knowledge_statements = RiGse::KnowledgeStatement.all
 
     respond_to do |format|
       format.html # index.html.erb

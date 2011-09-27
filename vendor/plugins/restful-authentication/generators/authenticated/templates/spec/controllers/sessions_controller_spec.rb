@@ -44,10 +44,10 @@ describe <%= controller_class_name %>Controller do
             it "kills existing login"        do controller.should_receive(:logout_keeping_session!); do_create; end    
             it "authorizes me"               do do_create; controller.send(:authorized?).should be_true;   end    
             it "logs me in"                  do do_create; controller.send(:logged_in?).should  be_true  end    
-            it "greets me nicely"            do do_create; response.flash[:notice].should =~ /success/i   end
+            it "greets me nicely"            do do_create; request.flash[:notice].should =~ /success/i   end
             it "sets/resets/expires cookie"  do controller.should_receive(:handle_remember_cookie!).with(want_remember_me); do_create end
             it "sends a cookie"              do controller.should_receive(:send_remember_cookie!);  do_create end
-            it 'redirects to the home page'  do do_create; response.should redirect_to('/')   end
+            it 'redirects to the home page'  do do_create; rendered.should redirect_to('/')   end
             it "does not reset my session"   do controller.should_not_receive(:reset_session).and_return nil; do_create end # change if you uncomment the reset_session path
             if (has_request_token == :valid)
               it 'does not make new token'   do @<%= file_name %>.should_not_receive(:remember_me);   do_create end
@@ -77,12 +77,12 @@ describe <%= controller_class_name %>Controller do
     end
     it 'logs out keeping session'   do controller.should_receive(:logout_keeping_session!); do_create end
     it 'flashes an error'           do do_create; flash[:error].should =~ /Couldn't log you in as 'quentin'/ end
-    it 'renders the log in page'    do do_create; response.should render_template('new')  end
+    it 'renders the log in page'    do do_create; rendered.should render_template('new')  end
     it "doesn't log me in"          do do_create; controller.send(:logged_in?).should == false end
     it "doesn't send password back" do 
       @login_params[:password] = 'FROBNOZZ'
       do_create
-      response.should_not have_text(/FROBNOZZ/i)
+      rendered.should_not have_text(/FROBNOZZ/i)
     end
   end
 
@@ -94,7 +94,7 @@ describe <%= controller_class_name %>Controller do
       login_as :quentin
     end
     it 'logs me out'                   do controller.should_receive(:logout_killing_session!); do_destroy end
-    it 'redirects me to the home page' do do_destroy; response.should be_redirect     end
+    it 'redirects me to the home page' do do_destroy; rendered.should be_redirect     end
   end
   
 end

@@ -1,7 +1,7 @@
 Given /^the class "([^"]*)" has the class word "([^"]*)"$/ do |class_name, class_word|
   clazz = Portal::Clazz.find_by_name(class_name)
   clazz.class_word = class_word
-  clazz.grade_levels << Factory(:full_portal_grade_level)
+  clazz.grade_levels << Factory(:portal_grade_level)
   clazz.save
 end
 
@@ -9,6 +9,13 @@ Given /^the default class is created$/ do
   enabled_default_class(true)
   # this has the side effect of creating the default class if it doesn't already exist
   Portal::Clazz.default_class
+end
+
+Given /^there is an active class named "([^"]*)" with a district$/ do |class_name|
+  offering = Factory(:portal_offering)
+  clazz = offering.clazz
+  clazz.name = class_name
+  clazz.save
 end
 
 Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content, offering_name|

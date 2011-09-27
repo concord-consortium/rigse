@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe RiGse::ExpectationStemsController do
 
@@ -15,7 +15,7 @@ describe RiGse::ExpectationStemsController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @expectation_stems" do
-      RiGse::ExpectationStem.should_receive(:find).with(:all).and_return([mock_expectation_stem])
+      RiGse::ExpectationStem.should_receive(:all).and_return([mock_expectation_stem])
       get :index
       assigns[:expectation_stems].should == [mock_expectation_stem]
     end
@@ -24,7 +24,7 @@ describe RiGse::ExpectationStemsController do
   
       it "should render all expectation_stems as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::ExpectationStem.should_receive(:find).with(:all).and_return(expectation_stems = mock("Array of ExpectationStems"))
+        RiGse::ExpectationStem.should_receive(:all).and_return(expectation_stems = mock("Array of ExpectationStems"))
         expectation_stems.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

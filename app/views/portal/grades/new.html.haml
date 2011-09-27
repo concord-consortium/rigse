@@ -1,0 +1,3 @@
+= form_for(@portal_grade, :as => :portal_grade, :url => { :action => "create" }) do |f|
+  = render :partial => 'form', :locals => { :portal_grade => @portal_grade, :f => f }
+  = submit_tag

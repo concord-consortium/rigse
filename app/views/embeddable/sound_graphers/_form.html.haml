@@ -1,4 +1,16 @@
 = edit_menu_for(sound_grapher, f)
 .content
-  - field_set_tag 'sound grapher name' do
-    = f.text_field :name, :id => dom_id_for(sound_grapher, :item, :name_field)
+  = f.label 'name'
+  = f.text_field :name, :id => dom_id_for(sound_grapher, :item, :name_field)
+  %br
+  = f.label 'display type'
+  = f.select(:display_mode, Embeddable::SoundGrapher.valid_display_modes)
+  %br
+  = f.label 'maximum sample time'
+  = f.select(:max_sample_time, Embeddable::SoundGrapher.valid_max_sample_times)
+  %br
+  = f.label 'maximum frequency'
+  = f.select(:max_frequency, Embeddable::SoundGrapher.valid_max_frequencies)
+  %br
+
+    

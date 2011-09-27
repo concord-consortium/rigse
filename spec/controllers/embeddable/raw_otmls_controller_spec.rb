@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::RawOtmlsController do
 
@@ -19,7 +19,7 @@ describe Embeddable::RawOtmlsController do
   end
 
   def with_tags_like_an_otml_raw_otml
-    with_tag('OTCompoundDoc')
+    assert_select('OTCompoundDoc')
   end
 
 end

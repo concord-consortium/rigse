@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::ExternalUserDomainsController do
 
@@ -9,7 +9,7 @@ describe Portal::ExternalUserDomainsController do
   describe "GET index" do
     it "assigns all portal_external_user_domains as @portal_external_user_domains" do
       pending "Broken example"
-      Portal::ExternalUserDomain.stub!(:find).with(:all).and_return([mock_external_user_domain])
+      Portal::ExternalUserDomain.stub!(:all).and_return([mock_external_user_domain])
       get :index
       assigns[:portal_external_user_domains].should == [mock_external_user_domain]
     end

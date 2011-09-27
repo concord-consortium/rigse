@@ -2,7 +2,7 @@ class RiGse::DomainsController < ApplicationController
   # GET /RiGse/domains
   # GET /RiGse/domains.xml
   def index
-    @domains = RiGse::Domain.find(:all)
+    @domains = RiGse::Domain.all
 
     respond_to do |format|
       format.html # index.html.erb

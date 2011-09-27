@@ -1,20 +1,23 @@
 = edit_menu_for(data_table,f)
 = observe_form(dom_id_for(data_table, :edit), :function => pack_field_params)
 .content
-  - field_set_tag 'table properties' do
+  = field_set_tag 'table properties' do
     = f.label "name"
     = f.text_field :name, :id => dom_id_for(data_table, :item, :name_field)
+    %br
     = f.label "visible rows"
     = f.text_field :visible_rows, :size => 5
+    %br
     = f.label "width"
     = f.text_field :width, :size => 5
+    %br
+    = f.label "Limit cell values to numbers:"
+    = f.check_box :is_numeric
+    %br
     = f.label "precision"
     = f.text_field :precision, :size => 5
-  - field_set_tag 'linked datacollector' do
-    %p
-      Link contents with a Graph in this Investigation:
-      = f.select(:data_collector_id, Embeddable::DataCollector.by_scope(@scope).collect { |dc| [ "#{dc.name}: #{dc.id}", dc.id ] }, { :prompt => false, :include_blank => "None" }, { :id => dom_id_for(data_table, :select_linked_data_collector)})
-  - field_set_tag 'column labels' do
+    %br
+  = field_set_tag 'column labels' do
     .action_menu
       .action_menu_header_right
         %ul

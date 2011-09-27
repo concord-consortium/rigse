@@ -1,5 +1,5 @@
-- options = { :complete => mce_init_string }
-- if defined? page_element
+- options = { :complete => mce_init_string }.merge(local_assigns[:overrides] || {})
+- if local_assigns.has_key? :page_element
   - view_class = for_teacher_only?(page_element) ? "teacher_only container_element" : "container_element"
   %div{ :id => dom_id_for(page_element, :item), :class => view_class }
     = show_menu_for(page_element, options)

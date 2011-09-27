@@ -1,0 +1,197 @@
+$rites_purple: #450688;
+$rites_yellow: #f2d61b;
+
+@mixin link_colors {
+  a {
+    text-decoration: underline;
+    color: $rites_purple;
+    background: {
+      color: inherit; }; }
+  a:active {
+    text-decoration: underline;
+    color: $rites_purple;
+    background: {
+      color: inherit; }; }
+  a:link {
+    text-decoration: underline;
+    color: $rites_purple;
+    background: {
+      color: inherit; }; }
+  a:visited {
+    text-decoration: underline;
+    color: $rites_purple;
+    background: {
+      color: inherit; }; }
+  a:hover {
+    color: $rites_yellow;
+    background: {
+      color: $rites_purple; }; } }
+
+body {
+  background: {
+    image: none;
+    color: $rites_purple; }; }
+
+#authentication_bar {
+  display: block;
+  width: 854px;
+  margin: 0px auto;
+  text-align: right;
+  clear: both;
+  color: white;
+  margin-bottom: 10px;
+  margin-top: 0px;
+  font-weight: bold;
+  a {
+    color: white; } }
+
+#header {
+  @include link_colors;
+  background: {
+    color: $rites_purple;
+    image: none; };
+  .left_content {
+    margin: 0px {
+      bottom: 2px; }; }
+  .right_content {
+    margin: 0px {
+      bottom: 2px; }; } }
+
+#nav_top {
+  a {
+    text-decoration: none;
+    color: white;
+    background: {
+      color: inherit; }; }
+  a:active {
+    text-decoration: underline;
+    color: white;
+    background: {
+      color: inherit; }; }
+  a:link {
+    text-decoration: underline;
+    color: white;
+    background: {
+      color: inherit; }; }
+  a:visited {
+    text-decoration: underline;
+    color: white;
+    background: {
+      color: inherit; }; }
+  background: {
+    color: $rites_purple; }; }
+
+#left_nav {
+  background: {
+    color: #e5dcee; }; }
+
+#main_content {
+  @include link_colors;
+  background: {
+    color: white; }; }
+
+.conent_colors {
+  background: {
+    color: white; }; }
+
+.authform {
+  label {
+    font-weight: bold; }
+  color: $rites_purple;
+  td {
+    vertical-align: bottom;
+    padding: 2px; }
+  td.left {
+    text-align: right;
+    padding-right: 5px; }
+  td.right {
+    text-align: left; } }
+
+.drop_target {
+  padding-left: 0px;
+  margin-left: 0px;
+  background: {
+    color: white; };
+  border: {
+    color: $rites_purple;
+    top: 3px solid;
+    bottom: 3px solid; }; }
+
+.action_menu {
+  background: {
+    color: inherit !important; };
+  .action_menu_header_right {
+    ul {
+      background: {
+        color: inherit; };
+      li {
+        background: {
+          color: inherit; }; } } }
+  .action_menu_header_right {
+    display: inline-block; } }
+
+.accordion_container {
+  background: {
+    color: #e5dcee; }; }
+
+input[type=password] {
+  background: {
+    color: white !important; };
+  &:focus {
+    background: {
+      color: white !important; }; }
+  border: {
+    color: $rites_purple; }; }
+
+input[type=text] {
+  background: {
+    color: white !important; };
+  &:focus {
+    background: {
+      color: white !important; }; }
+  border: {
+    color: $rites_purple; }; }
+
+textarea {
+  background: {
+    color: white !important; }; }
+
+h3 {
+  font-weight: bold; }
+
+a {
+  font-weight: bold; }
+
+th.bold {
+  font-weight: bold; }
+
+.nobreak {
+  white-space: nowrap; }
+
+.item {
+  border: none;
+  ul {
+    white-space: normal;
+    background: {
+      color: #e5dcee; };
+    li {
+      white-space: normal;
+      background: {
+        color: inherit; }; } } }
+
+.flash {
+  background: {
+    color: inherit; };
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1.5em;
+  text-align: left; }
+
+#clazzes_nav {
+  padding-left: 5px;
+  ul {
+    .create_link {
+      background-color: #cccccc;
+      border: 1px solid #444444;
+      margin-left: -15px;
+      text-align: center; } } }

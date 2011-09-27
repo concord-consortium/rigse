@@ -1,16 +1,16 @@
 = edit_menu_for(biologica_chromosome_zoom, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(biologica_chromosome_zoom, :item, :name_field)
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(biologica_chromosome_zoom, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
-  - field_set_tag 'organisms' do
+  = field_set_tag 'organisms' do
     = "Organisms: "
     = "<select name='chromosome_zoom[organism_ids][]' multiple='true' size='5'>"
     = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_chromosome_zoom.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
     = "</select>"
     = "<br/>"
-  - field_set_tag 'options' do
+  = field_set_tag 'options' do
     = "Chromosome a visible: "
     = f.check_box :chromosome_a_visible, :id => dom_id_for(biologica_chromosome_zoom, :item, :chromosome_a_visible_checkbox)
     = "<br/>"

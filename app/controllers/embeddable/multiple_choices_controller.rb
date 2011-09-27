@@ -28,15 +28,6 @@ class Embeddable::MultipleChoicesController < ApplicationController
     end
   end
 
-  # GET /Embeddable/multiple_choices/1/print
-  def print
-    @multiple_choice = Embeddable::MultipleChoice.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @multiple_choice }
-    end
-  end
-
   # GET /Embeddable/multiple_choices/new
   # GET /Embeddable/multiple_choices/new.xml
   def new

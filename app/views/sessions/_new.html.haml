@@ -1,8 +1,8 @@
 #content-upper
   .cols.login-area
     .col
-      - form_tag session_path, :id=>"project-signin" do
-        - field_set_tag "Project Sign In" do
+      = form_tag session_path, :id=>"project-signin" do
+        = field_set_tag "Project Sign In" do
           %h2
             Project Sign In
           %ul.graphic-input
@@ -19,21 +19,7 @@
             'Login'
           %p.forgot= link_to 'Forgot Password', forgot_password_path
     .col2
-      %h3
-        First Time Here?
-      %p
-        Sign up for access as:
-        %br
-        = link_to("Student", signup_portal_students_path, :class=>'more')
-        %br
-        %a{ :href=>"/portal/teachers/new", :class=>'more' }
-          Teacher
-      %h3
-        Just want to Try the Units?
-      %p
-        =link_to "View our unit Previews", investigation_preview_list_path, {:class=>'more'}
-        -#%a{ :href=>"/preview", :class=>'more' }
-          -#View our unit previews
+      = render :partial => 'shared/signin_blurb'
     %p.note
       %strong
         IMPORTANT!

@@ -6,6 +6,8 @@
 
 <% @calibrations.each do |calibration| %>
   <tr>
+    <td><%= calibration.name %></td>
+    <td><%= calibration.data_filter.name %></td>
     <td><%= link_to 'Show', calibration %></td>
     <td><%= link_to 'Edit', edit_probe_calibration_path(calibration) %></td>
     <td><%= link_to 'Destroy', calibration, :confirm => 'Are you sure?', :method => :delete %></td>

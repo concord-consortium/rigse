@@ -1,5 +1,5 @@
 - if offering.runnable
-  - if defined? @portal_teacher
+  - if @portal_teacher
     = render :partial => 'shared/offering_for_teacher', :locals => {:offering => offering}
   - else
     = render :partial => 'shared/offering_for_student', :locals => {:offering => offering}

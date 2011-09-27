@@ -7,7 +7,7 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
     xml << "    <all-permissions />"
   }
   jnlp_mac_java_config(xml)
-  if defined? data_test && data_test
+  if local_assigns[:data_test]
     jnlp_testing_resources(xml, { :learner => learner, :runnable => runnable })
   else
     jnlp_resources(xml, { :learner => learner, :runnable => runnable })
@@ -16,11 +16,11 @@ xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) {
   jnlp_resources_linux(xml)
   jnlp_resources_macosx(xml)
   jnlp_resources_windows(xml)
-  if defined? data_test && data_test
+  if local_assigns[:data_test]
     xml << "  <application-desc main-class='org.concord.testing.gui.AutomatedDataEditor'>\n  "
   else
     xml << "  <application-desc main-class='net.sf.sail.emf.launch.EMFLauncher2'>\n  "
   end
-  xml.argument polymorphic_url(learner, :format =>  :config, :session => session_options[:id])
+  xml.argument polymorphic_url(learner, :format =>  :config,  Rails.application.config.session_options[:key]  => session_options[:id])
   xml << "  </application-desc>\n"
 }

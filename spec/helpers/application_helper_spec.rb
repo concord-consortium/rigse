@@ -11,7 +11,7 @@ describe ApplicationHelper do
     end
 
     it "should output container if set" do
-      title_tag('hello', :h2).should have_tag('h2', 'hello')
+      title_tag('hello', :h2).should have_selector('h2', :content => 'hello')
     end
   end
 

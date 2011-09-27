@@ -13,7 +13,7 @@
   .action_menu
     .action_menu_header
       .action_menu_header_left
-        %p= page_entries_info investigations, :entry_name=>"Investigation"
+        %p= page_entries_info investigations, :model=>"Investigation"
         %p.paginator
           = will_paginate investigations
       .action_menu_header_right

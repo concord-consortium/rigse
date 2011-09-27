@@ -1,5 +1,4 @@
 %div{:id => dom_id_for(open_response, :details), :class => 'content'}
   = wrap_edit_link_around_content(open_response, options={:complete => mce_init_string}) do
-    = open_response.prompt
-
-    %textarea{:type => 'text', :style=>"width: 100%;", :value =>open_response.default_response, :class=> "mceNoEditor",:id => dom_id_for(open_response, :item, :default_response_field)}
+    = open_response.prompt.html_safe unless open_response.prompt.nil?
+    %textarea{:type => 'text', :style => "font-size: #{open_response.font_size}px;", :rows => open_response.rows, :cols => open_response.columns, :value =>open_response.default_response, :class=> "mceNoEditor",:id => dom_id_for(open_response, :item, :default_response_field)}

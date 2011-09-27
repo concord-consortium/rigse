@@ -1,17 +1,44 @@
 class Portal::Nces06DistrictsController < ApplicationController
 
+  before_filter :admin_or_manager, :except => [ :index ]
   include RestrictedPortalController
-  before_filter :admin_only
+
+  protected
+
+  def admin_only
+    unless current_user.has_role?('admin')
+      flash[:notice] = "Please log in as an administrator" 
+      redirect_to(:home)
+    end
+  end
+  
+  def admin_or_manager
+    if current_user.has_role?('admin')
+      @admin_role = true
+    elsif current_user.has_role?('manager')
+      @manager_role = true
+    else
+      flash[:notice] = "Please log in as an administrator or manager" 
+      redirect_to(:home)
+    end
+  end
+
   public
   
   # GET /portal_nces06_districts
   # GET /portal_nces06_districts.xml
   def index
-    @nces06_districts = Portal::Nces06District.all
+    select = "id, NAME"
+    if params[:state_or_province]
+      @nces06_districts = Portal::Nces06District.find(:all, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'NAME')
+    else
+      @nces06_districts = Portal::Nces06District.find(:all, :select => select, :order => 'NAME')
+    end
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @nces06_districts }
+      format.xml  { render :xml  => @nces06_districts }
+      format.json { render :json => @nces06_districts }
     end
   end
 

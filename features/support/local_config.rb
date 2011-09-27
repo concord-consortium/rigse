@@ -13,6 +13,7 @@
 # the sauce_connect command would look like:
 # sauce_connect -u [sauce-user] -k [sauce-key] -s 33.33.33.10 -p 3001 -d example.com
 
+require 'capybara'
 require 'selenium-webdriver'
 
 class CapybaraConfig

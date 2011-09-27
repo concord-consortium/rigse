@@ -43,7 +43,7 @@ class Probe::VendorInterfacesController < ApplicationController
   # POST /Probe/vendor_interfaces
   # POST /Probe/vendor_interfaces.xml
   def create
-    @vendor_interface = Probe::VendorInterface.new(params[:vendor_interface])
+    @vendor_interface = Probe::VendorInterface.new(params[:probe_vendor_interface])
 
     respond_to do |format|
       if @vendor_interface.save
@@ -63,7 +63,7 @@ class Probe::VendorInterfacesController < ApplicationController
     @vendor_interface = Probe::VendorInterface.find(params[:id])
 
     respond_to do |format|
-      if @vendor_interface.update_attributes(params[:vendor_interface])
+      if @vendor_interface.update_attributes(params[:probe_vendor_interface])
         flash[:notice] = 'Probe::VendorInterface.was successfully updated.'
         format.html { redirect_to(@vendor_interface) }
         format.xml  { head :ok }

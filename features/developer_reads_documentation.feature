@@ -5,7 +5,7 @@ Feature: A developer reads technical documentation about the software
   And so I can see that documentation I write is formatted correctly before I commit it and share with other developers
   
   Background:
-    Given The default project and jnlp resources exist using mocks
+    Given The default project and jnlp resources exist using factories
 
   Scenario: A developer looks at the readme
     Given I am on /readme

@@ -35,9 +35,6 @@ class Embeddable::LabBookSnapshot < ActiveRecord::Base
   default_value_for :description, "description ..."
   
 
-  def self.display_name
-    "Snapshot Button"
-  end
 
 
   def other_elements_on_page

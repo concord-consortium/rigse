@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe "/security_questions/_fields.html.haml" do
   
@@ -12,9 +12,9 @@ describe "/security_questions/_fields.html.haml" do
   
   it "should display the options" do  
      render :partial => "/security_questions/fields"
-     response.should have_tag('select') do
-       with_tag('option', :text => 'Why?')
-       with_tag('option', :text => 'What?')
+     assert_select('select') do
+       assert_select('option', :text => 'Why?')
+       assert_select('option', :text => 'What?')
      end
   end
   

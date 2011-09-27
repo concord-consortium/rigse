@@ -1,8 +1,6 @@
-include OtmlHelper
-include JnlpHelper
-include Clipboard
-
 module ApplicationHelper
+  include Clipboard
+  
   def current_project
     @_project ||= Admin::Project.default_project
   end
@@ -26,10 +24,18 @@ module ApplicationHelper
 
   def dom_id_for(component, *optional_prefixes)
     optional_prefixes.flatten!
+    optional_prefixes.compact! unless optional_prefixes.empty?
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    id = component.id.nil? ? Time.now.to_i : component.id
+    if component.is_a?(ActiveRecord::Base)
+      id = component.id || Time.now.to_i
+    else
+      # this will be a temporary id, so it seems unlikely that these type of ids
+      # should be really be generated, however there are some parts of the code
+      # calling dom_id_for and passing a form object for example
+      id = component.object_id
+    end
     id_string = id.to_s
     "#{prefix}#{class_name}_#{id_string}"
   end
@@ -43,28 +49,21 @@ module ApplicationHelper
   end
 
   def display_system_info
-    list1 =
-      content_tag('ul', :class => 'tiny menu_h') do
-        list = ''
-        # grit (git gem) throws strange errors when running rspec tests
-        # using command-R in textmate, so here's the hack to fix
-        # that for now
-        unless RUNNING_TESTS
-          git_repo_info.collect { |info| list << content_tag('li') { info } }
-          if USING_JNLPS
-            list << content_tag('li') { '|' }
-            maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
-          end
-        end
-        list
-      end
-    # list2 =
-    #   content_tag('ul', :class => 'tiny menu_h') do
-    #     list = ''
-    #     maven_jnlp_info.collect { |info| list << content_tag('li') { info } }
-    #     list
-    #   end
-    # "#{list1}\n<br />#{list2}"
+    commit = git_repo_info
+    jnlp = maven_jnlp_info
+    info = <<-HEREDOC
+<ul class="tiny menu_h">
+  <li>#{commit[:branch]}</li>
+  <li><a href="#{commit[:href]}">#{commit[:short_id]}</a></li>
+  <li>#{commit[:author]}</li>
+  <li>#{commit[:date]}</li>
+  <li>#{commit[:short_message]}</li>
+  <li>|</li>
+  <li>#{jnlp[:name]}</li>
+  <li><a href="#{jnlp[:href]}">#{jnlp[:version]}</a></li>
+  <li>#{jnlp[:snapshot]}</li>
+</ul>
+    HEREDOC
   end
 
   def git_repo_info
@@ -92,34 +91,36 @@ module ApplicationHelper
     if head
       branch = head.name
       last_commit = repo.commits(branch).first
-      message = last_commit.message
-      link = "<a title='#{message}' href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
-      name = last_commit.author.name
-      date = last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
-      short_message = truncate(last_commit.message, :length => 54)
-      [branch, link, name, date, short_message]
+      {
+        :branch => branch,
+        :last_commit => repo.commits(branch).first,
+        :short_message => truncate(last_commit.message, :length => 54),
+        :href => "http://github.com/concord-consortium/rigse/commit/#{last_commit.id}",
+        :short_id => truncate(last_commit.id, :length => 16),
+        :name => last_commit.author.name,
+        :date => last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
+      }
     else
-      []
+      {}
     end
   end
 
   def maven_jnlp_info
-    name = jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name
-    version = jnlp_adaptor.jnlp.versioned_jnlp_url.version_str
-    url = jnlp_adaptor.jnlp.versioned_jnlp_url.url
-    link = "<a href='#{url}'>#{version}</a>"
-    info = [name, link]
-    if current_project.snapshot_enabled
-      info << "(snapshot)"
+    if current_project.maven_jnlp_family
+      {
+        :name => jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.name,
+        :version => jnlp_adaptor.jnlp.versioned_jnlp_url.version_str,
+        :href => jnlp_adaptor.jnlp.versioned_jnlp_url.url,
+        :snapshot => current_project.snapshot_enabled ? "(snapshot)" : "(frozen)"
+      }
     else
-      info << "(frozen)"
+      {
+        :name => 'unknown',
+        :version => 'unknown',
+        :href => 'unknown',
+        :snapshot => current_project.snapshot_enabled ? "(snapshot)" : "(frozen)"
+      }
     end
-
-    # if jnlp_adaptor.jnlp.versioned_jnlp_url.maven_jnlp_family.snapshot_version == version
-    #   info << "(snapshot)"
-    # else
-    #   info << "(frozen)"
-    # end
   end
 
   def display_repo_info
@@ -130,7 +131,7 @@ module ApplicationHelper
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
         list << content_tag('li') { branch }
-        list << content_tag('li') { "<a title='href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
+        list << content_tag('li') { "<a title='href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
         list << content_tag('li') { last_commit.author.name }
         list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
         list << content_tag('li') { truncate(message, :length => 70) }
@@ -189,24 +190,38 @@ module ApplicationHelper
     if container_class.respond_to?(:search_list)
       render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.search_list(locals), :hide_print => hide_print }
     else
-      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.find(:all), :hide_print => hide_print }
+      render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.all, :hide_print => hide_print }
     end
   end
 
-  def render_show_partial_for(component,teacher_mode=false)
-    class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.delete_module.underscore_module
-    partial = "#{class_name.pluralize}/show"
-    # if component.respond_to? :print_partial_name
-    #   partial = "#{class_name.pluralize}/#{component.print_partial_name}"
-    # end
-    render :partial => partial, :locals => { demodulized_class_name.to_sym => component, :teacher_mode => teacher_mode}
+  def top_level_container_name_as_class_string
+    container = top_level_container_name.pluralize
+    container_sym = top_level_container_name.pluralize.to_sym
+    container_class = top_level_container_name.classify
   end
 
-  def render_edit_partial_for(component)
+  def render_partial_for(component,_opts={})
     class_name = component.class.name.underscore
-    demodulized_class_name = component.class.name.demodulize.underscore
-    render :partial => "#{class_name.pluralize}/remote_form", :locals => { demodulized_class_name.to_sym => component }
+    demodulized_class_name = component.class.name.delete_module.underscore_module
+
+    opts = {
+      :teacher_mode => false,
+      :substitute    => nil,
+      :partial      => 'show'
+    }
+    opts.merge!(_opts)
+    teacher_mode = opts[:teacher_mode]
+    substitute = opts[:substitute]
+    partial = "#{class_name.pluralize}/#{opts[:partial]}"
+    render :partial => partial, :locals => { demodulized_class_name.to_sym => (substitute ? substitute : component), :teacher_mode => teacher_mode}
+  end
+
+  def render_show_partial_for(component,teacher_mode=false,substitute=nil)
+    render_partial_for(component, {:teacher_mode => teacher_mode, :substitute => substitute})
+  end
+
+  def render_edit_partial_for(component,opts={})
+    render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
   end
 
   def wrap_edit_link_around_content(component, options={})
@@ -259,21 +274,21 @@ module ApplicationHelper
     end
   end
 
-  def edit_menu_for(component, form, kwds={:omit_cancel => true}, scope=false)
+  def edit_menu_for(component, form, options={:omit_cancel => true}, scope=false)
     component = (component.respond_to? :embeddable) ? component.embeddable : component
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_tag(:h3,{:class => 'menu'}) do
-            haml_concat title_for_component(component)
+            haml_concat title_for_component(component, :id_prefix => 'edit')
           end
         end
         haml_tag :div, :class => 'action_menu_header_right' do
           haml_tag :ul, {:class => 'menu'} do
-            if (component.changeable?(current_user))
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
-              haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless kwds[:omit_cancel]
-            end
+            #if (component.changeable?(current_user))
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Save") }
+            haml_tag(:li, {:class => 'menu'}) { haml_concat form.submit("Cancel") } unless options[:omit_cancel]
+            #end
           end
         end
       end
@@ -435,11 +450,11 @@ module ApplicationHelper
         options[:redirect] ||= url_for model.parent
       end
       if options[:redirect]
-        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id, :redirect=>options[:redirect])
+        url = url_for(:controller => controller, :id => model.id, :action => :destroy, :redirect=>options[:redirect])
       else
-        url = url_for(:controller => controller, :action => 'destroy', :id=>model.id)
+        url = url_for(:controller => controller, :id => model.id, :action => :destroy)
       end
-      remote_link_button "delete.png", :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
+      remote_link_button "delete.png", :method => :delete, :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
     end
   end
 
@@ -449,10 +464,11 @@ module ApplicationHelper
 
   def title_for_component(component, options={})
     title = name_for_component(component, options)
-    if RAILS_ENV == "development" || current_user.has_role?('admin')
-      "<span class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
+    id = dom_id_for(component, options[:id_prefix], :title)
+    if ::Rails.env == "development" || current_user.has_role?('admin')
+      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
     else
-      "<span class='component_title'>#{title}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span>"
     end
   end
 
@@ -478,7 +494,7 @@ module ApplicationHelper
     end
     name << case
       when component.id.nil? then "(new)"
-      when component.name == component.class.default_value('name') then ''
+      when component.name == default_name then ''
       when component.name then component.name
       else ''
     end
@@ -792,15 +808,15 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat report_link_for(learner, 'report', 'Report')
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'open_response_report', open_response_learner_stat(learner))
-          # haml_concat " | "
-          # haml_concat report_link_for(learner, 'multiple_choice_report', multiple_choice_learner_stat(learner))
-          if USING_JNLPS && current_user.has_role?("admin")
+          if learner.offering.runnable.run_format == :jnlp
+            haml_concat link_to('Run', run_url_for(learner))
             haml_concat " | "
-            haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+            if current_user.has_role?("admin")
+              haml_concat report_link_for(learner, 'bundle_report', 'Bundles ')
+              haml_concat " | "
+            end
           end
+          haml_concat report_link_for(learner, 'report', 'Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do
           haml_concat title_for_component(learner, options)
@@ -915,7 +931,7 @@ module ApplicationHelper
       :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
     }
     options = defaults.merge(options)
-    link_to(options[:text], options[:url], options)
+    link_to(options[:text], options[:url], options.except(:text, :url))
   end
 
   def dropdown_button(image,options={})
@@ -1197,13 +1213,13 @@ module ApplicationHelper
     Admin::Project.settings_for(key)
   end
 
+  # this appears to not be used in master right now
   def current_user_can_author
     return true if current_user.has_role? "author" 
     if settings_for(:teachers_can_author)
-      return true unless current_user.teacher.nil?
+      return true unless current_user.portal_teacher.nil?
     end
     # TODO add aditional can-author conditions
     return false
   end
-
 end

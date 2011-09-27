@@ -51,25 +51,21 @@ class Portal::OfferingsController < ApplicationController
          else
            # session[:put_path] = nil
          end
-         redirect_to(@offering.runnable.url, 'popup' => true)
+         redirect_to(@offering.runnable.url(learner))
        }
 
       format.jnlp {
         # check if the user is a student in this offering's class
         if learner = setup_portal_student
           if params.delete(:use_installer)
-            wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params)
-            render :partial => 'shared/learn_installer', :locals =>
-              { :runnable => @offering.runnable, :learner => learner, :wrapped_jnlp_url => wrapped_jnlp_url }
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
           else
             render :partial => 'shared/learn', :locals => { :runnable => @offering.runnable, :learner => learner }
           end
         else
           # The current_user is a teacher (or another user acting like a teacher)
           if params.delete(:use_installer)
-            wrapped_jnlp_url = polymorphic_url(@offering, :format => :jnlp, :params => params, :teacher_mode => true )
-            render :partial => 'shared/show_installer', :locals =>
-              { :runnable => @offering.runnable, :wrapped_jnlp_url => wrapped_jnlp_url, :teacher_mode => true }
+            render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
           else
             render :partial => 'shared/show', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
           end
@@ -288,12 +284,15 @@ class Portal::OfferingsController < ApplicationController
     @offering = Portal::Offering.find(params[:id])
     if @offering
       learner = setup_portal_student
-      bundle_logger = learner.bundle_logger
-      bundle_logger.start_bundle
-      students = params[:students] || ''
-      students = students.split(',').map { |s| Portal::Student.find(s) }
-      bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
-      bundle_logger.in_progress_bundle.save
+      # TODO: Temporary fix for bug in previews
+      if (learner)
+        bundle_logger = learner.bundle_logger
+        bundle_logger.start_bundle
+        students = params[:students] || ''
+        students = students.split(',').map { |s| Portal::Student.find(s) }
+        bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
+        bundle_logger.in_progress_bundle.save
+      end
       render :status => 200, :text => "ok"
     else
       render :status => 500, :text => "problem loading offering"
