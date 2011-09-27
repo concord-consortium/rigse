@@ -18,6 +18,8 @@ set :stages, %w(
 
 set :default_stage, "development"
 
+set :rake,           "bundle exec rake"
+
 def render(file,opts={})
   template = File.read(file)
   haml_engine = Haml::Engine.new(template)
@@ -600,7 +602,7 @@ end
 #
 # generake (hehe) cap task to run rake tasks.
 # found here: http://stackoverflow.com/questions/312214/how-do-i-run-a-rake-task-from-capistrano
-namespace :rake do  
+namespace :rake_tasks do  
   desc "Run a rake task: cap staging rake:invoke task=a_certain_task"
   # run like: cap staging rake:invoke task=a_certain_task  
   task :invoke do  
