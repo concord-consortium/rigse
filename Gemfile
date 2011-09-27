@@ -83,7 +83,7 @@ group :test, :development do
   gem "rspec-rails",       "~> 2.6"
   gem "factory_girl",      "~> 2.0.5"
   gem "email_spec",        "~> 1.2.1"
-  gem "fakeweb",           "~> 1.3"
+  gem "fakeweb",           "~> 1.3", :require => false
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   # If you update the version of ci_reporter
   # please make sure to update the --require path in Hudson

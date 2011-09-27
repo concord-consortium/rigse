@@ -1,5 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
+require 'fakeweb'
+
 describe Embeddable::VideoPlayer do
   before(:all) do
     @small_video_url = "http://example.com/small_video.mpeg"
