@@ -185,7 +185,6 @@ module SisImporter
             parse_csv_files_for_district(district)
 
             log_message "\n (joining data for district #{district}...)\n"
-            join_data
 
             log_message "\n (updating models for district #{district}...)\n"
             update_models
@@ -243,11 +242,6 @@ module SisImporter
       verify_users
     end
 
-    def join_data
-      log_message("Skipin Sakai table join..", {:log_level => 'info'})
-      #  join_students_sakai
-      #  join_staff_sakai
-    end
 
     def update_models
       update_teachers
