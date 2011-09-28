@@ -55,6 +55,9 @@ module SisImporter::SisImporterExampleHelpers
     @sis_data_importer = SisImporter::SisImporter.new(sis_data_options)
     @logger = @sis_data_importer.log
     @sis_data_importer.run_scheduled_job
+    puts @sis_data_importer
+    puts @sis_data_importer.district_importers
+    @district_importer=@sis_data_importer.district_importers.first
   end
 
 end
@@ -136,9 +139,9 @@ describe SisImporter::SisImporter do
     # end
 
     it "should have parsed data" do
-      @sis_data_importer.parsed_data.should_not be_nil
+      @district_importer.parsed_data.should_not be_nil
       %w{students staff courses enrollments staff_assignments}.each do |data_file|
-        @sis_data_importer.parsed_data[data_file.to_sym].should_not be_nil
+        @district_importer.parsed_data[data_file.to_sym].should_not be_nil
       end
     end
 
