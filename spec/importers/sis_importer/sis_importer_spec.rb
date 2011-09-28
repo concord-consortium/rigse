@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+# require File.expand_path('../../spec_helper', __FILE__)
 
 module SisImporter::SisImporterExampleHelpers
 
@@ -87,33 +87,23 @@ describe SisImporter::SisImporter do
       @sis_data = SisImporter::SisImporter.new(:district_data_root_dir => @district_data_root_dir)
     end
 
-    it "should be resilient in the event that it can not connect to the sftp server"
 
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
-      #pending "Broken example"
-      Net::SFTP.stub(:start).and_raise(NoMethodError.new('SFTP.start failed', 'random message'))
-      @sis_data.should_receive(:log_message) do |a, b|
-        a.should =~ @failed_connection_log
-      end
+      transport = @sis_data.file_transport
+      error = SisImporter::SftpFileTransport::ConnectionError.new('fake') 
+      transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      transport.errors.size.should eql 0
       lambda { @sis_data.get_csv_files }.should raise_error
     end
 
-    it "should be resilient in the event that a local/remote directory/file does not exist" do
-      #pending "Broken example"
-      sftp = double('mock_sftp')
-      sftp.stub(:download!).and_raise(RuntimeError.new('open the test file to download: no such file'))
-      proc = lambda { @sis_data.get_csv_files_for_district('test07', sftp) }
-      proc.should_not raise_error(RuntimeError, @no_file_message)
-    end
-
     it "should report an error in the event that a remote directory/file does not exist" do
-      #pending "Broken example"
-      sftp = double('mock_sftp')
-      sftp.stub(:download!).and_raise(RuntimeError.new('open the test file to download: no such file'))
-      @sis_data.should_receive('log_message').at_least(:once) do |a, b |
-        a.should =~ @no_file_log
-      end
-      @sis_data.get_csv_files_for_district('test07', sftp)
+      transport = @sis_data.file_transport
+      error = SisImporter::FileTransport::TransportError.new('fake') 
+      transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      transport.errors.size.should eql 0
+      lambda { @sis_data.get_csv_files }.should_not raise_error
+      transport.errors.size.should eql 1
+      transport.errors.first.should equal error
     end
   end
 
@@ -192,7 +182,6 @@ describe SisImporter::SisImporter do
         run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
       end
       it "should log an error if an enrollment is missing a valid student" do
-        #pending "Broken example"
         @logger.should_receive(:error).with(/student not found/)
         # 007 is not a real student SASID
         csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,01,0"
@@ -201,7 +190,6 @@ describe SisImporter::SisImporter do
       end
 
       it "should log an error if an enrollment is for a non existing course" do
-        #pending "Broken example"
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,01,0"
@@ -210,7 +198,6 @@ describe SisImporter::SisImporter do
       end
 
       it "should log an error if a staff assignment is missing a teacher" do
-        #pending "Broken example"
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,01"
@@ -219,7 +206,6 @@ describe SisImporter::SisImporter do
       end
 
       it "should log an error if a staff ssignment is missing course information" do
-        #pending "Broken example"
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,01"
@@ -242,7 +228,6 @@ describe SisImporter::SisImporter do
       run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
     it "should create new teachers" do
-      #pending "Broken example"
       Portal::Teacher.find(:all).should be_more_than(@initial_teachers)
     end
 
@@ -340,35 +325,30 @@ describe SisImporter::SisImporter do
 
 
     it "when the same import is rerun, there should be no new students" do
-      #pending "Broken example"
       current_students = Portal::Student.find(:all)
       run_importer # run the import again.
       Portal::Student.find(:all).should eql(current_students)
     end
 
     it "when the same import is rerun, there should be no new teachers" do
-      #pending "Broken example"
       current_teachers = Portal::Teacher.find(:all)
       run_importer # run the import again.
       Portal::Teacher.find(:all).should eql(current_teachers)
     end
 
     it "when the same import is rerun, there should be no new classes" do
-      #pending "Broken example"
       current_clazzes = Portal::Clazz.find(:all)
       run_importer # run the import again.
       Portal::Clazz.find(:all).should eql(current_clazzes)
     end
 
     it "when the same import is rerun, there should be no new courses" do
-      #pending "Broken example"
       current_courses = Portal::Course.find(:all)
       run_importer # run the import again.
       Portal::Course.find(:all).should eql(current_courses)
     end
 
     it "when the same import is rerun, there should be no new users" do
-      #pending "Broken example"
       current_courses = Portal::Course.find(:all)
       run_importer # run the import again.
       Portal::Course.find(:all).should eql(current_courses)
@@ -387,26 +367,22 @@ describe SisImporter::SisImporter do
     end
     describe "district 01, and 02 contain 3 and 4 students each, with one duplicate, for a total of 6 unique students" do
       it "when students are added from the first district 3 new students are created, then 3 more are created for district 02" do
-        #pending "Broken example"
         run_importer(:districts => ['01'])
         Portal::Student.find(:all).size.should eql(@initial_students.size + 3)
         run_importer(:districts => ['02'])
         Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
       end
       it "when students are imported from districts [02,01] in one batch, all six new students get created at once" do
-        #pending "Broken example"
         run_importer(:districts => ['02','01'])
         Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
       end
       it "when students are imported from districts [01,02] in one batch, all six new students get created at once" do
-        #pending "Broken example"
         run_importer(:districts => ['01','02'])
         Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
       end
     end
 
     it "GYM is imported from district 01, and PHYSICS is imported from district 02. Both should be in Active Record tables." do
-      #pending "Broken example"
       run_importer(:districts => ['01','02'])
       ["GYM","PHYSICS"].each do | name |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(1)
@@ -415,7 +391,6 @@ describe SisImporter::SisImporter do
     end
 
     it "ART and MATH exist in both distrcits, and ART exists in 3 schools, but all are unique courses" do
-      #pending "Broken example"
       run_importer(:districts => ['01','02'])
       {"ART" => 3,"MATH" => 2}.each_pair do | name, size |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(size)
@@ -426,7 +401,6 @@ describe SisImporter::SisImporter do
 
   describe "when student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
     it "when students are added to the the ART class in csv for day two of district 1, they should be added on the rites site too" do
-      #pending "Broken example"
       run_importer(:districts => ['01'])
       Portal::Clazz.find_by_name("ART").students.size.should be(1)
       run_importer(:districts => ['01_day_two'])
@@ -442,27 +416,22 @@ describe SisImporter::SisImporter do
       @sis_data_importer = SisImporter::SisImporter.new #FIXME: ExternalUserDomain::ExternalUserDomainError
     end
     it "should not return nil when parsing a start_date like: '2008-08-15'" do
-      #pending "Broken example"
       @sis_data_importer.check_start_date("2008-08-15").should_not be_nil
     end
 
     it "should not return nil when parsing a start_date like: '9/1/2009'" do
-      #pending "Broken example"
       @sis_data_importer.check_start_date("9/1/2009").should_not be_nil
     end
 
     it "should return nil when parsing a start_date like: 'abc'" do
-      #pending "Broken example"
       @sis_data_importer.check_start_date("abc").should be_nil
     end
 
     it "should return nil when parsing a start_date like: ''" do
-      #pending "Broken example"
       @sis_data_importer.check_start_date("").should be_nil
     end
 
     it "should return nil when parsing a start_date like: nil" do
-      #pending "Broken example"
       @sis_data_importer.check_start_date(nil).should be_nil
     end
   end
