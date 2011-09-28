@@ -117,14 +117,10 @@ module SisImporter
         :logger   => @log
       })
       message = <<-HEREDOC
-
-  Started in: #{@district_data_root_dir} at #{Time.now}
-
-  Logging to: #{File.expand_path(@log_path)}
-
+        Started in: #{@district_data_root_dir} at #{Time.now}
+        Logging to: #{File.expand_path(@log_path)}
       HEREDOC
       log_message(message)
-
       clear_ar_maps
     end
 
@@ -175,38 +171,12 @@ module SisImporter
 
       @districts.each do |district|
         begin
-          if @errors[:districts][district]
-            log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
-          else
-
-            clear_ar_maps
-
-            log_message "\n (parsing csv files for district #{district}...)\n"
-            parse_csv_files_for_district(district)
-
-            log_message "\n (joining data for district #{district}...)\n"
-
-            log_message "\n (updating models for district #{district}...)\n"
-            update_models
-            import_report(district)
-
-            district_summary = <<-HEREDOC
-
-      Import Summary for district #{district}:
-        Teachers: #{@parsed_data[:staff].length}
-        Students: #{@parsed_data[:students].length}
-        Courses:  #{@parsed_data[:courses].length}
-        Classes:  #{@parsed_data[:staff_assignments].length}
-
-            HEREDOC
-            report(district_summary)
-
-            num_districts += 1
-            num_teachers  += @parsed_data[:staff].length
-            num_students  += @parsed_data[:students].length
-            num_courses   += @parsed_data[:courses].length
-            num_classes   += @parsed_data[:staff_assignments].length
-          end
+          import_district(district)
+          num_districts += 1
+          num_teachers  += @parsed_data[:staff].length
+          num_students  += @parsed_data[:students].length
+          num_courses   += @parsed_data[:courses].length
+          num_classes   += @parsed_data[:staff_assignments].length
         rescue MissingDistrictFolderError => e
           log_message "Could not find district folder for district #{district} in #{e.folder}", {:log_level => 'error'}
         rescue RuntimeError => e
@@ -214,33 +184,60 @@ module SisImporter
           log_message e.message, {:log_level => 'error'}
           log_message e.backtrace.join("\n    "), {:log_level => 'debug'}
         end
-
-
       end
 
       end_time = Time.now
       grand_total = <<-HEREDOC
+        ============================
+        Import Summary:
+        ============================
+        Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
+          End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}
+           Minutes: #{((end_time - start_time)/60).to_i}
 
-  ============================
-  Import Summary:
-  ============================
-  Start Time: #{start_time.strftime("%Y-%m-%d %H:%M:%S")}
-    End Time: #{end_time.strftime("%Y-%m-%d %H:%M:%S")}
-     Minutes: #{((end_time - start_time)/60).to_i}
+         Districts: #{num_districts}
+          Teachers: #{num_teachers}
+          Students: #{num_students}
+           Courses: #{num_courses}
+           Classes: #{num_classes}
 
-   Districts: #{num_districts}
-    Teachers: #{num_teachers}
-    Students: #{num_students}
-     Courses: #{num_courses}
-     Classes: #{num_classes}
+        Logged to: #{File.expand_path(@log_path)}
 
-  Logged to: #{File.expand_path(@log_path)}
-
-  ============================
+        ============================
       HEREDOC
       report(grand_total)
     end
+    
+    #
+    #
+    #
+    def import_district(district)
+      if @errors[:districts][district]
+        log_message("\nskipping: district: #{district} due to earlier errors downloading csv data)\n", {:log_level => :error})
+      else
 
+        clear_ar_maps
+        log_message "\n (parsing csv files for district #{district}...)\n"
+        parse_csv_files_for_district(district)
+
+        log_message "\n (joining data for district #{district}...)\n"
+
+        log_message "\n (updating models for district #{district}...)\n"
+        update_models
+        import_report(district)
+
+        district_summary = <<-HEREDOC
+          Import Summary for district #{district}:
+          Teachers: #{@parsed_data[:staff].length}
+          Students: #{@parsed_data[:students].length}
+          Courses:  #{@parsed_data[:courses].length}
+          Classes:  #{@parsed_data[:staff_assignments].length}
+        HEREDOC
+
+        report(district_summary)
+
+      end
+    end
 
     def update_models
       update_teachers
@@ -248,28 +245,6 @@ module SisImporter
       update_courses
       update_classes
     end
-
-    def import_report(district)
-      report_path = File.join(@log_directory, district, "current", "report")
-      FileUtils.mkdir_p(report_path)
-      created_path = File.join(report_path, "users_created.csv")
-      updated_path = File.join(report_path, "users_updated.csv")
-      errors_pah   = File.join(report_path, "users_error.dump.rb")
-
-      data = user_report(@created_users)
-      File.open(created_path, 'w') {|f| f.write(data) }
-
-      data = user_report(@updated_users)
-      File.open(updated_path, 'w') {|f| f.write(data) }
-      
-      data = ""
-      @error_users.each do |row|
-        data << row.inspect
-        data << "\n"
-      end
-      File.open(errors_pah, 'w') {|f| f.write(data) }
-    end
-
 
     def parse_csv_files_for_district(district, date_time_key='current')
       log_message "\n(parsing csv data: #{@district_data_root_dir}/#{district}/#{date_time_key})"
@@ -690,54 +665,6 @@ module SisImporter
       member_relation_row
     end
 
-    def log_message(message, options={})
-      # optional formmating for short :log_level => :info messages
-      #   print a continuing sequence of :info messages in 3 columns of 30 characters each
-      #   :info_in_columns => ['teachers', 4, 30]
-      #
-      defaults = {:log_level => :debug, :newline => "\n", :info_in_columns => false}
-      options = defaults.merge(options)
-      newline = options[:newline]
-      column_format = options[:info_in_columns]
-      if column_format && (options[:log_level] == :info)
-        message = sprintf("%-#{column_format[2]}s", message)
-        @last_log_column += 1
-        if @last_log_column == 1
-          index = sprintf('%6d', @collection_index)
-          length = sprintf('%-6s', "#{@collection_length}:")
-          line_prefix = "#{column_format[0]} #{index}/#{length}"
-          message = "#{line_prefix}  #{message}"
-        end
-        @last_log_column %= column_format[1]
-        if @last_log_column == 0
-          newline = "\n"
-        else
-          newline = ''
-        end
-      else
-        if @last_log_column != 0
-          message = "\n" + message
-          @last_log_column = 0
-        end
-      end
-      message = message + newline
-      print message if @verbose
-      @log.send(options[:log_level], message)
-      @last_log_level = options[:log_level]
-    end
-
-    def status_update(step_size=1)
-      if @verbose
-        unless defined? @step_counter
-          @step_counter = 0
-        end
-        @step_counter += 1
-        if (@step_counter % step_size) == 0
-          print '.' ; STDOUT.flush
-        end
-      end
-    end
-
     ##
     ## Used to print out student login info
     ##
@@ -793,11 +720,6 @@ module SisImporter
       nil
     end
 
-    def report(message)
-      log_message(message, {:log_level => :error})
-      @report.info(message)
-    end
-
     def cache_course_ar_map(course_number,school_id,value=nil)
       unless (course_number && school_id)
         raise SisImporterError.new("must supply a course_number and a school")
@@ -816,12 +738,71 @@ module SisImporter
     end
 
 
+    ##################################################################
+    ##  LOGGING / REPORTING METHODS HERE AFTER:
+    ##################################################################
+    
+    def log_message(message, options={})
+      # optional formmating for short :log_level => :info messages
+      #   print a continuing sequence of :info messages in 3 columns of 30 characters each
+      #   :info_in_columns => ['teachers', 4, 30]
+      #
+      defaults = {:log_level => :debug, :newline => "\n", :info_in_columns => false}
+      options = defaults.merge(options)
+      newline = options[:newline]
+      column_format = options[:info_in_columns]
+      if column_format && (options[:log_level] == :info)
+        message = sprintf("%-#{column_format[2]}s", message)
+        @last_log_column += 1
+        if @last_log_column == 1
+          index = sprintf('%6d', @collection_index)
+          length = sprintf('%-6s', "#{@collection_length}:")
+          line_prefix = "#{column_format[0]} #{index}/#{length}"
+          message = "#{line_prefix}  #{message}"
+        end
+        @last_log_column %= column_format[1]
+        if @last_log_column == 0
+          newline = "\n"
+        else
+          newline = ''
+        end
+      else
+        if @last_log_column != 0
+          message = "\n" + message
+          @last_log_column = 0
+        end
+      end
+      message = message + newline
+      print message if @verbose
+      @log.send(options[:log_level], message)
+      @last_log_level = options[:log_level]
+    end
+
+    def status_update(step_size=1)
+      if @verbose
+        unless defined? @step_counter
+          @step_counter = 0
+        end
+        @step_counter += 1
+        if (@step_counter % step_size) == 0
+          print '.' ; STDOUT.flush
+        end
+      end
+    end
+
+    def report(message)
+      log_message(message, {:log_level => :error})
+      @report.info(message)
+    end
+
     def created_user(user)
       return user.valid? && user.created_at > @start_time
     end
+
     def updated_user(user)
       return user.valid? && user.updated_at > @start_time
     end
+
     def push_user_change(user,row)
       role = user.portal_teacher ? "teacher" : "unknown"
       role = user.portal_student ? "student" : "unknown"
@@ -855,5 +836,27 @@ module SisImporter
       end
       return return_string
     end
+
+    def import_report(district)
+      report_path = File.join(@log_directory, district, "current", "report")
+      FileUtils.mkdir_p(report_path)
+      created_path = File.join(report_path, "users_created.csv")
+      updated_path = File.join(report_path, "users_updated.csv")
+      errors_pah   = File.join(report_path, "users_error.dump.rb")
+
+      data = user_report(@created_users)
+      File.open(created_path, 'w') {|f| f.write(data) }
+
+      data = user_report(@updated_users)
+      File.open(updated_path, 'w') {|f| f.write(data) }
+      
+      data = ""
+      @error_users.each do |row|
+        data << row.inspect
+        data << "\n"
+      end
+      File.open(errors_pah, 'w') {|f| f.write(data) }
+    end
+
   end
 end
