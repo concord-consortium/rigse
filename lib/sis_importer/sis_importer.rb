@@ -56,9 +56,6 @@ module SisImporter
     class SisImporterError < ArgumentError
     end
 
-    class SisGetFileError < RuntimeError
-    end
-
     class MissingDistrictFolderError < Exception
       attr_accessor :folder
       def initialize(district_folder)
@@ -68,8 +65,9 @@ module SisImporter
 
 
     include SisCsvFields  # definitions for the fields we use when parsing.
-    attr_reader :parsed_data
+    attr_reader   :parsed_data
     attr_accessor :log
+    attr_accessor :file_transport
 
     @@csv_files = %w{students staff courses enrollments staff_assignments }
 
@@ -109,7 +107,15 @@ module SisImporter
       @log.level = @sis_import_data_options[:log_level]
       @report = Logger.new(@report_path,'daily')
       @report.level = Logger::INFO
-
+      self.file_transport = SftpFileTransport.new({
+        :csv_files => @csv_files,
+        :districts => @districts,
+        :host => @sis_import_data_config[:host], 
+        :username => @sis_import_data_config[:username], 
+        :password => @sis_import_data_config[:password],
+        :output_dir => @district_data_root_dir,
+        :logger   => @log
+      })
       message = <<-HEREDOC
 
   Started in: #{@district_data_root_dir} at #{Time.now}
@@ -149,6 +155,10 @@ module SisImporter
 
     def skip_get_csv_files
       return @sis_import_data_options[:skip_get_csv_files]
+    end
+
+    def get_csv_files
+      @file_transport.get_csv_files
     end
 
     def run_scheduled_job(opts = {})
@@ -193,10 +203,10 @@ module SisImporter
             report(district_summary)
 
             num_districts += 1
-            num_teachers += @parsed_data[:staff].length
-            num_students += @parsed_data[:students].length
-            num_courses += @parsed_data[:courses].length
-            num_classes += @parsed_data[:staff_assignments].length
+            num_teachers  += @parsed_data[:staff].length
+            num_students  += @parsed_data[:students].length
+            num_courses   += @parsed_data[:courses].length
+            num_classes   += @parsed_data[:staff_assignments].length
           end
         rescue MissingDistrictFolderError => e
           log_message "Could not find district folder for district #{district} in #{e.folder}", {:log_level => 'error'}
@@ -265,43 +275,6 @@ module SisImporter
         data << "\n"
       end
       File.open(errors_pah, 'w') {|f| f.write(data) }
-    end
-
-    def get_csv_files
-      begin
-        Net::SFTP.start(@sis_import_data_config[:host], @sis_import_data_config[:username] , :password => @sis_import_data_config[:password]) do |sftp|
-          @districts.each do |district|
-            get_csv_files_for_district(district, sftp)
-          end
-        end
-      rescue Exception => e
-        log_message("get_csv_files failed: #{e.class}: #{e.message}", {:log_level => 'error'})
-        raise e
-      end
-    end
-
-    ## sftp: a Net::SFTP::Session object
-    def get_csv_files_for_district(district, sftp)
-      new_date_time_key = Time.now.strftime("%Y%m%d_%H%M%S")
-      local_district_path = "#{@district_data_root_dir}/#{district}/#{new_date_time_key}"
-      FileUtils.mkdir_p(local_district_path)
-      @@csv_files.each do |csv_file|
-        # download a file or directory from the remote host
-        remote_path = "#{district}/#{csv_file}.csv"
-        local_path = "#{local_district_path}/#{csv_file}.csv"
-        log_message("Downloading: #{remote_path} and saving to: \n  #{local_path}", {:log_level => :info})
-        begin
-          sftp.download!(remote_path, local_path)
-        rescue RuntimeError => e
-          message = "\nDownload: #{remote_path} failed: \n#{e.class}: #{e.message}\n"
-          log_message(message, {:log_level => :error})
-          @errors[:districts][district] = message
-          # raise SisGetFileError
-        end
-      end
-      current_path = "#{@district_data_root_dir}/#{district}/current"
-      FileUtils.rm_f(current_path)
-      FileUtils.ln_s(local_district_path, current_path, :force => true)
     end
 
 
