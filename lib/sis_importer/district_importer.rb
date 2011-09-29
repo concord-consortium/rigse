@@ -4,6 +4,7 @@ module SisImporter
 
     attr_accessor :log
     attr_accessor :district
+    attr_accessor :file_transport
     attr_accessor :parsed_data
 
     def initialize(opts={})
@@ -15,7 +16,7 @@ module SisImporter
 
       @start_time    = Time.now
       @parsed_data   = {}
-      
+
       # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
       # See sis_csv_fields for a complete list..
 
@@ -32,10 +33,27 @@ module SisImporter
       # Example map entry: Portal::Clazz.id => {:teachers => [], :students => []}
 
       @nces_districts = {}
-      @nces_schools   = {}  
+      @nces_schools   = {}
       @error_users    = []
       @created_users  = []
       @updated_users  = []
+      self.create_transport(@configuration)
+    end
+
+    def create_transport(config)
+      self.file_transport = SftpFileTransport.new({
+        :config     => config,
+        :host       => config.host,
+        :username   => config.username,
+        :password   => config.password,
+        :output_dir => config.local_root_dir,
+        :districts  => [self.district], #TODO: make this district singular
+        :logger     => self.log
+      })
+    end
+
+    def get_csv_files
+      self.file_transport.get_csv_files
     end
 
     def directory(timestamp="current")
@@ -132,7 +150,7 @@ module SisImporter
         # cache the result
         @nces_schools[row[:SchoolNumber]] = school
 
-      # initialize SisImporter with :default_school => "My School Name" 
+      # initialize SisImporter with :default_school => "My School Name"
       # to force non-matched schools into a default school.
       elsif @configuration.default_school
         name = @configuration.default_school
@@ -214,7 +232,7 @@ module SisImporter
       end
       return row[:lastname]
     end
-    
+
     def email(row)
       if row[:email]
         return row[:email]
@@ -223,7 +241,7 @@ module SisImporter
         row[:email] = email = row[:EmailAddress].gsub(/\s+/,"")
       else
         login = User.suggest_login(firstname(row),lastname(row))
-        row[:email] = "#{login}@mailinator.com" 
+        row[:email] = "#{login}@mailinator.com"
         # (temporary unique email address to pass valiadations)
       end
       return row[:email]
@@ -564,7 +582,7 @@ module SisImporter
       value = @course_active_record_map[course_number][school_id]
       return value
     end
-    
+
     def created_user(user)
       return user.valid? && user.created_at > @start_time
     end
@@ -619,7 +637,7 @@ module SisImporter
 
       data = user_report(@updated_users)
       File.open(updated_path, 'w') {|f| f.write(data) }
-      
+
       data = ""
       @error_users.each do |row|
         data << row.inspect

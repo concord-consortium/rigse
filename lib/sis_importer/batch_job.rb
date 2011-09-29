@@ -64,38 +64,22 @@ module SisImporter
   class BatchJob
     include SisCsvFields  # definitions for the fields we use when parsing.
     attr_accessor :log
-    attr_accessor :file_transport
     attr_accessor :districts
     attr_accessor :configuration
+
     def initialize(options= {})
       @configuration          = SisImporter::Configuration.new(options)
-      @distric_names          = @configuration.districts
-      @local_root_dir         = @configuration.local_root_dir
-      @log_directory          = @configuration.log_directory
 
       @created_users          = []
       @updated_users          = []
       @error_users            = []
       
-      @log                    = ImportLog.new(@log_directory,'daily')
+      @log                    = ImportLog.new(@configuration.log_directory,'daily')
       @log.level              = @configuration.log_level
       @log.verbose            = @configuration.verbose
 
-      self.file_transport = SftpFileTransport.new({
-        :csv_files  => @csv_files,
-        :districts  => @distric_names,
-        :host       => @configuration.host,
-        :username   => @configuration.username,
-        :password   => @configuration.password,
-        :output_dir => @local_root_dir,
-        :logger     => @log
-      })
-      @log.log_message("Started in: #{@local_root_dir} at #{Time.now}")
+      @log.log_message("Started in: #{@configuration.local_root_dir} at #{Time.now}")
       self.districts = []
-    end
-
-    def get_csv_files
-      @file_transport.get_csv_files
     end
 
     def run_scheduled_job(opts = {})
@@ -110,7 +94,7 @@ module SisImporter
 
       num_districts = num_teachers = num_students = num_courses = num_classes = 0
 
-      @distric_names.each do |district_name|
+      @configuration.districts.each do |district_name|
         # begin
           district = import_district(district_name)
           num_districts += 1
@@ -138,6 +122,7 @@ module SisImporter
         :configuration          => @configuration
       }
       district = DistrictImporter.new(opts)
+      district.get_csv_files
       district.import
       self.districts << district
       district
