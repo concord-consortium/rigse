@@ -68,7 +68,6 @@ module SisImporter
     attr_accessor :districts
     attr_accessor :configuration
     def initialize(options= {})
-      User.delete_observers
       @configuration          = SisImporter::Configuration.new(options)
       @distric_names          = @configuration.districts
       @local_root_dir         = @configuration.local_root_dir

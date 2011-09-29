@@ -7,6 +7,7 @@ module SisImporter
     attr_accessor :parsed_data
 
     def initialize(opts={})
+      User.delete_observers
       @configuration = opts[:configuration] || Configuration.new(opts)
 
       self.district  = opts[:district]
