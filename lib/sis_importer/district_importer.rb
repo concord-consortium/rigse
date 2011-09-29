@@ -425,10 +425,10 @@ module SisImporter
           # cache that results in hashtable
           cache_course_ar_map(course_csv_row[:CourseNumber],course_csv_row[:SchoolNumber],course)
         else
-          @log.info("no school exists when creating a course", {:log_level => :warn})
+          @log.log_message("no school exists when creating a course", {:log_level => :warn})
         end
       else
-        @log.info("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}", {:log_level => :warn})
+        @log.warn("course #{course_csv_row[:Title]} already defined in this import for school #{school_for(course_csv_row).name}")
       end
       course_csv_row
     end
@@ -462,7 +462,7 @@ module SisImporter
       begin
         start_date = Date.parse(start_date)
       rescue ArgumentError, TypeError
-        @log.info("bad start date for class: '#{start_date}'", {:log_level => :error})
+        @log.log_message("bad start date for class: '#{start_date}'", {:log_level => :error})
         nil
       end
     end
@@ -472,7 +472,7 @@ module SisImporter
       portal_course = cache_course_ar_map(member_relation_row[:CourseNumber],member_relation_row[:SchoolNumber])
       # unless portal_course is a Portal::Course
       unless portal_course.class == Portal::Course
-        @log.info("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
+        @log.log_message("course not found #{member_relation_row[:CourseNumber]} nil: #{portal_course.nil?}: #{member_relation_row.join(', ')}", {:log_level => :error})
         return
       end
 
@@ -491,7 +491,7 @@ module SisImporter
         clazz.save
         @log.log_message("#{clazz.teacher.last_name}", {:log_level => :info, :info_in_columns => ['teacher-assigments', 6, 24]})
       else
-        @log.log_message("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n")
+        @log.error("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n")
       end
       member_relation_row
     end
