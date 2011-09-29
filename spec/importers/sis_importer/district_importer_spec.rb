@@ -48,7 +48,7 @@ module SisImporter::DistrictImporterExampleHelpers
     defaults = {
       :districts => ["01"],
       :verbose => false,
-      :district_data_root_dir => working_test_directory,
+      :local_root_dir => working_test_directory,
       :skip_get_csv_files => true
     }
     sis_data_options = defaults.merge(opts)
@@ -414,7 +414,7 @@ describe SisImporter::BatchJob do
 
   describe "check_start_date validation method works" do
     before(:each) do
-      @district_importer = SisImporter::DistrictImporter.new({}) 
+      @district_importer = SisImporter::DistrictImporter.new() 
     end
     it "should not return nil when parsing a start_date like: '2008-08-15'" do
       @district_importer.check_start_date("2008-08-15").should_not be_nil

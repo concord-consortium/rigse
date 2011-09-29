@@ -3,20 +3,19 @@ module SisImporter
     include SisCsvFields  # definitions for the fields we use when parsing.
 
     attr_accessor :log
-    attr_accessor :district_data_root_dir
     attr_accessor :district
     attr_accessor :parsed_data
     @@csv_files = %w{students staff courses enrollments staff_assignments }
 
-    def initialize(opts)
-      @sis_import_data_options = opts
+    def initialize(opts={})
+      @configuration = opts[:configuration] || Configuration.new(opts)
 
-      self.district               = opts[:district]
-      self.district_data_root_dir = opts[:district_data_root_dir] || "/tmp/"
-      self.log                    = opts[:log] || ImportLog.new(self.district_data_root_dir)
+      self.district  = opts[:district]
+      self.log       = opts[:log] || ImportLog.new(@configuration.local_root_dir)
+
+      @start_time    = Time.now
+      @parsed_data   = {}
       
-      @start_time                 = Time.now
-      @parsed_data            = {}
       # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
       # See sis_csv_fields for a complete list..
 
@@ -40,7 +39,7 @@ module SisImporter
     end
 
     def directory(timestamp="current")
-      return File.join(@district_data_root_dir,self.district,timestamp)
+      return File.join(@configuration.local_root_dir,self.district,timestamp)
     end
 
     def import
@@ -135,8 +134,8 @@ module SisImporter
 
       # initialize SisImporter with :default_school => "My School Name" 
       # to force non-matched schools into a default school.
-      elsif @sis_import_data_options[:default_school]
-        name = @sis_import_data_options[:default_school]
+      elsif @configuration.default_school
+        name = @configuration.default_school
         @log.warn("using #{name} for: #{row[:SchoolNumber]} as specified in options.")
         school = Portal::School.find_by_name(name)
         if (school.nil?)
@@ -331,7 +330,7 @@ module SisImporter
           # teacher.grades << grade_9
 
           # optionally remove assignments from teacher:
-          if @sis_import_data_options[:drop_enrollments]
+          if @configuration.drop_enrollments
             teacher.clazzes = []
           end
 
@@ -376,7 +375,7 @@ module SisImporter
             user.portal_student=student;
           end
           # optionally remove enrollments from student:
-          if @sis_import_data_options[:drop_enrollments]
+          if @configuration.drop_enrollments
             student.clazzes = []
           end
 
@@ -498,8 +497,8 @@ module SisImporter
     ## Used to print out student login info
     ##
     def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
-      students_file_name = "#{@district_data_root_dir}/#{district}/current/students.csv"
-      student_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/student_sakai.csv"
+      students_file_name = "#{@configuration.local_root_dir}/#{district}/current/students.csv"
+      student_sakai_file_name = "#{@configuration.local_root_dir}/#{district}/current/student_sakai.csv"
       student_rows = FasterCSV.read(students_file_name)
       login = ""
       while login == ""
@@ -524,7 +523,7 @@ module SisImporter
     ## Used to print out staff login info
     ##
     def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
-      staff_file_name = "#{@district_data_root_dir}/#{district}/current/staff.csv"
+      staff_file_name = "#{@configuration.local_root_dir}/#{district}/current/staff.csv"
       staf_rows = FasterCSV.read(staff_file_name)
       login = nil
       while login.nil?
@@ -538,7 +537,7 @@ module SisImporter
     end
 
     def find_staff_login(district,certification_number)
-      staff_sakai_file_name = "#{@district_data_root_dir}/#{district}/current/staff_sakai.csv"
+      staff_sakai_file_name = "#{@configuration.local_root_dir}/#{district}/current/staff_sakai.csv"
       open(staff_sakai_file_name) do |fd|
         fd.each do |line|
            if line =~ /#{certification_number}\s*,\s*(\S+)/

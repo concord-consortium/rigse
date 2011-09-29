@@ -22,7 +22,7 @@
 #   :skip_get_csv_files => false
 #   :log_level => Logger::WARN
 #   :districts => @sis_import_data_config[:districts]
-#   :district_data_root_dir => "#{RAILS_ROOT}/sis_import_data/districts/#{@external_domain_suffix}/csv"
+#   :local_root_dir => "#{RAILS_ROOT}/sis_import_data/districts/#{@external_domain_suffix}/csv"
 #
 # You can customize the operation, here's an example:
 #
@@ -66,51 +66,33 @@ module SisImporter
     attr_accessor :log
     attr_accessor :file_transport
     attr_accessor :districts
-
+    attr_accessor :configuration
     def initialize(options= {})
       User.delete_observers
-      @sis_import_data_config = YAML.load_file("#{RAILS_ROOT}/config/sis_import_data.yml")[RAILS_ENV].symbolize_keys
-      ExternalUserDomain.select_external_domain_by_server_url(@sis_import_data_config[:external_domain_url])
-      @external_domain_suffix = ExternalUserDomain.external_domain_suffix
-
-      defaults = {
-        :verbose => false,
-        :districts => @sis_import_data_config[:districts],
-        :district_data_root_dir => "#{RAILS_ROOT}/sis_import_data/districts/#{@external_domain_suffix}/csv",
-        :log_level => Logger::WARN,
-        :drop_enrollments => false,
-        :default_school => "Summer Courses 2011"
-      }
-
-      @sis_import_data_options = defaults.merge(options)
-      @sis_import_data_options[:log_directory] ||= @sis_import_data_options[:district_data_root_dir]
-      @distric_names          = @sis_import_data_options[:districts]
-      @district_data_root_dir = @sis_import_data_options[:district_data_root_dir]
-      @log_directory          = @sis_import_data_options[:log_directory]
+      @configuration          = SisImporter::Configuration.new(options)
+      @distric_names          = @configuration.districts
+      @local_root_dir         = @configuration.local_root_dir
+      @log_directory          = @configuration.log_directory
 
       @created_users          = []
       @updated_users          = []
       @error_users            = []
       
       @log                    = ImportLog.new(@log_directory,'daily')
-      @log.level              = @sis_import_data_options[:log_level]
-      @log.verbose            = @sis_import_data_options[:verbose]
+      @log.level              = @configuration.log_level
+      @log.verbose            = @configuration.verbose
 
       self.file_transport = SftpFileTransport.new({
-        :csv_files => @csv_files,
-        :districts => @distric_names,
-        :host => @sis_import_data_config[:host], 
-        :username => @sis_import_data_config[:username], 
-        :password => @sis_import_data_config[:password],
-        :output_dir => @district_data_root_dir,
-        :logger   => @log
+        :csv_files  => @csv_files,
+        :districts  => @distric_names,
+        :host       => @configuration.host,
+        :username   => @configuration.username,
+        :password   => @configuration.password,
+        :output_dir => @local_root_dir,
+        :logger     => @log
       })
-      @log.log_message("Started in: #{@district_data_root_dir} at #{Time.now}")
+      @log.log_message("Started in: #{@local_root_dir} at #{Time.now}")
       self.districts = []
-    end
-
-    def skip_get_csv_files
-      return @sis_import_data_options[:skip_get_csv_files]
     end
 
     def get_csv_files
@@ -121,7 +103,7 @@ module SisImporter
       # disable observable behavior on useres for import task
 
       @start_time = Time.now
-      if skip_get_csv_files
+      if @configuration.skip_get_csv_files
         @log.log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
       else
         get_csv_files
@@ -154,7 +136,7 @@ module SisImporter
       opts = {
         :district               => district_name,
         :log                    => @log,
-        :district_data_root_dir => @district_data_root_dir,
+        :configuration          => @configuration
       }
       district = DistrictImporter.new(opts)
       district.import
