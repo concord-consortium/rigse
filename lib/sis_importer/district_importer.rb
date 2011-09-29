@@ -5,7 +5,6 @@ module SisImporter
     attr_accessor :log
     attr_accessor :district
     attr_accessor :parsed_data
-    @@csv_files = %w{students staff courses enrollments staff_assignments }
 
     def initialize(opts={})
       @configuration = opts[:configuration] || Configuration.new(opts)
@@ -87,7 +86,7 @@ module SisImporter
         raise MissingDistrictFolderError.new(csv_data_directory)
       end
       count = 0
-      @@csv_files.each do |csv_file|
+      @configuration.csv_files.each do |csv_file|
         local_path = path_for_csv(csv_file)
         @log.info "\n(parsing: #{local_path}"
         key = csv_file.to_sym

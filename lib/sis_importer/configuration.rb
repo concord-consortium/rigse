@@ -38,6 +38,10 @@ module SisImporter
       end
     end
 
+    def csv_files
+      %w{students staff courses enrollments staff_assignments }
+    end
+
     def log_directory
       @configuration[:log_directory] || local_root_dir
     end
