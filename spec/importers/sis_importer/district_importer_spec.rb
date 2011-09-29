@@ -54,7 +54,7 @@ module SisImporter::DistrictImporterExampleHelpers
     sis_data_options = defaults.merge(opts)
     @batch_job = SisImporter::BatchJob.new(sis_data_options)
     @batch_job.run_scheduled_job
-    @district_importer=@batch_job.district_importers.first
+    @district_importer=@batch_job.districts.first
     @logger = @district_importer.log
   end
 

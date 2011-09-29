@@ -65,7 +65,7 @@ module SisImporter
     include SisCsvFields  # definitions for the fields we use when parsing.
     attr_accessor :log
     attr_accessor :file_transport
-    attr_accessor :district_importers
+    attr_accessor :districts
 
     def initialize(options= {})
       User.delete_observers
@@ -84,7 +84,7 @@ module SisImporter
 
       @sis_import_data_options = defaults.merge(options)
       @sis_import_data_options[:log_directory] ||= @sis_import_data_options[:district_data_root_dir]
-      @districts              = @sis_import_data_options[:districts]
+      @distric_names          = @sis_import_data_options[:districts]
       @district_data_root_dir = @sis_import_data_options[:district_data_root_dir]
       @log_directory          = @sis_import_data_options[:log_directory]
 
@@ -98,7 +98,7 @@ module SisImporter
 
       self.file_transport = SftpFileTransport.new({
         :csv_files => @csv_files,
-        :districts => @districts,
+        :districts => @distric_names,
         :host => @sis_import_data_config[:host], 
         :username => @sis_import_data_config[:username], 
         :password => @sis_import_data_config[:password],
@@ -106,7 +106,7 @@ module SisImporter
         :logger   => @log
       })
       @log.log_message("Started in: #{@district_data_root_dir} at #{Time.now}")
-      self.district_importers = []
+      self.districts = []
     end
 
     def skip_get_csv_files
@@ -129,7 +129,7 @@ module SisImporter
 
       num_districts = num_teachers = num_students = num_courses = num_classes = 0
 
-      @districts.each do |district_name|
+      @distric_names.each do |district_name|
         # begin
           district = import_district(district_name)
           num_districts += 1
@@ -158,7 +158,7 @@ module SisImporter
       }
       district = DistrictImporter.new(opts)
       district.import
-      self.district_importers << district
+      self.districts << district
       district
     end
 
