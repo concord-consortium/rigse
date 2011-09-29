@@ -13,9 +13,9 @@ module SisImporter
       @sis_import_data_options = opts
 
       self.district               = opts[:district]
-      self.log                    = opts[:log]
+      self.district_data_root_dir = opts[:district_data_root_dir] || "/tmp/"
+      self.log                    = opts[:log] || ImportLog.new(self.district_data_root_dir)
       self.reporter               = opts[:report]
-      self.district_data_root_dir = opts[:district_data_root_dir]
       
       @start_time                 = Time.now
       @parsed_data            = {}
