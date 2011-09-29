@@ -3,7 +3,6 @@ module SisImporter
     include SisCsvFields  # definitions for the fields we use when parsing.
 
     attr_accessor :log
-    attr_accessor :reporter
     attr_accessor :district_data_root_dir
     attr_accessor :district
     attr_accessor :parsed_data
@@ -15,7 +14,6 @@ module SisImporter
       self.district               = opts[:district]
       self.district_data_root_dir = opts[:district_data_root_dir] || "/tmp/"
       self.log                    = opts[:log] || ImportLog.new(self.district_data_root_dir)
-      self.reporter               = opts[:report]
       
       @start_time                 = Time.now
       @parsed_data            = {}
