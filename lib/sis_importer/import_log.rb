@@ -3,7 +3,7 @@ module SisImporter
     attr_accessor :verbose
     attr_accessor :errors
 
-    def initialize(base_directory,rotation)
+    def initialize(base_directory,rotation='daily')
       @log_directory   = base_directory
       @start_time      = Time.now
       @errors          = {:districts=> {}}
