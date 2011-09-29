@@ -25,13 +25,18 @@ module SisImporter
     end
 
     def fetch_districts
-      Net::SFTP.start(self.host, self.username, :password => self.password) do |sftp|
-        sftp.download!(district_list_path, local_tmp_path)
-      end  
-
-      # parse data
-      File.open(local_tmp_path, "r") do |file|
-        convert_districts(file.readlines)
+      begin
+        Net::SFTP.start(self.host, self.username, :password => self.password) do |sftp|
+          sftp.download!(district_list_path, local_tmp_path)
+          # parse data
+          File.open(local_tmp_path, "r") do |file|
+            convert_districts(file.readlines)
+          end
+        end
+      rescue NoMethodError => e
+        raise SisImporter::SftpFileTransport::ConnectionError.new("Connection Failed: #{self.username}@#{self.host}", e)
+      rescue RuntimeError => e
+        raise SisImporter::FileTransport::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.ocal_tmp_path}", e)
       end
     end
 
