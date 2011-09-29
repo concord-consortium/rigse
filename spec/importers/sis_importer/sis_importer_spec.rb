@@ -112,8 +112,8 @@ describe SisImporter::SisImporter do
 
   describe "exceptions that should be thrown" do
     it "should throw MissingDistrictFolderError when trying to load non-existant district data" do
-      rd = SisImporter::SisImporter.new
-      lambda {rd.parse_csv_files_for_district('fake')}.should raise_error(SisImporter::SisImporter::MissingDistrictFolderError)
+      rd = SisImporter::DistrictImporter.new({:district => 'fake'})
+      lambda {rd.parse_csv_files_for_district }.should raise_error(SisImporter::MissingDistrictFolderError)
     end
   end
 
@@ -147,16 +147,16 @@ describe SisImporter::SisImporter do
 
     describe "parsing should tolerate broken input" do
       it "should tolerate csv input with blank lines" do
-        @sis_data_importer.add_csv_row(:students,"")
+        @district_importer.add_csv_row(:students,"")
       end
       it "should tolerate csv input with blank fields" do
         csv_student_with_blank_fields = "Garcia,Raquel,"",,"",1000139715,07113,07,0,CTP,2009-09-01,0--,230664,Y,N,"",10316"
-        @sis_data_importer.add_csv_row(:students,csv_student_with_blank_fields)
+        @district_importer.add_csv_row(:students,csv_student_with_blank_fields)
       end
 
       it "should tolerate csv input with missing fields" do
         csv_student_with_missing_commas = "Garcia,"",,"",1000139715,"
-        @sis_data_importer.add_csv_row(:students,csv_student_with_missing_commas)
+        @district_importer.add_csv_row(:students,csv_student_with_missing_commas)
       end
 
       # try creating a student with a bad SASID
@@ -171,7 +171,7 @@ describe SisImporter::SisImporter do
           #:Birthdate => ""
           :SchoolNumber => '07113' # real school
         }
-        @sis_data_importer.create_or_update_student(student_row)
+        @district_importer.create_or_update_student(student_row)
       end
     end
 
@@ -188,32 +188,32 @@ describe SisImporter::SisImporter do
         @logger.should_receive(:error).with(/student not found/)
         # 007 is not a real student SASID
         csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,01,0"
-        @sis_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
-        @sis_data_importer.update_models
+        @district_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
+        @district_importer.update_models
       end
 
       it "should log an error if an enrollment is for a non existing course" do
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,01,0"
-        @sis_data_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
-        @sis_data_importer.update_models
+        @district_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
+        @district_importer.update_models
       end
 
       it "should log an error if a staff assignment is missing a teacher" do
         @logger.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,01"
-        @sis_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
-        @sis_data_importer.update_models
+        @district_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
+        @district_importer.update_models
       end
 
       it "should log an error if a staff ssignment is missing course information" do
         @logger.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,01"
-        @sis_data_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
-        @sis_data_importer.update_models
+        @district_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)
+        @district_importer.update_models
       end
 
     end
@@ -416,33 +416,33 @@ describe SisImporter::SisImporter do
 
   describe "check_start_date validation method works" do
     before(:each) do
-      @sis_data_importer = SisImporter::SisImporter.new #FIXME: ExternalUserDomain::ExternalUserDomainError
+      @district_importer = SisImporter::DistrictImporter.new({}) 
     end
     it "should not return nil when parsing a start_date like: '2008-08-15'" do
-      @sis_data_importer.check_start_date("2008-08-15").should_not be_nil
+      @district_importer.check_start_date("2008-08-15").should_not be_nil
     end
 
     it "should not return nil when parsing a start_date like: '9/1/2009'" do
-      @sis_data_importer.check_start_date("9/1/2009").should_not be_nil
+      @district_importer.check_start_date("9/1/2009").should_not be_nil
     end
 
     it "should return nil when parsing a start_date like: 'abc'" do
-      @sis_data_importer.check_start_date("abc").should be_nil
+      @district_importer.check_start_date("abc").should be_nil
     end
 
     it "should return nil when parsing a start_date like: ''" do
-      @sis_data_importer.check_start_date("").should be_nil
+      @district_importer.check_start_date("").should be_nil
     end
 
     it "should return nil when parsing a start_date like: nil" do
-      @sis_data_importer.check_start_date(nil).should be_nil
+      @district_importer.check_start_date(nil).should be_nil
     end
   end
 
 
   describe "test the course_caching method called cache_course_ar_map" do
       before(:each) do
-        @importer = SisImporter::SisImporter.new #FIXME: ExternalUserDomain::ExternalUserDomainError
+        @importer = SisImporter::DistrictImporter.new({}) 
       end
 
       it "should throw an exception if nill is passed in as course number of school id" do
