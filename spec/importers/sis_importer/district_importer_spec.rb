@@ -1,6 +1,6 @@
 # require File.expand_path('../../spec_helper', __FILE__)
 
-module SisImporter::SisImporterExampleHelpers
+module SisImporter::DistrictImporterExampleHelpers
 
   RSpec::Matchers.define :be_more_than do |expected|
     match                          { |given| given.size > expected.size }
@@ -52,16 +52,16 @@ module SisImporter::SisImporterExampleHelpers
       :skip_get_csv_files => true
     }
     sis_data_options = defaults.merge(opts)
-    @sis_data_importer = SisImporter::SisImporter.new(sis_data_options)
-    @logger = @sis_data_importer.log
-    @sis_data_importer.run_scheduled_job
-    @district_importer=@sis_data_importer.district_importers.first
+    @batch_job = SisImporter::BatchJob.new(sis_data_options)
+    @batch_job.run_scheduled_job
+    @district_importer=@batch_job.district_importers.first
+    @logger = @district_importer.log
   end
 
 end
 
-describe SisImporter::SisImporter do
-  include SisImporter::SisImporterExampleHelpers
+describe SisImporter::BatchJob do
+  include SisImporter::DistrictImporterExampleHelpers
 
   # make test schools
   before (:all) do
@@ -85,7 +85,7 @@ describe SisImporter::SisImporter do
     end
 
     before(:each) do
-      @sis_data = SisImporter::SisImporter.new(:district_data_root_dir => @district_data_root_dir)
+      @sis_data = SisImporter::BatchJob.new(:district_data_root_dir => @district_data_root_dir)
     end
 
 
