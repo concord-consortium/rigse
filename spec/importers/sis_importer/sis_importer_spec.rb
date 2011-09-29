@@ -55,8 +55,6 @@ module SisImporter::SisImporterExampleHelpers
     @sis_data_importer = SisImporter::SisImporter.new(sis_data_options)
     @logger = @sis_data_importer.log
     @sis_data_importer.run_scheduled_job
-    puts @sis_data_importer
-    puts @sis_data_importer.district_importers
     @district_importer=@sis_data_importer.district_importers.first
   end
 
