@@ -85,26 +85,26 @@ describe SisImporter::BatchJob do
     end
 
     before(:each) do
-      @sis_data = SisImporter::BatchJob.new(:district_data_root_dir => @district_data_root_dir)
+      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir)
+      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf)
+      @transport = @district_importer.file_transport
     end
 
 
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
-      transport = @sis_data.file_transport
       error = SisImporter::SftpFileTransport::ConnectionError.new('fake') 
-      transport.should_receive(:get_csv_files_for_district).and_raise(error)
-      transport.errors.size.should eql 0
-      lambda { @sis_data.get_csv_files }.should raise_error
+      @transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      @transport.errors.size.should eql 0
+      lambda { @district_importer.get_csv_files }.should raise_error
     end
 
     it "should report an error in the event that a remote directory/file does not exist" do
-      transport = @sis_data.file_transport
       error = SisImporter::FileTransport::TransportError.new('fake') 
-      transport.should_receive(:get_csv_files_for_district).and_raise(error)
-      transport.errors.size.should eql 0
-      lambda { @sis_data.get_csv_files }.should_not raise_error
-      transport.errors.size.should eql 1
-      transport.errors.first.should equal error
+      @transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      @transport.errors.size.should eql 0
+      lambda { @district_importer.get_csv_files }.should_not raise_error
+      @transport.errors.size.should eql 1
+      @transport.errors.first.should equal error
     end
   end
 
