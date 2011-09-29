@@ -61,14 +61,11 @@ module SisImporter
       end
     end
 
-  class SisImporter
+  class BatchJob
     include SisCsvFields  # definitions for the fields we use when parsing.
-    attr_reader   :parsed_data
     attr_accessor :log
     attr_accessor :file_transport
     attr_accessor :district_importers
-    attr_accessor :reporter
-    attr_accessor :sis_logger
 
     def initialize(options= {})
       User.delete_observers
@@ -87,7 +84,6 @@ module SisImporter
 
       @sis_import_data_options = defaults.merge(options)
       @sis_import_data_options[:log_directory] ||= @sis_import_data_options[:district_data_root_dir]
-      @verbose                = @sis_import_data_options[:verbose]
       @districts              = @sis_import_data_options[:districts]
       @district_data_root_dir = @sis_import_data_options[:district_data_root_dir]
       @log_directory          = @sis_import_data_options[:log_directory]
@@ -99,9 +95,6 @@ module SisImporter
       @log                    = ImportLog.new(@log_directory,'daily')
       @log.level              = @sis_import_data_options[:log_level]
       @log.verbose            = @sis_import_data_options[:verbose]
-      
-      @reporter = Logger.new(@report_path,'daily')
-      @reporter.level = Logger::INFO
 
       self.file_transport = SftpFileTransport.new({
         :csv_files => @csv_files,
@@ -161,9 +154,7 @@ module SisImporter
       opts = {
         :district               => district_name,
         :log                    => @log,
-        :reporter               => @mereporter,
         :district_data_root_dir => @district_data_root_dir,
-        :errors                 => @errors
       }
       district = DistrictImporter.new(opts)
       district.import
