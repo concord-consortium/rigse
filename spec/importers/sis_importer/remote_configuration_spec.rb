@@ -8,7 +8,6 @@ class FakeFTP
   def download!(remote,local)
     File.open(local,'w') do |file|
       file.write(self.data)
-      puts "FAKE_FTP: Wrote data to #{local}"
     end
   end
 end
