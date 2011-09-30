@@ -44,7 +44,7 @@ module SisImporter
       rescue NoMethodError => e
         raise SisImporter::SftpFileTransport::ConnectionError.new("Connection Failed: #{self.username}@#{self.host}", e)
       rescue RuntimeError => e
-        raise SisImporter::FileTransport::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.ocal_tmp_path}", e)
+        raise SisImporter::FileTransport::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.local_tmp_path} (#{e.message})", e)
       end
     end
 
