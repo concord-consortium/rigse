@@ -51,7 +51,7 @@ module SisImporter::DistrictImporterExampleHelpers
       :local_root_dir => working_test_directory,
       :skip_get_csv_files => true
     }
-    sis_data_options = defaults.merge(opts)
+    sis_data_options = SisImporter::Configuration.new(defaults.merge(opts))
     @batch_job = SisImporter::BatchJob.new(sis_data_options)
     @batch_job.run_scheduled_job
     @district_importer=@batch_job.districts.first
