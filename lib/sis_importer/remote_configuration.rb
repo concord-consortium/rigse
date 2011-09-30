@@ -1,6 +1,13 @@
 module SisImporter
   class RemoteConfiguration < Configuration
 
+    def defaults
+      super.merge({
+        :district_file_name => 'IMPORT',
+        :remote_root_path   => 'district'
+      })
+    end
+
     def districts
       if defined?(@districts)
         return @districts
@@ -10,8 +17,9 @@ module SisImporter
 
 
     protected
+
     def district_list_path
-      return "IMPORT"
+      File.join(remote_root_path,district_file_name)
     end
 
     def local_tmp_path
