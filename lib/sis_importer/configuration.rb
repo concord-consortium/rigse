@@ -4,13 +4,13 @@ module SisImporter
 
     def defaults
       {
-        :verbose              => false,
-        :districts            => ['test'],
-        :log_level            => Logger::WARN,
-        :drop_enrollments     => false,
-        :default_school       => "Summer Courses 2011",
+        :verbose                => false,
+        :districts              => ['test'],
+        :log_level              => Logger::WARN,
+        :drop_enrollments       => false,
+        :default_school         => "Summer Courses 2011",
         :external_domain_suffix => "sis_feed",
-        :skip_get_csv_files   => false
+        :skip_get_csv_files     => false
       }
     end
     
