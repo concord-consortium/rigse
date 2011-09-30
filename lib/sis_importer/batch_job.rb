@@ -67,8 +67,8 @@ module SisImporter
     attr_accessor :districts
     attr_accessor :configuration
 
-    def initialize(options= {})
-      @configuration          = SisImporter::Configuration.new(options)
+    def initialize(conf=SisImporter::Configuration.new({}))
+      self.configuration      = conf
 
       @created_users          = []
       @updated_users          = []
