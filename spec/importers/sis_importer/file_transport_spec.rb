@@ -3,7 +3,7 @@ describe SisImporter::FileTransport do
   before(:each) do
     @opts = {
         :districts  => %w[Boston Cambridge Somerville],
-        :output_dir => "test",
+        :output_dir => File.join('sis_import_data','test'),
         :csv_files  => %w[ one.csv two.csv three.csv]
     }
     @file_transport = SisImporter::FileTransport.new(@opts)
@@ -45,7 +45,7 @@ describe SisImporter::FileTransport do
 
   describe "local_path(file)" do
     it "should be the the path 'output_dir/filename'" do
-      @file_transport.local_path("foo").should == "test/foo"
+      @file_transport.local_path("foo").should == "sis_import_data/test/foo"
     end
   end
 

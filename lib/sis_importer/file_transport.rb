@@ -17,7 +17,7 @@ module SisImporter
     def defaults
       {
         :districts  => [],
-        :output_dir => '.',
+        :output_dir => File.join('sis_import_data','districts'),
         :csv_files  => []
       }
     end
