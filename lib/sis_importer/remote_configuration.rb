@@ -15,7 +15,6 @@ module SisImporter
       fetch_districts
     end
 
-
     protected
 
     def district_list_path
@@ -42,10 +41,11 @@ module SisImporter
           end
         end
       rescue NoMethodError => e
-        raise SisImporter::SftpFileTransport::ConnectionError.new("Connection Failed: #{self.username}@#{self.host}", e)
+        raise Errors::ConnectionError.new("Connection Failed: #{self.username}@#{self.host}", e)
       rescue RuntimeError => e
-        raise SisImporter::FileTransport::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.local_tmp_path} (#{e.message})", e)
+        raise Errors::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.local_tmp_path} (#{e.message})", e)
       end
+      @districts
     end
 
     def convert_districts(dists)
@@ -53,7 +53,7 @@ module SisImporter
     end
 
     def convert_district_name(district)
-      district.downcase.strip
+      district.strip
     end
   end
 end

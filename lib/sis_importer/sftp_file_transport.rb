@@ -35,15 +35,16 @@ module SisImporter
         logger.info("Downloaded: #{remote} ==>  #{local}")
         sftp.session.close
       rescue NoMethodError => e
-        raise ConnectionError.new("Connection Failed: #{@opts[:username]}@#{@opts[:host]}", e)
+        raise Errors::ConnectionError.new("Connection Failed: #{@opts[:username]}@#{@opts[:host]}", e)
       rescue RuntimeError => e
-        raise TransportError.new("Download Failed: #{@opts[:host]}/#{remote} ==> #{local}", e)
+        raise Errors::TransportError.new("Download Failed: #{@opts[:host]}/#{remote} ==> #{local}", e)
       end
     end
       
     def get_csv_files_for_district(district)
       csv_files.each do |csv_file|
-        download(remote_district_path(district,csv_file),local_path(csv_file))
+        filename = "#{csv_file}.csv"
+        download(remote_district_path(district,filename),local_current_district_file(district,filename))
       end
     end
 
