@@ -1,4 +1,4 @@
-# require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../../../spec_helper', __FILE__)
 
 module SisImporter::DistrictImporterExampleHelpers
 
@@ -86,32 +86,36 @@ describe SisImporter::BatchJob do
 
     before(:each) do
       conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir)
-      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf)
+      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf,:district=>'fakeotron')
       @transport = @district_importer.file_transport
     end
 
 
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
-      error = Errors::ConnectionError.new('fake') 
+      error = SisImporter::Errors::ConnectionError.new('fake') 
       @transport.should_receive(:get_csv_files_for_district).and_raise(error)
       @transport.errors.size.should eql 0
       lambda { @district_importer.get_csv_files }.should raise_error
     end
 
     it "should report an error in the event that a remote directory/file does not exist" do
-      error = SisImporter::FileTransport::TransportError.new('fake') 
+      error = SisImporter::Errors::TransportError.new('fake',RuntimeError.new("eek")) 
       @transport.should_receive(:get_csv_files_for_district).and_raise(error)
-      @transport.errors.size.should eql 0
+      @district_importer.errors.should have(0).errors
       lambda { @district_importer.get_csv_files }.should_not raise_error
-      @transport.errors.size.should eql 1
-      @transport.errors.first.should equal error
+      @district_importer.errors.should have(1).errors
+      @district_importer.errors.first.should equal error
     end
   end
 
   describe "exceptions that should be thrown" do
+    before(:each) do
+      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir, :districts =>['super-fake'])
+      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf,:district => "super-fake")
+      @transport = @district_importer.file_transport
+    end
     it "should throw MissingDistrictFolderError when trying to load non-existant district data" do
-      rd = SisImporter::DistrictImporter.new({:district => 'fake'})
-      lambda {rd.parse_csv_files_for_district }.should raise_error(SisImporter::MissingDistrictFolderError)
+      lambda {@district_importer.parse_csv_files_for_district }.should raise_error(SisImporter::Errors::MissingDistrictFolderError)
     end
   end
 

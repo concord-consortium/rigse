@@ -60,7 +60,7 @@ describe SisImporter::SftpFileTransport do
         it "should throw a connection error" do
           # this is the error that gets raised when connection parameteres are bad.
           Net::SFTP.should_receive(:start).and_raise(NoMethodError.new("undefined method `shutdown!' for nil:NilClass"))
-          lambda {@sft_trasport.download('x','y')}.should raise_error(SisImporter::SftpFileTransport::ConnectionError)
+          lambda {@sft_trasport.download('x','y')}.should raise_error(SisImporter::Errors::ConnectionError)
         end
       end
 
@@ -70,8 +70,8 @@ describe SisImporter::SftpFileTransport do
           @sftp.stub_chain(:session, :close).and_return true
           Net::SFTP.stub!(:start => @sftp)
           @sftp.should_receive(:download!).twice.and_raise(RuntimeError.new("open x: no such file (2)"))
-          lambda {@sft_trasport.download('x','y')}.should_not raise_error(SisImporter::SftpFileTransport::ConnectionError)
-          lambda {@sft_trasport.download('x','y')}.should raise_error(SisImporter::FileTransport::TransportError)
+          lambda {@sft_trasport.download('x','y')}.should_not raise_error(SisImporter::Errors::ConnectionError)
+          lambda {@sft_trasport.download('x','y')}.should raise_error(SisImporter::Errors::TransportError)
         end
       end
 

@@ -109,7 +109,7 @@ module SisImporter
       @log.info "\n(parsing csv data: #{self.directory}"
       if (!File.exists?(csv_data_directory))
         @log.error("no data folder found: #{csv_data_directory}")
-        raise MissingDistrictFolderError.new(csv_data_directory)
+        raise Errors::MissingDistrictFolderError.new(csv_data_directory)
       end
       count = 0
       @configuration.csv_files.each do |csv_file|
