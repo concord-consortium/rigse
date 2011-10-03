@@ -110,14 +110,18 @@ module SisImporter
         @log.info "\n(parsing: #{local_path}"
         key = csv_file.to_sym
         @parsed_data[key] = []
-        File.open(local_path).each do |line|
-          # ignore comments(!)
-          # comments are not valid in CSV but helps in testing
-          next if line =~/^#/
-          # ignore blank lines
-          next if line =~/^\s+$/
-          @log.status_update(40)
-          add_csv_row(key,line)
+        File.open(local_path,'r') do |f|
+          lines = f.readlines
+          @log.with_status_update(lines,40,".") do |line|
+            # ignore comments(!)
+            # comments are not valid in CSV but helps in testing
+            comment =( line =~/^#/ )
+            # ignore blank lines
+            blank   =( line =~/^\s+$/ )
+            unless (comment || blank)
+              add_csv_row(key,line)
+            end
+          end
         end
       end
     end
@@ -330,10 +334,9 @@ module SisImporter
       @collection_length = new_teachers.length
       @collection_index = 0
       @log.info "\n\nprocessing: #{ @collection_length} teachers:"
-      new_teachers.each do |teacher|
-        @log.log_message("#{teacher[:Lastname]}", {:log_level => :info, :info_in_columns => ['teachers', 6, 24]})
+      @log.with_info_in_columns(new_teachers,'teachers') do |teacher|
         create_or_update_teacher(teacher)
-        @collection_index += 1
+        teacher[:Lastname]
       end
     end
 
@@ -374,10 +377,9 @@ module SisImporter
       @collection_length = new_students.length
       @collection_index = 0
       @log.info("\n\n(processing: #{@collection_length} students: )")
-      new_students.each do |student|
-        @log.log_message("#{student[:Lastname]}", {:log_level => :info, :info_in_columns => ['students', 6, 24]})
+      @log.with_info_in_columns(new_students,'students') do |student|
         create_or_update_student(student)
-        @collection_index += 1
+        student[:Lastname]
       end
     end
 
@@ -419,11 +421,9 @@ module SisImporter
       @collection_length = new_courses.length
       @collection_index = 0
       @log.info("\n\n(processing: #{@collection_length} courses:)\n")
-      new_courses.each do |course_csv_row|
-        @log.log_message("#{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})",
-          {:log_level => :info, :info_in_columns => ['courses', 3, 40]})
+      @log.with_info_in_columns(new_courses,'courses') do |course_csv_row|
         create_or_update_course(course_csv_row)
-        @collection_index += 1
+        "#{course_csv_row[:CourseNumber]}, #{course_csv_row[:CourseSection]}, #{course_csv_row[:Term]}, #{course_csv_row[:Title]})"
       end
     end
 
@@ -501,11 +501,11 @@ module SisImporter
       if member_relation_row[:SASID] && @students_active_record_map[member_relation_row[:SASID]]
         student =  @students_active_record_map[member_relation_row[:SASID]]
         student.add_clazz(clazz)
-        @log.log_message("#{student.last_name}", {:log_level => :info, :info_in_columns => ['student-enrollments', 6, 24]})
+        @log.log_message("#{student.last_name}", {:log_level => :info})
       elsif member_relation_row[:TeacherCertNum] && @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
         clazz.teacher = @teachers_active_record_map[member_relation_row[:TeacherCertNum]]
         clazz.save
-        @log.log_message("#{clazz.teacher.last_name}", {:log_level => :info, :info_in_columns => ['teacher-assigments', 6, 24]})
+        @log.log_message("#{clazz.teacher.last_name}", {:log_level => :info})
       else
         @log.error("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n")
       end

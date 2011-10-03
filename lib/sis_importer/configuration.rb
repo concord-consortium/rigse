@@ -6,7 +6,7 @@ module SisImporter
       {
         :verbose                => false,
         :districts              => ['test'],
-        :log_level              => Logger::WARN,
+        :log_level              => Logger::INFO,
         :drop_enrollments       => false,
         :default_school         => "Summer Courses 2011",
         :external_domain_suffix => "sis_feed",
