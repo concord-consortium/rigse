@@ -6,6 +6,8 @@ module SisImporter
     attr_accessor :district
     attr_accessor :file_transport
     attr_accessor :parsed_data
+    attr_accessor :errors
+    attr_accessor :completed
 
     def initialize(opts={})
       User.delete_observers
@@ -37,6 +39,8 @@ module SisImporter
       @error_users    = []
       @created_users  = []
       @updated_users  = []
+      @errors         = []
+      @completed      = false
       self.create_transport(@configuration)
     end
 
@@ -47,13 +51,27 @@ module SisImporter
         :username   => config.username,
         :password   => config.password,
         :output_dir => config.local_root_dir,
+        :csv_files  => config.csv_files,
         :districts  => [self.district], #TODO: make this district singular
         :logger     => self.log
       })
     end
 
     def get_csv_files
-      self.file_transport.get_csv_files
+      unless @configuration.skip_get_csv_files
+        begin
+          self.file_transport.get_csv_files
+          @log.info "\n (downloaded csv files for district #{district}...)\n"
+        rescue SisImporter::Errors::TransportError => e
+          @log.error e
+          @log.error "Failed to download data for #{district}! Skipping ...\n"
+          self.errors << e
+        end
+      end
+    end
+
+    def errors?
+      return self.errors.length > 0
     end
 
     def directory(timestamp="current")
@@ -61,28 +79,17 @@ module SisImporter
     end
 
     def import
-      if @log.errors[:districts][district]
-        @log.error("\nskipping: district: #{district} due to earlier errors downloading csv data)\n")
-      else
+      get_csv_files
+      return if self.errors?
+      @log.info "\n (parsing csv files for district #{district}...)\n"
+      parse_csv_files_for_district
+      @log.info "\n (joining data for district #{district}...)\n"
 
-        @log.info "\n (parsing csv files for district #{district}...)\n"
-        parse_csv_files_for_district
-        @log.info "\n (joining data for district #{district}...)\n"
-
-        @log.info "\n (updating models for district #{district}...)\n"
-        update_models
-        import_report(district)
-
-        district_summary = <<-HEREDOC
-          Import Summary for district #{district}:
-          Teachers: #{@parsed_data[:staff].length}
-          Students: #{@parsed_data[:students].length}
-          Courses:  #{@parsed_data[:courses].length}
-          Classes:  #{@parsed_data[:staff_assignments].length}
-        HEREDOC
-
-        @log.report(district_summary)
-      end
+      @log.info "\n (updating models for district #{district}...)\n"
+      update_models
+      import_report
+      report_summary
+      self.completed = true
     end
 
     def update_models
@@ -626,7 +633,7 @@ module SisImporter
       return return_string
     end
 
-    def import_report(district)
+    def import_report
       report_path = File.join(self.directory, "report")
       FileUtils.mkdir_p(report_path)
       created_path = File.join(report_path, "users_created.csv")
@@ -645,6 +652,17 @@ module SisImporter
         data << "\n"
       end
       File.open(errors_path, 'w') {|f| f.write(data) }
+    end
+
+    def report_summary
+      district_summary = <<-HEREDOC
+        Import Summary for district #{district}:
+        Teachers: #{@parsed_data[:staff].length}
+        Students: #{@parsed_data[:students].length}
+        Courses:  #{@parsed_data[:courses].length}
+        Classes:  #{@parsed_data[:staff_assignments].length}
+      HEREDOC
+      @log.report(district_summary)
     end
 
   end

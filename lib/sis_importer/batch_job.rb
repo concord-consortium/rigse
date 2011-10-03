@@ -78,31 +78,28 @@ module SisImporter
 
     def run_scheduled_job(opts = {})
       # disable observable behavior on useres for import task
-
       @start_time = Time.now
-      if @configuration.skip_get_csv_files
-        @log.log_message "\n (skipping: get csv files, using previously downloaded data ...)\n"
-      else
-        get_csv_files
-      end
 
+      # statistics:
       num_districts = num_teachers = num_students = num_courses = num_classes = 0
 
       @configuration.districts.each do |district_name|
-        # begin
+        begin
           district = import_district(district_name)
+        rescue Exception => e
+          @log.error("Uncaught Exception: #{e.message}")
+          @log.log_message(e.backtrace.join("\n"), {:log_level => 'error'})
+          next
+        end
+        if district.completed
           num_districts += 1
           num_teachers  += district.parsed_data[:staff].length
           num_students  += district.parsed_data[:students].length
           num_courses   += district.parsed_data[:courses].length
           num_classes   += district.parsed_data[:staff_assignments].length
-        # rescue MissingDistrictFolderError => e
-        #   @log.log_message "Could not find district folder for district #{district} in #{e.folder}", {:log_level => 'error'}
-        # rescue RuntimeError => e
-        #   @log.log_message "Runtime exception for district #{district}", {:log_level => 'error'}
-        #   @log.log_message e.message, {:log_level => 'error'}
-        #   @log.log_message e.backtrace.join("\n    "), {:log_level => 'debug'}
-        # end
+        else
+          # tell some one
+        end
       end
 
       @end_time = Time.now
@@ -110,13 +107,13 @@ module SisImporter
     end
 
     def import_district(district_name)
+      # TODO: these opts should be rolled into @configuration
       opts = {
         :district               => district_name,
         :log                    => @log,
         :configuration          => @configuration
       }
       district = DistrictImporter.new(opts)
-      district.get_csv_files
       district.import
       self.districts << district
       district
