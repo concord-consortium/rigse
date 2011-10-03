@@ -48,7 +48,7 @@ describe SisImporter::RemoteConfiguration do
     describe "districts" do
       it "should throw an exception" do
         # probably should think about this some more..
-        lambda { @remote_config.districts }.should raise_error(SisImporter::SftpFileTransport::ConnectionError)
+        lambda { @remote_config.districts }.should raise_error(SisImporter::Errors::ConnectionError)
       end
     end
   end
