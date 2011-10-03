@@ -54,12 +54,6 @@ module SisImporter
     class SisImporterError < ArgumentError
     end
 
-    class MissingDistrictFolderError < Exception
-      attr_accessor :folder
-      def initialize(district_folder)
-        self.folder = district_folder
-      end
-    end
 
   class BatchJob
     include SisCsvFields  # definitions for the fields we use when parsing.

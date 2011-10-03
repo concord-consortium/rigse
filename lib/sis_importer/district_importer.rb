@@ -166,7 +166,8 @@ module SisImporter
           school.save!
           school.reload
           if (school.district.nil?)
-            throw "couldn't create district #{name} for school #{name}!"
+            message =  "couldn't create district #{name} for school #{name}!"
+            Errors::Error.new(message)
           end
         end
       else
@@ -568,7 +569,7 @@ module SisImporter
 
     def cache_course_ar_map(course_number,school_id,value=nil)
       unless (course_number && school_id)
-        raise SisImporterError.new("must supply a course_number and a school")
+        raise Errors::Error.new("must supply a course_number and a school")
       end
       # TODO NP: sometimes we get keys which are strings. Force them to be trimmed
       course_number.strip! if course_number.respond_to?(:strip!)

@@ -1,8 +1,5 @@
 module SisImporter
   class FileTransport
-    class TransportError < Errors::Error
-    end
-    
     include Errors::Collector
     
     def initialize(opts)
