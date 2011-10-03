@@ -10,7 +10,7 @@ module SisImporter
         :host        => nil,
         :username    => nil,
         :password    => nil,
-        :remote_root => nil
+        :remote_root => "district"
       })
     end
 
