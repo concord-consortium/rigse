@@ -49,12 +49,25 @@ module SisImporter
       return File.join(local_path(district),timestamp)
     end
 
+    def local_current_district_file(district,file)
+      return File.join(local_current_district_path(district),file)
+    end
+
     def local_current_district_path(district)
       return File.join(local_path(district),'current')
     end
 
     def timestamp
       @timestamp ||= Time.now.strftime("%Y%m%d_%H%M")
+    end
+
+    def initialize_paths(district)
+      create_local_district_path(district)
+      relink_local_current_district_path(district)
+    end
+
+    def create_local_district_path(district)
+      FileUtils.mkdir_p(local_district_path(district))
     end
 
     # link <timestamp> => current
@@ -64,12 +77,9 @@ module SisImporter
     end
 
     def get_csv_files
-      begin
-        options[:districts].each do |district|
-          get_csv_files_for_district(district)
-        end
-      rescue TransportError => e
-        error(e)
+      options[:districts].each do |district|
+        initialize_paths(district)
+        get_csv_files_for_district(district)
       end
     end
 
