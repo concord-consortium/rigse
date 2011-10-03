@@ -92,7 +92,7 @@ describe SisImporter::BatchJob do
 
 
     it "should report a reasonable error message in the event that it can not connect to the sftp server" do
-      error = SisImporter::SftpFileTransport::ConnectionError.new('fake') 
+      error = Errors::ConnectionError.new('fake') 
       @transport.should_receive(:get_csv_files_for_district).and_raise(error)
       @transport.errors.size.should eql 0
       lambda { @district_importer.get_csv_files }.should raise_error

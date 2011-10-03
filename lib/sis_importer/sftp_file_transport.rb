@@ -1,9 +1,7 @@
+
 module SisImporter
   class SftpFileTransport < FileTransport
     
-    class ConnectionError < Errors::FatalError
-    end
-
     attr_accessor :ssh_session
     attr_accessor :sftp_session
 
