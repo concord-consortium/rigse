@@ -365,9 +365,13 @@ module ApplicationHelper
     reportable_display_name = reportable.class.display_name.downcase
     action_string = action.gsub('_', ' ')
     name = reportable.name
-    url = polymorphic_url(reportable, :action => action)
+    format = nil
+    if (reportable.respond_to?('runnable') && reportable.runnable.respond_to?('report_format'))
+      format = reportable.runnable.report_format
+    end
+    url = polymorphic_url(reportable, :action => action, :format => format)
     if title.nil?
-      title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window."
+      title = "Display a #{action_string} for the #{reportable_display_name}: '#{name}' in a new browser window woo."
     end
     link_to(link_text, url, :popup => true, :title => title)
   end
