@@ -170,7 +170,7 @@ class Portal::OfferingsController < ApplicationController
           "name: '#{l.name}', id: #{l.id}"
         end
         
-        cookies[:activity_name] = @offering.runnable.name
+        cookies[:activity_name] = @offering.runnable.url
         cookies[:class_students] = "[{" + @learners.join("},{") + "}]"
         redirect_to(@offering.runnable.report_url, 'popup' => true)
        }
