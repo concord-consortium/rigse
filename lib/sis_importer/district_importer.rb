@@ -8,15 +8,15 @@ module SisImporter
     attr_accessor :parsed_data
     attr_accessor :errors
     attr_accessor :completed
+    attr_accessor :report
 
     def initialize(opts={})
       User.delete_observers
       @configuration = opts[:configuration] || Configuration.new(opts)
-
+      
       self.district  = opts[:district]
       self.log       = opts[:log] || ImportLog.new(@configuration.local_root_dir)
-
-      @start_time    = Time.now
+      self.report    = Reporter.new(self.log,File.join(@configuration.local_root_dir,"reports"))
       @parsed_data   = {}
 
       # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
@@ -36,9 +36,6 @@ module SisImporter
 
       @nces_districts = {}
       @nces_schools   = {}
-      @error_users    = []
-      @created_users  = []
-      @updated_users  = []
       @errors         = []
       @completed      = false
       self.create_transport(@configuration)
@@ -87,8 +84,8 @@ module SisImporter
 
       @log.info "\n (updating models for district #{district}...)\n"
       update_models
-      import_report
-      report_summary
+      report.import_report
+      # @log.report(report.report_summary)
       self.completed = true
     end
 
@@ -306,16 +303,16 @@ module SisImporter
           if user
             user.update_attributes!(user_params_from_row(row))
           end
-          push_user_change(user,row)
+          report << user
         rescue ExternalUserDomain::ExternalUserDomainError => e
           message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
           @log.error(message)
-          push_error_row(row)
+          report.push_error_row(row)
           return nil
         rescue ActiveRecord::ActiveRecordError => e
           message = "\nCould not create user: #{row.inspect} because of field-validation errors:\n#{$!}\n"
           @log.error(message)
-          push_error_row(row)
+          report.push_error_row(row)
           return nil
         end
         row[:rites_user_id] = user.id
@@ -589,80 +586,6 @@ module SisImporter
       end
       value = @course_active_record_map[course_number][school_id]
       return value
-    end
-
-    def created_user(user)
-      return user.valid? && user.created_at > @start_time
-    end
-
-    def updated_user(user)
-      return user.valid? && user.updated_at > @start_time
-    end
-
-    def push_user_change(user,row)
-      role = user.portal_teacher ? "teacher" : "unknown"
-      role = user.portal_student ? "student" : "unknown"
-      data = [
-        user.last_name,
-        user.first_name,
-        user.email,
-        role,
-        user.login,
-        user.external_id,
-        user.created_at,
-        user.updated_at,
-        user.state
-      ]
-      if created_user(user)
-        @created_users.push(data)
-      elsif updated_user(user)
-        @updated_users.push(data)
-      end
-    end
-
-    def push_error_row(row)
-      @error_users.push(row)
-    end
-
-    def user_report(user_record_array)
-      return_string = ""
-      user_record_array.sort{|a,b| a[0] <=> a[0]}.each do |row|
-        return_string += row.join(",")
-        return_string += "\n"
-      end
-      return return_string
-    end
-
-    def import_report
-      report_path = File.join(self.directory, "report")
-      FileUtils.mkdir_p(report_path)
-      created_path = File.join(report_path, "users_created.csv")
-      updated_path = File.join(report_path, "users_updated.csv")
-      errors_path   = File.join(report_path, "users_error.dump.rb")
-
-      data = user_report(@created_users)
-      File.open(created_path, 'w') {|f| f.write(data) }
-
-      data = user_report(@updated_users)
-      File.open(updated_path, 'w') {|f| f.write(data) }
-
-      data = ""
-      @error_users.each do |row|
-        data << row.inspect
-        data << "\n"
-      end
-      File.open(errors_path, 'w') {|f| f.write(data) }
-    end
-
-    def report_summary
-      district_summary = <<-HEREDOC
-        Import Summary for district #{district}:
-        Teachers: #{@parsed_data[:staff].length}
-        Students: #{@parsed_data[:students].length}
-        Courses:  #{@parsed_data[:courses].length}
-        Classes:  #{@parsed_data[:staff_assignments].length}
-      HEREDOC
-      @log.report(district_summary)
     end
 
   end
