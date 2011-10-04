@@ -88,6 +88,7 @@ module SisImporter
           district = import_district(district_name)
         rescue Exception => e
           @log.error("Uncaught Exception: #{e.message}")
+          @log.log_message(e.message << "\n",      {:log_level => 'error'})
           @log.log_message(e.backtrace.join("\n"), {:log_level => 'error'})
           next
         end
