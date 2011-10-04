@@ -167,11 +167,11 @@ class Portal::OfferingsController < ApplicationController
       
       format.run_external_html   {
         @learners = @offering.clazz.students.map do |l|
-          "name: #{l.name}, id: #{l.id}"
+          "name: '#{l.name}', id: #{l.id}"
         end
         
         cookies[:activity_name] = @offering.runnable.name
-        cookies[:class_students] = "{" + @learners.join("}{") + "}"
+        cookies[:class_students] = "[{" + @learners.join("},{") + "}]"
         redirect_to(@offering.runnable.report_url, 'popup' => true)
        }
     end
