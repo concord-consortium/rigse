@@ -2,6 +2,8 @@ module SisImporter
   class ImportLog < Logger
     attr_accessor :verbose
     attr_accessor :errors
+    attr_accessor :log_path
+    attr_accessor :report_path
 
     def initialize(base_directory,rotation='daily')
       @log_directory   = base_directory

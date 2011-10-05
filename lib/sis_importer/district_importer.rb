@@ -85,7 +85,8 @@ module SisImporter
       @log.info "\n (updating models for district #{district}...)\n"
       update_models
       self.reporter.import_report
-      @log.report(self.reporter.report_summary)
+      # @log.report(self.reporter.report_summary)
+      self.reporter.report_summary
       self.completed = true
     end
 
@@ -169,7 +170,7 @@ module SisImporter
           school = Portal::School.create(:name => name)
         end
         if (school.district.nil?)
-          @log.info("Creating district #{name}.",{:log_level => :warn})
+          @log.log_message("Creating district '#{name}'.",{:log_level => :warn})
           school.district = Portal::District.create(:name => name)
           school.save!
           school.reload
@@ -292,7 +293,9 @@ module SisImporter
         :password_confirmation => password
       }
       params = user_params_from_row(row).merge(create_params)
-      User.create(params)
+      user = User.create(params)
+      reporter.password(user,password)
+      user
     end
 
     def create_or_update_user(row)

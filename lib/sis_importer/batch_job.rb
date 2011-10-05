@@ -105,6 +105,8 @@ module SisImporter
 
       @end_time = Time.now
       report_grand_total(num_districts,num_teachers,num_students,num_courses,num_classes)
+      @configuration.signal_success
+      @configuration.copy_logs(@log)
     end
 
     def import_district(district_name)
