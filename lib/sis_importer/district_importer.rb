@@ -49,7 +49,7 @@ module SisImporter
         :password   => config.password,
         :output_dir => config.local_root_dir,
         :csv_files  => config.csv_files,
-        :districts  => [self.district], #TODO: make this district singular
+        :district   => self.district,
         :logger     => self.log
       })
     end
