@@ -84,10 +84,13 @@ module SisImporter
 
       @log.info "\n (updating models for district #{district}...)\n"
       update_models
-      self.reporter.import_report
-      # @log.report(self.reporter.report_summary)
-      self.reporter.report_summary
+      send_reports
       self.completed = true
+    end
+
+    def send_reports
+      self.reporter.import_report
+      self.reporter.report_summary
     end
 
     def update_models
