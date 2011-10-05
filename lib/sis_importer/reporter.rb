@@ -103,12 +103,43 @@ module SisImporter
     end
 
     def report_summary
+      c_teachers = self.creates(User).select {|u| u.portal_teacher}.uniq.size
+      u_teachers = self.updates(User).select {|u| u.portal_teacher}.uniq.size
+      n_teachers =   self.noops(User).select {|u| u.portal_teacher}.uniq.size
+
+      c_students = self.creates(User).select {|u| u.portal_student}.uniq.size
+      u_students = self.updates(User).select {|u| u.portal_student}.uniq.size
+      n_students =   self.noops(User).select {|u| u.portal_student}.uniq.size
+
+      c_courses = self.creates(Portal::Course).uniq.size
+      u_courses = self.updates(Portal::Course).uniq.size
+      n_courses =   self.noops(Portal::Course).uniq.size
+      
+      c_clazzes = self.creates(Portal::Clazz).uniq.size
+      u_clazzes = self.updates(Portal::Clazz).uniq.size
+      n_clazzes =   self.noops(Portal::Clazz).uniq.size
+
       district_summary = <<-HEREDOC
-        Import Summary for district #{district}:
-        Teachers: #{@parsed_data[:staff].length}
-        Students: #{@parsed_data[:students].length}
-        Courses:  #{@parsed_data[:courses].length}
-        Classes:  #{@parsed_data[:staff_assignments].length}
+        Report for district: #{self.transport.district}
+        Teachers:
+                new      : #{c_teachers}
+                updated  : #{u_teachers}
+                unchanged: #{n_teachers}
+
+        Students: 
+                new      : #{c_students}
+                updated  : #{u_students}
+                unchanged: #{n_students}
+
+        Courses: 
+                new      : #{c_courses}
+                updated  : #{u_courses}
+                unchanged: #{n_courses}
+
+        Classes:
+                new      : #{c_clazzes}
+                updated  : #{u_clazzes}
+                unchanged: #{n_clazzes}
       HEREDOC
       @log.report(district_summary)
     end
