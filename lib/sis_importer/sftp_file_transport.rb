@@ -22,8 +22,9 @@ module SisImporter
       File.join(remote_root,file)
     end
 
-    def remote_district_path(district,file)
-      return File.join(remote_path(district),file)
+    def remote_district_file(file)
+      File.join(remote_path(district),file)
+    end
     end
 
     def download(remote, local)
@@ -38,11 +39,11 @@ module SisImporter
         raise Errors::TransportError.new("Download Failed: #{@opts[:host]}/#{remote} ==> #{local}", e)
       end
     end
-      
-    def get_csv_files_for_district(district)
+
+    def get_csv_files
       csv_files.each do |csv_file|
         filename = "#{csv_file}.csv"
-        download(remote_district_path(district,filename),local_current_district_file(district,filename))
+        download(remote_district_file(filename),local_current_district_file(filename))
       end
     end
 
