@@ -58,12 +58,10 @@ module SisImporter
       end
     end
 
-    def get_csv_files
-      csv_files.each do |csv_file|
-        filename = "#{csv_file}.csv"
-        download(remote_district_file(filename),local_current_district_file(filename))
-      end
+    def get_csv_file(csv_filename)
+      download(remote_district_file(filename),local_current_district_file(filename))
     end
+
     
     def send_report(filename)
       upload(local_current_report_file(filename), remote_district_report_file(filename))

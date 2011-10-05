@@ -85,9 +85,15 @@ module SisImporter
       FileUtils.ln_s(local_district_path, local_current_district_path, :force => true)
     end
 
-
     def get_csv_files
-      logger.error("You should implement your own get_csv_files method")
+      csv_files.each do |csv_file|
+        filename = "#{csv_file}.csv"
+        get_csv_file(filename)
+      end
+    end
+
+    def get_csv_file(filename)
+      logger.error("You should implement your own get_csv_file(filename) method")
     end
 
     def send_report(report_file)
