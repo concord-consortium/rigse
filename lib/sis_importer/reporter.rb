@@ -92,7 +92,7 @@ module SisImporter
         self.errors(User).each { |user| f.write(user_report user) }
       end
 
-      File.open(errors_path, 'w') do |f| 
+      File.open(csv_errors_path, 'w') do |f| 
         @csv_errors.each { |row| f.write(row << "\n") }
       end
 
