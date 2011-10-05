@@ -5,11 +5,10 @@ module SisImporter
     attr_accessor :log
     attr_accessor :start_time
     attr_accessor :end_time
-    attr_accessor :report_path
-
-    def initialize(log,path)
-      @report_path   = path
-      @log           = log
+    attr_accessor :transport
+    def initialize(transport)
+      @transport     = transport
+      @log           = transport.logger
       @start_time    = Time.now
       @csv_errors    = []
       @errors        = {}
@@ -74,12 +73,14 @@ module SisImporter
     end
 
     def import_report
+      report_path   = File.join(self.transport.local_current_district_path,"reports")
       FileUtils.mkdir_p(report_path)
-      created_path    = File.join(report_path, "users_created.csv")
-      updated_path    = File.join(report_path, "users_updated.csv")
-      errors_path     = File.join(report_path, "users_error.csv")
-      csv_errors_path = File.join(report_path, "parse_error.csv")
-        
+
+      created_path    = self.transport.local_current_report_file "users_created.csv"
+      updated_path    = self.transport.local_current_report_file "users_updated.csv"
+      errors_path     = self.transport.local_current_report_file "users_error.csv"
+      csv_errors_path = self.transport.local_current_report_file "parse_error.csv"
+
       File.open(created_path, 'w') do |f| 
         self.creates(User).each { |user| f.write(user_report user) }
       end
