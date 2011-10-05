@@ -97,6 +97,11 @@ module SisImporter
         @csv_errors.each { |row| f.write(row << "\n") }
       end
 
+      self.transport.send_report "users_created.csv"
+      self.transport.send_report "users_updated.csv"
+      self.transport.send_report "users_error.csv"
+      self.transport.send_report "parse_error.csv"
+
     end
 
     def push_error_row(bad_csv_row)
