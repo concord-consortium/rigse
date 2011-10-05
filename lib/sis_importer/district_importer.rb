@@ -8,7 +8,7 @@ module SisImporter
     attr_accessor :parsed_data
     attr_accessor :errors
     attr_accessor :completed
-    attr_accessor :report
+    attr_accessor :reporter
 
     def initialize(opts={})
       User.delete_observers
@@ -16,7 +16,6 @@ module SisImporter
       
       self.district  = opts[:district]
       self.log       = opts[:log] || ImportLog.new(@configuration.local_root_dir)
-      self.report    = Reporter.new(self.log,File.join(@configuration.local_root_dir,"reports"))
       @parsed_data   = {}
 
       # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
@@ -39,6 +38,7 @@ module SisImporter
       @errors         = []
       @completed      = false
       self.create_transport(@configuration)
+      self.reporter    = Reporter.new(self.file_transport)
     end
 
     def create_transport(config)
@@ -84,8 +84,8 @@ module SisImporter
 
       @log.info "\n (updating models for district #{district}...)\n"
       update_models
-      report.import_report
-      # @log.report(report.report_summary)
+      self.reporter.import_report
+      @log.report(self.reporter.report_summary)
       self.completed = true
     end
 
@@ -303,16 +303,16 @@ module SisImporter
           if user
             user.update_attributes!(user_params_from_row(row))
           end
-          report << user
+          self.reporter << user
         rescue ExternalUserDomain::ExternalUserDomainError => e
           message = "\nCould not create user with sakai_login: #{sakai_login} because of field-validation errors:\n#{$!}"
           @log.error(message)
-          report.push_error_row(row)
+          self.reporter.push_error_row(row)
           return nil
         rescue ActiveRecord::ActiveRecordError => e
           message = "\nCould not create user: #{row.inspect} because of field-validation errors:\n#{$!}\n"
           @log.error(message)
-          report.push_error_row(row)
+          self.reporter.push_error_row(row)
           return nil
         end
         row[:rites_user_id] = user.id
@@ -442,6 +442,7 @@ module SisImporter
           # courses = Portal::Course.find(:all, :conditions => {:name => course_csv_row[:Title]}).detect { |course| course.school.id == school.id }
           course = Portal::Course.find_or_create_by_course_number_name_and_school_id(course_csv_row[:CourseNumber],course_csv_row[:Title], school.id)
           course_csv_row[:rites_course] = course
+          self.reporter << course
           # cache that results in hashtable
           cache_course_ar_map(course_csv_row[:CourseNumber],course_csv_row[:SchoolNumber],course)
         else
@@ -513,6 +514,7 @@ module SisImporter
       else
         @log.error("\nteacher or student not found: SASID: #{member_relation_row[:SASID]} cert: #{member_relation_row[:TeacherCertNum]}\n")
       end
+      self.reporter << clazz
       member_relation_row
     end
 
