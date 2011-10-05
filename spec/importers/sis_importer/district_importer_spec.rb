@@ -46,21 +46,22 @@ module SisImporter::DistrictImporterExampleHelpers
 
   def run_importer(opts = {})
     defaults = {
-      :districts => ["01"],
-      :verbose => false,
-      :local_root_dir => working_test_directory,
+      :districts          => ["01"],
+      :verbose            => false,
+      :local_root_dir     => working_test_directory,
       :skip_get_csv_files => true
     }
-    sis_data_options = SisImporter::Configuration.new(defaults.merge(opts))
-    @batch_job = SisImporter::BatchJob.new(sis_data_options)
-    @batch_job.run_scheduled_job
-    @district_importer=@batch_job.districts.first
+    opts = defaults.merge(opts)
+    sis_data_options = SisImporter::Configuration.new(opts)
+    @district_importer = SisImporter::DistrictImporter.new(:configuration => sis_data_options, :district => opts[:districts].first)
+    @district_importer.stub!(:send_reports => true)
+    @district_importer.import
     @logger = @district_importer.log
   end
 
 end
 
-describe SisImporter::BatchJob do
+describe SisImporter::DistrictImporter do
   include SisImporter::DistrictImporterExampleHelpers
 
   # make test schools
@@ -91,16 +92,16 @@ describe SisImporter::BatchJob do
     end
 
 
-    it "should report a reasonable error message in the event that it can not connect to the sftp server" do
+    it "should report a reasonable error message in the event that it can not get a csv_file" do
       error = SisImporter::Errors::ConnectionError.new('fake') 
-      @transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      @transport.should_receive(:get_csv_file).and_raise(error)
       @transport.errors.size.should eql 0
       lambda { @district_importer.get_csv_files }.should raise_error
     end
 
     it "should report an error in the event that a remote directory/file does not exist" do
       error = SisImporter::Errors::TransportError.new('fake',RuntimeError.new("eek")) 
-      @transport.should_receive(:get_csv_files_for_district).and_raise(error)
+      @transport.should_receive(:get_csv_file).and_raise(error)
       @district_importer.errors.should have(0).errors
       lambda { @district_importer.get_csv_files }.should_not raise_error
       @district_importer.errors.should have(1).errors
@@ -377,18 +378,11 @@ describe SisImporter::BatchJob do
         run_importer(:districts => ['02'])
         Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
       end
-      it "when students are imported from districts [02,01] in one batch, all six new students get created at once" do
-        run_importer(:districts => ['02','01'])
-        Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
-      end
-      it "when students are imported from districts [01,02] in one batch, all six new students get created at once" do
-        run_importer(:districts => ['01','02'])
-        Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
-      end
     end
 
     it "GYM is imported from district 01, and PHYSICS is imported from district 02. Both should be in Active Record tables." do
-      run_importer(:districts => ['01','02'])
+      run_importer(:districts => ['01'])
+      run_importer(:districts => ['02'])
       ["GYM","PHYSICS"].each do | name |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(1)
         Portal::Course.count(:conditions=>{:name => name}).should be(1)
@@ -396,7 +390,8 @@ describe SisImporter::BatchJob do
     end
 
     it "ART and MATH exist in both distrcits, and ART exists in 3 schools, but all are unique courses" do
-      run_importer(:districts => ['01','02'])
+      run_importer(:districts => ['01'])
+      run_importer(:districts => ['02'])
       {"ART" => 3,"MATH" => 2}.each_pair do | name, size |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(size)
         Portal::Course.count(:conditions=>{:name => name}).should be(size)
