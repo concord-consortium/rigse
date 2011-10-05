@@ -4,7 +4,7 @@ describe SisImporter::Reporter do
   before(:each) do
     options = {}
     path = File.join("tmp","report")
-    @reporter = SisImporter::Reporter.new(options,path)
+    @reporter = SisImporter::Reporter.new(options,path,"test")
   end
 
   describe "push_error(csv_row)" do

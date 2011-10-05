@@ -11,6 +11,7 @@ module SisImporter
       @log           = transport.logger
       @start_time    = Time.now
       @csv_errors    = []
+      @passwords     = {}
       @errors        = {}
       @noops         = {}
       @updates       = {}
@@ -53,23 +54,31 @@ module SisImporter
       end
     end
 
+    def password(user,password=nil)
+      @passwords[user] = password if password
+      @passwords[user]
+    end
+
+    def user_report_header
+        %w[role last_name first_name email login password exernal_id created_at updated_at].join(",") << "\n"
+    end
 
     def user_report(user)
-
-      role = user.portal_teacher ? "teacher" : "unknown"
-      role = user.portal_student ? "student" : "unknown"
+      role = user.portal_student ? "student" : "teacher"
+      password = password(user) || "<obscured>"
       row = [
+        role,
         user.last_name,
         user.first_name,
         user.email,
-        role,
         user.login,
+        password,
         user.external_id,
         user.created_at,
         user.updated_at,
         user.state
       ]
-      return row.join(",") << "\n" 
+      return row.join(",") << "\n"
     end
 
     def import_report
@@ -81,20 +90,23 @@ module SisImporter
       errors_path     = self.transport.local_current_report_file "users_error.csv"
       csv_errors_path = self.transport.local_current_report_file "parse_error.csv"
 
-      File.open(created_path, 'w') do |f| 
+      File.open(created_path, 'w') do |f|
+        f.write(user_report_header)
         self.creates(User).each { |user| f.write(user_report user) }
       end
 
-      File.open(updated_path, 'w') do |f| 
+      File.open(updated_path, 'w') do |f|
+        f.write(user_report_header)
         self.updates(User).each { |user| f.write(user_report user) }
       end
 
-      File.open(errors_path, 'w') do |f| 
+      File.open(errors_path, 'w') do |f|
+        f.write(user_report_header)
         self.errors(User).each { |user| f.write(user_report user) }
       end
 
-      File.open(csv_errors_path, 'w') do |f| 
-        @csv_errors.each { |row| f.write(row << "\n") }
+      File.open(csv_errors_path, 'w') do |f|
+        @csv_errors.each { |row| f.write(row.split(",") << "\n") }
       end
 
       self.transport.send_report "users_created.csv"
