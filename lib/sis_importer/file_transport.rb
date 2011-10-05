@@ -16,7 +16,7 @@ module SisImporter
 
     def defaults
       {
-        :districts  => [],
+        :district   => 'test',
         :output_dir => File.join('sis_import_data','districts'),
         :csv_files  => []
       }
@@ -41,62 +41,57 @@ module SisImporter
       return (options[:csv_files])
     end
 
+    def district
+      return (options[:district])
+    end
+
     def local_path(file)
       File.join(output_dir,file)
     end
+    
+    def local_current_district_path
+      return File.join(local_path(district),'current')
+    end
 
-    def local_district_path(district)
+    
+    def local_district_path
       return File.join(local_path(district),timestamp)
     end
 
-    def local_current_district_file(district,file)
-      return File.join(local_current_district_path(district),file)
+    def local_current_district_file(file)
+      return File.join(local_current_district_path,file)
     end
 
-    def local_current_district_path(district)
-      return File.join(local_path(district),'current')
+    def local_current_report_file(filename)
+      return File.join(local_current_district_path,'reports',filename)
     end
 
     def timestamp
       @timestamp ||= Time.now.strftime("%Y%m%d_%H%M")
     end
 
-    def initialize_paths(district)
-      create_local_district_path(district)
-      relink_local_current_district_path(district)
+    def initialize_paths
+      create_local_district_path
+      relink_local_current_district_path
     end
 
-    def create_local_district_path(district)
-      FileUtils.mkdir_p(local_district_path(district))
+    def create_local_district_path
+      FileUtils.mkdir_p(local_district_path)
     end
 
     # link <timestamp> => current
-    def relink_local_current_district_path(district)
-      FileUtils.rm_f(local_current_district_path(district))
-      FileUtils.ln_s(local_district_path(district), local_current_district_path(district), :force => true)
+    def relink_local_current_district_path
+      FileUtils.rm_f(local_current_district_path)
+      FileUtils.ln_s(local_district_path, local_current_district_path, :force => true)
     end
+
 
     def get_csv_files
-      options[:districts].each do |district|
-        initialize_paths(district)
-        get_csv_files_for_district(district)
-      end
+      logger.error("You should implement your own get_csv_files method")
     end
 
-    def get_csv_files_for_district(district)
-      logger.error("You should implement your own get_csv_file_for_district method")
-    end
-
-    def send_report(report,district)
-      logger.error("You should implement your own get_csv_file_for_district method")
-    end
-
-    def shutdown
-      logger.info("You should implement your own shutdown method")
-    end
-
-    def startup
-      logger.info("You should implement your own startup method")
+    def send_report(report_file)
+      logger.error("You should implement your own send_report method")
     end
 
     def logger
