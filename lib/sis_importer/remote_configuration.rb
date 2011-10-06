@@ -53,10 +53,10 @@ module SisImporter
         Net::SFTP.start(self.host, self.username, :password => self.password) do |sftp|
           stat = sftp.stat!(File.join(self.remote_root_path,in_progress_name))
         end
-      rescue Net::SFTP::StatusException 
-        return true
+      rescue Net::SFTP::StatusException => e
+        return false
       end
-      return false
+      return true
     end
 
     def remove_old_signals
