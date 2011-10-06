@@ -90,6 +90,8 @@ module SisImporter
       end
 
       districts = @configuration.districts
+      successes = []
+      failures  = []
       @configuration.remove_old_signals
       @configuration.signal_in_progress
       districts.each do |district_name|
@@ -99,6 +101,7 @@ module SisImporter
           @log.error("Uncaught Exception: #{e.message}")
           @log.log_message(e.message << "\n",      {:log_level => 'error'})
           @log.log_message(e.backtrace.join("\n"), {:log_level => 'error'})
+          failures << district_name
           next
         end
         if district.completed
@@ -107,14 +110,19 @@ module SisImporter
           num_students  += district.parsed_data[:students].length
           num_courses   += district.parsed_data[:courses].length
           num_classes   += district.parsed_data[:staff_assignments].length
+          successes << district_name
         else
+          failures << district_name
           # tell some one
         end
       end
 
       @end_time = Time.now
       report_grand_total(num_districts,num_teachers,num_students,num_courses,num_classes)
-      @configuration.signal_success
+      if failures.size > 0 
+        @configuration.signal_failure(failures.split("\n"))
+      end
+      @configuration.signal_success(successes.split("\n"))
       @configuration.copy_logs(@log)
     end
 

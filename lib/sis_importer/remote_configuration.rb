@@ -31,16 +31,16 @@ module SisImporter
       fetch_districts
     end
 
-    def signal_in_progress
+    def signal_in_progress()
       change_signal(pending_name, in_progress_name)
     end
 
-    def signal_success
-      change_signal(in_progress_name,success_name)
+    def signal_success(data=nil)
+      change_signal(in_progress_name,success_name,data)
     end
 
-    def signal_failure
-      change_signal(in_progress_name, error_name)
+    def signal_failure(data=nil)
+      change_signal(in_progress_name, error_name,data)
     end
 
     def copy_logs(logger)
