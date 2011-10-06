@@ -34,7 +34,6 @@ module SisImporter
     def upload(local, remote)
       begin
         sftp = Net::SFTP.start(@opts[:host], @opts[:username] , :password => @opts[:password])
-        puts "Uploading: #{local} ==>  #{remote}"
         sftp.upload!(local, remote)
         logger.info("Uploaded: #{local} ==>  #{remote}")
         sftp.session.close

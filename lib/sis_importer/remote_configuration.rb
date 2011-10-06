@@ -133,8 +133,7 @@ module SisImporter
           sftp.remove!(File.join(self.remote_root_path,file))
         end
       rescue Exception => e
-        puts("Unable to remove file: '#{file}' :#{e}")
-        # self.logger.error("Unable to remove file: #{file} :#{$!}")
+        # self.logger.warn("Unable to remove file: #{file} :#{$!}")
       end
     end
 
@@ -145,7 +144,7 @@ module SisImporter
           sftp.upload!(file,remote)
         end
       rescue Exception => e
-        puts("Unable to upload file: '#{file}' => '#{remote}' :#{e}")
+        # self.logger.warn("Unable to remove file: #{file} :#{$!}")
       end
 
     end
@@ -155,8 +154,7 @@ module SisImporter
         remove_file(from)
         write_file(to,data)
       rescue
-        puts ("Unable to change signal: #{from} #{to} : #{$!}")
-        # self.logger.error("Unable to change signal: #{from} #{to} : #{$!}")
+        # self.logger.warn("Unable to change signal: #{from} #{to} : #{$!}")
       end
     end
 
