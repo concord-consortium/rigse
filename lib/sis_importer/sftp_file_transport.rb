@@ -59,7 +59,7 @@ module SisImporter
     end
 
     def get_csv_file(csv_filename)
-      download(remote_district_file(filename),local_current_district_file(filename))
+      download(remote_district_file(csv_filename),local_current_district_file(csv_filename))
     end
 
     
