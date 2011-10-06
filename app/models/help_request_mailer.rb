@@ -7,7 +7,7 @@ class HelpRequestMailer < ActionMailer::Base
   
   def setup_email(help_request)
     self.current_theme = (APP_CONFIG[:theme]||'default')
-    @recipients = "emcelroy@concord.org"
+    @recipients = "itsisu-support@concord.org"
     @from = "#{help_request.name} <#{help_request.email}>"
     @subject = "New Help Request from #{help_request.name}"
     @sent_on = Time.now
