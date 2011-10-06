@@ -5,6 +5,7 @@ module SisImporter
     def initialize(opts)
       @opts = {}
       self.set_options(opts)
+      initialize_paths
     end
 
     def set_options(opts)
