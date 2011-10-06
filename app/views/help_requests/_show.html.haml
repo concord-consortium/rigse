@@ -1,0 +1,91 @@
+-if current_user.has_role?("manager")
+  %div{:id => dom_id_for(help_request, :item)}
+    %div{:id => dom_id_for(help_request, :details), :class => 'content'}
+      %h2{:style => "line-height: 110%;"}
+        %span{:style => "color: #777; font-size: 15px !important; font-weight: bold;"}
+          Help Request
+        %br
+        = h("#{help_request.name}: #{help_request.problem_type}")
+      %div.help_request_left
+        %dl.help_request
+          %dt
+            Name
+          %dd
+            =h(help_request.name)
+
+          %dt
+            Email
+          %dd
+            =h(help_request.email)
+
+          %dt
+            Class Name
+          %dd
+            =h(help_request.class_name)
+
+          %dt
+            Activity Name
+          %dd
+            =h(help_request.activity)
+
+          %dt
+            Number of Students
+          %dd
+            =h(help_request.num_students)
+
+          %dt
+            Computer Type
+          %dd
+            =h(help_request.computer_type)
+
+          %dt
+            Problem Type
+          %dd
+            =h(help_request.problem_type)
+
+          %dt
+            All Computers?
+          %dd
+            =h(help_request.all_computers)
+
+          %dt
+            Software Pre-loaded?
+          %dd
+            =h(help_request.pre_loaded)
+
+          %dt
+            Login
+          %dd
+            =h(help_request.login)
+
+          %dt
+            Operating System
+          %dd
+            =h(help_request.os)
+
+          %dt
+            Browser
+          %dd
+            =h(help_request.browser)
+
+          %dt
+            IP address
+          %dd
+            =h(help_request.ip_address)
+
+          %dt
+            Referrer
+          %dd
+            =h(help_request.referrer)
+
+      %div.help_request_right
+        %dl.help_request
+          %dt
+            Details
+          %dd
+            =h(help_request.more_info)
+
+          %dt
+            Console
+          %dd
+            =h(help_request.console)
