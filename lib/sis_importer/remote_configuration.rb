@@ -48,6 +48,26 @@ module SisImporter
       upload_file(logger.report_path)
     end
 
+    def in_progress?
+      begin
+        Net::SFTP.start(self.host, self.username, :password => self.password) do |sftp|
+          stat = sftp.stat!(File.join(self.remote_root_path,in_progress_name))
+        end
+      rescue Net::SFTP::StatusException 
+        return true
+      end
+      return false
+    end
+
+    def remove_old_signals
+      [self.success_name,self.error_name].each do |file|
+        begin
+          remove_file(file)
+        rescue
+        end
+      end
+    end
+
     protected
 
     def district_list_path
@@ -66,7 +86,6 @@ module SisImporter
 
     def fetch_districts
       begin
-        remove_old_signals
         Net::SFTP.start(self.host, self.username, :password => self.password) do |sftp|
           sftp.download!(district_list_path, local_tmp_path)
           # parse data
@@ -82,7 +101,6 @@ module SisImporter
         # error.
         @districts=[]
       end
-      signal_in_progress
       @districts
     end
 
@@ -108,14 +126,6 @@ module SisImporter
       district.strip
     end
 
-    def remove_old_signals
-      [self.in_progress_name,self.success_name,self.error_name].each do |file|
-        begin
-          remove_file(file)
-        rescue
-        end
-      end
-    end
 
     def remove_file(file)
       begin
