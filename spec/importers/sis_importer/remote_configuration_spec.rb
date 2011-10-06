@@ -29,11 +29,15 @@ describe SisImporter::RemoteConfiguration do
       @data = "  disricta \n  districtb   \n districtc \n\n"
       @ftp = FakeFTP.new(@data)
       Net::SFTP.stub!(:start).and_yield(@ftp)
+      @ftp.stub!(:stat!).and_return(true)
       @expected = ['disricta','districtb','districtc']
     end
 
     describe "districts" do
       it "should return expected districts" do
+        # @remote_config.should_receive(:in_progress?).and_return(false)
+        # @remote_config.should_receive(:remove_old_signals)
+        # @remote_config.should_receive(:signal_in_progress)
         @remote_config.districts.should eql @expected
       end
     end
@@ -42,7 +46,10 @@ describe SisImporter::RemoteConfiguration do
 
   describe "with connection errors" do
     before(:each) do
-      Net::SFTP.should_receive(:start).and_raise(NoMethodError.new("undefined method `shutdown!' for nil:NilClass"))
+      # @remote_config.stub!(:in_progress?).and_return(false)
+      # @remote_config.stub!(:remove_old_signals)
+      # @remote_config.stub!(:signal_in_progress)
+      Net::SFTP.stub!(:start).and_raise(NoMethodError.new("undefined method `shutdown!' for nil:NilClass"))
     end
 
     describe "districts" do

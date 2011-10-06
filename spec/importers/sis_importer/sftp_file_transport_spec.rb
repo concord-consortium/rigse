@@ -4,14 +4,14 @@ describe SisImporter::SftpFileTransport do
 
     @district    = "plymouth"
     @output_dir  = "fake_dir"
-    @csv_files   = %q[a.csv b.csv c.csv]
+    @csv_files   = %q[a b c]
     @usename     = "knowuh"
     @host        = "localhost"
     @password    = "secret"
     @remote_root = "root"
 
     @opts = {
-      :districts   => [@district],
+      :district    => @district,
       :output_dir  => @output_dir,
       :csv_files   => @csv_files,
       :host        => @host,
@@ -25,7 +25,7 @@ describe SisImporter::SftpFileTransport do
     describe "defaults" do
       describe "inherit supers defaults" do
         it "should include :distrcits" do
-          @sft_trasport.defaults.should include(:districts)
+          @sft_trasport.defaults.should include(:district)
         end
       end
       describe "localy defined defaults" do
@@ -51,7 +51,7 @@ describe SisImporter::SftpFileTransport do
     describe  "remote_distrcit_path" do
       it "should be the remote_root + district + filename" do
         @filename = 'foo'
-        @sft_trasport.remote_district_path(@district,@filename).should eql File.join(@remote_root,@district,@filename)
+        @sft_trasport.remote_district_file(@filename).should eql File.join(@remote_root,@district,@filename)
       end
     end
 
@@ -90,9 +90,10 @@ describe SisImporter::SftpFileTransport do
     describe "get_csv_files_for_district(district)" do
       it "should call download for each csv_file" do
         @csv_files.each do |file|
-          @sft_trasport.should_receive(:download).once.with(/#{file}/,/#{file}/)
+          filename = "#{file}.csv"
+          @sft_trasport.should_receive(:download).once.with(/#{filename}/,/#{filename}/)
         end
-        @sft_trasport.get_csv_files_for_district(@district)
+        @sft_trasport.get_csv_files
       end
     end
 end

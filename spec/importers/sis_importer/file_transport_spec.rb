@@ -2,9 +2,9 @@ describe SisImporter::FileTransport do
 
   before(:each) do
     @opts = {
-        :districts  => %w[Boston Cambridge Somerville],
+        :district   => 'Boston',
         :output_dir => File.join('sis_import_data','test'),
-        :csv_files  => %w[ one.csv two.csv three.csv]
+        :csv_files  => %w[one two three]
     }
     @file_transport = SisImporter::FileTransport.new(@opts)
   end
@@ -16,8 +16,8 @@ describe SisImporter::FileTransport do
     it "should include output_dir" do
       @file_transport.defaults[:output_dir].should_not be_nil
     end
-    it "should include districts" do
-      @file_transport.defaults[:districts].should_not be_nil
+    it "should include a district" do
+      @file_transport.defaults[:district].should_not be_nil
     end
   end
 
@@ -49,25 +49,25 @@ describe SisImporter::FileTransport do
     end
   end
 
-  describe "local_district_path(district)" do
+  describe "local_district_path" do
     it "should be the path 'output_dir/<district>/<timestamp>'" do
       fake_time = "201109231234"
       output_dir = @opts[:output_dir]
-      fake_district = "Boston"
+      fake_district = @opts[:district] #"Boston"
       @file_transport.should_receive(:timestamp).and_return(fake_time)
-      @file_transport.local_district_path(fake_district).should == [output_dir,fake_district,fake_time].join("/")
+      @file_transport.local_district_path.should == [output_dir,fake_district,fake_time].join("/")
     end
   end
 
-  describe "local_current_district_path(district)" do
+  describe "local_current_district_path" do
     it "should be the path 'output_dir/<district>/current'" do
       output_dir = @opts[:output_dir]
-      fake_district = "Boston"
-      @file_transport.local_current_district_path(fake_district).should == [output_dir,fake_district,"current"].join("/")
+      fake_district = @opts[:district] #"Boston"
+      @file_transport.local_current_district_path.should == [output_dir,fake_district,"current"].join("/")
     end
   end
 
-  describe "relink_local_current_district_path(district)" do
+  describe "relink_local_current_district_path" do
     before(:each) do
       FileUtils.stub!(:rm_f)
       FileUtils.stub!(:ln_s)
@@ -78,18 +78,18 @@ describe SisImporter::FileTransport do
     end
     it "should remove the old current symlink" do
       FileUtils.should_receive(:rm_f).with(@current_dir) 
-      @file_transport.relink_local_current_district_path(@district)
+      @file_transport.relink_local_current_district_path
     end
     it "should link the timestamp folder to the new folder" do
       FileUtils.should_receive(:ln_s).once.with(@timestamp_dir,@current_dir,:force=>true)
-      @file_transport.relink_local_current_district_path(@district)
+      @file_transport.relink_local_current_district_path
     end
   end
 
   describe "get_csv_files" do
-    it "should call get_csv_files_for_district for each district" do
-      @opts[:districts].each do |district|
-        @file_transport.should_receive(:get_csv_files_for_district).once.with(district)
+    it "should call get_csv_file with each file" do
+      @opts[:csv_files].each do |file|
+        @file_transport.should_receive(:get_csv_file).once.with("#{file}.csv")
       end
       @file_transport.get_csv_files
     end
