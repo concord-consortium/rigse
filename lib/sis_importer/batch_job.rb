@@ -82,8 +82,16 @@ module SisImporter
 
       # statistics:
       num_districts = num_teachers = num_students = num_courses = num_classes = 0
+      
 
-      @configuration.districts.each do |district_name|
+      districts = []
+      if @configuration.in_progress?
+        @log.error("Another process is running, aborting. ")
+        return
+      end
+
+      @configuration.remove_old_signals
+      districts.each do |district_name|
         begin
           district = import_district(district_name)
         rescue Exception => e
