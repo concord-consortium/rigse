@@ -4,7 +4,11 @@ describe SisImporter::Reporter do
   before(:each) do
     options = {}
     path = File.join("tmp","report")
-    @reporter = SisImporter::Reporter.new(options,path,"test")
+    @transport = mock("transport", {
+      :district => 'district',
+      :logger   => ""
+    })
+    @reporter = SisImporter::Reporter.new(@transport)
   end
 
   describe "push_error(csv_row)" do
