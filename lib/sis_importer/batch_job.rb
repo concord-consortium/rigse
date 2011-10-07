@@ -1,10 +1,10 @@
 # To run the import of the RITES districts:
 #
-#   RAILS_ENV=production ./script/runner "(SisImporter.new).run_scheduled_job"
+#   RAILS_ENV=production ./script/runner "SisImporter::BatchJob.new(SisImporter::RemoteConfiguration.new()).run_scheduled_job"
 #
 # Here's an equivalent invocation in jruby:
 #
-#   RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner "SisImporter.new().run_scheduled_job"
+#   RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner "SisImporter::BatchJob.new(SisImporter::RemoteConfiguration.new()).run_scheduled_job"
 #
 # If you are doing development you will want to create a dump of the state of
 # your working database before any imports have been made:
@@ -16,15 +16,9 @@
 #
 #    rake db:load
 #
-# Here are the default options:
 #
-#   :verbose => false
-#   :skip_get_csv_files => false
-#   :log_level => Logger::WARN
-#   :districts => @sis_import_data_config[:districts]
-#   :local_root_dir => "#{RAILS_ROOT}/sis_import_data/districts/#{@external_domain_suffix}/csv"
-#
-# You can customize the operation, here's an example:
+# You can customize the operation using a subclass of "SisImporter::Configuration"
+# a RemoteConfiguration will pick up the district names from a remote FTP serevr.
 #
 #   If you want to:
 #
@@ -33,19 +27,10 @@
 #   - display a complete log on the console as you run the task
 #   - create a log file that consists of ONLY the items recorded as :errors
 #
-#   SisImporter.new({:districts => ["17"], :skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR})
-#
-# Here is the command I use to reload the production and development databases
-# (on my development setup they are the same database) to the condition just after
-# initial app creation and then test the importer in JRuby with data from Cranston.
-#
-#   rake db:load; RAILS_ENV=production jruby -J-Xmx2024m -J-server ./script/runner \
-#   'SisImporter.new({:districts => ['07'], :verbose => true, :skip_get_csv_files => false}).run_scheduled_job'
-#
-# Note: In order to avoid issues with shell interpretation of characters in the command
-# string passed to script/runner I use single-quotes around the command -- this then requires
-# the use of an alternate string delimeter around: the district string: 07. I use double-quotes
-# here but Ruby has additional string delimters if needed.
+#   config = SisImporter.Configuration new(:district => "17", :skip_get_csv_files => true, :verbose => true, :log_level => Logger::ERROR)
+#   # then you can just use it like this:
+#   SisImporter::BatchJob.new(config).run_scheduled_job
+
 
 require 'fileutils'
 require 'arrayfields'
