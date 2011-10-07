@@ -23,7 +23,7 @@ module SisImporter
     def copy(remote, local)
       begin
         FileUtils.cp(remote, local)
-        logger.info("copyed: #{remote} ==>  #{local}")
+        log.info("copyed: #{remote} ==>  #{local}")
       rescue RuntimeError => e
         raise Errors::TransportError.new("copy Failed: #{remote} ==> #{local}", e)
       end
