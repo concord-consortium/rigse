@@ -4,22 +4,19 @@ module SisImporter
 
     attr_accessor :log
     attr_accessor :district
-    attr_accessor :file_transport
+    attr_accessor :transport
     attr_accessor :parsed_data
     attr_accessor :errors
     attr_accessor :completed
     attr_accessor :reporter
+    attr_accessor :configuration
 
-    def initialize(opts={})
+    def initialize(config=Configuration.new)
       User.delete_observers
-      @configuration = opts[:configuration] || Configuration.new(opts)
-      
-      self.district  = opts[:district]
-      self.log       = opts[:log] || ImportLog.new(@configuration.local_root_dir)
+      self.configuration = config
+      self.district  = self.configuration.district
+      self.log       = self.configuration.log
       @parsed_data   = {}
-
-      # :students => [], :staff =>[], :courses => [], :&etc. -- from CSV files
-      # See sis_csv_fields for a complete list..
 
       @students_active_record_map = {}
       # Example map entry:  SASID => Portal::Student
@@ -37,28 +34,15 @@ module SisImporter
       @nces_schools   = {}
       @errors         = []
       @completed      = false
-      self.create_transport(@configuration)
-      self.reporter    = Reporter.new(self.file_transport)
-    end
-
-    def create_transport(config)
-      self.file_transport = SftpFileTransport.new({
-        :config     => config,
-        :host       => config.host,
-        :username   => config.username,
-        :password   => config.password,
-        :output_dir => config.local_root_dir,
-        :csv_files  => config.csv_files,
-        :district   => self.district,
-        :logger     => self.log
-      })
+      @transport      = @configuration.transport
+      self.reporter    = Reporter.new(self.transport)
     end
 
     def get_csv_files
       unless @configuration.skip_get_csv_files
         begin
-          self.file_transport.get_csv_files
-          @log.info "\n (downloaded csv files for district #{district}...)\n"
+          self.transport.get_csv_files
+          @log.info "n (downloaded csv files for district #{district}...)\n"
         rescue SisImporter::Errors::TransportError => e
           @log.error e
           @log.error "Failed to download data for #{district}! Skipping ...\n"
@@ -116,6 +100,11 @@ module SisImporter
       @configuration.csv_files.each do |csv_file|
         local_path = path_for_csv(csv_file)
         @log.info "\n(parsing: #{local_path}"
+        if (!File.exists?(local_path))
+          @log.error("no data folder found: #{local_path}")
+          raise Errors::MissingDistrictFolderError.new(local_path)
+        end
+
         key = csv_file.to_sym
         @parsed_data[key] = []
         File.open(local_path,'r') do |f|

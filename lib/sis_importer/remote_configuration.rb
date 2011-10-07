@@ -4,7 +4,8 @@ module SisImporter
     def defaults
       super.merge({
         :district_file_name => 'IMPORT',
-        :remote_root_path   => 'district'
+        :remote_root_path   => 'district',
+        :transport_class    => SisImporter::SftpFileTransport
       })
     end
 

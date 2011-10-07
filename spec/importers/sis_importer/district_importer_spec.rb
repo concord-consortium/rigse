@@ -40,20 +40,25 @@ module SisImporter::DistrictImporterExampleHelpers
 
   def copy_test_data
     FileUtils.rm_rf(working_test_directory)
-    FileUtils.mkdir_p(working_test_directory)
-    FileUtils.cp_r(Dir.glob(File.join(sis_test_data_dir,"*")), working_test_directory)
+    # FileUtils.mkdir_p(working_test_directory)
+    # puts "copying files from #{sis_test_data_dir} to #{working_test_directory}"
+    # FileUtils.cp_r(Dir.glob(File.join(sis_test_data_dir,"*")), working_test_directory)
   end
 
   def run_importer(opts = {})
+    district = opts[:district] || "01"
     defaults = {
-      :districts          => ["01"],
+      :district           => district,
+      :districts          => [district],
       :verbose            => false,
       :local_root_dir     => working_test_directory,
-      :skip_get_csv_files => true
+      :remote_root        => sis_test_data_dir,
+      :skip_get_csv_files => false,
+      :transport_class    => SisImporter::LocalFileTransport
     }
     opts = defaults.merge(opts)
-    sis_data_options = SisImporter::Configuration.new(opts)
-    @district_importer = SisImporter::DistrictImporter.new(:configuration => sis_data_options, :district => opts[:districts].first)
+    config = SisImporter::Configuration.new(opts)
+    @district_importer = SisImporter::DistrictImporter.new(config)
     @district_importer.stub!(:send_reports => true)
     @district_importer.import
     @logger = @district_importer.log
@@ -86,9 +91,9 @@ describe SisImporter::DistrictImporter do
     end
 
     before(:each) do
-      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir)
-      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf,:district=>'fakeotron')
-      @transport = @district_importer.file_transport
+      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir, :district => 'fakeotron')
+      @district_importer = SisImporter::DistrictImporter.new(conf)
+      @transport = @district_importer.transport
     end
 
 
@@ -111,9 +116,9 @@ describe SisImporter::DistrictImporter do
 
   describe "exceptions that should be thrown" do
     before(:each) do
-      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir, :districts =>['super-fake'])
-      @district_importer = SisImporter::DistrictImporter.new(:configuration => conf,:district => "super-fake")
-      @transport = @district_importer.file_transport
+      conf = SisImporter::Configuration.new(:local_root_dir => @district_data_root_dir, :skip_get_csv_files => true, :district=>'super-fake')
+      @district_importer = SisImporter::DistrictImporter.new(conf)
+      @transport = @district_importer.transport
     end
     it "should throw MissingDistrictFolderError when trying to load non-existant district data" do
       lambda {@district_importer.parse_csv_files_for_district }.should raise_error(SisImporter::Errors::MissingDistrictFolderError)
@@ -309,7 +314,7 @@ describe SisImporter::DistrictImporter do
 
 
     it "should work for classes with same course numbers in different schools" do
-      run_importer(:districts => ["02"])
+      run_importer(:district => "02")
       # in the test import data, teacher e and teacher d both teach a course with course Number ART
       # but they teach it in different schools
       user_d = User.find(:first, :conditions => {:first_name => 'd'})
@@ -373,16 +378,16 @@ describe SisImporter::DistrictImporter do
     end
     describe "district 01, and 02 contain 3 and 4 students each, with one duplicate, for a total of 6 unique students" do
       it "when students are added from the first district 3 new students are created, then 3 more are created for district 02" do
-        run_importer(:districts => ['01'])
+        run_importer(:district => '01')
         Portal::Student.find(:all).size.should eql(@initial_students.size + 3)
-        run_importer(:districts => ['02'])
+        run_importer(:district => '02')
         Portal::Student.find(:all).size.should eql(@initial_students.size + 6)
       end
     end
 
     it "GYM is imported from district 01, and PHYSICS is imported from district 02. Both should be in Active Record tables." do
-      run_importer(:districts => ['01'])
-      run_importer(:districts => ['02'])
+      run_importer(:district => '01')
+      run_importer(:district => '02')
       ["GYM","PHYSICS"].each do | name |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(1)
         Portal::Course.count(:conditions=>{:name => name}).should be(1)
@@ -390,8 +395,8 @@ describe SisImporter::DistrictImporter do
     end
 
     it "ART and MATH exist in both distrcits, and ART exists in 3 schools, but all are unique courses" do
-      run_importer(:districts => ['01'])
-      run_importer(:districts => ['02'])
+      run_importer(:district => '01')
+      run_importer(:district => '02')
       {"ART" => 3,"MATH" => 2}.each_pair do | name, size |
         Portal::Clazz.count(:conditions=>{:name => name}).should be(size)
         Portal::Course.count(:conditions=>{:name => name}).should be(size)
@@ -401,9 +406,9 @@ describe SisImporter::DistrictImporter do
 
   describe "when student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
     it "when students are added to the the ART class in csv for day two of district 1, they should be added on the rites site too" do
-      run_importer(:districts => ['01'])
+      run_importer(:district => '01')
       Portal::Clazz.find_by_name("ART").students.size.should be(1)
-      run_importer(:districts => ['01_day_two'])
+      run_importer(:district => '01_day_two')
       Portal::Clazz.find_by_name("ART").students.size.should be(2)
     end
 
@@ -439,7 +444,7 @@ describe SisImporter::DistrictImporter do
 
   describe "test the course_caching method called cache_course_ar_map" do
       before(:each) do
-        @importer = SisImporter::DistrictImporter.new({}) 
+        @importer = SisImporter::DistrictImporter.new() 
       end
 
       it "should throw an exception if nill is passed in as course number of school id" do
