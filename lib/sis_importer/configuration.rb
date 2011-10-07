@@ -6,7 +6,7 @@ module SisImporter
     def initialize(options= {})
       @configuration  = defaults.merge(self.yaml_config).merge(options)
       @transport     = @configuration[:transport_class].new(self) 
-      self.log       = options[:log] || ImportLog.new(@configuration[:local_root_dir])
+      self.log       = options[:log] || ImportLog.new(self.log_directory)
     end
 
     def defaults
