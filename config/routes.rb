@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :help_requests
+
   map.namespace(:saveable) do |saveable|
     saveable.namespace(:sparks) do |sparks|
       sparks.resources :measuring_resistances

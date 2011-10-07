@@ -1,0 +1,37 @@
+-if current_user.has_role?("manager")
+  %h2
+    Help Requests
+  -if !@help_requests.empty?
+    %table#help_request_list
+      %tr
+        %th
+          Name
+        %th
+          Email
+        %th
+          Date
+        %th
+          Action
+      -@help_requests.each do |help_request|
+        %tr
+          %td
+            = link_to help_request.name, help_request
+          %td
+            = link_to help_request.email, help_request
+          %td
+            = link_to help_request.created_at, help_request
+          %td
+            = link_to 'delete', {:action => 'destroy', :id => help_request}, :method => 'delete', :class => 'delete-link'
+    =will_paginate @help_requests
+  -else
+    %p
+      There are currently no pending help requests.
+-else
+  - form_for(@help_request) do |f|
+    = render :partial => 'form', :locals => { :help_request => @help_request, :f => f }
+    =f.submit :submit
+    %p{:style => 'margin-top: 20px;'}
+      %em
+        You can also email 
+        %a{:href => 'mailto:portal-support@concord.org'} portal-support@concord.org
+        if you prefer or this form is not working.

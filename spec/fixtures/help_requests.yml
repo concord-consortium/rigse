@@ -1,0 +1,37 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  email: MyString
+  class_name: MyString
+  activity: MyString
+  num_students: 
+  computer_type: MyString
+  problem_type: MyString
+  all_computers: 
+  pre_loaded: 
+  more_info: MyText
+  console: MyText
+  login: MyString
+  os: MyString
+  browser: MyString
+  ip_address: MyString
+  referrer: MyText
+
+two:
+  name: MyString
+  email: MyString
+  class_name: MyString
+  activity: MyString
+  num_students: 
+  computer_type: MyString
+  problem_type: MyString
+  all_computers: 
+  pre_loaded: 
+  more_info: MyText
+  console: MyText
+  login: MyString
+  os: MyString
+  browser: MyString
+  ip_address: MyString
+  referrer: MyText

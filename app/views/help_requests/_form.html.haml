@@ -1,0 +1,153 @@
+%h2
+  Contact Technical Support
+%p
+  Do you have a technical support problem? You've come to the right place.
+%p
+  We encourage you to take a look at our 
+  %a{:href => '/help'}help documentation
+  before contacting us.
+%div.hr
+%p
+  Please complete the following form if you are experiencing problems with activities. The support team will receive a copy of your information by email. If you need immediate assistance, please call The Concord Consortium at 978-405-3200.
+%div
+  .content
+    %dl.help_request
+      %dt
+        Name
+      %dd
+        =f.text_field :name, :value => "#{current_user.first_name} #{current_user.last_name}"
+  
+      %dt
+        Email
+      %dd
+        =f.text_field :email, :value => current_user.email
+  
+      %dt
+        Class Name
+      %dd
+        =f.text_field :class_name
+  
+      %dt
+        Activity Name
+      %dd
+        =f.text_field :activity 
+  
+      %dt
+        Number of Students
+      %dd
+        =f.text_field :num_students 
+  
+      %dt
+        Computer Type
+      %dd
+        =f.text_field :computer_type 
+  
+      %dt
+        Are you experiencing...
+      %dd
+        =f.radio_button :problem_type, "Download Problems", :value => "Download Problems"
+        Download Problems
+        %br
+        =f.radio_button :problem_type, "Upload (Saving) Problems", :value => "Upload Problems"
+        Upload (Saving) Problems
+        %br
+        =f.radio_button :problem_type, "Viewing Past Work", :value => "Viewing Past Work"
+        Viewing Past Work
+  
+      %dt
+        Did all computers experience the same problem?
+      %dd
+        =f.radio_button :all_computers, "Yes", :value => "Yes"
+        Yes 
+        %br
+        =f.radio_button :all_computers, "No", :value => "No"
+        No
+  
+      %dt
+        Were the computers pre-loaded prior to student use?
+        %br
+        %small{:style => "font-weight: normal;"}
+          (Preloading is running the software on each computer before your students do so that it works more quickly)
+      %dd
+        =f.radio_button :pre_loaded, "Yes", :value => "Yes"
+        Yes
+        %br
+        =f.radio_button :pre_loaded, "No", :value => "No"
+        No
+  
+      %dt
+        Details
+      %dd
+        =f.text_area :more_info, :class => "mceNoEditor", :rows => 10, :cols => 20
+  
+      %dt
+        Console Information:
+        %br
+        %small{:style => "font-weight: normal;"}
+          Copy all text in the "Java Console" window (not the activity itself).
+          %br
+          How to enable the Java console on 
+          %a{:href => '#', :onclick => "showHideHelp('win-java-console', this); return false;"}
+            Windows PCs
+          , on 
+          %a{:href => '#', :onclick => "showHideHelp('mac-java-console', this); return false;"}
+            Macs
+          
+      %dd
+        =f.text_area :console, :class => "mceNoEditor", :rows => 10, :cols => 20
+  
+      =f.hidden_field :login, :value => current_user.login
+      =f.hidden_field :environment, :value => request.env['HTTP_USER_AGENT']
+      =f.hidden_field :ip_address, :value => request.remote_ip
+      =f.hidden_field :referrer, :value => request.referer
+    
+    %div#win-java-console.help{:style => "display: none;"}
+      %p
+        The Java console is disabled by default. To enable it...
+      %ol
+        %li
+          Click on the Windows Start button
+        %li
+          Select Settings > Control Panel, or just Control Panel
+        %li
+          Double-click the Java icon
+        %li
+          Click on the Advanced tab
+        %li
+          Under "Java console" select the "Show console" option, then click the OK button
+      %p
+        Note: The Java console will continue to appear while it is activated. To deactivate it, go back to Java Preferences and deselect the "Show console" option.
+      %a.close-it{:href => '#', :onclick => "showHideHelp('win-java-console'); return false;"} X
+              
+    %div#mac-java-console.help{:style => "display: none;"}
+      %p
+        The Java console is disabled by default. To enable it...
+      %ol
+        %li
+          Navigate to the following folder: Applications > Utilities > Java
+        %li
+          Click on the "Java Preferences" icon
+        %li
+          Click on the "Advanced" tab
+        %li
+          Under "Java console", select the "Show console" option
+        %li
+          You will now see the Java console appear as a separate window whenever a Java application is launched 
+      %p
+        Note: The Java console will continue to appear while it is activated. To deactivate it, go back to Java Preferences and deselect the "Show console" option.
+      %a.close-it{:href => '#', :onclick => "showHideHelp('mac-java-console'); return false;"} X
+
+%script{:type => 'text/javascript'}
+  function showHideHelp(elem, toggle_link) {
+  // if toggle_link var is defined, get its X and Y coordinates to help place help div
+  if (toggle_link) {
+  // close all open help divs
+  $$('.help').each(function(d) { d.setStyle({'display': 'none'}); });
+  var elem_left = toggle_link.offsetLeft - 350 + 'px';
+  var elem_top = toggle_link.offsetTop + 15 + 'px';
+  $(elem).setStyle({'left': elem_left, 'top': elem_top});
+  }
+  
+  // toggle help div
+  $(elem).toggle();
+  }
