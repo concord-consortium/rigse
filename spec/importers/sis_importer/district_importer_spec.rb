@@ -61,7 +61,7 @@ module SisImporter::DistrictImporterExampleHelpers
     @district_importer = SisImporter::DistrictImporter.new(config)
     @district_importer.stub!(:send_reports => true)
     @district_importer.import
-    @logger = @district_importer.log
+    @log = @district_importer.log
   end
 
 end
@@ -193,7 +193,7 @@ describe SisImporter::DistrictImporter do
         run_importer #FIXME: ExternalUserDomain::ExternalUserDomainError
       end
       it "should log an error if an enrollment is missing a valid student" do
-        @logger.should_receive(:error).with(/student not found/)
+        @log.should_receive(:error).with(/student not found/)
         # 007 is not a real student SASID
         csv_enrollment_with_bad_student_id = "007,GYM,1,FY,07,2009-09-01,01,0"
         @district_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_student_id)
@@ -201,7 +201,7 @@ describe SisImporter::DistrictImporter do
       end
 
       it "should log an error if an enrollment is for a non existing course" do
-        @logger.should_receive(:error).with(/course not found/)
+        @log.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_enrollment_with_bad_course_id = "1000139715,SPYING_101,1,FY,07,2009-09-01,01,0"
         @district_importer.add_csv_row(:enrollments,csv_enrollment_with_bad_course_id)
@@ -209,7 +209,7 @@ describe SisImporter::DistrictImporter do
       end
 
       it "should log an error if a staff assignment is missing a teacher" do
-        @logger.should_receive(:error).with(/teacher .* not found/)
+        @log.should_receive(:error).with(/teacher .* not found/)
         # 007 is not a real teacher:
         csv_assignment_with_bad_teacher_id = "007,GYM,1,FY,07,2009-09-01,01"
         @district_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_teacher_id)
@@ -217,7 +217,7 @@ describe SisImporter::DistrictImporter do
       end
 
       it "should log an error if a staff ssignment is missing course information" do
-        @logger.should_receive(:error).with(/course not found/)
+        @log.should_receive(:error).with(/course not found/)
         # SPYING_101 is not a real course:
         csv_assignment_with_bad_course_id = "48404,SPYING_101,1,FY,07,2009-09-01,01"
         @district_importer.add_csv_row(:staff_assignments,csv_assignment_with_bad_course_id)

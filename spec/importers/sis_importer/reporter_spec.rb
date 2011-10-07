@@ -6,7 +6,7 @@ describe SisImporter::Reporter do
     path = File.join("tmp","report")
     @transport = mock("transport", {
       :district => 'district',
-      :logger   => ""
+      :log   => ""
     })
     @reporter = SisImporter::Reporter.new(@transport)
   end

@@ -51,16 +51,16 @@ describe SisImporter::Errors::Collector do
     before(:each) do
       @collector = Object.new
       @collector.extend SisImporter::Errors::Collector
-      @logger = mock("logger")
-      @logger.stub!(:error)
-      @collector.stub!(:logger => @logger)
+      @log = mock("log")
+      @log.stub!(:error)
+      @collector.stub!(:log => @log)
       @message = "Bang!"
       @original_error = StandardError.new("foo")
       @sis_error = SisImporter::Errors::Error.new(@message,@original_error)
     end
 
     it "should log the errors message" do
-      @logger.should_receive(:error).with(@sis_error.message)
+      @log.should_receive(:error).with(@sis_error.message)
       @collector.error(@sis_error)
     end
 
