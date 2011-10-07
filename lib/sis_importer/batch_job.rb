@@ -128,12 +128,8 @@ module SisImporter
 
     def import_district(district_name)
       # TODO: these opts should be rolled into @configuration
-      opts = {
-        :district               => district_name,
-        :log                    => @log,
-        :configuration          => @configuration
-      }
-      district = DistrictImporter.new(opts)
+      configuration.configuration[:district] = district_name
+      district = DistrictImporter.new(configuration)
       district.import
       self.districts << district
       district
