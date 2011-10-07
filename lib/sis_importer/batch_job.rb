@@ -90,6 +90,7 @@ module SisImporter
       end
 
       districts = @configuration.districts
+      return if districts.size < 1
       successes = []
       failures  = []
       @configuration.remove_old_signals
@@ -122,7 +123,9 @@ module SisImporter
       if failures.size > 0 
         @configuration.signal_failure(failures.split("\n"))
       end
-      @configuration.signal_success(successes.split("\n"))
+      if successes.size > 0 
+        @configuration.signal_success(successes.split("\n"))
+      end
       @configuration.copy_logs(@log)
     end
 

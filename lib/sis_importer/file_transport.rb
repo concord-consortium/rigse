@@ -6,7 +6,6 @@ module SisImporter
     
     def initialize(config)
       @configuration = config
-      initialize_paths
     end
 
     def options
@@ -62,6 +61,7 @@ module SisImporter
     end
 
     def get_csv_files
+      initialize_paths
       csv_files.each do |csv_file|
         filename = "#{csv_file}.csv"
         get_csv_file(filename)
