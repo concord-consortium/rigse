@@ -1,41 +1,16 @@
 module SisImporter
   class FileTransport
     include Errors::Collector
+
+    attr_accessor :configuration
     
-    def initialize(opts)
-      @opts = {}
-      self.set_options(opts)
+    def initialize(config)
+      @configuration = config
       initialize_paths
     end
 
-    def set_options(opts)
-      defaults.merge(opts).keys.each do |key|
-        value = opts[key] || defaults[key]
-        set_option(key,value)
-      end
-    end
-
-    def defaults
-      {
-        :district   => 'test',
-        :output_dir => File.join('sis_import_data','districts'),
-        :csv_files  => []
-      }
-    end
-
-    def options(key=nil)
-      if key
-        return @opts[key]
-      end
-      return @opts
-    end
-
-    def set_option(key,value)
-      @opts[key] = value
-    end
-
-    def output_dir
-      return (options[:output_dir])
+    def options
+      self.configuration.configuration
     end
 
     def csv_files
@@ -47,7 +22,7 @@ module SisImporter
     end
 
     def local_path(file)
-      File.join(output_dir,file)
+      File.join(@configuration.local_root_dir,file)
     end
     
     def local_current_district_path
@@ -94,15 +69,15 @@ module SisImporter
     end
 
     def get_csv_file(filename)
-      logger.error("You should implement your own get_csv_file(filename) method")
+      log.error("You should implement your own get_csv_file(filename) method")
     end
 
     def send_report(report_file)
-      logger.error("You should implement your own send_report method")
+      log.error("You should implement your own send_report method")
     end
 
-    def logger
-      return (options[:logger] ||= Logger.new(STDOUT))
+    def log
+      self.configuration.log
     end
   end
 end

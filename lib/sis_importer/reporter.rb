@@ -8,7 +8,7 @@ module SisImporter
     attr_accessor :transport
     def initialize(transport)
       @transport     = transport
-      @log           = transport.logger
+      @log           = transport.log
       @start_time    = Time.now
       @csv_errors    = []
       @passwords     = {}

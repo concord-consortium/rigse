@@ -3,67 +3,40 @@ describe SisImporter::FileTransport do
   before(:each) do
     @opts = {
         :district   => 'Boston',
-        :output_dir => File.join('sis_import_data','test'),
+        :local_root_dir => File.join('sis_import_data','test'),
         :csv_files  => %w[one two three]
     }
-    @file_transport = SisImporter::FileTransport.new(@opts)
+    @file_transport = SisImporter::FileTransport.new(SisImporter::Configuration.new(@opts))
   end
 
-  describe "defaults" do
-    it "should include csv_files" do
-      @file_transport.defaults[:csv_files].should_not be_nil
-    end
-    it "should include output_dir" do
-      @file_transport.defaults[:output_dir].should_not be_nil
-    end
-    it "should include a district" do
-      @file_transport.defaults[:district].should_not be_nil
-    end
-  end
-
-  describe "set_option(key,value)" do
-    it "should save options" do
-      @file_transport.set_option(:a, :b)
-      @file_transport.options(:a).should == :b
-    end
-  end
-
-  describe "set_options(opts)" do
-    it "should call set_option for each option" do
-      @opts.keys.each do | key |
-        @file_transport.should_receive(:set_option).once.with(key, @opts[key])
-      end
-      @file_transport.set_options(@opts)
-    end
-  end
   
-  describe "output_dir" do
+  describe "local_root_dir" do
     it "should be the output directory specified in the options" do
-      @file_transport.output_dir.should == @opts[:output_dir]
+      @file_transport.configuration.local_root_dir.should == @opts[:local_root_dir]
     end
   end
 
   describe "local_path(file)" do
-    it "should be the the path 'output_dir/filename'" do
+    it "should be the the path 'local_root_dir/filename'" do
       @file_transport.local_path("foo").should == "sis_import_data/test/foo"
     end
   end
 
   describe "local_district_path" do
-    it "should be the path 'output_dir/<district>/<timestamp>'" do
+    it "should be the path 'local_root_dir/<district>/<timestamp>'" do
       fake_time = "201109231234"
-      output_dir = @opts[:output_dir]
+      local_root_dir = @opts[:local_root_dir]
       fake_district = @opts[:district] #"Boston"
       @file_transport.should_receive(:timestamp).and_return(fake_time)
-      @file_transport.local_district_path.should == [output_dir,fake_district,fake_time].join("/")
+      @file_transport.local_district_path.should == [local_root_dir,fake_district,fake_time].join("/")
     end
   end
 
   describe "local_current_district_path" do
-    it "should be the path 'output_dir/<district>/current'" do
-      output_dir = @opts[:output_dir]
+    it "should be the path 'local_root_dir/<district>/current'" do
+      local_root_dir = @opts[:local_root_dir]
       fake_district = @opts[:district] #"Boston"
-      @file_transport.local_current_district_path.should == [output_dir,fake_district,"current"].join("/")
+      @file_transport.local_current_district_path.should == [local_root_dir,fake_district,"current"].join("/")
     end
   end
 
@@ -95,20 +68,6 @@ describe SisImporter::FileTransport do
     end
   end
 
-  describe "logger" do
-    it "should have a default logger" do
-      @file_transport.logger.should_not be_nil
-    end
-    describe "with a custom logger" do
-      before(:each) do
-        @logger = mock("logger")
-        @file_transport.set_option(:logger, @logger)
-      end
-      it "should return the custom logger" do
-        @file_transport.logger.should == @logger
-      end
-    end
-  end
 
   describe "error(message, exc, tags=[])" do
     it "should keep track of untagged errors" do

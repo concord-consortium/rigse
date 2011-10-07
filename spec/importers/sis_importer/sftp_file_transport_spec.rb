@@ -19,27 +19,8 @@ describe SisImporter::SftpFileTransport do
       :password    => @password,
       :remote_root => @remote_root
     }
-    @sft_trasport = SisImporter::SftpFileTransport.new(@opts)
+    @sft_trasport = SisImporter::SftpFileTransport.new(SisImporter::Configuration.new(@opts))
   end
-    # def defaults :host, :username, :password, distrcits
-    describe "defaults" do
-      describe "inherit supers defaults" do
-        it "should include :distrcits" do
-          @sft_trasport.defaults.should include(:district)
-        end
-      end
-      describe "localy defined defaults" do
-        it "should define a host default" do
-          @sft_trasport.defaults.should include(:host)
-        end
-        it "should define a username default" do
-          @sft_trasport.defaults.should include(:username)
-        end
-        it "should define a password default" do
-          @sft_trasport.defaults.should include(:password)
-        end
-      end
-    end
 
     describe  "remote_path(file)" do
       it "should be the remote_root + filename" do

@@ -5,7 +5,7 @@ module SisImporter
     attr_accessor :log_path
     attr_accessor :report_path
 
-    def initialize(base_directory,rotation='daily')
+    def initialize(base_directory,rotation='daily',log_level=Logger::INFO)
       @log_directory   = base_directory
       @start_time      = Time.now
       @errors          = {:districts=> {}}

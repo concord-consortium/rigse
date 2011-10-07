@@ -2,20 +2,8 @@
 module SisImporter
   class SftpFileTransport < FileTransport
     
-    attr_accessor :ssh_session
-    attr_accessor :sftp_session
-
-    def defaults
-      super.merge({
-        :host        => nil,
-        :username    => nil,
-        :password    => nil,
-        :remote_root => "district"
-      })
-    end
-
     def remote_root
-      @opts[:remote_root]
+      self.configuration.remote_root || "district"
     end
 
     def remote_path(file)
@@ -33,27 +21,27 @@ module SisImporter
 
     def upload(local, remote)
       begin
-        sftp = Net::SFTP.start(@opts[:host], @opts[:username] , :password => @opts[:password])
+        sftp = Net::SFTP.start(self.configuration.host, self.configuration.username, :password => self.configuration.password)
         sftp.upload!(local, remote)
-        logger.info("Uploaded: #{local} ==>  #{remote}")
+        log.info("Uploaded: #{local} ==>  #{remote}")
         sftp.session.close
       rescue NoMethodError => e
-        raise Errors::ConnectionError.new("Connection Failed: #{@opts[:username]}@#{@opts[:host]}", e)
+        raise Errors::ConnectionError.new("Connection Failed: #{self.configuration.user}@#{self.configuration.host}", e)
       rescue RuntimeError => e
-        raise Errors::TransportError.new("Download Failed: #{@opts[:host]}/#{remote} ==> #{local}", e)
+        raise Errors::TransportError.new("Download Failed: #{self.configuration.host}/#{remote} ==> #{local}", e)
       end
     end
 
     def download(remote, local)
       begin
-        sftp = Net::SFTP.start(@opts[:host], @opts[:username] , :password => @opts[:password])
+        sftp = Net::SFTP.start(self.configuration.host, self.configuration.username , :password => self.configuration.password)
         sftp.download!(remote, local)
-        logger.info("Downloaded: #{remote} ==>  #{local}")
+        log.info("Downloaded: #{remote} ==>  #{local}")
         sftp.session.close
       rescue NoMethodError => e
-        raise Errors::ConnectionError.new("Connection Failed: #{@opts[:username]}@#{@opts[:host]}", e)
+        raise Errors::ConnectionError.new("Connection Failed: #{self.configuration.username}@#{self.configuration.host}", e)
       rescue RuntimeError => e
-        raise Errors::TransportError.new("Download Failed: #{@opts[:host]}/#{remote} ==> #{local}", e)
+        raise Errors::TransportError.new("Download Failed: #{self.configuration.host}/#{remote} ==> #{local}", e)
       end
     end
 
