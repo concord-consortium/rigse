@@ -13,7 +13,7 @@ module SisImporter
       end
 
       def error(exc, tags=[])
-        self.logger.error(exc.message)
+        self.log.error(exc.message)
         tags << :all
         tags.each { |tag| errors(tag) << exc }
         raise exc if exc.kind_of? FatalError

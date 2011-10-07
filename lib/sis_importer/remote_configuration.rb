@@ -44,9 +44,9 @@ module SisImporter
       change_signal(in_progress_name, error_name,data)
     end
 
-    def copy_logs(logger)
-      upload_file(logger.log_path)
-      upload_file(logger.report_path)
+    def copy_logs(log)
+      upload_file(log.log_path)
+      upload_file(log.report_path)
     end
 
     def in_progress?
@@ -98,7 +98,7 @@ module SisImporter
         raise Errors::ConnectionError.new("Connection Failed: #{self.username}@#{self.host}", e)
       rescue RuntimeError => e
         # raise Errors::TransportError.new("Download Failed: #{self.host}/#{self.district_list_path} ==> #{self.local_tmp_path} (#{e.message})", e)
-        # TODO we want a reference to the logger here so we can log the
+        # TODO we want a reference to the log here so we can log the
         # error.
         @districts=[]
       end
@@ -134,7 +134,7 @@ module SisImporter
           sftp.remove!(File.join(self.remote_root_path,file))
         end
       rescue Exception => e
-        # self.logger.warn("Unable to remove file: #{file} :#{$!}")
+        # self.log.warn("Unable to remove file: #{file} :#{$!}")
       end
     end
 
@@ -145,7 +145,7 @@ module SisImporter
           sftp.upload!(file,remote)
         end
       rescue Exception => e
-        # self.logger.warn("Unable to remove file: #{file} :#{$!}")
+        # self.log.warn("Unable to remove file: #{file} :#{$!}")
       end
 
     end
@@ -155,7 +155,7 @@ module SisImporter
         remove_file(from)
         write_file(to,data)
       rescue
-        # self.logger.warn("Unable to change signal: #{from} #{to} : #{$!}")
+        # self.log.warn("Unable to change signal: #{from} #{to} : #{$!}")
       end
     end
 
