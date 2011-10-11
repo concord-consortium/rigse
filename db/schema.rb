@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110724025253) do
+ActiveRecord::Schema.define(:version => 20111011152602) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2147,6 +2147,7 @@ ActiveRecord::Schema.define(:version => 20110724025253) do
     t.string   "type"
     t.integer  "external_user_domain_id"
     t.string   "external_id"
+    t.boolean  "require_password_reset",                   :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
