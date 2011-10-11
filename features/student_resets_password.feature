@@ -7,7 +7,6 @@ Feature: Student resets password
   Background:
     Given The default project and jnlp resources exist using factories
 
-  @javascript
   Scenario: Passwords can not be blank
     Given the following students exist:
       | login   | password |
@@ -23,5 +22,5 @@ Feature: Student resets password
     And I press "Submit"
     Then I should see "Please enter a new password and confirm it."
     When I press "Submit"
-    Then I should see "Password could not be updated"
+    Then I should see "Your password could not be changed."
     And I should see "Password can't be blank"

@@ -47,7 +47,7 @@ class HomeController < ApplicationController
       render :nothing => true, :status => 404
     end
   end
-  
+
   def report
     # two different ways to render pdfs
     respond_to do |format|
@@ -62,5 +62,10 @@ class HomeController < ApplicationController
       format.pdf { render :layout => false }
     end
   end
-  
+
+  def index
+    if current_user.require_password_reset
+      redirect_to :controller => :passwords, :action=>'reset', :reset_code => 0
+    end
+  end
 end
