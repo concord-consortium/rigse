@@ -387,6 +387,12 @@ module SisImporter
       student = nil
       unless row[:rites_student_id]
         user = create_or_update_user(row)
+        if user.created_at > 2.minutes.ago
+          # if we have just created a new student, require them
+          # to update their password at next login
+          user.require_password_reset=true
+          user.save
+        end
         if user
           student = user.portal_student
           unless student
