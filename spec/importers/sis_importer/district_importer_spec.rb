@@ -45,6 +45,14 @@ module SisImporter::DistrictImporterExampleHelpers
     # FileUtils.cp_r(Dir.glob(File.join(sis_test_data_dir,"*")), working_test_directory)
   end
 
+  def reset_user_password(user,password)
+    user.password               = password
+    user.password_confirmation  = password
+    user.updating_password      = true
+    user.require_password_reset = false
+    user.save
+  end
+
   def run_importer(opts = {})
     district = opts[:district] || "01"
     defaults = {
@@ -402,6 +410,53 @@ describe SisImporter::DistrictImporter do
         Portal::Course.count(:conditions=>{:name => name}).should be(size)
       end
     end
+  end
+
+  describe "after an import, students must reset their passwords" do
+    before(:each) do
+      Delorean.time_travel_to "5 minutes ago"
+      run_importer(:district => '01')
+      Delorean.back_to_the_present
+      @student = Portal::Student.last.user
+      @teacher = Portal::Teacher.last.user
+    end
+    
+    after(:each) do
+      Delorean.back_to_the_present
+    end
+
+    describe "when the student is a new user" do
+      it "will require the student to reset their password" do
+        @student.require_password_reset.should be_true
+      end
+    end
+
+    describe "when the student is re-imported, but haven't yet reset their password" do
+      it "will require the student to reset their password" do
+        run_importer(:district => '01')
+        @student.reload
+        @student.require_password_reset.should be_true
+      end
+    end
+
+    describe "when the student has been re-imported, but *has* reset their password already" do
+      it "will not require the student to reset their password a second time" do
+        new_pass = "flubnerdubner"
+        reset_user_password(@student,new_pass)
+        run_importer(:district => '01')
+        @student.reload
+        @student.authenticated?(new_pass).should be_true
+        @student.require_password_reset.should be_false
+      end
+    end
+
+    describe "teachers are not forced to reset their passwords after the import" do
+      it "will note require teachers to reset their password" do
+        @teacher.require_password_reset.should be_false
+      end
+    end
+
+
   end
 
   describe "when student enrollments change in CSV, those changes *ARE* reflected in the rites portal" do
