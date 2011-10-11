@@ -2117,6 +2117,7 @@ ActiveRecord::Schema.define(:version => 20111130181720) do
     t.boolean  "of_consenting_age",                        :default => false
     t.boolean  "have_consent",                             :default => false
     t.string   "external_id"
+    t.boolean  "require_password_reset",                   :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

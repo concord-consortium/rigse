@@ -321,6 +321,18 @@ describe User do
       end
     end
   end
+
+  describe "require_reset_password" do
+    before(:each) do
+      @user = create_user(:login => 'default_user', :email => 'nobody@noplace.com')
+    end
+    describe "freshly minted user" do
+      it "will not require the password to be reset" do
+        @user.require_password_reset.should be_false
+      end
+    end
+  end
+
 protected
   def create_user(options = {})
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
