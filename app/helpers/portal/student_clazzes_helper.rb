@@ -14,7 +14,8 @@ module Portal::StudentClazzesHelper
     student_list = (students_in_class(clazz.students)).sort { |a,b| (a.user.last_name <=> b.user.last_name) }
     
     if (existing_students && existing_students.size > 0)
-      default_value = "Add a registered #{current_project.name} student"        
+      # default_value = "Add a registered #{current_project.name} student"
+      default_value = "Add a student from one of your other classes."
       options = [[default_value,default_value]]
       options = options + (existing_students.map { |s| [ truncate("#{s.last_name}, #{s.first_name} (#{s.login})",30), s.id ] })
       select_opts = options_for_select(options, :selected => default_value)
