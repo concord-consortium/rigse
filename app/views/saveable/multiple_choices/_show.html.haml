@@ -3,14 +3,14 @@
   %div{ :id => dom_id_for(multiple_choice, :details), :class => 'content' }
     - css_style = multiple_choice.answered? ? 'answered' : 'not_answered'
     - css_style = multiple_choice.answered_correctly? ? 'correct' : 'incorrect' if multiple_choice.answered?
-    %item{:class => css_style}
+    .item{:class => css_style}
       = multiple_choice.prompt
     - multiple_choice.choices.each_with_index do |choice, i|
       - if choice.choice == multiple_choice.answer
-        %item{:class => css_style, :style => 'display: block; font-weight: bold;'}
+        .item{:class => css_style, :style => 'display: block; font-weight: bold;'}
           = "#{i+1}. #{multiple_choice.answer}"
       - else
         - css = choice.is_correct ? 'correct' : ''
-        %item{:class => css, :style => 'display: block;'}
+        .item{:class => css, :style => 'display: block;'}
           = "#{i+1}. #{choice.choice}"
       
