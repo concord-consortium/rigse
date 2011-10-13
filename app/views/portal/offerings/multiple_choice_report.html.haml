@@ -30,8 +30,8 @@
                           - css_style << (response.respondable.answered_correctly? ? ' correct' : ' incorrect')
                           - answer = response.respondable.answer
                           %div{:id => dom_id_for(response), :style => "clear: right;", :class => css_style}
-                            %item{:class => css_style}
+                            .item{:class => css_style}
                               = response.learner.name
-                            %item{:style => "float: right;", :class => css_style}
+                            .item{:style => "float: right;", :class => css_style}
                               = response.respondable.answer
                                     

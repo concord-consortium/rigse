@@ -4,15 +4,15 @@
       - saveable = saveable_for_learner(embeddable, learner)
       - css_style = saveable.answered? ? 'answered' : 'not_answered'
       - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
-      %item{:style => 'display: block;'}
+      .item{:style => 'display: block;'}
         %strong
           = embeddable.prompt
       - embeddable.choices.each_with_index do |choice, i|
         - css = choice.is_correct ? 'correct' : 'incorrect'
         - if saveable && choice.choice == saveable.answer
           - css << " chosen_answer"
-        %item{:class => css, :style => 'display: block;'}
+        .item{:class => css, :style => 'display: block;'}
           = "#{i+1}. #{choice.choice}"
       - if saveable.answer == 'not answered'
-        %item{:class => 'not_answered', :style => 'font-weight: bold;'}
+        .item{:class => 'not_answered', :style => 'font-weight: bold;'}
           = 'not answered'
