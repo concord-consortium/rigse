@@ -1,0 +1,34 @@
+@import "app_colors";
+
+.dropdown {
+  z-index: 1000;
+  display: block;
+  position: fixed;
+  left: -1000px;
+  top: 0;
+  clear: left;
+  float: none;
+  background: transparent;
+  font-size: 10px;
+  overflow-x: hidden;
+  .big {
+    font-size: 1.2em; }
+  ul {
+    background-color: white;
+    list-style-type: none;
+    font-weight: normal;
+    border: 1px #bddfdf solid;
+    margin-left: 0;
+    padding-left: 0; }
+  li {
+    background: #fef7e0;
+    list-style-type: none;
+    padding: 0.5em; }
+  a {
+    display: block; }
+  a.rollover {
+    clear: left !important; }
+  hr {
+    border: none !important;
+    height: 1px !important;
+    padding: 0 !important; } }

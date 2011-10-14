@@ -13,4 +13,4 @@
                 = Embeddable::ImageQuestion.display_name + ': ' + @image_question.name
               %object{ :refid => ot_refid_for(@image_question) }
       %library
-        =yield :layout
+        = content_for :layout

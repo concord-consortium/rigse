@@ -5,8 +5,13 @@ class SessionsController < ApplicationController
   end
 
   def create
-    logout_keeping_session!
-    password_authentication
+    if cookies.blank?
+      flash[:notice] = "Your browser does not have cookies enabled. Please refer to your browser's documentation to enable cookies."
+      render :action => :new
+    else
+      logout_keeping_session!
+      password_authentication
+    end
   end
 
   def destroy
@@ -52,4 +57,15 @@ class SessionsController < ApplicationController
     return true
   end
 
+  protected
+  # authenticated system does this by default: 
+  #def logged_in?
+  #  !!current_user
+  #end
+  #
+  # but out current_user will be 'anonymous'
+  # because we always have a current_user
+  def logged_in?
+    return (!(current_user.nil? || current_user == User.anonymous))
+  end
 end

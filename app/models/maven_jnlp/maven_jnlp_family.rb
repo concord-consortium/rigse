@@ -66,7 +66,7 @@ class MavenJnlp::MavenJnlpFamily < ActiveRecord::Base
       Timeout::timeout(10) do
         open("#{url}/#{name}-CURRENT_VERSION.txt").read
       end
-    rescue OpenURI::HTTPError, SocketError, Timeout::Error
+    rescue ::OpenURI::HTTPError, SocketError, Timeout::Error
       puts "couldn't read from #{url}/#{name}-CURRENT_VERSION.txt"
       snapshot_version
     end

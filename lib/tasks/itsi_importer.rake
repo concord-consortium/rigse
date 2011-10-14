@@ -5,7 +5,6 @@ namespace :app do
     task :setup_itsi_environment => :environment do 
       # prefix will be "ITSI, unless we are using and itsi theme"
       @prefix = (APP_CONFIG[:theme] && APP_CONFIG[:theme] =~ /itsi/i) ? "" : "ITSI: "
-      require 'hpricot'
       raise "need an 'itsi' specification in database.yml to run this task" unless ActiveRecord::Base.configurations['itsi']
       ITSIDIY_URL = ActiveRecord::Base.configurations['itsi']['asset_url']
     end

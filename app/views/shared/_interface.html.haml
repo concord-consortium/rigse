@@ -4,7 +4,7 @@
 %p
   %span.SectionTitle
     Interface:
-  %= interface.select(:vendor_interface_id,  Probe::VendorInterface.find(:all).map { |i| [i.name, i.id] }
+  %= interface.select(:vendor_interface_id,  Probe::VendorInterface.all.map { |i| [i.name, i.id] }
 %br
 %= observe_field 'user_vendor_interface_id', :update => 'interface_description', :before => "Element.show('spinner')", :complete => "Element.hide('spinner')", :with => "'vendor_interface=' + escape(value)", :url => { :action => "vendor_interface"}, :method => :get
 %p

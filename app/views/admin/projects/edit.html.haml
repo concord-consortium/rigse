@@ -1,2 +1,2 @@
-- form_for(@admin_project, :before => "tinyMCE.triggerSave(true,true)") do |f|
+= form_for(@admin_project, :before => "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => 'form', :locals => { :admin_project => @admin_project, :f => f }

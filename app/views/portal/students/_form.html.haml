@@ -1,7 +1,7 @@
-- form_for portal_student do |f|
+= form_for portal_student do |f|
   = error_messages_for 'user'
   = error_messages_for 'portal_student', :object_name => 'student'
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     .aligned
       %ul
         %li
@@ -16,7 +16,7 @@
           %li 
             = label_tag :portal_student, 'grade level: ', :class=>"right" 
             = f.collection_select(:grade_level_id, (current_user.portal_teacher ? current_user.portal_teacher.schools.collect{|s| s.grade_levels}.flatten.uniq : []), :id, :name, options ={:prompt => "-Select a grade level"}, :class =>"string")
-  - field_set_tag 'password' do
+  = field_set_tag 'password' do
     .aligned
       %ul
         %li

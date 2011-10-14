@@ -12,7 +12,9 @@ class Password < ActiveRecord::Base
 
   protected
   
-  def before_create
+  before_create :initialize_reset_code_and_expiration
+  
+  def initialize_reset_code_and_expiration
     self.reset_code = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join )
     self.expiration_date = 2.weeks.from_now
   end

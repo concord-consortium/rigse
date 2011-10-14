@@ -1,6 +1,6 @@
 = render :partial => 'sections/show', :locals => {:teacher_mode => teacher_mode}, :collection => activity.sections, :as => :section
 
-- content_for("activity_#{dom_id_for(activity)}".to_sym) do
+- content_for dom_id_for(activity, :activity) do
   %OTRITESContainer{ :leftPanelWidth => activity.left_nav_panel_width }
     %title
       %OTCompoundDoc
@@ -24,7 +24,7 @@
         %cards
           - activity.sections.each do |section|
             - unless ((for_teacher_only?(section)) && (!teacher_mode))
-              =yield "section_#{dom_id_for(section)}".to_sym
+              = content_for dom_id_for(section, :section)
         %currentCard
           - if activity.sections.first
             - unless ((for_teacher_only?(activity.sections.first)) && (!teacher_mode))

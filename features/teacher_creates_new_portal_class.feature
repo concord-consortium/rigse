@@ -10,6 +10,7 @@ Feature: Teacher creates new portal class
       | login   | password |
       | teacher | teacher  |
     And I login with username: teacher password: teacher
+    And grade levels for classes is enabled
 
   Scenario: Class words are stored as lowercase
     Given I am on the clazz create page

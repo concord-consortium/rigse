@@ -29,15 +29,6 @@ class Embeddable::DataTablesController < ApplicationController
     end
   end
 
-  # GET /Embeddable/data_tables/1/print
-  def print
-    @data_table = Embeddable::DataTable.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @data_table }
-    end
-  end
-
   # GET /Embeddable/data_tables/new
   # GET /Embeddable/data_tables/new.xml
   def new

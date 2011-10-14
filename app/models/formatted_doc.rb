@@ -1,7 +1,7 @@
 class FormattedDoc
   
   def initialize(path)
-    @document_path = File.join(RAILS_ROOT, path)
+    @document_path = File.join(::Rails.root.to_s, path)
     @html = "<p>Technical document: <i><b>#{File.basename(@document_path)}</i></b> not found</p>"
     if File.exists?(@document_path)
       @last_changed = File.ctime(@document_path)

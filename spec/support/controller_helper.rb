@@ -1,5 +1,4 @@
 
-
 # In order to run the user specs the encrypted passwords
 # for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
 # need to be created with a REST_AUTH_SITE_KEY used for testing.
@@ -12,19 +11,23 @@ suppress_warnings { REST_AUTH_SITE_KEY = 'sitekeyforrunningtests' }
 # This modification allows stubing helper methods when using integrate views
 # the template object isn't ready until the render method is called, so this code
 # adds a hook to be run before render is run.
-class ApplicationController
-  def before_render; end
-  def render(options=nil, extra_options={}, &bloc)
-    before_render
-    super
-  end
 
-  # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
-  # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
-  # when rails copies the instance variables from the controller to view.  This copying happens
-  # sometime during the render method (after before_render)
-  @@protected_instance_variables = %w(@mock_proxy)
-end
+# this commented out because it was breaking cucumber spork runs
+# this ApplicationController definition was loaded before the main one so then
+# the application controller wasn't extending ActionController::Base
+# class ApplicationController
+#   def before_render; end
+#   def render(options=nil, extra_options={}, &bloc)
+#     before_render
+#     super
+#   end
+# 
+#   # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
+#   # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
+#   # when rails copies the instance variables from the controller to view.  This copying happens
+#   # sometime during the render method (after before_render)
+#   @@protected_instance_variables = %w(@mock_proxy)
+# end
 
 #
 # Factory Generators
@@ -56,14 +59,15 @@ def generate_default_project_and_jnlps_with_factories
 end
 
 def generate_default_users_with_factories
-  @anon_user =  User.anonymous
+  @anon_user =  Factory.next :anonymous_user
   @admin_user = Factory.next :admin_user
 end
 
 def generate_default_school_resources_with_factories
   @portal_school = Factory(:portal_school)
   @portal_district = @portal_school.district
-  @portal_grade = Factory(:portal_grade)
+  @portal_grade_level = Factory(:portal_grade_level)
+  @portal_grade = @portal_grade_level.grade
   @rigse_domain = Factory(:rigse_domain)
 end
 
@@ -167,7 +171,9 @@ def generate_default_project_and_jnlps_with_mocks
     :enable_default_users  => APP_CONFIG[:enable_default_users],
     :states_and_provinces  => APP_CONFIG[:states_and_provinces],
     :maven_jnlp_server => @mock_maven_jnlp_server,
-    :maven_jnlp_family => @mock_maven_jnlp_family)
+    :maven_jnlp_family => @mock_maven_jnlp_family,
+    :using_custom_css? => false,
+    :use_bitmap_snapshots? => false)
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
@@ -175,6 +181,10 @@ def generate_default_project_and_jnlps_with_mocks
   mock_anonymous_user
   mock_admin_user
   mock_researcher_user
+  
+  # we have to do this because we can't easily stub helper methods so instead we are stubbing one level lower
+  mock_jnlp_adapter = JnlpAdaptor.new(@mock_project)
+  JnlpAdaptor.stub(:new).and_return(mock_jnlp_adapter)
   @mock_project
 end
 
@@ -345,3 +355,9 @@ def will_paginate_params(opts = {})
   { :limit => opts[:limit] || 30, :offset => opts[:offset] || 0, :include=>opts[:include] || {} }
 end
 
+def xml_http_html_request(request_method, action, parameters = nil, session = nil, flash = nil)
+  # set the request type so the response type is set tot html by rails
+  # otherwise the testing code tries to handle the response as javascript
+  request.env['HTTP_ACCEPT'] = Mime::HTML
+  xml_http_request request_method, action, parameters, session, flash
+end

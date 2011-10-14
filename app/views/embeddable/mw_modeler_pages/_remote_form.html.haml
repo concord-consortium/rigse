@@ -1,2 +1,2 @@
-- remote_form_for(mw_modeler_page, :update => dom_id_for(mw_modeler_page, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(mw_modeler_page, :update => dom_id_for(mw_modeler_page, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = render :partial => "embeddable/mw_modeler_pages/form", :locals => { :mw_modeler_page => mw_modeler_page, :f => f  }

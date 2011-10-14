@@ -1,3 +1,4 @@
+require 'aasm'
 #
 #  Methods for containers that can be made public through some workflow
 #  (challenge will be defining this in a project agnostic way...)
@@ -8,7 +9,7 @@ module Publishable
   ##
   def self.included(clazz)
     ## add before_save hooks
-    clazz.class_eval {
+    clazz.class_eval do
       # use rubyist-aasm gem (acts_as_state_machine)
       # for publication status:
       # see: http://www.practicalecommerce.com/blogs/post/440-Acts-As-State-Machine-Is-Now-A-Gem
@@ -33,7 +34,7 @@ module Publishable
         transitions :to => :draft, :from => [:published]
       end
 
-      named_scope :published,
+      scope :published,
       {
         :conditions =>{:publication_status => "published"}
       }
@@ -52,6 +53,6 @@ module Publishable
       def public?
         return publication_status == 'published'
       end
-    }
+    end
   end
 end

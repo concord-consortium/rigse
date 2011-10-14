@@ -13,4 +13,4 @@
                 = h(Embeddable::NLogoModel.display_name + ': ' + @n_logo_model.name)
               %object{ :refid => ot_refid_for(@n_logo_model) }
       %library
-        =yield :layout
+        = content_for :layout

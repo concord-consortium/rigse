@@ -1,7 +1,7 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::TeachersController do
-  integrate_views
+  render_views
   
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
@@ -64,9 +64,10 @@ describe Portal::TeachersController do
       
       assert_equal User.count(:all), current_user_count, "TeachersController#create erroneously created a User when given invalid POST data"
       assert_equal Portal::Teacher.count(:all), current_teacher_count, "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
-      assert_not_nil flash[:error]
+      #assert_not_nil flash.now[:error]
       assert_nil flash[:notice]
       @response.body.should include("must select a school")
+      @response.body.should include("Sorry")
     end
   end
   

@@ -15,5 +15,4 @@ class Probe::DataFilter < ActiveRecord::Base
       @@searchable_attributes
     end
   end
-
 end

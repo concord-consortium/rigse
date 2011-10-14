@@ -24,11 +24,11 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
     end
 
     def jnlp_object_cache_dir
-      File.join(RAILS_ROOT, 'config', 'jnlp_objects')
+      File.join(::Rails.root.to_s, 'config', 'jnlp_objects')
     end
 
     def jnlp_cache_dir
-      File.join(RAILS_ROOT, 'public', 'jnlp')
+      File.join(::Rails.root.to_s, 'public', 'jnlp')
     end
 
     def delete_all_cached_jnlp_objects
@@ -147,7 +147,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
 
   def update_jnlp_object
-    @jnlp_object = Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
+    @jnlp_object = ::Jnlp::Jnlp.new(self.versioned_jnlp_url.url)
     @jnlp_object.local_cache_dir = MavenJnlp::VersionedJnlp.jnlp_object_cache_dir
     save_jnlp_object
   end
@@ -161,7 +161,7 @@ class MavenJnlp::VersionedJnlp < ActiveRecord::Base
   end
 
   def jnlp_object_path
-    "#{self.jnlp_object_path_prefix}_#{id}.yaml"
+    "#{self.jnlp_object_path_prefix}_#{self.versioned_jnlp_url.version_str}.yml"
   end
 
   def parse_jnlp_object

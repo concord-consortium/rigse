@@ -1,15 +1,15 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe Embeddable::Biologica::StaticOrganismsController do
 
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_static_organism
-    with_tag('OTStaticOrganism') do
-      with_tag('organism') do
-        with_tag('OTOrganism') do
-          with_tag('world') do
-            with_tag('OTWorld')
+    assert_select('OTStaticOrganism') do
+      assert_select('organism') do
+        assert_select('OTOrganism') do
+          assert_select('world') do
+            assert_select('OTWorld')
           end
         end
       end

@@ -1,15 +1,17 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111004190149) do
+ActiveRecord::Schema.define(:version => 20110921013947) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -60,6 +62,16 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
     t.text     "rpc_admin_email"
     t.text     "rpc_admin_password"
     t.text     "word_press_url"
+    t.boolean  "teachers_can_author",                          :default => true
+    t.boolean  "opportunistic_installer",                      :default => false
+    t.boolean  "enable_member_registration",                   :default => false
+  end
+
+  create_table "admin_tags", :force => true do |t|
+    t.string   "scope"
+    t.string   "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "attached_files", :force => true do |t|
@@ -223,10 +235,8 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
   end
 
   create_table "embeddable_biologica_chromosome_zooms_organisms", :id => false, :force => true do |t|
-    t.integer  "chromosome_zoom_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "chromosome_zoom_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_chromosomes", :force => true do |t|
@@ -374,6 +384,7 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
     t.float    "time_limit_seconds"
     t.integer  "data_table_id"
     t.boolean  "is_digital_display",                       :default => false
+    t.integer  "dd_font_size"
   end
 
   create_table "embeddable_data_tables", :force => true do |t|
@@ -547,10 +558,13 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
 
   create_table "embeddable_sound_graphers", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",       :limit => 36
+    t.string   "uuid",            :limit => 36
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "max_frequency"
+    t.string   "max_sample_time"
+    t.string   "display_mode"
   end
 
   create_table "embeddable_video_players", :force => true do |t|
@@ -583,9 +597,12 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
     t.string   "publication_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "offerings_count",    :default => 0
+    t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
     t.string   "report_url"
+    t.boolean  "append_learner_id_to_url"
+    t.boolean  "popup"
+    t.boolean  "append_survey_monkey_uid"
   end
 
   add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
@@ -2087,6 +2104,23 @@ ActiveRecord::Schema.define(:version => 20111004190149) do
   end
 
   add_index "student_views", ["user_id", "viewable_id", "viewable_type"], :name => "index_student_views_on_user_id_and_viewable_id_and_viewable_type"
+
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "taggable_type"
+    t.string   "context"
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
 
   create_table "teacher_notes", :force => true do |t|
     t.text     "body"

@@ -32,9 +32,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Dataservice::BundleContent"
-    end
     
     def b64gzip_unpack(b64gzip_content)
       s = StringIO.new(B64::B64.decode(b64gzip_content))
@@ -45,6 +42,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
     def b64gzip_pack(content)
       gzip_string_io = StringIO.new()
       gzip = Zlib::GzipWriter.new(gzip_string_io)
+
+      # use a fixed modified time so b64gzip_pack always returns the same string with the same input
+      #  the gzip spec (http://www.gzip.org/zlib/rfc-gzip.html) says when gzipping a string mtime defaults to the current time
+      #  so if mtime isn't fixed then calls to this method will return different strings depending when it is called
+      gzip.mtime=1
       gzip.write(content)
       gzip.close
       gzip_string_io.rewind
@@ -187,8 +189,12 @@ class Dataservice::BundleContent < ActiveRecord::Base
     return nil
   end
   
+  def otml_empty?
+    !self.otml || self.otml.size <= 17
+  end
+  
   def extract_saveables
-    raise "BundleContent ##{self.id}: otml is empty!" unless self.otml && self.otml.size > 17 
+    raise "BundleContent ##{self.id}: otml is empty!" if otml_empty?
     extractor = Otrunk::ObjectExtractor.new(self.otml)
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)

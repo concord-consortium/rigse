@@ -13,4 +13,4 @@
                 = h(Embeddable::Biologica::BreedOffspring.display_name + ': ' + @biologica_breed_offspring.name)
               %object{ :refid => ot_refid_for(@biologica_breed_offspring) }
       %library
-        =yield :layout
+        = content_for :layout

@@ -7,8 +7,8 @@ class Portal::School < ActiveRecord::Base
   belongs_to :district, :class_name => "Portal::District", :foreign_key => "district_id"
   belongs_to :nces_school, :class_name => "Portal::Nces06School", :foreign_key => "nces_school_id"
 
-  has_many :courses, :class_name => "Portal::Course", :foreign_key => "school_id"
-  has_many :semesters, :class_name => "Portal::Semester", :foreign_key => "school_id"
+  has_many :courses, :dependent => :destroy, :class_name => "Portal::Course", :foreign_key => "school_id"
+  has_many :semesters, :dependent => :destroy, :class_name => "Portal::Semester", :foreign_key => "school_id"
 
   # has_many :grade_levels, :class_name => "Portal::GradeLevel", :foreign_key => "school_id"
 
@@ -36,10 +36,10 @@ class Portal::School < ActiveRecord::Base
   #
   
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
-  has_many :portal_teachers, :through => :members, :source => "teacher"
+  has_many :portal_teachers, :through => :members, :source => 'member', :source_type => "Portal::Teacher"
   alias :teachers :portal_teachers
-  named_scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
-  named_scope :virtual, { :conditions => 'nces_school_id is NULL' }  
+  scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
+  scope :virtual, { :conditions => 'nces_school_id is NULL' }  
 
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }
@@ -54,10 +54,6 @@ class Portal::School < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-
-    def display_name
-      "School"
     end
 
     ##
@@ -101,10 +97,13 @@ class Portal::School < ActiveRecord::Base
       found_instance = find(:first, :conditions=> {:nces_school_id => nces_school.id})
       unless found_instance
         attributes = {
-          :name => nces_school.SCHNAM,
-          :description => "imported from nces data",
-          :nces_school_id => nces_school.id,
-          :district => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
+          :name            => nces_school.capitalized_name,
+          :description     => nces_school.description,
+          :nces_school_id  => nces_school.id,
+          :state           => nces_school.MSTATE,
+          :ncessch         => nces_school.NCESSCH,
+          :zipcode         => nces_school.MZIP,
+          :district        => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
         }
         found_instance = create!(attributes)
       end

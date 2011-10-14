@@ -1,3 +1,6 @@
 - page.page_elements.each do |element|
+  - # FIXME if you copy an investigation and then visit Sections#show (i.e., click on one of its sections), several 
+  - # page_elements will have element.embeddable.nil? == true and therefore render_show_partial will attempt to render 
+  - # the (nonexistent) 'nil_show' partial
   %div{ :id => dom_id_for(element.embeddable, :item), :class => style_for_item(element) }
     = render_show_partial_for(element.embeddable)

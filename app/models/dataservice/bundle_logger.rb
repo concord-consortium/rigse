@@ -53,9 +53,6 @@ class Dataservice::BundleLogger < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Dataservice::BundleLogger"
-    end
   end
   
   # for the view system ...

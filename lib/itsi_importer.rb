@@ -378,7 +378,7 @@ class ItsiImporter
     end
 
     def process_textile_content(textile_content, split_last_paragraph=false)
-      doc = Hpricot(RedCloth.new(textile_content).to_html)
+      doc = Nokogiri(RedCloth.new(textile_content).to_html)
       # if imaages use paths relative to the itsidiy make the full
       (doc/"img[@src]").each do |img|
         if img[:src][0..6] == '/images'

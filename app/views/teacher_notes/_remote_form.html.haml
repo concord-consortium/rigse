@@ -1,2 +1,2 @@
-- remote_form_for(teacher_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)", :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
+= remote_form_for(teacher_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)", :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
   = render :partial => "teacher_notes/form", :locals => {:f => f, :teacher_note => teacher_note}

@@ -7,7 +7,7 @@ namespace :app do
     autoload :Highline, 'highline'
     
     def agree_check_in_development_mode
-      if RAILS_ENV == 'development'
+      if ::Rails.env == 'development'
         HighLine.new.agree("Accept defaults? (y/n) ")
       else
         true
@@ -413,9 +413,10 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     #   { "role"=>"admin", 
     #     "first_name"=>"Stephen", 
     #     "last_name"=>"Bannasch", 
+    #     "login" => "stephen",
     #     "email"=>"stephen.bannasch@gmail.com"}
     #   }
-    # File.open(File.join(RAILS_ROOT, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
+    # File.open(File.join(::Rails.root.to_s, %w{config additional_users.yml}), 'w') {|f| YAML.dump(additional_users, f)}
     # 
     # The additional users will be created but each one will need to go to the
     # forgot password link to actually get a working password:
@@ -425,18 +426,19 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
     desc "Create additional users from additional_users.yml file."
     task :create_additional_users => :environment do
       begin
-        path = File.join(RAILS_ROOT, %w{config additional_users.yml})
+        path = File.join(::Rails.root.to_s, %w{config additional_users.yml})
         additional_users = YAML::load(IO.read(path))
         puts "\nCreating additional users ...\n\n"
         pw = User.make_token
         additional_users.each do |user_config|
-          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['email']}"
+          puts "  #{user_config[1]['role']} #{user_config[0]}: #{user_config[1]['first_name']} #{user_config[1]['last_name']}, #{user_config[1]['login']}, #{user_config[1]['email']}"
           if u = User.find_by_email(user_config[1]['email'])
             puts "  *** user: #{u.name} already exists ...\n"
           else
             u = User.create(:login => user_config[0], 
               :first_name => user_config[1]['first_name'], 
               :last_name => user_config[1]['last_name'], 
+              :login => user_config[1]['login'], 
               :email => user_config[1]['email'], 
               :password => pw, 
               :password_confirmation => pw)
@@ -457,5 +459,15 @@ First creating admin user account for: #{APP_CONFIG[:admin_email]} from site par
       end
     end
 
+    desc "create an investigation to test all know probe_type / calibration combinations"
+    task "create_probe_testing_investigation" => :environment do
+      author_user = User.find_by_login("author")
+      if author_user
+        DefaultRunnable.recreate_sensor_testing_investigation_for_user(author_user)
+      else
+        puts "You must have created the default author user first"
+        puts "try running the default_users_roles task"
+      end
+    end
   end
 end

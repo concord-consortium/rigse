@@ -1,3 +1,3 @@
-- form_for(@<%= singular_name %>, :before => "tinyMCE.triggerSave(true,true)") do |f|
+= form_for(@<%= singular_name %>, :before => "tinyMCE.triggerSave(true,true)") do |f|
   .item
     = render :partial => 'form', :locals => { :<%= singular_name %> => @<%= singular_name %>, :f => f }

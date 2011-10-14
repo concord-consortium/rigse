@@ -3,6 +3,10 @@ Given /^I am not logged in$/ do
   # controller.current_user = User.anonymous
 end
 
+When /^I visit the route (.+)$/ do |path|
+  visit path
+end
+
 Then /^I should be redirected (.+)$/ do |named_route|
   response.should redirect_to(named_route)
 end

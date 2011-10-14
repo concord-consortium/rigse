@@ -89,31 +89,31 @@ class Investigation < ActiveRecord::Base
   # Investigation.with_gse.grade('9-11') == good
   # Investigation.grade('9-11') == bad
   #
-  named_scope :with_gse, {
+  scope :with_gse, {
     :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
   }
 
-  named_scope :domain, lambda { |domain_id|
+  scope :domain, lambda { |domain_id|
     {
       :conditions => ['ri_gse_knowledge_statements.domain_id = ?', domain_id]
     }
   }
 
-  named_scope :grade, lambda { |gs|
+  scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
     {
       :conditions => ['ri_gse_grade_span_expectations.grade_span LIKE ?', gs ]
     }
   }
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
     }
   }
 
-  named_scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| { :order => order } }
 
   include Changeable
   include Noteable # convenience methods for notes...
@@ -126,9 +126,6 @@ class Investigation < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      self.to_s
-    end
 
     def saveable_types
       [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]
@@ -207,7 +204,9 @@ class Investigation < ActiveRecord::Base
     self
   end
 
-  def after_save
+  after_save :add_author_role_to_use
+  
+  def add_author_role_to_use
     if self.user
       self.user.add_role('author')
     end

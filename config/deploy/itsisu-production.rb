@@ -2,14 +2,22 @@
 #  Application
 #############################################################
 
-set :deploy_to, "/web/production/itsisu_units"
+# TODO: keep the units server alive and happy.
+# dont deploy itsisu-production to it.
+# set :deploy_to, "/web/production/itsisu_units"
+# set :branch, "itsisu-units"
+
+set :deploy_to, "/web/portal"
 set :branch, "itsisu-production"
+
 
 #############################################################
 #  Servers
 #############################################################
 
-set :domain, "itsisu.units.concord.org"
+#set :domain, "itsisu.units.concord.org"
+set :domain, "ruby-vm5.concord.org"
+
 server domain, :app, :web
 role :db, domain, :primary => true
 # DISABLE SOME OF THE DESTRUCTIVE DB TASKS

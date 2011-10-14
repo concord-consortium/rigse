@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::ProjectsController do
 
@@ -15,7 +15,7 @@ describe Admin::ProjectsController do
 
   describe "GET index" do
     it "assigns all admin_projects as @admin_projects" do
-      Admin::Project.should_receive(:find).with(:all, hash_including(will_paginate_params)).and_return([mock_project])
+      Admin::Project.should_receive(:search).with(nil, nil, nil).and_return([mock_project])
       get :index
       assigns[:admin_projects].should == [mock_project]
     end
@@ -28,7 +28,7 @@ describe Admin::ProjectsController do
   end
 
   describe "GET index for managers" do
-    integrate_views
+    render_views
 
     it "only allows managers to edit the current project and only shows them the information they can change" do
       project = Factory.create(:admin_project)
@@ -92,7 +92,7 @@ describe Admin::ProjectsController do
   end
 
   describe "GET edit for managers" do
-    integrate_views
+    render_views
 
     it "renders the _form_for_managers partial" do
       project = Factory.create(:admin_project)
@@ -107,11 +107,11 @@ describe Admin::ProjectsController do
 
       assert_response :success
       assert_template :partial => "_form_for_managers"
+      
+      response.body.should have_selector("*[name='admin_project[home_page_content]']")
 
-      with_tag("*[name=?]", "admin_project[home_page_content]")
-
-      (project.attributes.keys - ["home_page_content"]).each do |attribute|
-        without_tag("*[name=?]", "admin_project[#{attribute}]")
+      (project.attributes.keys - ["home_page_content","custom_css"]).each do |attribute|
+        response.body.should_not have_selector("*[name='admin_project[#{attribute}]']")
       end
     end
   end

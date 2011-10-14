@@ -2,8 +2,9 @@
 #  Application
 #############################################################
 
+set :user, "deploy3"
 set :deploy_to, "/web/has.dev.concord.org"
-set :branch, "has-dev"
+set :branch, "has3-dev"
 
 #############################################################
 #  Servers

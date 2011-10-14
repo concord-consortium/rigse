@@ -1,3 +1,15 @@
 %div{:id => dom_id_for(sound_grapher, :details), :class => 'content'}
   = wrap_edit_link_around_content(sound_grapher, options={:complete => mce_init_string}) do
     = sound_grapher.name
+    %br
+    Display Mode:
+    = sound_grapher.display_mode
+    %br
+    Sample Time:
+    = sound_grapher.max_sample_time
+    ms
+    %br 
+    Max Frequency:
+    = sound_grapher.max_frequency
+    hz
+    %br

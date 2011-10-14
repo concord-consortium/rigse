@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe User do
   fixtures :users
@@ -37,7 +37,7 @@ describe User do
   it 'requires login' do
     lambda do
       u = create_user(:login => nil)
-      u.errors.on(:login).should_not be_nil
+      u.errors[:login].should_not be_nil
     end.should_not change(User, :count)
   end
 
@@ -47,7 +47,7 @@ describe User do
       it "'#{login_str}'" do
         lambda do
           u = create_user(:login => login_str)
-          u.errors.on(:login).should     be_nil
+          u.errors[:login].should == []
         end.should change(User, :count).by(1)
       end
     end
@@ -60,7 +60,7 @@ describe User do
       it "'#{login_str}'" do
         lambda do
           u = create_user(:login => login_str)
-          u.errors.on(:login).should_not be_nil
+          u.errors[:login].should_not be_nil
         end.should_not change(User, :count)
       end
     end
@@ -69,21 +69,21 @@ describe User do
   it 'requires password' do
     lambda do
       u = create_user(:password => nil)
-      u.errors.on(:password).should_not be_nil
+      u.errors[:password].should_not be_nil
     end.should_not change(User, :count)
   end
 
   it 'requires password confirmation' do
     lambda do
       u = create_user(:password_confirmation => nil)
-      u.errors.on(:password_confirmation).should_not be_nil
+      u.errors[:password_confirmation].should_not be_nil
     end.should_not change(User, :count)
   end
 
   it 'requires email' do
     lambda do
       u = create_user(:email => nil)
-      u.errors.on(:email).should_not be_nil
+      u.errors[:email].should_not be_nil
     end.should_not change(User, :count)
   end
 
@@ -96,7 +96,7 @@ describe User do
       it "'#{email_str}'" do
         lambda do
           u = create_user(:email => email_str)
-          u.errors.on(:email).should     be_nil
+          u.errors[:email].should == []
         end.should change(User, :count).by(1)
       end
     end
@@ -107,12 +107,15 @@ describe User do
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
-     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'tick\'@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
+     # Update: just saw a tick in the wild, modified validations
+     # see commit: 1e9d396b0     
+     # 'tick\'@gmail.com' now allowed.
+     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
     ].each do |email_str|
       it "'#{email_str}'" do
         lambda do
           u = create_user(:email => email_str)
-          u.errors.on(:email).should_not be_nil
+          u.errors[:email].should_not be_nil
         end.should_not change(User, :count)
       end
     end
@@ -125,7 +128,7 @@ describe User do
       it "'#{name_str}'" do
         lambda do
           u = create_user(:first_name => name_str)
-          u.errors.on(:first_name).should     be_nil
+          u.errors[:first_name].should == []
         end.should change(User, :count).by(1)
       end
     end
@@ -136,7 +139,7 @@ describe User do
       it "'#{name_str}'" do
         lambda do
           u = create_user(:first_name => name_str)
-          u.errors.on(:first_name).should_not be_nil
+          u.errors[:first_name].should_not be_nil
         end.should_not change(User, :count)
       end
     end

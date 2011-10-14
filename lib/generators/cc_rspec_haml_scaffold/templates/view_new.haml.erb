@@ -2,7 +2,7 @@
 
 = error_messages_for :<%= singular_name %> 
 
-- form_for(<%= form_link_for(table_name, singular_name) %>) do |f| 
+= form_for(<%= form_link_for(table_name, singular_name) %>) do |f| 
 <% for attribute in displayable_attributes -%>
   %p
     %b <%= attribute.column.human_name %>

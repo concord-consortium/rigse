@@ -19,11 +19,11 @@ class User < ActiveRecord::Base
   has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
   has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
-  named_scope :active, { :conditions => { :state => 'active' } }
-  named_scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
-  named_scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
-  named_scope :default, { :conditions => { :default_user => true } }
-  named_scope :with_role, lambda { | role_name |
+  scope :active, { :conditions => { :state => 'active' } }
+  scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
+  scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
+  scope :default, { :conditions => { :default_user => true } }
+  scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
   }
   has_settings
@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
+  validates_presence_of     :password, :on => :update, :if => :updating_password?
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
@@ -86,6 +87,8 @@ class User < ActiveRecord::Base
   has_one :portal_student, :class_name => "Portal::Student"
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
+
+  attr_accessor :updating_password
 
   acts_as_replicatable
 
@@ -141,7 +144,7 @@ class User < ActiveRecord::Base
   default_value_for :default_user, false
 
   # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
-  default_value_for :vendor_interface_id, 6
+  default_value_for :vendor_interface_id, 14
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
@@ -199,7 +202,7 @@ class User < ActiveRecord::Base
   end
 
   def set_role_ids(role_ids)
-    all_roles = Role.find(:all)
+    all_roles = Role.all
     all_roles.each do |role|
       if role_ids.find { |id| id.to_i == role.id }
         add_role(role.title)
@@ -279,6 +282,10 @@ class User < ActiveRecord::Base
       self.security_questions << q
       q.save
     end
+  end
+
+  def updating_password?
+    updating_password
   end
 
   protected

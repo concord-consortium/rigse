@@ -2,7 +2,7 @@ class RiGse::ExpectationStemsController < ApplicationController
   # GET /RiGse/expectation_stems
   # GET /RiGse/expectation_stems.xml
   def index
-    @expectation_stems = RiGse::ExpectationStem.find(:all)
+    @expectation_stems = RiGse::ExpectationStem.all
 
     respond_to do |format|
       format.html # index.html.erb

@@ -4,61 +4,58 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
-ENV["RAILS_ENV"] ||= "cucumber"
-require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
+require 'rubygems'
+require 'spork'
 
-require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
-require 'cucumber/rails/rspec'
-require 'cucumber/rails/world'
-require 'cucumber/rails/active_record'
-require 'cucumber/web/tableish'
+require 'spork/ext/ruby-debug'
 
-require 'capybara/rails'
-require 'capybara/cucumber'
-require 'capybara/session'
-require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+Spork.prefork do
+  require 'cucumber/rails'
 
-require 'email_spec'
-require 'email_spec/cucumber'
-require 'spec/stubs/cucumber'
+  require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+  require 'cucumber/rails/capybara/select_dates_and_times'
 
-# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-# order to ease the transition to Capybara we set the default here. If you'd
-# prefer to use XPath just remove this line and adjust any selectors in your
-# steps to use the XPath syntax.
-Capybara.default_selector = :css
+  require 'email_spec'
+  require 'email_spec/cucumber'
 
-# If you set this to false, any error raised from within your app will bubble 
-# up to your step definition and out to cucumber unless you catch it somewhere
-# on the way. You can make Rails rescue errors and render error pages on a
-# per-scenario basis by tagging a scenario or feature with the @allow-rescue tag.
-#
-# If you set this to true, Rails will rescue all errors and render error
-# pages, more or less in the same way your application would behave in the
-# default production environment. It's not recommended to do this for all
-# of your scenarios, as this makes it hard to discover errors in your application.
-ActionController::Base.allow_rescue = false
+  # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
+  # order to ease the transition to Capybara we set the default here. If you'd
+  # prefer to use XPath just remove this line and adjust any selectors in your
+  # steps to use the XPath syntax.
+  Capybara.default_selector = :css
+  
+  # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
+  # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
+  Capybara.default_wait_time = 5
 
-# If you set this to true, each scenario will run in a database transaction.
-# You can still turn off transactions on a per-scenario basis, simply tagging 
-# a feature or scenario with the @no-txn tag. If you are using Capybara,
-# tagging with @culerity or @javascript will also turn transactions off.
-#
-# If you set this to false, transactions will be off for all scenarios,
-# regardless of whether you use @no-txn or not.
-#
-# Beware that turning transactions off will leave data in your database 
-# after each scenario, which can lead to hard-to-debug failures in 
-# subsequent scenarios. If you do this, we recommend you create a Before
-# block that will explicitly put your database in a known state.
-Cucumber::Rails::World.use_transactional_fixtures = true
-
-# How to clean your database when transactions are turned off. See
-# http://github.com/bmabey/database_cleaner for more info.
-if defined?(ActiveRecord::Base)
+end
+ 
+Spork.each_run do
+  RailsPortal::Application.reload_routes!
+  require 'hirb'
+  Hirb.enable :pager=>false
+  Hirb.enable :formatter=>false
+  
+  # By default, any exception happening in your Rails application will bubble up
+  # to Cucumber so that your scenario will fail. This is a different from how 
+  # your application behaves in the production environment, where an error page will 
+  # be rendered instead.
+  #
+  # Sometimes we want to override this default behaviour and allow Rails to rescue
+  # exceptions and display an error page (just like when the app is running in production).
+  # Typical scenarios where you want to do this is when you test your error pages.
+  # There are two ways to allow Rails to rescue exceptions:
+  #
+  # 1) Tag your scenario (or feature) with @allow-rescue
+  #
+  # 2) Set the value below to true. Beware that doing this globally is not
+  # recommended as it will mask a lot of errors for you!
+  #
+  ActionController::Base.allow_rescue = false
+  
+  # Remove/comment out the lines below if your app doesn't have a database.
+  # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
   begin
-    require 'database_cleaner'
-    # require 'database_cleaner/cucumber'
     probe_tables = %w{
       probe_calibrations
       probe_datafilters
@@ -80,59 +77,36 @@ if defined?(ActiveRecord::Base)
       ri_gse_assessment_target_unifying_themes
     }
     DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
-  rescue LoadError => ignore_if_database_cleaner_not_present
-    puts "*** please install the gem database_cleaner"
+  rescue NameError
+    raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
   end
+  
+  APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
+
+  require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
+  require 'rspec/mocks'
+  require 'rspec/expectations'
+  
+  World(RSpec::Rails::Mocks)
+  World(RSpec::Mocks::ExampleMethods)
+  include RSpec::Mocks::Methods
+
+  # Make visible for testing
+  include AuthenticatedSystem
+  ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
+
+  # so we can use things like dom_id_for
+  include ApplicationHelper
+  
+  # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
+  # See the DatabaseCleaner documentation for details. Example:
+  #
+  #   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
+  #     DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
+  #   end
+  #
+  #   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
+  #     DatabaseCleaner.strategy = :transaction
+  #   end
+  #
 end
-
-APP_CONFIG[:theme] = 'default' #lots of tests seem to be broken if we try to use another theme
-
-# use factory girl:
-require 'factory_girl'
-Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each {|f| require f }
-
-require 'spec/support/controller_helper'
-
-# This code used to live in factories/zz_default_data.rb.
-# It boots the cucmber environement with a default project.
-# required by application_controller.rb
-# puts "Loading default data set required for application_controller.rb to run ...."
-# anon =  Factory.next :anonymous_user
-# admin = Factory.next :admin_user 
-# device_config = Factory.create(:probe_device_config)
-# school = Factory(:portal_school)
-# domain = Factory(:rigse_domain)
-# grade = Factory(:portal_grade)
-# puts "done."
-
-# Make visible for testing
-include AuthenticatedSystem
-ApplicationController.send(:public, :logged_in?, :current_user, :authorized?)
-
-# Cucumber Hooks: http://wiki.github.com/aslakhellesoy/cucumber/hooks
-# Mocking: http://groups.google.com/group/cukes/browse_thread/thread/522dc6323b2d34b9
-# Mocking: http://wiki.github.com/aslakhellesoy/cucumber/mocking-and-stubbing-with-cucumber
-Before do
-  # To get RSpec stubs and mocks working.
-  $rspec_mocks ||= Spec::Mocks::Space.new
-  # generate_default_project_and_jnlps_with_mocks
-  User.anonymous(true)
-end
-
-After do
-  begin
-    $rspec_mocks.verify_all
-  ensure
-    $rspec_mocks.reset_all
-  end
-end
-
-# this is to add backwards compatibility so the cucumber-rails code works with our current version
-# of capybara.  A better solution is to upgrade cucumber-rails but currently it doesn't support
-# our version of rails (2.3.11)
-class Capybara::Driver::RackTest::Node
-  def node
-    native
-  end
-end
-

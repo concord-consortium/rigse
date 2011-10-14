@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 class ClassWithAppSettings
    include AppSettings
@@ -8,9 +8,9 @@ describe "A class with the AppSettings module included" do
   
   before(:each) do
     @class_with_app_settings = ClassWithAppSettings.new
-    @settings_with_symbol_keys_path = "#{RAILS_ROOT}/spec/fixtures/settings_with_symbol_keys.yml"
-    @settings_with_string_keys_path = "#{RAILS_ROOT}/spec/fixtures/settings_with_string_keys.yml"
-    @settings_with_mixed_keys_path = "#{RAILS_ROOT}/spec/fixtures/settings_with_mixed_keys.yml"
+    @settings_with_symbol_keys_path = "#{::Rails.root.to_s}/spec/fixtures/settings_with_symbol_keys.yml"
+    @settings_with_string_keys_path = "#{::Rails.root.to_s}/spec/fixtures/settings_with_string_keys.yml"
+    @settings_with_mixed_keys_path = "#{::Rails.root.to_s}/spec/fixtures/settings_with_mixed_keys.yml"
   end
   
   describe "ClassWithAppSettings#load_and_symbolize_settings" do

@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe SessionsController do
 
   fixtures        :users
@@ -18,6 +17,7 @@ describe SessionsController do
     @user  = mock_user
     @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
+    controller.stub!(:cookies).and_return(@login_params)
   end
   
   describe "on successful login," do
@@ -65,7 +65,7 @@ describe SessionsController do
 
             it "greets me nicely"            do 
               do_create
-              response.flash[:notice].should =~ /success/i   
+              request.flash[:notice].should =~ /success/i   
             end
 
             it "sets/resets/expires cookie"  do 
@@ -141,7 +141,7 @@ describe SessionsController do
     end
       
     it "should not check for security questions if the user is not a student" do
-      @controller.stub!(:cookies).and_return({})
+      #@controller.stub!(:cookies).and_return({})
       @user.stub!(:remember_me) 
       @user.stub!(:refresh_token) 
       @user.stub!(:forget_me)
@@ -227,7 +227,7 @@ describe SessionsController do
     end
 
     it "doesn't log me in"          do
-      pending "Broken example"
+      # pending "Broken example"
       do_create
       controller.send(:logged_in?).should == false
     end
@@ -235,7 +235,7 @@ describe SessionsController do
     it "doesn't send password back" do
       @login_params[:password] = 'FROBNOZZ'
       do_create
-      response.should_not have_text(/FROBNOZZ/i)
+      response.should_not == /FROBNOZZ/i
     end
   end
 
@@ -262,39 +262,34 @@ end
 describe SessionsController do
   describe "route generation" do
     it "should route the new sessions action correctly" do
-      route_for(:controller => 'sessions', :action => 'new').should == "/login"
+      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
     end
     it "should route the create sessions correctly" do
-      route_for(:controller => 'sessions', :action => 'create').should == {:path => "/session", :method => :post}
+      { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
     end
     it "should route the destroy sessions action correctly" do
-      route_for(:controller => 'sessions', :action => 'destroy').should == "/logout"
+      { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   
   describe "route recognition" do
     it "should generate params from GET /login correctly" do
-      params_from(:get, '/login').should == {:controller => 'sessions', :action => 'new'}
+      { :get => "/login" }.should route_to(:controller => "sessions", :action => "new")
     end
     it "should generate params from POST /session correctly" do
-      params_from(:post, '/session').should == {:controller => 'sessions', :action => 'create'}
+      { :post => "/session" }.should route_to(:controller => "sessions", :action => "create")
     end
     it "should generate params from DELETE /session correctly" do
-      params_from(:delete, '/logout').should == {:controller => 'sessions', :action => 'destroy'}
+      { :get => "/logout" }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   
   describe "named routing" do
-    before(:each) do
-      #get :new #FIXME: error
+    it "should route login_path() correctly" do
+      { :get => login_path }.should route_to(:controller => "sessions", :action => "new")
     end
-    it "should route session_path() correctly" do
-      pending "Broken example"
-      session_path().should == "/session"
-    end
-    it "should route new_session_path() correctly" do
-      pending "Broken example"
-      new_session_path().should == "/session/new"
+    it "should route logout_path() correctly" do
+      { :get => logout_path }.should route_to(:controller => "sessions", :action => "destroy")
     end
   end
   

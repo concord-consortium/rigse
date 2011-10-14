@@ -13,4 +13,4 @@
                 = <%= class_name %>.display_name + ': ' + @<%= singular_name %>.name
               %object{ :refid => ot_refid_for(@<%= singular_name %>) }
       %library
-        =yield :layout
+        = content_for :layout

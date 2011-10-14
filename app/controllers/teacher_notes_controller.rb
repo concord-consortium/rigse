@@ -15,7 +15,7 @@ class TeacherNotesController < ApplicationController
   public
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @teacher_note = TeacherNote.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @teacher_note = TeacherNote.find(params[:id])

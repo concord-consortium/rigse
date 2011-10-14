@@ -13,4 +13,4 @@
                 = h(Embeddable::Biologica::World.display_name + ': ' + @biologica_world.name)
               %object{ :refid => ot_refid_for(@biologica_world) }
       %library
-        =yield :layout
+        = content_for :layout

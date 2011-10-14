@@ -1,4 +1,6 @@
-- display_name = "#{portal_school.name} active classes: #{portal_school.clazzes.active.length}"
+- display_name = "#{portal_school.name}"
+- if local_assigns[:show_classes]
+  - display_name += " active classes: #{portal_school.clazzes.active.length}"
 - options = { :hide_componenent_name => true, :display_name => display_name }
 = accordion_for(portal_school, show_menu_for(portal_school, options)) do
   %div{:id => dom_id_for(portal_school, :item), :class => 'item'}
@@ -6,6 +8,7 @@
       = wrap_edit_link_around_content(portal_school, options={:complete => mce_init_string}) do
         %h4= h(portal_school.name)
         %p= h(portal_school.description)
-        = render :partial => 'shared/classes_for_school', :locals => { :portal_clazzes => portal_school.clazzes.active } 
-        
+        - if local_assigns[:show_classes]
+          = render :partial => 'shared/classes_for_school', :locals => { :portal_clazzes => portal_school.clazzes.active }
+
 

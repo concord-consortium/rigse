@@ -1,6 +1,6 @@
 
 .page
-  -unless defined? hide_title
+  -unless local_assigns[:hide_title]
     %h4=page.section ? "#{page.activity.name} : #{page.section.name} : #{page.name}" : page.name
   .page_content
     - page.page_elements.each do |element|

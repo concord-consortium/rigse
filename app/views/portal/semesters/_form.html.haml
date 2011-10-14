@@ -1,7 +1,7 @@
-- form_for @semester do |f|
-  - field_set_tag 'name' do
+= form_for @semester do |f|
+  = field_set_tag 'name' do
     = f.text_field :name
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description
 
   = f.submit 'Create it '

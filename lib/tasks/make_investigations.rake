@@ -7,7 +7,6 @@ namespace :app do
     #
     desc 'wrap orphaned activities in a parent investigation'
     task :investigations => :environment do
-      require 'hpricot'
       puts "Creating parent investiations for activities without a parent."
       ParentInvestigation.parent_activities # see lib/parent_investigations.rb
     end

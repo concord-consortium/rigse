@@ -11,7 +11,7 @@ Feature: External Activities can be assigned as offerings
     And the following classes exist:
       | name     | teacher |
       | My Class | teacher |
-    And the following investigation exists:
+    And the following simple investigations exist:
       | name               | user    |
       | Test Investigation | teacher |
     And the investigation "Test Investigation" is published

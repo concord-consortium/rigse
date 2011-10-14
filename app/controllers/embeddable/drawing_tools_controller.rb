@@ -28,15 +28,6 @@ class Embeddable::DrawingToolsController < ApplicationController
     end
   end
 
-  # GET /Embeddable/drawing_tools/1/print
-  def print
-    @drawing_tool = Embeddable::DrawingTool.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @drawing_tool }
-    end
-  end
-
   # GET /Embeddable/drawing_tools/new
   # GET /Embeddable/drawing_tools/new.xml
   def new

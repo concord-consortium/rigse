@@ -10,7 +10,7 @@
             /%li= link_to 'duplicate', duplicate_activity_url(activity)
             / %li= link_to 'edit', activity
             / %li.menu=toggle_more activity
-            %li.menu=link_to_remote 'delete', :confirm => "delete activity #{activity.name}?", :url => { :controller => 'investigations', :action => 'delete_activity', :params => {:id=>activity.investigation.id, :activity_id => activity.id}}, :html => {:class=>"delete"}
+            %li.menu=link_to_remote 'delete', :confirm => "delete activity #{activity.name}?", :url => { :controller => 'investigations', :action => 'delete_activity', :id=>activity.investigation.id, :activity_id => activity.id}, :html => {:class=>"delete"}
     %div{:id => dom_id_for(activity, :details), :class => 'content ', :style =>'display:block;'}
       = activity.description
       %ul.tiny

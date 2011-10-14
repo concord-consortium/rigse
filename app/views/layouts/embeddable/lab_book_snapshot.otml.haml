@@ -11,6 +11,6 @@
             #content
               %h3
                 = h(Embeddable::LabBookSnapshot.display_name + ': ' + @lab_book_snapshot.name)
-              %object{ :refid => ot_refid_for(@lab_book_snapshot) }
+              %object{ :refid => ot_refid_for(@lab_book_snapshot) }/
       %library
-        =yield :layout
+        = content_for :layout

@@ -6,7 +6,7 @@
     %OTSystem{:local_id => 'system'}
       =ot_bundles({:left_nav_panel_width => @activity.left_nav_panel_width, :title => h(@activity.name)})
       %root
-        =yield "activity_#{dom_id_for(@activity)}".to_sym
+        = content_for dom_id_for(@activity, :activity)
       %library
         %OTLabbook{:local_id =>'labbook'}/
-        =yield :library
+        = content_for :library

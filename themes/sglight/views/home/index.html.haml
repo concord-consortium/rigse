@@ -7,8 +7,8 @@
 - if @portal_student
   = render :partial => "student"
 
-= yield :authored_pages
+= content_for :authored_pages
 
 .padded_content
   - render_project_info
-  = yield :project_info
+  = content_for :project_info

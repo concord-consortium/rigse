@@ -1,6 +1,3 @@
-gem 'ar-extensions', '>= 0.9.1'
-require 'ar-extensions'
-
 class NcesParser
   
   def initialize(district_layout_file, school_layout_file, year, states_and_provinces=nil)
@@ -37,35 +34,39 @@ class NcesParser
     ## Delete all the entries first
     ## Use the TRUNCATE cammand -- works in mysql to effectively empty the database and reset 
     ## the autogenerating primary key index ... not certain about other databases
-    print "\nImporting School data "
-    if @states_and_provinces
-      puts "for the following states and provinces: #{@states_and_provinces.join(', ')}."
+    if @states_and_provinces && @states_and_provinces.empty?
+      print "\nNot importing any schools -- states_and_provinces is an empty array []"
     else
-      puts "for all states and provinces."
-    end
-    ActiveRecord::Base.connection.delete("TRUNCATE `#{@district_model.table_name}`")
-    ActiveRecord::Base.connection.delete("TRUNCATE `#{@school_model.table_name}`")
-    puts
-    puts "Loading district data:"
-    district_data_files.each do |fpath|
-      open(fpath) do |file|
-        _parse_file_using_import(file, @district_layout, @district_model)
+      print "\nImporting School data "
+      if @states_and_provinces
+        puts "for the following states and provinces: #{@states_and_provinces.join(', ')}."
+      else
+        puts "for all states and provinces ... this will take a while ..."
       end
-    end
-    puts "\n#{@district_model.count} #{@district_model.name} records created"
-    puts
-    puts "Loading school data:"
-    school_data_files.each do |fpath|
-      open(fpath) do |file|
-        _parse_file_using_import(file, @school_layout, @school_model)
+      ActiveRecord::Base.connection.delete("TRUNCATE `#{@district_model.table_name}`")
+      ActiveRecord::Base.connection.delete("TRUNCATE `#{@school_model.table_name}`")
+      puts
+      puts "Loading district data:"
+      district_data_files.each do |fpath|
+        open(fpath, "r:iso-8859-1") do |file|
+          _parse_file_using_import(file, @district_layout, @district_model)
+        end
       end
+      puts "\n#{@district_model.count} #{@district_model.name} records created"
+      puts
+      puts "Loading school data:"
+      school_data_files.each do |fpath|
+        open(fpath, "r:iso-8859-1") do |file|
+          _parse_file_using_import(file, @school_layout, @school_model)
+        end
+      end
+      puts "\n#{@school_model.count} #{@school_model.name} records created"
+      puts
+      puts "Generating #{@school_model.count} #{@school_model.name} 'belongs_to :nces_district' associations:"
+      # _parseDistrictSchoolAssociations
+      _parseDistrictSchoolAssociationWithIndex
+      puts
     end
-    puts "\n#{@school_model.count} #{@school_model.name} records created"
-    puts
-    puts "Generating #{@school_model.count} #{@school_model.name} 'belongs_to :nces_district' associations:"
-    # _parseDistrictSchoolAssociations
-    _parseDistrictSchoolAssociationWithIndex
-    puts
   end
 
 private
@@ -84,7 +85,7 @@ private
   
   def _get_school_layout(layout_file)
     columns = []
-    open(layout_file) do |file|
+    File.open(layout_file, "r:iso-8859-1") do |file|
       count = 0
       line = ''
       while (line = file.gets) && count < 2 do #fast forward until real data begins
@@ -127,7 +128,7 @@ private
 
   def _get_district_layout(layout_file)
     columns = []
-    open(layout_file) do |file|
+    File.open(layout_file, "r:iso-8859-1") do |file|
       count = 0
       line = ''
       while (line = file.gets) && count < 2 do #fast forward until real data begins
@@ -317,7 +318,7 @@ private
 
   def _get_file_path(migration_file_name)
     timestamp = Time.now.gmtime.strftime('%Y%m%d%H%M%S')
-    File.join(RAILS_ROOT, 'db', 'migrate', "#{timestamp}_#{migration_file_name}")
+    File.join(::Rails.root.to_s, 'db', 'migrate', "#{timestamp}_#{migration_file_name}")
   end
 
   def _getIndexesText
