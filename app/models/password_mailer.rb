@@ -1,5 +1,5 @@
 class PasswordMailer < ActionMailer::Base
-  default :from => "Admin <#{APP_CONFIG[:help_email]}"
+  default :from => "Admin <#{APP_CONFIG[:help_email]}>"
   
   def forgot_password(password)
     @user = password.user
