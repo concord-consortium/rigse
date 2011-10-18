@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "Admin <#{APP_CONFIG[:help_email]}"
+  default :from => "Admin <#{APP_CONFIG[:help_email]}>"
   
   def signup_notification(user)
     @url = "#{APP_CONFIG[:site_url]}/activate/#{user.activation_code}"
