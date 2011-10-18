@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921013947) do
+ActiveRecord::Schema.define(:version => 20111004190149) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -58,10 +58,6 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
     t.boolean  "enable_grade_levels",                          :default => false
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
-    t.text     "rpc_admin_login"
-    t.text     "rpc_admin_email"
-    t.text     "rpc_admin_password"
-    t.text     "word_press_url"
     t.boolean  "teachers_can_author",                          :default => true
     t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "enable_member_registration",                   :default => false
@@ -95,52 +91,6 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-  end
-
-  create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
-    t.text "hostname"
-    t.text "key"
-    t.text "value"
-    t.text "cast"
-  end
-
-  create_table "bj_job", :primary_key => "bj_job_id", :force => true do |t|
-    t.text     "command"
-    t.text     "state"
-    t.integer  "priority"
-    t.text     "tag"
-    t.integer  "is_restartable"
-    t.text     "submitter"
-    t.text     "runner"
-    t.integer  "pid"
-    t.datetime "submitted_at"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.text     "env"
-    t.text     "stdin"
-    t.text     "stdout"
-    t.text     "stderr"
-    t.integer  "exit_status"
-  end
-
-  create_table "bj_job_archive", :primary_key => "bj_job_archive_id", :force => true do |t|
-    t.text     "command"
-    t.text     "state"
-    t.integer  "priority"
-    t.text     "tag"
-    t.integer  "is_restartable"
-    t.text     "submitter"
-    t.text     "runner"
-    t.integer  "pid"
-    t.datetime "submitted_at"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.datetime "archived_at"
-    t.text     "env"
-    t.text     "stdin"
-    t.text     "stdout"
-    t.text     "stderr"
-    t.integer  "exit_status"
   end
 
   create_table "collaborations", :force => true do |t|
@@ -282,10 +232,8 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
   end
 
   create_table "embeddable_biologica_multiple_organisms_organisms", :id => false, :force => true do |t|
-    t.integer  "multiple_organism_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "multiple_organism_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_organisms", :force => true do |t|
@@ -304,10 +252,8 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
   end
 
   create_table "embeddable_biologica_organisms_pedigrees", :id => false, :force => true do |t|
-    t.integer  "pedigree_id"
-    t.integer  "organism_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "pedigree_id"
+    t.integer "organism_id"
   end
 
   create_table "embeddable_biologica_pedigrees", :force => true do |t|
@@ -899,10 +845,8 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
   add_index "portal_courses", ["school_id"], :name => "index_portal_courses_on_school_id"
 
   create_table "portal_courses_grade_levels", :id => false, :force => true do |t|
-    t.integer  "grade_level_id"
-    t.integer  "course_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "grade_level_id"
+    t.integer "course_id"
   end
 
   create_table "portal_districts", :force => true do |t|
@@ -931,10 +875,8 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
   end
 
   create_table "portal_grade_levels_teachers", :id => false, :force => true do |t|
-    t.integer  "grade_level_id"
-    t.integer  "teacher_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "grade_level_id"
+    t.integer "teacher_id"
   end
 
   create_table "portal_grades", :force => true do |t|
