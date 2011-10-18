@@ -72,7 +72,7 @@ class Reports::Account < Reports::Excel
     return [0, 'never'] unless user && user.respond_to?(:learners)
     bundle_loggers = user.learners.collect{|l| l.bundle_logger }
     user_runs = bundle_loggers.collect{|bl| bl.bundle_contents.size }.sum
-    user_last_run = bundle_loggers.collect{|bl| b = bl.bundle_contents.compact.last; b ? b.created_at : @@default_time }.sort.last
+    user_last_run = bundle_loggers.collect{|bl| b = bl.last_non_empty_bundle_content; b ? b.created_at : @@default_time }.sort.last
     user_last_run = "never" if user_last_run == @@default_time || user_last_run.nil?
     return [user_runs, user_last_run]
   end
