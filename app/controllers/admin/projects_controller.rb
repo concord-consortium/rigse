@@ -42,7 +42,9 @@ class Admin::ProjectsController < ApplicationController
     if @manager_role
       @admin_projects = [default_project].paginate
     else
-      @admin_projects = Admin::Project.search(params[:search], params[:page], nil)
+      # convert from ActiveRecord::Relation to a collection
+      # because delete bellow will remove from db otherwise
+      @admin_projects = Admin::Project.search(params[:search], params[:page], nil).to_a
     end
 
     # If default_project is in collection to be displayed then put it first.
