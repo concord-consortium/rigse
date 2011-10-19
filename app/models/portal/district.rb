@@ -73,6 +73,10 @@ class Portal::District < ActiveRecord::Base
       end
       found_instance
     end
+
+    def default
+      Portal::District.find_or_create_by_name('default')
+    end
     
   end
   
