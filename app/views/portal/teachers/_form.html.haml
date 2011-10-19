@@ -19,20 +19,17 @@
   = field_set_tag 'school' do
     .aligned
       %ul
-        %li
+        %li#school_choice
           = label_tag :school, 'School: ', :class=>"right"
           - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
           = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
-        -# dont select either grades or domains for teachers.
-          - if portal_grades.size > 0
-            %li
-              = label_tag :grade, 'Grade: ', :class=>"right"
-              = select_tag('grade[id]', options_for_select(portal_grades.map { |g| [g.name,g.id] }, default_grade_id ) )
-          - if domains.size > 0
-            %li
-              = label_tag :domain, 'Domain: ', :class=>"right"
-              = select_tag('domain[id]', options_for_select(domains.map { |d| [d.name, d.id] } ) )
-        
+          .tiny#show_write_in
+            I can't find my school here.
+        %li#school_write_in{:style => 'display: none;'}
+          = label_tag  :pending_school, 'School: ', :class => "right"
+          = text_field :school, :name, {:live => false }
+          .tiny#show_select
+            I want to look in the list again.
   = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
 
   .aligned
@@ -40,3 +37,21 @@
 
   :javascript
     new Chosen($('school_id'))
+  
+    var value = '';
+    var sel=null;
+    $('show_write_in').observe("click", function(e) {
+      $('school_choice').hide();
+      sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
+      $$('select#school_id option')[0].selected=true;
+      $('school_name').value = sel.text || value;
+      $('school_write_in').show();
+    });
+    $('show_select').observe("click", function(e) {
+      $('school_write_in').hide();
+      $('school_choice').show();
+      if (sel) { sel.selected=true; }
+      $('school_name').value ='';
+    });
+    
+
