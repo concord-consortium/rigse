@@ -101,4 +101,13 @@ module RunnablesHelper
       x_link_for(component, "run", as_name, params)
     end
   end
+
+  # TODO: think of a better way
+  def preview_list_link
+    if settings_for(:runnable_mime_type) =~ /sparks/i
+      return external_activities_path
+    end
+    return investigation_preview_list_path
+  end
+
 end
