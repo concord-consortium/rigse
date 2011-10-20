@@ -2,61 +2,58 @@
   = error_messages_for 'user'
   = error_messages_for 'portal_teacher', :object_name => 'teacher'
   = field_set_tag 'personal info' do
-    .aligned
-      %ul
-        %li
-          = label_tag :user, 'First Name: ', :class=>"right"
-          = text_field :user, :first_name, {:live => false}
-        
-        %li  
-          = label_tag :user, 'Last Name: ', :class=>"right"
-          = text_field :user, :last_name, {:live => false}
-        
-        %li
-          = label_tag :user, 'Email: ', :class=>"right"
-          = text_field :user, :email, {:live => false}
-  
-  = field_set_tag 'school' do
-    .aligned
+    %table.form
+      %tr
+        %td= label_tag :user, 'First Name: ', :class=>"right"
+        %td= text_field :user, :first_name, {:live => false}
+      
+      %tr  
+        %td= label_tag :user, 'Last Name: ', :class=>"right"
+        %td= text_field :user, :last_name, {:live => false}
+      
+      %tr
+        %td= label_tag :user, 'Email: ', :class=>"right"
+        %td= text_field :user, :email, {:live => false}
+
       - # conditionally allow for 'adhoc_school' entry
       - if settings_for(:allow_adhoc_schools)
-        %ul
-          %li#school_choice
-            = label_tag :school, 'School: ', :class=>"right"
-            = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
-            .tiny_help#show_write_in
-              I can't find my school in the list.
-          %li#school_write_in{:style => 'display: none;'}
-            = label_tag  :pending_school, 'School: ', :class => "right"
-            = text_field :school, :name, {:live => false }
-            .tiny_help#show_select
-              Show me the list again.
-        :javascript
-          new Chosen($('school_id'))
-          var value = '';
-          var sel=null;
-          $('show_write_in').observe("click", function(e) {
-            $('school_choice').hide();
-            sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
-            $$('select#school_id option')[0].selected=true;
-            $('school_name').value = sel.text || value;
-            $('school_write_in').show();
-          });
-          $('show_select').observe("click", function(e) {
-            $('school_write_in').hide();
-            $('school_choice').show();
-            if (sel) { sel.selected=true; }
-            $('school_name').value ='';
-          });
+        %tr
+          %td= label_tag :school, 'School: ', :class=>"right"
+          %td
+            #school_choice
+              = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
+              .tiny.help#show_write_in
+                I can't find my school in the list.
+            #school_write_in{:style => 'display: none;'}
+              = text_field :school, :name, {:live => false }
+              .tiny.help#show_select
+                Show me the list again.
+            :javascript
+              new Chosen($('school_id'))
+              var value = '';
+              var sel=null;
+              $('show_write_in').observe("click", function(e) {
+                $('school_choice').hide();
+                sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
+                $$('select#school_id option')[0].selected=true;
+                $('school_name').value = sel.text || value;
+                $('school_write_in').show();
+              });
+              $('show_select').observe("click", function(e) {
+                $('school_write_in').hide();
+                $('school_choice').show();
+                if (sel) { sel.selected=true; }
+                  $('school_name').value ='';
+              });
       - else
-        %ul
-          %li#school_choice
-            = label_tag :school, 'School: ', :class=>"right"
-            = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
+        %tr
+          %td= label_tag :school, 'School: ', :class=>"right"
+          %td= select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
         :javascript
           new Chosen($('school_id'))
-  = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
-
-  .aligned
-    = f.submit 'Submit'
+      = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+      %tr
+        %td
+        %td
+          = f.submit 'Submit'
 
