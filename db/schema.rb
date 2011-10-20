@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921013947) do
+ActiveRecord::Schema.define(:version => 20111004190149) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -545,11 +545,13 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
     t.datetime "updated_at"
     t.integer  "offerings_count",          :default => 0
     t.string   "save_path"
+    t.string   "report_url"
     t.boolean  "append_learner_id_to_url"
     t.boolean  "popup"
     t.boolean  "append_survey_monkey_uid"
   end
 
+  add_index "external_activities", ["report_url"], :name => "index_external_activities_on_report_url"
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
 
   create_table "external_user_domains", :force => true do |t|
@@ -793,8 +795,8 @@ ActiveRecord::Schema.define(:version => 20110921013947) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["position"], :name => "index_pages_on_position"

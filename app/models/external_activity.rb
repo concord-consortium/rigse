@@ -127,6 +127,10 @@ class ExternalActivity < ActiveRecord::Base
   def run_format
     :run_external_html
   end
+  
+  def report_format
+    :run_external_html
+  end
 
   private
 

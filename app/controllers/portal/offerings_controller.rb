@@ -150,14 +150,29 @@ class Portal::OfferingsController < ApplicationController
 
   def report
     @offering = Portal::Offering.find(params[:id])
-    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-    @learners = reportUtil.learners
-
-    @page_elements = reportUtil.page_elements
-
+    
     respond_to do |format|
-      format.html { render :layout => 'report' }# report.html.haml
+      format.html { 
+        reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
+        @learners = reportUtil.learners
+
+        @page_elements = reportUtil.page_elements
+        
+        render :layout => 'report' # report.html.haml
+      }
+      
+      format.run_external_html   {
+        @learners = @offering.clazz.students.map do |l|
+          "name: '#{l.name}', id: #{l.id}"
+        end
+        
+        cookies[:activity_name] = @offering.runnable.url
+        cookies[:class] = @offering.clazz.id
+        cookies[:class_students] = "[{" + @learners.join("},{") + "}]" # formatted for JSON parsing
+        redirect_to(@offering.runnable.report_url, 'popup' => true)
+       }
     end
+    
 
   end
 
