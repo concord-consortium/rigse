@@ -1,14 +1,11 @@
-= field_set_tag 'login info' do
-  .aligned  
-    %ul
-      %li
-        = label_tag :user, 'Login: ', :class=>"right"
-        = text_field :user, :login, {:live => false} 
+%tr
+  %td= label_tag :user, 'Login: '
+  %td= text_field :user, :login
 
-      %li
-        = label_tag :user, 'Password: ', :class=>"right"
-        = password_field :user, :password, {:live => false}
+%tr
+  %td= label_tag :user, 'Password: '
+  %td= password_field :user, :password
 
-      %li
-        = label_tag :user, 'Password again: ', :class=>"right"
-        = password_field :user, :password_confirmation, {:live => false}
+%tr
+  %td= label_tag :user, 'Password again: '
+  %td= password_field :user, :password_confirmation

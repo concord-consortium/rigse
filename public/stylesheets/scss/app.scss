@@ -78,7 +78,21 @@ ul, ol {
 table {
   border-collapse: collapse;
   margin: 1em 0; }
-
+  .form {
+    width: 100%;
+    text-align: left;
+    tr {
+      vertical-align: top;
+    }
+    td {
+      padding-top: 10px;
+      padding-left: 10px;
+    }
+    td:nth-child(odd) { 
+      width: 30%;
+      text-align: right; 
+    }
+  }
 body {
   background: {
     color: #fee9aa;
@@ -1012,7 +1026,10 @@ ul.quiet_list {
     margin-right: 5px; }
   p {
     margin: 0.2em; } }
-
+  .help {
+    font-weight: normal;
+    font-size: 0.75em;
+  }
 .data_collector {
   display: block;
   width: 100%;

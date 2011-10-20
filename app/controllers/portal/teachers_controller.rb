@@ -72,9 +72,19 @@ class Portal::TeachersController < ApplicationController
     end
     
     #if @user.errors.empty? && @portal_teacher.save
-    if @user.valid? && @portal_teacher.valid? && !portal_school.nil?
+    if @user.valid? && @portal_teacher.valid?
       if @user.register! && @portal_teacher.save
-      # will redirect:
+        if (portal_school.nil?)
+          name = params[:school][:name]
+          if name && name.strip.length > 0
+            name=name.strip
+            portal_school = Portal::School.find_or_create_by_similar_name(name,@user.email)
+            if portal_school && portal_school.valid?
+              @portal_teacher.schools << portal_school
+            end
+          end
+        end
+        # will redirect:
         successful_creation(@user)
         return
       end

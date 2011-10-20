@@ -1,6 +1,6 @@
 class ExternalActivitiesController < ApplicationController
 
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index, :preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
@@ -87,6 +87,15 @@ class ExternalActivitiesController < ApplicationController
         format.js
       end
     end
+  end
+  
+  def preview_index
+    page= params[:page] || 1
+    @activities = ExternalActivity.all.paginate(
+        :page => page || 1,
+        :per_page => params[:per_page] || 20,
+        :order => 'name')
+    render 'preview_index'
   end
   
   # GET /external_activities/1
