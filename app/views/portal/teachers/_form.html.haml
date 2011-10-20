@@ -16,7 +16,7 @@
         %td= text_field :user, :email, {:live => false}
 
       - # conditionally allow for 'adhoc_school' entry
-      - if settings_for(:allow_adhoc_schools)
+      - if current_project.allow_adhoc_schools?
         %tr
           %td= label_tag :school, 'School: ', :class=>"right"
           %td
@@ -29,7 +29,7 @@
               .tiny.help#show_select
                 Show me the list again.
             :javascript
-              new Chosen($('school_id'))
+              new Chosen($('school_id'));
               var value = '';
               var sel=null;
               $('show_write_in').observe("click", function(e) {
@@ -50,7 +50,7 @@
           %td= label_tag :school, 'School: ', :class=>"right"
           %td= select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
         :javascript
-          new Chosen($('school_id'))
+          new Chosen($('school_id'));
       = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
       %tr
         %td

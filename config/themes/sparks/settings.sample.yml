@@ -18,7 +18,6 @@ development: &id003
   :site_district: SPARKS-district
   :site_name: SPARKS Assessments (development)
   :site_url: http://localhost:3000
-  :allow_adhoc_chools: true
   :default_admin_user:
     :first_name: Seong
     :login: skim
