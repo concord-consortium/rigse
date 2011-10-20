@@ -421,6 +421,7 @@ RailsPortal::Application.routes.draw do
     end
   end
 
+  match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
   resources :external_activities do
     member do
       get :duplicate

@@ -1,0 +1,21 @@
+#offering_list.item_collection
+  .action_menu
+    .action_menu_header
+      .action_menu_header_left
+        - if @activities
+          %p= page_entries_info @activities, :model=>TOP_LEVEL_CONTAINER_NAME_PLURAL
+          %p.paginator
+            = will_paginate @activities
+      .action_menu_header_right
+        %ul.menu
+          -if current_user.has_role? "author"
+            %li= link_to "create #{TOP_LEVEL_CONTAINER_NAME}", new_activity_path
+
+  %ul.preview_list       
+    - for activity in @activities
+      %li{ :id => dom_id_for(activity), :class => cycle('odd', 'even') }
+        %span.activity_preview= run_link_for(activity, nil,:link_text => activity.name)
+        %br{:style => "clear: both;"}
+        %div.details.tiny
+          %span.description=activity.description
+          %span.author= "Created by #{activity.user.name}"
