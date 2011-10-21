@@ -71,12 +71,10 @@ class Portal::TeachersController < ApplicationController
 
     if (@user.valid?)
       if (portal_school && portal_school.new_record? && portal_school.valid?)
-        puts "making a school"
         portal_school.save
         portal_school.reload
       end
       @portal_teacher = Portal::Teacher.new do |t|
-        puts "making a teacher"
         t.user = @user
         t.domain = @domain
         t.schools << portal_school if !portal_school.nil?
