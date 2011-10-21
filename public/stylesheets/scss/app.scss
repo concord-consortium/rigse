@@ -1028,7 +1028,11 @@ ul.quiet_list {
     margin: 0.2em; } }
   .help {
     font-weight: normal;
-    font-size: 0.75em;
+    text-decoration: underline;
+    color: #57a19f;
+    // color: blue;
+    cursor: pointer;
+    font-size: 9pt;
   }
 .data_collector {
   display: block;
