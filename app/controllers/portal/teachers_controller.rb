@@ -44,6 +44,7 @@ class Portal::TeachersController < ApplicationController
 
   # POST /portal_teachers
   # POST /portal_teachers.xml
+  # TODO: move some of this into the teachers model.
   def create
     portal_school = Portal::School.find_by_id(params[:school][:id])
     
@@ -59,34 +60,31 @@ class Portal::TeachersController < ApplicationController
     load_domains_and_grades
 
     @user = User.new(params[:user])
-    #if @user && @user.valid?
-    #  @user.register!
-    #  @user.save
-    #end
-        
-    @portal_teacher = Portal::Teacher.new do |t|
-      t.user = @user
-      t.domain = @domain
-      t.schools << portal_school if !portal_school.nil?
-      t.grades << @portal_grade if !@portal_grade.nil?
+
+    unless portal_school
+      school_name = params[:school][:name]
+      unless (school_name.nil? || school_name.empty?)
+        # if current_project.allow_adhoc_schools
+        portal_school = Portal::School.find_by_similar_name_or_new(school_name,@user.email)
+      end
     end
-    
-    #if @user.errors.empty? && @portal_teacher.save
-    if @user.valid? && @portal_teacher.valid?
-      if @user.register! && @portal_teacher.save
-        if (portal_school.nil?)
-          name = params[:school][:name]
-          if name && name.strip.length > 0
-            name=name.strip
-            portal_school = Portal::School.find_or_create_by_similar_name(name,@user.email)
-            if portal_school && portal_school.valid?
-              @portal_teacher.schools << portal_school
-            end
-          end
-        end
+
+    if (@user.valid?)
+      if (portal_school && portal_school.new_record? && portal_school.valid?)
+        puts "making a school"
+        portal_school.save
+        portal_school.reload
+      end
+      @portal_teacher = Portal::Teacher.new do |t|
+        puts "making a teacher"
+        t.user = @user
+        t.domain = @domain
+        t.schools << portal_school if !portal_school.nil?
+        t.grades << @portal_grade if !@portal_grade.nil?
+      end
+      if portal_school && @user.register! && @portal_teacher.save
         # will redirect:
-        successful_creation(@user)
-        return
+        return successful_creation(@user)
       end
     end
 
@@ -94,7 +92,6 @@ class Portal::TeachersController < ApplicationController
     # will redirect:
     @user.errors.add(:you, "must select a school") if portal_school.nil?
     failed_creation
-    
   end
 
   # PUT /portal_teachers/1

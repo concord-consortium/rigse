@@ -39,7 +39,7 @@ describe Portal::TeachersController do
       assert_nil flash[:notice]
     end
     
-    it "should not allow the teacher not to select a school" do
+    it "should not force the teacher not to select a school" do
       params = {
         :user => {
           :first_name => "Test",
