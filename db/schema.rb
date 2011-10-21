@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111020194147) do
+ActiveRecord::Schema.define(:version => 20111021210946) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20111020194147) do
     t.boolean  "opportunistic_installer",                      :default => false
     t.boolean  "enable_member_registration",                   :default => false
     t.boolean  "allow_adhoc_schools",                          :default => false
+    t.boolean  "require_user_consent",                         :default => false
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -2142,6 +2143,8 @@ ActiveRecord::Schema.define(:version => 20111020194147) do
     t.boolean  "site_admin",                               :default => false
     t.string   "type"
     t.integer  "external_user_domain_id"
+    t.boolean  "of_consenting_age",                        :default => false
+    t.boolean  "have_consent",                             :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

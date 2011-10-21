@@ -36,6 +36,10 @@
           %td{:colspan => '2'}
             = render :partial => "security_questions/header"
             = render :partial => "security_questions/fields"
+
+    - if current_project.required_user_consent?
+      = render :partial => "shared/_consent_form.html.haml"
+
     %tr
       %td
       %td= f.submit 'Submit'
