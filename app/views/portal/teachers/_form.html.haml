@@ -27,23 +27,24 @@
             #school_write_in{:style => 'display: none;'}
               = text_field :school, :name, {:live => false }
               .tiny.help#show_select
-                Show me the list again.
+                Go back to the school list.
             :javascript
               new Chosen($('school_id'));
-              var value = '';
+              var value = 'Type your school name here';
               var sel=null;
               $('show_write_in').observe("click", function(e) {
                 $('school_choice').hide();
                 sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
                 $$('select#school_id option')[0].selected=true;
-                $('school_name').value = sel.text || value;
+                $('school_name').value = value;
                 $('school_write_in').show();
               });
               $('show_select').observe("click", function(e) {
                 $('school_write_in').hide();
                 $('school_choice').show();
                 if (sel) { sel.selected=true; }
-                  $('school_name').value ='';
+                value = $('school_name').value;
+                $('school_name').value ='';
               });
       - else
         %tr
