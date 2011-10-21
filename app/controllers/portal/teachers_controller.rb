@@ -74,16 +74,16 @@ class Portal::TeachersController < ApplicationController
         portal_school.save
         portal_school.reload
       end
-      @portal_teacher = Portal::Teacher.new do |t|
-        t.user = @user
-        t.domain = @domain
-        t.schools << portal_school if !portal_school.nil?
-        t.grades << @portal_grade if !@portal_grade.nil?
-      end
-      if portal_school && @user.register! && @portal_teacher.save
-        # will redirect:
-        return successful_creation(@user)
-      end
+    end
+    @portal_teacher = Portal::Teacher.new do |t|
+      t.user = @user
+      t.domain = @domain
+      t.schools << portal_school if !portal_school.nil?
+      t.grades << @portal_grade if !@portal_grade.nil?
+    end
+    if portal_school && @user.register! && @portal_teacher.save
+      # will redirect:
+      return successful_creation(@user)
     end
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
