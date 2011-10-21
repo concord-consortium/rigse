@@ -141,7 +141,12 @@ module JnlpHelper
   
   def jnlp_headers(runnable)
     response.headers["Content-Type"] = "application/x-java-jnlp-file"
-    response.headers["Cache-Control"] = "max-age=1"
+    
+    # we don't want the jnlp to be cached because it contains session information for the current user
+    # if a shared proxy caches it then multiple users will be loading and storing data in the same place
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     response.headers["Last-Modified"] = runnable.updated_at.httpdate
     filename = smoosh_file_name("#{APP_CONFIG[:site_name]} #{runnable.class.name} #{short_name(runnable.name)}")
     response.headers["Content-Disposition"] = "inline; filename=#{filename}.jnlp"
