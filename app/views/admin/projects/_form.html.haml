@@ -64,8 +64,8 @@
             (This option changes whether or not teachers can create schools)
           %li
             %b
-            = f.label :required_user_consent, "Require Users Consent:", :style => "display:inline;"
-            = f.check_box :required_user_consent
+            = f.label :require_user_consent, "Require Users Consent:", :style => "display:inline;"
+            = f.check_box :require_user_consent
             %br
             (This option changes whether or not users will be asked for consent to use their data)
       = field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do

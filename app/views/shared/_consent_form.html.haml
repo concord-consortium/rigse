@@ -1,23 +1,23 @@
 %p Welcome student!
 %p
   Thank you for registering to use the SPARKS (
-  %em S
+  %strong S
   imulations for
-  %em P
+  %strong P
   erformance
-  %em A
+  %strong A
   ssessments that
-  %em R
+  %strong R
   eport on
-  %em K
+  %strong K
   nowledge and
-  %em S
+  %strong S
   kills) modules. The SPARKS project is funded by the National
   Science Foundation and is designed to help students like you learn
   electronics by presenting realistic problems—similar to what you will
   see in the lab—simulated on a computer. As a registered student, you
   will receive
-  %em instant feedback and detailed reports
+  %strong instant feedback and detailed reports
   as you work to
   develop your electronic lab skills with the SPARKS modules.
 %p
@@ -27,7 +27,7 @@
   allowing us to gather data from you (your answers and computer logs)
   as you work through the modules. This is how we are able to show you
   reports of your work. However,
-  %em we would also like to use your data in our research
+  %strong we would also like to use your data in our research
   To do this, we require your consent. If you do agree to
   allow us to use your data, we will strip it of all identifying
   information, including your name. We will analyze your data, together
@@ -52,13 +52,27 @@
   entirely anonymous –  your name will be stripped off, along with all
   other features that might enable someone to identify you.
 %p
-  Please check YES below if you are willing to allow us to use your data
-  in our research. Check NO if you will not allow us to use your data.
+  Please check 
+  %strong 
+    YES 
+  below if you are willing to allow us to use your data
+  in our research. Check 
+  %strong 
+    NO 
+  if you will not allow us to use your data.
 %p
-  (radio buttons here)
+  =radio_button :user, :have_consent, "true"
+  %strong
+    YES
+  you may use my data in research.
+%p
+  =radio_button :user, :have_consent, "false"
+  %strong
+    NO
+  you many not use my data in research.
 %p
   We are interested to hear what you think about the SPARKS modules.
   There will be a link to provide feedback once you have logged into the
   Portal.
-  %em Good luck and have fun!
+  %strong Good luck and have fun!
 

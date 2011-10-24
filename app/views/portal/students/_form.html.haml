@@ -37,8 +37,10 @@
             = render :partial => "security_questions/header"
             = render :partial => "security_questions/fields"
 
-    - if current_project.required_user_consent?
-      = render :partial => "shared/_consent_form.html.haml"
+    - if current_project.require_user_consent?
+      %tr
+        %td{:colspan => '2', :style=> "text-align: left;"}
+          = render :partial => "shared/consent_form", :locals => {:form => f }
 
     %tr
       %td
