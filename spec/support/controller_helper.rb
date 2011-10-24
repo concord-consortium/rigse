@@ -162,19 +162,20 @@ def generate_default_project_and_jnlps_with_mocks
   server, family, version = Admin::Project.default_jnlp_info
   generate_jnlps_with_mocks
   @mock_project = mock_model(Admin::Project,
-    :name => project_name,
-    :url =>  project_url,
-    :home_page_content => nil,
+    :name                           => project_name,
+    :url                            => project_url,
+    :home_page_content              => nil,
     :use_student_security_questions => false,
-    :jnlp_version_str =>  version,
-    :snapshot_enabled => false,
-    :enable_default_users  => APP_CONFIG[:enable_default_users],
-    :states_and_provinces  => APP_CONFIG[:states_and_provinces],
-    :maven_jnlp_server => @mock_maven_jnlp_server,
-    :maven_jnlp_family => @mock_maven_jnlp_family,
-    :using_custom_css? => false,
-    :use_bitmap_snapshots? => false,
-    :allow_adhoc_schools? => false
+    :jnlp_version_str               => version,
+    :snapshot_enabled               => false,
+    :enable_default_users           => APP_CONFIG[:enable_default_users],
+    :states_and_provinces           => APP_CONFIG[:states_and_provinces],
+    :maven_jnlp_server              => @mock_maven_jnlp_server,
+    :maven_jnlp_family              => @mock_maven_jnlp_family,
+    :using_custom_css?              => false,
+    :use_bitmap_snapshots?          => false,
+    :allow_adhoc_schools?           => false,
+    :require_user_consent?          => false
   )
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
