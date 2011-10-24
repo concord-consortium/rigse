@@ -85,6 +85,17 @@
                   %b
                     No
                   (Teachers must choose their school from a list when registering.)
+              %li
+                Ask users to sign 
+                consent form:
+                - if admin_project.require_user_consent?
+                  %b
+                    Yes
+                  (Users will be asked for consent to use their data in reports.)
+                - else
+                  %b
+                    No
+                  (Users will not be asked for consent to use their data in reports.)
             = field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:
