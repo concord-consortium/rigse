@@ -81,7 +81,7 @@ class Portal::StudentsController < ApplicationController
       end
     end
 
-    if current_project.require_user_consent
+    if current_project.require_user_consent?
       unless params[:user][:of_consenting_age]
         errors << [:you, "must specify your age."]
       end
