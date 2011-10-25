@@ -81,6 +81,11 @@ class Portal::StudentsController < ApplicationController
       end
     end
 
+    if current_project.require_user_consent
+      unless params[:user][:of_consenting_age]
+        errors << [:you, "must specify your age."]
+      end
+    end
     # TODO: This creation logic should be reorganized a la Portal::Teachers, so orphan Users don't get
     # created and fill up the usernamespace if there's an error later in the process. -- Cantina-CMH 6/17/10
 
