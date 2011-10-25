@@ -81,9 +81,14 @@ class Portal::ClazzesController < ApplicationController
       okToCreate = false
     end
 
+    if current_user.anonymous?
+      flash[:error] = "Anonymous can't create classes. Please log in and try again."
+      okToCreate = false
+    end
+
     if okToCreate and Admin::Project.default_project.enable_grade_levels?
       grade_levels.each do |name, v|
-        grade = Portal::Grade.find_by_name(name)
+        grade = Portal::Grade.find_or_create_by_name(name)
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
@@ -93,10 +98,7 @@ class Portal::ClazzesController < ApplicationController
     end
 
     if okToCreate && !@portal_clazz.teacher
-      if current_user.anonymous?
-        flash[:error] = "Anonymous can't create classes. Please log in and try again."
-        okToCreate = false
-      elsif current_user.portal_teacher
+      if current_user.portal_teacher
         @portal_clazz.teacher_id = current_user.portal_teacher.id
         @portal_clazz.teacher = current_user.portal_teacher
       else
