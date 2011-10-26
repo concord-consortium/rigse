@@ -2,7 +2,7 @@ class RiGse::UnifyingThemesController < ApplicationController
   # GET /RiGse/unifying_themes
   # GET /RiGse/unifying_themes.xml
   def index
-    @unifying_themes = RiGse::UnifyingTheme.find(:all)
+    @unifying_themes = RiGse::UnifyingTheme.all
 
     respond_to do |format|
       format.html # index.html.erb

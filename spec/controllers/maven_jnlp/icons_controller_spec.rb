@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe MavenJnlp::IconsController do
 
@@ -14,7 +14,7 @@ describe MavenJnlp::IconsController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_icons as @maven_jnlp_icons" do
-      MavenJnlp::Icon.should_receive(:find).with(:all).and_return([mock_icon])
+      MavenJnlp::Icon.should_receive(:all).and_return([mock_icon])
       get :index
       assigns[:maven_jnlp_icons].should == [mock_icon]
     end
@@ -22,7 +22,7 @@ describe MavenJnlp::IconsController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_icons as xml" do
-        MavenJnlp::Icon.should_receive(:find).with(:all).and_return(icons = mock("Array of MavenJnlp::Icons"))
+        MavenJnlp::Icon.should_receive(:all).and_return(icons = mock("Array of MavenJnlp::Icons"))
         icons.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

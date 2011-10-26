@@ -21,9 +21,9 @@
     = javascript_tag mce_init_string
     - if protect_against_forgery?
       = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
-    - if (defined? @container_id) && @container_id
+    - if @container_id
       = javascript_tag "var container_id = #{@container_id};"
-    - if defined? @container_type && @container_type
+    - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
       
     
@@ -92,18 +92,18 @@
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}  
           - elsif @portal_student && (@portal_student.user == current_user)
             = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
-          = yield :side_bar
+          = content_for :side_bar
 
         #main_content.main_content_colors
           #content_header.main_content_colors
-            = yield :content_header
+            = content_for :content_header
           #js_flash{:style=>"display: none;"}
 
           #flash
             .padded_contents
               - flash.each_pair do |key, message|
                 %div{:class=>"flash flash_#{key}"}= message 
-          = yield :layout
+          = content_for :layout
 
       #footer
         .padded_content

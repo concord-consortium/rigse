@@ -1,13 +1,14 @@
 Feature: An author registers to use the portal
 
-  As a potential student
+  As a potential author
   I want to register
   In order to author content on the portal
 
   Background:
     Given The default project and jnlp resources exist using factories
+    And member registration is enabled
 
-  Scenario: Anaonymous user signs up as an author
+  Scenario: Anonymous user signs up as an author
     Given I am an anonymous user
     When I go to the pick signup page
     And I press "Sign up as a member"
@@ -52,3 +53,10 @@ Feature: An author registers to use the portal
 
     And I press "Sign up"
     Then I should see " Thanks for signing up!"
+    And I should not see "Sorry, there was an error creating your account"
+
+  Scenario: Anonymous user can't sign up as an author when member registration is disabled
+    Given I am an anonymous user
+    And member registration is disabled
+    When I go to the pick signup page
+    Then I should not see the button "Sign up as a member"

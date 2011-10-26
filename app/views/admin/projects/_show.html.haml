@@ -38,16 +38,76 @@
                   - else
                     disabled.
                 (This option will allow students to register without a class word.)
-            
-          - field_set_tag 'Maven Jnlp' do
-            %p
-              Maven Jnlp Server:
-              - if admin_project.maven_jnlp_server
-                = admin_project.maven_jnlp_server.name
-                %ul.menu_h
-                  -  maven_jnlp_info.each do |elem|
-                    %li= elem
-              - else
-                no server configured
-          - field_set_tag 'Project Description' do
-            %p= admin_project.description
+              %li
+                Grade Levels for Classes:
+                %b
+                  - if admin_project.enable_grade_levels?
+                    enabled.
+                  - else
+                    disabled.
+                (This option will allow teachers to select grade levels during class creation.)
+              %li
+                Use Bitmaps in Labbook Exclusively:
+                %b
+                  - if admin_project.use_bitmap_snapshots?
+                    Yes
+                  - else
+                    No
+                (This option insures that all labbook entries are treated like simple images.)
+              %li
+                Teachers can author:
+                - if admin_project.teachers_can_author?
+                  %b
+                    Yes
+                  (Teachers are considered authors by default.)
+                - else
+                  %b
+                    No
+                  (Teachers are not considered authors by default and can only author when given the "author" role.)
+              %li
+                Opportunistic Installer:
+                - if admin_project.opportunistic_installer?
+                  %b
+                    Yes
+                  (The installer launcher will automatically launch the non installer jnlp if no installation is found.)
+                - else
+                  %b
+                    No
+                  (The installer launcher will show the user a dialog and open the a page where the user can download the installer)
+                  
+              %li
+                Teachers can create schools:
+                - if admin_project.allow_adhoc_schools?
+                  %b
+                    Yes
+                  (Teachers can create their own schools when registering.)
+                - else
+                  %b
+                    No
+                  (Teachers must choose their school from a list when registering.)
+              %li
+                Ask users to sign 
+                consent form:
+                - if admin_project.require_user_consent?
+                  %b
+                    Yes
+                  (Users will be asked for consent to use their data in reports.)
+                - else
+                  %b
+                    No
+                  (Users will not be asked for consent to use their data in reports.)
+            = field_set_tag 'Maven Jnlp' do
+              %p
+                Maven Jnlp Server:
+                - if admin_project.maven_jnlp_server
+                  = admin_project.maven_jnlp_server.name
+                  %ul.menu_h
+                    -  maven_jnlp_info.each do |elem|
+                      %li= elem
+                - else
+                  no server configured
+            = field_set_tag 'Project Description' do
+              %p= admin_project.description
+            = field_set_tag 'Home Page Content' do
+              %p= admin_project.home_page_content.html_safe unless admin_project.home_page_content.nil?
+            = render :partial => 'custom_css', :locals => { :admin_project => admin_project }

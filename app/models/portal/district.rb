@@ -3,11 +3,11 @@ class Portal::District < ActiveRecord::Base
   
   acts_as_replicatable
   
-  has_many :schools, :class_name => "Portal::School", :foreign_key => "district_id", :order => "name"
+  has_many :schools, :dependent => :destroy, :class_name => "Portal::School", :foreign_key => "district_id", :order => "name"
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
   
-  named_scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools, :order => "name" }  
-  named_scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools, :order => "name" }  
+  scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools, :order => "name" }  
+  scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools, :order => "name" }  
   
   include Changeable
 
@@ -18,9 +18,6 @@ class Portal::District < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-    def display_name
-      "District"
     end
     
     ##
@@ -64,14 +61,21 @@ class Portal::District < ActiveRecord::Base
       found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
       unless found_instance
         attributes = {
-          :name => nces_district.NAME,
-          :description => "imported from nces data",
-          :nces_district_id => nces_district.id
+          :name             => nces_district.NAME,
+          :description      => "imported from nces data",
+          :nces_district_id => nces_district.id,
+          :state            => nces_district.LSTATE,
+          :leaid            => nces_district.LEAID,
+          :zipcode          => nces_district.LZIP
         }
         found_instance = self.create(attributes)
         found_instance.save!
       end
       found_instance
+    end
+
+    def default
+      Portal::District.find_or_create_by_name('default')
     end
     
   end

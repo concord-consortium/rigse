@@ -1,5 +1,5 @@
 .padded_content
   - render :partial => 'project_info'
   - render :partial => 'tech_info'
-  = yield :project_info
-  = yield :tech_info
+  = content_for :project_info
+  = content_for :tech_info

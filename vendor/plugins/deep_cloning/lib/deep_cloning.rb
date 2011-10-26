@@ -88,13 +88,13 @@ module DeepCloning
     
     if options[:except]
       Array(options[:except]).each do |attribute|
-        kopy.write_attribute(attribute, attributes_from_column_definition[attribute.to_s])
+        kopy.send(:write_attribute, attribute, attributes_from_column_definition[attribute.to_s])
       end
     end
     
     get_never_clone.each do |attribute|
       if kopy.query_attribute(attribute)
-        kopy.write_attribute(attribute, attributes_from_column_definition[attribute.to_s])
+        kopy.send(:write_attribute, attribute, attributes_from_column_definition[attribute.to_s])
       end
     end
     

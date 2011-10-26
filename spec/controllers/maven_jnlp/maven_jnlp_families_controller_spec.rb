@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe MavenJnlp::MavenJnlpFamiliesController do
 
@@ -15,7 +15,7 @@ describe MavenJnlp::MavenJnlpFamiliesController do
   describe "GET index" do
 
     it "exposes all maven_jnlp_maven_jnlp_families as @maven_jnlp_maven_jnlp_families" do
-      MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return([mock_maven_jnlp_family])
+      MavenJnlp::MavenJnlpFamily.should_receive(:all).and_return([mock_maven_jnlp_family])
       get :index
       assigns[:maven_jnlp_maven_jnlp_families].should == [mock_maven_jnlp_family]
     end
@@ -23,7 +23,7 @@ describe MavenJnlp::MavenJnlpFamiliesController do
     describe "with mime type of xml" do
   
       it "renders all maven_jnlp_maven_jnlp_families as xml" do
-        MavenJnlp::MavenJnlpFamily.should_receive(:find).with(:all).and_return(maven_jnlp_families = mock("Array of MavenJnlp::MavenJnlpFamilies"))
+        MavenJnlp::MavenJnlpFamily.should_receive(:all).and_return(maven_jnlp_families = mock("Array of MavenJnlp::MavenJnlpFamilies"))
         maven_jnlp_families.should_receive(:to_xml).and_return("generated XML")
         get :index, :format => 'xml'
         response.body.should == "generated XML"

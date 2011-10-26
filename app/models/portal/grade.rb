@@ -4,7 +4,7 @@ class Portal::Grade < ActiveRecord::Base
   acts_as_list
   acts_as_replicatable
 
-  named_scope :active, { :conditions => { :active => true } }  
+  scope :active, { :conditions => { :active => true } }  
   has_many :grade_levels, :class_name => "Portal::GradeLevel"
   
   include Changeable
@@ -17,9 +17,6 @@ class Portal::Grade < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Grade"
-    end
   end
   
 end

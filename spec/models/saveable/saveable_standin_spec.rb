@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Saveable::SaveableStandin do
   #it_should_behave_like 'a saveable'

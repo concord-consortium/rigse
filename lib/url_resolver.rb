@@ -1,5 +1,5 @@
 class URLResolver
-  include ActionController::UrlWriter
+  include Rails.application.routes.url_helpers
   
   def getUrl(method, options)
     eval("#{method}(options)")

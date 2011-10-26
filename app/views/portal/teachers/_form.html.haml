@@ -1,39 +1,60 @@
-- form_for portal_teacher do |f|
+= form_for portal_teacher do |f|
   = error_messages_for 'user'
   = error_messages_for 'portal_teacher', :object_name => 'teacher'
-  - field_set_tag 'personal info' do
-    .aligned
-      %ul
-        %li
-          = label_tag :user, 'First Name: ', :class=>"right"
-          = text_field :user, :first_name, {:live => false}
-        
-        %li  
-          = label_tag :user, 'Last Name: ', :class=>"right"
-          = text_field :user, :last_name, {:live => false}
-        
-        %li
-          = label_tag :user, 'Email: ', :class=>"right"
-          = text_field :user, :email, {:live => false}
-  
-  - field_set_tag 'school' do
-    .aligned
-      %ul
-        %li
-          = label_tag :school, 'School: ', :class=>"right"
-          - # Changed from select_tag() to select() because the former doesn't support FormOptions, such as :prompt -- Cantina-CMH 6/9/10
-          = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
-        -# dont select either grades or domains for teachers.
-          - if portal_grades.size > 0
-            %li
-              = label_tag :grade, 'Grade: ', :class=>"right"
-              = select_tag('grade[id]', options_for_select(portal_grades.map { |g| [g.name,g.id] }, default_grade_id ) )
-          - if domains.size > 0
-            %li
-              = label_tag :domain, 'Domain: ', :class=>"right"
-              = select_tag('domain[id]', options_for_select(domains.map { |d| [d.name, d.id] } ) )
-        
-  = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+  = field_set_tag 'personal info' do
+    %table.form
+      %tr
+        %td= label_tag :user, 'First Name: ', :class=>"right"
+        %td= text_field :user, :first_name, {:live => false}
+      
+      %tr  
+        %td= label_tag :user, 'Last Name: ', :class=>"right"
+        %td= text_field :user, :last_name, {:live => false}
+      
+      %tr
+        %td= label_tag :user, 'Email: ', :class=>"right"
+        %td= text_field :user, :email, {:live => false}
 
-  .aligned
-    = f.submit 'Submit'
+      - # conditionally allow for 'adhoc_school' entry
+      - if current_project.allow_adhoc_schools?
+        %tr
+          %td= label_tag :school, 'School: ', :class=>"right"
+          %td
+            #school_choice
+              = select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
+              .tiny.help#show_write_in
+                I can't find my school in the list.
+            #school_write_in{:style => 'display: none;'}
+              = text_field :school, :name, {:live => false }
+              .tiny.help#show_select
+                Go back to the school list.
+            :javascript
+              new Chosen($('school_id'));
+              var value = 'Type your school name here';
+              var sel=null;
+              $('show_write_in').observe("click", function(e) {
+                $('school_choice').hide();
+                sel = $$('select#school_id option').find(function(ele){return !!ele.selected});
+                $$('select#school_id option')[0].selected=true;
+                $('school_name').value = value;
+                $('school_write_in').show();
+              });
+              $('show_select').observe("click", function(e) {
+                $('school_write_in').hide();
+                $('school_choice').show();
+                if (sel) { sel.selected=true; }
+                value = $('school_name').value;
+                $('school_name').value ='';
+              });
+      - else
+        %tr
+          %td= label_tag :school, 'School: ', :class=>"right"
+          %td= select('school', 'id', option_groups_from_collection_for_select(portal_districts, :schools , :name, :id, :name  ), {:prompt => "-Select your school"})
+        :javascript
+          new Chosen($('school_id'));
+      = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+      %tr
+        %td
+        %td
+          = f.submit 'Submit'
+

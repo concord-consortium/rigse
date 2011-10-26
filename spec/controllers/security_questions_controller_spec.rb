@@ -1,15 +1,13 @@
-require "spec_helper"
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe SecurityQuestionsController do
-  integrate_views
+  render_views
   
   before(:each) do
     @student = Factory.create(:portal_student, :user => Factory.create(:user))
     stub_current_user @student.user
-
-    controller.stub(:before_render) {
-      response.template.stub_chain(:current_project, :name).and_return("Test Project")
-    }
+    @test_project = mock("project",:name=> "Test Project")
+    Admin::Project.stub(:default_project).and_return(@test_project)
   end
   
   describe "GET edit" do
@@ -20,10 +18,10 @@ describe SecurityQuestionsController do
       get :edit
       
       @student.user.security_questions.each_with_index do |q, i|
-        with_tag("select[name=?]", "security_questions[question#{i}][question_idx]") do
-          with_tag("option[value='current']", :text => q.question_idx)
+        assert_select("select[name=?]", "security_questions[question#{i}][question_idx]") do
+          assert_select("option[value='current']", :text => q.question_idx)
         end
-        with_tag("input[name=?][value=?]", "security_questions[question#{i}][answer]", q.answer)
+        assert_select("input[name=?][value=?]", "security_questions[question#{i}][answer]", q.answer)
       end
     end
   end

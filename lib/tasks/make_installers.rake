@@ -10,11 +10,11 @@ namespace :build do
     end
     
     def bitrocket_installer_dir
-      check_dir_exists("#{RAILS_ROOT}/resources/bitrock_installer")
+      check_dir_exists("#{::Rails.root.to_s}/resources/bitrock_installer")
      end
 
     def installer_dest
-      check_dir_exists("#{RAILS_ROOT}/public/installers/")
+      check_dir_exists("#{::Rails.root.to_s}/public/installers/")
     end
 
     def installer_config_xml
@@ -27,6 +27,7 @@ namespace :build do
     
     def bitrocket_builder_path
       app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Enterprise 6.2.5/bin/Builder.app"
+      app_path = ENV['BITROCK_INSTALLER'] || "/Applications/BitRock InstallBuilder Professional 7.2.0/bin/Builder.app"
       app_path + "/Contents/MacOS/installbuilder.sh"
     end
   
@@ -70,7 +71,7 @@ namespace :build do
       return YAML::load(file_txt)
     end
  
-    def write_config(config, config_file="#{RAILS_ROOT}/config/installer.yml")
+    def write_config(config, config_file="#{::Rails.root.to_s}/config/installer.yml")
       File.open(config_file, "w") { |f|
         f.write(YAML::dump(config))
       }
@@ -100,7 +101,7 @@ namespace :build do
     end
     
     desc 'create a new release specification interactively'
-    task :new_release => ["#{RAILS_ROOT}/config/installer.yml"] do
+    task :new_release => ["#{::Rails.root.to_s}/config/installer.yml"] do
       config = {}
       puts <<-HERE_DOC
         bumping the version... (TODO: create some helper )
@@ -109,7 +110,7 @@ namespace :build do
             #{bitrocket_installer_dir}/#{installer_config_xml}
             #{bitrocket_installer_dir}/jnlps.conf"
       HERE_DOC
-      config = load_yaml("#{RAILS_ROOT}/config/installer.yml")
+      config = load_yaml("#{::Rails.root.to_s}/config/installer.yml")
       %w[shortname version jnlp_config].each do |k|
         config[k] = ask("value for #{k}") { |q| q.default = config[k] }
       end
@@ -117,8 +118,8 @@ namespace :build do
     end
     
     desc 'automagically create a new release'
-    task :bump_release => ["#{RAILS_ROOT}/config/installer.yml"]  do
-       filename = "#{RAILS_ROOT}/config/installer.yml"
+    task :bump_release => ["#{::Rails.root.to_s}/config/installer.yml"]  do
+       filename = "#{::Rails.root.to_s}/config/installer.yml"
        config = load_yaml(filename)
        date,version = config['version'].split(".")
        version = version.to_i
@@ -142,12 +143,12 @@ namespace :build do
       %x[rm -rf #{bitrocket_installer_dir}/installers]
     end
     
-    file "#{RAILS_ROOT}/config/installer.yml" do
+    file "#{::Rails.root.to_s}/config/installer.yml" do
       configs = current_config_settings
       %w[shortname version jnlp_config].each do |k|
         configs[k] = ask("value for #{k}") { |q| q.default = configs[k] }
       end
-      File.open("#{RAILS_ROOT}/config/installer.yml", "w") { |f|
+      File.open("#{::Rails.root.to_s}/config/installer.yml", "w") { |f|
         f.write(YAML::dump(configs))
       }
     end

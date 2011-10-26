@@ -11,6 +11,6 @@
 
 = render :partial => 'gse_filter'
 
-- form_for(@teacher_note) do |f|
+= form_for(@teacher_note) do |f|
   = f.error_messages
   = render :partial => "form", :locals => {:f => f, :teacher_note => @teacher_note}

@@ -1,8 +1,8 @@
 = edit_menu_for(raw_otml, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(raw_otml, :item, :name_field)
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(raw_otml, :item, :textarea), :rows => 4, :cols => 80, :class => 'mceNoEditor'
-  - field_set_tag 'otml_content' do
+  = field_set_tag 'otml_content' do
     = f.text_area :otml_content, :id => dom_id_for(raw_otml, :item, :textarea), :rows => 40, :cols => 80, :class => 'mceNoEditor'

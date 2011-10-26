@@ -1,11 +1,11 @@
 = edit_menu_for(biologica_chromosome, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(biologica_chromosome, :item, :name_field)
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(biologica_chromosome, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
-  - field_set_tag 'organism' do
+  = field_set_tag 'organism' do
     = f.select :organism_id, Embeddable::Biologica::Organism.by_scope(@scope).collect { |org| [ "#{org.name}: #{org.id}", org.id ] }, { :prompt => true }, {:id => dom_id_for(biologica_chromosome, :item, :organism_select)}
-    - field_set_tag 'options' do
+    = field_set_tag 'options' do
       = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_chromosome, :item, :width_field)) + " "
       = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_chromosome, :item, :height_field)) + "<br/>"

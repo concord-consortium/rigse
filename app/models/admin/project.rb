@@ -27,7 +27,7 @@ class Admin::Project < ActiveRecord::Base
   validate :states_and_provinces_array_members_must_match_list
   
   default_value_for :enabled_vendor_interfaces do
-    Probe::VendorInterface.find(:all)
+    Probe::VendorInterface.all
   end
   
   if USING_JNLPS
@@ -46,13 +46,17 @@ class Admin::Project < ActiveRecord::Base
     end
   end
 
-  def before_save
+  before_save :update_jnlp_version_str_if_snapshot
+  
+  def update_jnlp_version_str_if_snapshot
     if snapshot_enabled
       self.jnlp_version_str = maven_jnlp_family.snapshot_version
     end
   end
   
-  def after_save
+  after_save :update_app_saettings
+  
+  def update_app_saettings
     if name == APP_CONFIG[:site_name] && url == APP_CONFIG[:site_url]
       update_app_settings
     end
@@ -65,12 +69,12 @@ class Admin::Project < ActiveRecord::Base
 
   def update_app_settings
     new_app_settings = load_all_app_settings
-    new_app_settings[RAILS_ENV][:site_name] = self.name
-    new_app_settings[RAILS_ENV][:site_url] = self.url
-    new_app_settings[RAILS_ENV][:enable_default_users] = self.enable_default_users
-    new_app_settings[RAILS_ENV][:description] = self.description
-    new_app_settings[RAILS_ENV][:states_and_provinces] = self.states_and_provinces
-    new_app_settings[RAILS_ENV][:default_maven_jnlp] = generate_default_maven_jnlp
+    new_app_settings[::Rails.env][:site_name] = self.name
+    new_app_settings[::Rails.env][:site_url] = self.url
+    new_app_settings[::Rails.env][:enable_default_users] = self.enable_default_users
+    new_app_settings[::Rails.env][:description] = self.description
+    new_app_settings[::Rails.env][:states_and_provinces] = self.states_and_provinces
+    new_app_settings[::Rails.env][:default_maven_jnlp] = generate_default_maven_jnlp
     save_app_settings(new_app_settings)
   end
 
@@ -88,7 +92,10 @@ class Admin::Project < ActiveRecord::Base
     default_maven_jnlp
   end
   
-  
+  def using_custom_css?
+    return (! (self.custom_css.nil? || self.custom_css.strip.empty?))
+  end
+
   def display_type
     self.default_project? ? 'Default ' : ''
   end
@@ -112,9 +119,6 @@ class Admin::Project < ActiveRecord::Base
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
 
-    def display_name
-      "Project"
-    end
     
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"
@@ -178,7 +182,7 @@ class Admin::Project < ActiveRecord::Base
         #     puts "created grade #{grade.name}, active: #{grade.active}"
         #   end
         # end
-        Portal::Grade.find(:all).each do |grade|
+        Portal::Grade.all.each do |grade|
           grade.active = active_grades.include?(grade.name)
           grade.save!
         end
@@ -252,8 +256,8 @@ Dataservice::BundleContent: #{Dataservice::BundleContent.count}
 Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
 Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
-There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
-There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
+There are #{Portal::Clazz.all.select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
+There are #{Portal::Learner.all.select {|i| i.student == nil}.size} Learners which are no longer associated with Students
 
 If these numbers are large you may want to consider cleaning up the database.
 

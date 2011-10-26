@@ -25,7 +25,7 @@ class Itsi::Activity < Itsi::Itsi
   # representing all the different and unique interactive components
   # used in an activity or a collection of activities. 
   # For example: 
-  # activities = Activity.find(:all)
+  # activities = Activity.all
   # [:models, :probes].collect {|k| activities.collect {|a| a.interactive_components[k] } }.flatten.uniq
   # => ["Molecular Workbench", "PhET Circuit Construction Kit", "NetLogo", "PhET Wave Interference Model", 
   #     "Temperature", "Light", "Force (5N)", "Motion", "Voltage", "Relative Humidity", "Raw Voltage"]

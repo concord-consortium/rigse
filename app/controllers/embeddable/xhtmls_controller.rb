@@ -28,15 +28,6 @@ class Embeddable::XhtmlsController < ApplicationController
     end
   end
 
-  # GET /Embeddable/xhtmls/1/print
-  def print
-    @xhtml = Embeddable::Xhtml.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @xhtml }
-    end
-  end
-
   # GET /Embeddable/xhtmls/new
   # GET /Embeddable/xhtmls/new.xml
   def new

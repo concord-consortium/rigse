@@ -1,14 +1,13 @@
 = edit_menu_for(biologica_pedigree, f)
 .content
-  - field_set_tag 'name' do
+  = field_set_tag 'name' do
     = f.text_field :name, :id => dom_id_for(biologica_pedigree, :item, :name_field)
-  - field_set_tag 'description' do
+  = field_set_tag 'description' do
     = f.text_area :description, :id => dom_id_for(biologica_pedigree, :item, :textarea),:rows => 40, :class => 'tinymce_textarea'
-  - field_set_tag 'starting organisms' do
-    = "<select name='pedigree[organism_ids][]' multiple='true' size='5'>"
-    = Embeddable::Biologica::Organism.by_scope(@scope).collect {|o| selected = false; selected = true if biologica_pedigree.organisms.include?(o); "<option value='#{o.id}' #{selected ? "selected='true'" : ""}>#{o.name}</option>" }.join("\n")
-    = "</select>"
-  - field_set_tag 'options' do
+  = field_set_tag 'starting organisms' do
+    - selectables = Embeddable::Biologica::Organism.by_scope(@scope)
+    = f.collection_select :organism_ids, selectables, :id, :name, {},{:multiple => true, :size => 5 }
+  = field_set_tag 'options' do
     = "Width: " + f.text_field(:width, :id => dom_id_for(biologica_pedigree, :item, :width_field)) + " "
     = "Height: " + f.text_field(:height, :id => dom_id_for(biologica_pedigree, :item, :height_field)) + "<br/>"
     = "Crossover Enabled: " + f.check_box(:crossover_enabled, :id => dom_id_for(biologica_pedigree, :item, :crossover_enabled_check_box)) + "<br/>"

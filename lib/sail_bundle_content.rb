@@ -3,7 +3,7 @@ require 'b64'
 
 module SailBundleContent
 
-  EMPTY_EPORTFOLIO_BUNDLE_PATH = File.join(RAILS_ROOT, 'public', 'bundles', 'empty_bundle.xml')
+  EMPTY_EPORTFOLIO_BUNDLE_PATH = File.join(::Rails.root.to_s, 'public', 'bundles', 'empty_bundle.xml')
   EMPTY_EPORTFOLIO_BUNDLE = File.read(EMPTY_EPORTFOLIO_BUNDLE_PATH)
   EMPTY_BUNDLE = "<sessionBundles />\n"
   VALID_CLOSING_ELEMENT = "</sessionBundles>"

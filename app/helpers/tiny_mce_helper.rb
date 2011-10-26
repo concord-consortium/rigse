@@ -12,7 +12,7 @@ tinyMCE.init({
     auto_resize : true,
     remove_script_host : false,
     relative_urls : false,
-    content_css : "/stylesheets/app.css",
+    content_css : "/stylesheets/otml.css, /stylesheets/project.css",
     gecko_spellcheck : true,
     theme_advanced_resizing : true,
     theme_advanced_resizing_use_cookie : true,
@@ -39,7 +39,7 @@ HEREDOC
 
   def default_mce_buttons(n)
     case(n)
-    when 1:
+    when 1
       "bold,italic,underline,|,sup,sub,|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall,|,justifyleft,justifycenter,justifyright"
     else 
       ""

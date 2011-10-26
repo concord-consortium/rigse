@@ -43,14 +43,8 @@ module TruncatableXhtml
   def extract_text_from_elements(xhtml)
     return '' if xhtml.empty?
     begin
-      doc = Hpricot.XML(xhtml)
-      text_contents = []
-      doc.children.each do |child| 
-        child.traverse_text do |text_element| 
-          t = text_element.to_s.strip
-          text_contents << t unless t.empty?
-        end
-      end
+      doc = Nokogiri.XML(xhtml)
+      text_contents = doc.search("//text()").collect { |text_node| text_node.text }
     rescue ArgumentError
     end
     text_contents
@@ -111,28 +105,23 @@ module TruncatableXhtml
     ##  @param table_anames = names of attributes that might have html content.
     ##  @ param replaceables = patterns we want to exlude from the sanitized output.
     def has_html_tables(table_names = DEFAULT_TABLES,replaceables = REPLACEMENT_MAP)
-      define_method("html_tables") do
-        table_names
-      end
-      define_method("html_replacements") do
-        replaceables
-      end
+      define_method("html_tables")       { table_names }
+      define_method("html_replacements") { replaceables }
     end
   end
-  
-  
+
+
   ##
   ## Called when a class extends this module:
   ##
   def self.included(clazz)
     clazz.extend(ClassMethods)
     clazz.has_html_tables
-    
+    clazz.send :before_save, :truncate_xhtml
+
     ## add before_save hooks
-    clazz.class_eval {
-      alias old_before_save before_save
-      def before_save
-        self.old_before_save
+    clazz.class_eval do
+      def truncate_xhtml
         if (self.respond_to? 'name')
           self.html_tables.each do |tablename|
             if self.respond_to? tablename
@@ -143,7 +132,7 @@ module TruncatableXhtml
         end
         self.replace_offensive_html
       end
-    }
+    end
   end
   
   ##

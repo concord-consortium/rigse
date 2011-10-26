@@ -1,9 +1,9 @@
-- remote_form_for(multiple_choice, :update => dom_id_for(multiple_choice, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
+= remote_form_for(multiple_choice, :update => dom_id_for(multiple_choice, :item), :before =>  "tinyMCE.triggerSave(true,true)") do |f|
   = edit_menu_for(multiple_choice, f)
   .content
-    / - field_set_tag 'name' do
+    / = field_set_tag 'name' do
     /   = f.text_field :name, :id => dom_id_for(multiple_choice, :item, :name_field)
-    - field_set_tag 'prompt' do
+    = field_set_tag 'prompt' do
       = f.text_area :prompt, :id => dom_id_for(multiple_choice, :item, :textarea), :class => 'tinymce_textarea'
       
     %fieldset{:id => dom_id_for(multiple_choice, :edit_choices)}

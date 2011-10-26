@@ -40,7 +40,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/new
   # GET /portal_clazzes/new.xml
   def new
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
@@ -57,7 +57,7 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1/edit
   def edit
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
     end
@@ -66,7 +66,7 @@ class Portal::ClazzesController < ApplicationController
   # POST /portal_clazzes
   # POST /portal_clazzes.xml
   def create
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
 
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
@@ -81,9 +81,14 @@ class Portal::ClazzesController < ApplicationController
       okToCreate = false
     end
 
-    if okToCreate
+    if current_user.anonymous?
+      flash[:error] = "Anonymous can't create classes. Please log in and try again."
+      okToCreate = false
+    end
+
+    if okToCreate and Admin::Project.default_project.enable_grade_levels?
       grade_levels.each do |name, v|
-        grade = Portal::Grade.find_by_name(name)
+        grade = Portal::Grade.find_or_create_by_name(name)
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
@@ -93,10 +98,7 @@ class Portal::ClazzesController < ApplicationController
     end
 
     if okToCreate && !@portal_clazz.teacher
-      if current_user.anonymous?
-        flash[:error] = "Anonymous can't create classes. Please log in and try again."
-        okToCreate = false
-      elsif current_user.portal_teacher
+      if current_user.portal_teacher
         @portal_clazz.teacher_id = current_user.portal_teacher.id
         @portal_clazz.teacher = current_user.portal_teacher
       else
@@ -145,7 +147,7 @@ class Portal::ClazzesController < ApplicationController
   # PUT /portal_clazzes/1
   # PUT /portal_clazzes/1.xml
   def update
-    @semesters = Portal::Semester.find(:all)
+    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.find(params[:id])
 
     if request.xhr?
@@ -168,17 +170,20 @@ class Portal::ClazzesController < ApplicationController
         okToUpdate = true
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
-        if grade_levels
-          # This logic will attempt to prevent someone from removing all grade levels from a class.
-          grades_to_add = []
-          grade_levels.each do |name, v|
-            grade = Portal::Grade.find_by_name(name)
-            grades_to_add << grade if grade
+        
+        if Admin::Project.default_project.enable_grade_levels?
+          if grade_levels
+            # This logic will attempt to prevent someone from removing all grade levels from a class.
+            grades_to_add = []
+            grade_levels.each do |name, v|
+              grade = Portal::Grade.find_by_name(name)
+              grades_to_add << grade if grade
+            end
+            object_params[:grades] = grades_to_add if !grades_to_add.empty?
+          else
+            flash[:error] = "You need to select at least one grade level for this class."
+            okToUpdate = false
           end
-          object_params[:grades] = grades_to_add if !grades_to_add.empty?
-        else
-          flash[:error] = "You need to select at least one grade level for this class."
-          okToUpdate = false
         end
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
@@ -383,7 +388,7 @@ class Portal::ClazzesController < ApplicationController
     return clazz_offerings if @portal_clazz.default_class
     offerings = clazz_offerings.clone
     offerings.each do |offering|
-      all_offerings = Portal::Offering.find_all_by_runnable_id(offering.runnable.id)
+      all_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type(offering.runnable.id, offering.runnable_type)
       default_offerings = all_offerings.select {|x| x.default_offering == true && x.runnable.id == offering.runnable.id}
       default_offerings.each do |doff|
         if doff.runnable.id == offering.runnable.id

@@ -1,0 +1,12 @@
+%h3
+  First Time Here?
+%p
+  Sign up for access as:
+  %br
+  = link_to("Student", signup_portal_students_path, :class=>'more')
+  %br
+  = link_to("Teacher", new_portal_teacher_path, :class=>'more')
+%h3
+  Just want to Try the Units?
+%p
+  =link_to "View our unit Previews", preview_list_link, {:class=>'more'}

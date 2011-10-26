@@ -12,7 +12,7 @@ namespace :app do
 
     desc "Saves users.yaml to spec/fixtures" 
     task :create_fixtures => :environment do 
-      dir = File.join(RAILS_ROOT, 'spec/fixtures')
+      dir = File.join(::Rails.root.to_s, 'spec/fixtures')
       FileUtils.mkdir_p(dir)
       FileUtils.chdir(dir) do
         File.open("users.yml", 'w') do |f|

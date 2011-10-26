@@ -1,12 +1,12 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe Embeddable::Biologica::ChromosomeZoomsController do
 
   it_should_behave_like 'an embeddable controller'
 
   def with_tags_like_an_otml_biologica_chromosome_zoom
-    with_tag('OTChromosomeZoom') do
-      with_tag('organisms')
+    assert_select('OTChromosomeZoom') do
+      assert_select('organisms')
     end
   end
 

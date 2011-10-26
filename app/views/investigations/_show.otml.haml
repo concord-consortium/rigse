@@ -37,7 +37,7 @@
                     %cards
                       - activity.sections.each do |section|
                         - unless ((for_teacher_only?(section)) && (!teacher_mode))
-                          =yield "section_#{dom_id_for(section)}".to_sym
+                          = content_for dom_id_for(section, :section)
                     %currentCard
                       - if (activity.sections.first && (!for_teacher_only?(activity.sections.first))) || teacher_mode
                         -if (activity.sections.first)

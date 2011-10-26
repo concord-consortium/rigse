@@ -1,0 +1,31 @@
+---
+default:
+  Dataservice::BundleContent : BundleContent
+  Dataservice::BundleLogger : BundleLogger
+  Dataservice::ConsoleContent : ConsoleContent
+  Dataservice::ConsoleLogger : ConsoleLogger
+  Embeddable::Biologica::BreedOffspring : Biologica Breed Offspring
+  Embeddable::Biologica::Chromosome : Biologica Chromosome
+  Embeddable::Biologica::ChromosomeZoom : Biologica Chromosome Zoom
+  Embeddable::Biologica::MeiosisView : Biologica Meiosis View
+  Embeddable::Biologica::MultipleOrganism : Biologica Multiple Organism
+  Embeddable::Biologica::Organism : Biologica Organism
+  Embeddable::Biologica::Pedigree : Biologica Pedigree
+  Embeddable::Biologica::StaticOrganism : Biologica Static Organism View
+  Embeddable::Biologica::World : Biologica World
+  Embeddable::DataCollector : Graph
+  Embeddable::DrawingTool : Draw Tool
+  Embeddable::ImageQuestion : Image Question
+  Embeddable::LabBookSnapshot : Snapshot Button
+  Embeddable::MultipleChoice : Multiple Choice Question
+  Embeddable::MwModelerPage : Molecular Workbench Model
+  Embeddable::NLogoModel : Net Logo Model
+  Embeddable::Smartgraph::RangeQuestion : Smartgraph Range Question
+  Embeddable::Xhtml : Text
+  Portal::Clazz : Class
+  Portal::Nces06District : NCES District
+  Portal::Nces06School : NCES School
+
+smartgraphs:
+  ExternalActivity : Activity
+  ResourcePage : Resource

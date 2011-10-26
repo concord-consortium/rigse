@@ -1,6 +1,6 @@
 %div{:id => dom_id_for(raw_otml, :details), :class => 'content'}
   = wrap_edit_link_around_content(raw_otml, options={:complete => mce_init_string}) do
-    - field_set_tag 'description' do
+    = field_set_tag 'description' do
       = raw_otml.description
-    - field_set_tag 'otml_content' do
+    = field_set_tag 'otml_content' do
       %pre= h(raw_otml.otml_content)

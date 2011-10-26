@@ -48,15 +48,6 @@ class Embeddable::DataCollectorsController < ApplicationController
     end
   end
 
-  # GET /Embeddable/data_collectors/1/print
-  def print
-    @data_collector = Embeddable::DataCollector.find(params[:id])
-    respond_to do |format|
-      format.html { render :layout => "layouts/embeddable/print" }
-      format.xml  { render :xml => @data_collector }
-    end
-  end
-
   # GET /Embeddable/data_collectors/new
   # GET /Embeddable/data_collectors/new.xml
   def new
@@ -141,8 +132,8 @@ class Embeddable::DataCollectorsController < ApplicationController
     # default values for the y-axis. This assmption will not necessarily
     # be correct with a REST update to this resource.
     if request.symbolized_path_parameters[:format] == 'otml'
-      otml_root_content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
-      otml_library_content = (Hpricot.XML(request.raw_post)/'/otrunk/objects/OTSystem/library/*').to_s
+      otml_root_content = (Nokogiri.XML(request.raw_post)/'/otrunk/objects/OTSystem/root/*').to_s
+      otml_library_content = (Nokogiri.XML(request.raw_post)/'/otrunk/objects/OTSystem/library/*').to_s
       @data_collector.update_attributes(:otml_root_content => otml_root_content, :otml_library_content => otml_library_content)
       @data_collector.update_from_otml_library_content
       render :nothing => true

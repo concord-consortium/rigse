@@ -8,7 +8,7 @@
       - style = for_teacher_only?(activity) ? "accordion_container teacher_only" : "accordion_container"
       %li{:id=>dom_id_for(activity,:accordion_item), :class=>style}
         .accordion_name
-          -if (defined? @activity) && (@activity.id == activity.id)
+          -if @activity && (@activity.id == activity.id)
             = link_to activity.name,activity, :class=> 'selected'
           -else
             =link_to activity.name, activity
@@ -21,13 +21,13 @@
             - activity.sections.each_with_index do |s,i|
               - style = for_teacher_only?(s) ? "accordion_container teacher_only" : "accordion_container"
               %li{:id => dom_id_for(s, :accordion_item), :class=>style}
-                -if (defined? @section) && (@section.id == s.id)
+                -if @section && (@section.id == s.id)
                   = link_to "#{i+1}:#{s.name}",s, :class=> 'selected accordion_section_title '
                 -else
                   =link_to "#{i+1}: #{s.name}",s, :class=> 'accordion_section_title'
                 -s.pages.each_with_index do |p,i|
                   - style = for_teacher_only?(p) ? "rollover teacher_only" : "rollover"
-                  - if (defined? @page) && (p.id == @page.id)
+                  - if @page && (p.id == @page.id)
                     = link_button "this_node.png", "#", :title => "you are here", :class => style
                   - else
                     = link_button "other_node.png", p, :title => "go to #{p.name}", :class => style

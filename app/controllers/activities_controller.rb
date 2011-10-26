@@ -1,9 +1,7 @@
 class ActivitiesController < ApplicationController
   # GET /pages
   # GET /pages.xml
-  prawnto :prawn=>{
-    :page_layout=>:landscape,
-  }
+
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
@@ -44,7 +42,7 @@ class ActivitiesController < ApplicationController
 
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @activity = Activity.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @activity = Activity.find(params[:id])

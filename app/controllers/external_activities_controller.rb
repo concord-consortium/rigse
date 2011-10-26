@@ -1,6 +1,6 @@
 class ExternalActivitiesController < ApplicationController
 
-  before_filter :setup_object, :except => [:index]
+  before_filter :setup_object, :except => [:index, :preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export] 
@@ -40,7 +40,7 @@ class ExternalActivitiesController < ApplicationController
   
   def setup_object
     if params[:id]
-      if params[:id].length == 36
+      if valid_uuid(params[:id])
         @external_activity = ExternalActivity.find(:first, :conditions => ['uuid=?',params[:id]])
       else
         @external_activity = ExternalActivity.find(params[:id])
@@ -67,6 +67,8 @@ class ExternalActivitiesController < ApplicationController
     @external_activities = ExternalActivity.search_list({
       :name => @name, 
       :description => @description, 
+      :include_drafts => @include_drafts,
+      :user => current_user,
       :paginate => true, 
       :page => pagination
     })
@@ -87,6 +89,15 @@ class ExternalActivitiesController < ApplicationController
     end
   end
   
+  def preview_index
+    page= params[:page] || 1
+    @activities = ExternalActivity.all.paginate(
+        :page => page || 1,
+        :per_page => params[:per_page] || 20,
+        :order => 'name')
+    render 'preview_index'
+  end
+  
   # GET /external_activities/1
   # GET /external_activities/1.xml
   def show
@@ -97,7 +108,7 @@ class ExternalActivitiesController < ApplicationController
           render :print, :layout => "layouts/print"
         end
       }
-      format.run_external_html   { redirect_to(@external_activity.url, 'popup' => true) }
+      format.run_external_html   { redirect_to(@external_activity.url) }
       format.xml  { render :xml => @external_activity }
     end
   end
@@ -126,6 +137,12 @@ class ExternalActivitiesController < ApplicationController
   def create
     @external_activity = ExternalActivity.new(params[:external_activity])
     @external_activity.user = current_user
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
@@ -144,6 +161,13 @@ class ExternalActivitiesController < ApplicationController
   def update
     cancel = params[:commit] == "Cancel"
     @external_activity = ExternalActivity.find(params[:id])
+
+    if params[:update_cohorts]
+      # set the cohort tags
+      @external_activity.cohort_list = (params[:cohorts] || [])
+      @external_activity.save
+    end
+
     if request.xhr?
       if cancel || @external_activity.update_attributes(params[:external_activity])
         render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }

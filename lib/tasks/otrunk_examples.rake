@@ -5,11 +5,11 @@ namespace :app do
     # require 'otrunk_examples_import'
     autoload :OtrunkExampleImport, "otrunk_examples_import"
     def otrunk_lib_dir
-      @otrunk_lib_dir || @otrunk_lib_dir = File.join(RAILS_ROOT, 'lib', 'otrunk')
+      @otrunk_lib_dir || @otrunk_lib_dir = File.join(::Rails.root.to_s, 'lib', 'otrunk')
     end
 
     def otrunk_examples_dir
-      @otrunk_examples_dir || @otrunk_examples_dir = File.join(RAILS_ROOT, 'public', 'otrunk-examples')
+      @otrunk_examples_dir || @otrunk_examples_dir = File.join(::Rails.root.to_s, 'public', 'otrunk-examples')
     end
 
     def otrunk_model_classes_path
@@ -41,7 +41,7 @@ namespace :app do
     end
 
     def ot_introspect_object_path
-      File.join(RAILS_ROOT, 'lib', 'otrunk', 'ot_introspect.yaml')
+      File.join(::Rails.root.to_s, 'lib', 'otrunk', 'ot_introspect.yaml')
     end
     
     def git_update_otrunk_examples
@@ -100,11 +100,12 @@ namespace :app do
     
     desc "create or update: #{otrunk_model_classes_path}"
     task :create_or_update_otrunk_model_classes => :create_or_update_otrunk_examples do
-      require 'hpricot'
       puts "\nupdating #{otrunk_model_classes_path} ..."
-      otrunk_imports = [] 
-      Dir["#{otrunk_examples_dir}/**/*.otml"].each do |f| 
-        doc = Hpricot.XML(open(f)) 
+      otrunk_imports = []
+      otml_files = Dir["#{otrunk_examples_dir}/**/*.otml"].find_all {|o| !(o =~ /rites/) }
+      otml_files.each do |f| 
+        puts "#{File::stat(f).size}: #{f}"
+        doc = Nokogiri.XML(open(f)) 
         otrunk_imports << doc.search("//import").collect {|i| i['class']} 
       end 
       otrunk_imports.flatten!.uniq!
@@ -133,7 +134,8 @@ namespace :app do
       otml_files_otrunk_imports = ActiveRecord::Base.connection.select_value("SELECT count(*) AS count_all FROM `otml_files_otrunk_imports`")
       puts "otml_files_otrunk_imports joins: #{otml_files_otrunk_imports}"
       otml_categories_otrunk_imports = ActiveRecord::Base.connection.select_value("SELECT count(*) AS count_all FROM `otml_categories_otrunk_imports`")
-      puts "otml_categories_otrunk_imports joins: #{otml_categories_otrunk_imports}"      
+      puts "otml_categories_otrunk_imports joins: #{otml_categories_otrunk_imports}"
+      puts
     end
   end
 end

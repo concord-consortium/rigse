@@ -1,7 +1,7 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::SchoolsController do
-  integrate_views
+  # render_views
 
   def mock_school(_stubs={})
     clazzes = mock(:active => [], :length => 0, :size => 0)
@@ -21,17 +21,30 @@ describe Portal::SchoolsController do
     mock_school = mock_model(Portal::School,stubs)
     mock_school
   end
+
+  def nces_mock_school(_stubs={})
+    clazzes = mock(:active => [], :length => 0, :size => 0)
+    stubs = {
+      :SCHNAM => "AMHERST REGIONAL MS",
+      :changeable? => true  # admin user in most test cases..
+    }
+    stubs.merge!(_stubs)
+    nces_mock_school = mock_model(Portal::Nces06School, stubs)
+    nces_mock_school
+  end
   
   before(:each) do
     generate_default_project_and_jnlps_with_mocks
     generate_portal_resources_with_mocks
     login_admin
     @school = mock_school
+    @nces_school = nces_mock_school
+    @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
   end
 
   describe "GET index" do
     it "assigns all portal_schools as @portal_schools" do
-      Portal::School.stub!(:find).with(:all, hash_including(will_paginate_params)).and_return([@school])
+      Portal::School.stub!(:search).with(nil,nil,nil).and_return([@school])
       get :index
       assigns[:portal_schools].should == [@school]
     end
@@ -55,7 +68,7 @@ describe Portal::SchoolsController do
   
   describe "GET edit" do
     it "assigns the requested school as @portal_school" do
-      @school.should_receive(:changeable?).and_return(:true)
+      #@school.should_receive(:changeable?).and_return(:true)
       Portal::School.stub!(:find).with("37").and_return(@school)
       get :edit, :id => "37"
       assigns[:portal_school].should equal(@school)
@@ -64,24 +77,25 @@ describe Portal::SchoolsController do
   
   describe "POST create" do
   
-    describe "with valid params" do
+    describe "with valid nces_school params" do
       it "assigns a newly created school as @portal_school" do
         @school.should_receive(:save).and_return(true)
-        Portal::School.stub!(:new).with({'these' => 'params'}).and_return(@school)
-        post :create, :portal_school => {:these => 'params'}
+        Portal::Nces06School.stub!(:find).with('123').and_return(@nces_school)
+        Portal::School.stub!(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        post :create, :nces_school => {:id => '123'}
         assigns[:portal_school].should equal(@school)
       end
   
       it "redirects to the created school" do
         @school.should_receive(:save).and_return(true)
-        @school.stub(:id => 1);
-        Portal::School.stub!(:new).and_return(@school)
-        post :create, :portal_school => {}
+        Portal::Nces06School.stub!(:find).with('123').and_return(@nces_school)
+        Portal::School.stub!(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        post :create, :nces_school => {:id => '123'}
         response.should redirect_to(portal_school_url(@school))
       end
     end
   
-    describe "with invalid params" do
+    describe "with invalid portal_school params" do
       it "assigns a newly created but unsaved school as @portal_school" do
         @school.should_receive(:save).and_return(true)
         Portal::School.stub!(:new).with({'these' => 'params'}).and_return(@school)
@@ -146,6 +160,8 @@ describe Portal::SchoolsController do
   end
   
   describe "DELETE destroy" do
+    render_views
+
     before(:each) do
       @school.stub!(:id => 1)
       @school.should_receive(:destroy).and_return(true)
@@ -164,12 +180,12 @@ describe Portal::SchoolsController do
     it "renders the rjs template" do
       xhr :post, :destroy, :id => "1"
       response.should render_template('destroy')
-      response.should have_rjs
+      assert_select_rjs
     end
 
     it "the rjs response should remove a dom elemet" do
       xhr :post, :destroy, :id => "1"
-      response.should have_rjs(:remove)
+      assert_select_rjs(:remove)
     end
   end
 

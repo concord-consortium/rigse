@@ -3,7 +3,7 @@
     .action_menu_header
       .action_menu_header_left
         - if @investigations
-          %p= page_entries_info @investigations, :entry_name=>TOP_LEVEL_CONTAINER_NAME_PLURAL
+          %p= page_entries_info @investigations, :model=>TOP_LEVEL_CONTAINER_NAME_PLURAL
           %p.paginator
             = will_paginate @investigations
       .action_menu_header_right
@@ -13,9 +13,8 @@
 
   %ul.preview_list       
     - for investigation in @investigations
-      %li{ :id => dom_id_for(investigation)}
+      %li{ :id => dom_id_for(investigation), :class => cycle('odd', 'even') }
         %span.investigation_preview= preview_link_for(investigation, nil,:link_text => investigation.name)
         %div.details.tiny
           %span.description=investigation.description
           %span.author= "Created by #{investigation.user.name}"
-      %br

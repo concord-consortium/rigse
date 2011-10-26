@@ -1,7 +1,7 @@
-- form_for portal_teacher do |f|
+= form_for portal_teacher do |f|
   = error_messages_for 'user'
   = error_messages_for 'portal_teacher', :object_name => 'teacher'
-  - field_set_tag 'personal info' do
+  = field_set_tag 'personal info' do
     .aligned
       %ul
         %li
@@ -16,7 +16,7 @@
           = label_tag :user, 'Email: ', :class=>"right"
           = text_field :user, :email, {:live => false}
   
-  - field_set_tag 'school' do
+  = field_set_tag 'school' do
     .aligned
       %ul
         %li

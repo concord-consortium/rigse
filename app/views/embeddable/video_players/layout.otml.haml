@@ -13,4 +13,4 @@
                 = Embeddable::VideoPlayer.display_name + ': ' + @video_player.name
               %object{ :refid => ot_refid_for(@video_player) }
       %library
-        =yield :layout
+        = content_for :layout

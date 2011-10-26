@@ -5,5 +5,5 @@
         %li= link_to 'edit', edit_author_note_url(@teacher_note)
 
 .content
-  - field_set_tag 'body' do
+  = field_set_tag 'body' do
     = @author_note.body

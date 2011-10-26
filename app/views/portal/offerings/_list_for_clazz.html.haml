@@ -3,7 +3,8 @@
     .action_menu_left
       %p
         %strong="Class Assignments:"
-        %br To add assignments, drag items from the search area into the box below.         
+        %br
+        To add assignments, drag items from the search area into the box below.
   #clazz_offerings.drop_target
     = render :partial => 'shared/offering_for_teacher', :collection => portal_clazz.offerings, :as => :offering
     

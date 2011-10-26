@@ -44,6 +44,7 @@ class Portal::TeachersController < ApplicationController
 
   # POST /portal_teachers
   # POST /portal_teachers.xml
+  # TODO: move some of this into the teachers model.
   def create
     portal_school = Portal::School.find_by_id(params[:school][:id])
     
@@ -59,32 +60,36 @@ class Portal::TeachersController < ApplicationController
     load_domains_and_grades
 
     @user = User.new(params[:user])
-    #if @user && @user.valid?
-    #  @user.register!
-    #  @user.save
-    #end
-        
+
+    unless portal_school
+      school_name = params[:school][:name]
+      unless (school_name.nil? || school_name.empty?)
+        # if current_project.allow_adhoc_schools
+        portal_school = Portal::School.find_by_similar_name_or_new(school_name,@user.email)
+      end
+    end
+
+    if (@user.valid?)
+      if (portal_school && portal_school.new_record? && portal_school.valid?)
+        portal_school.save
+        portal_school.reload
+      end
+    end
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
       t.domain = @domain
       t.schools << portal_school if !portal_school.nil?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
-    
-    #if @user.errors.empty? && @portal_teacher.save
-    if @user.valid? && @portal_teacher.valid? && !portal_school.nil?
-      if @user.register! && @portal_teacher.save
+    if portal_school && @user.register! && @portal_teacher.save
       # will redirect:
-        successful_creation(@user)
-        return
-      end
+      return successful_creation(@user)
     end
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
     @user.errors.add(:you, "must select a school") if portal_school.nil?
     failed_creation
-    
   end
 
   # PUT /portal_teachers/1
@@ -125,7 +130,7 @@ class Portal::TeachersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
   

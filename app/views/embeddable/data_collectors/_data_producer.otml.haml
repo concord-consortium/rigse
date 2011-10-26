@@ -1,0 +1,7 @@
+- if data_collector.time_limit_status
+  %OTTimeLimitDataProducerFilter{ :sourceChannel => "1",
+                                  :timeLimit     => otml_time_limit_seconds(data_collector.time_limit_seconds) }
+    %source
+      = render :partial => "embeddable/data_collectors/sensor_data_proxy", :locals => { :data_collector => data_collector }
+- else
+  = render :partial => "embeddable/data_collectors/sensor_data_proxy", :locals => { :data_collector => data_collector }

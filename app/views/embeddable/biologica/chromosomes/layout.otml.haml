@@ -13,4 +13,4 @@
                 = h(Embeddable::Biologica::Chromosome.display_name + ': ' + @biologica_chromosome.name)
               %object{ :refid => ot_refid_for(@biologica_chromosome) }
       %library
-        =yield :layout
+        = content_for :layout

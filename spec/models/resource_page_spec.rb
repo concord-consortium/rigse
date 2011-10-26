@@ -1,9 +1,16 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe ResourcePage do
   
+  before(:each) do
+    generate_default_users_with_factories
+      # @anon_user
+      # @admin_user
+  end
+  
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @resource_page = ResourcePage.new
     end
     
@@ -15,7 +22,7 @@ describe ResourcePage do
       %w( user_id name ).each do |attribute|      
         r = build_resource_page(attribute.to_sym => nil)
         r.should_not be_valid
-        r.errors.on(attribute.to_sym).should_not be_nil
+        r.errors[attribute.to_sym].should_not be_nil
       end
 
       r = build_resource_page
@@ -34,7 +41,7 @@ describe ResourcePage do
   describe "after creation" do
     before do 
       @resource_page = create_resource_page
-      @attachment = File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')
+      @attachment = File.new(::Rails.root.to_s + '/spec/fixtures/images/rails.png')
     end
     
     it "should allow a new file to be attached" do
@@ -64,7 +71,45 @@ describe ResourcePage do
       end
     end
   end
+  
+  describe "searching" do
+    
+    it "should be searchable with a few terms by an admin" do
+      params = {
+        :name => "abc",
+        :user => @admin_user
+      }
+      ResourcePage.search_list(params)
+    end
+    
+    # This test doesn't expose possible bugs in more complicated searches.
+    # To push this search feature further we actually need the kind of 
+    # resources setup in the teacher_cohort_external_activity_filtering.feature.
+    it "should be searchable with many terms by an admin" do
+      Portal::Clazz.stub!(:find).and_return(Factory.build :portal_clazz)
+      params = {
+        :name => "abc",
+        :user => @admin_user,
+        :portal_clazz_id => 1, 
+        :hide_print => true,
+        :hide_drafts_checkbox => true
+      }
+      ResourcePage.search_list(params)
+    end
+    
+    
+  end
 
+  # @resource_pages = ResourcePage.search_list({
+  #   :name => @name,
+  #   :user => current_user,
+  #   :portal_clazz_id => @portal_clazz_id,
+  #   :include_drafts => @include_drafts,
+  #   :sort_order => @sort_order,
+  #   :paginate => true,
+  #   :page => params[:page]
+  # })
+  
 protected
 
   def build_resource_page(options = {})

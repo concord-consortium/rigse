@@ -13,4 +13,4 @@
                 = h(Embeddable::Biologica::MeiosisView.display_name + ': ' + @biologica_meiosis_view.name)
               %object{ :refid => ot_refid_for(@biologica_meiosis_view) }
       %library
-        =yield :layout
+        = content_for :layout

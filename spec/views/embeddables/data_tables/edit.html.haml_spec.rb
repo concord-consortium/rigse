@@ -1,11 +1,11 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe "/embeddable/data_tables/edit.html.haml" do
   include Embeddable::DataTableHelper
 
   before(:each) do
     # cut off the edit_menu_for helper which traverses lots of other code
-    template.stub!(:edit_menu_for).and_return("edit menu")
+    view.stub!(:edit_menu_for).and_return("edit menu")
     assigns[:data_table] = @data_table = stub_model(Embeddable::DataTable,
       :new_record? => false, :id => 1, :name => "Data Table", :description => "Desc", :column_count => 4, :visible_rows => 9, :column_names => 'One,Two,Three,Four', :column_data => '', :data_collector_id => nil
     )
@@ -14,12 +14,8 @@ describe "/embeddable/data_tables/edit.html.haml" do
   it "renders the edit form" do
     render
 
-    response.should have_tag("form[action=#{embeddable_data_table_path(@data_table)}][method=post]") do
+    response.should have_selector("form[action='#{embeddable_data_table_path(@data_table)}'][method=post]") do
     end
   end
 
-  it "should have a way to select a linked data collector" do
-    render
-    response.should have_tag("select[name='embeddable_data_table[data_collector_id]']")
-  end
 end

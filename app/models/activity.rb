@@ -64,14 +64,14 @@ class Activity < ActiveRecord::Base
   @@searchable_attributes = %w{name description}
   send_update_events_to :investigation
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
     }
   }
 
-  named_scope :published,
+  scope :published,
   {
     :conditions =>{:publication_status => "published"}
   }
@@ -79,10 +79,6 @@ class Activity < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-
-    def display_name
-      "Activity"
     end
 
     def search_list(options)
@@ -123,9 +119,6 @@ class Activity < ActiveRecord::Base
     sections
   end
 
-  def self.display_name
-    'Activity'
-  end
 
   def left_nav_panel_width
     300
@@ -168,53 +161,53 @@ class Activity < ActiveRecord::Base
     )
   end
 
-@@opening_xhtml= <<HEREDOC
-  <h3>Procedures</h3>
-  <p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
-  <p></p>
-  <h4>What will you be doing?</h4>
-  <p><em>How do you activate and assess students’ prior knowledge and connect it to this new learning?</em></li>
-  <p></p>
-  <p><em>How do you get students engaged in this lesson?</em></li>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p><em>Students will discuss the following driving question:</em></p>
-  <p></p>
-  <p><em>Key components:</p>
-  <p></p>
-  <p><em>Starting conditions:</p>
-  <p></p>
-  <p><em>Ability to change variables:</p>
-  <p></p>
-HEREDOC
+  @@opening_xhtml = <<-HEREDOC
+<h3>Procedures</h3>
+<p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
+<p></p>
+<h4>What will you be doing?</h4>
+<p><em>How do you activate and assess students' prior knowledge and connect it to this new learning?</em></li>
+<p></p>
+<p><em>How do you get students engaged in this lesson?</em></li>
+<p></p>
+<h4>What will the students be doing?</h4>
+<p><em>Students will discuss the following driving question:</em></p>
+<p></p>
+<p><em>Key components:</p>
+<p></p>
+<p><em>Starting conditions:</p>
+<p></p>
+<p><em>Ability to change variables:</p>
+<p></p>
+  HEREDOC
 
-@@engagement_xhtml= <<HEREDOC
-  <h3>Engagement</h3>
-  <h4>What will you be doing?</h4>
-  <p><em>What questions can you pose to encourage students to take risks and to deepen students’ understanding?</em></p>
-  <p></p>
-  <p><em>How do you facilitate student discourse?</em></p>
-  <p></p>
-  <p><em>How do you facilitate the lesson so that all students are active learners and reflective during this lesson?</em></p>
-  <p></p>
-  <p><em>How do you monitor students’ learning throughout this lesson?</em></p>
-  <p></p>
-  <p><em>What formative assessment is imbedded in the lesson?</em></p>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p></p>
-HEREDOC
+  @@engagement_xhtml = <<-HEREDOC
+<h3>Engagement</h3>
+<h4>What will you be doing?</h4>
+<p><em>What questions can you pose to encourage students to take risks and to deepen students' understanding?</em></p>
+<p></p>
+<p><em>How do you facilitate student discourse?</em></p>
+<p></p>
+<p><em>How do you facilitate the lesson so that all students are active learners and reflective during this lesson?</em></p>
+<p></p>
+<p><em>How do you monitor students' learning throughout this lesson?</em></p>
+<p></p>
+<p><em>What formative assessment is imbedded in the lesson?</em></p>
+<p></p>
+<h4>What will the students be doing?</h4>
+<p></p>
+  HEREDOC
 
-@@closure_xhtml= <<HEREDOC
-  <h3>Closure</h3>
-  <h4>What will you be doing?</h4>
-  <p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
-  <p></p>
-  <p><em>What opportunities do you provide for students to share their understandings of the task(s)?</em></p>
-  <p></p>
-  <h4>What will the students be doing?</h4>
-  <p></p>
-HEREDOC
+  @@closure_xhtml = <<-HEREDOC
+<h3>Closure</h3>
+<h4>What will you be doing?</h4>
+<p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
+<p></p>
+<p><em>What opportunities do you provide for students to share their understandings of the task(s)?</em></p>
+<p></p>
+<h4>What will the students be doing?</h4>
+<p></p>
+  HEREDOC
 
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
@@ -226,6 +219,16 @@ HEREDOC
       @reportable_elements.each{|elem| elem[:activity] = self}
     end
     return @reportable_elements
+  end
+
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
   end
 
 end

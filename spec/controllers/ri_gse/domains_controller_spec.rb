@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe RiGse::DomainsController do
 
@@ -15,7 +15,7 @@ describe RiGse::DomainsController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @domains" do
-      RiGse::Domain.should_receive(:find).with(:all).and_return([mock_domain])
+      RiGse::Domain.should_receive(:all).and_return([mock_domain])
       get :index
       assigns[:domains].should == [mock_domain]
     end
@@ -24,7 +24,7 @@ describe RiGse::DomainsController do
   
       it "should render all domains as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::Domain.should_receive(:find).with(:all).and_return(domains = mock("Array of Domains"))
+        RiGse::Domain.should_receive(:all).and_return(domains = mock("Array of Domains"))
         domains.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

@@ -1,3 +1,3 @@
 %div{ :id => "item_data_collector_#{data_collector.id}", :class => 'item' }
-  - remote_form_for(data_collector) do |f|
+  = remote_form_for(data_collector) do |f|
     = render :partial => 'form', :locals => { :data_collector => @data_collector, :f => form }

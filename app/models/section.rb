@@ -75,7 +75,7 @@ class Section < ActiveRecord::Base
 
   send_update_events_to :investigation
 
-  named_scope :like, lambda { |name|
+  scope :like, lambda { |name|
     name = "%#{name}%"
     {
      :conditions => ["sections.name LIKE ? OR sections.description LIKE ?", name,name]
@@ -88,10 +88,6 @@ class Section < ActiveRecord::Base
   class <<self
     def searchable_attributes
       @@searchable_attributes
-    end
-
-    def display_name
-      "Section"
     end
 
     def search_list(options)

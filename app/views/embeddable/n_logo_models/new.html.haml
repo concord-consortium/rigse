@@ -1,3 +1,3 @@
-- form_for(@n_logo_model, :before => "tinyMCE.triggerSave(true,true)") do |f|
+= form_for(@n_logo_model, :before => "tinyMCE.triggerSave(true,true)") do |f|
   .item
     = render :partial => 'form', :locals => { :n_logo_model => @n_logo_model, :f => f }

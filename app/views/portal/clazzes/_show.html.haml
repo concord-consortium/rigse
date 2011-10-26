@@ -6,7 +6,7 @@
       .action_menu_header_left
       .action_menu_header_right
         -if portal_clazz.changeable? current_user
-          = link_to "edit", edit_portal_clazz_url
+          = link_to "edit class information", edit_portal_clazz_url(portal_clazz)
       .block_list
         %ul
           %li

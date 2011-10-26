@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe RiGse::BigIdeasController do
 
@@ -15,7 +15,7 @@ describe RiGse::BigIdeasController do
   describe "responding to GET index" do
 
     it "should expose an array of all the @big_ideas" do
-      RiGse::BigIdea.should_receive(:find).with(:all).and_return([mock_big_idea])
+      RiGse::BigIdea.should_receive(:all).and_return([mock_big_idea])
       get :index
       assigns[:big_ideas].should == [mock_big_idea]
     end
@@ -24,7 +24,7 @@ describe RiGse::BigIdeasController do
   
       it "should render all big_ideas as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        RiGse::BigIdea.should_receive(:find).with(:all).and_return(big_ideas = mock("Array of BigIdeas"))
+        RiGse::BigIdea.should_receive(:all).and_return(big_ideas = mock("Array of BigIdeas"))
         big_ideas.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

@@ -1,10 +1,10 @@
-if File.exists?("#{RAILS_ROOT}/config/mailer.yml") || ENV['RAILS_ENV'] == "test" || ENV['RAILS_ENV'] == "cucumber"
+if File.exists?("#{::Rails.root.to_s}/config/mailer.yml") || ::Rails.env == "test" || ::Rails.env == "cucumber"
   require "action_mailer"
-  if ENV['RAILS_ENV'] == "test" || ENV['RAILS_ENV'] == "cucumber"
+  if ::Rails.env == "test" || ::Rails.env == "cucumber"
     puts "Overriding ActionMailer config and setting test mode"
     ActionMailer::Base.delivery_method = :test
   else
-    c = YAML::load(File.open("#{RAILS_ROOT}/config/mailer.yml"))
+    c = YAML::load(File.open("#{::Rails.root.to_s}/config/mailer.yml"))
     c.each do |key,val|
       if key == :smtp || key == 'smtp'
         key = :smtp_settings

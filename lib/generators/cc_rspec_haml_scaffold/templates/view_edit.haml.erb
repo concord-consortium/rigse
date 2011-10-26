@@ -1,2 +1,2 @@
-- form_for(@<%= local_singular_name %>) do |f|
+= form_for(@<%= local_singular_name %>) do |f|
   = render :partial => 'form', :locals => { :<%= local_singular_name %> => @<%= local_singular_name %>, :f => f }

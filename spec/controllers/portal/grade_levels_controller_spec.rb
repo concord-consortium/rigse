@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::GradeLevelsController do
 
@@ -16,7 +16,7 @@ describe Portal::GradeLevelsController do
 
   describe "GET index" do
     it "assigns all portal_grade_levels as @portal_grade_levels" do
-      Portal::GradeLevel.stub!(:find).with(:all).and_return([mock_grade_level])
+      Portal::GradeLevel.stub!(:all).and_return([mock_grade_level])
       get :index
       assigns[:portal_grade_levels].should == [mock_grade_level]
     end

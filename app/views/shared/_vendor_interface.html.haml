@@ -1,8 +1,8 @@
 %fieldset
   %legend
-    Selected Probeware Interface: 
+    Probeware Interface 
   %label{:for => 'user_vendor_interface_id'}
-    Selected Probeware Interface:
+    Selected Interface:
   = f.collection_select(:vendor_interface_id, Admin::Project.default_project.enabled_vendor_interfaces, :id, :name, :html => { :id => "vendor_interface_id" })
 
   #vendor_interface

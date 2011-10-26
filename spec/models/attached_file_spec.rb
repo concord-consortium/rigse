@@ -1,9 +1,10 @@
-require 'spec_helper'
+require File.expand_path('../../spec_helper', __FILE__)
 
 describe AttachedFile do
   
   describe "being created" do
     before do
+      Paperclip.options[:log] = false
       @attached_file = AttachedFile.new
     end
     
@@ -15,7 +16,7 @@ describe AttachedFile do
       %w( user_id name attachable_type attachable_id ).each do |attribute|      
         a = build_attached_file(attribute.to_sym => nil)
         a.should_not be_valid
-        a.errors.on(attribute.to_sym).should_not be_nil
+        a.errors[attribute.to_sym].should_not be_nil
       end
 
       a = build_attached_file
@@ -24,7 +25,7 @@ describe AttachedFile do
     
     it "should upload a file" do
       a = build_attached_file({
-        :attachment => File.new(RAILS_ROOT + '/spec/fixtures/images/rails.png')
+        :attachment => File.new(::Rails.root.to_s + '/spec/fixtures/images/rails.png')
       })
       a.should be_valid
       a.save

@@ -16,10 +16,12 @@
         %h3= "Activity: #{in_place_editor_field :external_activity, 'name'}"
         .tiny=in_place_editor_field :external_activity, 'description', {},{:rows=>3, :cols=>80}
         .tiny=in_place_editor_field :external_activity, 'url', {},{:rows=>3, :cols=>80}
+        .tiny= "Cohorts: #{@external_activity.cohort_list.join(', ')}"
       - else
         %h3= @external_activity.name
         .small= @external_activity.description
-        .small= @external_activity.description
+        .small= @external_activity.url
+        .tiny= "Cohorts: #{@external_activity.cohort_list.join(', ')}"
   .action_menu_header_right
     = dropdown_button "actions.png", :title => "actions for this external_activity"
     - if (external_activity.changeable?(current_user))

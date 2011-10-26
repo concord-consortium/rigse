@@ -2,7 +2,7 @@ class RiGse::ExpectationsController < ApplicationController
   # GET /RiGse/expectations
   # GET /RiGse/expectations.xml
   def index
-    @expectations = RiGse::Expectation.find(:all)
+    @expectations = RiGse::Expectation.all
     respond_to do |format|
       format.html 
       format.xml { render :xml => @expectations }

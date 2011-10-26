@@ -1,8 +1,10 @@
-%div{:id => dom_id_for(embeddable, :item), :class => 'item'}
-  %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
-    - saveable = saveable_for_learner(embeddable, learner)
-    - css_style = saveable.answered? ? 'answered' : 'not_answered'
-    %item{:style => 'display: block;'}
-      = embeddable.prompt
-    %item{:class => css_style, :style => 'display: block;'}
-      = h(saveable.answer).gsub("\n", '<br/>')
+%div{:class => 'question_container'}
+  %div{:id => dom_id_for(embeddable, :item), :class => 'item'}
+    %div{ :id => dom_id_for(embeddable, :details), :class => 'content' }
+      - saveable = saveable_for_learner(embeddable, learner)
+      - css_style = saveable.answered? ? 'answered' : 'not_answered'
+      .item{:style => 'display: block;'}
+        %strong
+          = embeddable.prompt
+      .item{:class => css_style, :style => 'display: block;'}
+        = h(saveable.answer).gsub("\n", '<br/>')

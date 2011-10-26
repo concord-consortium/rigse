@@ -13,4 +13,4 @@
                 = Embeddable::SoundGrapher.display_name + ': ' + @sound_grapher.name
               %object{ :refid => ot_refid_for(@sound_grapher) }
       %library
-        =yield :layout
+        = content_for :layout

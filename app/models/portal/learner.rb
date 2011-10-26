@@ -79,9 +79,6 @@ class Portal::Learner < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Learner"
-    end
   end
   
   # for the view system ...
@@ -128,4 +125,7 @@ class Portal::Learner < ActiveRecord::Base
     # end
   end
 
+  def run_format
+    offering.runnable.run_format
+  end
 end

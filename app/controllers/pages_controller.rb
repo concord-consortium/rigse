@@ -65,7 +65,7 @@ class PagesController < ApplicationController
   def index
     # @activity = Activity.find(params['section_id'])
     # @pages = @activity.pages
-    # @pages = Page.find(:all)
+    # @pages = Page.all
     
     @include_drafts = param_find(:include_drafts)
     @name = param_find(:name)
