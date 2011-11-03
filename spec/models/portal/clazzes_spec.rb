@@ -269,7 +269,7 @@ describe Portal::Clazz do
           @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable_id => i)
         end
         @student_offerings = @offerings[0...3]
-        @clazzes = [mock(:clazz, :active_offerings => @student_offerings)]
+        @clazzes = [mock(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
         @student = mock(:student, :clazzes => @clazzes)
         @user = mock(:user, :portal_student => @student)
         @clazz.stub!(:default_class => true)

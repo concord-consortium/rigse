@@ -175,7 +175,9 @@ def generate_default_project_and_jnlps_with_mocks
     :using_custom_css?              => false,
     :use_bitmap_snapshots?          => false,
     :allow_adhoc_schools?           => false,
-    :require_user_consent?          => false
+    :require_user_consent?          => false,
+    :allow_default_class            => false,
+    :allow_default_class?           => false
   )
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
