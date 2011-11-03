@@ -141,4 +141,88 @@ describe Portal::Clazz do
       Portal::Clazz.default_class.should == default_clazz
     end
   end
+  
+  describe "offerings_including_default_class" do
+    before(:each) do
+      @clazz             = Factory :portal_clazz
+      @offerings         = []
+      @default_offerings = []
+      1.upto(10) do |i|
+        @offerings << mock(:offering,
+                           :id => i,
+                           :runnable_id => i, 
+                           :runnable_type => 'bogus', 
+                           :default => false)
+
+        @default_offerings << mock(:offering,
+                                   :id => i,
+                                   :runnable_id => i, 
+                                   :runnable_type => 'bogus', 
+                                   :default => true)
+      end
+      @clazz.stub!(:active_offerings => @offerings)
+    end
+    
+    describe "when there are no default activities" do
+      before(:each) do
+        def_offerings = []
+        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+          def_offerings.select {|o| o.runnable_id == a}}
+      end
+      it "should have 10 offerings, zero default offerings" do
+        @clazz.offerings_including_default_class.size.should == 10
+        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 0
+      end
+    end
+
+    describe "when there is 100% overlap with default activities" do
+      before(:each) do
+        def_offerings = @default_offerings
+        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+          def_offerings.select {|o| o.runnable_id == a}}
+      end
+      it "should have 10 offerings, 10 default offerings" do
+        @clazz.offerings_including_default_class.size.should == 10
+        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 10
+      end
+    end
+    
+    describe "the first half are default activities" do
+      before(:each) do
+        def_offerings = @default_offerings[0...5]
+        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+          def_offerings.select {|o| o.runnable_id == a}}
+      end
+      it "should have 10 offerings, 5 default offerings" do
+        @clazz.offerings_including_default_class.size.should == 10
+        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+      end
+    end
+
+    describe "the first half are default activities" do
+      before(:each) do
+        def_offerings = @default_offerings[5...10]
+        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+          def_offerings.select {|o| o.runnable_id == a}}
+      end
+      it "should have 10 offerings, 5 default offerings" do
+        @clazz.offerings_including_default_class.size.should == 10
+        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+      end
+    end
+
+    describe "every other activity is the default default" do
+      before(:each) do
+        def_offerings = @default_offerings.select { |i| i.runnable_id % 2 == 0 }
+        Portal::Offering.stub!(:find_all_by_runnable_id_and_runnable_type_and_default_offering).and_return { |a,b,c|
+          def_offerings.select {|o| o.runnable_id == a}}
+      end
+      it "should have 10 offerings, 5 default offerings" do
+        @clazz.offerings_including_default_class.size.should == 10
+        @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 5
+      end
+    end
+  end
+
 end
+

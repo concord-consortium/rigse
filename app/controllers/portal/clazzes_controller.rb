@@ -30,7 +30,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
-    @offerings = substitute_default_class_offerings(@portal_clazz.active_offerings)
+    @offerings = @portal_clazz.offerings_including_default_class
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @portal_clazz }
@@ -384,19 +384,4 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
-  def substitute_default_class_offerings(clazz_offerings)
-    return clazz_offerings if @portal_clazz.default_class
-    offerings = clazz_offerings.clone
-    offerings.each do |offering|
-      all_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type(offering.runnable.id, offering.runnable_type)
-      default_offerings = all_offerings.select {|x| x.default_offering == true && x.runnable.id == offering.runnable.id}
-      default_offerings.each do |doff|
-        if doff.runnable.id == offering.runnable.id
-          offerings.delete offering
-          offerings << doff
-        end
-      end
-    end
-    offerings
-  end
 end
