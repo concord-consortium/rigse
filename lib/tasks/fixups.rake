@@ -407,6 +407,31 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     task :use_jna_for_vernier_goio => :environment do
       Fixups.switch_driver('vernier_goio','JNI','JNA')
     end
+
+    desc "move all offerings to default class"
+    task :move_offerings_to_default_class => :environment do
+      clazz = Portal::Clazz.default_class
+      Portal::Offering.all.each do |offering|
+        next if offering.clazz_id == clazz.id
+        runnable_id = offering.runnable_id
+        runnable_type = offering.runnable_type
+        found   = Portal::Offering.find_all_by_runnable_id_and_runnable_type(runnable_id, runnable_type)
+        found   = found.detect { |o| o.clazz_id == clazz.id }
+        unless found
+          found = Portal::Offering.create(:runnable_id => runnable_id, :runnable_type => runnable_type, :clazz => clazz, :default_offering => true)
+        end
+        offering.learners.each do |learner|
+          learner.offering = found
+          learner.save
+        end
+      end
+      # We don't need to delete offerings, they are
+      # switched out dynamically in the controller
+      # Portal::Offering.all.each do |offering|
+      #   next if offering.clazz_id == clazz.id
+      #   offering.delete
+      # end
+    end
   end
 end
 
