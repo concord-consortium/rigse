@@ -223,6 +223,72 @@ describe Portal::Clazz do
       end
     end
   end
+  
+  # def offerings_with_default_classes(user=nil)
+  #   return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
+  #   real_offerings = user.portal_student.clazzes.map{ |c| c.active_offerings }.flatten.uniq.compact
+  #   default_offerings = self.active_offerings.reject { |o| real_offerings.include?(o) }
+  #   default_offerings 
+  # end
+  describe "offerings_with_default_classes" do
+    before(:each) do
+      @clazz = Factory :portal_clazz, :default_class => false
+    end
+    describe "called without a user" do
+      it "should fall back to offerings_including_default_class" do
+        @clazz.should_receive(:offerings_including_default_class).and_return(true)
+        @clazz.offerings_with_default_classes.should == true
+      end
+    end
+    describe "called without a student" do
+      before(:each) do
+        @user = mock(:user, :portal_student => nil)
+      end
+      it "should fall back to offerings_including_default_class" do
+        @clazz.should_receive(:offerings_including_default_class).and_return(true)
+        @clazz.offerings_with_default_classes(@user).should == true
+      end
+    end
+    describe "when not the default class" do
+      before(:each) do
+        @offerings = [mock(:offering),mock(:offering)]
+        @clazzes = [mock(:clazz, :offerings => @offerings)]
+        @student = mock(:student, :clazzes => @clazzes)
+        @user = mock(:user, :portal_student => @student)
+      end
+      it "should fall back to offerings_including_default_class" do
+        @clazz.should_receive(:default_class).and_return(false)
+        @clazz.should_receive(:offerings_including_default_class).and_return(true)
+        @clazz.offerings_with_default_classes(@user).should == true
+      end
+    end
+    describe "when the default class, and when there is a user" do
+      before(:each) do
+        @offerings = []
+        1.upto(10) do |i|
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable_id => i)
+        end
+        @student_offerings = @offerings[0...3]
+        @clazzes = [mock(:clazz, :active_offerings => @student_offerings)]
+        @student = mock(:student, :clazzes => @clazzes)
+        @user = mock(:user, :portal_student => @student)
+        @clazz.stub!(:default_class => true)
+        @clazz.stub!(:active_offerings => @offerings)
+      end
+      it "should not fall back to offerings_including_default_class" do
+        @clazz.should_not_receive(:offerings_including_default_class).and_return(true)
+        @clazz.offerings_with_default_classes(@user).should_not be_nil
+      end
+      it "should not contain the students offerings" do
+        default_class_offerings = @clazz.offerings_with_default_classes(@user)
+        @student_offerings.each do |o|
+          default_class_offerings.should_not include(o)
+        end
+        default_class_offerings.should have(7).offerings
+      end
+    end
+
+  end
 
 end
 
