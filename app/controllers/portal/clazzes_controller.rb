@@ -31,7 +31,7 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_project.allow_default_class
-      @offerings = @portal_clazz.offerings_with_default_class(current_user)
+      @offerings = @portal_clazz.offerings_with_default_classes(current_user)
     else
       @offerings = @portal_clazz.active_offerings
     end
