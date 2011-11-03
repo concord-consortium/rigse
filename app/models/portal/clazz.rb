@@ -280,12 +280,15 @@ class Portal::Clazz < ActiveRecord::Base
     self.class_word.downcase! if self.class_word
   end
 
-
+  # NOTE: this should only be called by offerings_with_default_classes
+  # TODO: make protected method
   def offerings_including_default_class
     return self.active_offerings if self.default_class
     offerings = self.active_offerings.clone
     final_offers = []
     offerings.each do |offering|
+      # TODO: ensure that the offerings are in the default class?
+      # the 'default' flag in offerings seems to be redundant, possibly confusing ...
       default_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
       case default_offerings.size
       when 0
@@ -299,6 +302,13 @@ class Portal::Clazz < ActiveRecord::Base
       logger.warn("multiple default offerings with the same runnable ids: #{default_offerings.map {|o| o.id}} type: #{default_offerings.first.runnable_type} id: #{default_offerings.first.runnable_id}")
     end
     final_offers
+  end
+
+  def offerings_with_default_classes(user=nil)
+    return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
+    real_offerings = user.portal_student.clazzes.map{ |c| c.active_offerings }.flatten.uniq.compact
+    default_offerings = self.active_offerings.reject { |o| real_offerings.include?(o) }
+    default_offerings 
   end
 
 end
