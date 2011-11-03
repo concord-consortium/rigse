@@ -279,4 +279,26 @@ class Portal::Clazz < ActiveRecord::Base
   def class_word_lowercase
     self.class_word.downcase! if self.class_word
   end
+
+
+  def offerings_including_default_class
+    return self.active_offerings if self.default_class
+    offerings = self.active_offerings.clone
+    final_offers = []
+    offerings.each do |offering|
+      default_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
+      case default_offerings.size
+      when 0
+        final_offers << offering
+        next
+      when 1
+        final_offers << default_offerings.first
+        next
+      end
+      final_offers <<  default_offerings.first
+      logger.warn("multiple default offerings with the same runnable ids: #{default_offerings.map {|o| o.id}} type: #{default_offerings.first.runnable_type} id: #{default_offerings.first.runnable_id}")
+    end
+    final_offers
+  end
+
 end
