@@ -13,9 +13,16 @@ Feature: Student requires a password reset
   Scenario: Student forced to change password
     # And the student "student" has security questions set
     When I am logged in as "student", "student"
-    And I am on my home page
+    And I go to my home page
+    Then I should be on the password reset page
     Then I should see "You must set a new password."
-  
+
+  Scenario: Student tries to navigate to their preferences
+    When I am logged in as "student", "student"
+    When I go to my preferences
+    Then I should be on the password reset page
+    And I should see "You must set a new password."
+
   Scenario: Student updates password with errors
     When I am logged in as "student", "student"
     And I am on my home page
