@@ -125,10 +125,8 @@ class ApplicationController < ActionController::Base
 
   def check_for_password_reset_requirement
     if current_user && current_user.require_password_reset
-      path = ActionController::Routing::Routes.recognize_path request.env['PATH_INFO']
-      controller = path[:controller]
-      action = path[:action]
-      unless controller =~/password/i || controller =~/session/i
+      path = request.env['PATH_INFO']
+      unless path =~/password/i || path =~/session/i || path=~/login/i || path =~ /logout/i
         redirect_to change_password_path :reset_code => "0"
       end
     end
