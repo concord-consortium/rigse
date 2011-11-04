@@ -300,6 +300,12 @@ module SisImporter
           user = find_user(row) || create_user(row)
           if user
             user.update_attributes!(user_params_from_row(row))
+            if user.created_at > 10.minutes.ago
+              # if we have just created a new user, require them
+              # to update their password at next login
+              user.require_password_reset=true
+              user.save
+            end
           end
           self.reporter << user
         rescue ExternalUserDomain::ExternalUserDomainError => e

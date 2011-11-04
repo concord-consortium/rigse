@@ -273,6 +273,14 @@ describe SisImporter::DistrictImporter do
       end
     end
 
+    it "imported users are required to change their passwords" do
+      all_users = User.find(:all)
+      new_users = all_users - @initial_users
+      new_users.each do |user|
+        user.require_password_reset?.should be_true
+      end
+    end
+
     it "should create new courses" do
       Portal::Course.find(:all).should be_more_than(@initial_courses)
       courses = Portal::Course.find(:all) - @initial_courses
@@ -463,7 +471,7 @@ describe SisImporter::DistrictImporter do
 
   describe "after an import, students must reset their passwords" do
     before(:each) do
-      Delorean.time_travel_to "5 minutes ago"
+      Delorean.time_travel_to "15 minutes ago"
       run_importer(:district => '01')
       Delorean.back_to_the_present
       @student = Portal::Student.last.user
@@ -499,9 +507,9 @@ describe SisImporter::DistrictImporter do
       end
     end
 
-    describe "teachers are not forced to reset their passwords after the import" do
-      it "will note require teachers to reset their password" do
-        @teacher.require_password_reset.should be_false
+    describe "teachers are also forced to reset their passwords after the import" do
+      it "will require teachers to reset their password" do
+        @teacher.require_password_reset.should be_true
       end
     end
 
