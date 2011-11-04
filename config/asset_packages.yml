@@ -62,7 +62,7 @@ stylesheets:
   - data_table
   - reports
   - workgroup
-  
+  - chosen 
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
