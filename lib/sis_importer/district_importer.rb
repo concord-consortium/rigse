@@ -154,7 +154,7 @@ module SisImporter
       # initialize SisImporter with :default_school => "My School Name"
       # to force non-matched schools into a default school.
       elsif @configuration.default_school
-        name = @configuration.default_school
+        name = "#{@configuration.default_school}-#{row[:SchoolNumber]}"
         @log.warn("using #{name} for: #{row[:SchoolNumber]} as specified in options.")
         school = Portal::School.find_by_name(name)
         if (school.nil?)
@@ -204,7 +204,10 @@ module SisImporter
           rake portal:setup:import_nces_from_files
         HEREDOC
         @log.warn(message)
-        # TODO, create one with a special name? Throw exception?
+        name = "non-nces district - #{row[:District]}"
+        description = "This district was created using the sis_importer/district_importer.\No matchind NCES district was found."
+        district = Portal::District.find_by_name(name) || Portal::District.create(:name => name, :description => description)
+        @log.warn("created district #{name} -- possibly an error")
       else
         district = Portal::District.find_or_create_by_nces_district(nces_district)
         # cache the result:
