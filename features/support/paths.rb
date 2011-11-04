@@ -60,6 +60,8 @@ module NavigationHelpers
       preferences_user_path user
     when /the requirements page/
       "/requirements/"
+    when /the password reset page/
+      "/change_password/0"
     # accept paths too:
     when /the route (.+)/
       $1
