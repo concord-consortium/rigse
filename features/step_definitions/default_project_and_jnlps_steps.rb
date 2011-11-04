@@ -47,5 +47,5 @@ Then /^adhoc workgroups are set based on settings.yml$/ do
 end
 
 Then /^I should see the default district$/ do
-  page.should have_xpath('//*', :text => "#{APP_CONFIG[:site_name]}-district")
+  page.should have_xpath('//*', :text => APP_CONFIG[:site_district])
 end
