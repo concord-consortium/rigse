@@ -16,7 +16,7 @@ module SisImporter
         :district               => 'test',
         :log_level              => Logger::INFO,
         :drop_enrollments       => false,
-        :default_school         => "Summer Courses 2011",
+        :default_school         => "imported non-nces school",
         :external_domain_suffix => "sis_feed",
         :skip_get_csv_files     => false,
         :transport_class        => SisImporter::LocalFileTransport,
