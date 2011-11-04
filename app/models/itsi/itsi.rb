@@ -9,7 +9,10 @@ class Itsi::Itsi < ActiveRecord::Base
     end
   end
 
-#  self.table_name_prefix = ""
-  establish_connection :itsi
 
+  begin
+    establish_connection :itsi
+  rescue
+    "not able to establish itsi db connnection"
+  end
 end
