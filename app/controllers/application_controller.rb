@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
   before_filter :original_user
   before_filter :portal_resources
   before_filter :check_for_password_reset_requirement
+  before_filter :check_student_security_questions_ok
 
   # Portal::School.find(:first).members.count
 
@@ -123,11 +124,23 @@ class ApplicationController < ActionController::Base
     redirect_to path
   end
 
+  def session_sensitive_path
+    path = request.env['PATH_INFO']
+    return path =~ /password|session|login|logout|security_questions/i
+  end
+
   def check_for_password_reset_requirement
     if current_user && current_user.require_password_reset
-      path = request.env['PATH_INFO']
-      unless path =~/password/i || path =~/session/i || path=~/login/i || path =~ /logout/i
+      unless session_sensitive_path
         redirect_to change_password_path :reset_code => "0"
+      end
+    end
+  end
+
+  def check_student_security_questions_ok
+    if current_project && current_project.use_student_security_questions && !current_user.portal_student.nil? && current_user.security_questions.size < 3
+      unless session_sensitive_path
+        redirect_to(edit_user_security_questions_path(current_user))
       end
     end
   end
