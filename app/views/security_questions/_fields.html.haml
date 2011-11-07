@@ -1,13 +1,15 @@
-%table.form
-  %tr
-    %th Question:
-    %th Answer:
+%ul
   - question_names = ["First", "Second", "Third"]
-  - @security_questions.each_with_index do |question, i|
-    - errors = question.errors[:answer]
-    - border = "border: 2px #FF0000 solid;" unless (errors.nil? || errors.empty?)
+  %table.form
     %tr
-      %td
-        = hidden_field_tag "security_questions[question#{i}][id]", question.id
-        = select_tag "security_questions[question#{i}][question_idx]", question.select_options.join.html_safe
-      %td= text_field_tag "security_questions[question#{i}][answer]", question.answer, :style => border
+      %th Question
+      %th Answer
+    - @security_questions.each_with_index do |question, i|
+      %tr
+        - border = "border: 2px #FF0000 solid;" unless question.errors.on(:answer).nil?
+        %td{:style => "text-align: left;"}
+          = hidden_field_tag "security_questions[question#{i}][id]", question.id
+          = label_tag "security_questions[question#{i}][question_idx]", "#{question_names[i]} question:"
+          = select_tag "security_questions[question#{i}][question_idx]", question.select_options
+        %td
+          = text_field_tag "security_questions[question#{i}][answer]", question.answer, :style => border
