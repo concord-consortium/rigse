@@ -19,14 +19,29 @@ Given /^The default project and jnlp resources exist using factories$/ do
   generate_default_project_and_jnlps_with_factories
 end
 
-def enabled_default_class(enable)
+def get_project
   project = Admin::Project.default_project
   unless project
     generate_default_project_and_jnlps_with_factories
     project = Admin::Project.default_project
   end
+  project
+end
+
+def enabled_default_class(enable)
+  project = get_project
   project.allow_default_class = enable
   project.save
+end
+
+def enable_security_questions(enable)
+  project = get_project
+  project.use_student_security_questions = enable
+  project.save
+end
+
+Given /^the default project has security questions enabled$/ do
+  enable_security_questions(true)
 end
 
 Given /^the option to allow default classes is enabled$/ do
