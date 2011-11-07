@@ -14,7 +14,10 @@ describe SessionsController do
     # This line prevented successful testing of a non-admin (eg, Student) user. -- Cantina-CMH 6/15/10
     #login_admin
     
+    # 2011-11-08 NP: found ./lib/authenticated_test_helper.rb (this probably should be
+    # moved!)
     @user  = mock_user
+    @user.stub!(:require_password_reset).and_return(false)
     @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
     controller.stub!(:cookies).and_return(@login_params)
@@ -35,6 +38,7 @@ describe SessionsController do
               @ccookies.stub!(:[]).with(:auth_token).and_return(token_value)
               @ccookies.stub!(:delete).with(:auth_token)
               @ccookies.stub!(:[]=)
+              @user.stub!(:require_password_reset).and_return(false)
               @user.stub!(:remember_me) 
               @user.stub!(:refresh_token) 
               @user.stub!(:forget_me)
