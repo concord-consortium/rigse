@@ -18,6 +18,15 @@ describe SessionsController do
     # moved!)
     @user  = mock_user
     @user.stub!(:require_password_reset).and_return(false)
+    @user.stub!(:portal_teacher).and_return(nil)
+    @user.stub!(:portal_student).and_return(nil)
+    @user.stub!(:remember_me) 
+    @user.stub!(:refresh_token) 
+    @user.stub!(:forget_me)
+    @user.stub!(:remember_token)
+    @user.stub!(:remember_token_expires_at)
+    @user.stub!(:remember_token?)
+    stub_current_user(@user)
     @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
     controller.stub!(:cookies).and_return(@login_params)
@@ -146,15 +155,9 @@ describe SessionsController do
       
     it "should not check for security questions if the user is not a student" do
       #@controller.stub!(:cookies).and_return({})
-      @user.stub!(:remember_me) 
-      @user.stub!(:refresh_token) 
-      @user.stub!(:forget_me)
-      @user.stub!(:remember_token)
-      @user.stub!(:remember_token_expires_at)
-      @user.stub!(:remember_token?)
       @login_params[:remember_me] = '0'
       
-      @mock_project.should_receive(:use_student_security_questions).and_return(true)
+      @mock_project.stub!(:use_student_security_questions).and_return(true)
       @user.should_receive(:portal_student).and_return(nil)
       @user.should_not_receive(:security_questions)
       
@@ -170,6 +173,7 @@ describe SessionsController do
         @login_params = { :login => 'grrrrrr', :password => 'testpassword' }
         @student = Factory.create(:portal_student, :user => Factory.create(:user, @login_params))
         User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@student.user)
+        stub_current_user(@student.user)
       end
       
       it "should not check for security questions if the current Admin::Project says not to" do
@@ -188,7 +192,7 @@ describe SessionsController do
             true,
             true
           ]
-          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          @mock_project.stub(:use_student_security_questions).and_return(true)
           @student.user.should_receive(:security_questions).and_return(questions)
           
           do_create

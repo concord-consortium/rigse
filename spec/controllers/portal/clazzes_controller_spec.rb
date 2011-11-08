@@ -43,6 +43,7 @@ describe Portal::ClazzesController do
     @mock_project.stub(:maven_jnlp_family).and_return(nil)
     @mock_project.stub(:snapshot_enabled).and_return(false)
     @mock_project.stub(:allow_default_class).and_return(false)
+    @mock_project.stub(:use_student_security_questions).and_return(false)
     Admin::Project.stub(:default_project).and_return(@mock_project)
   end
 
