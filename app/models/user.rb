@@ -163,8 +163,8 @@ class User < ActiveRecord::Base
   end
 
   def name_and_login
-    _fullname = "#{first_name} #{last_name}".strip
-    _fullname.empty? ? login : "#{_fullname} (#{login})"
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname} ( #{login} )"
   end
 
   # Check if a user has a role.

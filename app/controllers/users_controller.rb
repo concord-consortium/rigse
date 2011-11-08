@@ -94,23 +94,30 @@ class UsersController < ApplicationController
 
         users = all_users.group_by do |u|
           case
-          when u.default_user then :default_users
-          when u.email[/no-email/] then :no_email
-          else :email
+          when u.default_user   then :default_users
+          when u.portal_student then :student
+          when u.portal_teacher then :teacher
+          else :regular
           end
         end
-        # to avoid nil values, initialize everything to an empty array if it's non-existent
-        users[:no_email] ||= []
-        users[:email] ||= []
-        users[:default_users] ||= []
-        users[:no_email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-        users[:email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
 
-        @user_list = [ { :name => 'recent' , :users => recent_users },
-                       { :name => 'guest', :users => [User.anonymous] },
-                       { :name => 'regular', :users => users[:email] },
-                       { :name => 'students' , :users => users[:no_email] }
-                     ]
+        # to avoid nil values, initialize everything to an empty array if it's non-existent
+        # users[:student] ||= []
+        # users[:regular] ||= []
+        # users[:default_users] ||= []
+        # users[:student].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        # users[:regular].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        [:student, :regular, :default_users, :student, :teacher].each do |ar|
+          users[ar] ||= []
+          users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
+        end
+        @user_list = [ 
+          { :name => 'recent' ,   :users => recent_users     } ,
+          { :name => 'guest',     :users => [User.anonymous] } ,
+          { :name => 'regular',   :users => users[:regular]  } ,
+          { :name => 'students',  :users => users[:student]  } ,
+          { :name => 'teachers',  :users => users[:teacher]  } 
+        ]
         if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
         end
