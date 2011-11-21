@@ -26,9 +26,9 @@ class HomeController < ApplicationController
   def requirements
   end
 
-  # @template is a reference to the View template object
+  # view_context is a reference to the View template object
   def name_for_clipboard_data
-    render :text=> @template.clipboard_object_name(params)
+    render :text=> view_context.clipboard_object_name(params)
   end
 
   def missing_installer

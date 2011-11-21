@@ -97,8 +97,8 @@ class Admin::ProjectsController < ApplicationController
       render_to_string :partial => "home/project_info"
       self.class.instance_variable_set(:@controller_path, saved_path)
       
-      @admin_project.home_page_content = @template.instance_variable_get(:@content_for_project_info)
-      @template.instance_variable_set(:@content_for_project_info, nil)
+      @admin_project.home_page_content = view_context.instance_variable_get(:@content_for_project_info)
+      view_context.instance_variable_set(:@content_for_project_info, nil)
     end
     
     if request.xhr?
