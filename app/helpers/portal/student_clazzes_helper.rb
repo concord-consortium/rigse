@@ -29,9 +29,9 @@ module Portal::StudentClazzesHelper
       # default_value = "Add a registered #{current_project.name} student"
       default_value = "Add another student from this school."
       options = [[default_value,default_value]]
-      options = options + (student_list.map { |s| [ truncate(s.user.name_and_login,50), s.id ] })
+      options = options + (student_list.map { |s| [ truncate(s.user.name_and_login,:length => 50), s.id ] })
       select_opts = options_for_select(options, :selected => default_value)
-      return <<-EOF
+      span_tag = <<-EOF
           #{span_tag}
           #{select_tag('student_id',  select_opts ,:id => 'student_id_selector')}
           #{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_student', :id => clazz}, :with => "'student_id='+$('student_id_selector').value")}
@@ -39,7 +39,7 @@ module Portal::StudentClazzesHelper
         #{make_chosen('student_id_selector')}
       EOF
     end
-    return "#{span_tag}</span>"
+    return "#{span_tag}</span>".html_safe
   end
 
 
