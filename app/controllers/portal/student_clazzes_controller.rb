@@ -79,7 +79,7 @@ class Portal::StudentClazzesController < ApplicationController
   # DELETE /portal_student_clazzes/1.xml
   def destroy
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
-    @dom_id = @template.dom_id_for(@portal_student_clazz)
+    @dom_id = view_context.dom_id_for(@portal_student_clazz)
     @clazz = @portal_student_clazz.clazz
     @portal_student_clazz.destroy
     @clazz.reload

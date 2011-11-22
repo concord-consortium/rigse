@@ -54,7 +54,7 @@ describe User do
   end
   
   describe 'disallows illegitimate logins:' do
-    ['12', '1234567890_234567890_234567890_234567890_', 
+    ['', '1234567890_234567890_234567890_234567890_', 
      "Iñtërnâtiônàlizætiøn hasn't happened to ruby 1.8 yet",
      'semicolon;', 'quote"', 'backtick`', 'percent%', 'plus+'].each do |login_str|
       it "'#{login_str}'" do

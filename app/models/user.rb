@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   # Validations
 
   validates_presence_of     :login
-  validates_length_of       :login,    :within => 3..40
+  validates_length_of       :login,    :within => 1..40
   validates_uniqueness_of   :login
   validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
 
@@ -163,8 +163,8 @@ class User < ActiveRecord::Base
   end
 
   def name_and_login
-    _fullname = "#{first_name} #{last_name}".strip
-    _fullname.empty? ? login : "#{_fullname} (#{login})"
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname} ( #{login} )"
   end
 
   # Check if a user has a role.
