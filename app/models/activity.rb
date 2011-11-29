@@ -81,10 +81,6 @@ class Activity < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Activity"
-    end
-
     def search_list(options)
       name = options[:name]
       if (options[:include_drafts])
@@ -123,9 +119,6 @@ class Activity < ActiveRecord::Base
     sections
   end
 
-  def self.display_name
-    'Activity'
-  end
 
   def left_nav_panel_width
     300
@@ -226,6 +219,16 @@ HEREDOC
       @reportable_elements.each{|elem| elem[:activity] = self}
     end
     return @reportable_elements
+  end
+
+  def print_listing
+    listing = []
+    self.sections.each do |s|
+      s.pages.each do |p|
+        listing << {"#{s.name} #{p.name}" => p}
+      end
+    end
+    listing
   end
 
 end

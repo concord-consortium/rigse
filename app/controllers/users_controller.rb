@@ -94,23 +94,30 @@ class UsersController < ApplicationController
 
         users = all_users.group_by do |u|
           case
-          when u.default_user then :default_users
-          when u.email[/no-email/] then :no_email
-          else :email
+          when u.default_user   then :default_users
+          when u.portal_student then :student
+          when u.portal_teacher then :teacher
+          else :regular
           end
         end
-        # to avoid nil values, initialize everything to an empty array if it's non-existent
-        users[:no_email] ||= []
-        users[:email] ||= []
-        users[:default_users] ||= []
-        users[:no_email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
-        users[:email].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
 
-        @user_list = [ { :name => 'recent' , :users => recent_users },
-                       { :name => 'guest', :users => [User.anonymous] },
-                       { :name => 'regular', :users => users[:email] },
-                       { :name => 'students' , :users => users[:no_email] }
-                     ]
+        # to avoid nil values, initialize everything to an empty array if it's non-existent
+        # users[:student] ||= []
+        # users[:regular] ||= []
+        # users[:default_users] ||= []
+        # users[:student].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        # users[:regular].sort! { |a, b| a.first_name.downcase <=> b.first_name.downcase }
+        [:student, :regular, :default_users, :student, :teacher].each do |ar|
+          users[ar] ||= []
+          users[ar].sort! { |a, b| a.last_name.downcase <=> b.last_name.downcase }
+        end
+        @user_list = [ 
+          { :name => 'recent' ,   :users => recent_users     } ,
+          { :name => 'guest',     :users => [User.anonymous] } ,
+          { :name => 'regular',   :users => users[:regular]  } ,
+          { :name => 'students',  :users => users[:student]  } ,
+          { :name => 'teachers',  :users => users[:teacher]  } 
+        ]
         if users[:default_users] && users[:default_users].size > 0
           @user_list.insert(2, { :name => 'default', :users => users[:default_users] })
         end
@@ -150,6 +157,14 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.update_attributes(params[:user])
           @user.set_role_ids(params[:user][:role_ids]) if params[:user][:role_ids]
+
+          # set the cohort tags if we have a teacher
+          if @user.portal_teacher && params[:update_cohorts]
+            cohorts = params[:cohorts] ? params[:cohorts] : []
+            @user.portal_teacher.cohort_list = cohorts
+            @user.portal_teacher.save
+          end
+
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
             if request.env["HTTP_REFERER"] =~ /preferences/
@@ -265,7 +280,7 @@ class UsersController < ApplicationController
     # force the current_user to anonymous, because we have not successfully created an account yet.
     # edge case, which we might need a more integrated solution for??
     self.current_user = User.anonymous
-    flash[:error] = message
+    flash.now[:error] = message
     render :action => :new
   end
 end

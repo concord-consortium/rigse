@@ -13,6 +13,7 @@
       padding: 0px
         right: 10px
       a, a:visited, a:active
+        text-transform: capitalize
         cursor: pointer
         color: $_color
         font-weight: bold
@@ -36,7 +37,7 @@
   display: block
   clear: none
   float: left
-  height: 18px
+  height: 100%
   width: 18px
   overflow: hidden
   border: none
@@ -62,11 +63,10 @@ a.rollover:hover
   padding-left: 0
 
 .action_menu
-  font-size: 11px
   margin: 0 !important
   padding: 3px 10px
-  background-color: #f8ac1a
-  color: white
+  background-color: #FEE9AA
+  color: #53857C
   ul
     li
       list-style-type: none
@@ -80,10 +80,9 @@ a.rollover:hover
     margin: 0
     width: 50% !important
     .author
-      font-size: 9px
       font-style: italic
     a
-      color: white
+      color: #53857C
     input
       float: left
       margin-right: 5px
@@ -124,8 +123,6 @@ a.rollover:hover
     float: right
     display: table-cell
     text-align: right
-    +action_menu_tab
-  .action_menu_header_right a
     color: white
   ul.menu
     list-style-image: none
@@ -206,7 +203,7 @@ a.rollover:hover
   padding: 0
   text-align: right
   text-transform: uppercase
-  width: 10%
+  width: auto
 
 .item .action_menu .action_menu_activity_options a
   color: #333333 !important
@@ -216,8 +213,11 @@ a.rollover:hover
   float: left
   width: 85%
 
-#students_listing table th, #students_listing table td
+#students_listing table th, #students_listing table td, #teachers_listing table th, #teachers_listing table td
   text-align: left !important
+
+#students_listing table th, #students_listing table th
+  font-size: 1.5em
 
 div.action_menu_header_left span.dev_note a, div.action_menu_header_left span.filter_selection_control a, div.action_menu_header_left a.container_link
   color: #333333 !important

@@ -4,7 +4,7 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name => "External Activity"
+        %p= page_entries_info paginated_objects, :entry_name => ExternalActivity.display_name
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right
@@ -22,12 +22,16 @@
             = external_activity.user.name
         %div.action_menu_header_right
           %ul.menu
-            - unless(current_user.anonymous?)
+            - if current_user.has_role? "author"
               %li.menu=link_to 'duplicate', duplicate_external_activity_url(external_activity)
             - if (external_activity.changeable?(current_user))
+              %li.menu=link_to 'edit', edit_external_activity_url(external_activity)
               %li.menu=link_to 'delete', external_activity, :class => 'delete', :confirm => "Are you sure you want to delete #{TOP_LEVEL_CONTAINER_NAME_PLURAL} #{external_activity.id}", :method => :delete
       %div{:id => dom_id_for(external_activity, :details), :class => 'tiny'}
         %p=external_activity.description
+        - if current_user.has_role?("admin", "manager")
+          %p
+            %i= "Cohorts: #{external_activity.cohort_list.join(", ")}"
         %p
           %i= updated_time_text(external_activity)
         %p

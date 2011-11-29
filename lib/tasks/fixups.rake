@@ -302,7 +302,7 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
     task :populate_new_district_and_school_attributes_with_data_from_nces_tables => :environment do
       puts "\nUpdating #{Portal::District.count} Portal::District models with state, leaid, and zipcode data from the Portal::Nces06District models"
-      Portal::District.find_in_batches(:batch_size => 500) do |portal_districts|
+      Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
         portal_districts.each do |portal_district|
           nces_district = Portal::Nces06District.find(:first, :conditions => { :id => portal_district.nces_district_id }, :select => "id, LEAID, LZIP, LSTATE")
           portal_district.state   = nces_district.LSTATE
@@ -314,24 +314,24 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       end
 
       puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
-      Portal::School.find_in_batches(:batch_size => 500) do |portal_schools|
+      Portal::School.real.find_in_batches(:batch_size => 500) do |portal_schools|
         portal_schools.each do |portal_school|
-          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, LEAID, MZIP, MSTATE")
+          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, NCESSCH, MZIP, MSTATE")
           portal_school.state           = nces_school.MSTATE
-          portal_school.leaid_schoolnum = nces_school.LEAID
+          portal_school.ncessch         = nces_school.NCESSCH
           portal_school.zipcode         = nces_school.MZIP
           portal_school.save!
         end
         print '.'; STDOUT.flush
       end
+      puts
     end
-
   end
 
   namespace :report do
     # NSP: 20100826
     desc "report on activities without position attributes"
-    task :activity_positon_bug_report, :file_name, :needs => :environment do |t,args|
+    task :activity_positon_bug_report, [:file_name] => :environment do |t,args|
       args.with_defaults(:file_name => 'position_bug_activity_report.csv')
       file_name = args.file_name
       suspect_activities = Activity.find(:all, :conditions => "position is null and investigation_id is not null")
@@ -403,7 +403,15 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       Portal::Offering.all.select {|o| o.runnable.nil?}.each {|o| o.delete }
     end
 
-
+    desc "move vernier_goio vendor interface users to new JNA driver"
+    task :use_jna_for_vernier_goio => :environment do
+      Fixups.switch_driver('vernier_goio','JNI','JNA')
+    end
+    
+    desc "remove 'teacher' students (users which both, loose their students"
+    task :remove_teachers_test_students => :environment do
+      Fixups.remove_teachers_test_students
+    end
   end
 end
 

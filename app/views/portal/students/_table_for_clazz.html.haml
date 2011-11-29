@@ -5,7 +5,7 @@
   %th
     Student login
   %th
-    action
+    Remove
   - student_list.each do |portal_student|
     - portal_student_clazz = portal_clazz.student_clazzes.find_by_student_id(portal_student.id)
     %tr{:id=>dom_id_for(portal_student_clazz)}

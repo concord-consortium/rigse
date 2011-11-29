@@ -14,13 +14,13 @@ var EnableWorkgroups = function(_selector) {
     // remove other click observers!
     el.stopObserving('click');
     el.observe('click', function(e) {
-      Workgroup(offering_id);
+      Workgroup(offering_id,el.href);
       e.stop();
     });
   });
 };
 
-var Workgroup = function(_offering) {
+var Workgroup = function(_offering,_launch_url) {
   var load_error         = false;
   var loading_learners   = false;
   var learners           = [];
@@ -38,7 +38,7 @@ var Workgroup = function(_offering) {
   var learners_container = null;
   var lightbox_hood      = null;
   var lightbox_content   = null;
-
+  var launch_url         = _launch_url;
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
 
   var load_dom_elems = function() {
@@ -96,7 +96,7 @@ var Workgroup = function(_offering) {
       onSuccess: function() {
         pending_requests = pending_requests -1;
         close_dialog();
-        window.location = "/portal/offerings/" + offering + ".jnlp"
+        window.location = launch_url;
       },
       onFaiulre: function() {
         pending_requests = pending_requests -1;

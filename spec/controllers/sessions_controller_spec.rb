@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe SessionsController do
 
   fixtures        :users
@@ -15,9 +14,22 @@ describe SessionsController do
     # This line prevented successful testing of a non-admin (eg, Student) user. -- Cantina-CMH 6/15/10
     #login_admin
     
+    # 2011-11-08 NP: found ./lib/authenticated_test_helper.rb (this probably should be
+    # moved!)
     @user  = mock_user
+    @user.stub!(:require_password_reset).and_return(false)
+    @user.stub!(:portal_teacher).and_return(nil)
+    @user.stub!(:portal_student).and_return(nil)
+    @user.stub!(:remember_me) 
+    @user.stub!(:refresh_token) 
+    @user.stub!(:forget_me)
+    @user.stub!(:remember_token)
+    @user.stub!(:remember_token_expires_at)
+    @user.stub!(:remember_token?)
+    stub_current_user(@user)
     @login_params = { :login => 'quentin', :password => 'testpassword' }
     User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@user)
+    controller.stub!(:cookies).and_return(@login_params)
   end
   
   describe "on successful login," do
@@ -35,6 +47,7 @@ describe SessionsController do
               @ccookies.stub!(:[]).with(:auth_token).and_return(token_value)
               @ccookies.stub!(:delete).with(:auth_token)
               @ccookies.stub!(:[]=)
+              @user.stub!(:require_password_reset).and_return(false)
               @user.stub!(:remember_me) 
               @user.stub!(:refresh_token) 
               @user.stub!(:forget_me)
@@ -141,16 +154,10 @@ describe SessionsController do
     end
       
     it "should not check for security questions if the user is not a student" do
-      @controller.stub!(:cookies).and_return({})
-      @user.stub!(:remember_me) 
-      @user.stub!(:refresh_token) 
-      @user.stub!(:forget_me)
-      @user.stub!(:remember_token)
-      @user.stub!(:remember_token_expires_at)
-      @user.stub!(:remember_token?)
+      #@controller.stub!(:cookies).and_return({})
       @login_params[:remember_me] = '0'
       
-      @mock_project.should_receive(:use_student_security_questions).and_return(true)
+      @mock_project.stub!(:use_student_security_questions).and_return(true)
       @user.should_receive(:portal_student).and_return(nil)
       @user.should_not_receive(:security_questions)
       
@@ -166,6 +173,7 @@ describe SessionsController do
         @login_params = { :login => 'grrrrrr', :password => 'testpassword' }
         @student = Factory.create(:portal_student, :user => Factory.create(:user, @login_params))
         User.stub!(:authenticate).with(@login_params[:login], @login_params[:password]).and_return(@student.user)
+        stub_current_user(@student.user)
       end
       
       it "should not check for security questions if the current Admin::Project says not to" do
@@ -184,7 +192,7 @@ describe SessionsController do
             true,
             true
           ]
-          @mock_project.should_receive(:use_student_security_questions).and_return(true)
+          @mock_project.stub(:use_student_security_questions).and_return(true)
           @student.user.should_receive(:security_questions).and_return(questions)
           
           do_create

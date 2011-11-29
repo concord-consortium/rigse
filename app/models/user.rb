@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
   validates_presence_of     :vendor_interface_id
+  validates_presence_of     :password, :on => :update, :if => :updating_password?
 
   # Relationships
   has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
@@ -86,6 +87,8 @@ class User < ActiveRecord::Base
   has_one :portal_student, :class_name => "Portal::Student"
 
   belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
+
+  attr_accessor :updating_password
 
   acts_as_replicatable
 
@@ -104,6 +107,17 @@ class User < ActiveRecord::Base
 
     def login_does_not_exist?(login)
       User.count(:conditions => "`login` = '#{login}'") == 0
+    end
+
+    def suggest_login(first,last)
+      base = "#{first.first}#{last}".downcase.gsub(/[^a-z]/, "_")
+      suggestion = base
+      count = 0
+      while(login_exists?(suggestion)) 
+        count = count + 1
+        suggestion = "#{base}#{count}"
+      end
+      return suggestion
     end
 
     def default_users
@@ -141,12 +155,12 @@ class User < ActiveRecord::Base
   default_value_for :default_user, false
 
   # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
-  default_value_for :vendor_interface_id, 6
+  default_value_for :vendor_interface_id, 14
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id, :external_id
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -160,8 +174,8 @@ class User < ActiveRecord::Base
   end
 
   def name_and_login
-    _fullname = "#{first_name} #{last_name}".strip
-    _fullname.empty? ? login : "#{_fullname} (#{login})"
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname} ( #{login} )"
   end
 
   # Check if a user has a role.
@@ -279,6 +293,10 @@ class User < ActiveRecord::Base
       self.security_questions << q
       q.save
     end
+  end
+
+  def updating_password?
+    updating_password
   end
 
   protected

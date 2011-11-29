@@ -1,0 +1,16 @@
+.item
+  = edit_menu_for(admin_tag, f, { :omit_cancel => true })
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Scope:
+
+          =f.text_field :scope 
+    
+        %li
+          Tag:
+
+          =f.text_field :tag 
+    
+    

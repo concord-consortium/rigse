@@ -37,9 +37,6 @@ class Embeddable::Biologica::BreedOffspring < ActiveRecord::Base
   
   send_update_events_to :investigations
   
-  def self.display_name
-    "Biologica Breed Offspring"
-  end
 
   def investigations
     invs = []

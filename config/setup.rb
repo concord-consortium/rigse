@@ -1,4 +1,6 @@
 require 'rubygems'
+require "bundler/setup"
+
 require 'fileutils'
 require 'yaml'
 require 'erb'
@@ -66,17 +68,15 @@ require rails_file_path(%w{ lib app_settings })
 require rails_file_path(%w{ lib states_and_provinces })
 
 # Some of the AppSettings module methods need the constant RAILS_ENV defined
-RAILS_ENV = 'development'
+RAILS_ENV = 'development' unless defined?(RAILS_ENV)
+
 include AppSettings
 
 @settings_config_sample_path   = rails_file_path(%w{config settings.sample.yml})
 @settings_config_sample        = AppSettings.load_all_app_settings(@settings_config_sample_path)
 
-if AppSettings.settings_exists?
-  @app_settings = AppSettings.load_app_settings
-else
-  @app_settings = @settings_config_sample[RAILS_ENV]
-end
+@app_settings = AppSettings.load_app_settings if AppSettings.settings_exists?
+@app_settings = @settings_config_sample[RAILS_ENV] unless @app_settings
 
 # ==================================================================
 #
@@ -136,10 +136,23 @@ optparse = OptionParser.new do |opts|
     @options[:db_password] = db_password
   end
 
+  @options[:states_provinces] = nil
+  opts.on( '--states ',
+    "comma delimited list of 2 letter state/province abbreviations for creating NCES schools, use 'none' to create no NCES schools, default specified in config/themes/<theme>/settings.sample.yml" ) do |states_provinces|
+    @options[:states_provinces] = states_provinces
+  end
+
   @options[:db_name_prefix] = default_db_name_prefix
   opts.on( '-D', '--database DATABASE',
     "prefix to add to the names for the development, test, and production databases, default: '#{default_db_name_prefix}'" ) do |db_name_prefix|
+    default_db_name_prefix = nil
     @options[:db_name_prefix] = db_name_prefix
+  end
+
+  @options[:include_otrunk_examples] = false
+  opts.on( '--include-otrunk-examples',
+    "import and introspect content in otrunk-examples, this enables the raw_otml embeddable, default: false" ) do
+    @options[:include_otrunk_examples] = true
   end
 
   @options[:quiet] = default_quiet
@@ -170,61 +183,7 @@ end
 
 optparse.parse!
 
-# ==================================================================
-#
-#   Check for gems that need to be installed manually
-#
-# ==================================================================
-
-def gem_install_command_strings(missing_gems)
-  command = JRUBY ? "  jruby -S gem install " : "  sudo gem install "
-  command + missing_gems.collect {|g| "#{g[0]} -v'#{g[1]}'"}.join(' ') + "\n"
-end
-
-@missing_gems = []
-
-# These gems need to be installed with the Ruby VM for the web application
-if JRUBY
-  @gems_needed_at_start = [
-    ['rake', '>=0.8.7'],
-    ['activerecord-jdbcmysql-adapter', '>=0.9.2'],
-    ['jruby-openssl', '>=0.6']
-  ]
-else
-  @gems_needed_at_start = [['mysql', '>= 2.7']]
-end
-
-@gems_needed_at_start.each do |gem_name_and_version|
-  begin
-    gem gem_name_and_version[0], gem_name_and_version[1]
-  rescue Gem::LoadError
-    @missing_gems << gem_name_and_version
-  end
-  begin
-    require gem_name_and_version[0]
-  rescue LoadError
-  end
-end
-
-if @missing_gems.length > 0
-  message = "\n\n*** Please install the following gems: (#{@missing_gems.join(', ')}) and run config/setup.rb again.\n"
-  message << "\n#{gem_install_command_strings(@missing_gems)}\n"
-  raise message
-end
-
-
-# FIXME: see comment about this hack in config/environments/development.rb
-$: << 'vendor/gems/ffi-ncurses-0.3.2.1/lib/'
-
 require 'highline/import'
-
-def wrapped_agree(prompt)
-  if @options[:answer_yes]
-    true
-  else
-    agree(prompt)
-  end
-end
 
 # ==================================================================
 #
@@ -238,8 +197,8 @@ if @options[:force] && File.exists?(@db_config_path)
   FileUtils.rm(@db_config_path)
 end
 @db_config_sample_path         = rails_file_path(%w{config database.sample.yml})
-@rinet_data_config_path        = rails_file_path(%w{config rinet_data.yml})
-@rinet_data_config_sample_path = rails_file_path(%w{config rinet_data.sample.yml})
+@sis_import_data_config_path        = rails_file_path(%w{config sis_import_data.yml})
+@sis_import_data_config_sample_path = rails_file_path(%w{config sis_import_data.sample.yml})
 @mailer_config_path            = rails_file_path(%w{config mailer.yml})
 @mailer_config_sample_path     = rails_file_path(%w{config mailer.sample.yml})
 
@@ -248,7 +207,6 @@ if @options[:force] && File.exists?(@settings_config_path)
   FileUtils.rm(@settings_config_path)
 end
 
-puts "using theme: #{@options[:theme]} (use -t argument to specify alternate theme)"
 if @options[:theme]
   @theme_settings_config_sample_path   = rails_file_path(["config", "themes", @options[:theme], "settings.sample.yml"])
   raise "\n\n*** missing theme: #{@theme_settings_config_sample_path}\n\n" unless File.exists?(@theme_settings_config_sample_path)
@@ -265,12 +223,32 @@ if @options[:theme]
   end
 end
 
-puts "using site_url: #{@options[:site_url]} (use -s argument to specify alternate site url)\n"
+if @options[:states_provinces]
+  @options[:states_provinces] = @options[:states_provinces].split(',')
+  @options[:states_provinces] = [] if @options[:states_provinces].first == 'none'
+  @settings_config_sample['production'][:states_and_provinces] = @options[:states_provinces]
+  # dup the values so yaml doesn't use anchor labels (&id001)-- it makes it harder to read
+  @settings_config_sample['staging'][:states_and_provinces] = @options[:states_provinces].dup
+  @settings_config_sample['development'][:states_and_provinces] = @options[:states_provinces].dup
+end
 
-print "\nInitial setup of Rails Portal application named '#{@options[:app_name]}' ... "
+if @options[:include_otrunk_examples]
+  @settings_config_sample['production'][:include_otrunk_examples]  = true
+  @settings_config_sample['staging'][:include_otrunk_examples]     = true
+  @settings_config_sample['development'][:include_otrunk_examples] = true
+end
+
+puts <<HEREDOC
+
+Initial setup of Rails Portal application named '#{@options[:app_name]}' ...
+
+  using theme:    #{@options[:theme]} (use -t argument to specify alternate theme)
+  using site_url: #{@options[:site_url]} (use -s argument to specify alternate site url)
+
+HEREDOC
 
 @db_config_sample              = YAML::load_file(@db_config_sample_path)
-@rinet_data_config_sample      = YAML::load_file(@rinet_data_config_sample_path)
+@sis_import_data_config_sample      = YAML::load_file(@sis_import_data_config_sample_path)
 @mailer_config_sample          = YAML::load_file(@mailer_config_sample_path)
 
 if @options[:site_url]
@@ -281,7 +259,7 @@ end
 
 @new_database_yml_created = false
 @new_settings_yml_created = false
-@new_rinet_data_yml_created = false
+@new_sis_import_data_yml_created = false
 @new_mailer_yml_created = false
 @new_sds_yml_created = false
 
@@ -398,17 +376,17 @@ def create_new_mailer_yml
   File.open(@mailer_config_path, 'w') {|f| f.write @mailer_config.to_yaml }
 end
 
-def create_new_rinet_data_yml
-  @rinet_data_config = @rinet_data_config_sample
+def create_new_sis_import_data_yml
+  @sis_import_data_config = @sis_import_data_config_sample
   unless @options[:quiet]
     puts <<-HEREDOC
 
-       creating: #{@rinet_data_config_path}
-  from template: #{@rinet_data_config_sample_path}
+       creating: #{@sis_import_data_config_path}
+  from template: #{@sis_import_data_config_sample_path}
 
     HEREDOC
   end
-  File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+  File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
 end
 
 # ==================================================================
@@ -629,10 +607,10 @@ def check_for_config_mailer_yml
 end
 
 #
-# check for config/rinet_data.yml
+# check for config/sis_import_data.yml
 #
-def check_for_config_rinet_data_yml
-  unless file_exists_and_is_not_empty?(@rinet_data_config_path)
+def check_for_config_sis_import_data_yml
+  unless file_exists_and_is_not_empty?(@sis_import_data_config_path)
     unless @options[:quiet]
       puts <<-HEREDOC
 
@@ -640,8 +618,8 @@ def check_for_config_rinet_data_yml
 
       HEREDOC
     end
-    create_new_rinet_data_yml
-    @new_rinet_data_yml_created = true
+    create_new_sis_import_data_yml
+    @new_sis_import_data_yml_created = true
   end
 end
 
@@ -791,48 +769,48 @@ specify the values for the mysql database name, host, username, password.
 end
 
 #
-# update config/rinet_data.yml
+# update config/sis_import_data.yml
 #
-def update_config_rinet_data_yml
-  @rinet_data_config = YAML::load_file(@rinet_data_config_path)
+def update_config_sis_import_data_yml
+  @sis_import_data_config = YAML::load_file(@sis_import_data_config_path)
 
   unless @options[:quiet]
     puts <<-HEREDOC
 ----------------------------------------
 
-Updating the RINET CSV Account import configuration file: config/rinet_data.yml
+Updating the RINET CSV Account import configuration file: config/sis_import_data.yml
 
 Specify values for the host, username and password for the RINET SFTP
 site to download Sakai account data in CSV format.
 
-Here are the current settings in config/rinet_data.yml:
+Here are the current settings in config/sis_import_data.yml:
 
-#{@rinet_data_config.to_yaml}
+#{@sis_import_data_config.to_yaml}
     HEREDOC
   end
   if @options[:answer_yes] || agree("Accept defaults? (y/n) ")
-    File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
   else
-    create_new_rinet_data_yml unless @new_rinet_data_yml_created
+    create_new_sis_import_data_yml unless @new_sis_import_data_yml_created
 
     %w{development test staging production}.each do |env|
-      puts "\nSetting parameters for the #{env} rinet_data:\n"
-      @rinet_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @rinet_data_config[env]['host'] }
-      @rinet_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @rinet_data_config[env]['username'] }
-      @rinet_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @rinet_data_config[env]['password'] }
+      puts "\nSetting parameters for the #{env} sis_import_data:\n"
+      @sis_import_data_config[env]['host']     = ask("         RINET host: ") { |q| q.default = @sis_import_data_config[env]['host'] }
+      @sis_import_data_config[env]['username'] = ask("     RINET username: ") { |q| q.default = @sis_import_data_config[env]['username'] }
+      @sis_import_data_config[env]['password'] = ask("     RINET password: ") { |q| q.default = @sis_import_data_config[env]['password'] }
       puts
     end
 
     unless @options[:quiet]
       puts <<-HEREDOC
 
-    Here is the updated rinet_data configuration:
-    #{@rinet_data_config.to_yaml}
+    Here is the updated sis_import_data configuration:
+    #{@sis_import_data_config.to_yaml}
       HEREDOC
     end
 
-    if agree("OK to save to config/rinet_data.yml? (y/n): ")
-      File.open(@rinet_data_config_path, 'w') {|f| f.write @rinet_data_config.to_yaml }
+    if agree("OK to save to config/sis_import_data.yml? (y/n): ")
+      File.open(@sis_import_data_config_path, 'w') {|f| f.write @sis_import_data_config.to_yaml }
     end
   end
 end
@@ -856,7 +834,7 @@ It is currently #{include_otrunk_examples ? 'disabled' : 'enabled' }.
 end
 
 def get_states_and_provinces_settings(env)
-  states_and_provinces = (@settings_config[env][:states_and_provinces] || []).join(' ')
+  states_and_provinces = (@options[:states_provinces] || @settings_config[env][:states_and_provinces] || []).join(' ')
   puts <<-HEREDOC
 
 Detailed data are imported for the following US schools and district:
@@ -1113,17 +1091,11 @@ body of the email.
 
 You will need to specify a mail delivery method: (#{deliv_types})
 
-  the hostname of the #{@options[:app_name]} without the protocol: (example: #{@mailer_config_sample[:host]})
-
 If you do not have a working SMTP server select the test deliver method instead of the
 smtp delivery method. The activivation emails will appear in #{@dev_log_path}. You can
 easily see then as the are generated with this command:
 
   tail -f -n 100 #{@dev_log_path}
-
-You will also need to specify:
-
-  the hostname of the #{@options[:app_name]} application without the protocol: (example: #{@mailer_config_sample[:host]})
 
 and a series of SMTP server values:
 
@@ -1147,8 +1119,6 @@ Here are the current settings in config/mailer.yml:
     @mailer_config[:delivery_type] =            ask("    delivery type: ", delivery_types) { |q|
       q.default = "test"
     }
-
-    @mailer_config[:host] =                     ask("    #{@options[:app_name]} hostname: ") { |q| q.default = @mailer_config[:host] }
 
     @mailer_config[:smtp][:address] =           ask("    SMTP address: ") { |q|
       q.default = @mailer_config[:smtp][:address]
@@ -1194,7 +1164,6 @@ end
 #
 # ==================================================================
 
-
 unless @options[:quiet]
   puts <<-HEREDOC
 
@@ -1205,13 +1174,13 @@ end
 check_for_git_submodules
 check_for_config_database_yml
 check_for_config_settings_yml
-check_for_config_rinet_data_yml
+check_for_config_sis_import_data_yml
 check_for_config_mailer_yml
 check_for_log_development_log
 check_for_config_initializers_site_keys_rb
 update_config_database_yml
 update_config_settings_yml
-update_config_rinet_data_yml
+update_config_sis_import_data_yml
 update_config_mailer_yml
 if @options[:quiet]
   puts "done.\n\nTo finish (if you are building from scratch):\n\n"
@@ -1230,15 +1199,12 @@ end
 
 puts <<-HEREDOC
   MRI Ruby:
-    rake gems:install
-    RAILS_ENV=cucumber rake gems:install
     RAILS_ENV=production rake db:migrate:reset
-    RAILS_ENV=production rake rigse:setup:new_rites_app
+    RAILS_ENV=production rake app:setup:new_app
 
   JRuby:
-    jruby -S rake gems:install
     RAILS_ENV=production jruby -S rake db:migrate:reset
-    RAILS_ENV=production jruby -S rake rigse:setup:new_rites_app
+    RAILS_ENV=production jruby -S rake app:setup:new_app
 
 
 HEREDOC

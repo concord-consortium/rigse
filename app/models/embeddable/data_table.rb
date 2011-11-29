@@ -8,7 +8,9 @@ class Embeddable::DataTable < ActiveRecord::Base
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
  
-  belongs_to :data_collector, :class_name => "Embeddable::DataCollector"
+  # belongs_to :data_collector, :class_name => "Embeddable::DataCollector"
+  
+  has_many :data_collectors, :class_name => "Embeddable::DataCollector"
 
   acts_as_replicatable
 
@@ -31,6 +33,7 @@ class Embeddable::DataTable < ActiveRecord::Base
   default_value_for :visible_rows, 9
   default_value_for :precision, 2
   default_value_for :width, 1200
+  default_value_for :is_numeric, true
   send_update_events_to :investigations
 
   def self.record_delimiter
@@ -74,15 +77,21 @@ class Embeddable::DataTable < ActiveRecord::Base
   def cell_data(column_index,row_index)
     if column_index > column_count
       logger.error "bad cell column: Column:#{column_index}"
+      if self.is_numeric? 
+        return 0
+      end
       return ""
     end
     index = (row_index -1) * column_count + (column_index -1)
-    return data[index]
+    value = data[index]
+    if value
+      return data[index]
+    elsif self.is_numeric?
+      return 0
+    end
+    return ""
   end
 
-  def self.display_name
-    "Data Table"
-  end
 
   def investigations
     invs = []

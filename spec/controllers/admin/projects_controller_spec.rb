@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::ProjectsController do
 
@@ -33,13 +33,12 @@ describe Admin::ProjectsController do
     it "only allows managers to edit the current project and only shows them the information they can change" do
       project = Factory.create(:admin_project)
       second_project = Factory.create(:admin_project, { :name => "Test project" })
-      Admin::Project.should_receive(:default_project).and_return(project)
-
+      Admin::Project.stub!(:default_project).and_return(project)
       manager_user = Factory.create(:user)
       manager_user.add_role("manager")
 
       stub_current_user manager_user
-
+      
       get :index
 
       assert_response :success
@@ -110,7 +109,7 @@ describe Admin::ProjectsController do
 
       with_tag("*[name=?]", "admin_project[home_page_content]")
 
-      (project.attributes.keys - ["home_page_content"]).each do |attribute|
+      (project.attributes.keys - ["home_page_content","custom_css"]).each do |attribute|
         without_tag("*[name=?]", "admin_project[#{attribute}]")
       end
     end

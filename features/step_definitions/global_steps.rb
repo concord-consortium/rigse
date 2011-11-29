@@ -1,4 +1,5 @@
-def find_or_create_offering(runnable,clazz,type="Investigation")
+def find_or_create_offering(runnable,clazz)
+    type = runnable.class.to_s
     create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
     offering = Portal::Offering.find(:first, :conditions=> create_hash)
     unless offering
@@ -58,6 +59,11 @@ Given /^(?:|I )login as an admin$/ do
   login_as(admin.login, 'password')
 end
 
+
+When /^I am logged in as "([^"]*)"\s*,?\s*"([^"]*)"\s*$/ do |username,password|
+  login_as(username,password)
+end
+
 Given /^there are (\d+) (.+)$/ do |number, model_name|
   model_name = model_name.gsub(/\s/, '_').singularize
   the_class = model_name.classify.constantize
@@ -90,10 +96,15 @@ end
 
 When /^(?:|I )debug$/ do
   debugger
+  # this 0 is here so the debugger stop in a nice place instead of cucumber code
   0
 end
 
 When /^I wait "(.*)" second(?:|s)$/ do |seconds|
+  sleep(seconds.to_i)
+end
+
+When /^I wait (\d+) second(?:|s)$/ do |seconds|
   sleep(seconds.to_i)
 end
 

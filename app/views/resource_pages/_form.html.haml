@@ -11,9 +11,16 @@
 		= f.text_area :description
 	
 	%p
+		= f.label :content
+		%br/
+		= f.text_area :content
+
+	%p
 		= f.label :publication_status
 		%br/
 		= f.select :publication_status, ResourcePage.publication_states.map {|s| s.to_s}
+
+	= render :partial => 'shared/cohorts_edit', :locals => { :object => @resource_page }
 
 	%h2 Attachments
 	#attachments

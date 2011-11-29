@@ -167,7 +167,9 @@ def generate_default_project_and_jnlps_with_mocks
     :enable_default_users  => APP_CONFIG[:enable_default_users],
     :states_and_provinces  => APP_CONFIG[:states_and_provinces],
     :maven_jnlp_server => @mock_maven_jnlp_server,
-    :maven_jnlp_family => @mock_maven_jnlp_family)
+    :maven_jnlp_family => @mock_maven_jnlp_family,
+    :using_custom_css? => false,
+    :use_bitmap_snapshots? => false)
 
   MavenJnlp::Jar.stub!(:find_all_by_os).and_return(@versioned_jars)
   MavenJnlp::MavenJnlpFamily.stub!(:find_by_name).with("gui-testing").and_return(@mock_gui_testing_maven_jnlp_family)
@@ -238,6 +240,7 @@ def mock_anonymous_user
     @anonymous_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
     @anonymous_user.stub!(:extra_params).and_return({})
     @anonymous_user.stub!(:resource_pages).and_return([])
+    @anonymous_user.stub!(:require_password_reset).and_return(false)
     User.stub!(:anonymous).and_return(@anonymous_user)
     User.stub!(:find_by_login).with('anonymous').and_return(@anonymous_user)
   end
@@ -263,6 +266,7 @@ def mock_admin_user
    @admin_user.stub!(:vendor_interface).and_return(mock_probe_vendor_interface)
    @admin_user.stub!(:resource_pages).and_return([])
    @admin_user.stub!(:extra_params).and_return({})
+   @admin_user.stub!(:require_password_reset).and_return(false)
    User.stub!(:find_by_login).with('admin').and_return(@admin_user)
  end
 end

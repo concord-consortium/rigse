@@ -18,6 +18,7 @@ javascripts:
   - report_filter
   - pagination
   - workgroup
+  - chosen.proto
   
 stylesheets: 
 - base: 
@@ -32,6 +33,7 @@ stylesheets:
   - data_table
   - reports
   - workgroup
+  - chosen
 
 - default:
   - app
@@ -44,6 +46,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - chosen
   
 - rites:
   - app
@@ -58,7 +61,8 @@ stylesheets:
   - drop_down
   - data_table
   - reports
-  
+  - workgroup
+  - chosen 
 - investigations:
   - themes/investigations/investigations
   - themes/investigations/action_menu_tab
@@ -84,14 +88,14 @@ stylesheets:
   - reports
 
 - smartgraphs:
-  - themes/smartgraphs/smartgraphs
-  - themes/smartgraphs/action_menu_tab
-  - themes/smartgraphs/drop_down
-  - themes/smartgraphs/accordion
+  - app
+  - accordion
   - window/window
   - window/rites
   - live_validation
+  - action_menu_tab
   - notes
+  - drop_down
   - data_table
   - reports
 
@@ -120,6 +124,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - chosen
 
 - has:
   - app

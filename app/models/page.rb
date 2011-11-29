@@ -49,6 +49,10 @@ class Page < ActiveRecord::Base
     # BiologicaDna,
   ]
 
+  if APP_CONFIG[:include_otrunk_examples]
+    @@element_types << Embeddable::RawOtml
+  end
+  
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
   #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -112,9 +116,6 @@ class Page < ActiveRecord::Base
       @@element_types
     end
 
-    def display_name
-      "Page"
-    end
 
     def search_list(options)
       name = options[:name]

@@ -45,6 +45,20 @@ class Dataservice::BundleContentsController < ApplicationController
   # POST /dataservice_bundle_contents
   # POST /dataservice_bundle_contents.xml
   def create
+    # by default this is not used.  Instead the file app/metal/bundle_content intercepts this route
+    if params[:format] == 'bundle'
+      bundle_logger_id = params[:bundle_logger_id]
+      if bundle_logger = Dataservice::BundleLogger.find(bundle_logger_id)
+        body = request.body.read
+        bundle_logger.end_bundle( { :body => body} )
+        bundle_content = bundle_logger.bundle_contents.last
+        digest = Digest::MD5.hexdigest(body)
+        return head :created, :Last_Modified => bundle_content.created_at.httpdate, :Content_MD5 => digest
+      else
+        return head :bad_request
+      end
+    end
+    
     @dataservice_bundle_content = Dataservice::BundleContent.new(params[:dataservice_bundle_content])
 
     respond_to do |format|

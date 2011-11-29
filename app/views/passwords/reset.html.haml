@@ -1,10 +1,11 @@
 = title_tag "Reset Your Password"
-- form_for :user, :url => { :action => 'update_after_forgetting' } do |f|
+%h2 You must set a new password.
+%h3 Please enter a new password and confirm it.
+
+- form_for :user, :url => { :controller => 'passwords', :action => 'update_users_password' } do |f|
   %div{:id => dom_id_for(@user,:form), :class =>"action_menu"}       
-    .action_menu
-      .action_menu_header_left
-        .padded_content
-          %h3 Please enter a new password and confirm it.
+    .padded_content
+      = f.error_messages :header_tag => 'h4', :header_message => "Your password could not be changed.", :message => ""
 
     %fieldset
       %legend= "Password for #{@user.login}"
@@ -17,8 +18,4 @@
         %ul.quiet_list
           %li= submit_tag "Submit"
 
-    = f.error_messages
   = hidden_field_tag :reset_code, params[:reset_code]
-
-
-

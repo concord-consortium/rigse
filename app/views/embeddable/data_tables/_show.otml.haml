@@ -1,20 +1,16 @@
-- content_for("element_#{dom_id_for(data_table)}".to_sym) do
+- content_for("element_#{ot_dom_id_for(data_table)}".to_sym) do
   = data_table_title(data_table)
-
-- content_for(:library) do
-  - if ! data_table.data_collector.nil?
-    = render_scoped_reference(data_table.data_collector)
+  %object{ :refid => ot_refid_for(data_table) }/
 
 %OTDataTable{ :local_id => ot_local_id_for(data_table), :name => h(data_table.name), :showLastRowForAddingNew => 'true', :visibleRows => data_table.visible_rows, :precision => data_table.precision, :width => data_table.width }
   %dataStore
-    - if data_table.data_collector_id.nil?
-      %OTDataStore{ :local_id => ot_local_id_for(data_table, :data_store), :numberChannels => data_table.column_count.to_s }
-        %channelDescriptions
-          - data_table.column_names.split(',').each do |column_name| 
-            %OTDataChannelDescription{ :name => h(column_name), :numericData => 'false' }/
-        %values
-          - 1.upto data_table.visible_rows do |y|
-            - 1.upto data_table.column_count do |x|
-              %string= h(data_table.cell_data(x,y))
-    - else
-      %object{:refid => ot_refid_for(data_table.data_collector, :data_store)}
+    %OTDataStore{ :local_id => ot_local_id_for(data_table, :data_store), :numberChannels => data_table.column_count.to_s }
+      %channelDescriptions
+        - data_table.column_names.split(',').each do |column_name| 
+          %OTDataChannelDescription{ :name => h(column_name), :numericData => (data_table.is_numeric? ? 'true' : 'false') }/
+      %values
+        - data_table.data.each do |datum|
+          - if data_table.is_numeric?
+            %float= h(datum)
+          - else
+            %string= h(datum)

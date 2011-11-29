@@ -1,1 +1,4 @@
-%OTSoundGrapherModel{ :local_id => ot_local_id_for(sound_grapher) }
+-# <!-- <OTSoundGrapherModel local_id="model_id_soundgrapher" displayMode="Waves" maxFrequency = "1000" maxSampleTime="30"/> -->
+-# <!-- <OTSoundGrapherModel local_id="model_id_soundgrapher" displayMode="Waves" /> -->
+-# <OTSoundGrapherModel local_id="model_id_soundgrapher"  maxFrequency = "1000" maxSampleTime="30"/>
+%OTSoundGrapherModel{ :local_id => ot_local_id_for(sound_grapher), :displayMode => sound_grapher.display_mode, :maxFrequency => sound_grapher.max_frequency, :maxSampleTime => sound_grapher.max_sample_time }
