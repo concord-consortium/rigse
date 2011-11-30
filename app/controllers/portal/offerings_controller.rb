@@ -57,6 +57,11 @@ class Portal::OfferingsController < ApplicationController
       format.jnlp {
         # check if the user is a student in this offering's class
         if learner = setup_portal_student
+          launch_event = Dataservice::LaunchProcessEvent.create(
+            :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
+            :event_details => "Offering jnlp requested",
+            :bundle_content => learner.bundle_logger.in_progress_bundle
+          )
           if params.delete(:use_installer)
             render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :learner => learner }
           else
@@ -292,6 +297,12 @@ class Portal::OfferingsController < ApplicationController
         students = students.split(',').map { |s| Portal::Student.find(s) }
         bundle_logger.in_progress_bundle.collaborators = students.compact.uniq
         bundle_logger.in_progress_bundle.save
+
+        launch_event = Dataservice::LaunchProcessEvent.create(
+          :event_type => Dataservice::LaunchProcessEvent::TYPES[:session_started],
+          :event_details => "Learner session started",
+          :bundle_content => bundle_logger.in_progress_bundle
+        )
       end
       render :status => 200, :text => "ok"
     else
