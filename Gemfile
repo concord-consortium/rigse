@@ -4,18 +4,20 @@ YAML::ENGINE.yamler= "psych"
 source "http://rubygems.org"
 
 #### COMMON
-  platforms :ruby do
-    if ENV['RB_MYSQL2']
-      gem "mysql2",             '< 0.3' # version restriction is because 0.3 and higher require rails 3.1
-    else
-      gem "mysql",              "~>2.7"
-    end
+  if ENV['RB_MYSQL2']
+    gem "mysql2",             '< 0.3', :platforms => [:ruby,:mingw] # version restriction is because 0.3 and higher require rails 3.1
+  else
+    gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
 
   platforms :jruby do
     gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
     gem "jruby-openssl",                   "~> 0.7.4"
     gem "ffi-ncurses",                     "~> 0.3.3"
+  end
+
+  platforms :mingw do
+    gem "win32-open3"
   end
 
   gem "rails",                "~> 3.0.10"
@@ -67,7 +69,7 @@ group :development do
   gem "wirble"
   gem "what_methods"
   gem "hirb"
-  gem "ruby-debug",   :platforms => :mri_18
+  gem "ruby-debug",   :platforms => [:mri_18, :mingw_18]
   gem "ruby-debug19", :platforms => :mri_19
   gem "awesome_print"
   gem "interactive_editor"
