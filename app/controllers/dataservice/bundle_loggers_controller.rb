@@ -25,6 +25,13 @@ class Dataservice::BundleLoggersController < ApplicationController
     else
       eportfolio_bundle =  Dataservice::BundleContent::EMPTY_EPORTFOLIO_BUNDLE
     end
+    if @dataservice_bundle_logger.in_progress_bundle
+      launch_event = Dataservice::LaunchProcessEvent.create(
+        :event_type => Dataservice::LaunchProcessEvent::TYPES[:bundle_requested],
+        :event_details => "Learner session data requested",
+        :bundle_content => @dataservice_bundle_logger.in_progress_bundle
+      )
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => eportfolio_bundle }

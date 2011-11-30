@@ -1,9 +1,10 @@
 class Dataservice::LaunchProcessEvent < ActiveRecord::Base
-  set_table_name :launch_process_events
+  set_table_name :dataservice_launch_process_events
 
   belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
 
   TYPES = {
+    :session_started => "session started",
     :jnlp_requested => "jnlp requested",
     :logo_image_requested => "logo image requested",
     :config_requested => "config requested",

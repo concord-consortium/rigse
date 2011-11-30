@@ -88,7 +88,14 @@ class Portal::LearnersController < ApplicationController
       format.config { 
         # if this isn't the learner then it is launched read only
         properties = {}
-        if Portal::Learner.find(params[:id]).student.user == current_user
+        if @portal_learner.student.user == current_user
+          if @portal_learner.bundle_logger.in_progress_bundle
+            launch_event = Dataservice::LaunchProcessEvent.create(
+              :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
+              :event_details => "Runnable config requested",
+              :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
+            )
+          end
           bundle_post_url = dataservice_bundle_logger_bundle_contents_url(@portal_learner.bundle_logger, :format => :bundle)
         else
           bundle_post_url = nil
