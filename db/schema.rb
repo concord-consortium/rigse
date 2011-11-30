@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111011152602) do
+ActiveRecord::Schema.define(:version => 20111130181720) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -641,6 +641,16 @@ ActiveRecord::Schema.define(:version => 20111011152602) do
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
   end
+
+  create_table "launch_process_events", :force => true do |t|
+    t.string   "event_type"
+    t.text     "event_details"
+    t.integer  "bundle_content_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "launch_process_events", ["bundle_content_id"], :name => "index_launch_process_events_on_bundle_content_id"
 
   create_table "maven_jnlp_icons", :force => true do |t|
     t.string   "uuid"
