@@ -1,6 +1,6 @@
 class CreateLaunchProcessEvents < ActiveRecord::Migration
   def self.up
-    create_table :launch_process_events do |t|
+    create_table :dataservice_launch_process_events do |t|
       t.string :event_type
       t.text :event_details
 
@@ -9,10 +9,10 @@ class CreateLaunchProcessEvents < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :launch_process_events, :bundle_content_id
+    add_index :dataservice_launch_process_events, :bundle_content_id
   end
 
   def self.down
-    drop_table :launch_process_events
+    drop_table :dataservice_launch_process_events
   end
 end
