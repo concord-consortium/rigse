@@ -28,7 +28,7 @@ class Dataservice::BundleLoggersController < ApplicationController
     if @dataservice_bundle_logger.in_progress_bundle
       launch_event = Dataservice::LaunchProcessEvent.create(
         :event_type => Dataservice::LaunchProcessEvent::TYPES[:bundle_requested],
-        :event_details => "Learner session data requested",
+        :event_details => "Learner session data loaded. Activity should now be running...",
         :bundle_content => @dataservice_bundle_logger.in_progress_bundle
       )
     end
