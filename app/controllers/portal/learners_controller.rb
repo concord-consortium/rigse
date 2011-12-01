@@ -92,7 +92,7 @@ class Portal::LearnersController < ApplicationController
           if @portal_learner.bundle_logger.in_progress_bundle
             launch_event = Dataservice::LaunchProcessEvent.create(
               :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
-              :event_details => "Activity configuration loaded. Loading activity content...",
+              :event_details => "Activity configuration loaded. Loading prior learner session data...",
               :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
             )
           end
@@ -103,7 +103,7 @@ class Portal::LearnersController < ApplicationController
         end
         render :partial => 'shared/sail',
           :locals => { 
-            :otml_url => polymorphic_url(@portal_learner.offering.runnable, :format => :dynamic_otml),
+            :otml_url => polymorphic_url(@portal_learner.offering.runnable, :format => :dynamic_otml, :learner_id => @portal_learner.id),
             :session_id => (params[:session] || request.env["rack.session.options"][:id]),
             :console_post_url => dataservice_console_logger_console_contents_url(@portal_learner.console_logger, :format => :bundle),
             :bundle_url => dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle),
