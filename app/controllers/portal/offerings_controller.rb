@@ -311,6 +311,8 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def launch_status
+    # NOTE: If the user is requesting json, this is actually handled
+    # at the rack/metal layer, in launch_status.rb.
     @offering = Portal::Offering.find(params[:id])
     @learner = Portal::Learner.find_by_offering_id_and_student_id(@offering.id, current_user.portal_student.id)
     @status_event_info = {}
@@ -320,7 +322,7 @@ class Portal::OfferingsController < ApplicationController
         @status_event_info["event_type"] = last_event.event_type
         @status_event_info["event_details"] = last_event.event_details
       end
-    elsif @learner
+    else
       # no in progress bundle. use a special response to indicate there's no active session
       @status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
     end
