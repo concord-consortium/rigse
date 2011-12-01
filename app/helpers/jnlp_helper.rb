@@ -8,7 +8,14 @@ module JnlpHelper
     host = root_path(:only_path => false)[0..-2]
     host + path_to_image(path)
   end
-  
+
+  def jnlp_splash_url(learner = nil)
+    # throw in a random element to the url so that it'll get requested every time
+    opts = { :rand => UUIDTools::UUID.timestamp_create.hexdigest }
+    opts[:learner_id] = learner if learner
+    return banner_url(opts)
+  end
+
   def resource_jars
     jnlp_adaptor.resource_jars
   end
@@ -140,13 +147,14 @@ module JnlpHelper
   end
   
   
-  def jnlp_information(xml)
+  def jnlp_information(xml, learner = nil)
     xml.information { 
       xml.title current_project.name
       xml.vendor "Concord Consortium"
       xml.homepage :href => APP_CONFIG[:site_url]
       xml.description APP_CONFIG[:description]
       xml.icon :href => full_url_for_image("sail_orangecirc_64.gif"), :height => "64", :width => "64"
+      xml.icon :href => jnlp_splash_url(learner), :kind => "splash"
     }
   end
   

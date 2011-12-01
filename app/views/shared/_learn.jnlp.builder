@@ -2,7 +2,7 @@ jnlp_headers(runnable)
 session_options = request.env["rack.session.options"]
 xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 xml.jnlp(:spec => "1.0+", :codebase => jnlp_adaptor.jnlp.codebase) { 
-  jnlp_information(xml)
+  jnlp_information(xml, learner)
   xml.security {
     xml << "    <all-permissions />"
   }
