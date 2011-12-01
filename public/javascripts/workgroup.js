@@ -90,7 +90,7 @@ var Workgroup = function(_offering) {
     pending_requests = pending_requests +1;
     lightbox_hood.hide();
     lightbox_content.hide();
-    showWait();
+    showWait(offering);
     new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
       onSuccess: function() {

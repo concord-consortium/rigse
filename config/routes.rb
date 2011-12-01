@@ -147,6 +147,7 @@ RailsPortal::Application.routes.draw do
         get :separated_report
         post :report_embeddable_filter
         get :learners
+        get :launch_status
       end
     end
 
