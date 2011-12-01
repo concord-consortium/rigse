@@ -309,4 +309,25 @@ class Portal::OfferingsController < ApplicationController
       render :status => 500, :text => "problem loading offering"
     end
   end
+
+  def launch_status
+    @offering = Portal::Offering.find(params[:id])
+    @learner = Portal::Learner.find_by_offering_id_and_student_id(@offering.id, current_user.portal_student.id)
+    @status_event_info = {}
+    if @learner && @learner.bundle_logger.in_progress_bundle
+      last_event = @learner.bundle_logger.in_progress_bundle.launch_process_events.last
+      if last_event
+        @status_event_info["event_type"] = last_event.event_type
+        @status_event_info["event_details"] = last_event.event_details
+      end
+    elsif @learner
+      # no in progress bundle. use a special response to indicate there's no active session
+      @status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
+    end
+    respond_to do |format|
+      format.json { render :json => @status_event_info }
+      format.xml  { render :xml => @status_event_info }
+    end
+  end
+
 end

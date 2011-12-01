@@ -153,6 +153,7 @@ ActionController::Routing::Routes.draw do |map|
       :deactivate => :get,
       :learners => :get,
       :check_learner_auth => :post,
+      :launch_status => :get,
       :start => :post
     }, :collection => { :data_test => [:get,:post] }
 
