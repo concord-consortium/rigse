@@ -227,7 +227,7 @@ DEPENDENCIES
   maruku (~> 0.6)
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
-  newrelic_rpm
+  newrelic_rpm (~> 3.3.0)
   nokogiri (~> 1.4.4)
   open4 (~> 0.9.6)
   paperclip
