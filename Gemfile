@@ -1,12 +1,10 @@
 source "http://rubygems.org"
 
 #### COMMON
-  platforms :ruby do
-    if ENV['RB_MYSQL2']
-      gem "mysql2",             "0.2.7"
-    else
-      gem "mysql",              "~>2.7"
-    end
+  if ENV['RB_MYSQL2']
+    gem "mysql2",             "0.2.7", :platforms => [:ruby,:mingw]
+  else
+    gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
 
   platforms :jruby do
@@ -14,6 +12,10 @@ source "http://rubygems.org"
     gem "activerecord-jdbcmysql-adapter",  ">=0.9.2"
     gem "jruby-openssl",                   ">=0.6"
     gem "ffi-ncurses",                      "~>0.3.3"
+  end
+
+  platforms :mingw do
+    gem "win32-open3"
   end
 
   gem "rails",                "2.3.12"
@@ -52,7 +54,7 @@ group :development do
   gem "wirble"
   gem "what_methods"
   gem "hirb"
-  gem "ruby-debug",     :platforms => :mri_18
+  gem "ruby-debug",     :platforms => [:mri_18, :mingw_18]
   gem "awesome_print"
   gem "interactive_editor"
   gem "pry"
