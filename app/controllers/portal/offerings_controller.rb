@@ -59,7 +59,7 @@ class Portal::OfferingsController < ApplicationController
         if learner = setup_portal_student
           launch_event = Dataservice::LaunchProcessEvent.create(
             :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
-            :event_details => "Offering jnlp requested",
+            :event_details => "Activity launcher delivered. Activity should be opening...",
             :bundle_content => learner.bundle_logger.in_progress_bundle
           )
           if params.delete(:use_installer)
@@ -315,7 +315,7 @@ class Portal::OfferingsController < ApplicationController
 
         launch_event = Dataservice::LaunchProcessEvent.create(
           :event_type => Dataservice::LaunchProcessEvent::TYPES[:session_started],
-          :event_details => "Learner session started",
+          :event_details => "Learner session started. Requesting activity launcher...",
           :bundle_content => bundle_logger.in_progress_bundle
         )
       end

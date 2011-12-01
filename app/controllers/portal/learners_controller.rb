@@ -92,7 +92,7 @@ class Portal::LearnersController < ApplicationController
           if @portal_learner.bundle_logger.in_progress_bundle
             launch_event = Dataservice::LaunchProcessEvent.create(
               :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
-              :event_details => "Runnable config requested",
+              :event_details => "Activity configuration loaded. Loading activity content...",
               :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
             )
           end

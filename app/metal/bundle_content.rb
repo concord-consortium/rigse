@@ -21,7 +21,7 @@ class BundleContent
       if bundle_logger.in_progress_bundle
         launch_event = ::Dataservice::LaunchProcessEvent.create(
           :event_type => ::Dataservice::LaunchProcessEvent::TYPES[:bundle_saved],
-          :event_details => "Learner session data saved",
+          :event_details => "Learner session data saved. Activity should now be closed.",
           :bundle_content => bundle_logger.in_progress_bundle
         )
       end

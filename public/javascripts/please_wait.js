@@ -40,7 +40,7 @@ var showSmartWait = function(offering) {
       onSuccess: function(transport) {
         status_event = transport.responseJSON;
         if (!!status_event.event_details) {
-          $(timer_dom).update(status_event.event_details);
+          $(timer_dom).update("<br/><br/>" + status_event.event_details);
         }
 
         if (!!status_id && (status_event.event_type == "bundle_saved" || status_event.event_type == "no_session")) {
@@ -54,7 +54,7 @@ var showSmartWait = function(offering) {
     });
   };
 
-  $(timer_dom).update("Requesting activity launcher.");
+  $(timer_dom).update("<br/><br/>Requesting activity launcher...");
   $(wait_dom).show();
   status_id = setInterval(update_status,10000);
 };
