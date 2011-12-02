@@ -138,6 +138,7 @@ stylesheets:
   - data_table
   - reports
   - workgroup
+  - chosen
 
 - xproject:
   - app
