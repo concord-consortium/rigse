@@ -223,6 +223,7 @@ DEPENDENCIES
   interactive_editor
   jnlp (~> 0.7.2)
   jruby-openssl (>= 0.6)
+  json (~> 1.5.1)
   launchy
   maruku (~> 0.6)
   mysql (~> 2.7)
