@@ -48,6 +48,7 @@ source "http://rubygems.org"
   gem "acts-as-taggable-on"
   gem "nokogiri",             "~> 1.4.4"
   gem 'rdoc',                 "~> 3.6.1"
+  gem 'calendar_date_select'
 
 group :development do
   gem "highline"
