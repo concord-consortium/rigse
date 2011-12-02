@@ -62,6 +62,7 @@ source "http://rubygems.org"
   gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
+  gem 'calendar_date_select'
 
 group :development do
   gem "rake",                 "~> 0.9.2"

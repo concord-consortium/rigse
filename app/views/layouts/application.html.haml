@@ -20,6 +20,8 @@
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
 
+    = calendar_date_select_includes "silver"
+
     = csrf_meta_tag
 
     / shouldn't probably do this here, do it on domloaded elsewhere..:
@@ -30,6 +32,7 @@
       = javascript_tag "var container_id = #{@container_id};"
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
+    = calendar_date_select_includes "silver"
   %body
 
     #note{:style=>"display: none;"}
