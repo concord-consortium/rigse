@@ -50,6 +50,7 @@ source "http://rubygems.org"
   gem 'rdoc',                 "~> 3.6.1"
   gem 'json',                 "~> 1.5.1"
   gem 'newrelic_rpm',          "~> 3.3.0"
+  gem 'calendar_date_select'
 
 group :development do
   gem "highline"
