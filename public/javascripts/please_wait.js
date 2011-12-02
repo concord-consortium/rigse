@@ -60,7 +60,7 @@ var showSmartWait = function(offering) {
 };
 
 var showWait = function(offering) {
-  if (!!offering) {
+  if (!!offering && typeof(offering) == "string") {
     showSmartWait(offering);
   } else {
     showCountdownWait();
