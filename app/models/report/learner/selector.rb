@@ -18,7 +18,7 @@ class Report::Learner::Selector
       clazzes = clazzes.flatten.map    { |c| c.id } 
       @scopes[:in_classes] = clazzes if clazzes.size > 0
     end
-    
+
     if @scopes.size > 0
       results = Report::Learner
       @scopes.each_pair do |k,v|

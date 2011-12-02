@@ -2,7 +2,6 @@ class Report::LearnerController < ApplicationController
 
   before_filter :setup
 
-
   def update_learners
     # this should be removed eventually,
     # force loading report-learner data
@@ -29,6 +28,7 @@ class Report::LearnerController < ApplicationController
     @select_schools        = params['schools']   || []
     @select_teachers       = params['teachers']  || []
 
+    # to populate dropdown menus:
     @select_schools   = @select_schools.map      { |s| Portal::School.find(s) }
     @select_teachers  = @select_teachers.map     { |t| Portal::Teacher.find(t) }
     @select_runnables = @select_runnables.map    { |r| Investigation.find(r)  }
@@ -66,7 +66,6 @@ class Report::LearnerController < ApplicationController
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
     end
   end
-
 
   def index
     # renders views/report/learner/index.html.haml
