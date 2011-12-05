@@ -56,7 +56,7 @@ var showSmartWait = function(offering) {
 
   $(timer_dom).update("<br/><br/>Requesting activity launcher...");
   $(wait_dom).show();
-  status_id = setInterval(update_status,10000);
+  status_id = setInterval(update_status,5000);
 };
 
 var showWait = function(offering) {
