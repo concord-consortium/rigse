@@ -341,6 +341,12 @@ class Portal::OfferingsController < ApplicationController
       # no in progress bundle. use a special response to indicate there's no active session
       @status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
     end
+
+    # don't cache these responses!
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+
     respond_to do |format|
       format.json { render :json => @status_event_info }
       format.xml  { render :xml => @status_event_info }
