@@ -39,8 +39,8 @@ class Report::Learner < ActiveRecord::Base
 
     # We need to populate these field
     self.num_answerables = report_util.embeddables.size
-    self.num_answered = report_util.answered_number(self.learner).size
-    self.num_correct = report_util.correct_number(self.learner).size
+    self.num_answered = report_util.answered_number(self.learner)
+    self.num_correct = report_util.correct_number(self.learner)
 
     # TODO: We might also want to gather 'saveables' in An associated model?
   end
