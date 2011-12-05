@@ -25,6 +25,16 @@ development: &id003
     :email: skim@concord.org
   :states_and_provinces:
   - VA
+  :maven_jnlp_servers:
+    - :name: concord
+      :host: http://jnlp.concord.org
+      :path: /dev/org/concord/maven-jnlp/
+  :maven_jnlp_families:
+    - all-otrunk-snapshot
+  :default_maven_jnlp:
+    :version: 0.1.0-20090724.190238
+    :server: concord
+    :family: all-otrunk-snapshot
 test: *id003
 production: *id003
 staging: *id003
