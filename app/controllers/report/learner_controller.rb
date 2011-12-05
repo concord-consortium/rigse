@@ -2,7 +2,19 @@ class Report::LearnerController < ApplicationController
 
   before_filter :setup
 
+
+  def update_learners
+    # this should be removed eventually,
+    # force loading report-learner data
+    Portal::Learner.all.each { |l| Report::Learner.for_learner(l).update_fields }
+  end
+
+
   def setup
+    # commit"=>"update learners"
+    if params['commit'] =~ /update learners/i
+      update_learners
+    end
     @all_schools           = Portal::School.all.sort_by {|s| s.name}
     # TODO: fix me -- choose runnables better
     @all_runnables         = Investigation.published.sort_by { |i| i.name }
@@ -35,7 +47,15 @@ class Report::LearnerController < ApplicationController
       "classes:"        => @select_learners.map {|l| l.class_id}.uniq.size,
       "Investigations:" => @select_learners.map {|l| l.runnable_id}.uniq.size
     }
+
+    if params[:commit] == 'usage report'
+      sio = StringIO.new
+      report = Reports::Usage.new(:investigations => @select_runnables, :report_learners => @select_learners)
+      report.run_report(sio)
+      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
+    end
   end
+
 
   def index
     # renders views/report/learner/index.html.haml
