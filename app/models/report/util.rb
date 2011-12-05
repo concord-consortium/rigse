@@ -175,6 +175,10 @@ class Report::Util
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
   end
 
+  def answered_number(learner)
+    return saveables(:learner => learner, :answered => true).size
+  end
+
   def correct_number(learner)
     return saveables(:learner => learner, :correct => true).size
   end
