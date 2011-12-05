@@ -32,7 +32,12 @@ class LaunchStatus
           status_event_info = {"event_type" => "no_session", "event_details" => "There's not a current session." }
         end
         return [200, 
-          { 'Content-Type' => 'application/json' }, 
+          {
+            'Content-Type' => 'application/json',
+            'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT'
+          },
           [status_event_info.to_json]
         ]
       end
