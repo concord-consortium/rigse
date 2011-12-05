@@ -35,11 +35,14 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def update_answers
-    # TODO: We need to populate these field
+    report_util = Report::Util.new(self.learner, false, true)
+
+    # We need to populate these field
+    self.num_answerables = report_util.embeddables.size
+    self.num_answered = report_util.answered_number(self.learner).size
+    self.num_correct = report_util.correct_number(self.learner).size
+
     # TODO: We might also want to gather 'saveables' in An associated model?
-    # self.num_answerables
-    # self.num_answered
-    # self.num_correct
   end
 
   def update_field(methods_string, field=nil)
