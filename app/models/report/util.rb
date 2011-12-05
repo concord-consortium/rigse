@@ -55,7 +55,6 @@ class Report::Util
     results = Array(@saveables_by_learner_id[options[:learner].id]) if options[:learner]
     results = results & Array(@saveables_by_answered[true]) if options[:answered]
     results = results & Array(@saveables_by_embeddable[options[:embeddable]]) if options[:embeddable]
-    results = results & Array(@saveables_by_correct[true]) if options[:correct]
     if options[:embeddables]
       embeddables = options[:embeddables]
       results = results & embeddables.map { |e| @saveables_by_embeddable[e]}.flatten
@@ -146,7 +145,6 @@ class Report::Util
       Rails.logger.info(warning)
       @saveables = current
     end
-    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id } 
     @saveables_by_embeddable = @saveables.group_by { |s| s.embeddable } 
