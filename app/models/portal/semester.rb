@@ -16,8 +16,5 @@ class Portal::Semester < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Semester"
-    end
   end
 end

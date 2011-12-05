@@ -16,9 +16,6 @@ class Portal::Nces06School < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "NCES School"
-    end
   end
   
   def portal_school_created?

@@ -8,19 +8,19 @@ var ParseOfferingUrl = function(url) {
 };
 
 var EnableWorkgroups = function(_selector) {
-  var _selector = _selector ||   'a.run_link';
+  _selector = _selector ||   'a.run_link';
     $$(_selector).each(function(el) {
     var offering_id = ParseOfferingUrl(el.href);
     // remove other click observers!
     el.stopObserving('click');
     el.observe('click', function(e) {
-      Workgroup(offering_id);
+      Workgroup(offering_id,el.href);
       e.stop();
     });
   });
 };
 
-var Workgroup = function(_offering) {
+var Workgroup = function(_offering,_launch_url) {
   var load_error         = false;
   var loading_learners   = false;
   var learners           = [];
@@ -38,11 +38,11 @@ var Workgroup = function(_offering) {
   var learners_container = null;
   var lightbox_hood      = null;
   var lightbox_content   = null;
-
+  var launch_url         = _launch_url;
   var learner_id_for = function(learner) { return "_LEARNER_" + learner.id; };
 
   var load_dom_elems = function() {
-    if (learners_list == null) {
+    if (learners_list === null) {
       learners_list      =  $('learners_list');
       learners_dropdown  =  $('learners_dropdown');
       add_button         =  $('add_button');
@@ -79,10 +79,10 @@ var Workgroup = function(_offering) {
         lightbox_hood.hide();
         lightbox_content.hide();
         hide_workgroup_editor();
-        clearTimeout(timeout)
+        clearTimeout(timeout);
         $(document).stopObserving('keydown');
       }
-    }
+    };
     timeout = setTimeout(function(){closefunction();}, 100);
   };
 
@@ -90,15 +90,15 @@ var Workgroup = function(_offering) {
     pending_requests = pending_requests +1;
     lightbox_hood.hide();
     lightbox_content.hide();
-    showWait();
+    showWait(offering);
     new Ajax.Request('/portal/offerings/' + offering + '/start.json', {
       parameters: { students: collaborators.map(function(l){return l.id;}).join(',')  },
       onSuccess: function() {
         pending_requests = pending_requests -1;
         close_dialog();
-        window.location = "/portal/offerings/" + offering + ".jnlp"
+        window.location = launch_url;
       },
-      onFaiulre: function() {
+      onFailure: function() {
         pending_requests = pending_requests -1;
       }
     });
@@ -106,7 +106,7 @@ var Workgroup = function(_offering) {
 
   var handle_keydown = function(e) {
     var code;
-    if (!e) var e = window.event;
+    if (!e) e = window.event;
     if (e.keyCode) code = e.keyCode;
     else if (e.which) code = e.which;
     switch (code) {
@@ -117,6 +117,7 @@ var Workgroup = function(_offering) {
         handle_return(e);
         break;
       default:
+        break;
     }
   };
 
@@ -162,7 +163,7 @@ var Workgroup = function(_offering) {
   var enable_run = function() {
     run_button.setOpacity(1);
     run_message.update('run the activity now');
-    run_message.removeClassName('wg_important')
+    run_message.removeClassName('wg_important');
     run_button.stopObserving('click');
     run_button.observe('click', launch_action);
   };
@@ -179,9 +180,9 @@ var Workgroup = function(_offering) {
   };
 
   var selected_learner = function() {
-    selected = learners_dropdown.select('option').find(function(ele){return !!ele.selected});
+    selected = learners_dropdown.select('option').find(function(ele){return !!ele.selected;});
     var learner = learners.detect(function(l) {
-      return l.id == parseInt(selected.value);
+      return l.id == parseInt(selected.value, 10);
     });
     return learner;
   };
@@ -198,7 +199,7 @@ var Workgroup = function(_offering) {
       method: 'get',
       onSuccess: function(transport) {
         learners = transport.responseJSON;
-        learners = learners.sortBy(function(l) {return l.name});
+        learners = learners.sortBy(function(l) {return l.name;});
         loading_learners = false;
         load_error = false;
         pending_requests = pending_requests - 1;
@@ -235,14 +236,15 @@ var Workgroup = function(_offering) {
     login_button.observe('click',do_check_password);
     password_field.observe('keydown',function(e) {
         var code;
-        if (!e) var e = window.event;
+        if (!e) e = window.event;
         if (e.keyCode) code = e.keyCode;
         else if (e.which) code = e.which;
         switch (code) {
           case 13:
             do_check_password();
-          break;
+            break;
           default:
+            break;
         }
     });
 
@@ -268,7 +270,7 @@ var Workgroup = function(_offering) {
       wait.hide();
       pending.show();
       update_ui();
-    }
+    };
 
   };
 
@@ -317,7 +319,7 @@ var Workgroup = function(_offering) {
         id: learner_id_for(learner),
         value: learner.id
       }).update(learner.name);
-    learners_dropdown.insert({ bottom: learner_el})
+    learners_dropdown.insert({ bottom: learner_el});
   };
 
   var remove_learner_from_dropdown = function (learner) {

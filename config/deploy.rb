@@ -207,7 +207,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}"
     run "mkdir -p #{shared_path}/config"
     run "mkdir -p #{shared_path}/log"
-    run "mkdir -p #{shared_path}/rinet_data"
+    run "mkdir -p #{shared_path}/sis_import_data"
     run "mkdir -p #{shared_path}/config/nces_data"
     run "mkdir -p #{shared_path}/public/otrunk-examples"
     run "mkdir -p #{shared_path}/public/sparks-content"
@@ -217,7 +217,7 @@ namespace :deploy do
     run "touch #{shared_path}/config/database.yml"
     run "touch #{shared_path}/config/settings.yml"
     run "touch #{shared_path}/config/installer.yml"
-    run "touch #{shared_path}/config/rinet_data.yml"
+    run "touch #{shared_path}/config/sis_import_data.yml"
     run "touch #{shared_path}/config/mailer.yml"
     run "touch #{shared_path}/config/initializers/site_keys.rb"
     run "touch #{shared_path}/config/initializers/subdirectory.rb"
@@ -233,7 +233,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml"
     run "ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml"
-    run "ln -nfs #{shared_path}/config/rinet_data.yml #{release_path}/config/rinet_data.yml"
+    run "ln -nfs #{shared_path}/config/sis_import_data.yml #{release_path}/config/sis_import_data.yml"
     run "ln -nfs #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
     run "ln -nfs #{shared_path}/config/initializers/site_keys.rb #{release_path}/config/initializers/site_keys.rb"
     run "ln -nfs #{shared_path}/config/initializers/subdirectory.rb #{release_path}/config/initializers/subdirectory.rb"
@@ -241,7 +241,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/public/sparks-content #{release_path}/public/sparks-content"
     run "ln -nfs #{shared_path}/public/installers #{release_path}/public/installers"
     run "ln -nfs #{shared_path}/config/nces_data #{release_path}/config/nces_data"
-    run "ln -nfs #{shared_path}/rinet_data #{release_path}/rinet_data"
+    run "ln -nfs #{shared_path}/sis_import_data #{release_path}/sis_import_data"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system" # paperclip file attachment location
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
@@ -344,7 +344,7 @@ namespace :import do
   end
 
   desc "Import RINET data"
-  task :import_rinet_data, :roles => :app do
+  task :import_sis_import_data, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
     "bundle exec rake RAILS_ENV=#{rails_env} app:import:rinet --trace"
   end
@@ -648,9 +648,9 @@ namespace 'account_data' do
       district = ENV['district']
       if district
         domain = ENV['domain'] || 'rinet_sakai'
-        district_root = File.join('rinet_data','districts',domain, 'csv')
-        from_dir = File.join('rinet_data','districts',domain, 'csv',district)
-        to_dir   = File.join(deploy_to,current_dir,'rinet_data','districts',domain, 'csv')
+        district_root = File.join('sis_import_data','districts',domain, 'csv')
+        from_dir = File.join('sis_import_data','districts',domain, 'csv',district)
+        to_dir   = File.join(deploy_to,current_dir,'sis_import_data','districts',domain, 'csv')
         upload(from_dir, to_dir, :via => :scp, :recursive => true)
       end
     end

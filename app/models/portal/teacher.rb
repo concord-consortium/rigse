@@ -49,11 +49,6 @@ class Portal::Teacher < ActiveRecord::Base
 
   include Changeable
 
-  class <<self
-    def display_name
-      "Teacher"
-    end
-  end
 
   ##
   ##

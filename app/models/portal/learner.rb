@@ -31,6 +31,8 @@ class Portal::Learner < ActiveRecord::Base
       find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
     end
   end
+  
+  has_one :report_learner, :class_name => "Report::Learner", :foreign_key => "learner_id"
 
   def sessions
     self.bundle_logger.bundle_contents.length
@@ -79,9 +81,6 @@ class Portal::Learner < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Learner"
-    end
   end
   
   # for the view system ...

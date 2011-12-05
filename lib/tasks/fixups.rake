@@ -407,6 +407,11 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
     task :use_jna_for_vernier_goio => :environment do
       Fixups.switch_driver('vernier_goio','JNI','JNA')
     end
+    
+    desc "remove 'teacher' students (users which both, loose their students"
+    task :remove_teachers_test_students => :environment do
+      Fixups.remove_teachers_test_students
+    end
   end
 end
 

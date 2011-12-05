@@ -26,9 +26,6 @@ class Embeddable::DrawingTool < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Draw Tool"
-  end
   
   def investigations
     invs = []

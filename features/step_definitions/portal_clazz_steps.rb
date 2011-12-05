@@ -11,6 +11,13 @@ Given /^the default class is created$/ do
   Portal::Clazz.default_class
 end
 
+Given /^there is an active class named "([^"]*)" within a district$/ do |class_name|
+  offering = Factory(:portal_offering)
+  clazz = offering.clazz
+  clazz.name = class_name
+  clazz.save
+end
+
 Then /^I should see "([^"]*)" for the external activity "([^"]*)"$/ do |content, offering_name|
   offering = ExternalActivity.find_by_name offering_name
   with_scope("#details_portal__offering_#{offering.id}") do
