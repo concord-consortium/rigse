@@ -8,7 +8,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   has_many :collaborations, :class_name => "Portal::Collaboration", :foreign_key => "bundle_content_id"
   has_many :collaborators, :through => :collaborations, :class_name => "Portal::Student", :source => :student
 
-  has_many :launch_process_events, :class_name => "Dataservice::LaunchProcessEvent", :foreign_key => "bundle_content_id", :order => "updated_at ASC"
+  has_many :launch_process_events, :class_name => "Dataservice::LaunchProcessEvent", :foreign_key => "bundle_content_id", :order => "id ASC"
 
   acts_as_list :scope => :bundle_logger_id
 
