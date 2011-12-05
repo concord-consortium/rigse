@@ -265,26 +265,47 @@ describe Portal::Clazz do
     describe "when the default class, and when there is a user" do
       before(:each) do
         @offerings = []
-        1.upto(10) do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable_id => i)
+        # these offerings belong to the "real" class
+        0.upto(2) do |i|
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)
         end
-        @student_offerings = @offerings[0...3]
+        @student_offerings = @offerings[0..2]
+
+        # these offerings belong to the default class but have the same runnable as the first 2 student offerings
+        3.upto 4 do |i|
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i-3, :runnable_id => i-3)          
+        end
+        @default_offerings_with_same_runnable_as_a_student_offering = @offerings[3..4]
+                
+        # these offerings belong only to the default class
+        5.upto 8 do |i|
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)           
+        end
+        @default_offerings_with_unique_runnable = @offerings[5..8]
+        @default_offerings = @offerings[3..8]
+        
         @clazzes = [mock(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
         @student = mock(:student, :clazzes => @clazzes)
         @user = mock(:user, :portal_student => @student)
         @clazz.stub!(:default_class => true)
-        @clazz.stub!(:active_offerings => @offerings)
+        @clazz.stub!(:active_offerings => @default_offerings)
       end
       it "should not fall back to offerings_including_default_class" do
         @clazz.should_not_receive(:offerings_including_default_class).and_return(true)
         @clazz.offerings_with_default_classes(@user).should_not be_nil
       end
-      it "should not contain the students offerings" do
+      it "should not contain the offerings which use the same runnable as a student offering" do
         default_class_offerings = @clazz.offerings_with_default_classes(@user)
-        @student_offerings.each do |o|
+        @default_offerings_with_same_runnable_as_a_student_offering.each do |o|
           default_class_offerings.should_not include(o)
         end
-        default_class_offerings.should have(7).offerings
+      end
+      it "should contain exactly the offerings which do not use the same runnable as a student offering" do
+        default_class_offerings = @clazz.offerings_with_default_classes(@user)
+        default_class_offerings.should have(@default_offerings_with_unique_runnable.length).offerings
+        @default_offerings_with_unique_runnable.each do |o|
+          default_class_offerings.should include(o)
+        end
       end
     end
 
