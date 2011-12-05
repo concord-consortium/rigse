@@ -30,8 +30,10 @@
       %td
         = calendar_date_select_tag "end_date", @end_date
 
-  = submit_tag 'update'
-  = submit_tag 'run report'
+  = submit_tag 'update filters'
+  = submit_tag 'usage report'
+  = submit_tag 'details report'
+  = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
 
 :javascript
   new Chosen($('schools'));
