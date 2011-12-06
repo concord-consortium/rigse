@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111205233127) do
+ActiveRecord::Schema.define(:version => 20111206190839) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1837,6 +1837,7 @@ ActiveRecord::Schema.define(:version => 20111205233127) do
     t.integer  "num_answered"
     t.integer  "num_correct"
     t.text     "answers"
+    t.string   "runnable_type"
   end
 
   create_table "resource_pages", :force => true do |t|

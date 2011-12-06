@@ -79,7 +79,7 @@ class Reports::Detail < Reports::Excel
     print "Filling in student data" if @verbose
     iterate_with_status(student_learners.keys) do |student_id|
       student_learners[student_id].each do |l|
-        next unless (inv = @investigations.detect{|i| i.id == l.runnable_id}) # ??? FIXME: We're assuming that the runnable on Report::Learner is always an investigation
+        next unless (inv = @investigations.detect{|i| learner.runnable_type == "Investigation" && i.id == l.runnable_id})
 
         # <=================================================>
         total_assessments = l.num_answerables

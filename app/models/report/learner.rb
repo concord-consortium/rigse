@@ -90,6 +90,7 @@ class Report::Learner < ActiveRecord::Base
 
     update_field "offering.runnable.name"
     update_field "offering.runnable.id"
+    update_field "offering.runnable.class.to_s", "runnable_type"
 
     update_field "student.user.id"
     update_field "student.user.name", "student_name"
