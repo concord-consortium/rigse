@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111130220121) do
+ActiveRecord::Schema.define(:version => 20111205233127) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1868,6 +1868,7 @@ ActiveRecord::Schema.define(:version => 20111130220121) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
+    t.text     "answers"
   end
 
   create_table "resource_pages", :force => true do |t|

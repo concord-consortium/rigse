@@ -6,6 +6,7 @@ class Report::Learner < ActiveRecord::Base
   set_table_name "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
+  serialize    :answers
 
   named_scope :after,  lambda         { |date|         {:conditions => ["last_run > ?", date]} }
   named_scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
@@ -42,7 +43,16 @@ class Report::Learner < ActiveRecord::Base
     self.num_answered = report_util.answered_number(self.learner)
     self.num_correct = report_util.correct_number(self.learner)
 
-    # TODO: We might also want to gather 'saveables' in An associated model?
+    # We might also want to gather 'saveables' in An associated model?
+    # AU: We'll use a serialized column to store a hash, for now
+    answers_hash = {}
+    report_util.saveables(:learner => self.learner).each do |s|
+      hash = {:answer => s.answer, :answered => s.answered? }
+      hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
+      hash[:answer] = "Dataservice::Blob|#{hash[:answer].id}" if hash[:answer].kind_of?(Dataservice::Blob)
+      answers_hash["#{s.class.to_s}|#{s.embeddable.id}"] = hash
+    end
+    self.answers = answers_hash
   end
 
   def update_field(methods_string, field=nil)
