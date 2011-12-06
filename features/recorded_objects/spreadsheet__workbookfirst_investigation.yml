@@ -1196,7 +1196,7 @@ worksheets:
     - Test School
     - user_id
     - student_a
-    - Doe, Jack
+    - Jack Doe
     - joe user
     - 4/4(4)
     - 100%
@@ -1215,7 +1215,7 @@ worksheets:
     - Test School
     - user_id
     - student_b
-    - Smith, Jill
+    - Jill Smith
     - joe user
     - 3/4(4)
     - 75%

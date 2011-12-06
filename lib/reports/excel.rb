@@ -131,7 +131,7 @@ class Reports::Excel
   end
 
   def learner_name(learner)
-    "#{learner.student.user.last_name}, #{learner.student.user.first_name}"
+    "#{learner.student.user.first_name} #{learner.student.user.last_name}"
   end
 
   def learner_info_cells(learner)
