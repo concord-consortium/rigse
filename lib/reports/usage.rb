@@ -43,7 +43,7 @@ class Reports::Usage < Reports::Excel
       learner_info = report_learner_info_cells(learners.first)
       row[0, learner_info.size] =  learner_info
       @investigations.each do |inv|
-        l = learners.detect {|learner| learner.runnable_id == inv.id}
+        l = learners.detect {|learner| learner.runnable_type == "Investigation" && learner.runnable_id == inv.id}
         if (l)
           total_assessments = l.num_answerables
           assess_completed =  l.num_answered
