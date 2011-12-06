@@ -222,6 +222,9 @@ ActionController::Routing::Routes.draw do |map|
 
 # ----------------------------------------------
 
+  # A prettier version of the blob w/ token url
+  map.dataservice_blob_raw_pretty "dataservice/blobs/:id/:token.:format", :controller => "dataservice/blobs", :action => "show", :misc => 'foo', :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
+
   map.namespace(:dataservice) do |dataservice|
     dataservice.resources :blobs
     dataservice.resources :bundle_contents

@@ -197,6 +197,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extract_open_responses(extractor)
     extract_multiple_choices(extractor)
     extract_image_questions(extractor)
+    
+    # Also create/update a Report::Learner object for reporting
+    Report::Learner.for_learner(self.bundle_logger.learner).update_fields
   end
   
   def extract_open_responses(extractor = Otrunk::ObjectExtractor.new(self.otml))
