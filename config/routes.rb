@@ -234,7 +234,9 @@ RailsPortal::Application.routes.draw do
     end
   end
 
-  match 'dataservice/blobs/:id.blob/:token' => 'dataservice/blobs#show', :as => :dataservice_blob_raw, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }, :format => 'blob'
+  # A prettier version of the blob w/ token url
+  match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }
+  match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }, :format => 'blob'
 
   namespace :admin do
     resources :projects do
