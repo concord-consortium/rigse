@@ -120,3 +120,36 @@ In NO case should the system allow:
     Examples:
       | route  |
       | /users |
+
+  Scenario Outline: Anonymous user can't access report learner routes:
+    Given I am not logged in
+    When I visit the route <route>
+    Then I should be on my home page
+
+    Examples:
+      | route           |
+      | /report/learner |
+
+  Scenario Outline: Admin user can accesss report learner routes
+    Given the following users exist:
+      | login       | password       | roles                 |
+      | admin_login | admin_password | admin, member, author |
+    And I login with username: admin_login password: admin_password
+    When I visit the route <route>
+    Then I should be on <route>
+
+    Examples:
+      | route           |
+      | /report/learner |
+
+  Scenario Outline: Researcher user can accesss report learner routes
+    Given the following users exist:
+      | login            | password            | roles              |
+      | researcher_login | researcher_password | member, researcher |
+    And I login with username: admin_login password: admin_password
+    When I visit the route <route>
+    Then I should be on <route>
+
+    Examples:
+      | route           |
+      | /report/learner |

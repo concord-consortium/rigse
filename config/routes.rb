@@ -403,6 +403,7 @@ RailsPortal::Application.routes.draw do
   match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
   match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
   match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
+  match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
   resources :activities do
     member do
       get :duplicate
