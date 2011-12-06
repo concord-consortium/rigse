@@ -31,10 +31,20 @@ class Dataservice::Blob < ActiveRecord::Base
     return "#{self.id}: #{self.mimetype}"
   end
 
-  # IF you add more auto-detectable mime-types, be sure to add an html representation in the html_content method.
+  # IF you add more auto-detectable mime-types, be sure to add an html representation in the html_content method,
+  # and add support in the Dataservice::BlobsController#show action.
   def mimetype
     return "image/png" if content =~ /^.PNG/
     return "application/octet-stream"
+  end
+
+  def file_extension
+    case self.mimetype
+    when "image/png"
+      return "png"
+    when "application/octet-stream"
+    end
+    return "blob"
   end
 
   def html_content(path_to_self)
