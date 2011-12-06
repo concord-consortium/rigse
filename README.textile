@@ -71,8 +71,8 @@ bc. bundle install --binstubs
 
 Automatic setup of application settings in the config directory, for example: settings.yml and database.yml
 
-bc. ruby config/setup.rb -n "Cross Project Portal" -D xproject -u <dbuser> -p <password> -t xproject --states none -y -q -f
-
+bc. ruby config/setup.rb --name "Cross Project Portal" --database xproject --user <dbuser> --password <password> --theme xproject --states none --yes --quiet --force
+  
 The option @--states none@ means that only a single virtual district and school will be created.
 
 If you leave this option out the default is to create portals instances for all the districts and schools in Massachusetts.
