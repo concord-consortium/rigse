@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111130181720) do
+ActiveRecord::Schema.define(:version => 20111205233127) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -1814,6 +1814,29 @@ ActiveRecord::Schema.define(:version => 20111130181720) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ignore"
+  end
+
+  create_table "report_learners", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "student_id"
+    t.integer  "user_id"
+    t.integer  "offering_id"
+    t.integer  "class_id"
+    t.datetime "last_run"
+    t.datetime "last_report"
+    t.string   "offering_name"
+    t.string   "teachers_name"
+    t.string   "student_name"
+    t.string   "username"
+    t.string   "school_name"
+    t.string   "class_name"
+    t.integer  "runnable_id"
+    t.integer  "runnable_name"
+    t.integer  "school_id"
+    t.integer  "num_answerables"
+    t.integer  "num_answered"
+    t.integer  "num_correct"
+    t.text     "answers"
   end
 
   create_table "resource_pages", :force => true do |t|
