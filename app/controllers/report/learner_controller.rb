@@ -1,6 +1,12 @@
 class Report::LearnerController < ApplicationController
 
+  include RestrictedController
   before_filter :setup
+  before_filter :manager_or_researcher,
+    :only => [
+      :index,
+      :update_learners
+    ]
 
   def update_learners
     # this should be removed eventually,

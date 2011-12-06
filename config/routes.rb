@@ -389,6 +389,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
   map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
+
+  map.learner_report '/report/learner', :controller => 'report/learner', :action => :index
   
   map.resources :activities, :member => {
     :add_section => [:post,:get],

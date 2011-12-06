@@ -1,3 +1,5 @@
+- if current_user.has_role?('admin', 'manager','researcher')
+  %li.trail= link_to 'Reports', learner_report_path
 - if current_user.has_role?('admin', 'manager')
   %li.trail= link_to 'Districts', portal_districts_path
   %li.trail= link_to 'Schools', portal_schools_path
