@@ -19,6 +19,10 @@
               %strong
                 = portal_clazz.semester.name
             %li
+              Class Added:
+              %strong
+                = portal_clazz.created_at.strftime("%A, %B %-d, %Y")
+            %li
               Class Word:
               %strong
                 = portal_clazz.class_word
