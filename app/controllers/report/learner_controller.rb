@@ -2,25 +2,47 @@ class Report::LearnerController < ApplicationController
 
   before_filter :setup
 
+  def update_learners
+    # this should be removed eventually,
+    # force loading report-learner data
+    Portal::Learner.all.each { |l| Report::Learner.for_learner(l).update_fields }
+  end
+
+
   def setup
-    @all_schools           = Portal::School.all.sort_by {|s| s.name}
+    # commit"=>"update learners"
+    if params['commit'] =~ /update learners/i
+      update_learners
+    end
+    
+    @all_schools           = Portal::School.all.sort_by  {|s| s.name.downcase}
+    @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
+
     # TODO: fix me -- choose runnables better
-    @all_runnables         = Investigation.published.sort_by { |i| i.name }
+    @all_runnables         = Investigation.published.sort_by { |i| i.name.downcase }
 
     @start_date            = params['start_date']
     @end_date              = params['end_date']
 
     @select_runnables      = params['runnables'] || []
     @select_schools        = params['schools']   || []
+    @select_teachers       = params['teachers']  || []
 
-    # to populate dropdown menus:
-    @select_schools   = @select_schools.map   { |s| Portal::School.find(s) }
-    @select_runnables = @select_runnables.map { |r| Investigation.find(r)  }
+    @select_schools   = @select_schools.map      { |s| Portal::School.find(s) }
+    @select_teachers  = @select_teachers.map     { |t| Portal::Teacher.find(t) }
+    @select_runnables = @select_runnables.map    { |r| Investigation.find(r)  }
+
+    if (@select_schools.size > 0) 
+      @all_teachers = @all_teachers.select       { |t| @select_schools.map{|s| s.teachers}.flatten.include? t  }
+      @select_teachers = @select_teachers.select { |t| @select_schools.map{|s| s.teachers}.flatten.include? t  }
+    end
+
 
     # helper model to limit learner selections:
     @learner_selector = Report::Learner::Selector.new({
-                          :schools    => @select_schools.map  { |s| s.id},
-                          :runnables  => @select_runnables.map{ |r| r.id},
+                          :schools    => @select_schools,
+                          :teachers   => @select_teachers,
+                          :runnables  => @select_runnables,
                           :start_date => @start_date,
                           :end_date   => @end_date
                         })
@@ -35,6 +57,20 @@ class Report::LearnerController < ApplicationController
       "classes:"        => @select_learners.map {|l| l.class_id}.uniq.size,
       "Investigations:" => @select_learners.map {|l| l.runnable_id}.uniq.size
     }
+
+    if params[:commit] == 'usage report'
+      sio = StringIO.new
+      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
+      report = Reports::Usage.new(:investigations => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
+      report.run_report(sio)
+      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
+    elsif params[:commit] == 'details report'
+      sio = StringIO.new
+      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
+      report = Reports::Detail.new(:investigations => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
+      report.run_report(sio)
+      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+    end
   end
 
   def index

@@ -6,10 +6,12 @@ class Report::Learner < ActiveRecord::Base
   set_table_name "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
+  serialize    :answers
 
   named_scope :after,  lambda         { |date|         {:conditions => ["last_run > ?", date]} }
   named_scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
   named_scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
+  named_scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
   named_scope :with_runnables, lambda { |runnable_ids| {:conditions => {:runnable_id => runnable_ids }}}
 
   validates_presence_of   :learner
@@ -35,11 +37,31 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def update_answers
-    # TODO: We need to populate these field
-    # TODO: We might also want to gather 'saveables' in An associated model?
-    # self.num_answerables
-    # self.num_answered
-    # self.num_correct
+    report_util = Report::Util.new(self.learner, false, true)
+
+    # We need to populate these field
+    self.num_answerables = report_util.embeddables.size
+    self.num_answered = report_util.answered_number(self.learner)
+    self.num_correct = report_util.correct_number(self.learner)
+
+    # We might also want to gather 'saveables' in An associated model?
+    # AU: We'll use a serialized column to store a hash, for now
+    answers_hash = {}
+    report_util.saveables(:learner => self.learner).each do |s|
+      hash = {:answer => s.answer, :answered => s.answered? }
+      hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
+      if hash[:answer].kind_of?(Dataservice::Blob)
+        blob = hash[:answer]
+        hash[:answer] = {
+          :type => "Dataservice::Blob",
+          :id => blob.id,
+          :token => blob.token,
+          :file_extension => blob.file_extension
+        }
+      end
+      answers_hash["#{s.embeddable.class.to_s}|#{s.embeddable.id}"] = hash
+    end
+    self.answers = answers_hash
   end
 
   def update_field(methods_string, field=nil)
@@ -68,6 +90,7 @@ class Report::Learner < ActiveRecord::Base
 
     update_field "offering.runnable.name"
     update_field "offering.runnable.id"
+    update_field "offering.runnable.class.to_s", "runnable_type"
 
     update_field "student.user.id"
     update_field "student.user.name", "student_name"

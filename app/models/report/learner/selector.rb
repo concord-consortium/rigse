@@ -8,13 +8,17 @@ class Report::Learner::Selector
     options.reject! { |k,v| v.size < 1 if v.respond_to? :size }
 
     @scopes = {}
+    @scopes[:in_schools]     = options[:schools].map   {|s| s.id}  if options[:schools]
+    @scopes[:with_runnables] = options[:runnables].map {|r| r.id}  if options[:runnables]
+    @scopes[:before]         = Time.parse(options[:end_date])      if options[:end_date]
+    @scopes[:after]          = Time.parse(options[:start_date])    if options[:start_date]
 
-    @scopes[:in_schools]     = options[:schools]    if options[:schools]
-    @scopes[:with_runnables] = options[:runnables]  if options[:runnables]
+    if options[:teachers]
+      clazzes = options[:teachers].map { |t| t.clazzes }
+      clazzes = clazzes.flatten.map    { |c| c.id } 
+      @scopes[:in_classes] = clazzes if clazzes.size > 0
+    end
 
-    @scopes[:before]         = Time.parse(options[:end_date])   if options[:end_date]
-    @scopes[:after]          = Time.parse(options[:start_date]) if options[:start_date]
-    
     if @scopes.size > 0
       results = Report::Learner
       @scopes.each_pair do |k,v|
