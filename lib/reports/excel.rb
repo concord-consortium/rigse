@@ -82,7 +82,8 @@ class Reports::Excel
   def report_learners_for_runnables(runnables)
     runnables = [runnables] unless runnables.respond_to? :count
     offerings = runnables.map { |i| i.offerings }.flatten.uniq.compact
-    offerings.map {|o| o.learners}.flatten.compact
+    learners = offerings.map {|o| o.learners}.flatten.compact
+    learners.map {|l| Report::Learner.for_learner(l) }
   end
 
   def sorted_students(students)
