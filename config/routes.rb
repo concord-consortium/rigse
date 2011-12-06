@@ -153,6 +153,7 @@ ActionController::Routing::Routes.draw do |map|
       :deactivate => :get,
       :learners => :get,
       :check_learner_auth => :post,
+      :launch_status => :get,
       :start => :post
     }, :collection => { :data_test => [:get,:post] }
 
@@ -220,6 +221,9 @@ ActionController::Routing::Routes.draw do |map|
   end
 
 # ----------------------------------------------
+
+  # A prettier version of the blob w/ token url
+  map.dataservice_blob_raw_pretty "dataservice/blobs/:id/:token.:format", :controller => "dataservice/blobs", :action => "show", :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
 
   map.namespace(:dataservice) do |dataservice|
     dataservice.resources :blobs
@@ -446,6 +450,7 @@ ActionController::Routing::Routes.draw do |map|
   map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
+  map.banner '/banner', :controller => 'home', :action => 'banner'
   # map. ':controller/:action/:id.:format'
 
   # Install the default routes as the lowest priority.

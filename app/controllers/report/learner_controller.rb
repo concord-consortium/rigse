@@ -2,7 +2,6 @@ class Report::LearnerController < ApplicationController
 
   before_filter :setup
 
-
   def update_learners
     # this should be removed eventually,
     # force loading report-learner data
@@ -66,7 +65,6 @@ class Report::LearnerController < ApplicationController
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
     end
   end
-
 
   def index
     # renders views/report/learner/index.html.haml

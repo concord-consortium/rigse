@@ -106,7 +106,7 @@ class Reports::Detail < Reports::Excel
           row.concat [answered_answers.size, percent(answered_answers.size, reportables.size)]
           all_answers += answers.collect{|ans| 
             if ans.answer.class == Dataservice::Blob
-              url = "#{@blobs_url}/#{ans.answer.id.to_s}.blob"
+              url = "#{@blobs_url}/#{ans.answer.id.to_s}/#{ans.answer.token}.#{ans.answer.file_extension}"
               Spreadsheet::Link.new url, url
             else
               ans.answer
