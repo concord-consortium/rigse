@@ -11,6 +11,7 @@ class Report::Learner < ActiveRecord::Base
   named_scope :after,  lambda         { |date|         {:conditions => ["last_run > ?", date]} }
   named_scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
   named_scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
+  named_scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
   named_scope :with_runnables, lambda { |runnable_ids| {:conditions => {:runnable_id => runnable_ids }}}
 
   validates_presence_of   :learner
