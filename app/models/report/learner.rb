@@ -50,7 +50,7 @@ class Report::Learner < ActiveRecord::Base
       hash = {:answer => s.answer, :answered => s.answered? }
       hash[:is_correct] = s.answered_correctly? if s.respond_to?("answered_correctly?")
       hash[:answer] = "Dataservice::Blob|#{hash[:answer].id}" if hash[:answer].kind_of?(Dataservice::Blob)
-      answers_hash["#{s.class.to_s}|#{s.embeddable.id}"] = hash
+      answers_hash["#{s.embeddable.class.to_s}|#{s.embeddable.id}"] = hash
     end
     self.answers = answers_hash
   end
