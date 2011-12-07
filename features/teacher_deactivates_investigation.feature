@@ -5,10 +5,7 @@ Feature: Teacher can deactivate investigations from a class
 
   Background:
     Given The default project and jnlp resources exist using factories
-
-  @itsisu-todo
-  Scenario: Teacher can see if student has performed work on an investigation
-    Given the following teachers exist:
+    And the following teachers exist:
       | login         | password        |
       | teacher       | teacher         |
     And the following classes exist:
@@ -24,6 +21,7 @@ Feature: Teacher can deactivate investigations from a class
     And a student has performed work on the investigation "Test Investigation" for the class "My Class"
     And I login with username: teacher password: teacher
 
+  @itsisu-todo
   Scenario: Teacher can see if student has performed work on an investigation
     When I am on the class page for "My Class"
     And I open the accordion for the offering for investigation "Test Investigation" for the class "My Class"

@@ -1,3 +1,6 @@
+# ITSISU-TODO:  the step definitions
+# ./features/step_definitions/investigations_steps.rb are looking for 
+# #assignable_list -- perhaps we can give the same ID to a container in itsisu
 Feature: Resource pages can be filtered by cohort
   As a teacher
   I want to only see resource pages for my cohort

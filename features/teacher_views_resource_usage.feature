@@ -1,4 +1,4 @@
-@selenium
+@selenium @itsisu-todo
 Feature: Teacher views resource usage
 
   In order to know how many students have viewed a resource page
@@ -24,7 +24,6 @@ Feature: Teacher views resource usage
     And I am on the class page for "My Class"
     And I assign the resource page "Test Resource" to the class "My Class"
 
-  @itsisu-todo
   Scenario: Student resource page view increments counter
     When I am on the resource pages page
     And I open the accordion for the resource "Test Resource"
