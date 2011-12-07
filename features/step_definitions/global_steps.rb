@@ -59,6 +59,11 @@ Given /^(?:|I )login as an admin$/ do
   login_as(admin.login, 'password')
 end
 
+
+When /^I am logged in as "([^"]*)"\s*,?\s*"([^"]*)"\s*$/ do |username,password|
+  login_as(username,password)
+end
+
 Given /^there are (\d+) (.+)$/ do |number, model_name|
   model_name = model_name.gsub(/\s/, '_').singularize
   the_class = model_name.classify.constantize

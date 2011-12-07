@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe "/embeddable/data_collectors/edit.html.haml" do
   include Embeddable::DataCollectorHelper
@@ -10,7 +10,7 @@ describe "/embeddable/data_collectors/edit.html.haml" do
     template.stub!(:current_user).and_return(power_user)
     assigns[:scope] = mock(
       :id => 1, 
-      :activity => mock (
+      :activity => mock(
         :data_collectors => [],
         :data_tables => []
     ))
@@ -46,6 +46,7 @@ describe "/embeddable/data_collectors/edit.html.haml" do
       :probe_type_id =>1, 
       :multiple_graphable_enabled =>false, 
       :calibration_id =>nil,
+      :dd_font_size => Embeddable::DataCollector.dd_font_sizes[:small],
       :user => power_user)
   end
 
@@ -58,5 +59,13 @@ describe "/embeddable/data_collectors/edit.html.haml" do
   it "should have a way to select a linked data collector" do
     render
     response.should have_tag("select[name='embeddable_data_collector[data_table_id]']")
+  end
+  it "should have a way to select the font size for the digital display" do
+    render
+    response.should have_tag("select[name='embeddable_data_collector[dd_font_size]']") do
+      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:small]}']")
+      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:medium]}']")
+      with_tag("option[value='#{Embeddable::DataCollector.dd_font_sizes[:large]}']")
+    end
   end
 end

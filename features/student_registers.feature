@@ -46,7 +46,7 @@ Feature: Student registers to use the portal
     And I press "Sign up as a student"
     Then I should see "Student Signup"
     When I press "Submit"
-    Then I should see "6 errors prohibited this user from being saved"
+    Then I should see "7 errors prohibited this user from being saved"
     And "2" fields should have the class selector ".fieldWithErrors"
     When I fill in the following:
       | user_first_name            | Example             |

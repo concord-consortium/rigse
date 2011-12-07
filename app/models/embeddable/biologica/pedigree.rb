@@ -51,9 +51,6 @@ class Embeddable::Biologica::Pedigree < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Biologica Pedigree"
-  end
 
   def investigations
     invs = []

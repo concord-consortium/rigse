@@ -125,9 +125,6 @@ class Page < ActiveRecord::Base
       @@element_types
     end
 
-    def display_name
-      "Page"
-    end
 
     def search_list(options)
       name = options[:name]

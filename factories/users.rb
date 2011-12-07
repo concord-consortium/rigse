@@ -21,6 +21,7 @@ Factory.define :user do |f|
   f.password  'password' 
   f.password_confirmation  {|u| u.password}
   f.skip_notifications true
+  f.require_password_reset false
   f.roles  { [ Factory.next(:member_role)] }
   f.vendor_interface { |d| Probe::VendorInterface.find(:first) || Factory(:probe_vendor_interface) }
 end

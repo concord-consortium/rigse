@@ -12,4 +12,7 @@ Mime::Type.register "text/xml", :dynamic_otml
 Mime::Type.register "", :run_html
 Mime::Type.register "", :run_external_html
 Mime::Type.register "", :run_sparks_html
+
+# for blobs
+Mime::Type.register "image/png", :png
 Mime::Type.register "application/octet-stream", :blob

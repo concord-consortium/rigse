@@ -8,21 +8,23 @@
   
 
 - form_for :user, @user, :url => switch_user_path(@user), :html => { :method => :put }  do |form|
-  .item
+  .item{:style=>"min-height: 400px;"}
     .content
       %fieldset
         %legend
           Select another user to switch to:
-        %ul.menu_h
-          %li
-            = select_tag('user[id]', option_groups_from_collection_for_select(@user_list, 'send(:fetch, :users)' ,'send(:fetch, :name)', :id, :name_and_login  ))
-          %li
-            = submit_tag 'Switch'
-        %ul.menu_h.right_content
-          %li
-            - if @original_user != current_user
-              - if (@original_user != @user_list[1][:users].first && @original_user != @user_list[0][:users].first)
-                = submit_tag "Return to your actual user: #{@original_user.name}"
-            - else
-              = submit_tag 'Cancel'
+        %span
+          = select_tag('user[id]', option_groups_from_collection_for_select(@user_list, 'send(:fetch, :users)' ,'send(:fetch, :name)', :id, :name_and_login  ))
+        %span
+          = submit_tag 'Switch'
+        - if @original_user != current_user
+          - if (@original_user != @user_list[1][:users].first && @original_user != @user_list[0][:users].first)
+            %br
+            %span
+              = submit_tag "Return to your actual user: #{@original_user.name}"
+        - else
+          %span
+            = submit_tag 'Cancel'
         
+:javascript
+  new Chosen($('user_id'));

@@ -28,9 +28,6 @@ class Embeddable::VideoPlayer < ActiveRecord::Base
 
   send_update_events_to :investigations
   
-  def self.display_name
-    "VideoPlayer"
-  end
   
   def investigations
     invs = []

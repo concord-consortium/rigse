@@ -42,9 +42,6 @@ class Embeddable::InnerPage < ActiveRecord::Base
   end
   alias << add_page
   
-  def self.display_name
-    "Inner Page"
-  end
 
   def parent
     pages[0]

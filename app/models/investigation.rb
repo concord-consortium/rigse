@@ -126,9 +126,6 @@ class Investigation < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      self.to_s
-    end
 
     def saveable_types
       [ Saveable::OpenResponse, Saveable::MultipleChoice, Saveable::ImageQuestion ]

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::DataCollectorsController do
   integrate_views
@@ -62,6 +62,26 @@ describe Embeddable::DataCollectorsController do
           # <OTDataStore local_id='data_store_data_collector_3046' numberChannels='2'>
           with_tag("OTDataStore[local_id*=?]", /data_store_data_collector_/ )
         end
+      end
+    end
+  end
+
+  describe "digital display only" do
+    before(:all) do
+      generate_default_project_and_jnlps_with_mocks
+      generate_portal_resources_with_mocks
+    end
+    before(:each) do
+      @font_size = 23
+      @graph = Embeddable::DataCollector.create(
+        :is_digital_display => true,
+        :dd_font_size => @font_size)
+      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+    end
+    describe "the generated otml" do
+      it "should include OTDigitalDisplay tag" do
+        get :show, :id => "37", :format => 'otml'
+        response.should have_tag("OTDigitalDisplay[fontSize='#{@font_size}']")
       end
     end
   end

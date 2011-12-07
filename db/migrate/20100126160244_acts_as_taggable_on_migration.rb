@@ -27,3 +27,4 @@ class ActsAsTaggableOnMigration < ActiveRecord::Migration
     drop_table :tags
   end
 end
+

@@ -79,6 +79,13 @@ class Reports::Excel
     students  = sorted_students(students)
   end
 
+  def report_learners_for_runnables(runnables)
+    runnables = [runnables] unless runnables.respond_to? :count
+    offerings = runnables.map { |i| i.offerings }.flatten.uniq.compact
+    learners = offerings.map {|o| o.learners}.flatten.compact
+    learners.map {|l| Report::Learner.for_learner(l) }
+  end
+
   def sorted_students(students)
     # sort by school and last
     students.sort{ |a,b|
@@ -110,11 +117,13 @@ class Reports::Excel
     return name
   end
   def learner_id(learner)
-    "#{learner.student.id}_#{learner.offering.clazz.id}"
+    return "#{learner.student_id}_#{learner.class_id}" if learner.kind_of?(Report::Learner)
+    return "#{learner.student.id}_#{learner.offering.clazz.id}"
   end
 
   def user_id(learner)
-    learner.student.user.id
+    return learner.user_id if learner.kind_of?(Report::Learner)
+    return learner.student.user.id
   end
 
   def learner_login(learner)
@@ -122,7 +131,7 @@ class Reports::Excel
   end
 
   def learner_name(learner)
-    "#{learner.student.user.last_name}, #{learner.student.user.first_name}"
+    "#{learner.student.user.first_name} #{learner.student.user.last_name}"
   end
 
   def learner_info_cells(learner)
@@ -132,4 +141,16 @@ class Reports::Excel
     return [learner_id(learner), clazz.name, school_name_for(clazz), user_id(learner), learner_login(learner), learner_name(learner), teachers]
   end
 
+  def report_learner_info_cells(report_learner)
+    return [
+      learner_id(report_learner),
+      report_learner.class_name,
+      report_learner.school_name,
+      user_id(report_learner),
+      report_learner.username,
+      report_learner.student_name,
+      report_learner.teachers_name
+    ]
+
+  end
 end

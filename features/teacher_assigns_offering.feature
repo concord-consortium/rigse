@@ -38,7 +38,7 @@ Feature: Teacher can assign an offering to a class
     Given the following simple investigations exist:
       | name               | user    |
       | Test Investigation | teacher |
-		And the investigation "Test Investigation" is published
+    And the investigation "Test Investigation" is published
     And the following resource pages exist:
       | name               | user    |
       | Test Resource Page | teacher |
@@ -47,9 +47,9 @@ Feature: Teacher can assign an offering to a class
       | My Activity | teacher |
     And I login with username: teacher password: teacher
     And I am on the class page for "My Class"
-		Then I should see "Investigation: Test Investigation"
-		Then I should see "Resource Page: Test Resource Page"
-		Then I should see "External Activity: My Activity"
+    Then I should see "Investigation: Test Investigation"
+    Then I should see "Resource Page: Test Resource Page"
+    Then I should see "External Activity: My Activity"
 
   @selenium @itsisu-todo
   Scenario: Offerings from the default class show learner data in the default class

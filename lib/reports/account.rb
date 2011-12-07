@@ -5,11 +5,14 @@ class Reports::Account < Reports::Excel
     super(opts)
 
     @column_defs = [
+      Reports::ColumnDefinition.new(:title => "User id",      :width => 9),
+      Reports::ColumnDefinition.new(:title => "External id",  :width => 9),
       Reports::ColumnDefinition.new(:title => "User name",    :width => 25),
       Reports::ColumnDefinition.new(:title => "Login",        :width =>  9),
       Reports::ColumnDefinition.new(:title => "User type",    :width =>  9),
       Reports::ColumnDefinition.new(:title => "School",       :width => 27),
       Reports::ColumnDefinition.new(:title => "Classes",      :width => 50),
+      Reports::ColumnDefinition.new(:title => "Cohorts",      :width => 50),
       Reports::ColumnDefinition.new(:title => "User created", :width => 18),
       Reports::ColumnDefinition.new(:title => "User runs",    :width => 10),
       Reports::ColumnDefinition.new(:title => "Last run",     :width => 18)
@@ -47,11 +50,19 @@ class Reports::Account < Reports::Excel
         user_school = school_name(portal_user)
         user_classes = portal_user.clazzes.compact.map{ |c| class_name(c) }.join(',')
 
+        user_cohorts = ""
+        if user_type == "Teacher"
+          user_cohorts = portal_user.cohort_list.join(", ")
+        else
+          clazzes = portal_user.clazzes.reject { |c| c.teacher.nil? }
+          user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_list }.flatten.uniq.compact.join(', ')
+        end
+
         user_created = user.created_at
 
         user_runs,user_last_run = run_info(user.portal_student)  # only students have learners, so use a teacher's associated student (if any)
 
-        row.concat [user_name, user_login, user_type, user_school, user_classes, user_created, user_runs, user_last_run]
+        row.concat [user.id, user.external_id, user_name, user_login, user_type, user_school, user_classes, user_cohorts, user_created, user_runs, user_last_run]
       end
     end
     book.write stream_or_path
@@ -63,7 +74,7 @@ class Reports::Account < Reports::Excel
     return [0, 'never'] unless user && user.respond_to?(:learners)
     bundle_loggers = user.learners.collect{|l| l.bundle_logger }
     user_runs = bundle_loggers.collect{|bl| bl.bundle_contents.size }.sum
-    user_last_run = bundle_loggers.collect{|bl| b = bl.bundle_contents.compact.last; b ? b.created_at : @@default_time }.sort.last
+    user_last_run = bundle_loggers.collect{|bl| b = bl.last_non_empty_bundle_content; b ? b.created_at : @@default_time }.sort.last
     user_last_run = "never" if user_last_run == @@default_time || user_last_run.nil?
     return [user_runs, user_last_run]
   end

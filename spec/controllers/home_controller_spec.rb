@@ -1,10 +1,10 @@
-require 'spec_helper'
-
+require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
   integrate_views
 
   before(:each) do
     @test_project = mock("project")
+    @test_project.stub!(:use_student_security_questions).and_return(false)
     controller.stub(:before_render) {
       response.template.stub(:current_project).and_return(@test_project)
     }

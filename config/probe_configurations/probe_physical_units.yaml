@@ -35,3 +35,12 @@
   base_unit: 
   unit_symbol: S
   description: "rotational speed -- not angular velocity which would be degrees or radians per second. "
+- si: 
+  name: gauss
+  quantity: magnetic field
+  uuid: 5edceb9a-b4a2-11e0-b78f-e80688fffebc
+  id: 5
+  unit_symbol_text: G
+  base_unit: 
+  unit_symbol: G
+  description: "gauss"

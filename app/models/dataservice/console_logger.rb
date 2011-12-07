@@ -22,9 +22,6 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Dataservice::ConsoleLogger"
-    end
   end
 
   # for the view system ...

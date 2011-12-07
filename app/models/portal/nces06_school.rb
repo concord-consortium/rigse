@@ -9,18 +9,66 @@ class Portal::Nces06School < ActiveRecord::Base
 
   @@searchable_attributes = %w{NCESSCH LEAID SCHNO SCHNAM PHONE MSTREE MCITY MSTATE MZIP}
 
+  include ActionView::Helpers::NumberHelper
+  
   class <<self
     def searchable_attributes
       @@searchable_attributes
     end
 
-    def display_name
-      "NCES School"
-    end
   end
   
+  def portal_school_created?
+    self.school ? true : false
+  end
+
   def capitalized_name
-    self.SCHNAM.split.collect {|w| w.capitalize}.join(' ').gsub(/\b\w/) { $&.upcase }
+    capitalized_words(self.SCHNAM.split)
+  end
+
+  def phone
+    number_to_phone(self.PHONE.to_i)
+  end
+  
+  def address
+    capitalized_words(self.MSTREE) + ', ' + capitalized_words(self.MCITY) + ", #{self.MSTATE} #{self.MZIP}" 
+  end
+
+  def geographic_location
+    "latitude: #{self.LATCOD}, longitude: #{self.LONCOD}"
+  end
+
+  def student_teacher_ratio
+    number_with_precision(self.MEMBER.to_f / self.FTE.to_f, :precision => 1)
+  end
+
+  def percent_free_reduced_lunch
+    number_to_percentage(self.TOTFRL.to_f / self.MEMBER.to_f * 100, :precision => 1)
+  end
+  
+  def description
+    content = <<-HEREDOC
+<h3>#{self.capitalized_name}</h3>
+
+<p>In 2006 #{self.capitalized_name} with grades from #{self.GSLO.to_i} to #{self.GSHI.to_i} was located at #{address}, 
+#{self.geographic_location} with telephone: #{self.phone}.</p>
+
+<p>#{self.capitalized_name} had #{self.FTE} FTE-equivalent teachers and #{self.MEMBER} students of which #{self.percent_free_reduced_lunch} 
+were eligible for either free or reduced-price lunch. The effective student-teacher ratio was #{self.student_teacher_ratio} to 1.
+</p>
+
+<p>Students were distributed among the following groups: American Indian/Alaska Native: #{self.AM}, 
+Asian/Pacific Islander: #{self.ASIAN}, Hispanic: #{self.HISP}, Black: #{self.BLACK}, and White: #{self.WHITE}.</p>
+    HEREDOC
+    content.delete("\n")
+  end
+
+  def summary
+    { 
+      'name' => self.capitalized_name,
+      'school_created' => self.portal_school_created?,
+      'description' => self.description 
+    }
   end
   
   # School level.  The following codes were calculated from the school's corresponding GSLO and GSHI values: 
@@ -75,5 +123,12 @@ class Portal::Nces06School < ActiveRecord::Base
     # active_grades.min <= grades.max
     (active_grades & grades).size > 0
   end
+  
+  private
+  
+  def capitalized_words(words, delimiter=' ')
+    words.collect {|w| w.capitalize}.join(delimiter).gsub(/\b\w{1,2}\b/) { $&.upcase }
+  end
+  
   
 end

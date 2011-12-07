@@ -40,9 +40,9 @@ module RunnablesHelper
       :title => title_text(component, verb, run_as)
     }
     if component.is_a?(ExternalActivity)
-      options[:popup] = true
+      options[:popup] = component.popup
     elsif component.is_a?(Portal::Offering) && component.runnable.is_a?(ExternalActivity)
-      options[:popup] = true
+      options[:popup] = component.runnable.popup
     end
     link_button("#{image}.png",  run_url_for(component, params), options)
   end
@@ -64,7 +64,7 @@ module RunnablesHelper
     case component
     when Portal::Offering
       html_options[:class] = 'offering'
-      html_options[:popup] = true if component.runnable.kind_of?(ExternalActivity)
+      html_options[:popup] = component.runnable.popup if component.runnable.kind_of?(ExternalActivity)
     when ExternalActivity
       html_options[:popup] = component.popup
     else

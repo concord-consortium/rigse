@@ -1,0 +1,45 @@
+
+%div{:style=>"min-height: 400px;"}
+  %p
+    %h3 You have selected:
+    - @infos.each_pair do |k,v|
+      %span{:style=> "padding-left: 10px"}
+        %span{:style=> "font-weight: bold"}=k
+        %span=v
+  - form_for :learner_select, :url => url_for(:action => 'index'), :html => { :method => :get }  do |form|
+    %table{:clas => 'form', :style=>"width: 90%;"}
+      %tr
+        %td
+          %label schools:
+        %td
+          = select_tag('schools', options_for_select(@all_schools.map {|s| [s.name, s.id]}, @select_schools.map {|s| s.id}), { :multiple => true })
+      %tr
+        %td
+          %label teachers:
+        %td
+          = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
+      %tr
+        %td
+          %label investigations:
+        %td
+          = select_tag('runnables', options_for_select(@all_runnables.map {|s| [s.name, s.id]}, @select_runnables.map {|s| s.id}), { :multiple => true })
+      %tr
+        %td
+          %label start date:
+        %td
+          = calendar_date_select_tag "start_date", @start_date
+      %tr
+        %td
+          %label end date:
+        %td
+          = calendar_date_select_tag "end_date", @end_date
+
+    = submit_tag 'update filters'
+    = submit_tag 'usage report'
+    = submit_tag 'details report'
+    = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
+
+:javascript
+  new Chosen($('schools'));
+  new Chosen($('runnables'));
+  new Chosen($('teachers'));

@@ -53,13 +53,11 @@ class Dataservice::BlobsController < ApplicationController
           login_redirect
         end
       }
+      format.png  {
+        _handle_rendering_blob(is_authorized)
+      }
       format.blob  {
-        if is_authorized
-          type = params[:mimetype] ? params[:mimetype] : @dataservice_blob.mimetype
-          send_data(@dataservice_blob.content, :type => type, :filename => "file", :disposition => 'inline' )
-        else
-          render :text => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
-        end
+        _handle_rendering_blob(is_authorized)
       }
     end
   end
@@ -123,6 +121,17 @@ class Dataservice::BlobsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(dataservice_blobs_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  private
+
+  def _handle_rendering_blob(is_authorized)
+    if is_authorized
+      type = params[:mimetype] ? params[:mimetype] : @dataservice_blob.mimetype
+      send_data(@dataservice_blob.content, :type => type, :filename => "file", :disposition => 'inline' )
+    else
+      render :text => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
     end
   end
 end

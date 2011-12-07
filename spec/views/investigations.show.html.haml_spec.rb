@@ -27,6 +27,9 @@ describe "/investigations/index.html.haml" do
   end
 
   it "should have a global details report link" do
+    # Jun 1, 2011: Global Details reports cause pain sometimes
+    # because they can eat a lot of memory... (NP)
+    pending("we are temporarily disabling details reports in RITES")
     render
     response.should have_tag("div[id=?]", "offering_list") do
       with_tag("div[class=?]", "action_menu") do

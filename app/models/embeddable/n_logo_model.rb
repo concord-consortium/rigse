@@ -28,9 +28,6 @@ class Embeddable::NLogoModel < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Net Logo Model"
-  end
 
   def investigations
     invs = []
