@@ -1,4 +1,5 @@
 *~
+log/newrelic*
 log/*.log
 tmp/*
 .DS_Store
