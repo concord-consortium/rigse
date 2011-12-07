@@ -117,11 +117,13 @@ class Reports::Excel
     return name
   end
   def learner_id(learner)
-    "#{learner.student.id}_#{learner.offering.clazz.id}"
+    return "#{learner.student_id}_#{learner.class_id}" if learner.kind_of?(Report::Learner)
+    return "#{learner.student.id}_#{learner.offering.clazz.id}"
   end
 
   def user_id(learner)
-    learner.student.user.id
+    return learner.user_id if learner.kind_of?(Report::Learner)
+    return learner.student.user.id
   end
 
   def learner_login(learner)
@@ -129,7 +131,7 @@ class Reports::Excel
   end
 
   def learner_name(learner)
-    "#{learner.student.user.last_name}, #{learner.student.user.first_name}"
+    "#{learner.student.user.first_name} #{learner.student.user.last_name}"
   end
 
   def learner_info_cells(learner)
@@ -141,10 +143,10 @@ class Reports::Excel
 
   def report_learner_info_cells(report_learner)
     return [
-      "#{report_learner.student_id}_#{report_learner.class_id}", 
+      learner_id(report_learner),
       report_learner.class_name,
       report_learner.school_name,
-      report_learner.user_id,
+      user_id(report_learner),
       report_learner.username,
       report_learner.student_name,
       report_learner.teachers_name
