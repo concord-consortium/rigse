@@ -2,8 +2,8 @@ class Reports::Usage < Reports::Excel
   def initialize(opts = {})
     super(opts)
 
-    @investigations =  opts[:investigations]  || Investigation.published
-    @report_learners = opts[:report_learners] || report_learners_for_runnables(@investigations)
+    @runnables =  opts[:runnables]  || Investigation.published
+    @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
     #@column_defs = [
       #Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10 ),
       #Reports::ColumnDefinition.new(:title => "Student Name", :width => 25 ),
@@ -20,10 +20,10 @@ class Reports::Usage < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
     ]
     
-    @inv_start_column = {}
-    @investigations.each do |inv|
-      @inv_start_column[inv] = @column_defs.size
-      @column_defs << Reports::ColumnDefinition.new(:title => "#{inv.name} (#{inv.id})\nAssessments Completed", :width => 4, :left_border => true)
+    @runnable_start_column = {}
+    @runnables.each do |runnable|
+      @runnable_start_column[runnable] = @column_defs.size
+      @column_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})\nAssessments Completed", :width => 4, :left_border => true)
       @column_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
       @column_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
     end
@@ -42,16 +42,16 @@ class Reports::Usage < Reports::Excel
       row = sheet.row(sheet.last_row_index + 1)
       learner_info = report_learner_info_cells(learners.first)
       row[0, learner_info.size] =  learner_info
-      @investigations.each do |inv|
-        l = learners.detect {|learner| learner.runnable_type == "Investigation" && learner.runnable_id == inv.id}
+      @runnables.each do |runnable|
+        l = learners.detect {|learner| learner.runnable_type == runnable.class.to_s && learner.runnable_id == runnable.id}
         if (l)
           total_assessments = l.num_answerables
           assess_completed =  l.num_answered
           assess_percent = percent(assess_completed, total_assessments)
           last_run = l.last_run || 'never'
-          row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
+          row[@runnable_start_column[runnable], 3] = [assess_completed, assess_percent, last_run]
         else
-          row[@inv_start_column[inv], 3] = ['n/a', 'n/a', 'not assigned']
+          row[@runnable_start_column[runnable], 3] = ['n/a', 'n/a', 'not assigned']
         end
       end
     end
