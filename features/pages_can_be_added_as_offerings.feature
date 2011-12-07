@@ -16,7 +16,8 @@ Feature: Pages can be assigned as offerings
       | My Page | teacher | published          |
     And I login with username: teacher password: teacher
 
-  @selenium
+  # itsisu doesn't have the same assignmet interface
+  @itsisu-todo @selenium
   Scenario: Pages can be assigned by a Teacher to a class
     When I am on the class page for "My Class"
     
