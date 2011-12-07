@@ -1,3 +1,5 @@
+#itsisu doesn't support external activities at the moment
+@itsisu-todo 
 Feature: External activities can be filtered by cohort
   As a teacher
   I want to only see external activities for my cohort
