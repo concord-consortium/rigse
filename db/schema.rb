@@ -62,6 +62,13 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
     t.boolean  "opportunistic_installer",                      :default => false
   end
 
+  create_table "admin_tags", :force => true do |t|
+    t.string   "scope"
+    t.string   "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ancestries", :force => true do |t|
     t.integer  "ancestor_id"
     t.string   "ancestor_type"
@@ -74,13 +81,6 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
   add_index "ancestries", ["ancestor_id"], :name => "index_ancestries_on_ancestor_id"
   add_index "ancestries", ["ancestor_type"], :name => "index_ancestries_on_ancestor_type"
   add_index "ancestries", ["descendant_id"], :name => "index_ancestries_on_descendant_id"
-
-  create_table "admin_tags", :force => true do |t|
-    t.string   "scope"
-    t.string   "tag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "attached_files", :force => true do |t|
     t.integer  "user_id"
@@ -203,6 +203,16 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
     t.datetime "updated_at"
   end
 
+  create_table "dataservice_launch_process_events", :force => true do |t|
+    t.string   "event_type"
+    t.text     "event_details"
+    t.integer  "bundle_content_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
+
   create_table "diy_model_types", :force => true do |t|
     t.string  "name"
     t.text    "description"
@@ -247,16 +257,6 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
   add_index "diy_models", ["name"], :name => "index_diy_models_on_name"
   add_index "diy_models", ["public"], :name => "index_diy_models_on_public"
   add_index "diy_models", ["user_id"], :name => "index_diy_models_on_user_id"
-
-  create_table "dataservice_launch_process_events", :force => true do |t|
-    t.string   "event_type"
-    t.text     "event_details"
-    t.integer  "bundle_content_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
 
   create_table "embeddable_biologica_breed_offsprings", :force => true do |t|
     t.integer  "user_id"
