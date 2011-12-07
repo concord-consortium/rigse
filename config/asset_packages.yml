@@ -95,6 +95,7 @@ stylesheets:
   - data_table
   - reports
   - bin
+  - chosen
 
 - smartgraphs:
   - app
