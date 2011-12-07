@@ -104,12 +104,11 @@ class Report::Util
     unless skip_filters
       results = @report_embeddable_filter.filter(results)
       allowed_embeddables = @report_embeddable_filter.embeddables
-      reportables          = @offering.runnable.reportable_elements
       if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
         reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
       end
     end
-    #reportables          = @offering.runnable.reportable_elements
+
     elements             = reportables.map       { |r| r[:element]    } 
     @embeddables         = reportables.map       { |r| r[:embeddable] } 
     @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   } 
@@ -123,7 +122,7 @@ class Report::Util
     elsif assignable.is_a? Activity
       lambdas = [section_lambda, page_lambda]
     end
-      
+
     @page_elements  = reportables.extended_group_by(lambdas)
 
     Investigation.saveable_types.each do |type|
