@@ -480,7 +480,7 @@ class InvestigationsController < AuthoringController
   def get_report(type)
     sio = StringIO.new
     opts = {:verbose => false}
-    opts[:investigations] = [@investigation] unless @investigation.id.nil?
+    opts[:runnables] = [@investigation] unless @investigation.id.nil?
     opts[:blobs_url] = dataservice_blobs_url
     rep = nil
     case type
