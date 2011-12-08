@@ -25,7 +25,7 @@ class Report::LearnerController < ApplicationController
     @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
 
     # TODO: fix me -- choose runnables better
-    @all_runnables         = Investigation.published.sort_by { |i| i.name.downcase }
+    @all_runnables         = Assignable.all_assignables.sort_by { |i| i.name.downcase }
 
     @start_date            = params['start_date']
     @end_date              = params['end_date']
@@ -36,7 +36,14 @@ class Report::LearnerController < ApplicationController
 
     @select_schools   = @select_schools.map      { |s| Portal::School.find(s) }
     @select_teachers  = @select_teachers.map     { |t| Portal::Teacher.find(t) }
-    @select_runnables = @select_runnables.map    { |r| Investigation.find(r)  }
+    @select_runnables = @select_runnables.map    { |r|
+      begin
+        klass, id = r.split('|')
+        klass.constantize.find(id)
+      rescue
+        nil
+      end
+    }.compact
 
     if (@select_schools.size > 0) 
       @all_teachers = @all_teachers.select       { |t| @select_schools.map{|s| s.teachers}.flatten.include? t  }
@@ -61,7 +68,7 @@ class Report::LearnerController < ApplicationController
       "learners:"       => @select_learners.size,
       "students:"       => @select_learners.map {|l| l.student_id}.uniq.size,
       "classes:"        => @select_learners.map {|l| l.class_id}.uniq.size,
-      "Investigations:" => @select_learners.map {|l| l.runnable_id}.uniq.size
+      "assignables:"    => @select_learners.map {|l| l.runnable_id}.uniq.size
     }
 
     if params[:commit] == 'usage report'
