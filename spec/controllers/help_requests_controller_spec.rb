@@ -7,10 +7,16 @@ describe HelpRequestsController do
   end
 
   describe "GET index" do
-    it "assigns all help_requests as @help_requests" do
-      HelpRequest.stub(:find).with(:all).and_return([mock_help_request])
-      get :index
-      assigns[:help_requests].should == [mock_help_request]
+    describe "for admins" do
+      before :each do
+        login_admin
+      end
+      it "assigns all help_requests as @help_requests" do
+        help_req = mock_help_request(:paginate => mock_help_request)
+        HelpRequest.stub(:find).and_return([mock_help_request])
+        get :index
+        assigns[:help_requests].should == [mock_help_request]
+      end
     end
   end
 
@@ -42,9 +48,11 @@ describe HelpRequestsController do
 
     describe "with valid params" do
       it "assigns a newly created help_request as @help_request" do
-        HelpRequest.stub(:new).with({'these' => 'params'}).and_return(mock_help_request(:save => true))
-        post :create, :help_request => {:these => 'params'}
-        assigns[:help_request].should equal(mock_help_request)
+        exp_params = {"os"=>"unknown", "these"=>"params", "browser"=>nil}
+        help_request = mock_help_request(:save => true)
+        HelpRequest.stub(:new).with(exp_params).and_return(help_request)
+        post :create, :help_request => exp_params
+        assigns[:help_request].should equal(help_request)
       end
 
       it "redirects to the created help_request" do
@@ -56,9 +64,10 @@ describe HelpRequestsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved help_request as @help_request" do
-        HelpRequest.stub(:new).with({'these' => 'params'}).and_return(mock_help_request(:save => false))
+        expected=mock_help_request({:save => false})
+        HelpRequest.stub(:new).with({'these' => 'params', 'os' => "unknown", 'browser' => nil}).and_return(expected)
         post :create, :help_request => {:these => 'params'}
-        assigns[:help_request].should equal(mock_help_request)
+        assigns[:help_request].should equal(expected)
       end
 
       it "re-renders the 'new' template" do
