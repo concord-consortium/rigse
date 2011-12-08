@@ -54,7 +54,9 @@ class Embeddable::DataCollector < ActiveRecord::Base
   
   validates_presence_of :name, :message => "can't be blank"
   validates_inclusion_of :dd_font_size, :in => 9..300, :message => "font outside of range 9 -> 300"
-  default_value_for :dd_font_size, 100
+  default_value_for :dd_font_size do 
+    Embeddable::DataCollector.dd_font_sizes[:small]
+  end
   # this could work if the finder sql was redone
   # has_many :investigations,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
