@@ -64,7 +64,7 @@ Given /^the investigation "([^"]*)" is published$/ do |investigation_name|
 end
 
 When /^I sort investigations by "([^"]*)"$/ do |sort_str|
-  visit "/investigations?sort_order=#{sort_str}"
+  visit "/investigations?sort_order=#{url_encode(sort_str)}"
 end
 
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
