@@ -272,7 +272,7 @@ class Activity < ActiveRecord::Base
 
   # returns an ordered list of graphables.
   def graphs_and_predictors
-    ordered_embeddables.select { |e| e.kind_of?(Embeddable::Diy::Sensor) || e.kind_of? (Embeddable::DataCollector) }
+    ordered_embeddables.select { |e| e.kind_of?(Embeddable::Diy::Sensor) || e.kind_of?(Embeddable::DataCollector) }
   end
 
   # retuns a list of embeddables ordered by their 
