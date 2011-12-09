@@ -276,8 +276,8 @@ class ItsiImporter
     },
     { :key => :career_stem2,
       :enabled => true,
-      :name => "Second Career STEM Question",
-      :page_desc => "Second Career STEM Question",
+      :name => "Concluding Career STEM Question",
+      :page_desc => "Concluding Career STEM Question",
       :embeddable_elements => [
         {:key => :main_content,  :diy_attribute => true },
         {:key => :text_response, :diy_attribute => true  },
@@ -313,6 +313,19 @@ class ItsiImporter
   @errors = []
 
   class <<self
+    # rename all sections matching oldName used like
+    # ItsiImporter.rename_section("Second Career STEM Question", "Concluding Career STEM Question")
+    def rename_section(oldName='Second Career STEM Question',newName='Concluding Career STEM Question')
+      sections = Section.find(:all, :conditions => {:name => oldName})
+      sections.each do |section|
+        section.name = newName
+        if section.description == oldName
+          section.description = newName
+        end
+        section.save
+      end
+    end
+
     def find_or_create_itsi_import_user
       unless user = User.find_by_login('itsi_import_user')
         user = User.create(:login => 'itsi_import_user', :first_name => 'ITSI', :last_name => 'Importer', :email => 'itsi_import_user@concord.org', :password => "it$iu$er", :password_confirmation => "it$iu$er")
