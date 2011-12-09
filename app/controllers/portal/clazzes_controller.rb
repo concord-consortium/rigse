@@ -241,7 +241,10 @@ class Portal::ClazzesController < ApplicationController
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
       if @offering
-        @offering.active = true
+        unless @offering.active
+          @offering.active = true
+          @offering.save
+        end
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
             @offering.default_offering = true
