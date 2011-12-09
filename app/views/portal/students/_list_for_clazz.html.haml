@@ -1,5 +1,6 @@
-= accordion_for(portal_clazz, 'Student Roster') do
-  .content
+-# = accordion_for(portal_clazz, 'Student Roster') d
+.content
+  .item{:style => "min-height: 400px;"}
     .action_menu
       .action_menu_header_left
         %div
@@ -8,11 +9,11 @@
           %strong= "Students: #{portal_clazz.students.length}"    
       .action_menu_header_right
         = link_to "Print", class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
-        - if portal_clazz.changeable?(current_user)
-          %br
-          = student_add_dropdown(portal_clazz)
-          %br
-          = link_to "Register and add a new student", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
+    - if portal_clazz.changeable?(current_user)
+      %br
+      = student_add_dropdown(portal_clazz)
+      %br
+      = link_to "Register and add a new student", new_portal_student_path(:clazz_id => portal_clazz.id), :title => "add a student to #{portal_clazz.name}"
 
-  .item{:id=>'students_listing'}
-    = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}
+    .item{:id=>'students_listing'}
+      = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => portal_clazz}

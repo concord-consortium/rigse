@@ -2,8 +2,8 @@ class Reports::Usage < Reports::Excel
   def initialize(opts = {})
     super(opts)
 
-    @investigations = opts[:investigations] || Investigation.published
-
+    @investigations =  opts[:investigations]  || Investigation.published
+    @report_learners = opts[:report_learners] || report_learners_for_runnables(@investigations)
     #@column_defs = [
       #Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10 ),
       #Reports::ColumnDefinition.new(:title => "Student Name", :width => 25 ),
@@ -29,32 +29,29 @@ class Reports::Usage < Reports::Excel
     end
   end
 
+  def sorted_learners()
+    @report_learners.sort_by {|l| [l.school_name, l.class_name, l.student_name, l.runnable_name]}
+  end
+
   def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
     sheet = book.create_worksheet :name => 'Usage'
     write_sheet_headers(sheet, @column_defs)
-
-    @report_utils = {}  # map of offerings to Report::Util objects
-    iterate_with_status(sorted_students_for_runnables(@investigations)) do |student|
-      clazz_learners = sorted_learners(student).group_by {|l| l.offering.clazz}
-      clazz_learners.each_key do |clazz|
-        learners = clazz_learners[clazz]
-        row = sheet.row(sheet.last_row_index + 1)
-        learner_info = learner_info_cells(learners.first)
-        row[0, learner_info.size] =  learner_info
-        @investigations.each do |inv|
-          l = learners.detect {|learner| learner.offering.runnable == inv}
-          if (l)
-            @report_utils[l.offering] ||= Report::Util.new(l.offering,false,true)
-            total_assessments = @report_utils[l.offering].embeddables.size
-            assess_completed = @report_utils[l.offering].saveables({:learner => l})
-            assess_completed = assess_completed.select{|s| s.answered? }.size
-            assess_percent = percent(assess_completed, total_assessments)
-            last_run = l.bundle_logger.bundle_contents.compact.last
-            last_run = last_run.nil? ? 'never' : last_run.created_at
-            row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
-          else
-            row[@inv_start_column[inv], 3] = ['n/a', 'n/a', 'not assigned']
-          end
+    student_learners = sorted_learners.group_by {|l| l.student_id }
+    student_learners.each_key do |student_id|
+      learners = student_learners[student_id]
+      row = sheet.row(sheet.last_row_index + 1)
+      learner_info = report_learner_info_cells(learners.first)
+      row[0, learner_info.size] =  learner_info
+      @investigations.each do |inv|
+        l = learners.detect {|learner| learner.runnable_type == "Investigation" && learner.runnable_id == inv.id}
+        if (l)
+          total_assessments = l.num_answerables
+          assess_completed =  l.num_answered
+          assess_percent = percent(assess_completed, total_assessments)
+          last_run = l.last_run || 'never'
+          row[@inv_start_column[inv], 3] = [assess_completed, assess_percent, last_run]
+        else
+          row[@inv_start_column[inv], 3] = ['n/a', 'n/a', 'not assigned']
         end
       end
     end

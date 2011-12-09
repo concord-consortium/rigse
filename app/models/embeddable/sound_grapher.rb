@@ -33,15 +33,20 @@ class Embeddable::SoundGrapher < ActiveRecord::Base
   def self.searchable_attributes
       @@searchable_attributes
   end
+  
+  def investigations
+    invs = []
+    self.pages.each do |page|
+      inv = page.investigation
+      invs << inv if inv
+    end
+  end
 
   default_value_for :name, "Sound Grapher"
   default_value_for :display_mode, self.valid_display_modes.first
   default_value_for :max_frequency, self.valid_max_frequencies.first
   default_value_for :max_sample_time, self.valid_max_sample_times.first
 
-  def self.display_name
-    "Sound Grapher"
-  end
 
 
 end

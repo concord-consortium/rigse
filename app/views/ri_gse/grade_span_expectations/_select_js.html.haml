@@ -1,6 +1,9 @@
 %select{:name=> :grade_span_expectation_id, :size => 4}
   - related_gses.each do |gse|
-    -if defined? selected_gse && selected_gse.id == gse.id
+    -if defined?(selected_gse) && (selected_gse.id == gse.id)
+      - p "HERE!"
+      - p selected_gse
       %option{:value => gse.id, :onClick =>"$('gse_summary_container').innerHTML='#{short_format_gse_summary(gse)}'", :selected => true}= gse.gse_key
     -else
+      - p "ELSE"
       %option{:value => gse.id, :onClick =>"$('gse_summary_container').innerHTML='#{short_format_gse_summary(gse)}'"}= gse.gse_key

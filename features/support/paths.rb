@@ -60,6 +60,11 @@ module NavigationHelpers
       preferences_user_path user
     when /the requirements page/
       "/requirements/"
+    when /the password reset page/
+      "/change_password/0"
+    when /the edit security questions page for the user "(.*)"/
+      user = User.find_by_login $1
+      edit_user_security_questions_path user
     # accept paths too:
     when /the route (.+)/
       $1

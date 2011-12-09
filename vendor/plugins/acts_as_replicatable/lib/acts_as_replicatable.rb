@@ -21,6 +21,8 @@
 #
 # requires gem uuidtools version 2.0.0 or newer
 
+require 'uuidtools'
+
 module Foo #:nodoc:
   module Acts #:nodoc:
     # Specify this act if you want to be able to replicate models from one instance of this web application to another.

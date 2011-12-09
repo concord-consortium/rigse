@@ -57,9 +57,6 @@ class ResourcePage < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Resource Page"
-    end
 
     def search_list(options)
       name = options[:name]

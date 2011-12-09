@@ -29,9 +29,6 @@ class Portal::Course < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Course"
-    end
     
     
     #  for a given school_id:

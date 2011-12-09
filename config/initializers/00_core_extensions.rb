@@ -1,3 +1,5 @@
+
+require 'lib/local_names'
 # Recursively converts the keys in a Hash to symbols.
 # Also converts the keys in any Array elements which are 
 # Hashes to symbols.
@@ -120,4 +122,18 @@ module URI
 
   end
 end
+
+# Define Object#dipsplay_name
+# See:
+#    lib/local_names.rb,
+#    spec/libs/local_names_spec.rb,
+#    spec/core_extensions/object_extensions_spec.rb
+module DisplayNameMethod
+  def display_name
+    LocalNames.instance.local_name_for(self)
+  end
+end
+
+# include #display_name everywhere
+Object.send(:include, DisplayNameMethod)
 

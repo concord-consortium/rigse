@@ -107,7 +107,10 @@ describe User do
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
-     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'tick\'@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
+     # Update: just saw a tick in the wild, modified validations
+     # see commit: 1e9d396b0     
+     # 'tick\'@gmail.com' now allowed.
+     'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
     ].each do |email_str|
       it "'#{email_str}'" do
         lambda do
@@ -295,6 +298,37 @@ describe User do
       @user.security_questions.size.should == 3
       questions.each do |v|
         @user.security_questions.select { |q| q.question == v.question && q.answer == v.answer }.size.should == 1
+      end
+    end
+  end
+
+  describe "checking for logins" do
+    describe "when available" do
+      before(:each) do
+        User.should_receive(:login_exists?).with("hpotter").and_return(false)
+      end
+      it "should return the first initial and last name" do
+        User.suggest_login('Harry','Potter').should == "hpotter"
+      end
+    end
+    describe "when not available" do
+      it "should append a counter number to the default login" do
+        User.should_receive(:login_exists?).once.with("hpotter").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter1").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter2").ordered.and_return(true)
+        User.should_receive(:login_exists?).once.with("hpotter3").ordered.and_return(false)
+        User.suggest_login('Harry','Potter').should == "hpotter3"
+      end
+    end
+  end
+
+  describe "require_reset_password" do
+    before(:each) do
+      @user = create_user(:login => 'default_user', :email => 'nobody@noplace.com')
+    end
+    describe "freshly minted user" do
+      it "will not require the password to be reset" do
+        @user.require_password_reset.should be_false
       end
     end
   end

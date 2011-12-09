@@ -6,6 +6,7 @@ class Reports::Account < Reports::Excel
 
     @column_defs = [
       Reports::ColumnDefinition.new(:title => "User id",      :width => 9),
+      Reports::ColumnDefinition.new(:title => "External id",  :width => 9),
       Reports::ColumnDefinition.new(:title => "User name",    :width => 25),
       Reports::ColumnDefinition.new(:title => "Login",        :width =>  9),
       Reports::ColumnDefinition.new(:title => "User type",    :width =>  9),
@@ -53,14 +54,15 @@ class Reports::Account < Reports::Excel
         if user_type == "Teacher"
           user_cohorts = portal_user.cohort_list.join(", ")
         else
-          user_cohorts = portal_user.clazzes.compact.map{|c| c.teacher.cohort_list }.flatten.uniq.compact.join(', ')
+          clazzes = portal_user.clazzes.reject { |c| c.teacher.nil? }
+          user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_list }.flatten.uniq.compact.join(', ')
         end
 
         user_created = user.created_at
 
         user_runs,user_last_run = run_info(user.portal_student)  # only students have learners, so use a teacher's associated student (if any)
 
-        row.concat [user.id, user_name, user_login, user_type, user_school, user_classes, user_cohorts, user_created, user_runs, user_last_run]
+        row.concat [user.id, user.external_id, user_name, user_login, user_type, user_school, user_classes, user_cohorts, user_created, user_runs, user_last_run]
       end
     end
     book.write stream_or_path
@@ -72,7 +74,7 @@ class Reports::Account < Reports::Excel
     return [0, 'never'] unless user && user.respond_to?(:learners)
     bundle_loggers = user.learners.collect{|l| l.bundle_logger }
     user_runs = bundle_loggers.collect{|bl| bl.bundle_contents.size }.sum
-    user_last_run = bundle_loggers.collect{|bl| b = bl.bundle_contents.compact.last; b ? b.created_at : @@default_time }.sort.last
+    user_last_run = bundle_loggers.collect{|bl| b = bl.last_non_empty_bundle_content; b ? b.created_at : @@default_time }.sort.last
     user_last_run = "never" if user_last_run == @@default_time || user_last_run.nil?
     return [user_runs, user_last_run]
   end

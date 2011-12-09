@@ -240,9 +240,6 @@ class Embeddable::DataCollector < ActiveRecord::Base
     graph_type
   end
   
-  def self.display_name
-    "Graph"
-  end
 
   def self.authorable_in_java?
     true

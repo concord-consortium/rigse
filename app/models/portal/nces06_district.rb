@@ -17,9 +17,6 @@ class Portal::Nces06District < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "NCES District"
-    end
   end
   
   def capitalized_name

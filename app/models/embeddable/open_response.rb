@@ -69,9 +69,6 @@ class Embeddable::OpenResponse < ActiveRecord::Base
 
   send_update_events_to :investigations
   
-  def self.display_name
-    "Open Response"
-  end
 
   def investigations
     invs = []

@@ -51,6 +51,13 @@ Given /^the student "([^"]*)" has security questions set$/ do |student_login|
   student.save
 end
 
+Given /^the student "([^"]*)" has no security questions set$/ do |student_login|
+  user = User.find_by_login student_login
+  student = Portal::Student.find_by_user_id user.id
+  student.user.security_questions = []
+  student.save
+end
+
 Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_login, class_name|
   user = User.find_by_login student_login
   student = Portal::Student.find_by_user_id user.id

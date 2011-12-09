@@ -44,9 +44,6 @@ class Embeddable::Biologica::ChromosomeZoom < ActiveRecord::Base
 
   send_update_events_to :investigations
   
-  def self.display_name
-    "Biologica Chromosome Zoom"
-  end
 
   def investigations
     invs = []

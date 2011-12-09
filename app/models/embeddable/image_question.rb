@@ -27,9 +27,6 @@ class Embeddable::ImageQuestion < ActiveRecord::Base
   default_value_for :name, "Embeddable::ImageQuestion element"
   default_value_for :prompt, Embeddable::ImageQuestion.default_prompt
 
-  def self.display_name
-    "Image Question"
-  end
 
   def description
     prompt

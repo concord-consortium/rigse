@@ -4,7 +4,7 @@
   .action_menu_header
     .action_menu_header_left
       - if paginated_objects
-        %p= page_entries_info paginated_objects, :entry_name => "External Activity"
+        %p= page_entries_info paginated_objects, :entry_name => ExternalActivity.display_name
         %p.paginator
           = will_paginate paginated_objects
     .action_menu_header_right

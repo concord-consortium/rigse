@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110715140638) do
+ActiveRecord::Schema.define(:version => 20111206190839) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20110715140638) do
     t.text     "custom_css"
     t.boolean  "use_bitmap_snapshots",                         :default => false
     t.boolean  "teachers_can_author",                          :default => true
+    t.boolean  "opportunistic_installer",                      :default => false
   end
 
   create_table "admin_tags", :force => true do |t|
@@ -186,6 +187,16 @@ ActiveRecord::Schema.define(:version => 20110715140638) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "dataservice_launch_process_events", :force => true do |t|
+    t.string   "event_type"
+    t.text     "event_details"
+    t.integer  "bundle_content_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dataservice_launch_process_events", ["bundle_content_id"], :name => "index_dataservice_launch_process_events_on_bundle_content_id"
 
   create_table "embeddable_biologica_breed_offsprings", :force => true do |t|
     t.integer  "user_id"
@@ -1847,6 +1858,30 @@ ActiveRecord::Schema.define(:version => 20110715140638) do
     t.boolean  "ignore"
   end
 
+  create_table "report_learners", :force => true do |t|
+    t.integer  "learner_id"
+    t.integer  "student_id"
+    t.integer  "user_id"
+    t.integer  "offering_id"
+    t.integer  "class_id"
+    t.datetime "last_run"
+    t.datetime "last_report"
+    t.string   "offering_name"
+    t.string   "teachers_name"
+    t.string   "student_name"
+    t.string   "username"
+    t.string   "school_name"
+    t.string   "class_name"
+    t.integer  "runnable_id"
+    t.integer  "runnable_name"
+    t.integer  "school_id"
+    t.integer  "num_answerables"
+    t.integer  "num_answered"
+    t.integer  "num_correct"
+    t.text     "answers"
+    t.string   "runnable_type"
+  end
+
   create_table "resource_pages", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -2145,6 +2180,8 @@ ActiveRecord::Schema.define(:version => 20110715140638) do
     t.boolean  "site_admin",                               :default => false
     t.string   "type"
     t.integer  "external_user_domain_id"
+    t.string   "external_id"
+    t.boolean  "require_password_reset",                   :default => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

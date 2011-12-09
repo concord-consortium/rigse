@@ -56,10 +56,6 @@ class Portal::School < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "School"
-    end
-
     ##
     ## Given an NCES local school id that matches the SEASCH field in an NCES school
     ## find and return the first district that is associated with the NCES or nil.

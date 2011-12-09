@@ -115,9 +115,6 @@ class Admin::Project < ActiveRecord::Base
       [APP_CONFIG[:site_name], APP_CONFIG[:site_url]]
     end
 
-    def display_name
-      "Project"
-    end
     
     def summary_info
       default_project ? default_project.summary_info : "no default project defined"
@@ -255,6 +252,8 @@ Dataservice::BundleContent: #{Dataservice::BundleContent.count}
 Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
 Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
+There are #{Portal::Teacher.find(:all).select {|t| t.user == nil}.size} Teachers without Users
+There are #{Portal::Student.find(:all).select {|s| s.user == nil}.size} Students which no longer have Teachers
 There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
 There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
 
