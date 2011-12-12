@@ -267,9 +267,10 @@ class User < ActiveRecord::Base
   end
 
   def school
+    return @school if @school
     school_person = self.portal_teacher || self.portal_student
     if (school_person)
-      return school_person.school
+      return @school = school_person.school
     end
   end
 

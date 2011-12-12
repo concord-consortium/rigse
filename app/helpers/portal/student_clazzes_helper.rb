@@ -23,8 +23,8 @@ module Portal::StudentClazzesHelper
         default_value = "Add student from #{clazz.school.name.titlecase}"
       end
     end
-    other_students  = other_clazzes.map { |c| c.students}.flatten.uniq
-    other_students  = other_students - clazz.students
+    other_students  = other_clazzes.map { |c| c.students.find(:all, :include => :user)}.flatten.uniq
+    other_students  = other_students - clazz.students.find(:all, :include => :user)
     other_students.reject! { |s| s.user.nil?}
     other_students.compact!
     student_list = other_students.sort { |a,b| (a.user.last_name.upcase <=> b.user.last_name.upcase) }

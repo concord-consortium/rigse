@@ -30,13 +30,11 @@ class Reports::ConcludingCareerStem < Reports::Excel
     header_defs = @common_columns.clone
     container_header_defs = [] # top level header
 
-    @reportable_columns = {}
     header_col_idx = header_defs.size
     runnables.each do |r|
       if reportables = get_concluding_stem_questions(r)
         first = true
         reportables.each do |rep|
-          @reportable_columns[rep] = {:idx => header_col_idx, :sheet => sheet}
           container_header_defs << Reports::ColumnDefinition.new(:title => r.name, :width=> 30, :heading_row => 0, :col_index => header_col_idx)
           header_defs << Reports::ColumnDefinition.new(:title => clean_text((rep.respond_to?(:prompt) ? rep.prompt : rep.name)), :width => 25, :left_border => first)
           header_col_idx += 1 # (one column per container)
@@ -83,7 +81,6 @@ class Reports::ConcludingCareerStem < Reports::Excel
       range_end += COLS_PER_SHEET
     end
     puts " done." if @verbose
-    puts "Found #{@reportable_columns.size} STEM questions" if @verbose
 
     ############### STUDENT ANSWERS ########################
     print "Filling in student data... " if @verbose
