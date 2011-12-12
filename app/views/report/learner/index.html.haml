@@ -37,6 +37,8 @@
     = submit_tag 'update filters'
     = submit_tag 'usage report'
     = submit_tag 'details report'
+    - if APP_CONFIG[:theme] == 'itsisu'
+      = submit_tag 'career stem report'
 
 :javascript
   new Chosen($('schools'));

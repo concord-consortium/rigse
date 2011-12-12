@@ -70,6 +70,12 @@ class Report::LearnerController < ApplicationController
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+    elsif params[:commit] == 'career stem report'
+      sio = StringIO.new
+      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
+      report = Reports::ConcludingCareerStem.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
+      report.run_report(sio)
+      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "career_stem.xls" )
     end
   end
 
