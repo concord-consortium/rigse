@@ -14,8 +14,8 @@
           %li.bin_button{:class => "unit-navigation level#{_tag[:order]}", :onclick => "show_section('#{bin_key}', this);"}
             ="#{_tag[:name]} ("
             %span.tag_count
-              =_tag[:off_count]
-            ="/ #{_tag[:count]})"
+              =_tag[:count]
+            =")"
     %td#activity-chart-panels
       - bin_keys.each do |bin_key|
         - _tag = bins[bin_key]
