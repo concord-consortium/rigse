@@ -1,26 +1,13 @@
 class Report::LearnerController < ApplicationController
 
   include RestrictedController
-  before_filter :setup
   before_filter :manager_or_researcher,
     :only => [
-      :index,
-      :update_learners
+      :index
     ]
-
-  def update_learners
-    # this should be removed eventually,
-    # force loading report-learner data
-    Portal::Learner.all.each { |l| Report::Learner.for_learner(l).update_fields }
-  end
-
+  before_filter :setup
 
   def setup
-    # commit"=>"update learners"
-    if params['commit'] =~ /update learners/i
-      update_learners
-    end
-    
     @all_schools           = Portal::School.all.sort_by  {|s| s.name.downcase}
     @all_teachers          = Portal::Teacher.all.sort_by {|t| t.name.downcase}
 
