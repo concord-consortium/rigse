@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111206190839) do
+ActiveRecord::Schema.define(:version => 20111209203357) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -2008,6 +2008,13 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
     t.text     "answers"
     t.string   "runnable_type"
   end
+
+  add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"
+  add_index "report_learners", ["last_run"], :name => "index_report_learners_on_last_run"
+  add_index "report_learners", ["learner_id"], :name => "index_report_learners_on_learner_id"
+  add_index "report_learners", ["offering_id"], :name => "index_report_learners_on_offering_id"
+  add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
+  add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
 
   create_table "resource_pages", :force => true do |t|
     t.integer  "user_id"

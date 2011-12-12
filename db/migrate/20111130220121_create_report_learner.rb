@@ -29,12 +29,6 @@ class CreateReportLearner < ActiveRecord::Migration
       t.integer  :num_answered
       t.integer  :num_correct
 
-      t.index    :school_id
-      t.index    :learner_id
-      t.index    :offering_id
-      t.index    :runnable_id
-      t.index    :class_id
-      t.index    :last_run
     end
 
   end
