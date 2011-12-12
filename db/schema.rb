@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111209203357) do
+ActiveRecord::Schema.define(:version => 20111212182649) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
@@ -30,6 +30,9 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
+  add_index "activities", ["name"], :name => "index_activities_on_name"
+  add_index "activities", ["publication_status", "is_exemplar"], :name => "index_activities_on_publication_status_and_is_exemplar", :length => {"publication_status"=>"10", "is_exemplar"=>nil}
+  add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "admin_project_vendor_interfaces", :force => true do |t|
     t.integer  "admin_project_id"
@@ -772,6 +775,10 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
     t.integer  "offerings_count",                         :default => 0
   end
 
+  add_index "investigations", ["name"], :name => "index_investigations_on_name"
+  add_index "investigations", ["publication_status"], :name => "index_investigations_on_publication_status", :length => {"publication_status"=>"10"}
+  add_index "investigations", ["user_id"], :name => "index_investigations_on_user_id"
+
   create_table "jars_versioned_jnlps", :id => false, :force => true do |t|
     t.integer "jar_id"
     t.integer "versioned_jnlp_id"
@@ -983,8 +990,11 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
     t.boolean  "is_enabled",                       :default => true
   end
 
+  add_index "pages", ["name"], :name => "index_pages_on_name"
   add_index "pages", ["position"], :name => "index_pages_on_position"
+  add_index "pages", ["publication_status"], :name => "index_pages_on_publication_status", :length => {"publication_status"=>"10"}
   add_index "pages", ["section_id", "position"], :name => "index_pages_on_section_id_and_position"
+  add_index "pages", ["user_id"], :name => "index_pages_on_user_id"
 
   create_table "passwords", :force => true do |t|
     t.integer  "user_id"
@@ -1787,6 +1797,8 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
     t.boolean  "default_offering",               :default => false
   end
 
+  add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"
+
   create_table "portal_school_memberships", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
@@ -1800,7 +1812,8 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
     t.datetime "updated_at"
   end
 
-  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index"
+  add_index "portal_school_memberships", ["member_type", "member_id"], :name => "member_type_id_index", :length => {"member_id"=>nil, "member_type"=>"15"}
+  add_index "portal_school_memberships", ["school_id"], :name => "index_portal_school_memberships_on_school_id"
 
   create_table "portal_schools", :force => true do |t|
     t.string   "uuid",           :limit => 36
@@ -2225,6 +2238,7 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
 
   add_index "sections", ["activity_id", "position"], :name => "index_sections_on_activity_id_and_position"
   add_index "sections", ["position"], :name => "index_sections_on_position"
+  add_index "sections", ["publication_status"], :name => "index_sections_on_publication_status", :length => {"publication_status"=>"10"}
 
   create_table "security_questions", :force => true do |t|
     t.integer "user_id",                 :null => false
@@ -2254,8 +2268,8 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
   end
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
-  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
+  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|
@@ -2278,7 +2292,7 @@ ActiveRecord::Schema.define(:version => 20111209203357) do
   end
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context", :length => {"context"=>"15", "taggable_id"=>nil, "taggable_type"=>"15"}
 
   create_table "tags", :force => true do |t|
     t.string "name"
