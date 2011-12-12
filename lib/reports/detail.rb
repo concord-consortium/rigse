@@ -19,8 +19,6 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "% Completed", :width => 4),
       Reports::ColumnDefinition.new(:title => "Last run",    :width => 20),
     ]
-
-    @reportable_embeddables = {} # keys will be runnables, and value will be an array of reportables for that runnable, in the correct order
   end
 
   def sorted_learners()
