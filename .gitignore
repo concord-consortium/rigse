@@ -74,6 +74,7 @@ bin/
 features/factories/*
 spec/factories/*
 vendor/plugins/query_reviewer
+public/system/fragments
 sis_import_data
 **/sis_import_test_data/*/*/report
 **/sis_import_test_data/report

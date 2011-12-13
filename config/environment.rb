@@ -74,6 +74,7 @@ Rails::Initializer.run do |config|
 
   # Set the default location for page caching
   config.action_controller.page_cache_directory = RAILS_ROOT + '/public'
+  config.action_controller.cache_store = :file_store, (RAILS_ROOT + '/public/system/fragments')
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,

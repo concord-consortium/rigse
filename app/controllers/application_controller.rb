@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include Clipboard
   include ContainerController
-  
+  include ActionController::Caching::Sweeping
+
   self.allow_forgery_protection = false
 
   theme :get_theme

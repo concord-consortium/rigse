@@ -18,6 +18,7 @@ class ActivitiesController < ApplicationController
   in_place_edit_for :activity, :name
   in_place_edit_for :activity, :description
 
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
 
   protected
 
