@@ -5,6 +5,7 @@ class InvestigationsController < AuthoringController
 
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
 
   include RestrictedController
   #access_rule 'researcher', :only => [:usage_report, :details_report]

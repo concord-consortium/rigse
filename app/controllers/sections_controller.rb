@@ -1,5 +1,4 @@
 class SectionsController < ApplicationController
-  
   before_filter :find_entities, :except => ['create','new']
   in_place_edit_for :section, :name
   in_place_edit_for :section, :description
@@ -7,6 +6,9 @@ class SectionsController < ApplicationController
   before_filter :render_scope, :only => [:show]
   before_filter :can_edit, :except => [:index,:show,:print,:create,:new]
   before_filter :can_create, :only => [:new, :create]
+
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
+
   protected 
   
   def can_create

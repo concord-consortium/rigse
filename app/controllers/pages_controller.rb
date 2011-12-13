@@ -9,6 +9,8 @@ class PagesController < ApplicationController
   in_place_edit_for :page, :name
   in_place_edit_for :page, :description
     
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
+
   protected
   
   def render_scope
