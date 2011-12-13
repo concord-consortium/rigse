@@ -23,7 +23,7 @@ module RunnablesHelper
   end
 
   def x_button_for(component, verb, image = verb, params = {}, run_as = nil)
-
+    run_url = params[:run_url] || run_url_for(component, params)
     unless run_as
       run_as = case component
       when JnlpLaunchable   then "Java Web Start application"
@@ -44,7 +44,7 @@ module RunnablesHelper
     elsif component.is_a?(Portal::Offering) && component.runnable.is_a?(ExternalActivity)
       options[:popup] = component.runnable.popup
     end
-    link_button("#{image}.png",  run_url_for(component, params), options)
+    link_button("#{image}.png", run_url, options)
   end
 
   def x_link_for(component, verb, as_name = nil, params = {})
@@ -74,7 +74,7 @@ module RunnablesHelper
     if params[:no_button]
       link_to(link_text, url, html_options)
     else
-      x_button_for(component, verb) + link_to(link_text, url, html_options)
+      x_button_for(component, verb, verb, :run_url => url) + link_to(link_text, url, html_options)
     end
   end
 
