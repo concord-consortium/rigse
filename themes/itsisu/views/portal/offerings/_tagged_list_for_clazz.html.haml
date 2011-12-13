@@ -32,6 +32,6 @@
               %h2="#{unit[:name]} (#{unit[:count]})"
               - unit[:activities].each do |runnable|
                 -#- Activity.published.each do |runnable|
-                - offering = portal_clazz.offerings.detect { |o| o.runnable.id == runnable.id }
+                - offering = portal_clazz.offerings.detect { |o| o.runnable_id == runnable.id && o.runnable_type == runnable.class.to_s}
                 - offering_id = offering.nil? ? false : offering.id
                 = render :partial => 'portal/offerings/portal_edit', :locals => {:assigned => true, :offering_id => offering_id, :is_being_edited => true, :portal_clazz => portal_clazz, :runnable => runnable}

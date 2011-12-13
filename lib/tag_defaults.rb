@@ -144,7 +144,7 @@ module TagDefaults
       
       key_map = key_map + tests.map {|p| 
         keys = p.bin_keys
-        {:activity => p, :keys => p.bin_keys, :test => true}
+        {:activity => p, :keys => keys, :test => true}
       }
 
       results = {}
