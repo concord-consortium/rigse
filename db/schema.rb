@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20111212182649) do
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
   add_index "activities", ["name"], :name => "index_activities_on_name"
-  add_index "activities", ["publication_status", "is_exemplar"], :name => "index_activities_on_publication_status_and_is_exemplar", :length => {"publication_status"=>"10", "is_exemplar"=>nil}
+  add_index "activities", ["publication_status"], :name => "index_activities_on_publication_status", :length => {"publication_status"=>"10"}
   add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "admin_project_vendor_interfaces", :force => true do |t|
@@ -859,8 +859,8 @@ ActiveRecord::Schema.define(:version => 20111212182649) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "teacher_only",                     :default => false
-    t.integer  "offerings_count",                  :default => 0
     t.string   "publication_status"
+    t.integer  "offerings_count",                  :default => 0
   end
 
   add_index "pages", ["name"], :name => "index_pages_on_name"
@@ -2140,7 +2140,7 @@ ActiveRecord::Schema.define(:version => 20111212182649) do
   end
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
-  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
+  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
   add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
