@@ -85,4 +85,24 @@ describe Embeddable::DataCollectorsController do
       end
     end
   end
+
+  describe "x axis in minutes" do
+    before(:all) do
+      generate_default_project_and_jnlps_with_mocks
+      generate_portal_resources_with_mocks
+    end
+    before(:each) do
+      @graph = Embeddable::DataCollector.create(
+        :x_axis_units => "min",
+        :x_axis_min => 2,
+        :x_axis_max => 13)
+      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+    end
+    describe "the generated otml" do
+      it "should include an x axis with min and max defined in seconds" do
+        get :show, :id => "37", :format => 'otml'
+        response.should have_tag("OTDataAxis[min='120.0'][max='780.0'][units='min']")
+      end
+    end
+  end
 end
