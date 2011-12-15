@@ -1,5 +1,6 @@
 class PageElementsController < ApplicationController
   toggle_controller_for :page_elements
+  cache_sweeper :runnable_sweeper, :only => [:enable, :disable, :destroy]
 
   public
   # DELETE /page_elements/1

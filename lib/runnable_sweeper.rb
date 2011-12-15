@@ -1,5 +1,5 @@
 class RunnableSweeper < ActionController::Caching::Sweeper
-  observe Investigation, Section, Activity, Page, ExternalActivity, ResourcePage
+  observe Investigation, Section, Activity, Page, ExternalActivity, ResourcePage, PageElement
 
   def after_create(runnable)
     expire_cache_for(runnable)
