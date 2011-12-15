@@ -52,7 +52,7 @@
         %object{ :refid => ot_refid_for(prediction_graph, :source, :data_graphable) }/
 
     %xDataAxis
-      %OTDataAxis{ :max => data_collector.x_axis_max, :min => data_collector.x_axis_min,
+      %OTDataAxis{ :max => data_collector.x_axis_max_converted, :min => data_collector.x_axis_min_converted,
         :units => data_collector.x_axis_units, :label => data_collector.x_axis_label, :labelFormat => 'None' }/
     %yDataAxis
       %OTDataAxis{ :max => data_collector.y_axis_max, :min => data_collector.y_axis_min,

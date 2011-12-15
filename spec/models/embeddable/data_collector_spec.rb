@@ -103,4 +103,24 @@ describe Embeddable::DataCollector do
 
     end
   end
+
+  describe "x axis conversion" do
+    it "should convert values when saving and the x axis units are minutes" do
+      dc = Embeddable::DataCollector.new
+      dc.x_axis_units = "min"
+      dc.x_axis_min_converted = 3600
+      dc.x_axis_min.should == 60
+      dc.x_axis_max_converted = 1800
+      dc.x_axis_max.should == 30
+    end
+
+    it "should convert values when reading and the x axis units are minutes" do
+      dc = Embeddable::DataCollector.new
+      dc.x_axis_units = "min"
+      dc.x_axis_min = 22
+      dc.x_axis_max = 16
+      dc.x_axis_min_converted.should == 1320
+      dc.x_axis_max_converted.should == 960
+    end
+  end
 end
