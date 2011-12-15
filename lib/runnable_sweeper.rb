@@ -20,7 +20,7 @@ class RunnableSweeper < ActionController::Caching::Sweeper
     expire_fragment(Regexp.new("_#{runnable.class.to_s}_#{runnable.id}_"))
 
     #also expire any parent caches
-    case runnbale
+    case runnable
     when Page
       expire_cache_for(runnable.find_section)
     when Section
