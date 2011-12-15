@@ -11,9 +11,9 @@ class Reports::ConcludingCareerStem < Reports::Excel
     @reportables_by_runnable = {}
 
     @common_columns = [
-      Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10),
-      Reports::ColumnDefinition.new(:title => "Class",        :width => 25),
-      Reports::ColumnDefinition.new(:title => "School",       :width => 25),
+      Reports::ColumnDefinition.new(:title => "Student IDs",  :width => 10),
+      Reports::ColumnDefinition.new(:title => "Classes",      :width => 25),
+      Reports::ColumnDefinition.new(:title => "Schools",      :width => 25),
       Reports::ColumnDefinition.new(:title => "UserID",       :width => 25),
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
@@ -53,7 +53,7 @@ class Reports::ConcludingCareerStem < Reports::Excel
     current_row = first_row
     @student_learners.each do |student_id, learners|
       # FIXME This won't provide an accurate list of student teachers and classes!
-      sheet.row(current_row).concat report_learner_info_cells(learners.first)[0..(@common_columns.size-1)]
+      sheet.row(current_row).concat report_learner_info_cells(learners)[0..(@common_columns.size-1)]
       current_row += 1
     end
     return sheet
@@ -129,5 +129,17 @@ class Reports::ConcludingCareerStem < Reports::Excel
   def get_concluding_stem_answer(stem_question, report_learner)
     answer_obj = report_learner[:answers]["#{stem_question.class.to_s}|#{stem_question.id.to_s}"] || {:answer => nil}
     return answer_obj[:answer]
+  end
+
+  def report_learner_info_cells(report_learners)
+    return [
+      report_learners.map{|rl| learner_id(rl) }.uniq.join(","),
+      report_learners.map{|rl| rl.class_name }.uniq.join(","),
+      report_learners.map{|rl| rl.school_name }.uniq.join(","),
+      user_id(report_learners[0]),
+      report_learners[0].username,
+      report_learners[0].student_name,
+      report_learners.map{|rl| rl.teachers_name }.uniq.join(",")
+    ]
   end
 end
