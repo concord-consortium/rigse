@@ -16,6 +16,19 @@ class RunnableSweeper < ActionController::Caching::Sweeper
   private
 
   def expire_cache_for(runnable)
+    return unless runnable
     expire_fragment(Regexp.new("_#{runnable.class.to_s}_#{runnable.id}_"))
+
+    #also expire any parent caches
+    case runnbale
+    when Page
+      expire_cache_for(runnable.find_section)
+    when Section
+      expire_cache_for(runnable.activity)
+    when Activity
+      expire_cache_for(runnable.investigation)
+    when PageElement
+      expire_cache_for(runnable.page)
+    end
   end
 end
