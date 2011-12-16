@@ -69,6 +69,8 @@ class Reports::ConcludingCareerStem < Reports::Excel
 
   def run_report(stream_or_path, work_book = Spreadsheet::Workbook.new)
     @book = work_book
+    @book.create_worksheet :name => 'Empty' if @runnables.empty?
+
     print "Sorting runnables..." if @verbose
     @runnables.sort!{|a,b| a.name <=> b.name}
     @runnables_by_id = {}
