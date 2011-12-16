@@ -452,7 +452,7 @@ ActionController::Routing::Routes.draw do |map|
   map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
-  map.banner '/banner', :controller => 'home', :action => 'banner'
+  map.banner '/banner', :controller => 'misc', :action => 'banner'
   # map. ':controller/:action/:id.:format'
 
   # Install the default routes as the lowest priority.
