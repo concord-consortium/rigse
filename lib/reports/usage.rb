@@ -28,7 +28,8 @@ class Reports::Usage < Reports::Excel
     @runnable_start_column = {}
     @runnables.each do |runnable|
       @runnable_start_column[runnable] = @column_defs.size
-      @column_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})\nAssessments Completed", :width => 4, :left_border => true)
+      @heading_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})", :heading_row => 0, :col_index => @column_defs.size)
+      @column_defs << Reports::ColumnDefinition.new(:title => "Assessments Completed", :width => 4, :left_border => true)
       @column_defs << Reports::ColumnDefinition.new(:title => "% Completed", :width => 4)
       @column_defs << Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
     end
@@ -40,7 +41,7 @@ class Reports::Usage < Reports::Excel
 
   def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
     sheet = book.create_worksheet :name => 'Usage'
-    write_sheet_headers(sheet, @column_defs)
+    write_sheet_headers(sheet, (@column_defs + @heading_defs))
     student_learners = sorted_learners.group_by {|l| l.student_id }
     student_learners.each_key do |student_id|
       learners = student_learners[student_id]
