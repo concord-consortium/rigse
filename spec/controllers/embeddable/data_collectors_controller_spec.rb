@@ -81,4 +81,52 @@ describe Embeddable::DataCollectorsController do
       end
     end
   end
+
+  describe "with multiple_graphable_enabled" do
+    include OtmlHelper
+    before(:each) do
+      generate_default_project_and_jnlps_with_mocks
+      generate_portal_resources_with_mocks
+    end
+    before(:each) do
+      @graph = Embeddable::DataCollector.create(
+        :multiple_graphable_enabled =>  true)
+      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+    end
+    describe "the generated otml" do
+      it "should include a prototype graphable" do
+        get :show, :id => "37", :format => 'otml'
+        assert_select("prototypeGraphables")
+        #%OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy, extra) }
+        prototype_id = ot_local_id_for(@graph, :data_proxy, :prototype) 
+        local_id = ot_local_id_for(@graph, :data_proxy) 
+        assert_select("OTSensorDataProxy[local_id='#{prototype_id}']")
+        assert_select("OTSensorDataProxy[local_id='#{local_id}']")
+      end
+    end
+  end
+
+  describe "without multiple_graphable_enabled" do
+    include OtmlHelper
+    before(:each) do
+      generate_default_project_and_jnlps_with_mocks
+      generate_portal_resources_with_mocks
+    end
+    before(:each) do
+      @graph = Embeddable::DataCollector.create(
+        :multiple_graphable_enabled =>  false)
+      Embeddable::DataCollector.should_receive(:find).and_return(@graph)
+    end
+    describe "the generated otml" do
+      it "should include a prototype graphable" do
+        get :show, :id => "37", :format => 'otml'
+        #%OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy, extra) }
+        prototype_id = ot_local_id_for(@graph, :data_proxy, :prototype) 
+        local_id = ot_local_id_for(@graph, :data_proxy) 
+        assert_select("OTSensorDataProxy[local_id='#{prototype_id}']",false)
+        assert_select("OTSensorDataProxy[local_id='#{local_id}']")
+      end
+    end
+
+  end
 end

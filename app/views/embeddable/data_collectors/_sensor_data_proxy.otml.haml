@@ -1,35 +1,42 @@
+- if (defined? prototype) && prototype
+  - sensor_id = ot_local_id_for(data_collector, :data_proxy,  :prototype)
+  - tare_id   = ot_local_id_for(data_collector, :zero_action, :prototype)
+- else
+  - sensor_id = ot_local_id_for(data_collector, :data_proxy)
+  - tare_id   = ot_local_id_for(data_collector, :zero_action)
+
 - if ((calibration = data_collector.calibration) && calibration.data_filter)
   - haml_tag calibration.otml_filter_tag_symbol, calibration.otml_filter_tag_attributes.merge({:sourceChannel => "1" }) do
     %source
       - if probe_type = data_collector.probe_type
-        %OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy) }
+        %OTSensorDataProxy{ :local_id => sensor_id}
           %request
             %OTExperimentRequest{ :period => probe_type.period.to_s }
               %sensorRequests
-                %OTSensorRequest{ :stepSize         => probe_type.step_size.to_s, 
+                %OTSensorRequest{ :stepSize         => probe_type.step_size.to_s,
                                   :type             => probe_type.ptype.to_s,
                                   :unit             => probe_type.unit,
-                                  :port             => probe_type.port.to_s, 
+                                  :port             => probe_type.port.to_s,
                                   :requiredMax      => probe_type.max.to_s,
                                   :requiredMin      => probe_type.min.to_s,
                                   :displayPrecision => "#{data_collector.probe_type.display_precision}" }
           - if data_collector.show_tare
             %zeroSensor
-              %OTZeroSensor{:sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action) }
+              %OTZeroSensor{:sensorIndex => '0', :local_id=> tare_id}
 
 - else
   - if probe_type = data_collector.probe_type
-    %OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy) }
+    %OTSensorDataProxy{ :local_id => sensor_id }
       %request
         %OTExperimentRequest{ :period => probe_type.period.to_s }
           %sensorRequests
-            %OTSensorRequest{ :stepSize         => probe_type.step_size.to_s, 
+            %OTSensorRequest{ :stepSize         => probe_type.step_size.to_s,
                               :type             => probe_type.ptype.to_s,
                               :unit             => probe_type.unit,
-                              :port             => probe_type.port.to_s, 
+                              :port             => probe_type.port.to_s,
                               :requiredMax      => probe_type.max.to_s,
                               :requiredMin      => probe_type.min.to_s,
                               :displayPrecision => "#{data_collector.probe_type.display_precision}" }
       - if data_collector.show_tare
         %zeroSensor
-          %OTZeroSensor{:sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action) }
+          %OTZeroSensor{:sensorIndex => '0', :local_id=> tare_id }
