@@ -4,6 +4,7 @@ class Reports::Usage < Reports::Excel
 
     @runnables =  opts[:runnables]  || Investigation.published
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
+    @heading_defs = []
     #@column_defs = [
       #Reports::ColumnDefinition.new(:title => "Student ID",   :width => 10 ),
       #Reports::ColumnDefinition.new(:title => "Student Name", :width => 25 ),
@@ -19,7 +20,11 @@ class Reports::Usage < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
     ]
-    
+
+    # sanity check the number of cells
+    num_cells_needed = ((@runnables.size * 3) + @column_defs.size) * @report_learners.size
+    raise Reports::Errors::TooManyCellsError if num_cells_needed > MAX_CELLS
+
     @runnable_start_column = {}
     @runnables.each do |runnable|
       @runnable_start_column[runnable] = @column_defs.size

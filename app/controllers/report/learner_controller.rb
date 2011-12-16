@@ -13,6 +13,7 @@ class Report::LearnerController < ApplicationController
 
     # TODO: fix me -- choose runnables better
     @all_runnables         = Assignable.all_assignables.sort_by { |i| i.name.downcase }
+    @all_runnables_by_id   = @all_runnables.group_by {|r| "#{r.class.to_s}|#{r.id}" }
 
     @start_date            = params['start_date']
     @end_date              = params['end_date']
@@ -58,24 +59,44 @@ class Report::LearnerController < ApplicationController
       "assignables:"    => @select_learners.map {|l| l.runnable_id}.uniq.size
     }
 
-    if params[:commit] == 'usage report'
-      sio = StringIO.new
-      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
-      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
-      report.run_report(sio)
-      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
-    elsif params[:commit] == 'details report'
-      sio = StringIO.new
-      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
-      report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
-      report.run_report(sio)
-      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
-    elsif params[:commit] == 'career stem report'
-      sio = StringIO.new
-      runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
-      report = Reports::ConcludingCareerStem.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
-      report.run_report(sio)
-      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "career_stem.xls" )
+    # Because of issues with the spreadsheet gem and dealing with large workbooks (too many sheets, or too many cells within a sheet)
+    # narrow down the applicable runnables, so the report only shows runnables that have learners
+    if @select_runnables.empty?
+      if @select_runnables.size > 0
+        runnables = @select_runnables
+      else
+        runnables = @select_learners.map{|l| @all_runnables_by_id["#{l.runnable_type}|#{l.runnable_id}"] }.flatten.uniq.compact
+      end
+    end
+
+    begin
+      if params[:commit] == 'usage report'
+        sio = StringIO.new
+        report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
+        report.run_report(sio)
+        send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
+      elsif params[:commit] == 'details report'
+        sio = StringIO.new
+        report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :verbose => true)
+        report.run_report(sio)
+        send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+      elsif params[:commit] == 'career stem report'
+        sio = StringIO.new
+        report = Reports::ConcludingCareerStem.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :verbose => true)
+        report.run_report(sio)
+        send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "career_stem.xls" )
+      end
+    rescue Reports::Errors::GeneralReportError => e
+      msg = "There was a problem running your report.\n\n"
+      case e
+      when Reports::Errors::TooManyCellsError
+        msg += "You have too many total cells. Add filters to reduce the number of learners."
+      when Reports::Errors::TooManySheetsError
+        msg += "You have too many assignables selected. Add filters to reduce the number of assignables."
+      else
+        msg += "An Unknown error occurred. Try adding more filters to reduce the complexity of the report."
+      end
+      flash[:error] = msg.gsub("\n","<br/>\n")
     end
   end
 
