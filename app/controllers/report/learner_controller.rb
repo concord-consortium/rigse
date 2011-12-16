@@ -61,12 +61,10 @@ class Report::LearnerController < ApplicationController
 
     # Because of issues with the spreadsheet gem and dealing with large workbooks (too many sheets, or too many cells within a sheet)
     # narrow down the applicable runnables, so the report only shows runnables that have learners
-    if @select_runnables.empty?
-      if @select_runnables.size > 0
-        runnables = @select_runnables
-      else
-        runnables = @select_learners.map{|l| @all_runnables_by_id["#{l.runnable_type}|#{l.runnable_id}"] }.flatten.uniq.compact
-      end
+    if @select_runnables.size > 0
+      runnables = @select_runnables
+    else
+      runnables = @select_learners.map{|l| @all_runnables_by_id["#{l.runnable_type}|#{l.runnable_id}"] }.flatten.uniq.compact
     end
 
     begin
