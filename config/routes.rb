@@ -474,7 +474,7 @@ RailsPortal::Application.routes.draw do
   match '/stylesheets/project.css' => 'home#project_css', :as => :project_css
   match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
   match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
-  match '/banner' => 'home#banner', :as => :banner
+  match '/banner' => 'misc#banner', :as => :banner
   match '/:controller(/:action(/:id))'
 
   root :to => 'home#index'
