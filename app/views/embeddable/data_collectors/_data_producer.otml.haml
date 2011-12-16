@@ -1,6 +1,13 @@
 - ot_sensor_data_proxy = capture_haml do
   - if probe_type = data_collector.probe_type
-    %OTSensorDataProxy{ :local_id => ot_local_id_for(data_collector, :data_proxy) }
+    - if defined? extra
+      - sensor_id = ot_local_id_for(data_collector, :data_proxy, extra)
+      - tare_id  = ot_local_id_for(data_collector, :zero_action, extra) 
+    - else 
+      - sensor_id = ot_local_id_for(data_collector, :data_proxy)
+      - tare_id  = ot_local_id_for(data_collector, :zero_action) 
+
+    %OTSensorDataProxy{ :local_id => sensor_id}
       %request
         %OTExperimentRequest{ :period => probe_type.period.to_s }
           %sensorRequests
@@ -13,7 +20,7 @@
                               :displayPrecision => "#{data_collector.probe_type.display_precision}" }
       - if data_collector.show_tare
         %zeroSensor
-          %OTZeroSensor{:sensorIndex => '0', :local_id=> ot_local_id_for(data_collector, :zero_action) }
+          %OTZeroSensor{:sensorIndex => '0', :local_id=> tare_id }
 
 - otml_for_time_limit_filter = capture_haml do
   - if ((calibration = data_collector.calibration) && calibration.data_filter)
