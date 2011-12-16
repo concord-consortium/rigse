@@ -19,6 +19,14 @@ class Reports::ConcludingCareerStem < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
     ]
+
+    # Sanity checks
+    num_sheets_required = (@runnables.size/COLS_PER_SHEET.to_f).ceil
+    raise Reports::Errors::TooManySheetsError if num_sheets_required > MAX_SHEETS
+
+    max_cols_required = (@runnables.size > COLS_PER_SHEET ? (COLS_PER_SHEET) : @runnables.size) + @common_columns.size
+    max_cells_required = max_cols_required * @student_learners.size
+    raise Reports::Errors::TooManyCellsError if max_cells_required > MAX_CELLS
   end
 
   def sorted_learners

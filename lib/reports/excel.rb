@@ -2,6 +2,9 @@ class Reports::Excel
   require 'spreadsheet'
   require 'nokogiri' # text sanitization ...
 
+  MAX_SHEETS = 100
+  MAX_CELLS = 500000
+
   def initialize(opts = {})
     @verbose = !!opts[:verbose]
     @blobs_url =  opts[:blobs_url] || "<specify blobs host>"

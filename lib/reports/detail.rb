@@ -4,6 +4,8 @@ class Reports::Detail < Reports::Excel
     super(opts)
 
     @runnables = opts[:runnables] || Investigation.published
+    raise Reports::Errors::TooManySheetsError if @runnables.size > MAX_SHEETS
+
     @report_learners = opts[:report_learners] || report_learners_for_runnables(@runnables)
 
     # stud.id, class, school, user.id, username, student name, teachers, completed, %completed, last_run
@@ -19,6 +21,10 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "% Completed", :width => 4),
       Reports::ColumnDefinition.new(:title => "Last run",    :width => 20),
     ]
+
+    # sanity check our sheets for # of cells
+    too_big = @runnables.detect{|r| ((r.reportable_elements.size + @common_columns.size) * @report_learners.size) > MAX_CELLS }
+    raise Reports::Errors::TooManyCellsError if too_big
   end
 
   def sorted_learners()
@@ -83,11 +89,9 @@ class Reports::Detail < Reports::Excel
     @runnable_sheet = {}
     @runnables.sort!{|a,b| a.name <=> b.name}
 
-    print "Creating #{@runnables.size} worksheets for report" if @verbose
-    @runnables.each do |runnable|
+    iterate_with_status(@runnables) do |runnable|
       setup_sheet_for_runnable(runnable)
     end # runnables
-    puts " done." if @verbose
 
     student_learners = sorted_learners.group_by {|l| l.student_id }
 
@@ -137,7 +141,9 @@ class Reports::Detail < Reports::Excel
         row.concat all_answers
       end
     end
+    print "Writing xls data... " if @verbose
     @book.write stream_or_path
+    puts " done."
   end
 
   def get_containers(runnable)
