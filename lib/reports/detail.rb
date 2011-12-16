@@ -89,6 +89,8 @@ class Reports::Detail < Reports::Excel
     @runnable_sheet = {}
     @runnables.sort!{|a,b| a.name <=> b.name}
 
+    @book.create_worksheet :name => 'Empty' if @runnables.empty?
+
     iterate_with_status(@runnables) do |runnable|
       setup_sheet_for_runnable(runnable)
     end # runnables
