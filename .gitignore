@@ -1,6 +1,7 @@
 *~
 log/newrelic*
 log/*.log
+log/newrelic*
 tmp/*
 .DS_Store
 doc/api
