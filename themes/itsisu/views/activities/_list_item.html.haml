@@ -1,4 +1,6 @@
-- cache("item_list_#{runnable.class.to_s}_#{runnable.id}_") do
+- cache_key = "item_list_#{runnable.class.to_s}_#{runnable.id}_"
+- cache_key = "changeable_" + cache_key if runnable.changeable? current_user
+- cache(cache_key) do
   .activity
     .actions
       - if runnable.changeable? current_user
