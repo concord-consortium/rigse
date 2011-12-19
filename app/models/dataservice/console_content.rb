@@ -20,9 +20,6 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
       @@searchable_attributes
     end
     
-    def display_name
-      "Dataservice::ConsoleContent"
-    end
   end
 
   

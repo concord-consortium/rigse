@@ -18,6 +18,13 @@ class BundleContent
     bundle_logger_id = env[PATH_INFO][/\/dataservice\/bundle_loggers\/(\d+)\/bundle_contents\.bundle/, 1]
     if env[REQUEST_METHOD] == POST && bundle_logger_id && bundle_logger = ::Dataservice::BundleLogger.find(bundle_logger_id)
       body = env[POST_BODY].read
+      if bundle_logger.in_progress_bundle
+        launch_event = ::Dataservice::LaunchProcessEvent.create(
+          :event_type => ::Dataservice::LaunchProcessEvent::TYPES[:bundle_saved],
+          :event_details => "Learner session data saved. Activity should now be closed.",
+          :bundle_content => bundle_logger.in_progress_bundle
+        )
+      end
       bundle_logger.end_bundle( { :body => body} )
       bundle_content = bundle_logger.bundle_contents.last
       digest = Digest::MD5.hexdigest(body)

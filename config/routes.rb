@@ -167,6 +167,7 @@ ActionController::Routing::Routes.draw do |map|
       :deactivate => :get,
       :learners => :get,
       :check_learner_auth => :post,
+      :launch_status => :get,
       :start => :post
     }, :collection => { :data_test => [:get,:post] }
 
@@ -189,7 +190,7 @@ ActionController::Routing::Routes.draw do |map|
     portal.resources :external_users
 
     portal.resources :nces06_districts
-    portal.resources :nces06_schools
+    portal.resources :nces06_schools, :member => { :description => :get }
     # portal.home 'readme', :controller => 'home', :action => 'readme'
     # oops no controller for home any more, see http://www.pivotaltracker.com/story/show/2605204
   end
@@ -235,6 +236,9 @@ ActionController::Routing::Routes.draw do |map|
 
 # ----------------------------------------------
 
+  # A prettier version of the blob w/ token url
+  map.dataservice_blob_raw_pretty "dataservice/blobs/:id/:token.:format", :controller => "dataservice/blobs", :action => "show", :misc => 'foo', :requirements => { :id => /\d+/, :token => /[a-zA-Z0-9]{32}/ }
+
   map.namespace(:dataservice) do |dataservice|
     dataservice.resources :blobs
     dataservice.resources :bundle_contents
@@ -253,6 +257,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace(:admin) do |admin|
     admin.resources :projects, :member => { :update_form => :put }
+    admin.resources :tags
   end
 
   map.namespace(:maven_jnlp) do |maven_jnlp|
@@ -405,6 +410,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
   map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
+
+  map.learner_report '/report/learner', :controller => 'report/learner', :action => :index
   
   map.resources :activities, :member => {
     :add_section => [:post,:get],
@@ -471,6 +478,7 @@ ActionController::Routing::Routes.draw do |map|
   map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
+  map.banner '/banner', :controller => 'misc', :action => 'banner'
   # map. ':controller/:action/:id.:format'
 
   # Install the default routes as the lowest priority.

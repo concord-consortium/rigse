@@ -2,7 +2,7 @@ class HelpRequestsController < ApplicationController
   # GET /help_requests
   # GET /help_requests.xml
   def index
-    if current_user.has_role?("manager")
+    if current_user.has_role?("manager","admin")
       @help_requests = HelpRequest.find(:all,:order => "created_at DESC").paginate(:per_page => 10, :page => params[:page])
     end
     @help_request = HelpRequest.new

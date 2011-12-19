@@ -17,6 +17,14 @@ def polymorphic_assign(assignable_type, assignable_name, clazz_name)
   })
 end
 
+def offering_for_class(assignable_type, assignable_name, clazz_name)
+  clazz = Portal::Clazz.find_by_name(clazz_name)
+  assignable_type = assignable_type.gsub(/\s/, "_").classify.constantize
+  assignable = assignable_type.find_by_name(assignable_name)
+  offering = Portal::Offering.find(:first, :conditions => { :runnable_id => assignable.id, :runnable_type => assignable_type.to_s })
+end
+
+
 Given /^the following assignments exist:$/ do |assignments_table|
   assignments_table.hashes.each do |hash|
     type = hash['type']
@@ -31,8 +39,18 @@ Given /^the ([^"]+) "([^"]*)" is assigned to the class "([^"]*)"$/ do |assignabl
 end
 
 # this is the interactive version of the step above
-When /^I assign the ([^"]+) "([^"]*)"$/ do |assignable_type, assignable_name|
+When /^I assign the ([^"]+) "([^"]*)" to the class "([^"]*)"$/ do |assignable_type, assignable_name, class_name|
   assignable = assignable_type.gsub(/\s/, "_").classify.constantize.find_by_name(assignable_name)
   runnable_element = find("##{dom_id_for(assignable)}")
   assign_runnable(runnable_element)
+end
+    
+Then /^the ([^"]+) "([^"]*)" should be archived for the class "([^"]*)"$/ do |assignable_type, assignable_name, class_name|
+  offering = offering_for_class(assignable_type, assignable_name, class_name)
+  offering.should_not be_active
+end
+
+Then /the ([^"]+) "([^"]*)" should be active for the class "([^"]*)"$/ do |assignable_type, assignable_name, class_name|
+  offering = offering_for_class(assignable_type, assignable_name, class_name)
+  offering.should be_active
 end

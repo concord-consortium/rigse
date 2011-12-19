@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::DataCollector do
   before(:each) do
@@ -59,6 +59,68 @@ describe Embeddable::DataCollector do
         @data_collector.graph_type="xyzzy"
         @data_collector.graph_type.should == old_value
       end
+    end
+  end
+
+  describe "digital displays" do
+    describe "font size" do
+      describe "validation" do
+        describe "a font size of zero" do
+          it "should not be valid" do
+            Embeddable::DataCollector.create(:dd_font_size => 0).should_not be_valid
+          end
+        end
+        describe "a font size of 304" do
+          it "should not be valid" do
+            Embeddable::DataCollector.create(:dd_font_size => 304).should_not be_valid
+          end
+        end
+        describe "a font size of 40" do
+          it "should be valid" do
+            Embeddable::DataCollector.create(:dd_font_size => 40).should be_valid
+          end
+        end
+      end
+      
+      describe "pre-defined sizes for authors" do
+        it "should include a small font" do
+          Embeddable::DataCollector.dd_font_sizes[:small].should_not be_nil
+        end
+        it "should include a medium font" do
+          Embeddable::DataCollector.dd_font_sizes[:medium].should_not be_nil
+        end
+        it "should include a large font" do
+          Embeddable::DataCollector.dd_font_sizes[:large].should_not be_nil
+        end
+      end
+      
+      describe "the default digital display font-size" do
+        it "should be small" do
+          digital = Embeddable::DataCollector.create(:is_digital_display => true)
+          digital.dd_font_size.should == Embeddable::DataCollector.dd_font_sizes[:small]
+        end
+      end
+
+    end
+  end
+
+  describe "x axis conversion" do
+    it "should convert values when saving and the x axis units are minutes" do
+      dc = Embeddable::DataCollector.new
+      dc.x_axis_units = "min"
+      dc.x_axis_min_converted = 3600
+      dc.x_axis_min.should == 60
+      dc.x_axis_max_converted = 1800
+      dc.x_axis_max.should == 30
+    end
+
+    it "should convert values when reading and the x axis units are minutes" do
+      dc = Embeddable::DataCollector.new
+      dc.x_axis_units = "min"
+      dc.x_axis_min = 22
+      dc.x_axis_max = 16
+      dc.x_axis_min_converted.should == 1320
+      dc.x_axis_max_converted.should == 960
     end
   end
 end

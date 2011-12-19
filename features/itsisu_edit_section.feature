@@ -33,7 +33,7 @@ Feature: Sections of activities can be edited using the itsisu theme
     And I am on the template edit page for "first_activity"    
     And I fill in the first templated activity section with "Hello World"
     And I click ".template_save_button" within the "Introduction" section
-    And I click ".template_save_button" within the "Second Career STEM Question" section
+    And I click ".template_save_button" within the "Concluding Career STEM Question" section
     And I click "#activity_submit"
     Then I should see "Hello World"
 

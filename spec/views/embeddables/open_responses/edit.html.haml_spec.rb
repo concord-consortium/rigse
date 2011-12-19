@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe "/embeddable/open_responses/edit.html.haml" do
 

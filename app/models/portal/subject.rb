@@ -14,8 +14,5 @@ class Portal::Subject < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Subject"
-    end
   end
 end

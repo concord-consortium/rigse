@@ -109,6 +109,17 @@ class User < ActiveRecord::Base
       User.count(:conditions => "`login` = '#{login}'") == 0
     end
 
+    def suggest_login(first,last)
+      base = "#{first.first}#{last}".downcase.gsub(/[^a-z]/, "_")
+      suggestion = base
+      count = 0
+      while(login_exists?(suggestion)) 
+        count = count + 1
+        suggestion = "#{base}#{count}"
+      end
+      return suggestion
+    end
+
     def default_users
       User.find(:all, :conditions => { :default_user => true })
     end
@@ -149,7 +160,7 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id, :source
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :vendor_interface_id, :external_id
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -163,8 +174,8 @@ class User < ActiveRecord::Base
   end
 
   def name_and_login
-    _fullname = "#{first_name} #{last_name}".strip
-    _fullname.empty? ? login : "#{_fullname} (#{login})"
+    _fullname = "#{last_name}, #{first_name}".strip
+    _fullname.empty? ? login : "#{_fullname} ( #{login} )"
   end
 
   # Check if a user has a role.
@@ -256,9 +267,10 @@ class User < ActiveRecord::Base
   end
 
   def school
+    return @school if @school
     school_person = self.portal_teacher || self.portal_student
     if (school_person)
-      return school_person.school
+      return @school = school_person.school
     end
   end
 

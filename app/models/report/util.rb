@@ -55,7 +55,6 @@ class Report::Util
     results = Array(@saveables_by_learner_id[options[:learner].id]) if options[:learner]
     results = results & Array(@saveables_by_answered[true]) if options[:answered]
     results = results & Array(@saveables_by_embeddable[options[:embeddable]]) if options[:embeddable]
-    results = results & Array(@saveables_by_correct[true]) if options[:correct]
     if options[:embeddables]
       embeddables = options[:embeddables]
       results = results & embeddables.map { |e| @saveables_by_embeddable[e]}.flatten
@@ -71,19 +70,26 @@ class Report::Util
     return results
   end
 
-  def initialize(offering, show_only_active_learners=false,skip_filters=false)
+  def initialize(offering_or_learner, show_only_active_learners=false,skip_filters=false)
     @last_accessed = Time.now
-    @offering = offering
+    if offering_or_learner.kind_of?(Portal::Learner)
+      @offering = offering_or_learner.offering
+
+      @learners = [offering_or_learner]
+    else
+      @offering = offering_or_learner
+
+      @learners = @offering.learners
+      @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
+    end
+
     @report_embeddable_filter = @offering.report_embeddable_filter
     unless (@report_embeddable_filter)
       @report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => [])
       @offering.reload
     end
 
-    @learners = @offering.learners
-    @learners = @learners.select{|l| l.bundle_logger.bundle_contents.count > 0 } if show_only_active_learners
-
-    assignable = offering.runnable
+    assignable = @offering.runnable
 
     @saveables               = []
     @saveables_by_type       = {}
@@ -98,12 +104,11 @@ class Report::Util
     unless skip_filters
       results = @report_embeddable_filter.filter(results)
       allowed_embeddables = @report_embeddable_filter.embeddables
-      reportables          = @offering.runnable.reportable_elements
       if ! @report_embeddable_filter.ignore && allowed_embeddables.size > 0
         reportables = reportables.select{|r| allowed_embeddables.include?(r[:embeddable]) }
       end
     end
-    #reportables          = @offering.runnable.reportable_elements
+
     elements             = reportables.map       { |r| r[:element]    } 
     @embeddables         = reportables.map       { |r| r[:embeddable] } 
     @embeddables_by_type = @embeddables.group_by { |e| e.class.to_s   } 
@@ -119,15 +124,20 @@ class Report::Util
     elsif assignable.is_a? Page
       lambdas = [page_lambda]
     end
-      
+
     @page_elements  = reportables.extended_group_by(lambdas)
 
     Investigation.saveable_types.each do |type|
-      all = type.find_all_by_offering_id(@offering.id)
+      all = []
+      if @learners.size == 1
+        all = type.find_all_by_learner_id(@learners[0].id)
+      else
+        all = type.find_all_by_offering_id(@offering.id)
+      end
       @saveables += all
       @saveables_by_type[type.to_s] = all
     end
-    # If an investigation has changed, and daveable elements have been removed (eek!)
+    # If an investigation has changed, and saveable elements have been removed (eek!)
     current =  @saveables.select { |s| assignable.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
     old = @saveables - current
     if old.size > 0
@@ -136,7 +146,6 @@ class Report::Util
       Rails.logger.info(warning)
       @saveables = current
     end
-    @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_answered   = @saveables.group_by { |s| s.answered?  } 
     @saveables_by_learner_id = @saveables.group_by { |s| s.learner_id } 
     @saveables_by_embeddable = @saveables.group_by { |s| s.embeddable } 
@@ -154,6 +163,10 @@ class Report::Util
     completed = Float(complete_number(learner))
     total = Float(embeddables.size)
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
+  end
+
+  def answered_number(learner)
+    return saveables(:learner => learner, :answered => true).size
   end
 
   def correct_number(learner)

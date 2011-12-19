@@ -32,9 +32,6 @@ class Embeddable::Biologica::Chromosome < ActiveRecord::Base
   
   send_update_events_to :investigations
 
-  def self.display_name
-    "Biologica Chromosome"
-  end
 
   def investigations
     invs = []

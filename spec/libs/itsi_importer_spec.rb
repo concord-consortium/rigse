@@ -421,9 +421,9 @@ describe ItsiImporter do
         section.name.should == ItsiImporter::SECTIONS_MAP[index][:name]
       end
     end
-    it "by default all sections should be disabled except Introduction and Second Career STEM Question" do
+    it "by default all sections should be disabled except Introduction and Concluding Career STEM Question" do
       @activity.sections.each do |s|
-        if s.name == 'Introduction' || s.name == 'Second Career STEM Question'
+        if s.name == 'Introduction' || s.name == 'Concluding Career STEM Question'
           s.is_enabled.should be_true
         else
           s.is_enabled.should be_false

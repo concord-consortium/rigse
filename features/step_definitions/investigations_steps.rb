@@ -64,7 +64,7 @@ Given /^the investigation "([^"]*)" is published$/ do |investigation_name|
 end
 
 When /^I sort investigations by "([^"]*)"$/ do |sort_str|
-  visit "/investigations?sort_order=#{sort_str}"
+  visit "/investigations?sort_order=#{url_encode(sort_str)}"
 end
 
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
@@ -161,15 +161,27 @@ end
 #end
 
 
-Then /^There should be (\d+) investigations displayed$/ do |count|
+Then /^There should be (\d+) (?:investigations|assignables) displayed$/ do |count|
   within("#offering_list") do
     page.all(".runnable").size.should == count.to_i
   end
 end
 
-Then /^"([^"]*)" should not be displayed in the investigations list$/ do |not_expected|
+Then /^"([^"]*)" should not be displayed in the (?:investigations|assignables) list$/ do |not_expected|
   within("#offering_list") do 
     page.should have_no_content(not_expected)
+  end
+end
+
+Then /the following should (not )?be displayed in the (?:investigations|assignables) list:$/ do |nomatch, table|
+  within('#assignable_list') do
+    table.hashes.each do |hash|
+      if nomatch == "not "
+        page.should have_no_content(hash[:name])
+      else
+        page.should have_content(hash[:name])
+      end
+    end
   end
 end
 

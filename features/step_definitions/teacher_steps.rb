@@ -23,6 +23,7 @@ Given /^the following teachers exist:$/ do |users_table|
   User.anonymous(true)
   users_table.hashes.each do |hash|
     begin
+      cohorts = hash.delete("cohort_list")
       user = Factory(:user, hash)
       user.add_role("member")
       user.register
@@ -30,6 +31,7 @@ Given /^the following teachers exist:$/ do |users_table|
       user.save!
       
       portal_teacher = Factory(:portal_teacher, { :user => user })
+      portal_teacher.cohort_list = cohorts if cohorts
       portal_teacher.save!
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...

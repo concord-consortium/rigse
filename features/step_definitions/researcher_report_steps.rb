@@ -2,7 +2,7 @@ FAKE_BLOBS_URL = "http://nowhere.com/dataservice/blobs"
 def modified_report_for(investigation)
   report  = Reports::Detail.new(
     :verbose        => false,
-    :investigations => [investigation],
+    :runnables      => [investigation],
     :blobs_url      => FAKE_BLOBS_URL
   )
   report.stub!(:learner_id).and_return('learner_id')
@@ -112,7 +112,7 @@ end
 
 def find_bloblinks_in_spreadheet(spreadsheet,num)
   structure = YAML::dump(spreadsheet)
-  regexp = /"@url": #{FAKE_BLOBS_URL}\/(\d+)\.blob/
+  regexp = /"@url": #{FAKE_BLOBS_URL}\/(\d+)\/[a-f0-9]+\.(blob|png)/
   lines = structure.lines.select{ |l| l =~ regexp}
   if num
     num = num.to_i
@@ -204,7 +204,7 @@ Then /^the usage report for "([^"]*)" should have \((\d+)\) answers for "([^"]*)
   #buffer = StringIO.new
   #spreadsheet = Spreadsheet::Workbook.new
   #investigation = Investigation.find_by_name(investigation_name)
-  #report  = Reports::Usage.new(:investigations => Investigation.all)
+  #report  = Reports::Usage.new(:runnables => Investigation.all)
   #report.run_report(buffer,spreadsheet)
   #assessments_completed_for(spreadsheet,student,investigation_name).strip.downcase.should == value.strip.downcase
 end

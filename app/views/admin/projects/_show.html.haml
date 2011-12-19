@@ -54,6 +54,27 @@
                   - else
                     No
                 (This option insures that all labbook entries are treated like simple images.)
+              %li
+                Teachers can author:
+                - if admin_project.teachers_can_author?
+                  %b
+                    Yes
+                  (Teachers are considered authors by default.)
+                - else
+                  %b
+                    No
+                  (Teachers are not considered authors by default and can only author when given the "author" role.)
+              %li
+                Opportunistic Installer:
+                - if admin_project.opportunistic_installer?
+                  %b
+                    Yes
+                  (The installer launcher will automatically launch the non installer jnlp if no installation is found.)
+                - else
+                  %b
+                    No
+                  (The installer launcher will show the user a dialog and open the a page where the user can download the installer)
+                  
             - field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:

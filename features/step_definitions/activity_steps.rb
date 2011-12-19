@@ -82,3 +82,15 @@ Then /^I click "([^\"]*)" within the "([^\"]*)" section$/ do |selector, section|
     find(selector).click
   end
 end
+
+When /^a student has performed work on the activity "([^"]*)" for the class "([^"]*)"$/ do |activity_name, class_name|
+  clazz = Portal::Clazz.find_by_name(class_name)
+  activity = Activity.find_by_name(activity_name)
+  offering = Portal::Offering.first(:conditions => {
+    :runnable_type => activity.class.name,
+    :runnable_id => activity.id,
+    :clazz_id => clazz.id
+  })
+  Factory.create(:full_portal_learner, :offering => offering)
+end
+

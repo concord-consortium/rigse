@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Dataservice::BundleLoggersController do
 
@@ -23,7 +23,9 @@ describe Dataservice::BundleLoggersController do
 
   describe "GET show" do
     it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
-      Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
+      logger = mock_bundle_logger
+      Dataservice::BundleLogger.should_receive(:find).with("37").and_return(logger)
+      logger.should_receive(:in_progress_bundle).twice.and_return(mock_bundle_content)
       login_admin
       get :show, :id => "37"
       assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)

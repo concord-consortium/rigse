@@ -103,7 +103,7 @@ module ApplicationHelper
       branch = head.name
       last_commit = repo.commits(branch).first
       message = last_commit.message
-      link = "<a title='#{message}' href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
+      link = "<a title='#{message}' href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>"
       name = last_commit.author.name
       date = last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
       short_message = truncate(last_commit.message, :length => 54)
@@ -140,7 +140,7 @@ module ApplicationHelper
       content_tag('ul', :class => 'tiny menu_h') do
         list = ''
         list << content_tag('li') { branch }
-        list << content_tag('li') { "<a title='href='http://github.com/stepheneb/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
+        list << content_tag('li') { "<a title='href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
         list << content_tag('li') { last_commit.author.name }
         list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
         list << content_tag('li') { truncate(message, :length => 70) }
@@ -201,6 +201,12 @@ module ApplicationHelper
     else
       render :partial => "#{container}/runnable_list", :locals => { container_sym => container_class.find(:all), :hide_print => hide_print }
     end
+  end
+
+  def top_level_container_name_as_class_string
+    container = top_level_container_name.pluralize
+    container_sym = top_level_container_name.pluralize.to_sym
+    container_class = top_level_container_name.classify
   end
 
   def render_partial_for(component,_opts={})
@@ -1268,7 +1274,7 @@ module ApplicationHelper
   # this appears to not be used in master right now
   def current_user_can_author
     return true if current_user.has_role? "author" 
-    if settings_for(:teachers_can_author)
+    if current_project.teachers_can_author?
       return true unless current_user.portal_teacher.nil?
     end
     # TODO add aditional can-author conditions

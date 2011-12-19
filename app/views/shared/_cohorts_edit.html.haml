@@ -1,0 +1,11 @@
+-# Expects locals: object
+- if object && object.respond_to?("cohort_list") && current_user.has_role?("admin", "manager")
+  - field_set_tag 'Cohorts' do
+    .aligned
+      = hidden_field_tag :update_cohorts, "true"
+      %ul.menu_h
+        - Admin::Tag.find_all_by_scope("cohorts").each do |admin_tag|
+          %li
+            - label_str = "cohorts_#{admin_tag.tag.underscore}"
+            = label_tag label_str, admin_tag.tag
+            = check_box_tag "cohorts[]", admin_tag.tag, object.cohort_list.include?(admin_tag.tag), :id => label_str

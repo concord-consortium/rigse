@@ -72,6 +72,8 @@ describe ApplicationHelper do
         @user = mock_model(User, :portal_teacher => nil)
         @user.stub!(:has_role?).with("author").and_return(false)
         stub!(:current_user).and_return(@user)
+        @project = mock_model(Admin::Project, :teachers_can_author? => true)
+        Admin::Project.stub!(:default_project).and_return(@project)
       end
       it "should return false" do
         current_user_can_author.should == false
@@ -86,13 +88,15 @@ describe ApplicationHelper do
       end
       describe "when teachers can author" do
         it "should return true" do
-          stub!(:settings_for).with(:teachers_can_author).and_return(true)
+          @project = mock_model(Admin::Project, :teachers_can_author? => true)
+          Admin::Project.stub!(:default_project).and_return(@project)
           current_user_can_author.should == true
         end
       end
       describe "when teachers can't author" do
         it "should return false" do  
-          stub!(:settings_for).with(:teachers_can_author).and_return(false)
+          @project = mock_model(Admin::Project, :teachers_can_author? => false)
+          Admin::Project.stub!(:default_project).and_return(@project)
           current_user_can_author.should == false
         end
       end

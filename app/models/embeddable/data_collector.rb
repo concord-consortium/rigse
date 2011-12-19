@@ -50,6 +50,13 @@ class Embeddable::DataCollector < ActiveRecord::Base
   # proto-type datastores are hints for how to create diy-sensors
   named_scope :prototypes, :conditions => {:is_prototype => true}
 
+  # validates_associated :probe_type, :message => "must exist"
+  
+  validates_presence_of :name, :message => "can't be blank"
+  validates_inclusion_of :dd_font_size, :in => 9..300, :message => "font outside of range 9 -> 300"
+  default_value_for :dd_font_size do 
+    Embeddable::DataCollector.dd_font_sizes[:small]
+  end
   # this could work if the finder sql was redone
   # has_many :investigations,
   #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
@@ -175,6 +182,14 @@ class Embeddable::DataCollector < ActiveRecord::Base
     Embeddable::DataCollector.find_all_by_graph_type_id(2)
   end
 
+  # Preset font sizes for the digital display:
+  def self.dd_font_sizes
+    return {
+      :small =>  30,
+      :medium => 100,
+      :large  => 260}
+  end
+  
   def ot_button_str
     buttons = '0,1,2,3,4'
     buttons << ',5' if ruler_enabled
@@ -233,6 +248,43 @@ class Embeddable::DataCollector < ActiveRecord::Base
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
 
+  # support for converting non-second x-axis values
+  def x_axis_min_converted
+    min = self.x_axis_min
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from minutes to seconds
+      min = min * 60
+    end
+    min
+  end
+
+  def x_axis_min_converted=(val)
+    cval = val
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from seconds to minutes
+      cval = val/60.0
+    end
+    self.x_axis_min = cval
+  end
+
+  def x_axis_max_converted
+    min = self.x_axis_max
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from minutes to seconds
+      min = min * 60
+    end
+    min
+  end
+
+  def x_axis_max_converted=(val)
+    cval = val
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from seconds to minutes
+      cval = val/60.0
+    end
+    self.x_axis_max = cval
+  end
+
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
   default_value_for :name, Embeddable::DataCollector::DEFAULT_NAME
   # default_value_for :y_axis_label, default_probe_type.name
@@ -285,8 +337,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
       if ot_data_axis = ot_data_collector['xDataAxis']['OTDataAxis']
         self.x_axis_label = ot_data_axis['label']
         self.x_axis_units = ot_data_axis['units']
-        self.x_axis_min   = ot_data_axis['min'].to_f
-        self.x_axis_max   = ot_data_axis['max'].to_f
+        self.x_axis_min_converted   = ot_data_axis['min'].to_f
+        self.x_axis_max_converted   = ot_data_axis['max'].to_f
       end
       if ot_data_axis = ot_data_collector['yDataAxis']['OTDataAxis']
         self.y_axis_label = ot_data_axis['label']

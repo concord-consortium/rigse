@@ -9,8 +9,8 @@
         - data_table.column_names.split(',').each do |column_name| 
           %OTDataChannelDescription{ :name => h(column_name), :numericData => (data_table.is_numeric? ? 'true' : 'false') }/
       %values
-        - data_table.data.each do
+        - data_table.data.each do |datum|
           - if data_table.is_numeric?
-            %float= h(data_table.cell_data(x,y))
+            %float= h(datum)
           - else
-            %string= h(data_table.cell_data(x,y))
+            %string= h(datum)

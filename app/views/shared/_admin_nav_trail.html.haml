@@ -1,7 +1,10 @@
+- if current_user.has_role?('admin', 'manager','researcher')
+  %li.trail= link_to 'Reports', learner_report_path
 - if current_user.has_role?('admin', 'manager')
   %li.trail= link_to 'Districts', portal_districts_path
   %li.trail= link_to 'Schools', portal_schools_path
   - if APP_CONFIG[:use_gse]
     %li.trail= link_to 'GSEs', ri_gse_grade_span_expectations_path
   %li.trail= link_to 'Users', users_path
+  %li.trail= link_to 'Tags', admin_tags_path
   %li.trail= link_to 'Projects', admin_projects_path

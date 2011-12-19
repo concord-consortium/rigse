@@ -90,10 +90,6 @@ class Section < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Section"
-    end
-
     def search_list(options)
       name = options[:name]
       if (options[:include_drafts])

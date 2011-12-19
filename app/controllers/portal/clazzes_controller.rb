@@ -234,18 +234,24 @@ class Portal::ClazzesController < ApplicationController
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def add_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
-    dom_id = params[:dragged_dom_id]
-    container = params[:dropped_dom_id]
-    runnable_id = params[:runnable_id]
+    dom_id        = params[:dragged_dom_id]
+    container     = params[:dropped_dom_id]
+    runnable_id   = params[:runnable_id]
     unless params[:runnable_type] == 'portal_offering'
       runnable_type = params[:runnable_type].classify
       @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
       if @offering
+        unless @offering.active
+          @offering.active = true
+          @offering.save
+        end
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
             @offering.default_offering = true
             @offering.save
           else
+            # eg:"The Investigation Testing Water Temperature is already assigned in a class"
+            # displayed when trying to create a offering for the runnable in default class.
             error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
             @offering.destroy
             render :update do |page|
@@ -291,15 +297,18 @@ class Portal::ClazzesController < ApplicationController
   # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
   def remove_offering
     @portal_clazz = Portal::Clazz.find(params[:id])
-    dom_id = params[:dragged_dom_id]
-    container = params[:dropped_dom_id]
-    offering_id = params[:offering_id]
-    @offering = Portal::Offering.find(offering_id)
+    dom_id        = params[:dragged_dom_id]
+    container     = params[:dropped_dom_id]
+    offering_id   = params[:offering_id]
+    @offering     = Portal::Offering.find(offering_id)
+
     if (@offering && @offering.can_be_deleted?)
       @runnable = @offering.runnable
       @offering.destroy
-      @portal_clazz.reload
+    else
+      @offering.deactivate!
     end
+    @portal_clazz.reload
     if container
       render :update do |page|
         page << "var container = $('#{container}');"

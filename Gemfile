@@ -1,12 +1,10 @@
 source "http://rubygems.org"
 
 #### COMMON
-  platforms :ruby do
-    if ENV['RB_MYSQL2']
-      gem "mysql2",             "0.2.7"
-    else
-      gem "mysql",              "~>2.7"
-    end
+  if ENV['RB_MYSQL2']
+    gem "mysql2",             "0.2.7", :platforms => [:ruby,:mingw]
+  else
+    gem "mysql",              "~>2.7", :platforms => [:ruby,:mingw]
   end
 
   platforms :jruby do
@@ -16,7 +14,11 @@ source "http://rubygems.org"
     gem "ffi-ncurses",                      "~>0.3.3"
   end
 
-  gem "rails",                "2.3.11"
+  platforms :mingw do
+    gem "win32-open3"
+  end
+
+  gem "rails",                "2.3.12"
   gem "arrayfields"
   gem "hpricot",              "0.6.164"
   gem "httpclient",           "~> 2.1.5.2"
@@ -36,7 +38,7 @@ source "http://rubygems.org"
   # use a merge of ghazel and tracksimple ar-extensions forks
   # for mysql2, remove of deprecation warnings, and fixing gemspec so it works with bundler
   git "git://github.com/concord-consortium/ar-extensions.git" do
-    gem "ar-extensions",        "~> 0.9.3"
+    gem "ar-extensions",        "~> 0.9.4"
   end
   gem "fastercsv",            "   1.5.0"
   gem "net-sftp",             "   2.0.2",   :require => "net/sftp"
@@ -45,6 +47,10 @@ source "http://rubygems.org"
   gem "paperclip"
   gem "acts-as-taggable-on"
   gem "nokogiri",             "~> 1.4.4"
+  gem 'rdoc',                 "~> 3.6.1"
+  gem 'json',                 "~> 1.5.1"
+  gem 'newrelic_rpm',          "~> 3.3.0"
+  gem 'calendar_date_select'
 
   #git "/Users/npaessel/lab/ruby/deep_cloneable", :branch => "cloneable_assocations" do
   git "git://github.com/concord-consortium/deep_cloneable.git", :branch => "cloneable_assocations" do
@@ -56,17 +62,20 @@ group :development do
   gem "wirble"
   gem "what_methods"
   gem "hirb"
-  gem "ruby-debug",     :platforms => :mri_18
+  gem "ruby-debug",     :platforms => [:mri_18, :mingw_18]
+  gem "awesome_print"
+  gem "interactive_editor"
+  gem "pry"
 end
 
 group :test do
   #gem "gherkin",           "~>2.3"
-  gem "cucumber",          "~>0.10.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber"))
-  gem "cucumber-rails",    "~>0.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/cucumber-rails"))
-  gem "database_cleaner",  "~>0.6.6" #unless File.directory?(File.join(Rails.root, "vendor/plugins/database_cleaner"))
-  gem "capybara",          "~>0.4" #unless File.directory?(File.join(Rails.root, "vendor/plugins/capybara"))
-  gem "rspec",             "~>1.3.0" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec"))
-  gem "rspec-rails",       "~>1.3.2" #unless File.directory?(File.join(Rails.root, "vendor/plugins/rspec-rails"))
+  gem "cucumber",          "~>0.10.0"
+  gem "cucumber-rails",    "~>0.3.2"
+  gem "database_cleaner",  "~>0.6.6"
+  gem "capybara",          "~>0.4"
+  gem "rspec",             "~>1.3.0"
+  gem "rspec-rails",       "~>1.3.2"
   gem "factory_girl",      "= 1.2.3"
   gem "email_spec",        "= 0.3.5"
   gem "fakeweb",           "~>1.2.8"

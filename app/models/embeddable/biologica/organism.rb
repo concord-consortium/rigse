@@ -66,9 +66,6 @@ end
   default_value_for :sex, -1
   default_value_for :fatal_characteristics, true
 
-  def self.display_name
-    "Biologica Organism"
-  end
   
   
   def self.male

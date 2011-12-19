@@ -42,9 +42,6 @@ class Embeddable::Biologica::World < ActiveRecord::Base
 
   send_update_events_to :investigations
 
-  def self.display_name
-    "Biologica World"
-  end
   
   def self.by_scope(scope)
     if scope && scope.class != Embeddable::Biologica::World

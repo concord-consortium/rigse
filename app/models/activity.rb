@@ -124,10 +124,6 @@ class Activity < ActiveRecord::Base
       @@searchable_attributes
     end
 
-    def display_name
-      "Activity"
-    end
-
     def search_list(options)
       name = options[:name]
       activities = Activity.unarchived.like(name)
@@ -154,9 +150,6 @@ class Activity < ActiveRecord::Base
     sections
   end
 
-  def self.display_name
-    'Activity'
-  end
 
   def left_nav_panel_width
     300
@@ -279,7 +272,7 @@ class Activity < ActiveRecord::Base
 
   # returns an ordered list of graphables.
   def graphs_and_predictors
-    ordered_embeddables.select { |e| e.kind_of?(Embeddable::Diy::Sensor) || e.kind_of? (Embeddable::DataCollector) }
+    ordered_embeddables.select { |e| e.kind_of?(Embeddable::Diy::Sensor) || e.kind_of?(Embeddable::DataCollector) }
   end
 
   # retuns a list of embeddables ordered by their 

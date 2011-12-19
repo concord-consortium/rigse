@@ -85,12 +85,12 @@ module TagDefaults
 
       if portal_clazz && portal_clazz.teacher
         user ||= portal_clazz.teacher.user
-        offerings = portal_clazz.offerings
+        offerings = portal_clazz.offerings.find(:all, :include => :runnable)
         off_runnables= offerings.map { |o| o.runnable }
       end
       
       # Add exemplar activities
-      activities = opts[:activities] || self.published_exemplars # self should be publishable
+      activities = opts[:activities] || self.published_exemplars.find(:all, :include => [:user, :grade_levels, :subject_areas, :units]) # self should be publishable
       key_map = activities.map { |a| {:activity => a, :keys => a.bin_keys }}
       if user
         # Add all un archived activities of the user:
@@ -111,7 +111,7 @@ module TagDefaults
 
         # Add published activities by others (non-exemplars)
         if (user.portal_teacher || user.has_role?("admin") || user.has_role?("manager") || user.has_role?("author"))
-          other_activities = self.published_non_exemplars
+          other_activities = self.published_non_exemplars.find(:all, :include => [:user, :grade_levels, :subject_areas, :units] )
           other_activities.reject! { |activity| activity.user == user }
           others_key_map = other_activities.map do |a|
             # todo
@@ -129,22 +129,22 @@ module TagDefaults
       end
 
       # Add tests
-      tests = Page.published
+      tests = Page.published.find(:all, :include => [:cohorts, :grade_levels, :subject_areas, :units])
       # filter based on cohorts
       if user.has_role?("admin", "manager")
         # no filtering
       elsif user.portal_teacher
-        teacher_cohorts = user.portal_teacher.cohort_list
+        teacher_cohorts = user.portal_teacher.cohorts.find(:all)
         tests = tests.select { |test|
-          test.cohort_list.any? { |test_cohort| teacher_cohorts.include? test_cohort }
+          test.cohorts.any? { |test_cohort| teacher_cohorts.include? test_cohort }
         }
       else
-        tests.delete_if { |test| test.cohort_list.size > 0 }
+        tests.delete_if { |test| test.cohorts.size > 0 }
       end
       
       key_map = key_map + tests.map {|p| 
         keys = p.bin_keys
-        {:activity => p, :keys => p.bin_keys, :test => true}
+        {:activity => p, :keys => keys, :test => true}
       }
 
       results = {}
@@ -231,13 +231,16 @@ module TagDefaults
   ## Return the set of tag-keys[grade,subject,unit] for this instance.
   def bin_keys
     results = []
-    self.grade_level_list.each do |grade|
-      self.subject_area_list.each do |subject|
-        self.unit_list.each do |unit|
-          results << [grade,subject,unit]
+    gll = self.grade_levels
+    sal = self.subject_areas
+    ul = self.units
+    gll.each do |grade|
+      sal.each do |subject|
+        ul.each do |unit|
+          results << [grade.name,subject.name,unit.name]
         end
       end
     end
-    results
+    return results
   end
 end

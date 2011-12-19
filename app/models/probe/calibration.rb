@@ -28,4 +28,16 @@ class Probe::Calibration < ActiveRecord::Base
     c
   end
   
+  def otml_filter_tag_symbol
+    self.data_filter.otrunk_object_class.split(".")[-1].to_sym
+  end
+
+  def otml_filter_tag_attributes
+    attrib = {}
+    attrib[:k0] = self.k0 if self.k0
+    attrib[:k1] = self.k1 if self.k1
+    attrib[:k2] = self.k2 if self.k2
+    attrib[:k3] = self.k3 if self.k3
+    attrib
+  end
 end
