@@ -47,4 +47,59 @@ describe ApplicationHelper do
       end
     end
   end
+  
+  describe "settings_for" do
+    it "should return APP_CONFIG values" do
+      APP_CONFIG[:foo] = 42
+      settings_for(:foo).should == 42
+    end
+  end
+
+  describe "current_user_can_author" do
+    describe "when the current user is an author" do
+      before(:each) do
+        @user = mock_model(User)
+        @user.stub!(:has_role?).with("author").and_return(true)
+        stub!(:current_user).and_return(@user)
+      end
+      it "should return true" do
+        current_user_can_author.should == true
+      end
+    end
+
+    describe "when the current user is not an author" do
+      before(:each) do
+        @user = mock_model(User, :portal_teacher => nil)
+        @user.stub!(:has_role?).with("author").and_return(false)
+        stub!(:current_user).and_return(@user)
+        @project = mock_model(Admin::Project, :teachers_can_author? => true)
+        Admin::Project.stub!(:default_project).and_return(@project)
+      end
+      it "should return false" do
+        current_user_can_author.should == false
+      end
+    end
+
+    describe "when the current user is a teacher" do
+      before(:each) do
+        @teacher = mock_model(User,:portal_teacher => true)
+        @teacher.stub!(:has_role?).with("author").and_return(false)
+        stub!(:current_user).and_return(@teacher)
+      end
+      describe "when teachers can author" do
+        it "should return true" do
+          @project = mock_model(Admin::Project, :teachers_can_author? => true)
+          Admin::Project.stub!(:default_project).and_return(@project)
+          current_user_can_author.should == true
+        end
+      end
+      describe "when teachers can't author" do
+        it "should return false" do  
+          @project = mock_model(Admin::Project, :teachers_can_author? => false)
+          Admin::Project.stub!(:default_project).and_return(@project)
+          current_user_can_author.should == false
+        end
+      end
+    end
+  end
 end
