@@ -6,7 +6,7 @@
 # dont deploy itsisu-production to it.
 # set :deploy_to, "/web/production/itsisu_units"
 # set :branch, "itsisu-units"
-
+set :gateway, "otto.concord.org"
 set :deploy_to, "/web/portal"
 set :branch, "itsisu-production"
 
