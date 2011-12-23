@@ -1,31 +1,28 @@
 - form_for portal_teacher do |f|
   = error_messages_for 'user'
   = error_messages_for 'portal_teacher', :object_name => 'teacher'
-  - field_set_tag 'personal info' do
-    .aligned
-      %ul
-        %li
-          = label_tag :user, 'First Name: ', :class=>"right"
-          = text_field :user, :first_name, {:live => false}
-        
-        %li  
-          = label_tag :user, 'Last Name: ', :class=>"right"
-          = text_field :user, :last_name, {:live => false}
-        
-        %li
-          = label_tag :user, 'Email: ', :class=>"right"
-          = text_field :user, :email, {:live => false}
+  = field_set_tag 'personal info' do
+    %table.form
+      %tr
+        %td= label_tag :user, 'First Name: ', :class=>"right"
+        %td= text_field :user, :first_name, {:live => false}
+      
+      %tr  
+        %td= label_tag :user, 'Last Name: ', :class=>"right"
+        %td= text_field :user, :last_name, {:live => false}
+      
+      %tr
+        %td= label_tag :user, 'Email: ', :class=>"right"
+        %td= text_field :user, :email, {:live => false}
 
-  = render :partial => 'schools', :locals => { :portal_teacher => portal_teacher, :districts => portal_districts }
+      %tr
+        %td{:colspan=>2, :id => 'school_selector'}
+          = render :partial => 'shared/school_selector',
+            :locals => { :school_selector => school_selector }
+      = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
+	  = render :partial => 'cohorts', :locals => { :portal_teacher => portal_teacher }
+      %tr
+        %td
+        %td
+          = f.submit 'Submit'
 
-  = render :partial => 'shared/login_fields', :locals => { :user => portal_teacher.user }
-
-  = render :partial => 'users/source', :locals => { :user => portal_teacher.user }
-
-  = render :partial => 'cohorts', :locals => { :portal_teacher => portal_teacher }
-
-  .aligned
-    = f.submit 'Submit'
-
-  :javascript
-    new Chosen($('school_id'))
