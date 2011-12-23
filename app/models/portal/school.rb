@@ -110,13 +110,22 @@ class Portal::School < ActiveRecord::Base
       found_instance
     end
 
-    def find_by_similar_name_or_new(name,username='automatic process')
-      # this is slow, but it might work for us
-      all_names = Portal::School.find_by_sql "SELECT id, name FROM portal_schools"
+    def find_by_similar_or_new(attrs,username='automatic process')
+      found = Portal::School.find(:first, :conditions => attrs)
+      unless found
+        attrs[:description] ||= "created by #{username}"
+        found = Portal::School.new(attrs)
+      end
+      return found
+    end
+
+    def find_by_similar_name_or_new(name,username='automatic process',district=Portal::District.default)
+      sql = "SELECT id, name FROM portal_schools where district_id=?"
+      all_names = Portal::School.find_by_sql [sql,district.id]
       found = all_names.detect { |s| s.name.upcase.gsub(/[^A-Z]/,'') == name.upcase.gsub(/[^A-Z]/,'') }
       unless found
-        found = Portal::School.new(:name => name, :description => "name created by #{username}")
-        found.district = Portal::District.default
+        found = Portal::School.new(:name => name, :description => "#{name} created by #{username}")
+        found.district = district
       end
       return found
     end

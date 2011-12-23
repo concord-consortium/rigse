@@ -19,7 +19,7 @@ javascripts:
   - pagination
   - workgroup
   - chosen.proto
-  
+  - pt_event_simulate  
 stylesheets: 
 - base: 
   - app
@@ -150,6 +150,7 @@ stylesheets:
   - drop_down
   - data_table
   - reports
+  - chosen
 
 - genomedynamics:
   - app

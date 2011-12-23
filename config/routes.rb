@@ -182,8 +182,9 @@ RailsPortal::Application.routes.draw do
         get :description
       end
     end
-  end
 
+  end
+  match '/portal/school_selector/update' => 'portal/school_selector#update'
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
   match '/register' => 'users#create', :as => :register
