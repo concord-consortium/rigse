@@ -5,6 +5,12 @@ GIT
     ar-extensions (0.9.4)
       activerecord (~> 2.1)
 
+GIT
+  remote: git://github.com/concord-consortium/rpm.git
+  revision: 49f8a55d9b72ee4e62d600b27ec8b3de401d0625
+  specs:
+    newrelic_rpm (3.3.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -109,7 +115,6 @@ GEM
     net-ssh (2.1.4)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.3.0)
     nokogiri (1.4.4)
     nokogiri (1.4.4-x86-mingw32)
     open4 (0.9.6)
@@ -230,7 +235,7 @@ DEPENDENCIES
   maruku (~> 0.6)
   mysql (~> 2.7)
   net-sftp (= 2.0.2)
-  newrelic_rpm (~> 3.3.0)
+  newrelic_rpm (~> 3.3.0)!
   nokogiri (~> 1.4.4)
   open4 (~> 0.9.6)
   paperclip
