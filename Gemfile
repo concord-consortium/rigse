@@ -49,9 +49,12 @@ source "http://rubygems.org"
   gem "nokogiri",             "~> 1.4.4"
   gem 'rdoc',                 "~> 3.6.1"
   gem 'json',                 "~> 1.5.1"
-  gem 'newrelic_rpm',          "~> 3.3.0"
   gem 'calendar_date_select'
-
+  
+  # gem 'newrelic_rpm'
+  # use a patched version of newrelic compatible with older linux
+  # kernels.  See: https://github.com/newrelic/rpm/pull/47
+  gem 'newrelic_rpm',          "~> 3.3.0", :git => "git://github.com/concord-consortium/rpm.git"
   #git "/Users/npaessel/lab/ruby/deep_cloneable", :branch => "cloneable_assocations" do
   git "git://github.com/concord-consortium/deep_cloneable.git", :branch => "cloneable_assocations" do
     gem "deep_cloneable"
