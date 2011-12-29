@@ -31,6 +31,7 @@ GEM
     arrayfields (4.7.4)
     awesome_print (0.3.2)
     builder (3.0.0)
+    calendar_date_select (1.16.3)
     capistrano (2.6.0)
       highline
       net-scp (>= 1.0.0)
@@ -206,6 +207,7 @@ DEPENDENCIES
   ar-extensions (~> 0.9.4)!
   arrayfields
   awesome_print
+  calendar_date_select
   capistrano-ext
   capybara (~> 0.4)
   ci_reporter (~> 1.6.4)
@@ -228,6 +230,7 @@ DEPENDENCIES
   interactive_editor
   jnlp (~> 0.7.2)
   jruby-openssl (>= 0.6)
+  json (~> 1.5.1)
   launchy
   maruku (~> 0.6)
   mysql (~> 2.7)
