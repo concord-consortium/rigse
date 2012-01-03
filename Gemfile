@@ -6,7 +6,7 @@ source "http://rubygems.org"
 #### COMMON
   platforms :ruby do
     if ENV['RB_MYSQL2']
-      gem "mysql2",             '< 0.3'
+      gem "mysql2",             '< 0.3' # version restriction is because 0.3 and higher require rails 3.1
     else
       gem "mysql",              "~>2.7"
     end
