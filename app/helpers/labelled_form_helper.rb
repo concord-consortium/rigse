@@ -10,7 +10,7 @@ module LabelledFormHelper
       define_method(name) do |field, *args|
         options = args.extract_options!
         label = label(field, options[:label], :class => options[:label_class])
-        @template.content_tag(:p, label +'<br/>' + super)  #wrap with a paragraph 
+        @template.content_tag(:p, label + "<br/>".html_safe + super(field, *args))  #wrap with a paragraph
       end
     end
   end
