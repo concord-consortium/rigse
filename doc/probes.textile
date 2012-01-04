@@ -1,0 +1,47 @@
+h1. Probe support
+
+h2. Models
+
+h3. ProbeType 
+
+types of probes like temperature, pressure, ...
+contains probe type id used by java sensor library as well as information for graph defaults
+
+h3. VendorInterfaces
+
+interfaces used to connect probes to computer.  A portal user needs to select one of these in order
+to use probes. 
+
+h3. PhysicalUnits
+
+h3. DeviceConfigs
+
+h3. DataFilters
+
+h3. Calibrations
+
+h2. Adding new probe types
+
+The root storage location for probe information is in the yaml files located in config/probe_configurations
+There are rake tasks for loading this probe information into the database, and saving it back out again.
+
+To add a new probe type you have two options,
+# use the UI in the portal to add and edit the probe type, and export the yaml files
+# edit the yaml directly
+
+The problem with #1 is that the yaml exporter doesn't keep the ordering of properties when 
+it exports them yaml.  So to make a nice changeset that only contains the changes it
+is better to edit the yaml directly. 
+
+When editing the yaml directly you need to make sure you to make a new database id for the probe type.
+And you'll need a uuid for the probe type too.  After editing the yaml, run this rake task to import it:
+<pre><code>rake db:backup:load_probe_configurations</code></pre>
+
+Then you can run this rake task to make or update a test investigation:
+<pre><code>rake app:setup:create_probe_testing_investigation</code></pre>
+That investigation contains all the registered sensor types and calibrations.
+
+h2. Notes
+
+* a project can enable or disable VendorInterfaces in the project settings
+
