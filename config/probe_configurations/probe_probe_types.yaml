@@ -219,3 +219,14 @@
   min: 0.0
   step_size: 1.0
   ptype: 36
+- name: Oxygen Gas
+  uuid: 64862ec4-3640-11e1-9319-e80688fffebc
+  port: 0
+  period: 1.0
+  max: 100.0
+  id: 22
+  display_precision: -2
+  unit: "%"
+  min: 0.0
+  step_size: 0.01
+  ptype: 19
