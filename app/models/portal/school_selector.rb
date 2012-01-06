@@ -119,6 +119,11 @@ class Portal::SchoolSelector
     end
   end
 
+  def validate_country
+    @country ||= USA
+    return true
+  end
+
   def validate_state
     if @country != USA
       @state = default_state_for(@country)
