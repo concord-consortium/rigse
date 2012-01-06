@@ -1,7 +1,7 @@
 class NationalDistrictImporter
-  def tick(count, interval=25)
+  def tick(count, interval=25,string='.')
     if count % interval == 0
-      print '.'
+      print string
       STDOUT.flush
     end
   end
@@ -9,9 +9,6 @@ class NationalDistrictImporter
   def _import_schools(school_values)
     portal_school_field_names   = [:name, :uuid, :state, :ncessch, :zipcode, :district_id, :nces_school_id]
     import_options              = {:validate => false }
-    # school_values.each do |row|
-    #   puts "DB INSERT: #{row.split(", ")}"
-    # end
     Portal::School.import(portal_school_field_names, school_values, import_options)
     nil
   end
@@ -20,9 +17,6 @@ class NationalDistrictImporter
     portal_district_field_names = [:name, :uuid, :state, :leaid, :zipcode, :nces_district_id]
     import_options              = {:validate => false }
     Portal::District.import(portal_district_field_names, district_values, import_options)
-    # district_values.each do |row|
-    #   puts "DB INSERT: #{row.split(", ")}"
-    # end
   end
 
   def load_districts
@@ -66,7 +60,7 @@ class NationalDistrictImporter
   end
 
   def load_schools
-    districts_map = {} 
+    districts_map = {}
     Portal::District.find(:all, :select => "id, nces_district_id").each do |d|
       next unless d.nces_district_id
       districts_map[d.nces_district_id] = d.id
@@ -75,20 +69,29 @@ class NationalDistrictImporter
                                              :select => "id, nces_district_id, NCESSCH, LZIP, LEAID, SCHNAM, LSTATE")
     nces_school_ids     = nces_schools.map { |s| s.id }
 
-    existing_schools    = Portal::School.find(:all, 
+    existing_schools    = Portal::School.find(:all,
                                               :conditions => {:nces_school_id => nces_school_ids},
                                               :select => "id, nces_school_id")
     existing_school_ids = existing_schools.map { |s| s.nces_school_id }
-
+    import_count = nces_schools.size - existing_school_ids.size
     puts "found    : #{nces_schools.size} national schools to import"
     puts "found    : #{existing_school_ids.size} pre-imported schools"
-    puts "         : #{nces_schools.size - existing_school_ids.size} schools will be imported"
+    puts "         : #{import_count} schools will be imported"
 
     school_values = []
+    added = 0
+    # this seems ineficient, but nces_schools.reject! was also really slow.
     nces_schools.each_with_index do |nces_school,count|
       tick count
-      next if existing_school_ids.include? nces_school.id
 
+      break if added >= import_count
+      if existing_school_ids.include? nces_school.id
+        tick(count,25,'.')
+        next
+      end
+      tick(count,25,'+')
+
+      added = added + 1
       district_id = districts_map[nces_school.nces_district_id]
       existing_school ||= Portal::School.find(:first,
                                               :conditions  => {
@@ -101,11 +104,11 @@ class NationalDistrictImporter
         existing_school.save
       else
         school_values << [
-          nces_school.capitalized_name, 
-          UUIDTools::UUID.timestamp_create.to_s, 
-          nces_school.LSTATE, 
-          nces_school.NCESSCH, 
-          nces_school.LZIP,  
+          nces_school.capitalized_name,
+          UUIDTools::UUID.timestamp_create.to_s,
+          nces_school.LSTATE,
+          nces_school.NCESSCH,
+          nces_school.LZIP,
           district_id,
           nces_school.id]
       end
