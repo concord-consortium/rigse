@@ -581,7 +581,7 @@ namespace :convert do
   desc "create an investigation to test all know probe_type / calibration combinations"
   task :create_probe_testing_investigation, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
-        "rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
+        "bundle exec rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
   end
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
