@@ -228,7 +228,7 @@ The following codes were calculated from the school's corresponding GSLO and GSH
   # Not a setup-task, import all schools, try to avoid re-importing existing districts.
   desc "import all nces (nationaL) districst missing from portal districts. Will result in one portal district per nces district"
   task :import_all_national_districts => :environment do
-    imp = NationalDistrictImpoter.new
+    imp = NationalDistrictImporter.new
     imp.load_districts
     imp.load_schools
   end
