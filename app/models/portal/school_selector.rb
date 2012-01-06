@@ -250,7 +250,7 @@ class Portal::SchoolSelector
 
   def select_args(field)
     value = self.send field
-    if value && (value.respond_to? :id)
+    if value && (value.kind_of? ActiveRecord::Base)
       value = value.id
     end
     return [:school_selector, field, self.choices[field] || [], {:selected => value, :include_blank => true}]
