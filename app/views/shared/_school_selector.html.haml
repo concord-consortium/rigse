@@ -11,7 +11,7 @@
     %td
       -# %span{:id => "#{field.to_s}_choice"}
       %span{:id => "#{field.to_s}_choice"}
-        = select(*school_selector.select_args(field),{:style=>'min-width: 120px;'})
+        = select(*school_selector.select_args(field) << {:style=>'width: 300px;'})
         - if can_create
           .tiny.help{:id => "#{field.to_s}_toggle_write_in"}
             I can't find my  #{field.to_s} in the list.
@@ -25,7 +25,7 @@
     - if can_create
       :javascript
         var value = 'Type your #{field.to_s} name here';
-        
+
         $('#{field.to_s}_toggle_write_in').observe("click", function(e) {
           $('#{field.to_s}_choice').hide();
           $$('select#school_selector_#{field.to_s} option').each(function(ele){
