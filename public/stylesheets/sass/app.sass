@@ -74,6 +74,17 @@ ul, ol
 table
   border-collapse: collapse
   margin: 1em 0
+  .form 
+    width: 100%
+    text-align: left
+    tr 
+      vertical-align: top
+    td 
+      padding-top: 10px
+      padding-left: 10px
+    td:nth-child(odd) 
+      width: 30%
+      text-align: right 
 
 body
   background:
@@ -1185,6 +1196,21 @@ table#help_request_list
     background: #ffc
     a
       color: #da5936
+.form
+  .help
+    color: #ee864e    
+    text-decoration: underline
+    display: inline-block
+    background: inherit
+    border: none
+    font-size: 11px
+    padding: inherit
+    position: relative
+    z-index: default
+    -mox-box-shadow: none
+    -webkit-box-shadow: none
+    box-shadow: none
+
 .help
   background: #fff
   border: solid 1px #e3e2dd

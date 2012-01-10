@@ -23,11 +23,12 @@ class Portal::TeachersController < ApplicationController
     end
   end
 
-  # GET /portal_teachers/new
+  # GET /portal_teachers/view
   # GET /portal_teachers/new.xml
   def new
     @portal_teacher = Portal::Teacher.new
-    
+    @school_selector = Portal::SchoolSelector.new(params)
+    #
     # TODO: We dont use domains or grades for teachers anymore.
     load_domains_and_grades
     respond_to do |format|
@@ -39,17 +40,14 @@ class Portal::TeachersController < ApplicationController
   # GET /portal_teachers/1/edit
   def edit
     @portal_teacher = Portal::Teacher.find(params[:id])
-
-    # TODO: We dont use domains or grades for teachers anymore.
-    load_domains_and_grades
-
     @user = @portal_teacher.user
+    @school_selector = Portal::SchoolSelector.new(params)
   end
 
   # POST /portal_teachers
   # POST /portal_teachers.xml
+  # TODO: move some of this into the teachers model.
   def create
-    portal_school = Portal::School.find_by_id(params[:school][:id])
     
     # TODO: Teachers DO NOT HAVE grades or Domains.
     @portal_grade = nil
@@ -63,32 +61,27 @@ class Portal::TeachersController < ApplicationController
     load_domains_and_grades
 
     @user = User.new(params[:user])
-    #if @user && @user.valid?
-    #  @user.register!
-    #  @user.save
-    #end
-        
+    @school_selector = Portal::SchoolSelector.new(params)
+
+    if (@user.valid?)
+      # TODO: save backing DB objects
+      # @school_selector.save
+    end
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
       t.domain = @domain
-      t.schools << portal_school if !portal_school.nil?
+      t.schools << @school_selector.school if @school_selector.valid?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
-    
-    #if @user.errors.empty? && @portal_teacher.save
-    if @user.valid? && @portal_teacher.valid? && !portal_school.nil?
-      if @user.register! && @portal_teacher.save
+    if @school_selector.valid? && @user.register! && @portal_teacher.save
       # will redirect:
-        successful_creation(@user)
-        return
-      end
+      return successful_creation(@user)
     end
 
     # Luckily, ActiveRecord errors allow you to attach errors to arbitrary, non-existant attributes
     # will redirect:
-    @user.errors.add(:you, "must select a school") if portal_school.nil?
+    @user.errors.add(:you, "must select a school") unless @school_selector.valid?
     failed_creation
-    
   end
 
   # PUT /portal_teachers/1
@@ -97,7 +90,6 @@ class Portal::TeachersController < ApplicationController
     @portal_teacher = Portal::Teacher.find(params[:id])
 
     respond_to do |format|
-      params[:teacher][:cohort_list] ||= [] if params[:update_teacher_cohort_list]
       if @portal_teacher.update_attributes(params[:teacher])
         flash[:notice] = 'Portal::Teacher was successfully updated.'
         format.html { redirect_to(@portal_teacher) }
