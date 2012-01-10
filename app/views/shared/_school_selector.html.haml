@@ -2,6 +2,7 @@
   %tr
     %td{:colspan=>2}
       = hidden_field 'school_selector', 'previous_attr'
+      = hidden_field 'school_selector', 'use_default_school'
   - school_selector.attr_order.each do |field|
     - choices = school_selector.choices[field]
     - can_create = school_selector.allow_teacher_creation(field)
@@ -75,5 +76,9 @@
     });
   });
 
+  // just pick any school.
+  var useDefaultSchool= function() {
+    $('school_selector_use_default_school').value = 'yes';
+  };
 
 

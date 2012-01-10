@@ -1,7 +1,7 @@
 When /^I select a school from the list of schools$/ do
-  school = Portal::School.first
-  When "I select \"#{school.name}\" from \"school_id\""
+  page.evaluate_script("useDefaultSchool();")
 end
+
 
 Then /^I should see the the teacher signup form$/ do
   Then I should see "Teacher Signup Page"
