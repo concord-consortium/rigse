@@ -11,7 +11,7 @@ class Portal::SchoolSelector
   attr_accessor :school           # int AR eg 212
   attr_accessor :school_name      # string
   attr_accessor :previous_attr    # hash old values
-
+  attr_accessor :use_default_school
   def self.country_choices
     return @@country_choices if (@@country_choices && (! @@country_choices.empty?))
     @@country_choices = []
@@ -99,6 +99,10 @@ class Portal::SchoolSelector
       @needs ||= attr unless validate_attr(attr)
       @choices[attr] = (self.send(choice_method) || [])
       previous_change ||= changed
+    end
+    if self.use_default_school
+      self.school = Portal::School.first
+      @needs = nil
     end
   end
 

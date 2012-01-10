@@ -2037,7 +2037,7 @@ ActiveRecord::Schema.define(:version => 20111021210946) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
   add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
+  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name", :length => {"name"=>"15", "scope_type"=>"15", "scope_id"=>nil}
   add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "student_views", :force => true do |t|

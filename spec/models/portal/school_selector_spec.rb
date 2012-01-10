@@ -12,11 +12,11 @@ describe Portal::SchoolSelector do
     Admin::Project.stub!(:default_project).and_return(@adhoc)
   end
   describe "when presented for the first time (no query params)" do
-    it "needs a country" do
-      new_selector({}).needs.should == :country
+    it "needs a state" do
+      new_selector({}).needs.should == :state
     end
-    it "provides country options" do
-      new_selector({}).choices[:country].should include Portal::SchoolSelector::USA
+    it "provides state options" do
+      new_selector({}).choices[:state].should include "MA"
     end
   end
 
@@ -61,7 +61,7 @@ describe Portal::SchoolSelector do
 
     describe "when the user has selected Massachussetts as the state" do
       before(:each) do
-        @selector = new_selector ({:country => Portal::SchoolSelector::USA, :state => 'MA'})
+        @selector = new_selector({:country => Portal::SchoolSelector::USA, :state => 'MA'})
       end
 
       it "still requires a district" do
@@ -76,7 +76,7 @@ describe Portal::SchoolSelector do
 
       describe "when the user has picked the first district in Massachussetts" do
         before(:each) do
-          @selector = new_selector ({:country => Portal::SchoolSelector::USA, :state => 'MA', :district => @district1.id.to_s})
+          @selector = new_selector({:country => Portal::SchoolSelector::USA, :state => 'MA', :district => @district1.id.to_s})
         end
 
         it "no longer requires a district" do
@@ -96,7 +96,7 @@ describe Portal::SchoolSelector do
 
       describe "when the teacher hasn't picked a school" do
         before(:each) do
-          @selector = new_selector ({
+          @selector = new_selector({
             :country => Portal::SchoolSelector::USA,
             :state => 'MA',
             :district => @district1.id.to_s
@@ -111,6 +111,11 @@ describe Portal::SchoolSelector do
         describe "when the portal allows adhoc schools" do
           before(:each) do
             Admin::Project.stub!(:default_project).and_return(@adhoc)
+            @selector = new_selector({
+            :country => Portal::SchoolSelector::USA,
+            :state => 'MA',
+            :district => @district1.id.to_s
+          })
           end
           it "should let teachers add new schools" do
             @selector.allow_teacher_creation.should be_true
@@ -120,8 +125,8 @@ describe Portal::SchoolSelector do
           before(:each) do
             Admin::Project.stub!(:default_project).and_return(@no_adhoc)
           end
-          it "shouldn't let teachers add new schools" do
-            @selector.allow_teacher_creation.should be_false
+          it "shouldn't let teachers add new district" do
+            @selector.allow_teacher_creation(:district).should be_false
           end
         end
       end
@@ -129,7 +134,7 @@ describe Portal::SchoolSelector do
       describe "picking a school" do
         describe "when the school exists" do
           before(:each) do
-            @selector = new_selector ({
+            @selector = new_selector({
               :country => Portal::SchoolSelector::USA,
               :state => 'MA',
               :district => @district1.id.to_s,
