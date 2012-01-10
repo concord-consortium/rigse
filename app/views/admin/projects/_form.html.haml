@@ -56,6 +56,12 @@
             = f.check_box :opportunistic_installer
             %br
             (This option changes the boot up process of the installer to automatically launch the non installer jnlp if no installation is found.)
+          %li
+            %b
+            = f.label :allow_adhoc_schools, "Teachers can create schools:", :style => "display:inline;"
+            = f.check_box :allow_adhoc_schools
+            %br
+            (This option changes whether or not teachers can create schools)
 
       - field_set_tag '<b>Maven Jnlp</b>', { :id => dom_id_for(admin_project, :maven_jnlp) } do
         = render :partial => 'maven_jnlp_form', :locals => { :admin_project => admin_project }

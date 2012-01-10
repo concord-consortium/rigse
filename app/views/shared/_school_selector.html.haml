@@ -1,0 +1,84 @@
+%table.form{:style => "font-weight: normal;"}
+  %tr
+    %td{:colspan=>2}
+      = hidden_field 'school_selector', 'previous_attr'
+      = hidden_field 'school_selector', 'use_default_school'
+  - school_selector.attr_order.each do |field|
+    - choices = school_selector.choices[field]
+    - can_create = school_selector.allow_teacher_creation(field)
+    - next unless (choices && choices.size > 0) || can_create
+    %tr
+    %td= label_tag field, "#{field.to_s().capitalize}:"
+    %td
+      -# %span{:id => "#{field.to_s}_choice"}
+      %span{:id => "#{field.to_s}_choice"}
+        = select(*school_selector.select_args(field) << {:style=>'width: 300px;'})
+        - if can_create
+          .tiny.help{:id => "#{field.to_s}_toggle_write_in"}
+            I can't find my  #{field.to_s} in the list.
+      - if school_selector.allow_teacher_creation(field)
+        %span{:id => "#{field.to_s}_write_in", :style => 'display: none;'}
+          = text_field "school_selector", "#{field}_name", {:live => false }
+          .tiny.help{:id => "#{field.to_s}_show_select"}
+            Go back to the #{field.to_s} list.
+    :javascript
+      new Chosen($('school_selector_#{field.to_s}'));
+    - if can_create
+      :javascript
+        var value = 'Type your #{field.to_s} name here';
+
+        $('#{field.to_s}_toggle_write_in').observe("click", function(e) {
+          $('#{field.to_s}_choice').hide();
+          $$('select#school_selector_#{field.to_s} option').each(function(ele){
+            ele.selected = false;
+          });
+
+          // $$('select#school_selector_#{field.to_s} option')[0].selected=true;
+          $('school_selector_#{field.to_s}_name').value = value;
+          $('#{field.to_s}_write_in').show();
+        });
+        $('#{field.to_s}_show_select').observe("click", function(e) {
+          $('#{field.to_s}_write_in').hide();
+          $('#{field.to_s}_choice').show();
+          $('school_selector_#{field.to_s}_name').value = '';
+        });
+
+:javascript
+  var selectors = $('school_selector').select('select','input');
+  var on_change_func = function() {
+    var url = '/portal/school_selector/update';
+    var params = $('new_portal_teacher').serialize();
+    var request = new Ajax.Updater('school_selector', url, {
+      method: 'post',
+      parameters: params,
+      evalScripts: true,
+      onLoading: function() {
+        $('school_selector').setOpacity(0.1);
+      },
+      onComplete: function() {
+        $('school_selector').setOpacity(1.0);
+      }
+    });
+  };
+  selectors.each(function(elem) {
+    elem.observe('change', function(event) {
+      on_change_func();
+    });
+  });
+
+  // disable the enter key on form input fields
+  $('school_selector').select('input').each( function(elem) {
+    elem.observe('keypress', function(event){
+      if(event.keyCode == Event.KEY_RETURN) {
+        Event.stop(event);
+        on_change_func();
+      }
+    });
+  });
+
+  // just pick any school.
+  var useDefaultSchool= function() {
+    $('school_selector_use_default_school').value = 'yes';
+  };
+
+

@@ -75,6 +75,16 @@
                     No
                   (The installer launcher will show the user a dialog and open the a page where the user can download the installer)
                   
+              %li
+                Teachers can create schools:
+                - if admin_project.allow_adhoc_schools?
+                  %b
+                    Yes
+                  (Teachers can create their own schools when registering.)
+                - else
+                  %b
+                    No
+                  (Teachers must choose their school from a list when registering.)
             - field_set_tag 'Maven Jnlp' do
               %p
                 Maven Jnlp Server:

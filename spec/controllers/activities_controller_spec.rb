@@ -1,7 +1,12 @@
 
 require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelper
 
+failing_themes = {
+  "xproject" => :itsi_su_specific_test
+}
+
 describe ActivitiesController do
+
   integrate_views
 
   before(:each) do
@@ -32,30 +37,29 @@ describe ActivitiesController do
     Activity.stub!(:published).and_return([@activity])
   end
 
-  describe "the itsisu theme" do
-    before(:each) do
-      ApplicationController.set_theme('itsisu')
-    end
-    describe "index" do
-      describe "for a teacher" do
-        before(:each) do
-          stub_current_user :teacher_user
-        end
+  describe "index" do
+    describe "for a teacher" do
+      before(:each) do
+        stub_current_user :teacher_user
+      end
 
-        describe "the project allows teacher editing" do
-          before(:each) do
-            @current_project.stub!(:teachers_can_author?).and_return(true)
-          end
-          it "should have a 'Create Activity' button" do
+      describe "the project allows teacher editing" do
+        before(:each) do
+          @current_project.stub!(:teachers_can_author?).and_return(true)
+        end
+        it "should have a 'Create Activity' button" do
+          fails_in_themes(failing_themes) do
             get :index
             assert_select("a[href=/activities/new]")
           end
         end
-        describe "the project does not allowteacher editing" do
-          before(:each) do
-            @current_project.stub!(:teachers_can_author?).and_return(false)
-          end
-          it "should not have a 'Create Activity' button" do
+      end
+      describe "the project does not allowteacher editing" do
+        before(:each) do
+          @current_project.stub!(:teachers_can_author?).and_return(false)
+        end
+        it "should not have a 'Create Activity' button" do
+          fails_in_themes(failing_themes) do
             get :index
             assert_select("a[href=/activities/new]", 0)
           end
