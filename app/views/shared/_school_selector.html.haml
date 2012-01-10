@@ -43,15 +43,6 @@
         });
 
 :javascript
-  // disable the enter key on form input fields
-  $('school_selector').select('input').each( function(elem) {
-    elem.observe('keypress', function(event){
-      if(event.keyCode == Event.KEY_RETURN) {
-        Event.stop(event);
-      }
-    });
-  });
-
   var selectors = $('school_selector').select('select','input');
   var on_change_func = function() {
     var url = '/portal/school_selector/update';
@@ -73,3 +64,16 @@
       on_change_func();
     });
   });
+
+  // disable the enter key on form input fields
+  $('school_selector').select('input').each( function(elem) {
+    elem.observe('keypress', function(event){
+      if(event.keyCode == Event.KEY_RETURN) {
+        Event.stop(event);
+        on_change_func();
+      }
+    });
+  });
+
+
+
