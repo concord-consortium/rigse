@@ -262,7 +262,13 @@ class Portal::SchoolSelector
   end
 
   def allow_teacher_creation(field=:school)
-    acceptable_fields = [:district,:school]
+    acceptable_fields = []
+    if self.country  == USA
+      acceptable_fields << [:district] if self.state
+    else
+      acceptable_fields << [:district] if self.country
+    end
+    acceptable_fields << :school if self.district
     Admin::Project.default_project.allow_adhoc_schools && acceptable_fields.include?(field)
   end
 end
