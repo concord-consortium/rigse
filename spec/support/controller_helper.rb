@@ -174,6 +174,7 @@ def generate_default_project_and_jnlps_with_mocks
     :maven_jnlp_family              => @mock_maven_jnlp_family,
     :using_custom_css?              => false,
     :use_bitmap_snapshots?          => false,
+    :allow_adhoc_schools            => false,
     :allow_adhoc_schools?           => false,
     :require_user_consent?          => false,
     :allow_default_class            => false,
