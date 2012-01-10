@@ -11,7 +11,7 @@ class Portal::SchoolSelector
   attr_accessor :school           # int AR eg 212
   attr_accessor :school_name      # string
   attr_accessor :previous_attr    # hash old values
-
+  attr_accessor :use_default_school
   def self.country_choices
     return @@country_choices if (@@country_choices && (! @@country_choices.empty?))
     @@country_choices = []
@@ -100,6 +100,10 @@ class Portal::SchoolSelector
       @choices[attr] = (self.send(choice_method) || [])
       previous_change ||= changed
     end
+    if self.use_default_school
+      self.school = Portal::School.first
+      @needs = nil
+    end
   end
 
   def invalid?
@@ -117,6 +121,11 @@ class Portal::SchoolSelector
     else
       return !self.send(symbol).nil?
     end
+  end
+
+  def validate_country
+    @country ||= USA
+    return true
   end
 
   def validate_state
@@ -257,7 +266,13 @@ class Portal::SchoolSelector
   end
 
   def allow_teacher_creation(field=:school)
-    acceptable_fields = [:district,:school]
+    acceptable_fields = []
+    if self.country  == USA
+      acceptable_fields << [:district] if self.state
+    else
+      acceptable_fields << [:district] if self.country
+    end
+    acceptable_fields << :school if self.district
     Admin::Project.default_project.allow_adhoc_schools && acceptable_fields.include?(field)
   end
 end

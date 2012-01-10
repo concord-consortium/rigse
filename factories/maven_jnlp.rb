@@ -30,7 +30,7 @@ Factory.define :admin_project_no_jnlps, :class => Admin::Project do |f|
   f.user  { |p| Factory.next(:admin_user) }
   f.name  name
   f.url  url
-  f.states_and_provinces  APP_CONFIG[:states_and_provinces]
+  f.states_and_provinces  APP_CONFIG[:states_and_provinces] || []
   f.snapshot_enabled  0
   f.enable_default_users  APP_CONFIG[:enable_default_users]
 

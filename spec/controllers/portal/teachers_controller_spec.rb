@@ -8,6 +8,17 @@ describe Portal::TeachersController do
     generate_portal_resources_with_mocks
   end
 
+  before(:each) do
+    @school   = Factory.create(:portal_school)
+    @selector = Portal::SchoolSelector.new({
+      :country => Portal::SchoolSelector::USA,
+      :state   => 'MA'})
+    @selector.stub!(:valid?).and_return true
+    @selector.school = @school
+    @selector.district = @school.district
+    Portal::SchoolSelector.stub!(:new).and_return(@selector) 
+  end
+
   describe "POST create" do
     it "should create a user and a teacher if all fields are valid" do
       params = {
@@ -18,12 +29,6 @@ describe Portal::TeachersController do
           :login => "tteacher",
           :password => "password",
           :password_confirmation => "password"
-        },
-        :school => {
-          :id => Factory.create(:portal_school).id
-        },
-        :grade => {
-          :id => Factory.create(:portal_grade).id
         }
       }
       
@@ -48,15 +53,9 @@ describe Portal::TeachersController do
           :login => "tteacher",
           :password => "password",
           :password_confirmation => "password"
-        },
-        :school => {
-          :id => ""
-        },
-        :grade => {
-          :id => Factory.create(:portal_grade).id
         }
       }
-      
+      @selector.stub!(:valid?).and_return false
       current_user_count = User.count(:all)
       current_teacher_count = Portal::Teacher.count(:all)
       
@@ -71,31 +70,4 @@ describe Portal::TeachersController do
     end
   end
   
-  describe "GET new" do
-      
-    before(:all) do
-      ['c','b','a'].each do |name|
-        district = Factory.create(:portal_district, :name => "district_#{name}")
-        ['c','b','a'].each do |school_name|
-          Factory.create(:portal_school, :name => "school_#{name}", :district => district)
-        end
-      end
-    end
-    
-    it "should render the dropdown list of districts in alpha order" do
-      get :new
-      position = last_position = nil
-      ['a','b','c'].each do |name|
-        position = @response.body =~ /district_#{name}/
-        assert (position > 0)
-        if (last_position)
-          (last_position < position).should be_true
-        end
-        last_position = position
-      end
-    end
-   
-    # TODO: write test for schools also being in alpha order  
-    
-  end
 end
