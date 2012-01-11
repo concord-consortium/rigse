@@ -73,6 +73,7 @@ class SessionsController < ApplicationController
   def remote_logout
     logout_killing_session!
     delete_cc_cookie
+    delete_blog_cookie
     message = "logged out."
     values = {:message => message}
     render :json => values
