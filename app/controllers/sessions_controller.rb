@@ -143,7 +143,11 @@ class SessionsController < ApplicationController
     # cookies match: wordpress_* and wordpress_logged_in_*
     cookies.each do |key, val|
       if key.to_s =~ /^wordpress_/
+        if cookies.kind_of? ActionController::CookieJar
+          cookies.delete(key, {:domain => cookie_domain})
+        else
           cookies.delete key
+        end
       end
     end
   end
