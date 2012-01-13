@@ -73,7 +73,7 @@ We'll be adding a bunch of records into the database, save a dump of your curren
 
 Check to see how many Dataservice::BundleContent models you are starting with:
 
-    $ script/runner "puts Dataservice::BundleContent.count"
+    $ bin/rails runner "puts Dataservice::BundleContent.count"
     => 2
 
 cd to the httperf dir:
@@ -86,7 +86,8 @@ Check the os settings for maximum number of open files -- httperf uses select() 
 
 On my Mac the maximum open files descriptors was set to 256
 
-    $ ulimit -acore file size          (blocks, -c) 0
+    $ ulimit -acore 
+    file size          (blocks, -c) 0
     data seg size           (kbytes, -d) unlimited
     file size               (blocks, -f) unlimited
     max locked memory       (kbytes, -l) unlimited
@@ -100,9 +101,14 @@ On my Mac the maximum open files descriptors was set to 256
 
 Increase the maximum number of file descriptors to 1024:
 
-    [httperf ruby-1.8.7-p334@xproject (master)]$ ulimit -n 1024
- 
-THis measures the time to post 100 OTrunk session bundles:
+    $ ulimit -n 1024
+
+
+
+    curl -i --header "Content-Type: application/xml" --header "Content-Encoding: b64gzip" --header "Content-md5: 2f90a99d87961e3ffdf585cd0c523b42 --cookie _rails_portal_session=520923139d1eb51aea3715a82ad94cba; --data @curl-data/dataservice_bundle_loggers_1_bundle_contents.bundle.med.txt" http://xproject3.local/dataservice/bundle_loggers/1/bundle_contents.bundle
+
+
+This measures the time to post 100 OTrunk session bundles:
 
     $ httperf --hog --server xproject.local --add-header="Content-Type: application/xml\nContent-Encoding: b64gzip\nContent-md5: 2f90a99d87961e3ffdf585cd0c523b42\n" --wsesslog 100,0,sessions/dataservice_bundle_loggers_1_bundle_contents.bundle.med.txt
 
@@ -139,7 +145,7 @@ The results running both httperf and the rails-portal server on the same machine
 
 If you ran the previous test once you should have 100 more Dataservice::BundleContent models than you starting with:
 
-    $ script/runner "puts Dataservice::BundleContent.count"
+    $ bin/rails runner "puts Dataservice::BundleContent.count"
     => 102
 
 When you are done restore the previous state of the database:
