@@ -34,6 +34,9 @@ class Embeddable::DataCollectorsController < ApplicationController
   def show
     @authoring = false
     @data_collector = Embeddable::DataCollector.find(params[:id])
+    if @data_collector.is_prototype?
+      @diy_sensors = @data_collector.diy_sensors
+    end
     if request.xhr?
       render :partial => 'show', :locals => { :data_collector => @data_collector }
     else
