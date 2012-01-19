@@ -37,7 +37,8 @@
     = submit_tag 'update filters'
     = submit_tag 'usage report'
     = submit_tag 'details report'
-    = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
+    -# This was seen as too distructive. Removed.
+    -# = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
 
 :javascript
   new Chosen($('schools'));
