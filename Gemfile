@@ -55,6 +55,10 @@ source "http://rubygems.org"
   # kernels.  See: https://github.com/newrelic/rpm/pull/47
   gem 'newrelic_rpm',          "~> 3.3.0", :git => "git://github.com/concord-consortium/rpm.git"
 
+  # gem 'newrelic_rpm'
+  # use a patched version of newrelic compatible with older linux
+  # kernels.  See: https://github.com/newrelic/rpm/pull/47
+  gem 'newrelic_rpm',          "~> 3.3.0", :git => "git://github.com/concord-consortium/rpm.git"
 group :development do
   gem "highline"
   gem "wirble"
