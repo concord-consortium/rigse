@@ -18,7 +18,7 @@ module Portal::StudentClazzesHelper
     other_clazzes = []
     default_value =  "Add another student from this school."
     if clazz.school 
-      other_clazzes = (clazz.school.clazzes - [clazz])
+      other_clazzes = (clazz.school.clazzes.find(:all, :include => {:students => :user}) - [clazz])
       if clazz.school.name && clazz.school.name.length > 1
         default_value = "Add student from #{clazz.school.name.titlecase}"
       end
@@ -33,7 +33,7 @@ module Portal::StudentClazzesHelper
       # default_value = "Add a registered #{current_project.name} student"
       # default_value = "Add another student from this school."
       options = [[default_value,default_value]]
-      options = options + (student_list.map { |s| [ truncate(s.user.name_and_login,50), s.id ] })
+      options = options + (student_list.map { |s| [ truncate(s.user.name_and_login,:length => 50), s.id ] })
       select_opts = options_for_select(options, :selected => default_value)
       return <<-EOF
           #{span_tag}

@@ -208,7 +208,44 @@ class Embeddable::DataCollector < ActiveRecord::Base
   def x_axis_title
     "#{self.x_axis_label} (#{self.x_axis_units})"
   end
-  
+
+  # support for converting non-second x-axis values
+  def x_axis_min_converted
+    min = self.x_axis_min
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from minutes to seconds
+      min = min * 60
+    end
+    min
+  end
+
+  def x_axis_min_converted=(val)
+    cval = val
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from seconds to minutes
+      cval = val/60.0
+    end
+    self.x_axis_min = cval
+  end
+
+  def x_axis_max_converted
+    min = self.x_axis_max
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from minutes to seconds
+      min = min * 60
+    end
+    min
+  end
+
+  def x_axis_max_converted=(val)
+    cval = val
+    if self.x_axis_units =~ /^min(?:ute)?(?:s)?$/  # min, mins, minute, minutes
+      # convert from seconds to minutes
+      cval = val/60.0
+    end
+    self.x_axis_max = cval
+  end
+
   default_value_for :name, "Data Graph"
   default_value_for :description, "Data Collector Graphs can be used for sensor data or predictions."
   
@@ -258,8 +295,8 @@ class Embeddable::DataCollector < ActiveRecord::Base
       if ot_data_axis = ot_data_collector['xDataAxis']['OTDataAxis']
         self.x_axis_label = ot_data_axis['label']
         self.x_axis_units = ot_data_axis['units']
-        self.x_axis_min   = ot_data_axis['min'].to_f
-        self.x_axis_max   = ot_data_axis['max'].to_f
+        self.x_axis_min_converted   = ot_data_axis['min'].to_f
+        self.x_axis_max_converted   = ot_data_axis['max'].to_f
       end
       if ot_data_axis = ot_data_collector['yDataAxis']['OTDataAxis']
         self.y_axis_label = ot_data_axis['label']

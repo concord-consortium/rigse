@@ -389,6 +389,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.investigation_usage_report '/investigations/reports/usage', :controller => 'investigations', :action => 'usage_report', :method => :get
   map.investigation_details_report '/investigations/reports/details', :controller => 'investigations', :action => 'details_report', :method => :get
+
+  map.learner_report '/report/learner', :controller => 'report/learner', :action => :index
   
   map.resources :activities, :member => {
     :add_section => [:post,:get],
@@ -450,7 +452,7 @@ ActionController::Routing::Routes.draw do |map|
   map.project_css '/stylesheets/project.css', :controller => 'home', :action => 'project_css'
   map.pick_signup '/pick_signup', :controller => 'home', :action => 'pick_signup'
   map.name_for_clipboard_data '/name_for_clipboard_data', :controller => 'home', :action =>'name_for_clipboard_data'
-  map.banner '/banner', :controller => 'home', :action => 'banner'
+  map.banner '/banner', :controller => 'misc', :action => 'banner'
   # map. ':controller/:action/:id.:format'
 
   # Install the default routes as the lowest priority.

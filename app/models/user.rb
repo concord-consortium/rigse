@@ -155,7 +155,7 @@ class User < ActiveRecord::Base
   default_value_for :default_user, false
 
   # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
-  default_value_for :vendor_interface_id, 14
+  default_value_for :vendor_interface_id, 6
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
@@ -267,9 +267,10 @@ class User < ActiveRecord::Base
   end
 
   def school
+    return @school if @school
     school_person = self.portal_teacher || self.portal_student
     if (school_person)
-      return school_person.school
+      return @school = school_person.school
     end
   end
 

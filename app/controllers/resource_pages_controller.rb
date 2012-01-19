@@ -1,4 +1,5 @@
 class ResourcePagesController < ApplicationController
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
   before_filter :teacher_required, :except => [:show, :index]
   before_filter :find_resource_page_and_verify_owner, :only => [:edit, :update, :destroy]
 

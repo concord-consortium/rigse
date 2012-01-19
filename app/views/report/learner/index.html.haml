@@ -20,9 +20,9 @@
           = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
       %tr
         %td
-          %label investigations:
+          %label assignables:
         %td
-          = select_tag('runnables', options_for_select(@all_runnables.map {|s| [s.name, s.id]}, @select_runnables.map {|s| s.id}), { :multiple => true })
+          = select_tag('runnables', options_for_select(@all_runnables.map {|s| [s.name, "#{s.class.to_s}|#{s.id}"]}, @select_runnables.map {|s| "#{s.class.to_s}|#{s.id}"}), { :multiple => true })
       %tr
         %td
           %label start date:
@@ -37,7 +37,8 @@
     = submit_tag 'update filters'
     = submit_tag 'usage report'
     = submit_tag 'details report'
-    = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
+    - if APP_CONFIG[:theme] == 'itsisu'
+      = submit_tag 'career stem report'
 
 :javascript
   new Chosen($('schools'));

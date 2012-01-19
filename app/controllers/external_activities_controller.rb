@@ -1,4 +1,5 @@
 class ExternalActivitiesController < ApplicationController
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
 
   before_filter :setup_object, :except => [:index]
   before_filter :render_scope, :only => [:show]

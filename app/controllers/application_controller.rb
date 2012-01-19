@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include Clipboard
+  include ActionController::Caching::Sweeping
 
   self.allow_forgery_protection = false
 

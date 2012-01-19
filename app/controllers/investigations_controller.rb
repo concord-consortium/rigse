@@ -5,6 +5,7 @@ class InvestigationsController < AuthoringController
 
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
+  cache_sweeper :runnable_sweeper, :only => [:create, :update, :destroy]
 
   include RestrictedController
   #access_rule 'researcher', :only => [:usage_report, :details_report]
@@ -480,7 +481,7 @@ class InvestigationsController < AuthoringController
   def get_report(type)
     sio = StringIO.new
     opts = {:verbose => false}
-    opts[:investigations] = [@investigation] unless @investigation.id.nil?
+    opts[:runnables] = [@investigation] unless @investigation.id.nil?
     opts[:blobs_url] = dataservice_blobs_url
     rep = nil
     case type
