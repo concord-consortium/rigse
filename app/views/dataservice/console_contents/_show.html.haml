@@ -1,6 +1,17 @@
 - options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
+- console_summary = capture_haml do
+  Session console: #{dataservice_console_content.id} (#{dataservice_console_content.position}) #{dataservice_console_content.session_uuid || "No Session UUID"}
+  .tiny
+    %div
+      CreatedAt: #{dataservice_console_content.created_at},
+      UpdatedAt: #{dataservice_console_content.updated_at}
+    %div
+      Start: #{dataservice_console_content.session_start || "None"},
+      Stop: #{dataservice_console_content.session_stop || "None"},
 %div{:id => dom_id_for(dataservice_console_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_console_content, :details), :class => 'content'}
-    = accordion_for(dataservice_console_content, "Session console:#{dataservice_console_content.id} (#{dataservice_console_content.position})",'body') do
-      %pre= h(dataservice_console_content.body)
+    = accordion_for(dataservice_console_content, console_summary,'body') do
+      = accordion_for(dataservice_console_content, "Raw XML",'body_xml') do
+        %pre= h(dataservice_console_content.body)
+      %pre= h(dataservice_console_content.parsed_body)
     
