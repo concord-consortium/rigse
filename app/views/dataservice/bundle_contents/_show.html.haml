@@ -1,8 +1,22 @@
 - options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
+- bundle_summary = capture_haml do
+  Session bundle: #{dataservice_bundle_content.id} (#{dataservice_bundle_content.position}) #{dataservice_bundle_content.session_uuid || "No Session UUID"}
+  .tiny
+    %div
+      Previous Session: #{dataservice_bundle_content.previous_session_uuid || "None"}
+    %div
+      CreatedAt: #{dataservice_bundle_content.created_at},
+      UpdatedAt: #{dataservice_bundle_content.updated_at}
+    %div
+      Start: #{dataservice_bundle_content.session_start || "None"},
+      Stop: #{dataservice_bundle_content.session_stop || "None"},
+    %div
+      Otml: #{dataservice_bundle_content.otml.length / 1024}k, Empty: #{dataservice_bundle_content.empty ? 'true' : 'false'}
 %div{:id => dom_id_for(dataservice_bundle_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_bundle_content, :details), :class => 'content'}
-    = accordion_for(dataservice_bundle_content, "Session bundle:#{dataservice_bundle_content.id} (#{dataservice_bundle_content.position}) SessionID: #{dataservice_bundle_content.session_uuid} PreviouSessionID: #{dataservice_bundle_content.previous_session_uuid}",'body') do
-      %pre= h(dataservice_bundle_content.body)
-    = accordion_for(dataservice_bundle_content, "Otml: #{dataservice_bundle_content.otml.length / 1024}k, Empty: #{dataservice_bundle_content.empty ? 'true' : 'false'}", 'otml') do
-      %pre= h(dataservice_bundle_content.otml)
+    = accordion_for(dataservice_bundle_content, bundle_summary,'body') do
+      = accordion_for(dataservice_bundle_content, "Bundle XML", 'body_xml') do
+        %pre= h(dataservice_bundle_content.body)
+      = accordion_for(dataservice_bundle_content, "Otml: #{dataservice_bundle_content.otml.length / 1024}k, Empty: #{dataservice_bundle_content.empty ? 'true' : 'false'}", 'otml') do
+        %pre= h(dataservice_bundle_content.otml)
     

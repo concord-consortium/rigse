@@ -82,6 +82,16 @@ class Dataservice::BundleContent < ActiveRecord::Base
     return self.body[/<launchProperties key="previous.bundle.session.id" value="([^"]*)"/, 1]
   end
 
+  def session_start
+    return nil if self.body.nil?
+    return self.body[/start="([^"]*)"/, 1]
+  end
+
+  def session_stop
+    return nil if self.body.nil?
+    return self.body[/stop="([^"]*)"/, 1]
+  end
+
   def record_bundle_processing
     self.updated_at = Time.now
     self.processed = true

@@ -27,5 +27,14 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
     return self.body[/net.sf.sail.emf.launch.SessionBundleHelper.setupSessionBundle: sessionId: ([^&"]*)/,1]
   end
 
-  
+  def session_start
+    return nil if self.body.nil?
+    return self.body[/start="([^"]*)"/, 1]
+  end
+
+  def session_stop
+    return nil if self.body.nil?
+    return self.body[/stop="([^"]*)"/, 1]
+  end
+
 end
