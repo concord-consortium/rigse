@@ -1,6 +1,6 @@
 - options = { :omit_edit => true, :omit_delete => true, :hide_componenent_name => true }
 %div{:id => dom_id_for(dataservice_console_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_console_content, :details), :class => 'content'}
-    = accordion_for(dataservice_console_content, "Session console:#{dataservice_console_content.id} (#{dataservice_console_content.position})",'body') do
+    = accordion_for(dataservice_console_content, "Session console:#{dataservice_console_content.id} (#{dataservice_console_content.position}) SessionId:#{dataservice_console_content.session_uuid}",'body') do
       %pre= h(dataservice_console_content.body)
     

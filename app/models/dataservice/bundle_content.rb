@@ -71,7 +71,17 @@ class Dataservice::BundleContent < ActiveRecord::Base
     login = user.login
     "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
- 
+
+  def session_uuid
+    return nil if self.body.nil?
+    return self.body[/sessionUUID="([^"]*)"/, 1]
+  end
+
+  def previous_session_uuid
+    return nil if self.body.nil?
+    return self.body[/<launchProperties key="previous.bundle.session.id" value="([^"]*)"/, 1]
+  end
+
   def record_bundle_processing
     self.updated_at = Time.now
     self.processed = true

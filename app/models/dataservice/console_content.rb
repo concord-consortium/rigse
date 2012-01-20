@@ -19,7 +19,12 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
-    
+
+  end
+
+  def session_uuid
+    return nil if self.body.nil?
+    return self.body[/net.sf.sail.emf.launch.SessionBundleHelper.setupSessionBundle: sessionId: ([^&"]*)/,1]
   end
 
   
