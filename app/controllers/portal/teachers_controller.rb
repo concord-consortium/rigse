@@ -1,7 +1,20 @@
 class Portal::TeachersController < ApplicationController
   include RestrictedPortalController
+  before_filter :teacher_admin_or_manager, :except=> [:new, :create]
   public
-  
+
+  def teacher_admin_or_manager
+    if current_user.has_role?('admin') ||
+       current_user.has_role?('manager') ||
+       (current_user.portal_teacher && current_user.portal_teacher.id.to_s == params[:id])
+       # this user is authorized
+       true
+    else
+      flash[:notice] = "Please log in as an administrator or manager"
+      redirect_to(:home)
+    end
+  end
+
   # GET /portal_teachers
   # GET /portal_teachers.xml
   def index
