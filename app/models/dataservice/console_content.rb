@@ -37,4 +37,8 @@ class Dataservice::ConsoleContent < ActiveRecord::Base
     return self.body[/stop="([^"]*)"/, 1]
   end
 
+  def parsed_body
+    return nil if self.body.nil?
+    self.body.scan(/<sockEntries value="([^"]*)"\/>/).map{|matched| matched[0]}.join("\n")
+  end
 end

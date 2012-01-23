@@ -11,5 +11,7 @@
 %div{:id => dom_id_for(dataservice_console_content, :item), :class => 'item'}
   %div{:id => dom_id_for(dataservice_console_content, :details), :class => 'content'}
     = accordion_for(dataservice_console_content, console_summary,'body') do
-      %pre= h(dataservice_console_content.body)
+      = accordion_for(dataservice_console_content, "Raw XML",'body_xml') do
+        %pre= h(dataservice_console_content.body)
+      %pre= h(dataservice_console_content.parsed_body)
     

@@ -101,9 +101,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
 
   def otml_hash
-    return nil if self.otml.nil?
+    otml_text = self.otml
+    return nil if otml_text.nil? || otml_text.empty?
     # this is only for debugging issues so it is fine to change the hash function
-    Digest::MD5.hexdigest(self.otml)
+    Digest::MD5.hexdigest(otml_text)
   end
 
   def record_bundle_processing
