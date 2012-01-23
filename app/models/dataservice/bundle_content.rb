@@ -1,3 +1,5 @@
+require 'digest/md5'  # for the otml md5 this is only for tracking down errors
+
 class Dataservice::BundleContent < ActiveRecord::Base
   require 'otrunk/object_extractor'
   set_table_name :dataservice_bundle_contents
@@ -90,6 +92,18 @@ class Dataservice::BundleContent < ActiveRecord::Base
   def session_stop
     return nil if self.body.nil?
     return self.body[/stop="([^"]*)"/, 1]
+  end
+
+  # localIP="10.81.18.190"
+  def local_ip
+    return nil if self.body.nil?
+    return self.body[/localIP="([^"]*)"/, 1]
+  end
+
+  def otml_hash
+    return nil if self.otml.nil?
+    # this is only for debugging issues so it is fine to change the hash function
+    Digest::MD5.hexdigest(self.otml)
   end
 
   def record_bundle_processing
