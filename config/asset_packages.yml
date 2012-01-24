@@ -182,3 +182,17 @@ stylesheets:
   - themes/geniverse/drop_down
   - themes/geniverse/accordion
 
+- interactions:
+  - app
+  - accordion
+  - please_wait
+  - live_validation
+  - accordion
+  - notes
+  - action_menu_tab
+  - drop_down
+  - data_table
+  - reports
+  - workgroup
+  - chosen
+
