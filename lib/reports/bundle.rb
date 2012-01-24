@@ -17,7 +17,7 @@ class Reports::Bundle < Reports::Excel
     ]
 
     # sanity check the number of cells
-    num_cells_needed = ((@runnables.size * 2) + @column_defs.size) * @report_learners.size
+    num_cells_needed = ((@runnables.size * 4) + @column_defs.size) * @report_learners.size
     raise Reports::Errors::TooManyCellsError if num_cells_needed > MAX_CELLS
 
     @runnable_start_column = {}
@@ -25,7 +25,9 @@ class Reports::Bundle < Reports::Excel
       @runnable_start_column[runnable] = @column_defs.size
       @heading_defs << Reports::ColumnDefinition.new(:title => "#{runnable.name} (#{runnable.id})", :heading_row => 0, :col_index => @column_defs.size, :width => 25)
       @column_defs << Reports::ColumnDefinition.new(:title => "Learner created at", :width => 20)
-      @column_defs << Reports::ColumnDefinition.new(:title => "Bundles", :width => 4)
+      @column_defs << Reports::ColumnDefinition.new(:title => "# Bundles", :width => 4)
+      @column_defs << Reports::ColumnDefinition.new(:title => "# Consoles", :width => 4)
+      @column_defs << Reports::ColumnDefinition.new(:title => "ID Learner", :width => 4)
     end
   end
 
@@ -36,9 +38,10 @@ class Reports::Bundle < Reports::Excel
   def run_report(stream_or_path,book=Spreadsheet::Workbook.new)
     sheet = book.create_worksheet :name => 'Usage'
     write_sheet_headers(sheet, (@column_defs + @heading_defs))
-    student_learners = sorted_learners.group_by {|l| l.student_id }
-    student_learners.each_key do |student_id|
-      learners = student_learners[student_id]
+    # the learner_id function in the super class returns a string of the [student_id]_[class_id]
+    student_learners = sorted_learners.group_by {|l| learner_id(l) }
+    student_learners.each_key do |student_class_id|
+      learners = student_learners[student_class_id]
       row = sheet.row(sheet.last_row_index + 1)
       learner_info = report_learner_info_cells(learners.first)
       row[0, learner_info.size] =  learner_info
@@ -49,10 +52,13 @@ class Reports::Bundle < Reports::Excel
           bundle_count = 0
           bundle_logger = portal_learner.bundle_logger
           bundle_count = bundle_logger.bundle_contents.count if bundle_logger
+          console_count = 0
+          console_logger = portal_learner.console_logger
+          console_count = console_logger.console_contents.count if console_logger
 
-          row[@runnable_start_column[runnable], 2] = [portal_learner.created_at.to_s, bundle_count]
+          row[@runnable_start_column[runnable], 2] = [portal_learner.created_at.to_s, bundle_count, console_count, portal_learner.id]
         else
-          row[@runnable_start_column[runnable], 2] = ['no learner', 'n/a']
+          row[@runnable_start_column[runnable], 2] = ['no learner', 'n/a', 'n/a', 'n/a']
         end
       end
     end
