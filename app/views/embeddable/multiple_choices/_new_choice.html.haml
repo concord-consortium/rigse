@@ -1,3 +1,3 @@
 .choice
-- fields_for "embeddable_multiple_choice[choices_attributes][]",choice do |f|
-  = render :partial => "embeddable/multiple_choices/edit_choice", :locals => {:form => f, :choice => choice}
+  = fields_for "embeddable_multiple_choice[choices_attributes][]",choice do |f|
+    = render :partial => "embeddable/multiple_choices/edit_choice", :locals => {:form => f, :choice => choice}
