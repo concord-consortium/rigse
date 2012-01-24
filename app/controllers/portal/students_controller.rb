@@ -98,7 +98,7 @@ class Portal::StudentsController < ApplicationController
       user_created = @user.save
       if user_created
         @user.activate!
-        if current_project.allow_default_class
+        if current_project.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else
           @portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)
