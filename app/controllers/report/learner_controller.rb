@@ -33,7 +33,7 @@ class Report::LearnerController < ApplicationController
       end
     }.compact
 
-    if (@select_schools.size > 0) 
+    if (@select_schools.size > 0)
       @all_teachers = @all_teachers.select       { |t| @select_schools.map{|s| s.teachers}.flatten.include? t  }
       @select_teachers = @select_teachers.select { |t| @select_schools.map{|s| s.teachers}.flatten.include? t  }
     end
@@ -83,6 +83,11 @@ class Report::LearnerController < ApplicationController
         report = Reports::ConcludingCareerStem.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :verbose => true)
         report.run_report(sio)
         send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "career_stem.xls" )
+      elsif params[:commit] == 'bundle report'
+        sio = StringIO.new
+        report = Reports::Bundle.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :verbose => true)
+        report.run_report(sio)
+        send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "bundles.xls" )
       end
     rescue Reports::Errors::GeneralReportError => e
       msg = "There was a problem running your report.\n\n"
