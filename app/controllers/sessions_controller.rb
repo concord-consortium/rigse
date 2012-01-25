@@ -73,6 +73,7 @@ class SessionsController < ApplicationController
   def remote_logout
     logout_killing_session!
     delete_cc_cookie
+    delete_blog_cookie
     message = "logged out."
     values = {:message => message}
     render :json => values
@@ -166,7 +167,7 @@ class SessionsController < ApplicationController
       # capture the cookies set by the blog
       # and set those cookies in our current domain
       #   cookies match: wordpress_* and wordpress_logged_in_*
-      resp['Set-Cookie'].split(/[,;] |\n/).each do |token|
+      resp['Set-Cookie'].split(/[,\;] |\n/).each do |token|
         k,v = token.split("=")
         if k.to_s =~ /^wordpress_/
           cookies[k.to_sym] = {:value => CGI::unescape(v), :domain => cookie_domain }
