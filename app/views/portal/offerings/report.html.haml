@@ -5,5 +5,5 @@
 - content_for :report_summary do
   = offering_report_summary(@offering)
 
-= use_contentflow
+!= use_contentflow
 = render :partial => '/portal/reports/report', :locals => {:report_context => @offering, :offering => @offering, :learners => @learners, :page_elements => @page_elements}

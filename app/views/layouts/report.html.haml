@@ -13,8 +13,8 @@
 
     / see documentation for asset packager here: http://synthesis.sbecker.net/pages/asset_packager
     / see the yaml file too: config/asset_packages.yml
-    = stylesheet_link_merged(theme_name.to_sym, {'media' => 'screen, presentation'})
-    = javascript_include_merged :base
+    != stylesheet_link_merged(theme_name.to_sym, {'media' => 'screen, presentation'})
+    != javascript_include_merged :base
     / tiny_mce didn't play nice with the asset_packager..
     = javascript_include_tag("tiny_mce/tiny_mce")
 
