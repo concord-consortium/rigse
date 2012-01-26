@@ -86,12 +86,20 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   def session_start
     return nil if self.body.nil?
-    return self.body[/start="([^"]*)"/, 1]
+    begin
+      DateTime.parse(self.body[/start="([^"]*)"/, 1])
+    rescue
+      nil
+    end
   end
 
   def session_stop
     return nil if self.body.nil?
-    return self.body[/stop="([^"]*)"/, 1]
+    begin
+      DateTime.parse(self.body[/stop="([^"]*)"/, 1])
+    rescue
+      nil
+    end
   end
 
   # localIP="10.81.18.190"
