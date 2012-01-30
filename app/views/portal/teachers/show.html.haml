@@ -1,1 +1,12 @@
-= render :partial => "portal/teachers/show", :locals => {:teacher => @portal_teacher}
+-# this view is only accessed by administrators
+-# a normally logged in teacher will be on the home page which includes the show partial
+-# the show partial doesn't really show anything useful other than the user name so it
+-# isn't included here
+%h3= @portal_teacher.name
+
+School: #{@portal_teacher.school.name}
+
+%h4 Classes
+%ul
+  - @portal_teacher.clazzes.each do |clazz|
+    %li=link_to clazz.name, clazz

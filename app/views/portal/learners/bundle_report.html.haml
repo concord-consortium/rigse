@@ -1,5 +1,6 @@
 %div{:id => dom_id_for(@portal_learner, :item), :class => 'item'}
   %h3= "Bundle and Console log reports for: #{@portal_learner.name}"
+  Learner created at: #{@portal_learner.created_at}
   %div{:id => dom_id_for(@portal_learner, :details), :class => 'content'}
     = accordion_for(@portal_learner, report_details_for_learner(@portal_learner)) do
       Bundle Logs

@@ -1,1 +1,11 @@
 = render :partial => 'shared/embeddable_container', :locals=> {:component => @data_collector}
+
+- if @diy_sensors
+  Referenced #{@diy_sensors.size} times
+  %ul
+  - @diy_sensors.each do |diy_sensor| 
+    %li
+      - page =  diy_sensor.pages[0]
+      - activity = page.activity
+      = link_to "#{activity.id}: #{activity.name}", activity
+      = "(#{page.name})"

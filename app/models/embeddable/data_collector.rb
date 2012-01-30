@@ -26,7 +26,7 @@ class Embeddable::DataCollector < ActiveRecord::Base
     :class_name => "Embeddable::DataCollector",
     :foreign_key => "prediction_graph_id"
   # diy_sensors is a simplified interface for a dataCollector.
-  has_many :diy_sensors, :as => 'prototype'
+  has_many :diy_sensors, :foreign_key => 'prototype_id', :class_name => 'Embeddable::Diy::Sensor'
 
   # has_many :data_tables, :class_name => "Embeddable::DataTable"
   belongs_to :data_table, 
