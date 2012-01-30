@@ -57,6 +57,10 @@ class Portal::OfferingsController < ApplicationController
       format.jnlp {
         # check if the user is a student in this offering's class
         if learner = setup_portal_student
+          if(!learner.bundle_logger.in_progress_bundle)
+            learner.bundle_logger.start_bundle
+          end
+
           launch_event = Dataservice::LaunchProcessEvent.create(
             :event_type => Dataservice::LaunchProcessEvent::TYPES[:jnlp_requested],
             :event_details => "Activity launcher delivered. Activity should be opening...",

@@ -143,6 +143,7 @@ stylesheets:
 - xproject:
   - app
   - accordion
+  - please_wait
   - window/window
   - window/rites
   - live_validation
