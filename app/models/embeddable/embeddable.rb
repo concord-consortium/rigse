@@ -24,12 +24,13 @@ class Embeddable::Embeddable < ActiveRecord::Base
     end
   end
 
-  def activitiies
+  def activities
     acts = []
     self.pages.each do |page|
-      act = page.activities
+      act = page.activity
       acts << act if act
     end
+    acts
   end
 
   def _dis_enable_targets(page)

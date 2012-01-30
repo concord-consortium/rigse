@@ -39,6 +39,8 @@
     = submit_tag 'details report'
     - if APP_CONFIG[:theme] == 'itsisu'
       = submit_tag 'career stem report'
+    - if current_user.has_role?('admin')
+      = submit_tag 'bundle report'
 
 :javascript
   new Chosen($('schools'));

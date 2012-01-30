@@ -12,9 +12,9 @@
         %img{:alt => "info", :src => "/images/diy_icons/information.png", :title => "View activity description"}/
       %a{:href => polymorphic_url(runnable) ,  :title => "View a quick preview version of this activity"}
         %img{:alt => "preview", :src => "/images/diy_icons/picture.png", :title => "View a quick preview version of this activity"}/
-      %a#try_button_1435.waiter{:href =>polymorphic_url(runnable, :format => :jnlp, :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
+      %a#try_button_1435.run_link{:href =>polymorphic_url(runnable, :format => :jnlp, :params => {:teacher_mode => 'true'}), :name => "try_button_1435", :title => "Try this activity (as a teacher, do not save data)"}
         %img{:alt => "try", :src => "/images/diy_icons/picture_go.png", :title => "Try this activity (as a teacher, do not save data)"}/
-      %a#run_button_.waiter{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
+      %a#run_button_.run_link{:href => polymorphic_url(runnable, :format => :jnlp) , :name => "run_button_", :title => "Run this activity (and save data)"}
         %img{:alt => "run", :src => "/images/diy_icons/bullet_go.png", :title => "Run this activity (and save data)"}/
 
     .title

@@ -1,3 +1,5 @@
+require 'digest/md5'  # for the otml md5 this is only for tracking down errors
+
 class Dataservice::BundleContent < ActiveRecord::Base
   require 'otrunk/object_extractor'
   set_table_name :dataservice_bundle_contents
@@ -71,7 +73,48 @@ class Dataservice::BundleContent < ActiveRecord::Base
     login = user.login
     "#{user.login}: (#{user.name}), #{learner.offering.runnable.name}, session: #{position}"
   end
- 
+
+  def session_uuid
+    return nil if self.body.nil?
+    return self.body[/sessionUUID="([^"]*)"/, 1]
+  end
+
+  def previous_session_uuid
+    return nil if self.body.nil?
+    return self.body[/<launchProperties key="previous.bundle.session.id" value="([^"]*)"/, 1]
+  end
+
+  def session_start
+    return nil if self.body.nil?
+    begin
+      DateTime.parse(self.body[/start="([^"]*)"/, 1])
+    rescue
+      nil
+    end
+  end
+
+  def session_stop
+    return nil if self.body.nil?
+    begin
+      DateTime.parse(self.body[/stop="([^"]*)"/, 1])
+    rescue
+      nil
+    end
+  end
+
+  # localIP="10.81.18.190"
+  def local_ip
+    return nil if self.body.nil?
+    return self.body[/localIP="([^"]*)"/, 1]
+  end
+
+  def otml_hash
+    otml_text = self.otml
+    return nil if otml_text.nil? || otml_text.empty?
+    # this is only for debugging issues so it is fine to change the hash function
+    Digest::MD5.hexdigest(otml_text)
+  end
+
   def record_bundle_processing
     self.updated_at = Time.now
     self.processed = true
