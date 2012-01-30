@@ -87,6 +87,7 @@ stylesheets:
   - authoring
   - template_edit
   - accordion
+  - please_wait
   - window/window
   - window/rites
   - action_menu_tab
