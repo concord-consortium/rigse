@@ -118,7 +118,17 @@ class PagesController < ApplicationController
       format.jnlp       { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode } }
       format.config     { render :partial => 'shared/show', :locals => { :runnable => @page, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }      
       format.otml       { render :layout => "layouts/page" } # page.otml.haml
-      format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode} }
+      format.dynamic_otml {
+        learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
+        if learner && learner.bundle_logger.in_progress_bundle
+          launch_event = Dataservice::LaunchProcessEvent.create(
+            :event_type => Dataservice::LaunchProcessEvent::TYPES[:activity_otml_requested],
+            :event_details => "Activity content loaded. Activity should now be running...",
+            :bundle_content => learner.bundle_logger.in_progress_bundle
+          )
+        end
+        render :partial => 'shared/show', :locals => {:runnable => @page, :teacher_mode => @teacher_mode}
+      }
       format.xml        { render :xml => @page }
     end
   end

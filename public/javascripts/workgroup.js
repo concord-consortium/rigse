@@ -1,12 +1,3 @@
-var ParseOfferingUrl = function(url) {
-  var offering_id_str = null;
-  if (url.match(/portal\/offerings\/\d+\.jnlp/gi)) {
-    offering_id_str = url.match(/\d+\.jnlp/gi).first();
-    offering_id_str = offering_id_str.match(/\d+/gi).first();
-  }
-  return offering_id_str;
-};
-
 var EnableWorkgroups = function(_selector) {
   _selector = _selector ||   'a.run_link';
     $$(_selector).each(function(el) {
