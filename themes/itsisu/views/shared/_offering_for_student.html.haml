@@ -1,0 +1,9 @@
+.activity-box
+  .activity-title
+    - description_id = dom_id_for(offering, :description);
+    - link_title = "run #{offering.name}"
+    = info_button(description_id,"description for #{offering.name}")
+    = link_to image_tag("/images/diy_icons/bullet_go.png"), polymorphic_url(offering, :format => :jnlp), {:class => 'run_link offering', :title=>link_title}
+    = offering.name
+  .activity_description{:id => description_id, :style=>"display: none;"}
+    = offering.description
