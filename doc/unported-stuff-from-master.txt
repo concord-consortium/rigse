@@ -1,0 +1,6 @@
+reports page that admins and researchers can use to generate csv reports
+  some paths: app/controllers/report
+itsisu specific files have only been partially pulled in from master
+  these files are also not all in master
+
+  
