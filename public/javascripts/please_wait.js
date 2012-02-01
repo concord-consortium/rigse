@@ -1,3 +1,12 @@
+var ParseOfferingUrl = function(url) {
+  var offering_id_str = null;
+  if (url.match(/portal\/offerings\/\d+\.jnlp/gi)) {
+    offering_id_str = url.match(/\d+\.jnlp/gi).first();
+    offering_id_str = offering_id_str.match(/\d+/gi).first();
+  }
+  return offering_id_str;
+};
+
 var showCountdownWait = function() {
   var selector = "run_link";
   var waiting_id = null;
@@ -69,6 +78,13 @@ var showWait = function(offering) {
 
 document.observe("dom:loaded", function() {
   $$(".run_link").each(function(item) {
-    item.observe("click", showWait);
+    if(item.hasClassName('offering')){
+      var offering_id = ParseOfferingUrl(item.href);
+      item.observe("click", function(e){
+        showWait(offering_id);
+      });
+    } else {
+      item.observe("click", showWait);
+    }
   });
 });
