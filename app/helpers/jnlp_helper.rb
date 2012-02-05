@@ -100,12 +100,15 @@ module JnlpHelper
       }
     end
   end
-  
+
   def jnlp_resources(xml, options = {})
+    # HACKITY HACK to shrink the download size since the pasco-jna jar is 3MB.
+    doesnt_need_pasco_usb = current_user.vendor_interface.device_id != 62
     jnlp = jnlp_adaptor.jnlp
     xml.resources {
       jnlp_j2se(xml, jnlp)
       resource_jars.each do |resource|
+        next if resource[0] =~ /pasco-jna/ && doesnt_need_pasco_usb
         jnlp_jar(xml, resource)
       end
       system_properties(options).each do |property|
