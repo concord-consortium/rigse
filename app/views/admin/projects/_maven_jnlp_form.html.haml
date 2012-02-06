@@ -8,7 +8,7 @@
         = select(:admin_project, :maven_jnlp_server_id, MavenJnlp::MavenJnlpServer.all.collect {|mjs| [ mjs.name, mjs.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_server)})
       %li
         Maven Jnlp Family: 
-        = select(:admin_project, :maven_jnlp_family_id, admin_project.maven_jnlp_server.maven_jnlp_families.collect {|mjf| [ mjf.name, mjf.id ]}, { :selected => admin_project.maven_jnlp_server.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_family)})
+        = select(:admin_project, :maven_jnlp_family_id, admin_project.maven_jnlp_server.maven_jnlp_families.collect {|mjf| [ mjf.name, mjf.id ]}, { :selected => admin_project.maven_jnlp_family.id }, { :id => dom_id_for(admin_project, :select_maven_jnlp_family)})
       %li 
         Snapshot Enabled? 
         = check_box(:admin_project, :snapshot_enabled)
