@@ -125,8 +125,12 @@ class Admin::ProjectsController < ApplicationController
   def update
     @admin_project = Admin::Project.find(params[:id])
     if request.xhr?
-      @admin_project.update_attributes(params[:admin_project])
-      render :partial => 'show', :locals => { :admin_project => @admin_project }
+      if @admin_project.update_attributes(params[:admin_project])
+        render :partial => 'show', :locals => { :admin_project => @admin_project }
+      else
+        render :text => "Invalid project update (reload the page to see the original project)," +
+                        "you might need to make this change in the settings.yml"
+      end
     else
       respond_to do |format|
         if @admin_project.update_attributes(params[:admin_project])
