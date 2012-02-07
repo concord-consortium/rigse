@@ -43,7 +43,7 @@
   min: -10.0
   step_size: 0.1
   ptype: 4
-- name: Force (5N)
+- name: Force (5N high res)
   uuid: 20263140-4163-11de-aad1-001ff3caa767
   port: 0
   period: 0.01
@@ -252,3 +252,14 @@
   min: 0.0
   step_size: 0.1
   ptype: 31
+- name: Force (5N)
+  uuid: 7d483c50-5138-11e1-b86c-0800200c9a66
+  port: 0
+  period: 0.01
+  max: 4.0
+  id: 25
+  display_precision: -2
+  unit: N
+  min: -4.0
+  step_size: 0.1
+  ptype: 5

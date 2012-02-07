@@ -27,12 +27,13 @@ namespace :app do
 Generate MavenJnlp family of resources from jnlp servers in settings.yml.
 
   Example from file: config/settings.yml:
-  
-    default_maven_jnlp_server: concord
-    default_maven_jnlp_family: all-otrunk-snapshot
+
+    default_maven_jnlp:
+      :sever: concord
+      :family: all-otrunk-snapshot
+      :version: snapshot
     maven_jnlp_families:
       - "all-otrunk-snapshot"
-    default_jnlp_version: snapshot
     maven_jnlp_servers:
       - :name: concord
         :host: http://jnlp.concord.org
@@ -41,8 +42,10 @@ Generate MavenJnlp family of resources from jnlp servers in settings.yml.
 If you want to generate resources for all the MavenJnlp familes hosted on the MavenJnlp server
 delete all the family names assigned to: maven_jnlp_families.
 
-      HEREDOC
+If you are adding a new family, with the current broken code, you need to add it to the families
+list, and also set it as the family of the default_maven_jnlp
 
+      HEREDOC
       maven_jnlp_servers = APP_CONFIG[:maven_jnlp_servers]
       if maven_jnlp_families = APP_CONFIG[:maven_jnlp_families]
         families = maven_jnlp_families.length

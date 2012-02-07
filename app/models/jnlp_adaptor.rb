@@ -17,6 +17,12 @@ class JnlpAdaptor
       @jnlp = @jnlp_family.snapshot_jnlp_url.versioned_jnlp
     else
       jnlp_url = @jnlp_family.versioned_jnlp_urls.find_by_version_str(default_version_str)
+      if jnlp_url.nil?
+        # this can happen if the family is changed but the version is not changed to a valid one
+        # we could just take the first versioned_jnlp_url, but that causes strange behavior because
+        # the @jnlp doesn't match the project.jnlp_version_str, 
+        throw "Cannot find versioned jnlp: #{project.maven_jnlp_family.name}:#{default_version_str}"
+      end
       @jnlp = jnlp_url.versioned_jnlp
     end
     otrunk_nlogo_jars = @jnlp.jars.select { |j2| j2.name[/otrunk-nlogo.*?/] }

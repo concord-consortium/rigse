@@ -270,8 +270,7 @@ module OtmlHelper
 
   def ot_script_engine_bundle
     engines = [
-      ['org.concord.otrunk.script.js.OTJavascript', 'org.concord.otrunk.script.js.OTJavascriptEngine'],
-      ['org.concord.otrunk.script.jruby.OTJRuby', 'org.concord.otrunk.script.jruby.OTJRubyEngine']
+      ['org.concord.otrunk.script.js.OTJavascript', 'org.concord.otrunk.script.js.OTJavascriptEngine']
     ]
     render :partial => "otml/ot_script_engine_bundle", :locals => { :engines => engines }
   end

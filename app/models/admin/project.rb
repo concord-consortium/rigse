@@ -33,6 +33,14 @@ class Admin::Project < ActiveRecord::Base
   if USING_JNLPS
     validates_associated :maven_jnlp_server
     validates_associated :maven_jnlp_family
+    validate :jnlp_version_is_in_family
+  end
+
+  def jnlp_version_is_in_family
+    # check that the version string is valid one for this jnlp_family
+    unless maven_jnlp_family.versioned_jnlp_urls.find_by_version_str(jnlp_version_str)
+      errors.add(:jnlp_version_str, "is not version in the family: #{maven_jnlp_family.name}")
+    end
   end
 
   def states_and_provinces_array_members_must_match_list
