@@ -8,5 +8,8 @@
       - field_set_tag 'NCES District' do
         = select(:portal_district, "nces_district_id", Portal::Nces06District.all.collect {|cd| [ cd.NAME, cd.id ] }, {:include_blank => 'None'})
     %p
+      - field_set_tag 'State' do
+        = select(:portal_district, :state, Portal::SchoolSelector.usa_states)
+    %p
       - field_set_tag 'Description' do
         = f.text_area :description

@@ -68,6 +68,7 @@ class Activity < ActiveRecord::Base
     INNER JOIN sections ON pages.section_id = sections.id
     WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true'
 
+  # skip predictions, because their probe types are ignored
   has_many :enabled_probes, :class_name => 'Probe::ProbeType',
     :finder_sql => 'SELECT probe_probe_types.* FROM probe_probe_types
     INNER JOIN embeddable_data_collectors ON probe_probe_types.id = embeddable_data_collectors.probe_type_id
@@ -75,7 +76,7 @@ class Activity < ActiveRecord::Base
     INNER JOIN page_elements ON embeddable_diy_sensors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::Diy::Sensor"
     INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
-    WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true'
+    WHERE sections.activity_id = #{id} AND page_elements.is_enabled = true AND embeddable_diy_sensors.graph_type <> "Prediction"'
 
   has_many :page_elements,
     :finder_sql => 'SELECT page_elements.* FROM page_elements
