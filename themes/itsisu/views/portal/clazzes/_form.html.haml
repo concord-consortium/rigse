@@ -54,5 +54,5 @@
   
     / .aligned
     /   = f.submit 'Submit'
-  - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
+  - if action == :edit && (@portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin"))
     = render :partial => 'portal/offerings/tagged_list_for_clazz', :locals => {:portal_clazz => @portal_clazz, :is_being_edited => true}
