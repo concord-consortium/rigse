@@ -7,7 +7,7 @@
     %br
     %span.form-field-info
       Examples: Honors Physics - Period 3, Biology - Period 5V
-  - if action_name == "new"
+  - if portal_clazz.new_record?
     %p
       - schools = []
       - if current_user.portal_teacher
