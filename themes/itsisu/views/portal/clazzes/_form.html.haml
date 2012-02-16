@@ -15,7 +15,7 @@
       - if schools.empty?
         - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
       = label_tag :school, 'School: ', :class=>"right"
-      = f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
+      = f.collection_select(:school_id, schools, :id, :name, :options => {}, :class => "string")
   %p 
     = label_tag :semester, 'Semester: ', :class=>"right"
     = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 

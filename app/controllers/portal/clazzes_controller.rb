@@ -62,6 +62,11 @@ class Portal::ClazzesController < ApplicationController
       @portal_clazz.teacher = current_user.portal_teacher
       @portal_clazz.teacher_id = current_user.portal_teacher.id
     end
+    schools = @portal_teacher.schools
+    if schools.empty?
+      schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+    end
+    @portal_clazz.build_course(:school => schools.first)
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_clazz }
