@@ -88,7 +88,7 @@ class Portal::ClazzesController < ApplicationController
     @semesters = Portal::Semester.find(:all)
 
     @object_params = params[:portal_clazz]
-    school_id = @object_params.delete(:school)
+    school_id = @object_params.delete(:school_id)
     grade_levels = @object_params.delete(:grade_levels)
 
     @portal_clazz = Portal::Clazz.new(@object_params)
