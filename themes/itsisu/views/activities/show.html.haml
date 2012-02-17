@@ -24,5 +24,9 @@
           - component = element.embeddable
           %div.template_view_container{:id => dom_id_for(element, :template_view_container)}
             = render :partial => 'shared/template_embeddable_container', :locals=> {:component => component, :page_element=> element}
-
+  %p#print_button
+    %a.button{:href => '#', :onclick => 'window.print(); return false;'} Print This Page
+  %ul.page-utility
+    %li.print-this-page
+      %a{:href => '#', :onclick => 'window.print(); return false;'} Print this page
 

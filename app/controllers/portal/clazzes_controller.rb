@@ -62,6 +62,11 @@ class Portal::ClazzesController < ApplicationController
       @portal_clazz.teacher = current_user.portal_teacher
       @portal_clazz.teacher_id = current_user.portal_teacher.id
     end
+    schools = @portal_teacher.schools
+    if schools.empty?
+      schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+    end
+    @portal_clazz.build_course(:school => schools.first)
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_clazz }
@@ -83,7 +88,7 @@ class Portal::ClazzesController < ApplicationController
     @semesters = Portal::Semester.find(:all)
 
     @object_params = params[:portal_clazz]
-    school_id = @object_params.delete(:school)
+    school_id = @object_params.delete(:school_id)
     grade_levels = @object_params.delete(:grade_levels)
 
     @portal_clazz = Portal::Clazz.new(@object_params)
