@@ -7,7 +7,7 @@
     %br
     %span.form-field-info
       Examples: Honors Physics - Period 3, Biology - Period 5V
-  - if action_name == "new"
+  - if portal_clazz.new_record?
     %p
       - schools = []
       - if current_user.portal_teacher
@@ -15,7 +15,7 @@
       - if schools.empty?
         - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
       = label_tag :school, 'School: ', :class=>"right"
-      = f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
+      = f.collection_select(:school_id, schools, :id, :name, :options => {}, :class => "string")
   %p 
     = label_tag :semester, 'Semester: ', :class=>"right"
     = f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string") 
@@ -54,5 +54,5 @@
   
     / .aligned
     /   = f.submit 'Submit'
-  - if @portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin")
+  - if action == :edit && (@portal_clazz.is_teacher?(current_user) || current_user.has_role?("admin"))
     = render :partial => 'portal/offerings/tagged_list_for_clazz', :locals => {:portal_clazz => @portal_clazz, :is_being_edited => true}

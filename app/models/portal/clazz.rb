@@ -233,6 +233,13 @@ class Portal::Clazz < ActiveRecord::Base
     return nil
   end
 
+  def school_id
+    if course
+      return course.school_id
+    end
+    return nil
+  end
+
   # HACK: to support transitioning to multiple teachers.
   def teacher
     self.teachers.first
