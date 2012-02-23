@@ -239,7 +239,7 @@ class Admin::Project < ActiveRecord::Base
   end
   
   def summary_info
-    puts <<HEREDOC
+    summary = <<HEREDOC
 
 Portal::District: #{Portal::District.count}
 Portal::School:   #{Portal::School.count}
@@ -267,6 +267,7 @@ ut = User.find_by_login('teacher'); us = User.find_by_login('student')
 t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
 
 HEREDOC
-    
+    puts summary
+    summary
   end 
 end
