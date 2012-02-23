@@ -136,7 +136,16 @@ class Report::Util
       @saveables_by_type[type.to_s] = all
     end
     # If an investigation has changed, and saveable elements have been removed (eek!)
-    current =  @saveables.select { |s| assignable.page_elements.map{|pe|pe.embeddable}.include? s.embeddable}
+    assignable_embeddables = assignable.page_elements.map{|pe|pe.embeddable}
+    current_embeddables = assignable_embeddables.map{|ce|
+      if ce.kind_of?(Embeddable::InnerPage)
+        ## collect all the inner page pages' embeddables
+        ce.pages.collect{|ip| ip.page_elements.map{|ippe| ippe.embeddable} }.flatten
+      else
+        ce
+      end
+    }.flatten
+    current =  @saveables.select { |s| current_embeddables.include? s.embeddable}
     old = @saveables - current
     if old.size > 0
       warning = "WARNING: missing #{old.size} removed reportables in report for #{assignable.name}"
