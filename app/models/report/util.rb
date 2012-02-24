@@ -140,7 +140,7 @@ class Report::Util
     current_embeddables = assignable_embeddables.map{|ce|
       if ce.kind_of?(Embeddable::InnerPage)
         ## collect all the inner page pages' embeddables
-        ce.pages.collect{|ip| ip.page_elements.map{|ippe| ippe.embeddable} }.flatten
+        ce.sub_pages.collect{|ip| ip.page_elements.map{|ippe| ippe.embeddable} }.flatten
       else
         ce
       end
