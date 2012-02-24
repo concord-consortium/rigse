@@ -6,10 +6,11 @@
         %span{:style => 'font-weight: bold;'}= container.class.to_s
         - if show_selection_controls
           = selectAllNone(dom_id_for(container))
-        = " &ndash; #{container.name}"
+        &ndash;
+        = "#{container.name}"
       - children = map[container]
       - if children.is_a? Array
-        %div{:style => "padding-left: #{indent + 10}px;"}        
+        %div{:style => "padding-left: #{indent + 10}px;"}
           = render :partial => '/portal/reports/page_embeddables', :locals => { :page_embeddables => children, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}
       - else
         = render :partial => '/portal/reports/container_heading', :locals => { :indent => indent + 10, :map => children, :show_selection_controls => show_selection_controls, :offering => offering, :learners => learners}
