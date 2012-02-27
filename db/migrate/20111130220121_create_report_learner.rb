@@ -28,18 +28,24 @@ class CreateReportLearner < ActiveRecord::Migration
       t.integer  :num_answerables
       t.integer  :num_answered
       t.integer  :num_correct
-
-      t.index    :school_id
-      t.index    :learner_id
-      t.index    :offering_id
-      t.index    :runnable_id
-      t.index    :class_id
-      t.index    :last_run
     end
 
+    add_index :report_learners, :school_id
+    add_index :report_learners, :learner_id
+    add_index :report_learners, :offering_id
+    add_index :report_learners, :runnable_id
+    add_index :report_learners, :class_id
+    add_index :report_learners, :last_run
   end
 
   def self.down
+    remove_index :report_learners, :school_id
+    remove_index :report_learners, :learner_id
+    remove_index :report_learners, :offering_id
+    remove_index :report_learners, :runnable_id
+    remove_index :report_learners, :class_id
+    remove_index :report_learners, :last_run
+
     drop_table :report_learners
   end
 end
