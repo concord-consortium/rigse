@@ -124,14 +124,14 @@ Then /^"([^"]*)" should have answered (\d+)% of the questions for "([^"]*)" in "
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.complete_percent(learner).should be_close(Float(percent), 1.5)
+  report.complete_percent(learner).should be_within(1.5).of(Float(percent))
 end
 
 Then /^"([^"]*)" should have (\d+)% of the questions correctly for "([^"]*)" in "([^"]*)"$/ do |student_name, percent, investigation_name,class_name|
   offering = offering_for(investigation_name,class_name)
   learner = learner_for(student_name,offering)
   report = Report::Util.new(offering)
-  report.correct_percent(learner).should be_close(Float(percent), 1.5)
+  report.correct_percent(learner).should be_within(1.5).of(Float(percent))
 end
 
 

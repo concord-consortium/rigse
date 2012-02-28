@@ -7,6 +7,7 @@ Feature: Teacher resets password
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @javascript
   Scenario: Anonymous user signs up as teacher
     Given I am an anonymous user
     When I go to the pick signup page

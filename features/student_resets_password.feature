@@ -7,6 +7,7 @@ Feature: Student resets password
   Background:
     Given The default project and jnlp resources exist using factories
 
+  @javascript
   Scenario: Passwords can not be blank
     Given the following students exist:
       | login   | password |

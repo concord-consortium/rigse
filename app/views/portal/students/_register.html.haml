@@ -1,4 +1,4 @@
-= remote_form_for(:portal_student, portal_student, :url => { :controller => 'portal/students', :action => 'confirm' }, :html => {:id => "word_form"}) do |f|
+= remote_form_for(portal_student, :as => :portal_student, :url => { :controller => 'portal/students', :action => 'confirm' }, :html => {:id => "word_form"}) do |f|
   %p#invalid_word
   = field_set_tag 'Class Word' do
     %ul.menu_h

@@ -6,7 +6,7 @@
       %span{:style=> "padding-left: 10px"}
         %span{:style=> "font-weight: bold"}=k
         %span=v
-  - form_for :learner_select, :url => url_for(:action => 'index'), :html => { :method => :get }  do |form|
+  = form_for :learner_select, :url => url_for(:action => 'index'), :html => { :method => :get }  do |form|
     %table{:clas => 'form', :style=>"width: 90%;"}
       %tr
         %td

@@ -1,9 +1,8 @@
 = title_tag "Reset Your Password"
-- if params[:reset_code] == 0
-  %h2 You must set a new password.
-  %h3 Please enter a new password and confirm it.
+%h2= 'You must set a new password.'
+%h3= 'Please enter a new password and confirm it.'
 
-= form_for :user, :url => { :action => 'update_after_forgetting' } do |f|
+= form_for :user, :url => { :action => 'update_users_password' } do |f|
   %div{:id => dom_id_for(@user,:form), :class =>"action_menu"}
     .padded_content
       = f.error_messages :header_tag => 'h4', :header_message => "Your password could not be changed.", :message => ""
