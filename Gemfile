@@ -100,5 +100,4 @@ group :test, :development do
   # and: http://ben.hoskings.net/2009/07/16/speedy-rspec-with-rails
   # gem "ZenTest",                  "= 4.1.4"
   # gem "autotest-rails",           "= 4.1.0"
-  gem "rbx-require-relative",  "0.0.5", :platforms => [:mri_18, :mingw_18]
 end
