@@ -78,7 +78,6 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
   create_table "attached_files", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -1839,6 +1838,13 @@ ActiveRecord::Schema.define(:version => 20111206190839) do
     t.text     "answers"
     t.string   "runnable_type"
   end
+
+  add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"
+  add_index "report_learners", ["last_run"], :name => "index_report_learners_on_last_run"
+  add_index "report_learners", ["learner_id"], :name => "index_report_learners_on_learner_id"
+  add_index "report_learners", ["offering_id"], :name => "index_report_learners_on_offering_id"
+  add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
+  add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
 
   create_table "resource_pages", :force => true do |t|
     t.integer  "user_id"

@@ -15,15 +15,15 @@ class Section < ActiveRecord::Base
   end
 
   # has_many :data_collectors, :class_name => 'Embeddable::DataCollector',
-  #    :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
+  #    :finder_sql => proc { "SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
   #    INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
   #    INNER JOIN pages ON page_elements.page_id = pages.id
-  #    WHERE pages.section_id = #{id}'
+  #    WHERE pages.section_id = #{id}" }
 
   has_many :page_elements,
-    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
     INNER JOIN pages ON page_elements.page_id = pages.id
-    WHERE pages.section_id = #{id}'
+    WHERE pages.section_id = #{id}" }
 
   [ Embeddable::Xhtml,
     Embeddable::OpenResponse,
@@ -46,11 +46,11 @@ class Section < ActiveRecord::Base
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
     Embeddable::Smartgraph::RangeQuestion].each do |klass|
-      eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
+      eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
+      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
       INNER JOIN pages ON page_elements.page_id = pages.id
-      WHERE pages.section_id = \#\{id\}'"
+      WHERE pages.section_id = \#\{id\}" }!
   end
 
   delegate :saveable_types, :reportable_types, :to => :investigation

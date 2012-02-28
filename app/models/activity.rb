@@ -37,19 +37,19 @@ class Activity < ActiveRecord::Base
     Embeddable::Biologica::MultipleOrganism,
     Embeddable::Biologica::MeiosisView,
     Embeddable::Smartgraph::RangeQuestion].each do |klass|
-      eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
+      eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
+      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
       INNER JOIN pages ON page_elements.page_id = pages.id
       INNER JOIN sections ON pages.section_id = sections.id
-      WHERE sections.activity_id = \#\{id\}'"
+      WHERE sections.activity_id = \#\{id\}" }!
   end
 
   has_many :page_elements,
-    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
     INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
-    WHERE sections.activity_id = #{id}'
+    WHERE sections.activity_id = #{id}" }
 
   delegate :saveable_types, :reportable_types, :to => :investigation
 

@@ -1,10 +1,11 @@
+require File.expand_path('../../../spec_helper', __FILE__)
 
 describe SisImporter::SftpFileTransport do
   before(:each) do
 
     @district    = "plymouth"
     @output_dir  = "fake_dir"
-    @csv_files   = %q[a b c]
+    @csv_files   = %w[a b c]
     @usename     = "knowuh"
     @host        = "localhost"
     @password    = "secret"

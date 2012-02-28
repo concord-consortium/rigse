@@ -25,10 +25,10 @@ module SisImporter
     end
     
     def config_file
-      return File.join(RAILS_ROOT,'config','sis_import_data.yml')
+      return File.join(::Rails.root.to_s,'config','sis_import_data.yml')
     end
 
-    def yaml_config(env=RAILS_ENV)
+    def yaml_config(env=::Rails.env)
       YAML.load_file(config_file)[env].symbolize_keys
     end
 
@@ -68,7 +68,7 @@ o     end
       rescue
         # TODO: this is probably an error condition we should track
       end
-      File.join(RAILS_ROOT, 'sis_import_data', 'districts', external_domain_suffix, 'csv')
+      File.join(::Rails.root.to_s, 'sis_import_data', 'districts', external_domain_suffix, 'csv')
     end
   end
 end

@@ -10,10 +10,10 @@ class Page < ActiveRecord::Base
 
   # this could work if the finder sql was redone
   # has_one :investigation,
-  #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
+  #   :finder_sql => proc { "SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
   #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
   #   INNER JOIN pages ON page_elements.page_id = pages.id
-  #   WHERE pages.section_id = #{id}'
+  #   WHERE pages.section_id = #{id}" }
 
   has_many :page_elements, :order => :position, :dependent => :destroy
   has_many :inner_page_pages, :class_name => 'Embeddable::InnerPagePage'
@@ -61,10 +61,10 @@ class Page < ActiveRecord::Base
 
   @@element_types.each do |klass|
     unless defined? klass.dont_make_associations
-      eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
-      WHERE page_elements.page_id = \#\{id\}'"
+      eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
+      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
+      WHERE page_elements.page_id = \#\{id\}" }!
     end
   end
 

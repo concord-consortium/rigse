@@ -6,10 +6,10 @@
       %th Answer
     - @security_questions.each_with_index do |question, i|
       %tr
-        - border = "border: 2px #FF0000 solid;" unless question.errors.on(:answer).nil?
+        - border = "border: 2px #FF0000 solid;" unless question.errors[:answer].empty?
         %td{:style => "text-align: left;"}
           = hidden_field_tag "security_questions[question#{i}][id]", question.id
           = label_tag "security_questions[question#{i}][question_idx]", "#{question_names[i]} question:"
-          = select_tag "security_questions[question#{i}][question_idx]", question.select_options
+          = select_tag "security_questions[question#{i}][question_idx]", question.select_options.join.html_safe
         %td
           = text_field_tag "security_questions[question#{i}][answer]", question.answer, :style => border

@@ -39,43 +39,43 @@ class Investigation < ActiveRecord::Base
     Embeddable::Smartgraph::RangeQuestion ]
 
   @@embeddable_klasses.each do |klass|
-    eval "has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
-      :finder_sql => 'SELECT #{klass.table_name}.* FROM #{klass.table_name}
-      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = \"#{klass.to_s}\"
+    eval %!has_many :#{klass.name[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass.name}',
+      :finder_sql => proc { "SELECT #{klass.table_name}.* FROM #{klass.table_name}
+      INNER JOIN page_elements ON #{klass.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass.to_s}'
       INNER JOIN pages ON page_elements.page_id = pages.id
       INNER JOIN sections ON pages.section_id = sections.id
       INNER JOIN activities ON sections.activity_id = activities.id
-      WHERE activities.investigation_id = \#\{id\}'"
+      WHERE activities.investigation_id = \#\{id\}" }!
   end
 
   has_many :page_elements,
-    :finder_sql => 'SELECT page_elements.* FROM page_elements
+    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
     INNER JOIN pages ON page_elements.page_id = pages.id
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}'
+    WHERE activities.investigation_id = #{id}" }
 
   has_many :sections,
-    :finder_sql => 'SELECT sections.* FROM sections
+    :finder_sql => proc { "SELECT sections.* FROM sections
     INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}'
+    WHERE activities.investigation_id = #{id}" }
 
   has_many :student_sections, :class_name => Section.to_s,
-    :finder_sql => 'SELECT sections.* FROM sections
+    :finder_sql => proc { "SELECT sections.* FROM sections
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
-    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0'
+    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0" }
 
   has_many :pages,
-    :finder_sql => 'SELECT pages.* FROM pages
+    :finder_sql => proc { "SELECT pages.* FROM pages
     INNER JOIN sections ON pages.section_id = sections.id
     INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}'
+    WHERE activities.investigation_id = #{id}" }
 
   has_many :student_pages, :class_name => Page.to_s,
-    :finder_sql => 'SELECT pages.* FROM pages
+    :finder_sql => proc { "SELECT pages.* FROM pages
     INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
     INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
-    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0'
+    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0" }
 
   acts_as_replicatable
 

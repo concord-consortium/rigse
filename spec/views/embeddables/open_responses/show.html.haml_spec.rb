@@ -6,7 +6,7 @@ describe "/embeddable/open_responses/show.html.haml" do
     power_user = stub_model(User, :has_role? => true)
     view.stub!(:edit_menu_for).and_return("edit menu")
     view.stub!(:current_user).and_return(power_user)
-    assigns[:open_response] = @open_response = stub_model(Embeddable::OpenResponse,
+    assign(:open_response, @open_response = stub_model(Embeddable::OpenResponse,
       :new_record? => false, 
       :id => 1,
       :uuid => "uuid",
@@ -14,15 +14,15 @@ describe "/embeddable/open_responses/show.html.haml" do
       :default_response=>"Tell us how you feel.",
       :name => "Open Response",
       :prompt => "Prompt",
-      :user => power_user)
+      :user => power_user))
   end
 
   it "should have a rows field" do
     render
-    response.should have_selector("textarea[rows='#{@open_response.rows.to_s}']")
+    rendered.should have_selector("textarea[rows='#{@open_response.rows.to_s}']")
   end
   it "should have a columns field" do
     render
-    response.should have_selector("textarea[cols='#{@open_response.columns.to_s}']")
+    rendered.should have_selector("textarea[cols='#{@open_response.columns.to_s}']")
   end
 end

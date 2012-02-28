@@ -8,6 +8,7 @@
 
 require 'fileutils'
 require 'arrayfields'
+require 'csv'
 
 class SchoolImporter
   attr_accessor :import_data
@@ -64,7 +65,7 @@ class SchoolImporter
   end
   
   def add_csv_row(line)
-    FasterCSV.parse(line) do |row|
+    CSV.parse(line) do |row|
       if row.class == Array
         row.fields = CVS_COLUMNS
         school_for(row)

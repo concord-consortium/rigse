@@ -1,3 +1,4 @@
+require 'csv'
 module SisImporter
   class DistrictImporter
     include SisCsvFields  # definitions for the fields we use when parsing.
@@ -12,7 +13,7 @@ module SisImporter
     attr_accessor :configuration
 
     def initialize(config=Configuration.new)
-      User.delete_observers
+      User.observers = []
       self.configuration = config
       self.district  = self.configuration.district
       self.log       = self.configuration.log
@@ -125,7 +126,7 @@ module SisImporter
 
     def add_csv_row(key,line)
       # if row.respond_to? fields
-      FasterCSV.parse(line) do |row|
+      CSV.parse(line) do |row|
         if row.class == Array
           row.fields = csv_field_columns[key]
           @parsed_data[key] << row
@@ -534,7 +535,7 @@ module SisImporter
     def random_student_login(district=@districts[(rand * (@districts.length-1)).round])
       students_file_name = "#{@configuration.local_root_dir}/#{district}/current/students.csv"
       student_sakai_file_name = "#{@configuration.local_root_dir}/#{district}/current/student_sakai.csv"
-      student_rows = FasterCSV.read(students_file_name)
+      student_rows = CSV.read(students_file_name)
       login = ""
       while login == ""
         student_row = student_rows[(rand * student_rows.length-1).round]
@@ -559,7 +560,7 @@ module SisImporter
     ##
     def random_staff_login(district=@districts[(rand * (@districts.length-1)).round])
       staff_file_name = "#{@configuration.local_root_dir}/#{district}/current/staff.csv"
-      staf_rows = FasterCSV.read(staff_file_name)
+      staf_rows = CSV.read(staff_file_name)
       login = nil
       while login.nil?
         staff_row = staf_rows[(rand * staf_rows.length-1).round]

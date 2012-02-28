@@ -7,6 +7,7 @@ describe SecurityQuestionsController do
     @student = Factory.create(:portal_student, :user => Factory.create(:user))
     stub_current_user @student.user
     @test_project = mock("project",:name=> "Test Project")
+    @test_project.should_receive(:use_student_security_questions).and_return(true)
     Admin::Project.stub(:default_project).and_return(@test_project)
   end
   

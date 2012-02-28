@@ -1,3 +1,4 @@
+require File.expand_path('../../../spec_helper', __FILE__)
 describe SisImporter::FileTransport do
 
   before(:each) do

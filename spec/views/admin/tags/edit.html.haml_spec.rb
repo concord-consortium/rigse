@@ -5,12 +5,12 @@ describe "/admin/tags/edit.html.haml" do
 
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
-    template.stub!(:current_user).and_return(power_user)
-    assigns[:admin_tag] = @admin_tag = stub_model(Admin::Tag,
+    view.stub!(:current_user).and_return(power_user)
+    assign(:admin_tag, @admin_tag = stub_model(Admin::Tag,
       :new_record? => false,
       :scope => "value for scope",
       :tag => "value for tag"
-    )
+    ))
   end
 
   it "renders the edit tags form" do
