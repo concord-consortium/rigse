@@ -49,9 +49,11 @@ namespace :app do
       puts "#{learners.size} learners to process...\n"
       learners.each_with_index do |l,i|
         print ("\n%5d: " % i) if (i % 250 == 0)
-        rl = Report::Learner.for_learner(l)
-        if args[:force] || (l.bundle_logger.last_non_empty_bundle_content && l.bundle_logger.last_non_empty_bundle_content.updated_at != rl.last_run)
-          rl.update_fields
+        if l.offering
+          rl = Report::Learner.for_learner(l)
+          if args[:force] || (l.bundle_logger.last_non_empty_bundle_content && l.bundle_logger.last_non_empty_bundle_content.updated_at != rl.last_run)
+            rl.update_fields
+          end
         end
         print '.' if (i % 5 == 4)
       end
