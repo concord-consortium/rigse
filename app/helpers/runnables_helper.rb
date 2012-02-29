@@ -11,7 +11,8 @@ module RunnablesHelper
     format ||= component.run_format
 
     params.update(current_user.extra_params)
-    polymorphic_url(component, :format => format, :params => params)
+    params[:format] = format
+    polymorphic_url(component, params)
   end
 
   def run_button_for(component)
