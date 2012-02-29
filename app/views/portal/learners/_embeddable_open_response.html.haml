@@ -5,6 +5,6 @@
       - css_style = saveable.answered? ? 'answered' : 'not_answered'
       .item{:style => 'display: block;'}
         %strong
-          = embeddable.prompt
+          != embeddable.prompt
       .item{:class => css_style, :style => 'display: block;'}
-        = h(saveable.answer).gsub("\n", '<br/>')
+        != h(saveable.answer).gsub("\n", '<br/>')

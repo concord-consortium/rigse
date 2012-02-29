@@ -6,7 +6,7 @@
       - css_style = saveable.answered_correctly? ? 'correct' : 'incorrect' if saveable.answered?
       .item{:style => 'display: block;'}
         %strong
-          = embeddable.prompt
+          != embeddable.prompt
       - embeddable.choices.each_with_index do |choice, i|
         - css = choice.is_correct ? 'correct' : 'incorrect'
         - if saveable && choice.choice == saveable.answer
