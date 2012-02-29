@@ -30,6 +30,18 @@ class Report::LearnerController < ApplicationController
     @start_date            = params['start_date']
     @end_date              = params['end_date']
 
+    begin
+      Time.parse(@start_date)
+    rescue
+      @start_date = nil
+    end
+
+    begin
+      Time.parse(@end_date)
+    rescue
+      @end_date = nil
+    end
+
     @select_runnables      = params['runnables'] || []
     @select_schools        = params['schools']   || []
     @select_teachers       = params['teachers']  || []
