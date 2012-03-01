@@ -31,6 +31,7 @@ class Reports::Detail < Reports::Excel
       # Spreadhseet was dying on ":" and  "/" chars. Others?
       sheet_name = runnable.name.gsub /[^a-zA-z0-9 ]/,"_"
       sheet_name = sheet_name[0..30]
+      sheet_name "Unknown" unless sheet_name && sheet_name.size > 0
       @runnable_sheet[runnable] = @book.create_worksheet :name => sheet_name
       sheet_defs = @common_columns.clone
       answer_defs = []
