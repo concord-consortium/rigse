@@ -147,9 +147,10 @@ RailsPortal::Application.routes.draw do
         get :separated_report
         post :report_embeddable_filter
         get :learners
-        get :launch_status
       end
     end
+
+    get '/portal/offerings/:id/launch_status.json' => 'portal/offerings_metal#launch_status', :constraints => { :format => 'json' }
 
     resources :schools
 
@@ -227,12 +228,16 @@ RailsPortal::Application.routes.draw do
     resources :bundle_contents
     resources :console_contents
     resources :bundle_loggers do
-      resources :bundle_contents
+      resources :bundle_contents, :except => [:create]
     end
     resources :console_loggers do
-      resources :console_contents
+      resources :console_contents, :except => [:create]
     end
   end
+
+  # metal routing
+  post '/dataservice/bundle_loggers/:id/bundle_contents.bundle' => 'dataservice/bundle_content_metal#create', :constraints => { :format => 'bundle' }
+  post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_content_metal#create', :constraints => { :format => 'bundle' }
 
   # A prettier version of the blob w/ token url
   match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }
