@@ -1,7 +1,7 @@
 = render :partial => 'activities/show', :locals => {:teacher_mode => teacher_mode}, :collection => investigation.activities, :as => :activity
 
 - content_for(:investigation) do
-  %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :version=>3 }
+  %OTRITESContainer{ :leftPanelWidth => investigation.left_nav_panel_width, :leftPanelTitle => "Table of Contents", :version=>3 }
     %title
       -# render a preview_warning message by default.
       -# dynamic_otml will remove the element.

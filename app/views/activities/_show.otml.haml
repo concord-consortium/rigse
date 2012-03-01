@@ -1,7 +1,7 @@
 = render :partial => 'sections/show', :locals => {:teacher_mode => teacher_mode}, :collection => activity.sections, :as => :section
 
 - content_for dom_id_for(activity, :activity) do
-  %OTRITESContainer{ :leftPanelWidth => activity.left_nav_panel_width }
+  %OTRITESContainer{ :leftPanelWidth => activity.left_nav_panel_width, :leftPanelTitle => "Table of Contents" }
     %title
       %OTCompoundDoc
         %bodyText
