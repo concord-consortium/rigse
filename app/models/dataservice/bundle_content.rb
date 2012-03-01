@@ -160,7 +160,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
   end
   
   @@url_resolver = URLResolver.new
-  @@blob_url_regexp = /http.*?\/dataservice\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
+  @@blob_url_regexp = /(?:http.*?\/dataservice|\.\.)\/blobs\/([0-9]+)\.blob\/([0-9a-zA-Z]+)/
   @@blob_content_regexp = /\s*gzb64:([^<]+)/m
   
   def process_blobs
@@ -312,11 +312,11 @@ class Dataservice::BundleContent < ActiveRecord::Base
       parent_id = extractor.get_parent_id(chooser)
       if parent_id && parent_id =~ /image_question_(\d+)/
         saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, $1)
-        answer = extractor.get_property_path(chooser, 'embeddedEntries/oTObject').first
+        answer = extractor.get_property_path(chooser, 'embeddedEntries/oTObject').last
         src = answer.nil? ? nil : extractor.get_text_property(answer, 'src')
         if src =~ @@blob_url_regexp
           blob_id = $1
-          if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id
+          if saveable_image_question.response_count == 0 || saveable_image_question.answers.last.blob_id != blob_id.to_i
             saveable_image_question.answers.create(:bundle_content_id => self.id, :blob_id => blob_id)
           end
         else
