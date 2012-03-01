@@ -131,6 +131,8 @@ RailsPortal::Application.routes.draw do
       end
     end
 
+    get 'offerings/:id/launch_status.:format' => 'offerings_metal#launch_status', :constraints => { :format => 'json' }
+
     resources :offerings do
       collection do
         get :data_test
@@ -149,8 +151,6 @@ RailsPortal::Application.routes.draw do
         get :learners
       end
     end
-
-    get '/portal/offerings/:id/launch_status.json' => 'portal/offerings_metal#launch_status', :constraints => { :format => 'json' }
 
     resources :schools
 

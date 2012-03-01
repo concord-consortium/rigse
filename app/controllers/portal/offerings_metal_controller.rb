@@ -2,7 +2,7 @@ require 'json'
 class Portal::OfferingsMetalController < ActionController::Metal
 
   def launch_status
-    if offering = Portal::Offering.find(params[:id]) && (current_user = session[:user_id] ? User.find(session[:user_id]) : nil) && current_user.portal_student
+    if (offering = Portal::Offering.find(params[:id])) && (current_user = (session[:user_id] ? User.find(session[:user_id]) : nil)) && current_user.portal_student
       learner = Portal::Learner.find_by_offering_id_and_student_id(offering.id, current_user.portal_student.id)
       status_event_info = {}
       if learner && learner.bundle_logger.in_progress_bundle
@@ -19,7 +19,6 @@ class Portal::OfferingsMetalController < ActionController::Metal
       self.status = 200
       self.content_type = 'application/json'
       self.response_body = status_event_info.to_json
-      self.headers['Last-Modified'] = bundle_content.created_at.httpdate
       self.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
       self.headers['Pragma'] = 'no-cache'
       self.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
