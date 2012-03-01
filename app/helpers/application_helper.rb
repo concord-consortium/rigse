@@ -201,6 +201,15 @@ module ApplicationHelper
   end
 
   def render_partial_for(component,_opts={})
+    ## if we're rendering otml, only render if the thing we're rendering hasn't
+    ## already been rendered before.
+    if self.formats.include?('otml') || self.formats.include?(:otml)
+      if already_rendered?(component)
+        return ""
+      else
+        mark_rendered(component)
+      end
+    end
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
 
@@ -1042,9 +1051,18 @@ module ApplicationHelper
     end
   end
 
+  def already_rendered?(thing)
+    return @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
+  end
+
+  def mark_rendered(thing)
+    @render_scope_additional_objects ||= []
+    @render_scope_additional_objects << thing
+  end
+
   def in_render_scope?(thing)
     return true if thing == nil
-    if @render_scope_additional_objects && @render_scope_additional_objects.include?(thing)
+    if already_rendered?(thing)
       return true
     end
 
@@ -1066,8 +1084,6 @@ module ApplicationHelper
         haml_tag :object, :refid => ot_refid_for(thing)
       end
     else
-      @render_scope_additional_objects ||= []
-      @render_scope_additional_objects << thing
       render_show_partial_for(thing)
     end
   end
