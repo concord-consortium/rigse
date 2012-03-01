@@ -1,51 +1,59 @@
 class Otrunk::ObjectExtractor
   require 'nokogiri'
-  
+
   def initialize(otml)
     @otml = Nokogiri::XML(otml)
     @doc_id = @otml.at("otrunk[@id]")[:id]
   end
-  
+
   def get_text_property(element, property)
     prop = nil
-    
+
     return element.get_attribute(property) if element.has_attribute?(property)
-    
+
     prop = element.xpath("./#{property}/text()")
     return '' if prop.nil?
     prop = prop[0] if prop.size > 1
     prop.text
   end
-  
+
   # returns an array of zero or more elements or attributes
   def get_property(element, property)
     prop = nil
-    
+
     return [element.get_attribute(property)] if element.has_attribute?(property)
-    
-    prop = element.xpath("./#{property}")
-    return [] if prop.nil?
-    prop = prop[0] # shouldn't ever be more than one...
-    
-    # we should now have an element
-    return [] if ! prop.kind_of?(Nokogiri::XML::Element)
-    
-    resolved_children = resolve_elements(prop.children)
-    if property =~ /\[(.*)\]$/
-      return [resolved_children[$1.to_i]]
+
+    props = element.xpath("./#{property}")
+    return [] if props.nil?
+
+    results = []
+    props.each do |prop|
+      # we should now have an element
+      next if ! prop.kind_of?(Nokogiri::XML::Element)
+
+      resolved_children = resolve_elements(prop.children)
+      if property =~ /\[(.*)\]$/
+        results << resolved_children[$1.to_i]
+      end
+      results << resolved_children
     end
-    return resolved_children
+    return results
   end
-  
+
   def get_property_path(element, path)
-    path.split('/').each do |path_piece|
-      break if element.nil?
-      element = get_property(element, path_piece).first
+    path = path.split('/') unless path.is_a?(Array)
+    element = [element] unless element.is_a?(Array)
+    unless path.size < 1
+      path_piece = path.shift
+      results = []
+      element.each do |el|
+        results << get_property(el, path_piece)
+      end
+      element = get_property_path(results.flatten, path)
     end
-    return [] if element.nil?
-    return [element]
+    return element
   end
-  
+
   def resolve_elements(elements)
     resolved = elements.map {|elem|
       out = nil
@@ -59,10 +67,10 @@ class Otrunk::ObjectExtractor
       end
       out
     }.compact
-    
+
     return (resolved.empty? ? elements : resolved)
   end
-  
+
   def resolve_id(id)
     if id =~ /$\{(.*?)\}/
       return resolve_local_id($1)
@@ -74,13 +82,13 @@ class Otrunk::ObjectExtractor
       return nil
     end
   end
-  
+
   def resolve_local_id(local_id)
     elem = @otml.at("//[@local_id='#{local_id}']")
     return elem unless elem.nil?
     return resolve_entry("#{@doc_id}!/#{local_id}")
   end
-  
+
   def resolve_path_id(parent_id, path_id)
     parent = (parent_id == @doc_id) ? @otml : resolve_uuid(parent_id)
     path_parts = path_id.split('/')
@@ -97,18 +105,18 @@ class Otrunk::ObjectExtractor
     end
     return parent
   end
-  
+
   def resolve_uuid(uuid)
     elem = @otml.at("//[@id='#{uuid}']")
     return elem unless elem.nil?
     return resolve_entry(uuid)
   end
-  
+
   def resolve_entry(entry_key)
     elem = @otml.at("//entry[@key='#{entry_key}']")
     return (elem.nil? ? nil : elem.children.first)
   end
-  
+
   def find_all(object_type, &block)
     elements = @otml.search("//#{object_type}")
     if block_given?
@@ -119,7 +127,7 @@ class Otrunk::ObjectExtractor
       return elements
     end
   end
-  
+
   def get_parent_id(element)
     parent = element.parent
     return parent.get_attribute('key') if parent.name == 'entry' && parent.has_attribute?('key')
