@@ -1,5 +1,5 @@
 RailsPortal::Application.routes.draw do
-
+constraints :id => /\d+/ do
   namespace :saveable do
     namespace :sparks do
       resources :measuring_resistances
@@ -240,8 +240,8 @@ RailsPortal::Application.routes.draw do
   post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_contents_metal#create', :constraints => { :format => 'bundle' }
 
   # A prettier version of the blob w/ token url
-  match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }
-  match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/, :id => /\d+/ }, :format => 'blob'
+  match 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
+  match 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
   namespace :admin do
     resources :projects do
@@ -487,4 +487,5 @@ RailsPortal::Application.routes.draw do
 
   root :to => 'home#index'
 
+end
 end
