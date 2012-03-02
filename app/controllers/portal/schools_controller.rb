@@ -101,7 +101,7 @@ class Portal::SchoolsController < ApplicationController
         redirect_to :index
       elsif @portal_school.save
         @portal_school.put_setting("use_installer", use_installer)
-        render :partial => 'new', :locals => { :portal_school => @portal_school }
+        render :partial => 'show', :locals => { :portal_school => @portal_school }
       else
         render :xml => @portal_school.errors, :status => :unprocessable_entity
       end
