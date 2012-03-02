@@ -10,35 +10,33 @@
     %table{:clas => 'form', :style=>"width: 90%;"}
       %tr
         %td
-          %label schools:
+          %label Schools:
         %td
           = select_tag('schools', options_for_select(@all_schools.map {|s| [s.name, s.id]}, @select_schools.map {|s| s.id}), { :multiple => true })
       %tr
         %td
-          %label teachers:
+          %label Teachers:
         %td
           = select_tag('teachers', options_for_select(@all_teachers.map {|s| [s.name, s.id]}, @select_teachers.map {|s| s.id}), { :multiple => true })
       %tr
         %td
-          %label investigations:
+          %label Investigations:
         %td
           = select_tag('runnables', options_for_select(@all_runnables.map {|s| [s.name, s.id]}, @select_runnables.map {|s| s.id}), { :multiple => true })
       %tr
         %td
-          %label start date:
+          %label Start Date:
         %td
           = calendar_date_select_tag "start_date", @start_date
       %tr
         %td
-          %label end date:
+          %label End Date:
         %td
           = calendar_date_select_tag "end_date", @end_date
 
-    = submit_tag 'update filters'
-    = submit_tag 'usage report'
-    = submit_tag 'details report'
-    -# This was seen as too distructive. Removed.
-    -# = submit_tag 'update learners', :confirm => "update all the back-end learner objects? (This could take *a long time*)"
+    = submit_tag 'Apply Filters'
+    = submit_tag 'Usage Report'
+    = submit_tag 'Details Report'
 
 :javascript
   new Chosen($('schools'));
