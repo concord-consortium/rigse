@@ -89,7 +89,7 @@ class Portal::SchoolsController < ApplicationController
   # POST /portal_schools.xml
   def create
     cancel = params[:commit] == "Cancel"
-    use_installer = params[:settings][:use_installer]
+    use_installer = (params[:settings] && params[:settings][:use_installer] == "1")
     if params[:nces_school]
       @nces_school = Portal::Nces06School.find(params[:nces_school][:id])
       @portal_school = Portal::School.find_or_create_by_nces_school(@nces_school) if @nces_school
@@ -100,7 +100,7 @@ class Portal::SchoolsController < ApplicationController
       if cancel 
         redirect_to :index
       elsif @portal_school.save
-        @portal_school.put_setting("use_installer", use_installer)
+        @portal_school.put_setting("use_installer", "1") if use_installer
         render :partial => 'show', :locals => { :portal_school => @portal_school }
       else
         render :xml => @portal_school.errors, :status => :unprocessable_entity
@@ -108,7 +108,7 @@ class Portal::SchoolsController < ApplicationController
     else
       respond_to do |format|
         if @portal_school.save
-          @portal_school.put_setting("use_installer", use_installer)
+          @portal_school.put_setting("use_installer", "1") if use_installer
           flash[:notice] = 'Portal::School was successfully created.'
           format.html { redirect_to(@portal_school) }
           format.xml  { render :xml => @portal_school, :status => :created, :location => @portal_school }
@@ -124,11 +124,20 @@ class Portal::SchoolsController < ApplicationController
   # PUT /portal_schools/1.xml
   def update
     cancel = params[:commit] == "Cancel"
-    use_installer = params[:settings][:use_installer]
+    use_installer = (params[:settings] && params[:settings][:use_installer] == "1")
     @portal_school = Portal::School.find(params[:id])
     if request.xhr?
       if cancel || @portal_school.update_attributes(params[:portal_school])
-        @portal_school.put_setting("use_installer", use_installer) unless cancel
+        unless cancel
+          if use_installer
+            @portal_school.put_setting("use_installer", "1")
+          else
+            if setting = @portal_school.get_setting("use_installer")
+              setting.destroy
+              @portal_school.reload
+            end
+          end
+        end
         render :partial => 'show', :locals => { :portal_school => @portal_school }
       else
         render :xml => @portal_school.errors, :status => :unprocessable_entity
@@ -136,7 +145,14 @@ class Portal::SchoolsController < ApplicationController
     else
       respond_to do |format|
         if @portal_school.update_attributes(params[:portal_school])
-          @portal_school.put_setting("use_installer", use_installer)
+          if use_installer
+            @portal_school.put_setting("use_installer", "1")
+          else
+            if setting = @portal_school.get_setting("use_installer")
+              setting.destroy
+              @portal_school.reload
+            end
+          end
           flash[:notice] = 'Portal::School was successfully updated.'
           format.html { redirect_to(@portal_school) }
           format.xml  { head :ok }
