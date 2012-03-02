@@ -2,6 +2,7 @@ class Portal::SchoolsController < ApplicationController
   
   include RestrictedPortalController
   before_filter :admin_or_manager
+  before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
 
   protected 
 
@@ -21,6 +22,16 @@ class Portal::SchoolsController < ApplicationController
       flash[:notice] = "Please log in as an administrator or manager" 
       redirect_to(:home)
     end
+  end
+
+  def states_and_provinces
+    if APP_CONFIG[:states_and_provinces]
+      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a.select { |s| APP_CONFIG[:states_and_provinces].any? { |i| i == s[0] } }
+    else
+      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
+    end
+    @states_and_provinces.collect! {|i| i.reverse}
+    @states_and_provinces.sort! { |a, b| a[1] <=> b[1] }
   end
   
   public
@@ -55,14 +66,6 @@ class Portal::SchoolsController < ApplicationController
   def new
     @portal_school = Portal::School.new
 
-    if APP_CONFIG[:states_and_provinces]
-      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a.select { |s| APP_CONFIG[:states_and_provinces].any? { |i| i == s[0] } }
-    else
-      @states_and_provinces = StatesAndProvinces::STATES_AND_PROVINCES.to_a
-    end
-    @states_and_provinces.collect! {|i| i.reverse}
-    @states_and_provinces.sort! { |a, b| a[1] <=> b[1] }
-    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @portal_school }
