@@ -112,6 +112,12 @@ a.rollover:hover {
           -moz-border-radius: 8px;
           -webkit-border-radius: 8px; }
         a.rollover {
+          background: transparent;
+          border-radius: 0px;
+          -moz-border-radius: 0px;
+          -webkit-border-radius: 0px;
+          margin: 0px;
+          padding: 0px;
           img {
             border-style: none; } } } } }
   .action_menu_left {
