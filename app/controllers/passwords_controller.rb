@@ -101,7 +101,7 @@ class PasswordsController < ApplicationController
         logout_keeping_session!
         redirect_to login_path
       else
-        redirect_back_or root_path
+        redirect_to(session[:return_to] || root_path)
       end
     else
       # flash[:error] = 'Password could not be updated'
