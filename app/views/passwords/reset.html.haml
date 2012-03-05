@@ -8,7 +8,7 @@
       = f.error_messages :header_tag => 'h4', :header_message => "Your password could not be changed.", :message => ""
 
     %fieldset
-      %legend= "Password for #{@user.login}"
+      %legend= "Password for #{@user.name} (#{@user.login})"
       %ul.quiet_list
         %li= f.label :password, "password", :class=>"aligned"
         %li= f.password_field :password, :live => false, :class=>"aligned"
