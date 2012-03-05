@@ -8,6 +8,7 @@ class UsersController < ApplicationController
       :show,
       :edit,
       :update,
+      :reset_password
     ]
   before_filter :manager, :only => [:destroy]
   before_filter :manager_or_researcher,
@@ -256,6 +257,13 @@ class UsersController < ApplicationController
     rep = Reports::Account.new({:verbose => false})
     rep.run_report(sio)
     send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "accounts-report.xls" )
+  end
+
+  def reset_password
+    p = Password.new(:user_id => @user.id)
+    p.save(false) # we don't need the user to have a valid email address...
+    session[:return_to] = request.referer
+    redirect_to change_password_path(p.reset_code)
   end
 
   protected
