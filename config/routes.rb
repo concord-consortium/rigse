@@ -220,6 +220,7 @@ ActionController::Routing::Routes.draw do |map|
   # Restful Authentication Resources
   map.resources :users, :member => {
       :preferences => [:get, :put],
+      :reset_password => :get,
       :switch => [:get, :put],
       :interface => :get,
       :suspend   => :put,
