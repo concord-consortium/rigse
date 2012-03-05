@@ -207,6 +207,7 @@ ActionController::Routing::Routes.draw do |map|
       :interface => :get,
       :suspend   => :put,
       :unsuspend => :put,
+      :reset_password => :get,
       :purge     => :delete } do |users|
     users.resource :security_questions, :only => [ :edit, :update ]
   end
