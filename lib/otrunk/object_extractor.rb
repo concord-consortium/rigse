@@ -40,6 +40,8 @@ class Otrunk::ObjectExtractor
     return results
   end
 
+  ## path is a '/' delimited list of otobject property names which will be traversed
+  # and the values from the final path piece will be returned
   def get_property_path(element, path)
     path = path.split('/') unless path.is_a?(Array)
     element = [element] unless element.is_a?(Array)

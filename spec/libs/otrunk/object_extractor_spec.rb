@@ -211,5 +211,64 @@ describe Otrunk::ObjectExtractor do
       end
     end
 
+    it "returns multiple results" do
+      # note: this is not a real OTrunk object but there a possibilities like this
+      @extractor = Otrunk::ObjectExtractor.new <<-OTML
+        <otrunk id='test_id'>
+          <OTObject>
+            <child>
+              <OTText text="hello world"/>
+              <OTText text="this is some"/>
+              <OTText text="text for answers"/>
+            </child>
+          </OTObject>
+        </otrunk>
+      OTML
+
+      element = @extractor.find_all("OTObject").first
+      texts = @extractor.get_property_path(element, "child/text")
+      texts.size.should == 3
+      texts[0].should == 'hello world'
+      texts[1].should == 'this is some'
+      texts[2].should == 'text for answers'
+    end
+
+    it "returns multiple results (complex)" do
+      # note: this is not a real OTrunk object but there a possibilities like this
+      @extractor = Otrunk::ObjectExtractor.new <<-OTML
+        <otrunk id='test_id'>
+          <OTObject>
+            <child>
+              <OTHolder>
+                <first>
+                  <OTImage>
+                    <src>First Source</src>
+                  </OTImage>
+                </first>
+                <second>
+                  <OTBlob>
+                    <src>Second Source</src>
+                  </OTBlob>
+                </second>
+                <third>
+                  <OTOrange src="Third Source" />
+                </third>
+              </OTHolder>
+            </child>
+            <parent>
+              <OTDisplay src="Display Source" />
+            </parent>
+          </OTObject>
+        </otrunk>
+      OTML
+
+      element = @extractor.find_all("OTObject").first
+      texts = @extractor.get_property_path(element, "child/*/src")
+      texts.size.should == 3
+      texts[0].to_s.should == 'First Source'
+      texts[1].to_s.should == 'Second Source'
+      texts[2].to_s.should == 'Third Source'
+    end
+
   end
 end
