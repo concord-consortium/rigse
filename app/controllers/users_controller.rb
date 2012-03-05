@@ -264,6 +264,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     p = Password.new(:user_id => @user.id)
     p.save(false) # we don't need the user to have a valid email address...
+    session[:return_to] = request.referer
     redirect_to change_password_path(:reset_code => p.reset_code)
   end
 
