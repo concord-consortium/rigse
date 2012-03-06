@@ -36,3 +36,35 @@ Feature: A manager updates account information for another user
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
 
+  # @javascript
+  Scenario Outline: Managers can change a users password
+    Given the following teachers exist:
+      | login   | password     | email               |
+      | teacher | teacher      | bademail@noplace.com|
+
+    And the following students exist:
+      | login   | password     | email                  |
+      | student | student      | student@mailinator.com |
+
+    And the following users exist:
+      | login     | password   | roles           |
+      | mymanager | mymanager  | manager         |
+
+    When I log out
+    And I login with username: mymanager password: mymanager
+    And I am on the user list page
+    And I click "Reset Password" for user: "<userlogin>"
+    Then I should see "Password for <username> (<userlogin>)"
+    When I fill in "user_password" with "<new_password>"
+    And I fill in "user_password_confirmation" with "<new_password>"
+    And I press "Submit"
+    Then the location should be "http://www.example.com/users"
+    When I log out
+    And I login with username: <userlogin> password: <new_password>
+    Then I should see "Logged in successfully"
+
+    Examples:
+      | username | userlogin | new_password |
+      | joe user | student   | foobarbaz    |
+      | joe user | teacher   | buzbixbez    |
+
