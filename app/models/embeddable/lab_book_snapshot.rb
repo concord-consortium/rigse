@@ -23,11 +23,17 @@ class Embeddable::LabBookSnapshot < ActiveRecord::Base
     end
   end
   
+  include Cloneable
+  @@cloneable_associations = [:target_element]
+
   @@searchable_attributes = %w{name description}
   
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 
