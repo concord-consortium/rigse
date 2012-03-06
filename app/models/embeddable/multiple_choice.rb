@@ -58,7 +58,8 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
   #   Embeddable::MultipleChoiceChoice.create(:choice => 'c')
   # ]
   
-  after_create :create_default_choices
+  # Don't do this automatically anymore, since it causes problems with duplication
+  # after_create :create_default_choices
   
   def create_default_choices
     Embeddable::MultipleChoiceChoice.create(:choice => 'a', :multiple_choice => self)

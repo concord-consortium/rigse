@@ -233,6 +233,7 @@ class PagesController < ApplicationController
     else
       @component = component_class.create
     end
+    @component.create_default_choices if component_class == Embeddable::MultipleChoice
     @component.pages << @page
     @component.user = current_user
     @component.save

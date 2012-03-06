@@ -59,6 +59,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
       if cancel 
         redirect_to :index
       elsif @multiple_choice.save
+        @multiple_choice.create_default_choices
         render :partial => 'new', :locals => { :multiple_choice => @multiple_choice }
       else
         render :xml => @multiple_choice.errors, :status => :unprocessable_entity
@@ -66,6 +67,7 @@ class Embeddable::MultipleChoicesController < ApplicationController
     else
       respond_to do |format|
         if @multiple_choice.save
+          @multiple_choice.create_default_choices
           flash[:notice] = 'Multiplechoice was successfully created.'
           format.html { redirect_to(@multiple_choice) }
           format.xml  { render :xml => @multiple_choice, :status => :created, :location => @multiple_choice }
