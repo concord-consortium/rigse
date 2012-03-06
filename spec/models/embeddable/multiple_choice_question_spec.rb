@@ -10,6 +10,7 @@ describe Embeddable::MultipleChoice do
     @multichoice.pages << @page
     @multichoice.user = @user
     @multichoice.save
+    @multichoice.create_default_choices
     @multichoice.reload
   end
 
