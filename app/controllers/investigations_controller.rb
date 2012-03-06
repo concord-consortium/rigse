@@ -101,7 +101,7 @@ class InvestigationsController < AuthoringController
       @include_drafts = param_find(:include_drafts)
     end
 
-    @sort_order = param_find(:sort_order, true)
+    @sort_order = param_find(:sort_order, (params[:method] == :get))
     if params[:include_usage_count].blank?
       # The checkbox was unchecked. No other way to detect this as the param gets passed as nil
       # unless it was actually checked as part of the request
