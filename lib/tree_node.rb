@@ -45,8 +45,13 @@ module TreeNode
     self.children.each do |leaf| 
       if leaf.respond_to? 'children'
         leaf.each(&block) 
-      else
+      elsif leaf
         block.call(leaf)
+      else
+        msg ="Nil object in children list for #{self}"
+        msg << ", id: #{self.id}" if self.respond_to?("id")
+        msg << ", name: #{self.name}" if self.respond_to?("name")
+        logger.error msg
       end
     end
   end

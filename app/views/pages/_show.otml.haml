@@ -8,6 +8,13 @@
 
 - content_for(:library) do
   - page.page_elements.each do |element|
+    - unless element && element.embeddable
+      - msg = "Nil embeddable in page #{page.id}: #{page.name}"
+      - if page.section
+        - msg << ", section: #{page.section.name}"
+        - msg << ", activity: #{page.section.activity.name}" if page.section.activity
+      - logger.error msg
+      - next
     = render :partial => "pages/element_container", :locals => { :teacher_mode => teacher_mode, :element => element, :component => element.embeddable, :page => @page }
 
   %OTCompoundDoc{ :local_id => ot_local_id_for(page, :tab_content), :name => page.name }
@@ -18,6 +25,7 @@
             %p.page_title= "#{h(page.section.name)}  (#{h(page.name)})".html_safe
 
           - page.page_elements.each do |element|
+            - next unless element && element.embeddable
             .element
               -# allow embeddables to control how they are referenced from the document
               - embeddable_doc_ref = ot_dom_id_for(element.embeddable, :element)

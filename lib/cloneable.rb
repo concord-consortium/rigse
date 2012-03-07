@@ -18,7 +18,12 @@ module Cloneable
 #  end
 
   def clone(options = {})
-    new_assocs = self.class.cloneable_associations
+    if self.class.respond_to?("cloneable_associations")
+      new_assocs = self.class.cloneable_associations
+    else
+      new_assocs = []
+      $stderr.puts "Class: #{self.class.name} does not define Klass.clonable_associations!"
+    end
     # puts("new associations are: '#{new_assocs.join("','")}'")
     if new_assocs.size > 0
       options[:include] ||= []
