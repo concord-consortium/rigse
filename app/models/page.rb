@@ -101,9 +101,16 @@ class Page < ActiveRecord::Base
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
 
+  include Cloneable
+  @@cloneable_associations = [:page_elements]
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+
+    def cloneable_associations
+      @@cloneable_associations
     end
 
     # returns an array of class names transmogrified into the form

@@ -22,7 +22,7 @@ class SectionsController < ApplicationController
   
   def find_entities
     if (params[:id])
-      @section = Section.find(params[:id], :include=> {:pages => {:page_elements => :embeddable}})
+      @section = Section.find(params[:id], :include=> :pages)
       format = request.parameters[:format]
       unless format == 'otml' || format == 'jnlp'
         if @section
@@ -228,7 +228,7 @@ class SectionsController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:pages => {:page_elements => :embeddable}}
+    @copy = @section.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => :pages
     @copy.name = "copy of #{@section.name}"
     @copy.save
     @copy.deep_set_user current_user
@@ -255,7 +255,7 @@ class SectionsController < ApplicationController
         if @original.class == Page
           @component = @original.duplicate
         else
-          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include =>  {:page_elements => :embeddable}
+          @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
           @component.name = "copy of #{@original.name}"
         end
         if (@component)

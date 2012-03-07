@@ -8,7 +8,16 @@ class Embeddable::InnerPagePage < ActiveRecord::Base
   
   acts_as_replicatable
   include Changeable
-  
+
+  include Cloneable
+  @@cloneable_associations = [:page]
+
+  class <<self
+    def cloneable_associations
+      @@cloneable_associations
+    end
+  end
+
   def parent
     return inner_page
   end

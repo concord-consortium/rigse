@@ -48,6 +48,15 @@ class PageElement < ActiveRecord::Base
 
   include Changeable
 
+  include Cloneable
+  @@cloneable_associations = [:embeddable]
+
+  class <<self
+    def cloneable_associations
+      @@cloneable_associations
+    end
+  end
+
   before_destroy :check_for_other_references
 
   # only destroy the embeddable if it isn't referenced by any other page elements

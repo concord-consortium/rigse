@@ -85,6 +85,7 @@ module DeepCloning
   # 
   def clone_with_deep_cloning options = {}
     kopy = clone_without_deep_cloning
+    kopy.save(:validate => false) # skip validations when cloning
     
     if options[:except]
       Array(options[:except]).each do |attribute|
@@ -119,7 +120,7 @@ module DeepCloning
     return kopy
   end
   
-  def deep_clone(options)
+  def deep_clone(options={})
     set_no_duplicates(options[:no_duplicates])
     
     if options[:never_clone]

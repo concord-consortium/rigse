@@ -10,16 +10,21 @@ class Embeddable::InnerPage < ActiveRecord::Base
   
   acts_as_replicatable
 
+  include Cloneable
   include Changeable
   include TreeNode
 
   self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}
+  @@cloneable_associations = [:inner_page_pages]
   
   class <<self
     def searchable_attributes
       @@searchable_attributes
+    end
+    def cloneable_associations
+      @@cloneable_associations
     end
   end
 

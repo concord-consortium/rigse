@@ -267,7 +267,7 @@ class PagesController < ApplicationController
   ##
   ##
   def duplicate
-    @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:page_elements => :embeddable}
+    @copy = @page.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at]
     @copy.name = "" #force numbering by default
     @copy.save
     flash[:notice] ="Copied #{@page.name}"

@@ -238,7 +238,7 @@ class ActivitiesController < ApplicationController
   ##
   def duplicate
     @original = Activity.find(params['id'])
-    @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => {:pages => {:page_elements => :embeddable}}}
+    @activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => {:sections => :pages}
     @activity.name = "copy of #{@activity.name}"
     @activity.deep_set_user current_user
     @activity.save
@@ -260,7 +260,7 @@ class ActivitiesController < ApplicationController
     if @activity.changeable?(current_user)
       @original = clipboard_object(params)
       if (@original)
-        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => {:pages => {:page_elements => :embeddable}}
+        @component = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at], :include => :pages
         if (@component)
           # @component.original = @original
           @container = params[:container] || 'activity_sections_list'
