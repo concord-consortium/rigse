@@ -87,9 +87,5 @@ class Portal::Student < ActiveRecord::Base
       self.clazzes << clazz
     end
   end
-  
-  def school
-    return schools.first
-  end
-  
+
 end
