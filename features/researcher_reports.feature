@@ -201,3 +201,28 @@ Feature: Investigations can be reported on
      Then "student_a" should have 4 answers for "first investigation" in "Intro to bugs"
      And  "student_a" should have completed (2) assessments for Activity "act 1" in "Intro to bugs"
      And  "student_a" should have completed (2) assessments for Activity "act 2" in "Intro to bugs"
+
+  Scenario: Interacting with the researcher report UI
+    Given the following researchers exist:
+      | login      | password   | email                  |
+      | researcher | researcher | researcher@concord.org |
+
+    And the following student answers:
+        | student   | class         | investigation       | question_prompt | answer |
+        | student_a | Intro to bugs | first investigation | a               | b      |
+        | student_a | Intro to bugs | first investigation | a               | a      |
+        | student_a | Intro to bugs | first investigation | c               | b      |
+
+    And a mocked spreadsheet library
+
+    When I log out
+    And I login with username: researcher password: researcher
+    And I am on the researcher reports page
+    Then I should see "You have selected:"
+    When I press "Apply Filters"
+    Then I should see "You have selected:"
+    When I press "Usage Report"
+    Then I should receive an Excel spreadsheet
+    When I am on the researcher reports page
+    And I press "Details Report"
+    Then I should receive an Excel spreadsheet

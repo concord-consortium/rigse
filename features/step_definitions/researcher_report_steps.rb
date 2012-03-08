@@ -196,3 +196,30 @@ Then /^"([^"]*)" should have completed \((\d+)\) assessments for Activity "([^"]
   report.complete_number(learner,activity).should == num_answers.to_i
 end
 
+Then /^I should receive an Excel spreadsheet$/ do
+  headers = page.driver.response.headers
+  headers.should have_key 'Content-Type'
+  headers['Content-Type'].should match "application/vnd.ms.excel"
+end
+
+Given /^the following researchers exist:$/ do |users_table|
+  User.anonymous(true)
+  users_table.hashes.each do |hash|
+    begin
+      user = Factory(:user, hash)
+      user.add_role("member")
+      user.add_role("researcher")
+      user.register
+      user.activate
+      user.save!
+    rescue ActiveRecord::RecordInvalid
+      # assume this user is already created...
+    end
+  end
+end
+
+Given /^a mocked spreadsheet library$/ do
+  workbook = Spreadsheet::Workbook.new
+  workbook.stub("write").and_return('')
+  Spreadsheet::Workbook.stub(:new).and_return(workbook)
+end

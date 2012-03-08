@@ -37,6 +37,8 @@ module NavigationHelpers
       "/resource_pages/?include_drafts=true"
     when /the reports for resource pages/
       "/reports/resource_pages"
+    when /the researcher reports page/
+      "/report/learner"
     when /the class page for "(.*)"/
       "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
     when /the class edit page for "([^"]*)"/
