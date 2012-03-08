@@ -34,9 +34,9 @@
         %td
           = calendar_date_select_tag "end_date", @end_date
 
-    = submit_tag 'Apply Filters'
-    = submit_tag 'Usage Report'
-    = submit_tag 'Details Report'
+    = submit_tag @button_texts[:apply]
+    = submit_tag @button_texts[:usage]
+    = submit_tag @button_texts[:details]
 
 :javascript
   new Chosen($('schools'));

@@ -16,6 +16,12 @@ class Report::LearnerController < ApplicationController
 
 
   def setup
+    @button_texts = {
+      :apply => 'Apply Filters',
+      :usage => 'Usage Report',
+      :details => 'Details Report'
+    }
+
     # commit"=>"update learners"
     if params['commit'] =~ /update learners/i
       update_learners
@@ -77,13 +83,13 @@ class Report::LearnerController < ApplicationController
       "Investigations:" => @select_learners.map {|l| l.runnable_id}.uniq.size
     }
 
-    if params[:commit] == 'usage report'
+    if params[:commit] == @button_texts[:usage]
       sio = StringIO.new
       runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
       report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
       report.run_report(sio)
       send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
-    elsif params[:commit] == 'details report'
+    elsif params[:commit] == @button_texts[:details]
       sio = StringIO.new
       runnables =  @select_runnables.size > 0 ? @select_runnables : @all_runnables
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url)
