@@ -10,12 +10,19 @@ describe Embeddable::VideoPlayer do
     @non_existant_video = "http://example.com/not_found.mpeg"
     @non_existant_image = "http://example.com/not_found.jpg"
 
+    WebMock.reset!
+    WebMock.enable!
     stub_request(:head, @small_video_url).to_return(:status => ["200", "OK"], :headers => {"Content-Type" => "video/flash", "Content-Length" => 100})
     stub_request(:head, @small_image_url).to_return(:status => ["200", "OK"], :headers => {"Content-Type" => "video/flash", "Content-Length" => 100})
     stub_request(:head, @non_existant_image).to_return( :status => ["404", "Not Found"])
     stub_request(:head, @non_existant_video).to_return( :status => ["404", "Not Found"])
   end
-  
+
+  after(:all) do
+    WebMock.reset!
+    WebMock.disable!
+  end
+
   before(:each) do
     @valid_attributes={
       :video_url => @small_video_url,
