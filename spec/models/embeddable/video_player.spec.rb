@@ -1,7 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-require 'webmock'
-include WebMock::API
+require 'fakeweb'
 
 describe Embeddable::VideoPlayer do
   before(:all) do
@@ -10,17 +9,10 @@ describe Embeddable::VideoPlayer do
     @non_existant_video = "http://example.com/not_found.mpeg"
     @non_existant_image = "http://example.com/not_found.jpg"
 
-    WebMock.reset!
-    WebMock.enable!
-    stub_request(:head, @small_video_url).to_return(:status => ["200", "OK"], :headers => {"Content-Type" => "video/flash", "Content-Length" => 100})
-    stub_request(:head, @small_image_url).to_return(:status => ["200", "OK"], :headers => {"Content-Type" => "video/flash", "Content-Length" => 100})
-    stub_request(:head, @non_existant_image).to_return( :status => ["404", "Not Found"])
-    stub_request(:head, @non_existant_video).to_return( :status => ["404", "Not Found"])
-  end
-
-  after(:all) do
-    WebMock.reset!
-    WebMock.disable!
+    FakeWeb.register_uri(:head, @small_video_url, :status => ["200", "OK"],:content_type => "video/flash", :content_length => 100)
+    FakeWeb.register_uri(:head, @small_image_url, :status => ["200", "OK"],:content_type => "video/flash", :content_length => 100)
+    FakeWeb.register_uri(:head, @non_existant_image, :status => ["404", "Not Found"])
+    FakeWeb.register_uri(:head, @non_existant_video, :status => ["404", "Not Found"])
   end
 
   before(:each) do

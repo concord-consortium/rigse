@@ -1,7 +1,6 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
-require 'webmock'
-include WebMock::API
+require 'fakeweb'
 
 describe UrlChecker do
   before(:all) do
@@ -10,17 +9,10 @@ describe UrlChecker do
     @huge_image_url = "http://example.com/huge_image.jpg"
     @non_existant = "http://example.com/not_found.jpg"
 
-    WebMock.reset!
-    WebMock.enable!
-    stub_request(:head, @small_image_url).to_return(:status => ["200", "OK"],:headers => { "Content-Type" => "image/jpeg", "Content-Length" => 100})
-    stub_request(:head, @medium_image_url).to_return(:status => ["200", "OK"], :headers => { "Content-Type" => "image/jpeg", "Content-Length" => 1000})
-    stub_request(:head, @huge_image_url).to_return(:status => ["200", "OK"], :headers => { "Content-Type" => "image/jpeg", "Content-Length" => 100000000})
-    stub_request(:head, @non_existant).to_return(:status => ["404", "Not Found"])
-  end
-
-  after(:all) do
-    WebMock.reset!
-    WebMock.disable!
+    FakeWeb.register_uri(:head, @small_image_url, :status => ["200", "OK"],:content_type => "image/jpeg", :content_length => 100)
+    FakeWeb.register_uri(:head, @medium_image_url, :status => ["200", "OK"], :content_type => "image/jpeg", :content_length => 1000)
+    FakeWeb.register_uri(:head, @huge_image_url, :status => ["200", "OK"], :content_type => "image/jpeg", :content_length => 100000000)
+    FakeWeb.register_uri(:head, @non_existant, :status => ["404", "Not Found"])
   end
 
   it "should validate good image urls" do
