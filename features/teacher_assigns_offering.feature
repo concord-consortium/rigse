@@ -84,6 +84,18 @@ Feature: Teacher can assign an offering to a class
     And the learner count for the external activity "My Activity" in the class "Default Class" should be "1"
     Then adhoc workgroups are set based on settings.yml
 
+  Scenario: Teacher can reset their students passwords
+    Given the default class is created
+    And the following students exist:
+      | login     | password  |
+      | student   | student   |
+    And the student "student" is in the class "My Class"
+    When I login with username: teacher password: teacher
+    And I am on the class page for "My Class"
+    Then I should see 'Reset Password'
+    When I follow 'Reset Password'
+    Then I should see 'You must set a new password'
+
   @dialog
   @selenium
   Scenario: Runnables with offerings in regular classes can not be assigned to the default class

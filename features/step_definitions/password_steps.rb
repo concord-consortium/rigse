@@ -1,4 +1,4 @@
-When /^I (?:click|press) "([^"]*)" for user: "([^"]*)"$/ do |link, login|
+When /^I click "([^"]*)" for user: "([^"]*)"$/ do |link, login|
   if link == "Reset Password"
     # find the right update password button
     user = User.find_by_login(login)
@@ -8,4 +8,8 @@ When /^I (?:click|press) "([^"]*)" for user: "([^"]*)"$/ do |link, login|
   else
     pending
   end
+end
+
+When /^I click "([^"]*)"$/ do |link|
+  click_link link
 end
