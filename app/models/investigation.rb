@@ -178,7 +178,9 @@ class Investigation < ActiveRecord::Base
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
 
-      investigations = investigations.ordered_by(sort_order)
+      if investigations.respond_to? :ordered_by
+        investigations = investigations.ordered_by(sort_order)
+      end
 
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)
