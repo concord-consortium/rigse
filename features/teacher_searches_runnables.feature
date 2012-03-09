@@ -40,17 +40,17 @@ Feature: Investigations can be searched
           | x Investigation | teacher | 20              | published          | 
           | y Investigation | teacher | 20              | published          | 
           | z Investigation | teacher | 20              | published          | 
-          | Good a          | teacher | 5               | published          | 
-          | Good b          | teacher | 5               | published          | 
-          | Good c          | teacher | 5               | published          | 
-          | Good d          | teacher | 5               | published          | 
+          | x Good a        | teacher | 5               | published          | 
+          | x Good b        | teacher | 5               | published          | 
+          | x Good c        | teacher | 5               | published          | 
+          | x Good d        | teacher | 5               | published          | 
     And I login with username: teacher password: teacher
 
   @selenium
   Scenario: looking at the first page of runnable investigations
     When I am on the class page for "My Class"
     Then There should be 20 investigations displayed
-    And  "Good" should not be displayed in the investigations list
+    And  "x Good" should not be displayed in the investigations list
     And  I should see "Next" within "#offering_list"
 
   @selenium
@@ -58,7 +58,7 @@ Feature: Investigations can be searched
     When I am on the class page for "My Class"
     And I click on the next page of results
     Then I should still be on the class page for "My Class"
-    Then  "Good a" should be displayed in the investigations list
+    Then  "x Good a" should be displayed in the investigations list
 
   @selenium
   Scenario:  searching through the list of runnable investigations
