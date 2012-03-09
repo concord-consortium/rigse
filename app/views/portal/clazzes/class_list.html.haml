@@ -1,1 +1,10 @@
-= render :partial => 'portal/students/list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+-# = accordion_for(portal_clazz, 'Student Roster') d
+.item{ :style => "padding: 1em;"}
+  .content
+    %div
+      %strong= "Class: #{@portal_clazz.name}"
+      %strong= "Students: #{@portal_clazz.students.length}"
+      .button{:style => "float: right; text-align: right;"}
+        = link_to "Print", class_list_portal_clazz_url(@portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+    .item{:id=>'students_listing'}
+      = render :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}

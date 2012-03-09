@@ -21,6 +21,8 @@ javascripts:
   - chosen.proto
   - pt_event_simulate  
 stylesheets: 
+- print:
+  - print
 - base: 
   - app
   - accordion

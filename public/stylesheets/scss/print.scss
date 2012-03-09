@@ -1,12 +1,49 @@
 @import "compass/reset";
 @import "blueprint";
-
 @include blueprint-typography;
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 0.25em 0; }
+
+h1 {
+  font-size: 2em; }
+
+h2 {
+  color: #ee864e;
+  font-size: 1.833em; }
+
+h3 {
+  font-size: 1.165em;
+  font-weight: bold;
+  line-height: 1.3;
+  padding-top: 3px; }
+
+h4 {
+  clear: both;
+  color: #ef864e;
+  font-size: 1.165em; }
+
+h5 {
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase; }
+
+h6 {
+  font-size: 0.917em; }
+
+li h3 {
+  display: inline;
+  padding: 0; }
+
+p {
+  margin-bottom: 1em; }
+
+ul, ol {
+  margin: 0 0 1em 3em; }
 
 #wrapper {
   margin: 1em;
-  display: block;
-  float: left; }
+  display: block; }
 
 .menu {
   font: {
@@ -15,27 +52,27 @@
 .activity {
   page-break-after: always; }
 
+h4, .content, .editable_block {
+  clear: both;
+  display: block; }
+
 .page {
   display: block;
-  float: left;
   margin: 0px;
   padding: 0px;
   width: 100%;
   .page_content {
     display: block;
     width: 70%;
-    float: left;
     margin: 1em;
     .item {
       display: block;
-      float: left;
       width: 100%;
       clear: both;
       margin: 2em;
       page-break-inside: avoid; }
     .data_collector {
       display: block;
-      float: left;
       clear: both;
       width: 400px;
       height: 200px; } }
@@ -51,13 +88,65 @@
         font: {
           size: 0.9em; }; } } } }
 
-img {
-  float: left;
-  margin: 1em; }
-
+/* FORMS */
 input {
-  border: dotted;
-  border-width: 1px; }
+  border: 1px solid #242323; }
 
 textarea {
-  min-height: 170px; }
+  border: 1px solid #242323;
+  height: 200px;
+  margin-left: 0 !important;
+  page-break-before: avoid !important;
+  page-break-inside: avoid !important; }
+
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  .form {
+    width: 100%;
+    text-align: left;
+    tr {
+      vertical-align: top; }
+    td {
+      padding-top: 10px;
+      padding-left: 10px;
+      &:nth-child(odd) {
+        width: 30%;
+        text-align: right; } } } }
+
+/* CANVAS, FLOTR */
+canvas, .flotr-overlay, .data_collector, .flotr-axis-title {
+  clear: both;
+  display: block;
+  min-height: 400px;
+  page-break-before: always !important;
+  page-break-inside: avoid !important; }
+
+canvas, .flotr-labels div, .flotr-legend, .flotr-legend-bg {
+  margin: 0 0 0 -100px !important; }
+
+/* FORCE DISPLAY OF ALL ACTIVITY LIST PANES */
+.show_section {
+  display: block !important; }
+
+.activity .action a {
+  clear: both;
+  display: block; }
+
+/* HIDE "CHROME", NAVIGATION, AND OTHER PERIPHERAL ELEMENTS */
+#header, #userlinks, #nav_top, #project-signin, #element_nav_menu, #page_nav_menu, #section_nav_menu, #print_button, #secondary, #footer_left, .project-header, .page-utility, .send-to-friend, .share-it, .login-area, .hidden, .LV_valid, .doNotPrint, .activity-chart-navigation {
+  display: none; }
+
+/* this is cool too from ethan; display link url after links */
+/* a:link:after { content: " (" attr(href) ")"; }            */
+    
+a:link    {color:black; text-decoration:none;}
+a:visited {color:black; text-decoration:none;}
+a:hover   {color:black; text-decoration:none;}
+a:active  {color:black; text-decoration:none;}
+a.rollover {display: none;}
+/* hide table elements? */
+.students_listing {
+  color: black;
+  a:link;
+}
