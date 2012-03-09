@@ -26,7 +26,7 @@ module Delayed::Worker::Scaler
     end
 
     def down
-      unless jobs.count > 0 and workers > 0
+      if jobs.count == 0 and workers > 0
         Rush::Box.new[Rails.root].bash("RAILS_ENV=production bundle exec script/delayed_job stop -i #{process_tag}", :background => true)
       end
       true
