@@ -173,13 +173,14 @@ class Investigation < ActiveRecord::Base
           investigations = Investigation.published.like(name)
         end
       end
-      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
-      if portal_clazz
-        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
-      end
 
       if investigations.respond_to? :ordered_by
         investigations = investigations.ordered_by(sort_order)
+      end
+
+      portal_clazz = options[:portal_clazz] || (options[:portal_clazz_id] && options[:portal_clazz_id].to_i > 0) ? Portal::Clazz.find(options[:portal_clazz_id].to_i) : nil
+      if portal_clazz
+        investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
 
       if options[:paginate]
