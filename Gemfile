@@ -63,6 +63,10 @@ source "http://rubygems.org"
   gem 'dynamic_form',         "~> 1.1.4"
   gem 'json',                 "~> 1.6.3"
   gem 'calendar_date_select'
+  gem 'delayed_job',          "~> 3.0.1"
+  gem 'delayed_job_active_record', "~> 0.3.2"
+  gem 'daemons',              "~> 1.1.8"
+  gem 'rush',                 "~> 0.6.7"
 
 group :development do
   gem "rake",                 "~> 0.9.2"
