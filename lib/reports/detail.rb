@@ -15,9 +15,10 @@ class Reports::Detail < Reports::Excel
       Reports::ColumnDefinition.new(:title => "Username",     :width => 25),
       Reports::ColumnDefinition.new(:title => "Student Name", :width => 25),
       Reports::ColumnDefinition.new(:title => "Teachers",     :width => 50),
-      Reports::ColumnDefinition.new(:title => "Assessments Completed", :width => 4, :left_border => true),
-      Reports::ColumnDefinition.new(:title => "% Completed", :width => 4),
-      Reports::ColumnDefinition.new(:title => "Last run",    :width => 20),
+      Reports::ColumnDefinition.new(:title => "# Completed", :width => 10, :left_border => true),
+      Reports::ColumnDefinition.new(:title => "% Completed", :width => 10),
+      Reports::ColumnDefinition.new(:title => "# Correct",   :width => 10),
+      Reports::ColumnDefinition.new(:title => "Last run",    :width => 20)
     ]
 
     @reportable_embeddables = {} # keys will be runnables, and value will be an array of reportables for that runnable, in the correct order
@@ -92,7 +93,7 @@ class Reports::Detail < Reports::Excel
     iterate_with_status(student_learners.keys) do |student_id|
       student_learners[student_id].each do |l|
         next unless (runnable = @runnables.detect{|r| l.runnable_type == r.class.to_s && r.id == l.runnable_id})
-
+        correctable = runnable.reportable_elements.select {|r| r[:embeddable].respond_to? :correctable? }
         # <=================================================>
         total_assessments = l.num_answerables
         assess_completed = l.num_answered
@@ -104,7 +105,8 @@ class Reports::Detail < Reports::Excel
         sheet = @runnable_sheet[runnable]
         row = sheet.row(sheet.last_row_index + 1)
         assess_completed = "#{assess_completed}/#{total_assessments}(#{total_by_container})"
-        row[0, 3] =  report_learner_info_cells(l) + [assess_completed, assess_percent, last_run]
+        assess_correct = "#{l.num_correct}/#{correctable.size}"
+        row[0, 3] =  report_learner_info_cells(l) + [assess_completed, assess_percent, assess_correct, last_run]
 
         all_answers = []
         get_containers(runnable).each do |container|
@@ -113,7 +115,8 @@ class Reports::Detail < Reports::Excel
           answers = reportables.map{|r| l.answers["#{r.class.to_s}|#{r.id}"] || {:answered => false, :answer => "not answered"} }
           #Bellow is bad, it gets the answers in the wrong order!
           #answers = @report_utils[l.offering].saveables(:learner => l, :embeddables => reportables )
-          answered_answers = answers.select{|s| s[:answered] }
+          answered_answers = answers.select{|s| s[:answered]  }
+          correct_answers  = answers.select{|s| s[:is_correct]}
           # <=================================================>
           # TODO: weed out answers with no length, or which are empty
           row.concat [answered_answers.size, percent(answered_answers.size, reportables.size)]
@@ -123,7 +126,12 @@ class Reports::Detail < Reports::Excel
               url = "#{@blobs_url}/#{blob[:id]}/#{blob[:token]}.#{blob[:file_extension]}"
               Spreadsheet::Link.new url, url
             else
-              ans[:answer]
+              case ans[:is_correct]
+                when true then "(correct) #{ans[:answer]}"
+                when nil then ans[:answer]
+                when false then "(wrong) #{ans[:answer]}"
+              end
+              # "#{(ans[:is_correct] ? "(correct)" : "")}#{ans[:answer]}"
             end
           }
         end
