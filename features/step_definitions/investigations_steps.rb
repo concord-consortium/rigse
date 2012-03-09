@@ -220,6 +220,10 @@ When /^I click on the next page of results$/ do
   end
 end
 
+When /^I browse public investigations$/ do
+  visit "/investigations"
+end
+
 When /^I browse draft investigations$/ do
   visit "/investigations?include_drafts=true"
 end

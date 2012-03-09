@@ -143,6 +143,7 @@ class Investigation < ActiveRecord::Base
 
     def search_list(options)
       grade_span = options[:grade_span] || ""
+      sort_order = options[:sort_order] || "name ASC"
       domain_id = options[:domain_id].to_i
       name = options[:name]
       if APP_CONFIG[:use_gse]
@@ -177,9 +178,7 @@ class Investigation < ActiveRecord::Base
         investigations = investigations - portal_clazz.offerings.map { |o| o.runnable }
       end
 
-      unless options[:sort_order].blank?
-        investigations = investigations.ordered_by(options[:sort_order])
-      end
+      investigations = investigations.ordered_by(sort_order)
 
       if options[:paginate]
         investigations = investigations.paginate(:page => options[:page] || 1, :per_page => options[:per_page] || 20)

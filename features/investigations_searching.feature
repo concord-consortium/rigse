@@ -13,8 +13,8 @@ Feature: Investigations can be searched
       | My Class  | teacher     |
     And the following empty investigations exist:
         | name                    | user    | offerings_count | publication_status |
+        | b Investigation         | teacher | 5               | published          |        
         | a Investigation         | teacher | 5               | published          |
-        | b Investigation         | teacher | 5               | published          |
         | c Investigation         | teacher | 5               | published          |
         | d Investigation         | teacher | 5               | published          |
         | e Investigation         | teacher | 5               | published          |
@@ -67,12 +67,19 @@ Feature: Investigations can be searched
         | copy of z Investigation | teacher | 20              | draft              |
     And I login with username: teacher password: teacher
 
-  @selenium
-  Scenario: Browsing public investigations
-    When I sort investigations by "name ASC"
+  @selenium 
+  Scenario: Default display of public investigations is name ASC
+    When I browse public investigations
     Then There should be 20 investigations displayed
     And  "copy" should not be displayed in the investigations list
     And  "a Investigation" should appear before "b Investigation"
+
+  @selenium
+  Scenario: Changing the sort order
+    When I sort investigations by "name DESC"
+    Then There should be 20 investigations displayed
+    And  "copy" should not be displayed in the investigations list
+    And  "z Investigation" should appear before "y Investigation"   
 
   @selenium
   Scenario: Searching public investigations
