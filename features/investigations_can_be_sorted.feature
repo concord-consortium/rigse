@@ -17,7 +17,11 @@ Feature: Investigations can be sorted
       | MediumInv  | teacher   | 10              | Wed Jan 23 12:00:00 -0500 2011  | published           |
       | OldestInv  | teacher   | 20              | Wed Jan 20 12:00:00 -0500 2011  | published           |
     And I login with username: teacher password: teacher
-    
+  
+  Scenario: The investigation list page has a sort mechanism
+    When I am on the investigations page
+    Then the sort order selection should be "name ASC"
+
   @selenium
   Scenario: The investigations list can be sorted by name
     When I sort investigations by "name ASC"

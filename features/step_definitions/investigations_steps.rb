@@ -83,6 +83,11 @@ When /^I sort investigations by "([^"]*)"$/ do |sort_str|
   visit "/investigations?sort_order=#{sort_str}"
 end
 
+When /sort order .*should be "([^"]*)"/ do |sort_str|
+  page.should have_selector('select[name="[sort_order]"]')
+  page.should have_selector("option[value='#{sort_str}'][selected='selected']")
+end
+
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
   investigation = Investigation.find_by_name investigation_name
   selector_id = "#investigation_#{investigation.id}"
